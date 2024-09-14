@@ -83,11 +83,9 @@ namespace
 template< typename... ARGS >
 struct type_list
 {
-    template< typename F >
-    static void for_each( F f )
+    static void for_each( auto call )
     {
-        auto wrapped_f = [ f ]< typename A >( A* a ){ f.template operator()< A >(); };
-        ( wrapped_f( static_cast< ARGS* >( nullptr ) ), ... );
+        ( call.template operator()< ARGS >(), ... );
     }
 };
 
