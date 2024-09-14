@@ -73,11 +73,11 @@ std::string ToString_( const X& x )
     return x.s;
 }
 
-auto update = BitFactory::simple_open_method::declare< void >{};
+auto update = BitFactory::simple_open_method::declare< void, const std::string& >{};
 
 namespace
 {
-    auto updateX = update.define< X >( []( X* x ){ x->s += "updated"; } );
+    auto updateX = update.define< X >( []( X* x, const std::string& u ){ x->s += u; } );
 }
 
 
@@ -94,7 +94,7 @@ int main()
     
     std::cout << pro::proxy_reflect<MetaData>(cp).type_info.name() << "\n"; 
 
-    update( &o );
+    update( &o, "->updated" );
     std::cout << ToString_( o ) << "\n";
 }
 
