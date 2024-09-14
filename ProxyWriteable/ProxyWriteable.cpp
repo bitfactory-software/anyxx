@@ -80,6 +80,16 @@ namespace
     auto updateX = update.define< X >( []( X* x, const std::string& u ){ x->s += u; } );
 }
 
+template< typename... ARGS >
+struct type_list
+{
+    template< typename F >
+    static void for_each( F f )
+    {
+        auto wrapped_f = [ f ]< typename A >( A* a ){ f.template operator()< A >(); };
+        ( wrapped_f( static_cast< ARGS* >( nullptr ) ), ... );
+    }
+};
 
 int main()
 {
@@ -93,6 +103,9 @@ int main()
     std::cout << ToString( *cp ) << "\n";
     
     std::cout << pro::proxy_reflect<MetaData>(cp).type_info.name() << "\n"; 
+
+    using types = type_list< int, double, X >;
+    types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
 
     update( &o, "->updated" );
     std::cout << ToString_( o ) << "\n";
