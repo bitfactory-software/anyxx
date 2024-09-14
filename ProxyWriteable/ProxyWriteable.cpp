@@ -9,7 +9,9 @@
 #include "simple_open_method.h"
 #include "type_list.h"
 #include "class_hierarchy.h"
+
 #include "class_hierarchy_test.h"
+#include "simple_open_method_test.h"
 
 struct MetaData {
   template <class P>
@@ -161,6 +163,7 @@ int main()
     std::cout << ToString( *cp ) << "\n";
 
     
-    BitFactory::test_type_hiearchy();
+    BitFactory::class_hierarchy::test();
+    BitFactory::simple_open_method::test();
 }
 

@@ -4,7 +4,7 @@
 
 #include "class_hierarchy.h"
 
-namespace BitFactory
+namespace BitFactory::class_hierarchy
 {
 	namespace
 	{
@@ -19,7 +19,7 @@ namespace BitFactory
 		struct C {};
 		struct D : C, C3 {};
 
-		void test_type_hiearchy()
+		void test()
 		{
 			std::cout << "\n";
 			std::cout << __func__ << "\n";
