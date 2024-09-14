@@ -10,6 +10,21 @@
 namespace class_hierarchy
 {
 	template< typename CLASS > struct describe;
+
+	template< typename CLASS, bool deep >
+	void visit( auto visit_class, auto visit_base )
+	{
+        visit_class.template operator()< CLASS >();
+		using bases = class_hierarchy::describe< CLASS >::bases;
+		bases::for_each( [ & ]< typename BASE >()
+		{ 
+	        visit_base.template operator()< CLASS, BASE >();
+			if constexpr( deep )
+			{
+				visit< BASE, deep >( visit_class, visit_base );
+			}
+		});
+	}
 };
 
 namespace BitFactory
@@ -24,21 +39,17 @@ namespace BitFactory
 
 	using classes_with_bases = std::map< std::type_index, class_with_bases >;
 
-	template< typename CLASS, bool deep >
+	template< typename CLASS, bool deep = true >
 	void declare( classes_with_bases& registry )
 	{
-		class_with_bases self_with_bases;
-		self_with_bases.self = &typeid( CLASS );
-		using bases = class_hierarchy::describe< CLASS >::bases;
-		bases::for_each( [ & ]< typename BASE >()
-			{ 
-				self_with_bases.bases.emplace_back( &typeid( BASE ) );
-				if constexpr( deep )
-				{
-					declare< BASE, deep >( registry );
-				}
-			});
-		registry[ *self_with_bases.self ] = self_with_bases;
+		class_hierarchy::visit< CLASS, deep >
+			( [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C ); }
+			, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
+			);
+	}
+	template< typename CLASSES, bool deep = true >
+	void declare_all( classes_with_bases& registry )
+	{
 	}
 
 	template< typename CLASS >
