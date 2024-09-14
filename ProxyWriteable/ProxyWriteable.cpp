@@ -6,7 +6,7 @@
 
 #include "proxy.h"
 
-#include "SOM.h"
+#include "simple_open_method.h"
 #include "type_list.h"
 
 struct MetaData {
