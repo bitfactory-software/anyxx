@@ -9,7 +9,7 @@ namespace BitFactory::class_hierarchy
 {
 	namespace
 	{
-		void dump( const BitFactory::classes_with_bases& registry )
+		void dump( const classes_with_bases& registry )
 		{
 			for( const auto& [ _, class_with_bases ] : registry )
 			{
@@ -28,7 +28,7 @@ namespace BitFactory::class_hierarchy
 			std::cout << "class_hierarchy::test" << "\n";
 
 			{
-				BitFactory::classes_with_bases registry;
+				classes_with_bases registry;
 				declare_shallow< A1 >( registry );
 				declare_shallow< A2 >( registry );
 				declare_shallow< B1 >( registry );
@@ -45,20 +45,20 @@ namespace BitFactory::class_hierarchy
 			}
 
 			{
-				BitFactory::classes_with_bases registry;
+				classes_with_bases registry;
 				declare_deep< D >( registry );
 				std::cout << "declare_deep< D >" << "\n";
 				dump( registry );
 			}
 
 			{
-				BitFactory::classes_with_bases registry;
+				classes_with_bases registry;
 				declare_all< type_list< D, C1, C2 > >( registry );
 				std::cout << "declare_deep< D >" << "\n";
 				dump( registry );
 			}
 			{
-				BitFactory::classes_with_bases registry;
+				classes_with_bases registry;
 				declare_all< type_list< D > >( registry );
 				declare_all< type_list< C1, C2 > >( registry );
 				std::cout << "declare_deep< D >" << "\n";

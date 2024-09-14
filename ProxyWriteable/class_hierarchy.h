@@ -12,11 +12,15 @@ namespace class_hierarchy
 {
 	template< typename CLASS > struct describe;
 
+};
+
+namespace BitFactory::class_hierarchy
+{
 	template< typename CLASS, bool deep = true >
 	void visit_class( auto visitor )
 	{
         visitor.template operator()< CLASS >();
-		using bases = class_hierarchy::describe< CLASS >::bases;
+		using bases = ::class_hierarchy::describe< CLASS >::bases;
 		bases::for_each( [ & ]< typename BASE >()
 		{ 
 	        visitor.template operator()< CLASS, BASE >();
@@ -34,18 +38,13 @@ namespace class_hierarchy
 	        visit_class< CLASS, deep >( visitor );
 		});
 	}
-};
 
-namespace BitFactory
-{
 	using type_infos = std::initializer_list< const std::type_info& >;
-
 	struct class_with_bases
 	{
 		const std::type_info* self;
 		std::vector< const std::type_info* > bases;
 	};
-
 	using classes_with_bases = std::map< std::type_index, class_with_bases >;
 
 	auto declare_visitor( classes_with_bases& registry )
