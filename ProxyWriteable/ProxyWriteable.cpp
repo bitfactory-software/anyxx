@@ -9,6 +9,7 @@
 #include "simple_open_method.h"
 #include "type_list.h"
 #include "class_hierarchy.h"
+#include "class_hierarchy_test.h"
 
 struct MetaData {
   template <class P>
@@ -117,7 +118,6 @@ void test_type_hiearchy()
     }
 }
 
-
 struct X
 {
     std::string s;
@@ -161,6 +161,6 @@ int main()
     std::cout << ToString( *cp ) << "\n";
 
     
-    test_type_hiearchy();
+    BitFactory::test_type_hiearchy();
 }
 
