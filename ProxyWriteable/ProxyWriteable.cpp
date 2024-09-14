@@ -7,6 +7,7 @@
 #include "proxy.h"
 
 #include "SOM.h"
+#include "type_list.h"
 
 struct MetaData {
   template <class P>
@@ -80,15 +81,6 @@ namespace
     auto updateX = update.define< X >( []( X* x, const std::string& u ){ x->s += u; } );
 }
 
-template< typename... ARGS >
-struct type_list
-{
-    static void for_each( auto call )
-    {
-        ( call.template operator()< ARGS >(), ... );
-    }
-};
-
 int main()
 {
     auto o = X{ "hallo" };
@@ -102,7 +94,7 @@ int main()
     
     std::cout << pro::proxy_reflect<MetaData>(cp).type_info.name() << "\n"; 
 
-    using types = type_list< int, double, X >;
+    using types = BitFactory::type_list< int, double, X >;
     types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
 
     update( &o, "->updated" );
