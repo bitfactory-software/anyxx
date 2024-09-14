@@ -6,12 +6,7 @@
 #include <map>
 
 #include "type_list.h"
-
-namespace BitFactory
-{
-	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
-	template<class... Ts> overload(Ts...) -> overload<Ts...>;
-}
+#include "overload.h"
 
 namespace class_hierarchy
 {
