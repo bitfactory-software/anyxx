@@ -22,16 +22,22 @@ struct MetaData {
 
 struct Shareable;
 struct Writeable;
+PRO_DEF_FREE_DISPATCH(FreeGetData, GetData_, GetData);
 PRO_DEF_FREE_DISPATCH(FreeToString, ToString_, ToString);
 PRO_DEF_FREE_DISPATCH(FreeToWriteable, ToWriteable_, ToWriteable);
 PRO_DEF_FREE_DISPATCH(FreeToShareable, ToShareable_, ToShareable);
 
-struct BasicStringable : pro::facade_builder
+struct TypeData : pro::facade_builder
     ::support_copy<pro::constraint_level::nontrivial>
-    ::add_convention<FreeToString, std::string() const>
+    ::add_convention<FreeGetData, void*() const>
     ::add_reflection<MetaData>
     ::build {};
 
+struct BasicStringable : pro::facade_builder
+    ::add_facade<TypeData, true>
+    ::support_copy<pro::constraint_level::nontrivial>
+    ::add_convention<FreeToString, std::string() const>
+    ::build {};
 
 template< typename C >
     pro::proxy<Writeable> ToWriteable_( const C& c );
@@ -63,6 +69,17 @@ template< typename C >
         auto cc= std::make_shared< C >( c );
         pro::proxy<Shareable> ccc( cc );
         return ccc;
+    }
+
+template< typename C >
+    void* GetData_( C& c )
+    {
+        return &c;
+    }
+template< typename C >
+    void* GetData_( std::shared_ptr< C >& c )
+    {
+        return c.get();
     }
 
 struct X
@@ -99,5 +116,10 @@ int main()
 
     update( &o, "->updated" );
     std::cout << ToString_( o ) << "\n";
+
+    auto dataOriginal = GetData( *op );
+    auto dataWriteable = GetData( *cp );
+    std::cout << dataOriginal << ", " << dataWriteable << "\n"; 
+
 }
 
