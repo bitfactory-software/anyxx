@@ -121,5 +121,7 @@ int main()
     auto dataWriteable = GetData( *cp );
     std::cout << dataOriginal << ", " << dataWriteable << "\n"; 
 
+    update( pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable, "->updated!!!" );
+    std::cout << ToString( *cp ) << "\n";
 }
 
