@@ -7,22 +7,39 @@
 
 #include "type_list.h"
 
+namespace BitFactory
+{
+	template<typename ... Ts>                                                 // (7) 
+	struct overload : Ts ... { 
+		using Ts::operator() ...;
+	};
+	template<class... Ts> overload(Ts...) -> overload<Ts...>;
+}
+
 namespace class_hierarchy
 {
 	template< typename CLASS > struct describe;
 
-	template< typename CLASS, bool deep >
-	void visit( auto visit_class, auto visit_base )
+	template< typename CLASS, bool deep = true >
+	void visit_class( auto visitor )
 	{
-        visit_class.template operator()< CLASS >();
+        visitor.template operator()< CLASS >();
 		using bases = class_hierarchy::describe< CLASS >::bases;
 		bases::for_each( [ & ]< typename BASE >()
 		{ 
-	        visit_base.template operator()< CLASS, BASE >();
+	        visitor.template operator()< CLASS, BASE >();
 			if constexpr( deep )
 			{
-				visit< BASE, deep >( visit_class, visit_base );
+				visit_class< BASE, deep >( visitor );
 			}
+		});
+	}
+	template< typename CLASSES, bool deep = true >
+	void visit_classes( auto visitor )
+	{
+		CLASSES::for_each( [ & ]< typename CLASS >()
+		{ 
+	        visit_class< CLASS, deep >( visitor );
 		});
 	}
 };
@@ -39,19 +56,23 @@ namespace BitFactory
 
 	using classes_with_bases = std::map< std::type_index, class_with_bases >;
 
+	auto declare_visitor( classes_with_bases& registry )
+	{
+		return overload
+			{ [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C ); }
+			, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
+			};	
+	}
 	template< typename CLASS, bool deep = true >
 	void declare( classes_with_bases& registry )
 	{
-		class_hierarchy::visit< CLASS, deep >
-			( [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C ); }
-			, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
-			);
+		class_hierarchy::visit_class< CLASS, deep >( declare_visitor( registry ) );
 	}
 	template< typename CLASSES, bool deep = true >
 	void declare_all( classes_with_bases& registry )
 	{
+		class_hierarchy::visit_classes< CLASSES, deep >( declare_visitor( registry ) );
 	}
-
 	template< typename CLASS >
 	void declare_deep( classes_with_bases& registry )
 	{

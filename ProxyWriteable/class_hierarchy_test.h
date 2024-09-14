@@ -50,6 +50,20 @@ namespace BitFactory::class_hierarchy
 				std::cout << "declare_deep< D >" << "\n";
 				dump( registry );
 			}
+
+			{
+				BitFactory::classes_with_bases registry;
+				declare_all< type_list< D, C1, C2 > >( registry );
+				std::cout << "declare_deep< D >" << "\n";
+				dump( registry );
+			}
+			{
+				BitFactory::classes_with_bases registry;
+				declare_all< type_list< D > >( registry );
+				declare_all< type_list< C1, C2 > >( registry );
+				std::cout << "declare_deep< D >" << "\n";
+				dump( registry );
+			}
 		}
 	}
 }
