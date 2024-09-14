@@ -8,7 +8,7 @@
 
 #include "simple_open_method.h"
 #include "type_list.h"
-#include "class_hirarchy.h"
+#include "class_hierarchy.h"
 
 struct MetaData {
   template <class P>
