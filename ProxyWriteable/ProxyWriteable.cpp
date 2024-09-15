@@ -13,6 +13,30 @@
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
 
+constexpr std::uint64_t gms_hash_sdbm_64(const void *sP, size_t n, uint64_t param)
+{
+    uint64_t hash = 0;
+    const unsigned char *s   = (const unsigned char*) sP;
+    const unsigned char *end = s + n;
+
+    // NB: 65599 is a prime that works well in practice
+    // the parametrization isn't part of the original design,
+    // i.e. this hash function wasn't designed as a parametized/seedable
+    // hash function
+    // however, this works good-enough to resolve collisions
+    uint64_t k = 65599 + param;
+
+    // NB: other versions of this function use some shifts
+    //     however, modern optimizing compilers generate the same code,
+    //     i.e. they replace the shifts with a multiplcation
+    //     cf. https://godbolt.org/z/3Txh1n
+    for (; s != end; ++s)
+        hash = hash * k + *s;
+
+    return hash;
+}
+
+
 struct MetaData {
   template <class P>
   constexpr explicit MetaData(std::in_place_type_t<P>)

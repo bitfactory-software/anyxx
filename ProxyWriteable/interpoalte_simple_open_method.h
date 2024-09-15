@@ -25,4 +25,4 @@ namespace BitFactory::simple_open_method
 				if( auto found = find_decared_in_bases( method, registry, class_with_bases.bases ) )
 					method.define_erased( *class_with_bases.self, found );
 	}
-}
+}	
