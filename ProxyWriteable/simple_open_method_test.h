@@ -59,7 +59,7 @@ namespace BitFactory::simple_open_method
 				fill_with_overloads< classes >( toString, []( auto s ){ return ToString( s ); } );
 				class_hierarchy::visit_classes< classes >( 
 					overload
-					{ [&]< typename C >				{ call< C >( toString );; }
+					{ [&]< typename C >				{ call< C >( toString ); }
 					, [&]< typename C, typename B >	{}
 					});
 
