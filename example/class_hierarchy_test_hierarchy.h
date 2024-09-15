@@ -1,6 +1,6 @@
 #pragma once
 
-#include "class_hierarchy.h"
+#include "class_hierarchy/class_hierarchy.h"
 
 namespace TestDomain
 {

@@ -1,7 +1,8 @@
 #pragma once
 
-#include "simple_open_method.h"
-#include "class_hierarchy.h"
+#include "class_hierarchy/class_hierarchy.h"
+
+#include "define.h"
 
 namespace BitFactory::simple_open_method
 {

@@ -3,10 +3,10 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "simple_open_method.h"
-#include "interpoalte_simple_open_method.h"
-#include "fill_with_overloads_simple_open_method.h"
-#include "class_hierarchy.h"
+#include "simple_open_method/define.h"
+#include "simple_open_method/interpolate.h"
+#include "simple_open_method/fill_with_overloads.h"
+#include "class_hierarchy/class_hierarchy.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
