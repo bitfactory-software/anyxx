@@ -1,7 +1,4 @@
-﻿# CMakeList.txt : CMake project for ProxyWriteable, include source and define
-# project specific logic here.
-#
-
+﻿
 # Add source to this project's executable.
 add_executable (example "main.cpp")
 
