@@ -4,37 +4,45 @@
 #include <typeinfo>
 
 #include "simple_open_method.h"
+#include "interpoalte_simple_open_method.h"
 #include "class_hierarchy.h"
+
+#include "class_hierarchy_test_hierarchy.h"
 
 namespace BitFactory::simple_open_method
 {
 	namespace
 	{
-		struct A1 {};
-		struct A2 {};
-		struct B1 : A1 {};
-		struct B2 : A2 {};
-		struct B3 : A1, A2 {};
-		struct C1 : B1 {};
-		struct C2 : B2 {};
-		struct C3 : B3 {};
-		struct C {};
-		struct D : C, C3 {};
 
 		template< typename T > std::string ToString( T* ){ return typeid( T ).name(); }  
 
-
-		void test()
+		void test_simple_open_method()
 		{
 			std::cout << "\n";
 			std::cout << __func__ << "\n";
+
+			using namespace TestDomain;
+
 			{
 				auto toString = declare< std::string >{};
-				{
-					toString.define< A1 >( []( A1* x ){ return ToString( x ); } );
-				}
+				
+				toString.define< A1 >( []( A1* x ){ return ToString( x ); } );
+
 				std::cout << toString( static_cast< A1* >( nullptr ) ) << "\n";
-				//std::cout << toString( static_cast< D* >( nullptr ) ) << "\n";
+				try
+				{
+					std::cout << toString( static_cast< D* >( nullptr ) ) << "\n";
+					std::cout << "error: should not work!" << "\n";
+				}
+				catch( simple_open_method::error& error )
+				{
+					std::cout << error.what() << " as expected." << "\n";
+				}
+				class_hierarchy::classes_with_bases registry;
+				declare_deep< D >( registry );
+				interpolate( toString, registry );
+				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
+				std::cout << toString( static_cast< D* >( nullptr ) ) << "\n";
 			}
 		}
 	}

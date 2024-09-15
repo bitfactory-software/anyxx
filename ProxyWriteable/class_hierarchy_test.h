@@ -20,7 +20,7 @@ namespace BitFactory::class_hierarchy
 			}
 		}
 	
-		void test()
+		void test_class_hierarchy()
 		{
 			using namespace TestDomain;
 

@@ -131,7 +131,7 @@ int main()
     std::cout << ToString( *cp ) << "\n";
 
     
-    BitFactory::class_hierarchy::test();
-    BitFactory::simple_open_method::test();
+    BitFactory::class_hierarchy::test_class_hierarchy();
+    BitFactory::simple_open_method::test_simple_open_method();
 }
 

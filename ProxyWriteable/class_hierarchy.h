@@ -39,11 +39,11 @@ namespace BitFactory::class_hierarchy
 		});
 	}
 
-	using type_infos = std::initializer_list< const std::type_info& >;
+	using bases_t =	std::vector< const std::type_info* >;
 	struct class_with_bases
 	{
 		const std::type_info* self;
-		std::vector< const std::type_info* > bases;
+		bases_t bases;
 	};
 	using classes_with_bases = std::map< std::type_index, class_with_bases >;
 
@@ -69,10 +69,24 @@ namespace BitFactory::class_hierarchy
 	{
 		declare< CLASS, true >( registry );
 	}
-
 	template< typename CLASS >
 	void declare_shallow( classes_with_bases& registry )
 	{
 		declare< CLASS, false >( registry );
+	}
+
+	void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor );
+	void visit_bases( const bases_t& bases, const classes_with_bases& classes_with_bases, auto visitor )
+	{
+		for( auto base : bases )
+			visit_hierarchy( *base, classes_with_bases, visitor );
+	}
+	void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor )
+	{
+		auto found = classes_with_bases.find( self );
+		if( found == classes_with_bases.end() )
+			throw std::runtime_error("class not registered.");
+		visitor( *found->second.self );
+		visit_bases( found->second.bases, classes_with_bases, visitor );
 	}
 }
