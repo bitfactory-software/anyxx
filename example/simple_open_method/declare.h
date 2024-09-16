@@ -1,25 +1,65 @@
 #pragma once
 
+#include <any>
 #include <map>
 #include <typeindex>
 #include <stdexcept>
 #include <functional>
+#include <type_traits>
+
+#include "error.h"
 
 namespace BitFactory::simple_open_method
 {
-	class error : public std::runtime_error
+	template< typename >  struct erased;
+	template< typename, typename >  struct unerased;
+	template<>  struct erased< const std::any >
 	{
-		using std::runtime_error::runtime_error;
+		using type = const std::any&;
 	};
-	template< typename R, typename... ARGS >
+	template< typename SELF >  struct unerased< SELF, const std::any >
+	{
+		using type = const SELF*;
+		auto operator()( const std::any& erased ){ return std::any_cast< type >( erased ); };
+	};
+	template<>  struct erased< std::any >
+	{
+		using type = std::any;
+	};
+	template< typename SELF > struct unerased< SELF, std::any >
+	{
+		using type = SELF*;
+		auto operator()( std::any& erased ){ return std::any_cast< type >( erased ); };
+	};
+	template<>  struct erased< const void >
+	{
+		using type = const void*;
+	};
+	template< typename SELF >  struct unerased< SELF, const void >
+	{
+		using type = const SELF*;
+		auto operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
+	};
+	template<>  struct erased< void >
+	{
+		using type = void*;
+	};
+	template< typename SELF >  struct unerased< SELF, void >
+	{
+		using type = SELF*;
+		auto operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
+	};
+
+	template< typename R, typename DISPATCH, typename... ARGS >
 	class declare
 	{
 	public:
-		using erased_function_t = std::function< R(void*, ARGS... ) >;
+		using erased_t = erased< DISPATCH >::type;
+		using erased_function_t = std::function< R( erased_t, ARGS... ) >;
 	private:
 		std::map< std::type_index, erased_function_t > methodTable_; 
 	public:
-		auto define_erased( const std::type_info& register_type_info, const std::function< R( void*, ARGS... ) >& f )
+		auto define_erased( const std::type_info& register_type_info, const erased_function_t& f )
 		{
 			auto entry = methodTable_.find( register_type_info );
 			if( entry != methodTable_.end() )
@@ -28,19 +68,20 @@ namespace BitFactory::simple_open_method
 			return definition{};
 		}
 		template< typename SELF >
-		auto define( const std::function< R( SELF*, ARGS... ) >& f )
+		auto define( const auto& f )
 		{
-			return define_erased( typeid( SELF ), [ f ]( void* self, ARGS... args )->R
+			return define_erased( typeid( SELF ), [ f ]( erased_t erased, ARGS... args )->R
 			{
-				return f( reinterpret_cast< SELF* >( self ), std::forward< ARGS >( args )... );
+				return f( unerased< SELF, DISPATCH >{}( erased ), std::forward< ARGS >( args )... );
 			});
 		}
-		template< typename SELF >
-		R operator()( SELF* self, ARGS&&... args ) const
+		template< typename PARAM >
+		R operator()( PARAM self, ARGS&&... args ) const
 		{
+			using SELF = std::remove_pointer_t< PARAM >;
 			return (*this)( typeid( SELF ), self, std::forward< ARGS >( args )... );
 		}
-		R operator()( const std::type_info& type_info, void* self, ARGS&&... args ) const
+		R operator()( const std::type_info& type_info, erased_t self, ARGS&&... args ) const
 		{
 			auto entry = methodTable_.find( type_info );
 			if( entry == methodTable_.end() )
@@ -60,6 +101,4 @@ namespace BitFactory::simple_open_method
 		}
 		class definition{};
 	};
-
-
 }

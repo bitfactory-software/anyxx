@@ -17,7 +17,7 @@ namespace BitFactory::simple_open_method
 
 		template< typename T > std::string ToString( T* ){ return typeid( T ).name(); }  
 
-		template< typename T > void call( const declare< std::string >& method )
+		template< typename T > void call( const declare< std::string, void >& method )
 		{ 
 				std::cout << method( static_cast< T* >( nullptr ) ) << "\n";
 		}
@@ -30,7 +30,7 @@ namespace BitFactory::simple_open_method
 			using namespace TestDomain;
 
 			{
-				auto toString = declare< std::string >{};
+				auto toString = declare< std::string, void >{};
 				
 				toString.define< A1 >( []( A1* x ){ return ToString( x ); } );
 
@@ -54,7 +54,7 @@ namespace BitFactory::simple_open_method
 			}
 
 			{
-				auto toString = declare< std::string >{};
+				auto toString = declare< std::string, void >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, []( auto s ){ return ToString( s ); } );
 				class_hierarchy::visit_classes< classes >( 
