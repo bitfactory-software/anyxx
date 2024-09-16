@@ -7,8 +7,6 @@
 #include <functional>
 #include <type_traits>
 
-#include "error.h"
-
 namespace BitFactory::simple_open_method
 {
 	template< typename P > auto to_typed_void( const P* p ){ return std::pair< const std::type_info&, const void* >{ typeid( P ), p }; }
@@ -64,6 +62,11 @@ namespace BitFactory::simple_open_method
 	std::any get_erased( std::any& any ) { return any; }
 	const void* get_erased( std::pair< const std::type_info&, const void* >& typed_void ) { return typed_void.second; }
 	void* get_erased( std::pair< const std::type_info&, void* >& typed_void ) { return typed_void.second; }
+
+	class error : public std::runtime_error
+	{
+		using std::runtime_error::runtime_error;
+	};
 
 	template< typename R, typename DISPATCH, typename... ARGS >
 	class declare
