@@ -24,7 +24,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF >  struct unerased< SELF, const std::any >
 	{
 		using type = const SELF*;
-		type operator()( const std::any& erased ) const { return std::any_cast< const SELF >( &erased ); };
+		auto operator()( const std::any& erased ) const { return std::any_cast< const SELF >( &erased ); };
 	};
 	template<>  struct erased< std::any >
 	{
@@ -34,7 +34,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF > struct unerased< SELF, std::any >
 	{
 		using type = SELF*;
-		type operator()( std::any& erased ) const { return std::any_cast< SELF >( &erased ); };
+		auto operator()( std::any& erased ) const { return std::any_cast< SELF >( &erased ); };
 	};
 	template<>  struct erased< const void >
 	{
@@ -44,7 +44,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF >  struct unerased< SELF, const void >
 	{
 		using type = const SELF*;
-		type operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
+		auto operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
 	};
 	template<>  struct erased< void >
 	{
@@ -54,7 +54,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF >  struct unerased< SELF, void >
 	{
 		using type = SELF*;
-		type operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
+		auto operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
 	};
 
 	const std::type_info& get_type_info( const std::any& any ) { return any.type(); }
