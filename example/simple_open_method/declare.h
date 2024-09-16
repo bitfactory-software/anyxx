@@ -5,10 +5,12 @@
 #include <stdexcept>
 #include <functional>
 
-#include "error.h"
-
 namespace BitFactory::simple_open_method
 {
+	class error : public std::runtime_error
+	{
+		using std::runtime_error::runtime_error;
+	};
 	template< typename R, typename... ARGS >
 	class declare
 	{

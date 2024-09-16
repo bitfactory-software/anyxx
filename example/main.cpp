@@ -6,7 +6,7 @@
 
 #include "3rd_party/proxy.h"
 
-#include "simple_open_method/define.h"
+#include "simple_open_method/declare.h"
 #include "utilities/type_list.h"
 #include "class_hierarchy/class_hierarchy.h"
 

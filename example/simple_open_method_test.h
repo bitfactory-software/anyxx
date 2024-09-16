@@ -3,7 +3,7 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "simple_open_method/define.h"
+#include "simple_open_method/declare.h"
 #include "simple_open_method/interpolate.h"
 #include "simple_open_method/fill_with_overloads.h"
 #include "class_hierarchy/class_hierarchy.h"

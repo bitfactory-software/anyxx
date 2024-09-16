@@ -58,6 +58,4 @@ namespace BitFactory::simple_open_method
 		}
 		class definition{};
 	};
-
-
 }
