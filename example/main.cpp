@@ -144,14 +144,14 @@ int main()
     using types = BitFactory::type_list< int, double, X >;
     types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
 
-    update( &o, "->updated" );
+    update( BitFactory::simple_open_method::to_typed_void( &o ), "->updated" );
     std::cout << ToString_( o ) << "\n";
 
     auto dataOriginal = GetData( *op );
     auto dataWriteable = GetData( *cp );
     std::cout << dataOriginal << ", " << dataWriteable << "\n"; 
 
-    update( pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable, "->updated!!!" );
+    update( std::pair< const std::type_info&, void* >{ pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable }, "->updated!!!" );
     std::cout << ToString( *cp ) << "\n";
 
     

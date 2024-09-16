@@ -36,7 +36,8 @@ namespace BitFactory::simple_open_method
 
 				call< A1 >( toString );
 
-				std::cout << toString( static_cast< A1* >( nullptr ) ) << "\n";
+				auto tv = to_typed_void( static_cast< A1* >( nullptr ) );
+				std::cout << toString( tv ) << "\n";
 				try
 				{
 					call< D >( toString );
