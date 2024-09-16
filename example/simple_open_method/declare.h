@@ -18,7 +18,7 @@ namespace BitFactory::simple_open_method
 	template< typename, typename >  struct unerased;
 	template<>  struct erased< const std::any >
 	{
-		using type = const std::any&;
+		using type = const std::any;
 		using param = const std::any&;
 	};
 	template< typename SELF >  struct unerased< SELF, const std::any >
