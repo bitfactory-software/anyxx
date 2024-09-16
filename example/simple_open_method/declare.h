@@ -59,6 +59,7 @@ namespace BitFactory::simple_open_method
 
 	const std::type_info& get_type_info( const std::any& any ) { return any.type(); }
 	const std::type_info& get_type_info( const  std::pair< const std::type_info&, const void* >& typed_void ) { return typed_void.first; }
+	const std::type_info& get_type_info( const  std::pair< const std::type_info&, void* >& typed_void ) { return typed_void.first; }
 	const std::any get_erased( const std::any& any ) { return any; }
 	std::any get_erased( std::any& any ) { return any; }
 	const void* get_erased( std::pair< const std::type_info&, const void* >& typed_void ) { return typed_void.second; }
@@ -90,25 +91,19 @@ namespace BitFactory::simple_open_method
 				return f( unerased< SELF, DISPATCH >{}( erased ), std::forward< ARGS >( args )... );
 			});
 		}
-		//template< typename PARAM >
-		//R operator()( PARAM self, ARGS&&... args ) const
+		//R operator()( const std::pair< const std::type_info&, erased_t > param, ARGS&&... args ) const
 		//{
-		//	using SELF = std::remove_pointer_t< PARAM >;
-		//	return (*this)( typed_void{ typeid( SELF ), self }, std::forward< ARGS >( args )... );
-		//}
-		//R operator()( const std::type_info& type_info, erased_t self, ARGS&&... args ) const
-		//{
-		//	auto entry = methodTable_.find( type_info );
+		//	auto entry = methodTable_.find( param.first );
 		//	if( entry == methodTable_.end() )
 		//		throw error( "No registered method." );
-		//	return entry->second( self, std::forward< ARGS >( args )... );
+		//	return entry->second( param.second, std::forward< ARGS >( args )... );
 		//}	
-		R operator()( param_t&& param, ARGS&&... args ) const
+		R operator()( param_t param, ARGS&&... args ) const
 		{
-			auto entry = methodTable_.find( get_type_info( std::forward< param_t >( param ) ) );
+			auto entry = methodTable_.find( get_type_info( param ) );
 			if( entry == methodTable_.end() )
 				throw error( "No registered method." );
-			return entry->second( get_erased( std::forward< param_t >( param ) ), std::forward< ARGS >( args )... );
+			return entry->second( get_erased( param ), std::forward< ARGS >( args )... );
 		}	
 		erased_function_t is_defined( const std::type_info& type_info )
 		{
