@@ -24,7 +24,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF >  struct unerased< SELF, const std::any >
 	{
 		using type = const SELF*;
-		auto operator()( const std::any& erased ){ return std::any_cast< type >( erased ); };
+		type operator()( const std::any& erased ) const { return std::any_cast< const SELF >( &erased ); };
 	};
 	template<>  struct erased< std::any >
 	{
@@ -34,7 +34,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF > struct unerased< SELF, std::any >
 	{
 		using type = SELF*;
-		auto operator()( std::any& erased ){ return std::any_cast< type >( erased ); };
+		type operator()( std::any& erased ) const { return std::any_cast< SELF >( &erased ); };
 	};
 	template<>  struct erased< const void >
 	{
@@ -44,7 +44,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF >  struct unerased< SELF, const void >
 	{
 		using type = const SELF*;
-		auto operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
+		type operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
 	};
 	template<>  struct erased< void >
 	{
@@ -54,7 +54,7 @@ namespace BitFactory::simple_open_method
 	template< typename SELF >  struct unerased< SELF, void >
 	{
 		using type = SELF*;
-		auto operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
+		type operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
 	};
 
 	const std::type_info& get_type_info( const std::any& any ) { return any.type(); }
@@ -91,13 +91,6 @@ namespace BitFactory::simple_open_method
 				return f( unerased< SELF, DISPATCH >{}( erased ), std::forward< ARGS >( args )... );
 			});
 		}
-		//R operator()( const std::pair< const std::type_info&, erased_t > param, ARGS&&... args ) const
-		//{
-		//	auto entry = methodTable_.find( param.first );
-		//	if( entry == methodTable_.end() )
-		//		throw error( "No registered method." );
-		//	return entry->second( param.second, std::forward< ARGS >( args )... );
-		//}	
 		R operator()( param_t param, ARGS&&... args ) const
 		{
 			auto entry = methodTable_.find( get_type_info( param ) );
