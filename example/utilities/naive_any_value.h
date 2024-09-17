@@ -14,16 +14,16 @@ class any_value
 private:
     struct concept_
     {
-        virtual void* data() = 0;
+  //      virtual void* data() = 0;
         virtual concept_* clone() = 0;
         ~concept_() = default;
     };
     template< typename VALUE >
-    struct model : concept_
+    struct model final : concept_
     {
         VALUE value_;
         model( VALUE&& value ) : value_( std::forward< VALUE >( value ) ){}
-        void* data() override { return &value_; }
+//        void* data() override { return &value_; }
         concept_* clone() override { return new model( VALUE{ value_ } ); }
     };
     std::unique_ptr< concept_ > value_;
@@ -53,9 +53,10 @@ public:
         swap( rhs.value_, lhs.value_ );
         swap( rhs.type_info_, lhs.type_info_ );
     }
-    bool has_value() const { return static_cast< bool >( value_->data() ); }
+    bool has_value() const { return static_cast< bool >( value_ ); }
     explicit operator bool() const { return has_value(); }
-    void* data() { return value_->data(); }
+//    void* data() { return value_->data(); } // via v-table
+    void* data() { return &static_cast< model< std::string >* >( value_.get() )->value_; } // we know, what we do.
     const void* data() const { return value_.get(); }
     const std::type_info& type() const { return *type_info_; }
 };
