@@ -9,6 +9,7 @@
 #include "simple_open_method/declare.h"
 #include "utilities/type_list.h"
 #include "class_hierarchy/class_hierarchy.h"
+#include "utilities/any_function.h"
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
@@ -157,5 +158,16 @@ int main()
     
     BitFactory::class_hierarchy::test_class_hierarchy();
     BitFactory::simple_open_method::test_simple_open_method();
+
+
+    //any_function< std::string( int ) > toString1 { []( int i ){ return std::to_string( i ); } };
+    auto x = []( int i )->std::string{ return std::to_string( i ); };
+    std::cout << x( 4711 ) << std::endl;
+    //any_function< std::string( int ) > toString{ std::move( x ) };
+    static_assert( std::invocable< decltype( x ), int > );
+    any_function< std::string( int ) > toString( x );
+    std::cout << toString( 4711 ) << std::endl;
+
+    return 0;
 }
 
