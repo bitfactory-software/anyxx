@@ -9,7 +9,8 @@
 #include "simple_open_method/declare.h"
 #include "utilities/type_list.h"
 #include "class_hierarchy/class_hierarchy.h"
-#include "utilities/any_function.h"
+#include "utilities/naive_any_function.h"
+#include "utilities/naive_any_value.h"
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
