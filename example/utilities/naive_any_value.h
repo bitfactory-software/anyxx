@@ -14,7 +14,7 @@
 //    {
 //        ~concept_() = default;
 //    };
-//    template< typename CALLABLE >
+//    template< typename VALUE >
 //    struct model : concept_
 //    {
 //        model( CALLABLE&& callable ) : callable_( std::forward< CALLABLE >( callable ) ){}
@@ -37,5 +37,5 @@
 //    R operator()( ARGS&&... args ) const { return callable_->invoke( std::forward< ARGS >( args )... ); }
 //};
 //
-//
+
 
