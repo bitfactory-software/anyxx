@@ -22,29 +22,28 @@ private:
     struct model : concept_
     {
         CALLABLE callable_;
-        model( const CALLABLE& callable ) : callable_( callable ){}
-        //model( CALLABLE&& callable ) : callable_( std::move( callable ) ){}
+        model( CALLABLE&& callable ) : callable_( std::forward< CALLABLE >( callable ) ){}
         R invoke( ARGS&&... args ) override { return  callable_( std::forward< ARGS >( args )... ); }
     };
     std::shared_ptr< concept_ > callable_;
 public:
     any_function() = default;
-    //~any_function() = default;
-    //any_function( const any_function& ) = default;
-    //any_function& operator=( const any_function& ) = default;
-    //any_function( any_function&& ) = default;
-    //any_function& operator=( any_function&& ) = default;
-//    template< typename X > any_function( const std::initializer_list< X >& ) = delete;
+    ~any_function() = default;
+    any_function( const any_function& ) = default;
+    any_function& operator=( const any_function& ) = default;
+    any_function( any_function&& ) = default;
+    any_function& operator=( any_function&& ) = default;
     template< typename CALLABLE >
-        any_function( const CALLABLE& callable )
+        any_function( CALLABLE&& callable )
             requires ( std::invocable< CALLABLE, ARGS... > ) 
-        : callable_( std::make_shared< model< CALLABLE > >( callable ) ) 
+        : callable_( std::make_shared< model< CALLABLE > >( std::forward< CALLABLE >( callable ) ) ) 
         {}
-    //template< typename CALLABLE > : requires std::invokeable< CALLABLE, R, ARGS... >
-    //    any_function( CALLABLE&& callable ) : callable_( std::make_shared< model< CALLABLE > >( std::move( callable ) ) {}
     bool has_value() const { return callable_; }
     explicit operator bool() const { return callable_; }
-    R operator()( ARGS&&... args ){ return callable_->invoke( std::forward< ARGS >( args )... ); }
+    R operator()( ARGS&&... args ) const { return callable_->invoke( std::forward< ARGS >( args )... ); }
+    friend void swap( any_function& lhs, any_function& rhs )
+        {
+    }
 };
 
 

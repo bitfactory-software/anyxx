@@ -160,13 +160,28 @@ int main()
     BitFactory::simple_open_method::test_simple_open_method();
 
 
-    //any_function< std::string( int ) > toString1 { []( int i ){ return std::to_string( i ); } };
-    auto x = []( int i )->std::string{ return std::to_string( i ); };
+    any_function< std::string( int ) > toString0;
+    any_function< std::string( int ) > toString1 { []( int i ){ return std::to_string( i ) + "1"; } };
+    std::cout << "1: " << toString1( 4711 ) << std::endl;
+
+    auto x = []( int i )->std::string{ return std::to_string( i ) + "x"; };
     std::cout << x( 4711 ) << std::endl;
-    //any_function< std::string( int ) > toString{ std::move( x ) };
-    static_assert( std::invocable< decltype( x ), int > );
-    any_function< std::string( int ) > toString( x );
-    std::cout << toString( 4711 ) << std::endl;
+
+    auto y = []( int i )->std::string{ return std::to_string( i ) + "y"; };
+    std::cout << y( 4711 ) << std::endl;
+
+    any_function< std::string( int ) > toString2 ( x );
+    std::cout << "2: " << toString2( 4711 ) << std::endl;
+
+    any_function< std::string( int ) > toString3 ( toString1 );
+    std::cout << "3: " << toString3( 4711 ) << std::endl;
+
+    toString2 = toString3;
+    std::cout << "2: " << toString2( 4711 ) << std::endl;
+    std::cout << "3: " << toString3( 4711 ) << std::endl;
+
+    toString2 = y;
+    std::cout << "2: " << toString2( 4711 ) << std::endl;
 
     return 0;
 }
