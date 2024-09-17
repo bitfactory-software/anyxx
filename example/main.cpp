@@ -160,6 +160,7 @@ int main()
     BitFactory::class_hierarchy::test_class_hierarchy();
     BitFactory::simple_open_method::test_simple_open_method();
 
+    std::cout << "any_function..." << std::endl << std::endl;
 
     any_function< std::string( int ) > toString0;
     any_function< std::string( int ) > toString1 { []( int i ){ return std::to_string( i ) + "1"; } };
@@ -183,6 +184,33 @@ int main()
 
     toString2 = y;
     std::cout << "2: " << toString2( 4711 ) << std::endl;
+
+    std::cout << "any_value ..." << std::endl << std::endl;
+
+    any_value a0;
+    std::cout << "a1 " << a0.type().name() << std::endl;
+    try
+    {
+        any_value_cast< int >( a0 );
+        std::cout << "error! must throw!" << std::endl;
+    }
+    catch( bad_any_value_cast& e)
+    {
+        std::cout << "cathed: " << e.what() << std::endl;
+    }
+    any_value a1 = 4711;
+    std::cout << "a1 " << a1.type().name() << std::endl;
+    auto helloWorld = "hello world";
+    any_value a2 = helloWorld;
+    std::cout << "a2 " << a2.type().name() << std::endl;
+    any_value a3 = std::string{ "hello any_value" };
+    std::cout << "a3 " << a3.type().name() << std::endl;
+
+    std::cout << "a1 " << any_value_cast< int >( a1 ) << std::endl;
+    std::cout << "a2" << any_value_cast< decltype( helloWorld ) >( a2 ) << std::endl;
+    std::cout << "a2" << any_value_cast< const char* >(a2) << std::endl;
+    std::cout << "a3" << any_value_cast< std::string >( a3 ) << std::endl;
+    
 
     return 0;
 }

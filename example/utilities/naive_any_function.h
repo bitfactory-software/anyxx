@@ -41,9 +41,6 @@ public:
     bool has_value() const { return target_; }
     explicit operator bool() const { return target_; }
     R operator()( ARGS&&... args ) const { return target_->invoke( std::forward< ARGS >( args )... ); }
-    friend void swap( any_function& lhs, any_function& rhs )
-        {
-    }
 };
 
 
