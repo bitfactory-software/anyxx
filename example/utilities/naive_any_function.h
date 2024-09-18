@@ -7,6 +7,9 @@
 #include <type_traits>
 #include <concepts>
 
+namespace naive
+{
+
 template< typename R, typename... ARGS >
 class any_function;
 template< typename R, typename... ARGS >
@@ -43,5 +46,4 @@ public:
     R operator()( ARGS&&... args ) const { return target_->invoke( std::forward< ARGS >( args )... ); }
 };
 
-
-
+}

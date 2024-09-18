@@ -18,14 +18,14 @@ private:
         virtual R invoke( ARGS&&... args ) = 0;
         ~concept_() = default;
     };
-    template< typename CALLABLE >
-    struct model final: concept_
+    template< typename TARGET >
+    struct model : concept_
     {
-        CALLABLE callable_;
-        model( CALLABLE&& callable ) : callable_( std::forward< CALLABLE >( callable ) ){}
-        R invoke( ARGS&&... args ) override { return  callable_( std::forward< ARGS >( args )... ); }
+        TARGET target_;
+        model( TARGET&& target ) : target_( std::forward< TARGET >( target ) ){}
+        R invoke( ARGS&&... args ) override { return  target_( std::forward< ARGS >( args )... ); }
     };
-    std::shared_ptr< concept_ > callable_;
+    std::shared_ptr< concept_ > target_;
 public:
     any_function() = default;
     ~any_function() = default;
@@ -33,17 +33,14 @@ public:
     any_function& operator=( const any_function& ) = default;
     any_function( any_function&& ) = default;
     any_function& operator=( any_function&& ) = default;
-    template< typename CALLABLE >
-        any_function( CALLABLE&& callable )
-            requires ( std::invocable< CALLABLE, ARGS... > ) 
-        : callable_( std::make_shared< model< CALLABLE > >( std::forward< CALLABLE >( callable ) ) ) 
+    template< typename TARGET >
+        any_function( TARGET&& target )
+            requires ( std::invocable< TARGET, ARGS... > ) 
+        : target_( std::make_shared< model< TARGET > >( std::forward< TARGET >( target ) ) ) 
         {}
-    bool has_value() const { return callable_; }
-    explicit operator bool() const { return callable_; }
-    R operator()( ARGS&&... args ) const { return callable_->invoke( std::forward< ARGS >( args )... ); }
-    friend void swap( any_function& lhs, any_function& rhs )
-        {
-    }
+    bool has_value() const { return target_; }
+    explicit operator bool() const { return target_; }
+    R operator()( ARGS&&... args ) const { return target_->invoke( std::forward< ARGS >( args )... ); }
 };
 
 

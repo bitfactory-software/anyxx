@@ -106,35 +106,8 @@ namespace
     auto updateX = update.define< X >( []( X* x, const std::string& u ){ x->s += u; } );
 }
 
-int main()
+template< template< typename, typename... > class any_function, typename any_value > void test_any()
 {
-    auto o = X{ "hallo" };
-    pro::proxy<Shareable> op{ &o };
-    auto cp = ToWriteable( *op );
-    std::cout << ToString( *op ) << "\n";
-    std::cout << ToString( *cp ) << "\n";
-    o.s = "world";
-    std::cout << ToString( *op ) << "\n";
-    std::cout << ToString( *cp ) << "\n";
-    
-    std::cout << pro::proxy_reflect<MetaData>(cp).type_info.name() << "\n"; 
-
-    using types = BitFactory::type_list< int, double, X >;
-    types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
-
-    update( BitFactory::simple_open_method::to_typed_void( &o ), "->updated" );
-    std::cout << ToString_( o ) << "\n";
-
-    auto dataOriginal = GetData( *op );
-    auto dataWriteable = GetData( *cp );
-    std::cout << dataOriginal << ", " << dataWriteable << "\n"; 
-
-    update( std::pair< const std::type_info&, void* >{ pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable }, "->updated!!!" );
-    std::cout << ToString( *cp ) << "\n";
-
-    
-    BitFactory::class_hierarchy::test_class_hierarchy();
-    BitFactory::simple_open_method::test_simple_open_method();
 
     std::cout << "any_function..." << std::endl << std::endl;
 
@@ -170,7 +143,7 @@ int main()
         any_value_cast< int >( a0 );
         std::cout << "error! must throw!" << std::endl;
     }
-    catch( bad_any_value_cast& e)
+    catch( std::runtime_error& e)
     {
         std::cout << "cathed: " << e.what() << std::endl;
     }
@@ -183,10 +156,52 @@ int main()
     std::cout << "a3 " << a3.type().name() << std::endl;
 
     std::cout << "a1 " << any_value_cast< int >( a1 ) << std::endl;
-    std::cout << "a2" << any_value_cast< decltype( helloWorld ) >( a2 ) << std::endl;
-    std::cout << "a2" << any_value_cast< const char* >(a2) << std::endl;
-    std::cout << "a3" << any_value_cast< std::string >( a3 ) << std::endl;
+    std::cout << "a2 " << any_value_cast< decltype( helloWorld ) >( a2 ) << std::endl;
+    std::cout << "a2 " << any_value_cast< const char* >(a2) << std::endl;
+    std::cout << "a3 " << any_value_cast< std::string >( a3 ) << std::endl;
+}
+
+template< typename T > void trace_alignof()
+{
+    std::cout << "alignof(" << typeid( T ).name() << "): " << alignof( T ) << std::endl;
+
+}
+int main()
+{
+    trace_alignof< const char* >();
+    trace_alignof< std::string >();
+    trace_alignof< int >();
+    trace_alignof< double >();
+
+    auto o = X{ "hallo" };
+    pro::proxy<Shareable> op{ &o };
+    auto cp = ToWriteable( *op );
+    std::cout << ToString( *op ) << "\n";
+    std::cout << ToString( *cp ) << "\n";
+    o.s = "world";
+    std::cout << ToString( *op ) << "\n";
+    std::cout << ToString( *cp ) << "\n";
     
+    std::cout << pro::proxy_reflect<MetaData>(cp).type_info.name() << "\n"; 
+
+    using types = BitFactory::type_list< int, double, X >;
+    types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
+
+    update( BitFactory::simple_open_method::to_typed_void( &o ), "->updated" );
+    std::cout << ToString_( o ) << "\n";
+
+    auto dataOriginal = GetData( *op );
+    auto dataWriteable = GetData( *cp );
+    std::cout << dataOriginal << ", " << dataWriteable << "\n"; 
+
+    update( std::pair< const std::type_info&, void* >{ pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable }, "->updated!!!" );
+    std::cout << ToString( *cp ) << "\n";
+
+    
+    BitFactory::class_hierarchy::test_class_hierarchy();
+    BitFactory::simple_open_method::test_simple_open_method();
+
+    test_any< naive::any_function, naive::any_value >();
 
     return 0;
 }

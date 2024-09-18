@@ -9,19 +9,27 @@
 #include <stdexcept>
 #include <sstream>
 
+namespace naive
+{
+
 class any_value
 {
 private:
     struct concept_
     {
-  //      virtual void* data() = 0;
+//        virtual void* data() = 0;
         virtual concept_* clone() = 0;
         ~concept_() = default;
     };
     template< typename VALUE >
     struct model final : concept_
     {
-        VALUE value_;
+        union
+        {
+            std::remove_reference_t< VALUE > value_;
+            long _to_ensure_same_offset_for_all_VALUEs;
+        };
+        ~model() { delete &value_; }
         model( VALUE&& value ) : value_( std::forward< VALUE >( value ) ){}
 //        void* data() override { return &value_; }
         concept_* clone() override { return new model( VALUE{ value_ } ); }
@@ -55,8 +63,8 @@ public:
     }
     bool has_value() const { return static_cast< bool >( value_ ); }
     explicit operator bool() const { return has_value(); }
-//    void* data() { return value_->data(); } // via v-table
-    void* data() { return &static_cast< model< std::string >* >( value_.get() )->value_; } // we know, what we do.
+    //void* data() { return value_->data(); } // via v-table
+    void* data() {  return &static_cast< model< long >* >( value_.get() )->value_; } // we place the value_ for all types via union to the same offset, so we can do this.
     const void* data() const { return value_.get(); }
     const std::type_info& type() const { return *type_info_; }
 };
@@ -91,3 +99,4 @@ template< typename TO > TO&         any_value_cast( any_value& any )       { ret
 template< typename TO > const TO*   any_value_cast( const any_value* any ) { return any_value_cast< TO > ( &any, ignore_any_value_cast_missmatch ) ; }
 template< typename TO > TO*         any_value_cast( any_value* any )       { return any_value_cast< TO >( &any, ignore_any_value_cast_missmatch ) ; }
 
+}
