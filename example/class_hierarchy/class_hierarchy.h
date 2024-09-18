@@ -11,7 +11,6 @@
 namespace class_hierarchy
 {
 	template< typename CLASS > struct describe;
-
 };
 
 namespace BitFactory::class_hierarchy
