@@ -1,0 +1,5 @@
+﻿add_subdirectory ("1_Callback_Inheritance")
+add_subdirectory ("2_Callback_TypeErased")
+add_subdirectory ("3_Sink_Inheritance")
+add_subdirectory ("4_Sink_TypeErased")
+add_subdirectory ("5_Sink_TypeErased_w_Type_info_dispatch")
