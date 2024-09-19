@@ -70,44 +70,6 @@ namespace BitFactory::simple_open_method
 					, [&]< typename C, typename B >	{}
 					});
 			}
-
-			std::cout << "\n";
-			std::cout << "dispatch via std::any" << "\n";
-			{
-				auto toString = declare< std::string, const std::any >{};
-				
-				toString.define< A1 >( []( const A1* x ){ return ToString( x ); } );
-
-				call_any< A1 >( toString );
-
-				auto a1 = std::make_any< A1 >();
-				std::cout << toString( a1 ) << "\n";
-				try
-				{
-					call_any< D >( toString );
-					std::cout << "error: should not work!" << "\n";
-				}
-				catch( simple_open_method::error& error )
-				{
-					std::cout << error.what() << " as expected." << "\n";
-				}
-				class_hierarchy::classes_with_bases registry;
-				declare_deep< D >( registry );
-				interpolate( toString, registry );
-				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
-				call_any< D >( toString );
-			}
-
-			{
-				auto toString = declare< std::string, const std::any >{};
-				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( toString, []( auto s ){ return ToString( s ); } );
-				class_hierarchy::visit_classes< classes >( 
-					overload
-					{ [&]< typename C >				{ call_any< C >( toString ); }
-					, [&]< typename C, typename B >	{}
-					});
-			}
 		}
 	}
 }
