@@ -63,12 +63,12 @@ namespace BitFactory::simple_open_method
 		template< typename CLASS >
 		static auto to_function_ptr( auto functor )
 		{
-			static decltype( functor ) s_functor = functor;
+			using functor_t = decltype( functor );
 			using class_param_t = self_pointer< DISPATCH >::template type< CLASS >;
 			using function_ptr_t = R(*)(class_param_t, ARGS...);
 			static function_ptr_t function_ptr = +[]( class_param_t self, ARGS&&... args )->R
 			{
-				return s_functor( self, std::forward< ARGS >( args )... );
+					return functor_t{}( self, std::forward< ARGS >( args )... );
 			};
 			return function_ptr;
 		}
