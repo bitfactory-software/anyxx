@@ -127,8 +127,7 @@ namespace BitFactory::simple_open_method
 		void self_test() const
 		{
 			for( std::size_t i = 0; i < methodTable_.size(); ++i )
-		        if( auto found = phashTable_.lookup( &methodTable_[ i ].first, hash_method_lookup ); i != found )
-					throw error( "phashTable corrupt" );
+		        lookup( methodTable_[ i ].first );
 		}
 		static auto hash_method_build( const void *p, uint32_t i, uint32_t param )->uint32_t
 		{
