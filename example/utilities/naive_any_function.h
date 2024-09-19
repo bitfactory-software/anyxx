@@ -19,7 +19,7 @@ private:
     struct concept_
     {
         virtual R invoke( ARGS&&... args ) = 0;
-        ~concept_() = default;
+        virtual ~concept_() = default;
     };
     template< typename TARGET >
     struct model : concept_
@@ -30,15 +30,10 @@ private:
     };
     std::shared_ptr< concept_ > target_;
 public:
-    any_function() = default;
-    ~any_function() = default;
-    any_function( const any_function& ) = default;
-    any_function& operator=( const any_function& ) = default;
-    any_function( any_function&& ) = default;
-    any_function& operator=( any_function&& ) = default;
     template< typename TARGET >
         any_function( TARGET&& target )
             requires ( std::invocable< TARGET, ARGS... > ) 
+                && (!std::same_as< any_function, std::remove_reference_t< TARGET > > )
         : target_( std::make_shared< model< TARGET > >( std::forward< TARGET >( target ) ) ) 
         {}
     bool has_value() const { return target_; }

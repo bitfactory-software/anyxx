@@ -108,10 +108,8 @@ namespace
 
 template< template< typename, typename... > class any_function, typename any_value > void test_any()
 {
-
     std::cout << "any_function..." << std::endl << std::endl;
 
-    any_function< std::string( int ) > toString0;
     any_function< std::string( int ) > toString1 { []( int i ){ return std::to_string( i ) + "1"; } };
     std::cout << "1: " << toString1( 4711 ) << std::endl;
 
