@@ -162,4 +162,56 @@ namespace BitFactory::simple_open_method
 			}
 		}
 	};
+
+	template< typename R, typename... ARGS >
+	class factory
+	{
+	public:
+		using factory_function_t = R(*)( ARGS... );
+	private:
+		type_info_dispatch< factory_function_t > methodTable_;
+	public:
+		auto define_erased( const std::type_info& ti, factory_function_t f ) { return methodTable_.define_erased( ti, f ); }
+		template< typename CLASS, typename FACTORY >
+		auto define( FACTORY f )
+		{
+			auto fp = ensure_factory_ptr< CLASS >( f );
+			return methodTable_.define_erased( typeid( CLASS ), reinterpret_cast< factory_function_t >( fp ) );
+		}
+		R operator()( const std::type_info& type_info, ARGS&&... args ) const
+		{
+			auto f = methodTable_.lookup( type_info );
+			return f( std::forward< ARGS >( args )... );
+		}
+		template< typename CLASS > R operator()( ARGS&&... args ) const // to simplify tests!
+		{
+			return (*this)( typeid( CLASS ), std::forward< ARGS >( args )... );
+		}
+		factory_function_t is_defined( const std::type_info& type_info ) const
+		{
+			return methodTable_.is_defined( type_info );
+		}
+		template< typename C > auto is_defined() const
+		{
+			return is_defined( typeid( C ) );
+		}
+		void seal() { methodTable_.seal(); }
+	private:
+		template< typename CLASS >
+		static auto ensure_factory_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
+		{
+			using functor_t = decltype( functor );
+			if constexpr( std::is_pointer_v< functor_t > )
+			{
+				return functor;
+			}
+			else
+			{
+				return +[]( ARGS&&... args )->R
+				{
+					return functor_t{}. template operator()< CLASS >( std::forward< ARGS >( args )... );
+				};
+			}
+		}
+	};
 }

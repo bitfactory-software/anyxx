@@ -74,6 +74,33 @@ namespace BitFactory::simple_open_method
 					, [&]< typename C, typename B >	{}
 					});
 			}
+			{
+				auto any_factory = factory< std::any >{};
+				using classes = type_list< D, C1, C2 >;
+				fill_with_overloads< classes >( any_factory, []< typename T >()->std::any
+				{ 
+					//std::cout << "construct any for " << typeid( T ).name() << std::endl; 
+					return std::any( T() ); 
+				});
+				any_factory.seal();
+				auto test = [ & ]< typename T >()
+				{ 
+					std::cout << "any_factory for " << typeid( T ).name() << ": "; 
+					auto a = any_factory( typeid( T ) );
+					if( a.type() != typeid( T ) )
+						std::cout << "fail: " << a.type().name();
+					else
+						std::cout << "OK";
+					std::cout << std::endl;
+
+				};
+				class_hierarchy::visit_classes< classes >( 
+					overload
+					{ [&]< typename C >				{ test.template operator()< C >(); }
+					, [&]< typename C, typename B >	{}
+					});
+			}
+
 		}
 	}
 }
