@@ -15,22 +15,22 @@ namespace BitFactory::simple_open_method
 	template< typename >  struct erased;
 	template< typename, typename >  struct unerased;
 
-	template<>  struct erased< const void >
+	template<>  struct erased< const void* >
 	{
 		using type = const void*;
 		using param = std::pair< const std::type_info&, type >;
 	};
-	template< typename SELF >  struct unerased< SELF, const void >
+	template< typename SELF >  struct unerased< SELF, const void* >
 	{
 		using type = const SELF*;
 		auto operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
 	};
-	template<>  struct erased< void >
+	template<>  struct erased< void* >
 	{
 		using type = void*;
 		using param = std::pair< const std::type_info&, type >;
 	};
-	template< typename SELF >  struct unerased< SELF, void >
+	template< typename SELF >  struct unerased< SELF, void* >
 	{
 		using type = SELF*;
 		auto operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
@@ -48,6 +48,7 @@ namespace BitFactory::simple_open_method
 	};
 
 	template< typename R, typename DISPATCH, typename... ARGS >
+		requires ( std::same_as< DISPATCH, void* > || std::same_as< DISPATCH, const void* > ) 
 	class declare
 	{
 	public:

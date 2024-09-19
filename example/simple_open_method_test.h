@@ -14,16 +14,11 @@ namespace BitFactory::simple_open_method
 {
 	namespace
 	{
-
 		template< typename T > std::string ToString( const T* ){ return typeid( T ).name(); }  
 
-		template< typename T > void call( const declare< std::string, const void >& method )
+		template< typename T > void call( const declare< std::string, const void* >& method )
 		{ 
 				std::cout << method( to_typed_void( static_cast< const T* >( nullptr ) ) ) << "\n";
-		}
-		template< typename T > void call_any( const declare< std::string, const std::any >& method )
-		{ 
-				std::cout << method( std::make_any< T >() ) << "\n";
 		}
 
 		void test_simple_open_method()
@@ -36,7 +31,7 @@ namespace BitFactory::simple_open_method
 			std::cout << "\n";
 			std::cout << "dispatch via void" << "\n";
 			{
-				auto toString = declare< std::string, const void >{};
+				auto toString = declare< std::string, const void* >{};
 				
 				toString.define< A1 >( []( const A1* x ){ return ToString( x ); } );
 
@@ -61,7 +56,7 @@ namespace BitFactory::simple_open_method
 			}
 
 			{
-				auto toString = declare< std::string, const void >{};
+				auto toString = declare< std::string, const void* >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, []( auto s ){ return ToString( s ); } );
 				class_hierarchy::visit_classes< classes >( 
