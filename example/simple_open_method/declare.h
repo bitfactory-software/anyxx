@@ -13,27 +13,14 @@ namespace BitFactory::simple_open_method
 	template< typename P > auto to_typed_void( P* p ){ return std::pair< const std::type_info&, void* >{ typeid( P ), p }; }
 
 	template< typename >  struct erased;
-	template< typename, typename >  struct unerased;
 
-	template<>  struct erased< const void* >
+	template< typename SELF >  auto self_cast( void* erased )
 	{
-		using type = const void*;
-		using param = std::pair< const std::type_info&, type >;
+		return static_cast< SELF* >( erased );
 	};
-	template< typename SELF >  struct unerased< SELF, const void* >
+	template< typename SELF >  auto self_cast( const void* erased )
 	{
-		using type = const SELF*;
-		auto operator()( const void* erased ){ return reinterpret_cast< type >( erased ); };
-	};
-	template<>  struct erased< void* >
-	{
-		using type = void*;
-		using param = std::pair< const std::type_info&, type >;
-	};
-	template< typename SELF >  struct unerased< SELF, void* >
-	{
-		using type = SELF*;
-		auto operator()( void* erased ){ return reinterpret_cast< type >( erased ); };
+		return static_cast< const SELF* >( erased );
 	};
 
 	const std::type_info& get_type_info( const  std::pair< const std::type_info&, const void* >& typed_void ) { return typed_void.first; }
@@ -52,9 +39,8 @@ namespace BitFactory::simple_open_method
 	class declare
 	{
 	public:
-		using erased_t = erased< DISPATCH >::type;
-		using param_t = erased< DISPATCH >::param;
-		using erased_function_t = std::function< R( erased_t, ARGS... ) >;
+		using param_t = std::pair< const std::type_info&, DISPATCH >;
+		using erased_function_t = std::function< R( DISPATCH, ARGS... ) >;
 	private:
 		std::map< std::type_index, erased_function_t > methodTable_; 
 	public:
@@ -69,9 +55,9 @@ namespace BitFactory::simple_open_method
 		template< typename SELF >
 		auto define( const auto& f )
 		{
-			return define_erased( typeid( SELF ), [ f ]( erased_t erased, ARGS... args )->R
+			return define_erased( typeid( SELF ), [ f ]( DISPATCH erased, ARGS... args )->R
 			{
-				return f( unerased< SELF, DISPATCH >{}( erased ), std::forward< ARGS >( args )... );
+				return f( self_cast< SELF >( erased ), std::forward< ARGS >( args )... );
 			});
 		}
 		R operator()( param_t param, ARGS&&... args ) const
