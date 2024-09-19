@@ -18,15 +18,6 @@ namespace BitFactory::simple_open_method
 	template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
 	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
 
-	template< typename SELF >  auto self_cast( void* erased )
-	{
-		return static_cast< SELF* >( erased );
-	};
-	template< typename SELF >  auto self_cast( const void* erased )
-	{
-		return static_cast< const SELF* >( erased );
-	};
-
 	const std::type_info& get_type_info( const  std::pair< const std::type_info&, const void* >& typed_void ) { return typed_void.first; }
 	const std::type_info& get_type_info( const  std::pair< const std::type_info&, void* >& typed_void ) { return typed_void.first; }
 
