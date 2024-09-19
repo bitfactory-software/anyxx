@@ -12,7 +12,9 @@ namespace BitFactory::simple_open_method
 	template< typename P > auto to_typed_void( const P* p ){ return std::pair< const std::type_info&, const void* >{ typeid( P ), p }; }
 	template< typename P > auto to_typed_void( P* p ){ return std::pair< const std::type_info&, void* >{ typeid( P ), p }; }
 
-	template< typename >  struct erased;
+	template< typename >  struct self_pointer;
+	template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
+	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
 
 	template< typename SELF >  auto self_cast( void* erased )
 	{
@@ -40,11 +42,11 @@ namespace BitFactory::simple_open_method
 	{
 	public:
 		using param_t = std::pair< const std::type_info&, DISPATCH >;
-		using erased_function_t = std::function< R( DISPATCH, ARGS... ) >;
+		using erased_function_t = R(*)( DISPATCH, ARGS... );
 	private:
 		std::map< std::type_index, erased_function_t > methodTable_; 
 	public:
-		auto define_erased( const std::type_info& register_type_info, const erased_function_t& f )
+		auto define_erased( const std::type_info& register_type_info, erased_function_t f )
 		{
 			auto entry = methodTable_.find( register_type_info );
 			if( entry != methodTable_.end() )
@@ -52,13 +54,23 @@ namespace BitFactory::simple_open_method
 			methodTable_[ register_type_info ] = f;
 			return definition{};
 		}
-		template< typename SELF >
-		auto define( const auto& f )
+		template< typename SELF, typename FUNCTION_PTR >
+		auto define( FUNCTION_PTR f )
+			requires ( std::is_pointer_v< FUNCTION_PTR > )
 		{
-			return define_erased( typeid( SELF ), [ f ]( DISPATCH erased, ARGS... args )->R
+			return define_erased( typeid( SELF ), reinterpret_cast< erased_function_t >( f ) );
+		}
+		template< typename CLASS >
+		static auto to_function_ptr( auto functor )
+		{
+			static decltype( functor ) s_functor = functor;
+			using class_param_t = self_pointer< DISPATCH >::template type< CLASS >;
+			using function_ptr_t = R(*)(class_param_t, ARGS...);
+			static function_ptr_t function_ptr = +[]( class_param_t self, ARGS&&... args )->R
 			{
-				return f( self_cast< SELF >( erased ), std::forward< ARGS >( args )... );
-			});
+				return s_functor( self, std::forward< ARGS >( args )... );
+			};
+			return function_ptr;
 		}
 		R operator()( param_t param, ARGS&&... args ) const
 		{

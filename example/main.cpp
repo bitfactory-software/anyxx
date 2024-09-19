@@ -103,7 +103,7 @@ auto update = BitFactory::simple_open_method::declare< void, void*, const std::s
 
 namespace
 {
-    auto updateX = update.define< X >( []( X* x, const std::string& u ){ x->s += u; } );
+    auto updateX = update.define< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
 }
 
 template< template< typename, typename... > class any_function, typename any_value > void test_any()

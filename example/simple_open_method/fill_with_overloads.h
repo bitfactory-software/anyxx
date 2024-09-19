@@ -5,11 +5,12 @@
 
 namespace BitFactory::simple_open_method
 {
+
 	template< typename CLASS, typename DEFINITION >
 	void fill_with_overload( DEFINITION& method, auto wrapper )
 	{
 		if( !method.is_defined< CLASS >() )
-			method.define< CLASS >( wrapper );
+			method.define< CLASS >( DEFINITION::to_function_ptr< CLASS >( wrapper ) );
 	}
 
 	template< typename CLASSES, typename DEFINITION >
