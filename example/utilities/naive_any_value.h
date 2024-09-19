@@ -15,33 +15,33 @@ namespace naive
 class any_value
 {
 private:
+    struct concept_;
+    using model_ptr_t = std::unique_ptr< concept_ >;
     struct concept_
     {
-//        virtual void* data() = 0;
-        virtual concept_* clone() = 0;
-        ~concept_() = default;
+        virtual void* data() = 0;
+        virtual model_ptr_t clone() const = 0;
+        virtual ~concept_() = default;
     };
     template< typename VALUE >
     struct model final : concept_
     {
-        union
-        {
-            std::remove_reference_t< VALUE > value_;
-            long _to_ensure_same_offset_for_all_VALUEs;
-        };
-        ~model() { delete &value_; }
-        model( VALUE&& value ) : value_( std::forward< VALUE >( value ) ){}
-//        void* data() override { return &value_; }
-        concept_* clone() override { return new model( VALUE{ value_ } ); }
+        using value_t = VALUE;
+        value_t value_;
+        model( VALUE&& value ) : value_( std::forward< VALUE >( value ) ){ static_assert( std::same_as< value_t, std::remove_reference_t< VALUE > > ); }
+        void* data() override { return &value_; }
+        model_ptr_t clone() const override { return std::make_unique< model >( *this ); }
     };
-    std::unique_ptr< concept_ > value_;
+    model_ptr_t model_;
     struct has_no_value{};
     const std::type_info* type_info_ = &typeid( has_no_value );
 public:
     any_value() = default;
     ~any_value() = default;
     any_value( const any_value& rhs )
-        : value_( rhs ? rhs.value_->clone() : nullptr ){}
+        : model_( rhs ? rhs.model_->clone() : nullptr )
+        , type_info_ ( rhs.type_info_ )
+    {}
     any_value& operator=( const any_value& rhs )
     {
         any_value clone = rhs;
@@ -51,21 +51,22 @@ public:
     any_value& operator=( any_value&& ) = default;
     template< typename VALUE >
         any_value( VALUE&& value )
-            requires ( std::copy_constructible< VALUE > ) 
-        : value_( std::make_unique< model< VALUE > >( std::forward< VALUE >( value ) ) ) 
+            requires ( std::copy_constructible< std::remove_reference_t< VALUE > > )
+                && (!std::same_as< any_value, std::remove_reference_t< VALUE > > )
+                && (std::same_as< VALUE, std::remove_pointer_t< VALUE > > )
+        : model_( std::make_unique< model< std::remove_reference_t< VALUE > > >( std::forward< VALUE >( value ) ) ) 
         , type_info_( &typeid( VALUE ) )
         {}
     friend void swap( any_value& rhs, any_value& lhs )
     {
         using std::swap;
-        swap( rhs.value_, lhs.value_ );
+        swap( rhs.model_, lhs.model_ );
         swap( rhs.type_info_, lhs.type_info_ );
     }
-    bool has_value() const { return static_cast< bool >( value_ ); }
+    bool has_value() const { return static_cast< bool >( model_ ); }
     explicit operator bool() const { return has_value(); }
-    //void* data() { return value_->data(); } // via v-table
-    void* data() {  return &static_cast< model< long >* >( value_.get() )->value_; } // we place the value_ for all types via union to the same offset, so we can do this.
-    const void* data() const { return value_.get(); }
+    void* data() { return model_->data(); } // via v-table
+    const void* data() const { return model_.get(); }
     const std::type_info& type() const { return *type_info_; }
 };
 

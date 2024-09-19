@@ -149,16 +149,19 @@ template< template< typename, typename... > class any_function, typename any_val
     }
     any_value a1 = 4711;
     std::cout << "a1 " << a1.type().name() << std::endl;
-    auto helloWorld = "hello world";
-    any_value a2 = helloWorld;
-    std::cout << "a2 " << a2.type().name() << std::endl;
+    //auto helloWorld = "hello world";
+    //any_value a2 = helloWorld;
+    //std::cout << "a2 " << a2.type().name() << std::endl;
     any_value a3 = std::string{ "hello any_value" };
     std::cout << "a3 " << a3.type().name() << std::endl;
+    any_value a4 = a3;
+    std::cout << "a4 " << a4.type().name() << std::endl;
 
     std::cout << "a1 " << any_value_cast< int >( a1 ) << std::endl;
-    std::cout << "a2 " << any_value_cast< decltype( helloWorld ) >( a2 ) << std::endl;
-    std::cout << "a2 " << any_value_cast< const char* >(a2) << std::endl;
+    //std::cout << "a2 " << any_value_cast< decltype( helloWorld ) >( a2 ) << std::endl;
+    //std::cout << "a2 " << any_value_cast< const char* >(a2) << std::endl;
     std::cout << "a3 " << any_value_cast< std::string >( a3 ) << std::endl;
+    std::cout << "a4 " << any_value_cast< std::string >( a4 ) << std::endl;
 }
 
 template< typename T > void trace_alignof()
