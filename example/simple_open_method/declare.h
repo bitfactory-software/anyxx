@@ -7,6 +7,8 @@
 #include <functional>
 #include <type_traits>
 
+#include "phash/phash_table.hh"
+
 namespace BitFactory::simple_open_method
 {
 	template< typename P > auto to_typed_void( const P* p ){ return std::pair< const std::type_info&, const void* >{ typeid( P ), p }; }
@@ -45,14 +47,18 @@ namespace BitFactory::simple_open_method
 		using param_t = std::pair< const std::type_info&, DISPATCH >;
 		using erased_function_t = R(*)( DISPATCH, ARGS... );
 	private:
-		std::map< std::type_index, erased_function_t > methodTable_; 
+		using method_table_t = std::vector< std::pair< std::type_index, erased_function_t > >;;
+		method_table_t methodTable_;
+		gms::Phash_Table phashTable_;
+		bool sealed_ = false;
 	public:
 		auto define_erased( const std::type_info& register_type_info, erased_function_t f )
 		{
-			auto entry = methodTable_.find( register_type_info );
-			if( entry != methodTable_.end() )
+			if( sealed_ )
+				throw error( "This open_method is already seald." );
+			if( is_defined( register_type_info ) )
 				throw error( "Method for type already registered." );
-			methodTable_[ register_type_info ] = f;
+			methodTable_.push_back( { std::type_index( register_type_info ), f } );
 			return definition{};
 		}
 		template< typename CLASS, typename FUNCTION >
@@ -63,21 +69,42 @@ namespace BitFactory::simple_open_method
 		}
 		R operator()( param_t param, ARGS&&... args ) const
 		{
-			auto entry = methodTable_.find( get_type_info( param ) );
-			if( entry == methodTable_.end() )
-				throw error( "No registered method." );
-			return entry->second( get_erased( param ), std::forward< ARGS >( args )... );
-		}	
-		erased_function_t is_defined( const std::type_info& type_info )
+			if( !sealed_ )
+				throw error( "Not yet sealed." );
+			auto f = lookup( param.first );
+			return f( param.second, std::forward< ARGS >( args )... );
+		}
+		erased_function_t lookup( const std::type_info& type_info ) const
 		{
-			if( auto entry = methodTable_.find( type_info ); entry != methodTable_.end() )
-				return entry->second;
-			return nullptr_t{};
+			return lookup( std::type_index{ type_info } );
+		}
+		erased_function_t lookup( std::type_index type_index ) const
+		{
+			auto i = phashTable_.lookup( &type_index, hash_method_lookup );
+			const auto& found = methodTable_.at( i );
+			if( found.first != type_index )
+				throw error( "phash table corrupt." );
+			return found.second;
+		}
+		erased_function_t is_defined( const std::type_info& type_info ) const
+		{
+			auto found = std::ranges::find_if( methodTable_, [ & ]( const auto& entry ){ return entry.first == type_info; } );
+			if( found != methodTable_.end() )
+				return found->second;
+			return nullptr;
 		}
 		template< typename C >
-		erased_function_t is_defined()
+		auto is_defined() const
 		{
 			return is_defined( typeid( C ) );
+		}
+		void seal()
+		{
+			if( methodTable_.size() == 1 )
+				define_erased( typeid(nullptr_t), nullptr );
+			phashTable_ = gms::Phash_Table{ &methodTable_, (uint32_t)methodTable_.size(), hash_method_build };
+			self_test();
+			sealed_ = true;
 		}
 		struct definition{};
 	private:
@@ -96,6 +123,26 @@ namespace BitFactory::simple_open_method
 					return functor_t{}( self, std::forward< ARGS >( args )... );
 				};
 			}
+		}
+		void self_test() const
+		{
+			for( std::size_t i = 0; i < methodTable_.size(); ++i )
+		        if( auto found = phashTable_.lookup( &methodTable_[ i ].first, hash_method_lookup ); i != found )
+					throw error( "phashTable corrupt" );
+		}
+		static auto hash_method_build( const void *p, uint32_t i, uint32_t param )->uint32_t
+		{
+			auto method_table = static_cast< const method_table_t* >( p );
+			auto& method = method_table->at( i );
+			return hash_method_typed( &method.first, 0, param );
+		}
+		static auto hash_method_lookup( const void* type_index, uint32_t, uint32_t param )->uint32_t
+		{
+			return hash_method_typed( static_cast< const std::type_index* >( type_index ), sizeof( type_index ), param );
+		}
+		static auto hash_method_typed( const std::type_index* type_index, uint32_t, uint32_t param )->uint32_t
+		{
+			return gms_hash_sdbm_32( type_index, sizeof( type_index ), param );
 		}
 	};
 }

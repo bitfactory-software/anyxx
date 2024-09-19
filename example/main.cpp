@@ -187,7 +187,7 @@ int main()
 
     using types = BitFactory::type_list< int, double, X >;
     types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
-
+    update.seal();
     update( BitFactory::simple_open_method::to_typed_void( &o ), "->updated" );
     std::cout << ToString_( o ) << "\n";
 

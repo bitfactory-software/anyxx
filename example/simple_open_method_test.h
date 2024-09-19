@@ -35,6 +35,7 @@ namespace BitFactory::simple_open_method
 				auto toString = declare< std::string, const void* >{};
 				
 				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
+				toString.seal();
 
 				call< A1 >( toString );
 
@@ -49,10 +50,16 @@ namespace BitFactory::simple_open_method
 				{
 					std::cout << error.what() << " as expected." << "\n";
 				}
+			}
+			{
+				auto toString = declare< std::string, const void* >{};
+				
+				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				class_hierarchy::classes_with_bases registry;
 				declare_deep< D >( registry );
 				interpolate( toString, registry );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
+				toString.seal();
 				call< D >( toString );
 			}
 
@@ -60,6 +67,7 @@ namespace BitFactory::simple_open_method
 				auto toString = declare< std::string, const void* >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, ToString );
+				toString.seal();
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				{ call< C >( toString ); }
