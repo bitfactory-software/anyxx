@@ -75,7 +75,7 @@ namespace BitFactory::simple_open_method
 					});
 			}
 			{
-				auto any_factory = factory< std::any >{};
+				auto any_factory = factory< std::any() >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( any_factory, []< typename T >()->std::any
 				{ 

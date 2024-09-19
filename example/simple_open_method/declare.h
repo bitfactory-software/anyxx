@@ -164,7 +164,10 @@ namespace BitFactory::simple_open_method
 	};
 
 	template< typename R, typename... ARGS >
-	class factory
+	class factory;
+
+	template< typename R, typename... ARGS >
+	class factory< R( ARGS...) >
 	{
 	public:
 		using factory_function_t = R(*)( ARGS... );
