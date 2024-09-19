@@ -36,7 +36,7 @@ private:
     struct has_no_value{};
     const std::type_info* type_info_ = &typeid( has_no_value );
 public:
-    any_value() = default;
+//    any_value() = default;
     ~any_value() = default;
     any_value( const any_value& rhs )
         : model_( rhs ? rhs.model_->clone() : nullptr )

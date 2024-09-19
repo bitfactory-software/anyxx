@@ -136,7 +136,7 @@ template< template< typename, typename... > class any_function, typename any_val
 
     std::cout << "any_value ..." << std::endl << std::endl;
 
-    any_value a0;
+    any_value a0{ 3.14 };
     std::cout << "a1 " << a0.type().name() << std::endl;
     try
     {
