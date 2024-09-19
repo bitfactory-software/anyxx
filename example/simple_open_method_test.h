@@ -19,7 +19,7 @@ namespace BitFactory::simple_open_method
 		template< typename T > void call( const declare< std::string, const void* >& method )
 		{ 
 			T t;
-			std::cout << method( to_typed_void( &t ) ) << "\n";
+			std::cout << method( &t ) << "\n";
 		}
 
 		void test_simple_open_method()

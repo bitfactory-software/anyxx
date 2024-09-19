@@ -67,12 +67,20 @@ namespace BitFactory::simple_open_method
 			auto fp = ensure_function_ptr< CLASS >( f );
 			return define_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
 		}
-		R operator()( param_t param, ARGS&&... args ) const
+		R operator()( const std::type_info& type_info, DISPATCH dispatched, ARGS&&... args ) const
 		{
 			if( !sealed_ )
 				throw error( "Not yet sealed." );
-			auto f = lookup( param.first );
-			return f( param.second, std::forward< ARGS >( args )... );
+			auto f = lookup( type_info );
+			return f( dispatched, std::forward< ARGS >( args )... );
+		}
+		R operator()( param_t param, ARGS&&... args ) const
+		{
+			return (*this)( param.first, param.second, std::forward< ARGS >( args )... );
+		}
+		template< typename CLASS > R operator()( CLASS* param, ARGS&&... args ) const // to simplify tests!
+		{
+			return (*this)( to_typed_void( param ), std::forward< ARGS >( args )... );
 		}
 		erased_function_t lookup( const std::type_info& type_info ) const
 		{
