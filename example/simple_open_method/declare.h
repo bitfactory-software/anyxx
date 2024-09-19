@@ -41,6 +41,7 @@ namespace BitFactory::simple_open_method
 	class declare
 	{
 	public:
+		template< typename CLASS > using class_param_t = self_pointer< DISPATCH >::template type< CLASS >;
 		using param_t = std::pair< const std::type_info&, DISPATCH >;
 		using erased_function_t = R(*)( DISPATCH, ARGS... );
 	private:
@@ -54,23 +55,11 @@ namespace BitFactory::simple_open_method
 			methodTable_[ register_type_info ] = f;
 			return definition{};
 		}
-		template< typename SELF, typename FUNCTION_PTR >
-		auto define( FUNCTION_PTR f )
-			requires ( std::is_pointer_v< FUNCTION_PTR > )
+		template< typename CLASS, typename FUNCTION >
+		auto define( FUNCTION f )
 		{
-			return define_erased( typeid( SELF ), reinterpret_cast< erased_function_t >( f ) );
-		}
-		template< typename CLASS >
-		static auto to_function_ptr( auto functor )
-		{
-			using functor_t = decltype( functor );
-			using class_param_t = self_pointer< DISPATCH >::template type< CLASS >;
-			using function_ptr_t = R(*)(class_param_t, ARGS...);
-			static function_ptr_t function_ptr = +[]( class_param_t self, ARGS&&... args )->R
-			{
-					return functor_t{}( self, std::forward< ARGS >( args )... );
-			};
-			return function_ptr;
+			auto fp = ensure_function_ptr< CLASS >( f );
+			return define_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
 		}
 		R operator()( param_t param, ARGS&&... args ) const
 		{
@@ -90,6 +79,23 @@ namespace BitFactory::simple_open_method
 		{
 			return is_defined( typeid( C ) );
 		}
-		class definition{};
+		struct definition{};
+	private:
+		template< typename CLASS >
+		static auto ensure_function_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
+		{
+			using functor_t = decltype( functor );
+			if constexpr( std::is_pointer_v< functor_t > )
+			{
+				return functor;
+			}
+			else
+			{
+				return +[]( class_param_t< CLASS > self, ARGS&&... args )->R
+				{
+					return functor_t{}( self, std::forward< ARGS >( args )... );
+				};
+			}
+		}
 	};
 }
