@@ -1,17 +1,63 @@
 #pragma once
 
-#include <any>
-#include <map>
 #include <typeindex>
 #include <stdexcept>
 #include <functional>
 #include <type_traits>
 #include <algorithm>
+#include <vector>
 
 #include "../utilities/type_list.h"
 
 namespace BitFactory::simple_open_method
 {
+	class v_table
+	{
+	public:
+		using v_table_target_t = void(*)();
+		void set_method( int method_index, v_table_target_t target )
+		{
+			ensure_size( method_index + 1  );
+			table_[ method_index ] = target;
+		}
+		template< typename TRAGET >
+		void set_method( int method_index, TRAGET target )
+		{
+			auto v_table_target = reinterpret_cast< v_table_target_t >( target );
+			set_method( method_index, v_table_target );
+		}
+		void clear()
+		{
+			table_.clear();
+		}
+		auto at( int method_index ) const
+		{
+			return table_.at( method_index );
+		}
+		auto operator[]( int method_index ) const
+		{
+			return table_[ method_index ];
+		}
+	private:
+		std::vector< v_table_target_t > table_;
+		void ensure_size( std::size_t s )
+		{
+			if( table_.size() >= s )
+				return;
+			table_.insert( table_.end(), s  - table_.size(), nullptr );
+		}
+	};
+	template< typename CLASS > v_table* v_table_of()
+	{
+		static v_table v_table_;
+		return &v_table_;
+	}
+	using virtual_const_void = std::pair< const v_table*, const void* >;
+	using virtual_void = std::pair< const v_table*, void* >;
+
+	template< typename P > auto to_virtual_void( const P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
+	template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
+
 	using typed_const_void = std::pair< const std::type_info&, const void* >;
 	using typed_void = std::pair< const std::type_info&, void* >;
 
@@ -116,10 +162,13 @@ namespace BitFactory::simple_open_method
 		using dispatch_t = typename first< ARGS... >;
 		template< typename CLASS > using class_param_t = self_pointer< dispatch_t >::template type< CLASS >;
 		using param_t = std::pair< const std::type_info&, dispatch_t >;
+		using virtual_void_t = std::pair< const v_table*, dispatch_t >;
 		using erased_function_t = R(*)( ARGS... );
+		int v_table_index_ = -1;
 	private:
 		type_info_dispatch< erased_function_t > methodTable_;
 	public:
+		int v_table_index() const { return v_table_index_; }
 		auto define_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.define_erased( ti, f ); }
 		template< typename CLASS, typename FUNCTION >
 		auto define( FUNCTION f )
@@ -138,6 +187,13 @@ namespace BitFactory::simple_open_method
 		{
 			return (*this)( param.first, param.second, std::forward< OTHER_ARGS >( args )... );
 		}
+		template< typename... OTHER_ARGS >
+		R operator()( const virtual_void_t& param, OTHER_ARGS&&... args ) const
+		{
+			const v_table& v_table = *param.first;
+			auto erased_function = reinterpret_cast< erased_function_t >( v_table[ v_table_index_ ] );
+			return (erased_function)( param.second, std::forward< OTHER_ARGS >( args )... );
+		}
 		template< typename CLASS, typename... OTHER_ARGS >
 		R operator()( CLASS* param, OTHER_ARGS&&... args ) const // to simplify tests!
 		{
@@ -151,7 +207,11 @@ namespace BitFactory::simple_open_method
 		{
 			return is_defined( typeid( C ) );
 		}
-		void seal() { methodTable_.seal(); }
+		void seal( int v_table_index = -1 ) 
+		{
+			methodTable_.seal(); 
+			v_table_index_ = v_table_index;
+		}
 	private:
 		template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
 		static auto ensure_function_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
@@ -207,7 +267,10 @@ namespace BitFactory::simple_open_method
 		{
 			return is_defined( typeid( C ) );
 		}
-		void seal() { methodTable_.seal(); }
+		void seal() 
+		{ 
+			return methodTable_.seal(); 
+		}
 	private:
 		template< typename CLASS >
 		static auto ensure_factory_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;

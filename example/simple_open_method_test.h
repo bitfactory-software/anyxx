@@ -2,10 +2,12 @@
 
 #include <iostream>
 #include <typeinfo>
+#include <any>
 
 #include "simple_open_method/declare.h"
 #include "simple_open_method/interpolate.h"
 #include "simple_open_method/fill_with_overloads.h"
+#include "simple_open_method/v_table_build.h"
 #include "class_hierarchy/class_hierarchy.h"
 
 #include "class_hierarchy_test_hierarchy.h"
@@ -14,7 +16,7 @@ namespace BitFactory::simple_open_method
 {
 	namespace
 	{
-		auto ToString = []( const auto* t )->std::string{ return typeid( t ).name(); };  
+		auto ToString = []( const auto* t )->std::string{ return typeid( *t ).name(); };  
 
 		using to_string_method = declare< std::string( const void* ) >;
 
@@ -76,6 +78,32 @@ namespace BitFactory::simple_open_method
 					, [&]< typename C, typename B >	{}
 					});
 			}
+
+			{
+				auto toString = to_string_method{};
+				using classes = type_list< D, C1, C2 >;
+				fill_with_overloads< classes >( toString, ToString );
+				toString.seal( 0 );
+				build_v_tables< classes >( toString );
+				class_hierarchy::visit_classes< classes >( 
+					overload
+					{ [&]< typename C >				
+					{	
+						C c;
+						auto virtual_void = to_virtual_void( &c );
+						auto expected = typeid( C ).name();
+						std::cout << "virtual_void dispatch for " << expected << ": "; 
+						auto r = toString( virtual_void );
+						if( r != expected )
+							std::cout << "fail: " << r;
+						else
+							std::cout << "OK";
+						std::cout << std::endl;
+					}
+					, [&]< typename C, typename B >	{}
+					});
+			}
+
 			{
 				auto any_factory = factory< std::any() >{};
 				using classes = type_list< D, C1, C2 >;
