@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "forward.h"
-#include "utilities/type_list.h"
 
 namespace virtual_void
 {

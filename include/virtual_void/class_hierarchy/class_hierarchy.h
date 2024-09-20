@@ -6,7 +6,6 @@
 #include <map>
 
 #include "../forward.h"
-#include "../utilities/type_list.h"
 
 namespace virtual_void::class_hierarchy
 {

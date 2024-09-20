@@ -6,7 +6,6 @@
 #include <stdexcept>
 
 #include "class_hierarchy/class_hierarchy.h"
-#include "utilities/type_list.h"
 
 namespace virtual_void
 {
