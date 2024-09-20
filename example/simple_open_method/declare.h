@@ -6,9 +6,9 @@
 #include <stdexcept>
 #include <functional>
 #include <type_traits>
+#include <algorithm>
 
 #include "../utilities/type_list.h"
-#include "phash/phash_table.hh"
 
 namespace BitFactory::simple_open_method
 {
@@ -33,11 +33,21 @@ namespace BitFactory::simple_open_method
 	public:
 		using dispatch_target_t = DISPATCH_TARGET;
 	private:
-		using method_table_t = std::vector< std::pair< std::type_index, dispatch_target_t > >;;
+		using entry_t = std::pair< std::type_index, dispatch_target_t >;
+		using method_table_t = std::vector< entry_t >;;
 		method_table_t dispatchTable_;
-		gms::Phash_Table phashTable_;
+		dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 		bool sealed_ = false;
 	public:
+		static void throw_not_found(){ throw error( "no target specified." ); }
+		auto define_default( dispatch_target_t f )
+		{
+			default_ = dispatch_target_t;
+		}
+		auto get_default() const
+		{
+			return default_;
+		}
 		auto define_erased( const std::type_info& register_type_info, dispatch_target_t f )
 		{
 			if( sealed_ )
@@ -49,16 +59,14 @@ namespace BitFactory::simple_open_method
 		}
 		dispatch_target_t is_defined( const std::type_info& type_info ) const
 		{
-			auto found = std::ranges::find_if( dispatchTable_, [ & ]( const auto& entry ){ return entry.first == type_info; } );
+			auto found = std::find_if( dispatchTable_.begin(), dispatchTable_.end(), [ & ]( const entry_t& entry ){ return entry.first == type_info; } );
 			if( found != dispatchTable_.end() )
 				return found->second;
 			return nullptr;
 		}
 		void seal()
 		{
-			if( dispatchTable_.size() == 1 )
-				define_erased( typeid(nullptr_t), nullptr );
-			phashTable_ = gms::Phash_Table{ &dispatchTable_, (uint32_t)dispatchTable_.size(), hash_method_build };
+			std::ranges::sort( dispatchTable_, l_lower_r_ );
 			self_test();
 			sealed_ = true;
 		}
@@ -66,42 +74,31 @@ namespace BitFactory::simple_open_method
 		{
 			if( !sealed_ )
 				throw error( "Not yet sealed." );
-			return lookup_( type_info );
+			auto found = lookup_( type_info );
+			if( found == dispatchTable_.end() )
+				return default_;
+			return found->second;
 		}
 		struct definition{};
 	private:
+		static auto l_lower_r_( const entry_t& l, const entry_t& r ){ return l.first < r.first; };
 		void self_test() const
 		{
 			for( std::size_t i = 0; i < dispatchTable_.size(); ++i )
-		        lookup_( dispatchTable_[ i ].first );
+		        if( auto found = lookup_( dispatchTable_[ i ].first );
+					found == dispatchTable_.end() || found->first != dispatchTable_[ i ].first
+					)
+					throw error( "dispatchTable_ corrupt." );
 		}
-		dispatch_target_t lookup_( const std::type_info& type_info ) const
+		auto lookup_( const std::type_info& type_info ) const
 		{
 			if( !sealed_ )
 				throw error( "Not yet sealed." );
 			return lookup_( std::type_index{ type_info } );
 		}
-		dispatch_target_t lookup_( std::type_index type_index ) const
+		auto lookup_( std::type_index type_index ) const
 		{
-			auto i = phashTable_.lookup( &type_index, hash_method_lookup );
-			const auto& found = dispatchTable_.at( i );
-			if( found.first != type_index )
-				throw error( "phash table corrupt." );
-			return found.second;
-		}
-		static auto hash_method_build( const void *p, uint32_t i, uint32_t param )->uint32_t
-		{
-			auto method_table = static_cast< const method_table_t* >( p );
-			auto& method = method_table->at( i );
-			return hash_method_typed( &method.first, 0, param );
-		}
-		static auto hash_method_lookup( const void* type_index, uint32_t, uint32_t param )->uint32_t
-		{
-			return hash_method_typed( static_cast< const std::type_index* >( type_index ), sizeof( type_index ), param );
-		}
-		static auto hash_method_typed( const std::type_index* type_index, uint32_t, uint32_t param )->uint32_t
-		{
-			return gms_hash_sdbm_32( type_index, sizeof( type_index ), param );
+			return std::lower_bound( dispatchTable_.begin(), dispatchTable_.end(), entry_t{ type_index, nullptr }, l_lower_r_ );
 		}
 	};
 
