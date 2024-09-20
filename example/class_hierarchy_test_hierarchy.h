@@ -16,17 +16,18 @@ namespace TestDomain
 	struct D : C, C3 {};
 }
 
-namespace class_hierarchy
+namespace virtual_void::class_hierarchy
 {
-	template<> struct describe< TestDomain::A1 >{ using bases = virtual_void::type_list<>; };
-	template<> struct describe< TestDomain::A2 >{ using bases = virtual_void::type_list<>; };
-	template<> struct describe< TestDomain::B1 >{ using bases = virtual_void::type_list< TestDomain::A1 >; };
-	template<> struct describe< TestDomain::B2 >{ using bases = virtual_void::type_list< TestDomain::A2 >; };
-	template<> struct describe< TestDomain::B3 >{ using bases = virtual_void::type_list< TestDomain::A1, TestDomain::A2 >; };
-	template<> struct describe< TestDomain::C1 >{ using bases = virtual_void::type_list< TestDomain::B1 >; };
-	template<> struct describe< TestDomain::C2 >{ using bases = virtual_void::type_list< TestDomain::B2 >; };
-	template<> struct describe< TestDomain::C3 >{ using bases = virtual_void::type_list< TestDomain::B3 >; };
-	template<> struct describe< TestDomain::C >{ using bases = virtual_void::type_list<>; };
-	template<> struct describe< TestDomain::D >{ using bases = virtual_void::type_list< TestDomain::C, TestDomain::C3 >; };
+	using namespace TestDomain;
+	template<> struct describe< A1 >{ using bases = none; };
+	template<> struct describe< A2 >{ using bases = none; };
+	template<> struct describe< B1 >{ using bases = are< A1 >; };
+	template<> struct describe< B2 >{ using bases = are< A2 >; };
+	template<> struct describe< B3 >{ using bases = are< A1, A2 >; };
+	template<> struct describe< C1 >{ using bases = are< B1 >; };
+	template<> struct describe< C2 >{ using bases = are< B2 >; };
+	template<> struct describe< C3 >{ using bases = are< B3 >; };
+	template<> struct describe< C >{ using bases = none; };
+	template<> struct describe< D >{ using bases = are< C, C3 >; };
 };
 

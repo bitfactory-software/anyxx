@@ -8,18 +8,18 @@
 #include "../utilities/type_list.h"
 #include "../utilities/overload.h"
 
-namespace class_hierarchy
-{
-	template< typename CLASS > struct describe;
-};
-
 namespace virtual_void::class_hierarchy
 {
+	template< typename CLASS > struct describe;
+
+	template< typename... BASES > using are = virtual_void::type_list< BASES... >;
+	using none = virtual_void::type_list<>;
+
 	template< typename CLASS, bool deep = true >
 	void visit_class( auto visitor )
 	{
         visitor.template operator()< CLASS >();
-		using bases = ::class_hierarchy::describe< CLASS >::bases;
+		using bases = describe< CLASS >::bases;
 		bases::for_each( [ & ]< typename BASE >()
 		{ 
 	        visitor.template operator()< CLASS, BASE >();
