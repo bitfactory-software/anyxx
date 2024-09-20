@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <any>
 
-#include "../include/virtual_void/dispatch/declare.h"
+#include "../include/virtual_void/dispatch/method.h"
 #include "../include/virtual_void/dispatch/interpolate.h"
 #include "../include/virtual_void/dispatch/fill_with_overloads.h"
 #include "../include/virtual_void/dispatch/v_table_build.h"

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "declare.h"
 #include "../class_hierarchy/class_hierarchy.h"
 
 namespace virtual_void::dispatch
