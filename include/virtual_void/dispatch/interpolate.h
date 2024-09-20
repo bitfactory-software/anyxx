@@ -2,7 +2,7 @@
 
 #include "../class_hierarchy/class_hierarchy.h"
 
-namespace virtual_void::dispatch
+namespace virtual_void
 {
 	template< typename DEFINITION >
 	DEFINITION::erased_function_t find_decared_in_bases( DEFINITION& method, const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases )

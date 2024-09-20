@@ -99,11 +99,11 @@ std::string ToString_( const X& x )
     return x.s;
 }
 
-auto update = virtual_void::dispatch::declare< void (void*, const std::string& ) >{};
+auto update = virtual_void::method< void (void*, const std::string& ) >{};
 
 namespace
 {
-    auto updateX = update.define< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
+    auto updateX = update.override_< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
 }
 
 template< template< typename, typename... > class any_function, typename any_value > void test_any()
@@ -200,7 +200,7 @@ int main()
 
     
     virtual_void::class_hierarchy::test_class_hierarchy();
-    virtual_void::dispatch::test_simple_open_method();
+    virtual_void::test_simple_open_method();
 
     test_any< naive::any_function, naive::any_value >();
 

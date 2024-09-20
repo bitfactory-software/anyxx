@@ -9,7 +9,7 @@
 
 #include "../utilities/type_list.h"
 
-namespace virtual_void::dispatch
+namespace virtual_void
 {
 	class v_table
 	{
@@ -94,7 +94,7 @@ namespace virtual_void::dispatch
 		{
 			return default_;
 		}
-		auto define_erased( const std::type_info& register_type_info, dispatch_target_t f )
+		auto override_erased( const std::type_info& register_type_info, dispatch_target_t f )
 		{
 			if( sealed_ )
 				throw error( "This open_method is already seald." );
@@ -149,10 +149,10 @@ namespace virtual_void::dispatch
 	};
 
 	template< typename R, typename... ARGS >
-	class declare;
+	class method;
 
 	template< typename R, typename... ARGS >
-	class declare< R( ARGS... ) >
+	class method< R( ARGS... ) >
 	{
 		static_assert 
 			(	std::same_as< first< ARGS... >,	void* > 
@@ -169,9 +169,9 @@ namespace virtual_void::dispatch
 		type_info_dispatch< erased_function_t > methodTable_;
 	public:
 		int v_table_index() const { return v_table_index_; }
-		auto define_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.define_erased( ti, f ); }
+		auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.define_erased( ti, f ); }
 		template< typename CLASS, typename FUNCTION >
-		auto define( FUNCTION f )
+		auto override_( FUNCTION f )
 		{
 			auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
 			return methodTable_.define_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
@@ -243,12 +243,12 @@ namespace virtual_void::dispatch
 	private:
 		type_info_dispatch< factory_function_t > methodTable_;
 	public:
-		auto define_erased( const std::type_info& ti, factory_function_t f ) { return methodTable_.define_erased( ti, f ); }
+		auto override_erased( const std::type_info& ti, factory_function_t f ) { return methodTable_.override_erased( ti, f ); }
 		template< typename CLASS, typename FACTORY >
-		auto define( FACTORY f )
+		auto override_( FACTORY f )
 		{
 			auto fp = ensure_factory_ptr< CLASS >( f );
-			return methodTable_.define_erased( typeid( CLASS ), reinterpret_cast< factory_function_t >( fp ) );
+			return methodTable_.override_erased( typeid( CLASS ), reinterpret_cast< factory_function_t >( fp ) );
 		}
 		R operator()( const std::type_info& type_info, ARGS&&... args ) const
 		{

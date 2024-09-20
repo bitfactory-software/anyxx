@@ -2,14 +2,14 @@
 
 #include "../class_hierarchy/class_hierarchy.h"
 
-namespace virtual_void::dispatch
+namespace virtual_void
 {
 
 	template< typename CLASS, typename DEFINITION >
 	void fill_with_overload( DEFINITION& method, auto wrapper )
 	{
 		if( !method.is_defined< CLASS >() )
-			method.define< CLASS >( wrapper );
+			method.override_< CLASS >( wrapper );
 	}
 
 	template< typename CLASSES, typename DEFINITION >

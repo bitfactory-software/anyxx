@@ -9,7 +9,7 @@
 #include "../utilities/type_list.h"
 #include "../utilities/overload.h"
 
-namespace virtual_void::dispatch
+namespace virtual_void
 {
 	template < typename CLASS >
 	void clear_v_table()

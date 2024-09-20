@@ -12,13 +12,13 @@
 
 #include "class_hierarchy_test_hierarchy.h"
 
-namespace virtual_void::dispatch
+namespace virtual_void
 {
 	namespace
 	{
 		auto ToString = []( const auto* t )->std::string{ return typeid( *t ).name(); };  
 
-		using to_string_method = declare< std::string( const void* ) >;
+		using to_string_method = method< std::string( const void* ) >;
 
 		template< typename T > void call( const to_string_method& method )
 		{ 
@@ -38,7 +38,7 @@ namespace virtual_void::dispatch
 			{
 				to_string_method toString;
 				
-				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
+				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				toString.seal();
 
 				call< A1 >( toString );
@@ -50,7 +50,7 @@ namespace virtual_void::dispatch
 					call< D >( toString );
 					std::cout << "error: should not work!" << "\n";
 				}
-				catch( dispatch::error& error )
+				catch( error& error )
 				{
 					std::cout << error.what() << " as expected." << "\n";
 				}
@@ -58,7 +58,7 @@ namespace virtual_void::dispatch
 			{
 				auto toString = to_string_method{};
 				
-				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
+				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				class_hierarchy::classes_with_bases registry;
 				declare_deep< D >( registry );
 				interpolate( toString, registry );
