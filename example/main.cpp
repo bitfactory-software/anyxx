@@ -14,6 +14,7 @@
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
+#include "typeid_cast_test.h"
 
 struct MetaData {
   template <class P>
@@ -201,6 +202,7 @@ int main()
     
     virtual_void::class_hierarchy::test_class_hierarchy();
     virtual_void::test_simple_open_method();
+    typeid_cast_test();
 
     test_any< naive::any_function, naive::any_value >();
 

@@ -5,8 +5,8 @@
 #include <typeindex>
 #include <map>
 
+#include "../forward.h"
 #include "../utilities/type_list.h"
-#include "../utilities/overload.h"
 
 namespace virtual_void::class_hierarchy
 {
