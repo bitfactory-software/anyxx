@@ -22,6 +22,6 @@ namespace virtual_void
 		for( const auto& [ self, class_with_bases ] : registry )
 			if( !method.is_defined( *class_with_bases.self ) )
 				if( auto found = find_decared_in_bases( method, registry, class_with_bases.bases ) )
-					method.define_erased( *class_with_bases.self, found );
+					method.override_erased( *class_with_bases.self, found );
 	}
 }	

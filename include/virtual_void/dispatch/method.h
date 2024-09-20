@@ -169,12 +169,12 @@ namespace virtual_void
 		type_info_dispatch< erased_function_t > methodTable_;
 	public:
 		int v_table_index() const { return v_table_index_; }
-		auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.define_erased( ti, f ); }
+		auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.override_erased( ti, f ); }
 		template< typename CLASS, typename FUNCTION >
 		auto override_( FUNCTION f )
 		{
 			auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
-			return methodTable_.define_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
+			return methodTable_.override_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
 		}
 		template< typename... OTHER_ARGS >
 		R operator()( const std::type_info& type_info, dispatch_t dispatched, OTHER_ARGS&&... args ) const
