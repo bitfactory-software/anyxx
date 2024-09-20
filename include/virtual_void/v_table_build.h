@@ -5,9 +5,9 @@
 #include <typeindex>
 #include <stdexcept>
 
-#include "../class_hierarchy/class_hierarchy.h"
-#include "../utilities/type_list.h"
-#include "../utilities/overload.h"
+#include "class_hierarchy/class_hierarchy.h"
+#include "utilities/type_list.h"
+#include "utilities/overload.h"
 
 namespace virtual_void
 {

@@ -6,7 +6,7 @@
 
 #include "../include/proxy/proxy.h"
 
-#include "../include/virtual_void/dispatch/method.h"
+#include "../include/virtual_void/method.h"
 #include "../include/virtual_void/utilities/type_list.h"
 #include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
 #include "../include/virtual_void/utilities/naive_any_function.h"

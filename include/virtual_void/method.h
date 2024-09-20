@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "../utilities/type_list.h"
+#include "utilities/type_list.h"
 
 namespace virtual_void
 {
