@@ -6,7 +6,7 @@
 
 #include "../include/proxy/proxy.h"
 
-#include "../include/virtual_void/simple_open_method/declare.h"
+#include "../include/virtual_void/dispatch/declare.h"
 #include "../include/virtual_void/utilities/type_list.h"
 #include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
 #include "../include/virtual_void/utilities/naive_any_function.h"
@@ -99,7 +99,7 @@ std::string ToString_( const X& x )
     return x.s;
 }
 
-auto update = BitFactory::simple_open_method::declare< void (void*, const std::string& ) >{};
+auto update = virtual_void::dispatch::declare< void (void*, const std::string& ) >{};
 
 namespace
 {
@@ -185,7 +185,7 @@ int main()
     
     std::cout << pro::proxy_reflect<MetaData>(cp).type_info.name() << "\n"; 
 
-    using types = BitFactory::type_list< int, double, X >;
+    using types = virtual_void::type_list< int, double, X >;
     types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
     update.seal();
     update( &o, "->updated" );
@@ -199,8 +199,8 @@ int main()
     std::cout << ToString( *cp ) << "\n";
 
     
-    BitFactory::class_hierarchy::test_class_hierarchy();
-    BitFactory::simple_open_method::test_simple_open_method();
+    virtual_void::class_hierarchy::test_class_hierarchy();
+    virtual_void::dispatch::test_simple_open_method();
 
     test_any< naive::any_function, naive::any_value >();
 

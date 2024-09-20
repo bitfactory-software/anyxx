@@ -5,7 +5,7 @@
 #include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
 #include "class_hierarchy_test_hierarchy.h"
 
-namespace BitFactory::class_hierarchy
+namespace virtual_void::class_hierarchy
 {
 	namespace
 	{

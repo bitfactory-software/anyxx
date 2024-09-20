@@ -9,7 +9,7 @@
 #include "../utilities/type_list.h"
 #include "../utilities/overload.h"
 
-namespace BitFactory::simple_open_method
+namespace virtual_void::dispatch
 {
 	template < typename CLASS >
 	void clear_v_table()

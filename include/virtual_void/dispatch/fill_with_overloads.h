@@ -3,7 +3,7 @@
 #include "declare.h"
 #include "../class_hierarchy/class_hierarchy.h"
 
-namespace BitFactory::simple_open_method
+namespace virtual_void::dispatch
 {
 
 	template< typename CLASS, typename DEFINITION >

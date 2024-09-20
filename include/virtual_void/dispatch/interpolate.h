@@ -3,7 +3,7 @@
 #include "declare.h"
 #include "../class_hierarchy/class_hierarchy.h"
 
-namespace BitFactory::simple_open_method
+namespace virtual_void::dispatch
 {
 	template< typename DEFINITION >
 	DEFINITION::erased_function_t find_decared_in_bases( DEFINITION& method, const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases )

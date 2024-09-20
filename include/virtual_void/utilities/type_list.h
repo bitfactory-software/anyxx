@@ -1,6 +1,6 @@
 #pragma once
 
-namespace BitFactory
+namespace virtual_void
 {
     template< typename... ARGS >
     struct type_list

@@ -13,7 +13,7 @@ namespace class_hierarchy
 	template< typename CLASS > struct describe;
 };
 
-namespace BitFactory::class_hierarchy
+namespace virtual_void::class_hierarchy
 {
 	template< typename CLASS, bool deep = true >
 	void visit_class( auto visitor )

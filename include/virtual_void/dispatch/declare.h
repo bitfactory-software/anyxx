@@ -9,7 +9,7 @@
 
 #include "../utilities/type_list.h"
 
-namespace BitFactory::simple_open_method
+namespace virtual_void::dispatch
 {
 	class v_table
 	{

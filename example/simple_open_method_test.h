@@ -4,15 +4,15 @@
 #include <typeinfo>
 #include <any>
 
-#include "../include/virtual_void/simple_open_method/declare.h"
-#include "../include/virtual_void/simple_open_method/interpolate.h"
-#include "../include/virtual_void/simple_open_method/fill_with_overloads.h"
-#include "../include/virtual_void/simple_open_method/v_table_build.h"
+#include "../include/virtual_void/dispatch/declare.h"
+#include "../include/virtual_void/dispatch/interpolate.h"
+#include "../include/virtual_void/dispatch/fill_with_overloads.h"
+#include "../include/virtual_void/dispatch/v_table_build.h"
 #include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
-namespace BitFactory::simple_open_method
+namespace virtual_void::dispatch
 {
 	namespace
 	{
@@ -50,7 +50,7 @@ namespace BitFactory::simple_open_method
 					call< D >( toString );
 					std::cout << "error: should not work!" << "\n";
 				}
-				catch( simple_open_method::error& error )
+				catch( dispatch::error& error )
 				{
 					std::cout << error.what() << " as expected." << "\n";
 				}
