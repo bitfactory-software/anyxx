@@ -5,6 +5,7 @@
 #include <any>
 
 #include "../include/virtual_void/typeid_cast_method.h"
+#include "../include/virtual_void/v_table_build.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
@@ -42,7 +43,6 @@ namespace
 			});
 	}
 
-
 	void typeid_cast_test()
 	{
 		std::cout << "\n";
@@ -57,10 +57,13 @@ namespace
 
 			virtual_void::fill_const_cast_for< classes >( typeid_const_cast );
 
-			typeid_const_cast.seal();
+			typeid_const_cast.seal( 0 );
 
 			run_cast_test< classes >( typeid_const_cast, []( auto top ){ return virtual_void::to_typed_void( top ); } );
 
+			build_v_tables< classes >( typeid_const_cast );
+
+			run_cast_test< classes >( typeid_const_cast, []( auto top ){ return virtual_void::to_virtual_void( top ); } );
 		}
 	}
 }
