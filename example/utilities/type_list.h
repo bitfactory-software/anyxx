@@ -11,4 +11,9 @@ namespace BitFactory
             ( call.template operator()< ARGS >(), ... );
         }
     };
+
+    template<int N, typename... Ts> using nth_type =
+        typename std::tuple_element<N, std::tuple<Ts...>>::type;
+
+    template< typename... Ts> using first = nth_type< 0, Ts...>;
 }

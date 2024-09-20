@@ -16,7 +16,9 @@ namespace BitFactory::simple_open_method
 	{
 		auto ToString = []( const auto* t )->std::string{ return typeid( t ).name(); };  
 
-		template< typename T > void call( const declare< std::string, const void* >& method )
+		using to_string_method = declare< std::string( const void* ) >;
+
+		template< typename T > void call( const to_string_method& method )
 		{ 
 			T t;
 			std::cout << method( &t ) << "\n";
@@ -32,7 +34,7 @@ namespace BitFactory::simple_open_method
 			std::cout << "\n";
 			std::cout << "dispatch via void" << "\n";
 			{
-				auto toString = declare< std::string, const void* >{};
+				to_string_method toString;
 				
 				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				toString.seal();
@@ -52,7 +54,7 @@ namespace BitFactory::simple_open_method
 				}
 			}
 			{
-				auto toString = declare< std::string, const void* >{};
+				auto toString = to_string_method{};
 				
 				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				class_hierarchy::classes_with_bases registry;
@@ -64,7 +66,7 @@ namespace BitFactory::simple_open_method
 			}
 
 			{
-				auto toString = declare< std::string, const void* >{};
+				auto toString = to_string_method{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, ToString );
 				toString.seal();

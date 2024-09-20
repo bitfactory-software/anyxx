@@ -99,7 +99,7 @@ std::string ToString_( const X& x )
     return x.s;
 }
 
-auto update = BitFactory::simple_open_method::declare< void, void*, const std::string& >{};
+auto update = BitFactory::simple_open_method::declare< void (void*, const std::string& ) >{};
 
 namespace
 {

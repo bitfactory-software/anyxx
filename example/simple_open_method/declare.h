@@ -7,6 +7,7 @@
 #include <functional>
 #include <type_traits>
 
+#include "../utilities/type_list.h"
 #include "phash/phash_table.hh"
 
 namespace BitFactory::simple_open_method
@@ -104,14 +105,21 @@ namespace BitFactory::simple_open_method
 		}
 	};
 
-	template< typename R, typename DISPATCH, typename... ARGS >
-		requires ( std::same_as< DISPATCH, void* > || std::same_as< DISPATCH, const void* > ) 
-	class declare
+	template< typename R, typename... ARGS >
+	class declare;
+
+	template< typename R, typename... ARGS >
+	class declare< R( ARGS... ) >
 	{
+		static_assert 
+			(	std::same_as< first< ARGS... >,	void* > 
+			||	std::same_as< first< ARGS... >,	const void* > 
+			); 
 	public:
-		template< typename CLASS > using class_param_t = self_pointer< DISPATCH >::template type< CLASS >;
-		using param_t = std::pair< const std::type_info&, DISPATCH >;
-		using erased_function_t = R(*)( DISPATCH, ARGS... );
+		using dispatch_t = typename first< ARGS... >;
+		template< typename CLASS > using class_param_t = self_pointer< dispatch_t >::template type< CLASS >;
+		using param_t = std::pair< const std::type_info&, dispatch_t >;
+		using erased_function_t = R(*)( ARGS... );
 	private:
 		type_info_dispatch< erased_function_t > methodTable_;
 	public:
@@ -119,21 +127,24 @@ namespace BitFactory::simple_open_method
 		template< typename CLASS, typename FUNCTION >
 		auto define( FUNCTION f )
 		{
-			auto fp = ensure_function_ptr< CLASS >( f );
+			auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
 			return methodTable_.define_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
 		}
-		R operator()( const std::type_info& type_info, DISPATCH dispatched, ARGS&&... args ) const
+		template< typename... OTHER_ARGS >
+		R operator()( const std::type_info& type_info, dispatch_t dispatched, OTHER_ARGS&&... args ) const
 		{
 			auto f = methodTable_.lookup( type_info );
-			return f( dispatched, std::forward< ARGS >( args )... );
+			return f( dispatched, std::forward< OTHER_ARGS >( args )... );
 		}
-		R operator()( param_t param, ARGS&&... args ) const
+		template< typename... OTHER_ARGS >
+		R operator()( const param_t& param, OTHER_ARGS&&... args ) const
 		{
-			return (*this)( param.first, param.second, std::forward< ARGS >( args )... );
+			return (*this)( param.first, param.second, std::forward< OTHER_ARGS >( args )... );
 		}
-		template< typename CLASS > R operator()( CLASS* param, ARGS&&... args ) const // to simplify tests!
+		template< typename CLASS, typename... OTHER_ARGS >
+		R operator()( CLASS* param, OTHER_ARGS&&... args ) const // to simplify tests!
 		{
-			return (*this)( to_typed_void( param ), std::forward< ARGS >( args )... );
+			return (*this)( to_typed_void( param ), std::forward< OTHER_ARGS >( args )... );
 		}
 		erased_function_t is_defined( const std::type_info& type_info ) const
 		{
@@ -145,7 +156,7 @@ namespace BitFactory::simple_open_method
 		}
 		void seal() { methodTable_.seal(); }
 	private:
-		template< typename CLASS >
+		template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
 		static auto ensure_function_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
 		{
 			using functor_t = decltype( functor );
@@ -155,9 +166,10 @@ namespace BitFactory::simple_open_method
 			}
 			else
 			{
-				return +[]( class_param_t< CLASS > self, ARGS&&... args )->R
+								
+				return +[]( class_param_t< CLASS > self, OTHER_ARGS&&... args )->R
 				{
-					return functor_t{}( self, std::forward< ARGS >( args )... );
+					return functor_t{}( self, std::forward< OTHER_ARGS >( args )... );
 				};
 			}
 		}
