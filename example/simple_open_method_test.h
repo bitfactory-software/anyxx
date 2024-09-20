@@ -4,11 +4,11 @@
 #include <typeinfo>
 #include <any>
 
-#include "simple_open_method/declare.h"
-#include "simple_open_method/interpolate.h"
-#include "simple_open_method/fill_with_overloads.h"
-#include "simple_open_method/v_table_build.h"
-#include "class_hierarchy/class_hierarchy.h"
+#include "../include/virtual_void/simple_open_method/declare.h"
+#include "../include/virtual_void/simple_open_method/interpolate.h"
+#include "../include/virtual_void/simple_open_method/fill_with_overloads.h"
+#include "../include/virtual_void/simple_open_method/v_table_build.h"
+#include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 

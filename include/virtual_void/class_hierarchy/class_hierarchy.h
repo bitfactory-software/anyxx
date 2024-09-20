@@ -5,8 +5,8 @@
 #include <typeindex>
 #include <map>
 
-#include "utilities/type_list.h"
-#include "utilities/overload.h"
+#include "../utilities/type_list.h"
+#include "../utilities/overload.h"
 
 namespace class_hierarchy
 {

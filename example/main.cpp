@@ -4,13 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "3rd_party/proxy.h"
+#include "../include/proxy/proxy.h"
 
-#include "simple_open_method/declare.h"
-#include "utilities/type_list.h"
-#include "class_hierarchy/class_hierarchy.h"
-#include "utilities/naive_any_function.h"
-#include "utilities/naive_any_value.h"
+#include "../include/virtual_void/simple_open_method/declare.h"
+#include "../include/virtual_void/utilities/type_list.h"
+#include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
+#include "../include/virtual_void/utilities/naive_any_function.h"
+#include "../include/virtual_void/utilities/naive_any_value.h"
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
