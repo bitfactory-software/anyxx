@@ -64,8 +64,8 @@ namespace virtual_void
 	public:
 		using dispatch_target_t = DISPATCH_TARGET;
 	private:
-		using entry_t = std::pair< std::type_index, dispatch_target_t >;
-		using method_table_t = std::vector< entry_t >;;
+		using method_table_t = std::map< std::type_index, dispatch_target_t >;;
+		using entry_t = method_table_t::value_type;
 		method_table_t dispatchTable_;
 		dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 		bool sealed_ = false;
@@ -85,52 +85,30 @@ namespace virtual_void
 				throw error( "This open_method is already seald." );
 			if( is_defined( register_type_info ) )
 				throw error( "Method for type already registered." );
-			dispatchTable_.push_back( { std::type_index( register_type_info ), f } );
+			dispatchTable_[ register_type_info ] = f;
 			return definition{};
 		}
 		dispatch_target_t is_defined( const std::type_info& type_info ) const
 		{
-			auto found = std::find_if( dispatchTable_.begin(), dispatchTable_.end(), [ & ]( const entry_t& entry ){ return entry.first == type_info; } );
+			auto found = dispatchTable_.find( type_info );
 			if( found != dispatchTable_.end() )
 				return found->second;
 			return nullptr;
 		}
 		void seal()
 		{
-			std::ranges::sort( dispatchTable_, l_lower_r_ );
-			self_test();
 			sealed_ = true;
 		}
 		dispatch_target_t lookup( const std::type_info& type_info ) const
 		{
 			if( !sealed_ )
 				throw error( "Not yet sealed." );
-			auto found = lookup_( type_info );
-			if( found == dispatchTable_.end() )
-				return default_;
-			return found->second;
+			if( auto found = is_defined( type_info ) )
+				return found;
+			return default_;
 		}
 		struct definition{};
 	private:
-		static auto l_lower_r_( const entry_t& l, const entry_t& r ){ return l.first < r.first; };
-		void self_test() const
-		{
-			for( std::size_t i = 0; i < dispatchTable_.size(); ++i )
-		        if( auto found = lookup_( dispatchTable_[ i ].first );
-					found == dispatchTable_.end() || found->first != dispatchTable_[ i ].first
-					)
-					throw error( "dispatchTable_ corrupt." );
-		}
-		auto lookup_( const std::type_info& type_info ) const
-		{
-			if( !sealed_ )
-				throw error( "Not yet sealed." );
-			return lookup_( std::type_index{ type_info } );
-		}
-		auto lookup_( std::type_index type_index ) const
-		{
-			return std::lower_bound( dispatchTable_.begin(), dispatchTable_.end(), entry_t{ type_index, nullptr }, l_lower_r_ );
-		}
 	};
 
 	template< typename R, typename... ARGS >

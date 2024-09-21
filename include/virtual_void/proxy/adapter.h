@@ -27,24 +27,55 @@ namespace virtual_void::proxy
         ::build {};
 
     PRO_DEF_FREE_DISPATCH( free_data, data_, data );
-
-    template< typename O > const void* data_( const O& o ) { return &o; }
-    template< typename O > void* data_( O& o ) { return &o; }
-
-    template< typename O > const void* data_( std::shared_ptr< const O >& o ) { return o.get(); }
-    template< typename O > void* data_( std::shared_ptr< O >& o ) { return o.get(); }
-    template< typename O > const void* data_( std::unique_ptr< const O >& o ) { return o.get(); }
-
     struct virtual_const_void_facade : pro::facade_builder
         ::support_copy<pro::constraint_level::nontrivial>
         ::add_facade< meta_facade, true >
         ::add_convention< free_data, const void*() const >
         ::build {};
-
     struct virtual_void_facade : pro::facade_builder
         ::support_copy<pro::constraint_level::nontrivial>
-//        ::add_facade< virtual_const_void_facade, true >
+        ::add_facade< virtual_const_void_facade, true >
         ::add_convention< free_data, void*() >
         ::build {};
+    template< typename O > const void* data_( const O& o ) 
+    { 
+        return &o; 
+    }
+    template< typename O > void* data_( O& o ) 
+    { 
+        return &o; 
+    }
+    template< typename O > void* data_( std::shared_ptr< O >& o ) 
+    { 
+        return o->get(); 
+    }
+    template< typename O > const void* data_( std::shared_ptr< const O >& o ) 
+    { 
+        return o->get(); 
+    }
+    template< typename O > void* data_( std::unique_ptr< O >& o ) 
+    { 
+        return o->get(); 
+    }
+    template< typename O > const void* data_( std::unique_ptr< const O >& o ) 
+    { 
+        return o->get(); 
+    }
+
+
+    PRO_DEF_FREE_DISPATCH( free_v_table_of, v_table_of_, v_table_of );
+    struct v_table_facade : pro::facade_builder
+        ::support_copy<pro::constraint_level::nontrivial>
+        ::add_convention< free_v_table_of, v_table*()const >
+        ::build {};
+    template< typename O > v_table* v_table_of_( const O& o ) { return v_table_of< O >(); }
+
+    template< typename FACADE >
+    typed_const_void to_typed_const_void( const pro::proxy< FACADE >& p )
+    {
+        const std::type_info& type_info = pro::proxy_reflect< meta >( p ).type_info;
+        const void* cv = data( *p );
+        return { type_info, cv };
+    }
 }
 

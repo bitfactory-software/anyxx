@@ -10,26 +10,21 @@
 
 #include "../../include/proxy/proxy.h"
 #include "../../include/virtual_void/forward.h"
+#include "../../include/virtual_void/method.h"
+#include "../../include/virtual_void/v_table_build.h"
 #include "../../include/virtual_void/proxy/adapter.h"
 
 namespace DB
 {
-
-    PRO_DEF_FREE_DISPATCH( free_data, data_, data );
-//    PRO_DEF_FREE_DISPATCH( free_v_table, v_table_, v_table );
-
-
-    struct virtual_void_facade : pro::facade_builder
-        ::support_copy<pro::constraint_level::nontrivial>
-        ::add_facade< virtual_void::proxy::meta_facade, true >
-//        ::add_facade< virtual_const_void_facade, true >
-        ::add_convention< free_data, void*() >
-        ::build {};
+    PRO_DEF_FREE_DISPATCH(FreeToString, ToString_, ToString);
 
     struct EntityFacade : pro::facade_builder
-        ::add_facade< virtual_void_facade, true >
+        ::add_facade< virtual_void::proxy::virtual_void_facade, true >
+//        ::add_facade< virtual_void::proxy::v_table_facade, true >
+        ::add_convention<FreeToString, std::string() const>
         ::support_copy<pro::constraint_level::nontrivial>
         ::build {};
+
 
     using Entity = pro::proxy< EntityFacade >;
 
@@ -56,8 +51,8 @@ namespace DB
 
 namespace Application
 {
-    //template< typename O > auto data_( O&& o ) { return virtual_void::proxy::data_( std::forward< O >( o ) ); }
     using virtual_void::proxy::data_;
+    using virtual_void::proxy::v_table_of_;
 
     struct IntData
     {
@@ -72,14 +67,24 @@ namespace Application
         double data;
     }; 
 
-    //auto AnyToOut = library::declare_any_dispatch< void, const std::any& >{};
+    std::string ToString_( const auto& x )
+    {
+        return std::to_string( x.data );
+    }
+
+    std::string ToString_( const StringData& x )
+    {
+        return x.data;
+    }
+
+    auto entityToOut = virtual_void::method< void( const void* ) >{};
 
     void IntToOut( const IntData* i ){ std::cout << "int: " << i->data << std::endl; }
 
-    //void AnywhereInTheApplication()
-    //{
-    //    AnyToOut.define< const IntData >( &IntToOut );
-    //}
+    void AnywhereInTheApplication()
+    {
+        entityToOut.override_< IntData >( &IntToOut );
+    }
 }
 
 int main()
@@ -87,20 +92,18 @@ int main()
     using namespace Application;
     using namespace DB;
 
-    //AnywhereInTheApplication();
+    AnywhereInTheApplication();
 
     DB::System db;
 
-    //AnyToOut.define< const StringData >( []( const auto s )
-    //    { std::cout << "string: " << s->data << std::endl; } );
+    entityToOut.override_< StringData >( []( const StringData* s ) 
+        { 
+            std::cout << "string: " << s->data << std::endl; 
+        });
 
-    //auto v = virtual_void::v_table_of< IntData >();
-
-    //using DB::data_;
-    //std::string data = "1";
-    //auto s = std::make_shared< IntData >( std::atoi( data.c_str() ) );
-    //DB::Entity entity( s );
      
+    entityToOut.seal();
+
     db.factories[ "i" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< StringData >( data ); };
     db.factories[ "d" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< DoubleData >( std::atof( data.c_str() ) ); };
@@ -108,7 +111,9 @@ int main()
     {
         db.Query( "junk", []( const DB::Entity& e )
             { 
-                std::cout << "type_info: " << pro::proxy_reflect< virtual_void::proxy::meta >( e ).type_info.name() << std::endl;
+
+                std::cout << "type_info: " << pro::proxy_reflect< virtual_void::proxy::meta >( e ).type_info.name() << ": " << ToString( *e )<< std::endl;
+                entityToOut( virtual_void::proxy::to_typed_const_void( e ) );    
             });
     }
     catch( std::exception& e )
