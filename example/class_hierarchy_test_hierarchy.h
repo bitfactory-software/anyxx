@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
+#include "../include/virtual_void/method.h"
 
 namespace TestDomain
 {

@@ -8,7 +8,6 @@
 #include "../include/virtual_void/interpolate.h"
 #include "../include/virtual_void/fill_with_overloads.h"
 #include "../include/virtual_void/v_table_build.h"
-#include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 

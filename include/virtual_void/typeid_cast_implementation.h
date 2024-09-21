@@ -1,7 +1,6 @@
 #pragma once
 
 #include "method.h"
-#include "class_hierarchy/class_hierarchy.h"
 
 namespace virtual_void
 {
