@@ -18,26 +18,6 @@ namespace DB
     PRO_DEF_FREE_DISPATCH( free_data, data_, data );
 //    PRO_DEF_FREE_DISPATCH( free_v_table, v_table_, v_table );
 
-    template< typename O > const void* data_( const O& o ) { return &o; }
-    template< typename O > void* data_( O& o ) { return &o; }
-
-    template< typename O > const void* data_( std::shared_ptr< const O >& o ) { return o.get(); }
-    template< typename O > void* data_( std::shared_ptr< O >& o ) { return o.get(); }
-    template< typename O > const void* data_( std::unique_ptr< const O >& o ) { return o.get(); }
-
-    //template< typename O > const void* data_( const O& o ) { return &o; }
-    //template< typename O > void* data_( O& o ) { return &o; }
-
-    //template< typename O > const void* data_( std::shared_ptr< const O >& o ) { return o.get(); }
-    //template< typename O > void* data_( std::shared_ptr< O >& o ) { return o.get(); }
-    //template< typename O > const void* data_( std::unique_ptr< const O >& o ) { return o.get(); }
-
-
-    //struct virtual_const_void_facade : pro::facade_builder
-    //    ::support_copy<pro::constraint_level::nontrivial>
-    //    ::add_facade< meta_facade, true >
-    //    ::add_convention< free_data, const void*() const >
-    //    ::build {};
 
     struct virtual_void_facade : pro::facade_builder
         ::support_copy<pro::constraint_level::nontrivial>
