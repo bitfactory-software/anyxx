@@ -9,6 +9,106 @@
 
 namespace virtual_void
 {
+	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
+	template<class... Ts> overload(Ts...) -> overload<Ts...>;
+
+    template< typename... ARGS >
+    struct type_list
+    {
+        // see https://vittorioromeo.info/index/blog/cpp20_lambdas_compiletime_for.html
+        static void for_each( auto&& call )
+        {
+            ( call.template operator()< ARGS >(), ... );
+        }
+    };
+
+    template<int N, typename... Ts> using nth_type =
+        typename std::tuple_element<N, std::tuple<Ts...>>::type;
+
+    template< typename... Ts> using first = nth_type< 0, Ts...>;
+
+	namespace class_hierarchy
+	{
+		template< typename CLASS > struct describe;
+
+		template< typename... BASES > using are = type_list< BASES... >;
+		using none = type_list<>;
+
+		template< typename CLASS, bool deep = true >
+		void visit_class( auto visitor )
+		{
+			visitor.template operator()< CLASS >();
+			using bases = describe< CLASS >::bases;
+			bases::for_each( [ & ]< typename BASE >()
+			{ 
+				visitor.template operator()< CLASS, BASE >();
+				if constexpr( deep )
+				{
+					visit_class< BASE, deep >( visitor );
+				}
+			});
+		}
+		template< typename CLASSES, bool deep = true >
+		void visit_classes( auto visitor )
+		{
+			CLASSES::for_each( [ & ]< typename CLASS >()
+			{ 
+				visit_class< CLASS, deep >( visitor );
+			});
+		}
+
+		using bases_t =	std::vector< const std::type_info* >;
+		struct class_with_bases
+		{
+			const std::type_info* self;
+			bases_t bases;
+		};
+		using classes_with_bases = std::map< std::type_index, class_with_bases >;
+
+		auto declare_visitor( classes_with_bases& registry )
+		{
+			return overload
+				{ [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C ); }
+				, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
+				};	
+		}
+		template< typename CLASS, bool deep = true >
+		void declare( classes_with_bases& registry )
+		{
+			class_hierarchy::visit_class< CLASS, deep >( declare_visitor( registry ) );
+		}
+		template< typename CLASSES, bool deep = true >
+		void declare_all( classes_with_bases& registry )
+		{
+			class_hierarchy::visit_classes< CLASSES, deep >( declare_visitor( registry ) );
+		}
+		template< typename CLASS >
+		void declare_deep( classes_with_bases& registry )
+		{
+			declare< CLASS, true >( registry );
+		}
+		template< typename CLASS >
+		void declare_shallow( classes_with_bases& registry )
+		{
+			declare< CLASS, false >( registry );
+		}
+
+		void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor );
+		void visit_bases( const bases_t& bases, const classes_with_bases& classes_with_bases, auto visitor )
+		{
+			for( auto base : bases )
+				visit_hierarchy( *base, classes_with_bases, visitor );
+		}
+		void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor )
+		{
+			auto found = classes_with_bases.find( self );
+			if( found == classes_with_bases.end() )
+				throw std::runtime_error("class not registered.");
+			visitor( *found->second.self );
+			visit_bases( found->second.bases, classes_with_bases, visitor );
+		}
+	}
+
 	class v_table;
 	template< typename CLASS > constexpr v_table* v_table_of();
 
@@ -29,24 +129,6 @@ namespace virtual_void
 	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
 
 	class error;
-
-	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
-	template<class... Ts> overload(Ts...) -> overload<Ts...>;
-
-    template< typename... ARGS >
-    struct type_list
-    {
-        // see https://vittorioromeo.info/index/blog/cpp20_lambdas_compiletime_for.html
-        static void for_each( auto&& call )
-        {
-            ( call.template operator()< ARGS >(), ... );
-        }
-    };
-
-    template<int N, typename... Ts> using nth_type =
-        typename std::tuple_element<N, std::tuple<Ts...>>::type;
-
-    template< typename... Ts> using first = nth_type< 0, Ts...>;
 
 	class v_table
 	{
@@ -95,11 +177,10 @@ namespace virtual_void
 		using std::runtime_error::runtime_error;
 	};
 
-	template< typename DISPATCH_TARGET >
 	class type_info_dispatch
 	{
 	public:
-		using dispatch_target_t = DISPATCH_TARGET;
+		using dispatch_target_t = void(*)();
 	private:
 		using method_table_t = std::map< std::type_index, dispatch_target_t >;;
 		using entry_t = method_table_t::value_type;
@@ -108,41 +189,40 @@ namespace virtual_void
 		bool sealed_ = false;
 	public:
 		static void throw_not_found(){ throw error( "no target specified." ); }
-		auto define_default( dispatch_target_t f )
+		auto define_default( auto f )
 		{
-			default_ = dispatch_target_t;
+			default_ = reinterpret_cast< dispatch_target_t >( f );
 		}
-		auto get_default() const
+		auto override_erased( const std::type_info& register_type_info, auto f )
 		{
-			return default_;
-		}
-		auto override_erased( const std::type_info& register_type_info, dispatch_target_t f )
-		{
+			auto t = reinterpret_cast< dispatch_target_t >( f );
 			if( sealed_ )
 				throw error( "This open_method is already seald." );
 			if( is_defined( register_type_info ) )
 				throw error( "Method for type already registered." );
-			dispatchTable_[ register_type_info ] = f;
+			dispatchTable_[ register_type_info ] = t;
 			return definition{};
 		}
-		dispatch_target_t is_defined( const std::type_info& type_info ) const
+		template< typename TARGET = dispatch_target_t >
+		TARGET is_defined( const std::type_info& type_info ) const
 		{
 			auto found = dispatchTable_.find( type_info );
 			if( found != dispatchTable_.end() )
-				return found->second;
+				return reinterpret_cast< TARGET >( found->second );
 			return nullptr;
 		}
 		void seal()
 		{
 			sealed_ = true;
 		}
-		dispatch_target_t lookup( const std::type_info& type_info ) const
+		template< typename TARGET = dispatch_target_t >
+		TARGET lookup( const std::type_info& type_info ) const
 		{
 			if( !sealed_ )
 				throw error( "Not yet sealed." );
 			if( auto found = is_defined( type_info ) )
-				return found;
-			return default_;
+				return reinterpret_cast< TARGET >( found );
+			return reinterpret_cast< TARGET >( default_ );
 		}
 		struct definition{};
 	private:
@@ -166,7 +246,7 @@ namespace virtual_void
 		using erased_function_t = R(*)( ARGS... );
 		int v_table_index_ = -1;
 	private:
-		type_info_dispatch< erased_function_t > methodTable_;
+		type_info_dispatch methodTable_;
 	public:
 		int v_table_index() const { return v_table_index_; }
 		auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.override_erased( ti, f ); }
@@ -174,12 +254,12 @@ namespace virtual_void
 		auto override_( FUNCTION f )
 		{
 			auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
-			return methodTable_.override_erased( typeid( CLASS ), reinterpret_cast< erased_function_t >( fp ) );
+			return methodTable_.override_erased( typeid( CLASS ), fp );
 		}
 		template< typename... OTHER_ARGS >
 		R operator()( const std::type_info& type_info, dispatch_t dispatched, OTHER_ARGS&&... args ) const
 		{
-			auto f = methodTable_.lookup( type_info );
+			auto f = methodTable_.lookup< erased_function_t >( type_info );
 			return f( dispatched, std::forward< OTHER_ARGS >( args )... );
 		}
 		template< typename... OTHER_ARGS >
@@ -201,7 +281,7 @@ namespace virtual_void
 		}
 		erased_function_t is_defined( const std::type_info& type_info ) const
 		{
-			return methodTable_.is_defined( type_info );
+			return reinterpret_cast< erased_function_t >( methodTable_.is_defined( type_info ) );
 		}
 		template< typename C > auto is_defined() const
 		{
@@ -241,7 +321,7 @@ namespace virtual_void
 	public:
 		using factory_function_t = R(*)( ARGS... );
 	private:
-		type_info_dispatch< factory_function_t > methodTable_;
+		type_info_dispatch methodTable_;
 	public:
 		auto override_erased( const std::type_info& ti, factory_function_t f ) { return methodTable_.override_erased( ti, f ); }
 		template< typename CLASS, typename FACTORY >
@@ -252,7 +332,7 @@ namespace virtual_void
 		}
 		R operator()( const std::type_info& type_info, ARGS&&... args ) const
 		{
-			auto f = methodTable_.lookup( type_info );
+			auto f = methodTable_.lookup< factory_function_t >( type_info );
 			return f( std::forward< ARGS >( args )... );
 		}
 		template< typename CLASS > R operator()( ARGS&&... args ) const // to simplify tests!
@@ -261,7 +341,7 @@ namespace virtual_void
 		}
 		factory_function_t is_defined( const std::type_info& type_info ) const
 		{
-			return methodTable_.is_defined( type_info );
+			return methodTable_.is_defined< factory_function_t >( type_info );
 		}
 		template< typename C > auto is_defined() const
 		{
@@ -289,91 +369,7 @@ namespace virtual_void
 			}
 		}
 	};
-}
 
-namespace virtual_void::class_hierarchy
-{
-	template< typename CLASS > struct describe;
-
-	template< typename... BASES > using are = type_list< BASES... >;
-	using none = type_list<>;
-
-	template< typename CLASS, bool deep = true >
-	void visit_class( auto visitor )
-	{
-        visitor.template operator()< CLASS >();
-		using bases = describe< CLASS >::bases;
-		bases::for_each( [ & ]< typename BASE >()
-		{ 
-	        visitor.template operator()< CLASS, BASE >();
-			if constexpr( deep )
-			{
-				visit_class< BASE, deep >( visitor );
-			}
-		});
-	}
-	template< typename CLASSES, bool deep = true >
-	void visit_classes( auto visitor )
-	{
-		CLASSES::for_each( [ & ]< typename CLASS >()
-		{ 
-	        visit_class< CLASS, deep >( visitor );
-		});
-	}
-
-	using bases_t =	std::vector< const std::type_info* >;
-	struct class_with_bases
-	{
-		const std::type_info* self;
-		bases_t bases;
-	};
-	using classes_with_bases = std::map< std::type_index, class_with_bases >;
-
-	auto declare_visitor( classes_with_bases& registry )
-	{
-		return overload
-			{ [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C ); }
-			, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
-			};	
-	}
-	template< typename CLASS, bool deep = true >
-	void declare( classes_with_bases& registry )
-	{
-		class_hierarchy::visit_class< CLASS, deep >( declare_visitor( registry ) );
-	}
-	template< typename CLASSES, bool deep = true >
-	void declare_all( classes_with_bases& registry )
-	{
-		class_hierarchy::visit_classes< CLASSES, deep >( declare_visitor( registry ) );
-	}
-	template< typename CLASS >
-	void declare_deep( classes_with_bases& registry )
-	{
-		declare< CLASS, true >( registry );
-	}
-	template< typename CLASS >
-	void declare_shallow( classes_with_bases& registry )
-	{
-		declare< CLASS, false >( registry );
-	}
-
-	void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor );
-	void visit_bases( const bases_t& bases, const classes_with_bases& classes_with_bases, auto visitor )
-	{
-		for( auto base : bases )
-			visit_hierarchy( *base, classes_with_bases, visitor );
-	}
-	void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor )
-	{
-		auto found = classes_with_bases.find( self );
-		if( found == classes_with_bases.end() )
-			throw std::runtime_error("class not registered.");
-		visitor( *found->second.self );
-		visit_bases( found->second.bases, classes_with_bases, visitor );
-	}
-}
-namespace virtual_void
-{
 	template< typename CLASS, typename DEFINITION >
 	void fill_with_overload( DEFINITION& method, const auto& wrapper )
 	{
@@ -488,4 +484,9 @@ namespace virtual_void
 	{
 		fill_with_overloads< CLASSES >( method, typeid_cast_implementation{} );
 	}
+
+	class global
+	{
+		class_hierarchy::classes_with_bases  known_classes;	
+	};
 }
