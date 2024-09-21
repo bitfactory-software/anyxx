@@ -381,7 +381,6 @@ namespace virtual_void
 		if( !method.is_defined< CLASS >() )
 			method.override_< CLASS >( wrapper );
 	}
-
 	template< typename CLASSES, typename DEFINITION >
 	void fill_with_overloads( DEFINITION& method, const auto& wrapper )
 	{
@@ -390,6 +389,26 @@ namespace virtual_void
 			{ [&]< typename C >				{ fill_with_overload< C >( method, wrapper ); }
 			, [&]< typename C, typename B >	{}
 			});
+	}
+
+	template< typename DEFINITION >
+	DEFINITION::erased_function_t find_decared_in_bases( DEFINITION& method, const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases )
+	{
+		typename DEFINITION::erased_function_t found = nullptr;
+		visit_bases( bases, registry, [ & ]( const std::type_info& base )
+			{
+				if( !found )
+					found = method.is_defined( base );				
+			});
+		return found;
+	}
+	template< typename DEFINITION >
+	void interpolate( DEFINITION& method, const class_hierarchy::classes_with_bases& registry )
+	{
+		for( const auto& [ self, class_with_bases ] : registry )
+			if( !method.is_defined( *class_with_bases.self ) )
+				if( auto found = find_decared_in_bases( method, registry, class_with_bases.bases ) )
+					method.override_erased( *class_with_bases.self, found );
 	}
 
 	template< template< typename > typename CONST, typename FOUND, typename FROM > auto typeid_cast_implementation_( auto* from, const std::type_info& to )
