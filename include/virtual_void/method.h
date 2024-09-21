@@ -374,6 +374,24 @@ namespace virtual_void::class_hierarchy
 }
 namespace virtual_void
 {
+	template< typename CLASS, typename DEFINITION >
+	void fill_with_overload( DEFINITION& method, const auto& wrapper )
+	{
+		static_assert( !std::is_const_v< DEFINITION > );
+		if( !method.is_defined< CLASS >() )
+			method.override_< CLASS >( wrapper );
+	}
+
+	template< typename CLASSES, typename DEFINITION >
+	void fill_with_overloads( DEFINITION& method, const auto& wrapper )
+	{
+		class_hierarchy::visit_classes< CLASSES >( 
+			overload
+			{ [&]< typename C >				{ fill_with_overload< C >( method, wrapper ); }
+			, [&]< typename C, typename B >	{}
+			});
+	}
+
 	template< template< typename > typename CONST, typename FOUND, typename FROM > auto typeid_cast_implementation_( auto* from, const std::type_info& to )
 	{
 		typename CONST< void >::type found = nullptr;
