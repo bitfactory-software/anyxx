@@ -59,7 +59,7 @@ namespace virtual_void
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				class_hierarchy::classes_with_bases registry;
 				declare_deep< D >( registry );
-				interpolate( toString, registry );
+				interpolate( *testDomain.method_dispatches[ 0 ], registry );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
 				toString.seal();
 				call< D >( toString );

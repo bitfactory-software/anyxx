@@ -20,12 +20,33 @@ namespace virtual_void
         {
             ( call.template operator()< ARGS >(), ... );
         }
-    };
+    };	class v_table;
+
+	template< typename CLASS > constexpr v_table* v_table_of();
+
+	using virtual_const_void = std::pair< const v_table*, const void* >;
+	using virtual_void = std::pair< const v_table*, void* >;
+
+	template< typename P > auto to_virtual_void( const P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
+	template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
+
+	using typed_const_void = std::pair< const std::type_info&, const void* >;
+	using typed_void = std::pair< const std::type_info&, void* >;
+
+	template< typename P > auto to_typed_void( const P* p ){ return typed_const_void{ typeid( P ), p }; }
+	template< typename P > auto to_typed_void( P* p ){ return typed_void{ typeid( P ), p }; }
+
+	template< typename >  struct self_pointer;
+	template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
+	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
+
+	class type_info_dispatch;
 
     template<int N, typename... Ts> using nth_type =
         typename std::tuple_element<N, std::tuple<Ts...>>::type;
 
     template< typename... Ts> using first = nth_type< 0, Ts...>;
+
 
 	namespace class_hierarchy
 	{
@@ -109,26 +130,6 @@ namespace virtual_void
 		}
 	}
 
-	class v_table;
-	template< typename CLASS > constexpr v_table* v_table_of();
-
-	using virtual_const_void = std::pair< const v_table*, const void* >;
-	using virtual_void = std::pair< const v_table*, void* >;
-
-	template< typename P > auto to_virtual_void( const P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
-	template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
-
-	using typed_const_void = std::pair< const std::type_info&, const void* >;
-	using typed_void = std::pair< const std::type_info&, void* >;
-
-	template< typename P > auto to_typed_void( const P* p ){ return typed_const_void{ typeid( P ), p }; }
-	template< typename P > auto to_typed_void( P* p ){ return typed_void{ typeid( P ), p }; }
-
-	template< typename >  struct self_pointer;
-	template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
-	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
-
-	class type_info_dispatch;
 
 	struct domain
 	{
@@ -399,10 +400,9 @@ namespace virtual_void
 			});
 	}
 
-	template< typename DEFINITION >
-	DEFINITION::erased_function_t find_decared_in_bases( DEFINITION& method, const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases )
+	auto find_declared_in_bases( type_info_dispatch& method, const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases )
 	{
-		typename DEFINITION::erased_function_t found = nullptr;
+		typename type_info_dispatch::dispatch_target_t found = nullptr;
 		visit_bases( bases, registry, [ & ]( const std::type_info& base )
 			{
 				if( !found )
@@ -410,12 +410,11 @@ namespace virtual_void
 			});
 		return found;
 	}
-	template< typename DEFINITION >
-	void interpolate( DEFINITION& method, const class_hierarchy::classes_with_bases& registry )
+	void interpolate( type_info_dispatch& method, const class_hierarchy::classes_with_bases& registry )
 	{
 		for( const auto& [ self, class_with_bases ] : registry )
 			if( !method.is_defined( *class_with_bases.self ) )
-				if( auto found = find_decared_in_bases( method, registry, class_with_bases.bases ) )
+				if( auto found = find_declared_in_bases( method, registry, class_with_bases.bases ) )
 					method.override_erased( *class_with_bases.self, found );
 	}
 
