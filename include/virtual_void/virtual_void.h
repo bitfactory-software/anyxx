@@ -128,6 +128,14 @@ namespace virtual_void
 	template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
 	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
 
+	class type_info_dispatch;
+
+	struct domain
+	{
+		class_hierarchy::classes_with_bases		classes;
+		std::vector< type_info_dispatch* >		method_dispatches;	
+	};
+
 	class error;
 
 	class v_table
@@ -244,10 +252,15 @@ namespace virtual_void
 		using param_t = std::pair< const std::type_info&, dispatch_t >;
 		using virtual_void_t = std::pair< const v_table*, dispatch_t >;
 		using erased_function_t = R(*)( ARGS... );
-		int v_table_index_ = -1;
+		const int v_table_index_ = -1;
 	private:
 		type_info_dispatch methodTable_;
 	public:
+		method( domain& domain )
+			: v_table_index_( domain.method_dispatches.size() )
+		{ 
+			domain.method_dispatches.push_back( &methodTable_ ); 
+		}
 		int v_table_index() const { return v_table_index_; }
 		auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.override_erased( ti, f ); }
 		template< typename CLASS, typename FUNCTION >
@@ -290,7 +303,6 @@ namespace virtual_void
 		void seal( int v_table_index = -1 ) 
 		{
 			methodTable_.seal(); 
-			v_table_index_ = v_table_index;
 		}
 	private:
 		template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
@@ -485,8 +497,4 @@ namespace virtual_void
 		fill_with_overloads< CLASSES >( method, typeid_cast_implementation{} );
 	}
 
-	class global
-	{
-		class_hierarchy::classes_with_bases  known_classes;	
-	};
 }

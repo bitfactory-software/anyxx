@@ -50,7 +50,8 @@ namespace
 		using namespace TestDomain;
 
 		{
-			virtual_void::typeid_const_cast_method typeid_const_cast;
+			virtual_void::domain testDomain;
+			virtual_void::typeid_const_cast_method typeid_const_cast( testDomain );
 		
 			using classes = virtual_void::type_list< D, C1, C2 >;
 

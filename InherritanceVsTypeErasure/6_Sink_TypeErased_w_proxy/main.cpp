@@ -75,7 +75,9 @@ namespace Application
         return x.data;
     }
 
-    auto entityToOut = virtual_void::method< void( const void* ) >{};
+    virtual_void::domain applicationDomain;
+
+    auto entityToOut = virtual_void::method< void( const void* ) >{ applicationDomain };
 
     void IntToOut( const IntData* i ){ std::cout << "int: " << i->data << std::endl; }
 

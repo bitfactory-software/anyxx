@@ -32,7 +32,8 @@ namespace virtual_void
 			std::cout << "\n";
 			std::cout << "dispatch via void" << "\n";
 			{
-				to_string_method toString;
+				domain testDomain;
+				to_string_method toString( testDomain );
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				toString.seal();
@@ -52,7 +53,8 @@ namespace virtual_void
 				}
 			}
 			{
-				auto toString = to_string_method{};
+				domain testDomain;
+				to_string_method toString( testDomain );
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				class_hierarchy::classes_with_bases registry;
@@ -64,7 +66,8 @@ namespace virtual_void
 			}
 
 			{
-				auto toString = to_string_method{};
+				domain testDomain;
+				to_string_method toString( testDomain );
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, ToString );
 				toString.seal();
@@ -76,7 +79,8 @@ namespace virtual_void
 			}
 
 			{
-				auto toString = to_string_method{};
+				domain testDomain;
+				to_string_method toString( testDomain );
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, ToString );
 				toString.seal( 0 );

@@ -98,13 +98,6 @@ std::string ToString_( const X& x )
     return x.s;
 }
 
-auto update = virtual_void::method< void (void*, const std::string& ) >{};
-
-namespace
-{
-    auto updateX = update.override_< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
-}
-
 template< template< typename, typename... > class any_function, typename any_value > void test_any()
 {
     std::cout << "any_function..." << std::endl << std::endl;
@@ -168,6 +161,11 @@ template< typename T > void trace_alignof()
 }
 int main()
 {
+    virtual_void::domain testDomain;
+    auto update = virtual_void::method< void (void*, const std::string& ) >{ testDomain };
+    auto updateX = update.override_< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
+
+
     trace_alignof< const char* >();
     trace_alignof< std::string >();
     trace_alignof< int >();
