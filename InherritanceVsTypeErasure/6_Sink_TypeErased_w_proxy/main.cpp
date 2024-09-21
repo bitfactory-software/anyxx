@@ -9,7 +9,6 @@
 #include <memory>
 
 #include "../../include/proxy/proxy.h"
-#include "../../include/virtual_void/forward.h"
 #include "../../include/virtual_void/method.h"
 #include "../../include/virtual_void/v_table_build.h"
 #include "../../include/virtual_void/proxy/adapter.h"

@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <map>
 
-#include "../forward.h"
+#include "../method.h"
 
 namespace virtual_void::class_hierarchy
 {
