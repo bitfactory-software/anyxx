@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "../../include/proxy/proxy.h"
-#include "../../include/virtual_void/method.h"
+#include "../../include/virtual_void/virtual_void.h"
 #include "../../include/virtual_void/proxy/adapter.h"
 
 namespace DB

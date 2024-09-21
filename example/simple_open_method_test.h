@@ -4,7 +4,7 @@
 #include <typeinfo>
 #include <any>
 
-#include "../include/virtual_void/method.h"
+#include "../include/virtual_void/virtual_void.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/virtual_void/method.h"
+#include "../include/virtual_void/virtual_void.h"
 
 namespace TestDomain
 {
