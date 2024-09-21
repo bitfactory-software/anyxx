@@ -2,7 +2,6 @@
 
 #include "method.h"
 #include "fill_with_overloads.h"
-#include "typeid_cast_implementation.h"
 
 namespace virtual_void
 {
