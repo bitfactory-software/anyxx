@@ -14,31 +14,9 @@
 
 namespace DB
 {
-    struct meta
-    {
-        template <class O> constexpr explicit meta( std::in_place_type_t< O > ) 
-            : type_info( typeid( O ) ) {}
-        template <class O> constexpr explicit meta( std::in_place_type_t< std::shared_ptr< O > > )
-            : type_info( typeid( O ) ) {}
-        template <class O> constexpr explicit meta( std::in_place_type_t< std::unique_ptr< O > > )
-            : type_info( typeid( O ) ) {}
-        template <class O> constexpr explicit meta( std::in_place_type_t< O* > )
-            : type_info( typeid( O ) ) {}
-
-        //template <class O> constexpr explicit meta( std::in_place_type_t< O > ) 
-        //    : type_info( typeid( O ) ) , v_table( v_table_of< O >() ) {}
-        //template <class O> constexpr explicit meta( std::in_place_type_t< std::shared_ptr< O > > )
-        //    : type_info( typeid( O ) ) , v_table( v_table_of< O >() ) {}
-        //template <class O> constexpr explicit meta( std::in_place_type_t< std::unique_ptr< O > > )
-        //    : type_info( typeid( O ) ) , v_table( v_table_of< O >() ) {}
-        //template <class O> constexpr explicit meta( std::in_place_type_t< O* > )
-        //    : type_info( typeid( O ) ) , v_table( v_table_of< O >() ) {}
-
-        const std::type_info& type_info;
-        //const v_table*        v_table;
-    };
 
     PRO_DEF_FREE_DISPATCH( free_data, data_, data );
+//    PRO_DEF_FREE_DISPATCH( free_v_table, v_table_, v_table );
 
     template< typename O > const void* data_( const O& o ) { return &o; }
     template< typename O > void* data_( O& o ) { return &o; }
@@ -47,10 +25,13 @@ namespace DB
     template< typename O > void* data_( std::shared_ptr< O >& o ) { return o.get(); }
     template< typename O > const void* data_( std::unique_ptr< const O >& o ) { return o.get(); }
 
-    struct meta_facade : pro::facade_builder
-        ::support_copy<pro::constraint_level::nontrivial>
-        ::add_reflection< meta >
-        ::build {};
+    //template< typename O > const void* data_( const O& o ) { return &o; }
+    //template< typename O > void* data_( O& o ) { return &o; }
+
+    //template< typename O > const void* data_( std::shared_ptr< const O >& o ) { return o.get(); }
+    //template< typename O > void* data_( std::shared_ptr< O >& o ) { return o.get(); }
+    //template< typename O > const void* data_( std::unique_ptr< const O >& o ) { return o.get(); }
+
 
     //struct virtual_const_void_facade : pro::facade_builder
     //    ::support_copy<pro::constraint_level::nontrivial>
@@ -60,7 +41,7 @@ namespace DB
 
     struct virtual_void_facade : pro::facade_builder
         ::support_copy<pro::constraint_level::nontrivial>
-        ::add_facade< meta_facade, true >
+        ::add_facade< virtual_void::proxy::meta_facade, true >
 //        ::add_facade< virtual_const_void_facade, true >
         ::add_convention< free_data, void*() >
         ::build {};
@@ -95,7 +76,8 @@ namespace DB
 
 namespace Application
 {
-    template< typename O > auto data_( O&& o ) { return DB::data_( std::forward< O >( o ) ); }
+    //template< typename O > auto data_( O&& o ) { return virtual_void::proxy::data_( std::forward< O >( o ) ); }
+    using virtual_void::proxy::data_;
 
     struct IntData
     {
@@ -132,6 +114,8 @@ int main()
     //AnyToOut.define< const StringData >( []( const auto s )
     //    { std::cout << "string: " << s->data << std::endl; } );
 
+    //auto v = virtual_void::v_table_of< IntData >();
+
     //using DB::data_;
     //std::string data = "1";
     //auto s = std::make_shared< IntData >( std::atoi( data.c_str() ) );
@@ -144,7 +128,7 @@ int main()
     {
         db.Query( "junk", []( const DB::Entity& e )
             { 
-                std::cout << "type_info: " << pro::proxy_reflect< DB::meta >( e ).type_info.name() << std::endl;
+                std::cout << "type_info: " << pro::proxy_reflect< virtual_void::proxy::meta >( e ).type_info.name() << std::endl;
             });
     }
     catch( std::exception& e )

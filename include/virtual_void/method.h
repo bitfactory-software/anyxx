@@ -15,39 +15,39 @@ namespace virtual_void
 	{
 	public:
 		using v_table_target_t = void(*)();
-		void set_method( int method_index, v_table_target_t target )
+		constexpr void set_method( int method_index, v_table_target_t target )
 		{
 			ensure_size( method_index + 1  );
 			table_[ method_index ] = target;
 		}
 		template< typename TRAGET >
-		void set_method( int method_index, TRAGET target )
+		constexpr void set_method( int method_index, TRAGET target )
 		{
 			auto v_table_target = reinterpret_cast< v_table_target_t >( target );
 			set_method( method_index, v_table_target );
 		}
-		void clear()
+		constexpr void clear()
 		{
 			table_.clear();
 		}
-		auto at( int method_index ) const
+		constexpr auto at( int method_index ) const
 		{
 			return table_.at( method_index );
 		}
-		auto operator[]( int method_index ) const
+		constexpr auto operator[]( int method_index ) const
 		{
 			return table_[ method_index ];
 		}
 	private:
 		std::vector< v_table_target_t > table_;
-		void ensure_size( std::size_t s )
+		constexpr void ensure_size( std::size_t s )
 		{
 			if( table_.size() >= s )
 				return;
 			table_.insert( table_.end(), s  - table_.size(), nullptr );
 		}
 	};
-	template< typename CLASS > v_table* v_table_of()
+	template< typename CLASS > constexpr v_table* v_table_of()
 	{
 		static v_table v_table_;
 		return &v_table_;

@@ -6,7 +6,7 @@
 namespace virtual_void
 {
 	class v_table;
-	template< typename CLASS > v_table* v_table_of();
+	template< typename CLASS > constexpr v_table* v_table_of();
 
 	using virtual_const_void = std::pair< const v_table*, const void* >;
 	using virtual_void = std::pair< const v_table*, void* >;
