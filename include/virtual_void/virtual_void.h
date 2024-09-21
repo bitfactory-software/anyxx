@@ -9,19 +9,27 @@
 
 namespace virtual_void
 {
-	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
-	template<class... Ts> overload(Ts...) -> overload<Ts...>;
+	// ++utillities
+		template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
+		template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
-    template< typename... ARGS >
-    struct type_list
-    {
-        // see https://vittorioromeo.info/index/blog/cpp20_lambdas_compiletime_for.html
-        static void for_each( auto&& call )
-        {
-            ( call.template operator()< ARGS >(), ... );
-        }
-    };	class v_table;
+		template< typename... ARGS >
+		struct type_list
+		{
+			// see https://vittorioromeo.info/index/blog/cpp20_lambdas_compiletime_for.html
+			static void for_each( auto&& call )
+			{
+				( call.template operator()< ARGS >(), ... );
+			}
+		};	
 
+		template<int N, typename... Ts> using nth_type =
+			typename std::tuple_element<N, std::tuple<Ts...>>::type;
+
+		template< typename... Ts> using first = nth_type< 0, Ts...>;
+	// --utillities
+
+	class v_table;
 	template< typename CLASS > constexpr v_table* v_table_of();
 
 	using virtual_const_void = std::pair< const v_table*, const void* >;
@@ -41,12 +49,6 @@ namespace virtual_void
 	template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
 
 	class type_info_dispatch;
-
-    template<int N, typename... Ts> using nth_type =
-        typename std::tuple_element<N, std::tuple<Ts...>>::type;
-
-    template< typename... Ts> using first = nth_type< 0, Ts...>;
-
 
 	namespace class_hierarchy
 	{
@@ -82,6 +84,7 @@ namespace virtual_void
 		struct class_with_bases
 		{
 			const std::type_info* self;
+			v_table* v_table;
 			bases_t bases;
 		};
 		using classes_with_bases = std::map< std::type_index, class_with_bases >;
@@ -89,7 +92,11 @@ namespace virtual_void
 		auto declare_visitor( classes_with_bases& registry )
 		{
 			return overload
-				{ [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C ); }
+				{ [&]< typename C >				
+					{ 
+						registry[ typeid( C ) ].self = &typeid( C );  
+						registry[ typeid( C ) ].v_table = v_table_of< C >();  
+					}
 				, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
 				};	
 		}
