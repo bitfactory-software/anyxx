@@ -45,22 +45,6 @@ namespace virtual_void::proxy
     { 
         return &o; 
     }
-    template< typename O > void* data_( std::shared_ptr< O >& o ) 
-    { 
-        return o->get(); 
-    }
-    template< typename O > const void* data_( std::shared_ptr< const O >& o ) 
-    { 
-        return o->get(); 
-    }
-    template< typename O > void* data_( std::unique_ptr< O >& o ) 
-    { 
-        return o->get(); 
-    }
-    template< typename O > const void* data_( std::unique_ptr< const O >& o ) 
-    { 
-        return o->get(); 
-    }
 
 
     PRO_DEF_FREE_DISPATCH( free_v_table_of, v_table_of_, v_table_of );
