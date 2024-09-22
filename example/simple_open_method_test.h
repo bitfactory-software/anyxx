@@ -37,7 +37,6 @@ namespace virtual_void
 				to_string_method toString( testDomain );
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
-				toString.seal();
 
 				call< A1 >( toString );
 
@@ -61,7 +60,6 @@ namespace virtual_void
 				declare_deep< D >( testDomain.classes );
 				build_runtime( testDomain );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
-				toString.seal();
 				call< D >( toString );
 			}
 
@@ -70,7 +68,6 @@ namespace virtual_void
 				to_string_method toString( testDomain );
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads< classes >( toString, ToString );
-				toString.seal();
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				{ call< C >( toString ); }
@@ -86,7 +83,6 @@ namespace virtual_void
 				class_hierarchy::declare_deep< C1 >( testDomain.classes );
 				class_hierarchy::declare_deep< C2 >( testDomain.classes );
 				fill_with_overloads< classes >( toString, ToString );
-				toString.seal( 0 );
 				build_runtime( testDomain );
 				class_hierarchy::visit_classes< classes >( 
 					overload
@@ -94,8 +90,10 @@ namespace virtual_void
 					{	
 						C c;
 						auto virtual_void = to_virtual_void( &c );
+						auto u = make_unique< C >();
 						auto expected = typeid( C ).name();
 						std::cout << "virtual_void dispatch for " << expected << ": "; 
+						//auto r = toString( u );
 						auto r = toString( virtual_void );
 						if( r != expected )
 							std::cout << "fail: " << r;
@@ -115,7 +113,6 @@ namespace virtual_void
 					//std::cout << "construct any for " << typeid( T ).name() << std::endl; 
 					return std::any( T() ); 
 				});
-				any_factory.seal();
 				auto test = [ & ]< typename T >()
 				{ 
 					std::cout << "any_factory for " << typeid( T ).name() << ": "; 
@@ -146,7 +143,6 @@ namespace virtual_void
 				{ 
 					return make_shared_const< T >( typeid( T ).name() ); 
 				});
-				const_void_factory.seal();
 				auto test = [ & ]< typename T >()
 				{ 
 					std::cout << "shared_const_void_factory for " << typeid( T ).name() << ": "; 
@@ -180,7 +176,6 @@ namespace virtual_void
 				{ 
 					return make_unique< T >( typeid( T ).name() ); 
 				});
-				const_void_factory.seal();
 				auto test = [ & ]< typename T >()
 				{ 
 					std::cout << "unique_void_factory for " << typeid( T ).name() << ": "; 

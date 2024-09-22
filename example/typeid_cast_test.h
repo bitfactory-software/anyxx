@@ -62,7 +62,6 @@ namespace
 			virtual_void::class_hierarchy::declare_deep< C2 >( testDomain.classes );
 
 			build_runtime( testDomain );
-			typeid_const_cast.seal( 0 );
 
 			run_cast_test< classes >( typeid_const_cast, []( auto top ){ return virtual_void::to_typed_void( top ); } );
 

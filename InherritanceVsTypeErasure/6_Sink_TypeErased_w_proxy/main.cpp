@@ -102,7 +102,6 @@ int main()
         });
 
      
-    entityToOut.seal();
 
     db.factories[ "i" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< StringData >( data ); };

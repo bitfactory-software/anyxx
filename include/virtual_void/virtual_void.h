@@ -206,7 +206,6 @@ private:
 	using entry_t = method_table_t::value_type;
 	method_table_t dispatchTable_;
 	dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
-	bool sealed_ = false;
 	const int v_table_index_ = -1;
 public:
 	type_info_dispatch() = default;
@@ -228,8 +227,6 @@ public:
 	auto override_erased( const std::type_info& register_type_info, auto f )
 	{
 		auto t = reinterpret_cast< dispatch_target_t >( f );
-		if( sealed_ )
-			throw error( "This open_method is already seald." );
 		if( is_defined( register_type_info ) )
 			throw error( "Method for type already registered." );
 		dispatchTable_[ register_type_info ] = t;
@@ -243,15 +240,9 @@ public:
 			return reinterpret_cast< TARGET >( found->second );
 		return nullptr;
 	}
-	void seal()
-	{
-		sealed_ = true;
-	}
 	template< typename TARGET = dispatch_target_t >
 	TARGET lookup( const std::type_info& type_info ) const
 	{
-		if( !sealed_ )
-			throw error( "Not yet sealed." );
 		if( auto found = is_defined( type_info ) )
 			return reinterpret_cast< TARGET >( found );
 		return reinterpret_cast< TARGET >( default_ );
@@ -320,10 +311,6 @@ public:
 	{
 		return is_defined( typeid( C ) );
 	}
-	void seal( int v_table_index = -1 ) 
-	{
-		methodTable_.seal(); 
-	}
 private:
 	template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
 	static auto ensure_function_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
@@ -378,10 +365,6 @@ public:
 	template< typename C > auto is_defined() const
 	{
 		return is_defined( typeid( C ) );
-	}
-	void seal() 
-	{ 
-		return methodTable_.seal(); 
 	}
 private:
 	template< typename CLASS >

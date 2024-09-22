@@ -184,7 +184,6 @@ int main()
 
     using types = virtual_void::type_list< int, double, X >;
     types::for_each( []< typename X >(){ std::cout << typeid( X ).name() << "\n"; } );
-    update.seal();
     update( &o, "->updated" );
     std::cout << ToString_( o ) << "\n";
 
