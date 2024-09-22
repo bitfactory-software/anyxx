@@ -54,7 +54,7 @@ template< typename DISPATCH, typename VOID >
 concept VtableDispatchableVoid = requires( const DISPATCH& void_ )
 {
     { void_.data() }	-> std::convertible_to< VOID >;
-    { void_.v_table() } -> std::same_as< v_table* >;
+    { void_.v_table() } -> std::convertible_to< const v_table* >;
 };
 
 namespace class_hierarchy
