@@ -5,6 +5,7 @@
 #include <any>
 
 #include "../include/virtual_void/virtual_void.h"
+#include "../include/virtual_void/virtual_void_ptr.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
@@ -125,6 +126,43 @@ namespace virtual_void
 						std::cout << "OK";
 					std::cout << std::endl;
 
+				};
+				class_hierarchy::visit_classes< classes >( 
+					overload
+					{ [&]< typename C >				{ test.template operator()< C >(); }
+					, [&]< typename C, typename B >	{}
+					});
+			}
+
+			{
+				auto x = make_shared_const_void< D >( "hallo" );
+				auto d = static_cast< const D* >( x.data() );
+				std::cout << d->data << ", " << x.type().name() << std::endl; 
+
+			
+			}
+			{
+				auto const_void_factory = factory< shared_const_void() >{};
+				using classes = type_list< D, C1, C2 >;
+				fill_with_overloads< classes >( const_void_factory, []< typename T >()->shared_const_void
+				{ 
+					return make_shared_const_void< T >();// typeid( T ).name() ); 
+				});
+				const_void_factory.seal();
+				auto test = [ & ]< typename T >()
+				{ 
+					std::cout << "shared_const_void_factory for " << typeid( T ).name() << ": "; 
+					auto cv = const_void_factory( typeid( T ) );
+					if( cv.type() != typeid( T ) )
+						std::cout << "fail: " << cv.type().name();
+					else
+						std::cout << "OK";
+					auto tp = static_cast< const T* >( cv.data() );
+					if( tp->data != typeid( T ).name() )
+						std::cout << "fail: " << cv.type().name();
+					else
+						std::cout << "OK";
+					std::cout << std::endl;
 				};
 				class_hierarchy::visit_classes< classes >( 
 					overload

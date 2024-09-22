@@ -148,6 +148,10 @@ namespace virtual_void
 	class v_table
 	{
 	public:
+		constexpr v_table( const std::type_info& type_info )
+			: type_info_( type_info )
+		{}
+		constexpr const std::type_info& type() const { return type_info_; }
 		using v_table_target_t = void(*)();
 		constexpr void set_method( int method_index, v_table_target_t target )
 		{
@@ -173,6 +177,7 @@ namespace virtual_void
 			return table_[ method_index ];
 		}
 	private:
+		const std::type_info& type_info_;
 		std::vector< v_table_target_t > table_;
 		constexpr void ensure_size( std::size_t s )
 		{
@@ -183,7 +188,7 @@ namespace virtual_void
 	};
 	template< typename CLASS > constexpr v_table* v_table_of()
 	{
-		static v_table v_table_;
+		static v_table v_table_{ typeid( CLASS ) };
 		return &v_table_;
 	}
 
