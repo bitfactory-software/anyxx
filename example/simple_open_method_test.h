@@ -135,16 +135,16 @@ namespace virtual_void
 			}
 
 			{
-				auto x = make_shared_const_void< D >( "shared hallo" );
+				auto x = make_shared_const< D >( "shared hallo" );
 				auto d = static_cast< const D* >( x.data() );
 				std::cout << d->data << ", " << x.type().name() << std::endl; 
 			}
 			{
-				auto const_void_factory = factory< shared_const_void() >{};
+				auto const_void_factory = factory< shared_const() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( const_void_factory, []< typename T >()->shared_const_void
+				fill_with_overloads< classes >( const_void_factory, []< typename T >()->shared_const
 				{ 
-					return make_shared_const_void< T >( typeid( T ).name() ); 
+					return make_shared_const< T >( typeid( T ).name() ); 
 				});
 				const_void_factory.seal();
 				auto test = [ & ]< typename T >()
@@ -170,16 +170,16 @@ namespace virtual_void
 					});
 			}
 			{
-				auto x = make_unique_void< D >( "unique hallo" );
+				auto x = make_unique< D >( "unique hallo" );
 				auto d = static_cast< const D* >( x.data() );
 				std::cout << d->data << ", " << x.type().name() << std::endl; 
 			}
 			{
-				auto const_void_factory = factory< unique_void() >{};
+				auto const_void_factory = factory< unique() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( const_void_factory, []< typename T >()->unique_void
+				fill_with_overloads< classes >( const_void_factory, []< typename T >()->unique
 				{ 
-					return make_unique_void< T >( typeid( T ).name() ); 
+					return make_unique< T >( typeid( T ).name() ); 
 				});
 				const_void_factory.seal();
 				auto test = [ & ]< typename T >()
