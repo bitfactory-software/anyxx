@@ -406,21 +406,25 @@ private:
 	}
 };
 
-template< typename CLASS, typename DEFINITION >
-void fill_with_overload( DEFINITION& method, const auto& wrapper )
+template< typename CLASS >
+void fill_with_overload( auto& method, const auto& wrapper )
 {
-	static_assert( !std::is_const_v< DEFINITION > );
 	if( !method.is_defined< CLASS >() )
 		method.override_< CLASS >( wrapper );
 }
-template< typename CLASSES, typename DEFINITION >
-void fill_with_overloads( DEFINITION& method, const auto& wrapper )
+template< typename TYPE_LIST >
+void fill_with_overloads( TYPE_LIST, auto& method, const auto& wrapper )
 {
-	class_hierarchy::visit_classes< CLASSES >( 
+	class_hierarchy::visit_classes< TYPE_LIST >( 
 		overload
 		{ [&]< typename C >				{ fill_with_overload< C >( method, wrapper ); }
 		, [&]< typename C, typename B >	{}
 		});
+}
+template< typename... CLASSES >
+void fill_with_overloads( auto& method, const auto& wrapper )
+{
+	fill_with_overloads( type_list< CLASSES... >{}, method, wrapper );
 }
 
 inline constexpr auto find_declared_in_bases( const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases, const type_info_dispatch& method )
@@ -452,20 +456,24 @@ inline void set_v_table( const class_hierarchy::class_with_bases& class_, const 
 		target = method.get_default();
 	class_.v_table->set_method( method.v_table_index(), target );
 }
-inline void build_v_tables( const class_hierarchy::classes_with_bases& classes, const type_info_dispatch& method )
+inline void fix_v_tables( const class_hierarchy::classes_with_bases& classes, const type_info_dispatch& method )
 {
 	for( const auto& class_ : classes )
 		set_v_table( class_.second, method );
 }
-inline void build_v_tables( const domain& domain )
+inline void fix_v_tables( const domain& domain )
 {
 	for( const auto& method : domain.method_dispatches )
-		build_v_tables( domain.classes, *method );
+		fix_v_tables( domain.classes, *method );
 }
-inline void build_runtime( const domain& domain )
+template< typename CLASSES > void declare_classes( CLASSES, domain& domain )
+{
+	class_hierarchy::declare_all< CLASSES >( domain.classes );
+}
+inline void build_v_tables( const domain& domain )
 {
 	interpolate( domain );
-	build_v_tables( domain );
+	fix_v_tables( domain );
 }
 
 template< template< typename > typename CONST, typename FOUND, typename FROM > auto typeid_cast_implementation_( auto* from, const std::type_info& to )
@@ -503,15 +511,23 @@ struct typeid_cast_implementation
 };
 using typeid_const_cast_method = method< const void*( const void*, const std::type_info& to ) >;
 using typeid_cast_method = method< void*( const void*, const std::type_info& to ) >;
-template< typename CLASSES >
+void fill_const_cast_for( auto classes, typeid_const_cast_method& method )
+{
+	fill_with_overloads( classes, method, typeid_const_cast_implementation{} );
+}
+template< typename... CLASSES >
 void fill_const_cast_for( typeid_const_cast_method& method )
 {
-	fill_with_overloads< CLASSES >( method, typeid_const_cast_implementation{} );
+	fill_const_cast_for( type_list< CLASSES... >{}, method );
 }
-template< typename CLASSES >
+void fill_cast_for( auto classes, typeid_cast_method& method )
+{
+	fill_with_overloads( classes, method, typeid_cast_implementation{} );
+}
+template< typename... CLASSES >
 void fill_cast_for( typeid_cast_method& method )
 {
-	fill_with_overloads< CLASSES >( method, typeid_cast_implementation{} );
+	fill_cast_for( type_list< CLASSES... >{}, method );
 }
 
 class shared_const

@@ -57,7 +57,7 @@ namespace virtual_void
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				declare_deep< D >( testDomain.classes );
-				build_runtime( testDomain );
+				build_v_tables( testDomain );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
 				call< D >( toString );
 			}
@@ -66,7 +66,7 @@ namespace virtual_void
 				domain testDomain;
 				to_string_method toString( testDomain );
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( toString, ToString );
+				fill_with_overloads( classes{}, toString, ToString );
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				{ call< C >( toString ); }
@@ -81,8 +81,8 @@ namespace virtual_void
 				class_hierarchy::declare_deep< D >( testDomain.classes );
 				class_hierarchy::declare_deep< C1 >( testDomain.classes );
 				class_hierarchy::declare_deep< C2 >( testDomain.classes );
-				fill_with_overloads< classes >( toString, ToString );
-				build_runtime( testDomain );
+				fill_with_overloads( classes{}, toString, ToString );
+				build_v_tables( testDomain );
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				
@@ -107,7 +107,7 @@ namespace virtual_void
 			{
 				auto any_factory = factory< std::any() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( any_factory, []< typename T >()->std::any
+				fill_with_overloads( classes{}, any_factory, []< typename T >()->std::any
 				{ 
 					//std::cout << "construct any for " << typeid( T ).name() << std::endl; 
 					return std::any( T() ); 
@@ -138,7 +138,7 @@ namespace virtual_void
 			{
 				auto const_void_factory = factory< shared_const() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( const_void_factory, []< typename T >()->shared_const
+				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->shared_const
 				{ 
 					return make_shared_const< T >( typeid( T ).name() ); 
 				});
@@ -171,7 +171,7 @@ namespace virtual_void
 			{
 				auto const_void_factory = factory< unique() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads< classes >( const_void_factory, []< typename T >()->unique
+				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->unique
 				{ 
 					return make_unique< T >( typeid( T ).name() ); 
 				});
