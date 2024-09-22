@@ -57,9 +57,8 @@ namespace virtual_void
 				to_string_method toString( testDomain );
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
-				class_hierarchy::classes_with_bases registry;
-				declare_deep< D >( registry );
-				interpolate( *testDomain.method_dispatches[ 0 ], registry );
+				declare_deep< D >( testDomain.classes );
+				build_runtime( testDomain );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
 				toString.seal();
 				call< D >( toString );
@@ -82,9 +81,12 @@ namespace virtual_void
 				domain testDomain;
 				to_string_method toString( testDomain );
 				using classes = type_list< D, C1, C2 >;
+				class_hierarchy::declare_deep< D >( testDomain.classes );
+				class_hierarchy::declare_deep< C1 >( testDomain.classes );
+				class_hierarchy::declare_deep< C2 >( testDomain.classes );
 				fill_with_overloads< classes >( toString, ToString );
 				toString.seal( 0 );
-				build_v_tables< classes >( toString );
+				build_runtime( testDomain );
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				

@@ -58,7 +58,7 @@ namespace virtual_void
 		using none = type_list<>;
 
 		template< typename CLASS, bool deep = true >
-		void visit_class( auto visitor )
+		constexpr void visit_class( auto visitor )
 		{
 			visitor.template operator()< CLASS >();
 			using bases = describe< CLASS >::bases;
@@ -72,7 +72,7 @@ namespace virtual_void
 			});
 		}
 		template< typename CLASSES, bool deep = true >
-		void visit_classes( auto visitor )
+		constexpr void visit_classes( auto visitor )
 		{
 			CLASSES::for_each( [ & ]< typename CLASS >()
 			{ 
@@ -89,7 +89,7 @@ namespace virtual_void
 		};
 		using classes_with_bases = std::map< std::type_index, class_with_bases >;
 
-		auto declare_visitor( classes_with_bases& registry )
+		constexpr auto declare_visitor( classes_with_bases& registry )
 		{
 			return overload
 				{ [&]< typename C >				
@@ -101,33 +101,33 @@ namespace virtual_void
 				};	
 		}
 		template< typename CLASS, bool deep = true >
-		void declare( classes_with_bases& registry )
+		constexpr void declare( classes_with_bases& registry )
 		{
 			class_hierarchy::visit_class< CLASS, deep >( declare_visitor( registry ) );
 		}
 		template< typename CLASSES, bool deep = true >
-		void declare_all( classes_with_bases& registry )
+		constexpr void declare_all( classes_with_bases& registry )
 		{
 			class_hierarchy::visit_classes< CLASSES, deep >( declare_visitor( registry ) );
 		}
 		template< typename CLASS >
-		void declare_deep( classes_with_bases& registry )
+		constexpr void declare_deep( classes_with_bases& registry )
 		{
 			declare< CLASS, true >( registry );
 		}
 		template< typename CLASS >
-		void declare_shallow( classes_with_bases& registry )
+		constexpr void declare_shallow( classes_with_bases& registry )
 		{
 			declare< CLASS, false >( registry );
 		}
 
-		void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor );
-		void visit_bases( const bases_t& bases, const classes_with_bases& classes_with_bases, auto visitor )
+		constexpr void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor );
+		inline constexpr void visit_bases( const bases_t& bases, const classes_with_bases& classes_with_bases, auto visitor )
 		{
 			for( auto base : bases )
 				visit_hierarchy( *base, classes_with_bases, visitor );
 		}
-		void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor )
+		inline constexpr void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor )
 		{
 			auto found = classes_with_bases.find( self );
 			if( found == classes_with_bases.end() )
@@ -136,7 +136,6 @@ namespace virtual_void
 			visit_bases( found->second.bases, classes_with_bases, visitor );
 		}
 	}
-
 
 	struct domain
 	{
@@ -203,11 +202,23 @@ namespace virtual_void
 		method_table_t dispatchTable_;
 		dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 		bool sealed_ = false;
+		const int v_table_index_ = -1;
 	public:
+		type_info_dispatch() = default;
+		type_info_dispatch( domain& domain )
+			: v_table_index_( (int)domain.method_dispatches.size() )
+		{ 
+			domain.method_dispatches.push_back( this ); 
+		}
+		int v_table_index() const { return v_table_index_; }
 		static void throw_not_found(){ throw error( "no target specified." ); }
-		auto define_default( auto f )
+		void define_default( auto f )
 		{
 			default_ = reinterpret_cast< dispatch_target_t >( f );
+		}
+		auto get_default() const
+		{
+			return default_;
 		}
 		auto override_erased( const std::type_info& register_type_info, auto f )
 		{
@@ -260,16 +271,12 @@ namespace virtual_void
 		using param_t = std::pair< const std::type_info&, dispatch_t >;
 		using virtual_void_t = std::pair< const v_table*, dispatch_t >;
 		using erased_function_t = R(*)( ARGS... );
-		const int v_table_index_ = -1;
 	private:
 		type_info_dispatch methodTable_;
 	public:
 		method( domain& domain )
-			: v_table_index_( domain.method_dispatches.size() )
-		{ 
-			domain.method_dispatches.push_back( &methodTable_ ); 
-		}
-		int v_table_index() const { return v_table_index_; }
+			: methodTable_( domain )
+		{}
 		auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.override_erased( ti, f ); }
 		template< typename CLASS, typename FUNCTION >
 		auto override_( FUNCTION f )
@@ -292,7 +299,7 @@ namespace virtual_void
 		R operator()( const virtual_void_t& param, OTHER_ARGS&&... args ) const
 		{
 			const v_table& v_table = *param.first;
-			auto erased_function = reinterpret_cast< erased_function_t >( v_table[ v_table_index_ ] );
+			auto erased_function = reinterpret_cast< erased_function_t >( v_table[ methodTable_.v_table_index() ] );
 			return (erased_function)( param.second, std::forward< OTHER_ARGS >( args )... );
 		}
 		template< typename CLASS, typename... OTHER_ARGS >
@@ -407,7 +414,7 @@ namespace virtual_void
 			});
 	}
 
-	auto find_declared_in_bases( type_info_dispatch& method, const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases )
+	inline constexpr auto find_declared_in_bases( const class_hierarchy::classes_with_bases& registry, const class_hierarchy::bases_t& bases, const type_info_dispatch& method )
 	{
 		typename type_info_dispatch::dispatch_target_t found = nullptr;
 		visit_bases( bases, registry, [ & ]( const std::type_info& base )
@@ -417,44 +424,39 @@ namespace virtual_void
 			});
 		return found;
 	}
-	void interpolate( type_info_dispatch& method, const class_hierarchy::classes_with_bases& registry )
+	inline void interpolate( const class_hierarchy::classes_with_bases& classes, type_info_dispatch* method )
 	{
-		for( const auto& [ self, class_with_bases ] : registry )
-			if( !method.is_defined( *class_with_bases.self ) )
-				if( auto found = find_declared_in_bases( method, registry, class_with_bases.bases ) )
-					method.override_erased( *class_with_bases.self, found );
+		for( const auto& [ self, class_with_bases ] : classes )
+			if( !method->is_defined( *class_with_bases.self ) )
+				if( auto found = find_declared_in_bases( classes, class_with_bases.bases, *method ) )
+					method->override_erased( *class_with_bases.self, found );
 	}
-
-	template < typename CLASS >
-	void clear_v_table()
+	inline void interpolate( const domain& domain )
 	{
-		v_table_of< CLASS >()->clear();
+		for( const auto& method : domain.method_dispatches )
+			interpolate( domain.classes, method );
 	}
-	template < typename CLASSES, typename METHOD >
-	void clear_v_tables()
+	inline void set_v_table( const class_hierarchy::class_with_bases& class_, const type_info_dispatch& method )
 	{
-		class_hierarchy::visit_classes
-			( overload
-			{ [&]< typename C >				{ clear_v_table< C >(); }
-			, [&]< typename C, typename B >	{}
-			});
-	}
-	template < typename CLASS, typename METHOD >
-	void set_v_table( const METHOD& method )
-	{
-		auto target = method.is_defined< CLASS >();
+		auto target = method.is_defined( *class_.self );
 		if( !target )
-			throw std::logic_error("No dispatch target found.");
-		v_table_of< CLASS >()->set_method( method.v_table_index(), target );
+			target = method.get_default();
+		class_.v_table->set_method( method.v_table_index(), target );
 	}
-	template < typename CLASSES, typename METHOD >
-	void build_v_tables( const METHOD& method )
+	inline void build_v_tables( const class_hierarchy::classes_with_bases& classes, const type_info_dispatch& method )
 	{
-		class_hierarchy::visit_classes< CLASSES >
-			( overload
-			{ [&]< typename C >				{ set_v_table< C >( method ); }
-			, [&]< typename C, typename B >	{}
-			});
+		for( const auto& class_ : classes )
+			set_v_table( class_.second, method );
+	}
+	inline void build_v_tables( const domain& domain )
+	{
+		for( const auto& method : domain.method_dispatches )
+			build_v_tables( domain.classes, *method );
+	}
+	inline void build_runtime( const domain& domain )
+	{
+		interpolate( domain );
+		build_v_tables( domain );
 	}
 
 	template< template< typename > typename CONST, typename FOUND, typename FROM > auto typeid_cast_implementation_( auto* from, const std::type_info& to )

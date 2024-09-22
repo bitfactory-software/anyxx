@@ -57,11 +57,14 @@ namespace
 
 			virtual_void::fill_const_cast_for< classes >( typeid_const_cast );
 
+			virtual_void::class_hierarchy::declare_deep< D >( testDomain.classes );
+			virtual_void::class_hierarchy::declare_deep< C1 >( testDomain.classes );
+			virtual_void::class_hierarchy::declare_deep< C2 >( testDomain.classes );
+
+			build_runtime( testDomain );
 			typeid_const_cast.seal( 0 );
 
 			run_cast_test< classes >( typeid_const_cast, []( auto top ){ return virtual_void::to_typed_void( top ); } );
-
-			build_v_tables< classes >( typeid_const_cast );
 
 			run_cast_test< classes >( typeid_const_cast, []( auto top ){ return virtual_void::to_virtual_void( top ); } );
 		}
