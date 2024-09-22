@@ -26,6 +26,7 @@ template< typename T, typename... ARGS > shared_const make_shared_const( ARGS&&.
     s.v_table_ = v_table_of< T >();
     return s;
 }
+static_assert( VtableDispatchableVoid< const shared_const, const void* > );
 
 template< typename T >
 class typed_shared_const
@@ -38,7 +39,7 @@ private:
     template< typename T > friend auto as( shared_const source );
 public:
     const T* operator->() const { return  static_cast< const T* >( ptr_.data() ); }
-    void* data() const { return ptr_.data(); }
+    const void* data() const { return ptr_.data(); }
     const std::type_info& type() const { return ptr_.type(); }
 	v_table* v_table() const { return ptr_.v_table; };
 };
@@ -48,6 +49,7 @@ template< typename T > auto as( shared_const source )
         throw error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_shared_const< T >{ std::move( source ) };
 }
+static_assert( VtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
 
 class unique
 {
@@ -68,6 +70,8 @@ template< typename T, typename... ARGS > unique make_unique( ARGS&&... args )
     unique::deleter_t deleter = +[]( void* p ){ delete static_cast< T* >( p ); };
     return unique{ std::unique_ptr< void, unique::deleter_t >( new T( std::forward< ARGS >( args )... ), deleter ), v_table_of< T >() };
 }
+static_assert( VtableDispatchableVoid< const unique, void* > );
+static_assert( VtableDispatchableVoid< const unique, const void* > );
 
 template< typename T >
 class typed_unique
@@ -90,5 +94,7 @@ template< typename T > auto as( unique&& source )
         throw error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_unique< T >{ std::move( source ) };
 }
+static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
+static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
 
 }

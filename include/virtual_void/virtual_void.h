@@ -50,6 +50,13 @@ template<>  struct self_pointer< const void * >	{ template< typename CLASS > usi
 
 class type_info_dispatch;
 
+template< typename DISPATCH, typename VOID >
+concept VtableDispatchableVoid = requires( const DISPATCH& void_ )
+{
+    { void_.data() }	-> std::convertible_to< VOID >;
+    { void_.v_table() } -> std::same_as< v_table* >;
+};
+
 namespace class_hierarchy
 {
 	template< typename CLASS > struct describe;
@@ -302,6 +309,20 @@ public:
 	R operator()( CLASS* param, OTHER_ARGS&&... args ) const // to simplify tests!
 	{
 		return (*this)( to_typed_void( param ), std::forward< OTHER_ARGS >( args )... );
+	}
+	template< typename POINTER, typename... OTHER_ARGS >
+	R operator()( const POINTER& pointer, OTHER_ARGS&&... args ) const
+		requires VtableDispatchableVoid< POINTER, dispatch_t >
+	{
+		virtual_void_t param{ pointer.v_table(), pointer.data() }; 
+		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
+	}
+	template< typename POINTER, typename... OTHER_ARGS >
+	R call( const POINTER& pointer, OTHER_ARGS&&... args ) const
+		requires VtableDispatchableVoid< POINTER, dispatch_t >
+	{
+		virtual_void_t param{ pointer.v_table(), pointer.data() }; 
+		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
 	}
 	erased_function_t is_defined( const std::type_info& type_info ) const
 	{

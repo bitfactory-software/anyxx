@@ -93,10 +93,10 @@ namespace virtual_void
 						auto u = make_unique< C >();
 						auto expected = typeid( C ).name();
 						std::cout << "virtual_void dispatch for " << expected << ": "; 
-						//auto r = toString( u );
-						auto r = toString( virtual_void );
-						if( r != expected )
-							std::cout << "fail: " << r;
+						auto r = toString( u );
+						auto r1 = toString( virtual_void );
+						if( r != expected || r1 != expected )
+							std::cout << "fail: " << r << ", " << r1;
 						else
 							std::cout << "OK";
 						std::cout << std::endl;
