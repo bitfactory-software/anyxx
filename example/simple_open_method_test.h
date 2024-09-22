@@ -136,7 +136,7 @@ namespace virtual_void
 
 			{
 				auto x = make_shared_const< D >( "shared hallo" );
-				auto d = static_cast< const D* >( x.data() );
+				auto d = as< D >( x );
 				std::cout << d->data << ", " << x.type().name() << std::endl; 
 			}
 			{
@@ -170,9 +170,8 @@ namespace virtual_void
 					});
 			}
 			{
-				auto x = make_unique< D >( "unique hallo" );
-				auto d = static_cast< const D* >( x.data() );
-				std::cout << d->data << ", " << x.type().name() << std::endl; 
+				auto d = as< D >( make_unique< D >( "unique hallo" ) );
+				std::cout << d->data << ", " << d.type().name() << std::endl; 
 			}
 			{
 				auto const_void_factory = factory< unique() >{};
