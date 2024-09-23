@@ -9,15 +9,10 @@
 #include <memory>
 
 #include "../../include/virtual_void/utilities/timer.h"
+#include "../../include/virtual_void/utilities/unnamed__.h"
 
 using std::cout;
 using std::string;
-
-// generate "unused identifier" to simplify overrides outside of function
-#define MERGE_(a,b)  a##b
-#define LABEL_(a) MERGE_(unique_name_, a)
-#define UNIQUE_NAME LABEL_(__LINE__)
-#define __ UNIQUE_NAME
 
 struct Node {
     virtual ~Node() = default; // generates c++ vtable + type_info
