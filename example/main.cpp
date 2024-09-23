@@ -12,7 +12,7 @@
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
-#include "typeid_cast_test.h"
+#include "erased_cast_test.h"
 
 struct MetaData {
   template <class P>
