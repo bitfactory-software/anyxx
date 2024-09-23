@@ -44,8 +44,8 @@ template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ 
 using typed_const_void = std::pair< const std::type_info&, const void* >;
 using typed_void = std::pair< const std::type_info&, void* >;
 
-template< typename P > auto to_typed_void( const P* p ){ return typed_const_void{ typeid( P ), p }; }
-template< typename P > auto to_typed_void( P* p ){ return typed_void{ typeid( P ), p }; }
+template< typename P > auto to_typed_void( const P* p ){ return typed_const_void{ typeid( *p ), p }; }
+template< typename P > auto to_typed_void( P* p ){ return typed_void{ typeid( *p ), p }; }
 
 template< typename >  struct self_pointer;
 template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
@@ -317,9 +317,14 @@ public:
 		return (erased_function)( param.second, std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename CLASS, typename... OTHER_ARGS >
-	R operator()( CLASS* param, OTHER_ARGS&&... args ) const // to simplify tests!
+	R operator()( CLASS* param, OTHER_ARGS&&... args ) const
 	{
 		return (*this)( to_typed_void( param ), std::forward< OTHER_ARGS >( args )... );
+	}
+	template< typename CLASS, typename... OTHER_ARGS >
+	R operator()( const std::shared_ptr< CLASS >& param, OTHER_ARGS&&... args ) const
+	{
+		return (*this)( param.get(), std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename POINTER, typename... OTHER_ARGS >
 	R operator()( const POINTER& pointer, OTHER_ARGS&&... args ) const

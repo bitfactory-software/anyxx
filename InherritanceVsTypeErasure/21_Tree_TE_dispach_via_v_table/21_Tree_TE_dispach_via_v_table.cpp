@@ -116,8 +116,6 @@ int main() {
 
     using virtual_void::make_shared_const;
 
-//     auto i = make_shared_const<Integer>(2);
-
     auto expr = make_shared_const<Times>(
         make_shared_const<Integer>(2),
         make_shared_const<Plus>(make_shared_const<Integer>(3), make_shared_const<Integer>(4)));
