@@ -85,7 +85,7 @@ auto __ = as_forth.override_< Plus >( []( auto expr ) {
 });
 
 auto __ = as_forth.override_< Times >( []( auto expr ) {
-    return as_forth( expr->left ) + " " + as_forth( expr->right ) + " -";
+    return as_forth( expr->left ) + " " + as_forth( expr->right ) + " *";
 });
 
 auto __ = as_forth.override_< Integer >( []( auto expr ) {
