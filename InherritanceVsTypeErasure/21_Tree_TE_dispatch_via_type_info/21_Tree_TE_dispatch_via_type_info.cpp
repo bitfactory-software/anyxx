@@ -1,11 +1,9 @@
-﻿
-// virtual_void variant of this yomm2 example
+﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
-
-#include <iostream>
 
 #include "../../include/virtual_void/virtual_void.h"
 
+#include <iostream>
 #include <iostream>
 #include <string>
 #include <memory>
