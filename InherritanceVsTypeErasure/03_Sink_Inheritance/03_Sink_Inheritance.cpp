@@ -15,28 +15,24 @@ namespace DB
         virtual IAny* Construct( const std::string& ) const = 0; 
         virtual ~IFactory() = default;   
     }; 
-    struct IQueryResultSink
+    struct ISink
     {
         virtual void Recieve( const IAny* ) const = 0;
     };
+    using Line = std::pair< std::string, std::string >;
+    using File = std::vector< Line >;
     struct System
     {
+        File file;
         std::map< std::string, std::unique_ptr< IFactory > > factories;
-        void Query( std::string what, const IQueryResultSink& sink )
+        void Query( const ISink& sink )
         {
-            auto dataLines = std::vector< std::pair< std::string, std::string > >  
-            {   { "i", "1" }
-            ,   { "i", "4711" }
-            ,   { "s", "hello" }
-            ,   { "s", "world" }
-            };
-            for( auto [ type, data ] : dataLines )
+            for( auto [ type, data ] : file )
                 if( std::unique_ptr< IAny > any{ factories[ type ]->Construct( data ) } )
                     sink.Recieve( any.get() );
         }        
     };
 }
-
 
 namespace Application
 {
@@ -44,7 +40,7 @@ namespace Application
     {
         virtual std::string ToString() const = 0;
     }; 
-    struct IntData : Data
+    struct  IntData final : Data
     {
         int data = 0;
         IntData( int i ) : data( i ) {}
@@ -54,7 +50,7 @@ namespace Application
             DB::IAny* Construct( const std::string& data ) const override { return new IntData( std::atoi( data.c_str() ) ); }
         };
     }; 
-    struct StringData : Data
+    struct StringData final : Data
     {
         std::string data;
         StringData( const std::string& s ) : data( s ) {}
@@ -64,7 +60,7 @@ namespace Application
             DB::IAny* Construct( const std::string& data ) const override { return new StringData( data ); }
         };
     }; 
-    struct QueryResultSink : DB::IQueryResultSink
+    struct ReportSink : DB::ISink
     {
         void Recieve( const DB::IAny* any ) const override
         {
@@ -74,14 +70,19 @@ namespace Application
     }; 
 }
 
-
 int main()
 {
     using namespace Application;
     DB::System db;
+    db.file =
+    {   { "i", "1" }
+    ,   { "i", "4711" }
+    ,   { "s", "hello" }
+    ,   { "s", "world" }
+    };
     db.factories[ "i" ] = std::make_unique< IntData::Factory >();
     db.factories[ "s" ] = std::make_unique< StringData::Factory >();
-    QueryResultSink sink;
-    db.Query( "junk", sink );
+    ReportSink sink;
+    db.Query( sink );
     return 0;
 }

@@ -10,19 +10,15 @@ namespace DB
 {
     using FactoryFunction = std::function< std::any( const std::string& ) >;
     using SinkFunction = std::function< void( const std::any& ) >;
-
+    using Line = std::pair< std::string, std::string >;
+    using File = std::vector< Line >;
     struct System
     {
+        File file;
         std::map< std::string, FactoryFunction > factories;
-        void Query( std::string what, const SinkFunction& sink )
+        void Query( const SinkFunction& sink )
         {
-            auto dataLines = std::vector< std::pair< std::string, std::string > >  
-            {   { "i", "1" }
-            ,   { "i", "4711" }
-            ,   { "s", "hello" }
-            ,   { "s", "world" }
-            };
-            for( auto [ type, data ] : dataLines )
+            for( auto [ type, data ] : file )
                 sink( factories[ type ]( data ) );
         }        
     };
@@ -38,20 +34,27 @@ namespace Application
     {
         std::string data;
     }; 
+    void ReportSink( const std::any& any )
+    {
+        if( auto i = std::any_cast< IntData >( &any ) )
+            std::cout << "int: " << i->data << std::endl;
+        else if( auto s = std::any_cast< StringData >( &any ) )
+            std::cout << "string: " << s->data << std::endl;
+    }
 }
 
 int main()
 {
     using namespace Application;
     DB::System db;
+    db.file =
+    {   { "i", "1" }
+    ,   { "i", "4711" }
+    ,   { "s", "hello" }
+    ,   { "s", "world" }
+    };
     db.factories[ "i" ] = []( const std::string& data )->std::any{  return IntData{std::atoi( data.c_str() ) }; };
     db.factories[ "s" ] = []( const std::string& data )->std::any{  return StringData{ data }; };
-    db.Query( "junk", []( const std::any& any ){
-        if( auto i = std::any_cast< IntData >( &any ) )
-            std::cout << "int: " << i->data << std::endl;
-        else if( auto s = std::any_cast< StringData >( &any ) )
-            std::cout << "string: " << s->data << std::endl;
-
-    });
+    db.Query( ReportSink );
     return 0;
 }
