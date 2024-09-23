@@ -137,7 +137,7 @@ int main() {
     for( int i = 0; i < 100000000; ++i )
         auto v = value( expr );
     auto t = timer.elapsed();
-    std::cout << t << std::endl; // 6246ms!
+    std::cout << t << std::endl; // 6246ms with std::map, 5200ms with std::unordered_map!
 
     return 0;
 }
