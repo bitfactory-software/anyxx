@@ -131,9 +131,12 @@ namespace virtual_void
 			}
 
 			{
-				auto x = make_shared_const< D >( "shared hallo" );
-				auto d = as< D >( x );
-				std::cout << d->data << ", " << x.type().name() << std::endl; 
+				auto d = make_shared_const< D >( "shared hallo" );
+				shared_const x = as< D >( d );
+				auto d1 = as< D >( x );
+				std::cout << d->data << ", " << x.type().name() << std::endl;
+				static_assert( std::derived_from< D, A1 > );
+				typed_shared_const< A1 > a1 = d1; 
 			}
 			{
 				auto const_void_factory = factory< shared_const() >{};
@@ -165,7 +168,9 @@ namespace virtual_void
 					});
 			}
 			{
-				auto d = as< D >( make_unique< D >( "unique hallo" ) );
+				auto d1 = make_unique< D >( "unique hallo" );
+				unique x{ std::move( d1 ) };
+				auto d = as< D >( std::move( x ) );
 				std::cout << d->data << ", " << d.type().name() << std::endl; 
 			}
 			{

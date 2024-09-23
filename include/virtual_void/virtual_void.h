@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <algorithm>
 #include <vector>
+#include <map>
+#include <memory>
 
 namespace virtual_void
 {
@@ -113,24 +115,26 @@ namespace class_hierarchy
 			};	
 	}
 	template< typename CLASS, bool deep = true >
-	constexpr void declare( classes_with_bases& registry )
+	constexpr nullptr_t declare( classes_with_bases& registry )
 	{
 		class_hierarchy::visit_class< CLASS, deep >( declare_visitor( registry ) );
+		return {};
 	}
 	template< typename CLASSES, bool deep = true >
-	constexpr void declare_all( classes_with_bases& registry )
+	constexpr nullptr_t declare_all( classes_with_bases& registry )
 	{
 		class_hierarchy::visit_classes< CLASSES, deep >( declare_visitor( registry ) );
+		return {};
 	}
 	template< typename CLASS >
-	constexpr void declare_deep( classes_with_bases& registry )
+	constexpr auto declare_deep( classes_with_bases& registry )
 	{
-		declare< CLASS, true >( registry );
+		return declare< CLASS, true >( registry );
 	}
 	template< typename CLASS >
-	constexpr void declare_shallow( classes_with_bases& registry )
+	constexpr auto declare_shallow( classes_with_bases& registry )
 	{
-		declare< CLASS, false >( registry );
+		return declare< CLASS, false >( registry );
 	}
 
 	constexpr void visit_hierarchy( const std::type_index& self, const classes_with_bases& classes_with_bases, auto visitor );
@@ -475,12 +479,18 @@ inline void fix_v_tables( const domain& domain )
 	for( const auto& method : domain.method_dispatches )
 		fix_v_tables( domain.classes, *method );
 }
-template< typename CLASSES > void declare_classes( CLASSES, domain& domain )
+template< typename CLASSES > auto declare_classes( CLASSES, domain& domain )
 {
-	class_hierarchy::declare_all< CLASSES >( domain.classes );
+	return class_hierarchy::declare_all< CLASSES >( domain.classes );
+}
+template< typename... CLASSES > auto declare_classes( domain& domain )
+{
+	return declare_classes( type_list< CLASSES... >{}, domain );
 }
 inline void build_v_tables( const domain& domain )
 {
+	if( domain.classes.empty() )
+		throw error( "no classes declared." );
 	interpolate( domain );
 	fix_v_tables( domain );
 }
@@ -545,21 +555,75 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
 {
     if( auto void_ = cast( from, typeid( std::remove_const_t< TO > ) ) )
         return static_cast< TO* >( void_ );
+	return static_cast< TO* >( nullptr );
 }    
 //---erased cast
 
 //+++lifetime 
 class shared_const
 {
+	//v_table* v_table_ = nullptr;
+	//std::shared_ptr< const void > ptr_;
+public:
 	v_table* v_table_ = nullptr;
 	std::shared_ptr< const void > ptr_;
-public:
-    template< typename T, typename... ARGS > friend shared_const make_shared_const( ARGS&&... args );
+    template< typename T, typename... ARGS > friend shared_const make_shared_const_( ARGS&&... args );
     const void* data() const { return ptr_.get(); }
     const std::type_info& type() const { return v_table_->type(); }
 	v_table* v_table() const { return v_table_; };
 };
-template< typename T, typename... ARGS > shared_const make_shared_const( ARGS&&... args )
+static_assert( VtableDispatchableVoid< const shared_const, const void* > );
+
+template< typename T >
+class typed_shared_const : public shared_const
+{
+private:
+   typed_shared_const( shared_const&& ptr ) noexcept
+        : shared_const( std::move( ptr ) )
+    {}
+ public:
+    template< typename T > friend typed_shared_const< T > as( shared_const source );
+	template< typename DERIVED >
+	typed_shared_const( const typed_shared_const< DERIVED >& rhs ) noexcept
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
+		: shared_const( rhs )
+	{}
+	template< typename DERIVED >
+	typed_shared_const( typed_shared_const< DERIVED >&& rhs ) noexcept
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
+		: shared_const( std::move( rhs ) )
+	{}
+	template< typename DERIVED >
+	typed_shared_const& operator=( const typed_shared_const< DERIVED >& rhs ) noexcept
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
+	{
+		typed_shared_const clone{ rhs };
+		swap( *this, clone );
+		return *this;
+	}
+	template< typename DERIVED >
+	typed_shared_const& operator=( typed_shared_const< DERIVED >&& rhs ) noexcept
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
+	{
+		(*this) = std::move( rhs );
+		return *this;
+	}
+    friend void swap( typed_shared_const& rhs, typed_shared_const& lhs ) noexcept
+    {
+        using std::swap;
+        swap( rhs.ptr_, lhs.ptr_ );
+    }
+    const T* operator->() const noexcept { return  static_cast< const T* >( data() ); }
+};
+static_assert( VtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
+
+template< typename T > typed_shared_const< T > as( shared_const source )
+{
+    if( source.type() != typeid( T ) )
+        throw error( "source is: " + std::string( source.type().name() ) + "." );
+    return typed_shared_const< T >{ std::move( source ) };
+}
+template< typename T, typename... ARGS >  shared_const make_shared_const_( ARGS&&... args )
 {
     using deleter_t = void(*)( const void*);
     deleter_t deleter = +[]( const void* p ){ delete static_cast< const T* >( p ); };
@@ -568,30 +632,10 @@ template< typename T, typename... ARGS > shared_const make_shared_const( ARGS&&.
     s.v_table_ = v_table_of< T >();
     return s;
 }
-static_assert( VtableDispatchableVoid< const shared_const, const void* > );
-
-template< typename T >
-class typed_shared_const
+template< typename T, typename... ARGS >  typed_shared_const< T > make_shared_const( ARGS&&... args )
 {
-private:
-    shared_const ptr_;
-    typed_shared_const( shared_const&& ptr )
-        : ptr_( std::move( ptr ) )
-    {}
-    template< typename T > friend auto as( shared_const source );
-public:
-    const T* operator->() const { return  static_cast< const T* >( ptr_.data() ); }
-    const void* data() const { return ptr_.data(); }
-    const std::type_info& type() const { return ptr_.type(); }
-	v_table* v_table() const { return ptr_.v_table; };
-};
-template< typename T > auto as( shared_const source )
-{
-    if( source.type() != typeid( T ) )
-        throw error( "source is: " + std::string( source.type().name() ) + "." );
-    return typed_shared_const< T >{ std::move( source ) };
+    return as< T >( make_shared_const_< T >( std::forward< ARGS >( args )... ) );
 }
-static_assert( VtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
 
 class unique
 {
@@ -602,42 +646,37 @@ class unique
         : ptr_( std::move( ptr ) ), v_table_( v_table )
     {}
 public:
-    template< typename T, typename... ARGS > friend unique make_unique( ARGS&&... args );
+    template< typename T, typename... ARGS > friend auto make_unique( ARGS&&... args );
     void* data() const { return ptr_.get(); }
     const std::type_info& type() const { return v_table_->type(); }
 	v_table* v_table() const { return v_table_; };
 };
-template< typename T, typename... ARGS > unique make_unique( ARGS&&... args )
-{
-    unique::deleter_t deleter = +[]( void* p ){ delete static_cast< T* >( p ); };
-    return unique{ std::unique_ptr< void, unique::deleter_t >( new T( std::forward< ARGS >( args )... ), deleter ), v_table_of< T >() };
-}
 static_assert( VtableDispatchableVoid< const unique, void* > );
 static_assert( VtableDispatchableVoid< const unique, const void* > );
 
 template< typename T >
-class typed_unique
+class typed_unique : public unique
 {
 private:
-    unique ptr_;
-    typed_unique( unique&& ptr )
-        : ptr_( std::move( ptr ) )
-    {}
     template< typename T > friend auto as( unique&& source );
 public:
-    const T* operator->() const { return  static_cast< const T* >( ptr_.data() ); }
-    void* data() const { return ptr_.data(); }
-    const std::type_info& type() const { return ptr_.type(); }
-	v_table* v_table() const { return ptr_.v_table; };
+    const T* operator->() const { return  static_cast< const T* >( data() ); }
 };
+static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
+static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
+
 template< typename T > auto as( unique&& source )
 {
     if( source.type() != typeid( T ) )
         throw error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_unique< T >{ std::move( source ) };
 }
-static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
-static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
+template< typename T, typename... ARGS > auto make_unique( ARGS&&... args )
+{
+    unique::deleter_t deleter = +[]( void* p ){ delete static_cast< T* >( p ); };
+    auto u = unique{ std::unique_ptr< void, unique::deleter_t >( new T( std::forward< ARGS >( args )... ), deleter ), v_table_of< T >() };
+	return typed_unique< T >{ std::move( u ) };
+}
 //---lifetime 
 
 }
