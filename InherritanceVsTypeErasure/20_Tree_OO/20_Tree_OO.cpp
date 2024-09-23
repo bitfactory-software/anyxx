@@ -1,32 +1,78 @@
-﻿#include <iostream>
+﻿// virtual_void variant of this yomm2 example via c++RTTI
+// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
-namespace DB
-{
-    struct IActionParameter
-    {
-        virtual std::string Address() const = 0;
-    }; 
-    struct System
-    {
-        void Execute( const IActionParameter& param )
-        {
-            std::cout << param.Address() << std::endl;
-        }        
-    };
-}
+#include <iostream>
+#include <iostream>
+#include <string>
+#include <memory>
 
-namespace Application
-{
-    struct ActionParameter : DB::IActionParameter
-    {
-        std::string Address() const override { return "hello world"; };
-    };
-}
+#include "../../include/virtual_void/utilities/timer.h"
 
-int main()
-{
-    DB::System db;
-    Application::ActionParameter actionParameter;
-    db.Execute( actionParameter );
+// Example code
+
+using std::cout;
+using std::string;
+
+struct Node {
+    virtual ~Node() = default; // generates c++ vtable + type_info
+    virtual int value() const = 0;
+    virtual string as_forth() const = 0;
+    virtual string as_lisp() const = 0;
+};
+
+using shared_const_node = std::shared_ptr<const Node>;
+
+struct Plus : Node {
+    Plus( shared_const_node left, shared_const_node right)
+        : left(left), right(right) {
+    }
+    int value() const override { return left->value() + right->value(); }
+    string as_forth() const override { return left->as_forth() + " " + right->as_forth() + " +"; }
+    string as_lisp() const override { return "(plus " + left->as_lisp() + " " + right->as_lisp() + ")"; }
+
+    shared_const_node left, right;
+};
+
+struct Times : Node {
+    Times(shared_const_node left, shared_const_node right)
+        : left(left), right(right) {
+    }
+    int value() const override { return left->value() * right->value(); }
+    string as_forth() const override { return left->as_forth() + " " + right->as_forth() + " *"; }
+    string as_lisp() const override { return "(times " + left->as_lisp() + " " + right->as_lisp() + ")"; }
+
+    shared_const_node left, right;
+};
+
+struct Integer : Node {
+    explicit Integer(int value) : int_(value) {
+    }
+    int value() const override { return int_; }
+    string as_forth() const override { return std::to_string(int_); }
+    string as_lisp() const override { return std::to_string(int_); }
+
+    int int_;
+};
+
+int main() {
+    using std::make_shared;
+
+    auto expr = make_shared<Times>(
+        make_shared<Integer>(2),
+        make_shared<Plus>(make_shared<Integer>(3), make_shared<Integer>(4)));
+
+    cout << expr->as_forth() << " = " << expr->as_lisp() << " = " << expr->value()
+         << "\n";
+    // error_output:
+    // 2 3 4 + * = (times 2 (plus 3 4)) = 14
+
+    utility::timer timer;
+    //                  123456789
+    for( int i = 0; i < 100000000; ++i )
+        auto v = expr->value();
+    auto t = timer.elapsed();
+    std::cout << t << std::endl; //450 ms
+
     return 0;
 }
+

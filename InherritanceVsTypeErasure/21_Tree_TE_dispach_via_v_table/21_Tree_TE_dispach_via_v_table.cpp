@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+#include "../../include/virtual_void/utilities/timer.h"
+
 using std::cout;
 using std::string;
 
@@ -126,6 +128,13 @@ int main() {
          << "\n";
     // error_output:
     // 2 3 4 + * = (times 2 (plus 3 4)) = 14
+
+    utility::timer timer;
+    //                  123456789
+    for( int i = 0; i < 100000000; ++i )
+        auto v = value( expr );
+    auto t = timer.elapsed();
+    std::cout << t << std::endl; // 450ms!
 
     return 0;
 }
