@@ -26,6 +26,7 @@ struct Plus : Node {
     }
 
     shared_const_node left, right;
+    ~Plus() { cout << "~Plus()" << "\n"; } // to show, that virtual_void::typed_shared_const will call the rigtht destructor
 };
 
 struct Times : Node {
@@ -34,12 +35,14 @@ struct Times : Node {
     }
 
     shared_const_node left, right;
+    ~Times() { cout << "~Times()" << "\n"; }
 };
 
 struct Integer : Node {
     explicit Integer(int value) : value(value) {
     }
     int value;
+    ~Integer() { cout << "~Integer()" << "\n"; }
 };
 
 // =============================================================================
