@@ -80,7 +80,7 @@ namespace Application
 
     auto entityToOut = virtual_void::method< void( const void* ) >{ applicationDomain };
     auto toString = virtual_void::method< std::string( const void* ) >{ applicationDomain };
-    auto typeid_const_cast = virtual_void::typeid_const_cast_method{ applicationDomain };
+    auto erased_const_cast = virtual_void::erased_const_cast_method{ applicationDomain };
 
     void IntToOut( const IntData* i ){ std::cout << "int: " << i->data << std::endl; }
 
@@ -120,7 +120,7 @@ int main()
         });
  
     virtual_void::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
-    virtual_void::fill_const_cast_for( classes{}, typeid_const_cast );
+    virtual_void::fill_const_cast_for( classes{}, erased_const_cast );
 
     build_v_tables( applicationDomain );
 
@@ -128,22 +128,24 @@ int main()
     db.factories[ "s" ] = []( const std::string& data ){  return virtual_void::make_shared_const< StringData >( data ); };
     db.factories[ "ss" ] = []( const std::string& data ){  return virtual_void::make_shared_const< SuperStringData >( data, "boss" ); };
     db.factories[ "d" ] = []( const std::string& data ){  return virtual_void::make_shared_const< DoubleData >( std::atof( data.c_str() ) ); };
-        db.Query( "junk", []( const virtual_void::shared_const& e )
-            { 
-                std::cout << "type_info: " << e.type().name() << ": " << toString( e ) << std::endl;
-                try
-                {
-                    entityToOut( e );
-                }
-                catch( std::exception& e )
-                {
-                    std::cout << "error: " << e.what() << std::endl;
-                }
-                if( auto voidStringData = typeid_const_cast( e, typeid( StringData ) ) )
-                {
-                    auto stringData = static_cast< const StringData* >( voidStringData );
-                    std::cout << "stringData: " << stringData->data << std::endl;
-                }
-            });
+
+    db.Query( "junk", []( const virtual_void::shared_const& e )
+    { 
+        std::cout << "type_info: " << e.type().name() << ": " << toString( e ) << std::endl;
+        try
+        {
+            entityToOut( e );
+        }
+        catch( std::exception& e )
+        {
+            std::cout << "error: " << e.what() << std::endl;
+        }
+        if( auto voidStringData = erased_const_cast( e, typeid( StringData ) ) )
+        {
+            auto stringData = static_cast< const StringData* >( voidStringData );
+            std::cout << "stringData: " << stringData->data << std::endl;
+        }
+    });
+
     return 0;
 }
