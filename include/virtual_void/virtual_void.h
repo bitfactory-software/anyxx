@@ -9,7 +9,7 @@
 
 namespace virtual_void
 {
-// ++utillities
+//++u+tillities
 	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
 	template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
@@ -27,8 +27,9 @@ namespace virtual_void
 		typename std::tuple_element<N, std::tuple<Ts...>>::type;
 
 	template< typename... Ts> using first = nth_type< 0, Ts...>;
-// --utillities
+//---utillities
 
+//+++Forward
 class v_table;
 template< typename CLASS > constexpr v_table* v_table_of();
 
@@ -49,14 +50,18 @@ template<>  struct self_pointer< void * >		{ template< typename CLASS > using ty
 template<>  struct self_pointer< const void * >	{ template< typename CLASS > using type = const CLASS*; };
 
 class type_info_dispatch;
+//---Forward
 
+//+++concepts
 template< typename DISPATCH, typename VOID >
 concept VtableDispatchableVoid = requires( const DISPATCH& void_ )
 {
     { void_.data() }	-> std::convertible_to< VOID >;
     { void_.v_table() } -> std::convertible_to< const v_table* >;
 };
+//---concepts
 
+//+++meta data and algorithms
 namespace class_hierarchy
 {
 	template< typename CLASS > struct class_;
@@ -143,7 +148,9 @@ namespace class_hierarchy
 		visit_bases( found->second.bases, classes_with_bases, visitor );
 	}
 }
+//---meta data and algorithms
 
+//+++open method dispatch
 struct domain
 {
 	class_hierarchy::classes_with_bases		classes;
@@ -405,7 +412,9 @@ private:
 		}
 	}
 };
+//---open method dispatch
 
+//+++open method algorithms
 template< typename CLASS >
 void fill_with_overload( auto& method, const auto& wrapper )
 {
@@ -475,7 +484,9 @@ inline void build_v_tables( const domain& domain )
 	interpolate( domain );
 	fix_v_tables( domain );
 }
+//---open method algorithms
 
+//+++erased cast
 template< template< typename > typename CONST, typename FOUND, typename FROM > auto erased_cast_implementation_( auto* from, const std::type_info& to )
 {
 	typename CONST< void >::type found = nullptr;
@@ -535,7 +546,9 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
     if( auto void_ = cast( from, typeid( std::remove_const_t< TO > ) ) )
         return static_cast< TO* >( void_ );
 }    
+//---erased cast
 
+//+++lifetime 
 class shared_const
 {
 	v_table* v_table_ = nullptr;
@@ -625,5 +638,6 @@ template< typename T > auto as( unique&& source )
 }
 static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
 static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
+//---lifetime 
 
 }
