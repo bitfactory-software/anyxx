@@ -561,12 +561,10 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
 
 //+++lifetime 
 class shared_const
-{
-	//v_table* v_table_ = nullptr;
-	//std::shared_ptr< const void > ptr_;
-public:
+{ 
 	v_table* v_table_ = nullptr;
 	std::shared_ptr< const void > ptr_;
+public:
     template< typename T, typename... ARGS > friend shared_const make_shared_const_( ARGS&&... args );
     const void* data() const { return ptr_.get(); }
     const std::type_info& type() const { return v_table_->type(); }
