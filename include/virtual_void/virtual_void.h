@@ -529,6 +529,12 @@ void fill_cast_for( erased_cast_method& method )
 {
 	fill_cast_for( type_list< CLASSES... >{}, method );
 }
+template< typename TO >
+auto cast_to( const erased_const_cast_method& cast, const auto& from )
+{
+    if( auto void_ = cast( from, typeid( std::remove_const_t< TO > ) ) )
+        return static_cast< TO* >( void_ );
+}    
 
 class shared_const
 {

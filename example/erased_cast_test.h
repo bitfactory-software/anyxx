@@ -28,7 +28,7 @@ namespace
 						{ 
 							std::cout << "typeid_const_cast: " << typeid( TOP ).name() << " to " << typeid( X ).name() << " :";
 							auto static_cast_result = static_cast< const X* >( &top );
-							auto type_id_cast_result = castMethod( c_typed_void, typeid( X ) );
+							auto type_id_cast_result = cast_to< const X >( castMethod, c_typed_void );
 							if( static_cast_result == type_id_cast_result )
 								std::cout << "OK";
 							else
