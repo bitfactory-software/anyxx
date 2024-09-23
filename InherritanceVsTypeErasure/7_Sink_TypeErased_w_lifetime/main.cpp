@@ -92,10 +92,10 @@ namespace Application
 namespace virtual_void::class_hierarchy
 {
 	using namespace Application;
-	template<> struct class_< StringData >{ using bases = none; };
-	template<> struct class_< SuperStringData >{ using bases = are< StringData >; };
-	template<> struct class_< IntData >{ using bases = none; };
-	template<> struct class_< DoubleData >{ using bases = none; };
+	template<> struct class_< StringData >: base {};
+	template<> struct class_< SuperStringData >: bases< StringData >{};
+	template<> struct class_< IntData >: base {};
+	template<> struct class_< DoubleData >: base {};
 }
 namespace Application
 {

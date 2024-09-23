@@ -60,15 +60,15 @@ concept VtableDispatchableVoid = requires( const DISPATCH& void_ )
 namespace class_hierarchy
 {
 	template< typename CLASS > struct class_;
-
-	template< typename... BASES > using are = type_list< BASES... >;
-	using none = type_list<>;
+	
+	struct base { using bases_ = type_list<>; };
+	template< typename... BASES > struct bases{ using bases_ = type_list< BASES... >; };
 
 	template< typename CLASS, bool deep = true >
 	constexpr void visit_class( auto visitor )
 	{
 		visitor.template operator()< CLASS >();
-		using bases = class_< CLASS >::bases;
+		using bases = class_< CLASS >::bases_;
 		bases::for_each( [ & ]< typename BASE >()
 		{ 
 			visitor.template operator()< CLASS, BASE >();

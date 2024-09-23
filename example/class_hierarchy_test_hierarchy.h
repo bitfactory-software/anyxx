@@ -19,15 +19,15 @@ namespace TestDomain
 namespace virtual_void::class_hierarchy
 {
 	using namespace TestDomain;
-	template<> struct class_< A1 >{ using bases = none; };
-	template<> struct class_< A2 >{ using bases = none; };
-	template<> struct class_< B1 >{ using bases = are< A1 >; };
-	template<> struct class_< B2 >{ using bases = are< A2 >; };
-	template<> struct class_< B3 >{ using bases = are< A1, A2 >; };
-	template<> struct class_< C1 >{ using bases = are< B1 >; };
-	template<> struct class_< C2 >{ using bases = are< B2 >; };
-	template<> struct class_< C3 >{ using bases = are< B3 >; };
-	template<> struct class_< C >{ using bases = none; };
-	template<> struct class_< D >{ using bases = are< C, C3 >; };
+	template<> struct class_< A1 >: base {};
+	template<> struct class_< A2 >: base {};
+	template<> struct class_< B1 >: bases< A1 >{};
+	template<> struct class_< B2 >: bases< A2 >{};
+	template<> struct class_< B3 >: bases< A1, A2 >{};
+	template<> struct class_< C1 >: bases< B1 >{};
+	template<> struct class_< C2 >: bases< B2 >{};
+	template<> struct class_< C3 >: bases< B3 >{};
+	template<> struct class_< C >: base {};
+	template<> struct class_< D >: bases< C, C3 >{};
 };
 
