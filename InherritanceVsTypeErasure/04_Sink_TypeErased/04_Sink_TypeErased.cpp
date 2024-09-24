@@ -29,17 +29,19 @@ namespace Application
     struct IntData
     {
         int data = 0;
+        std::string ToString() const { return "Int: " + std::to_string( data ); }
     }; 
     struct StringData
     {
         std::string data;
+        std::string ToString() const { return "String: " + data; }
     }; 
     void ReportSink( const std::any& any )
     {
         if( auto i = std::any_cast< IntData >( &any ) )
-            std::cout << "int: " << i->data << std::endl;
+            std::cout << "int: " << i->ToString() << std::endl;
         else if( auto s = std::any_cast< StringData >( &any ) )
-            std::cout << "string: " << s->data << std::endl;
+            std::cout << "string: " << s->ToString() << std::endl;
     }
 }
 
