@@ -221,8 +221,8 @@ class type_info_dispatch
 public:
 	using dispatch_target_t = void(*)();
 private:
-	using method_table_t = std::unordered_map< std::type_index, dispatch_target_t >; // unordered_map ~16% faster than map
-	using entry_t = method_table_t::value_type;
+	using entry_t = std::pair< std::type_index, dispatch_target_t >;
+	using method_table_t = std::vector< entry_t >;
 	method_table_t dispatchTable_;
 	dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 	const int v_table_index_ = -1;
@@ -248,14 +248,14 @@ public:
 		auto t = reinterpret_cast< dispatch_target_t >( f );
 		if( is_defined( register_type_info ) )
 			throw error( "Method for type already registered." );
-		dispatchTable_[ register_type_info ] = t;
+		dispatchTable_.insert( lower_bound( register_type_info ), entry_t{ register_type_info, t } );
 		return definition{};
 	}
 	template< typename TARGET = dispatch_target_t >
 	TARGET is_defined( const std::type_info& type_info ) const
 	{
-		auto found = dispatchTable_.find( type_info );
-		if( found != dispatchTable_.end() )
+		auto found = lower_bound( type_info );
+		if( found != dispatchTable_.end() && found->first == type_info )
 			return reinterpret_cast< TARGET >( found->second );
 		return nullptr;
 	}
@@ -268,6 +268,13 @@ public:
 	}
 	struct definition{};
 private:
+	auto lower_bound( std::type_index i ) const
+	{
+		return std::lower_bound
+			( dispatchTable_.begin(), dispatchTable_.end(), entry_t{ i, nullptr }
+			, []( const entry_t& i, const entry_t& v ){ return i.first < v.first; }
+			);
+	}
 };
 
 template< typename R, typename... ARGS >
