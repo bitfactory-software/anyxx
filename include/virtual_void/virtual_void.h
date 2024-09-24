@@ -222,7 +222,7 @@ public:
 	using dispatch_target_t = void(*)();
 private:
 	using entry_t = std::pair< std::type_index, dispatch_target_t >;
-	using method_table_t = std::vector< entry_t >;
+	using method_table_t = std::vector< entry_t >; // faster than map, slower than hash_map 
 	method_table_t dispatchTable_;
 	dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 	const int v_table_index_ = -1;
