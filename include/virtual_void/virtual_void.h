@@ -33,14 +33,14 @@ namespace virtual_void
 //---utillities
 
 //+++Forward
-class v_table;
-template< typename CLASS > constexpr v_table* v_table_of();
+class m_table;
+template< typename CLASS > constexpr m_table* m_table_of();
 
-using virtual_const_void = std::pair< const v_table*, const void* >;
-using virtual_void = std::pair< const v_table*, void* >;
+using virtual_const_void = std::pair< const m_table*, const void* >;
+using virtual_void = std::pair< const m_table*, void* >;
 
-template< typename P > auto to_virtual_void( const P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
-template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ v_table_of< P >(), p }; }
+template< typename P > auto to_virtual_void( const P* p ){ return virtual_const_void{ m_table_of< P >(), p }; }
+template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ m_table_of< P >(), p }; }
 
 using typed_const_void = std::pair< const std::type_info&, const void* >;
 using typed_void = std::pair< const std::type_info&, void* >;
@@ -60,7 +60,7 @@ template< typename DISPATCH, typename VOID >
 concept VtableDispatchableVoid = requires( const DISPATCH& void_ )
 {
     { void_.data() }	-> std::convertible_to< VOID >;
-    { void_.v_table() } -> std::convertible_to< const v_table* >;
+    { void_.m_table() } -> std::convertible_to< const m_table* >;
 };
 //---concepts
 
@@ -99,7 +99,7 @@ namespace class_hierarchy
 	struct class_with_bases
 	{
 		const std::type_info* self;
-		v_table* v_table;
+		m_table* m_table;
 		bases_t bases;
 	};
 	using classes_with_bases = std::map< std::type_index, class_with_bases >;
@@ -110,7 +110,7 @@ namespace class_hierarchy
 			{ [&]< typename C >				
 				{ 
 					registry[ typeid( C ) ].self = &typeid( C );  
-					registry[ typeid( C ) ].v_table = v_table_of< C >();  
+					registry[ typeid( C ) ].m_table = m_table_of< C >();  
 				}
 			, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
 			};	
@@ -164,15 +164,15 @@ struct domain
 
 class error;
 
-class v_table
+class m_table
 {
 public:
-	constexpr v_table( const std::type_info& type_info )
+	constexpr m_table( const std::type_info& type_info )
 		: type_info_( type_info )
 	{}
 	constexpr const std::type_info& type() const { return type_info_; }
-	using v_table_target_t = void(*)();
-	constexpr void set_method( int method_index, v_table_target_t target )
+	using m_table_target_t = void(*)();
+	constexpr void set_method( int method_index, m_table_target_t target )
 	{
 		ensure_size( method_index + 1  );
 		table_[ method_index ] = target;
@@ -180,8 +180,8 @@ public:
 	template< typename TRAGET >
 	constexpr void set_method( int method_index, TRAGET target )
 	{
-		auto v_table_target = reinterpret_cast< v_table_target_t >( target );
-		set_method( method_index, v_table_target );
+		auto m_table_target = reinterpret_cast< m_table_target_t >( target );
+		set_method( method_index, m_table_target );
 	}
 	constexpr void clear()
 	{
@@ -197,7 +197,7 @@ public:
 	}
 private:
 	const std::type_info& type_info_;
-	std::vector< v_table_target_t > table_;
+	std::vector< m_table_target_t > table_;
 	constexpr void ensure_size( std::size_t s )
 	{
 		if( table_.size() >= s )
@@ -205,10 +205,10 @@ private:
 		table_.insert( table_.end(), s  - table_.size(), nullptr );
 	}
 };
-template< typename CLASS > constexpr v_table* v_table_of()
+template< typename CLASS > constexpr m_table* m_table_of()
 {
-	static v_table v_table_{ typeid( CLASS ) };
-	return &v_table_;
+	static m_table m_table_{ typeid( CLASS ) };
+	return &m_table_;
 }
 
 class error : public std::runtime_error
@@ -225,15 +225,15 @@ private:
 	using entry_t = method_table_t::value_type;
 	method_table_t dispatchTable_;
 	dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
-	const int v_table_index_ = -1;
+	const int m_table_index_ = -1;
 public:
 	type_info_dispatch() = default;
 	type_info_dispatch( domain& domain )
-		: v_table_index_( (int)domain.method_dispatches.size() )
+		: m_table_index_( (int)domain.method_dispatches.size() )
 	{ 
 		domain.method_dispatches.push_back( this ); 
 	}
-	int v_table_index() const { return v_table_index_; }
+	int m_table_index() const { return m_table_index_; }
 	static void throw_not_found(){ throw error( "no target specified." ); }
 	void define_default( auto f )
 	{
@@ -284,7 +284,7 @@ public:
 	using dispatch_t = typename first< ARGS... >;
 	template< typename CLASS > using class_param_t = self_pointer< dispatch_t >::template type< CLASS >;
 	using param_t = std::pair< const std::type_info&, dispatch_t >;
-	using virtual_void_t = std::pair< const v_table*, dispatch_t >;
+	using virtual_void_t = std::pair< const m_table*, dispatch_t >;
 	using erased_function_t = R(*)( ARGS... );
 private:
 	type_info_dispatch methodTable_;
@@ -313,8 +313,8 @@ public:
 	template< typename... OTHER_ARGS >
 	R operator()( const virtual_void_t& param, OTHER_ARGS&&... args ) const
 	{
-		const v_table& v_table = *param.first;
-		auto erased_function = reinterpret_cast< erased_function_t >( v_table[ methodTable_.v_table_index() ] );
+		const m_table& m_table = *param.first;
+		auto erased_function = reinterpret_cast< erased_function_t >( m_table[ methodTable_.m_table_index() ] );
 		return (erased_function)( param.second, std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename CLASS, typename... OTHER_ARGS >
@@ -331,14 +331,14 @@ public:
 	R operator()( const POINTER& pointer, OTHER_ARGS&&... args ) const
 		requires VtableDispatchableVoid< POINTER, dispatch_t >
 	{
-		virtual_void_t param{ pointer.v_table(), pointer.data() }; 
+		virtual_void_t param{ pointer.m_table(), pointer.data() }; 
 		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename POINTER, typename... OTHER_ARGS >
 	R call( const POINTER& pointer, OTHER_ARGS&&... args ) const
 		requires VtableDispatchableVoid< POINTER, dispatch_t >
 	{
-		virtual_void_t param{ pointer.v_table(), pointer.data() }; 
+		virtual_void_t param{ pointer.m_table(), pointer.data() }; 
 		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
 	}
 	erased_function_t is_defined( const std::type_info& type_info ) const
@@ -468,22 +468,22 @@ inline void interpolate( const domain& domain )
 	for( const auto& method : domain.method_dispatches )
 		interpolate( domain.classes, method );
 }
-inline void set_v_table( const class_hierarchy::class_with_bases& class_, const type_info_dispatch& method )
+inline void set_m_table( const class_hierarchy::class_with_bases& class_, const type_info_dispatch& method )
 {
 	auto target = method.is_defined( *class_.self );
 	if( !target )
 		target = method.get_default();
-	class_.v_table->set_method( method.v_table_index(), target );
+	class_.m_table->set_method( method.m_table_index(), target );
 }
-inline void fix_v_tables( const class_hierarchy::classes_with_bases& classes, const type_info_dispatch& method )
+inline void fix_m_tables( const class_hierarchy::classes_with_bases& classes, const type_info_dispatch& method )
 {
 	for( const auto& class_ : classes )
-		set_v_table( class_.second, method );
+		set_m_table( class_.second, method );
 }
-inline void fix_v_tables( const domain& domain )
+inline void fix_m_tables( const domain& domain )
 {
 	for( const auto& method : domain.method_dispatches )
-		fix_v_tables( domain.classes, *method );
+		fix_m_tables( domain.classes, *method );
 }
 template< typename CLASSES > auto declare_classes( CLASSES, domain& domain )
 {
@@ -493,12 +493,12 @@ template< typename... CLASSES > auto declare_classes( domain& domain )
 {
 	return declare_classes( type_list< CLASSES... >{}, domain );
 }
-inline void build_v_tables( const domain& domain )
+inline void build_m_tables( const domain& domain )
 {
 	if( domain.classes.empty() )
 		throw error( "no classes declared." );
 	interpolate( domain );
-	fix_v_tables( domain );
+	fix_m_tables( domain );
 }
 //---open method algorithms
 
@@ -568,13 +568,13 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
 //+++lifetime 
 class shared_const
 { 
-	v_table* v_table_ = nullptr;
+	m_table* m_table_ = nullptr;
 	std::shared_ptr< const void > ptr_;
 public:
     template< typename T, typename... ARGS > friend shared_const make_shared_const_( ARGS&&... args );
     const void* data() const { return ptr_.get(); }
-    const std::type_info& type() const { return v_table_->type(); }
-	v_table* v_table() const { return v_table_; };
+    const std::type_info& type() const { return m_table_->type(); }
+	m_table* m_table() const { return m_table_; };
 };
 static_assert( VtableDispatchableVoid< const shared_const, const void* > );
 
@@ -633,7 +633,7 @@ template< typename T, typename... ARGS >  shared_const make_shared_const_( ARGS&
     deleter_t deleter = +[]( const void* p ){ delete static_cast< const T* >( p ); };
     shared_const s;
     s.ptr_ = std::unique_ptr< const void, deleter_t >( new T( std::forward< ARGS >( args )... ), deleter );
-    s.v_table_ = v_table_of< T >();
+    s.m_table_ = m_table_of< T >();
     return s;
 }
 template< typename T, typename... ARGS >  typed_shared_const< T > make_shared_const( ARGS&&... args )
@@ -643,17 +643,17 @@ template< typename T, typename... ARGS >  typed_shared_const< T > make_shared_co
 
 class unique
 {
-	v_table* v_table_;
+	m_table* m_table_;
     using deleter_t = void(*)( void*);
 	std::unique_ptr< void, deleter_t > ptr_;
-    unique( std::unique_ptr< void, deleter_t > ptr, v_table* v_table )
-        : ptr_( std::move( ptr ) ), v_table_( v_table )
+    unique( std::unique_ptr< void, deleter_t > ptr, m_table* m_table )
+        : ptr_( std::move( ptr ) ), m_table_( m_table )
     {}
 public:
     template< typename T, typename... ARGS > friend auto make_unique( ARGS&&... args );
     void* data() const { return ptr_.get(); }
-    const std::type_info& type() const { return v_table_->type(); }
-	v_table* v_table() const { return v_table_; };
+    const std::type_info& type() const { return m_table_->type(); }
+	m_table* m_table() const { return m_table_; };
 };
 static_assert( VtableDispatchableVoid< const unique, void* > );
 static_assert( VtableDispatchableVoid< const unique, const void* > );
@@ -678,7 +678,7 @@ template< typename T > auto as( unique&& source )
 template< typename T, typename... ARGS > auto make_unique( ARGS&&... args )
 {
     unique::deleter_t deleter = +[]( void* p ){ delete static_cast< T* >( p ); };
-    auto u = unique{ std::unique_ptr< void, unique::deleter_t >( new T( std::forward< ARGS >( args )... ), deleter ), v_table_of< T >() };
+    auto u = unique{ std::unique_ptr< void, unique::deleter_t >( new T( std::forward< ARGS >( args )... ), deleter ), m_table_of< T >() };
 	return typed_unique< T >{ std::move( u ) };
 }
 //---lifetime 

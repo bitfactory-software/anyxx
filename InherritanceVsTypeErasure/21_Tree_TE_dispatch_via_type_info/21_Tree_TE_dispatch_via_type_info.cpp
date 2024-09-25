@@ -114,7 +114,7 @@ auto __ = as_lisp.override_< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 
 int main() {
-    //build_v_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"override_" function
+    //build_m_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"override_" function
 
     using std::make_shared;
 

@@ -57,7 +57,7 @@ namespace virtual_void
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				declare_deep< D >( testDomain.classes );
-				build_v_tables( testDomain );
+				build_m_tables( testDomain );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
 				call< D >( toString );
 			}
@@ -82,7 +82,7 @@ namespace virtual_void
 				class_hierarchy::declare_deep< C1 >( testDomain.classes );
 				class_hierarchy::declare_deep< C2 >( testDomain.classes );
 				fill_with_overloads( classes{}, toString, ToString );
-				build_v_tables( testDomain );
+				build_m_tables( testDomain );
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				
