@@ -9,6 +9,7 @@
 #include <map>
 #include <unordered_map>
 #include <memory>
+#include <assert.h>
 
 namespace virtual_void
 {
@@ -34,6 +35,7 @@ namespace virtual_void
 
 //+++Forward
 class m_table;
+using m_table_t = m_table;
 template< typename CLASS > constexpr m_table* m_table_of();
 
 using virtual_const_void = std::pair< const m_table*, const void* >;
@@ -566,15 +568,42 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
 //---erased cast
 
 //+++lifetime 
+template< typename T > class typed_shared_const;
+
 class shared_const
 { 
-	m_table* m_table_ = nullptr;
-	std::shared_ptr< const void > ptr_;
+protected:
+	struct abstract
+	{
+		const m_table_t* m_table_ = nullptr;
+		const void* data_ = nullptr;
+		abstract( const m_table* m_table, const void* data )
+			: m_table_( m_table )
+			, data_( data )
+		{}
+	};
+	template< typename M >
+	struct concrete : abstract
+	{
+		M m_;
+		concrete( M&& m )
+			: abstract( m_table_of< M >(), std::addressof( m_ ) )
+			, m_( std::move( m ) )
+		{}
+		template< typename... ARGS >
+		concrete( std::in_place_t,  ARGS&&... args )
+			: abstract( m_table_of< M >(), std::addressof( m_ ) )
+			, m_( std::forward< ARGS >( args )... )
+		{}
+	};
+	std::shared_ptr< abstract > ptr_;
+	shared_const( const std::shared_ptr< abstract >& ptr )
+		: ptr_( ptr )
+	{}
 public:
-    template< typename T, typename... ARGS > friend shared_const make_shared_const_( ARGS&&... args );
-    const void* data() const { return ptr_.get(); }
-    const std::type_info& type() const { return m_table_->type(); }
-	m_table* m_table() const { return m_table_; };
+    const void* data() const { return ptr_->data_; }
+    const std::type_info& type() const { return ptr_->m_table_->type(); }
+	const m_table* m_table() const { return ptr_->m_table_; };
 };
 static_assert( VtableDispatchableVoid< const shared_const, const void* > );
 
@@ -586,6 +615,15 @@ private:
         : shared_const( std::move( ptr ) )
     {}
  public:
+	using shared_const::shared_const;
+	typed_shared_const( T&& v ) noexcept
+		: shared_const( std::make_shared< concrete< T > >( std::move( v ) ) )
+	{}
+	//template< typename... ARGS > 
+	//typed_shared_const( std::in_place_t, ARGS...&& args ) noexcept
+	//	: shared_const( std::make_shared< concrete< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+	//{}
+    template< typename T, typename... ARGS > friend typed_shared_const< T > make_shared_const( ARGS&&... args );
     template< typename T > friend typed_shared_const< T > as( shared_const source );
 	template< typename DERIVED >
 	typed_shared_const( const typed_shared_const< DERIVED >& rhs ) noexcept
@@ -617,28 +655,19 @@ private:
         using std::swap;
         swap( rhs.ptr_, lhs.ptr_ );
     }
+    const T& operator*() const noexcept  { return *static_cast< const T* >( data() ); }
     const T* operator->() const noexcept { return  static_cast< const T* >( data() ); }
 };
 static_assert( VtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
-
+template< typename T, typename... ARGS > typed_shared_const< T > make_shared_const( ARGS&&... args )
+{
+	return { std::make_shared< shared_const::concrete< T > >( std::in_place, std::forward< ARGS >( args )... ) };
+}
 template< typename T > typed_shared_const< T > as( shared_const source )
 {
     if( source.type() != typeid( T ) )
         throw error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_shared_const< T >{ std::move( source ) };
-}
-template< typename T, typename... ARGS >  shared_const make_shared_const_( ARGS&&... args )
-{
-    using deleter_t = void(*)( const void*);
-    deleter_t deleter = +[]( const void* p ){ delete static_cast< const T* >( p ); };
-    shared_const s;
-    s.ptr_ = std::unique_ptr< const void, deleter_t >( new T( std::forward< ARGS >( args )... ), deleter );
-    s.m_table_ = m_table_of< T >();
-    return s;
-}
-template< typename T, typename... ARGS >  typed_shared_const< T > make_shared_const( ARGS&&... args )
-{
-    return as< T >( make_shared_const_< T >( std::forward< ARGS >( args )... ) );
 }
 
 class unique

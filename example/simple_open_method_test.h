@@ -136,7 +136,12 @@ namespace virtual_void
 				auto d1 = as< D >( x );
 				std::cout << d->data << ", " << x.type().name() << std::endl;
 				static_assert( std::derived_from< D, A1 > );
-				typed_shared_const< A1 > a1 = d1; 
+				typed_shared_const< A1 > a1 = d1;
+				typed_shared_const< A1 > a2 = A1{ "a2ssssssssssssssssssssssssssssss" };
+				auto& a1r = *a2;
+				auto s1 = a1r.data;
+				auto s = a2->data;
+				std::cout << a2->data << ", " << a2.type().name() << std::endl;				
 			}
 			{
 				auto const_void_factory = factory< shared_const() >{};
