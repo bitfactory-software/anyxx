@@ -11,6 +11,8 @@
 #include <memory>
 #include <assert.h>
 
+#include "../../../perfect_typeid_hash/include/perfect_typeid_hash/index_table.h"
+
 namespace virtual_void
 {
 //++u+tillities
@@ -223,11 +225,13 @@ class type_info_dispatch
 public:
 	using dispatch_target_t = void(*)();
 private:
-	using entry_t = std::pair< std::type_index, dispatch_target_t >;
+	using entry_t = std::pair< const std::type_info*, dispatch_target_t >;
 	using method_table_t = std::vector< entry_t >; // faster than map, slower than hash_map 
 	method_table_t dispatchTable_;
 	dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 	const int m_table_index_ = -1;
+	using dispatch_target_index_t  = perfect_typeid_hash::index_table< dispatch_target_t >;
+	std::unique_ptr< dispatch_target_index_t > dispatch_target_index_;
 public:
 	type_info_dispatch() = default;
 	type_info_dispatch( domain& domain )
@@ -250,27 +254,33 @@ public:
 		auto t = reinterpret_cast< dispatch_target_t >( f );
 		if( is_defined( register_type_info ) )
 			throw error( "Method for type already registered." );
-		dispatchTable_.insert( lower_bound( register_type_info ), entry_t{ register_type_info, t } );
+		dispatchTable_.insert( lower_bound( &register_type_info ), entry_t{ &register_type_info, t } );
 		return definition{};
 	}
 	template< typename TARGET = dispatch_target_t >
 	TARGET is_defined( const std::type_info& type_info ) const
 	{
-		auto found = lower_bound( type_info );
-		if( found != dispatchTable_.end() && found->first == type_info )
+		auto found = lower_bound( &type_info );
+		if( found != dispatchTable_.end() && found->first == &type_info )
 			return reinterpret_cast< TARGET >( found->second );
 		return nullptr;
 	}
 	template< typename TARGET = dispatch_target_t >
 	TARGET lookup( const std::type_info& type_info ) const
 	{
-		if( auto found = is_defined( type_info ) )
+		if( !dispatch_target_index_ )
+			throw "Not yet sealed.";
+		if( auto found = dispatch_target_index_->at( &type_info ) )
 			return reinterpret_cast< TARGET >( found );
 		return reinterpret_cast< TARGET >( default_ );
 	}
+	void seal()
+	{
+		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( dispatchTable_ );
+	}
 	struct definition{};
 private:
-	auto lower_bound( std::type_index i ) const
+	auto lower_bound( const std::type_info* i ) const
 	{
 		return std::lower_bound
 			( dispatchTable_.begin(), dispatchTable_.end(), entry_t{ i, nullptr }
@@ -357,6 +367,10 @@ public:
 	template< typename C > auto is_defined() const
 	{
 		return is_defined( typeid( C ) );
+	}
+	void seal()
+	{
+		return methodTable_.seal();
 	}
 private:
 	template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
@@ -484,6 +498,11 @@ inline void set_m_table( const class_hierarchy::class_with_bases& class_, const 
 		target = method.get_default();
 	class_.m_table->set_method( method.m_table_index(), target );
 }
+inline void seal( domain& domain )
+{
+	for( const auto& method : domain.method_dispatches )
+		method->seal();
+}
 inline void fix_m_tables( const class_hierarchy::classes_with_bases& classes, const type_info_dispatch& method )
 {
 	for( const auto& class_ : classes )
@@ -502,11 +521,12 @@ template< typename... CLASSES > auto declare_classes( domain& domain )
 {
 	return declare_classes( type_list< CLASSES... >{}, domain );
 }
-inline void build_m_tables( const domain& domain )
+inline void build_m_tables( domain& domain )
 {
 	if( domain.classes.empty() )
 		throw error( "no classes declared." );
 	interpolate( domain );
+	seal( domain );
 	fix_m_tables( domain );
 }
 //---open method algorithms
