@@ -14,3 +14,4 @@ project ("virtual_void")
 # Include sub-projects.
 add_subdirectory ("example")
 add_subdirectory ("InherritanceVsTypeErasure")
+add_subdirectory ("test")

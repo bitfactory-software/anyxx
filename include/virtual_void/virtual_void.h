@@ -11,11 +11,11 @@
 #include <memory>
 #include <assert.h>
 
-#include "../../../perfect_typeid_hash/include/perfect_typeid_hash/index_table.h"
+#include "../perfect_typeid_hash/index_table.h"
 
 namespace virtual_void
 {
-//++u+tillities
+//++utillities
 	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
 	template<class... Ts> overload(Ts...) -> overload<Ts...>;
 
