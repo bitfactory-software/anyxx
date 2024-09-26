@@ -570,34 +570,36 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
 //+++lifetime 
 template< typename T > class typed_shared_const;
 
+struct abstract_data
+{
+	const m_table_t* m_table_ = nullptr;
+	const void* data_ = nullptr;
+	abstract_data( const m_table* m_table, const void* data )
+		: m_table_( m_table )
+		, data_( data )
+	{}
+};
+using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
+template< typename M >
+struct concrete_data : abstract_data
+{
+	M m_;
+	concrete_data( M&& m )
+		: abstract_data( m_table_of< M >(), std::addressof( m_ ) )
+		, m_( std::move( m ) )
+	{}
+	template< typename... ARGS >
+	concrete_data( std::in_place_t,  ARGS&&... args )
+		: abstract_data( m_table_of< M >(), std::addressof( m_ ) )
+		, m_( std::forward< ARGS >( args )... )
+	{}
+};
+
 class shared_const
 { 
 protected:
-	struct abstract
-	{
-		const m_table_t* m_table_ = nullptr;
-		const void* data_ = nullptr;
-		abstract( const m_table* m_table, const void* data )
-			: m_table_( m_table )
-			, data_( data )
-		{}
-	};
-	template< typename M >
-	struct concrete : abstract
-	{
-		M m_;
-		concrete( M&& m )
-			: abstract( m_table_of< M >(), std::addressof( m_ ) )
-			, m_( std::move( m ) )
-		{}
-		template< typename... ARGS >
-		concrete( std::in_place_t,  ARGS&&... args )
-			: abstract( m_table_of< M >(), std::addressof( m_ ) )
-			, m_( std::forward< ARGS >( args )... )
-		{}
-	};
-	std::shared_ptr< abstract > ptr_;
-	shared_const( const std::shared_ptr< abstract >& ptr )
+	shared_abstract_data_ptr ptr_;
+	shared_const( const shared_abstract_data_ptr& ptr )
 		: ptr_( ptr )
 	{}
 public:
@@ -617,11 +619,11 @@ private:
  public:
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
-		: shared_const( std::make_shared< concrete< T > >( std::move( v ) ) )
+		: shared_const( std::make_shared< concrete_data< T > >( std::move( v ) ) )
 	{}
 	template< typename... ARGS > 
 	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
-		: shared_const( std::make_shared< concrete< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+		: shared_const( std::make_shared< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
 	{}
     template< typename T, typename... ARGS > friend typed_shared_const< T > make_shared_const( ARGS&&... args );
     template< typename T > friend typed_shared_const< T > as( shared_const source );
