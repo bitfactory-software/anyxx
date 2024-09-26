@@ -41,12 +41,12 @@ template< typename O > const void* data_( const O& o ) { return &o; }
 template< typename O > void* data_( O& o ) { return &o; }
 
 
-PRO_DEF_FREE_DISPATCH( free_v_table_of, v_table_of_, v_table_of );
-struct v_table_facade : pro::facade_builder
+PRO_DEF_FREE_DISPATCH( free_m_table_of, m_table_of_, m_table_of );
+struct m_table_facade : pro::facade_builder
     ::support_copy<pro::constraint_level::nontrivial>
-    ::add_convention< free_v_table_of, v_table*()const >
+    ::add_convention< free_m_table_of, m_table*()const >
     ::build {};
-template< typename O > v_table* v_table_of_( const O& o ) { return v_table_of< O >(); }
+template< typename O > m_table* m_table_of_( const O& o ) { return m_table_of< O >(); }
 
 template< typename TYPED_VOID, typename FACADE >
 auto to_typed_void_( const pro::proxy< FACADE >& p )
@@ -69,7 +69,7 @@ auto to_typed_void( const pro::proxy< FACADE >& p )
 template< typename VIRTUAL_VOID, typename FACADE >
 auto to_virtual_void_( const pro::proxy< FACADE >& p )
 {
-    auto vt = v_table_of( *p );
+    auto vt = m_table_of( *p );
     auto cv = data( *p );
     return VIRTUAL_VOID{ vt, cv };
 }

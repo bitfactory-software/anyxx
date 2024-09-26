@@ -1,4 +1,4 @@
-﻿// virtual_void variant of this yomm2 example via virtual_void v_tables
+﻿// virtual_void variant of this yomm2 example via virtual_void m_tables
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include "../../include/virtual_void/virtual_void.h"
@@ -113,7 +113,7 @@ auto __ = as_lisp.override_< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 
 int main() {
-    build_v_tables( tree_domain );
+    build_m_tables( tree_domain );
 
     using virtual_void::make_shared_const;
 

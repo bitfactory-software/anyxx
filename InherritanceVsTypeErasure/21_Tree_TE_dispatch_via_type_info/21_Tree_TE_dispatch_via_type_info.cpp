@@ -114,7 +114,7 @@ auto __ = as_lisp.override_< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 
 int main() {
-    //build_v_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"override_" function
+    //build_m_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"override_" function
 
     using std::make_shared;
 
@@ -127,12 +127,16 @@ int main() {
     // error_output:
     // 2 3 4 + * = (times 2 (plus 3 4)) = 14
 
+#ifndef _DEBUG
+
     utility::timer timer;
     //                  123456789
     for( int i = 0; i < 100000000; ++i )
         auto v = value( expr );
     auto t = timer.elapsed();
     std::cout << t << std::endl; // 6246ms with std::map, 5200ms with std::unordered_map!
+
+#endif // !_DEBUG
 
     return 0;
 }

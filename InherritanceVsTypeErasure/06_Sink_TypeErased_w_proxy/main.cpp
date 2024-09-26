@@ -18,7 +18,7 @@ namespace DB
 
     struct EntityFacade : pro::facade_builder
         ::add_facade< virtual_void::proxy::virtual_void_facade, true >
-//        ::add_facade< virtual_void::proxy::v_table_facade, true >
+//        ::add_facade< virtual_void::proxy::m_table_facade, true >
         ::add_convention<FreeToString, std::string() const>
         ::support_copy<pro::constraint_level::nontrivial>
         ::build {};
@@ -50,7 +50,7 @@ namespace DB
 namespace Application
 {
     using virtual_void::proxy::data_;
-    using virtual_void::proxy::v_table_of_;
+   // using virtual_void::proxy::m_table_of;
 
     struct IntData
     {

@@ -59,7 +59,7 @@ namespace
 
 
 			virtual_void::declare_classes( classes{}, testDomain );
-			virtual_void::build_v_tables( testDomain );
+			virtual_void::build_m_tables( testDomain );
 
 			run_cast_test< classes >( erased_const_cast, []( auto top ){ return virtual_void::to_typed_void( top ); } );
 

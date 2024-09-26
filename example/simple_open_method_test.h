@@ -57,7 +57,7 @@ namespace virtual_void
 				
 				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				declare_deep< D >( testDomain.classes );
-				build_v_tables( testDomain );
+				build_m_tables( testDomain );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";
 				call< D >( toString );
 			}
@@ -82,7 +82,7 @@ namespace virtual_void
 				class_hierarchy::declare_deep< C1 >( testDomain.classes );
 				class_hierarchy::declare_deep< C2 >( testDomain.classes );
 				fill_with_overloads( classes{}, toString, ToString );
-				build_v_tables( testDomain );
+				build_m_tables( testDomain );
 				class_hierarchy::visit_classes< classes >( 
 					overload
 					{ [&]< typename C >				
@@ -136,7 +136,23 @@ namespace virtual_void
 				auto d1 = as< D >( x );
 				std::cout << d->data << ", " << x.type().name() << std::endl;
 				static_assert( std::derived_from< D, A1 > );
-				typed_shared_const< A1 > a1 = d1; 
+				typed_shared_const< A1 > a1 = d1;
+				typed_shared_const< A1 > a2 = A1{ "a2->OK" };
+				typed_shared_const< A1 > a3{ std::in_place, "a3 in_place->OK" };
+				auto& a1r = *a2;
+				auto s1 = a1r.data;
+				auto s = a2->data;
+				std::cout << a2->data << ", " << a2.type().name() << std::endl;				
+				std::cout << a3->data << ", " << a3.type().name() << std::endl;
+
+				auto c1 = make_unique< C >( "unique c1"); 
+				std::cout << c1->data << ", " << c1.type().name() << std::endl;				
+				auto c2 = typed_unique< C >( std::in_place, "unique c2" ); 
+				std::cout << c2->data << ", " << c2.type().name() << std::endl;				
+				auto c3 = typed_unique< C >( C{ "unique c3" } ); 
+				std::cout << c3->data << ", " << c3.type().name() << std::endl;				
+				auto c4 = std::move( c3 ); 
+				std::cout << c4->data << ", " << c4.type().name() << std::endl;				
 			}
 			{
 				auto const_void_factory = factory< shared_const() >{};

@@ -122,7 +122,7 @@ int main()
     virtual_void::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
     virtual_void::fill_const_cast_for( classes{}, erased_const_ );
 
-    build_v_tables( applicationDomain );
+    build_m_tables( applicationDomain );
 
     db.factories[ "i" ] = []( const std::string& data ){  return virtual_void::make_shared_const< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data ){  return virtual_void::make_shared_const< StringData >( data ); };
