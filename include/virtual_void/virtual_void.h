@@ -619,10 +619,10 @@ private:
 	typed_shared_const( T&& v ) noexcept
 		: shared_const( std::make_shared< concrete< T > >( std::move( v ) ) )
 	{}
-	//template< typename... ARGS > 
-	//typed_shared_const( std::in_place_t, ARGS...&& args ) noexcept
-	//	: shared_const( std::make_shared< concrete< T > >( std::in_place, std::forward< ARGS >( args )... ) )
-	//{}
+	template< typename... ARGS > 
+	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
+		: shared_const( std::make_shared< concrete< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+	{}
     template< typename T, typename... ARGS > friend typed_shared_const< T > make_shared_const( ARGS&&... args );
     template< typename T > friend typed_shared_const< T > as( shared_const source );
 	template< typename DERIVED >
@@ -661,7 +661,7 @@ private:
 static_assert( VtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
 template< typename T, typename... ARGS > typed_shared_const< T > make_shared_const( ARGS&&... args )
 {
-	return { std::make_shared< shared_const::concrete< T > >( std::in_place, std::forward< ARGS >( args )... ) };
+	return { std::in_place, std::forward< ARGS >( args )... };
 }
 template< typename T > typed_shared_const< T > as( shared_const source )
 {
