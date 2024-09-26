@@ -573,13 +573,12 @@ template< typename T > class typed_shared_const;
 struct abstract_data
 {
 	const m_table_t* m_table_ = nullptr;
-	const void* data_ = nullptr;
-	abstract_data( const m_table* m_table, const void* data )
+	void* data_ = nullptr;
+	abstract_data( const m_table* m_table, void* data )
 		: m_table_( m_table )
 		, data_( data )
 	{}
 };
-using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
 template< typename M >
 struct concrete_data : abstract_data
 {
@@ -595,6 +594,7 @@ struct concrete_data : abstract_data
 	{}
 };
 
+using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
 class shared_const
 { 
 protected:
@@ -672,19 +672,18 @@ template< typename T > typed_shared_const< T > as( shared_const source )
     return typed_shared_const< T >{ std::move( source ) };
 }
 
+using unique_abstract_data_ptr = std::unique_ptr< abstract_data >;
 class unique
 {
-	m_table* m_table_;
-    using deleter_t = void(*)( void*);
-	std::unique_ptr< void, deleter_t > ptr_;
-    unique( std::unique_ptr< void, deleter_t > ptr, m_table* m_table )
-        : ptr_( std::move( ptr ) ), m_table_( m_table )
-    {}
+	unique_abstract_data_ptr ptr_;
+protected:
+	unique( unique_abstract_data_ptr&& ptr )
+		: ptr_( std::move( ptr ) )
+	{}
 public:
-    template< typename T, typename... ARGS > friend auto make_unique( ARGS&&... args );
-    void* data() const { return ptr_.get(); }
-    const std::type_info& type() const { return m_table_->type(); }
-	m_table* m_table() const { return m_table_; };
+    void* data() const { return ptr_->data_; }
+    const std::type_info& type() const { return ptr_->m_table_->type(); }
+	const m_table* m_table() const { return ptr_->m_table_; };
 };
 static_assert( VtableDispatchableVoid< const unique, void* > );
 static_assert( VtableDispatchableVoid< const unique, const void* > );
@@ -692,10 +691,21 @@ static_assert( VtableDispatchableVoid< const unique, const void* > );
 template< typename T >
 class typed_unique : public unique
 {
-private:
     template< typename T > friend auto as( unique&& source );
+	typed_unique( unique&& u ) noexcept
+		: unique( std::move( u ) ) 
+	{}
 public:
-    const T* operator->() const { return  static_cast< const T* >( data() ); }
+	using unique::unique;
+	typed_unique( T&& v ) noexcept
+		: unique( std::make_unique< concrete_data< T > >( std::move( v ) ) )
+	{}
+	template< typename... ARGS > 
+	typed_unique( std::in_place_t, ARGS&&... args ) noexcept
+		: unique( std::make_unique< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+	{}
+    T& operator*() const { return  *static_cast< T* >( data() ); }
+    T* operator->() const { return  static_cast< T* >( data() ); }
 };
 static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
 static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
@@ -706,11 +716,9 @@ template< typename T > auto as( unique&& source )
         throw error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_unique< T >{ std::move( source ) };
 }
-template< typename T, typename... ARGS > auto make_unique( ARGS&&... args )
+template< typename T, typename... ARGS > typed_unique< T > make_unique( ARGS&&... args )
 {
-    unique::deleter_t deleter = +[]( void* p ){ delete static_cast< T* >( p ); };
-    auto u = unique{ std::unique_ptr< void, unique::deleter_t >( new T( std::forward< ARGS >( args )... ), deleter ), m_table_of< T >() };
-	return typed_unique< T >{ std::move( u ) };
+	return { std::in_place, std::forward< ARGS >( args )... };
 }
 //---lifetime 
 

@@ -143,7 +143,16 @@ namespace virtual_void
 				auto s1 = a1r.data;
 				auto s = a2->data;
 				std::cout << a2->data << ", " << a2.type().name() << std::endl;				
-				std::cout << a3->data << ", " << a3.type().name() << std::endl;				
+				std::cout << a3->data << ", " << a3.type().name() << std::endl;
+
+				auto c1 = make_unique< C >( "unique c1"); 
+				std::cout << c1->data << ", " << c1.type().name() << std::endl;				
+				auto c2 = typed_unique< C >( std::in_place, "unique c2" ); 
+				std::cout << c2->data << ", " << c2.type().name() << std::endl;				
+				auto c3 = typed_unique< C >( C{ "unique c3" } ); 
+				std::cout << c3->data << ", " << c3.type().name() << std::endl;				
+				auto c4 = std::move( c3 ); 
+				std::cout << c4->data << ", " << c4.type().name() << std::endl;				
 			}
 			{
 				auto const_void_factory = factory< shared_const() >{};
