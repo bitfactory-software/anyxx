@@ -647,6 +647,7 @@ private:
         : shared_const( std::move( ptr ) )
     {}
  public:
+	using type = T;
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
 		: shared_const( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )

@@ -8,6 +8,8 @@
 #include "../include/dynamic_interface/dynamic_interface.h"
 #include "../include/virtual_void/virtual_void.h"
 
+using namespace Catch::Matchers;
+
 namespace dynamic_interface
 {
     template<>
@@ -20,19 +22,28 @@ namespace dynamic_interface
         template< typename FROM >
         static type erase( FROM&& from )
         {
-            if constexpr( std::is_base_of_v< type, FROM > )
+            using from_t = std::remove_cvref_t< FROM >;
+            if constexpr( std::is_base_of_v< type, from_t > )
             {
                 return from;
             }
             else
             {
-                return 	virtual_void::make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
+                return 	virtual_void::make_shared_const< from_t >( std::forward< FROM >( from ) );
             }
         }
-        template< typename TO >
+        template< typename CONSTRUCTOR_PARAM >
         static auto unerase( type& from )
         {
-            return static_cast< const std::remove_cvref_t< TO >* >( from.data() );
+            using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
+            if constexpr( std::is_base_of_v< type, constructor_param_t > )
+            {
+                return static_cast< const constructor_param_t::type * >( from.data() );
+            }
+            else
+            {
+                return static_cast< const constructor_param_t* >( from.data() );
+            }
         }
     };
 
@@ -160,8 +171,17 @@ TEST_CASE( "dynamic interface" ) {
 
     std::cout << "print_shape_vv" << std::endl;
 
-    //auto sc = make_shared_const<circle>(c);
-    //print_shape_vv(sc);
+
+    auto sc = make_shared_const<circle>(circle{c});
+    static_assert( std::is_same_v< decltype(sc), typed_shared_const< circle > > );
+    static_assert( std::is_base_of_v< shared_const, typed_shared_const< circle > > );
+    auto& c1 = *sc;
+    REQUIRE_THAT( c1.perimeter(),  WithinAbs(77.2, 77.3));
+    shape_vv circle_shape_vv(sc);
+    //auto x = circle_shape_vv;
+    REQUIRE_THAT( circle_shape_vv.perimeter(),  WithinAbs(77.2, 77.3));
+    print_shape_vv(sc);
+    //print_shape_vv(circle_shape_vv);
     print_shape_vv(c);
     print_shape_vv(s);
     print_shape_vv(r);

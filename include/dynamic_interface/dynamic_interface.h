@@ -85,8 +85,11 @@ class n { \
     public: \
     n() = default; \
     template <typename _tp> \
-    n(_tp&& v) : _body(v) {} \
+    n(_tp&& v) requires (!std::same_as<std::remove_cvref_t<_tp>,n>): _body(v) {} \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
+    n(const n&) = default;\
+    n(n&) = default;\
+    n(n&&) = default;\
 };
 #define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(erased_t, name, (__VA_ARGS__))
 #define DECLARE_INTERFACE_EX(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
