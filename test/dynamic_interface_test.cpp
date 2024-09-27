@@ -20,19 +20,20 @@ namespace dynamic_interface
         template< typename FROM >
         static type erase( FROM* from )
         {
-            if constexpr( std::is_base_of< type, FROM > )
+            if constexpr( std::is_base_of_v< type, FROM > )
             {
                 return *from;
             }
             else
             {
-                return 	virtual_void::typed_shared_const( *from );
+                FROM f = (*from);
+                return 	virtual_void::typed_shared_const< FROM >( std::move( f ) );
             }
         }
         template< typename TO >
         static auto unerase( type& from )
         {
-            return from.data();
+            return static_cast< const std::remove_cvref_t< TO >* >( from.data() );
         }
     };
 
@@ -135,27 +136,32 @@ void print_shape(shape s) {
     std::cout << "Shape Area: " << s.area() << std::endl;
 }
 
+void print_shape_vv(shape_vv s) {
+    s.draw({4.0, 5.0});
+    std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
+    std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
+    std::cout << "Shape Area: " << s.area() << std::endl;
+}
+
 TEST_CASE( "dynamic interface" ) {
 
     circle c{12.3};
     square s{32};
     rectangle r{12, 9};
     regular_polygon p{4, 32};
+
+    std::cout << "print_shape" << std::endl;
+
     print_shape(c);
     print_shape(s);
     print_shape(r);
     print_shape(p);
 
-	//using entry_t = std::pair< perfect_typeid_hash::type_id, const char* >;
-	//using table_t = std::vector<entry_t>;
-	//table_t elements ={ { &typeid(int), "int" }, { &typeid(std::string), "std::string" }, { &typeid(entry_t), "entry_t" } }; 
+    std::cout << "print_shape_vv" << std::endl;
 
-	//auto not_found = "not found";
-	//perfect_typeid_hash::index_table< const char* > index_table( elements, not_found );
-
-	//REQUIRE( index_table[ &typeid(float) ] == not_found );
-
-	//for( auto element : elements )
-	//	REQUIRE( index_table[ element.first ] == element.second );
+    print_shape_vv(c);
+    print_shape_vv(s);
+    print_shape_vv(r);
+    print_shape_vv(p);
 }
 
