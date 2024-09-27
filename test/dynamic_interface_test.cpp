@@ -8,32 +8,46 @@
 #include "../include/dynamic_interface/dynamic_interface.h"
 #include "../include/virtual_void/virtual_void.h"
 
+namespace dynamic_interface
+{
+    template<>
+    struct trait< virtual_void::shared_const >
+    {
+        using type = virtual_void::shared_const;
+        
+        using param_t = type&;
+
+        template< typename FROM >
+        static type erase( FROM* from )
+        {
+            if constexpr( std::is_base_of< type, FROM > )
+            {
+                return *from;
+            }
+            else
+            {
+                return 	virtual_void::typed_shared_const( *from );
+            }
+        }
+        template< typename TO >
+        static auto unerase( type& from )
+        {
+            return from.data();
+        }
+    };
+
+};
+
 const double M_PI = 3.14;
 
 struct position {float x, y;};
 
-namespace test_dynamic_interface
-{
-    void test_trais()
-    {
-        {
-            int i = 0;
-            int* pi = &i;
-            void* pv = static_cast< std::remove_cvref_t< int > * >( pi );
-        }
- 
-        int v;
-        void* p = dynamic_interface::trait<void*>::erase(&v);
-    }
-
-}
-
-//DECLARE_INTERFACE_EX(virtual_void::shared_const, shape_vv,
-//    (void, draw, position),
-//    (int, count_sides),
-//    (double, area),
-//    (double, perimeter)
-//)
+DECLARE_INTERFACE_EX(virtual_void::shared_const, shape_vv,
+    (void, draw, position),
+    (int, count_sides),
+    (double, area),
+    (double, perimeter)
+)
 
 DECLARE_INTERFACE_EX(void*, shape,
     (void, draw, position),

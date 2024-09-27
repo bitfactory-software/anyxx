@@ -9,6 +9,8 @@ namespace dynamic_interface
     template<>
     struct trait< void* >
     {
+        using type = void*;
+
         using param_t = void*;
 
         template< typename FROM >
@@ -22,7 +24,6 @@ namespace dynamic_interface
             return static_cast< std::remove_cvref_t< TO > * >( from );
         }
     };
-
 };
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -86,7 +87,6 @@ class n { \
     template <typename _tp> \
     n(_tp&& v) : _body(v) {} \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
-    explicit operator bool() {return _body._ref != nullptr;}\
 };
 #define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(erased_t, name, (__VA_ARGS__))
 #define DECLARE_INTERFACE_EX(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
