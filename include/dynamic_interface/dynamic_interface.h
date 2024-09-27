@@ -14,9 +14,9 @@ namespace dynamic_interface
         using param_t = void*;
 
         template< typename FROM >
-        static void* erase( FROM* from )
+        static void* erase( FROM&& from )
         {
-            return static_cast< std::remove_cvref_t< FROM > * >( from );
+            return static_cast< std::remove_cvref_t< FROM > * >( &from );
         }
         template< typename TO >
         static auto unerase( void* from )
@@ -80,7 +80,7 @@ class n { \
         _impl() = default; \
         template <typename _tp> \
         _impl(_tp&& v) \
-        : _ref(dynamic_interface::trait<_erased>::erase(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
+        : _ref(dynamic_interface::trait<_erased>::erase(std::forward<_tp>(v))) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
     } _body;\
     public: \
     n() = default; \

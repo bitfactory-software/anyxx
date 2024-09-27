@@ -18,16 +18,15 @@ namespace dynamic_interface
         using param_t = type&;
 
         template< typename FROM >
-        static type erase( FROM* from )
+        static type erase( FROM&& from )
         {
             if constexpr( std::is_base_of_v< type, FROM > )
             {
-                return *from;
+                return from;
             }
             else
             {
-                FROM f = (*from);
-                return 	virtual_void::typed_shared_const< FROM >( std::move( f ) );
+                return 	virtual_void::make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
             }
         }
         template< typename TO >
@@ -145,6 +144,8 @@ void print_shape_vv(shape_vv s) {
 
 TEST_CASE( "dynamic interface" ) {
 
+    using namespace virtual_void;
+
     circle c{12.3};
     square s{32};
     rectangle r{12, 9};
@@ -159,6 +160,8 @@ TEST_CASE( "dynamic interface" ) {
 
     std::cout << "print_shape_vv" << std::endl;
 
+    //auto sc = make_shared_const<circle>(c);
+    //print_shape_vv(sc);
     print_shape_vv(c);
     print_shape_vv(s);
     print_shape_vv(r);
