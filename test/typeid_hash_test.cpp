@@ -12,9 +12,10 @@ TEST_CASE( "build perfect typeid" ) {
 	using table_t = std::vector<entry_t>;
 	table_t elements ={ { &typeid(int), "int" }, { &typeid(std::string), "std::string" }, { &typeid(entry_t), "entry_t" } }; 
 
-	perfect_typeid_hash::index_table< const char* > index_table( elements );
+	auto not_found = "not found";
+	perfect_typeid_hash::index_table< const char* > index_table( elements, not_found );
 
-	REQUIRE_THROWS( index_table[ &typeid(float) ] );
+	REQUIRE( index_table[ &typeid(float) ] == not_found );
 
 	for( auto element : elements )
 		REQUIRE( index_table[ element.first ] == element.second );

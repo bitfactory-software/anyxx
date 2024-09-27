@@ -31,6 +31,8 @@ struct index_table
 
     std::vector<element_t> table;
 
+    TARGET default_;
+
     index_t apply_formula(type_id type) const
     {
         return ( reinterpret_cast< std::size_t >( type ) * hash_mult) >> hash_shift;
@@ -40,37 +42,34 @@ struct index_table
         auto index = apply_formula(type);
 
         if (index >= hash_length || table[index].first != type) 
-            return {};
+            return default_;
 
         return table[ index ].second;
     }
     TARGET operator[](type_id type) const
     {
-        if( auto found = at(type) )
-            return found;
-        throw "Not found.";
+        return at(type);
     }
 
     index_table( const index_table& ) = delete;
     index_table( const index_table&& ) = delete;
 
-    explicit index_table( const std::vector< element_t >& elements )
+    explicit index_table( const std::vector< element_t >& elements,  TARGET default__ )
+        : default_( default__ )
     {
-        table.resize( 0 );
-
         const auto N = elements.size();
 
         std::default_random_engine rnd(13081963);
         std::size_t total_attempts = 0;
         std::size_t M = 1;
 
-        for (auto size = N * 5 / 4; size >>= 1;) {
+        for (auto size = N * 5 / 4; size >>= 1;)
             ++M;
-        }
 
         std::uniform_int_distribution<std::uintptr_t> uniform_dist;
 
-        for (std::size_t pass = 0; pass < 4; ++pass, ++M) {
+        for (std::size_t pass = 0; pass < 4; ++pass, ++M) 
+        {
             hash_shift = 8 * sizeof(type_id) - M;
             auto hash_size = 1 << M;
 
@@ -79,8 +78,11 @@ struct index_table
             table.resize(hash_size);
             hash_length = 0;
 
-            while (!found && attempts < 100000) {
-                std::fill(table.begin(), table.end(), std::pair{ nullptr, TARGET{} } );
+            const type_id unused_element = (type_id)-1;
+
+            while (!found && attempts < 100000) 
+            {
+                std::fill(table.begin(), table.end(), std::pair{ unused_element, TARGET{} } );
                 ++attempts;
                 ++total_attempts;
                 found = true;
@@ -92,12 +94,10 @@ struct index_table
                     hash_min = (std::min)(hash_min, index);
                     hash_max = (std::max)(hash_max, index);
 
-                    if (table[index].first) {
-                        found = false;
+                    if (found = ( table[index].first == unused_element))
+                        table[index] = std::pair{ type, target };
+                    else
                         break;
-                    }
-
-                    table[index] = std::pair{ type, target };
                 }
             }
 
