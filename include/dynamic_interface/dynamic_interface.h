@@ -76,7 +76,7 @@ class n { \
         _impl() = default; \
         template <typename _tp> \
         _impl(_tp&& v) \
-        : _ref(dynamic_interface::trait<void*>::erase(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
+        : _ref(dynamic_interface::trait<erased_t>::erase(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
     } _body;\
     public: \
     n() = default; \
@@ -85,7 +85,7 @@ class n { \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
     explicit operator bool() {return _body._ref != nullptr;}\
 };
-#define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(void*, name, (__VA_ARGS__))
+#define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(erased_t, name, (__VA_ARGS__))
 #define DECLARE_INTERFACE_EX(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
