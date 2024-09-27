@@ -78,16 +78,15 @@ class n { \
         erased_t _ref = nullptr; \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         _impl() = default; \
-        _impl(const _impl&) = default;\
         _impl(_impl&) = default;\
         _impl(_impl&&) = default;\
         template <typename _tp> \
-        _impl(_tp&& v)  requires (!std::same_as<std::remove_cvref_t<_tp>,n>) \
+        _impl(_tp&& v)  \
         : _ref(dynamic_interface::trait<_erased>::erase(std::forward<_tp>(v))) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
     } _body;\
     public: \
     template <typename _tp> \
-    n(_tp&& v) requires (!std::same_as<std::remove_cvref_t<_tp>,n>): _body(v) {} \
+    n(_tp&& v) : _body(v) {} \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
     n(const n&) = default;\
     n(n&) = default;\
