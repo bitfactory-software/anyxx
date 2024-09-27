@@ -14,25 +14,25 @@ struct position {float x, y;};
 DECLARE_INTERFACE(shape,
     (void, draw, position),
     (int, count_sides),
-    (float, area),
-    (float, perimeter)
+    (double, area),
+    (double, perimeter)
 )
 
 struct circle {
-    float radius;
+    double radius;
     void draw(position p) {
         std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << std::endl;
     }
     int count_sides() {
         return 1;
     }
-    float area() {
+    double area() {
         return radius * radius * M_PI;
     }
-    float circumference() {
+    double circumference() {
         return radius * 2.0f * M_PI;
     }
-    float perimeter() {
+    double perimeter() {
         return circumference();
     }
 };
@@ -44,10 +44,10 @@ struct square {
     int count_sides() {
         return 4;
     }
-    float area() {
+    double area() {
         return w * w;
     }
-    float perimeter() {
+    double perimeter() {
         return w * 4;
     }
 };
@@ -59,39 +59,39 @@ struct rectangle {
     int count_sides() {
         return 4;
     }
-    float area() {
+    double area() {
         return w * h;
     }
-    float perimeter() {
+    double perimeter() {
         return w + w + h + h;
     }
 };
 
 struct regular_polygon {
     int sides;
-    float side_length;
+    double side_length;
     void draw(position p) {
         std::cout << " A Polygon Is Recorded At " << p.x << ", " << p.y << std::endl;
     }
     int count_sides() {
         return sides;
     }
-    float apothem() {
+    double apothem() {
         return (side_length/2) / std::tan(M_PI/sides);
     }
-    float radius() {
+    double radius() {
         return (side_length/2) / std::sin(M_PI/sides);
     }
-    float perimeter() {
+    double perimeter() {
         return sides * side_length;
     }
-    float area() {
+    double area() {
         return (perimeter() * apothem()) / 2;
     }
 };
 
 void print_shape(shape s) {
-    s.draw({4, 5});
+    s.draw({4.0, 5.0});
     std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
     std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
     std::cout << "Shape Area: " << s.area() << std::endl;
