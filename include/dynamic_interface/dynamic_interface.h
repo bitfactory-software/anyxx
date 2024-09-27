@@ -60,10 +60,10 @@ __VA_OPT__(, _detail_map_macro_a _detail_PARENS (macro, __VA_ARGS__))
 #define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(,)
 #define _detail_INTERFACE_FPD_H(l) _detail_INTERFACE_FUNCTION_PTR_DECL l
-#define _detail_INTERFACE_LIMP_H(l) _detail_INTERFACE_LAMBDA_IMPL l
+#define _detail_INTERFACE_MEMEBER_LIMP_H(l) _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL l
 #define _detail_INTERFACE_METHOD_H(l) _detail_INTERFACE_METHOD l
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
-#define _detail_INTERFACE_LAMBDA_IMPL(type, name, ...) \
+#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
 name([](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 {return dynamic_interface::trait<erased_t>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));})
 #define _detail_INTERFACE_METHOD(type, name, ...) \
@@ -92,7 +92,7 @@ class n { \
     n(n&) = default;\
     n(n&&) = default;\
 };
-#define DECLARE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, _detail_INTERFACE_LIMP_H, (__VA_ARGS__))
+#define DECLARE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 
