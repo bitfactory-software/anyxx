@@ -70,7 +70,7 @@ name([](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__)
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _body.name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
-#define _detail_DECLARE_INTERFACE( _erased, n, l) \
+#define _detail_DECLARE_INTERFACE( _erased, n, limp, l) \
 class n { \
     using erased_t = _erased; \
     using erased_param_t = dynamic_interface::trait<_erased>::param_t; \
@@ -82,7 +82,7 @@ class n { \
         _impl(_impl&&) = default;\
         template <typename _tp> \
         _impl(_tp&& v)  \
-        : _ref(dynamic_interface::trait<_erased>::erase(std::forward<_tp>(v))) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
+        : _ref(dynamic_interface::trait<_erased>::erase(std::forward<_tp>(v))) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(limp, _detail_EXPAND_LIST l) {}\
     } _body;\
     public: \
     template <typename _tp> \
@@ -92,7 +92,7 @@ class n { \
     n(n&) = default;\
     n(n&&) = default;\
 };
-#define DECLARE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
+#define DECLARE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, _detail_INTERFACE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 
