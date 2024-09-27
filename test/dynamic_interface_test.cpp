@@ -67,6 +67,10 @@ DECLARE_INTERFACE(void*, shape,
     (double, perimeter)
 )
 
+//DECLARE_FREE_INTERFACE( virtual_void::shared_const, shape_free_vv,
+//    (std::string, double)
+//    )
+
 struct circle {
     double radius;
     void draw(position p) const {
