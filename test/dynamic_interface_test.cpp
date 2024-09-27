@@ -44,49 +44,49 @@ DECLARE_INTERFACE_EX(void*, shape,
 
 struct circle {
     double radius;
-    void draw(position p) {
+    void draw(position p) const {
         std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << std::endl;
     }
-    int count_sides() {
+    int count_sides() const {
         return 1;
     }
-    double area() {
+    double area() const {
         return radius * radius * M_PI;
     }
-    double circumference() {
+    double circumference() const {
         return radius * 2.0f * M_PI;
     }
-    double perimeter() {
+    double perimeter() const {
         return circumference();
     }
 };
 struct square {
     int w;
-    void draw(position p) {
+    void draw(position p) const {
         std::cout << " A Square Is Recorded At " << p.x << " " << p.y << std::endl;
     }
-    int count_sides() {
+    int count_sides() const {
         return 4;
     }
-    double area() {
+    double area() const {
         return w * w;
     }
-    double perimeter() {
+    double perimeter() const {
         return w * 4;
     }
 };
 struct rectangle {
     int w, h;
-    void draw(position p) {
+    void draw(position p) const {
         std::cout << " A Rectangle Is Recorded At " << p.x << " " << p.y << std::endl;
     }
-    int count_sides() {
+    int count_sides() const {
         return 4;
     }
-    double area() {
+    double area() const {
         return w * h;
     }
-    double perimeter() {
+    double perimeter() const {
         return w + w + h + h;
     }
 };
@@ -94,22 +94,22 @@ struct rectangle {
 struct regular_polygon {
     int sides;
     double side_length;
-    void draw(position p) {
+    void draw(position p) const {
         std::cout << " A Polygon Is Recorded At " << p.x << ", " << p.y << std::endl;
     }
-    int count_sides() {
+    int count_sides() const {
         return sides;
     }
-    double apothem() {
+    double apothem() const {
         return (side_length/2) / std::tan(M_PI/sides);
     }
-    double radius() {
+    double radius() const {
         return (side_length/2) / std::sin(M_PI/sides);
     }
-    double perimeter() {
+    double perimeter() const {
         return sides * side_length;
     }
-    double area() {
+    double area() const {
         return (perimeter() * apothem()) / 2;
     }
 };
