@@ -1,5 +1,28 @@
 #include <memory>
 #include <type_traits>
+
+namespace dynamic_interface
+{
+    template< typename ERASED >
+    struct trait; 
+
+    template<>
+    struct trait<void*>
+    {
+        template< typename FROM >
+        static void* erase( FROM* from )
+        {
+            return static_cast< std::remove_cvref_t< FROM > * >( from );
+        }
+        template< typename TO >
+        auto unerase( void* from )
+        {
+            return static_cast< std::remove_cvref_t< TO > * >( from );
+        }
+    };
+
+};
+
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
 #define _detail_EXPAND4(...) _detail_EXPAND3(_detail_EXPAND3(_detail_EXPAND3(_detail_EXPAND3(__VA_ARGS__))))
 #define _detail_EXPAND3(...) _detail_EXPAND2(_detail_EXPAND2(_detail_EXPAND2(_detail_EXPAND2(__VA_ARGS__))))
@@ -52,7 +75,7 @@ class n { \
         _impl() = default; \
         template <typename _tp> \
         _impl(_tp&& v) \
-        : _ref(const_cast<_detail_RMCVREF(_tp) *>(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
+        : _ref(dynamic_interface::trait<void*>::erase(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
     } _body;\
     public: \
     n() = default; \

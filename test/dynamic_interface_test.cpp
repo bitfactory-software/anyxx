@@ -11,6 +11,22 @@ const double M_PI = 3.14;
 
 struct position {float x, y;};
 
+namespace test_dynamic_interface
+{
+    void test_trais()
+    {
+        {
+            int i = 0;
+            int* pi = &i;
+            void* pv = static_cast< std::remove_cvref_t< int > * >( pi );
+        }
+ 
+        int v;
+        void* p = dynamic_interface::trait<void*>::erase(&v);
+    }
+
+}
+
 DECLARE_INTERFACE(shape,
     (void, draw, position),
     (int, count_sides),
