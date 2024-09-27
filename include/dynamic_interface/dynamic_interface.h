@@ -82,7 +82,7 @@ class n { \
     template <typename _tp> \
     n(_tp&& v) : _body(v) {} \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
-    operator bool() {return _body._ref != nullptr;}\
+    explicit operator bool() {return _body._ref != nullptr;}\
 };
 #define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(void*, name, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
