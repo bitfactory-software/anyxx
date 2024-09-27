@@ -177,11 +177,11 @@ TEST_CASE( "dynamic interface" ) {
     static_assert( std::is_base_of_v< shared_const, typed_shared_const< circle > > );
     auto& c1 = *sc;
     REQUIRE_THAT( c1.perimeter(),  WithinAbs(77.2, 77.3));
-    shape_vv circle_shape_vv(sc);
-    //auto x = circle_shape_vv;
+    shape_vv circle_shape_vv = sc;
+    auto x = circle_shape_vv;
     REQUIRE_THAT( circle_shape_vv.perimeter(),  WithinAbs(77.2, 77.3));
     print_shape_vv(sc);
-    //print_shape_vv(circle_shape_vv);
+    print_shape_vv(circle_shape_vv);
     print_shape_vv(c);
     print_shape_vv(s);
     print_shape_vv(r);
