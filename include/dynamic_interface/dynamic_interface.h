@@ -9,6 +9,8 @@ namespace dynamic_interface
     template<>
     struct trait< void* >
     {
+        using param_t = void*;
+
         template< typename FROM >
         static void* erase( FROM* from )
         {
@@ -54,29 +56,30 @@ __VA_OPT__(, _detail_map_macro_a _detail_PARENS (macro, __VA_ARGS__))
 #define _detail_PARAM_LIST2(...) _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) type (* name)(void* __VA_OPT__(, __VA_ARGS__));
+#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(,)
 #define _detail_INTERFACE_FPD_H(l) _detail_INTERFACE_FUNCTION_PTR_DECL l
 #define _detail_INTERFACE_LIMP_H(l) _detail_INTERFACE_LAMBDA_IMPL l
 #define _detail_INTERFACE_METHOD_H(l) _detail_INTERFACE_METHOD l
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 #define _detail_INTERFACE_LAMBDA_IMPL(type, name, ...) \
-name([](void * _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
-{return dynamic_interface::trait<void*>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));})
+name([](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
+{return dynamic_interface::trait<erased_t>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));})
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _body.name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 #define _detail_DECLARE_INTERFACE( _erased, n, l) \
 class n { \
+    using erased_t = _erased; \
+    using erased_param_t = dynamic_interface::trait<_erased>::param_t; \
     struct _impl { \
-        using erased_t = _erased; \
         erased_t _ref = nullptr; \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         _impl() = default; \
         template <typename _tp> \
         _impl(_tp&& v) \
-        : _ref(dynamic_interface::trait<erased_t>::erase(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
+        : _ref(dynamic_interface::trait<_erased>::erase(&v)) _detail_LEAD_COMMA_H_E(l) _detail_map_macro(_detail_INTERFACE_LIMP_H, _detail_EXPAND_LIST l) {}\
     } _body;\
     public: \
     n() = default; \
