@@ -92,8 +92,7 @@ class n { \
     n(n&) = default;\
     n(n&&) = default;\
 };
-#define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(erased_t, name, (__VA_ARGS__))
-#define DECLARE_INTERFACE_EX(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
+#define DECLARE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 

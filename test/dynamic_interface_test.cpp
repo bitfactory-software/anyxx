@@ -53,14 +53,14 @@ const double M_PI = 3.14;
 
 struct position {float x, y;};
 
-DECLARE_INTERFACE_EX(virtual_void::shared_const, shape_vv,
+DECLARE_INTERFACE(virtual_void::shared_const, shape_vv,
     (void, draw, position),
     (int, count_sides),
     (double, area),
     (double, perimeter)
 )
 
-DECLARE_INTERFACE_EX(void*, shape,
+DECLARE_INTERFACE(void*, shape,
     (void, draw, position),
     (int, count_sides),
     (double, area),
