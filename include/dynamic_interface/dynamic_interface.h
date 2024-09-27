@@ -67,10 +67,10 @@ name([](void * _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _body.name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
-#define _detail_DECLARE_INTERFACE(n, l) \
+#define _detail_DECLARE_INTERFACE( _erased, n, l) \
 class n { \
     struct _impl { \
-        void * _ref = nullptr; \
+        _erased _ref = nullptr; \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         _impl() = default; \
         template <typename _tp> \
@@ -84,7 +84,7 @@ class n { \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
     operator bool() {return _body._ref != nullptr;}\
 };
-#define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(name, (__VA_ARGS__))
+#define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(void*, name, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 #define _detail_VALUE_INTERFACE_METHOD(type, name, ...) virtual type name(__VA_ARGS__) = 0;
