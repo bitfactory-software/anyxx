@@ -7,7 +7,7 @@ namespace dynamic_interface
     struct trait; 
 
     template<>
-    struct trait<void*>
+    struct trait< void* >
     {
         template< typename FROM >
         static void* erase( FROM* from )
@@ -15,7 +15,7 @@ namespace dynamic_interface
             return static_cast< std::remove_cvref_t< FROM > * >( from );
         }
         template< typename TO >
-        auto unerase( void* from )
+        static auto unerase( void* from )
         {
             return static_cast< std::remove_cvref_t< TO > * >( from );
         }
@@ -62,7 +62,7 @@ __VA_OPT__(, _detail_map_macro_a _detail_PARENS (macro, __VA_ARGS__))
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 #define _detail_INTERFACE_LAMBDA_IMPL(type, name, ...) \
 name([](void * _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
-{return static_cast<_detail_RMCVREF(_tp) *>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));})
+{return dynamic_interface::trait<void*>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));})
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _body.name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
