@@ -6,6 +6,7 @@
 #include "include/catch.hpp"
 
 #include "../include/dynamic_interface/dynamic_interface.h"
+#include "../include/virtual_void/virtual_void.h"
 
 const double M_PI = 3.14;
 
@@ -26,6 +27,13 @@ namespace test_dynamic_interface
     }
 
 }
+
+//DECLARE_INTERFACE_EX(virtual_void::shared_const, shape_vv,
+//    (void, draw, position),
+//    (int, count_sides),
+//    (double, area),
+//    (double, perimeter)
+//)
 
 DECLARE_INTERFACE_EX(void*, shape,
     (void, draw, position),

@@ -70,7 +70,8 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
 #define _detail_DECLARE_INTERFACE( _erased, n, l) \
 class n { \
     struct _impl { \
-        _erased _ref = nullptr; \
+        using erased_t = _erased; \
+        erased_t _ref = nullptr; \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         _impl() = default; \
         template <typename _tp> \
@@ -113,7 +114,6 @@ class n { \
     std::unique_ptr<_detail_CONCAT(_concept_, n)> _obj; \
     \
 public: \
-    n() = default; \
     template <typename _tp> \
     n(_tp&& v) \
     : _obj(new _impl<typename std::remove_reference<_tp>::type>(v)) {} \

@@ -629,10 +629,10 @@ class shared_const
 { 
 protected:
 	shared_abstract_data_ptr ptr_;
+public:
 	shared_const( const shared_abstract_data_ptr& ptr )
 		: ptr_( ptr )
 	{}
-public:
     const void* data() const { return ptr_->data_; }
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table* m_table() const { return ptr_->m_table_; };
