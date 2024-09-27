@@ -142,11 +142,14 @@ namespace virtual_void
 				typed_shared_const< A1 > a1 = d1;
 				typed_shared_const< A1 > a2 = A1{ "a2->OK" };
 				typed_shared_const< A1 > a3{ std::in_place, "a3 in_place->OK" };
+				A1 a1_pur{ "a1_pur" };
+				typed_shared_const< A1 > a4{ a1_pur };
 				auto& a1r = *a2;
 				auto s1 = a1r.data;
 				auto s = a2->data;
 				std::cout << a2->data << ", " << a2.type().name() << std::endl;				
 				std::cout << a3->data << ", " << a3.type().name() << std::endl;
+				std::cout << a4->data << ", " << a4.type().name() << std::endl;
 
 				auto c1 = make_unique< C >( "unique c1"); 
 				std::cout << c1->data << ", " << c1.type().name() << std::endl;				

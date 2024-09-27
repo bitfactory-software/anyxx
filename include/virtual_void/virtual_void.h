@@ -649,7 +649,10 @@ private:
  public:
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( std::move( v ) ) )
+		: shared_const( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
+	{}
+	typed_shared_const( const T& v ) noexcept
+		: shared_const( std::make_shared< concrete_data< T > >( T{ v } ) )
 	{}
 	template< typename... ARGS > 
 	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
