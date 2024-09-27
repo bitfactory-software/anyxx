@@ -270,13 +270,11 @@ public:
 	{
 		if( !dispatch_target_index_ )
 			throw "Not yet sealed.";
-		if( auto found = dispatch_target_index_->at( &type_info ) )
-			return reinterpret_cast< TARGET >( found );
-		return reinterpret_cast< TARGET >( default_ );
+		return reinterpret_cast< TARGET >( dispatch_target_index_->at( &type_info ) );
 	}
 	void seal()
 	{
-		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( dispatchTable_ );
+		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( dispatchTable_, get_default() );
 	}
 	struct definition{};
 private:
@@ -311,6 +309,10 @@ public:
 	method( domain& domain )
 		: methodTable_( domain )
 	{}
+	void define_default( auto f )
+	{
+		methodTable_->define_default( f );
+	}
 	auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.override_erased( ti, f ); }
 	template< typename CLASS, typename FUNCTION >
 	auto override_( FUNCTION f )
@@ -427,6 +429,7 @@ public:
 	{
 		return is_defined( typeid( C ) );
 	}
+	void seal() { methodTable_.seal(); }
 private:
 	template< typename CLASS >
 	static auto ensure_factory_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;

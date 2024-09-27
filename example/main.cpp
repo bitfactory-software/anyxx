@@ -9,6 +9,7 @@
 #include "../include/virtual_void/virtual_void.h"
 #include "../include/virtual_void/utilities/naive_any_function.h"
 #include "../include/virtual_void/utilities/naive_any_value.h"
+#include "../include/virtual_void/utilities/unnamed__.h"
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"
@@ -163,8 +164,8 @@ int main()
 {
     virtual_void::domain testDomain;
     auto update = virtual_void::method< void (void*, const std::string& ) >{ testDomain };
-    auto updateX = update.override_< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
-
+    auto __ = update.override_< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
+    update.seal();
 
     trace_alignof< const char* >();
     trace_alignof< std::string >();
