@@ -85,6 +85,7 @@ class n { \
     explicit operator bool() {return _body._ref != nullptr;}\
 };
 #define DECLARE_INTERFACE(name, ...) _detail_DECLARE_INTERFACE(void*, name, (__VA_ARGS__))
+#define DECLARE_INTERFACE_EX(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 #define _detail_VALUE_INTERFACE_METHOD(type, name, ...) virtual type name(__VA_ARGS__) = 0;

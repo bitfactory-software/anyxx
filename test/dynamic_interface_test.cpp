@@ -27,7 +27,7 @@ namespace test_dynamic_interface
 
 }
 
-DECLARE_INTERFACE(shape,
+DECLARE_INTERFACE_EX(void*, shape,
     (void, draw, position),
     (int, count_sides),
     (double, area),
