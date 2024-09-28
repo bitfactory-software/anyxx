@@ -52,7 +52,7 @@ namespace dynamic_interface
         template< typename ERASED > using type = BASE_INTERFACE< ERASED, base >;
     };
     template< template< typename E, template< typename > typename B > typename BASE >
-    using derive = basic_< BASE >::type;
+    using basic = basic_< BASE >::type;
 };
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
