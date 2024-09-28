@@ -81,8 +81,24 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
+template
+    < template< typename E, template< typename > typename B > typename INTERFACE 
+    , template< typename E > typename BOUND_BASE_INTERFACE 
+    >
+struct derived_
+{
+    template < typename ERASED > using type = INTERFACE< ERASED, BOUND_BASE_INTERFACE >;
+};
+template
+    < template< typename E, template< typename > typename B > typename INTERFACE 
+    , template< typename E > typename BOUND_BASE_INTERFACE 
+    >
+using derived = derived_< INTERFACE,BOUND_BASE_INTERFACE >::type; 
+
 template < typename ERASED > using helper = shape_base< ERASED, dynamic_interface::basic< shape_base1 > >;
-using shape = shape_d_i< void*, helper >;
+
+using shape = shape_d_i< void*, derived< shape_base, dynamic_interface::basic< shape_base1 > > >;
+//using shape = shape_d_i< void*, helper >;
 //using shape = shape_d_i< void*, dynamic_interface::derived< shape_base2< dynamic_interface::basic< shape_base1 >::type > > >;
 
 struct circle {
