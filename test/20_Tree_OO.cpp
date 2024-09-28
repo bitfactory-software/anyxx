@@ -8,10 +8,11 @@
 
 #include "include/catch.hpp"
 
-// Example code
-
 using std::cout;
 using std::string;
+
+namespace
+{
 
 struct Node {
     virtual ~Node() = default; // generates c++ vtable + type_info
@@ -53,6 +54,8 @@ struct Integer : Node {
 
     int int_;
 };
+
+}
 
 TEST_CASE( "20_Tree_OO" ) 
 {

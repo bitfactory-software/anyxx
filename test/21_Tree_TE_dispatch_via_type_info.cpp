@@ -1,23 +1,28 @@
-﻿// virtual_void variant of this yomm2 example via virtual_void m_tables
+﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
-#include "../../include/virtual_void/virtual_void.h"
 
 #include <iostream>
+#include <iostream>
 #include <string>
+#include <memory>
 
-#include "../../include/virtual_void/utilities/timer.h"
+#include "include/catch.hpp"
+
+#include "../../include/virtual_void/virtual_void.h"
 #include "../../include/virtual_void/utilities/unnamed__.h"
 
 using std::cout;
 using std::string;
 
-// generate "unused identifier" to simplify overrides outside of function
+namespace
+{
 
 struct Node {
+    virtual ~Node() = default; // generates c++ vtable + type_info
 };
 
-using shared_const_node = virtual_void::typed_shared_const<const Node>;
+using shared_const_node = std::shared_ptr<const Node>;
 
 struct Plus : Node {
     Plus( shared_const_node left, shared_const_node right)
@@ -25,7 +30,6 @@ struct Plus : Node {
     }
 
     shared_const_node left, right;
-    ~Plus() { cout << "~Plus()" << "\n"; } // to show, that virtual_void::typed_shared_const will call the rigtht destructor
 };
 
 struct Times : Node {
@@ -34,14 +38,12 @@ struct Times : Node {
     }
 
     shared_const_node left, right;
-    ~Times() { cout << "~Times()" << "\n"; }
 };
 
 struct Integer : Node {
     explicit Integer(int value) : value(value) {
     }
     int value;
-    ~Integer() { cout << "~Integer()" << "\n"; }
 };
 
 // =============================================================================
@@ -49,15 +51,18 @@ struct Integer : Node {
 
 virtual_void::domain tree_domain;
 
-namespace virtual_void::class_hierarchy
-{
-    template<> struct class_< Node > : base {};
-    template<> struct class_< Plus > : bases< Node >{};
-    template<> struct class_< Times > : bases< Node >{};
-    template<> struct class_< Integer > : bases< Node >{};
-
-	auto __ = declare_classes< Node, Plus, Times, Integer >( tree_domain );
-}
+//+++ no special meta data needed. the dispatch information comes from the typeid() via the c++ vtable
+//
+//namespace virtual_void::class_hierarchy
+//{
+//    template<> struct class_< Node > : base {};
+//    template<> struct class_< Plus > : bases< Node >{};
+//    template<> struct class_< Times > : bases< Node >{};
+//    template<> struct class_< Integer > : bases< Node >{};
+//
+//	auto __ = declare_classes< Node, Plus, Times, Integer >( tree_domain );
+//}
+//---
 
 // -----------------------------------------------------------------------------
 // evaluate
@@ -110,29 +115,29 @@ auto __ = as_lisp.override_< Integer >( []( auto expr ) {
     return std::to_string(expr->value);
 });
 
+}
+
 // -----------------------------------------------------------------------------
 
-int main() {
-    build_m_tables( tree_domain );
+TEST_CASE( "21_Tree_TE_dispatch_via_type_info" )
+{
+    //build_m_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"override_" function
+   seal( tree_domain );
 
-    using virtual_void::make_shared_const;
+    using std::make_shared;
 
-    auto expr = make_shared_const<Times>(
-        make_shared_const<Integer>(2),
-        make_shared_const<Plus>(make_shared_const<Integer>(3), make_shared_const<Integer>(4)));
+    auto expr = make_shared<Times>(
+        make_shared<Integer>(2),
+        make_shared<Plus>(make_shared<Integer>(3), make_shared<Integer>(4)));
 
-    cout << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr)
-         << "\n";
-    // error_output:
-    // 2 3 4 + * = (times 2 (plus 3 4)) = 14
+    REQUIRE( value(expr) == 14 );
+    std::stringstream out;
+    out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
+    REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
+    std::cout << out.str() << "\n";
 
-    utility::timer timer;
-    //                  123456789
-    for( int i = 0; i < 100000000; ++i )
-        auto v = value( expr );
-    auto t = timer.elapsed();
-    std::cout << t << std::endl; // 450ms!
-
-    return 0;
+    BENCHMARK("21_Tree_TE_dispach_via_m_table benchmark") {
+        return value(expr);
+    };
 }
 

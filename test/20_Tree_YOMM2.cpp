@@ -16,6 +16,9 @@ using std::make_shared;
 using std::shared_ptr;
 using std::string;
 
+namespace
+{
+
 struct Node {
     virtual ~Node() {
     }
@@ -99,6 +102,7 @@ define_method(string, as_lisp, (const Integer& expr)) {
     return std::to_string(expr.value);
 }
 
+}
 // -----------------------------------------------------------------------------
 
 TEST_CASE( "20_Tree_YOMM2" )
