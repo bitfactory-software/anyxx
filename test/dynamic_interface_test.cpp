@@ -81,7 +81,49 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
-using shape = shape_d_i< void*, dynamic_interface::derived< shape_base, dynamic_interface::basic< shape_base1 > > >;
+//template< typename... >
+//struct bases_;
+//
+//template< typename BASE >
+//struct bases_< BASE >
+//{
+//};
+//
+//template
+//    < typename FIRST
+//    , typename... MORE
+//    >
+//struct bases_< FIRST, MORE... >
+//{
+//    
+//};
+
+
+template< template< typename, template< typename > typename > typename... >
+struct bases_;
+
+template< template< typename, template< typename > typename > typename BASE >
+struct bases_< BASE >
+{
+    template< typename E > using type = BASE< E, dynamic_interface::base >;
+};
+
+template
+    < template< typename, template< typename > typename > typename FIRST
+    , template< typename, template< typename > typename > typename... MORE
+    >
+struct bases_< FIRST, MORE... >
+{
+    template< typename E > using type = FIRST< E, typename bases_< MORE... >::type >;
+};
+
+template< typename E > 
+using bb = bases_< shape_base, shape_base1 >::type< E >;
+
+using bbb = bb<void*>;
+
+using shape = shape_d_i< void*, bases_< shape_base, shape_base1 >::type >;
+//using shape = shape_d_i< void*, dynamic_interface::derived< shape_base, dynamic_interface::basic< shape_base1 > > >;
 
 struct circle {
     double radius;
