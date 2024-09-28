@@ -53,23 +53,20 @@ const double M_PI = 3.14;
 
 struct position {float x, y;};
 
-DECLARE_FREE_INTERFACE(virtual_void::shared_const, to_string_vv,
+DECLARE_FREE_INTERFACE(to_string_i,
     (std::string, to_string)
 )
 
-DECLARE_INTERFACE(virtual_void::shared_const, shape_vv,
+DECLARE_INTERFACE(shape_i,
     (void, draw, position),
     (int, count_sides),
     (double, area),
     (double, perimeter)
 )
 
-DECLARE_INTERFACE(void*, shape,
-    (void, draw, position),
-    (int, count_sides),
-    (double, area),
-    (double, perimeter)
-)
+using to_string_vv = to_string_i< virtual_void::shared_const >;
+using shape_vv = shape_i< virtual_void::shared_const >;
+using shape = shape_i< void* >;
 
 //DECLARE_FREE_INTERFACE( virtual_void::shared_const, shape_free_vv,
 //    (std::string, double)

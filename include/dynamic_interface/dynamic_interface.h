@@ -84,10 +84,11 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _body._v_table->name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
-#define _detail_DECLARE_INTERFACE( _erased, n, delegate_lampda_limp, l) \
+#define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
+template< typename ERASED > \
 class n { \
-    using erased_t = _erased; \
-    using erased_param_t = dynamic_interface::trait<_erased>::param_t; \
+    using erased_t = ERASED; \
+    using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
     struct _impl { \
         erased_t _ref = nullptr; \
         struct _v_table_t { \
@@ -102,7 +103,7 @@ class n { \
         _impl(_impl&&) = default;\
         template <typename _tp> \
         _impl(_tp&& v)  \
-        : _ref(dynamic_interface::trait<_erased>::erase(std::forward<_tp>(v))) \
+        : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<_tp>(v))) \
         {  \
             static _v_table_t _tp_v_table{ v }; \
             _v_table = &_tp_v_table; \
@@ -116,8 +117,8 @@ class n { \
     n(n&) = default;\
     n(n&&) = default;\
 };
-#define DECLARE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define DECLARE_FREE_INTERFACE(_erased, name, ...) _detail_DECLARE_INTERFACE(_erased, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE( name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE( name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
             //static _v_table_t _tp_v_table; \
