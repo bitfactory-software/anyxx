@@ -46,37 +46,13 @@ namespace dynamic_interface
         auto* get_erased() { return &_ref; }
     };
 
-    template< template< typename E, template< typename > typename B > typename BASE_INTERFACE >
-    struct basic_
-    {
-        template< typename ERASED > using type = BASE_INTERFACE< ERASED, base >;
-    };
-    template< template< typename E, template< typename > typename B > typename BASE >
-    using basic = basic_< BASE >::type;
-
-    template
-        < template< typename E, template< typename > typename B > typename INTERFACE 
-        , template< typename E > typename BOUND_BASE_INTERFACE 
-        >
-    struct derived_
-    {
-        template < typename ERASED > using type = INTERFACE< ERASED, BOUND_BASE_INTERFACE >;
-    };
-    template
-        < template< typename E, template< typename > typename B > typename INTERFACE 
-        , template< typename E > typename BOUND_BASE_INTERFACE 
-        >
-    using derived = derived_< INTERFACE,BOUND_BASE_INTERFACE >::type; 
-
     template< template< typename, template< typename > typename > typename... >
     struct bases_;
-
     template< template< typename, template< typename > typename > typename BASE >
     struct bases_< BASE >
     {
         template< typename E > using type = BASE< E, dynamic_interface::base >;
     };
-
     template
         < template< typename, template< typename > typename > typename FIRST
         , template< typename, template< typename > typename > typename... MORE
