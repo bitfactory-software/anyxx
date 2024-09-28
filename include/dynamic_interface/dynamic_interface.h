@@ -131,6 +131,8 @@ class n : base< ERASED > { \
 };
 #define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::not_derived,  name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::not_derived, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define DECLARE_DERIVED_INTERFACE( base, name, ...) _detail_DECLARE_INTERFACE(base, name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define DECLARE_DERIVED_FREE_INTERFACE( base, name, ...) _detail_DECLARE_INTERFACE(base, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
             //static _v_table_t _tp_v_table; \
