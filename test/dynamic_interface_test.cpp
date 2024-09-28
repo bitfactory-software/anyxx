@@ -53,6 +53,10 @@ const double M_PI = 3.14;
 
 struct position {float x, y;};
 
+DECLARE_FREE_INTERFACE(virtual_void::shared_const, to_string_vv,
+    (std::string, to_string)
+)
+
 DECLARE_INTERFACE(virtual_void::shared_const, shape_vv,
     (void, draw, position),
     (int, count_sides),
@@ -143,6 +147,11 @@ struct regular_polygon {
     }
 };
 
+std::string to_string_( const auto& x )
+{
+    return std::to_string( x.count_sides() );
+}
+
 void print_shape(shape s) {
     s.draw({4.0, 5.0});
     std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
@@ -157,6 +166,12 @@ void print_shape_vv(shape_vv s) {
     std::cout << "Shape Area: " << s.area() << std::endl;
 }
 
+
+void ask_name(to_string_vv a)
+{
+    std::cout << "name: " << a.to_string() << std::endl;
+}
+
 TEST_CASE( "dynamic interface" ) {
 
     using namespace virtual_void;
@@ -166,15 +181,14 @@ TEST_CASE( "dynamic interface" ) {
     rectangle r{12, 9};
     regular_polygon p{4, 32};
 
-    std::cout << "print_shape" << std::endl;
+    std::cout << "print_shape *******************************" << std::endl;
 
     print_shape(c);
     print_shape(s);
     print_shape(r);
     print_shape(p);
 
-    std::cout << "print_shape_vv" << std::endl;
-
+    std::cout << "print_shape_vv ********************************" << std::endl;
 
     auto sc = make_shared_const<circle>(circle{c});
     static_assert( std::is_same_v< decltype(sc), typed_shared_const< circle > > );
@@ -190,5 +204,12 @@ TEST_CASE( "dynamic interface" ) {
     print_shape_vv(s);
     print_shape_vv(r);
     print_shape_vv(p);
+
+    std::cout << "ask  ********************************" << std::endl;
+    ask_name(sc);
+    ask_name(c);
+    ask_name(s);
+    ask_name(r);
+    ask_name(p);
 }
 
