@@ -81,12 +81,7 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
-
-//template < typename ERASED > using helper = shape_base< ERASED, dynamic_interface::basic< shape_base1 > >;
-
 using shape = shape_d_i< void*, dynamic_interface::derived< shape_base, dynamic_interface::basic< shape_base1 > > >;
-//using shape = shape_d_i< void*, helper >;
-//using shape = shape_d_i< void*, dynamic_interface::derived< shape_base2< dynamic_interface::basic< shape_base1 >::type > > >;
 
 struct circle {
     double radius;
