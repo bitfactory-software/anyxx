@@ -193,6 +193,8 @@ TEST_CASE( "dynamic interface" ) {
     auto& c1 = *sc;
     REQUIRE_THAT( c1.perimeter(),  WithinAbs(77.2, 77.3));
     shape_vv circle_shape_vv = sc;
+    auto unerased_circle = as< circle >( *circle_shape_vv.get_erased() );
+    REQUIRE_THAT( unerased_circle->perimeter(),  WithinAbs(77.2, 77.3));
     auto x = circle_shape_vv;
     REQUIRE_THAT( circle_shape_vv.perimeter(),  WithinAbs(77.2, 77.3));
     print_shape_vv(sc);

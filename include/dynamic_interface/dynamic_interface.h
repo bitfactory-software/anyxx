@@ -112,10 +112,12 @@ class n { \
     public: \
     template <typename _tp> \
     n(_tp&& v) : _body(v) {} \
-    _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)    \
+    _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l) \
     n(const n&) = default;\
     n(n&) = default;\
     n(n&&) = default;\
+    auto* get_erased() const { return &_body._ref; } \
+    auto* get_erased() { return &_body._ref; } \
 };
 #define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE( name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE( name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
