@@ -116,13 +116,10 @@ struct bases_< FIRST, MORE... >
 {
     template< typename E > using type = FIRST< E, typename bases_< MORE... >::type >;
 };
+template< template< typename, template< typename > typename > typename... BASES >
+using bases = bases_< BASES... >::type;
 
-template< typename E > 
-using bb = bases_< shape_base, shape_base1 >::type< E >;
-
-using bbb = bb<void*>;
-
-using shape = shape_d_i< void*, bases_< shape_base, shape_base1 >::type >;
+using shape = shape_d_i< void*, bases< shape_base, shape_base1 > >;
 //using shape = shape_d_i< void*, dynamic_interface::derived< shape_base, dynamic_interface::basic< shape_base1 > > >;
 
 struct circle {
