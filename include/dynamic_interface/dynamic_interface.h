@@ -67,6 +67,26 @@ namespace dynamic_interface
         , template< typename E > typename BOUND_BASE_INTERFACE 
         >
     using derived = derived_< INTERFACE,BOUND_BASE_INTERFACE >::type; 
+
+    template< template< typename, template< typename > typename > typename... >
+    struct bases_;
+
+    template< template< typename, template< typename > typename > typename BASE >
+    struct bases_< BASE >
+    {
+        template< typename E > using type = BASE< E, dynamic_interface::base >;
+    };
+
+    template
+        < template< typename, template< typename > typename > typename FIRST
+        , template< typename, template< typename > typename > typename... MORE
+        >
+    struct bases_< FIRST, MORE... >
+    {
+        template< typename E > using type = FIRST< E, typename bases_< MORE... >::type >;
+    };
+    template< template< typename, template< typename > typename > typename... BASES >
+    using bases = bases_< BASES... >::type;
 };
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -159,10 +179,6 @@ struct n : BASE< ERASED > \
 #define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
-
-            //static _v_table_t _tp_v_table; \
-            //_detail_map_macro(limp, _detail_EXPAND_LIST l) \
-            //_v_table = &_tp_v_table; \
 
 /*
 THIS INTERFACE:
