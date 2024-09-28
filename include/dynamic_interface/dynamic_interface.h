@@ -49,10 +49,10 @@ namespace dynamic_interface
     template< template< typename E, template< typename > typename B > typename BASE_INTERFACE >
     struct basic_
     {
-        template< typename ERASED > struct type : BASE_INTERFACE< ERASED, base >{};
+        template< typename ERASED > using type = BASE_INTERFACE< ERASED, base >;
     };
-    template< template< typename, typename > typename BASE >
-    using basic = basic_< BASE >::type;
+    template< template< typename E, template< typename > typename B > typename BASE >
+    using derive = basic_< BASE >::type;
 };
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
