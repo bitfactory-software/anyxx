@@ -45,6 +45,14 @@ namespace dynamic_interface
         auto* get_erased() const { return &_ref; }
         auto* get_erased() { return &_ref; }
     };
+
+    template< template< typename E, template< typename > typename B > typename BASE_INTERFACE >
+    struct basic_
+    {
+        template< typename ERASED > struct type : BASE_INTERFACE< ERASED, base >{};
+    };
+    template< template< typename, typename > typename BASE >
+    using basic = basic_< BASE >::type;
 };
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -107,7 +115,7 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
 
 #define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
 template< typename ERASED, template < typename > typename BASE = dynamic_interface::base > \
-class n : public BASE< ERASED > \
+struct n : BASE< ERASED > \
 { \
     using erased_t = ERASED; \
     using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
@@ -122,7 +130,6 @@ class n : public BASE< ERASED > \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
          {}; \
     } * _v_table; \
-public: \
     template <typename _tp> \
     n(_tp&& v)  \
     : base_t(std::forward<_tp>(v)) \
