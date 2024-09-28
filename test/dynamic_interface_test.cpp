@@ -65,8 +65,8 @@ DECLARE_INTERFACE(shape_i,
 )
 
 using to_string_vv = to_string_i< virtual_void::shared_const >;
-using shape_vv = shape_i< virtual_void::shared_const >;
-using shape = shape_i< void* >;
+using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
+using shape = shape_i< void*, dynamic_interface::base >;
 
 //DECLARE_FREE_INTERFACE( virtual_void::shared_const, shape_free_vv,
 //    (std::string, double)

@@ -105,20 +105,22 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _v_table->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
-#define _detail_DECLARE_INTERFACE( base, n, delegate_lampda_limp, l) \
-template< typename ERASED > \
-class n : public base< ERASED > \
+#define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
+template< typename ERASED, template < typename > typename BASE = dynamic_interface::base > \
+class n : public BASE< ERASED > \
 { \
     using erased_t = ERASED; \
     using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
-    using base_t = base< ERASED >; \
-    struct _v_table_t : base< erased_t >::_v_table_t { \
+    using base_t = BASE< ERASED >; \
+    using base_v_table_t = base_t::_v_table_t; \
+    struct _v_table_t : base_v_table_t \
+    { \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         template <typename _tp> \
         _v_table_t(_tp&& param) \
-            : base< erased_t >::_v_table_t( std::forward<_tp>(param) ) \
+            : base_v_table_t( std::forward<_tp>(param) ) \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
-            {}; \
+         {}; \
     } * _v_table; \
 public: \
     template <typename _tp> \
@@ -133,10 +135,8 @@ public: \
     n(n&) = default;\
     n(n&&) = default;\
 };
-#define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::base,  name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::base, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
-#define DECLARE_DERIVED_INTERFACE( base, name, ...) _detail_DECLARE_INTERFACE(base, name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define DECLARE_DERIVED_FREE_INTERFACE( base, name, ...) _detail_DECLARE_INTERFACE(base, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
             //static _v_table_t _tp_v_table; \
