@@ -25,13 +25,25 @@ namespace dynamic_interface
         }
     };
 
-    template< typename >
-    struct not_derived {
-        struct _v_table_t {
-        template <typename UNUSED> \
-            _v_table_t(UNUSED&& ) \
-             {}; \
+    template< typename ERASED >
+    struct base 
+    {
+        using erased_t = ERASED;
+        erased_t _ref = nullptr;
+        struct _v_table_t 
+        {
+            template <typename UNUSED>
+            _v_table_t(UNUSED&&){};
         };
+        template <typename T>
+        base(T&& v) 
+            : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<T>(v)))
+        {}
+        base(const base&) = default;
+        base(base&) = default;
+        base(base&&) = default;
+        auto* get_erased() const { return &_ref; }
+        auto* get_erased() { return &_ref; }
     };
 };
 
@@ -90,15 +102,16 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-    return _v_table->name(_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return _v_table->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
 #define _detail_DECLARE_INTERFACE( base, n, delegate_lampda_limp, l) \
 template< typename ERASED > \
-class n : base< ERASED > { \
+class n : public base< ERASED > \
+{ \
     using erased_t = ERASED; \
     using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
-    erased_t _ref = nullptr; \
+    using base_t = base< ERASED >; \
     struct _v_table_t : base< erased_t >::_v_table_t { \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         template <typename _tp> \
@@ -107,10 +120,10 @@ class n : base< ERASED > { \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
             {}; \
     } * _v_table; \
-    public: \
+public: \
     template <typename _tp> \
     n(_tp&& v)  \
-    : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<_tp>(v))) \
+    : base< ERASED >(std::forward<_tp>(v)) \
     {  \
         static _v_table_t _tp_v_table{ v }; \
         _v_table = &_tp_v_table; \
@@ -119,11 +132,9 @@ class n : base< ERASED > { \
     n(const n&) = default;\
     n(n&) = default;\
     n(n&&) = default;\
-    auto* get_erased() const { return &_ref; } \
-    auto* get_erased() { return &_ref; } \
 };
-#define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::not_derived,  name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::not_derived, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::base,  name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::base, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define DECLARE_DERIVED_INTERFACE( base, name, ...) _detail_DECLARE_INTERFACE(base, name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define DECLARE_DERIVED_FREE_INTERFACE( base, name, ...) _detail_DECLARE_INTERFACE(base, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
