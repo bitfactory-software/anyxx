@@ -6,8 +6,3 @@ add_subdirectory ("04_Sink_TypeErased")
 add_subdirectory ("05_Sink_TypeErased_w_Type_info_dispatch")
 add_subdirectory ("06_Sink_TypeErased_w_proxy")
 add_subdirectory ("07_Sink_TypeErased_w_lifetime")
-
-add_subdirectory ("20_Tree_OO")
-add_subdirectory ("20_Tree_YOMM2")
-add_subdirectory ("21_Tree_TE_dispach_via_m_table")
-add_subdirectory ("21_Tree_TE_dispatch_via_type_info")
