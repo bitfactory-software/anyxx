@@ -25,7 +25,9 @@ namespace dynamic_interface
         }
     };
 
-    template< typename ERASED >
+    template< typename > struct dummy {};
+
+    template< typename ERASED, template< typename > typename UNUSED = dummy >
     struct base 
     {
         using erased_t = ERASED;
@@ -46,7 +48,10 @@ namespace dynamic_interface
         auto* get_erased() { return &_ref; }
     };
 
-    template< template< typename E, template< typename > typename B > typename BASE_INTERFACE >
+    template
+        < template< typename E, template< typename > typename B > typename BASE_INTERFACE 
+        //        , template< typename E, template< typename > typename BASE_OF_BASE
+        >
     struct basic_
     {
         template< typename ERASED > using type = BASE_INTERFACE< ERASED, base >;

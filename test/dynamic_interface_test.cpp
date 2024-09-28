@@ -57,12 +57,15 @@ DECLARE_FREE_INTERFACE(to_string_i,
     (std::string, to_string)
 )
 
-DECLARE_INTERFACE(shape_base,
+DECLARE_INTERFACE(shape_1,
     (void, draw, position),
+)
+
+DECLARE_INTERFACE(shape_2,
     (int, count_sides),
 )
 
-DECLARE_INTERFACE(shape_d_i,
+DECLARE_INTERFACE(shape_3,
     (double, area),
     (double, perimeter)
 )
@@ -78,7 +81,12 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
-using shape = shape_d_i< void*, dynamic_interface::basic_< shape_base >::type >;
+
+//template< typename ERASED >
+//using shape_2_base = dynamic_interface::derive< shape_2, dynamic_interface::derive< shape_1 > >;
+//
+//using shape = shape_3< void*, shape_2_base >;
+using shape = shape_i< void* >;
 
 struct circle {
     double radius;
