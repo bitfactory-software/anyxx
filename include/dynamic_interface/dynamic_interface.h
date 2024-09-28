@@ -90,7 +90,7 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-    return _body._v_table->name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return _v_table->name(_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
 #define _detail_DECLARE_INTERFACE( base, n, delegate_lampda_limp, l) \
@@ -98,36 +98,29 @@ template< typename ERASED > \
 class n : base< ERASED > { \
     using erased_t = ERASED; \
     using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
-    struct _impl { \
-        erased_t _ref = nullptr; \
-        struct _v_table_t : base< erased_t >::_v_table_t { \
-            _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
-            template <typename _tp> \
-            _v_table_t(_tp&& param) \
-                : base< erased_t >::_v_table_t( std::forward<_tp>(param) ) \
-                , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
-             {}; \
-        } * _v_table; \
-        _impl() = default; \
-        _impl(_impl&) = default;\
-        _impl(_impl&&) = default;\
+    erased_t _ref = nullptr; \
+    struct _v_table_t : base< erased_t >::_v_table_t { \
+        _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         template <typename _tp> \
-        _impl(_tp&& v)  \
-        : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<_tp>(v))) \
-        {  \
-            static _v_table_t _tp_v_table{ v }; \
-            _v_table = &_tp_v_table; \
-        } \
-    } _body;\
+        _v_table_t(_tp&& param) \
+            : base< erased_t >::_v_table_t( std::forward<_tp>(param) ) \
+            , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
+            {}; \
+    } * _v_table; \
     public: \
     template <typename _tp> \
-    n(_tp&& v) : _body(v) {} \
+    n(_tp&& v)  \
+    : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<_tp>(v))) \
+    {  \
+        static _v_table_t _tp_v_table{ v }; \
+        _v_table = &_tp_v_table; \
+    } \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l) \
     n(const n&) = default;\
     n(n&) = default;\
     n(n&&) = default;\
-    auto* get_erased() const { return &_body._ref; } \
-    auto* get_erased() { return &_body._ref; } \
+    auto* get_erased() const { return &_ref; } \
+    auto* get_erased() { return &_ref; } \
 };
 #define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::not_derived,  name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(dynamic_interface::not_derived, name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
@@ -169,8 +162,8 @@ EXPANDS TO:
         example() = default;
         template <typename _tp> example(_tp &&v) : _body(v) {}
         void print(const char *_sig) {
-            return _body.print(_body._ref, std ::forward<decltype(_sig)>(_sig));
+            return print(_ref, std ::forward<decltype(_sig)>(_sig));
         }
-        operator bool() { return _body._ref != nullptr; }
+        operator bool() { return _ref != nullptr; }
     };
 */
