@@ -68,19 +68,23 @@ __VA_OPT__(, _detail_map_macro_a _detail_PARENS (macro, __VA_ARGS__))
 type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
-.name = [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
-{   return dynamic_interface::trait<erased_t>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));}
+name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
+{\
+    return dynamic_interface::trait<erased_t>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+})
 
 #define _detail_INTERFACE_LAMBDA_TO_FREE_IMPL(type, name, ...) \
-.name = [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
-{   return name##_( *dynamic_interface::trait<erased_t>::unerase<_tp>(_vp) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));}
+name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
+{ \
+    return name##_( *dynamic_interface::trait<erased_t>::unerase<_tp>(_vp) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+})
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return _body._v_table->name(_body._ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
-#define _detail_DECLARE_INTERFACE( _erased, n, limp, l) \
+#define _detail_DECLARE_INTERFACE( _erased, n, delegate_lampda_limp, l) \
 class n { \
     using erased_t = _erased; \
     using erased_param_t = dynamic_interface::trait<_erased>::param_t; \
@@ -88,6 +92,10 @@ class n { \
         erased_t _ref = nullptr; \
         struct _v_table_t { \
             _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
+            template <typename _tp> \
+            _v_table_t(_tp&& ) \
+                : _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
+             {}; \
         } * _v_table; \
         _impl() = default; \
         _impl(_impl&) = default;\
@@ -96,9 +104,7 @@ class n { \
         _impl(_tp&& v)  \
         : _ref(dynamic_interface::trait<_erased>::erase(std::forward<_tp>(v))) \
         {  \
-            static _v_table_t _tp_v_table{ \
-                _detail_map_macro(limp, _detail_EXPAND_LIST l) \
-            }; \
+            static _v_table_t _tp_v_table{ v }; \
             _v_table = &_tp_v_table; \
         } \
     } _body;\
