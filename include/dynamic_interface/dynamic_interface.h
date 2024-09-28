@@ -123,7 +123,7 @@ class n : public base< ERASED > \
 public: \
     template <typename _tp> \
     n(_tp&& v)  \
-    : base< ERASED >(std::forward<_tp>(v)) \
+    : base_t(std::forward<_tp>(v)) \
     {  \
         static _v_table_t _tp_v_table{ v }; \
         _v_table = &_tp_v_table; \
