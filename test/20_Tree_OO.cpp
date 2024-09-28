@@ -8,8 +8,6 @@
 
 #include "include/catch.hpp"
 
-#include "../include/virtual_void/utilities/timer.h"
-
 // Example code
 
 using std::cout;
@@ -73,6 +71,5 @@ TEST_CASE( "20_Tree_OO" )
     BENCHMARK("20_Tree_OO benchmark") {
         return expr->value();
     };
-//#endif // !_DEBUG
 }
 
