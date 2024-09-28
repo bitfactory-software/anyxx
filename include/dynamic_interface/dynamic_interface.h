@@ -57,13 +57,15 @@ __VA_OPT__(, _detail_map_macro_a _detail_PARENS (macro, __VA_ARGS__))
 #define _detail_PARAM_LIST2(...) _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(,)
 #define _detail_INTERFACE_FPD_H(l) _detail_INTERFACE_FUNCTION_PTR_DECL l
 #define _detail_INTERFACE_MEMEBER_LIMP_H(l) _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL l
 #define _detail_INTERFACE_FREE_LIMP_H(l) _detail_INTERFACE_LAMBDA_TO_FREE_IMPL l
 #define _detail_INTERFACE_METHOD_H(l) _detail_INTERFACE_METHOD l
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
+
+#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) \
+type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
 .name = [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
