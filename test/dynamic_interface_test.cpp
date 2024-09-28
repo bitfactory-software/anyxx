@@ -116,19 +116,19 @@ struct regular_polygon {
     }
 };
 
-std::string to_string_( const auto& x )
+std::string to_string_( auto const x )
 {
     return std::to_string( x.count_sides() );
 }
 
-void print_shape(shape s) {
+void print_shape(const shape s) {
     s.draw({4.0, 5.0});
     std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
     std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
     std::cout << "Shape Area: " << s.area() << std::endl;
 }
 
-void print_shape_vv(shape_vv s) {
+void print_shape_vv(const shape_vv s) {
     s.draw({4.0, 5.0});
     std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
     std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
@@ -136,7 +136,7 @@ void print_shape_vv(shape_vv s) {
 }
 
 
-void ask_name(to_string_vv a)
+void ask_name(const to_string_vv a)
 {
     std::cout << "name: " << a.to_string() << std::endl;
 }

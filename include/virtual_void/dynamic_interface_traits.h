@@ -10,7 +10,7 @@ namespace dynamic_interface
     {
         using type = virtual_void::shared_const;
         
-        using param_t = type&;
+        using param_t = const type&;
 
         template< typename FROM >
         static type erase( FROM&& from )
@@ -26,7 +26,7 @@ namespace dynamic_interface
             }
         }
         template< typename CONSTRUCTOR_PARAM >
-        static auto unerase( type& from )
+        static auto unerase( const type& from )
         {
             using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
             if constexpr( std::is_base_of_v< type, constructor_param_t > )
