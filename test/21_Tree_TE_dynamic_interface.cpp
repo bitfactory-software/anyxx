@@ -74,8 +74,11 @@ TEST_CASE( "21_Tree_TE_dynamic_interface" )
     REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
     std::cout << out.str() << "\n";
 
-    BENCHMARK("21_Tree_TE_dynamic_interface benchmark") {
+    BENCHMARK("21_Tree_TE_dynamic_interface value") {
         return expr.value();
+    };
+    BENCHMARK("21_Tree_TE_dynamic_interface as_lisp") {
+        return expr.as_lisp();
     };
 }
 

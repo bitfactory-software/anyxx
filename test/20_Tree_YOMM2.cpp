@@ -119,7 +119,10 @@ TEST_CASE( "20_Tree_YOMM2" )
     REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
     std::cout << out.str() << "\n";
 
-    BENCHMARK("20_Tree_YOMM2 benchmark") {
+    BENCHMARK("20_Tree_YOMM2 value") {
         return value(*expr);
+    };
+    BENCHMARK("20_Tree_YOMM2 as_lisp") {
+        return as_lisp(*expr);
     };
 }

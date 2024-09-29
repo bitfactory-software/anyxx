@@ -135,7 +135,10 @@ TEST_CASE( "21_Tree_TE_dispach_via_m_table" )
     REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
     std::cout << out.str() << "\n";
 
-    BENCHMARK("21_Tree_TE_dispach_via_m_table benchmark") {
+    BENCHMARK("21_Tree_TE_dispach_via_m_table value") {
         return value(expr);
+    };
+    BENCHMARK("21_Tree_TE_dispach_via_m_table as_lisp") {
+        return as_lisp(expr);
     };
 }
