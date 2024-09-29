@@ -21,18 +21,17 @@ using index_t = std::size_t;
 const type_id unused_element = (type_id)-1;
 
 template< typename TARGET >
-    requires ( std::convertible_to< TARGET, bool > )
 struct index_table
 {
     using element_t = std::pair< type_id, TARGET >;
-    using tabel_t = std::vector<element_t>;
+    using table_t = std::vector<element_t>;
  
     struct hash_index
     {
         std::size_t mult = 0;
         std::size_t shift = 0;
         std::size_t length = 0;
-        tabel_t table;
+        table_t table;
         index_t apply_formula(type_id type) const
         {
             return ( reinterpret_cast< std::size_t >( type ) * mult) >> shift;
@@ -55,18 +54,22 @@ struct index_table
         return at(type);
     }
 
+    index_table() = default;
     index_table( const index_table& ) = delete;
     index_table( const index_table&& ) = delete;
 
-    explicit index_table( const std::vector< element_t >& elements,  TARGET default__ )
-        : default_( default__ )
+    explicit index_table( const auto& elements,  TARGET default__ )
     {
+        build( elements,  default__ );
+    }
+    void build( const auto& elements,  TARGET default__ )
+    {
+        default_ = default__ ;
         if( auto found = find_hash( elements, inital_sparse_factor( elements.size() ) ) )
             hash_ = *found;
         else
             throw "abort!";
     }
-
     auto static inital_sparse_factor( std::size_t element_count )
     {
        std::size_t sparse_factor = 1;
@@ -74,16 +77,14 @@ struct index_table
            ++sparse_factor;
        return sparse_factor;
     }
-
-    static std::optional<hash_index> find_hash( const std::vector< element_t >& elements, std::size_t sparse_factor )
+    static std::optional<hash_index> find_hash( const auto& elements, std::size_t sparse_factor )
     {
         for (std::size_t pass = 0; pass < 4; ++pass, ++sparse_factor) 
             if( auto found = find_hash_for_sparse_factor( elements, sparse_factor ) )
                 return found;
         return{};
     }
-
-    static std::optional<hash_index> find_hash_for_sparse_factor( const std::vector< element_t >& elements, std::size_t sparse_factor )
+    static std::optional<hash_index> find_hash_for_sparse_factor( const auto& elements, std::size_t sparse_factor )
     {
         hash_index hash_index;
         hash_index.shift = 8 * sizeof(type_id) - sparse_factor;
@@ -99,8 +100,7 @@ struct index_table
 
         return {};
     }
-
-    static std::optional<hash_index> can_hash_input_values( const std::vector< element_t >& elements, hash_index& hash_index, std::size_t hash_mult )
+    static std::optional<hash_index> can_hash_input_values( const auto& elements, hash_index& hash_index, std::size_t hash_mult )
     {
         hash_index.mult = hash_mult;
         std::fill(hash_index.table.begin(), hash_index.table.end(), std::pair{ unused_element, TARGET{} } );                

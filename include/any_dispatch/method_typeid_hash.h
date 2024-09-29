@@ -1,19 +1,21 @@
 #pragma once
 
 #include <any>
-#include <functional>
 #include <map>
-#include <unordered_map>
+#include <functional>
 #include <typeindex>
+
+#include "../include/perfect_typeid_hash/index_table.h"
 
 namespace any_dispatch
 {
     template< typename R, typename ANY, typename... ARGS >
-    class method
+    class method_typeid_hash
     {
 		using erased_function_t = std::function< R( ANY, ARGS... ) >;
 	private:
-		std::map< std::type_index, erased_function_t > dispatchTable_;
+		std::map< perfect_typeid_hash::type_id, erased_function_t > dispatchMap_;
+		perfect_typeid_hash::index_table< erased_function_t > indexTable_;
         erased_function_t fallback_ = []( ANY dispatch, ARGS... args )->R
         {
 			throw std::runtime_error( std::string( dispatch.type().name() ) + ": No registered method." );
@@ -21,10 +23,10 @@ namespace any_dispatch
 	public:
 		auto define_erased( const std::type_info& register_type_info, const erased_function_t& f )
 		{
-			auto entry = dispatchTable_.find( register_type_info );
-			if( entry != dispatchTable_.end() )
+			auto entry = dispatchMap_.find( &register_type_info );
+			if( entry != dispatchMap_.end() )
 				throw std::runtime_error( "Method for type already registered." );
-			dispatchTable_[ register_type_info ] = f;
+			dispatchMap_[ &register_type_info ] = f;
 			return nullptr;
 		}
 		auto define_fallback( const erased_function_t& fallback )
@@ -42,14 +44,12 @@ namespace any_dispatch
 		}
 		R operator()( ANY dispatch, ARGS... args ) const
 		{
-			auto entry = dispatchTable_.find( dispatch.type() );
-			if( entry == dispatchTable_.end() )
-				return fallback_( dispatch, args... );
-			return entry->second( dispatch, args... );
+			auto target = indexTable_[ &dispatch.type() ];
+			return target( dispatch, args... );
 		}	
 		erased_function_t is_defined( const std::type_info& type_info )
 		{
-			if( auto entry = dispatchTable_.find( type_info ); entry != dispatchTable_.end() )
+			if( auto entry = dispatchMap_.find( &type_info ); entry != dispatchMap_.end() )
 				return entry->second;
 			return nullptr_t{};
 		}
@@ -57,6 +57,11 @@ namespace any_dispatch
 		erased_function_t is_defined()
 		{
 			return is_defined( typeid( C ) );
+		}
+		void seal()
+		{
+			indexTable_.build( dispatchMap_, fallback_ );
+			dispatchMap_.clear();
 		}
     };
 }
