@@ -10,6 +10,7 @@
 #include <typeinfo>
 #include <typeindex>
 #include <concepts>
+#include <optional>
 
 namespace perfect_typeid_hash 
 {
@@ -24,28 +25,30 @@ template< typename TARGET >
 struct index_table
 {
     using element_t = std::pair< type_id, TARGET >;
-
-    std::size_t hash_mult = 0;
-    std::size_t hash_shift = 0;
-    std::size_t hash_length = 0;
-
-    std::vector<element_t> table;
-
-
+    using tabel_t = std::vector<element_t>;
+ 
+    struct hash_index
+    {
+        std::size_t hash_mult = 0;
+        std::size_t hash_shift = 0;
+        std::size_t hash_length = 0;
+        tabel_t table;
+        index_t apply_formula(type_id type) const
+        {
+            return ( reinterpret_cast< std::size_t >( type ) * hash_mult) >> hash_shift;
+        }
+    };
+    hash_index hash_;
     TARGET default_;
 
-    index_t apply_formula(type_id type) const
-    {
-        return ( reinterpret_cast< std::size_t >( type ) * hash_mult) >> hash_shift;
-    }
     TARGET at(type_id type) const
     {
-        auto index = apply_formula(type);
+        auto index = hash_.apply_formula(type);
 
-        if (index >= hash_length || table[index].first != type) 
+        if (index >= hash_.hash_length || hash_.table[index].first != type) 
             return default_;
 
-        return table[ index ].second;
+        return hash_.table[ index ].second;
     }
     TARGET operator[](type_id type) const
     {
@@ -58,53 +61,64 @@ struct index_table
     explicit index_table( const std::vector< element_t >& elements,  TARGET default__ )
         : default_( default__ )
     {
-        const auto element_count = elements.size();
-
-        std::size_t sparse_factor = 1;
-
-        for (auto size = element_count * 5 / 4; size; size /= 2)
-            ++sparse_factor;
-
-        for (std::size_t pass = 0; pass < 4; ++pass, ++sparse_factor) 
-        {
-            hash_shift = 8 * sizeof(type_id) - sparse_factor;
-            table.resize( std::size_t(1) << sparse_factor );
-            hash_length = 0;
-
-            if( find_hash_mult_for_sparse_factor(elements) )
-                return;
-        }
-
-        throw "abort!";
+        if( auto found = find_hash( elements, inital_sparse_factor( elements.size() ) ) )
+            hash_ = *found;
+        else
+            throw "abort!";
     }
 
-    bool find_hash_mult_for_sparse_factor( const std::vector< element_t >& elements )
+    auto static inital_sparse_factor( std::size_t element_count )
     {
+       std::size_t sparse_factor = 1;
+       for (auto size = element_count * 5 / 4; size; size /= 2)
+           ++sparse_factor;
+       return sparse_factor;
+    }
+
+    static std::optional<hash_index> find_hash( const std::vector< element_t >& elements, std::size_t sparse_factor )
+    {
+        for (std::size_t pass = 0; pass < 4; ++pass, ++sparse_factor) 
+            if( auto found = find_hash_for_sparse_factor( elements, sparse_factor ) )
+                return found;
+        return{};
+    }
+
+    static std::optional<hash_index> find_hash_for_sparse_factor( const std::vector< element_t >& elements, std::size_t sparse_factor )
+    {
+        hash_index hash_index;
+        hash_index.hash_shift = 8 * sizeof(type_id) - sparse_factor;
+        hash_index.table.resize( std::size_t(1) << sparse_factor );
+        hash_index.hash_length = 0;
+
         std::default_random_engine random_engine(13081963);
         std::uniform_int_distribution<std::uintptr_t> uniform_dist;
+
         for(std::size_t attempts = 0; attempts < 100000; ++attempts) 
-        {
-            std::fill(table.begin(), table.end(), std::pair{ unused_element, TARGET{} } );                
-            hash_mult = uniform_dist(random_engine) | 1;
-            if( hash_mult_for_input_values( elements ) )
-                return true;
-        }
-        return false;
+            if( can_hash_input_values( elements, hash_index, ( uniform_dist(random_engine) | 1 ) ) )
+                return hash_index;
+
+        return {};
     }
 
-    bool hash_mult_for_input_values( const std::vector< element_t >& elements )
+    static std::optional<hash_index> can_hash_input_values( const std::vector< element_t >& elements, hash_index& hash_index, std::size_t hash_mult )
     {
-        for (const auto [ type, target ] : elements ) 
-        {
-            auto index = apply_formula(type);
-            hash_length = (std::max)(hash_length, index+1);
+        hash_index.hash_mult = hash_mult;
+        std::fill(hash_index.table.begin(), hash_index.table.end(), std::pair{ unused_element, TARGET{} } );                
+        for (const auto& element : elements ) 
+            if( !can_hash_input_value( element, hash_index ) )
+                return {};
 
-            if( table[index].first == unused_element )
-                table[index] = std::pair{ type, target };
-            else
-                return false;
-        }
-        return true;
+        return hash_index;
+    }
+    static std::optional<hash_index> can_hash_input_value( const element_t& element, hash_index& hash_index )
+    {
+        auto index = hash_index.apply_formula(element.first);
+        hash_index.hash_length = (std::max)(hash_index.hash_length, index+1);
+        if( hash_index.table[index].first != unused_element )
+            return {};
+            
+        hash_index.table[index] = element;
+        return hash_index;
     }
 };
 
