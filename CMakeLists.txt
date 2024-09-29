@@ -16,5 +16,4 @@ endif()
 project ("virtual_void")
 
 # Include sub-projects.
-add_subdirectory ("example")
 add_subdirectory ("test")

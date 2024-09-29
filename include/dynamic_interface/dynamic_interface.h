@@ -1,7 +1,14 @@
 #pragma once
 
+//
+// developed from: https://github.com/AlexCodesApps/dynamic_interface/blob/main/dynamic_interface.hpp
+//
+// for Microsoft C++, you must enable the C-Preprocessor with this flag: /Zc:preprocessor (see CMakeLists.txt for example)
+//
+
 #include <memory>
 #include <type_traits>
+
 
 namespace dynamic_interface
 {
@@ -158,38 +165,3 @@ struct n : BASE< ERASED > \
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
-/*
-THIS INTERFACE:
-DECLARE_INTERFACE(example,
-    (void, print, const char *)
-)
-EXPANDS TO:
-    class example {
-        struct _impl {
-            void *_ref = nullptr;
-            void (*print)(void *, const char *);
-            _impl() = default;
-            template <typename _tp>
-            _impl(_tp &&v)
-                : _ref(const_cast<
-                    typename std ::remove_const<typename std ::remove_volatile<
-                        typename std ::remove_reference<_tp>::type>::type>::type
-                        *>(&v)),
-                print([](void *_vp, const char *_sig) {
-                    return static_cast<typename std ::remove_const<
-                        typename std ::remove_volatile<
-                            typename std ::remove_reference<_tp>::type>::type>::
-                                            type *>(_vp)
-                        ->print(std ::forward<decltype(_sig)>(_sig));
-                }) {}
-        } _body;
-
-    public:
-        example() = default;
-        template <typename _tp> example(_tp &&v) : _body(v) {}
-        void print(const char *_sig) {
-            return print(_ref, std ::forward<decltype(_sig)>(_sig));
-        }
-        operator bool() { return _ref != nullptr; }
-    };
-*/
