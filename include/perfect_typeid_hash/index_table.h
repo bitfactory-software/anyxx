@@ -60,25 +60,25 @@ struct index_table
     {
         const auto element_count = elements.size();
 
-        std::size_t magnitude = 1;
+        std::size_t sparse_factor = 1;
 
         for (auto size = element_count * 5 / 4; size; size /= 2)
-            ++magnitude;
+            ++sparse_factor;
 
-        for (std::size_t pass = 0; pass < 4; ++pass, ++magnitude) 
+        for (std::size_t pass = 0; pass < 4; ++pass, ++sparse_factor) 
         {
-            hash_shift = 8 * sizeof(type_id) - magnitude;
-            table.resize( std::size_t(1) << magnitude );
+            hash_shift = 8 * sizeof(type_id) - sparse_factor;
+            table.resize( std::size_t(1) << sparse_factor );
             hash_length = 0;
 
-            if( find_hash_mult_for_magnitude(elements) )
+            if( find_hash_mult_for_sparse_factor(elements) )
                 return;
         }
 
         throw "abort!";
     }
 
-    bool find_hash_mult_for_magnitude( const std::vector< element_t >& elements )
+    bool find_hash_mult_for_sparse_factor( const std::vector< element_t >& elements )
     {
         std::default_random_engine random_engine(13081963);
         std::uniform_int_distribution<std::uintptr_t> uniform_dist;
