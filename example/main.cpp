@@ -7,9 +7,9 @@
 #include "../include/std26/proxy.h"
 
 #include "../include/virtual_void/virtual_void.h"
-#include "../include/virtual_void/utilities/naive_any_function.h"
-#include "../include/virtual_void/utilities/naive_any_value.h"
-#include "../include/virtual_void/utilities/unnamed__.h"
+#include "../include/utilities/naive_any_function.h"
+#include "../include/utilities/naive_any_value.h"
+#include "../include/utilities/unnamed__.h"
 
 #include "class_hierarchy_test.h"
 #include "simple_open_method_test.h"

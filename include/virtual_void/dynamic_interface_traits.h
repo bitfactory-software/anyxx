@@ -31,7 +31,7 @@ namespace dynamic_interface
             using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
             if constexpr( std::is_base_of_v< type, constructor_param_t > )
             {
-                return static_cast< const constructor_param_t::type * >( from.data() );
+                return static_cast< const constructor_param_t::wrapped_type * >( from.data() );
             }
             else
             {

@@ -9,7 +9,7 @@
 #include "include/catch.hpp"
 
 #include "../../include/any_dispatch/method.h"
-#include "../../include/virtual_void/utilities/unnamed__.h"
+#include "../../include/utilities/unnamed__.h"
 
 using std::cout;
 using std::string;
