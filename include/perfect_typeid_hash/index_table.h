@@ -26,8 +26,6 @@ struct index_table
     std::size_t hash_mult = 0;
     std::size_t hash_shift = 0;
     std::size_t hash_length = 0;
-    std::size_t hash_min = 0;
-    std::size_t hash_max = 0;
 
     std::vector<element_t> table;
 
@@ -60,7 +58,6 @@ struct index_table
         const auto element_count = elements.size();
 
         std::default_random_engine rnd(13081963);
-        std::size_t total_attempts = 0;
         std::size_t magnitude = 1;
 
         for (auto size = element_count * 5 / 4; size; size /= 2)
@@ -77,6 +74,7 @@ struct index_table
             std::size_t attempts = 0;
             table.resize(hash_size);
             hash_length = 0;
+            std::size_t hash_max = 0;
 
             const type_id unused_element = (type_id)-1;
 
@@ -84,14 +82,12 @@ struct index_table
             {
                 std::fill(table.begin(), table.end(), std::pair{ unused_element, TARGET{} } );
                 ++attempts;
-                ++total_attempts;
                 found = true;
                 hash_mult = uniform_dist(rnd) | 1;
 
                 for (const auto [ type, target ] : elements ) 
                 {
                     auto index = apply_formula(type);
-                    hash_min = (std::min)(hash_min, index);
                     hash_max = (std::max)(hash_max, index);
 
                     if (found = ( table[index].first == unused_element))
