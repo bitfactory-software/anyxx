@@ -6,7 +6,7 @@
 #include "../include/perfect_typeid_hash/index_table.h"
 
 
-TEST_CASE( "build perfect typeid" ) {
+TEST_CASE( "build perfect typeid hash index" ) {
 
 	using entry_t = std::pair< perfect_typeid_hash::type_id, const char* >;
 	using table_t = std::vector<entry_t>;

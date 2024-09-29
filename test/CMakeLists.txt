@@ -11,7 +11,11 @@ include_directories([SYSTEM] "D:/BitFactory/third_party_2024/vcpkg/installed/x64
 
 # Add source to this project's executable.
 add_executable (test "include/catch.cpp"
+    "_class_hierarchy_test.cpp"
     "_dynamic_interface_test.cpp"
+    "_erased_cast_test.cpp"
+    "_prototype.cpp"
+    "_simple_open_method_test.cpp"
     "_typeid_hash_test.cpp"
     "01_Callback_Inheritance.cpp"
     "02_Callback_TypeErased.cpp"
@@ -28,7 +32,7 @@ add_executable (test "include/catch.cpp"
     "21_Tree_TE_dispatch_via_m_table.cpp"
     "21_Tree_TE_dispatch_via_type_info.cpp"
     "21_Tree_TE_dynamic_interface.cpp"
-)
+    )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET test PROPERTY CXX_STANDARD 20)
