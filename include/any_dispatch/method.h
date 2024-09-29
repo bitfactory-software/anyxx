@@ -3,6 +3,7 @@
 #include <any>
 #include <functional>
 #include <map>
+#include <unordered_map>
 #include <typeindex>
 
 namespace any_dispatch
