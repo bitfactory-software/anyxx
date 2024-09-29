@@ -8,7 +8,7 @@
 
 #include "include/catch.hpp"
 
-#include "../../include/virtual_void/virtual_void.h"
+#include "../../include/any_dispatch/method.h"
 #include "../../include/virtual_void/utilities/unnamed__.h"
 
 using std::cout;
@@ -41,65 +41,60 @@ struct Times : Node {
 struct Integer : Node {
     explicit Integer(int value) : value(value) {
     }
-//    ~Integer() { cout << "~Integer()" << "\n"; }
+    int value;
 };
 
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-}
-
-
-namespace
-{
 // -----------------------------------------------------------------------------
 // evaluate
 
-auto value = virtual_void::method< int(const void*) >{ tree_domain };
+auto value = any_dispatch::method< int, const any& >{};
 
-auto __ = value.override_< Plus >( []( auto expr ) {
+auto __ = value.define< Plus >( []( auto expr ) {
     return value( expr->left ) + value( expr->right );
 });
 
-auto __ = value.override_< Times >( []( auto expr ) {
+auto __ = value.define< Times >( []( auto expr ) {
     return value( expr->left ) * value( expr->right );
 });
 
-auto __ = value.override_< Integer >( []( auto expr ) {
+auto __ = value.define< Integer >( []( auto expr ) {
     return expr->value;
 });
 
 // -----------------------------------------------------------------------------
 // render as Forth
 
-auto as_forth = virtual_void::method< string( const void* ) >{ tree_domain };
+auto as_forth = any_dispatch::method< string, const any& >{};
 
-auto __ = as_forth.override_< Plus >( []( auto expr ) {
+auto __ = as_forth.define< Plus >( []( auto expr ) {
     return as_forth( expr->left ) + " " + as_forth( expr->right ) + " +";
 });
 
-auto __ = as_forth.override_< Times >( []( auto expr ) {
+auto __ = as_forth.define< Times >( []( auto expr ) {
     return as_forth( expr->left ) + " " + as_forth( expr->right ) + " *";
 });
 
-auto __ = as_forth.override_< Integer >( []( auto expr ) {
+auto __ = as_forth.define< Integer >( []( auto expr ) {
     return std::to_string(expr->value);
 });
 
 // -----------------------------------------------------------------------------
 // render as Lisp
 
-auto as_lisp = virtual_void::method< string( const void* ) >{ tree_domain };
+auto as_lisp = any_dispatch::method< string, const any& >{};
 
-auto __ = as_lisp.override_< Plus >( []( auto expr ) {
+auto __ = as_lisp.define< Plus >( []( auto expr ) {
     return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });
 
-auto __ = as_lisp.override_< Times >( []( auto expr ) {
+auto __ = as_lisp.define< Times >( []( auto expr ) {
     return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });
 
-auto __ = as_lisp.override_< Integer >( []( auto expr ) {
+auto __ = as_lisp.define< Integer >( []( auto expr ) {
     return std::to_string(expr->value);
 });
 
@@ -107,15 +102,13 @@ auto __ = as_lisp.override_< Integer >( []( auto expr ) {
 
 // -----------------------------------------------------------------------------
 
-TEST_CASE( "21_Tree_TE_dispach_via_m_table" )
+TEST_CASE( "21_Tree_TE_dispach_via_any_dispatch" )
 {
-    build_m_tables( tree_domain );
+    using std::make_any;
 
-    using virtual_void::make_shared_const;
-
-    auto expr = make_shared_const<Times>(
-        make_shared_const<Integer>(2),
-        make_shared_const<Plus>(make_shared_const<Integer>(3), make_shared_const<Integer>(4)));
+    auto expr = make_any<Times>(
+        make_any<Integer>(2),
+        make_any<Plus>(make_any<Integer>(3), make_any<Integer>(4)));
 
     REQUIRE( value(expr) == 14 );
     std::stringstream out;
@@ -123,10 +116,10 @@ TEST_CASE( "21_Tree_TE_dispach_via_m_table" )
     REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
     std::cout << out.str() << "\n";
 
-    BENCHMARK("21_Tree_TE_dispach_via_m_table value") {
+    BENCHMARK("21_Tree_TE_dispach_via_any_dispatch value") {
         return value(expr);
     };
-    BENCHMARK("21_Tree_TE_dispach_via_m_table as_lisp") {
+    BENCHMARK("21_Tree_TE_dispach_via_any_dispatch as_lisp") {
         return as_lisp(expr);
     };
 }

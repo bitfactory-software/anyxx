@@ -18,12 +18,13 @@ namespace any_dispatch
 			throw std::runtime_error( std::string( dispatch.type().name() ) + ": No registered method." );
         };
 	public:
-		void define_erased( const std::type_info& register_type_info, const erased_function_t& f )
+		auto define_erased( const std::type_info& register_type_info, const erased_function_t& f )
 		{
 			auto entry = dispatchTable_.find( register_type_info );
 			if( entry != dispatchTable_.end() )
 				throw std::runtime_error( "Method for type already registered." );
 			dispatchTable_[ register_type_info ] = f;
+			return nullptr;
 		}
 		auto define_fallback( const erased_function_t& fallback )
 		{
