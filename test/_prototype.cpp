@@ -13,7 +13,6 @@
 #include "../include/utillities/naive_any_value.h"
 #include "../include/utillities/unnamed__.h"
 
-
 namespace
 {
 
@@ -89,8 +88,6 @@ template< typename C >
     {
         return c.get();
     }
-
-
 
 struct X
 {
