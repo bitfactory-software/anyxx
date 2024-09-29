@@ -11,6 +11,16 @@ include_directories([SYSTEM] "D:/BitFactory/third_party_2024/vcpkg/installed/x64
 
 # Add source to this project's executable.
 add_executable (test "include/catch.cpp"
+    "_dynamic_interface_test.cpp"
+    "_typeid_hash_test.cpp"
+    "01_Callback_Inheritance.cpp"
+    "02_Callback_TypeErased.cpp"
+    "03_Sink_Inheritance.cpp"
+    "03_Sink_Inheritance_modern.cpp"
+    "04_Sink_TypeErased.cpp"
+    "05_Sink_TypeErased_w_any_dispatch.cpp"
+    "06_Sink_TypeErased_w_proxy.cpp"
+    "07_Sink_TypeErased_w_lifetime.cpp"
     "20_Tree_OO.cpp"
     "20_Tree_YOMM2.cpp"
     "21_Tree_TE_dispatch_via_any.cpp"
@@ -18,8 +28,6 @@ add_executable (test "include/catch.cpp"
     "21_Tree_TE_dispatch_via_m_table.cpp"
     "21_Tree_TE_dispatch_via_type_info.cpp"
     "21_Tree_TE_dynamic_interface.cpp"
-    "dynamic_interface_test.cpp"
-    "typeid_hash_test.cpp" 
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

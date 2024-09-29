@@ -8,9 +8,14 @@
 #include <typeindex>
 #include <memory>
 
+#include "include/catch.hpp"
+
 #include "../../include/std26/proxy.h"
 #include "../../include/virtual_void/virtual_void.h"
 #include "../../include/virtual_void/proxy/adapter.h"
+
+namespace
+{
 
 namespace DB
 {
@@ -87,7 +92,7 @@ namespace Application
     }
 }
 
-int main()
+TEST_CASE( "06_Sink_TypeErased_w_proxy" ) 
 {
     using namespace Application;
     using namespace DB;
@@ -101,7 +106,7 @@ int main()
             std::cout << "string: " << s->data << std::endl; 
         });
 
-     
+    entityToOut.seal();
 
     db.factories[ "i" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< StringData >( data ); };
@@ -119,5 +124,7 @@ int main()
     {
         std::cout << "error: " << e.what() << std::endl;
     }
-    return 0;
+ 
+}
+
 }

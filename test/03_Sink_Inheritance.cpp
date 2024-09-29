@@ -4,6 +4,11 @@
 #include <map>
 #include <vector>
 
+#include "include/catch.hpp"
+
+namespace
+{
+
 namespace DB
 {
     struct IAny
@@ -70,7 +75,7 @@ namespace Application
     }; 
 }
 
-int main()
+TEST_CASE( "03_Sink_Inheritance" ) 
 {
     using namespace Application;
     DB::System db;
@@ -84,5 +89,7 @@ int main()
     db.factories[ "s" ] = std::make_unique< StringData::Factory >();
     ReportSink sink;
     db.Query( sink );
-    return 0;
+ 
+}
+
 }

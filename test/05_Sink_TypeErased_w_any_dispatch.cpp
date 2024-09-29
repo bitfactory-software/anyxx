@@ -9,6 +9,11 @@
 
 #include "../../include/any_dispatch/method.h"
 
+#include "include/catch.hpp"
+
+namespace
+{
+
 namespace DB
 {
     using FactoryFunction = std::function< std::any( const std::string& ) >;
@@ -57,7 +62,7 @@ namespace Application
     }
 }
 
-int main()
+TEST_CASE( "05_Sink_TypeErased_w_any_dispatch" ) 
 {
     using namespace Application;
 
@@ -79,5 +84,7 @@ int main()
     {
         std::cout << "error: " << e.what() << std::endl;
     }
-    return 0;
+ 
+}
+
 }

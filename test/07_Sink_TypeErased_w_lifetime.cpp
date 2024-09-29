@@ -8,8 +8,13 @@
 #include <typeindex>
 #include <memory>
 
+#include "include/catch.hpp"
+
 #include "../../include/std26/proxy.h"
 #include "../../include/virtual_void/virtual_void.h"
+
+namespace
+{
 
 namespace DB
 {
@@ -89,6 +94,8 @@ namespace Application
         entityToOut.override_< IntData >( &IntToOut );
     }
 }
+
+}
 namespace virtual_void::class_hierarchy
 {
 	using namespace Application;
@@ -97,13 +104,17 @@ namespace virtual_void::class_hierarchy
 	template<> struct class_< IntData >: base {};
 	template<> struct class_< DoubleData >: base {};
 }
+
+namespace
+{
+
 namespace Application
 {
     using classes = virtual_void::type_list< SuperStringData, StringData, IntData, DoubleData >;
 }
 
 
-int main()
+TEST_CASE( "07_Sink_TypeErased_w_lifetime" ) 
 {
     using namespace Application;
     using namespace DB;
@@ -149,5 +160,7 @@ int main()
             std::cout << "stringData: " << stringData->data << std::endl;
     });
 
-    return 0;
+ 
+}
+
 }

@@ -1,5 +1,10 @@
 ﻿#include <iostream>
 
+#include "include/catch.hpp"
+
+namespace
+{
+
 namespace DB
 {
     struct IActionParameter
@@ -23,10 +28,12 @@ namespace Application
     };
 }
 
-int main()
+TEST_CASE( "02_Callback_TypeErased" ) 
 {
     DB::System db;
     Application::ActionParameter actionParameter;
     db.Execute( actionParameter );
-    return 0;
+ 
+}
+
 }

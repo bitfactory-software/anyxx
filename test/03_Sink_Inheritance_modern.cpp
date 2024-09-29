@@ -5,6 +5,11 @@
 #include <vector>
 #include <functional>
 
+#include "include/catch.hpp"
+
+namespace
+{
+
 namespace DB
 {
     struct IAny
@@ -53,7 +58,7 @@ namespace Application
     }
 }
 
-int main()
+TEST_CASE( "03_Sink_Inheritance_modern" ) 
 {
     using namespace Application;
     DB::System db;
@@ -66,5 +71,7 @@ int main()
     db.factories[ "i" ] = []( const std::string& data ){ return new IntData{ std::atoi( data.c_str() ) }; };
     db.factories[ "s" ] = []( const std::string& data ){ return new StringData{ data }; };
     db.Query( ReportSink );
-    return 0;
+ 
+}
+
 }

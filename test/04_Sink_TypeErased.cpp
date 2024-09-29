@@ -6,6 +6,11 @@
 #include <vector>
 #include <utility>
 
+#include "include/catch.hpp"
+
+namespace
+{
+
 namespace DB
 {
     using FactoryFunction = std::function< std::any( const std::string& ) >;
@@ -45,7 +50,7 @@ namespace Application
     }
 }
 
-int main()
+TEST_CASE( "04_Sink_TypeErased" ) 
 {
     using namespace Application;
     DB::System db;
@@ -58,5 +63,7 @@ int main()
     db.factories[ "i" ] = []( const std::string& data )->std::any{  return IntData{std::atoi( data.c_str() ) }; };
     db.factories[ "s" ] = []( const std::string& data )->std::any{  return StringData{ data }; };
     db.Query( ReportSink );
-    return 0;
+ 
+}
+
 }

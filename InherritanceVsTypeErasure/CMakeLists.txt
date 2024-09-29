@@ -1,8 +1,0 @@
-﻿add_subdirectory ("01_Callback_Inheritance")
-add_subdirectory ("02_Callback_TypeErased")
-add_subdirectory ("03_Sink_Inheritance")
-add_subdirectory ("03_Sink_Inheritance_modern")
-add_subdirectory ("04_Sink_TypeErased")
-add_subdirectory ("05_Sink_TypeErased_w_any_dispatch")
-add_subdirectory ("06_Sink_TypeErased_w_proxy")
-add_subdirectory ("07_Sink_TypeErased_w_lifetime")
