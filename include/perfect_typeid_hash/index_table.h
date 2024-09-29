@@ -57,13 +57,13 @@ struct index_table
     explicit index_table( const std::vector< element_t >& elements,  TARGET default__ )
         : default_( default__ )
     {
-        const auto N = elements.size();
+        const auto element_count = elements.size();
 
         std::default_random_engine rnd(13081963);
         std::size_t total_attempts = 0;
         std::size_t M = 1;
 
-        for (auto size = N * 5 / 4; size >>= 1;)
+        for (auto size = element_count * 5 / 4; size >>= 1;)
             ++M;
 
         std::uniform_int_distribution<std::uintptr_t> uniform_dist;
