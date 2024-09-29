@@ -29,13 +29,13 @@ struct index_table
  
     struct hash_index
     {
-        std::size_t hash_mult = 0;
-        std::size_t hash_shift = 0;
-        std::size_t hash_length = 0;
+        std::size_t mult = 0;
+        std::size_t shift = 0;
+        std::size_t length = 0;
         tabel_t table;
         index_t apply_formula(type_id type) const
         {
-            return ( reinterpret_cast< std::size_t >( type ) * hash_mult) >> hash_shift;
+            return ( reinterpret_cast< std::size_t >( type ) * mult) >> shift;
         }
     };
     hash_index hash_;
@@ -45,7 +45,7 @@ struct index_table
     {
         auto index = hash_.apply_formula(type);
 
-        if (index >= hash_.hash_length || hash_.table[index].first != type) 
+        if (index >= hash_.length || hash_.table[index].first != type) 
             return default_;
 
         return hash_.table[ index ].second;
@@ -86,9 +86,9 @@ struct index_table
     static std::optional<hash_index> find_hash_for_sparse_factor( const std::vector< element_t >& elements, std::size_t sparse_factor )
     {
         hash_index hash_index;
-        hash_index.hash_shift = 8 * sizeof(type_id) - sparse_factor;
+        hash_index.shift = 8 * sizeof(type_id) - sparse_factor;
         hash_index.table.resize( std::size_t(1) << sparse_factor );
-        hash_index.hash_length = 0;
+        hash_index.length = 0;
 
         std::default_random_engine random_engine(13081963);
         std::uniform_int_distribution<std::uintptr_t> uniform_dist;
@@ -102,7 +102,7 @@ struct index_table
 
     static std::optional<hash_index> can_hash_input_values( const std::vector< element_t >& elements, hash_index& hash_index, std::size_t hash_mult )
     {
-        hash_index.hash_mult = hash_mult;
+        hash_index.mult = hash_mult;
         std::fill(hash_index.table.begin(), hash_index.table.end(), std::pair{ unused_element, TARGET{} } );                
         for (const auto& element : elements ) 
             if( !can_hash_input_value( element, hash_index ) )
@@ -113,7 +113,7 @@ struct index_table
     static std::optional<hash_index> can_hash_input_value( const element_t& element, hash_index& hash_index )
     {
         auto index = hash_index.apply_formula(element.first);
-        hash_index.hash_length = (std::max)(hash_index.hash_length, index+1);
+        hash_index.length = (std::max)(hash_index.length, index+1);
         if( hash_index.table[index].first != unused_element )
             return {};
             
