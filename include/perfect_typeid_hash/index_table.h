@@ -57,21 +57,21 @@ struct index_table
     explicit index_table( const std::vector< element_t >& elements,  TARGET default__ )
         : default_( default__ )
     {
-        const auto N = elements.size();
+        const auto element_count = elements.size();
 
         std::default_random_engine rnd(13081963);
         std::size_t total_attempts = 0;
-        std::size_t M = 1;
+        std::size_t magnitude = 1;
 
-        for (auto size = N * 5 / 4; size >>= 1;)
-            ++M;
+        for (auto size = element_count * 5 / 4; size; size /= 2)
+            ++magnitude;
 
         std::uniform_int_distribution<std::uintptr_t> uniform_dist;
 
-        for (std::size_t pass = 0; pass < 4; ++pass, ++M) 
+        for (std::size_t pass = 0; pass < 4; ++pass, ++magnitude) 
         {
-            hash_shift = 8 * sizeof(type_id) - M;
-            auto hash_size = 1 << M;
+            hash_shift = 8 * sizeof(type_id) - magnitude;
+            auto hash_size = 1 << magnitude;
 
             bool found = false;
             std::size_t attempts = 0;
