@@ -67,19 +67,9 @@ namespace dynamic_interface
         base(base&&) = default;
         auto* get_erased() const { return &_ref; }
         auto* get_erased() { return &_ref; }
-        bool is_derived_from( const std::type_info& from ) 
-        { 
-            return _v_table->_is_derived_from( from ); 
-        }
-        template< typename FROM >
-        bool is_derived_from() 
-        { 
-            return is_derived_from( typeid( FROM ) ); 
-        } 
-        static bool static_is_derived_from( const std::type_info& from ) 
-        { 
-            return typeid( base ) == from; 
-        } 
+        bool is_derived_from( const std::type_info& from ) const { return _v_table->_is_derived_from( from ); }
+        template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM ) );  } 
+        static bool static_is_derived_from( const std::type_info& from ) { return typeid( base ) == from; } 
     protected:
         base() = default;
     };
@@ -87,6 +77,16 @@ namespace dynamic_interface
     template< typename FACADE > void set_is_derived_from( auto v_table )
     {
         v_table->_is_derived_from = +[]( const std::type_info& from ){ return FACADE::static_is_derived_from( from ); };
+    }
+
+    template< typename TO, typename FROM >
+    TO static_interface_cast( const FROM& from ) requires ( std::derived_from< TO, FROM > ) { return *static_cast< const TO* >( &from ); }
+    template< typename TO, typename FROM >
+    std::optional< TO > interface_cast( const FROM& from ) requires ( std::derived_from< TO, FROM > ) 
+    { 
+        if( from.is_derived_from< TO >() )
+            return { *static_cast< const TO* >( &from ) };
+        return {};
     }
 
     template< template< typename, template< typename > typename > typename... >

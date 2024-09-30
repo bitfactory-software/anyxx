@@ -178,10 +178,19 @@ TEST_CASE( "dynamic interface" ) {
 
     REQUIRE( base_v.is_derived_from< shape >() );
     REQUIRE( !base_v.is_derived_from< shapeX >() );
+    static_assert( std::derived_from< shape, shape_base_v > );
+    REQUIRE( !dynamic_interface::interface_cast< shapeX >( base_v ) );
 
     shape_base_v shape_circle_base = shape_circle; 
-    shape shape_circle_1 = *static_cast< shape* >( &shape_circle_base );
-    print_shape(shape_circle_1);
+    {
+        shape shape_is_circle = dynamic_interface::static_interface_cast< shape >( shape_circle_base );
+        print_shape(shape_is_circle);
+    }
+    {
+        auto shape_is_circle = dynamic_interface::interface_cast< shape >( shape_circle_base );
+        REQUIRE( shape_is_circle );
+        print_shape( *shape_is_circle );
+    }
 
     std::cout << "print_shape_vv ********************************" << std::endl;
 
