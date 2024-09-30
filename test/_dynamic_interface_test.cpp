@@ -23,6 +23,7 @@ namespace dynamic_interface
         using erased_param_t = trait<ERASED>::param_t;
         using base_t = BASE< ERASED >;
         using base_v_table_t = base_t::_v_table_t;
+        using base_t::_v_table;
         struct _v_table_t : base_v_table_t
         {
             RET (*call_op)(erased_param_t, ARGS&&... );
@@ -30,7 +31,7 @@ namespace dynamic_interface
             _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
                 , call_op ( [](erased_param_t _vp, ARGS&&... args ) { return ( *trait<erased_t>::unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); })
             {}
-        } * _v_table;
+        };
         template <typename _tp>
         call_operator_facade(_tp&& v) 
             : base_t(std::forward<_tp>(v))
@@ -38,7 +39,7 @@ namespace dynamic_interface
             static _v_table_t _tp_v_table{ v };
             _v_table = &_tp_v_table;
         }
-        RET operator()( ARGS&&... args ) const { return _v_table->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
+        RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&&) = default;

@@ -43,7 +43,7 @@ namespace dynamic_interface
         {
             template <typename UNUSED>
             _v_table_t(UNUSED&&){};
-        };
+        } *_v_table;
         template <typename T>
         base(T&& v) 
             : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<T>(v)))
@@ -129,7 +129,7 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
-    return _v_table->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
 #define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
@@ -139,6 +139,7 @@ struct n : BASE< ERASED > \
     using erased_t = ERASED; \
     using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
     using base_t = BASE< ERASED >; \
+    using base_t::_v_table; \
     using base_v_table_t = base_t::_v_table_t; \
     struct _v_table_t : base_v_table_t \
     { \
@@ -148,7 +149,7 @@ struct n : BASE< ERASED > \
             : base_v_table_t( std::forward<_tp>(param) ) \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
          {}; \
-    } * _v_table; \
+    }; \
     template <typename _tp> \
     n(_tp&& v)  \
     : base_t(std::forward<_tp>(v)) \
