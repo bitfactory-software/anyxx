@@ -31,7 +31,9 @@ namespace dynamic_interface
             template <typename _tp>
             _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
                 , call_op ( [](erased_param_t _vp, ARGS&&... args ) { return ( *trait<erased_t>::unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); })
-            {}
+            {
+                set_is_derived_from< call_operator_facade >( this );
+            }
         };
         template <typename _tp>
         call_operator_facade(_tp&& v) 
@@ -52,6 +54,10 @@ namespace dynamic_interface
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&&) = default;
+        static bool static_is_derived_from( const std::type_info& from ) 
+        { 
+            return typeid( call_operator_facade ) == from ? true : BASE< ERASED >::static_is_derived_from( from ) ; 
+        } 
     protected:
         call_operator_facade() = default;
     };
@@ -97,6 +103,7 @@ using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 using shape_base_v = shape_base< void*, dynamic_interface::bases< shape_base1 > >;
 
 using shape = shape_d_i< void*, dynamic_interface::bases< dynamic_interface::call_operator< std::string, std::string >, shape_base, shape_base1 > >;
+using shapeX = shape_d_i< void*, dynamic_interface::bases< shape_base, shape_base1 > >;
 
 struct circle {
     double radius;
@@ -221,6 +228,9 @@ TEST_CASE( "dynamic interface" ) {
     shape shape_circle{ circle{ 33.3 } };
 
     dynamic_interface::base< void* > base_v = shape_circle; 
+
+    REQUIRE( base_v.is_derived_from< shape >() );
+    REQUIRE( !base_v.is_derived_from< shapeX >() );
 
     shape_base_v shape_circle_base = shape_circle; 
     shape shape_circle_1 = *static_cast< shape* >( &shape_circle_base );

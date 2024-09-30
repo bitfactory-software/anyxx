@@ -41,10 +41,10 @@ namespace dynamic_interface
         erased_t _ref = nullptr;
         struct _v_table_t 
         {
-            bool (_is_derived_from*)( const std::type_info& ); 
+            bool (*_is_derived_from)( const std::type_info& ); 
             template <typename UNUSED>
             _v_table_t(UNUSED&&)
-                : _is_derived_from ( []( const std::type_info& from ){ return typeid( base ) == from; } )
+                : _is_derived_from ( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
             {};
         } *_v_table;
         template <typename T>
@@ -67,10 +67,27 @@ namespace dynamic_interface
         base(base&&) = default;
         auto* get_erased() const { return &_ref; }
         auto* get_erased() { return &_ref; }
-        static bool is_derived_from( const std::type_info& from ) { return typeid( base ) == from; } 
+        bool is_derived_from( const std::type_info& from ) 
+        { 
+            return _v_table->_is_derived_from( from ); 
+        }
+        template< typename FROM >
+        bool is_derived_from() 
+        { 
+            return is_derived_from( typeid( FROM ) ); 
+        } 
+        static bool static_is_derived_from( const std::type_info& from ) 
+        { 
+            return typeid( base ) == from; 
+        } 
     protected:
         base() = default;
     };
+
+    template< typename FACADE > void set_is_derived_from( auto v_table )
+    {
+        v_table->_is_derived_from = +[]( const std::type_info& from ){ return FACADE::static_is_derived_from( from ); };
+    }
 
     template< template< typename, template< typename > typename > typename... >
     struct bases_;
@@ -168,7 +185,7 @@ struct n : BASE< ERASED > \
             : base_v_table_t( std::forward<_tp>(param) ) \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
         { \
-          _is_derived_from = []( const std::type_info& from ){ return typeid( n ) == from true ? ; };
+            dynamic_interface::set_is_derived_from< n >( this ); \
         }; \
     }; \
     template <typename _tp> \
@@ -190,6 +207,10 @@ struct n : BASE< ERASED > \
     n(const n&) = default;\
     n(n&) = default;\
     n(n&&) = default;\
+    static bool static_is_derived_from( const std::type_info& from ) \
+    {  \
+        return typeid( n ) == from ? true : BASE< ERASED >::static_is_derived_from( from ) ; \
+    } \
 protected: \
     n() = default;\
 };
