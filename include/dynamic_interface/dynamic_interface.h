@@ -218,10 +218,59 @@ protected: \
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
-    //template< typename OTHER > \
-    //    : requires ( std::derived_from< OTHER, interface_t >)\
-    //n:(const OTHER& other ) \
-    //{ \
-    //    _ref = other._ref; \
-    //    _v_table = other._v_table; \
-    //} \
+namespace dynamic_interface
+{
+    template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+    struct call_operator_facade : BASE< ERASED >
+    {
+        using erased_t = ERASED;
+        using erased_param_t = trait<ERASED>::param_t;
+        using base_t = BASE< ERASED >;
+        using base_v_table_t = base_t::_v_table_t;
+        using base_t::_ref;
+        using base_t::_v_table;
+        struct _v_table_t : base_v_table_t
+        {
+            RET (*call_op)(erased_param_t, ARGS&&... );
+            template <typename _tp>
+            _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
+                , call_op ( [](erased_param_t _vp, ARGS&&... args ) { return ( *trait<erased_t>::unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); })
+            {
+                set_is_derived_from< call_operator_facade >( this );
+            }
+        };
+        template <typename _tp>
+        call_operator_facade(_tp&& v) 
+            requires ( !std::derived_from< std::remove_cvref_t< _tp >, BASE< ERASED > > )
+            : base_t(std::forward<_tp>(v))
+        { 
+            static _v_table_t _tp_v_table{ v };
+            _v_table = &_tp_v_table;
+        }
+        template< typename OTHER >
+        call_operator_facade( const OTHER& other )
+            requires ( std::derived_from< OTHER, BASE< ERASED > > )
+        {
+            _ref = other._ref;
+            _v_table = other._v_table;
+        }
+        RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
+        call_operator_facade(const call_operator_facade&) = default;
+        call_operator_facade(call_operator_facade&) = default;
+        call_operator_facade(call_operator_facade&&) = default;
+        static bool static_is_derived_from( const std::type_info& from ) 
+        { 
+            return typeid( call_operator_facade ) == from ? true : BASE< ERASED >::static_is_derived_from( from ) ; 
+        } 
+    protected:
+        call_operator_facade() = default;
+    };
+    template< typename RET, typename... ARGS >
+    struct call_operator_
+    {
+        template< typename ERASED, template < typename > typename BASE >
+        using type = call_operator_facade< ERASED, BASE, RET, ARGS... >;
+    };
+    template< typename RET, typename... ARGS >
+    using call_operator = call_operator_< RET, ARGS... >::type;
+};
