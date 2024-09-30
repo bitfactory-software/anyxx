@@ -135,12 +135,13 @@ TEST_CASE( "21_Tree_TE_dispatch_via_type_info" )
     out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
     REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
     std::cout << out.str() << "\n";
-
+#ifndef _DEBUG
     BENCHMARK("21_Tree_TE_dispatch_via_type_info value") {
         return value(expr);
     };
     BENCHMARK("21_Tree_TE_dispatch_via_type_info as_lisp") {
         return as_lisp(expr);
     };
+#endif // !_DEBUG
 }
 
