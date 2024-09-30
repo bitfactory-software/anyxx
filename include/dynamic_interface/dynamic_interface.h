@@ -41,14 +41,20 @@ namespace dynamic_interface
         erased_t _ref = nullptr;
         struct _v_table_t 
         {
+            bool (_is_derived_from*)( const std::type_info& ); 
             template <typename UNUSED>
-            _v_table_t(UNUSED&&){};
+            _v_table_t(UNUSED&&)
+                : _is_derived_from ( []( const std::type_info& from ){ return typeid( base ) == from; } )
+            {};
         } *_v_table;
         template <typename T>
         base(T&& v) 
             requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
             : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<T>(v)))
-        {}
+        {
+            static _v_table_t _tp_v_table{ v };
+            _v_table = &_tp_v_table;
+        }
         template< typename OTHER >
         base( const OTHER& other )
             requires ( std::derived_from< OTHER, base< ERASED > > )
@@ -61,6 +67,7 @@ namespace dynamic_interface
         base(base&&) = default;
         auto* get_erased() const { return &_ref; }
         auto* get_erased() { return &_ref; }
+        static bool is_derived_from( const std::type_info& from ) { return typeid( base ) == from; } 
     protected:
         base() = default;
     };
@@ -160,7 +167,9 @@ struct n : BASE< ERASED > \
         _v_table_t(_tp&& param) \
             : base_v_table_t( std::forward<_tp>(param) ) \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
-         {}; \
+        { \
+          _is_derived_from = []( const std::type_info& from ){ return typeid( n ) == from true ? ; };
+        }; \
     }; \
     template <typename _tp> \
     n(_tp&& v) \
