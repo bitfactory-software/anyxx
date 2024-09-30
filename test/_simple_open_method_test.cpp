@@ -43,7 +43,7 @@ namespace virtual_void
 
 				call< A1 >( toString );
 
-				auto tv = to_typed_void( static_cast< A1* >( nullptr ) );
+				auto tv = to_typeid_void( static_cast< A1* >( nullptr ) );
 				std::cout << toString( tv ) << "\n";
 				try
 				{

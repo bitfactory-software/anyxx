@@ -46,11 +46,11 @@ using virtual_void = std::pair< const m_table*, void* >;
 template< typename P > auto to_virtual_void( const P* p ){ return virtual_const_void{ m_table_of< P >(), p }; }
 template< typename P > auto to_virtual_void( P* p ){ return virtual_const_void{ m_table_of< P >(), p }; }
 
-using typed_const_void = std::pair< const std::type_info&, const void* >;
-using typed_void = std::pair< const std::type_info&, void* >;
+using typeid_const_void = std::pair< const std::type_info&, const void* >;
+using typeid_void = std::pair< const std::type_info&, void* >;
 
-template< typename P > auto to_typed_void( const P* p ){ return typed_const_void{ typeid( *p ), p }; }
-template< typename P > auto to_typed_void( P* p ){ return typed_void{ typeid( *p ), p }; }
+template< typename P > auto to_typeid_void( const P* p ){ return typeid_const_void{ typeid( *p ), p }; }
+template< typename P > auto to_typeid_void( P* p ){ return typeid_void{ typeid( *p ), p }; }
 
 template< typename >  struct self_pointer;
 template<>  struct self_pointer< void * >		{ template< typename CLASS > using type = CLASS*; };
@@ -341,7 +341,7 @@ public:
 	template< typename CLASS, typename... OTHER_ARGS >
 	R operator()( CLASS* param, OTHER_ARGS&&... args ) const
 	{
-		return (*this)( to_typed_void( param ), std::forward< OTHER_ARGS >( args )... );
+		return (*this)( to_typeid_void( param ), std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename CLASS, typename... OTHER_ARGS >
 	R operator()( const std::shared_ptr< CLASS >& param, OTHER_ARGS&&... args ) const
@@ -557,7 +557,7 @@ struct erased_const_cast_implementation
 	template< typename T > struct const_ {	using type = const T*; }; 
 	template< typename FROM > auto operator()( const FROM* from, const std::type_info& to )
 	{
-		return erased_cast_implementation_< const_, typed_const_void, FROM >( from, to );
+		return erased_cast_implementation_< const_, typeid_const_void, FROM >( from, to );
 	}
 };
 struct erased_cast_implementation
@@ -565,7 +565,7 @@ struct erased_cast_implementation
 	template< typename T > struct non_const_ { using type = T; }; 
 	template< typename FROM > auto operator()( FROM* from, const std::type_info& to )
 	{
-		return erased_cast_implementation_< non_const_, typed_void, FROM >( from, to );	
+		return erased_cast_implementation_< non_const_, typeid_void, FROM >( from, to );	
 	}
 };
 using erased_const_cast_method = method< const void*( const void*, const std::type_info& to ) >;

@@ -58,12 +58,12 @@ auto to_typed_void_( const pro::proxy< FACADE >& p )
 template< typename FACADE >
 auto to_typed_const_void( const pro::proxy< FACADE >& p )
 {
-    return to_typed_void_< typed_const_void >( p );
+    return to_typed_void_< typeid_const_void >( p );
 }
 template< typename FACADE >
-auto to_typed_void( const pro::proxy< FACADE >& p )
+auto to_typeid_void( const pro::proxy< FACADE >& p )
 {
-    return to_typed_void_< typed_void >( p );
+    return to_typed_void_< typeid_void >( p );
 }
 
 template< typename VIRTUAL_VOID, typename FACADE >
@@ -81,7 +81,7 @@ auto to_virtual_const_void( const pro::proxy< FACADE >& p )
 template< typename FACADE >
 auto to_virtual_void( const pro::proxy< FACADE >& p )
 {
-    return to_virtual_void_< typed_void >( p );
+    return to_virtual_void_< typeid_void >( p );
 }
 }
 
