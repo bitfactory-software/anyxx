@@ -61,7 +61,7 @@ class type_info_dispatch;
 
 //+++concepts
 template< typename DISPATCH, typename VOID >
-concept VtableDispatchableVoid = requires( const DISPATCH& void_ )
+concept MtableDispatchableVoid = requires( const DISPATCH& void_ )
 {
     { void_.data() }	-> std::convertible_to< VOID >;
     { void_.m_table() } -> std::convertible_to< const m_table* >;
@@ -350,14 +350,14 @@ public:
 	}
 	template< typename POINTER, typename... OTHER_ARGS >
 	R operator()( const POINTER& pointer, OTHER_ARGS&&... args ) const
-		requires VtableDispatchableVoid< POINTER, dispatch_t >
+		requires MtableDispatchableVoid< POINTER, dispatch_t >
 	{
 		virtual_void_t param{ pointer.m_table(), pointer.data() }; 
 		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename POINTER, typename... OTHER_ARGS >
 	R call( const POINTER& pointer, OTHER_ARGS&&... args ) const
-		requires VtableDispatchableVoid< POINTER, dispatch_t >
+		requires MtableDispatchableVoid< POINTER, dispatch_t >
 	{
 		virtual_void_t param{ pointer.m_table(), pointer.data() }; 
 		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
@@ -637,7 +637,7 @@ public:
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table* m_table() const { return ptr_->m_table_; };
 };
-static_assert( VtableDispatchableVoid< const shared_const, const void* > );
+static_assert( MtableDispatchableVoid< const shared_const, const void* > );
 
 template< typename T >
 class typed_shared_const : public shared_const
@@ -694,7 +694,7 @@ private:
     const T& operator*() const noexcept  { return *static_cast< const T* >( data() ); }
     const T* operator->() const noexcept { return  static_cast< const T* >( data() ); }
 };
-static_assert( VtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
+static_assert( MtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
 template< typename T, typename... ARGS > typed_shared_const< T > make_shared_const( ARGS&&... args )
 {
 	return { std::in_place, std::forward< ARGS >( args )... };
@@ -719,8 +719,8 @@ public:
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table* m_table() const { return ptr_->m_table_; };
 };
-static_assert( VtableDispatchableVoid< const unique, void* > );
-static_assert( VtableDispatchableVoid< const unique, const void* > );
+static_assert( MtableDispatchableVoid< const unique, void* > );
+static_assert( MtableDispatchableVoid< const unique, const void* > );
 
 template< typename T >
 class typed_unique : public unique
@@ -741,8 +741,8 @@ public:
     T& operator*() const { return  *static_cast< T* >( data() ); }
     T* operator->() const { return  static_cast< T* >( data() ); }
 };
-static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
-static_assert( VtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
+static_assert( MtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
+static_assert( MtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
 
 template< typename T > auto as( unique&& source )
 {
