@@ -23,6 +23,7 @@ namespace dynamic_interface
         using erased_param_t = trait<ERASED>::param_t;
         using base_t = BASE< ERASED >;
         using base_v_table_t = base_t::_v_table_t;
+        using base_t::_ref;
         using base_t::_v_table;
         struct _v_table_t : base_v_table_t
         {
@@ -34,15 +35,25 @@ namespace dynamic_interface
         };
         template <typename _tp>
         call_operator_facade(_tp&& v) 
+            requires ( !std::derived_from< std::remove_cvref_t< _tp >, BASE< ERASED > > )
             : base_t(std::forward<_tp>(v))
         { 
             static _v_table_t _tp_v_table{ v };
             _v_table = &_tp_v_table;
         }
+        template< typename OTHER >
+        call_operator_facade( const OTHER& other )
+            requires ( std::derived_from< OTHER, BASE< ERASED > > )
+        {
+            _ref = other._ref;
+            _v_table = other._v_table;
+        }
         RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&&) = default;
+    protected:
+        call_operator_facade() = default;
     };
     template< typename RET, typename... ARGS >
     struct call_operator_
@@ -51,7 +62,7 @@ namespace dynamic_interface
         using type = call_operator_facade< ERASED, BASE, RET, ARGS... >;
     };
     template< typename RET, typename... ARGS >
-    using call_operator = call_operator_< RET, ARGS... >;
+    using call_operator = call_operator_< RET, ARGS... >::type;
 }
 
 
@@ -83,7 +94,9 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
-using shape = shape_d_i< void*, dynamic_interface::bases< dynamic_interface::call_operator_< std::string, std::string >::type, shape_base, shape_base1 > >;
+using shape_base_v = shape_base< void*, dynamic_interface::bases< shape_base1 > >;
+
+using shape = shape_d_i< void*, dynamic_interface::bases< dynamic_interface::call_operator< std::string, std::string >, shape_base, shape_base1 > >;
 
 struct circle {
     double radius;
@@ -201,6 +214,17 @@ TEST_CASE( "dynamic interface" ) {
     print_shape(s);
     print_shape(r);
     print_shape(p);
+
+    static_assert( std::is_base_of_v< dynamic_interface::base< void* >, shape > );
+    static_assert( std::is_base_of_v< shape_base_v, shape > );
+    static_assert( std::derived_from< shape, shape_base_v > );
+    shape shape_circle{ circle{ 33.3 } };
+
+    dynamic_interface::base< void* > base_v = shape_circle; 
+
+    shape_base_v shape_circle_base = shape_circle; 
+    shape shape_circle_1 = *static_cast< shape* >( &shape_circle_base );
+    print_shape(shape_circle_1);
 
     std::cout << "print_shape_vv ********************************" << std::endl;
 

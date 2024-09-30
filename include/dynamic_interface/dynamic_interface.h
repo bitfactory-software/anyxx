@@ -46,13 +46,23 @@ namespace dynamic_interface
         } *_v_table;
         template <typename T>
         base(T&& v) 
+            requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
             : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<T>(v)))
         {}
+        template< typename OTHER >
+        base( const OTHER& other )
+            requires ( std::derived_from< OTHER, base< ERASED > > )
+        {
+            _ref = other._ref;
+            _v_table = other._v_table;
+        }
         base(const base&) = default;
         base(base&) = default;
         base(base&&) = default;
         auto* get_erased() const { return &_ref; }
         auto* get_erased() { return &_ref; }
+    protected:
+        base() = default;
     };
 
     template< template< typename, template< typename > typename > typename... >
@@ -136,9 +146,11 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
 template< typename ERASED, template < typename > typename BASE = dynamic_interface::base > \
 struct n : BASE< ERASED > \
 { \
+    using interface_t = n; \
     using erased_t = ERASED; \
     using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
     using base_t = BASE< ERASED >; \
+    using base_t::_ref; \
     using base_t::_v_table; \
     using base_v_table_t = base_t::_v_table_t; \
     struct _v_table_t : base_v_table_t \
@@ -151,18 +163,35 @@ struct n : BASE< ERASED > \
          {}; \
     }; \
     template <typename _tp> \
-    n(_tp&& v)  \
+    n(_tp&& v) \
+        requires ( !std::derived_from< std::remove_cvref_t< _tp >, BASE< ERASED > > ) \
     : base_t(std::forward<_tp>(v)) \
     {  \
         static _v_table_t _tp_v_table{ v }; \
         _v_table = &_tp_v_table; \
     } \
+    template< typename OTHER > \
+    n( const OTHER& other ) \
+        requires ( std::derived_from< OTHER, BASE< ERASED > > ) \
+    { \
+        _ref = other._ref; \
+        _v_table = other._v_table; \
+    } \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l) \
     n(const n&) = default;\
     n(n&) = default;\
     n(n&&) = default;\
+protected: \
+    n() = default;\
 };
 #define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
+    //template< typename OTHER > \
+    //    : requires ( std::derived_from< OTHER, interface_t >)\
+    //n:(const OTHER& other ) \
+    //{ \
+    //    _ref = other._ref; \
+    //    _v_table = other._v_table; \
+    //} \
