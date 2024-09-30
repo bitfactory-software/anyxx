@@ -14,6 +14,53 @@ const double M_PI = 3.14;
 
 struct position {float x, y;};
 
+namespace dynamic_interface
+{
+    template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+    struct call_operator_facade : BASE< ERASED >
+    {
+        using erased_t = ERASED;
+        using erased_param_t = trait<ERASED>::param_t;
+        using base_t = BASE< ERASED >;
+        using base_v_table_t = base_t::_v_table_t;
+        struct _v_table_t : base_v_table_t
+        {
+            RET (*call_op)(erased_param_t, ARGS&&... );
+            template <typename _tp>
+            _v_table_t(_tp&& param)
+                : base_v_table_t( std::forward<_tp>(param) )
+                , call_op ( [](erased_param_t _vp, ARGS&&... args )
+                    {
+                        return ( *trait<erased_t>::unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...);
+                    })
+            {}
+        } * _v_table;
+        template <typename _tp>
+        call_operator_facade(_tp&& v) 
+            : base_t(std::forward<_tp>(v))
+        { 
+            static _v_table_t _tp_v_table{ v };
+            _v_table = &_tp_v_table;
+        }
+        RET operator()( ARGS&&... args ) const 
+        {
+            return _v_table->call_op( base_t::_ref, std::forward< ARGS >(args)...);
+        }
+        call_operator_facade(const call_operator_facade&) = default;
+        call_operator_facade(call_operator_facade&) = default;
+        call_operator_facade(call_operator_facade&&) = default;
+    };
+    template< typename RET, typename... ARGS >
+    struct call_operator_
+    {
+        template< typename ERASED, template < typename > typename BASE >
+        using type = call_operator_facade< ERASED, BASE, RET, ARGS... >;
+    };
+    template< typename RET, typename... ARGS >
+    using call_operator = call_operator_< RET, ARGS... >;
+}
+
+
 DECLARE_FREE_INTERFACE(to_string_i,
     (std::string, to_string)
 )
@@ -42,7 +89,7 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
-using shape = shape_d_i< void*, dynamic_interface::bases< shape_base, shape_base1 > >;
+using shape = shape_d_i< void*, dynamic_interface::bases< dynamic_interface::call_operator_< std::string, std::string >::type, shape_base, shape_base1 > >;
 
 struct circle {
     double radius;
@@ -61,6 +108,7 @@ struct circle {
     double perimeter() const {
         return circumference();
     }
+    std::string operator()( const std::string& x ) { return x + "circle"; }
 };
 struct square {
     int w;
@@ -76,6 +124,7 @@ struct square {
     double perimeter() const {
         return w * 4;
     }
+    std::string operator()( const std::string& x ) { return x + "square"; }
 };
 struct rectangle {
     int w, h;
@@ -91,8 +140,8 @@ struct rectangle {
     double perimeter() const {
         return w + w + h + h;
     }
+    std::string operator()( const std::string& x ) { return x + "rectangle"; }
 };
-
 struct regular_polygon {
     int sides;
     double side_length;
@@ -114,6 +163,7 @@ struct regular_polygon {
     double area() const {
         return (perimeter() * apothem()) / 2;
     }
+    std::string operator()( const std::string& x ) { return x + "regular_polygon"; }
 };
 
 std::string to_string_( auto const x )
@@ -126,6 +176,7 @@ void print_shape(const shape s) {
     std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
     std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
     std::cout << "Shape Area: " << s.area() << std::endl;
+    std::cout << s("Shape type = ") << std::endl;
 }
 
 void print_shape_vv(const shape_vv s) {
