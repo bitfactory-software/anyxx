@@ -98,5 +98,39 @@ namespace
         }
 
     }
-}
 
+    TEST_CASE( "_interface_const_correct virtual_void::shared_const" ) 
+    {
+        using const_function    = dynamic_interface::call_operator_facade< virtual_void::shared_const, dynamic_interface::base, std::string >;
+        using mutating_function = dynamic_interface::call_operator_facade< virtual_void::shared_const, dynamic_interface::base, void, std::string >;
+
+
+        {
+            functor function_object;
+            const_function cf = function_object;
+            //mutating_function mf = function_object; //  <- may not compile!
+            REQUIRE( cf() == "hallo" );
+        }
+
+        {
+            functor function_object;
+            const_function const cf = function_object;
+            //mutating_function const mf = function_object;  // <- may not compile!
+            REQUIRE( cf() == "hallo" );
+        }
+
+        {
+            functor const const_function_object;
+            const_function cf = const_function_object;
+            //mutating_function mf = const_function_object; // <- may not compile!
+            REQUIRE( cf() == "hallo" );
+        }
+
+        {
+            functor const function_object;
+            const_function const cf = function_object;
+            //mutating_function const mf = function_object; // <- may not compile!
+            REQUIRE( cf() == "hallo" );
+        }
+    }
+}
