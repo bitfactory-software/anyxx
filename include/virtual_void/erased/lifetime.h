@@ -1,6 +1,7 @@
 #pragma once
 
 #include <type_traits>
+#include <stdexcept>
 
 #include "forward.h"
 
@@ -45,30 +46,29 @@ struct trait< const_observer >
     }
 };
 
-////+++lifetime 
 //template< typename t > class typed_shared_const;
 //
 //struct abstract_data
 //{
-//	const m_table_t* m_table_ = nullptr;
+//	const std::type_info& type_info_;
 //	void* data_ = nullptr;
-//	abstract_data( const m_table* m_table, void* data )
-//		: m_table_( m_table )
+//	abstract_data( std::type_info& type_info, void* data )
+//		: type_info_( type_info )
 //		, data_( data )
 //	{}
 //};
-//template< typename m >
+//template< typename M >
 //struct concrete_data : abstract_data
 //{
-//	m m_;
-//	concrete_data( m&& m )
-//		: abstract_data( m_table_of< m >(), std::addressof( m_ ) )
+//	M m_;
+//	concrete_data( M&& m )
+//		: abstract_data( type_info_of< M >(), std::addressof( m_ ) )
 //		, m_( std::move( m ) )
 //	{}
-//	template< typename... args >
-//	concrete_data( std::in_place_t,  args&&... args )
-//		: abstract_data( m_table_of< m >(), std::addressof( m_ ) )
-//		, m_( std::forward< args >( args )... )
+//	template< typename... ARGS >
+//	concrete_data( std::in_place_t,  ARGS&&... args )
+//		: abstract_data( type_info_of< M >(), std::addressof( m_ ) )
+//		, m_( std::forward< ARGS >( args )... )
 //	{}
 //};
 //
@@ -82,10 +82,9 @@ struct trait< const_observer >
 //		: ptr_( ptr )
 //	{}
 //    const void* data() const { return ptr_->data_; }
-//    const std::type_info& type() const { return ptr_->m_table_->type(); }
-//	const m_table* m_table() const { return ptr_->m_table_; };
+//    const std::type_info& type() const { return ptr_->type_info_; }
+//	operator bool() const { return ptr_.operator bool(); } // false only after move!
 //};
-//static_assert( mtabledispatchablevoid< const shared_const, const void* > );
 //
 //template< typename t >
 //class typed_shared_const : public shared_const
@@ -103,33 +102,33 @@ struct trait< const_observer >
 //	typed_shared_const( const t& v ) noexcept
 //		: shared_const( std::make_shared< concrete_data< t > >( t{ v } ) )
 //	{}
-//	template< typename... args > 
-//	typed_shared_const( std::in_place_t, args&&... args ) noexcept
-//		: shared_const( std::make_shared< concrete_data< t > >( std::in_place, std::forward< args >( args )... ) )
+//	template< typename... ARGS > 
+//	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
+//		: shared_const( std::make_shared< concrete_data< t > >( std::in_place, std::forward< ARGS >( args )... ) )
 //	{}
-//    template< typename t, typename... args > friend typed_shared_const< t > make_shared_const( args&&... args );
+//    template< typename t, typename... ARGS > friend typed_shared_const< t > make_shared_const( ARGS&&... args );
 //    template< typename t > friend typed_shared_const< t > as( shared_const source );
-//	template< typename derived >
-//	typed_shared_const( const typed_shared_const< derived >& rhs ) noexcept
-//		requires ( std::derived_from< derived, t > && !std::same_as< derived, t > )
+//	template< typename DERIVED >
+//	typed_shared_const( const typed_shared_const< DERIVED >& rhs ) noexcept
+//		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
 //		: shared_const( rhs )
 //	{}
-//	template< typename derived >
-//	typed_shared_const( typed_shared_const< derived >&& rhs ) noexcept
-//		requires ( std::derived_from< derived, t > && !std::same_as< derived, t > )
+//	template< typename DERIVED >
+//	typed_shared_const( typed_shared_const< DERIVED >&& rhs ) noexcept
+//		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
 //		: shared_const( std::move( rhs ) )
 //	{}
-//	template< typename derived >
-//	typed_shared_const& operator=( const typed_shared_const< derived >& rhs ) noexcept
-//		requires ( std::derived_from< derived, t > && !std::same_as< derived, t > )
+//	template< typename DERIVED >
+//	typed_shared_const& operator=( const typed_shared_const< DERIVED >& rhs ) noexcept
+//		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
 //	{
 //		typed_shared_const clone{ rhs };
 //		swap( *this, clone );
 //		return *this;
 //	}
-//	template< typename derived >
-//	typed_shared_const& operator=( typed_shared_const< derived >&& rhs ) noexcept
-//		requires ( std::derived_from< derived, t > && !std::same_as< derived, t > )
+//	template< typename DERIVED >
+//	typed_shared_const& operator=( typed_shared_const< DERIVED >&& rhs ) noexcept
+//		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
 //	{
 //		(*this) = std::move( rhs );
 //		return *this;
@@ -142,17 +141,18 @@ struct trait< const_observer >
 //    const t& operator*() const noexcept  { return *static_cast< const t* >( data() ); }
 //    const t* operator->() const noexcept { return  static_cast< const t* >( data() ); }
 //};
-//static_assert( mtabledispatchablevoid< const typed_shared_const< nullptr_t >, const void* > );
-//template< typename t, typename... args > typed_shared_const< t > make_shared_const( args&&... args )
+//
+//template< typename t, typename... ARGS > typed_shared_const< t > make_shared_const( ARGS&&... args )
 //{
-//	return { std::in_place, std::forward< args >( args )... };
+//	return { std::in_place, std::forward< ARGS >( args )... };
 //}
 //template< typename t > typed_shared_const< t > as( shared_const source )
 //{
 //    if( source.type() != typeid( t ) )
-//        throw error( "source is: " + std::string( source.type().name() ) + "." );
+//        throw std::runtime_error( "source is: " + std::string( source.type().name() ) + "." );
 //    return typed_shared_const< t >{ std::move( source ) };
 //}
+//
 //
 //using unique_abstract_data_ptr = std::unique_ptr< abstract_data >;
 //class unique
@@ -164,11 +164,9 @@ struct trait< const_observer >
 //	{}
 //public:
 //    void* data() const { return ptr_->data_; }
-//    const std::type_info& type() const { return ptr_->m_table_->type(); }
-//	const m_table* m_table() const { return ptr_->m_table_; };
+//    const std::type_info& type() const { return ptr_->type_info_; }
+//	operator bool() const { return ptr_.operator bool(); } // false only after move!
 //};
-//static_assert( mtabledispatchablevoid< const unique, void* > );
-//static_assert( mtabledispatchablevoid< const unique, const void* > );
 //
 //template< typename t >
 //class typed_unique : public unique
@@ -182,26 +180,23 @@ struct trait< const_observer >
 //	typed_unique( t&& v ) noexcept
 //		: unique( std::make_unique< concrete_data< t > >( std::move( v ) ) )
 //	{}
-//	template< typename... args > 
-//	typed_unique( std::in_place_t, args&&... args ) noexcept
-//		: unique( std::make_unique< concrete_data< t > >( std::in_place, std::forward< args >( args )... ) )
+//	template< typename... ARGS > 
+//	typed_unique( std::in_place_t, ARGS&&... args ) noexcept
+//		: unique( std::make_unique< concrete_data< t > >( std::in_place, std::forward< ARGS >( args )... ) )
 //	{}
 //    t& operator*() const { return  *static_cast< t* >( data() ); }
 //    t* operator->() const { return  static_cast< t* >( data() ); }
 //};
-//static_assert( mtabledispatchablevoid< const typed_unique< nullptr_t >, void* > );
-//static_assert( mtabledispatchablevoid< const typed_unique< nullptr_t >, const void* > );
 //
 //template< typename t > auto as( unique&& source )
 //{
 //    if( source.type() != typeid( t ) )
-//        throw error( "source is: " + std::string( source.type().name() ) + "." );
+//        throw std::runtime_error( "source is: " + std::string( source.type().name() ) + "." );
 //    return typed_unique< t >{ std::move( source ) };
 //}
-//template< typename t, typename... args > typed_unique< t > make_unique( args&&... args )
+//template< typename t, typename... ARGS > typed_unique< t > make_unique( ARGS&&... args )
 //{
-//	return { std::in_place, std::forward< args >( args )... };
+//	return { std::in_place, std::forward< ARGS >( args )... };
 //}
-////---lifetime 
 
 }
