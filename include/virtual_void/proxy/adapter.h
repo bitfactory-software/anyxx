@@ -49,21 +49,21 @@ struct m_table_facade : pro::facade_builder
 template< typename O > m_table* m_table_of_( const O& o ) { return m_table_of< O >(); }
 
 template< typename TYPED_VOID, typename FACADE >
-auto to_typed_void_( const pro::proxy< FACADE >& p )
+auto to_typeid_void_( const pro::proxy< FACADE >& p )
 {
     const std::type_info& type_info = pro::proxy_reflect< meta >( p ).type_info;
     auto cv = data( *p );
     return TYPED_VOID{ type_info, cv };
 }
 template< typename FACADE >
-auto to_typed_const_void( const pro::proxy< FACADE >& p )
+auto to_typeid_const_void( const pro::proxy< FACADE >& p )
 {
-    return to_typed_void_< typeid_const_void >( p );
+    return to_typeid_void_< typeid_const_void >( p );
 }
 template< typename FACADE >
 auto to_typeid_void( const pro::proxy< FACADE >& p )
 {
-    return to_typed_void_< typeid_void >( p );
+    return to_typeid_void_< typeid_void >( p );
 }
 
 template< typename VIRTUAL_VOID, typename FACADE >
@@ -79,7 +79,7 @@ auto to_virtual_const_void( const pro::proxy< FACADE >& p )
     return to_virtual_void_< m_table_const_void >( p );
 }
 template< typename FACADE >
-auto to_virtual_void( const pro::proxy< FACADE >& p )
+auto to_m_table_void( const pro::proxy< FACADE >& p )
 {
     return to_virtual_void_< typeid_void >( p );
 }

@@ -43,8 +43,8 @@ template< typename CLASS > constexpr m_table* m_table_of();
 using m_table_const_void = std::pair< const m_table*, const void* >;
 using m_table_void = std::pair< const m_table*, void* >;
 
-template< typename P > auto to_virtual_void( const P* p ){ return m_table_const_void{ m_table_of< P >(), p }; }
-template< typename P > auto to_virtual_void( P* p ){ return m_table_const_void{ m_table_of< P >(), p }; }
+template< typename P > auto to_m_table_void( const P* p ){ return m_table_const_void{ m_table_of< P >(), p }; }
+template< typename P > auto to_m_table_void( P* p ){ return m_table_const_void{ m_table_of< P >(), p }; }
 
 using typeid_const_void = std::pair< const std::type_info&, const void* >;
 using typeid_void = std::pair< const std::type_info&, void* >;

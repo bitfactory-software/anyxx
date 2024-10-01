@@ -117,7 +117,7 @@ TEST_CASE( "06_Sink_TypeErased_w_proxy" )
             { 
 
                 std::cout << "type_info: " << pro::proxy_reflect< virtual_void::proxy::meta >( e ).type_info.name() << ": " << ToString( *e )<< std::endl;
-                entityToOut( virtual_void::proxy::to_typed_const_void( e ) );    
+                entityToOut( virtual_void::proxy::to_typeid_const_void( e ) );    
             });
     }
     catch( std::exception& e )

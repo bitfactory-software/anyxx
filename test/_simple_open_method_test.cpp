@@ -93,7 +93,7 @@ namespace virtual_void
 					{ [&]< typename C >				
 					{	
 						C c;
-						auto virtual_void = to_virtual_void( &c );
+						auto virtual_void = to_m_table_void( &c );
 						auto u = make_unique< C >();
 						auto expected = typeid( C ).name();
 						std::cout << "virtual_void dispatch for " << expected << ": "; 
