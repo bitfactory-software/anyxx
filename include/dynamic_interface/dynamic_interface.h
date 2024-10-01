@@ -18,19 +18,38 @@ namespace dynamic_interface
     template<>
     struct trait< void* >
     {
+        static const bool is_const = false;
         using type = void*;
-
         using param_t = void*;
 
         template< typename FROM >
         static void* erase( FROM&& from )
         {
-            return static_cast< std::remove_cvref_t< FROM > * >( &from );
+            return static_cast< std::remove_cvref_t< FROM > * >( &from ); // if this fails to compile, is param for interface const!
         }
         template< typename TO >
         static auto unerase( void* from )
         {
             return static_cast< std::remove_cvref_t< TO > * >( from );
+        }
+    };
+
+    template<>
+    struct trait< void const* >
+    {
+        static const bool is_const = true;
+        using type = void const*;
+        using param_t = void const*;
+
+        template< typename FROM >
+        static void const * erase( FROM&& from )
+        {
+            return static_cast< std::remove_reference_t< FROM > * >( &from );
+        }
+        template< typename TO >
+        static auto unerase( const void* from )
+        {
+            return static_cast< std::remove_reference_t< TO > const * >( from );
         }
     };
 
@@ -254,6 +273,7 @@ namespace dynamic_interface
             _ref = other._ref;
             _v_table = other._v_table;
         }
+        RET operator()( ARGS&&... args ) requires ( !trait<ERASED>::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
         RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;

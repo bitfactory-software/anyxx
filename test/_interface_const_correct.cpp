@@ -43,8 +43,8 @@ struct test_interface
 };
 
 
-//using const_function    = dynamic_interface::call_operator_facade< const void*, dynamic_interface::base, std::string >;
-using const_function    = dynamic_interface::call_operator_facade< void*,       dynamic_interface::base, std::string >;
+using const_function    = dynamic_interface::call_operator_facade< const void*, dynamic_interface::base, std::string >;
+//using const_function    = dynamic_interface::call_operator_facade< void*,       dynamic_interface::base, std::string >;
 using mutating_function = dynamic_interface::call_operator_facade< void*,       dynamic_interface::base, void, std::string >;
 
 struct functor
@@ -83,12 +83,27 @@ TEST_CASE( "_interface_const_correct.cpp" ) {
     }
 
     {
-        //functor const const_function_object;
-        //const_function cf = const_function_object;
-        //mutating_function mf = const_function_object; // <- should not compile!
-        //REQUIRE( cf() == "hallo" );
+        functor function_object;
+        const_function const cf = function_object;
+        mutating_function const mf = function_object;
+        REQUIRE( cf() == "hallo" );
+        mf( "world");
+        REQUIRE( cf() == "world" );
     }
 
+    {
+        functor const const_function_object;
+        const_function cf = const_function_object;
+        //mutating_function mf = const_function_object; // <- may not compile!
+        REQUIRE( cf() == "hallo" );
+    }
+
+    {
+        functor const function_object;
+        const_function const cf = function_object;
+        // mutating_function const mf = function_object; // <- may not compile!
+        REQUIRE( cf() == "hallo" );
+    }
 
 }
 
