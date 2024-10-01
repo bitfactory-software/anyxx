@@ -76,7 +76,7 @@ auto to_virtual_void_( const pro::proxy< FACADE >& p )
 template< typename FACADE >
 auto to_virtual_const_void( const pro::proxy< FACADE >& p )
 {
-    return to_virtual_void_< virtual_const_void >( p );
+    return to_virtual_void_< m_table_const_void >( p );
 }
 template< typename FACADE >
 auto to_virtual_void( const pro::proxy< FACADE >& p )

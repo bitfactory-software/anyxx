@@ -3,12 +3,12 @@
 #include "erased/interface.h"
 #include "virtual_void.h"
 
-namespace dynamic_interface
+namespace virtual_void::erased
 {
     template<>
-    struct trait< virtual_void::shared_const >
+    struct trait< shared_const >
     {
-        using type = virtual_void::shared_const;
+        using type = shared_const;
         
         using param_t = const type&;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 //
-// developed from: https://github.com/AlexCodesApps/dynamic_interface/blob/main/dynamic_interface.hpp
+// developed from: https://github.com/AlexCodesApps/virtual_void::erased/blob/main/dynamic_interface.hpp
 //
 // for Microsoft C++, you must enable the C-Preprocessor with this flag: /Zc:preprocessor (see CMakeLists.txt for example)
 //
@@ -9,8 +9,7 @@
 #include <memory>
 #include <type_traits>
 
-
-namespace dynamic_interface
+namespace virtual_void::erased
 {
     template< typename ERASED >
     struct trait; 
@@ -69,7 +68,7 @@ namespace dynamic_interface
         template <typename T>
         base(T&& v) 
             requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
-            : _ref(dynamic_interface::trait<erased_t>::erase(std::forward<T>(v)))
+            : _ref(virtual_void::erased::trait<erased_t>::erase(std::forward<T>(v)))
         {
             static _v_table_t _tp_v_table{ v };
             _v_table = &_tp_v_table;
@@ -113,7 +112,7 @@ namespace dynamic_interface
     template< template< typename, template< typename > typename > typename BASE >
     struct bases_< BASE >
     {
-        template< typename E > using type = BASE< E, dynamic_interface::base >;
+        template< typename E > using type = BASE< E, virtual_void::erased::base >;
     };
     template
         < template< typename, template< typename > typename > typename FIRST
@@ -171,17 +170,17 @@ type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
 name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 {\
-    return dynamic_interface::trait<erased_t>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+    return virtual_void::erased::trait<erased_t>::unerase<_tp>(_vp)->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_LAMBDA_TO_FREE_IMPL(type, name, ...) \
 name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 { \
-    return name##_( *dynamic_interface::trait<erased_t>::unerase<_tp>(_vp) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+    return name##_( *virtual_void::erased::trait<erased_t>::unerase<_tp>(_vp) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
-type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !dynamic_interface::trait<ERASED>::is_const ) { \
+type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !virtual_void::erased::trait<ERASED>::is_const ) { \
     return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 } \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
@@ -190,12 +189,12 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
 
         
 #define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
-template< typename ERASED, template < typename > typename BASE = dynamic_interface::base > \
+template< typename ERASED, template < typename > typename BASE = virtual_void::erased::base > \
 struct n : BASE< ERASED > \
 { \
     using interface_t = n; \
     using erased_t = ERASED; \
-    using erased_param_t = dynamic_interface::trait<ERASED>::param_t; \
+    using erased_param_t = virtual_void::erased::trait<ERASED>::param_t; \
     using base_t = BASE< ERASED >; \
     using base_t::_ref; \
     using base_t::_v_table; \
@@ -208,7 +207,7 @@ struct n : BASE< ERASED > \
             : base_v_table_t( std::forward<_tp>(param) ) \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
         { \
-            dynamic_interface::set_is_derived_from< n >( this ); \
+            virtual_void::erased::set_is_derived_from< n >( this ); \
         }; \
     }; \
     template <typename _tp> \
@@ -241,7 +240,7 @@ protected: \
 #define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
-namespace dynamic_interface
+namespace virtual_void::erased
 {
     template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
     struct call_operator_facade;

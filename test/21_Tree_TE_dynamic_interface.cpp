@@ -16,7 +16,7 @@ using std::string;
 
 namespace
 {
-using namespace dynamic_interface;
+using namespace virtual_void::erased;
 
 DECLARE_INTERFACE(node_i,
     (int, value),

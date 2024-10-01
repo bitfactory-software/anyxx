@@ -14,10 +14,6 @@ const double M_PI = 3.14;
 
 struct position {float x, y;};
 
-namespace dynamic_interface
-{
-}
-
 
 DECLARE_FREE_INTERFACE(to_string_i,
     (std::string, to_string)
@@ -45,12 +41,12 @@ DECLARE_INTERFACE(shape_i,
 
 using to_string_vv = to_string_i< virtual_void::shared_const >;
 
-using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
+using shape_vv = shape_i< virtual_void::shared_const, virtual_void::erased::base >;
 
-using shape_base_v = shape_base< void const*, dynamic_interface::bases< shape_base1 > >;
+using shape_base_v = shape_base< void const*, virtual_void::erased::bases< shape_base1 > >;
 
-using shape = shape_d_i< void const*, dynamic_interface::bases< dynamic_interface::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
-using shapeX = shape_d_i< void const*, dynamic_interface::bases< shape_base, shape_base1 > >;
+using shape = shape_d_i< void const*, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
+using shapeX = shape_d_i< void const*, virtual_void::erased::bases< shape_base, shape_base1 > >;
 
 struct circle {
     double radius;
@@ -169,26 +165,26 @@ TEST_CASE( "dynamic interface" ) {
     print_shape(r);
     print_shape(p);
 
-    static_assert( std::is_base_of_v< dynamic_interface::base< void const* >, shape > );
+    static_assert( std::is_base_of_v< virtual_void::erased::base< void const* >, shape > );
     static_assert( std::is_base_of_v< shape_base_v, shape > );
     static_assert( std::derived_from< shape, shape_base_v > );
     shape shape_circle{ circle{ 33.3 } };
 
-//    dynamic_interface::base< void* > base_v = shape_circle; -> interface_cast may not compile!
-    dynamic_interface::base< void const* > base_v = shape_circle;
+//    virtual_void::erased::base< void* > base_v = shape_circle; -> interface_cast may not compile!
+    virtual_void::erased::base< void const* > base_v = shape_circle;
 
     REQUIRE( base_v.is_derived_from< shape >() );
     REQUIRE( !base_v.is_derived_from< shapeX >() );
     static_assert( std::derived_from< shape, shape_base_v > );
-    REQUIRE( !dynamic_interface::interface_cast< shapeX >( base_v ) );
+    REQUIRE( !virtual_void::erased::interface_cast< shapeX >( base_v ) );
 
     shape_base_v shape_circle_base = shape_circle; 
     {
-        shape shape_is_circle = dynamic_interface::static_interface_cast< shape >( shape_circle_base );
+        shape shape_is_circle = virtual_void::erased::static_interface_cast< shape >( shape_circle_base );
         print_shape(shape_is_circle);
     }
     {
-        auto shape_is_circle = dynamic_interface::interface_cast< shape >( shape_circle_base );
+        auto shape_is_circle = virtual_void::erased::interface_cast< shape >( shape_circle_base );
         REQUIRE( shape_is_circle );
         print_shape( *shape_is_circle );
     }

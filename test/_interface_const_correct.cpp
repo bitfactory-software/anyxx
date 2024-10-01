@@ -61,8 +61,8 @@ namespace
 
     TEST_CASE( "_interface_const_correct void (const) *" ) 
     {
-        using const_function    = dynamic_interface::call_operator_facade< const void*, dynamic_interface::base, std::string() >;
-        using mutating_function = dynamic_interface::call_operator_facade< void*,       dynamic_interface::base, void(std::string) >;
+        using const_function    = virtual_void::erased::call_operator_facade< const void*, virtual_void::erased::base, std::string() >;
+        using mutating_function = virtual_void::erased::call_operator_facade< void*,       virtual_void::erased::base, void(std::string) >;
 
 
         {
@@ -101,8 +101,8 @@ namespace
 
     TEST_CASE( "_interface_const_correct virtual_void::shared_const" ) 
     {
-        using const_function    = dynamic_interface::call_operator_facade< virtual_void::shared_const, dynamic_interface::base, std::string() >;
-        using mutating_function = dynamic_interface::call_operator_facade< virtual_void::shared_const, dynamic_interface::base, void(std::string) >;
+        using const_function    = virtual_void::erased::call_operator_facade< virtual_void::shared_const, virtual_void::erased::base, std::string() >;
+        using mutating_function = virtual_void::erased::call_operator_facade< virtual_void::shared_const, virtual_void::erased::base, void(std::string) >;
 
 
         {
