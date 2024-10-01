@@ -181,10 +181,14 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 })
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
+type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !dynamic_interface::trait<ERASED>::is_const ) { \
+    return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+} \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
     return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
+        
 #define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
 template< typename ERASED, template < typename > typename BASE = dynamic_interface::base > \
 struct n : BASE< ERASED > \

@@ -47,10 +47,10 @@ using to_string_vv = to_string_i< virtual_void::shared_const >;
 
 using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
-using shape_base_v = shape_base< void*, dynamic_interface::bases< shape_base1 > >;
+using shape_base_v = shape_base< void const*, dynamic_interface::bases< shape_base1 > >;
 
-using shape = shape_d_i< void*, dynamic_interface::bases< dynamic_interface::call_operator< std::string, std::string >, shape_base, shape_base1 > >;
-using shapeX = shape_d_i< void*, dynamic_interface::bases< shape_base, shape_base1 > >;
+using shape = shape_d_i< void const*, dynamic_interface::bases< dynamic_interface::call_operator< std::string, std::string >, shape_base, shape_base1 > >;
+using shapeX = shape_d_i< void const*, dynamic_interface::bases< shape_base, shape_base1 > >;
 
 struct circle {
     double radius;
@@ -69,7 +69,7 @@ struct circle {
     double perimeter() const {
         return circumference();
     }
-    std::string operator()( const std::string& x ) { return x + "circle"; }
+    std::string operator()( const std::string& x ) const { return x + "circle"; }
 };
 struct square {
     int w;
@@ -85,7 +85,7 @@ struct square {
     double perimeter() const {
         return w * 4;
     }
-    std::string operator()( const std::string& x ) { return x + "square"; }
+    std::string operator()( const std::string& x ) const { return x + "square"; }
 };
 struct rectangle {
     int w, h;
@@ -101,7 +101,7 @@ struct rectangle {
     double perimeter() const {
         return w + w + h + h;
     }
-    std::string operator()( const std::string& x ) { return x + "rectangle"; }
+    std::string operator()( const std::string& x ) const { return x + "rectangle"; }
 };
 struct regular_polygon {
     int sides;
@@ -124,7 +124,7 @@ struct regular_polygon {
     double area() const {
         return (perimeter() * apothem()) / 2;
     }
-    std::string operator()( const std::string& x ) { return x + "regular_polygon"; }
+    std::string operator()( const std::string& x ) const { return x + "regular_polygon"; }
 };
 
 std::string to_string_( auto const x )
@@ -169,12 +169,13 @@ TEST_CASE( "dynamic interface" ) {
     print_shape(r);
     print_shape(p);
 
-    static_assert( std::is_base_of_v< dynamic_interface::base< void* >, shape > );
+    static_assert( std::is_base_of_v< dynamic_interface::base< void const* >, shape > );
     static_assert( std::is_base_of_v< shape_base_v, shape > );
     static_assert( std::derived_from< shape, shape_base_v > );
     shape shape_circle{ circle{ 33.3 } };
 
-    dynamic_interface::base< void* > base_v = shape_circle; 
+//    dynamic_interface::base< void* > base_v = shape_circle; -> interface_cast may not compile!
+    dynamic_interface::base< void const* > base_v = shape_circle;
 
     REQUIRE( base_v.is_derived_from< shape >() );
     REQUIRE( !base_v.is_derived_from< shapeX >() );
