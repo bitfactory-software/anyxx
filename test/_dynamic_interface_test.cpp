@@ -49,7 +49,7 @@ using shape_vv = shape_i< virtual_void::shared_const, dynamic_interface::base >;
 
 using shape_base_v = shape_base< void const*, dynamic_interface::bases< shape_base1 > >;
 
-using shape = shape_d_i< void const*, dynamic_interface::bases< dynamic_interface::call_operator< std::string, std::string >, shape_base, shape_base1 > >;
+using shape = shape_d_i< void const*, dynamic_interface::bases< dynamic_interface::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
 using shapeX = shape_d_i< void const*, dynamic_interface::bases< shape_base, shape_base1 > >;
 
 struct circle {

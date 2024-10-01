@@ -244,7 +244,10 @@ protected: \
 namespace dynamic_interface
 {
     template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
-    struct call_operator_facade : BASE< ERASED >
+    struct call_operator_facade;
+
+    template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+    struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
     {
         using erased_t = ERASED;
         using erased_param_t = trait<ERASED>::param_t;
