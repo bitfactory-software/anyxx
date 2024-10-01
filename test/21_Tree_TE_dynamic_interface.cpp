@@ -8,7 +8,7 @@
 
 #include "include/catch.hpp"
 
-#include "../include/dynamic_interface/dynamic_interface.h"
+#include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/dynamic_interface_traits.h"
 
 using std::cout;

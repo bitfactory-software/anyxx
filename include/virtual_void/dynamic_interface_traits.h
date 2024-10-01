@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../dynamic_interface/dynamic_interface.h"
+#include "erased/interface.h"
 #include "virtual_void.h"
 
 namespace dynamic_interface
