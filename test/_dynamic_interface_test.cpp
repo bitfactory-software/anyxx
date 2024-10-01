@@ -6,6 +6,7 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/lifetime.h"
 #include "../include/virtual_void/dynamic_interface_traits.h"
 
 using namespace Catch::Matchers;

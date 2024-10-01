@@ -6,52 +6,13 @@
 // for Microsoft C++, you must enable the C-Preprocessor with this flag: /Zc:preprocessor (see CMakeLists.txt for example)
 //
 
-#include <memory>
 #include <type_traits>
+#include <typeinfo>
+
+#include "forward.h"
 
 namespace virtual_void::erased
 {
-    template< typename ERASED >
-    struct trait; 
-
-    template<>
-    struct trait< void* >
-    {
-        static const bool is_const = false;
-        using type = void*;
-        using param_t = void*;
-
-        template< typename FROM >
-        static void* erase( FROM&& from )
-        {
-            return static_cast< std::remove_cvref_t< FROM > * >( &from ); // if this fails to compile, is param for interface const!
-        }
-        template< typename TO >
-        static auto unerase( void* from )
-        {
-            return static_cast< std::remove_cvref_t< TO > * >( from );
-        }
-    };
-
-    template<>
-    struct trait< void const* >
-    {
-        static const bool is_const = true;
-        using type = void const*;
-        using param_t = void const*;
-
-        template< typename FROM >
-        static void const * erase( FROM&& from )
-        {
-            return static_cast< std::remove_reference_t< FROM > * >( &from );
-        }
-        template< typename TO >
-        static auto unerase( const void* from )
-        {
-            return static_cast< std::remove_reference_t< TO > const * >( from );
-        }
-    };
-
     template< typename ERASED >
     struct base 
     {
@@ -259,7 +220,7 @@ namespace virtual_void::erased
             RET (*call_op)(erased_param_t, ARGS&&... );
             template <typename _tp>
             _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
-                , call_op ( [](erased_param_t _vp, ARGS&&... args ) { return ( *trait<erased_t>::unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); })
+                , call_op ( [](erased_param_t _vp, ARGS&&... args ) { return ( *trait<erased_t>::template unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); })
             {
                 set_is_derived_from< call_operator_facade >( this );
             }
