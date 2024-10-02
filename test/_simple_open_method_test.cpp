@@ -7,6 +7,7 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/virtual_void.h"
+#include "../include/virtual_void/m_table/lifetime.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
@@ -94,7 +95,7 @@ namespace virtual_void
 					{	
 						C c;
 						auto virtual_void = to_m_table_void( &c );
-						auto u = make_unique< C >();
+						auto u = m_table::make_unique< C >();
 						auto expected = typeid( C ).name();
 						std::cout << "virtual_void dispatch for " << expected << ": "; 
 						auto r = toString( u );
@@ -137,16 +138,16 @@ namespace virtual_void
 			}
 
 			{
-				auto d = make_shared_const< D >( "shared hallo" );
-				shared_const x = as< D >( d );
+				auto d = m_table::make_shared_const< D >( "shared hallo" );
+				m_table::shared_const x = as< D >( d );
 				auto d1 = as< D >( x );
 				std::cout << d->data << ", " << x.type().name() << std::endl;
 				static_assert( std::derived_from< D, A1 > );
-				typed_shared_const< A1 > a1 = d1;
-				typed_shared_const< A1 > a2 = A1{ "a2->OK" };
-				typed_shared_const< A1 > a3{ std::in_place, "a3 in_place->OK" };
+				m_table::typed_shared_const< A1 > a1 = d1;
+				m_table::typed_shared_const< A1 > a2 = A1{ "a2->OK" };
+				m_table::typed_shared_const< A1 > a3{ std::in_place, "a3 in_place->OK" };
 				A1 a1_pur{ "a1_pur" };
-				typed_shared_const< A1 > a4{ a1_pur };
+				m_table::typed_shared_const< A1 > a4{ a1_pur };
 				auto& a1r = *a2;
 				auto s1 = a1r.data;
 				auto s = a2->data;
@@ -154,21 +155,21 @@ namespace virtual_void
 				std::cout << a3->data << ", " << a3.type().name() << std::endl;
 				std::cout << a4->data << ", " << a4.type().name() << std::endl;
 
-				auto c1 = make_unique< C >( "unique c1"); 
+				auto c1 = m_table::make_unique< C >( "unique c1"); 
 				std::cout << c1->data << ", " << c1.type().name() << std::endl;				
-				auto c2 = typed_unique< C >( std::in_place, "unique c2" ); 
+				auto c2 = m_table::typed_unique< C >( std::in_place, "unique c2" ); 
 				std::cout << c2->data << ", " << c2.type().name() << std::endl;				
-				auto c3 = typed_unique< C >( C{ "unique c3" } ); 
+				auto c3 = m_table::typed_unique< C >( C{ "unique c3" } ); 
 				std::cout << c3->data << ", " << c3.type().name() << std::endl;				
 				auto c4 = std::move( c3 ); 
 				std::cout << c4->data << ", " << c4.type().name() << std::endl;				
 			}
 			{
-				auto const_void_factory = factory< shared_const() >{};
+				auto const_void_factory = factory< m_table::shared_const() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->shared_const
+				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->m_table::shared_const
 				{ 
-					return make_shared_const< T >( typeid( T ).name() ); 
+					return m_table::make_shared_const< T >( typeid( T ).name() ); 
 				});
 				const_void_factory.seal();
 				auto test = [ & ]< typename T >()
@@ -194,17 +195,17 @@ namespace virtual_void
 					});
 			}
 			{
-				auto d1 = make_unique< D >( "unique hallo" );
-				unique x{ std::move( d1 ) };
+				auto d1 = m_table::make_unique< D >( "unique hallo" );
+				m_table::unique x{ std::move( d1 ) };
 				auto d = as< D >( std::move( x ) );
 				std::cout << d->data << ", " << d.type().name() << std::endl; 
 			}
 			{
-				auto const_void_factory = factory< unique() >{};
+				auto const_void_factory = factory< m_table::unique() >{};
 				using classes = type_list< D, C1, C2 >;
-				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->unique
+				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->m_table::unique
 				{ 
-					return make_unique< T >( typeid( T ).name() ); 
+					return m_table::make_unique< T >( typeid( T ).name() ); 
 				});
 				const_void_factory.seal();
 				auto test = [ & ]< typename T >()

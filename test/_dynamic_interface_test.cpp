@@ -7,7 +7,7 @@
 
 #include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime.h"
-#include "../include/virtual_void/dynamic_interface_traits.h"
+#include "../include/virtual_void/m_table/dynamic_interface_traits.h"
 
 using namespace Catch::Matchers;
 
@@ -40,9 +40,9 @@ DECLARE_INTERFACE(shape_i,
     (double, perimeter)
 )
 
-using to_string_vv = to_string_i< virtual_void::shared_const >;
+using to_string_vv = to_string_i< virtual_void::m_table::shared_const >;
 
-using shape_vv = shape_i< virtual_void::shared_const, virtual_void::erased::base >;
+using shape_vv = shape_i< virtual_void::m_table::shared_const, virtual_void::erased::base >;
 
 using shape_base_v = shape_base< void const*, virtual_void::erased::bases< shape_base1 > >;
 
@@ -192,9 +192,9 @@ TEST_CASE( "dynamic interface" ) {
 
     std::cout << "print_shape_vv ********************************" << std::endl;
 
-    auto sc = make_shared_const<circle>(circle{c});
-    static_assert( std::is_same_v< decltype(sc), typed_shared_const< circle > > );
-    static_assert( std::is_base_of_v< shared_const, typed_shared_const< circle > > );
+    auto sc = m_table::make_shared_const<circle>(circle{c});
+    static_assert( std::is_same_v< decltype(sc), m_table::typed_shared_const< circle > > );
+    static_assert( std::is_base_of_v< m_table::shared_const, m_table::typed_shared_const< circle > > );
     auto& c1 = *sc;
     REQUIRE_THAT( c1.perimeter(),  WithinAbs(77.2, 77.3));
     shape_vv circle_shape_vv = sc;

@@ -7,7 +7,7 @@
 
 #include "include/catch.hpp"
 
-#include "../../include/virtual_void/virtual_void.h"
+#include "../../include/virtual_void/m_table/lifetime.h"
 #include "../../include/utillities/unnamed__.h"
 
 using std::cout;
@@ -19,7 +19,7 @@ namespace
 struct Node {
 };
 
-using shared_const_node = virtual_void::typed_shared_const<const Node>;
+using shared_const_node = virtual_void::m_table::typed_shared_const<const Node>;
 
 struct Plus : Node {
     Plus( shared_const_node left, shared_const_node right)
@@ -123,7 +123,7 @@ TEST_CASE( "21_Tree_TE_dispach_via_m_table" )
 {
     build_m_tables( tree_domain );
 
-    using virtual_void::make_shared_const;
+    using virtual_void::m_table::make_shared_const;
 
     auto expr = make_shared_const<Times>(
         make_shared_const<Integer>(2),

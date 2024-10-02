@@ -36,12 +36,11 @@ namespace virtual_void
 //---utillities
 
 //+++Forward
-class m_table;
-using m_table_t = m_table;
-template< typename CLASS > constexpr m_table* m_table_of();
+class m_table_t;
+template< typename CLASS > constexpr m_table_t* m_table_of();
 
-using m_table_const_void = std::pair< const m_table*, const void* >;
-using m_table_void = std::pair< const m_table*, void* >;
+using m_table_const_void = std::pair< const m_table_t*, const void* >;
+using m_table_void = std::pair< const m_table_t*, void* >;
 
 template< typename P > auto to_m_table_void( const P* p ){ return m_table_const_void{ m_table_of< P >(), p }; }
 template< typename P > auto to_m_table_void( P* p ){ return m_table_const_void{ m_table_of< P >(), p }; }
@@ -64,7 +63,7 @@ template< typename DISPATCH, typename VOID >
 concept MtableDispatchableVoid = requires( const DISPATCH& void_ )
 {
     { void_.data() }	-> std::convertible_to< VOID >;
-    { void_.m_table() } -> std::convertible_to< const m_table* >;
+    { void_.m_table() } -> std::convertible_to< const m_table_t* >;
 };
 //---concepts
 
@@ -103,7 +102,7 @@ namespace class_hierarchy
 	struct class_with_bases
 	{
 		const std::type_info* self;
-		m_table* m_table;
+		m_table_t* m_table;
 		bases_t bases;
 	};
 	using classes_with_bases = std::map< std::type_index, class_with_bases >;
@@ -168,10 +167,10 @@ struct domain
 
 class error;
 
-class m_table
+class m_table_t
 {
 public:
-	constexpr m_table( const std::type_info& type_info )
+	constexpr m_table_t( const std::type_info& type_info )
 		: type_info_( type_info )
 	{}
 	constexpr const std::type_info& type() const { return type_info_; }
@@ -209,9 +208,9 @@ private:
 		table_.insert( table_.end(), s  - table_.size(), nullptr );
 	}
 };
-template< typename CLASS > constexpr m_table* m_table_of()
+template< typename CLASS > constexpr m_table_t* m_table_of()
 {
-	static m_table m_table_{ typeid( CLASS ) };
+	static m_table_t m_table_{ typeid( CLASS ) };
 	return &m_table_;
 }
 
@@ -301,7 +300,7 @@ public:
 	using dispatch_t = typename first< ARGS... >;
 	template< typename CLASS > using class_param_t = self_pointer< dispatch_t >::template type< CLASS >;
 	using param_t = std::pair< const std::type_info&, dispatch_t >;
-	using virtual_void_t = std::pair< const m_table*, dispatch_t >;
+	using virtual_void_t = std::pair< const m_table_t*, dispatch_t >;
 	using erased_function_t = R(*)( ARGS... );
 private:
 	type_info_dispatch methodTable_;
@@ -334,7 +333,7 @@ public:
 	template< typename... OTHER_ARGS >
 	R operator()( const virtual_void_t& param, OTHER_ARGS&&... args ) const
 	{
-		const m_table& m_table = *param.first;
+		const m_table_t& m_table = *param.first;
 		auto erased_function = reinterpret_cast< erased_function_t >( m_table[ methodTable_.m_table_index() ] );
 		return (erased_function)( param.second, std::forward< OTHER_ARGS >( args )... );
 	}
@@ -596,164 +595,5 @@ auto cast_to( const erased_const_cast_method& cast, const auto& from )
 	return static_cast< TO* >( nullptr );
 }    
 //---erased cast
-
-//+++lifetime 
-template< typename T > class typed_shared_const;
-
-struct abstract_data
-{
-	const m_table_t* m_table_ = nullptr;
-	void* data_ = nullptr;
-	abstract_data( const m_table* m_table, void* data )
-		: m_table_( m_table )
-		, data_( data )
-	{}
-};
-template< typename M >
-struct concrete_data : abstract_data
-{
-	M m_;
-	concrete_data( M&& m )
-		: abstract_data( m_table_of< M >(), std::addressof( m_ ) )
-		, m_( std::move( m ) )
-	{}
-	template< typename... ARGS >
-	concrete_data( std::in_place_t,  ARGS&&... args )
-		: abstract_data( m_table_of< M >(), std::addressof( m_ ) )
-		, m_( std::forward< ARGS >( args )... )
-	{}
-};
-
-using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
-class shared_const
-{ 
-protected:
-	shared_abstract_data_ptr ptr_;
-public:
-	shared_const( const shared_abstract_data_ptr& ptr )
-		: ptr_( ptr )
-	{}
-    const void* data() const { return ptr_->data_; }
-    const std::type_info& type() const { return ptr_->m_table_->type(); }
-	const m_table* m_table() const { return ptr_->m_table_; };
-};
-static_assert( MtableDispatchableVoid< const shared_const, const void* > );
-
-template< typename T >
-class typed_shared_const : public shared_const
-{
-private:
-   typed_shared_const( shared_const&& ptr ) noexcept
-        : shared_const( std::move( ptr ) )
-    {}
- public:
-	using wrapped_type = T;
-	using shared_const::shared_const;
-	typed_shared_const( T&& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
-	{}
-	typed_shared_const( const T& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( T{ v } ) )
-	{}
-	template< typename... ARGS > 
-	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
-	{}
-    template< typename T, typename... ARGS > friend typed_shared_const< T > make_shared_const( ARGS&&... args );
-    template< typename T > friend typed_shared_const< T > as( shared_const source );
-	template< typename DERIVED >
-	typed_shared_const( const typed_shared_const< DERIVED >& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
-		: shared_const( rhs )
-	{}
-	template< typename DERIVED >
-	typed_shared_const( typed_shared_const< DERIVED >&& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
-		: shared_const( std::move( rhs ) )
-	{}
-	template< typename DERIVED >
-	typed_shared_const& operator=( const typed_shared_const< DERIVED >& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
-	{
-		typed_shared_const clone{ rhs };
-		swap( *this, clone );
-		return *this;
-	}
-	template< typename DERIVED >
-	typed_shared_const& operator=( typed_shared_const< DERIVED >&& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
-	{
-		(*this) = std::move( rhs );
-		return *this;
-	}
-    friend void swap( typed_shared_const& rhs, typed_shared_const& lhs ) noexcept
-    {
-        using std::swap;
-        swap( rhs.ptr_, lhs.ptr_ );
-    }
-    const T& operator*() const noexcept  { return *static_cast< const T* >( data() ); }
-    const T* operator->() const noexcept { return  static_cast< const T* >( data() ); }
-};
-static_assert( MtableDispatchableVoid< const typed_shared_const< nullptr_t >, const void* > );
-template< typename T, typename... ARGS > typed_shared_const< T > make_shared_const( ARGS&&... args )
-{
-	return { std::in_place, std::forward< ARGS >( args )... };
-}
-template< typename T > typed_shared_const< T > as( shared_const source )
-{
-    if( source.type() != typeid( T ) )
-        throw error( "source is: " + std::string( source.type().name() ) + "." );
-    return typed_shared_const< T >{ std::move( source ) };
-}
-
-using unique_abstract_data_ptr = std::unique_ptr< abstract_data >;
-class unique
-{
-	unique_abstract_data_ptr ptr_;
-protected:
-	unique( unique_abstract_data_ptr&& ptr )
-		: ptr_( std::move( ptr ) )
-	{}
-public:
-    void* data() const { return ptr_->data_; }
-    const std::type_info& type() const { return ptr_->m_table_->type(); }
-	const m_table* m_table() const { return ptr_->m_table_; };
-};
-static_assert( MtableDispatchableVoid< const unique, void* > );
-static_assert( MtableDispatchableVoid< const unique, const void* > );
-
-template< typename T >
-class typed_unique : public unique
-{
-    template< typename T > friend auto as( unique&& source );
-	typed_unique( unique&& u ) noexcept
-		: unique( std::move( u ) ) 
-	{}
-public:
-	using unique::unique;
-	typed_unique( T&& v ) noexcept
-		: unique( std::make_unique< concrete_data< T > >( std::move( v ) ) )
-	{}
-	template< typename... ARGS > 
-	typed_unique( std::in_place_t, ARGS&&... args ) noexcept
-		: unique( std::make_unique< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
-	{}
-    T& operator*() const { return  *static_cast< T* >( data() ); }
-    T* operator->() const { return  static_cast< T* >( data() ); }
-};
-static_assert( MtableDispatchableVoid< const typed_unique< nullptr_t >, void* > );
-static_assert( MtableDispatchableVoid< const typed_unique< nullptr_t >, const void* > );
-
-template< typename T > auto as( unique&& source )
-{
-    if( source.type() != typeid( T ) )
-        throw error( "source is: " + std::string( source.type().name() ) + "." );
-    return typed_unique< T >{ std::move( source ) };
-}
-template< typename T, typename... ARGS > typed_unique< T > make_unique( ARGS&&... args )
-{
-	return { std::in_place, std::forward< ARGS >( args )... };
-}
-//---lifetime 
 
 }

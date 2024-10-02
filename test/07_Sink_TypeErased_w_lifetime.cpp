@@ -11,15 +11,15 @@
 #include "include/catch.hpp"
 
 #include "../../include/std26/proxy.h"
-#include "../../include/virtual_void/virtual_void.h"
+#include "../../include/virtual_void/m_table/lifetime.h"
 
 namespace
 {
 
 namespace DB
 {
-    using FactoryFunction = std::function< virtual_void::shared_const( const std::string& ) >;
-    using SinkFunction = std::function< void( const virtual_void::shared_const& ) >;
+    using FactoryFunction = std::function< virtual_void::m_table::shared_const( const std::string& ) >;
+    using SinkFunction = std::function< void( const virtual_void::m_table::shared_const& ) >;
 
     struct System
     {
@@ -135,12 +135,12 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
 
     build_m_tables( applicationDomain );
 
-    db.factories[ "i" ] = []( const std::string& data ){  return virtual_void::make_shared_const< IntData >( std::atoi( data.c_str() ) ); };
-    db.factories[ "s" ] = []( const std::string& data ){  return virtual_void::make_shared_const< StringData >( data ); };
-    db.factories[ "ss" ] = []( const std::string& data ){  return virtual_void::make_shared_const< SuperStringData >( data, "boss" ); };
-    db.factories[ "d" ] = []( const std::string& data ){  return virtual_void::make_shared_const< DoubleData >( std::atof( data.c_str() ) ); };
+    db.factories[ "i" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< IntData >( std::atoi( data.c_str() ) ); };
+    db.factories[ "s" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< StringData >( data ); };
+    db.factories[ "ss" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< SuperStringData >( data, "boss" ); };
+    db.factories[ "d" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< DoubleData >( std::atof( data.c_str() ) ); };
 
-    db.Query( "junk", []( const virtual_void::shared_const& e )
+    db.Query( "junk", []( const virtual_void::m_table::shared_const& e )
     { 
         // call open method
         std::cout << "type_info: " << e.type().name() << ": " << toString( e ) << std::endl;

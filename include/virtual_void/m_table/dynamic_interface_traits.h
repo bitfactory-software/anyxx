@@ -1,14 +1,14 @@
 #pragma once
 
-#include "erased/interface.h"
-#include "virtual_void.h"
+#include "../erased/interface.h"
+#include "lifetime.h"
 
 namespace virtual_void::erased
 {
     template<>
-    struct trait< shared_const >
+    struct trait< virtual_void::m_table::shared_const >
     {
-        using type = shared_const;
+        using type = m_table::shared_const;
         
         using param_t = const type&;
 
@@ -22,7 +22,7 @@ namespace virtual_void::erased
             }
             else
             {
-                return 	virtual_void::make_shared_const< from_t >( std::forward< FROM >( from ) );
+                return 	virtual_void::m_table::make_shared_const< from_t >( std::forward< FROM >( from ) );
             }
         }
         template< typename CONSTRUCTOR_PARAM >

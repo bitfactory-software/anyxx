@@ -7,7 +7,7 @@
 
 #include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime.h"
-#include "../include/virtual_void/dynamic_interface_traits.h"
+#include "../include/virtual_void/m_table/dynamic_interface_traits.h"
 
 using namespace Catch::Matchers;
 
@@ -102,8 +102,8 @@ namespace
 
     TEST_CASE( "_interface_const_correct virtual_void::shared_const" ) 
     {
-        using const_function    = virtual_void::erased::call_operator_facade< virtual_void::shared_const, virtual_void::erased::base, std::string() >;
-        using mutating_function = virtual_void::erased::call_operator_facade< virtual_void::shared_const, virtual_void::erased::base, void(std::string) >;
+        using const_function    = virtual_void::erased::call_operator_facade< virtual_void::m_table::shared_const, virtual_void::erased::base, std::string() >;
+        using mutating_function = virtual_void::erased::call_operator_facade< virtual_void::m_table::shared_const, virtual_void::erased::base, void(std::string) >;
 
 
         {
