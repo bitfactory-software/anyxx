@@ -5,7 +5,7 @@
 
 #include "lifetime.h"
 
-namespace virtual_void::typeid_
+namespace virtual_void::erased
 {
 
 template<>
@@ -45,6 +45,5 @@ struct trait< const_observer >
         return static_cast< std::remove_reference_t< TO > const * >( from );
     }
 };
-
 
 }
