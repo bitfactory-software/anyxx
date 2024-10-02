@@ -12,8 +12,8 @@ include_directories([SYSTEM] "D:/BitFactory/third_party_2024/vcpkg/installed/x64
 # Add source to this project's executable.
 add_executable (test "include/catch.cpp"
     "_class_hierarchy_test.cpp"
-    "_dynamic_interface_test.cpp"
-    "_erased_cast_test.cpp"
+    "_erased_interface_test.cpp"
+    "_typeid_cast_test.cpp"
     "_interface_const_correct.cpp"
     "_prototype.cpp"
     "_simple_open_method_test.cpp"

@@ -9,7 +9,7 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/erased/interface.h"
-#include "../include/virtual_void/m_table/dynamic_interface_traits.h"
+#include "../include/virtual_void/m_table/interface_traits.h"
 
 using std::cout;
 using std::string;
