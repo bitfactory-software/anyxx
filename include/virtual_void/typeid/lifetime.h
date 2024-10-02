@@ -5,7 +5,7 @@
 
 #include "forward.h"
 
-namespace virtual_void::erased
+namespace virtual_void::typeid_
 {
 
 template<>
