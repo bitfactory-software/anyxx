@@ -1,43 +1,22 @@
 #pragma once
 
-#include "../erased/interface.h"
+#include "../erased/generic_traits.h"
 #include "lifetime.h"
 
 namespace virtual_void::erased
 {
-    template<>
-    struct trait< virtual_void::m_table::shared_const >
+    struct m_table_make_shared
     {
-        using type = m_table::shared_const;
-        
-        using param_t = const type&;
-
-        template< typename FROM >
-        static type erase( FROM&& from )
+        template< typename FROM > auto operator()( FROM&& from )
         {
-            using from_t = std::remove_cvref_t< FROM >;
-            if constexpr( std::is_base_of_v< type, from_t > )
-            {
-                return from;
-            }
-            else
-            {
-                return 	virtual_void::m_table::make_shared_const< from_t >( std::forward< FROM >( from ) );
-            }
-        }
-        template< typename CONSTRUCTOR_PARAM >
-        static auto unerase( const type& from )
-        {
-            using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
-            if constexpr( std::is_base_of_v< type, constructor_param_t > )
-            {
-                return static_cast< const constructor_param_t::wrapped_type * >( from.data() );
-            }
-            else
-            {
-                return static_cast< const constructor_param_t* >( from.data() );
-            }
+            return 	virtual_void::m_table::make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
         }
     };
+
+    template<> struct trait< virtual_void::m_table::shared_const > 
+        : erased::trait_shared_const
+            < virtual_void::m_table::shared_const 
+            , m_table_make_shared
+            >{};
 
 };
