@@ -51,6 +51,7 @@ public:
 	shared_const( const shared_abstract_data_ptr& ptr )
 		: ptr_( ptr )
 	{}
+	using void_t = void const *;
     const void* data() const { return ptr_->data_; }
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table_t* m_table() const { return ptr_->m_table_; };
@@ -65,7 +66,7 @@ private:
         : shared_const( std::move( ptr ) )
     {}
  public:
-	using wrapped_type = T;
+	using conrete_t = const T;
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
 		: shared_const( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
@@ -133,6 +134,7 @@ protected:
 		: ptr_( std::move( ptr ) )
 	{}
 public:
+	using void_t = void *;
     void* data() const { return ptr_->data_; }
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table_t* m_table() const { return ptr_->m_table_; };
@@ -148,6 +150,7 @@ class typed_unique : public unique
 		: unique( std::move( u ) ) 
 	{}
 public:
+	using conrete_t = T;
 	using unique::unique;
 	typed_unique( T&& v ) noexcept
 		: unique( std::make_unique< concrete_data< T > >( std::move( v ) ) )

@@ -17,6 +17,7 @@ protected:
 		: ptr_( std::move( ptr ) )
 	{}
 public:
+	using void_t = void *;
 	unique( const unique& ) = default;
 	unique( unique& ) = default;
 	unique( unique&& ) = default;
@@ -45,6 +46,7 @@ class typed_unique : public unique
 		: unique( std::move( u ) ) 
 	{}
 public:
+	using conrete_t = T;
 	using unique::unique;
 	typed_unique( T&& v ) noexcept
 		: unique( std::move( v ) )

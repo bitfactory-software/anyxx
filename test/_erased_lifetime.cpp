@@ -34,8 +34,10 @@ namespace
             static_assert( std::same_as< erased::select_observer< const std::string >::type, erased::const_observer > );
 
             std::string s{ "hallo"};
-		    auto mo = erased::mutable_observer( &s );
-		    auto co = erased::const_observer( &s );
+		    auto mo = erased::mutable_observer( s );
+            static_assert( std::same_as< erased::typed_observer< std::string >::conrete_t, std::string > );
+            static_assert( std::same_as< erased::typed_observer< std::string const >::conrete_t, std::string const > );
+		    auto co = erased::const_observer( s );
             auto tmo = erased::typed_observer< std::string >( mo );
             static_assert( std::derived_from< decltype(tmo), erased::mutable_observer > );
             *tmo = "world";
@@ -47,7 +49,7 @@ namespace
         {
             const std::string s{ "hallo"};
 		    // auto mo = erased::mutable_observer( &s ); // shall not compile
-		    auto co = erased::const_observer( &s );
+		    auto co = erased::const_observer( s );
             auto tco = erased::typed_observer< std::string const >( co );
             static_assert( std::derived_from< decltype(tco), erased::const_observer > );
             REQUIRE( *tco == "hallo" );

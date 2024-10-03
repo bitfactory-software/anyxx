@@ -6,8 +6,9 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/unique.h"
-#include "../include/virtual_void/erased/interface_traits.h"
+#include "../include/virtual_void/erased/generic_traits.h"
 #include "../include/virtual_void/m_table/interface_traits.h"
 
 using namespace Catch::Matchers;
@@ -15,14 +16,14 @@ using namespace Catch::Matchers;
 namespace
 {
     template< typename T >
-    struct trait;
+    struct test_trait;
     template<>
-    struct trait< const void * >
+    struct test_trait< const void * >
     {
         static const bool is_const = true;
     };
     template<>
-    struct trait< void * >
+    struct test_trait< void * >
     {
         static const bool is_const = false;
     };
@@ -30,17 +31,18 @@ namespace
     struct test_interface
     {
         VOID member = nullptr;
-        std::string f( int ) requires ( !trait<VOID>::is_const ) { return "mutable"; }
+        std::string f( int ) requires ( !test_trait<VOID>::is_const ) { return "mutable"; }
         std::string f( int ) const { return "const"; }
     };
     TEST_CASE( "_interface_const_correct prototyping" )
     {
-        static_assert( !trait<void* >::is_const );
-        static_assert( trait<const void* >::is_const );
-        test_interface< const void* > i1;
+        using namespace virtual_void;
+        static_assert( !test_trait<void* >::is_const );
+        static_assert( erased::trait<erased::const_observer >::is_const );
+        test_interface< void const* > i1;
         REQUIRE( i1.f( 1 ) == "const");
 
-        test_interface< const void* > const i2;
+        test_interface< void const* > const i2;
         REQUIRE( i2.f( 1 ) == "const");
 
         test_interface< void* > i3;
@@ -63,8 +65,10 @@ namespace
 
     TEST_CASE( "_interface_const_correct void (const) *" ) 
     {
-        using const_function    = virtual_void::erased::call_operator_facade< const void*, virtual_void::erased::base, std::string() >;
-        using mutating_function = virtual_void::erased::call_operator_facade< void*,       virtual_void::erased::base, void(std::string) >;
+        using namespace virtual_void;
+
+        using const_function    = virtual_void::erased::call_operator_facade< erased::const_observer, virtual_void::erased::base, std::string() >;
+        using mutating_function = virtual_void::erased::call_operator_facade< erased::mutable_observer,virtual_void::erased::base, void(std::string) >;
 
 
         {

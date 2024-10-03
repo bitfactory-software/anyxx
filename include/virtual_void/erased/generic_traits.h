@@ -4,45 +4,78 @@
 #include <stdexcept>
 
 #include "forward.h"
+#include "lifetime/observer.h"
 
 namespace virtual_void::erased
 {
 
 template<>
-struct trait< void * >
+struct trait< mutable_observer >
 {
     static const bool is_const = false;
-    using type = void *;
-    using param_t = void *;
+    using type = mutable_observer;
+    using param_t = const type&;
 
     template< typename FROM >
-    static void * erase( FROM&& from )
+    static type erase( FROM&& from ) 
     {
-        return static_cast< std::remove_cvref_t< FROM > * >( &from ); // if this fails to compile, is param for interface const!
+        using from_t = std::remove_cvref_t< FROM >;
+        if constexpr( std::is_base_of_v< type, from_t > )
+        {
+            return from;
+        }
+        else
+        {
+            return typed_observer< FROM >( from );
+        }
     }
-    template< typename TO >
-    static auto unerase( void * from )
+    template< typename CONSTRUCTOR_PARAM >
+    static auto unerase( const type& from )
     {
-        return static_cast< std::remove_cvref_t< TO > * >( from );
+        using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
+        if constexpr( std::is_base_of_v< type, constructor_param_t > )
+        {
+            return static_cast< constructor_param_t::conrete_t * >( from.data() );
+        }
+        else
+        {
+            return static_cast< constructor_param_t* >( from.data() );
+        }
     }
 };
 
 template<>
-struct trait< void const * >
+struct trait< const_observer >
 {
     static const bool is_const = true;
-    using type = void const *;
-    using param_t = void const *;
+    using type = const_observer;
+    using param_t = const type&;
 
     template< typename FROM >
-    static void const * erase( FROM&& from )
+    static type erase( FROM&& from )
     {
-        return static_cast< std::remove_reference_t< FROM > * >( &from );
+        using from_t = std::remove_reference_t< FROM >;
+        if constexpr( std::is_base_of_v< type, from_t > )
+        {
+            return from;
+        }
+        else
+        {
+            return typed_observer< std::add_const_t< from_t > >( from );
+        }
     }
-    template< typename TO >
-    static auto unerase( void const * from )
+    template< typename CONSTRUCTOR_PARAM >
+    static auto unerase( const type& from )
     {
-        return static_cast< std::remove_reference_t< TO > const * >( from );
+        using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
+        if constexpr( std::is_base_of_v< type, constructor_param_t > )
+        {
+            return static_cast< const constructor_param_t::conrete_t * >( from.data() );
+        }
+        else
+        {
+            return static_cast< const constructor_param_t* >( from.data() );
+        }
     }
 };
 
@@ -72,7 +105,7 @@ struct trait_shared_const
         using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
         if constexpr( std::is_base_of_v< type, constructor_param_t > )
         {
-            return static_cast< const constructor_param_t::wrapped_type * >( from.data() );
+            return static_cast< const constructor_param_t::conrete_t * >( from.data() );
         }
         else
         {

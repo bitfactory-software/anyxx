@@ -19,6 +19,7 @@ protected:
 		: ptr_( ptr )
 	{}
 public:
+	using void_t = void const *;
 	shared_const( const shared_const& ptr ) = default;
 	shared_const( shared_const& ptr ) = default;
 	shared_const( shared_const&& ptr ) = default;
@@ -42,8 +43,7 @@ public:
 	template< typename U > friend U* reconcrete_cast( shared_const& );
 	template< typename U > friend const U* reconcrete_cast( const shared_const& );
 };
-template< typename U > U* reconcrete_cast( shared_const& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
-template< typename U > const U* reconcrete_cast( const shared_const& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
+template< typename U > U const * reconcrete_cast( const shared_const& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
 
 template< typename T >
 class typed_shared_const : public shared_const
@@ -53,7 +53,7 @@ private:
         : shared_const( std::move( ptr ) )
     {}
  public:
-	using wrapped_type = T;
+	using conrete_t = const T;
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
 		: shared_const( std::forward< T >( v ) )

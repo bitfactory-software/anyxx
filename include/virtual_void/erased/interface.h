@@ -37,10 +37,9 @@ namespace virtual_void::erased
         template< typename OTHER >
         base( const OTHER& other )
             requires ( std::derived_from< OTHER, base< ERASED > > )
-        {
-            _ref = other._ref;
-            _v_table = other._v_table;
-        }
+            : _ref( other._ref )
+            , _v_table( other._v_table )
+        {}
         base(const base&) = default;
         base(base&) = default;
         base(base&&) = default;
@@ -182,10 +181,8 @@ struct n : BASE< ERASED > \
     template< typename OTHER > \
     n( const OTHER& other ) \
         requires ( std::derived_from< OTHER, BASE< ERASED > > ) \
-    { \
-        _ref = other._ref; \
-        _v_table = other._v_table; \
-    } \
+        : base_t( other ) \
+    {} \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l) \
     n(const n&) = default;\
     n(n&) = default;\
@@ -220,7 +217,10 @@ namespace virtual_void::erased
             RET (*call_op)(erased_param_t, ARGS&&... );
             template <typename _tp>
             _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
-                , call_op ( [](erased_param_t _vp, ARGS&&... args ) { return ( *trait<erased_t>::template unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); })
+                , call_op ( [](erased_param_t _vp, ARGS&&... args ) 
+                    { 
+                        return ( *trait<erased_t>::template unerase<_tp>(_vp) ) ( std::forward< ARGS >(args)...); 
+                    })
             {
                 set_is_derived_from< call_operator_facade >( this );
             }
@@ -236,10 +236,8 @@ namespace virtual_void::erased
         template< typename OTHER >
         call_operator_facade( const OTHER& other )
             requires ( std::derived_from< OTHER, BASE< ERASED > > )
-        {
-            _ref = other._ref;
-            _v_table = other._v_table;
-        }
+            : base_t( other )
+        {}
         RET operator()( ARGS&&... args ) requires ( !trait<ERASED>::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
         RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;

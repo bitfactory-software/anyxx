@@ -6,10 +6,13 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/interface_traits.h"
 #include "../include/virtual_void/m_table/interface_traits.h"
 
 using namespace Catch::Matchers;
+
+using namespace virtual_void;
 
 const double M_PI = 3.14;
 
@@ -44,10 +47,10 @@ using to_string_vv = to_string_i< virtual_void::m_table::shared_const >;
 
 using shape_vv = shape_i< virtual_void::m_table::shared_const, virtual_void::erased::base >;
 
-using shape_base_v = shape_base< void const*, virtual_void::erased::bases< shape_base1 > >;
+using shape_base_v = shape_base< erased::const_observer, virtual_void::erased::bases< shape_base1 > >;
 
-using shape = shape_d_i< void const*, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
-using shapeX = shape_d_i< void const*, virtual_void::erased::bases< shape_base, shape_base1 > >;
+using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
+using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
 
 struct circle {
     double radius;
@@ -166,13 +169,13 @@ TEST_CASE( "dynamic interface" ) {
     print_shape(r);
     print_shape(p);
 
-    static_assert( std::is_base_of_v< virtual_void::erased::base< void const* >, shape > );
+    static_assert( std::is_base_of_v< virtual_void::erased::base< erased::const_observer >, shape > );
     static_assert( std::is_base_of_v< shape_base_v, shape > );
     static_assert( std::derived_from< shape, shape_base_v > );
     shape shape_circle{ circle{ 33.3 } };
 
 //    virtual_void::erased::base< void* > base_v = shape_circle; -> interface_cast may not compile!
-    virtual_void::erased::base< void const* > base_v = shape_circle;
+    virtual_void::erased::base< erased::const_observer > base_v = shape_circle;
 
     REQUIRE( base_v.is_derived_from< shape >() );
     REQUIRE( !base_v.is_derived_from< shapeX >() );
