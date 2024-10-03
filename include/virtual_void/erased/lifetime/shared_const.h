@@ -3,7 +3,7 @@
 #include <type_traits>
 #include <stdexcept>
 
-#include "data"
+#include "data.h"
 
 namespace virtual_void::erased
 {
@@ -25,11 +25,13 @@ public:
 	shared_const& operator=( shared_const&& ptr ) = default;
 	template< typename T >
 	shared_const( T&& v ) noexcept
+		requires ( !std::derived_from< T, shared_const > )
 		: ptr_( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
 	{}
 	template< typename T >
 	shared_const( const T& v ) noexcept
-		: ptr_( std::make_shared< concrete_data< T > >( T{ v } ) )
+		requires ( !std::derived_from< T, shared_const > )
+		: ptr_( std::make_shared< concrete_data< T > >( v ) )
 	{}
 	template< typename T, typename... ARGS > 
 	shared_const( std::in_place_type_t< T >, ARGS&&... args ) noexcept
@@ -37,7 +39,11 @@ public:
 	{}
     const void* data() const { return ptr_->data_; }
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
+	template< typename U > friend U* reconcrete_cast( shared_const& );
+	template< typename U > friend const U* reconcrete_cast( const shared_const& );
 };
+template< typename U > U* reconcrete_cast( shared_const& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
+template< typename U > const U* reconcrete_cast( const shared_const& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
 
 template< typename T >
 class typed_shared_const : public shared_const
@@ -50,7 +56,7 @@ private:
 	using wrapped_type = T;
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
-		: shared_const( std::move< T >( v ) )
+		: shared_const( std::forward< T >( v ) )
 	{}
 	typed_shared_const( const T& v ) noexcept
 		: shared_const( std::forward< T >( v ) )
