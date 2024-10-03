@@ -8,7 +8,7 @@
 namespace virtual_void::erased
 {
 
-template< typename t > class typed_shared_const;
+template< typename T > class typed_shared_const;
 
 struct abstract_data
 {
@@ -48,7 +48,7 @@ public:
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
 };
 
-template< typename t >
+template< typename T >
 class typed_shared_const : public shared_const
 {
 private:
@@ -56,33 +56,33 @@ private:
         : shared_const( std::move( ptr ) )
     {}
  public:
-	using wrapped_type = t;
+	using wrapped_type = T;
 	using shared_const::shared_const;
-	typed_shared_const( t&& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< t > >( std::forward< t >( v ) ) )
+	typed_shared_const( T&& v ) noexcept
+		: shared_const( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
 	{}
-	typed_shared_const( const t& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< t > >( t{ v } ) )
+	typed_shared_const( const T& v ) noexcept
+		: shared_const( std::make_shared< concrete_data< T > >( T{ v } ) )
 	{}
 	template< typename... ARGS > 
 	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
-		: shared_const( std::make_shared< concrete_data< t > >( std::in_place, std::forward< ARGS >( args )... ) )
+		: shared_const( std::make_shared< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
 	{}
-    template< typename t, typename... ARGS > friend typed_shared_const< t > make_shared_const( ARGS&&... args );
-    template< typename t > friend typed_shared_const< t > as( shared_const source );
+    template< typename T, typename... ARGS > friend typed_shared_const< T > make_shared_const( ARGS&&... args );
+    template< typename T > friend typed_shared_const< T > as( shared_const source );
 	template< typename DERIVED >
 	typed_shared_const( const typed_shared_const< DERIVED >& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
 		: shared_const( rhs )
 	{}
 	template< typename DERIVED >
 	typed_shared_const( typed_shared_const< DERIVED >&& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
 		: shared_const( std::move( rhs ) )
 	{}
 	template< typename DERIVED >
 	typed_shared_const& operator=( const typed_shared_const< DERIVED >& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
 	{
 		typed_shared_const clone{ rhs };
 		swap( *this, clone );
@@ -90,7 +90,7 @@ private:
 	}
 	template< typename DERIVED >
 	typed_shared_const& operator=( typed_shared_const< DERIVED >&& rhs ) noexcept
-		requires ( std::derived_from< DERIVED, t > && !std::same_as< DERIVED, t > )
+		requires ( std::derived_from< DERIVED, T > && !std::same_as< DERIVED, T > )
 	{
 		(*this) = std::move( rhs );
 		return *this;
@@ -100,19 +100,19 @@ private:
         using std::swap;
         swap( rhs.ptr_, lhs.ptr_ );
     }
-    const t& operator*() const noexcept  { return *static_cast< const t* >( data() ); }
-    const t* operator->() const noexcept { return  static_cast< const t* >( data() ); }
+    const T& operator*() const noexcept  { return *static_cast< const T* >( data() ); }
+    const T* operator->() const noexcept { return  static_cast< const T* >( data() ); }
 };
 
-template< typename t, typename... ARGS > typed_shared_const< t > make_shared_const( ARGS&&... args )
+template< typename T, typename... ARGS > typed_shared_const< T > make_shared_const( ARGS&&... args )
 {
 	return { std::in_place, std::forward< ARGS >( args )... };
 }
-template< typename t > typed_shared_const< t > as( shared_const source )
+template< typename T > typed_shared_const< T > as( shared_const source )
 {
-    if( source.type() != typeid( t ) )
+    if( source.type() != typeid( T ) )
         throw std::runtime_error( "source is: " + std::string( source.type().name() ) + "." );
-    return typed_shared_const< t >{ std::move( source ) };
+    return typed_shared_const< T >{ std::move( source ) };
 }
 
 
@@ -130,33 +130,33 @@ public:
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
 };
 
-template< typename t >
+template< typename T >
 class typed_unique : public unique
 {
-    template< typename t > friend auto as( unique&& source );
+    template< typename T > friend auto as( unique&& source );
 	typed_unique( unique&& u ) noexcept
 		: unique( std::move( u ) ) 
 	{}
 public:
 	using unique::unique;
-	typed_unique( t&& v ) noexcept
-		: unique( std::make_unique< concrete_data< t > >( std::move( v ) ) )
+	typed_unique( T&& v ) noexcept
+		: unique( std::make_unique< concrete_data< T > >( std::move( v ) ) )
 	{}
 	template< typename... ARGS > 
 	typed_unique( std::in_place_t, ARGS&&... args ) noexcept
-		: unique( std::make_unique< concrete_data< t > >( std::in_place, std::forward< ARGS >( args )... ) )
+		: unique( std::make_unique< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
 	{}
-    t& operator*() const { return  *static_cast< t* >( data() ); }
-    t* operator->() const { return  static_cast< t* >( data() ); }
+    T& operator*() const { return  *static_cast< T* >( data() ); }
+    T* operator->() const { return  static_cast< T* >( data() ); }
 };
 
-template< typename t > auto as( unique&& source )
+template< typename T > auto as( unique&& source )
 {
-    if( source.type() != typeid( t ) )
+    if( source.type() != typeid( T ) )
         throw std::runtime_error( "source is: " + std::string( source.type().name() ) + "." );
-    return typed_unique< t >{ std::move( source ) };
+    return typed_unique< T >{ std::move( source ) };
 }
-template< typename t, typename... ARGS > typed_unique< t > make_unique( ARGS&&... args )
+template< typename T, typename... ARGS > typed_unique< T > make_unique( ARGS&&... args )
 {
 	return { std::in_place, std::forward< ARGS >( args )... };
 }
