@@ -40,6 +40,8 @@ namespace
             static_assert( std::derived_from< decltype(tmo), erased::mutable_observer > );
             *tmo = "world";
             REQUIRE( s == "world" );
+            REQUIRE( *reconcrete_cast< const std::string >( co ) == "world" );
+            REQUIRE( *reconcrete_cast< std::string >( mo ) == "world" );
             // auto tmo2 = erased::typed_observer< std::string * >{ co }; // shall not compile
         }
         {
@@ -49,6 +51,7 @@ namespace
             auto tco = erased::typed_observer< std::string const >( co );
             static_assert( std::derived_from< decltype(tco), erased::const_observer > );
             REQUIRE( *tco == "hallo" );
+            REQUIRE( *reconcrete_cast< const std::string >( co ) == "hallo" );
         }
     }
     TEST_CASE( "erased/lifetime/unique" )

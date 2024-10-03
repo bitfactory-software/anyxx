@@ -18,8 +18,8 @@ struct observer
 using const_observer = observer< void const *>;
 using mutable_observer = observer< void *>;
 
-template< typename U > auto reconcrete_cast( mutable_observer o )	{ return static_cast< U* >( *o.data() ); }
-template< typename U > auto reconcrete_cast( const_observer o )		{ return static_cast< const U* >( *o.data() ); }
+template< typename U > auto reconcrete_cast( mutable_observer o )	{ return static_cast< U* >( o.data() ); }
+template< typename U > auto reconcrete_cast( const_observer o )		{ return static_cast< const U* >( o.data() ); }
 
 template< typename T > struct select_observer				{ using type = mutable_observer; };
 template< typename T > struct select_observer< T const >	{ using type = const_observer; };
