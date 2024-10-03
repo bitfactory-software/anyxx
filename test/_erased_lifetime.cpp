@@ -16,6 +16,22 @@ namespace
     TEST_CASE( "erased/lifetime" )
     {
         {
+		    auto u1 = std::make_unique< erased::concrete_data< int > >( 1 );
+            REQUIRE( *erased::reconcrete_cast< int >( *u1 ) == 1 );
+        }
+        {
+		    const auto u1 = std::make_unique< erased::concrete_data< int > >( 1 );
+            REQUIRE( *erased::reconcrete_cast< int >( *u1 ) == 1 );
+        }
+        {
+		    auto u1 = erased::unique( 1 );
+            REQUIRE( *erased::reconcrete_cast< int >( u1 ) == 1 );
+        }
+        {
+		    const auto u1 = erased::unique( 1 );
+            REQUIRE( *erased::reconcrete_cast< int >( u1 ) == 1 );
+        }
+        {
            auto t1 = erased::typed_unique( 1 );
            *t1 = 2;
            REQUIRE( *t1 == 2 );

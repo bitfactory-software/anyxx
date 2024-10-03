@@ -32,14 +32,33 @@ struct concrete_data : abstract_data
 	{}
 };
 
+template< typename U > U* reconcrete_cast( abstract_data& a ) { return static_cast< U* >( a.data_ ); }
+template< typename U > const U* reconcrete_cast( const abstract_data& a ) { return static_cast< const U* >( a.data_ ); }
+
 using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
 class shared_const
 { 
 protected:
 	shared_abstract_data_ptr ptr_;
-public:
 	shared_const( const shared_abstract_data_ptr& ptr )
 		: ptr_( ptr )
+	{}
+public:
+	shared_const( const shared_const& ptr ) = default;
+	shared_const( shared_const& ptr ) = default;
+	shared_const( shared_const&& ptr ) = default;
+	shared_const& operator=( shared_const&& ptr ) = default;
+	template< typename T >
+	shared_const( T&& v ) noexcept
+		: ptr_( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
+	{}
+	template< typename T >
+	shared_const( const T& v ) noexcept
+		: ptr_( std::make_shared< concrete_data< T > >( T{ v } ) )
+	{}
+	template< typename T, typename... ARGS > 
+	shared_const( std::in_place_type_t< T >, ARGS&&... args ) noexcept
+		: ptr_( std::make_shared< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
 	{}
     const void* data() const { return ptr_->data_; }
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
@@ -56,14 +75,14 @@ private:
 	using wrapped_type = T;
 	using shared_const::shared_const;
 	typed_shared_const( T&& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( std::forward< T >( v ) ) )
+		: shared_const( std::move< T >( v ) )
 	{}
 	typed_shared_const( const T& v ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( T{ v } ) )
+		: shared_const( std::forward< T >( v ) )
 	{}
 	template< typename... ARGS > 
 	typed_shared_const( std::in_place_t, ARGS&&... args ) noexcept
-		: shared_const( std::make_shared< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+		: shared_const( std::in_place_type< T >, std::forward< ARGS >( args )... )
 	{}
     template< typename T, typename... ARGS > friend typed_shared_const< T > make_shared_const( ARGS&&... args );
     template< typename T > friend typed_shared_const< T > as( shared_const source );
@@ -120,9 +139,25 @@ protected:
 		: ptr_( std::move( ptr ) )
 	{}
 public:
-    void* data() const { return ptr_->data_; }
+	unique( const unique& ) = default;
+	unique( unique& ) = default;
+	unique( unique&& ) = default;
+	unique& operator=( unique&& ptr ) = default;
+ 	template< typename T >
+	unique( T&& v ) noexcept
+		: ptr_( std::make_unique< concrete_data< T > >( std::move( v ) ) )
+	{}
+	template< typename T, typename... ARGS > 
+	unique( std::in_place_type_t< T >, ARGS&&... args ) noexcept
+		: ptr_( std::make_unique< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+	{}
+	void* data() const { return ptr_->data_; }
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
+	template< typename U > friend U* reconcrete_cast( unique& );
+	template< typename U > friend const U* reconcrete_cast( const unique& );
 };
+template< typename U > U* reconcrete_cast( unique& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
+template< typename U > const U* reconcrete_cast( const unique& u ) { return reconcrete_cast< U >( *u.ptr_ ); }
 
 template< typename T >
 class typed_unique : public unique
@@ -134,11 +169,11 @@ class typed_unique : public unique
 public:
 	using unique::unique;
 	typed_unique( T&& v ) noexcept
-		: unique( std::make_unique< concrete_data< T > >( std::move( v ) ) )
+		: unique( std::move( v ) )
 	{}
 	template< typename... ARGS > 
 	typed_unique( std::in_place_t, ARGS&&... args ) noexcept
-		: unique( std::make_unique< concrete_data< T > >( std::in_place, std::forward< ARGS >( args )... ) )
+		: unique( std::in_place_type_t< T >, std::forward< ARGS >( args )... )
 	{}
     T& operator*() const { return  *static_cast< T* >( data() ); }
     T* operator->() const { return  static_cast< T* >( data() ); }
