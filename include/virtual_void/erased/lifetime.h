@@ -12,11 +12,9 @@ template< typename T > class typed_shared_const;
 
 struct abstract_data
 {
-	const std::type_info& type_info_;
 	void* data_ = nullptr;
-	abstract_data( std::type_info const & type_info, void* data )
-		: type_info_( type_info )
-		, data_( data )
+	abstract_data( void* data )
+		: data_( data )
 	{}
 };
 template< typename M >
@@ -24,12 +22,12 @@ struct concrete_data : abstract_data
 {
 	M m_;
 	concrete_data( M&& m )
-		: abstract_data( typeid( M ), std::addressof( m_ ) )
+		: abstract_data( std::addressof( m_ ) )
 		, m_( std::move( m ) )
 	{}
 	template< typename... ARGS >
 	concrete_data( std::in_place_t,  ARGS&&... args )
-		: abstract_data( typeid( M ), std::addressof( m_ ) )
+		: abstract_data( std::addressof( m_ ) )
 		, m_( std::forward< ARGS >( args )... )
 	{}
 };
@@ -44,7 +42,6 @@ public:
 		: ptr_( ptr )
 	{}
     const void* data() const { return ptr_->data_; }
-    const std::type_info& type() const { return ptr_->type_info_; }
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
 };
 
@@ -110,8 +107,6 @@ template< typename T, typename... ARGS > typed_shared_const< T > make_shared_con
 }
 template< typename T > typed_shared_const< T > as( shared_const source )
 {
-    if( source.type() != typeid( T ) )
-        throw std::runtime_error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_shared_const< T >{ std::move( source ) };
 }
 
@@ -126,7 +121,6 @@ protected:
 	{}
 public:
     void* data() const { return ptr_->data_; }
-    const std::type_info& type() const { return ptr_->type_info_; }
 	operator bool() const { return ptr_.operator bool(); } // false only after move!
 };
 
@@ -152,8 +146,6 @@ public:
 
 template< typename T > auto as( unique&& source )
 {
-    if( source.type() != typeid( T ) )
-        throw std::runtime_error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_unique< T >{ std::move( source ) };
 }
 template< typename T, typename... ARGS > typed_unique< T > make_unique( ARGS&&... args )
