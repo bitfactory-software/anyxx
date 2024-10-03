@@ -3,8 +3,7 @@
 #include <type_traits>
 #include <stdexcept>
 
-#include "forward.h"
-#include "generic_traits.h"
+#include "data.h"
 
 namespace virtual_void::erased
 {

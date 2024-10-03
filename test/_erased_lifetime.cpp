@@ -5,7 +5,7 @@
 
 #include "include/catch.hpp"
 
-#include "../include/virtual_void/erased/lifetime.h"
+#include "../include/virtual_void/erased/lifetime/unique.h"
 
 using namespace Catch::Matchers;
 
