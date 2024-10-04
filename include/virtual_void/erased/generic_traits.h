@@ -9,29 +9,6 @@
 namespace virtual_void::erased
 {
 
-template< typename ERASED, typename CONSTRUCTED_WITH >
-auto unerase( auto from )
-{
-    using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
-    constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructed_with_t >;
-    if constexpr( was_already_erased )
-    {
-        return static_cast< constructed_with_t::conrete_t * >( from );
-    }
-    else
-    {
-        using concrete_t = constructed_with_t;
-        if constexpr( trait< ERASED >::is_const )
-        {
-            return static_cast< concrete_t const * >( from );
-        }
-        else
-        {
-            return static_cast< concrete_t * >( from );
-        }
-    }
-}
-
 template<>
 struct trait< mutable_observer >
 {

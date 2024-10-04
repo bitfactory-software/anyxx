@@ -14,77 +14,101 @@
 
 namespace virtual_void::erased
 {
-    template< typename ERASED >
-    struct base 
+template< typename ERASED >
+struct base 
+{
+    using erased_t = ERASED;
+    erased_t _ref = nullptr;
+    struct _v_table_t 
     {
-        using erased_t = ERASED;
-        erased_t _ref = nullptr;
-        struct _v_table_t 
+        bool (*_is_derived_from)( const std::type_info& ); 
+        template <typename UNUSED>
+        _v_table_t(UNUSED&&)
+            : _is_derived_from ( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
+        {};
+    } *_v_table;
+    template <typename T>
+    base(T&& v) 
+        requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
+        : _ref(virtual_void::erased::trait<erased_t>::erase(std::forward<T>(v)))
+    {
+        static _v_table_t _tp_v_table{ v };
+        _v_table = &_tp_v_table;
+    }
+    template< typename OTHER >
+    base( const OTHER& other )
+        requires ( std::derived_from< OTHER, base< ERASED > > )
+        : _ref( other._ref )
+        , _v_table( other._v_table )
+    {}
+    base(const base&) = default;
+    base(base&) = default;
+    base(base&&) = default;
+    auto* get_erased() const { return &_ref; }
+    auto* get_erased() { return &_ref; }
+    bool is_derived_from( const std::type_info& from ) const { return _v_table->_is_derived_from( from ); }
+    template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM ) );  } 
+    static bool static_is_derived_from( const std::type_info& from ) { return typeid( base ) == from; } 
+protected:
+    base() = default;
+};
+
+template< typename FACADE > void set_is_derived_from( auto v_table )
+{
+    v_table->_is_derived_from = +[]( const std::type_info& from ){ return FACADE::static_is_derived_from( from ); };
+}
+
+template< typename TO, typename FROM >
+TO static_interface_cast( const FROM& from ) requires ( std::derived_from< TO, FROM > ) { return *static_cast< const TO* >( &from ); }
+template< typename TO, typename FROM >
+std::optional< TO > interface_cast( const FROM& from ) requires ( std::derived_from< TO, FROM > ) 
+{ 
+    if( from.is_derived_from< TO >() )
+        return { *static_cast< const TO* >( &from ) };
+    return {};
+}
+
+template< template< typename, template< typename > typename > typename... >
+struct bases_;
+template< template< typename, template< typename > typename > typename BASE >
+struct bases_< BASE >
+{
+    template< typename E > using type = BASE< E, virtual_void::erased::base >;
+};
+template
+    < template< typename, template< typename > typename > typename FIRST
+    , template< typename, template< typename > typename > typename... MORE
+    >
+struct bases_< FIRST, MORE... >
+{
+    template< typename E > using type = FIRST< E, typename bases_< MORE... >::type >;
+};
+template< template< typename, template< typename > typename > typename... BASES >
+using bases = bases_< BASES... >::type;
+
+template< typename ERASED, typename CONSTRUCTED_WITH >
+auto unerase( auto from )
+{
+    using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
+    constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructed_with_t >;
+    if constexpr( was_already_erased )
+    {
+        return static_cast< constructed_with_t::conrete_t * >( from );
+    }
+    else
+    {
+        using concrete_t = constructed_with_t;
+        if constexpr( trait< ERASED >::is_const )
         {
-            bool (*_is_derived_from)( const std::type_info& ); 
-            template <typename UNUSED>
-            _v_table_t(UNUSED&&)
-                : _is_derived_from ( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
-            {};
-        } *_v_table;
-        template <typename T>
-        base(T&& v) 
-            requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
-            : _ref(virtual_void::erased::trait<erased_t>::erase(std::forward<T>(v)))
-        {
-            static _v_table_t _tp_v_table{ v };
-            _v_table = &_tp_v_table;
+            return static_cast< concrete_t const * >( from );
         }
-        template< typename OTHER >
-        base( const OTHER& other )
-            requires ( std::derived_from< OTHER, base< ERASED > > )
-            : _ref( other._ref )
-            , _v_table( other._v_table )
-        {}
-        base(const base&) = default;
-        base(base&) = default;
-        base(base&&) = default;
-        auto* get_erased() const { return &_ref; }
-        auto* get_erased() { return &_ref; }
-        bool is_derived_from( const std::type_info& from ) const { return _v_table->_is_derived_from( from ); }
-        template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM ) );  } 
-        static bool static_is_derived_from( const std::type_info& from ) { return typeid( base ) == from; } 
-    protected:
-        base() = default;
-    };
-
-    template< typename FACADE > void set_is_derived_from( auto v_table )
-    {
-        v_table->_is_derived_from = +[]( const std::type_info& from ){ return FACADE::static_is_derived_from( from ); };
+        else
+        {
+            return static_cast< concrete_t * >( from );
+        }
     }
+}
 
-    template< typename TO, typename FROM >
-    TO static_interface_cast( const FROM& from ) requires ( std::derived_from< TO, FROM > ) { return *static_cast< const TO* >( &from ); }
-    template< typename TO, typename FROM >
-    std::optional< TO > interface_cast( const FROM& from ) requires ( std::derived_from< TO, FROM > ) 
-    { 
-        if( from.is_derived_from< TO >() )
-            return { *static_cast< const TO* >( &from ) };
-        return {};
-    }
-
-    template< template< typename, template< typename > typename > typename... >
-    struct bases_;
-    template< template< typename, template< typename > typename > typename BASE >
-    struct bases_< BASE >
-    {
-        template< typename E > using type = BASE< E, virtual_void::erased::base >;
-    };
-    template
-        < template< typename, template< typename > typename > typename FIRST
-        , template< typename, template< typename > typename > typename... MORE
-        >
-    struct bases_< FIRST, MORE... >
-    {
-        template< typename E > using type = FIRST< E, typename bases_< MORE... >::type >;
-    };
-    template< template< typename, template< typename > typename > typename... BASES >
-    using bases = bases_< BASES... >::type;
 };
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
