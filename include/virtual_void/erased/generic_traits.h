@@ -14,7 +14,7 @@ struct trait< mutable_observer >
 {
     static const bool is_const = false;
     using type = mutable_observer;
-    using param_t = const type&;
+    using param_t = void*;
 
     template< typename FROM >
     static type erase( FROM&& from ) 
@@ -30,16 +30,16 @@ struct trait< mutable_observer >
         }
     }
     template< typename CONSTRUCTOR_PARAM >
-    static auto unerase( const type& from )
+    static auto unerase( param_t from )
     {
         using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
         if constexpr( std::is_base_of_v< type, constructor_param_t > )
         {
-            return static_cast< constructor_param_t::conrete_t * >( from.data() );
+            return static_cast< constructor_param_t::conrete_t * >( from );
         }
         else
         {
-            return static_cast< constructor_param_t* >( from.data() );
+            return static_cast< constructor_param_t* >( from );
         }
     }
 };
@@ -49,7 +49,7 @@ struct trait< const_observer >
 {
     static const bool is_const = true;
     using type = const_observer;
-    using param_t = const type&;
+    using param_t = void const *;
 
     template< typename FROM >
     static type erase( FROM&& from )
@@ -65,16 +65,16 @@ struct trait< const_observer >
         }
     }
     template< typename CONSTRUCTOR_PARAM >
-    static auto unerase( const type& from )
+    static auto unerase( param_t from )
     {
         using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
         if constexpr( std::is_base_of_v< type, constructor_param_t > )
         {
-            return static_cast< const constructor_param_t::conrete_t * >( from.data() );
+            return static_cast< const constructor_param_t::conrete_t * >( from );
         }
         else
         {
-            return static_cast< const constructor_param_t* >( from.data() );
+            return static_cast< const constructor_param_t* >( from );
         }
     }
 };
@@ -82,9 +82,9 @@ struct trait< const_observer >
 template< typename SHARED_CONST, typename MAKE_SHARED >
 struct trait_shared_const
 {
+    static const bool is_const = true;
     using type = SHARED_CONST;
-        
-    using param_t = const type&;
+    using param_t = void const *;
 
     template< typename FROM >
     static type erase( FROM&& from )
@@ -100,16 +100,16 @@ struct trait_shared_const
         }
     }
     template< typename CONSTRUCTOR_PARAM >
-    static auto unerase( const type& from )
+    static auto unerase( param_t from )
     {
         using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
         if constexpr( std::is_base_of_v< type, constructor_param_t > )
         {
-            return static_cast< const constructor_param_t::conrete_t * >( from.data() );
+            return static_cast< const constructor_param_t::conrete_t * >( from );
         }
         else
         {
-            return static_cast< const constructor_param_t* >( from.data() );
+            return static_cast< const constructor_param_t* >( from );
         }
     }
 };

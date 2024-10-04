@@ -141,10 +141,10 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !virtual_void::erased::trait<ERASED>::is_const ) { \
-    return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 } \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
-    return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
         
@@ -238,8 +238,8 @@ namespace virtual_void::erased
             requires ( std::derived_from< OTHER, BASE< ERASED > > )
             : base_t( other )
         {}
-        RET operator()( ARGS&&... args ) requires ( !trait<ERASED>::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
-        RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref, std::forward< ARGS >(args)...); }
+        RET operator()( ARGS&&... args ) requires ( !trait<ERASED>::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
+        RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&&) = default;
