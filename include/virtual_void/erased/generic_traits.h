@@ -13,8 +13,8 @@ template< typename ERASED, typename CONSTRUCTOR_PARAM >
 auto unerase( auto from )
 {
     using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
-    constexpr bool is_already_erased = std::is_base_of_v< ERASED, constructor_param_t >;
-    if constexpr( is_already_erased )
+    constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructor_param_t >;
+    if constexpr( was_already_erased )
     {
         return static_cast< constructor_param_t::conrete_t * >( from );
     }
