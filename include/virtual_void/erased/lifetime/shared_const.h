@@ -20,6 +20,7 @@ protected:
 	{}
 public:
 	using void_t = void const *;
+	static constexpr bool is_const = true;
 	shared_const( const shared_const& ptr ) = default;
 	shared_const( shared_const& ptr ) = default;
 	shared_const( shared_const&& ptr ) = default;

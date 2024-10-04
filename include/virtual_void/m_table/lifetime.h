@@ -52,6 +52,7 @@ public:
 		: ptr_( ptr )
 	{}
 	using void_t = void const *;
+	static constexpr bool is_const = true;
     const void* data() const { return ptr_->data_; }
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table_t* m_table() const { return ptr_->m_table_; };
@@ -135,6 +136,7 @@ protected:
 	{}
 public:
 	using void_t = void *;
+	static constexpr bool is_const = false;
     void* data() const { return ptr_->data_; }
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table_t* m_table() const { return ptr_->m_table_; };

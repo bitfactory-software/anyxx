@@ -9,10 +9,10 @@
 namespace virtual_void::erased
 {
 
-template< typename ERASED, bool is_const_, typename MAKE_ERASED >
+template< typename ERASED, typename MAKE_ERASED >
 struct erase_trait
 {
-    static const bool is_const = is_const_;
+    static constexpr bool is_const = ERASED::is_const;
     using type = ERASED;
     using param_t = ERASED::void_t;
 
@@ -46,7 +46,7 @@ struct make_const_observer
     }
 };
 
-template<> struct trait< mutable_observer > : erase_trait< mutable_observer,    false,  make_mutable_observer >{};
-template<> struct trait< const_observer >   : erase_trait< const_observer,      true,  make_const_observer >{};
+template<> struct trait< mutable_observer > : erase_trait< mutable_observer, make_mutable_observer >{};
+template<> struct trait< const_observer >   : erase_trait< const_observer, make_const_observer >{};
 
 }

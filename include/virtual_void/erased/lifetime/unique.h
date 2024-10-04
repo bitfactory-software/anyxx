@@ -18,6 +18,7 @@ protected:
 	{}
 public:
 	using void_t = void *;
+	static constexpr bool is_const = false;
 	unique( const unique& ) = default;
 	unique( unique& ) = default;
 	unique( unique&& ) = default;

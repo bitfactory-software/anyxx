@@ -8,10 +8,16 @@
 namespace virtual_void::erased
 {
 
+template< typename VOID > struct is_const_void	{};
+template<> struct is_const_void< void * >		{ static constexpr bool value = false; };
+template<> struct is_const_void< void const * > { static constexpr bool value = true; };
+
 template< typename VOID >
 struct observer
 {
 	using void_t = VOID;
+	static constexpr bool is_const = is_const_void< VOID >::value;
+
 	observer( const observer& ) = default;
 	observer( observer& ) = default;
 	observer( observer&& ) = default;
@@ -25,6 +31,8 @@ struct observer
 };
 using const_observer = observer< void const *>;
 using mutable_observer = observer< void *>;
+static_assert( const_observer::is_const );
+static_assert( !mutable_observer::is_const );
 
 template< typename U > auto reconcrete_cast( mutable_observer o )	{ return static_cast< U* >( o.data() ); }
 template< typename U > auto reconcrete_cast( const_observer o )		{ return static_cast< const U* >( o.data() ); }
