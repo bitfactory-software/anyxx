@@ -53,11 +53,11 @@ struct trait< const_observer >
     }
 };
 
-template< typename SHARED_CONST, typename MAKE_SHARED >
-struct trait_shared_const
+template< typename ERASED, bool is_const_, typename MAKE_ERASED >
+struct erase_trait
 {
-    static const bool is_const = true;
-    using type = SHARED_CONST;
+    static const bool is_const = is_const_;
+    using type = ERASED;
     using param_t = void const *;
 
     template< typename FROM >
@@ -70,7 +70,7 @@ struct trait_shared_const
         }
         else
         {
-            return MAKE_SHARED{}( std::forward< FROM >( from ) );
+            return MAKE_ERASED{}( std::forward< FROM >( from ) );
         }
     }
 };
