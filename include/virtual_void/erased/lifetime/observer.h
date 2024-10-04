@@ -37,15 +37,14 @@ struct typed_observer : public select_observer< std::remove_reference_t< T > >::
 {
 	using conrete_t = std::remove_reference_t< T >;
 	using observer_t = select_observer< T >::type;
-	using observer_t::observer_t;
 	typed_observer( const typed_observer& ) = default;
 	typed_observer( typed_observer& ) = default;
 	typed_observer( typed_observer&& ) = default;
 	typed_observer( const observer_t& o )
-		: observer_t( o )
+		: select_observer< std::remove_reference_t< T > >::type( o )
 	{}
 	typed_observer( T&& v )
-		: observer_t( std::forward< T >( v ) )
+		: select_observer< std::remove_reference_t< T > >::type( std::forward< T >( v ) )
 	{}
     conrete_t& operator*() const  { return  *static_cast< conrete_t* >( this->data() ); }
     conrete_t* operator->() const { return  static_cast< conrete_t* >( this->data() ); }
