@@ -133,7 +133,7 @@ struct make_shared_const_t
 {
     template< typename FROM > auto operator()( FROM&& from )
     {
-        return 	virtual_void::m_table::make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
+        return make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
     }
 };
 

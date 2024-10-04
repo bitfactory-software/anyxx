@@ -9,7 +9,8 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/erased/interface.h"
-#include "../include/virtual_void/m_table/lifetime.h"
+//#include "../include/virtual_void/m_table/lifetime.h"
+#include "../include/virtual_void/erased/lifetime/shared_const.h"
 
 using std::cout;
 using std::string;
@@ -24,7 +25,8 @@ DECLARE_INTERFACE(node_i,
     (string, as_lisp),
 )
 
-using node = node_i< virtual_void::m_table::shared_const >;
+//using node = node_i< virtual_void::m_table::shared_const >;
+using node = node_i< virtual_void::erased::shared_const >;
 
 struct Plus  {
     Plus( node left, node right)
@@ -62,7 +64,8 @@ struct Integer  {
 
 TEST_CASE( "21_Tree_TE_dynamic_interface" ) 
 {
-    using virtual_void::m_table::make_shared_const;
+//    using virtual_void::m_table::make_shared_const;
+    using virtual_void::erased::make_shared_const;
 
     auto expr = node( make_shared_const<Times>(
         make_shared_const<Integer>(2),

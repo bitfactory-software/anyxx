@@ -11,6 +11,8 @@ namespace virtual_void::erased
 template< typename T > class typed_shared_const;
 using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
 
+struct make_shared_const_t;
+
 class shared_const
 { 
 protected:
@@ -21,6 +23,8 @@ protected:
 public:
 	using void_t = void const *;
 	static constexpr bool is_const = true;
+	using make_erased = make_shared_const_t;
+
 	shared_const( const shared_const& ptr ) = default;
 	shared_const( shared_const& ptr ) = default;
 	shared_const( shared_const&& ptr ) = default;
@@ -110,5 +114,13 @@ template< typename T > typed_shared_const< T > as( shared_const source )
 {
     return typed_shared_const< T >{ std::move( source ) };
 }
+
+struct make_shared_const_t
+{
+    template< typename FROM > auto operator()( FROM&& from )
+    {
+        return 	make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
+    }
+};
 
 }
