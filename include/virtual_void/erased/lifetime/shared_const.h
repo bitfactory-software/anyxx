@@ -17,7 +17,7 @@ class shared_const
 { 
 protected:
 	shared_abstract_data_ptr ptr_;
-	shared_const( const shared_abstract_data_ptr& ptr )
+	explicit shared_const( const shared_abstract_data_ptr& ptr )
 		: ptr_( ptr )
 	{}
 public:

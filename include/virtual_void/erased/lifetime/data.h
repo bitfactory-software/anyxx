@@ -37,7 +37,7 @@ struct concrete_data_t : abstract_data_t< MORE >
 using abstract_data = abstract_data_t< empty_t >;
 template< typename M > using concrete_data = concrete_data_t< M, empty_t >;
 
-template< typename U > U* reconcrete_cast( abstract_data& a ) { return static_cast< U* >( a.data_ ); }
-template< typename U > const U* reconcrete_cast( const abstract_data& a ) { return static_cast< const U* >( a.data_ ); }
+template< typename U, typename MORE = empty_t > U* reconcrete_cast( abstract_data_t< MORE >& a ) { return static_cast< U* >( a.data_ ); }
+template< typename U, typename MORE = empty_t > const U* reconcrete_cast( const abstract_data_t< MORE >& a ) { return static_cast< const U* >( a.data_ ); }
 
 }

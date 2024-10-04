@@ -9,6 +9,7 @@
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/shared_const.h"
 #include "../include/virtual_void/erased/lifetime/unique.h"
+#include "../include/virtual_void/erased/lifetime/value.h"
 
 using namespace Catch::Matchers;
 
@@ -110,6 +111,36 @@ namespace
             t1 = as< int >( std::move( e1 ) );
             REQUIRE( !e1 ); // !moved
             REQUIRE( *t1 == 1 );
+        }
+    }
+    TEST_CASE( "erased/lifetime/value" )
+    {
+        using namespace erased;
+        {
+		    auto u1 = value( 1 );
+            REQUIRE( *reconcrete_cast< int >( u1 ) == 1 );
+        }
+        {
+            struct A { std::string s; };            
+            auto u1 = value( std::in_place_type< A >, "hallo" );
+            REQUIRE( reconcrete_cast< A >( u1 )->s == "hallo" );
+            auto u2 = u1;
+            REQUIRE( reconcrete_cast< A >( u1 )->s.data() != reconcrete_cast< A >( u2 )->s.data() );
+            REQUIRE( reconcrete_cast< A >( u2 )->s == "hallo" );
+            reconcrete_cast< A >( u2 )->s = "world";
+            REQUIRE( reconcrete_cast< A >( u1 )->s == "hallo" );
+            REQUIRE( reconcrete_cast< A >( u2 )->s == "world" );
+        }
+        {
+            auto t1 = typed_value< int >( 1 );
+            *t1 = 2;
+            REQUIRE( *t1 == 2 );
+            auto e1 = t1;
+            REQUIRE( t1 ); // !moved
+            REQUIRE( e1.data() );
+            t1 = as< int >( std::move( e1 ) );
+            REQUIRE( !e1 ); // !moved
+            REQUIRE( *t1 == 2 );
         }
     }
 }
