@@ -10,7 +10,7 @@ namespace virtual_void::erased
 {
 
 template< typename ERASED, typename CONSTRUCTOR_PARAM >
-struct unerase_trait
+struct unerase
 {
     auto operator()( auto from )
     {

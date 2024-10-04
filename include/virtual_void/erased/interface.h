@@ -131,13 +131,13 @@ type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
 name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 {\
-    return  virtual_void::erased::unerase_trait< erased_t, _tp >{}( _vp )->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+    return  virtual_void::erased::unerase< erased_t, _tp >{}( _vp )->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_LAMBDA_TO_FREE_IMPL(type, name, ...) \
 name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 { \
-    return name##_( *virtual_void::erased::unerase_trait< erased_t, _tp >{}( _vp ) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+    return name##_( *virtual_void::erased::unerase< erased_t, _tp >{}( _vp ) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
@@ -220,7 +220,7 @@ namespace virtual_void::erased
             _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
                 , call_op ( [](erased_param_t _vp, ARGS&&... args ) 
                     { 
-                        return ( *erased::unerase_trait< erased_t, _tp >{}( _vp ) ) ( std::forward< ARGS >(args)...); 
+                        return ( *erased::unerase< erased_t, _tp >{}( _vp ) ) ( std::forward< ARGS >(args)...); 
                     })
             {
                 set_is_derived_from< call_operator_facade >( this );
