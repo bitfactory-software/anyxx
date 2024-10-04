@@ -9,24 +9,25 @@
 namespace virtual_void::erased
 {
 
-template< typename ERASED, typename CONSTRUCTOR_PARAM >
+template< typename ERASED, typename CONSTRUCTED_WITH >
 auto unerase( auto from )
 {
-    using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
-    constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructor_param_t >;
+    using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
+    constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructed_with_t >;
     if constexpr( was_already_erased )
     {
-        return static_cast< constructor_param_t::conrete_t * >( from );
+        return static_cast< constructed_with_t::conrete_t * >( from );
     }
     else
     {
+        using concrete_t = constructed_with_t;
         if constexpr( trait< ERASED >::is_const )
         {
-            return static_cast< constructor_param_t const * >( from );
+            return static_cast< concrete_t const * >( from );
         }
         else
         {
-            return static_cast< constructor_param_t* >( from );
+            return static_cast< concrete_t * >( from );
         }
     }
 }
