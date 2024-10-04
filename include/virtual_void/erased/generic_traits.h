@@ -10,28 +10,25 @@ namespace virtual_void::erased
 {
 
 template< typename ERASED, typename CONSTRUCTOR_PARAM >
-struct unerase
+auto unerase( auto from )
 {
-    auto operator()( auto from )
+    using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
+    if constexpr( std::is_base_of_v< ERASED, constructor_param_t > )
     {
-        using constructor_param_t = std::remove_cvref_t< CONSTRUCTOR_PARAM >;
-        if constexpr( std::is_base_of_v< ERASED, constructor_param_t > )
+        return static_cast< constructor_param_t::conrete_t * >( from );
+    }
+    else
+    {
+        if constexpr( trait< ERASED >::is_const )
         {
-            return static_cast< constructor_param_t::conrete_t * >( from );
+            return static_cast< constructor_param_t const * >( from );
         }
         else
         {
-            if constexpr( trait< ERASED >::is_const )
-            {
-                return static_cast< constructor_param_t const * >( from );
-            }
-            else
-            {
-                return static_cast< constructor_param_t* >( from );
-            }
+            return static_cast< constructor_param_t* >( from );
         }
     }
-};
+}
 
 template<>
 struct trait< mutable_observer >
