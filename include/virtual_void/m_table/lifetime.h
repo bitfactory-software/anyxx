@@ -42,6 +42,8 @@ struct concrete_data : abstract_data
 	{}
 };
 
+struct make_shared_const_t;
+
 using shared_abstract_data_ptr = std::shared_ptr< abstract_data >;
 class shared_const
 { 
@@ -53,7 +55,9 @@ public:
 	{}
 	using void_t = void const *;
 	static constexpr bool is_const = true;
-    const void* data() const { return ptr_->data_; }
+	using make_erased = make_shared_const_t;
+
+	const void* data() const { return ptr_->data_; }
     const std::type_info& type() const { return ptr_->m_table_->type(); }
 	const m_table_t* m_table() const { return ptr_->m_table_; };
 };
@@ -125,6 +129,13 @@ template< typename T > typed_shared_const< T > as( shared_const source )
         throw error( "source is: " + std::string( source.type().name() ) + "." );
     return typed_shared_const< T >{ std::move( source ) };
 }
+struct make_shared_const_t
+{
+    template< typename FROM > auto operator()( FROM&& from )
+    {
+        return 	virtual_void::m_table::make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
+    }
+};
 
 using unique_abstract_data_ptr = std::unique_ptr< abstract_data >;
 class unique

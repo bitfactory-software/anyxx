@@ -9,7 +9,7 @@
 namespace virtual_void::erased
 {
 
-template< typename ERASED, typename MAKE_ERASED >
+template< typename ERASED >
 struct erase_trait
 {
     using type = ERASED;
@@ -25,27 +25,14 @@ struct erase_trait
         }
         else
         {
-            return MAKE_ERASED{}( std::forward< FROM >( from ) );
+            using make_erased_t = ERASED::make_erased;
+            return make_erased_t{}( std::forward< FROM >( from ) );
         }
     }
 };
 
-struct make_mutable_observer
-{
-    template< typename FROM > auto operator()( FROM&& from )
-    {
-        return typed_observer< std::remove_const_t< std::remove_reference_t< FROM > > >( std::forward< FROM >( from ) );
-    }
-};
-struct make_const_observer
-{
-    template< typename FROM > auto operator()( FROM&& from )
-    {
-        return typed_observer< std::add_const_t< std::remove_reference_t< FROM > > >( from );
-    }
-};
 
-template<> struct trait< mutable_observer > : erase_trait< mutable_observer, make_mutable_observer >{};
-template<> struct trait< const_observer >   : erase_trait< const_observer, make_const_observer >{};
+template<> struct trait< mutable_observer > : erase_trait< mutable_observer >{};
+template<> struct trait< const_observer >   : erase_trait< const_observer >{};
 
 }

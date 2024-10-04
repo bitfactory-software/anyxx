@@ -12,11 +12,18 @@ template< typename VOID > struct is_const_void	{};
 template<> struct is_const_void< void * >		{ static constexpr bool value = false; };
 template<> struct is_const_void< void const * > { static constexpr bool value = true; };
 
+struct make_mutable_observer;
+struct make_const_observer;
+
+template< bool >	struct select_make_observer				{ using type = make_mutable_observer; };
+template<>			struct select_make_observer< true >		{ using type = make_const_observer; };
+
 template< typename VOID >
 struct observer
 {
 	using void_t = VOID;
 	static constexpr bool is_const = is_const_void< VOID >::value;
+	using make_erased = select_make_observer< is_const >::type;
 
 	observer( const observer& ) = default;
 	observer( observer& ) = default;
@@ -58,5 +65,19 @@ struct typed_observer : public select_observer< std::remove_reference_t< T > >::
     conrete_t* operator->() const { return  static_cast< conrete_t* >( this->data() ); }
 };
 
+struct make_mutable_observer
+{
+    template< typename FROM > auto operator()( FROM&& from )
+    {
+        return typed_observer< std::remove_const_t< std::remove_reference_t< FROM > > >( std::forward< FROM >( from ) );
+    }
+};
+struct make_const_observer
+{
+    template< typename FROM > auto operator()( FROM&& from )
+    {
+        return typed_observer< std::add_const_t< std::remove_reference_t< FROM > > >( from );
+    }
+};
 
 }
