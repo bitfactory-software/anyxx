@@ -7,8 +7,7 @@
 
 #include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
-#include "../include/virtual_void/erased/interface_traits.h"
-#include "../include/virtual_void/m_table/interface_traits.h"
+#include "../include/virtual_void/m_table/lifetime.h"
 
 using namespace Catch::Matchers;
 

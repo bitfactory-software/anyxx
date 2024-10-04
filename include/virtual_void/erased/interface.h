@@ -10,10 +10,25 @@
 #include <typeinfo>
 
 #include "forward.h"
-#include "generic_traits.h"
 
 namespace virtual_void::erased
 {
+
+template< typename ERASED, typename FROM >
+ERASED erase_to( FROM&& from )
+{
+    constexpr bool erased_is_passed_in = std::is_base_of_v< ERASED, std::remove_reference_t< FROM > >;
+    if constexpr( erased_is_passed_in )
+    {
+        return from;
+    }
+    else
+    {
+        using make_erased_t = ERASED::make_erased;
+        return make_erased_t{}( std::forward< FROM >( from ) );
+    }
+}
+
 template< typename ERASED >
 struct base 
 {
@@ -30,7 +45,7 @@ struct base
     template <typename T>
     base(T&& v) 
         requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
-        : _ref(virtual_void::erased::trait<erased_t>::erase(std::forward<T>(v)))
+        : _ref( virtual_void::erased::erase_to< erased_t >( std::forward< T >( v ) ) )
     {
         static _v_table_t _tp_v_table{ v };
         _v_table = &_tp_v_table;
@@ -165,7 +180,7 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 })
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
-type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !virtual_void::erased::trait<ERASED>::is_const ) { \
+type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !ERASED::is_const ) { \
     return static_cast< _v_table_t* >(_v_table)->name(base_t::_ref.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 } \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
@@ -263,7 +278,7 @@ namespace virtual_void::erased
             requires ( std::derived_from< OTHER, BASE< ERASED > > )
             : base_t( other )
         {}
-        RET operator()( ARGS&&... args ) requires ( !trait<ERASED>::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
+        RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
         RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
