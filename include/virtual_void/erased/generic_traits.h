@@ -12,7 +12,6 @@ namespace virtual_void::erased
 template< typename ERASED, typename MAKE_ERASED >
 struct erase_trait
 {
-    static constexpr bool is_const = ERASED::is_const;
     using type = ERASED;
     using param_t = ERASED::void_t;
 

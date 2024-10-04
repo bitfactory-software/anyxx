@@ -98,7 +98,7 @@ auto unerase( auto from )
     else
     {
         using concrete_t = constructed_with_t;
-        if constexpr( trait< ERASED >::is_const )
+        if constexpr( ERASED::is_const )
         {
             return static_cast< concrete_t const * >( from );
         }

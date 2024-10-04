@@ -38,7 +38,7 @@ namespace
     {
         using namespace virtual_void;
         static_assert( !test_trait<void* >::is_const );
-        static_assert( erased::trait<erased::const_observer >::is_const );
+        static_assert( erased::const_observer::is_const );
         test_interface< void const* > i1;
         REQUIRE( i1.f( 1 ) == "const");
 
