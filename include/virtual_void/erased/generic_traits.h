@@ -13,7 +13,6 @@ template< typename ERASED >
 struct erase_trait
 {
     using type = ERASED;
-    using param_t = ERASED::void_t;
 
     template< typename FROM >
     static type erase( FROM&& from )

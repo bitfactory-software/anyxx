@@ -179,7 +179,7 @@ struct n : BASE< ERASED > \
 { \
     using interface_t = n; \
     using erased_t = ERASED; \
-    using erased_param_t = virtual_void::erased::trait<ERASED>::param_t; \
+    using erased_param_t = ERASED::void_t; \
     using base_t = BASE< ERASED >; \
     using base_t::_ref; \
     using base_t::_v_table; \
@@ -232,7 +232,7 @@ namespace virtual_void::erased
     struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
     {
         using erased_t = ERASED;
-        using erased_param_t = trait<ERASED>::param_t;
+        using erased_param_t = ERASED::void_t;
         using base_t = BASE< ERASED >;
         using base_v_table_t = base_t::_v_table_t;
         using base_t::_ref;
