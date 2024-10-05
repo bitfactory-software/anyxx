@@ -9,8 +9,6 @@
 #include "../include/std26/proxy.h"
 
 #include "../include/virtual_void/virtual_void.h"
-#include "../include/utillities/naive_any_function.h"
-#include "../include/utillities/naive_any_value.h"
 #include "../include/utillities/unnamed__.h"
 
 namespace
@@ -98,62 +96,6 @@ std::string ToString_( const X& x )
     return x.s;
 }
 
-template< template< typename, typename... > class any_function, typename any_value > void test_any()
-{
-    std::cout << "any_function..." << std::endl << std::endl;
-
-    any_function< std::string( int ) > toString1 { []( int i ){ return std::to_string( i ) + "1"; } };
-    std::cout << "1: " << toString1( 4711 ) << std::endl;
-
-    auto x = []( int i )->std::string{ return std::to_string( i ) + "x"; };
-    std::cout << x( 4711 ) << std::endl;
-
-    auto y = []( int i )->std::string{ return std::to_string( i ) + "y"; };
-    std::cout << y( 4711 ) << std::endl;
-
-    any_function< std::string( int ) > toString2 ( x );
-    std::cout << "2: " << toString2( 4711 ) << std::endl;
-
-    any_function< std::string( int ) > toString3 ( toString1 );
-    std::cout << "3: " << toString3( 4711 ) << std::endl;
-
-    toString2 = toString3;
-    std::cout << "2: " << toString2( 4711 ) << std::endl;
-    std::cout << "3: " << toString3( 4711 ) << std::endl;
-
-    toString2 = y;
-    std::cout << "2: " << toString2( 4711 ) << std::endl;
-
-    std::cout << "any_value ..." << std::endl << std::endl;
-
-    any_value a0{ 3.14 };
-    std::cout << "a1 " << a0.type().name() << std::endl;
-    try
-    {
-        any_value_cast< int >( a0 );
-        std::cout << "error! must throw!" << std::endl;
-    }
-    catch( std::runtime_error& e)
-    {
-        std::cout << "cathed: " << e.what() << std::endl;
-    }
-    any_value a1 = 4711;
-    std::cout << "a1 " << a1.type().name() << std::endl;
-    //auto helloWorld = "hello world";
-    //any_value a2 = helloWorld;
-    //std::cout << "a2 " << a2.type().name() << std::endl;
-    any_value a3 = std::string{ "hello any_value" };
-    std::cout << "a3 " << a3.type().name() << std::endl;
-    any_value a4 = a3;
-    std::cout << "a4 " << a4.type().name() << std::endl;
-
-    std::cout << "a1 " << any_value_cast< int >( a1 ) << std::endl;
-    //std::cout << "a2 " << any_value_cast< decltype( helloWorld ) >( a2 ) << std::endl;
-    //std::cout << "a2 " << any_value_cast< const char* >(a2) << std::endl;
-    std::cout << "a3 " << any_value_cast< std::string >( a3 ) << std::endl;
-    std::cout << "a4 " << any_value_cast< std::string >( a4 ) << std::endl;
-}
-
 template< typename T > void trace_alignof()
 {
     std::cout << "alignof(" << typeid( T ).name() << "): " << alignof( T ) << std::endl;
@@ -194,8 +136,6 @@ TEST_CASE( "prototype" )
 
     update( std::pair< const std::type_info&, void* >{ pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable }, "->updated!!!" );
     std::cout << ToString( *cp ) << "\n";
-
-    test_any< naive::any_function, naive::any_value >();
 
 }
 
