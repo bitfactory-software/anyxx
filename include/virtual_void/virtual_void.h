@@ -12,29 +12,11 @@
 #include <assert.h>
 
 #include "../perfect_typeid_hash/index_table.h"
+#include "../utillities/overload.h"
+#include "../utillities/type_list.h"
 
 namespace virtual_void
 {
-//++utillities
-	template<typename ... Ts> struct overload : Ts ... { using Ts::operator() ...; };
-	template<class... Ts> overload(Ts...) -> overload<Ts...>;
-
-	template< typename... ARGS >
-	struct type_list
-	{
-		// see https://vittorioromeo.info/index/blog/cpp20_lambdas_compiletime_for.html
-		static void for_each( auto&& call )
-		{
-			( call.template operator()< ARGS >(), ... );
-		}
-	};	
-
-	template<int N, typename... Ts> using nth_type =
-		typename std::tuple_element<N, std::tuple<Ts...>>::type;
-
-	template< typename... Ts> using first = nth_type< 0, Ts...>;
-//---utillities
-
 //+++Forward
 class m_table_t;
 template< typename CLASS > constexpr m_table_t* m_table_of();
