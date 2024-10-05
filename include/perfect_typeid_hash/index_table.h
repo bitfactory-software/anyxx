@@ -55,8 +55,6 @@ struct index_table
     }
 
     index_table() = default;
-    index_table( const index_table& ) = delete;
-    index_table( const index_table&& ) = delete;
 
     explicit index_table( const auto& elements,  TARGET default__ )
     {

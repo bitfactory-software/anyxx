@@ -20,6 +20,7 @@
 #include "error.h"
 
 #include "class_hierarchy/class_hierarchy.h"
+#include "open_method/table.h"
 
 namespace virtual_void
 {
@@ -80,13 +81,12 @@ template< typename CLASS > constexpr m_table_t* m_table_of()
 
 class type_info_dispatch
 {
+	open_method::table table_;
 public:
 	using dispatch_target_t = void(*)();
 private:
 	using entry_t = std::pair< const std::type_info*, dispatch_target_t >;
 	using method_table_t = std::vector< entry_t >; // faster than map, slower than hash_map 
-	method_table_t dispatchTable_;
-	dispatch_target_t default_ = reinterpret_cast< dispatch_target_t >( &throw_not_found );
 	const int m_table_index_ = -1;
 	using dispatch_target_index_t  = perfect_typeid_hash::index_table< dispatch_target_t >;
 	std::unique_ptr< dispatch_target_index_t > dispatch_target_index_;
@@ -98,31 +98,11 @@ public:
 		domain.method_dispatches.push_back( this ); 
 	}
 	int m_table_index() const { return m_table_index_; }
-	static void throw_not_found(){ throw error( "no target specified." ); }
-	void define_default( auto f )
-	{
-		default_ = reinterpret_cast< dispatch_target_t >( f );
-	}
-	auto get_default() const
-	{
-		return default_;
-	}
-	auto override_erased( const std::type_info& register_type_info, auto f )
-	{
-		auto t = reinterpret_cast< dispatch_target_t >( f );
-		if( is_defined( register_type_info ) )
-			throw error( "Method for type already registered." );
-		dispatchTable_.insert( lower_bound( &register_type_info ), entry_t{ &register_type_info, t } );
-		return definition{};
-	}
+	void define_default( auto f ) { table_.define_default( f ); }
+	auto get_default() const { return table_.get_default(); }
+	auto override_erased( const std::type_info& register_type_info, auto f ) { return table_.define( register_type_info, f ); }
 	template< typename TARGET = dispatch_target_t >
-	TARGET is_defined( const std::type_info& type_info ) const
-	{
-		auto found = lower_bound( &type_info );
-		if( found != dispatchTable_.end() && found->first == &type_info )
-			return reinterpret_cast< TARGET >( found->second );
-		return nullptr;
-	}
+	TARGET is_defined( const std::type_info& type_info ) const { return table_.template is_defined< TARGET >( type_info ); }
 	template< typename TARGET = dispatch_target_t >
 	TARGET lookup( const std::type_info& type_info ) const
 	{
@@ -132,16 +112,7 @@ public:
 	}
 	void seal()
 	{
-		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( dispatchTable_, get_default() );
-	}
-	struct definition{};
-private:
-	auto lower_bound( const std::type_info* i ) const
-	{
-		return std::lower_bound
-			( dispatchTable_.begin(), dispatchTable_.end(), entry_t{ i, nullptr }
-			, []( const entry_t& i, const entry_t& v ){ return i.first < v.first; }
-			);
+		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( table_.make_lookup_table() );
 	}
 };
 
