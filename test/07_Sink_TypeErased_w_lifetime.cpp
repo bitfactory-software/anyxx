@@ -12,6 +12,7 @@
 
 #include "../../include/std26/proxy.h"
 #include "../../include/virtual_void/m_table/lifetime.h"
+#include "../../include/virtual_void/typeid/cast.h"
 
 namespace
 {
@@ -85,7 +86,7 @@ namespace Application
 
     auto entityToOut = virtual_void::method< void( const void* ) >{ applicationDomain };
     auto toString = virtual_void::method< std::string( const void* ) >{ applicationDomain };
-    auto erased_const_ = virtual_void::erased_const_cast_method{ applicationDomain };
+    auto erased_const_ = virtual_void::typeid_::erased_const_cast_method{ applicationDomain };
 
     void IntToOut( const IntData* i ){ std::cout << "int: " << i->data << std::endl; }
 
@@ -131,7 +132,7 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
         });
  
     virtual_void::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
-    virtual_void::fill_const_cast_for( classes{}, erased_const_ );
+    virtual_void::typeid_::fill_const_cast_for( classes{}, erased_const_ );
 
     build_m_tables( applicationDomain );
 
@@ -156,7 +157,7 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
         }
 
         // cast back from erased -> "unerase"
-        if( auto stringData = cast_to< const StringData >( erased_const_, e ) )
+        if( auto stringData = virtual_void::typeid_::cast_to< const StringData >( erased_const_, e ) )
             std::cout << "stringData: " << stringData->data << std::endl;
     });
 

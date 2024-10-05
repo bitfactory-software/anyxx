@@ -6,7 +6,7 @@
 
 #include "include/catch.hpp"
 
-#include "../include/virtual_void/virtual_void.h"
+#include "../include/virtual_void/typeid/cast.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
@@ -30,7 +30,7 @@ namespace
 						{ 
 							std::cout << "typeid_const_cast: " << typeid( TOP ).name() << " to " << typeid( X ).name() << " :";
 							auto static_cast_result = static_cast< const X* >( &top );
-							auto type_id_cast_result = cast_to< const X >( castMethod, c_typed_void );
+							auto type_id_cast_result = virtual_void::typeid_::cast_to< const X >( castMethod, c_typed_void );
 							if( static_cast_result == type_id_cast_result )
 								std::cout << "OK";
 							else
@@ -50,15 +50,15 @@ TEST_CASE( "erased_cast_test" )
 	std::cout << __func__ << "\n";
 
 	using namespace TestDomain;
+	using namespace virtual_void;
 
 	{
 		virtual_void::domain testDomain;
-		virtual_void::erased_const_cast_method erased_const_cast( testDomain );
+		typeid_::erased_const_cast_method erased_const_cast( testDomain );
 		
 		using classes = virtual_void::type_list< D, C1, C2 >;
 
-		virtual_void::fill_const_cast_for( classes{}, erased_const_cast );
-
+		typeid_::fill_const_cast_for( classes{}, erased_const_cast );
 
 		virtual_void::declare_classes( classes{}, testDomain );
 		virtual_void::build_m_tables( testDomain );
