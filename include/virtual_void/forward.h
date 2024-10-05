@@ -32,4 +32,6 @@ concept MtableDispatchableVoid = requires( const DISPATCH& void_ )
     { void_.m_table() } -> std::convertible_to< const m_table_t* >;
 };
 
+class error;
+
 }

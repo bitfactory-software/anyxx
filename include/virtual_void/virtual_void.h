@@ -17,6 +17,8 @@
 
 #include "forward.h"
 
+#include "error.h"
+
 #include "class_hierarchy/class_hierarchy.h"
 
 namespace virtual_void
@@ -28,8 +30,6 @@ struct domain
 	class_hierarchy::classes_with_bases		classes;
 	std::vector< type_info_dispatch* >		method_dispatches;	
 };
-
-class error;
 
 class m_table_t
 {
@@ -77,11 +77,6 @@ template< typename CLASS > constexpr m_table_t* m_table_of()
 	static m_table_t m_table_{ typeid( CLASS ) };
 	return &m_table_;
 }
-
-class error : public std::runtime_error
-{
-	using std::runtime_error::runtime_error;
-};
 
 class type_info_dispatch
 {
