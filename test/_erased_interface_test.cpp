@@ -7,6 +7,7 @@
 
 #include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
+#include "../include/virtual_void/erased/lifetime/value.h"
 #include "../include/virtual_void/m_table/lifetime.h"
 
 using namespace Catch::Matchers;
@@ -219,3 +220,26 @@ TEST_CASE( "dynamic interface" ) {
     ask_name(p);
 }
 
+TEST_CASE( "base" ) 
+{
+    using namespace virtual_void;
+    using namespace virtual_void::erased;
+
+    using value_base = base< value >;
+
+    struct x_t
+    {
+        std::string s_;
+    };
+    {
+        x_t a{ "hallo" };
+        value erased = erase_to< value >( a );
+        REQUIRE( reconcrete_cast< x_t >( erased )->s_ == "hallo" );
+    }
+    {
+        x_t a{ "hallo" };
+        value_base vb( a );
+        REQUIRE( reconcrete_cast< x_t >( vb._ref )->s_ == "hallo" );
+    }
+
+}

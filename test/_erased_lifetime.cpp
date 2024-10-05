@@ -142,5 +142,23 @@ namespace
             REQUIRE( !e1 ); // !moved
             REQUIRE( *t1 == 2 );
         }
+        {
+            auto t1 = make_value< std::string >( "hallo" );
+            REQUIRE( *t1 == "hallo" );
+        }
+        {
+            std::string a = "hallo";
+            auto t1 = make_value_t{}( a );
+            REQUIRE( *t1 == "hallo" );
+        }
+        {
+            struct x_t
+            {
+                std::string s_;
+            };
+            x_t a{ "hallo" };
+            auto t1 = make_value_t{}( a );
+            REQUIRE( t1->s_ == "hallo" );
+        }
     }
 }

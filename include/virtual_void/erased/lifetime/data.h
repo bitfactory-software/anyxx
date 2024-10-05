@@ -17,6 +17,10 @@ struct abstract_data_t : MORE
 	abstract_data_t( void* data )
 		: data_( data )
 	{}
+#ifdef DEBUG
+	virtual ~abstract_data_t() = default;
+#endif // DEBUG
+
 };
 
 template< typename M, typename MORE = empty_t >

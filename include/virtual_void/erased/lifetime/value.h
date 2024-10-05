@@ -43,6 +43,8 @@ inline value_abstract_data_ptr clone( abstract_value_data const * other )
 	return other->clone_( other ); 
 };
 
+struct make_value_t;
+
 class value
 {
 	value_abstract_data_ptr ptr_;
@@ -53,6 +55,8 @@ protected:
 public:
 	using void_t = void *;
 	static constexpr bool is_const = false;
+	using make_erased = make_value_t;
+
 	value( value&& ) = default;
 	value& operator=( value&& ptr ) = default;
 	value(const value& other) : ptr_( clone( other.ptr_.get() ) ) {}
@@ -69,6 +73,7 @@ public:
 	value( value& other ) : value( *const_cast< const value* >( &other ) ){}
  	template< typename T >
 	value( T&& v ) noexcept
+		requires( !std::derived_from< T, value > )
 		: ptr_( std::make_unique< concrete_value_data< T > >( std::move( v ) ) )
 	{}
 	template< typename T, typename... ARGS > 
@@ -104,7 +109,7 @@ public:
 	{}
 	template< typename... ARGS > 
 	typed_value( std::in_place_t, ARGS&&... args ) noexcept
-		: value( std::in_place_type_t< T >, std::forward< ARGS >( args )... )
+		: value( std::in_place_type< T >, std::forward< ARGS >( args )... )
 	{}
     T& operator*() const { return  *static_cast< T* >( data() ); }
     T* operator->() const { return  static_cast< T* >( data() ); }
@@ -118,5 +123,13 @@ template< typename T, typename... ARGS > typed_value< T > make_value( ARGS&&... 
 {
 	return { std::in_place, std::forward< ARGS >( args )... };
 }
+
+struct make_value_t
+{
+    template< typename FROM > auto operator()( FROM&& from )
+    {
+        return 	make_value< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
+    }
+};
 
 }
