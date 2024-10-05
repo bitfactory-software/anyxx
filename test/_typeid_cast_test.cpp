@@ -61,8 +61,8 @@ TEST_CASE( "typeid_cast_test" )
 
 		typeid_::fill_const_cast_for( classes{}, typedid_const_cast );
 
-		virtual_void::declare_classes( classes{}, testDomain );
-		virtual_void::build_m_tables( testDomain );
+		virtual_void::open_method::declare_classes( classes{}, testDomain );
+		virtual_void::open_method::build_m_tables( testDomain );
 
 		run_cast_test< classes >( typedid_const_cast, []( auto top ){ return virtual_void::to_typeid_void( top ); } );
 

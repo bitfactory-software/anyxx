@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../virtual_void.h"
+#include "../open_method/algorithm.h"
 
 namespace virtual_void::typeid_
 {
@@ -42,7 +43,7 @@ using const_cast_method = method< const void*( const void*, const std::type_info
 using cast_method = method< void*( const void*, const std::type_info& to ) >;
 void fill_const_cast_for( auto classes, const_cast_method& method )
 {
-	fill_with_overloads( classes, method, const_cast_implementation{} );
+	virtual_void::open_method::fill_with_overloads( classes, method, const_cast_implementation{} );
 }
 template< typename... CLASSES >
 void fill_const_cast_for( const_cast_method& method )

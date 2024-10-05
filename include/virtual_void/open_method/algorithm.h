@@ -2,7 +2,7 @@
 
 #include "../virtual_void.h"
 
-namespace virtual_void
+namespace virtual_void::open_method
 {
 
 //+++open method algorithms

@@ -60,7 +60,7 @@ namespace virtual_void::class_hierarchy
     template<> struct class_< Times > : bases< Node >{};
     template<> struct class_< Integer > : bases< Node >{};
 
-	auto __ = declare_classes< Node, Plus, Times, Integer >( tree_domain );
+	auto __ = open_method::declare_classes< Node, Plus, Times, Integer >( tree_domain );
 }
 
 namespace
@@ -122,7 +122,7 @@ auto __ = as_lisp.define< Integer >( []( auto expr ) {
 
 TEST_CASE( "21_Tree_TE_dispach_via_m_table" )
 {
-    build_m_tables( tree_domain );
+    virtual_void::open_method::build_m_tables( tree_domain );
 
     using virtual_void::m_table::make_shared_const;
 

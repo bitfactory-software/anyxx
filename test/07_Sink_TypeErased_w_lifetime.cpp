@@ -121,7 +121,7 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
     using namespace Application;
     using namespace DB;
 
-    declare_classes( classes{}, applicationDomain );
+    virtual_void::open_method::declare_classes( classes{}, applicationDomain );
  
     AnywhereInTheApplication();
 
@@ -132,10 +132,10 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
             std::cout << "string: " << s->data << std::endl; 
         });
  
-    virtual_void::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
+    virtual_void::open_method::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
     virtual_void::typeid_::fill_const_cast_for( classes{}, typeid_const_cast );
 
-    build_m_tables( applicationDomain );
+    virtual_void::open_method::build_m_tables( applicationDomain );
 
     db.factories[ "i" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< StringData >( data ); };
