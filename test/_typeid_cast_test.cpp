@@ -44,7 +44,7 @@ namespace
 			});
 	}
 
-TEST_CASE( "erased_cast_test" ) 
+TEST_CASE( "typeid_cast_test" ) 
 {
 	std::cout << "\n";
 	std::cout << __func__ << "\n";
@@ -54,18 +54,18 @@ TEST_CASE( "erased_cast_test" )
 
 	{
 		virtual_void::domain testDomain;
-		typeid_::erased_const_cast_method erased_const_cast( testDomain );
+		typeid_::const_cast_method typedid_const_cast( testDomain );
 		
 		using classes = virtual_void::type_list< D, C1, C2 >;
 
-		typeid_::fill_const_cast_for( classes{}, erased_const_cast );
+		typeid_::fill_const_cast_for( classes{}, typedid_const_cast );
 
 		virtual_void::declare_classes( classes{}, testDomain );
 		virtual_void::build_m_tables( testDomain );
 
-		run_cast_test< classes >( erased_const_cast, []( auto top ){ return virtual_void::to_typeid_void( top ); } );
+		run_cast_test< classes >( typedid_const_cast, []( auto top ){ return virtual_void::to_typeid_void( top ); } );
 
-		run_cast_test< classes >( erased_const_cast, []( auto top ){ return virtual_void::to_m_table_void( top ); } );
+		run_cast_test< classes >( typedid_const_cast, []( auto top ){ return virtual_void::to_m_table_void( top ); } );
 	}
 }
 }
