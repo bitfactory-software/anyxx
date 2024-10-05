@@ -14,7 +14,7 @@
 namespace virtual_void::erased
 {
 
-template< typename ERASED, typename FROM >
+template< is_erased ERASED, typename FROM >
 ERASED erase_to( FROM&& from )
 {
     constexpr bool erased_is_passed_in = std::is_base_of_v< ERASED, std::remove_reference_t< FROM > >;
@@ -29,7 +29,7 @@ ERASED erase_to( FROM&& from )
     }
 }
 
-template< typename ERASED >
+template< is_erased ERASED >
 struct base 
 {
     using erased_t = ERASED;
@@ -101,11 +101,12 @@ struct bases_< FIRST, MORE... >
 template< template< typename, template< typename > typename > typename... BASES >
 using bases = bases_< BASES... >::type;
 
-template< typename ERASED, typename CONSTRUCTED_WITH >
+template< is_erased ERASED, typename CONSTRUCTED_WITH >
 auto unerase( auto from )
 {
     using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
     constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructed_with_t >;
+    //constexpr bool was_already_erased = is_erased< constructed_with_t >;
     if constexpr( was_already_erased )
     {
         return static_cast< constructed_with_t::conrete_t * >( from );
@@ -189,7 +190,7 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
 
         
 #define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
-template< typename ERASED, template < typename > typename BASE = virtual_void::erased::base > \
+template< virtual_void::erased::is_erased ERASED, template < typename > typename BASE = virtual_void::erased::base > \
 struct n : BASE< ERASED > \
 { \
     using interface_t = n; \
@@ -240,10 +241,10 @@ protected: \
 
 namespace virtual_void::erased
 {
-    template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+    template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
     struct call_operator_facade;
 
-    template< typename ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+    template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
     struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
     {
         using erased_t = ERASED;

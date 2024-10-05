@@ -132,4 +132,7 @@ struct make_value_t
     }
 };
 
+static_assert( erased::is_erased< value > );
+static_assert( erased::is_erased< typed_value< int > > );
+
 }

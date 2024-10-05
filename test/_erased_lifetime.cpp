@@ -149,7 +149,7 @@ namespace
         {
             std::string a = "hallo";
             auto t1 = make_value_t{}( a );
-            REQUIRE( *t1 == "hallo" );
+            REQUIRE( *reconcrete_cast< std::string >( t1 )== "hallo" );
         }
         {
             struct x_t
@@ -158,7 +158,7 @@ namespace
             };
             x_t a{ "hallo" };
             auto t1 = make_value_t{}( a );
-            REQUIRE( t1->s_ == "hallo" );
+            REQUIRE( reconcrete_cast< x_t >( t1 )->s_ == "hallo" );
         }
     }
 }

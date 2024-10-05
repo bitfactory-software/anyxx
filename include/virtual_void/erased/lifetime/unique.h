@@ -9,6 +9,9 @@ namespace virtual_void::erased
 {
 
 using unique_abstract_data_ptr = std::unique_ptr< abstract_data >;
+
+struct make_unique_t;
+
 class unique
 {
 	unique_abstract_data_ptr ptr_;
@@ -19,6 +22,8 @@ protected:
 public:
 	using void_t = void *;
 	static constexpr bool is_const = false;
+	using make_erased = make_unique_t;
+
 	unique( const unique& ) = default;
 	unique( unique& ) = default;
 	unique( unique&& ) = default;
@@ -66,7 +71,18 @@ template< typename T > auto as( unique&& source )
 }
 template< typename T, typename... ARGS > typed_unique< T > make_unique( ARGS&&... args )
 {
-	return { std::in_place, std::forward< ARGS >( args )... };
+	return { std::in_place_type< T >, std::forward< ARGS >( args )... };
 }
+
+struct make_unique_t
+{
+    template< typename FROM > auto operator()( FROM&& from )
+    {
+        return 	make_unique< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
+    }
+};
+
+static_assert( erased::is_erased< unique > );
+static_assert( erased::is_erased< typed_unique< int > > );
 
 }

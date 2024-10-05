@@ -12,6 +12,7 @@
 #include <assert.h>
 
 #include "../virtual_void.h"
+#include "../erased/forward.h"
 
 namespace virtual_void::m_table
 {
@@ -136,6 +137,9 @@ struct make_shared_const_t
         return make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
     }
 };
+static_assert( erased::is_erased< shared_const > );
+static_assert( erased::is_erased< typed_shared_const< int > > );
+
 
 using unique_abstract_data_ptr = std::unique_ptr< abstract_data >;
 class unique

@@ -80,4 +80,9 @@ struct make_const_observer
     }
 };
 
+static_assert( is_erased< mutable_observer > );
+static_assert( is_erased< const_observer > );
+static_assert( is_erased< typed_observer< int const > > );
+static_assert( is_erased< typed_observer< int > > );
+
 }
