@@ -9,6 +9,7 @@
 #include "../include/virtual_void/virtual_void.h"
 #include "../include/virtual_void/m_table/lifetime.h"
 #include "../include/virtual_void/typeid/factory.h"
+#include "../include/virtual_void/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 

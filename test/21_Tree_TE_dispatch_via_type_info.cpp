@@ -10,6 +10,7 @@
 #include "include/catch.hpp"
 
 #include "../../include/virtual_void/virtual_void.h"
+#include "../../include/virtual_void/open_method/algorithm.h"
 #include "../../include/utillities/unnamed__.h"
 
 using std::cout;

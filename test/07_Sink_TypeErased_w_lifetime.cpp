@@ -13,6 +13,7 @@
 #include "../../include/std26/proxy.h"
 #include "../../include/virtual_void/m_table/lifetime.h"
 #include "../../include/virtual_void/typeid/cast.h"
+#include "../../include/virtual_void/open_method/algorithm.h"
 
 namespace
 {

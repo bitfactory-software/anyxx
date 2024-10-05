@@ -8,6 +8,7 @@
 #include "include/catch.hpp"
 
 #include "../../include/virtual_void/m_table/lifetime.h"
+#include "../../include/virtual_void/open_method/algorithm.h"
 #include "../../include/utillities/unnamed__.h"
 
 using std::cout;

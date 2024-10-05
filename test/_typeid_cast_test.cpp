@@ -7,6 +7,7 @@
 #include "include/catch.hpp"
 
 #include "../include/virtual_void/typeid/cast.h"
+#include "../include/virtual_void/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
