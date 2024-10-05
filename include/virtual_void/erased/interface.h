@@ -184,7 +184,7 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
 }
 
         
-#define _detail_DECLARE_INTERFACE( n, delegate_lampda_limp, l) \
+#define _detail_ERASED_INTERFACE( n, delegate_lampda_limp, l) \
 template< virtual_void::erased::is_erased ERASED, template < typename > typename BASE = virtual_void::erased::base > \
 struct n : BASE< ERASED > \
 { \
@@ -230,8 +230,8 @@ struct n : BASE< ERASED > \
 protected: \
     n() = default;\
 };
-#define DECLARE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define DECLARE_FREE_INTERFACE( name, ...) _detail_DECLARE_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define ERASED_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define ERASED_FREE__NTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 namespace virtual_void::erased

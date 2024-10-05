@@ -19,24 +19,24 @@ const double M_PI = 3.14;
 struct position {float x, y;};
 
 
-DECLARE_FREE_INTERFACE(to_string_i,
+ERASED_FREE__NTERFACE(to_string_i,
     (std::string, to_string)
 )
 
-DECLARE_INTERFACE(shape_base1,
+ERASED_INTERFACE(shape_base1,
     (void, draw, position)
 )
 
-DECLARE_INTERFACE(shape_base,
+ERASED_INTERFACE(shape_base,
     (int, count_sides),
 )
 
-DECLARE_INTERFACE(shape_d_i,
+ERASED_INTERFACE(shape_d_i,
     (double, area),
     (double, perimeter)
 )
 
-DECLARE_INTERFACE(shape_i,
+ERASED_INTERFACE(shape_i,
     (void, draw, position),
     (int, count_sides),
     (double, area),

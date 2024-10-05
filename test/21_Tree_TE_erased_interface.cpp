@@ -19,7 +19,7 @@ namespace
 {
 using namespace virtual_void::erased;
 
-DECLARE_INTERFACE(node_i,
+ERASED_INTERFACE(node_i,
     (int, value),
     (string, as_forth),
     (string, as_lisp),
