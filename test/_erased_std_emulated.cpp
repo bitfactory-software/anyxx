@@ -17,8 +17,6 @@ namespace virtual_void::erased
     using function = virtual_void::erased::call_operator_facade< erased::value, virtual_void::erased::base, SIG >;
     template< typename SIG >
     using ref_function = virtual_void::erased::call_operator_facade< erased::mutable_observer,virtual_void::erased::base, SIG >;
-
-    using any = value;
 }
 
 using namespace virtual_void;
