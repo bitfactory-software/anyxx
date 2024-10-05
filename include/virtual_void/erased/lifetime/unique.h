@@ -76,7 +76,7 @@ template< typename T, typename... ARGS > typed_unique< T > make_unique( ARGS&&..
 
 struct make_unique_t
 {
-    template< typename FROM > auto operator()( FROM&& from )
+    template< typename FROM > unique operator()( FROM&& from )
     {
         return 	make_unique< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
     }

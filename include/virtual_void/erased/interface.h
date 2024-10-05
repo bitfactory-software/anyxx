@@ -17,15 +17,13 @@ namespace virtual_void::erased
 template< is_erased ERASED, typename FROM >
 ERASED erase_to( FROM&& from )
 {
-    constexpr bool erased_is_passed_in = std::is_base_of_v< ERASED, std::remove_reference_t< FROM > >;
-    if constexpr( erased_is_passed_in )
+    if constexpr( is_erased< std::remove_reference_t< FROM > > )
     {
         return from;
     }
     else
     {
-        using make_erased_t = ERASED::make_erased;
-        return make_erased_t{}( std::forward< FROM >( from ) );
+        return ERASED::make_erased()( std::forward< FROM >( from ) );
     }
 }
 
@@ -105,22 +103,19 @@ template< is_erased ERASED, typename CONSTRUCTED_WITH >
 auto unerase( auto from )
 {
     using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
-    constexpr bool was_already_erased = std::is_base_of_v< ERASED, constructed_with_t >;
-    //constexpr bool was_already_erased = is_erased< constructed_with_t >;
-    if constexpr( was_already_erased )
+    if constexpr( is_erased< constructed_with_t > )
     {
         return static_cast< constructed_with_t::conrete_t * >( from );
     }
     else
     {
-        using concrete_t = constructed_with_t;
         if constexpr( ERASED::is_const )
         {
-            return static_cast< concrete_t const * >( from );
+            return static_cast< constructed_with_t const * >( from );
         }
         else
         {
-            return static_cast< concrete_t * >( from );
+            return static_cast< constructed_with_t * >( from );
         }
     }
 }

@@ -4,6 +4,8 @@
 namespace virtual_void::erased
 {
 
+template <class BASE, class DERIVED > concept base_of = std::derived_from< DERIVED, BASE >;
+
 template<class E >
 concept is_erased = requires( E e, int i )
 {
@@ -11,7 +13,7 @@ concept is_erased = requires( E e, int i )
 	{ E::is_const } -> std::convertible_to< bool >;
 	typename E::make_erased;
 
-	{ E::make_erased()(i) } -> std::derived_from< E >;
+	{ E::make_erased()(i) } -> base_of< E >;
 	{ e.data() } -> std::convertible_to< const void* >;
 };
 

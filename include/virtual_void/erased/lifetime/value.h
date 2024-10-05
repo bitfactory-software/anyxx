@@ -126,7 +126,7 @@ template< typename T, typename... ARGS > typed_value< T > make_value( ARGS&&... 
 
 struct make_value_t
 {
-    template< typename FROM > auto operator()( FROM&& from )
+    template< typename FROM > value operator()( FROM&& from )
     {
         return 	make_value< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
     }

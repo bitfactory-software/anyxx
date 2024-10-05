@@ -132,7 +132,7 @@ template< typename T > typed_shared_const< T > as( shared_const source )
 }
 struct make_shared_const_t
 {
-    template< typename FROM > auto operator()( FROM&& from )
+    template< typename FROM > shared_const operator()( FROM&& from )
     {
         return make_shared_const< std::remove_cvref_t< FROM > >( std::forward< FROM >( from ) );
     }

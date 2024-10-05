@@ -67,14 +67,14 @@ struct typed_observer : public select_observer< std::remove_reference_t< T > >::
 
 struct make_mutable_observer
 {
-    template< typename FROM > auto operator()( FROM&& from )
+    template< typename FROM > mutable_observer operator()( FROM&& from )
     {
         return typed_observer< std::remove_const_t< std::remove_reference_t< FROM > > >( std::forward< FROM >( from ) );
     }
 };
 struct make_const_observer
 {
-    template< typename FROM > auto operator()( FROM&& from )
+    template< typename FROM > const_observer operator()( FROM&& from )
     {
         return typed_observer< std::add_const_t< std::remove_reference_t< FROM > > >( from );
     }
