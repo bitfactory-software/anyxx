@@ -106,7 +106,7 @@ TEST_CASE( "prototype" )
 {
     virtual_void::domain testDomain;
     auto update = virtual_void::method< void (void*, const std::string& ) >{ testDomain };
-    auto __ = update.override_< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
+    auto __ = update.define< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
     update.seal();
 
     trace_alignof< const char* >();

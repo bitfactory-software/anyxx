@@ -39,7 +39,7 @@ namespace virtual_void
 				domain testDomain;
 				to_string_method toString( testDomain );
 				
-				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
+				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				toString.seal();
 
 				call< A1 >( toString );
@@ -60,7 +60,7 @@ namespace virtual_void
 				domain testDomain;
 				to_string_method toString( testDomain );
 				
-				toString.override_< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
+				toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 				declare_deep< D >( testDomain.classes );
 				build_m_tables( testDomain );
 				std::cout << "toSring.is_defined< D >() == " << std::boolalpha << (bool)toString.is_defined< D >() << "\n";

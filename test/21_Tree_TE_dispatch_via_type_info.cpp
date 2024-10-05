@@ -69,15 +69,15 @@ virtual_void::domain tree_domain;
 
 auto value = virtual_void::method< int(const void*) >{ tree_domain };
 
-auto __ = value.override_< Plus >( []( auto expr ) {
+auto __ = value.define< Plus >( []( auto expr ) {
     return value( expr->left ) + value( expr->right );
 });
 
-auto __ = value.override_< Times >( []( auto expr ) {
+auto __ = value.define< Times >( []( auto expr ) {
     return value( expr->left ) * value( expr->right );
 });
 
-auto __ = value.override_< Integer >( []( auto expr ) {
+auto __ = value.define< Integer >( []( auto expr ) {
     return expr->value;
 });
 
@@ -86,15 +86,15 @@ auto __ = value.override_< Integer >( []( auto expr ) {
 
 auto as_forth = virtual_void::method< string( const void* ) >{ tree_domain };
 
-auto __ = as_forth.override_< Plus >( []( auto expr ) {
+auto __ = as_forth.define< Plus >( []( auto expr ) {
     return as_forth( expr->left ) + " " + as_forth( expr->right ) + " +";
 });
 
-auto __ = as_forth.override_< Times >( []( auto expr ) {
+auto __ = as_forth.define< Times >( []( auto expr ) {
     return as_forth( expr->left ) + " " + as_forth( expr->right ) + " *";
 });
 
-auto __ = as_forth.override_< Integer >( []( auto expr ) {
+auto __ = as_forth.define< Integer >( []( auto expr ) {
     return std::to_string(expr->value);
 });
 
@@ -103,15 +103,15 @@ auto __ = as_forth.override_< Integer >( []( auto expr ) {
 
 auto as_lisp = virtual_void::method< string( const void* ) >{ tree_domain };
 
-auto __ = as_lisp.override_< Plus >( []( auto expr ) {
+auto __ = as_lisp.define< Plus >( []( auto expr ) {
     return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });
 
-auto __ = as_lisp.override_< Times >( []( auto expr ) {
+auto __ = as_lisp.define< Times >( []( auto expr ) {
     return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });
 
-auto __ = as_lisp.override_< Integer >( []( auto expr ) {
+auto __ = as_lisp.define< Integer >( []( auto expr ) {
     return std::to_string(expr->value);
 });
 
@@ -121,7 +121,7 @@ auto __ = as_lisp.override_< Integer >( []( auto expr ) {
 
 TEST_CASE( "21_Tree_TE_dispatch_via_type_info" )
 {
-    //build_m_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"override_" function
+    //build_m_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"define" function
    seal( tree_domain );
 
     using std::make_shared;

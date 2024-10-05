@@ -88,7 +88,7 @@ namespace Application
 
     void AnywhereInTheApplication()
     {
-        entityToOut.override_< IntData >( &IntToOut );
+        entityToOut.define< IntData >( &IntToOut );
     }
 }
 
@@ -101,7 +101,7 @@ TEST_CASE( "06_Sink_TypeErased_w_proxy" )
 
     DB::System db;
 
-    entityToOut.override_< StringData >( []( const StringData* s ) 
+    entityToOut.define< StringData >( []( const StringData* s ) 
         { 
             std::cout << "string: " << s->data << std::endl; 
         });

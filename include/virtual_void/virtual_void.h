@@ -100,7 +100,7 @@ public:
 	int m_table_index() const { return m_table_index_; }
 	void define_default( auto f ) { table_.define_default( f ); }
 	auto get_default() const { return table_.get_default(); }
-	auto override_erased( const std::type_info& register_type_info, auto f ) { return table_.define( register_type_info, f ); }
+	auto define_erased( const std::type_info& register_type_info, auto f ) { return table_.define( register_type_info, f ); }
 	template< typename TARGET = dispatch_target_t >
 	TARGET is_defined( const std::type_info& type_info ) const { return table_.template is_defined< TARGET >( type_info ); }
 	template< typename TARGET = dispatch_target_t >
@@ -142,12 +142,12 @@ public:
 	{
 		methodTable_->define_default( f );
 	}
-	auto override_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.override_erased( ti, f ); }
+	auto define_erased( const std::type_info& ti, erased_function_t f ) { return methodTable_.define_erased( ti, f ); }
 	template< typename CLASS, typename FUNCTION >
-	auto override_( FUNCTION f )
+	auto define( FUNCTION f )
 	{
 		auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
-		return methodTable_.override_erased( typeid( CLASS ), fp );
+		return methodTable_.define_erased( typeid( CLASS ), fp );
 	}
 	template< typename... OTHER_ARGS >
 	R operator()( const std::type_info& type_info, dispatch_t dispatched, OTHER_ARGS&&... args ) const
@@ -234,12 +234,11 @@ public:
 private:
 	type_info_dispatch methodTable_;
 public:
-	auto override_erased( const std::type_info& ti, factory_function_t f ) { return methodTable_.override_erased( ti, f ); }
 	template< typename CLASS, typename FACTORY >
-	auto override_( FACTORY f )
+	auto define( FACTORY f )
 	{
 		auto fp = ensure_factory_ptr< CLASS >( f );
-		return methodTable_.override_erased( typeid( CLASS ), reinterpret_cast< factory_function_t >( fp ) );
+		return methodTable_.define_erased( typeid( CLASS ), reinterpret_cast< factory_function_t >( fp ) );
 	}
 	R operator()( const std::type_info& type_info, ARGS&&... args ) const
 	{
@@ -284,7 +283,7 @@ template< typename CLASS >
 void fill_with_overload( auto& method, const auto& wrapper )
 {
 	if( !method.is_defined< CLASS >() )
-		method.override_< CLASS >( wrapper );
+		method.define< CLASS >( wrapper );
 }
 template< typename TYPE_LIST >
 void fill_with_overloads( TYPE_LIST, auto& method, const auto& wrapper )
@@ -316,7 +315,7 @@ inline void interpolate( const class_hierarchy::classes_with_bases& classes, typ
 	for( const auto& [ self, class_with_bases ] : classes )
 		if( !method->is_defined( *class_with_bases.self ) )
 			if( auto found = find_declared_in_bases( classes, class_with_bases.bases, *method ) )
-				method->override_erased( *class_with_bases.self, found );
+				method->define_erased( *class_with_bases.self, found );
 }
 inline void interpolate( const domain& domain )
 {
