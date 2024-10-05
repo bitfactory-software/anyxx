@@ -8,6 +8,7 @@
 
 #include "../include/virtual_void/virtual_void.h"
 #include "../include/virtual_void/m_table/lifetime.h"
+#include "../include/virtual_void/typeid/factory.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
@@ -111,7 +112,7 @@ namespace virtual_void
 			}
 
 			{
-				auto any_factory = factory< std::any() >{};
+				auto any_factory = typeid_::factory< std::any() >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads( classes{}, any_factory, []< typename T >()->std::any
 				{ 
@@ -165,7 +166,7 @@ namespace virtual_void
 				std::cout << c4->data << ", " << c4.type().name() << std::endl;				
 			}
 			{
-				auto const_void_factory = factory< m_table::shared_const() >{};
+				auto const_void_factory = typeid_::factory< m_table::shared_const() >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->m_table::shared_const
 				{ 
@@ -201,7 +202,7 @@ namespace virtual_void
 				std::cout << d->data << ", " << d.type().name() << std::endl; 
 			}
 			{
-				auto const_void_factory = factory< m_table::unique() >{};
+				auto const_void_factory = typeid_::factory< m_table::unique() >{};
 				using classes = type_list< D, C1, C2 >;
 				fill_with_overloads( classes{}, const_void_factory, []< typename T >()->m_table::unique
 				{ 
