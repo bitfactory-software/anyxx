@@ -14,17 +14,22 @@ namespace virtual_void::m_table
 
 class open_method_base;
 using open_methods = std::vector< open_method_base* >;
-
 using m_table_map = std::unordered_map< std::type_info const *, m_table_t* >;
+
+struct domain
+{
+	open_methods open_methods;
+	m_table_map m_table_map;
+};
 
 class open_method_base : public virtual_void::open_method::table
 {
 	const int m_table_index_ = -1;
 public:
-	explicit open_method_base( open_methods& domain )
-		: m_table_index_( (int)domain.size() )
+	explicit open_method_base( domain& domain )
+		: m_table_index_( (int)domain.open_methods.size() )
 	{ 
-		domain.push_back( this ); 
+		domain.open_methods.push_back( this ); 
 	}		
 	int m_table_index() const { return m_table_index_; }
 };
@@ -96,11 +101,18 @@ private:
 template< typename CLASSES >
 constexpr nullptr_t register_m_tables( m_table_map& registry )
 {
-	class_hierarchy::visit_classes< CLASSES >
+	class_hierarchy::visit_classes< CLASSES, true >
 		( overload
 		{ [&]< typename C >{ registry[ &typeid( C ) ] = m_table_of< C >(); }
 		, [&]< typename C, typename B >	{}
 		});	
+	return {};
+}
+
+template< typename CLASSES >
+constexpr nullptr_t register_m_tables( domain& domain )
+{
+	register_m_tables< CLASSES >( domain.m_table_map );
 	return {};
 }
 
@@ -120,6 +132,12 @@ inline void fix_m_tables( const open_methods& domain, const m_table_map& m_table
 {
 	for( const auto& method : domain )
 		fix_m_tables( m_table_map, *method );
+}
+
+inline void fix_m_tables( const domain& domain )
+{
+	for( const auto& method : domain.open_methods )
+		fix_m_tables( domain.m_table_map, *method );
 }
 
 }

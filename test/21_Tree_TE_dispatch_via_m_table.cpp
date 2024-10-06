@@ -47,8 +47,7 @@ struct Integer  {
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-virtual_void::m_table::open_methods tree_open_methods;
-virtual_void::m_table::m_table_map tree_m_table_map;
+virtual_void::m_table::domain tree_domain;
 
 }
 
@@ -58,7 +57,7 @@ namespace virtual_void::class_hierarchy
     template<> struct class_< Times > : bases<>{};
     template<> struct class_< Integer > : bases<>{};
 
-	auto __ = virtual_void::m_table::register_m_tables< virtual_void::type_list< Plus, Times, Integer > >( tree_m_table_map );
+	auto __ = virtual_void::m_table::register_m_tables< virtual_void::type_list< Plus, Times, Integer > >( tree_domain );
 }
 
 namespace
@@ -66,7 +65,7 @@ namespace
 // -----------------------------------------------------------------------------
 // evaluate
 
-auto value = virtual_void::m_table::open_method< int(const void*) >{ tree_open_methods };
+auto value = virtual_void::m_table::open_method< int(const void*) >{ tree_domain };
 
 auto __ = value.define< Plus >( []( auto expr ) {
     return value( expr->left ) + value( expr->right );
@@ -83,7 +82,7 @@ auto __ = value.define< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 // render as Forth
 
-auto as_forth = virtual_void::m_table::open_method< string( const void* ) >{ tree_open_methods };
+auto as_forth = virtual_void::m_table::open_method< string( const void* ) >{ tree_domain };
 
 auto __ = as_forth.define< Plus >( []( auto expr ) {
     return as_forth( expr->left ) + " " + as_forth( expr->right ) + " +";
@@ -100,7 +99,7 @@ auto __ = as_forth.define< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 // render as Lisp
 
-auto as_lisp = virtual_void::m_table::open_method< string( const void* ) >{ tree_open_methods };
+auto as_lisp = virtual_void::m_table::open_method< string( const void* ) >{ tree_domain };
 
 auto __ = as_lisp.define< Plus >( []( auto expr ) {
     return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
@@ -120,7 +119,7 @@ auto __ = as_lisp.define< Integer >( []( auto expr ) {
 
 TEST_CASE( "21_Tree_TE_dispach_via_m_table" )
 {
-    virtual_void::m_table::fix_m_tables( tree_open_methods, tree_m_table_map );
+    virtual_void::m_table::fix_m_tables( tree_domain );
 
     using virtual_void::m_table::make_shared_const;
 

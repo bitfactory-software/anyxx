@@ -33,7 +33,7 @@ add_executable (test "include/catch.cpp"
     "21_Tree_TE_dispatch_via_m_table.cpp"
     "21_Tree_TE_dispatch_via_type_info.cpp"
     "21_Tree_TE_erased_interface.cpp"
-     "_erased_lifetime.cpp" "_erased_std_emulated.cpp"  "_open_method_m_table_test.cpp" "_typeid_factory_test.cpp")
+     "_lifetime_erased.cpp" "_erased_std_emulated.cpp"  "_open_method_m_table_test.cpp" "_typeid_factory_test.cpp" "_lifetime_m_table.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET test PROPERTY CXX_STANDARD 20)
