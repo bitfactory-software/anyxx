@@ -4,6 +4,7 @@
 
 #include "../../utillities/overload.h"
 #include "../../utillities/type_list.h"
+#include "../../utillities/ensure_function_ptr.h"
 
 #include "../forward.h"
 #include "../open_method/table.h"
@@ -51,7 +52,7 @@ public:
 	{
 		if( dispatch_target_index_ )
 			throw error( "Already sealed for runtime." );
-		auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
+		auto fp = ensure_function_ptr< CLASS, class_param_t, R, ARGS... >( f );
 		return define_erased( typeid( CLASS ), fp );
 	}
 	template< typename... OTHER_ARGS >
@@ -84,23 +85,6 @@ public:
 		if( !dispatch_target_index_ )
 			throw error( "Not yet sealed for runtime." );
 		return reinterpret_cast< erased_function_t >( dispatch_target_index_->at( &type_info ) );
-	}
-private:
-	template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
-	static auto ensure_function_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
-	{
-		using functor_t = decltype( functor );
-		if constexpr( std::is_pointer_v< functor_t > )
-		{
-			return functor;
-		}
-		else
-		{
-			return +[]( class_param_t< CLASS > self, OTHER_ARGS&&... args )->R
-			{
-				return functor_t{}( self, std::forward< OTHER_ARGS >( args )... );
-			};
-		}
 	}
 };
 
