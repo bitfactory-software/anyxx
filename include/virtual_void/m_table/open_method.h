@@ -1,17 +1,7 @@
 #pragma once
 
 #include <typeindex>
-#include <stdexcept>
-#include <functional>
-#include <type_traits>
-#include <algorithm>
-#include <vector>
-#include <map>
-#include <unordered_map>
-#include <memory>
-#include <assert.h>
 
-#include "../../perfect_typeid_hash/index_table.h"
 #include "../../utillities/overload.h"
 #include "../../utillities/type_list.h"
 
@@ -73,22 +63,11 @@ public:
 		auto erased_function = reinterpret_cast< erased_function_t >( m_table[ m_table_index() ] );
 		return (erased_function)( param.second, std::forward< OTHER_ARGS >( args )... );
 	}
-	template< typename CLASS, typename... OTHER_ARGS >
-	R operator()( CLASS* param, OTHER_ARGS&&... args ) const
-	{
-		return (*this)( to_m_table_void( param ), std::forward< OTHER_ARGS >( args )... );
-	}
-	template< typename CLASS, typename... OTHER_ARGS >
-	R operator()( const std::shared_ptr< CLASS >& param, OTHER_ARGS&&... args ) const
-	{
-		return (*this)( param.get(), std::forward< OTHER_ARGS >( args )... );
-	}
 	template< typename POINTER, typename... OTHER_ARGS >
 	R operator()( const POINTER& pointer, OTHER_ARGS&&... args ) const
 		requires MtableDispatchableVoid< POINTER, dispatch_t >
 	{
-		virtual_void_t param{ pointer.m_table(), pointer.data() }; 
-		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
+		return call( pointer, std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename POINTER, typename... OTHER_ARGS >
 	R call( const POINTER& pointer, OTHER_ARGS&&... args ) const
