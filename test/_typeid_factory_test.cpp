@@ -28,7 +28,7 @@ namespace virtual_void
 		}
 
 
-		TEST_CASE( "test_simple_open_method" ) 
+		TEST_CASE( "typeid factory test_simple_open_method" ) 
 		{
 			std::cout << "\n";
 			std::cout << __func__ << "\n";
