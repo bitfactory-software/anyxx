@@ -5,10 +5,8 @@
 #include "../../utillities/overload.h"
 #include "../../utillities/type_list.h"
 
-#include "../virtual_void.h"
-
 #include "../open_method/table.h"
-
+#include "../class_hierarchy/class_hierarchy.h"
 #include "m_table.h"
 
 namespace virtual_void::m_table
