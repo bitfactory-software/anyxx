@@ -4,6 +4,7 @@
 
 #include "../../utillities/overload.h"
 #include "../../utillities/type_list.h"
+#include "../../utillities/ensure_function_ptr.h"
 
 #include "../open_method/table.h"
 #include "../open_method/domain.h"
@@ -56,7 +57,7 @@ public:
 	template< typename CLASS, typename FUNCTION >
 	auto define( FUNCTION f )
 	{
-		auto fp = ensure_function_ptr< CLASS, ARGS... >( f );
+		auto fp = ensure_function_ptr< CLASS, class_param_t, R, ARGS... >( f );
 		return define_erased( typeid( CLASS ), fp );
 	}
 	template< typename... OTHER_ARGS >
@@ -78,23 +79,6 @@ public:
 	{
 		virtual_void_t param{ pointer.m_table(), pointer.data() }; 
 		return (*this)( param, std::forward< OTHER_ARGS >( args )... );
-	}
-private:
-	template< typename CLASS, typename DISPATCH, typename... OTHER_ARGS >
-	static auto ensure_function_ptr( auto functor ) // if functor is a templated operator() from a stateless function object, instantiate it now!;
-	{
-		using functor_t = decltype( functor );
-		if constexpr( std::is_pointer_v< functor_t > )
-		{
-			return functor;
-		}
-		else
-		{
-			return +[]( class_param_t< CLASS > self, OTHER_ARGS&&... args )->R
-			{
-				return functor_t{}( self, std::forward< OTHER_ARGS >( args )... );
-			};
-		}
 	}
 };
 
