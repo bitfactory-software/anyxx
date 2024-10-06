@@ -9,8 +9,7 @@
 
 #include "include/catch.hpp"
 
-#include "../../include/virtual_void/virtual_void.h"
-#include "../../include/virtual_void/open_method/algorithm.h"
+#include "../../include/virtual_void/typeid/open_method.h"
 #include "../../include/utillities/unnamed__.h"
 
 using std::cout;
@@ -50,7 +49,7 @@ struct Integer : Node {
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-virtual_void::domain tree_domain;
+virtual_void::typeid_::open_methods tree_open_methods;
 
 //+++ no special meta data needed. the dispatch information comes from the typeid() via the c++ vtable
 //
@@ -68,7 +67,7 @@ virtual_void::domain tree_domain;
 // -----------------------------------------------------------------------------
 // evaluate
 
-auto value = virtual_void::method< int(const void*) >{ tree_domain };
+auto value = virtual_void::typeid_::open_method< int(const void*) >{ tree_open_methods };
 
 auto __ = value.define< Plus >( []( auto expr ) {
     return value( expr->left ) + value( expr->right );
@@ -85,7 +84,7 @@ auto __ = value.define< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 // render as Forth
 
-auto as_forth = virtual_void::method< string( const void* ) >{ tree_domain };
+auto as_forth = virtual_void::typeid_::open_method< string( const void* ) >{ tree_open_methods };
 
 auto __ = as_forth.define< Plus >( []( auto expr ) {
     return as_forth( expr->left ) + " " + as_forth( expr->right ) + " +";
@@ -102,7 +101,7 @@ auto __ = as_forth.define< Integer >( []( auto expr ) {
 // -----------------------------------------------------------------------------
 // render as Lisp
 
-auto as_lisp = virtual_void::method< string( const void* ) >{ tree_domain };
+auto as_lisp = virtual_void::typeid_::open_method< string( const void* ) >{ tree_open_methods };
 
 auto __ = as_lisp.define< Plus >( []( auto expr ) {
     return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
@@ -123,7 +122,7 @@ auto __ = as_lisp.define< Integer >( []( auto expr ) {
 TEST_CASE( "21_Tree_TE_dispatch_via_type_info" )
 {
     //build_m_tables( tree_domain ); no v_tabls, dispatch via typeindex(type_info)->"define" function
-   virtual_void::open_method::seal( tree_domain );
+   virtual_void::typeid_::seal_for_runtime( tree_open_methods );
 
     using std::make_shared;
 

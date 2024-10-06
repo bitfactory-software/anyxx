@@ -17,11 +17,9 @@ using std::string;
 namespace
 {
 
-struct Node {};
-
 using shared_const_node = virtual_void::m_table::shared_const;
 
-struct Plus : Node {
+struct Plus  {
     Plus( shared_const_node left, shared_const_node right)
         : left(left), right(right) {
     }
@@ -30,7 +28,7 @@ struct Plus : Node {
 //    ~Plus() { cout << "~Plus()" << "\n"; } // to show, that virtual_void::typed_shared_const will call the rigtht destructor
 };
 
-struct Times : Node {
+struct Times  {
     Times(shared_const_node left, shared_const_node right)
         : left(left), right(right) {
     }
@@ -39,7 +37,7 @@ struct Times : Node {
 //    ~Times() { cout << "~Times()" << "\n"; }
 };
 
-struct Integer : Node {
+struct Integer  {
     explicit Integer(int value) : value(value) {
     }
     int value;
@@ -56,12 +54,11 @@ virtual_void::m_table::m_table_map tree_m_table_map;
 
 namespace virtual_void::class_hierarchy
 {
-    template<> struct class_< Node > : base {};
-    template<> struct class_< Plus > : bases< Node >{};
-    template<> struct class_< Times > : bases< Node >{};
-    template<> struct class_< Integer > : bases< Node >{};
+    template<> struct class_< Plus > : bases<>{};
+    template<> struct class_< Times > : bases<>{};
+    template<> struct class_< Integer > : bases<>{};
 
-	auto __ = virtual_void::m_table::register_m_tables< virtual_void::type_list< Node, Plus, Times, Integer > >( tree_m_table_map );
+	auto __ = virtual_void::m_table::register_m_tables< virtual_void::type_list< Plus, Times, Integer > >( tree_m_table_map );
 }
 
 namespace
