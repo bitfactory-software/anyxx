@@ -6,31 +6,10 @@
 #include "../../utillities/type_list.h"
 #include "../../utillities/ensure_function_ptr.h"
 
-#include "../forward.h"
-#include "../open_method/table.h"
-#include "../open_method/domain.h"
+#include "open_method_base.h"
 
 namespace virtual_void::typeid_
 {
-
-class open_method_base;
-using domain = virtual_void::open_method::domain< open_method_base >;
-
-class open_method_base : public virtual_void::open_method::table
-{
-protected:
-	using dispatch_target_index_t  = perfect_typeid_hash::index_table< dispatch_target_t >;
-	std::unique_ptr< dispatch_target_index_t > dispatch_target_index_;
-public:
-	explicit open_method_base( domain& domain )
-	{ 
-		domain.open_methods.push_back( this ); 
-	}		
-	void seal_for_runtime()
-	{
-		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( make_lookup_table() );
-	}
-};
 
 template< typename R, typename... ARGS > class open_method;
 template< typename R, typename... ARGS > class open_method< R( ARGS... ) > 
@@ -58,7 +37,7 @@ public:
 	template< typename... OTHER_ARGS >
 	R operator()( const std::type_info& type_info, dispatch_t dispatched, OTHER_ARGS&&... args ) const
 	{
-		auto f = lookup( type_info );
+		auto f = lookup< erased_function_t >( type_info );
 		return f( dispatched, std::forward< OTHER_ARGS >( args )... );
 	}
 	template< typename... OTHER_ARGS >
@@ -76,22 +55,6 @@ public:
 	{
 		return (*this)( param.get(), std::forward< OTHER_ARGS >( args )... );
 	}
-	void seal_for_runtime()
-	{
-		dispatch_target_index_ = std::make_unique< dispatch_target_index_t >( make_lookup_table() );
-	}
-	auto lookup( const std::type_info& type_info ) const
-	{
-		if( !dispatch_target_index_ )
-			throw error( "Not yet sealed for runtime." );
-		return reinterpret_cast< erased_function_t >( dispatch_target_index_->at( &type_info ) );
-	}
 };
-
-inline void seal_for_runtime( domain& domain )
-{
-	for( const auto& method : domain.open_methods )
-		method->seal_for_runtime();
-}
 
 }

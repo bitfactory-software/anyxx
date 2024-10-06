@@ -27,7 +27,7 @@ TEST_CASE( "typeid factory" )
 			//std::cout << "construct any for " << typeid( T ).name() << std::endl; 
 			return std::any( T() ); 
 		});
-		any_factory.seal();
+		any_factory.seal_for_runtime();
 		auto test = [ & ]< typename T >()
 		{ 
 			auto a = any_factory( typeid( T ) );
@@ -41,16 +41,16 @@ TEST_CASE( "typeid factory" )
 	}
 
 	{
-		auto const_void_factory = typeid_::factory< m_table::shared_const() >{};
+		auto factory = typeid_::factory< m_table::shared_const() >{};
 		using classes = type_list< D, C1, C2 >;
-		open_method::fill_with_overloads( classes{}, const_void_factory, []< typename T >()->m_table::shared_const
+		open_method::fill_with_overloads( classes{}, factory, []< typename T >()->m_table::shared_const
 		{ 
 			return m_table::make_shared_const< T >( typeid( T ).name() ); 
 		});
-		const_void_factory.seal();
+		factory.seal_for_runtime();
 		auto test = [ & ]< typename T >()
 		{ 
-			auto cv = const_void_factory( typeid( T ) );
+			auto cv = factory( typeid( T ) );
 			REQUIRE( cv.type() == typeid( T ) );
 			auto tp = static_cast< const T* >( cv.data() );
 			REQUIRE( tp->data == typeid( T ).name() );
@@ -62,16 +62,16 @@ TEST_CASE( "typeid factory" )
 			});
 	}
 	{
-		auto const_void_factory = typeid_::factory< m_table::unique() >{};
+		auto factory = typeid_::factory< m_table::unique() >{};
 		using classes = type_list< D, C1, C2 >;
-		open_method::fill_with_overloads( classes{}, const_void_factory, []< typename T >()->m_table::unique
+		open_method::fill_with_overloads( classes{}, factory, []< typename T >()->m_table::unique
 		{ 
 			return m_table::make_unique< T >( typeid( T ).name() ); 
 		});
-		const_void_factory.seal();
+		factory.seal_for_runtime();
 		auto test = [ & ]< typename T >()
 		{ 
-			auto cv = const_void_factory( typeid( T ) );
+			auto cv = factory( typeid( T ) );
 			REQUIRE( cv.type() == typeid( T ) );
 			auto tp = static_cast< const T* >( cv.data() );
 			REQUIRE( tp->data == typeid( T ).name() );

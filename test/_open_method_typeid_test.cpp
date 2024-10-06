@@ -29,8 +29,6 @@ namespace
 	{
 		using namespace TestDomain;
 
-		std::cout << "\n";
-		std::cout << "dispatch via void" << "\n";
 		{
 			domain open_methods;
 			to_string_method toString( open_methods );
@@ -41,7 +39,7 @@ namespace
 			REQUIRE( call< A1 >( toString ) == typeid( A1 ).name() );
 
 			auto tv = virtual_void::to_typeid_void( static_cast< A1* >( nullptr ) );
-			std::cout << toString( tv ) << "\n";
+			REQUIRE( toString( tv ) == typeid( A1 ).name() );
 			try
 			{
 				call< D >( toString );
