@@ -3,7 +3,7 @@
 #include <memory>
 #include <utility>
 
-#include "../virtual_void.h"
+#include "../forward.h"
 
 namespace virtual_void::proxy
 {
