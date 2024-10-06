@@ -11,8 +11,9 @@
 #include <memory>
 #include <assert.h>
 
-#include "../virtual_void.h"
 #include "../erased/forward.h"
+
+#include "m_table.h"
 
 namespace virtual_void::m_table
 {

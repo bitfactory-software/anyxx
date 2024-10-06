@@ -3,8 +3,7 @@
 #include <typeindex>
 
 #include "../forward.h"
-
-#include "error.h"
+#include "../error.h"
 
 namespace virtual_void
 {
