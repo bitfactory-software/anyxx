@@ -135,7 +135,7 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
  
     virtual_void::open_method::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
     virtual_void::typeid_cast::fill_const_cast_for( classes{}, typeid_const_cast );
-    virtual_void::m_table::register_m_tables< classes >( applicationDomain );
+    virtual_void::m_table::register_m_tables( classes{}, applicationDomain );
     virtual_void::m_table::fix_m_tables( applicationDomain );
 
     db.factories[ "i" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< IntData >( std::atoi( data.c_str() ) ); };

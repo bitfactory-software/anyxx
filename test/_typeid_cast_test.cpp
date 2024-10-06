@@ -58,7 +58,7 @@ TEST_CASE( "typeid_cast_test" )
 	m_table::domain m_tableTestDomain;
 	typeid_cast::const_cast_method< m_table::open_method > m_table_const_cast( m_tableTestDomain );
 	virtual_void::open_method::declare_classes( classes{}, m_tableTestDomain );
-	virtual_void::m_table::register_m_tables< classes >( m_tableTestDomain );
+	virtual_void::m_table::register_m_tables( classes{}, m_tableTestDomain );
 	typeid_cast::fill_const_cast_for( classes{}, m_table_const_cast );
 	virtual_void::m_table::fix_m_tables( m_tableTestDomain );
 
