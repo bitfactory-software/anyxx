@@ -6,6 +6,7 @@
 #include "../../utillities/type_list.h"
 
 #include "../open_method/table.h"
+#include "../open_method/domain.h"
 #include "../class_hierarchy/class_hierarchy.h"
 #include "m_table.h"
 
@@ -16,9 +17,8 @@ class open_method_base;
 using open_methods = std::vector< open_method_base* >;
 using m_table_map = std::unordered_map< std::type_info const *, m_table_t* >;
 
-struct domain
+struct domain : virtual_void::open_method::domain< open_method_base >
 {
-	open_methods open_methods;
 	m_table_map m_table_map;
 };
 

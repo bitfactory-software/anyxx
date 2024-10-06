@@ -7,12 +7,13 @@
 
 #include "../forward.h"
 #include "../open_method/table.h"
+#include "../open_method/domain.h"
 
 namespace virtual_void::typeid_
 {
 
 class open_method_base;
-using open_methods = std::vector< open_method_base* >;
+using domain = virtual_void::open_method::domain< open_method_base >;
 
 class open_method_base : public virtual_void::open_method::table
 {
@@ -20,9 +21,9 @@ protected:
 	using dispatch_target_index_t  = perfect_typeid_hash::index_table< dispatch_target_t >;
 	std::unique_ptr< dispatch_target_index_t > dispatch_target_index_;
 public:
-	explicit open_method_base( open_methods& domain )
+	explicit open_method_base( domain& domain )
 	{ 
-		domain.push_back( this ); 
+		domain.open_methods.push_back( this ); 
 	}		
 	void seal_for_runtime()
 	{
@@ -95,7 +96,6 @@ private:
 		}
 		else
 		{
-								
 			return +[]( class_param_t< CLASS > self, OTHER_ARGS&&... args )->R
 			{
 				return functor_t{}( self, std::forward< OTHER_ARGS >( args )... );
@@ -104,9 +104,9 @@ private:
 	}
 };
 
-inline void seal_for_runtime( open_methods& domain )
+inline void seal_for_runtime( domain& domain )
 {
-	for( const auto& method : domain )
+	for( const auto& method : domain.open_methods )
 		method->seal_for_runtime();
 }
 

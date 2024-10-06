@@ -6,7 +6,9 @@
 
 #include "include/catch.hpp"
 
-#include "../include/virtual_void/typeid/cast.h"
+#include "../include/virtual_void/typeid/open_method.h"
+#include "../include/virtual_void/m_table/open_method.h"
+#include "../include/virtual_void/typeid_cast/cast.h"
 #include "../include/virtual_void/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
@@ -29,14 +31,9 @@ namespace
 					( virtual_void::overload
 					{ [&]< typename X >				
 						{ 
-							std::cout << "typeid_const_cast: " << typeid( TOP ).name() << " to " << typeid( X ).name() << " :";
 							auto static_cast_result = static_cast< const X* >( &top );
-							auto type_id_cast_result = virtual_void::typeid_::cast_to< const X >( castMethod, c_typed_void );
-							if( static_cast_result == type_id_cast_result )
-								std::cout << "OK";
-							else
-								std::cout << "ERROR";
-							std::cout << std::endl;
+							auto type_id_cast_result = virtual_void::typeid_cast::cast_to< const X >( castMethod, c_typed_void );
+							REQUIRE( static_cast_result == type_id_cast_result );
 						}
 					, [&]< typename, typename >	{  }
 					});
@@ -47,27 +44,27 @@ namespace
 
 TEST_CASE( "typeid_cast_test" ) 
 {
-	std::cout << "\n";
-	std::cout << __func__ << "\n";
-
 	using namespace TestDomain;
 	using namespace virtual_void;
 
-	{
-		virtual_void::domain testDomain;
-		typeid_::const_cast_method typedid_const_cast( testDomain );
-		
-		using classes = virtual_void::type_list< D, C1, C2 >;
+	using classes = virtual_void::type_list< D, C1, C2 >;
 
-		typeid_::fill_const_cast_for( classes{}, typedid_const_cast );
+	typeid_::domain typeidTestDomain;
+	typeid_cast::const_cast_method< typeid_::open_method > typeid_const_cast( typeidTestDomain );
+	virtual_void::open_method::declare_classes( classes{}, typeidTestDomain );
+	typeid_cast::fill_const_cast_for( classes{}, typeid_const_cast );
+	virtual_void::typeid_::seal_for_runtime( typeidTestDomain );
 
-		virtual_void::open_method::declare_classes( classes{}, testDomain );
-		virtual_void::open_method::build_m_tables( testDomain );
+	m_table::domain m_tableTestDomain;
+	typeid_cast::const_cast_method< m_table::open_method > m_table_const_cast( m_tableTestDomain );
+	virtual_void::open_method::declare_classes( classes{}, m_tableTestDomain );
+	virtual_void::m_table::register_m_tables< classes >( m_tableTestDomain );
+	typeid_cast::fill_const_cast_for( classes{}, m_table_const_cast );
+	virtual_void::m_table::fix_m_tables( m_tableTestDomain );
 
-		run_cast_test< classes >( typedid_const_cast, []( auto top ){ return virtual_void::to_typeid_void( top ); } );
+	run_cast_test< classes >( typeid_const_cast, []( auto top ){ return virtual_void::to_typeid_void( top ); } );
 
-		run_cast_test< classes >( typedid_const_cast, []( auto top ){ return virtual_void::to_m_table_void( top ); } );
-	}
+	run_cast_test< classes >( m_table_const_cast, []( auto top ){ return virtual_void::to_m_table_void( top ); } );
 }
 }
 

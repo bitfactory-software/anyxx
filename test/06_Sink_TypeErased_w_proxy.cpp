@@ -80,7 +80,7 @@ namespace Application
         return x.data;
     }
 
-    virtual_void::typeid_::open_methods applicationDomain;
+    virtual_void::typeid_::domain applicationDomain;
 
     auto entityToOut = virtual_void::typeid_::open_method< void( const void* ) >{ applicationDomain };
 

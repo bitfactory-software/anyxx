@@ -42,7 +42,6 @@ using bases_t =	std::vector< const std::type_info* >;
 struct class_with_bases
 {
 	const std::type_info* self;
-	m_table_t* m_table;
 	bases_t bases;
 };
 using classes_with_bases = std::map< std::type_index, class_with_bases >;
@@ -50,11 +49,7 @@ using classes_with_bases = std::map< std::type_index, class_with_bases >;
 constexpr auto declare_visitor( classes_with_bases& registry )
 {
 	return overload
-		{ [&]< typename C >				
-			{ 
-				registry[ typeid( C ) ].self = &typeid( C );  
-				registry[ typeid( C ) ].m_table = m_table_of< C >();  
-			}
+		{ [&]< typename C >				{ registry[ typeid( C ) ].self = &typeid( C );  }
 		, [&]< typename C, typename B >	{ registry[ typeid( C ) ].bases.emplace_back( &typeid( B ) ); }
 		};	
 }

@@ -49,7 +49,7 @@ struct Integer : Node {
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-virtual_void::typeid_::open_methods tree_open_methods;
+virtual_void::typeid_::domain tree_open_methods;
 
 //+++ no special meta data needed. the dispatch information comes from the typeid() via the c++ vtable
 //

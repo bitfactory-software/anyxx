@@ -12,7 +12,8 @@
 
 #include "../../include/std26/proxy.h"
 #include "../../include/virtual_void/m_table/lifetime.h"
-#include "../../include/virtual_void/typeid/cast.h"
+#include "../../include/virtual_void/m_table/open_method.h"
+#include "../../include/virtual_void/typeid_cast/cast.h"
 #include "../../include/virtual_void/open_method/algorithm.h"
 
 namespace
@@ -83,11 +84,11 @@ namespace Application
         return x->data + " -> " + x->more;
     }
 
-    virtual_void::domain applicationDomain;
+    virtual_void::m_table::domain applicationDomain;
 
-    auto entityToOut = virtual_void::method< void( const void* ) >{ applicationDomain };
-    auto toString = virtual_void::method< std::string( const void* ) >{ applicationDomain };
-    auto typeid_const_cast = virtual_void::typeid_::const_cast_method{ applicationDomain };
+    auto entityToOut = virtual_void::m_table::open_method< void( const void* ) >{ applicationDomain };
+    auto toString = virtual_void::m_table::open_method< std::string( const void* ) >{ applicationDomain };
+    auto typeid_const_cast = virtual_void::typeid_cast::const_cast_method< virtual_void::m_table::open_method >{ applicationDomain };
 
     void IntToOut( const IntData* i ){ std::cout << "int: " << i->data << std::endl; }
 
@@ -133,9 +134,9 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
         });
  
     virtual_void::open_method::fill_with_overloads( classes{}, toString, []( const auto* x ){ return ToString_( x ); } );
-    virtual_void::typeid_::fill_const_cast_for( classes{}, typeid_const_cast );
-
-    virtual_void::open_method::build_m_tables( applicationDomain );
+    virtual_void::typeid_cast::fill_const_cast_for( classes{}, typeid_const_cast );
+    virtual_void::m_table::register_m_tables< classes >( applicationDomain );
+    virtual_void::m_table::fix_m_tables( applicationDomain );
 
     db.factories[ "i" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data ){  return virtual_void::m_table::make_shared_const< StringData >( data ); };
@@ -158,7 +159,7 @@ TEST_CASE( "07_Sink_TypeErased_w_lifetime" )
         }
 
         // cast back from erased -> "unerase"
-        if( auto stringData = virtual_void::typeid_::cast_to< const StringData >( typeid_const_cast, e ) )
+        if( auto stringData = virtual_void::typeid_cast::cast_to< const StringData >( typeid_const_cast, e ) )
             std::cout << "stringData: " << stringData->data << std::endl;
     });
 
