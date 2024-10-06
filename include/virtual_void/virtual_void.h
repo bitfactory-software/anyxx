@@ -21,7 +21,8 @@
 
 #include "class_hierarchy/class_hierarchy.h"
 #include "open_method/table.h"
-#include "m_table/m_table.h"
+#include "m_table/open_method.h"
+#include "typeid/open_method.h"
 
 namespace virtual_void
 {

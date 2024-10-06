@@ -2,13 +2,10 @@
 
 #include <typeindex>
 
-#include <typeindex>
-
 #include "../../utillities/overload.h"
 #include "../../utillities/type_list.h"
 
-#include "../virtual_void.h"
-
+#include "../forward.h"
 #include "../open_method/table.h"
 
 namespace virtual_void::typeid_
