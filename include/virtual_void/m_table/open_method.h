@@ -83,7 +83,7 @@ public:
 };
 
 template< typename CLASSES >
-constexpr nullptr_t register_m_tables( m_table_map& registry )
+constexpr nullptr_t declare_classes( m_table_map& registry )
 {
 	class_hierarchy::visit_classes< CLASSES, true >
 		( overload
@@ -94,16 +94,17 @@ constexpr nullptr_t register_m_tables( m_table_map& registry )
 }
 
 template< typename CLASSES >
-constexpr nullptr_t register_m_tables( CLASSES, domain& domain )
+constexpr nullptr_t declare_classes( CLASSES, domain& domain )
 {
-	register_m_tables< CLASSES >( domain.m_table_map );
+	declare_classes< CLASSES >( domain.m_table_map );
+	declare_classes< CLASSES >( domain.classes );
 	return {};
 }
 
 template< typename... CLASSES >
-constexpr nullptr_t register_m_tables( domain& domain )
+constexpr nullptr_t declare_classes( domain& domain )
 {
-	return register_m_tables( virtual_void::type_list< CLASSES... >{}, domain );
+	return declare_classes( virtual_void::type_list< CLASSES... >{}, domain );
 }
 
 inline void set_m_table( auto type_info, auto m_table, const open_method_base& method )

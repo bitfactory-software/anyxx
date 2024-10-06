@@ -51,7 +51,7 @@ inline void interpolate( const auto& domain )
 }
 template< typename CLASSES > auto declare_classes( CLASSES, auto& domain )
 {
-	return class_hierarchy::declare_all< CLASSES >( domain.classes );
+	return class_hierarchy::declare_classes< CLASSES >( domain.classes );
 }
 template< typename... CLASSES > auto declare_classes( auto& domain )
 {

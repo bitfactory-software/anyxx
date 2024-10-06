@@ -57,7 +57,7 @@ namespace virtual_void::class_hierarchy
     template<> struct class_< Times > : bases<>{};
     template<> struct class_< Integer > : bases<>{};
 
-	auto __ = virtual_void::m_table::register_m_tables< Plus, Times, Integer >( tree_domain );
+	auto __ = virtual_void::m_table::declare_classes< Plus, Times, Integer >( tree_domain );
 }
 
 namespace

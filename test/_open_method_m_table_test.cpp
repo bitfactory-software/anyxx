@@ -37,8 +37,7 @@ TEST_CASE( "m_table open_method" )
 				
 		toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
 
-		virtual_void::open_method::declare_classes( virtual_void::type_list< D >{}, testDomain );
-		register_m_tables< D >( testDomain );
+		declare_classes< D >( testDomain );
 		virtual_void::open_method::interpolate( testDomain );
 		REQUIRE( toString.is_defined< D >() );
 		fix_m_tables( testDomain );
@@ -48,8 +47,7 @@ TEST_CASE( "m_table open_method" )
 		domain testDomain;
 		to_string_method toString( testDomain );
 				
-		virtual_void::open_method::declare_classes( virtual_void::type_list< D >{}, testDomain );
-		register_m_tables< D >( testDomain );
+		declare_classes< D >( testDomain );
 		virtual_void::open_method::fill_with_overloads< D >( toString, ToString );
 		REQUIRE( toString.is_defined< D >() );
 		fix_m_tables( testDomain );
@@ -59,8 +57,7 @@ TEST_CASE( "m_table open_method" )
 		domain testDomain;
 		to_string_method toString( testDomain );
 		using classes = virtual_void::type_list< D, C1, C2 >;
-	    virtual_void::open_method::declare_classes( classes{}, testDomain );
-		register_m_tables( classes{}, testDomain );
+		declare_classes( classes{}, testDomain );
 		virtual_void::open_method::fill_with_overloads( classes{}, toString, ToString );
 		fix_m_tables( testDomain );
 		virtual_void::class_hierarchy::visit_classes< classes >( 

@@ -60,7 +60,7 @@ constexpr nullptr_t declare( classes_with_bases& registry )
 	return {};
 }
 template< typename CLASSES, bool deep = true >
-constexpr nullptr_t declare_all( classes_with_bases& registry )
+constexpr nullptr_t declare_classes( classes_with_bases& registry )
 {
 	class_hierarchy::visit_classes< CLASSES, deep >( declare_visitor( registry ) );
 	return {};

@@ -54,14 +54,14 @@ namespace virtual_void::class_hierarchy
 
 			{
 				classes_with_bases registry;
-				declare_all< type_list< D, C1, C2 > >( registry );
+				declare_classes< type_list< D, C1, C2 > >( registry );
 				std::cout << "declare_deep< D >" << "\n";
 				dump( registry );
 			}
 			{
 				classes_with_bases registry;
-				declare_all< type_list< D > >( registry );
-				declare_all< type_list< C1, C2 > >( registry );
+				declare_classes< type_list< D > >( registry );
+				declare_classes< type_list< C1, C2 > >( registry );
 				std::cout << "declare_deep< D >" << "\n";
 				std::cout << "declare_deep< C1, C2 >" << "\n";
 				dump( registry );
