@@ -54,7 +54,7 @@ public:
 	int m_table_index() const { return m_table_index_; }
 	void define_default( auto f ) { table_.define_default( f ); }
 	auto get_default() const { return table_.get_default(); }
-	auto define_erased( const std::type_info& register_type_info, auto f ) { return table_.define( register_type_info, f ); }
+	auto define_erased( const std::type_info& register_type_info, auto f ) { return table_.define_erased( register_type_info, f ); }
 	template< typename TARGET = dispatch_target_t >
 	TARGET is_defined( const std::type_info& type_info ) const { return table_.template is_defined< TARGET >( type_info ); }
 	template< typename TARGET = dispatch_target_t >

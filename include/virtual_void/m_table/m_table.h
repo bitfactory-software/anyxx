@@ -56,4 +56,5 @@ template< typename CLASS > constexpr m_table_t* m_table_of()
 	return &m_table_;
 }
 
+
 }

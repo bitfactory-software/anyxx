@@ -5,9 +5,8 @@
 
 #include "../../include/perfect_typeid_hash/index_table.h"
 
-#include "forward.h"
-
-#include "error.h"
+#include "../forward.h"
+#include "../error.h"
 
 namespace virtual_void::open_method
 {
@@ -31,7 +30,7 @@ public:
 	{
 		return default_;
 	}
-	auto define( const std::type_info& register_type_info, auto f )
+	auto define_erased( const std::type_info& register_type_info, auto f )
 	{
 		auto t = reinterpret_cast< dispatch_target_t >( f );
 		if( is_defined( register_type_info ) )
@@ -46,12 +45,12 @@ public:
 			return reinterpret_cast< TARGET >( found->second );
 		return nullptr;
 	}
+	template< typename C > auto is_defined() const { return is_defined( typeid( C ) ); }
 	dispatch_target_index_t make_lookup_table() const
 	{
 		return dispatch_target_index_t{ map_, get_default() };
 	}
 	struct definition{};
-
 };
 
 }
