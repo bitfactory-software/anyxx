@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../virtual_void.h"
+#include "../forward.h"
 #include "../open_method/algorithm.h"
 
 namespace virtual_void::typeid_

@@ -11,8 +11,8 @@
 #include "include/catch.hpp"
 
 #include "../../include/std26/proxy.h"
-#include "../../include/virtual_void/virtual_void.h"
 #include "../../include/virtual_void/proxy/adapter.h"
+#include "../../include/virtual_void/typeid/open_method.h"
 
 namespace
 {
@@ -80,9 +80,9 @@ namespace Application
         return x.data;
     }
 
-    virtual_void::domain applicationDomain;
+    virtual_void::typeid_::open_methods applicationDomain;
 
-    auto entityToOut = virtual_void::method< void( const void* ) >{ applicationDomain };
+    auto entityToOut = virtual_void::typeid_::open_method< void( const void* ) >{ applicationDomain };
 
     void IntToOut( const IntData* i ){ std::cout << "int: " << i->data << std::endl; }
 
@@ -106,25 +106,33 @@ TEST_CASE( "06_Sink_TypeErased_w_proxy" )
             std::cout << "string: " << s->data << std::endl; 
         });
 
-    entityToOut.seal();
+    virtual_void::typeid_::seal_for_runtime( applicationDomain );
+
+    int tried = 0;
+    int ok = 0;
+    int catched = 0;
 
     db.factories[ "i" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< IntData >( std::atoi( data.c_str() ) ); };
     db.factories[ "s" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< StringData >( data ); };
     db.factories[ "d" ] = []( const std::string& data )->DB::Entity{  return std::make_shared< DoubleData >( std::atof( data.c_str() ) ); };
-    try
-    {
-        db.Query( "junk", []( const DB::Entity& e )
-            { 
-
-                std::cout << "type_info: " << pro::proxy_reflect< virtual_void::proxy::meta >( e ).type_info.name() << ": " << ToString( *e )<< std::endl;
-                entityToOut( virtual_void::proxy::to_typeid_const_void( e ) );    
-            });
-    }
-    catch( std::exception& e )
-    {
-        std::cout << "error: " << e.what() << std::endl;
-    }
- 
+    db.Query( "junk", [ & ]( const DB::Entity& e )
+    { 
+        try
+        {
+            ++tried;
+            std::cout << "type_info: " << pro::proxy_reflect< virtual_void::proxy::meta >( e ).type_info.name() << ": " << ToString( *e )<< std::endl;
+            entityToOut( virtual_void::proxy::to_typeid_const_void( e ) );
+            ++ok;
+        }
+        catch( std::exception& e )
+        {
+            ++catched;
+            std::cout << "error: " << e.what() << std::endl;
+        }
+    }); 
+    REQUIRE( tried == 5 );
+    REQUIRE( ok == 4 );
+    REQUIRE( catched == 1 );
 }
 
 }
