@@ -33,6 +33,9 @@ struct observer
 		requires( !std::derived_from< T, observer > )
 		: data_( &v )
 	{}
+	observer( void_t v )
+		: data_( v )
+	{}
 	VOID data_ = nullptr;
 	VOID data() const { return data_; }
 };
