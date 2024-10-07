@@ -161,4 +161,7 @@ namespace
             REQUIRE( reconcrete_cast< x_t >( t1 )->s_ == "hallo" );
         }
     }
+    TEST_CASE( "erased/lifetime/convert" )
+    {
+    }
 }

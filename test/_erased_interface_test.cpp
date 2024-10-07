@@ -19,7 +19,7 @@ const double M_PI = 3.14;
 struct position {float x, y;};
 
 
-ERASED_FREE__NTERFACE(to_string_i,
+ERASED_FREE_INTERFACE(to_string_i,
     (std::string, to_string)
 )
 

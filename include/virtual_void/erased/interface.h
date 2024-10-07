@@ -197,7 +197,7 @@ protected: \
     n() = default;\
 };
 #define ERASED_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define ERASED_FREE__NTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define ERASED_FREE_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 namespace virtual_void::erased
