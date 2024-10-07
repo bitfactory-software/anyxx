@@ -27,6 +27,10 @@ struct base
             : _is_derived_from ( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
         {};
     } *_v_table;
+    base( erased_t erased, _v_table_t* v_table )
+        : _ref( std::move( erased ) )
+        , _v_table( v_table )
+    {}
     template <typename T>
     base(T&& v) 
         requires ( !std::derived_from< std::remove_cvref_t< T >, base< ERASED > > )
@@ -172,9 +176,12 @@ struct n : BASE< ERASED > \
             virtual_void::erased::set_is_derived_from< n >( this ); \
         }; \
     }; \
+    n( erased_t erased, _v_table_t* v_table ) \
+        : base_t( std::move( erased ), v_table ) \
+    {} \
     template <typename _tp> \
     n(_tp&& v) \
-        requires ( !std::derived_from< std::remove_cvref_t< _tp >, BASE< ERASED > > ) \
+        requires ( !std::derived_from< std::remove_cvref_t< _tp >, base_t > ) \
     : base_t(std::forward<_tp>(v)) \
     {  \
         static _v_table_t _tp_v_table{ v }; \
@@ -182,7 +189,7 @@ struct n : BASE< ERASED > \
     } \
     template< typename OTHER > \
     n( const OTHER& other ) \
-        requires ( std::derived_from< OTHER, BASE< ERASED > > ) \
+        requires ( std::derived_from< OTHER, base_t > ) \
         : base_t( other ) \
     {} \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l) \
@@ -191,7 +198,7 @@ struct n : BASE< ERASED > \
     n(n&&) = default;\
     static bool static_is_derived_from( const std::type_info& from ) \
     {  \
-        return typeid( n ) == from ? true : BASE< ERASED >::static_is_derived_from( from ) ; \
+        return typeid( n ) == from ? true : base_t::static_is_derived_from( from ) ; \
     } \
 protected: \
     n() = default;\
@@ -227,9 +234,12 @@ namespace virtual_void::erased
                 set_is_derived_from< call_operator_facade >( this );
             }
         };
+        call_operator_facade( erased_t erased, _v_table_t* v_table )
+            : base_t( std::move( erased ), v_table )
+        {}
         template <typename _tp>
         call_operator_facade(_tp&& v) 
-            requires ( !std::derived_from< std::remove_cvref_t< _tp >, BASE< ERASED > > )
+            requires ( !std::derived_from< std::remove_cvref_t< _tp >, base_t > )
             : base_t(std::forward<_tp>(v))
         { 
             static _v_table_t _tp_v_table{ v };
@@ -237,7 +247,7 @@ namespace virtual_void::erased
         }
         template< typename OTHER >
         call_operator_facade( const OTHER& other )
-            requires ( std::derived_from< OTHER, BASE< ERASED > > )
+            requires ( std::derived_from< OTHER, base_t > )
             : base_t( other )
         {}
         RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
@@ -247,7 +257,7 @@ namespace virtual_void::erased
         call_operator_facade(call_operator_facade&&) = default;
         static bool static_is_derived_from( const std::type_info& from ) 
         { 
-            return typeid( call_operator_facade ) == from ? true : BASE< ERASED >::static_is_derived_from( from ) ; 
+            return typeid( call_operator_facade ) == from ? true : base_t::static_is_derived_from( from ) ; 
         } 
     protected:
         call_operator_facade() = default;
