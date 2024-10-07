@@ -11,7 +11,7 @@
 #include <memory>
 #include <assert.h>
 
-#include "../erased/forward.h"
+#include "../erased/concept.h"
 
 #include "m_table.h"
 

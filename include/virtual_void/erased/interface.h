@@ -9,23 +9,10 @@
 #include <type_traits>
 #include <typeinfo>
 
-#include "forward.h"
+#include "concept.h"
 
 namespace virtual_void::erased
 {
-
-template< is_erased ERASED, typename FROM >
-ERASED erase_to( FROM&& from )
-{
-    if constexpr( is_erased< std::remove_reference_t< FROM > > )
-    {
-        return from;
-    }
-    else
-    {
-        return ERASED::make_erased()( std::forward< FROM >( from ) );
-    }
-}
 
 template< is_erased ERASED >
 struct base 
@@ -98,27 +85,6 @@ struct bases_< FIRST, MORE... >
 };
 template< template< typename, template< typename > typename > typename... BASES >
 using bases = bases_< BASES... >::type;
-
-template< is_erased ERASED, typename CONSTRUCTED_WITH >
-auto unerase( auto from )
-{
-    using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
-    if constexpr( is_erased< constructed_with_t > )
-    {
-        return static_cast< constructed_with_t::conrete_t * >( from );
-    }
-    else
-    {
-        if constexpr( ERASED::is_const )
-        {
-            return static_cast< constructed_with_t const * >( from );
-        }
-        else
-        {
-            return static_cast< constructed_with_t * >( from );
-        }
-    }
-}
 
 };
 
