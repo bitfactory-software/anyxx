@@ -14,19 +14,22 @@
 namespace virtual_void::erased
 {
 
+struct base_v_table_t 
+{
+    static bool static_is_derived_from( const std::type_info& from ) { return typeid( base_v_table_t ) == from; } 
+    bool (*_is_derived_from)( const std::type_info& ); 
+    template <typename UNUSED>
+    base_v_table_t(UNUSED&&)
+        : _is_derived_from( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
+    {};
+};
+
 template< is_erased ERASED >
 struct base 
 {
     using erased_t = ERASED;
     erased_t _ref = nullptr;
-    struct _v_table_t 
-    {
-        bool (*_is_derived_from)( const std::type_info& ); 
-        template <typename UNUSED>
-        _v_table_t(UNUSED&&)
-            : _is_derived_from ( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
-        {};
-    } *_v_table;
+    using _v_table_t = base_v_table_t;
     base( erased_t erased, _v_table_t* v_table )
         : _ref( std::move( erased ) )
         , _v_table( v_table )
@@ -52,14 +55,13 @@ struct base
     auto* get_erased() { return &_ref; }
     bool is_derived_from( const std::type_info& from ) const { return _v_table->_is_derived_from( from ); }
     template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM ) );  } 
-    static bool static_is_derived_from( const std::type_info& from ) { return typeid( base ) == from; } 
 protected:
     base() = default;
 };
 
-template< typename FACADE > void set_is_derived_from( auto v_table )
+template< typename V_TABLE > void set_is_derived_from( auto v_table )
 {
-    v_table->_is_derived_from = +[]( const std::type_info& from ){ return FACADE::static_is_derived_from( from ); };
+    v_table->_is_derived_from = +[]( const std::type_info& from ){ return V_TABLE::static_is_derived_from( from ); };
 }
 
 template< typename TO, typename FROM >
@@ -167,13 +169,17 @@ struct n : BASE< ERASED > \
     using base_v_table_t = base_t::_v_table_t; \
     struct _v_table_t : base_v_table_t \
     { \
+        static bool static_is_derived_from( const std::type_info& from ) \
+        {  \
+            return typeid( n ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; \
+        } \
         _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
         template <typename _tp> \
         _v_table_t(_tp&& param) \
             : base_v_table_t( std::forward<_tp>(param) ) \
             , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
         { \
-            virtual_void::erased::set_is_derived_from< n >( this ); \
+            virtual_void::erased::set_is_derived_from< _v_table_t >( this ); \
         }; \
     }; \
     n( erased_t erased, _v_table_t* v_table ) \
@@ -196,10 +202,6 @@ struct n : BASE< ERASED > \
     n(const n&) = default;\
     n(n&) = default;\
     n(n&&) = default;\
-    static bool static_is_derived_from( const std::type_info& from ) \
-    {  \
-        return typeid( n ) == from ? true : base_t::static_is_derived_from( from ) ; \
-    } \
 protected: \
     n() = default;\
 };
@@ -223,6 +225,10 @@ namespace virtual_void::erased
         using base_t::_v_table;
         struct _v_table_t : base_v_table_t
         {
+            static bool static_is_derived_from( const std::type_info& from ) 
+            { 
+                return typeid( call_operator_facade ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; 
+            } 
             RET (*call_op)(erased_param_t, ARGS&&... );
             template <typename _tp>
             _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
@@ -231,7 +237,7 @@ namespace virtual_void::erased
                         return ( *erased::unerase< erased_t, _tp >( _vp ) ) ( std::forward< ARGS >(args)...); 
                     })
             {
-                set_is_derived_from< call_operator_facade >( this );
+                set_is_derived_from< _v_table_t >( this );
             }
         };
         call_operator_facade( erased_t erased, _v_table_t* v_table )
@@ -255,10 +261,6 @@ namespace virtual_void::erased
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&&) = default;
-        static bool static_is_derived_from( const std::type_info& from ) 
-        { 
-            return typeid( call_operator_facade ) == from ? true : base_t::static_is_derived_from( from ) ; 
-        } 
     protected:
         call_operator_facade() = default;
     };
