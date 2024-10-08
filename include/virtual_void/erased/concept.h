@@ -30,23 +30,32 @@ ERASED erase_to( FROM&& from )
     }
 }
 
+template< typename T >
+struct unerase_t
+{
+    auto operator()( auto from )
+    {
+        return static_cast< T * >( from );        
+    }
+};
+
 template< is_erased ERASED, typename CONSTRUCTED_WITH >
-auto unerase( auto from )
+auto unerase()
 {
     using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
     if constexpr( is_erased< constructed_with_t > )
     {
-        return static_cast< constructed_with_t::conrete_t * >( from );
+        return unerase_t< typename constructed_with_t::conrete_t >();
     }
     else
     {
         if constexpr( ERASED::is_const )
         {
-            return static_cast< constructed_with_t const * >( from );
+            return unerase_t< constructed_with_t const >();
         }
         else
         {
-            return static_cast< constructed_with_t * >( from );
+            return unerase_t< constructed_with_t >();
         }
     }
 }

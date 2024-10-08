@@ -34,16 +34,8 @@ namespace virtual_void::erased
     template< typename ERASED_TO >
     auto v_table_cast( const auto& v_table )
     {
-        return reinterpret_cast< typename ERASED_TO::_v_table_t* >( v_table ); 
-    }
-
-    template< typename ERASED_TO, typename ERASED_FROM >
-    ERASED_TO interface_lifetime_cast( const ERASED_FROM& from )
-    {
-        return ERASED_TO
-            ( lifetime_cast< typename ERASED_TO::erased_t >( from._ref )
-            , v_table_cast< ERASED_TO >( from._v_table )
-            );
+        static_assert( std::same_as< to_string_co::_v_table_t, to_string_sc::_v_table_t > );
+        return static_cast< typename ERASED_TO::_v_table_t* >( v_table ); 
     }
 }
 
@@ -61,5 +53,6 @@ TEST_CASE( "interface lifetime cast" )
 
     to_string_co co = interface_lifetime_cast< to_string_co >( sc );
     REQUIRE( co.to_string() == "hallo" );
+    static_assert( std::same_as< to_string_co::_v_table_t, to_string_sc::_v_table_t > );
     REQUIRE( co.is_derived_from< erased::base< erased::const_observer > >() );
 }

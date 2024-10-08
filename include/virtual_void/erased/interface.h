@@ -14,13 +14,15 @@
 namespace virtual_void::erased
 {
 
+template< typename VOID >
 struct base_v_table_t 
 {
+    using erased_param_t = VOID;
     static bool static_is_derived_from( const std::type_info& from ) { return typeid( base_v_table_t ) == from; } 
     bool (*_is_derived_from)( const std::type_info& ); 
-    template <typename UNUSED>
-    base_v_table_t(UNUSED&&)
-        : _is_derived_from( []( const std::type_info& from ){ return base::static_is_derived_from( from ); } )
+    template < typename UNERASE >
+    base_v_table_t( UNERASE )
+        : _is_derived_from( []( const std::type_info& from ){ return static_is_derived_from( from ); } )
     {};
 };
 
@@ -28,8 +30,9 @@ template< is_erased ERASED >
 struct base 
 {
     using erased_t = ERASED;
+    using _v_table_t = base_v_table_t< typename ERASED::void_t >;
     erased_t _ref = nullptr;
-    using _v_table_t = base_v_table_t;
+    _v_table_t* _v_table = nullptr;
     base( erased_t erased, _v_table_t* v_table )
         : _ref( std::move( erased ) )
         , _v_table( v_table )
@@ -54,7 +57,7 @@ struct base
     auto* get_erased() const { return &_ref; }
     auto* get_erased() { return &_ref; }
     bool is_derived_from( const std::type_info& from ) const { return _v_table->_is_derived_from( from ); }
-    template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM ) );  } 
+    template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM::_v_table_t ) );  } 
 protected:
     base() = default;
 };
@@ -72,6 +75,15 @@ std::optional< TO > interface_cast( const FROM& from ) requires ( std::derived_f
     if( from.is_derived_from< TO >() )
         return { *static_cast< const TO* >( &from ) };
     return {};
+}
+
+template< typename ERASED_TO, typename ERASED_FROM >
+ERASED_TO interface_lifetime_cast( const ERASED_FROM& from )
+{
+    return ERASED_TO
+        ( lifetime_cast< typename ERASED_TO::erased_t >( from._ref )
+        , v_table_cast< ERASED_TO >( from._v_table )
+        );
 }
 
 template< template< typename, template< typename > typename > typename... >
@@ -138,13 +150,13 @@ type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
 name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 {\
-    return  virtual_void::erased::unerase< erased_t, _tp >( _vp )->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+    return  ( UNERASE{}( _vp ) )->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_LAMBDA_TO_FREE_IMPL(type, name, ...) \
 name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 { \
-    return name##_( *virtual_void::erased::unerase< erased_t, _tp >( _vp ) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
+    return name##_( *UNERASE{}( _vp ) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
@@ -157,6 +169,25 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
 
         
 #define _detail_ERASED_INTERFACE( n, delegate_lampda_limp, l) \
+template< typename BASE_V_TABLE > \
+struct n##_v_table_t : BASE_V_TABLE \
+{ \
+    using base_v_table_t = BASE_V_TABLE; \
+    using erased_param_t = base_v_table_t::erased_param_t; \
+    using v_table_t = n##_v_table_t; \
+    static bool static_is_derived_from( const std::type_info& from ) \
+    {  \
+        return typeid( v_table_t ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; \
+    } \
+    _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
+    template <typename UNERASE > \
+    n##_v_table_t( UNERASE unerase ) \
+        : base_v_table_t( unerase ) \
+        , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
+    { \
+        virtual_void::erased::set_is_derived_from< v_table_t >( this ); \
+    }; \
+}; \
 template< virtual_void::erased::is_erased ERASED, template < typename > typename BASE = virtual_void::erased::base > \
 struct n : BASE< ERASED > \
 { \
@@ -167,21 +198,7 @@ struct n : BASE< ERASED > \
     using base_t::_ref; \
     using base_t::_v_table; \
     using base_v_table_t = base_t::_v_table_t; \
-    struct _v_table_t : base_v_table_t \
-    { \
-        static bool static_is_derived_from( const std::type_info& from ) \
-        {  \
-            return typeid( n ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; \
-        } \
-        _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
-        template <typename _tp> \
-        _v_table_t(_tp&& param) \
-            : base_v_table_t( std::forward<_tp>(param) ) \
-            , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
-        { \
-            virtual_void::erased::set_is_derived_from< _v_table_t >( this ); \
-        }; \
-    }; \
+    using _v_table_t = n##_v_table_t< base_v_table_t >; \
     n( erased_t erased, _v_table_t* v_table ) \
         : base_t( std::move( erased ), v_table ) \
     {} \
@@ -190,7 +207,7 @@ struct n : BASE< ERASED > \
         requires ( !std::derived_from< std::remove_cvref_t< _tp >, base_t > ) \
     : base_t(std::forward<_tp>(v)) \
     {  \
-        static _v_table_t _tp_v_table{ v }; \
+        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, _tp >() }; \
         _v_table = &_tp_v_table; \
     } \
     template< typename OTHER > \
@@ -208,6 +225,7 @@ protected: \
 #define ERASED_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
 #define ERASED_FREE_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
+
 
 namespace virtual_void::erased
 {
@@ -230,11 +248,11 @@ namespace virtual_void::erased
                 return typeid( call_operator_facade ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; 
             } 
             RET (*call_op)(erased_param_t, ARGS&&... );
-            template <typename _tp>
-            _v_table_t(_tp&& param) : base_v_table_t( std::forward<_tp>(param) )
-                , call_op ( [](erased_param_t _vp, ARGS&&... args ) 
-                    { 
-                        return ( *erased::unerase< erased_t, _tp >( _vp ) ) ( std::forward< ARGS >(args)...); 
+            template< typename UNERASE >
+            _v_table_t( UNERASE unerase ) : base_v_table_t( unerase )
+                , call_op ( []( erased_param_t _vp, ARGS&&... args ) 
+                    {
+                        return ( * UNERASE{}( _vp ) )( std::forward< ARGS >(args)...); 
                     })
             {
                 set_is_derived_from< _v_table_t >( this );
@@ -248,7 +266,7 @@ namespace virtual_void::erased
             requires ( !std::derived_from< std::remove_cvref_t< _tp >, base_t > )
             : base_t(std::forward<_tp>(v))
         { 
-            static _v_table_t _tp_v_table{ v };
+            static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, _tp >() };
             _v_table = &_tp_v_table;
         }
         template< typename OTHER >
@@ -256,7 +274,10 @@ namespace virtual_void::erased
             requires ( std::derived_from< OTHER, base_t > )
             : base_t( other )
         {}
-        RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
+        RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) 
+        { 
+            return static_cast< _v_table_t* >( _v_table )->call_op( base_t::_ref.data(), std::forward< ARGS >(args)... ); 
+        }
         RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
         call_operator_facade(const call_operator_facade&) = default;
         call_operator_facade(call_operator_facade&) = default;
