@@ -229,68 +229,70 @@ protected: \
 
 namespace virtual_void::erased
 {
-    template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
-    struct call_operator_facade;
 
     template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
-    struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
+struct call_operator_facade;
+
+template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
+{
+    using erased_t = ERASED;
+    using erased_param_t = ERASED::void_t;
+    using base_t = BASE< ERASED >;
+    using base_v_table_t = base_t::_v_table_t;
+    using base_t::_ref;
+    using base_t::_v_table;
+    struct _v_table_t : base_v_table_t
     {
-        using erased_t = ERASED;
-        using erased_param_t = ERASED::void_t;
-        using base_t = BASE< ERASED >;
-        using base_v_table_t = base_t::_v_table_t;
-        using base_t::_ref;
-        using base_t::_v_table;
-        struct _v_table_t : base_v_table_t
+        static bool static_is_derived_from( const std::type_info& from ) 
+        { 
+            return typeid( call_operator_facade ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; 
+        } 
+        RET (*call_op)(erased_param_t, ARGS&&... );
+        template< typename UNERASE >
+        _v_table_t( UNERASE unerase ) : base_v_table_t( unerase )
+            , call_op ( []( erased_param_t _vp, ARGS&&... args ) 
+                {
+                    return ( * UNERASE{}( _vp ) )( std::forward< ARGS >(args)...); 
+                })
         {
-            static bool static_is_derived_from( const std::type_info& from ) 
-            { 
-                return typeid( call_operator_facade ) == from ? true : base_v_table_t::static_is_derived_from( from ) ; 
-            } 
-            RET (*call_op)(erased_param_t, ARGS&&... );
-            template< typename UNERASE >
-            _v_table_t( UNERASE unerase ) : base_v_table_t( unerase )
-                , call_op ( []( erased_param_t _vp, ARGS&&... args ) 
-                    {
-                        return ( * UNERASE{}( _vp ) )( std::forward< ARGS >(args)...); 
-                    })
-            {
-                set_is_derived_from< _v_table_t >( this );
-            }
-        };
-        call_operator_facade( erased_t erased, _v_table_t* v_table )
-            : base_t( std::move( erased ), v_table )
-        {}
-        template <typename _tp>
-        call_operator_facade(_tp&& v) 
-            requires ( !std::derived_from< std::remove_cvref_t< _tp >, base_t > )
-            : base_t(std::forward<_tp>(v))
-        { 
-            static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, _tp >() };
-            _v_table = &_tp_v_table;
+            set_is_derived_from< _v_table_t >( this );
         }
-        template< typename OTHER >
-        call_operator_facade( const OTHER& other )
-            requires ( std::derived_from< OTHER, base_t > )
-            : base_t( other )
-        {}
-        RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) 
-        { 
-            return static_cast< _v_table_t* >( _v_table )->call_op( base_t::_ref.data(), std::forward< ARGS >(args)... ); 
-        }
-        RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
-        call_operator_facade(const call_operator_facade&) = default;
-        call_operator_facade(call_operator_facade&) = default;
-        call_operator_facade(call_operator_facade&&) = default;
-    protected:
-        call_operator_facade() = default;
     };
-    template< typename RET, typename... ARGS >
-    struct call_operator_
-    {
-        template< typename ERASED, template < typename > typename BASE >
-        using type = call_operator_facade< ERASED, BASE, RET, ARGS... >;
-    };
-    template< typename RET, typename... ARGS >
-    using call_operator = call_operator_< RET, ARGS... >::type;
+    call_operator_facade( erased_t erased, _v_table_t* v_table )
+        : base_t( std::move( erased ), v_table )
+    {}
+    template <typename _tp>
+    call_operator_facade(_tp&& v) 
+        requires ( !std::derived_from< std::remove_cvref_t< _tp >, base_t > )
+        : base_t(std::forward<_tp>(v))
+    { 
+        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, _tp >() };
+        _v_table = &_tp_v_table;
+    }
+    template< typename OTHER >
+    call_operator_facade( const OTHER& other )
+        requires ( std::derived_from< OTHER, base_t > )
+        : base_t( other )
+    {}
+    RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) 
+    { 
+        return static_cast< _v_table_t* >( _v_table )->call_op( base_t::_ref.data(), std::forward< ARGS >(args)... ); 
+    }
+    RET operator()( ARGS&&... args ) const { return static_cast< _v_table_t* >(_v_table)->call_op( base_t::_ref.data(), std::forward< ARGS >(args)...); }
+    call_operator_facade(const call_operator_facade&) = default;
+    call_operator_facade(call_operator_facade&) = default;
+    call_operator_facade(call_operator_facade&&) = default;
+protected:
+    call_operator_facade() = default;
+};
+template< typename RET, typename... ARGS >
+struct call_operator_
+{
+    template< typename ERASED, template < typename > typename BASE >
+    using type = call_operator_facade< ERASED, BASE, RET, ARGS... >;
+};
+template< typename RET, typename... ARGS >
+using call_operator = call_operator_< RET, ARGS... >::type;
+
 };
