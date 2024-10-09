@@ -36,8 +36,8 @@ protected:
     lifetime_holder_t erased_ = nullptr;
     _v_table_t* interface_impementation_ = nullptr;
 public:
-    base( lifetime_holder_t erased, _v_table_t* v_table )
-        : erased_( std::move( erased ) )
+    base( lifetime_holder_t lifetime_holder, _v_table_t* v_table )
+        : erased_( std::move( lifetime_holder ) )
         , interface_impementation_( v_table )
     {}
     template <typename CONSTRUCTED_WITH>
@@ -206,8 +206,8 @@ protected: \
     using base_t::erased_; \
     using base_t::interface_impementation_; \
 public: \
-    n( lifetime_holder_t erased, _v_table_t* v_table ) \
-        : base_t( std::move( erased ), v_table ) \
+    n( lifetime_holder_t lifetime_holder, _v_table_t* v_table ) \
+        : base_t( std::move( lifetime_holder ), v_table ) \
     {} \
     template <typename CONSTRUCTED_WITH> \
     n(CONSTRUCTED_WITH&& v) \
@@ -275,8 +275,8 @@ protected:
 public:
     using lifetime_holder_t = LIFETIME_HOLDER;
     using erased_param_t = LIFETIME_HOLDER::void_t;
-    call_operator_facade( lifetime_holder_t erased, _v_table_t* v_table )
-        : base_t( std::move( erased ), v_table )
+    call_operator_facade( lifetime_holder_t lifetime_holder, _v_table_t* v_table )
+        : base_t( std::move( lifetime_holder ), v_table )
     {}
     template <typename CONSTRUCTED_WITH>
     call_operator_facade(CONSTRUCTED_WITH&& v) 
