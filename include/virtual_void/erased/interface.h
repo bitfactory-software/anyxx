@@ -26,12 +26,12 @@ struct interface_base
     {};
 };
 
-template< is_erased_lifetime_holder ERASED >
+template< is_erased_lifetime_holder LIFETIME_HOLDER >
 class base 
 {
 public:
-    using erased_t = ERASED;
-    using _v_table_t = interface_base< typename ERASED::void_t >;
+    using erased_t = LIFETIME_HOLDER;
+    using _v_table_t = interface_base< typename LIFETIME_HOLDER::void_t >;
 protected:
     erased_t erased_ = nullptr;
     _v_table_t* interface_impementation_ = nullptr;
@@ -42,15 +42,15 @@ public:
     {}
     template <typename CONSTRUCTED_WITH>
     base(CONSTRUCTED_WITH&& constructed_with) 
-        requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base< ERASED > > )
+        requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base< LIFETIME_HOLDER > > )
         : erased_( virtual_void::erased::erase_to< erased_t >( std::forward< CONSTRUCTED_WITH >( constructed_with ) ) )
     {
-        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, CONSTRUCTED_WITH >() };
+        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
         interface_impementation_ = &_tp_v_table;
     }
     template< typename OTHER >
     base( const OTHER& other )
-        requires ( std::derived_from< OTHER, base< ERASED > > )
+        requires ( std::derived_from< OTHER, base< LIFETIME_HOLDER > > )
         : erased_( other.get_erased() )
         , interface_impementation_( other.get_interface() )
     {}
@@ -165,7 +165,7 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 })
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
-type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !ERASED::is_const ) { \
+type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !LIFETIME_HOLDER::is_const ) { \
     return static_cast< _v_table_t* >(interface_impementation_)->name(base_t::erased_.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 } \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
@@ -193,14 +193,14 @@ struct n##_v_table_t : BASE_V_TABLE \
         virtual_void::erased::set_is_derived_from< v_table_t >( this ); \
     }; \
 }; \
-template< virtual_void::erased::is_erased_lifetime_holder ERASED, template < typename > typename BASE = virtual_void::erased::base > \
-struct n : BASE< ERASED > \
+template< virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER, template < typename > typename BASE = virtual_void::erased::base > \
+struct n : BASE< LIFETIME_HOLDER > \
 { \
 public: \
     using interface_t = n; \
-    using erased_t = ERASED; \
-    using erased_param_t = ERASED::void_t; \
-    using base_t = BASE< ERASED >; \
+    using erased_t = LIFETIME_HOLDER; \
+    using erased_param_t = LIFETIME_HOLDER::void_t; \
+    using base_t = BASE< LIFETIME_HOLDER >; \
     using interface_base_t = base_t::_v_table_t; \
     using _v_table_t = n##_v_table_t< interface_base_t >; \
 protected: \
@@ -215,7 +215,7 @@ public: \
         requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base_t > ) \
     : base_t(std::forward<CONSTRUCTED_WITH>(v)) \
     {  \
-        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, CONSTRUCTED_WITH >() }; \
+        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() }; \
         interface_impementation_ = &_tp_v_table; \
     } \
     template< typename OTHER > \
@@ -261,21 +261,21 @@ struct call_operator_v_table : BASE_V_TABLE
     }
 };
 
-template< is_erased_lifetime_holder ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+template< is_erased_lifetime_holder LIFETIME_HOLDER, template < typename > typename BASE, typename RET, typename... ARGS >
 struct call_operator_facade;
-template< is_erased_lifetime_holder ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
-struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
+template< is_erased_lifetime_holder LIFETIME_HOLDER, template < typename > typename BASE, typename RET, typename... ARGS >
+struct call_operator_facade< LIFETIME_HOLDER, BASE, RET(ARGS...) >: BASE< LIFETIME_HOLDER >
 {
 public:
-    using base_t = BASE< ERASED >;
+    using base_t = BASE< LIFETIME_HOLDER >;
     using interface_base_t = base_t::_v_table_t;
     using _v_table_t = call_operator_v_table< interface_base_t, RET, ARGS... >;
 protected:
     using base_t::erased_;
     using base_t::interface_impementation_;
 public:
-    using erased_t = ERASED;
-    using erased_param_t = ERASED::void_t;
+    using erased_t = LIFETIME_HOLDER;
+    using erased_param_t = LIFETIME_HOLDER::void_t;
     call_operator_facade( erased_t erased, _v_table_t* v_table )
         : base_t( std::move( erased ), v_table )
     {}
@@ -284,7 +284,7 @@ public:
         requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base_t > )
         : base_t(std::forward<CONSTRUCTED_WITH>(v))
     { 
-        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< ERASED, CONSTRUCTED_WITH >() };
+        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
         interface_impementation_ = &_tp_v_table;
     }
     template< typename OTHER >
@@ -292,7 +292,7 @@ public:
         requires ( std::derived_from< OTHER, base_t > )
         : base_t( other )
     {}
-    RET operator()( ARGS&&... args ) requires ( !ERASED::is_const ) 
+    RET operator()( ARGS&&... args ) requires ( !LIFETIME_HOLDER::is_const ) 
     { 
         return static_cast< _v_table_t* >( interface_impementation_ )->call_op( base_t::erased_.data(), std::forward< ARGS >(args)... ); 
     }
@@ -309,8 +309,8 @@ protected:
 template< typename RET, typename... ARGS >
 struct call_operator_
 {
-    template< typename ERASED, template < typename > typename BASE >
-    using type = call_operator_facade< ERASED, BASE, RET, ARGS... >;
+    template< typename LIFETIME_HOLDER, template < typename > typename BASE >
+    using type = call_operator_facade< LIFETIME_HOLDER, BASE, RET, ARGS... >;
 };
 template< typename RET, typename... ARGS >
 using call_operator = call_operator_< RET, ARGS... >::type;
