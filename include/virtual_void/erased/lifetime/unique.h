@@ -82,7 +82,7 @@ struct make_unique_t
     }
 };
 
-static_assert( erased::is_erased< unique > );
-static_assert( erased::is_erased< typed_unique< int > > );
+static_assert( erased::is_erased_lifetime_holder< unique > );
+static_assert( erased::is_erased_lifetime_holder< typed_unique< int > > );
 
 }

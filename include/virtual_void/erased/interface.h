@@ -26,7 +26,7 @@ struct interface_base
     {};
 };
 
-template< is_erased ERASED >
+template< is_erased_lifetime_holder ERASED >
 class base 
 {
 public:
@@ -193,7 +193,7 @@ struct n##_v_table_t : BASE_V_TABLE \
         virtual_void::erased::set_is_derived_from< v_table_t >( this ); \
     }; \
 }; \
-template< virtual_void::erased::is_erased ERASED, template < typename > typename BASE = virtual_void::erased::base > \
+template< virtual_void::erased::is_erased_lifetime_holder ERASED, template < typename > typename BASE = virtual_void::erased::base > \
 struct n : BASE< ERASED > \
 { \
 public: \
@@ -261,9 +261,9 @@ struct call_operator_v_table : BASE_V_TABLE
     }
 };
 
-template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+template< is_erased_lifetime_holder ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
 struct call_operator_facade;
-template< is_erased ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
+template< is_erased_lifetime_holder ERASED, template < typename > typename BASE, typename RET, typename... ARGS >
 struct call_operator_facade< ERASED, BASE, RET(ARGS...) >: BASE< ERASED >
 {
 public:

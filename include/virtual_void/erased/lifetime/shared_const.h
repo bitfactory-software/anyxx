@@ -123,7 +123,7 @@ struct make_shared_const_t
     }
 };
 
-static_assert( is_erased< shared_const > );
-static_assert( is_erased< typed_shared_const< int > > );
+static_assert( is_erased_lifetime_holder< shared_const > );
+static_assert( is_erased_lifetime_holder< typed_shared_const< int > > );
 
 }

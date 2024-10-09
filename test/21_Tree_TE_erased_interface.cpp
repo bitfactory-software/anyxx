@@ -67,9 +67,9 @@ TEST_CASE( "21_Tree_TE_dynamic_interface" )
 //    using virtual_void::m_table::make_shared_const;
     using virtual_void::erased::make_shared_const;
 
-    static_assert( is_erased< typed_shared_const< Times > > );
-    static_assert( is_erased< typed_shared_const< Plus > > );
-    static_assert( is_erased< typed_shared_const< Integer > > );
+    static_assert( is_erased_lifetime_holder< typed_shared_const< Times > > );
+    static_assert( is_erased_lifetime_holder< typed_shared_const< Plus > > );
+    static_assert( is_erased_lifetime_holder< typed_shared_const< Integer > > );
 
     auto expr = node( make_shared_const<Times>(
         make_shared_const<Integer>(2),
