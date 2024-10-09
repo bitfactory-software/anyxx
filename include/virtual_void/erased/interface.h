@@ -30,20 +30,20 @@ template< is_erased_lifetime_holder LIFETIME_HOLDER >
 class base 
 {
 public:
-    using erased_t = LIFETIME_HOLDER;
+    using lifetime_holder_t = LIFETIME_HOLDER;
     using _v_table_t = interface_base< typename LIFETIME_HOLDER::void_t >;
 protected:
-    erased_t erased_ = nullptr;
+    lifetime_holder_t erased_ = nullptr;
     _v_table_t* interface_impementation_ = nullptr;
 public:
-    base( erased_t erased, _v_table_t* v_table )
+    base( lifetime_holder_t erased, _v_table_t* v_table )
         : erased_( std::move( erased ) )
         , interface_impementation_( v_table )
     {}
     template <typename CONSTRUCTED_WITH>
     base(CONSTRUCTED_WITH&& constructed_with) 
         requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base< LIFETIME_HOLDER > > )
-        : erased_( virtual_void::erased::erase_to< erased_t >( std::forward< CONSTRUCTED_WITH >( constructed_with ) ) )
+        : erased_( virtual_void::erased::erase_to< lifetime_holder_t >( std::forward< CONSTRUCTED_WITH >( constructed_with ) ) )
     {
         static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
         interface_impementation_ = &_tp_v_table;
@@ -62,7 +62,6 @@ public:
     _v_table_t* get_interface() const { return interface_impementation_; }
     bool is_derived_from( const std::type_info& from ) const { return interface_impementation_->_is_derived_from( from ); }
     template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM::_v_table_t ) );  }
-    template< typename ERASED_TO, typename ERASED_FROM > friend ERASED_TO interface_lifetime_cast( const ERASED_FROM& from );
 protected:
     base() = default;
 };
@@ -82,12 +81,12 @@ std::optional< TO > interface_cast( const FROM& from ) requires ( std::derived_f
     return {};
 }
 
-template< typename ERASED_TO, typename ERASED_FROM >
-ERASED_TO interface_lifetime_cast( const ERASED_FROM& from )
+template< typename TO, typename FROM >
+TO interface_lifetime_cast( const FROM& from )
 {
-    return ERASED_TO
-        ( lifetime_cast< typename ERASED_TO::erased_t >( from.get_erased() )
-        , v_table_cast< ERASED_TO >( from.get_interface() )
+    return TO
+        ( lifetime_cast< typename TO::lifetime_holder_t >( from.get_erased() )
+        , v_table_cast< TO >( from.get_interface() )
         );
 }
 
@@ -198,7 +197,7 @@ struct n : BASE< LIFETIME_HOLDER > \
 { \
 public: \
     using interface_t = n; \
-    using erased_t = LIFETIME_HOLDER; \
+    using lifetime_holder_t = LIFETIME_HOLDER; \
     using erased_param_t = LIFETIME_HOLDER::void_t; \
     using base_t = BASE< LIFETIME_HOLDER >; \
     using interface_base_t = base_t::_v_table_t; \
@@ -207,7 +206,7 @@ protected: \
     using base_t::erased_; \
     using base_t::interface_impementation_; \
 public: \
-    n( erased_t erased, _v_table_t* v_table ) \
+    n( lifetime_holder_t erased, _v_table_t* v_table ) \
         : base_t( std::move( erased ), v_table ) \
     {} \
     template <typename CONSTRUCTED_WITH> \
@@ -274,9 +273,9 @@ protected:
     using base_t::erased_;
     using base_t::interface_impementation_;
 public:
-    using erased_t = LIFETIME_HOLDER;
+    using lifetime_holder_t = LIFETIME_HOLDER;
     using erased_param_t = LIFETIME_HOLDER::void_t;
-    call_operator_facade( erased_t erased, _v_table_t* v_table )
+    call_operator_facade( lifetime_holder_t erased, _v_table_t* v_table )
         : base_t( std::move( erased ), v_table )
     {}
     template <typename CONSTRUCTED_WITH>
