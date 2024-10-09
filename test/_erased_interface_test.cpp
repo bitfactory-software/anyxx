@@ -239,7 +239,7 @@ TEST_CASE( "base" )
     {
         x_t a{ "hallo" };
         value_base vb( a );
-        REQUIRE( reconcrete_cast< x_t >( vb._ref )->s_ == "hallo" );
+        REQUIRE( reconcrete_cast< x_t >( vb._erased )->s_ == "hallo" );
     }
 
 }
