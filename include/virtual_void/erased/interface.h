@@ -17,7 +17,7 @@ namespace virtual_void::erased
 template< typename VOID >
 struct interface_base 
 {
-    using erased_param_t = VOID;
+    using void_t = VOID;
     static bool static_is_derived_from( const std::type_info& from ) { return typeid( interface_base ) == from; } 
     bool (*_is_derived_from)( const std::type_info& ); 
     template < typename UNERASE >
@@ -149,16 +149,16 @@ __VA_OPT__(, _detail_map_macro_a _detail_PARENS (macro, __VA_ARGS__))
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
 #define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) \
-type (* name)(erased_param_t __VA_OPT__(, __VA_ARGS__));
+type (* name)(void_t __VA_OPT__(, __VA_ARGS__));
 
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...) \
-name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
+name ( [](void_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 {\
     return  ( UNERASE{}( _vp ) )->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
 
 #define _detail_INTERFACE_LAMBDA_TO_FREE_IMPL(type, name, ...) \
-name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
+name ( [](void_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) \
 { \
     return name##_( *UNERASE{}( _vp ) __VA_OPT__(,) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));\
 })
@@ -177,7 +177,7 @@ template< typename BASE_V_TABLE > \
 struct n##interface : BASE_V_TABLE \
 { \
     using interface_base_t = BASE_V_TABLE; \
-    using erased_param_t = interface_base_t::erased_param_t; \
+    using void_t = interface_base_t::void_t; \
     using v_table_t = n##interface; \
     static bool static_is_derived_from( const std::type_info& from ) \
     {  \
@@ -197,7 +197,7 @@ struct n : BASE< LIFETIME_HOLDER > \
 { \
 public: \
     using lifetime_holder_t = LIFETIME_HOLDER; \
-    using erased_param_t = LIFETIME_HOLDER::void_t; \
+    using void_t = LIFETIME_HOLDER::void_t; \
     using base_t = BASE< LIFETIME_HOLDER >; \
     using interface_base_t = base_t::interface_t; \
     using interface_t = n##interface< interface_base_t >; \
@@ -240,17 +240,17 @@ template< typename BASE_V_TABLE, typename RET, typename... ARGS >
 struct call_operator_interface : BASE_V_TABLE
 {
     using interface_base_t = BASE_V_TABLE;
-    using erased_param_t = interface_base_t::erased_param_t;
+    using void_t = interface_base_t::void_t;
     using v_table_t = call_operator_interface;
     static bool static_is_derived_from( const std::type_info& from ) 
     { 
         return typeid( v_table_t ) == from ? true : BASE_V_TABLE::static_is_derived_from( from ) ; 
     } 
-    RET (*call_op)(erased_param_t, ARGS&&... );
+    RET (*call_op)(void_t, ARGS&&... );
     template< typename UNERASE >
     call_operator_interface( UNERASE unerase ) 
         : BASE_V_TABLE( unerase )
-        , call_op ( []( erased_param_t _vp, ARGS&&... args ) 
+        , call_op ( []( void_t _vp, ARGS&&... args ) 
             {
                 return ( * UNERASE{}( _vp ) )( std::forward< ARGS >(args)...); 
             })
@@ -273,7 +273,7 @@ protected:
     using base_t::interface_impementation_;
 public:
     using lifetime_holder_t = LIFETIME_HOLDER;
-    using erased_param_t = LIFETIME_HOLDER::void_t;
+    using void_t = LIFETIME_HOLDER::void_t;
     call_operator_facade( lifetime_holder_t lifetime_holder, interface_t* v_table )
         : base_t( std::move( lifetime_holder ), v_table )
     {}
