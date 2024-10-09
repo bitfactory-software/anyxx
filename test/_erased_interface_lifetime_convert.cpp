@@ -45,9 +45,9 @@ TEST_CASE( "interface lifetime cast" )
     REQUIRE( sc.to_string() == "hallo" );
     REQUIRE( sc.is_derived_from< erased::base< erased::shared_const > >() );
 
-    auto o1 = lifetime_cast< erased::const_observer >( sc._erased );
+    auto o1 = lifetime_cast< erased::const_observer >( sc.get_erased() );
     auto x = erased::reconcrete_cast< X >( o1 );
-    auto x1 = static_cast< X const * >( sc._erased.data() );
+    auto x1 = static_cast< X const * >( sc.get_erased().data() );
     REQUIRE( x->s_ == "hallo" );
 
 
