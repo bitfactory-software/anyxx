@@ -52,14 +52,14 @@ public:
     base( const OTHER& other )
         requires ( std::derived_from< OTHER, base< ERASED > > )
         : erased_( other.get_erased() )
-        , interface_impementation_( other.get_v_table() )
+        , interface_impementation_( other.get_interface() )
     {}
     base(const base&) = default;
     base(base&) = default;
     base(base&&) = default;
     auto& get_erased() const { return erased_; }
     auto& get_erased() { return erased_; }
-    _v_table_t* get_v_table() const { return interface_impementation_; }
+    _v_table_t* get_interface() const { return interface_impementation_; }
     bool is_derived_from( const std::type_info& from ) const { return interface_impementation_->_is_derived_from( from ); }
     template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM::_v_table_t ) );  }
     template< typename ERASED_TO, typename ERASED_FROM > friend ERASED_TO interface_lifetime_cast( const ERASED_FROM& from );
@@ -67,9 +67,9 @@ protected:
     base() = default;
 };
 
-template< typename V_TABLE > void set_is_derived_from( auto v_table )
+template< typename V_TABLE > void set_is_derived_from( auto interface )
 {
-    v_table->_is_derived_from = +[]( const std::type_info& from ){ return V_TABLE::static_is_derived_from( from ); };
+    interface->_is_derived_from = +[]( const std::type_info& from ){ return V_TABLE::static_is_derived_from( from ); };
 }
 
 template< typename TO, typename FROM >
@@ -87,7 +87,7 @@ ERASED_TO interface_lifetime_cast( const ERASED_FROM& from )
 {
     return ERASED_TO
         ( lifetime_cast< typename ERASED_TO::erased_t >( from.get_erased() )
-        , v_table_cast< ERASED_TO >( from.get_v_table() )
+        , v_table_cast< ERASED_TO >( from.get_interface() )
         );
 }
 
