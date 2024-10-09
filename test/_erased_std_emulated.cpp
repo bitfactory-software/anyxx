@@ -39,10 +39,10 @@ namespace
         {
             functor_t functor{ "hallo" };
             erased::function< std::string( const std::string ) > f{ functor };
-            REQUIRE( reconcrete_cast< functor_t >( f.get_erased() )->s_ == "hallo" );
+            REQUIRE( reconcrete_cast< functor_t >( f.get_lifetime_holder() )->s_ == "hallo" );
             REQUIRE( f( " world" ) == "hallo" );
             REQUIRE( functor.s_ == "hallo" );
-            REQUIRE( reconcrete_cast< functor_t >( f.get_erased() )->s_ == "hallo world" );
+            REQUIRE( reconcrete_cast< functor_t >( f.get_lifetime_holder() )->s_ == "hallo world" );
         }
     }
 }
