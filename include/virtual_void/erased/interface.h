@@ -27,10 +27,12 @@ struct base_v_table_t
 };
 
 template< is_erased ERASED >
-struct base 
+class base 
 {
+public:
     using erased_t = ERASED;
     using _v_table_t = base_v_table_t< typename ERASED::void_t >;
+protected:
     erased_t _erased = nullptr;
     _v_table_t* _v_table = nullptr;
 public:
@@ -55,8 +57,8 @@ public:
     base(const base&) = default;
     base(base&) = default;
     base(base&&) = default;
-    auto* get_erased() const { return &_erased; }
-    auto* get_erased() { return &_erased; }
+    auto& get_erased() const { return _erased; }
+    auto& get_erased() { return _erased; }
     bool is_derived_from( const std::type_info& from ) const { return _v_table->_is_derived_from( from ); }
     template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM::_v_table_t ) );  } 
 protected:
