@@ -31,12 +31,12 @@ class base
 {
 public:
     using lifetime_holder_t = LIFETIME_HOLDER;
-    using _v_table_t = interface_base< typename LIFETIME_HOLDER::void_t >;
+    using interface_t = interface_base< typename LIFETIME_HOLDER::void_t >;
 protected:
     lifetime_holder_t lifetime_holder_ = nullptr;
-    _v_table_t* interface_impementation_ = nullptr;
+    interface_t* interface_impementation_ = nullptr;
 public:
-    base( lifetime_holder_t lifetime_holder, _v_table_t* v_table )
+    base( lifetime_holder_t lifetime_holder, interface_t* v_table )
         : lifetime_holder_( std::move( lifetime_holder ) )
         , interface_impementation_( v_table )
     {}
@@ -45,8 +45,8 @@ public:
         requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base< LIFETIME_HOLDER > > )
         : lifetime_holder_( virtual_void::erased::erase_to< lifetime_holder_t >( std::forward< CONSTRUCTED_WITH >( constructed_with ) ) )
     {
-        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
-        interface_impementation_ = &_tp_v_table;
+        static interface_t imlpemented_interface{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
+        interface_impementation_ = &imlpemented_interface;
     }
     template< typename OTHER >
     base( const OTHER& other )
@@ -59,9 +59,9 @@ public:
     base(base&&) = default;
     auto& get_lifetime_holder() const { return lifetime_holder_; }
     auto& get_lifetime_holder() { return lifetime_holder_; }
-    _v_table_t* get_interface() const { return interface_impementation_; }
+    interface_t* get_interface() const { return interface_impementation_; }
     bool is_derived_from( const std::type_info& from ) const { return interface_impementation_->_is_derived_from( from ); }
-    template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM::_v_table_t ) );  }
+    template< typename FROM > bool is_derived_from() const { return is_derived_from( typeid( FROM::interface_t ) );  }
 protected:
     base() = default;
 };
@@ -165,27 +165,27 @@ name ( [](erased_param_t _vp __VA_OPT__(,_detail_PARAM_LIST2(a, _sig, __VA_ARGS_
 
 #define _detail_INTERFACE_METHOD(type, name, ...) \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) requires ( !LIFETIME_HOLDER::is_const ) { \
-    return static_cast< _v_table_t* >(interface_impementation_)->name(base_t::lifetime_holder_.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return static_cast< interface_t* >(interface_impementation_)->name(base_t::lifetime_holder_.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 } \
 type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
-    return static_cast< _v_table_t* >(interface_impementation_)->name(base_t::lifetime_holder_.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    return static_cast< interface_t* >(interface_impementation_)->name(base_t::lifetime_holder_.data() __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
 }
 
         
 #define _detail_ERASED_INTERFACE( n, delegate_lampda_limp, l) \
 template< typename BASE_V_TABLE > \
-struct n##_v_table_t : BASE_V_TABLE \
+struct n##interface : BASE_V_TABLE \
 { \
     using interface_base_t = BASE_V_TABLE; \
     using erased_param_t = interface_base_t::erased_param_t; \
-    using v_table_t = n##_v_table_t; \
+    using v_table_t = n##interface; \
     static bool static_is_derived_from( const std::type_info& from ) \
     {  \
         return typeid( v_table_t ) == from ? true : interface_base_t::static_is_derived_from( from ) ; \
     } \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)\
     template <typename UNERASE > \
-    n##_v_table_t( UNERASE unerase ) \
+    n##interface( UNERASE unerase ) \
         : interface_base_t( unerase ) \
         , _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) \
     { \
@@ -196,17 +196,16 @@ template< virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER, templ
 struct n : BASE< LIFETIME_HOLDER > \
 { \
 public: \
-    using interface_t = n; \
     using lifetime_holder_t = LIFETIME_HOLDER; \
     using erased_param_t = LIFETIME_HOLDER::void_t; \
     using base_t = BASE< LIFETIME_HOLDER >; \
-    using interface_base_t = base_t::_v_table_t; \
-    using _v_table_t = n##_v_table_t< interface_base_t >; \
+    using interface_base_t = base_t::interface_t; \
+    using interface_t = n##interface< interface_base_t >; \
 protected: \
     using base_t::lifetime_holder_; \
     using base_t::interface_impementation_; \
 public: \
-    n( lifetime_holder_t lifetime_holder, _v_table_t* v_table ) \
+    n( lifetime_holder_t lifetime_holder, interface_t* v_table ) \
         : base_t( std::move( lifetime_holder ), v_table ) \
     {} \
     template <typename CONSTRUCTED_WITH> \
@@ -214,8 +213,8 @@ public: \
         requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base_t > ) \
     : base_t(std::forward<CONSTRUCTED_WITH>(v)) \
     {  \
-        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() }; \
-        interface_impementation_ = &_tp_v_table; \
+        static interface_t imlpemented_interface{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() }; \
+        interface_impementation_ = &imlpemented_interface; \
     } \
     template< typename OTHER > \
     n( const OTHER& other ) \
@@ -238,18 +237,18 @@ namespace virtual_void::erased
 {
 
 template< typename BASE_V_TABLE, typename RET, typename... ARGS >
-struct call_operator_v_table : BASE_V_TABLE
+struct call_operator_interface : BASE_V_TABLE
 {
     using interface_base_t = BASE_V_TABLE;
     using erased_param_t = interface_base_t::erased_param_t;
-    using v_table_t = call_operator_v_table;
+    using v_table_t = call_operator_interface;
     static bool static_is_derived_from( const std::type_info& from ) 
     { 
         return typeid( v_table_t ) == from ? true : BASE_V_TABLE::static_is_derived_from( from ) ; 
     } 
     RET (*call_op)(erased_param_t, ARGS&&... );
     template< typename UNERASE >
-    call_operator_v_table( UNERASE unerase ) 
+    call_operator_interface( UNERASE unerase ) 
         : BASE_V_TABLE( unerase )
         , call_op ( []( erased_param_t _vp, ARGS&&... args ) 
             {
@@ -267,15 +266,15 @@ struct call_operator_facade< LIFETIME_HOLDER, BASE, RET(ARGS...) >: BASE< LIFETI
 {
 public:
     using base_t = BASE< LIFETIME_HOLDER >;
-    using interface_base_t = base_t::_v_table_t;
-    using _v_table_t = call_operator_v_table< interface_base_t, RET, ARGS... >;
+    using interface_base_t = base_t::interface_t;
+    using interface_t = call_operator_interface< interface_base_t, RET, ARGS... >;
 protected:
     using base_t::lifetime_holder_;
     using base_t::interface_impementation_;
 public:
     using lifetime_holder_t = LIFETIME_HOLDER;
     using erased_param_t = LIFETIME_HOLDER::void_t;
-    call_operator_facade( lifetime_holder_t lifetime_holder, _v_table_t* v_table )
+    call_operator_facade( lifetime_holder_t lifetime_holder, interface_t* v_table )
         : base_t( std::move( lifetime_holder ), v_table )
     {}
     template <typename CONSTRUCTED_WITH>
@@ -283,8 +282,8 @@ public:
         requires ( !std::derived_from< std::remove_cvref_t< CONSTRUCTED_WITH >, base_t > )
         : base_t(std::forward<CONSTRUCTED_WITH>(v))
     { 
-        static _v_table_t _tp_v_table{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
-        interface_impementation_ = &_tp_v_table;
+        static interface_t imlpemented_interface{ virtual_void::erased::unerase< LIFETIME_HOLDER, CONSTRUCTED_WITH >() };
+        interface_impementation_ = &imlpemented_interface;
     }
     template< typename OTHER >
     call_operator_facade( const OTHER& other )
@@ -293,11 +292,11 @@ public:
     {}
     RET operator()( ARGS&&... args ) requires ( !LIFETIME_HOLDER::is_const ) 
     { 
-        return static_cast< _v_table_t* >( interface_impementation_ )->call_op( base_t::lifetime_holder_.data(), std::forward< ARGS >(args)... ); 
+        return static_cast< interface_t* >( interface_impementation_ )->call_op( base_t::lifetime_holder_.data(), std::forward< ARGS >(args)... ); 
     }
     RET operator()( ARGS&&... args ) const 
     { 
-        return static_cast< _v_table_t* >(interface_impementation_)->call_op( base_t::lifetime_holder_.data(), std::forward< ARGS >(args)...); 
+        return static_cast< interface_t* >(interface_impementation_)->call_op( base_t::lifetime_holder_.data(), std::forward< ARGS >(args)...); 
     }
     call_operator_facade(const call_operator_facade&) = default;
     call_operator_facade(call_operator_facade&) = default;
