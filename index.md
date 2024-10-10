@@ -24,5 +24,5 @@ The library is **header only**
 The name of the library originates in its fundamental design idea:
 - hide the concrete data behind a (possible "smart") **pointer to void**,
 - pair this with a pointer to **virtual** meta data to interprete the hidden data
-- and such pairs as the external interfaces to seperate the implementation details as much as possible 
+- and use such pairs as the external interfaces, to seperate usage and implementation details as much as possible 
 
