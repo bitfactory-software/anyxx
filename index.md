@@ -26,3 +26,8 @@ The name of the library originates in its fundamental design idea:
 - pair this with a pointer to **virtual** meta data to interprete the hidden data
 - and use such pairs as the external interfaces, to seperate usage and implementation details as much as possible 
 
+# programming in the large: runtime versus compiletime dispatch
+
+Dispatch on behalf of a type is like function calls a fundamental  construction principle, to splitt software in smaler parts.
+They allow the building of layerd abstraction levels.
+Eceeds a program a certain size, it is no longer possible to solve   
