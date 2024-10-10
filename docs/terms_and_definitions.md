@@ -26,10 +26,10 @@ A concrete lifetime holdder delivers the a pointer to an object of type, with wh
 
 ### static cast vs dynamic cast
 - A static cast
-- - is in the language type rules and always checked ba the compiler. 
-- - Upcasts are always safe und static. 
-- - Static dowcasts are unsafe.
-- - Static casts are only a syntactic construct an leave no trace in the binary code.
+ - is in the language type rules and always checked ba the compiler. 
+ - Upcasts are always safe und static. 
+ - Static dowcasts are unsafe.
+ - Static casts are only a syntactic construct an leave no trace in the binary code.
 - A dynamic cast is
   - a runtime query, if the casted object is of this type
   - 
