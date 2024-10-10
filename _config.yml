@@ -1,0 +1,17 @@
+title: virtual void  
+description: void some vocabulary for programming in the large
+theme: just-the-docs
+
+url: https://www.bitfactory.at
+
+permalink: pretty
+
+defaults:
+  - scope:
+      path: "docs" # an empty string here means all files in the project
+      type: "pages"
+    values:
+      layout: "default"
+
+aux_links:
+  Template Repository: https://github.com/just-the-docs/just-the-docs-template
