@@ -6,23 +6,23 @@ nav_order: 2
 # terms and definitions in context of this documentation
 
 ##  erased interface
-An object, whitch , members are function pointers, and every function has as first parameter "self". This is a pointer to (eventually const )void.
+An object, which members are function pointers, and every function has as first parameter "self". This is a pointer to (eventually const )void.
 
 ##  implemented erased interface
 An object derived from an interface, with no additional members and where all members point to vaild functions.
-Thes funtion are filled by a templated consztuctuer. The pemplate parameter is called the erased type.
-These functions cast the self parameter to a pointer to the erased type, and delegete via this pointer to the function, for witch this was erased through self.
+These funtion are filled by a templated constructor. The template parameter is called the erased type.
+These functions cast the self parameter to a pointer to the erased type, and delegate via this pointer to the function, for which this was erased through self.
 
 ## lifetime holder
-An object with manages the lifetime of an other object in a defined way and deleiver an address of that object. There are four archetypes:
+An object that manages the lifetime of an other object in a defined way and delivers an address of that object. There are four archetypes:
 ### observer
-Takes no ownership. The Creator of such an observer is responsible for asureing, that the referenced object outlives the observer. There are two flavors: const and mutable, for read only or modifying acces to the referenced object.
+Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: const and mutable, for read only or modifying access to the referenced object.
 ### shard const
-Ownership as std::shard_ptr. The deliverd address is a pointer const.
+Ownership as std::shard_ptr. The delivered address is a pointer const.
 ### unique
-Ownership as std::unique_ptr. The deliverd address is a pointer to a mutable object.
+Ownership as std::unique_ptr. The delivered address is a pointer to a mutable object.
 ### value
-Every value object holds an own copy. Same semantis as 'int'. The delivered access is modifyable.
+Every value object holds an own copy. Same semantics as 'int'. The delivered access is modifyable.
 
 ## erased lifetime holders
 
