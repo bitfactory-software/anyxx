@@ -7,7 +7,7 @@ namespace virtual_void::erased
 template <class BASE, class DERIVED > concept base_of = std::derived_from< DERIVED, BASE >;
 
 template<class E >
-concept is_erased = requires( E e, int i )
+concept is_erased_lifetime_holder = requires( E e, int i )
 {
 	typename E::void_t;
 	{ E::is_const } -> std::convertible_to< bool >;
@@ -17,16 +17,16 @@ concept is_erased = requires( E e, int i )
 	{ e.data() } -> std::convertible_to< const void* >;
 };
 
-template< is_erased ERASED, typename FROM >
-ERASED erase_to( FROM&& from )
+template< is_erased_lifetime_holder LIFETIME_HOLDER, typename FROM >
+LIFETIME_HOLDER erase_to( FROM&& from )
 {
-    if constexpr( is_erased< std::remove_reference_t< FROM > > )
+    if constexpr( is_erased_lifetime_holder< std::remove_reference_t< FROM > > )
     {
         return from;
     }
     else
     {
-        return ERASED::make_erased()( std::forward< FROM >( from ) );
+        return LIFETIME_HOLDER::make_erased()( std::forward< FROM >( from ) );
     }
 }
 
@@ -39,17 +39,17 @@ struct unerase_t
     }
 };
 
-template< is_erased ERASED, typename CONSTRUCTED_WITH >
+template< is_erased_lifetime_holder LIFETIME_HOLDER, typename CONSTRUCTED_WITH >
 auto unerase()
 {
     using constructed_with_t = std::remove_cvref_t< CONSTRUCTED_WITH >;
-    if constexpr( is_erased< constructed_with_t > )
+    if constexpr( is_erased_lifetime_holder< constructed_with_t > )
     {
         return unerase_t< typename constructed_with_t::conrete_t >();
     }
     else
     {
-        if constexpr( ERASED::is_const )
+        if constexpr( LIFETIME_HOLDER::is_const )
         {
             return unerase_t< constructed_with_t const >();
         }

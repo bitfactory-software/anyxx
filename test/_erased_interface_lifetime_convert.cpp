@@ -34,8 +34,8 @@ namespace virtual_void::erased
     template< typename ERASED_TO >
     auto v_table_cast( const auto& v_table )
     {
-        static_assert( std::same_as< to_string_co::_v_table_t, to_string_sc::_v_table_t > );
-        return static_cast< typename ERASED_TO::_v_table_t* >( v_table ); 
+        static_assert( std::same_as< to_string_co::interface_t, to_string_sc::interface_t > );
+        return static_cast< typename ERASED_TO::interface_t* >( v_table ); 
     }
 }
 
@@ -45,14 +45,14 @@ TEST_CASE( "interface lifetime cast" )
     REQUIRE( sc.to_string() == "hallo" );
     REQUIRE( sc.is_derived_from< erased::base< erased::shared_const > >() );
 
-    auto o1 = lifetime_cast< erased::const_observer >( sc._ref );
+    auto o1 = lifetime_cast< erased::const_observer >( sc.get_lifetime_holder() );
     auto x = erased::reconcrete_cast< X >( o1 );
-    auto x1 = static_cast< X const * >( sc._ref.data() );
+    auto x1 = static_cast< X const * >( sc.get_lifetime_holder().data() );
     REQUIRE( x->s_ == "hallo" );
 
 
     to_string_co co = interface_lifetime_cast< to_string_co >( sc );
     REQUIRE( co.to_string() == "hallo" );
-    static_assert( std::same_as< to_string_co::_v_table_t, to_string_sc::_v_table_t > );
+    static_assert( std::same_as< to_string_co::interface_t, to_string_sc::interface_t > );
     REQUIRE( co.is_derived_from< erased::base< erased::const_observer > >() );
 }
