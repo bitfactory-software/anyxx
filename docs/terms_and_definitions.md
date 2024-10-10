@@ -47,6 +47,10 @@ While up and downcast are within related types, crosscasts are between unrelated
 A crosscast usualy tests, if one interface can be reached from an other, and if so give access to it.
 
 ### open method
-an open method is a freestanding callable, which 
+An open method is a freestanding callable, which acts like a virtual member function. Open member functions are an reciepe to solve the [expression problem]. An opem method is the simplies but very usefull case of [open multi methods]. With an open method you can add functions, whitch behaviour is determined by the type of its (first) arguent, but you do not need to change the definition of that type. 
 
+### open type
+A type is an open type, if you can add data members without changing the definition of that object. This can be trivially implemented by an map from some kinde of tag to an any. An implentation with v-table like performance and an typesafe interface is more elaborated.
 
+[expression problem] https://en.wikipedia.org/wiki/Expression_problem
+[open multi methods] https://en.wikipedia.org/wiki/Multiple_dispatch
