@@ -26,21 +26,27 @@ A concrete lifetime holdder delivers the a pointer to an object of type, with wh
 
 ### static cast vs dynamic cast
 - A static cast
- - is in the language type rules and always checked ba the compiler. 
- - Upcasts are always safe und static. 
- - Static dowcasts are unsafe.
- - Static casts are only a syntactic construct an leave no trace in the binary code.
+  - is in the language type rules and always checked ba the compiler. 
+  - Upcasts are always safe und static. 
+  - Static dowcasts are unsafe.
+  - Static casts are only a syntactic construct an leave no trace in the binary code.
 - A dynamic cast is
-  - a runtime query, if the casted object is of this type
-  - 
+  - a runtime query to test if the casted object is of this type
+  - if such a query succeeds, is determined by the programm
+  - all dynamic casts are safe
+  - dynamic cast need code to run
 
 ### upcast vs downcast
+An upcast is a conversion from a more detailed type to a general one.
+A dowcast is conversione from a more general type to a more detailed ond.
+For upcast and downcasts must the types be related within the language rules.
+Staic downcasts are guesses and as such unsafe. Dynamic downcasts are per definition safe.
 
 ### crosscast
-dynamic, from one "interface" to an other
+While up and downcast are within related types, crosscasts are between unrelated types. Such types are typicaly virtual base types (an interface).  
+A crosscast usualy tests, if one interface can be reached from an other, and if so give access to it.
 
 ### open method
+an open method is a freestanding callable, which 
 
 
-
-[README]: https://github.com/just-the-docs/just-the-docs-template/blob/main/README.md
