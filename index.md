@@ -7,9 +7,8 @@ permalink: /
 
 # virtual void
 
-## a library with vocabulary types for programming in the large
+## a library with **type erased** vocabulary types for programming in the large
 
-You will find for your disposal these **type erased** tools:
 - lifetimehandles
 - interfaces
   - deriveable
