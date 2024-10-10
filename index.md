@@ -22,8 +22,8 @@ These types are orthogonal building blocks for large software systems with loose
 The library is **header only** 
 
 The name of the library originates in its fundamental design idea:
-- hide the concrete data behind a (possible "smart") pointer to void
-- pair this with a pointer to static meta data to interprete the hidden data.
+- hide the concrete data behind a (possible "smart") **pointer to void**
+- pair this with a pointer to **virtual** meta data to interprete the hidden data.
 
 
 
