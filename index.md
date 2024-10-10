@@ -16,7 +16,7 @@ permalink: /
   - downcastable
 - open methods
 - object casts
-- open objects
+- open types
 
 These types are orthogonal building blocks for large software systems with loose coupling and performance on par with virtual function calls. 
 
