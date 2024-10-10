@@ -56,5 +56,5 @@ A type is an open type, if you can add data members without changing the definit
 
 
 
-[expression problem] https://en.wikipedia.org/wiki/Expression_problem
-[open multi methods] https://en.wikipedia.org/wiki/Multiple_dispatch
+[expression problem]: https://en.wikipedia.org/wiki/Expression_problem
+[open multi methods]: https://en.wikipedia.org/wiki/Multiple_dispatch
