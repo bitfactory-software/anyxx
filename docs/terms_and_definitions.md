@@ -52,5 +52,9 @@ An open method is a freestanding callable, which acts like a virtual member func
 ### open type
 A type is an open type, if you can add data members without changing the definition of that object. This can be trivially implemented by an map from some kinde of tag to an any. An implentation with v-table like performance and an typesafe interface is more elaborated.
 
+
+
+
+
 [expression problem] https://en.wikipedia.org/wiki/Expression_problem
 [open multi methods] https://en.wikipedia.org/wiki/Multiple_dispatch
