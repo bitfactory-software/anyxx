@@ -6,8 +6,6 @@ nav_order: 1
 
 # on the dark side of type erasure
 
-on the dark side of type erasure
-
   what we see…
   
     void algorithm( ersased );
