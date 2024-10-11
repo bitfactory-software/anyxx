@@ -1,6 +1,5 @@
 ---
-title: Inherritance is the root of all evil. Execpt if done right
-Execpt if done Right.
+title: Inherritance is the root of all evil. Execpt if done right.
 parent: blog
 nav_order: 1
 ---
