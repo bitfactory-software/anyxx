@@ -6,12 +6,11 @@ nav_order: 10
 
 # Inherritance is the base class of all evil. Execpt if done right
 
-If you have not yet seen Sean Parent talking about type erasure, do it now.
+If you have not yet seen [Sean Parent talking about type erasure](https://youtu.be/bIhUE5uUFOA?si=qa4nXpmz8FCNUoY0&t=577), do it now.
 
-<img width="1685" alt="image" src="https://github.com/user-attachments/assets/da75c051-6a95-4ed3-ac54-ef8e56fc2ac0">
-[Sean Parent on youtube](https://youtu.be/bIhUE5uUFOA?si=qa4nXpmz8FCNUoY0&t=577)
+The quintesential scene is captured her, to clarify this blog post title:
+<img width="1670" alt="image" src="https://github.com/user-attachments/assets/29ccd00e-cbdb-4ff1-bc18-174e8c46c061">
 
-For all others, the title of this bolg post, should be clear.
 As sharp as Parent hits against missuse of inherritance, he shows in the immense experssive power of this abstraction mechanism in the same example.
 
 And paradoxically these power get lost in all usually shown examples for the applictaion of type erasure. They typically look like this:
