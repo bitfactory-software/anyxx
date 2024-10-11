@@ -1,5 +1,5 @@
 ---
-title: Blog
+title: blog
 nav_order: 30
 ---
 
