@@ -6,7 +6,7 @@ nav_order: 3.1
 # on the dark side of type erasure
 
 on the dark side of type erasure
-  what we see…
+  what we seeâ€¦
     void algorithm( ersased );
     boundary caller-callee
     container of  erased
@@ -18,7 +18,7 @@ on the dark side of type erasure
   what is often implied
     (between the lines or loud)
     classes with "conventional" v-tables  are somewhat old school and outdatetd
-  lets ummarize, what we can do with v-tables…
+  lets ummarize, what we can do with v-tablesâ€¦
     Control Lifetime via virtual destructor
     do superfast runtime dispatch
     dynamic/static downcast
@@ -41,7 +41,7 @@ on the dark side of type erasure
     like v-tables
     only better
   so
-    let us explore…
+    let us exploreâ€¦
     what are typical Problems?
     what could a soultion look like?
       Show samlpe ?
