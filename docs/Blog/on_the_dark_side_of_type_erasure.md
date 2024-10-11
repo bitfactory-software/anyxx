@@ -1,6 +1,7 @@
 ---
 title: on the dark side of type erasure
-nav_order: 3.1
+parent: blog
+nav_order: 1
 ---
 
 # on the dark side of type erasure
