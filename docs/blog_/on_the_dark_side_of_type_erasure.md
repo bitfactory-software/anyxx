@@ -6,7 +6,9 @@ nav_order: 1
 
 # as we came on the dark side of type erasure
 
-If you have not yet seen [Sean Parent talking about type erasure](https://youtu.be/bIhUE5uUFOA?si=qa4nXpmz8FCNUoY0&t=577), do it now.
+<img width="920" alt="image" src="https://github.com/user-attachments/assets/65f7f175-08d6-4c5e-b3e1-7cb45a59779b">
+
+If you have not yet seen [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8), do it now.
 
 
 
