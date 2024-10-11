@@ -20,7 +20,16 @@ Compiler explorer proxy sample for shapes.
 
 We see some concrete objects are constructed direct at the call to an algorithm with an "type erasing" parameter type.
 then the magic happens, inside the algorithm the type erasure run time dispatch takes care, that the corresponding function of concrete object is executed.
+
+Wes see, that 
+- the implementation of the inteface ("drawable" to use the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), and
+- the implementation of the interface itsel can be very general bey use uf clever template tricks ("generic" ;-) )
+
+And so the conclusio, ...
+
 And here ends the the story.
+
+
 
 And my sorrow begins. This pseudoecode example should show you why... 
 
@@ -43,3 +52,5 @@ int main()
   return 0;
 }
 ```
+
+When we generalize our observations, we can say  
