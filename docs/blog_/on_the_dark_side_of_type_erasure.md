@@ -12,24 +12,29 @@ If you have not yet seen [Sean Parent talking about type erasure](https://www.yo
 
 
 
-Lets short  recap the quintesence of this example in terms of "proxy", the type erasure library roposed for inclusion in c++26:
+Let us short recap the quintesence of this example. To eliminate the boilerplat code, we will use "proxy". This is the "type erasure library roposed for inclusion in c++26:
 
 Compiler explorer proxy sample for shapes.
 
-Some concrete objects are constructed direct at the call to an algorithm with an "type erasing" parameter type.
-Then the magic happens, inside the algorithm the type erasure run time dispatch takes care, that the corresponding function of concrete object is executed.
+Some objects are constructed direct at the call site to an algorithm. 
+This algorithm has a "type erasing" parameter "drawable".
+The magic happens inside of the algorithm. 
+The "type erasure run time dispatch", provided by proxy, takes care, that the corresponding function of concrete object is executed.
 
 Wes see, that 
-- the implementation of the inteface ("drawable" to use the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), and
-- the implementation of the interface itsel can be very general bey use uf clever template tricks ("generic" ;-) )
+- the implementation of the inteface ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
+and
+- the implementation of the interface itself can be very generic by use uf clever template tricks.
 
-These features are intruding. So it is understanding, that type erasure is the new cool thing in down, when it comes to runtime dispatch. 
+These features are intruding.
+So it is understanding, that type erasure is the new cool thing in regards to runtime dispatch. 
 This reaches so far, that new languages, like 'rust' go full in on that idea and dissmiss the idea of inherritance as a whole.
 
-The key messeage we get told is, that programming along classes utilizing the conventional v-table is old school and outdated. 
+The key messeage we get told is: Programming along classes utilizing the conventional v-table is old school and outdated. 
 And here ends the the usual story. 
 
-We where convinced to. So we tried this techniqe to an aspect of our codebase.  
+We where convinced too. 
+So we tried to apply this techniqe to an aspect of our codebase.  
 Simplified, we had this structure
 
 ```c++
@@ -75,11 +80,11 @@ public:
 private: // nearly no data
 };
 
-proxy BaseProxy GetValue()
-proxy DerivedProxy : BaseProxy Scope()
+proxy BaseProxy ToString()
+proxy DerivedProxy : BaseProxy + GetValue()
 ```
 
-Until here it worked all fine. Untill we realized, our system not only consumes input:
+Until here it worked all fine. Untill we realized: Our system does not only consumes input:
 
 ```c++
 proxy< base > build for int value() const;
@@ -102,14 +107,16 @@ int main()
 ```
 
 The called functions
-- filter for the input with predicates, and
-- return results
+- filter for the input with predicates (callback)
+and
+- the have to return results
 
 But because we have erased away ALL **type** informatiom, we have no longer access to the data we need, to 
-- answer the questions asked to the predicate functions, and
-- continue with our processing.
+- answer the questions asked to the predicate functions via callbcks
+and
+- to continue with our processing, we need the full interface we passed into the functions.
 
-So in this case we resorted to old some school unsexy OO-Style template mixture to solve the riddle:
+So we resorted to old some school unsexy OO-Style template mixture to solve this particular riddle:
 
 ```c++
 struct IBase
@@ -120,34 +127,42 @@ struct IBase
 struct IDerived : IBase
 {
 	virtual int VirtualGetValue() const = 0;
-	std::string GetValue() const { return VirtualGetValue(); }
+	int GetValue() const { return VirtualGetValue(); }
 };
 
-template< typename MODEL, typename INTERFACE >
+template< typename MODEL >
 struct IBaseModel
 {
 	const MODEL* Model() const { return static_cast< const MODEL* >( this ); }
 	virtual std::string VirtualToString() const ;
-
 };
 
+template< typename MODEL >
+struct IDerivedModel : IBaseModel< MODEL >
+{
+	const MODEL* Model() const { return static_cast< const MODEL* >( this ); }
+	int GetValue() const ;
+};
 
-class Base
+class BaseImpl // same as original "Base"
 {
 public:
 	std::string ToString() const override;
 private: // data
 };
 
-class Dereived : Base
+class Base : public BaseImpl, IBaseModel< Base >
+{
+};
+
+class Dereived : public BaseImpl, IDerivedModel< Dereived >
 {
 public:
-	std::string ToString() const override;
-	int GetValue() const override;
+	int GetValue() const;
 private: // more data
 };
 
-class DereivedLigthweight
+class DereivedLigthweight : public BaseImpl, IDerivedModel< DereivedLigthweight >
 {
 public:
 	std::string GetValue();
@@ -155,90 +170,35 @@ public:
 private: // nearly no data
 };
 
-proxy BaseProxy GetValue()
-proxy DerivedProxy : BaseProxy Scope()
 ```
 
-When we generalize our observations, we can say, that the expressive power, Sean shows us in his talk, get lost in the usually examples for the applictaion of type erasure.
+That worked.
+But we saw, there is a lot of room for improvement.
+We saw also, there is a pattern, that shows a general flaw in the concept of "type erasure" as we understood it.
+We called that pattern the "2nd order type erasure problem".
+This pattern can be reduced to this code lines.
 
+```c++
 
-# on the dark side of type erasure
+proxy< base > build int func1() const;
+proxy< derived > : base + int func2() const;
 
-  what we see…
-  
-    void algorithm( ersased );
-    
-    boundary caller-callee
-    
-    container of  erased
-    
-  to Show 
-  
-    loose coupling
-    
-    no inherritance dependency imposed
-    
-    type erasure is the new runtime polymorhism kid in the down
-    
-    also adopted by rust ("traits")
-    
-  what is often implied
-  
-    (between the lines or loud)
-    
-    classes with "conventional" v-tables  are somewhat old school and outdatetd
-    
-  lets ummarize, what we can do with v-tables…
-  
-    Control Lifetime via virtual destructor
-    
-    do superfast runtime dispatch
-    
-    dynamic/static downcast
-    
-    dynamic typesafe crosscast
-    
-  type erasure as we  see in the exaples 
-  
-    Shines at 1 + 2
-    
-    pondering silence
-    
-    if you think, dynamic_cast's are a code smell
-    
-      please give me one more Minute, to give you my Point
-      
-      ersased  = algorithm( ersased  );
-  
-  but 
-  
-    so, we need it!
-    
-      same in rust ( https://github.com/rust-lang/rust/issues/65991 )
-        
-    to do all we can do with v-tables
-    
-    so type erasure can be a fundamental Building block for large scale Software
-    
-      what is "large scale Software"?
-      
-      when you need runtime dispatch for Inversion of Control, because the compiler can not know all your types everywhere.
-      
-      when you do not know all the interfaces a type supports everywhere
-      
-    like v-tables
-    
-    only better
-    
-  so
-    
-    let us explore…
-    
-    what are typical Problems?
-    
-    what could a soultion look like?
-    
-      Show samlpe ?
-      
-      interesting?  next time more!
-      
+struct S
+{
+	int func1() const { return 1; };
+	int func2() const { return 2; };
+};
+
+base f1( base b ) { return b; }
+
+derived f2( derived d ) { return erased_2n_order_problem_downcast< derived >( xb ); }
+
+int main()
+{
+  cout << f2( S{} ).func2() << "\n";
+  return 0;
+}
+```
+
+Next time, we will show, how we tackeled that problem on its root.
+
