@@ -13,16 +13,62 @@ If you have not yet seen [Sean Parent talking about type erasure](https://www.yo
 Let us short recap the quintesence of this example.
 To eliminate the boilerplat code, we will use "proxy". 
 This is the "type erasure library roposed for inclusion in c++26.
-We will use only a small part of the rich features availabel there.
+We will use only a small part of the ritch features available in this awesome library.
 
+```c++
+#include <iostream>
+#include <vector>
+#include "https://raw.githubusercontent.com/microsoft/proxy/refs/heads/main/proxy.h"
 
+struct position { float x, y; };
 
-Compiler explorer proxy sample for shapes.
+struct circle {
+    double radius;
+    void draw(position p) const 
+    {
+        std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << ", Area: " << area() <<  std::endl;
+    }
+    double area() const {  
+      return radius * radius * 3.14;
+    }
+};
+struct rectangle {
+    int w, h;
+    void draw(position p) const {
+        std::cout << " A Rectangle Is Recorded At " << p.x << " " << p.y << ", Area: " << area() << std::endl;
+    }
+    double area() const {
+        return w * h;
+    }
+};
 
-Some objects are constructed direct at the call site to an algorithm. 
-This algorithm has a "type erasing" parameter "drawable".
-The magic happens inside of the algorithm. 
-The "type erasure run time dispatch", provided by proxy, takes care, that the corresponding function of concrete object is executed.
+PRO_DEF_MEM_DISPATCH(draw_convention, draw);
+struct drawable : pro::facade_builder
+    ::add_convention<draw_convention, void(position) const>
+    ::support_copy<pro::constraint_level::nontrivial>
+    ::build {};
+
+void draw(const std::vector<pro::proxy<drawable>>& drawables){
+    position pos{ 1.0, 2.0 };
+    for( auto drawable: drawables )
+        drawable->draw( pos );
+}
+
+int main()
+{
+    circle c{ 1.0,};
+    rectangle r{3, 4};
+    draw({{&c}, {&r}});
+    return 0;
+}
+```
+[see it on compiler explorer]: https://en.wikipedia.org/wiki/Expression_problem
+
+Some objects are constructed. 
+Their addresses are add to a vector, witch elememnts are of type pro::proxy<drawable>.
+This is the "type eraser".
+The magic happens then inside of the algorithm. 
+The "type erasure run time dispatch", provided by proxy, takes care, that the corresponding function of the concrete object is executed.
 
 Wes see, that 
 - the implementation of the inteface ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
@@ -30,10 +76,11 @@ and
 - the implementation of the interface itself can be very generic by use uf clever template tricks.
 
 These features are intruding.
-So it is understanding, that type erasure is the new cool thing in regards to runtime dispatch. 
+So it is understanding, that "type erasure"" is the new cool thing in regards to runtime dispatch. 
 This reaches so far, that new languages, like 'rust' go full in on that idea and dissmiss the idea of inherritance as a whole.
+The key messeage we get told is: Programming along classes utilizing the conventional v-table is old school and outdated.
+(see "type erasure ["My existing project uses virtual functions. How should I migrate to “Proxy”?]: https://microsoft.github.io/proxy/docs/faq.html#how-migrate
 
-The key messeage we get told is: Programming along classes utilizing the conventional v-table is old school and outdated. 
 And here ends the the usual story. 
 
 We where convinced too. 
@@ -41,15 +88,13 @@ So we tried to apply this techniqe to an aspect of our codebase.
 Simplified, we had this structure
 
 ```c++
-class Base
-{
+class Base {
 public:
 	virtual std::string ToString() const;
 private: // data
 };
 
-class Dereived : Base
-{
+class Derived : Base {
 public:
 	std::string ToString() override;
 	int GetValue();
@@ -57,26 +102,23 @@ private: // more data
 };
 ```
 
-For Derevid, we wanted to seperate the implementation from the interface, becuause in many important cases, the usual implemetation of derived was too heavy.
+For Derived, we wanted to seperate the implementation from the interface, becuause in many important cases, the usual implemetation of derived was too heavy.
 We would like to came up with an design that looked something like that (in terms of 'proxy'):
 
 ```c++
-class Base
-{
+class Base {
 public:
 	std::string ToString() const;
 private: // data
 };
 
-class Dereived : Base
-{
+class Dereived : Base {
 public:
 	int GetValue();
 private: // more data
 };
 
-class DereivedLigthweight
-{
+class DereivedLigthweight {
 public:
 	std::string GetValue();
 	int Scope();
@@ -87,7 +129,7 @@ proxy BaseProxy ToString()
 proxy DerivedProxy : BaseProxy + GetValue()
 ```
 
-Until here it worked all fine. Untill we realized: Our system does not only consumes input:
+Until here it worked all fine. Untill we realized: Our system does not only consume input:
 
 ```c++
 proxy< base > build for int value() const;
