@@ -10,9 +10,12 @@ nav_order: 1
 
 If you have not yet seen [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8), do it now.
 
+Let us short recap the quintesence of this example.
+To eliminate the boilerplat code, we will use "proxy". 
+This is the "type erasure library roposed for inclusion in c++26.
+We will use only a small part of the rich features availabel there.
 
 
-Let us short recap the quintesence of this example. To eliminate the boilerplat code, we will use "proxy". This is the "type erasure library roposed for inclusion in c++26:
 
 Compiler explorer proxy sample for shapes.
 
