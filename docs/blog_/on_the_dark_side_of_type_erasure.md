@@ -1,10 +1,10 @@
 ---
-title: as we came on the dark side of type erasure
+title: As we came on the dark side of type erasure
 parent: blog
 nav_order: 1
 ---
 
-# as we came on the dark side of type erasure
+# As we came on the dark side of type erasure
 
 This is a short story, with lot of code, witch tells from exitment, illusion, realisation and new orientation around "type erasure"
 
