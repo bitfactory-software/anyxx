@@ -183,17 +183,16 @@ So fat so good. But but our functions do not look like the one in the example ab
 They are more like this:
 
 ```c++
-
-base f1(pro::proxy<HasValue> a, pro::proxy<HasValue> b, std::function< bool(pro::proxy<HasValue>) > ); // do somethin clever and then select the return type
-void f2(pro::proxy<HasValueAndScope> a, pro::proxy<HasValueAndScope> b )
-{
-  auto result_f1 = f1(a, b, [](auto x){ return downcast_to<pro::proxy<HasValueAndScope>>(x).Scope() > 30; };
-  auto result = i_need_a_downcast_to<pro::proxy<HasValueAndScope>>(result_f1):
-  cout << result.Scope() << "\n";
+base f1(pro::proxy<HasValue> a, pro::proxy<HasValue> b, std::function< bool(pro::proxy<HasValue>) > ) {
+   // do somethin clever and then select the return type
+   return {};
 }
-
-int main()
-{
+void f2(pro::proxy<HasValueAndScope> a, pro::proxy<HasValueAndScope> b ) {
+  auto result_f1 = f1(a, b, [](auto x){ return downcast_to<pro::proxy<HasValueAndScope>>(x).Scope() > 30; });
+  auto result = i_need_a_downcast_to<pro::proxy<HasValueAndScope>>(result_f1);
+  std::cout << result.Scope() << "\n";
+}
+int main() {
   f2(DereivedLigthweight{'x'}, Derived derived{"derived", 4711});
   return 0;
 }
@@ -281,18 +280,16 @@ This pattern can be reduced to this code lines.
 proxy< base > build int func1() const;
 proxy< derived > : base + int func2() const;
 
-struct S
-{
-	int func1() const { return 1; };
-	int func2() const { return 2; };
+struct S {
+  int func1() const { return 1; };
+  int func2() const { return 2; };
 };
 
 base f1( base b ) { return b; }
 
 derived f2( derived d ) { return erased_2n_order_problem_downcast< derived >( xb ); }
 
-int main()
-{
+int main() {
   cout << f2( S{} ).func2() << "\n";
   return 0;
 }
