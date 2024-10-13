@@ -58,7 +58,7 @@ int main()
 {
     circle c{ 1.0,};
     rectangle r{3, 4};
-    draw({{&c}, {&r}});
+    draw({ {&c}, {&r} });
     return 0;
 }
 ```
