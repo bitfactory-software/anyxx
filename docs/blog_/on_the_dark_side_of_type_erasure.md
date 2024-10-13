@@ -90,7 +90,7 @@ Simplified, we had this structure
 ```c++
 class Base {
 public:
-	virtual std::string ToString() const;
+	std::string ToString() const;
 private: // data
 };
 
@@ -102,9 +102,7 @@ private: // more data
 };
 ```
 
-For Derived, we wanted to seperate the implementation from the interface, becuause in many important cases, the usual implemetation of derived was too heavy.
-We would like to came up with an design that looked something like that (in terms of 'proxy'):
-
+We wanted to came up mit soemthing like, this:
 ```c++
 class Base {
 public:
@@ -124,30 +122,79 @@ public:
 	int Scope();
 private: // nearly no data
 };
-
-proxy BaseProxy ToString()
-proxy DerivedProxy : BaseProxy + GetValue()
 ```
-https://godbolt.org/z/GsoWhqd6o
+Derived needed two distinct implementations, becuause in many important cases, the usual implemetation of derived was too heavy.
 
-Until here it worked all fine. Untill we realized: Our system does not only consume input:
+In terms of "proxy", we wanted something like this:
+```c++
+#include <iostream>
+#include <vector>
+#include "https://raw.githubusercontent.com/microsoft/proxy/refs/heads/main/proxy.h"
+
+struct Base {
+    std::string b_data_;
+	std::string Value() const { return b_data_; }
+};
+struct Derived : Base {
+    int d_data_ = 0;
+	int Scope() const { return d_data_; }
+};
+struct DereivedLigthweight {
+    std::string::value_type lw_data = 'a'; // nearly no data
+	std::string Value() const { return std::string( 21, lw_data ); }
+	int Scope() const { return (int)lw_data * 31; }
+};
+
+PRO_DEF_MEM_DISPATCH(ValueMem, Value);
+PRO_DEF_MEM_DISPATCH(ScopeMem, Scope);
+struct HasValue : pro::facade_builder
+    ::add_convention<ValueMem, std::string() const>
+    ::support_copy<pro::constraint_level::nontrivial>
+    ::build {};
+struct HasValueAndScope : pro::facade_builder
+    ::add_facade<HasValue>
+    ::add_convention<ScopeMem, int() const>
+    ::support_copy<pro::constraint_level::nontrivial>
+    ::build {};
+
+void function_a(pro::proxy<HasValue> i) { std::cout << i->Value() << std::endl; }
+void function_b(pro::proxy<HasValueAndScope> i) { std::cout << i->Value() << ", " << i->Scope() << std::endl; }
+
+int main()
+{
+    Base base{ "base" };
+    Derived derived{ "derived", 4711 };
+    DereivedLigthweight dereivedLigthweight{ 'x' };
+
+    function_a(&base);
+    function_a(&derived);
+    function_a(&dereivedLigthweight);
+
+    //function_a(&base);
+    function_b(&derived);
+    function_b(&dereivedLigthweight);
+
+    return 0;
+}
+```
+[see it on compiler explorer]: https://godbolt.org/z/K5Y7GdW5Y
+
+So fat so good. But but our functions do not look like the one in the example above.
+They are more like this:
 
 ```c++
-proxy< base > build for int value() const;
-proxy derived buid for std::string to_string() const;
 
-base f1( base a, base b, std::function< bool( base ) > ); // do somethin clever and then select the return type
-
-void f2( derived a, derived b )
+base f1(pro::proxy<HasValue> a, pro::proxy<HasValue> b, std::function< bool(pro::proxy<HasValue>) > ); // do somethin clever and then select the return type
+void f2(pro::proxy<HasValueAndScope> a, pro::proxy<HasValueAndScope> b )
 {
-  auto xb = f1( a, b, []( base x ){  return i_need_a_downcast_to< derived >( x ).value() > 3.14; };
-  auto xd = i_need_a_downcast_to< derived >( xb ):
-  cout << xd.value() << "\n";
+  auto result_f1 = f1(a, b, [](auto x){ return downcast_to<pro::proxy<HasValueAndScope>>(x).value() > 3.14; };
+  auto result = i_need_a_downcast_to<pro::proxy<HasValueAndScope>>(result_f1):
+  cout << result.value() << "\n";
 }
 
 int main()
 {
-  f2( derived( 1 ), derived( 2 ) );
+  f2(DereivedLigthweight{'x'}, Derived derived{"derived", 4711});
   return 0;
 }
 ```
@@ -155,7 +202,7 @@ int main()
 The called functions
 - filter for the input with predicates (callback)
 and
-- the have to return results
+- the return results. 
 
 But because we have erased away ALL **type** informatiom, we have no longer access to the data we need, to 
 - answer the questions asked to the predicate functions via callbcks
