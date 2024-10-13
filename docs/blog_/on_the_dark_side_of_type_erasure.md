@@ -6,17 +6,20 @@ nav_order: 1
 
 # as we came on the dark side of type erasure
 
+This is a short story, with lot of code, witch tells from exitment, illusion, realisation and new orientation around "type erasure"
+
 <img width="920" alt="image" src="https://github.com/user-attachments/assets/65f7f175-08d6-4c5e-b3e1-7cb45a59779b">
 
 If you have not yet seen [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8), do it now.
+This was for us, as for many others a really, empowering expirience.
+It covered so many topics.
+For now, we will concentrate on the "type erasure" part.
 
-We will short recap the quintesence of this example.
-
+We will try, to short recap the quintesence of this example.
 To eliminate the boilerplate code, we use "proxy". 
+"proxy" is the "type erasure"" library roposed for inclusion in c++26.
 
-"proxy" is the "type erasure library roposed for inclusion in c++26.
-
-We will use only a small part of the many features available in this awesome library.
+In the sample is used only a small part of the many features available in this awesome library.
 
 ```c++
 #include <iostream>
@@ -77,7 +80,7 @@ The magic happens then inside of the algorithm.
 The "type erasure run time dispatch", provided by proxy, takes care, that the corresponding function of the concrete object is executed.
 
 Wes see, that 
-- the implementation of the inteface ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
+- the implementation of the interface ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
 
 and
 
@@ -85,9 +88,10 @@ and
 
 These features are intruding.
 
-So it is understanding, that "type erasure"" is the new cool thing in regards to runtime dispatch. 
+So it is understanding, that "type erasure" is the new cool thing in regards to runtime dispatch. 
 
-This reaches so far, that new languages, like 'rust' go full in on that idea and dissmiss the idea of inherritance as a whole.
+This reaches so far, that new languages, like "rust"" go full in on that concept, and dissmiss the idea of inherritance as a whole.
+
 The key messeage we get told is: Programming along classes utilizing the conventional v-table is old school and outdated.
 (see "type erasure ["My existing project uses virtual functions. How should I migrate to “Proxy”?]: https://microsoft.github.io/proxy/docs/faq.html#how-migrate
 
@@ -259,3 +263,4 @@ What we need, is
 
 Next time, we will show, how we tackeled that problem.
 
+PS: Rust also has to settle this topic, [see here]: https://github.com/rust-lang/rust/issues/65991
