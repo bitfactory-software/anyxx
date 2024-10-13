@@ -187,9 +187,9 @@ They are more like this:
 base f1(pro::proxy<HasValue> a, pro::proxy<HasValue> b, std::function< bool(pro::proxy<HasValue>) > ); // do somethin clever and then select the return type
 void f2(pro::proxy<HasValueAndScope> a, pro::proxy<HasValueAndScope> b )
 {
-  auto result_f1 = f1(a, b, [](auto x){ return downcast_to<pro::proxy<HasValueAndScope>>(x).value() > 3.14; };
+  auto result_f1 = f1(a, b, [](auto x){ return downcast_to<pro::proxy<HasValueAndScope>>(x).Scope() > 30; };
   auto result = i_need_a_downcast_to<pro::proxy<HasValueAndScope>>(result_f1):
-  cout << result.value() << "\n";
+  cout << result.Scope() << "\n";
 }
 
 int main()
