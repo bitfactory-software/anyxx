@@ -209,7 +209,12 @@ But because we have erased away ALL **type** informatiom, we have no longer acce
 and
 - to continue with our processing, we need the full interface we passed into the functions.
 
-So we resorted to old some school unsexy OO-Style template mixture to solve this particular riddle:
+We found no solution to this pattern in the libraries we found
+- [Boost Type Erasure]: https://www.boost.org/doc/libs/1_78_0/doc/html/boost_typeerasure/any.html#boost_typeerasure.any.conversions
+- [AnyAny]: https://github.com/kelbon/AnyAny
+- [Dyno]: https://github.com/ldionne/dyno
+
+So we resorted to a old school unsexy "OO-Style + template mixture" to solve this particular riddle.
 
 ```c++
 struct IBase
