@@ -133,7 +133,7 @@ public:
 private: // nearly no data
 };
 ```
-Derived needed two distinct implementations, becuause in many important cases, the usual implemetation of derived was too heavy.
+"Derived" needed two distinct implementations, becuause in many important cases, "Derived" itself is too heavy.
 
 In terms of "proxy", we wanted something like this:
 ```c++
