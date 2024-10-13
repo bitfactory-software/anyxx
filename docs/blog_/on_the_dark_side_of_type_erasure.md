@@ -116,20 +116,20 @@ We wanted to came up mit soemthing like, this:
 ```c++
 class Base {
 public:
-	std::string ToString() const;
+  std::string ToString() const;
 private: // data
 };
 
 class Derived : Base {
 public:
-	int Value();
+  int Value();
 private: // more data
 };
 
 class DerivedLigthweight {
 public:
-	std::string Value();
-	int Scope();
+  std::string Value();
+  int Scope();
 private: // nearly no data
 };
 ```
@@ -142,49 +142,48 @@ In terms of "proxy", we wanted something like this:
 #include "https://raw.githubusercontent.com/microsoft/proxy/refs/heads/main/proxy.h"
 
 struct Base {
-    std::string b_data_;
-	std::string Value() const { return b_data_; }
+  std::string b_data_;
+  std::string Value() const { return b_data_; }
 };
 struct Derived : Base {
-    int d_data_ = 0;
-	int Scope() const { return d_data_; }
+  int d_data_ = 0;
+  int Scope() const { return d_data_; }
 };
 struct DereivedLigthweight {
-    std::string::value_type lw_data = 'a'; // nearly no data
-	std::string Value() const { return std::string( 21, lw_data ); }
-	int Scope() const { return (int)lw_data * 31; }
+  std::string::value_type lw_data = 'a'; // nearly no data
+  std::string Value() const { return std::string( 21, lw_data ); }
+  int Scope() const { return (int)lw_data * 31; }
 };
 
 PRO_DEF_MEM_DISPATCH(ValueMem, Value);
 PRO_DEF_MEM_DISPATCH(ScopeMem, Scope);
 struct HasValue : pro::facade_builder
-    ::add_convention<ValueMem, std::string() const>
-    ::support_copy<pro::constraint_level::nontrivial>
-    ::build {};
+  ::add_convention<ValueMem, std::string() const>
+  ::support_copy<pro::constraint_level::nontrivial>
+  ::build {};
 struct HasValueAndScope : pro::facade_builder
-    ::add_facade<HasValue>
-    ::add_convention<ScopeMem, int() const>
-    ::support_copy<pro::constraint_level::nontrivial>
-    ::build {};
+  ::add_facade<HasValue>
+  ::add_convention<ScopeMem, int() const>
+  ::support_copy<pro::constraint_level::nontrivial>
+  ::build {};
 
 void function_a(pro::proxy<HasValue> i) { std::cout << i->Value() << std::endl; }
 void function_b(pro::proxy<HasValueAndScope> i) { std::cout << i->Value() << ", " << i->Scope() << std::endl; }
 
 int main()
 {
-    Base base{ "base" };
-    Derived derived{ "derived", 4711 };
-    DereivedLigthweight dereivedLigthweight{ 'x' };
+  Base base{ "base" };
+  Derived derived{ "derived", 4711 };
+  DereivedLigthweight dereivedLigthweight{ 'x' };
 
-    function_a(&base);
-    function_a(&derived);
-    function_a(&dereivedLigthweight);
+  function_a(&base);
+  function_a(&derived);
+  function_a(&dereivedLigthweight);
 
-    //function_a(&base);
-    function_b(&derived);
-    function_b(&dereivedLigthweight);
+  function_b(&derived);
+  function_b(&dereivedLigthweight);
 
-    return 0;
+  return 0;
 }
 ```
 [see it on compiler explorer]: https://godbolt.org/z/K5Y7GdW5Y
@@ -211,16 +210,16 @@ int main() {
 ```
 
 The called functions
-- filter for the input with predicates (callback)
+- filter the input with predicate callbacks
 and
 - they return results. 
 
-But because we have erased away ALL **type** informatiom, we have no longer access to the data we need, to 
+But because we have **erased** away ALL **type** informatiom, we have no longer access to the data we need, to 
 - answer the questions asked to the predicate functions via callbcks
 and
-- to continue with our processing, we need the full interface we passed into the functions.
+- to continue with our processing, because we need the full interface we passed into the functions.
 
-We found no solution to this pattern in the libraries we found
+We found no solution to this pattern in the libraries we searched
 - [Boost Type Erasure]: https://www.boost.org/doc/libs/1_78_0/doc/html/boost_typeerasure/any.html#boost_typeerasure.any.conversions
 - [AnyAny]: https://github.com/kelbon/AnyAny
 - [Dyno]: https://github.com/ldionne/dyno
