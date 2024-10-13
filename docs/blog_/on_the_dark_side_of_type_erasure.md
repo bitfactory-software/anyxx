@@ -233,7 +233,7 @@ So we resorted to a old school unsexy "OO-Style + template mixture" to solve thi
 That worked. But we saw, there is a lot of room for improvement.
 
 We saw also, there is a pattern, that shows a general flaw in the concept of "type erasure" as we understood it.
-We called that pattern the "2nd order type erasure problem".
+We called that pattern the "type_erased_downcast type erasure problem".
 This pattern can be reduced to this code lines.
 
 ```c++
@@ -259,7 +259,7 @@ int main() {
 
 What we need, is 
 1. a make_type_erased "thing" that supports
-2. a typerased_downcast, based on that "things"_
+2. a typerased_downcast, based on that "things" implementation
 
 Next time, we will show, how we tackeled that problem.
 
