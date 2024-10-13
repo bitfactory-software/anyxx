@@ -112,13 +112,13 @@ public:
 private: // data
 };
 
-class Dereived : Base {
+class Derived : Base {
 public:
 	int GetValue();
 private: // more data
 };
 
-class DereivedLigthweight {
+class DerivedLigthweight {
 public:
 	std::string GetValue();
 	int Scope();
@@ -128,6 +128,7 @@ private: // nearly no data
 proxy BaseProxy ToString()
 proxy DerivedProxy : BaseProxy + GetValue()
 ```
+https://godbolt.org/z/GsoWhqd6o
 
 Until here it worked all fine. Untill we realized: Our system does not only consume input:
 
@@ -200,14 +201,14 @@ class Base : public BaseImpl, IBaseModel< Base >
 {
 };
 
-class Dereived : public BaseImpl, IDerivedModel< Dereived >
+class Derived : public BaseImpl, IDerivedModel< Dereived >
 {
 public:
 	int GetValue() const;
 private: // more data
 };
 
-class DereivedLigthweight : public BaseImpl, IDerivedModel< DereivedLigthweight >
+class DerivedLigthweight : public BaseImpl, IDerivedModel< DereivedLigthweight >
 {
 public:
 	std::string GetValue();
