@@ -214,63 +214,9 @@ We found no solution to this pattern in the libraries we found
 - [Dyno]: https://github.com/ldionne/dyno
 
 So we resorted to a old school unsexy "OO-Style + template mixture" to solve this particular riddle.
+(if you are interested, look at a [scetch on compiler explorer]: https://godbolt.org/z/dPPzKzzEq )
+That worked. But we saw, there is a lot of room for improvement.
 
-```c++
-struct IBase
-{
-	virtual std::string VirtualToString() const = 0;
-	std::string ToString() const { return ToString(); }
-};
-struct IDerived : IBase
-{
-	virtual int VirtualGetValue() const = 0;
-	int GetValue() const { return VirtualGetValue(); }
-};
-
-template< typename MODEL >
-struct IBaseModel
-{
-	const MODEL* Model() const { return static_cast< const MODEL* >( this ); }
-	virtual std::string VirtualToString() const ;
-};
-
-template< typename MODEL >
-struct IDerivedModel : IBaseModel< MODEL >
-{
-	const MODEL* Model() const { return static_cast< const MODEL* >( this ); }
-	int GetValue() const ;
-};
-
-class BaseImpl // same as original "Base"
-{
-public:
-	std::string ToString() const override;
-private: // data
-};
-
-class Base : public BaseImpl, IBaseModel< Base >
-{
-};
-
-class Derived : public BaseImpl, IDerivedModel< Dereived >
-{
-public:
-	int GetValue() const;
-private: // more data
-};
-
-class DerivedLigthweight : public BaseImpl, IDerivedModel< DereivedLigthweight >
-{
-public:
-	std::string GetValue();
-	int Scope();
-private: // nearly no data
-};
-
-```
-
-That worked.
-But we saw, there is a lot of room for improvement.
 We saw also, there is a pattern, that shows a general flaw in the concept of "type erasure" as we understood it.
 We called that pattern the "2nd order type erasure problem".
 This pattern can be reduced to this code lines.
