@@ -10,10 +10,13 @@ nav_order: 1
 
 If you have not yet seen [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8), do it now.
 
-Let us short recap the quintesence of this example.
-To eliminate the boilerplat code, we will use "proxy". 
-This is the "type erasure library roposed for inclusion in c++26.
-We will use only a small part of the ritch features available in this awesome library.
+We will short recap the quintesence of this example.
+
+To eliminate the boilerplate code, we use "proxy". 
+
+"proxy" is the "type erasure library roposed for inclusion in c++26.
+
+We will use only a small part of the many features available in this awesome library.
 
 ```c++
 #include <iostream>
@@ -24,8 +27,7 @@ struct position { float x, y; };
 
 struct circle {
     double radius;
-    void draw(position p) const 
-    {
+    void draw(position p) const {
         std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << ", Area: " << area() <<  std::endl;
     }
     double area() const {  
@@ -64,19 +66,27 @@ int main()
 ```
 [see it on compiler explorer]: https://en.wikipedia.org/wiki/Expression_problem
 
-Some objects are constructed. 
+Some objects are constructed.
+
 Their addresses are add to a vector, witch elememnts are of type pro::proxy<drawable>.
+
 This is the "type eraser".
+
 The magic happens then inside of the algorithm. 
+
 The "type erasure run time dispatch", provided by proxy, takes care, that the corresponding function of the concrete object is executed.
 
 Wes see, that 
 - the implementation of the inteface ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
+
 and
-- the implementation of the interface itself can be very generic by use uf clever template tricks.
+
+- the implementation of the interface itself can be very generic by use of clever template tricks.
 
 These features are intruding.
+
 So it is understanding, that "type erasure"" is the new cool thing in regards to runtime dispatch. 
+
 This reaches so far, that new languages, like 'rust' go full in on that idea and dissmiss the idea of inherritance as a whole.
 The key messeage we get told is: Programming along classes utilizing the conventional v-table is old school and outdated.
 (see "type erasure ["My existing project uses virtual functions. How should I migrate to “Proxy”?]: https://microsoft.github.io/proxy/docs/faq.html#how-migrate
@@ -90,14 +100,14 @@ Simplified, we had this structure
 ```c++
 class Base {
 public:
-	std::string ToString() const;
+  std::string Value() const;
 private: // data
 };
 
 class Derived : Base {
 public:
-	std::string ToString() override;
-	int GetValue();
+  std::string Value() override;
+  int Scope();
 private: // more data
 };
 ```
@@ -112,13 +122,13 @@ private: // data
 
 class Derived : Base {
 public:
-	int GetValue();
+	int Value();
 private: // more data
 };
 
 class DerivedLigthweight {
 public:
-	std::string GetValue();
+	std::string Value();
 	int Scope();
 private: // nearly no data
 };
@@ -179,7 +189,9 @@ int main()
 ```
 [see it on compiler explorer]: https://godbolt.org/z/K5Y7GdW5Y
 
-So fat so good. But but our functions do not look like the one in the example above.
+So far, so good. 
+
+But but our functions do not look like the one in the example above.
 They are more like this:
 
 ```c++
@@ -201,7 +213,7 @@ int main() {
 The called functions
 - filter for the input with predicates (callback)
 and
-- the return results. 
+- they return results. 
 
 But because we have erased away ALL **type** informatiom, we have no longer access to the data we need, to 
 - answer the questions asked to the predicate functions via callbcks
