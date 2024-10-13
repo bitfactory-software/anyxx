@@ -222,10 +222,10 @@ We called that pattern the "2nd order type erasure problem".
 This pattern can be reduced to this code lines.
 
 ```c++
-//+++ pseudo code
+// pseudo code
 maketype_erased< base > for { int func1() const; }; }
 maketype_erased< derived > for base + { int func2() const; };
-//--- pseudo code
+// pseudo code
 
 struct S {
   int func1() const { return 1; };
@@ -234,7 +234,7 @@ struct S {
 
 base f1( base b ) { return b; }
 
-derived f2( derived d ) { return typerased_downcast< derived >( xb ); }
+derived f2( derived d ) { return typerased_downcast< derived >(xb); }
 
 int main() {
   cout << f2( S{} ).func2() << "\n";
