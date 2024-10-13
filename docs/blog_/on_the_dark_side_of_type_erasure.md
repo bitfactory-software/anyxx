@@ -276,9 +276,10 @@ We called that pattern the "2nd order type erasure problem".
 This pattern can be reduced to this code lines.
 
 ```c++
-
-proxy< base > build int func1() const;
-proxy< derived > : base + int func2() const;
+//+++ pseudo code
+maketype_erased< base > for { int func1() const; }; }
+maketype_erased< derived > for base + { int func2() const; };
+//--- pseudo code
 
 struct S {
   int func1() const { return 1; };
@@ -287,7 +288,7 @@ struct S {
 
 base f1( base b ) { return b; }
 
-derived f2( derived d ) { return erased_2n_order_problem_downcast< derived >( xb ); }
+derived f2( derived d ) { return typerased_downcast< derived >( xb ); }
 
 int main() {
   cout << f2( S{} ).func2() << "\n";
@@ -295,5 +296,9 @@ int main() {
 }
 ```
 
-Next time, we will show, how we tackeled that problem on its root.
+What we need, is 
+1. a make_type_erased "thing" that supports
+2. a typerased_downcast, based on that "things"_
+
+Next time, we will show, how we tackeled that problem.
 
