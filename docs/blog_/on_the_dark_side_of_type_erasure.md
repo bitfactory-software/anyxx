@@ -263,4 +263,5 @@ What we need, is
 
 Next time, we will show, how we tackeled that problem.
 
-PS: Rust also has to settle this topic, [see here]: https://github.com/rust-lang/rust/issues/65991
+PS: "Rust" also has to settle this topic, [see here]: https://github.com/rust-lang/rust/issues/65991
+PPS: It seems to us, that in "Rust" in "upcast" is in the other direction as usualy in "c++". With "upcast" they mean to cast to a more detailt "trait". 
