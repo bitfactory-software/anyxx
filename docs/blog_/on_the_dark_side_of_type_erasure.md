@@ -229,11 +229,12 @@ We found no solution to this pattern in the libraries we searched
 - [Dyno]: https://github.com/ldionne/dyno
 
 So we resorted to a old school unsexy "OO-Style + template mixture" to solve this particular riddle.
-(if you are interested, look at a [scetch on compiler explorer]: https://godbolt.org/z/dPPzKzzEq )
-That worked. But we saw, there is a lot of room for improvement.
+if you are interested, look at a [scetch on compiler explorer]: https://godbolt.org/z/dPPzKzzEq. 
+But beware, that looks realy ugly, but worked. And it shows, there is a lot room for improvement.
 
-We saw also, there is a pattern, that shows a general flaw in the concept of "type erasure" as we understood it.
-We called that pattern the "type_erased_downcast type erasure problem".
+Conclusio:
+There is a pattern, that shows a general hole in the application of "type erasure".
+We called that pattern the "type_erased_downcast problem".
 This pattern can be reduced to this code lines.
 
 ```c++
@@ -257,11 +258,5 @@ int main() {
 }
 ```
 
-What we need, is 
-1. a make_type_erased "thing" that supports
-2. a typerased_downcast, based on that "things" implementation
-
+What we need, is a make_type_erased "thing" that supports typerased_downcast.
 Next time, we will show, how we tackeled that problem.
-
-PS: "Rust" also has to settle this topic, [see here]: https://github.com/rust-lang/rust/issues/65991
-PPS: It seems to us, that in "Rust" in "upcast" is in the other direction as usualy in "c++". With "upcast" they mean to cast to a more detailt "trait". 
