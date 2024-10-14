@@ -32,6 +32,7 @@ class base
 public:
     using lifetime_holder_t = LIFETIME_HOLDER;
     using interface_t = interface_base< typename LIFETIME_HOLDER::void_t >;
+    template< typename > using is_already_base = std::false_type; // base is always at the bottom of the interface chain.
 protected:
     lifetime_holder_t lifetime_holder_ = nullptr;
     interface_t* interface_impementation_ = nullptr;
@@ -225,6 +226,14 @@ public: \
     using base_t = BASE< LIFETIME_HOLDER >; \
     using interface_base_t = base_t::interface_t; \
     using interface_t = n##interface< interface_base_t >; \
+    using query_interface_unique_t = n##interface< virtual_void::erased::base< lifetime_holder_t > >; \
+    template< typename T > using is_already_base \
+        = std::conditional_t \
+            < std::is_same_v< T, query_interface_unique_t > \
+            , std::true_type \
+            , typename base_t:: template  is_already_base< T > \
+            >; \
+    static_assert( !base_t::is_already_base< query_interface_unique_t >::value, "An interface my only be once in instanciated for a facade" ); \
 protected: \
     using base_t::lifetime_holder_; \
     using base_t::interface_impementation_; \
@@ -289,15 +298,23 @@ template< is_erased_lifetime_holder LIFETIME_HOLDER, template < typename > typen
 struct call_operator_facade< LIFETIME_HOLDER, BASE, RET(ARGS...) >: BASE< LIFETIME_HOLDER >
 {
 public:
+    using lifetime_holder_t = LIFETIME_HOLDER;
+    using void_t = LIFETIME_HOLDER::void_t;
     using base_t = BASE< LIFETIME_HOLDER >;
     using interface_base_t = base_t::interface_t;
     using interface_t = call_operator_interface< interface_base_t, RET, ARGS... >;
+    using query_interface_unique_t = call_operator_interface< virtual_void::erased::base< lifetime_holder_t >, void >;
+    template< typename T > using is_already_base
+        = std::conditional_t
+            < std::is_same_v< T, query_interface_unique_t >
+            , std::true_type
+            , typename  base_t:: template is_already_base< T >
+            >;
+    static_assert( !base_t::is_already_base< query_interface_unique_t >::value, "An interface my only be once in instanciated for a facade" );
 protected:
     using base_t::lifetime_holder_;
     using base_t::interface_impementation_;
 public:
-    using lifetime_holder_t = LIFETIME_HOLDER;
-    using void_t = LIFETIME_HOLDER::void_t;
     call_operator_facade( lifetime_holder_t lifetime_holder, interface_t* v_table )
         : base_t( std::move( lifetime_holder ), v_table )
     {}

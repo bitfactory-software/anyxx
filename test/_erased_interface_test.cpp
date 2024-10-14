@@ -59,8 +59,6 @@ using shapeXX = shape_d_i< erased::const_observer, shape_base_full >;
 template< typename _ > using full_shape = virtual_void::erased::compose< _, shape_d_i, shape_base, shape_base1 >;
 using full_shape_observer = full_shape< erased::mutable_observer >;
 
-//using shapeXX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; should not compile!
-
 struct circle {
     double radius;
     void draw(position p) const {
@@ -158,11 +156,15 @@ void print_shape_f(const full_shape_observer s) {
     print_shape_(s);
 }
 
+using shape_double_base_error = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; //should not compile!
+//void should_not_compile(shape_double_base_error s) {}//should not compile!
+
 std::string ask_name(const to_string_vv a) {
     return a.to_string();
 }
 
 TEST_CASE( "dynamic interface const_observer" ) {
+
 
     using namespace virtual_void;
 
