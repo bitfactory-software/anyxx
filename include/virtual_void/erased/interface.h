@@ -113,6 +113,25 @@ template
     , template< typename > typename UNUSED 
     > using open_base = base< E >;
 
+template< typename E, template< typename, template< typename > typename > typename... BASES >
+struct compose_
+{
+    using type = bases_< BASES... >:: template type< E >;
+};
+
+template
+    < typename E
+    , template< typename > typename UNUSED 
+    > using open_base = base< E >;
+
+template< typename E, template< typename, template< typename > typename > typename... BASES >
+using compose = typename bases_< BASES... >::template type< E >;
+
+template
+    < typename E
+    , template< typename > typename UNUSED 
+    > using open_base = base< E >;
+
 }
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))

@@ -49,8 +49,12 @@ using shape_vv = shape_i< virtual_void::m_table::shared_const, virtual_void::era
 
 using shape_base_v = shape_base< erased::const_observer, virtual_void::erased::bases< shape_base1 > >;
 
+template< typename _, template< typename, template< typename > typename > typename OPEN_BASE > using shape_base_and_base1_with_open_base = virtual_void::erased::bases_< shape_base, shape_base1, OPEN_BASE >:: template type< _ >;
+template< typename _ > using shape_base_full = virtual_void::erased::compose< _, shape_base, shape_base1 >;
+
 using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
 using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
+using shapeXX = shape_d_i< erased::const_observer, shape_base_full >;
 
 template
     < virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER
