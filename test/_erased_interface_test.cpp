@@ -52,7 +52,7 @@ using shape_base_v = shape_base< erased::const_observer, virtual_void::erased::b
 using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
 using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
 
-//using shapeXX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; shoul not compile!
+//using shapeXX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; should not compile!
 
 struct circle {
     double radius;
