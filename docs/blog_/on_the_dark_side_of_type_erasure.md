@@ -6,20 +6,17 @@ nav_order: 1
 
 # As we came on the dark side of type erasure
 
-This is a short story, with lot of code, witch tells from exitment, illusion, realisation and new orientation around "type erasure"
+This is a short story, with a lot of code, to tell from exitment, illusion, realisation and new orientation around "type erasure"
 
 <img width="920" alt="image" src="https://github.com/user-attachments/assets/65f7f175-08d6-4c5e-b3e1-7cb45a59779b">
 
-If you have not yet seen [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8), do it now.
-This was for us, as for many others a really, empowering expirience.
-It covered so many topics.
-For now, we will concentrate on the "type erasure" part.
+The story starts years back, by watching [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8). This was for us, as for many others a really, empowering expirience.
+It covered so many topics. For now, we will concentrate on the "type erasure" part.
 
-We will try, to short recap the quintesence of this example.
-To eliminate the boilerplate code, we use "proxy". 
-"proxy" is the "type erasure"" library roposed for inclusion in c++26.
+Let us start with a short recap of the quintesence in regard to type erasure.
+To eliminate the boilerplate code, we use "proxy". "proxy" is the "type erasure"" library roposed for inclusion in c++26.
 
-In the sample is used only a small part of the many features available in this awesome library.
+The sample uses only a small part of the many features available in this awesome library.
 
 ```c++
 #include <iostream>
@@ -260,3 +257,6 @@ int main() {
 
 What we need, is a make_type_erased "thing" that supports typerased_downcast.
 Next time, we will show, how we tackeled that problem.
+
+PS: We are no "Rust" experts. So we are curios, how this kind of pattern is solved there. As [we understand]: https://microsoft.github.io/rust-for-dotnet-devs/latest/language/custom-types/interfaces.html, 
+"Rust" has no downcasting for "traits". Maybe the answer is simple "Rust programmer write better programs, so they do not run in this kind of quirx" ;-)
