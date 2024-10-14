@@ -108,7 +108,12 @@ struct bases_< FIRST, MORE... >
 template< template< typename, template< typename > typename > typename... BASES >
 using bases = bases_< BASES... >::type;
 
-};
+template
+    < typename E
+    , template< typename > typename UNUSED 
+    > using open_base = base< E >;
+
+}
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
 #define _detail_EXPAND4(...) _detail_EXPAND3(_detail_EXPAND3(_detail_EXPAND3(_detail_EXPAND3(__VA_ARGS__))))

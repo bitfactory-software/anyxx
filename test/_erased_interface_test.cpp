@@ -52,6 +52,17 @@ using shape_base_v = shape_base< erased::const_observer, virtual_void::erased::b
 using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
 using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
 
+template
+    < virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER
+    , template < typename, template< typename > typename > typename BASE = virtual_void::erased::open_base
+    > 
+using full_shape = shape_d_i
+    < LIFETIME_HOLDER
+    , virtual_void::erased::bases< shape_base, shape_base1, BASE > 
+    >;
+
+using full_shape_observer = full_shape< erased::mutable_observer >;
+
 //using shapeXX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; should not compile!
 
 struct circle {
@@ -147,6 +158,9 @@ void print_shape(const shape s) {
     print_shape_(s);
     std::cout << s("Shape type = ") << std::endl;
 }
+void print_shape_f(const full_shape_observer s) {
+    print_shape_(s);
+}
 
 std::string ask_name(const to_string_vv a) {
     return a.to_string();
@@ -191,6 +205,8 @@ TEST_CASE( "dynamic interface const_observer" ) {
         REQUIRE( shape_is_circle );
         print_shape( *shape_is_circle );
     }
+
+    print_shape_f(full_shape_observer{ p } );
 }
 
 TEST_CASE( "dynamic interface m_table::shared_const" ) {
