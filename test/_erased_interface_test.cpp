@@ -56,15 +56,7 @@ using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< vi
 using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
 using shapeXX = shape_d_i< erased::const_observer, shape_base_full >;
 
-template
-    < virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER
-    , template < typename, template< typename > typename > typename BASE = virtual_void::erased::open_base
-    > 
-using full_shape = shape_d_i
-    < LIFETIME_HOLDER
-    , virtual_void::erased::bases< shape_base, shape_base1, BASE > 
-    >;
-
+template< typename _ > using full_shape = virtual_void::erased::compose< _, shape_d_i, shape_base, shape_base1 >;
 using full_shape_observer = full_shape< erased::mutable_observer >;
 
 //using shapeXX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; should not compile!
