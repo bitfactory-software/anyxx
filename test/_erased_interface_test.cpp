@@ -52,6 +52,8 @@ using shape_base_v = shape_base< erased::const_observer, virtual_void::erased::b
 using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
 using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
 
+//using shapeXX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; shoul not compile!
+
 struct circle {
     double radius;
     void draw(position p) const {
@@ -132,28 +134,25 @@ std::string to_string_( auto const x )
     return std::to_string( x.count_sides() );
 }
 
-void print_shape(const shape s) {
+void print_shape_(const auto s) {
     s.draw({4.0, 5.0});
     std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
     std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
     std::cout << "Shape Area: " << s.area() << std::endl;
+}
+void print_shape_vv(const shape_vv s) {
+    print_shape_(s);
+}
+void print_shape(const shape s) {
+    print_shape_(s);
     std::cout << s("Shape type = ") << std::endl;
 }
 
-void print_shape_vv(const shape_vv s) {
-    s.draw({4.0, 5.0});
-    std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
-    std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
-    std::cout << "Shape Area: " << s.area() << std::endl;
+std::string ask_name(const to_string_vv a) {
+    return a.to_string();
 }
 
-
-void ask_name(const to_string_vv a)
-{
-    std::cout << "name: " << a.to_string() << std::endl;
-}
-
-TEST_CASE( "dynamic interface" ) {
+TEST_CASE( "dynamic interface const_observer" ) {
 
     using namespace virtual_void;
 
@@ -192,7 +191,16 @@ TEST_CASE( "dynamic interface" ) {
         REQUIRE( shape_is_circle );
         print_shape( *shape_is_circle );
     }
+}
 
+TEST_CASE( "dynamic interface m_table::shared_const" ) {
+
+    using namespace virtual_void;
+
+    circle c{12.3};
+    square s{32};
+    rectangle r{12, 9};
+    regular_polygon p{4, 32};
     std::cout << "print_shape_vv ********************************" << std::endl;
 
     auto sc = m_table::make_shared_const<circle>(circle{c});
@@ -211,17 +219,19 @@ TEST_CASE( "dynamic interface" ) {
     print_shape_vv(s);
     print_shape_vv(r);
     print_shape_vv(p);
-
-    std::cout << "ask  ********************************" << std::endl;
-    ask_name(sc);
-    ask_name(c);
-    ask_name(s);
-    ask_name(r);
-    ask_name(p);
 }
 
-TEST_CASE( "base" ) 
-{
+TEST_CASE( "dynamic interface free" ) {
+
+    circle c{12.3};
+    auto sc = m_table::make_shared_const<circle>(circle{c});
+
+    REQUIRE( ask_name(sc) == std::to_string( sc->count_sides() ) );
+    REQUIRE( ask_name(c) == std::to_string( c.count_sides() ) );
+}
+
+TEST_CASE( "base" ) {
+
     using namespace virtual_void;
     using namespace virtual_void::erased;
 
@@ -241,5 +251,4 @@ TEST_CASE( "base" )
         value_base vb( a );
         REQUIRE( reconcrete_cast< x_t >( vb.get_lifetime_holder() )->s_ == "hallo" );
     }
-
 }
