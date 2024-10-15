@@ -267,7 +267,7 @@ What we need, is a make_type_erased "thing" that supports "downcast".
 So the quitessence, as we took it, is, that "type erasue" is not the end. We need kind of "type tunnel".
 So the object can pass thru lower abstraction levels, with a fitting facade for them.
 But when we get them back, we need to recover its ritcher interface or even its real type.
-Next time, we will digg deeper, and show a possible solution to problem.
+Next time, let us digg deeper.
 
 PS: We are no "Rust" experts. So we are curios, how this kind of pattern is solved there. As [we understand]: https://microsoft.github.io/rust-for-dotnet-devs/latest/language/custom-types/interfaces.html, 
 "Rust" has no downcasting for "traits". Maybe the answer is simple "Rust programmer write better programs, so they do not run in this kind of quirx" ;-)
