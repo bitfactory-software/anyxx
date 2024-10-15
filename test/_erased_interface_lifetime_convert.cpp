@@ -1,12 +1,11 @@
-#include <string>
-#include <vector>
 #include <cmath>
 #include <iostream>
-
-#include "include/catch.hpp"
+#include <string>
+#include <vector>
 
 #include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime/cast.h"
+#include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
@@ -14,45 +13,42 @@ using namespace virtual_void;
 
 const double M_PI = 3.14;
 
-struct position {float x, y;};
-
-struct X 
-{ 
-    std::string s_;
-    std::string to_string() const { return s_; } 
+struct position {
+  float x, y;
 };
 
-ERASED_INTERFACE( to_string_i,
-    (std::string, to_string)
-)
+struct X {
+  std::string s_;
+  std::string to_string() const { return s_; }
+};
 
-using to_string_sc = to_string_i< erased::shared_const  >;
-using to_string_co = to_string_i< erased::const_observer >;
+ERASED_INTERFACE(to_string_i, (std::string, to_string))
 
-namespace virtual_void::erased
-{
-    template< typename ERASED_TO >
-    auto v_table_cast( const auto& v_table )
-    {
-        static_assert( std::same_as< to_string_co::interface_t, to_string_sc::interface_t > );
-        return static_cast< typename ERASED_TO::interface_t* >( v_table ); 
-    }
+using to_string_sc = to_string_i<erased::shared_const>;
+using to_string_co = to_string_i<erased::const_observer>;
+
+namespace virtual_void::erased {
+template <typename ERASED_TO>
+auto v_table_cast(const auto& v_table) {
+  static_assert(
+      std::same_as<to_string_co::interface_t, to_string_sc::interface_t>);
+  return static_cast<typename ERASED_TO::interface_t*>(v_table);
 }
+}  // namespace virtual_void::erased
 
-TEST_CASE( "interface lifetime cast" ) 
-{
-    to_string_sc sc{ X{ "hallo" } };
-    REQUIRE( sc.to_string() == "hallo" );
-    REQUIRE( sc.is_derived_from< erased::base< erased::shared_const > >() );
+TEST_CASE("interface lifetime cast") {
+  to_string_sc sc{X{"hallo"}};
+  REQUIRE(sc.to_string() == "hallo");
+  REQUIRE(sc.is_derived_from<erased::base<erased::shared_const> >());
 
-    auto o1 = lifetime_cast< erased::const_observer >( sc.get_lifetime_holder() );
-    auto x = erased::reconcrete_cast< X >( o1 );
-    auto x1 = static_cast< X const * >( sc.get_lifetime_holder().data() );
-    REQUIRE( x->s_ == "hallo" );
+  auto o1 = lifetime_cast<erased::const_observer>(sc.get_lifetime_holder());
+  auto x = erased::reconcrete_cast<X>(o1);
+  auto x1 = static_cast<X const*>(sc.get_lifetime_holder().data());
+  REQUIRE(x->s_ == "hallo");
 
-
-    to_string_co co = interface_lifetime_cast< to_string_co >( sc );
-    REQUIRE( co.to_string() == "hallo" );
-    static_assert( std::same_as< to_string_co::interface_t, to_string_sc::interface_t > );
-    REQUIRE( co.is_derived_from< erased::base< erased::const_observer > >() );
+  to_string_co co = interface_lifetime_cast<to_string_co>(sc);
+  REQUIRE(co.to_string() == "hallo");
+  static_assert(
+      std::same_as<to_string_co::interface_t, to_string_sc::interface_t>);
+  REQUIRE(co.is_derived_from<erased::base<erased::const_observer> >());
 }

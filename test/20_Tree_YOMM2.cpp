@@ -7,105 +7,110 @@
 #include <memory>
 #include <string>
 
-//#include <yorel/yomm2/keywords.hpp>
+// #include <yorel/yomm2/keywords.hpp>
 //
-//#include "include/catch.hpp"
+// #include "include/catch.hpp"
 //
-//using std::cout;
-//using std::make_shared;
-//using std::shared_ptr;
-//using std::string;
+// using std::cout;
+// using std::make_shared;
+// using std::shared_ptr;
+// using std::string;
 //
-//namespace
+// namespace
 //{
 //
-//struct Node {
-//    virtual ~Node() {
-//    }
-//};
+// struct Node {
+//     virtual ~Node() {
+//     }
+// };
 //
-//struct Plus : Node {
-//    Plus(shared_ptr<const Node> left, shared_ptr<const Node> right)
-//        : left(left), right(right) {
-//    }
+// struct Plus : Node {
+//     Plus(shared_ptr<const Node> left, shared_ptr<const Node> right)
+//         : left(left), right(right) {
+//     }
 //
-//    shared_ptr<const Node> left, right;
-//};
+//     shared_ptr<const Node> left, right;
+// };
 //
-//struct Times : Node {
-//    Times(shared_ptr<const Node> left, shared_ptr<const Node> right)
-//        : left(left), right(right) {
-//    }
+// struct Times : Node {
+//     Times(shared_ptr<const Node> left, shared_ptr<const Node> right)
+//         : left(left), right(right) {
+//     }
 //
-//    shared_ptr<const Node> left, right;
-//};
+//     shared_ptr<const Node> left, right;
+// };
 //
-//struct Integer : Node {
-//    explicit Integer(int value) : value(value) {
-//    }
-//    int value;
-//};
+// struct Integer : Node {
+//     explicit Integer(int value) : value(value) {
+//     }
+//     int value;
+// };
 //
-//// =============================================================================
+////
+///=============================================================================
 //// add behavior to existing classes, without changing them
 //
-//register_classes(Node, Plus, Times, Integer);
+// register_classes(Node, Plus, Times, Integer);
 //
-//// -----------------------------------------------------------------------------
+////
+///-----------------------------------------------------------------------------
 //// evaluate
 //
-//declare_method(int, value, (virtual_<const Node&>));
+// declare_method(int, value, (virtual_<const Node&>));
 //
-//define_method(int, value, (const Plus& expr)) {
+// define_method(int, value, (const Plus& expr)) {
 //    return value(*expr.left) + value(*expr.right);
 //}
 //
-//define_method(int, value, (const Times& expr)) {
+// define_method(int, value, (const Times& expr)) {
 //    return value(*expr.left) * value(*expr.right);
 //}
 //
-//define_method(int, value, (const Integer& expr)) {
+// define_method(int, value, (const Integer& expr)) {
 //    return expr.value;
 //}
 //
-//// -----------------------------------------------------------------------------
+////
+///-----------------------------------------------------------------------------
 //// render as Forth
 //
-//declare_method(string, as_forth, (virtual_<const Node&>));
+// declare_method(string, as_forth, (virtual_<const Node&>));
 //
-//define_method(string, as_forth, (const Plus& expr)) {
+// define_method(string, as_forth, (const Plus& expr)) {
 //    return as_forth(*expr.left) + " " + as_forth(*expr.right) + " +";
 //}
 //
-//define_method(string, as_forth, (const Times& expr)) {
+// define_method(string, as_forth, (const Times& expr)) {
 //    return as_forth(*expr.left) + " " + as_forth(*expr.right) + " *";
 //}
 //
-//define_method(string, as_forth, (const Integer& expr)) {
+// define_method(string, as_forth, (const Integer& expr)) {
 //    return std::to_string(expr.value);
 //}
 //
-//// -----------------------------------------------------------------------------
+////
+///-----------------------------------------------------------------------------
 //// render as Lisp
 //
-//declare_method(string, as_lisp, (virtual_<const Node&>));
+// declare_method(string, as_lisp, (virtual_<const Node&>));
 //
-//define_method(string, as_lisp, (const Plus& expr)) {
+// define_method(string, as_lisp, (const Plus& expr)) {
 //    return "(plus " + as_lisp(*expr.left) + " " + as_lisp(*expr.right) + ")";
 //}
 //
-//define_method(string, as_lisp, (const Times& expr)) {
+// define_method(string, as_lisp, (const Times& expr)) {
 //    return "(times " + as_lisp(*expr.left) + " " + as_lisp(*expr.right) + ")";
 //}
 //
-//define_method(string, as_lisp, (const Integer& expr)) {
+// define_method(string, as_lisp, (const Integer& expr)) {
 //    return std::to_string(expr.value);
 //}
 //
 //}
-//// -----------------------------------------------------------------------------
+////
+///-----------------------------------------------------------------------------
 //
-//TEST_CASE( "20_Tree_YOMM2" )
+// TEST_CASE( "20_Tree_YOMM2" )
 //{
 //    yorel::yomm2::update();
 //
@@ -115,15 +120,15 @@
 //
 //    REQUIRE( value(*expr) == 14 );
 //    std::stringstream out;
-//    out << as_forth(*expr) << " = " << as_lisp(*expr) << " = " << value(*expr);
-//    REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14" );
-//    std::cout << out.str() << "\n";
-//#ifndef _DEBUG
+//    out << as_forth(*expr) << " = " << as_lisp(*expr) << " = " <<
+//    value(*expr); REQUIRE( out.str() == "2 3 4 + * = (times 2 (plus 3 4)) =
+//    14" ); std::cout << out.str() << "\n";
+// #ifndef _DEBUG
 //    BENCHMARK("20_Tree_YOMM2 value") {
 //        return value(*expr);
 //    };
 //    BENCHMARK("20_Tree_YOMM2 as_lisp") {
 //        return as_lisp(*expr);
 //    };
-//#endif // !_DEBUG
+// #endif // !_DEBUG
 //}
