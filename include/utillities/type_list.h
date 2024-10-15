@@ -12,8 +12,8 @@ namespace virtual_void
 		}
 	};	
 
-	template<int N, typename... Ts> using nth_type =
+	template<int N, typename... Ts> using nth_t =
 		typename std::tuple_element<N, std::tuple<Ts...>>::type;
 
-	template< typename... Ts> using first = nth_type< 0, Ts...>;
+	template< typename... Ts> using first_t = nth_t< 0, Ts...>;
 }

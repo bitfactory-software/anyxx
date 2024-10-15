@@ -16,11 +16,11 @@ template< typename R, typename... ARGS > class open_method< R( ARGS... ) >
 	: public open_method_base
 {
 	static_assert 
-		(	std::same_as< first< ARGS... >,	void* > 
-		||	std::same_as< first< ARGS... >,	const void* > 
+		(	std::same_as< first_t< ARGS... >,	void* > 
+		||	std::same_as< first_t< ARGS... >,	const void* > 
 		); 
 public:
-	using dispatch_t = typename first< ARGS... >;
+	using dispatch_t = typename first_t< ARGS... >;
 	template< typename CLASS > using class_param_t = self_pointer< dispatch_t >::template type< CLASS >;
 	using param_t = std::pair< const std::type_info&, dispatch_t >;
 	using erased_function_t = R(*)( ARGS... );
