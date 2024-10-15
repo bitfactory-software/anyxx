@@ -10,6 +10,7 @@
 
 #include <type_traits>
 #include <typeinfo>
+#include <optional>
 
 #include "concept.h"
 
