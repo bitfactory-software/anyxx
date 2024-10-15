@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "../../include/std26/proxy.h"
-#include "../../include/virtual_void/m_table/lifetime.h"
+#include "../../include/virtual_void/m_table/lifetime/shared_const.h"
 #include "../../include/virtual_void/m_table/open_method.h"
 #include "../../include/virtual_void/open_method/algorithm.h"
 #include "../../include/virtual_void/typeid_cast/cast.h"

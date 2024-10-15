@@ -4,7 +4,8 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "../include/virtual_void/m_table/lifetime.h"
+#include "../include/virtual_void/m_table/lifetime/shared_const.h"
+#include "../include/virtual_void/m_table/lifetime/unique.h"
 #include "../include/virtual_void/m_table/open_method.h"
 #include "../include/virtual_void/open_method/algorithm.h"
 #include "class_hierarchy_test_hierarchy.h"

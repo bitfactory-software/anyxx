@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/m_table/lifetime.h"
+#include "../include/virtual_void/m_table/lifetime/shared_const.h"
+#include "../include/virtual_void/m_table/lifetime/unique.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 
