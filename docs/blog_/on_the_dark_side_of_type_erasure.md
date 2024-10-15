@@ -10,11 +10,12 @@ This is a short story, with a lot of code, to tell from exitment, illusion, real
 
 <img width="920" alt="image" src="https://github.com/user-attachments/assets/65f7f175-08d6-4c5e-b3e1-7cb45a59779b">
 
-The story starts years back, by watching [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8). This was for us, as for many others a really, empowering expirience.
+The story starts years back, by watching [Sean Parent talking about type erasure](https://www.youtube.com/watch?v=_BpMYeUFXv8).
+This was for us, as for many others, a really empowering expirience.
 It covered so many topics. For now, we will concentrate on the "type erasure" part.
 
-Let us start with a short recap of the quintesence in regard to type erasure.
-To eliminate the boilerplate code, we use "proxy". "proxy" is the "type erasure"" library roposed for inclusion in c++26.
+Let us start with a short recap of the quintesence in regard to "type erasure".
+To eliminate the boilerplate code, we use "proxy". "proxy" is the "type erasure" library roposed for inclusion in c++26.
 
 The sample uses only a small part of the many features available in this awesome library.
 
@@ -66,9 +67,9 @@ int main()
 ```
 [see it on compiler explorer]: https://en.wikipedia.org/wiki/Expression_problem
 
-Some objects are constructed.
+Some objects are constructed in "main".
 
-Their addresses are add to a vector, witch elememnts are of type pro::proxy<drawable>.
+Their addresses are add to a vector with elememnts of type pro::proxy<drawable>.
 
 This is the "type eraser".
 
@@ -87,10 +88,10 @@ These features are intruding.
 
 So it is understanding, that "type erasure" is the new cool thing in regards to runtime dispatch. 
 
-This reaches so far, that new languages, like "rust"" go full in on that concept, and dissmiss the idea of inherritance as a whole.
+This reaches so far, that new languages, like "rust" go full in on that concept, and dissmiss the idea of inherritance as a whole.
 
 The key messeage we get told is: Programming along classes utilizing the conventional v-table is old school and outdated.
-(see "type erasure ["My existing project uses virtual functions. How should I migrate to “Proxy”?]: https://microsoft.github.io/proxy/docs/faq.html#how-migrate
+(see "type erasure ["My existing project uses virtual functions. How should I migrate to “Proxy”?]: https://microsoft.github.io/proxy/docs/faq.html#how-migrate)
 
 And here ends the the usual story. 
 
@@ -134,7 +135,7 @@ public:
 private: // nearly no data
 };
 ```
-"Derived" needed two distinct implementations, becuause in many important cases, "Derived" itself is too heavy.
+"Derived" needed two distinct implementations, becuause in many important cases, tho original "Derived" is too heavy.
 
 In terms of "proxy", we wanted something like this:
 ```c++
@@ -191,7 +192,7 @@ int main()
 
 So far, so good. 
 
-But but our functions do not look like the one in the example above.
+But but our functions behave not look like the one in the last example.
 They are more like this:
 
 ```c++
@@ -227,7 +228,7 @@ We found no solution to this pattern in the libraries we searched
 
 So we resorted to a old school unsexy "OO-Style + template mixture" to solve this particular riddle.
 if you are interested, look at a [scetch on compiler explorer]: https://godbolt.org/z/dPPzKzzEq. 
-But beware, that looks realy ugly, but worked. And it shows, there is a lot room for improvement.
+But beware, that looks realy ugly. It shows primary, there is a lot room for improvement.
 
 Conclusio:
 There is a pattern, that shows a general hole in the application of "type erasure".
@@ -255,8 +256,11 @@ int main() {
 }
 ```
 
-What we need, is a make_type_erased "thing" that supports typerased_downcast.
-Next time, we will show, how we tackeled that problem.
+What we need, is a make_type_erased "thing" that supports "downcast".
+So the quitessence, as we took it, is, that "type erasue" is not the end. We need kind of "type tunnel".
+So the object can pass thru lower abstraction levels, with a fitting facade for them.
+But when we get them back, we need to recover its ritcher interface or even its real type.
+Next time, we will digg deeper, and show a possible solution to problem.
 
 PS: We are no "Rust" experts. So we are curios, how this kind of pattern is solved there. As [we understand]: https://microsoft.github.io/rust-for-dotnet-devs/latest/language/custom-types/interfaces.html, 
 "Rust" has no downcasting for "traits". Maybe the answer is simple "Rust programmer write better programs, so they do not run in this kind of quirx" ;-)
