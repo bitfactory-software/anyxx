@@ -44,5 +44,22 @@ namespace
             REQUIRE( functor.s_ == "hallo" );
             REQUIRE( reconcrete_cast< functor_t >( f.get_lifetime_holder() )->s_ == "hallo world" );
         }
+        {
+            erased::function< std::string( const std::string ) > f{ []( auto s ){ return s; } };
+            REQUIRE( f( "hello world" ) == "hello world" );
+        }
+        {
+            functor_t functor{ "hallo" };
+            erased::ref_function< std::string( const std::string ) > f{ functor };
+            REQUIRE( reconcrete_cast< functor_t >( f.get_lifetime_holder() )->s_ == "hallo" );
+            REQUIRE( f( " world" ) == "hallo" );
+            REQUIRE( functor.s_ == "hallo world" );
+            REQUIRE( reconcrete_cast< functor_t >( f.get_lifetime_holder() )->s_ == "hallo world" );
+        }
+        {
+            auto func = []( auto s ){ return s; };
+            erased::ref_function< std::string( const std::string ) > f{ func };
+            REQUIRE( f( "hello world" ) == "hello world" );
+        }
     }
 }
