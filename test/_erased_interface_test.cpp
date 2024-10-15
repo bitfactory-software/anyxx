@@ -50,7 +50,7 @@ using shape_vv = shape_i< virtual_void::m_table::shared_const >;
 using shape_base_v = shape_base< erased::const_observer >;
 
 
-using shape = virtual_void::erased::call_operator_< shape_d_i, std::string(std::string) >::type< erased::const_observer >;
+using shape = virtual_void::erased::call_operator< std::string(std::string), erased::const_observer, shape_d_i >;
 using shapeX = shape_d_i< erased::const_observer >;
 using shapeXX = shape_d_i< erased::const_observer >;
 

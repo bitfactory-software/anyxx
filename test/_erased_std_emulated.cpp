@@ -14,9 +14,9 @@ using namespace Catch::Matchers;
 namespace virtual_void::erased
 {
     template< typename SIG >
-    using function = virtual_void::erased::call_operator_facade< erased::value, virtual_void::erased::base, SIG >;
+    using function = virtual_void::erased::call_operator< SIG, erased::value, virtual_void::erased::base >;
     template< typename SIG >
-    using ref_function = virtual_void::erased::call_operator_facade< erased::mutable_observer,virtual_void::erased::base, SIG >;
+    using ref_function = virtual_void::erased::call_operator< SIG, erased::mutable_observer,virtual_void::erased::base >;
 }
 
 using namespace virtual_void;

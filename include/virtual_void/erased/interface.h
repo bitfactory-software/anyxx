@@ -304,13 +304,14 @@ public:
 protected:
     call_operator_facade() = default;
 };
-template< template < typename > typename BASE, typename RET, typename... ARGS >
-struct call_operator_
-{
-    template< typename LIFETIME_HOLDER >
-    using type = call_operator_facade< LIFETIME_HOLDER, BASE, RET, ARGS... >;
-};
-template< template < typename > typename BASE, typename RET, typename... ARGS >
-using call_operator = call_operator_< BASE, RET, ARGS... >::type;
+//template< typename SIG, typename... ARGS >
+//struct call_operator
+//{
+//    template< typename LIFETIME_HOLDER, template < typename > typename BASE = base >
+//    using apply = call_operator_facade< LIFETIME_HOLDER, BASE, RET, ARGS... >;
+//};
+template< typename SIG, is_erased_lifetime_holder LIFETIME_HOLDER, template < typename > typename BASE  >
+using call_operator = call_operator_facade< LIFETIME_HOLDER, BASE, SIG >;
+
 
 };
