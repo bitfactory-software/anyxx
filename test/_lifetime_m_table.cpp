@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../include/virtual_void/m_table/lifetime/observer.h"
 #include "../include/virtual_void/m_table/lifetime/shared_const.h"
 #include "../include/virtual_void/m_table/lifetime/unique.h"
 #include "class_hierarchy_test_hierarchy.h"
@@ -10,10 +11,44 @@
 
 using namespace Catch::Matchers;
 
+using namespace virtual_void;
 using namespace virtual_void::m_table;
 using namespace TestDomain;
 
 namespace {
+
+TEST_CASE("m_table/lifetime/observer") {
+  static_assert(std::same_as<m_table::select_observer_t<std::string>,
+                             m_table::mutable_observer>);
+  static_assert(std::same_as<m_table::select_observer_t<const std::string>,
+                             m_table::const_observer>);
+
+  std::string s{"hallo"};
+  auto mo = m_table::mutable_observer(s);
+  REQUIRE(mo.data() == &s);
+  REQUIRE(*static_cast<std::string const*>(mo.data())=="hallo");
+  REQUIRE(mo.m_table() == m_table_of<std::string>());
+  REQUIRE(*static_cast<std::string const*>(mo.data())=="hallo");
+  static_assert(std::derived_from<m_table::mutable_observer, erased::observer<void*>>);
+  REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
+  static_assert(std::same_as<m_table::typed_observer<std::string>::conrete_t,
+                             std::string>);
+  static_assert(
+      std::same_as<m_table::typed_observer<std::string const>::conrete_t,
+                   std::string const>);
+  auto co = m_table::const_observer(s);
+  REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
+  auto tmo = m_table::typed_observer<std::string>(mo);
+  static_assert(std::derived_from<decltype(tmo), m_table::mutable_observer>);
+  REQUIRE(*tmo == "hallo");
+  *tmo = "world";
+  REQUIRE(s == "world");
+  REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
+  REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
+  // auto tmo2 = m_table::typed_observer< std::string * >{ co }; // shall not
+  // compile
+}
+
 TEST_CASE("m_table/lifetime/shared_const") {
   auto d = make_shared_const<D>("shared hallo");
   shared_const x = as<D>(d);

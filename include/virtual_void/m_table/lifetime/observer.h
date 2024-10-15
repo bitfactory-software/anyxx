@@ -3,20 +3,10 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../concept.h"
+#include "../../erased/lifetime/observer.h"
+#include "../../forward.h"
 
-namespace virtual_void::erased {
-
-template <typename VOID>
-struct is_const_void {};
-template <>
-struct is_const_void<void*> {
-  static constexpr bool value = false;
-};
-template <>
-struct is_const_void<void const*> {
-  static constexpr bool value = true;
-};
+namespace virtual_void::m_table {
 
 struct make_mutable_observer;
 struct make_const_observer;
@@ -33,35 +23,24 @@ template <bool is_const>
 using select_make_observer_t = select_make_observer<is_const>::type;
 
 template <typename VOID>
-struct observer {
-  using void_t = VOID;
-  static constexpr bool is_const = is_const_void<VOID>::value;
+struct observer : erased::observer<VOID> {
+using base_t = erased::observer<VOID>;
+  using base_t::void_t;
+  using base_t::is_const;
   using make_erased = select_make_observer_t<is_const>;
-
-  observer(const observer&) = default;
-  observer(observer&) = default;
-  observer(observer&&) = default;
+  using base_t::base_t;
   template <typename T>
   observer(T&& v)
-    requires(!std::derived_from<std::remove_reference_t<T>, observer>)
-      : data_(&v) {}
-  observer(void_t v) : data_(v) {}
-  VOID data_ = nullptr;
-  VOID data() const { return data_; }
+    requires(!std::derived_from<T, observer>)
+      : base_t(v), m_table_( m_table_of<std::remove_reference_t<T>>() ){}
+  observer(void_t v, const m_table_t* m_table) : base_t(v), m_table_(m_table) {}
+  const m_table_t* m_table_;
+  const m_table_t* m_table() const { return m_table_; };
 };
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 static_assert(const_observer::is_const);
 static_assert(!mutable_observer::is_const);
-
-template <typename U>
-auto reconcrete_cast(mutable_observer o) {
-  return static_cast<U*>(o.data());
-}
-template <typename U>
-auto reconcrete_cast(const_observer o) {
-  return static_cast<const U*>(o.data());
-}
 
 template <typename T>
 struct select_observer {
@@ -108,9 +87,9 @@ struct make_const_observer {
   }
 };
 
-static_assert(is_erased_lifetime_holder<mutable_observer>);
-static_assert(is_erased_lifetime_holder<const_observer>);
-static_assert(is_erased_lifetime_holder<typed_observer<int const> >);
-static_assert(is_erased_lifetime_holder<typed_observer<int> >);
+static_assert(erased::is_erased_lifetime_holder<mutable_observer>);
+static_assert(erased::is_erased_lifetime_holder<const_observer>);
+static_assert(erased::is_erased_lifetime_holder<typed_observer<int const> >);
+static_assert(erased::is_erased_lifetime_holder<typed_observer<int> >);
 
 }  // namespace virtual_void::erased
