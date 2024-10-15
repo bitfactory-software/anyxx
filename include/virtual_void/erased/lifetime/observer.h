@@ -17,13 +17,14 @@ struct make_const_observer;
 
 template< bool >	struct select_make_observer				{ using type = make_mutable_observer; };
 template<>			struct select_make_observer< true >		{ using type = make_const_observer; };
+template< bool is_const > using select_make_observer_t = select_make_observer< is_const >::type;
 
 template< typename VOID >
 struct observer
 {
 	using void_t = VOID;
 	static constexpr bool is_const = is_const_void< VOID >::value;
-	using make_erased = select_make_observer< is_const >::type;
+	using make_erased = select_make_observer_t< is_const >;
 
 	observer( const observer& ) = default;
 	observer( observer& ) = default;
@@ -49,20 +50,21 @@ template< typename U > auto reconcrete_cast( const_observer o )		{ return static
 
 template< typename T > struct select_observer				{ using type = mutable_observer; };
 template< typename T > struct select_observer< T const >	{ using type = const_observer; };
+template< typename T > using select_observer_t = select_observer< T >::type;
 
 template< typename T >
-struct typed_observer : public select_observer< std::remove_reference_t< T > >::type
+struct typed_observer : public select_observer_t< std::remove_reference_t< T > >
 {
 	using conrete_t = std::remove_reference_t< T >;
-	using observer_t = select_observer< T >::type;
+	using observer_t = select_observer_t< T >;
 	typed_observer( const typed_observer& ) = default;
 	typed_observer( typed_observer& ) = default;
 	typed_observer( typed_observer&& ) = default;
 	typed_observer( const observer_t& o )
-		: select_observer< std::remove_reference_t< T > >::type( o )
+		: select_observer_t< std::remove_reference_t< T > >( o )
 	{}
 	typed_observer( T&& v )
-		: select_observer< std::remove_reference_t< T > >::type( std::forward< T >( v ) )
+		: select_observer< std::remove_reference_t< T > >( std::forward< T >( v ) )
 	{}
     conrete_t& operator*() const  { return  *static_cast< conrete_t* >( this->data() ); }
     conrete_t* operator->() const { return  static_cast< conrete_t* >( this->data() ); }
