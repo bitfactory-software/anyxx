@@ -91,48 +91,6 @@ TO interface_lifetime_cast( const FROM& from )
         );
 }
 
-template< template< typename, template< typename > typename > typename... >
-struct bases_;
-template< template< typename, template< typename > typename > typename BASE >
-struct bases_< BASE >
-{
-    template< typename E > using type = BASE< E, virtual_void::erased::base >;
-};
-template
-    < template< typename, template< typename > typename > typename FIRST
-    , template< typename, template< typename > typename > typename... MORE
-    >
-struct bases_< FIRST, MORE... >
-{
-    template< typename E > using type = FIRST< E, typename bases_< MORE... >::type >;
-};
-template< template< typename, template< typename > typename > typename... BASES >
-using bases = bases_< BASES... >::type;
-
-template
-    < typename E
-    , template< typename > typename UNUSED 
-    > using open_base = base< E >;
-
-template< typename E, template< typename, template< typename > typename > typename... BASES >
-struct compose_
-{
-    using type = bases_< BASES... >:: template type< E >;
-};
-
-template
-    < typename E
-    , template< typename > typename UNUSED 
-    > using open_base = base< E >;
-
-template< typename E, template< typename, template< typename > typename > typename... BASES >
-using compose = typename bases_< BASES... >::template type< E >;
-
-template
-    < typename E
-    , template< typename > typename UNUSED 
-    > using open_base = base< E >;
-
 }
 
 #define _detail_EXPAND(...) _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -197,7 +155,7 @@ type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const { \
 }
 
         
-#define _detail_ERASED_INTERFACE( n, delegate_lampda_limp, l) \
+#define _detail_ERASED_INTERFACE( n, BASE, delegate_lampda_limp, l) \
 template< typename BASE_V_TABLE > \
 struct n##interface : BASE_V_TABLE \
 { \
@@ -217,7 +175,7 @@ struct n##interface : BASE_V_TABLE \
         virtual_void::erased::set_is_derived_from< v_table_t >( this ); \
     }; \
 }; \
-template< virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER, template < typename > typename BASE = virtual_void::erased::base > \
+template< virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER > \
 struct n : BASE< LIFETIME_HOLDER > \
 { \
 public: \
@@ -261,8 +219,9 @@ public: \
 protected: \
     n() = default;\
 };
-#define ERASED_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
-#define ERASED_FREE_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
+#define ERASED_INTERFACE_( name, base, ...) _detail_ERASED_INTERFACE(name, base, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define ERASED_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, virtual_void::erased::base, _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define ERASED_FREE_INTERFACE( name, ...) _detail_ERASED_INTERFACE(name, virtual_void::erased::base, _detail_INTERFACE_FREE_LIMP_H, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__),
 
 
@@ -345,13 +304,13 @@ public:
 protected:
     call_operator_facade() = default;
 };
-template< typename RET, typename... ARGS >
+template< template < typename > typename BASE, typename RET, typename... ARGS >
 struct call_operator_
 {
-    template< typename LIFETIME_HOLDER, template < typename > typename BASE >
+    template< typename LIFETIME_HOLDER >
     using type = call_operator_facade< LIFETIME_HOLDER, BASE, RET, ARGS... >;
 };
-template< typename RET, typename... ARGS >
-using call_operator = call_operator_< RET, ARGS... >::type;
+template< template < typename > typename BASE, typename RET, typename... ARGS >
+using call_operator = call_operator_< BASE, RET, ARGS... >::type;
 
 };

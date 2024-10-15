@@ -27,11 +27,11 @@ ERASED_INTERFACE(shape_base1,
     (void, draw, position)
 )
 
-ERASED_INTERFACE(shape_base,
+ERASED_INTERFACE_(shape_base, shape_base1,
     (int, count_sides),
 )
 
-ERASED_INTERFACE(shape_d_i,
+ERASED_INTERFACE_(shape_d_i, shape_base, 
     (double, area),
     (double, perimeter)
 )
@@ -45,19 +45,16 @@ ERASED_INTERFACE(shape_i,
 
 using to_string_vv = to_string_i< virtual_void::m_table::shared_const >;
 
-using shape_vv = shape_i< virtual_void::m_table::shared_const, virtual_void::erased::base >;
+using shape_vv = shape_i< virtual_void::m_table::shared_const >;
 
-using shape_base_v = shape_base< erased::const_observer, virtual_void::erased::bases< shape_base1 > >;
+using shape_base_v = shape_base< erased::const_observer >;
 
-template< typename _, template< typename, template< typename > typename > typename OPEN_BASE > using shape_base_and_base1_with_open_base = virtual_void::erased::bases_< shape_base, shape_base1, OPEN_BASE >:: template type< _ >;
-template< typename _ > using shape_base_full = virtual_void::erased::compose< _, shape_base, shape_base1 >;
 
-using shape = shape_d_i< erased::const_observer, virtual_void::erased::bases< virtual_void::erased::call_operator< std::string(std::string) >, shape_base, shape_base1 > >;
-using shapeX = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base1 > >;
-using shapeXX = shape_d_i< erased::const_observer, shape_base_full >;
+using shape = virtual_void::erased::call_operator_< shape_d_i, std::string(std::string) >::type< erased::const_observer >;
+using shapeX = shape_d_i< erased::const_observer >;
+using shapeXX = shape_d_i< erased::const_observer >;
 
-template< typename _ > using full_shape = virtual_void::erased::compose< _, shape_d_i, shape_base, shape_base1 >;
-using full_shape_observer = full_shape< erased::mutable_observer >;
+using full_shape_observer = shape_i< erased::mutable_observer >;
 
 struct circle {
     double radius;
@@ -156,7 +153,7 @@ void print_shape_f(const full_shape_observer s) {
     print_shape_(s);
 }
 
-using shape_double_base_error = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; //should not compile!
+//using shape_double_base_error = shape_d_i< erased::const_observer, virtual_void::erased::bases< shape_base, shape_base > >; //should not compile!
 //void should_not_compile(shape_double_base_error s) {}//should not compile!
 
 std::string ask_name(const to_string_vv a) {
@@ -184,14 +181,20 @@ TEST_CASE( "dynamic interface const_observer" ) {
     static_assert( std::is_base_of_v< shape_base_v, shape > );
     static_assert( std::derived_from< shape, shape_base_v > );
     shape shape_circle{ circle{ 33.3 } };
+    shapeX shape_circleX{ circle{ 33.3 } };
 
 //    virtual_void::erased::base< void* > base_v = shape_circle; -> interface_cast may not compile!
-    virtual_void::erased::base< erased::const_observer > base_v = shape_circle;
+    virtual_void::erased::base< erased::const_observer > base_shape = shape_circle;
+    virtual_void::erased::base< erased::const_observer > base_shapeX = shape_circleX;
 
-    REQUIRE( base_v.is_derived_from< shape >() );
-    REQUIRE( !base_v.is_derived_from< shapeX >() );
+    REQUIRE( base_shape.is_derived_from< shape >() );
+    REQUIRE( base_shape.is_derived_from< shapeX >() );
+    REQUIRE( !shape_circleX.is_derived_from< shape >() );
+    REQUIRE( shape_circleX.is_derived_from< shapeX >() );
     static_assert( std::derived_from< shape, shape_base_v > );
-    REQUIRE( !virtual_void::erased::interface_cast< shapeX >( base_v ) );
+    static_assert( std::derived_from< shapeX, shape_base_v > );
+    REQUIRE( virtual_void::erased::interface_cast< shapeX >( base_shape ) );
+    REQUIRE( !virtual_void::erased::interface_cast< shape >( shape_circleX ) );
 
     shape_base_v shape_circle_base = shape_circle; 
     {
