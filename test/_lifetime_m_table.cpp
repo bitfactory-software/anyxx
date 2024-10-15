@@ -26,10 +26,11 @@ TEST_CASE("m_table/lifetime/observer") {
   std::string s{"hallo"};
   auto mo = m_table::mutable_observer(s);
   REQUIRE(mo.data() == &s);
-  REQUIRE(*static_cast<std::string const*>(mo.data())=="hallo");
+  REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   REQUIRE(mo.m_table() == m_table_of<std::string>());
-  REQUIRE(*static_cast<std::string const*>(mo.data())=="hallo");
-  static_assert(std::derived_from<m_table::mutable_observer, erased::observer<void*>>);
+  REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
+  static_assert(
+      std::derived_from<m_table::mutable_observer, erased::observer<void*>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(std::same_as<m_table::typed_observer<std::string>::conrete_t,
                              std::string>);
