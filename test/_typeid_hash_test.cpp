@@ -3,7 +3,7 @@
 
 #include "include/catch.hpp"
 
-#include "../include/perfect_typeid_hash/index_table.h"
+#include "../include/virtual_void/perfect_typeid_hash/index_table.h"
 
 
 TEST_CASE( "build perfect typeid hash index" ) {

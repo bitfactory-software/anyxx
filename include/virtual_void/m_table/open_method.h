@@ -2,9 +2,9 @@
 
 #include <typeindex>
 
-#include "../../utillities/ensure_function_ptr.h"
-#include "../../utillities/overload.h"
-#include "../../utillities/type_list.h"
+#include "../utillities/ensure_function_ptr.h"
+#include "../utillities/overload.h"
+#include "../utillities/type_list.h"
 #include "../class_hierarchy/class_hierarchy.h"
 #include "../open_method/domain.h"
 #include "../open_method/table.h"

@@ -2,9 +2,9 @@
 
 #include <typeindex>
 
-#include "../../utillities/ensure_function_ptr.h"
-#include "../../utillities/overload.h"
-#include "../../utillities/type_list.h"
+#include "../utillities/ensure_function_ptr.h"
+#include "../utillities/overload.h"
+#include "../utillities/type_list.h"
 #include "open_method_base.h"
 
 namespace virtual_void::typeid_ {

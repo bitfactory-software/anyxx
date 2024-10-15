@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "../../include/any_dispatch/method.h"
+#include "../../include/virtual_void/any_dispatch/method.h"
 #include "include/catch.hpp"
 
 namespace {

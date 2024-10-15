@@ -4,8 +4,8 @@
 #include <vector>
 #include <map>
 
-#include "../../utillities/overload.h"
-#include "../../utillities/type_list.h"
+#include "../utillities/overload.h"
+#include "../utillities/type_list.h"
 #include "../forward.h"
 
 namespace virtual_void::class_hierarchy {

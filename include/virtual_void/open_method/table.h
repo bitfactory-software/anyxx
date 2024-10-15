@@ -3,7 +3,7 @@
 #include <typeindex>
 #include <unordered_map>
 
-#include "../../include/perfect_typeid_hash/index_table.h"
+#include "../perfect_typeid_hash/index_table.h"
 #include "../error.h"
 #include "../forward.h"
 
