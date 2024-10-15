@@ -7,7 +7,7 @@ permalink: /
 
 # virtual void
 
-## a "type erased" vocabulary for programming in the large
+## a "type tunnel" vocabulary for programming in the large
 - lifetimehandles
 - interfaces
   - deriveable
@@ -23,35 +23,36 @@ The library is **header only**
 
 The name of the library originates in its fundamental design idea:
 - hide the concrete data behind a (possible "smart") **pointer to void**,
-- pair this with a pointer to static meta data to interprete the hidden data
+- pair this with a pointer to static meta data to interprete and recover the hidden data
 - and use such pairs as the external interfaces, to seperate usage and implementation details as much as possible. So we can say, the pointer is only **virtual void**. 
 
 ## programming in the large
 
 ### runtime versus compiletime dispatch
 
-Dispatch on behalf of a type is like function calls a fundamental  construction principle, to splitt software in smaler parts.
+Dispatch on behalf of a type is - like function calls - a fundamental software construction principle. 
 They allow the building of layerd abstraction levels.
 Static dispatch is the dispatch of chioce in C++. Foremost because of performance and binary size.
-But eceeds a program a certain size, it is no longer possible to use static disapch. Reasons are:
+But eceeds a program a certain size, it is no longer possible to use static disapch for all and everything. 
+
+Reasons are:
 - you do not know all your types all the time
 - you can not use all your types all the time because of restricted build resources: time and space.
-For example, imagine a std::variant for some hundred different alternatives.
-This is where **programming in the large** begins and runtime dispatch is  proven means.
 
-### "OO style" versus "type erasure" runtime dispatch
+For example, imagine a std::variant for some hundred different alternatives.
+This is where **programming in the large** begins and runtime dispatch is the proven means.
+
+### From "OO style" to "type erasure" runtime dispatch to "type tunneling"
 
 C++'s virtual functions have shown their versaitilty and usefullness for decades.
-But, as the understanding for decompising software grow, we saw that the "OO style" integration of the interface direct into the object as an ever growing problem.
+But, as the understanding for decompising software grows, we see that the "OO style" integration of the interface direct into the object as an ever growing problem.
 It is now consens, that separation of the interface from the underlying object is the way to go. The type gets erased from the interface.
 On the contrary, by doing so, we lose this connection, whitch had shown is usefullnes in a countless homongos and succesful software projects.
 So can a v-table interface of an object to be used, to cast back to that object itself, to "downcast" the interface to a more specific one, and to "crosscast" to an other interface.
 We see the this casts as an absolute must, type erasure has do deliver, to use it as the fundamnental building block for  programming in the large.
-Because we found no library, which fullfilled this demands, we came up with this one.  
-
-
-
-
+Because we found no library, which fullfilled this demands, we came up with this one.
+We call a "loss less type erasing" technique "type tunneling".
+To symbolize the "hide the type information" and bring it "back to light".
 
 
 
