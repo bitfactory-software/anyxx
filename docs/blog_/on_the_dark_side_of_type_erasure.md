@@ -14,6 +14,8 @@ The story starts years back, by watching [Sean Parent talking about type erasure
 This was for us, as for many others, a really empowering expirience.
 It covered so many topics. For now, we will concentrate on the "type erasure" part.
 
+### A short recap 
+
 Let us start with a short recap of the quintesence in regard to "type erasure".
 To eliminate the boilerplate code, we use "proxy". "proxy" is the "type erasure" library roposed for inclusion in c++26.
 
@@ -94,6 +96,8 @@ The key messeage we get told is: Programming along classes utilizing the convent
 (see "type erasure ["My existing project uses virtual functions. How should I migrate to “Proxy”?]: https://microsoft.github.io/proxy/docs/faq.html#how-migrate)
 
 And here ends the the usual story. 
+
+### A practical application 
 
 We where convinced too. 
 So we tried to apply this techniqe to an aspect of our codebase.  
@@ -190,6 +194,8 @@ int main()
 ```
 [see it on compiler explorer]: https://godbolt.org/z/K5Y7GdW5Y
 
+### Downcast? 
+
 So far, so good. 
 
 But but our functions behave not look like the one in the last example.
@@ -230,7 +236,8 @@ So we resorted to a old school unsexy "OO-Style + template mixture" to solve thi
 if you are interested, look at a [scetch on compiler explorer]: https://godbolt.org/z/dPPzKzzEq. 
 But beware, that looks realy ugly. It shows primary, there is a lot room for improvement.
 
-Conclusio:
+### from "type erasure" to "type tunneling":
+
 There is a pattern, that shows a general hole in the application of "type erasure".
 We called that pattern the "type_erased_downcast problem".
 This pattern can be reduced to this code lines.
