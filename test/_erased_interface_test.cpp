@@ -19,18 +19,16 @@ struct position {
   float x, y;
 };
 
-ERASED_FREE_INTERFACE(to_string_i, (std::string, to_string))
+ERASED_INTERFACE(shape_base1, INTERFACE_METHOD(void, draw, position))
 
-ERASED_INTERFACE(shape_base1, (void, draw, position))
+ERASED_INTERFACE_(shape_base, shape_base1, INTERFACE_METHOD(int, count_sides) )
 
-ERASED_INTERFACE_(shape_base, shape_base1, (int, count_sides), )
+ERASED_INTERFACE_(shape_d_i, shape_base, INTERFACE_METHOD(double, area), INTERFACE_METHOD(double, perimeter))
 
-ERASED_INTERFACE_(shape_d_i, shape_base, (double, area), (double, perimeter))
-
-ERASED_INTERFACE(shape_i, (void, draw, position), (int, count_sides),
-                 (double, area), (double, perimeter))
-
-using to_string_vv = to_string_i<virtual_void::m_table::shared_const>;
+ERASED_INTERFACE(shape_i, INTERFACE_METHOD(void, draw, position),
+                 INTERFACE_METHOD(int, count_sides),
+                 INTERFACE_METHOD(double, area),
+                 INTERFACE_METHOD(double, perimeter))
 
 using shape_vv = shape_i<virtual_void::m_table::shared_const>;
 
@@ -93,8 +91,6 @@ struct regular_polygon {
   }
 };
 
-std::string to_string_(auto const x) { return std::to_string(x.count_sides()); }
-
 void print_shape_(const auto s) {
   s.draw({4.0, 5.0});
   std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
@@ -112,8 +108,6 @@ void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 // virtual_void::erased::bases< shape_base, shape_base > >; //should not
 // compile! void should_not_compile(shape_double_base_error s) {}//should not
 // compile!
-
-std::string ask_name(const to_string_vv a) { return a.to_string(); }
 
 TEST_CASE("dynamic interface const_observer") {
   using namespace virtual_void;
@@ -196,14 +190,6 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   print_shape_vv(s);
   print_shape_vv(r);
   print_shape_vv(p);
-}
-
-TEST_CASE("dynamic interface free") {
-  circle c{12.3};
-  auto sc = m_table::make_shared_const<circle>(circle{c});
-
-  REQUIRE(ask_name(sc) == std::to_string(sc->count_sides()));
-  REQUIRE(ask_name(c) == std::to_string(c.count_sides()));
 }
 
 TEST_CASE("base") {
