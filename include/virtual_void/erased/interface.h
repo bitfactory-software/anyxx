@@ -8,9 +8,9 @@
 // /Zc:preprocessor (see CMakeLists.txt for example)
 //
 
+#include <optional>
 #include <type_traits>
 #include <typeinfo>
-#include <optional>
 
 #include "concept.h"
 
@@ -222,7 +222,8 @@ TO interface_lifetime_cast(const FROM &from) {
                           _detail_EXPAND_LIST l) template <typename UNERASE>   \
     n##interface(UNERASE unerase)                                              \
         : interface_base_t(unerase),                                           \
-          _detail_map_macro(delegate_lampda_limp, _detail_EXPAND_LIST l) {     \
+          _detail_map_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
+                            _detail_EXPAND_LIST l) {                           \
       virtual_void::erased::set_is_derived_from<v_table_t>(this);              \
     };                                                                         \
   };                                                                           \
