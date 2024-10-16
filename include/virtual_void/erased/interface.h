@@ -201,6 +201,11 @@ TO interface_lifetime_cast(const FROM &from) {
   }
 
 #define _detail_ERASED_INTERFACE(n, BASE, l)                                   \
+  template <typename T>                                                        \
+  struct n##_defaultmap {};                                                    \
+  template <typename T>                                                        \
+  constexpr n##_defaultmap<T> n##_concept_map = {};                            \
+                                                                               \
   template <typename BASE_V_TABLE>                                             \
   struct n##interface : BASE_V_TABLE {                                         \
     using interface_base_t = BASE_V_TABLE;                                     \
@@ -215,11 +220,12 @@ TO interface_lifetime_cast(const FROM &from) {
                           _detail_EXPAND_LIST l) template <typename UNERASE>   \
     n##interface(UNERASE unerase)                                              \
         : interface_base_t(unerase),                                           \
-          _detail_map_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
+          _detail_map_macro(_detail_INTERFACE_MEMEBER_LIMP_H,            \
                             _detail_EXPAND_LIST l) {                           \
       virtual_void::erased::set_is_derived_from<v_table_t>(this);              \
     };                                                                         \
   };                                                                           \
+                                                                               \
   template <virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER>   \
   struct n : BASE<LIFETIME_HOLDER> {                                           \
    public:                                                                     \
