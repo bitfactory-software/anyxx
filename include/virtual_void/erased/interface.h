@@ -207,7 +207,7 @@ TO interface_lifetime_cast(const FROM &from) {
                    __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   }
 
-#define _detail_ERASED_INTERFACE(n, BASE, delegate_lampda_limp, l)             \
+#define _detail_ERASED_INTERFACE(n, BASE, l)                                   \
   template <typename BASE_V_TABLE>                                             \
   struct n##interface : BASE_V_TABLE {                                         \
     using interface_base_t = BASE_V_TABLE;                                     \
@@ -274,12 +274,10 @@ TO interface_lifetime_cast(const FROM &from) {
    protected:                                                                  \
     n() = default;                                                             \
   };
-#define ERASED_INTERFACE_(name, base, ...)                               \
-  _detail_ERASED_INTERFACE(name, base, _detail_INTERFACE_MEMEBER_LIMP_H, \
-                           (__VA_ARGS__))
-#define ERASED_INTERFACE(name, ...)                          \
-  _detail_ERASED_INTERFACE(name, virtual_void::erased::base, \
-                           _detail_INTERFACE_MEMEBER_LIMP_H, (__VA_ARGS__))
+#define ERASED_INTERFACE_(name, base, ...) \
+  _detail_ERASED_INTERFACE(name, base, (__VA_ARGS__))
+#define ERASED_INTERFACE(name, ...) \
+  _detail_ERASED_INTERFACE(name, virtual_void::erased::base, (__VA_ARGS__))
 #define INTERFACE_METHOD(...) (__VA_ARGS__)
 
 namespace virtual_void::erased {
