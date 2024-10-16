@@ -150,6 +150,15 @@ template <>
 constexpr auto shape_base1_concept_map<const circle> =
     circle_shape_base1_concept_map{};
 
+struct circle_shape_i_concept_map : shape_i_defaultmap<circle const> {
+  auto draw(circle const* x, position p) const {
+    std::cout << " A Circle Is Recorded VIA circle_shape_i_concept_map At "
+              << p.x << " " << p.y << std::endl;
+  }
+};
+template <>
+constexpr auto shape_i_concept_map<const circle> = circle_shape_i_concept_map{};
+
 struct square {
   int w;
   void draw(position p) const {
