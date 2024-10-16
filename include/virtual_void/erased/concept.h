@@ -26,6 +26,7 @@ LIFETIME_HOLDER erase_to(FROM&& from) {
 
 template <typename T>
 struct unerase_t {
+  using type = T;
   auto operator()(auto from) { return static_cast<T*>(from); }
 };
 

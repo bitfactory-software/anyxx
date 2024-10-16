@@ -19,11 +19,97 @@ struct position {
   float x, y;
 };
 
-ERASED_INTERFACE(shape_base1, INTERFACE_METHOD(void, draw, position))
+template <typename T>
+struct shape_base1_defaultmap {
+  auto draw(T const* x, position _sig) const {
+    return x->draw(std::forward<decltype(_sig)>(_sig));
+  }
+};
 
-ERASED_INTERFACE_(shape_base, shape_base1, INTERFACE_METHOD(int, count_sides) )
+template <typename T>
+constexpr shape_base1_defaultmap<T> shape_base1_concept_map = {};
 
-ERASED_INTERFACE_(shape_d_i, shape_base, INTERFACE_METHOD(double, area), INTERFACE_METHOD(double, perimeter))
+template <typename BASE_V_TABLE>
+struct shape_base1interface : BASE_V_TABLE {
+  using interface_base_t = BASE_V_TABLE;
+  using void_t = interface_base_t::void_t;
+  using v_table_t = shape_base1interface;
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(v_table_t) == from
+               ? true
+               : interface_base_t::static_is_derived_from(from);
+  }
+  void (*draw)(void_t, position);
+  template <typename UNERASE>
+  shape_base1interface(UNERASE unerase)
+      : interface_base_t(unerase), draw([](void_t _vp, position _sig) {
+          return shape_base1_concept_map<typename UNERASE::type>.draw(
+              (UNERASE{}(_vp)), std::forward<decltype(_sig)>(_sig));
+        }) {
+    virtual_void::erased::set_is_derived_from<v_table_t>(this);
+  };
+};
+template <virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER>
+struct shape_base1 : virtual_void::erased::base<LIFETIME_HOLDER> {
+ public:
+  using lifetime_holder_t = LIFETIME_HOLDER;
+  using void_t = LIFETIME_HOLDER::void_t;
+  using base_t = virtual_void::erased::base<LIFETIME_HOLDER>;
+  using interface_base_t = base_t::interface_t;
+  using interface_t = shape_base1interface<interface_base_t>;
+  using query_interface_unique_t =
+      shape_base1interface<virtual_void::erased::base<lifetime_holder_t>>;
+  template <typename T>
+  using is_already_base =
+      std::conditional_t<std::is_same_v<T, query_interface_unique_t>,
+                         std::true_type,
+                         typename base_t::template is_already_base<T>>;
+  static_assert(!base_t::is_already_base<query_interface_unique_t>::value,
+                "An interface my only be once in instanciated for a facade");
+
+ protected:
+  using base_t::interface_impementation_;
+  using base_t::lifetime_holder_;
+
+ public:
+  shape_base1(lifetime_holder_t lifetime_holder, interface_t* v_table)
+      : base_t(std::move(lifetime_holder), v_table) {}
+  template <typename CONSTRUCTED_WITH>
+  shape_base1(CONSTRUCTED_WITH&& v)
+    requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
+      : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
+    static interface_t imlpemented_interface{
+        virtual_void::erased::unerase<LIFETIME_HOLDER, CONSTRUCTED_WITH>()};
+    interface_impementation_ = &imlpemented_interface;
+  }
+  template <typename OTHER>
+  shape_base1(const OTHER& other)
+    requires(std::derived_from<OTHER, base_t>)
+      : base_t(other) {}
+  void draw(position _sig)
+    requires(!LIFETIME_HOLDER::is_const)
+  {
+    return static_cast<interface_t*>(interface_impementation_)
+        ->draw(base_t::lifetime_holder_.data(),
+               std::forward<decltype(_sig)>(_sig));
+  }
+  void draw(position _sig) const {
+    return static_cast<interface_t*>(interface_impementation_)
+        ->draw(base_t::lifetime_holder_.data(),
+               std::forward<decltype(_sig)>(_sig));
+  }
+  shape_base1(const shape_base1&) = default;
+  shape_base1(shape_base1&) = default;
+  shape_base1(shape_base1&&) = default;
+
+ protected:
+  shape_base1() = default;
+};
+
+ERASED_INTERFACE_(shape_base, shape_base1, INTERFACE_METHOD(int, count_sides))
+
+ERASED_INTERFACE_(shape_d_i, shape_base, INTERFACE_METHOD(double, area),
+                  INTERFACE_METHOD(double, perimeter))
 
 ERASED_INTERFACE(shape_i, INTERFACE_METHOD(void, draw, position),
                  INTERFACE_METHOD(int, count_sides),
@@ -53,6 +139,17 @@ struct circle {
   double perimeter() const { return circumference(); }
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
+
+struct circle_shape_base1_concept_map {
+  auto draw(circle const* x, position p) const {
+    std::cout << " A Circle Is Recorded VIA circle_shape_base1_concept_map At "
+              << p.x << " " << p.y << std::endl;
+  }
+};
+template <>
+constexpr auto shape_base1_concept_map<const circle> =
+    circle_shape_base1_concept_map{};
+
 struct square {
   int w;
   void draw(position p) const {
@@ -174,9 +271,9 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 
   auto sc = m_table::make_shared_const<circle>(circle{c});
   static_assert(
-      std::is_same_v<decltype(sc), m_table::typed_shared_const<circle> >);
+      std::is_same_v<decltype(sc), m_table::typed_shared_const<circle>>);
   static_assert(std::is_base_of_v<m_table::shared_const,
-                                  m_table::typed_shared_const<circle> >);
+                                  m_table::typed_shared_const<circle>>);
   auto& c1 = *sc;
   REQUIRE_THAT(c1.perimeter(), WithinAbs(77.2, 77.3));
   shape_vv circle_shape_vv = sc;
