@@ -186,13 +186,6 @@ TO interface_lifetime_cast(const FROM &from) {
             ->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
       })
 
-#define _detail_INTERFACE_LAMBDA_TO_FREE_IMPL(type, name, ...)                \
-  name([](void_t _vp __VA_OPT__(,                                             \
-                                _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-    return name##_(*UNERASE{}(_vp)__VA_OPT__(, )                              \
-                       __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
-  })
-
 #define _detail_INTERFACE_METHOD(type, name, ...)                           \
   type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__)))          \
     requires(!LIFETIME_HOLDER::is_const)                                    \
