@@ -188,7 +188,7 @@ TO interface_lifetime_cast(const FROM &from) {
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...)              \
   name =                                                                       \
       [](void_t _vp __VA_OPT__(, _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-        return concept_map.name( (UNERASE{}(_vp)) __VA_OPT__(,)                                              \
+        return interface_map.name( (UNERASE{}(_vp)) __VA_OPT__(,)                                              \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));             \
       };
 
@@ -208,11 +208,11 @@ TO interface_lifetime_cast(const FROM &from) {
 
 #define _detail_ERASED_INTERFACE(n, BASE, l)                                   \
   template <typename T>                                                        \
-  struct n##_defaultmap {                                                      \
+  struct n##_default_interface_map {                                                      \
     _detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, _detail_EXPAND_LIST l) \
   };                                                                           \
   template <typename T>                                                        \
-  constexpr n##_defaultmap<T> n##_concept_map = {};                            \
+  constexpr n##_default_interface_map<T> n##_interface_map = {};                            \
                                                                                \
   template <typename BASE_V_TABLE>                                             \
   struct n##interface : BASE_V_TABLE {                                         \
@@ -229,7 +229,7 @@ TO interface_lifetime_cast(const FROM &from) {
                                                                                \
         template <typename UNERASE>                                            \
         n##interface(UNERASE unerase) : interface_base_t(unerase) {            \
-       static auto concept_map = n##_concept_map<typename UNERASE::type>;                  \
+       static auto interface_map = n##_interface_map<typename UNERASE::type>;                  \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                      \
                         _detail_EXPAND_LIST l);                                \
       virtual_void::erased::set_is_derived_from<v_table_t>(this);              \

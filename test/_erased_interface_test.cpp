@@ -55,24 +55,24 @@ struct circle {
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
 
-struct circle_shape_base1_concept_map {
+struct circle_shape_base1_interface_map {
   auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_shape_base1_concept_map At "
+    std::cout << " A Circle Is Recorded VIA circle_shape_base1_interface_map At "
               << p.x << " " << p.y << std::endl;
   }
 };
 template <>
-constexpr auto shape_base1_concept_map<const circle> =
-    circle_shape_base1_concept_map{};
+constexpr auto shape_base1_interface_map<const circle> =
+    circle_shape_base1_interface_map{};
 
-struct circle_shape_i_concept_map : shape_i_defaultmap<circle const> {
+struct circle_shape_i_interface_map : shape_i_default_interface_map<circle const> {
   auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_shape_i_concept_map At "
+    std::cout << " A Circle Is Recorded VIA circle_shape_i_interface_map At "
               << p.x << " " << p.y << std::endl;
   }
 };
 template <>
-constexpr auto shape_i_concept_map<const circle> = circle_shape_i_concept_map{};
+constexpr auto shape_i_interface_map<const circle> = circle_shape_i_interface_map{};
 
 struct square {
   int w;
