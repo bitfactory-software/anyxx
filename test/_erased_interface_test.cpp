@@ -21,7 +21,7 @@ struct position {
 
 template <typename T>
 struct shape_base1_defaultmap {
-  auto draw(T const* x, position _sig) const {
+  auto draw(T* x, position _sig) const {
     return x->draw(std::forward<decltype(_sig)>(_sig));
   }
 };
