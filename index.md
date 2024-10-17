@@ -42,6 +42,14 @@ Reasons are:
 For example, imagine a std::variant for some hundred different alternatives.
 This is where **programming in the large** begins and runtime dispatch is the proven means.
 
+### runtime versus compiletime 
+
+In the general case, the "hot" runtime path an the bottleneck are easy diagnosed with profilers, once it gets a problem.
+When the problem is spottet, the soultion is - so our expirience - not so far away.  
+In contrary, when build time has grown to a problem, there is seldom an easy way out. 
+While a software system grows lager, keeping the edit-compile-run loop short, needs constan smart decisssions.
+The fundamental design principals here are loose-coupling and information hiding.
+
 ### From "OO style" to "type erasure" runtime dispatch to "type tunneling"
 
 C++'s virtual functions have shown their versaitilty and usefullness for decades.
