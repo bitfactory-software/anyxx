@@ -42,7 +42,6 @@ TEST_CASE("open object 1") {
   *a_test_object.get(test_member()) = "hello programm";
   REQUIRE((*a_test_object.get(test_member())) == "hello programm");
 }
-
 TEST_CASE("open object 2") {
   test_object a_test_object;
   auto r = a_test_object.get(test_member{});
