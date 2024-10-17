@@ -177,23 +177,23 @@ TO interface_lifetime_cast(const FROM& from) {
 #define _detail_INTERFACE_METHOD_H(l) _detail_INTERFACE_METHOD l
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
-#define _detail_INTERFACE_MAP_IMPL(type, name, ...)                         \
+#define _detail_INTERFACE_MAP_IMPL(type, name, const_, ...)                         \
   auto name(T* x __VA_OPT__(, _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
     return x->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
   };
 
-#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, ...) \
+#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, const_, ...) \
   type (*name)(void_t __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, ...)              \
+#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...)              \
   name =                                                                       \
       [](void_t _vp __VA_OPT__(, _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
         return interface_map{}.name((UNERASE{}(_vp))__VA_OPT__(, ) __VA_OPT__( \
             _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                        \
       };
 
-#define _detail_INTERFACE_METHOD(type, name, ...)                           \
-  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__)))          \
+#define _detail_INTERFACE_METHOD(type, name, const_, ...)                           \
+  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_   \
     requires(!LIFETIME_HOLDER::is_const)                                    \
   {                                                                         \
     return static_cast<interface_t*>(interface_impementation_)              \
@@ -286,7 +286,8 @@ TO interface_lifetime_cast(const FROM& from) {
 #define ERASED_INTERFACE(name, l) \
   ERASED_INTERFACE_(name, virtual_void::erased::base, l)
 #define INTERFACE_METHOD_(...) (__VA_ARGS__)
-#define INTERFACE_METHOD(ret, name, ...) INTERFACE_METHOD_( ret, name, __VA_ARGS__)
+#define INTERFACE_METHOD(ret, name, ...) INTERFACE_METHOD_( ret, name, , __VA_ARGS__)
+#define INTERFACE_CONST_METHOD(ret, name, ...) INTERFACE_METHOD_( ret, name, const, __VA_ARGS__)
 
 namespace virtual_void::erased {
 
