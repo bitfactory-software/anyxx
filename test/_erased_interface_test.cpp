@@ -19,18 +19,18 @@ struct position {
   float x, y;
 };
 
-ERASED_INTERFACE(shape_base1, (INTERFACE_METHOD(void, draw, position)))
+ERASED_INTERFACE(shape_base1, (INTERFACE_CONST_METHOD(void, draw, position)))
 
-ERASED_INTERFACE_(shape_base, shape_base1, (INTERFACE_METHOD(int, count_sides)))
+ERASED_INTERFACE_(shape_base, shape_base1, (INTERFACE_CONST_METHOD(int, count_sides)))
 
 ERASED_INTERFACE_(shape_d_i, shape_base,
-                  (INTERFACE_METHOD(double, area),
-                   INTERFACE_METHOD(double, perimeter)))
+                  (INTERFACE_CONST_METHOD(double, area),
+                   INTERFACE_CONST_METHOD(double, perimeter)))
 
-ERASED_INTERFACE(shape_i, (INTERFACE_METHOD(void, draw, position),
-                           INTERFACE_METHOD(int, count_sides),
-                           INTERFACE_METHOD(double, area),
-                           INTERFACE_METHOD(double, perimeter)))
+ERASED_INTERFACE(shape_i, (INTERFACE_CONST_METHOD(void, draw, position),
+                           INTERFACE_CONST_METHOD(int, count_sides),
+                           INTERFACE_CONST_METHOD(double, area),
+                           INTERFACE_CONST_METHOD(double, perimeter)))
 
 using shape_vv = shape_i<virtual_void::m_table::shared_const>;
 
