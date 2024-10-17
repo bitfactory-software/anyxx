@@ -206,7 +206,7 @@ TO interface_lifetime_cast(const FROM& from) {
                    __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   }
 
-#define _detail_ERASED_INTERFACE(n, BASE, l)                                   \
+#define ERASED_INTERFACE_(n, BASE, l)                                          \
   template <typename T>                                                        \
   struct n##_default_interface_map {                                           \
     _detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, _detail_EXPAND_LIST l) \
@@ -283,8 +283,6 @@ TO interface_lifetime_cast(const FROM& from) {
    protected:                                                                  \
     n() = default;                                                             \
   };
-#define ERASED_INTERFACE_(name, base, ...) \
-  _detail_ERASED_INTERFACE(name, base, (__VA_ARGS__))
 #define ERASED_INTERFACE(name, ...) \
   ERASED_INTERFACE_(name, virtual_void::erased::base, __VA_ARGS__)
 #define INTERFACE_METHOD(...) (__VA_ARGS__)

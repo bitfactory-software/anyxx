@@ -16,9 +16,9 @@ using std::string;
 namespace {
 using namespace virtual_void::erased;
 
-ERASED_INTERFACE(node_i, INTERFACE_METHOD(int, value),
-                 INTERFACE_METHOD(string, as_forth),
-                 INTERFACE_METHOD(string, as_lisp))
+ERASED_INTERFACE(node_i, (INTERFACE_METHOD(int, value),
+                          INTERFACE_METHOD(string, as_forth),
+                          INTERFACE_METHOD(string, as_lisp)))
 
 // using node = node_i< virtual_void::m_table::shared_const >;
 using node = node_i<virtual_void::erased::shared_const>;

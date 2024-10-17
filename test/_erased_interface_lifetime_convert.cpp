@@ -22,7 +22,7 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-ERASED_INTERFACE(to_string_i, INTERFACE_METHOD(std::string, to_string))
+ERASED_INTERFACE(to_string_i, (INTERFACE_METHOD(std::string, to_string)))
 
 using to_string_sc = to_string_i<erased::shared_const>;
 using to_string_co = to_string_i<erased::const_observer>;
