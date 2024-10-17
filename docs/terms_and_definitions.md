@@ -18,7 +18,7 @@ An object that manages the lifetime of an other object in a defined way and deli
 - observer: Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: const and mutable, for read only or modifying access to the referenced object.
 - shard const: Ownership as std::shard_ptr. The delivered address is a pointer to const.
 - unique: Ownership as std::unique_ptr. The delivered address is a pointer to a mutable object.
-- value: Every value object holds an own copy. Same semantics as 'int'. The delivered access is modifyable.
+- value: Every value object holds an own copy. Same semantics as 'int'. The delivered access is mutable.
 
 ### erased versus concrete lifetime holders
 An erased lifetime holder holds no compiletime information about the "holded" object. Only if the holder is decoratet with some "virtual meta data", there is a dynamic and safe cast of the void pointer to conrete pointer possible.
