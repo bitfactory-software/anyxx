@@ -22,7 +22,10 @@ An object that manages the lifetime of an other object in a defined way and deli
 
 ### erased versus concrete lifetime holders
 An erased lifetime holder holds no compiletime information about the "holded" object. Only if the holder is decoratet with some "virtual meta data", there is a dynamic and safe cast of the void pointer to conrete pointer possible.
-A concrete lifetime holdder delivers the a pointer to an object of type, with which the object was constructed. A concrete lifeteime holder can alwayes be converted in an aerased lifetime holder.
+virtual_void has two kinds of such meta data:
+- typeid
+- m_table
+A concrete lifetime holdder delivers the a pointer to an object of type, with which the object was constructed. A concrete lifeteime holder can alwayes be converted in an erased lifetime holder.
 
 ### static cast vs dynamic cast
 - A static cast
