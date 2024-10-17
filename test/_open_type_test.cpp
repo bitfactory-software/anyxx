@@ -18,7 +18,7 @@ struct test_member : member<test_object, test_member, std::string> {};
 const member_table_index<test_object>
     member<test_object, test_member, std::string>::index;
 
-TEST_CASE("open object") {
+TEST_CASE("open object 1") {
   REQUIRE(open_object::type_member_count_of<test_object>() == 1);
   test_object a_test_object;
   auto value = a_test_object.get(test_member());
@@ -41,4 +41,18 @@ TEST_CASE("open object") {
   }
   *a_test_object.get(test_member()) = "hello programm";
   REQUIRE((*a_test_object.get(test_member())) == "hello programm");
+}
+
+TEST_CASE("open object 2") {
+  test_object a_test_object;
+  auto r = a_test_object.get(test_member{});
+  REQUIRE(!r);
+  a_test_object[test_member()]="hello world";
+  a_test_object[test_member()]=="hello world";
+}
+TEST_CASE("open object 3") {
+  test_object a_test_object;
+  auto r = a_test_object.get(test_member{});
+  REQUIRE(!r);
+  a_test_object[test_member()]=="";
 }
