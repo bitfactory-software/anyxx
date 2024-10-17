@@ -15,7 +15,8 @@ struct test_object : open_object::members<test_object> {};
 struct test_member
     : open_object::member<test_object, test_member, std::string> {};
 
-const open_object::member_table_index<test_object> open_object::member<test_object, test_member, std::string>::index;
+const open_object::member_table_index<test_object>
+    open_object::member<test_object, test_member, std::string>::index;
 
 TEST_CASE("open object") {
   REQUIRE(open_object::type_member_count_of<test_object>() == 1);
@@ -26,9 +27,7 @@ TEST_CASE("open object") {
   auto r = a_test_object.get(test_member{});
   REQUIRE(r);
   std::cout << typeid(*r).name() << "\n";
-  //auto x = reconcrete_cast< std::string >(*r);
-  //std::cout << typeid(x).name() << "\n";
   REQUIRE(*r == "hello world");
-  static_assert(std::same_as<decltype(r), std::optional<std::string>>);
-  // REQUIRE((*a_test_object.get(test_member())) == "hello world");
+  static_assert(std::same_as<decltype(r), std::string const*>);
+  REQUIRE((*a_test_object.get(test_member())) == "hello world");
 }

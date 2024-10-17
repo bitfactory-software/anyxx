@@ -53,6 +53,7 @@ class value {
   static constexpr bool is_const = false;
   using make_erased = make_value_t;
 
+  value() = default;
   value(value&&) = default;
   value& operator=(value&& ptr) = default;
   value(const value& other) : ptr_(clone(other.ptr_.get())) {}

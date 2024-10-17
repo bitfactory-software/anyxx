@@ -18,7 +18,7 @@ std::size_t& type_member_count_of() {
 template <typename OBJECT_TYPE>
 struct members {
   members() : table_(type_member_count_of<OBJECT_TYPE>()) {}
-  std::vector<std::optional<erased::value>> table_;
+  std::vector<erased::value> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
     table_[OBJECT_MEMBER::get_index()] =
@@ -26,11 +26,11 @@ struct members {
             std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
-  std::optional<typename OBJECT_MEMBER::value_t> get(OBJECT_MEMBER) const {
-    if (auto value = table_[OBJECT_MEMBER::get_index()])
-      return *reconcrete_cast<std::string>(*value);
-    else
-      return {};
+  typename OBJECT_MEMBER::value_t const* const get(OBJECT_MEMBER) const {
+    const auto& value = table_[OBJECT_MEMBER::get_index()];
+    if( !value )
+        return{};
+    return reconcrete_cast<std::string>(value);
   }
 };
 
