@@ -26,8 +26,15 @@ struct members {
             std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
-  typename OBJECT_MEMBER::value_t const* const get(OBJECT_MEMBER) const {
+  typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {
     const auto& value = table_[OBJECT_MEMBER::get_index()];
+    if( !value )
+        return{};
+    return reconcrete_cast<std::string>(value);
+  }
+  template <typename OBJECT_MEMBER>
+  typename OBJECT_MEMBER::value_t* get(OBJECT_MEMBER) {
+    auto& value = table_[OBJECT_MEMBER::get_index()];
     if( !value )
         return{};
     return reconcrete_cast<std::string>(value);
