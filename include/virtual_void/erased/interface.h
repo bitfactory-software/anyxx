@@ -286,7 +286,7 @@ TO interface_lifetime_cast(const FROM& from) {
 #define ERASED_INTERFACE_(name, base, ...) \
   _detail_ERASED_INTERFACE(name, base, (__VA_ARGS__))
 #define ERASED_INTERFACE(name, ...) \
-  _detail_ERASED_INTERFACE(name, virtual_void::erased::base, (__VA_ARGS__))
+  ERASED_INTERFACE_(name, virtual_void::erased::base, __VA_ARGS__)
 #define INTERFACE_METHOD(...) (__VA_ARGS__)
 
 namespace virtual_void::erased {
