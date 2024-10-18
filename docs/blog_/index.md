@@ -3,9 +3,8 @@ title: blog
 nav_order: 30
 ---
 
-# Blog
+# Blog: the story of "virtual_void"
 
 Thougts about "programming in the large" generally and and more particularly on "type tunneling".
 
-In other words, the story of "virtual_void".
 
