@@ -98,9 +98,8 @@ The value case shows the overhead cler. Not a surprise computers today are realy
 As soon as there is a little relevant work todo in the found function, the time neccessary for dispatch is a smaller fraction. 
 The overhead goes down from ~1.400% to ~30%.
 
-30% overhead is still a lot, but worth a consideration, if it could help to get a hot header file out of the build time bottleneck, and we have not even tryed to speed up the things.
-
-That's what comes next!
+30% overhead is still a lot, but worth a consideration, if it could help to escape visitor pattern hell or to get a hot header file out of the build time bottleneck.
+We have not even tryed to speed up the things, so that's what we have to do next!
 
 
 
