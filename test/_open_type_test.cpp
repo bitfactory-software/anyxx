@@ -11,12 +11,17 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::open_object;
 
-struct test_object : members<test_object> {};
+struct test_object : members<test_object> {};  // name your open_object
 
-struct test_member : member<test_object, test_member, std::string> {};
+struct test_member : member<test_object, test_member, std::string> {
+};  // define your meber
 
 const member_table_index<test_object>
-    member<test_object, test_member, std::string>::index;
+    member<test_object, test_member, std::string>::
+        index;  // declare the static index, witch is used by "mebers" to access
+                // this member. This static variable must be reachable from each
+                // translation unit, that wants to access the memebers from
+                // test_object for each accces
 
 TEST_CASE("open object 1") {
   REQUIRE(open_object::type_member_count_of<test_object>() == 1);
@@ -46,12 +51,12 @@ TEST_CASE("open object 2") {
   test_object a_test_object;
   auto r = a_test_object.get(test_member{});
   REQUIRE(!r);
-  a_test_object[test_member()]="hello world";
-  REQUIRE(a_test_object[test_member()]=="hello world");
+  a_test_object[test_member()] = "hello world";
+  REQUIRE(a_test_object[test_member()] == "hello world");
 }
 TEST_CASE("open object 3") {
   test_object a_test_object;
   auto r = a_test_object.get(test_member{});
   REQUIRE(!r);
-  REQUIRE(a_test_object[test_member()]=="");
+  REQUIRE(a_test_object[test_member()] == "");
 }
