@@ -76,8 +76,9 @@ So can a v-table interface of an object to be used
 A vocabulary for programming in the large to must support those casts.
 Because we found no library, which fullfilled this demands, we came up with this one.
 
-We call a "loss less type erasing" technique "type tunneling".
+We call a "lossless type erasing" technique "type tunneling".
 To symbolize the "hide the type information" and bring it "back to light".
+
 
 
 
