@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/call_operator.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/value.h"
 #include "../include/virtual_void/m_table/lifetime/shared_const.h"
@@ -19,17 +20,18 @@ struct position {
   float x, y;
 };
 
-ERASED_INTERFACE(shape_base1, INTERFACE_METHOD(void, draw, position))
+ERASED_INTERFACE(shape_base1, (INTERFACE_CONST_METHOD(void, draw, position)))
 
-ERASED_INTERFACE_(shape_base, shape_base1, INTERFACE_METHOD(int, count_sides))
+ERASED_INTERFACE_(shape_base, shape_base1, (INTERFACE_CONST_METHOD(int, count_sides)))
 
-ERASED_INTERFACE_(shape_d_i, shape_base, INTERFACE_METHOD(double, area),
-                  INTERFACE_METHOD(double, perimeter))
+ERASED_INTERFACE_(shape_d_i, shape_base,
+                  (INTERFACE_CONST_METHOD(double, area),
+                   INTERFACE_CONST_METHOD(double, perimeter)))
 
-ERASED_INTERFACE(shape_i, INTERFACE_METHOD(void, draw, position),
-                 INTERFACE_METHOD(int, count_sides),
-                 INTERFACE_METHOD(double, area),
-                 INTERFACE_METHOD(double, perimeter))
+ERASED_INTERFACE(shape_i, (INTERFACE_CONST_METHOD(void, draw, position),
+                           INTERFACE_CONST_METHOD(int, count_sides),
+                           INTERFACE_CONST_METHOD(double, area),
+                           INTERFACE_CONST_METHOD(double, perimeter)))
 
 using shape_vv = shape_i<virtual_void::m_table::shared_const>;
 
@@ -55,24 +57,23 @@ struct circle {
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
 
-struct circle_shape_base1_interface_map {
+template <>
+struct shape_base1_interface_map<const circle> {
   auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_shape_base1_interface_map At "
-              << p.x << " " << p.y << std::endl;
+    std::cout
+        << " A Circle Is Recorded VIA circle_shape_base1_interface_map At "
+        << p.x << " " << p.y << std::endl;
   }
 };
-template <>
-constexpr auto shape_base1_interface_map<const circle> =
-    circle_shape_base1_interface_map{};
 
-struct circle_shape_i_interface_map : shape_i_default_interface_map<circle const> {
+template <>
+struct shape_i_interface_map<const circle>
+    : shape_i_default_interface_map<circle const> {
   auto draw(circle const* x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_shape_i_interface_map At "
               << p.x << " " << p.y << std::endl;
   }
 };
-template <>
-constexpr auto shape_i_interface_map<const circle> = circle_shape_i_interface_map{};
 
 struct square {
   int w;

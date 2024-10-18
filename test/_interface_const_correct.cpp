@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../include/virtual_void/erased/call_operator.h"
 #include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/unique.h"
@@ -60,10 +61,12 @@ struct functor {
 TEST_CASE("_interface_const_correct void (const) *") {
   using namespace virtual_void;
 
-  using const_function = virtual_void::erased::call_operator_facade<
-      erased::const_observer, virtual_void::erased::base, std::string()>;
-  using mutating_function = virtual_void::erased::call_operator_facade<
-      erased::mutable_observer, virtual_void::erased::base, void(std::string)>;
+  using const_function =
+      virtual_void::erased::call_operator<std::string(),
+                                          erased::const_observer>;
+  using mutating_function =
+      virtual_void::erased::mutable_call_operator<void(std::string),
+                                                  erased::mutable_observer>;
 
   {
     functor function_object;
@@ -99,12 +102,10 @@ TEST_CASE("_interface_const_correct void (const) *") {
 }
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
-  using const_function = virtual_void::erased::call_operator_facade<
-      virtual_void::m_table::shared_const, virtual_void::erased::base,
-      std::string()>;
-  using mutating_function = virtual_void::erased::call_operator_facade<
-      virtual_void::m_table::shared_const, virtual_void::erased::base,
-      void(std::string)>;
+  using const_function = virtual_void::erased::call_operator<std::string(),
+      virtual_void::m_table::shared_const>;
+  using mutating_function = virtual_void::erased::mutable_call_operator<void(std::string),
+      virtual_void::m_table::shared_const>;
 
   {
     functor function_object;

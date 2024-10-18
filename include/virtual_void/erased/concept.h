@@ -44,4 +44,9 @@ auto unerase() {
   }
 }
 
+template <typename VOID, typename LIFETIME_HOLDER>
+concept const_correct_for_lifetime_holder =
+    ((std::is_const_v<VOID> == LIFETIME_HOLDER::is_const) ||
+     !LIFETIME_HOLDER::is_const);
+
 }  // namespace virtual_void::erased

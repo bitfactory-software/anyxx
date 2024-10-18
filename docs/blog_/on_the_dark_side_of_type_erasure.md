@@ -17,7 +17,7 @@ It covered so many topics. For now, we will concentrate on the "type erasure" pa
 ### A short recap 
 
 Let us start with a short recap of the quintesence in regard to "type erasure".
-To eliminate the boilerplate code, we use "proxy". "proxy" is the "type erasure" library roposed for inclusion in c++26.
+To eliminate the boilerplate code, we use ["proxy"](https://github.com/microsoft/proxy). "proxy" is the "type erasure" library roposed for inclusion in c++26.
 
 The sample uses only a small part of the many features available in this awesome library.
 
@@ -227,10 +227,10 @@ But because we have **erased** away ALL **type** informatiom, we have no longer 
 and
 - to continue with our processing, because we need the full interface we passed into the functions.
 
-We found no solution to this pattern in the libraries we searched
-- [Boost Type Erasure]: https://www.boost.org/doc/libs/1_78_0/doc/html/boost_typeerasure/any.html#boost_typeerasure.any.conversions
-- [AnyAny]: https://github.com/kelbon/AnyAny
-- [Dyno]: https://github.com/ldionne/dyno
+We found no solution to this pattern in ["proxy"](https://github.com/microsoft/proxy) and the other libraries we searched
+- [Boost Type Erasure](https://www.boost.org/doc/libs/1_78_0/doc/html/boost_typeerasure/any.html#boost_typeerasure.any.conversions)
+- [AnyAny](https://github.com/kelbon/AnyAny)
+- [Dyno](https://github.com/ldionne/dyno)
 
 So we resorted to a old school unsexy "OO-Style + template mixture" to solve this particular riddle.
 if you are interested, look at a [scetch on compiler explorer]: https://godbolt.org/z/dPPzKzzEq. 
@@ -243,20 +243,15 @@ We called that pattern the "type_erased_downcast problem".
 This pattern can be reduced to this code lines.
 
 ```c++
-// pseudo code
+// pseudo code!!!
 maketype_erased< base > for { int func1() const; }; }
-maketype_erased< derived > for base + { int func2() const; };
-// pseudo code
-
+maketype_erased< derived : base > { int func2() const; };
 struct S {
   int func1() const { return 1; };
   int func2() const { return 2; };
 };
-
 base f1( base b ) { return b; }
-
-derived f2( derived d ) { return typerased_downcast< derived >(xb); }
-
+derived f2( derived d ) { return typerased_downcast< derived >(f1(d)); }
 int main() {
   cout << f2( S{} ).func2() << "\n";
   return 0;
@@ -267,7 +262,10 @@ What we need, is a make_type_erased "thing" that supports "downcast".
 So the quitessence, as we took it, is, that "type erasue" is not the end. We need kind of "type tunnel".
 So the object can pass thru lower abstraction levels, with a fitting facade for them.
 But when we get them back, we need to recover its ritcher interface or even its real type.
-Next time, let us digg deeper.
+
+Before we came to an (partial) solution for this problem, we needed to take some other angles on it.
+One of this perspectives came from std::any. 
+We will show next time.
 
 PS: We are no "Rust" experts. So we are curios, how this kind of pattern is solved there. As [we understand]: https://microsoft.github.io/rust-for-dotnet-devs/latest/language/custom-types/interfaces.html, 
 "Rust" has no downcasting for "traits". Maybe the answer is simple "Rust programmer write better programs, so they do not run in this kind of quirx" ;-)
