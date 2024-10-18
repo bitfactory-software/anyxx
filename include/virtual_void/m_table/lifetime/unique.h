@@ -66,6 +66,5 @@ template <typename T, typename... ARGS>
 typed_unique<T> make_unique(ARGS&&... args) {
   return {std::in_place, std::forward<ARGS>(args)...};
 }
-//---lifetime
 
-}  // namespace virtual_void::m_table}  // namespace virtual_void::m_table
+}  // namespace virtual_void::m_table
