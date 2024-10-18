@@ -144,6 +144,15 @@ pe_index as_lisp                               100           125      1.425 ms
 That is satisfying. The "value" case is nearly 50% down and for "as_lisp" the overhead is now only 10% compared to v-table dispatch.
 Things starts to get practically usefull.
 
+If you are interesstet in the details, you can read more here in this "special blog post".
+
+For now we will summarize the remaining bottlenecks with our any_dispatch:
+
+- "std::function" gives us an extra indirection for the type erasure
+- "std::any_cast" checks, if we access with right typeid. In our case is this redundant: we are here because we were found for this typeid.
+
+Next time, we will replace any and function to see, how far we get with this.
+
 
 
 
