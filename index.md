@@ -73,7 +73,7 @@ So can a v-table interface of an object to be used
 - to "downcast" the interface to a more specific one, and
 - to "crosscast" to an other interface.
 
-We see the this casts as an absolute must, a fundamnental vocabulary for programming in the large has do deliver.
+A vocabulary for programming in the large to must support those casts.
 Because we found no library, which fullfilled this demands, we came up with this one.
 
 We call a "loss less type erasing" technique "type tunneling".
