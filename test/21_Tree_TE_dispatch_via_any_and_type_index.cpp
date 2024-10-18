@@ -14,23 +14,21 @@ using std::string;
 
 namespace {
 
-struct Node {};
-
 using any = std::any;
 
-struct Plus : Node {
+struct Plus {
   Plus(any left, any right) : left(left), right(right) {}
 
   any left, right;
 };
 
-struct Times : Node {
+struct Times {
   Times(any left, any right) : left(left), right(right) {}
 
   any left, right;
 };
 
-struct Integer : Node {
+struct Integer {
   explicit Integer(int value) : value(value) {}
   int value;
 };
