@@ -40,6 +40,22 @@ Interestingly, for the any case, there is a solution, that jummps in your eye:
 Do the dispatch via typeid!
 
 The first naiive aproach will look like this:
+[test/05_Sink_TypeErased_w_any_dispach_simple.cpp](https://github.com/andreaspfaffenbichler/virtual_void/blob/master/test/05_Sink_TypeErased_w_any_dispach_simple.cpp)
+
+From the standpoint of decoupling is this the best you can get. But this comes with a large runtime penalty...
+Nevertheless, this aproach looks to appealing.
+So will in the next step investigate, how big is the overhead we generate with map, function and any in comparison to plain v-tables.
+For this we will use another example: An expression tree!
+In OO-style ths goes like this:
+https://github.com/andreaspfaffenbichler/virtual_void/blob/master/test/20_Tree_OO.cpp
+We will use the expression tree to compute its value and to show a representation in forth and in lisp.
+With a "catch" benchamrk we watch the runtime performance.
+
+Now to the sample with our naiive any dispatch 
+
+
+
+
 
 
 
