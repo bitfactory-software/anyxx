@@ -18,7 +18,7 @@ This was all so promisssing, but the proposal for the language from Bjarne Strou
 The performce results of Jean-Louis Leroys yomm2 are astonishing. The strong orientation to the simulation of the proposed language extension and along v-tables prevented us von adopting it.
 
 Both ideas develop from the multi-dispatch perspective, witch for our scenarios not realy relevent.
-We see the main attraction in the solving of the [expression problem]https://en.wikipedia.org/wiki/Expression_problem) by this aproach.
+We see the main attraction in the solving of the [expression problem](https://en.wikipedia.org/wiki/Expression_problem) by this aproach.
 
 By studiing the details of yomm2, we found deep inside a perl: A superfast perfect hash function for int64 keys. 
 
