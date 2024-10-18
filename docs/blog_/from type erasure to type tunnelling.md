@@ -51,9 +51,56 @@ https://github.com/andreaspfaffenbichler/virtual_void/blob/master/test/20_Tree_O
 We will use the expression tree to compute its value and to show a representation in forth and in lisp.
 With a "catch" benchamrk we watch the runtime performance.
 
-Now to the sample with our naiive any dispatch 
+Now to the sample with our [naiive any dispatch] (https://github.com/andreaspfaffenbichler/virtual_void/blob/master/test/21_Tree_TE_dispatch_via_any.cpp)
 
+On my laptop, i got this number with standard releas mode and MSVC 17
+```
+-------------------------------------------------------------------------------
+20_Tree_OO
+-------------------------------------------------------------------------------
+D:\BitFactory\Blog\virtual_void\test\20_Tree_OO.cpp(63)
+...............................................................................
 
+benchmark name                       samples       iterations    est run time
+                                     mean          low mean      high mean
+                                     std dev       low std dev   high std dev
+-------------------------------------------------------------------------------
+20_Tree_OO value                               100          2797     1.3985 ms
+                                        4.56024 ns    4.52199 ns    4.63389 ns
+                                       0.264757 ns    0.15925 ns   0.390666 ns
+
+20_Tree_OO as_lisp                             100           148     1.5244 ms
+                                        92.6486 ns    92.1149 ns    93.5676 ns
+                                        3.48399 ns    2.35465 ns    6.28842 ns
+
+-------------------------------------------------------------------------------
+21_Tree_TE_dispach_via_any_dispatch
+-------------------------------------------------------------------------------
+D:\BitFactory\Blog\virtual_void\test\21_Tree_TE_dispatch_via_any.cpp(88)
+...............................................................................
+
+benchmark name                       samples       iterations    est run time
+                                     mean          low mean      high mean
+                                     std dev       low std dev   high std dev
+-------------------------------------------------------------------------------
+21_Tree_TE_dispach_via_any_dispatch
+value                                          100           230      1.518 ms
+                                        55.1478 ns    54.8478 ns    55.8826 ns
+                                         2.2301 ns    1.13441 ns    4.53223 ns
+
+21_Tree_TE_dispach_via_any_dispatch
+as_lisp                                        100           113     1.5255 ms
+                                        125.407 ns    123.372 ns    128.301 ns
+                                        12.3265 ns    9.77748 ns    17.1408 ns
+```
+
+The value case shows the overhead cler. Not a surprise computers today are realy fast the in first rules of arithmetic, and the time neccessary to find the right function to call is a big part of the whole runtime.
+As soon as there is a little relevant work todo in the found function, the time neccessary for dispatch is a smaller fraction. 
+The overhead goes down from ~1.400% to ~30%.
+
+30% overhead is still a lot, but worth a consideration, if it could help to get a hot header file out of the build time bottleneck, and we have not even tryed to speed up the things.
+
+That's what comes next!
 
 
 
