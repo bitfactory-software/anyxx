@@ -17,10 +17,12 @@ permalink: /
 - object casts
 - open types
 
-- These types are orthogonal building blocks for large software systems with 
-  - loose coupling and
-  - performance on par with virtual function calls.
-- The work as a foundating vocabulary, to "factor out" the dependencies between the components in the system.  
+
+These types are orthogonal building blocks for large software systems with 
+- loose coupling and
+- performance on par with virtual function calls.
+
+The work as a foundating vocabulary, to "factor out" the dependencies between the components in the system.  
 
 The library is **header only** 
 
