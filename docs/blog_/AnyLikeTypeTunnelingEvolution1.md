@@ -1,5 +1,5 @@
 ---
-title: Any like type Tunneling evolution with (nearly) perfect hash.
+title: Any like type Tunneling evolution with nearly perfect hash.
 parent: blog
 nav_order: 30
 ---
