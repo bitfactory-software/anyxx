@@ -1,7 +1,11 @@
 ﻿#include <any>
+#include <functional>
 #include <iostream>
+#include <map>
 #include <string>
+#include <typeindex>
 #include <vector>
+#include <functional>
 
 #include "include/catch.hpp"
 
@@ -32,16 +36,19 @@ struct DoubleData {
   double data;
 };
 
-void ReportSink(const std::any& any) {
-  if (auto i = any_cast<IntData>(&any))
-    std::cout << "int: " << i->data << std::endl;
-  else if (auto s = any_cast<StringData>(&any))
-    std::cout << "string: " << s->data << std::endl;
+using AnyVistorMap =
+    std::map<std::type_index, std::function<void(const std::any& any)>>;
+AnyVistorMap ReportSink;
+void AnyVistor(const AnyVistorMap& vistorMap, const std::any& any) {
+  if (auto found = vistorMap.find(any.type()); found == vistorMap.end())
+    throw std::runtime_error("no dispatch found");
+  else
+    found->second(any);
 }
 
 }  // namespace Application
 
-TEST_CASE("05_Sink_TypeErased_w_any_cast") {
+TEST_CASE("05_Sink_TypeErased_w_any_dispatch_simple") {
   using namespace Application;
   DB::System db;
   db.factories["i"] = [](const std::string& data) -> std::any {
@@ -50,8 +57,14 @@ TEST_CASE("05_Sink_TypeErased_w_any_cast") {
   db.factories["s"] = [](const std::string& data) -> std::any {
     return StringData{data};
   };
+  ReportSink[typeid(IntData)] = [](const std::any& any) {
+    std::cout << "int: " << any_cast<IntData>(&any)->data << std::endl;
+  };
+  ReportSink[typeid(StringData)] = [](const std::any& any) {
+    std::cout << "string: " << any_cast<StringData>(&any)->data << std::endl;
+  };
   db.file = {{"i", "1"}, {"i", "4711"}, {"s", "hello"}, {"s", "world"}};
-  db.Query("junk", ReportSink);
+  db.Query("junk", std::bind( &AnyVistor, ReportSink, std::placeholders::_1 ) );
 }
 
 }  // namespace
