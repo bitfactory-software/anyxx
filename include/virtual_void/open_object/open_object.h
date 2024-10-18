@@ -39,9 +39,11 @@ struct members {
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t& operator[](OBJECT_MEMBER) {
-    if (auto value = get(OBJECT_MEMBER())) return *value;
+    if (auto value = get(OBJECT_MEMBER())) {
+      return *value;
+    }
     set(OBJECT_MEMBER{}, typename OBJECT_MEMBER::value_t{});
-    *get(OBJECT_MEMBER{});
+    return *get(OBJECT_MEMBER{});
   }
 };
 

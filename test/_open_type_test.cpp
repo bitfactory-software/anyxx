@@ -47,11 +47,11 @@ TEST_CASE("open object 2") {
   auto r = a_test_object.get(test_member{});
   REQUIRE(!r);
   a_test_object[test_member()]="hello world";
-  a_test_object[test_member()]=="hello world";
+  REQUIRE(a_test_object[test_member()]=="hello world");
 }
 TEST_CASE("open object 3") {
   test_object a_test_object;
   auto r = a_test_object.get(test_member{});
   REQUIRE(!r);
-  a_test_object[test_member()]=="";
+  REQUIRE(a_test_object[test_member()]=="");
 }
