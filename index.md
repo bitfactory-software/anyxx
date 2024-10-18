@@ -17,7 +17,10 @@ permalink: /
 - object casts
 - open types
 
-These types are orthogonal building blocks for large software systems with loose coupling and performance on par with virtual function calls. 
+- These types are orthogonal building blocks for large software systems with 
+  - loose coupling and
+  - performance on par with virtual function calls.
+- The work as a foundating vocabulary, to "factor out" the dependencies between the components in the system.  
 
 The library is **header only** 
 
@@ -53,12 +56,19 @@ The fundamental design principals here are loose-coupling and information hiding
 ### From "OO style" to "type erasure" runtime dispatch to "type tunneling"
 
 C++'s virtual functions have shown their versaitilty and usefullness for decades.
-But, as the understanding for decompising software grows, we see that the "OO style" integration of the interface direct into the object as an ever growing problem.
-It is now consens, that separation of the interface from the underlying object is the way to go. The type gets erased from the interface.
+But, as the understanding for decomopising software grew, we saw the "OO style" integration of the interface direct into the object as a problem.
+
+It is now consens, that separation of the interface from the underlying object is the way to go. The type gets "erased" from the interface.
 On the contrary, by doing so, we lose this connection, whitch had shown is usefullnes in a countless homongos and succesful software projects.
-So can a v-table interface of an object to be used, to cast back to that object itself, to "downcast" the interface to a more specific one, and to "crosscast" to an other interface.
-We see the this casts as an absolute must, type erasure has do deliver, to use it as the fundamnental building block for  programming in the large.
+So can a v-table interface of an object to be used
+- to cast back to that object itself
+- to "downcast" the interface to a more specific one, and
+- to "crosscast" to an other interface.
+
+
+We see the this casts as an absolute must, a vocabulary has do deliver, to be used as a fundamnental building block for programming in the large.
 Because we found no library, which fullfilled this demands, we came up with this one.
+
 We call a "loss less type erasing" technique "type tunneling".
 To symbolize the "hide the type information" and bring it "back to light".
 
