@@ -21,12 +21,33 @@ This function shall be a multiplcation with ***mult*** and a right shift with **
 ```
 So the art is, to find ***perfect*** values for ***mult*** and ***shift***.
 
-| size    | inital_sparse_factor |
+| size    | inital_sparse_base | 
 | ----: | -------------------: |
-| 5       | 4   |          
-| 25      | 6   |
-| 625     | 11  |
+| 10 | 4 |
+| 100 | 7 |
+| 1000 | 11 |
+| 10000 | 14 |
+| 100000 | 17 |
+| 1000000 | 21 |
 
-
+| sparse_base | table.size |
+| ----: | -------------: |
+ | 4 | 16 |
+ | 5 | 32 |
+ | 6 | 64 |
+ | 7 | 128 |
+ | 8 | 256 |
+ | 9 | 512 |
+ | 10 | 1024 |
+ | 11 | 2048 |
+ | 12 | 4096 |
+ | 13 | 8192 |
+ | 14 | 16384 |
+ | 15 | 32768 |
+ | 16 | 65536 |
+ | 17 | 131072 |
+ | 18 | 262144 |
+ | 19 | 524288 |
+ | 20 | 1048576 |
 
 
