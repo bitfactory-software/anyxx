@@ -9,7 +9,7 @@ nav_order: 40
 For his [yomm2](https://github.com/jll63/yomm2) library Jean-Louis Leroy developed an fast algorithm to **find from the addres of a std::type_info to a pointer**.
 Because he published it under the permissive BOOST license, we could use the algorithm for this library and refactor it for our purposes.
 
-We will provide here a short walk throug:
+We will provide here a short walk through:
 
 The goal of the hash index is, to compute as fast as possible a hash value from the *std::type_info* *, that can be directly used as an index in an array (std::vector) containig the searched target, where all possible values for the *std::type_info* * (=*type_id* from now on) are known.
 
@@ -25,7 +25,7 @@ To make this a task, that can end before the next big bang, the table containig 
 The algorithm starts with litle spare and tries to find values for *mult* and *shift*, so that the result of *apply_formula(type_id)* is unique for every type_id.
 If this fails, the spare space is increased, and the search for *mult* and *shift* is repeated.
 
-This table shows the initial spare_base value for some sizes of "elements":
+This table shows the initial *spare_base* value for some sizes of *elements*:
 ```
   auto static inital_sparse_base(std::size_t element_count) {
     std::size_t sparse_base = 1;
