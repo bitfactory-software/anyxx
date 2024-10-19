@@ -41,6 +41,56 @@ auto make_unique_data_ptr(ARGS&&... args) {
   return unique_data_ptr<meta_t>(new T(std::forward<ARGS>(args)...), deleter);
 }
 
+template <typename M>
+struct value_v_table_t {
+  using destroy_fn = void(M*) noexcept;
+  using copy_fn = M*(const M*);
+  template <class T>
+  constexpr value_v_table_t(std::in_place_type_t<T>)
+      : destroy(&destroy_impl<T>), copy(&copy_impl<T>) {}
+  template <class T>
+  static void destroy_impl(M* target) noexcept {
+    ::delete static_cast<T*>(target);
+  }
+  template <class T>
+  static M* copy_impl(M const* source) {
+    return ::new T(*static_cast<T const*>(source));
+  }
+  destroy_fn* destroy;
+  copy_fn* copy;
+};
+
+template <class T>
+constexpr value_v_table_t<typename T::meta_t> value_v_table =
+    value_v_table_t<typename T::meta_t>(std::in_place_type<T>);
+
+template <typename M>
+class value_ptr {
+ public:
+  template <typename DATA>
+  value_ptr(DATA* v) : m_(v), v_table_(&value_v_table<std::decay_t<DATA>>) {}
+  value_ptr(value_ptr const& rhs)
+      : m_(rhs.v_table_->copy(rhs.m_)), v_table_(rhs.v_table_) {}
+  ~value_ptr() { v_table_->destroy(m_); }
+  M* meta() { return m_; }
+  M const* meta() const { return m_; }
+  M& operator*() { return *meta(); }
+  const M& operator*() const { return *meta(); }
+  M* operator->() { return meta(); }
+  const M* operator->() const { return meta(); }
+
+ private:
+  M* m_;
+  const value_v_table_t<M>* v_table_;
+};
+
+template <typename T, typename... ARGS>
+auto make_value_data_ptr(ARGS&&... args) {
+  using meta_t = T::meta_t;
+  auto deleter = +[](meta_t* meta) { delete static_cast<T*>(meta); };
+  return value_ptr<meta_t>(new T(std::forward<ARGS>(args)...));
+}
+
 }  // namespace virtual_void::erased
 using namespace virtual_void;
 using namespace virtual_void::erased;
@@ -110,4 +160,12 @@ TEST_CASE("erase lifetiem test") {
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
+
+  Data::destrucor_runs = 0;
+  {
+    value_ptr<empty_meta_t> vp = make_value_data_ptr<data_aligned<Data>>();
+    REQUIRE(Data::destrucor_runs == 0);
+    auto vp2 = vp;
+  }
+  REQUIRE(Data::destrucor_runs == 2);
 }
