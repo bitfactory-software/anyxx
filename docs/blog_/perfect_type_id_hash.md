@@ -25,7 +25,7 @@ To make this a task, that can end before the next big bang, the table containig 
 The algorithm starts with litle spare and tries to find values for *mult* and *shift*, so that the result of *apply_formula(type_id)* is unique for every type_id.
 If this fails, the spare space is increased, and the search for *mult* and *shift* is repeated.
 
-This table shows the initial spare_base value for some sizes of "elements":
+This table shows the initial *spare_base* value for some sizes of *elements*:
 ```
   auto static inital_sparse_base(std::size_t element_count) {
     std::size_t sparse_base = 1;
