@@ -52,28 +52,31 @@ struct index_table {
   }
   void build(const auto& elements, TARGET default__) {
     default_ = default__;
-    if (auto found = find_hash(elements, inital_sparse_factor(elements.size())))
+    if (auto found = find_hash(elements, inital_sparse_base(elements.size())))
       hash_ = *found;
     else
       throw "abort!";
   }
-  auto static inital_sparse_factor(std::size_t element_count) {
-    std::size_t sparse_factor = 1;
-    for (auto size = element_count * 5 / 4; size; size /= 2) ++sparse_factor;
-    return sparse_factor;
+  auto static inital_sparse_base(std::size_t element_count) {
+    std::size_t sparse_base = 1;
+    for (auto size = element_count * 5 / 4; size >>= 1;) ++sparse_base;
+    return sparse_base;
   }
   static std::optional<hash_index> find_hash(const auto& elements,
-                                             std::size_t sparse_factor) {
-    for (std::size_t pass = 0; pass < 4; ++pass, ++sparse_factor)
-      if (auto found = find_hash_for_sparse_factor(elements, sparse_factor))
+                                             std::size_t sparse_base) {
+    for (std::size_t pass = 0; pass < 4; ++pass, ++sparse_base)
+      if (auto found = find_hash_for_sparse_base(elements, sparse_base))
         return found;
     return {};
   }
-  static std::optional<hash_index> find_hash_for_sparse_factor(
-      const auto& elements, std::size_t sparse_factor) {
+  static auto size_for_sparse_base(std::size_t sparse_base) {
+    return std::size_t(1) << sparse_base;
+  }
+  static std::optional<hash_index> find_hash_for_sparse_base(
+      const auto& elements, std::size_t sparse_base) {
     hash_index hash_index;
-    hash_index.shift = 8 * sizeof(type_id) - sparse_factor;
-    hash_index.table.resize(std::size_t(1) << sparse_factor);
+    hash_index.shift = 8 * sizeof(type_id) - sparse_base;
+    hash_index.table.resize(size_for_sparse_base(sparse_base));
     hash_index.length = 0;
 
     std::default_random_engine random_engine(13081963);
@@ -91,9 +94,10 @@ struct index_table {
     hash_index.mult = hash_mult;
     std::fill(hash_index.table.begin(), hash_index.table.end(),
               std::pair{unused_element, TARGET{}});
+    
     for (const auto& element : elements)
       if (!can_hash_input_value(element, hash_index)) return {};
-
+   
     return hash_index;
   }
   static std::optional<hash_index> can_hash_input_value(
@@ -101,7 +105,6 @@ struct index_table {
     auto index = hash_index.apply_formula(element.first);
     hash_index.length = (std::max)(hash_index.length, index + 1);
     if (hash_index.table[index].first != unused_element) return {};
-
     hash_index.table[index] = element;
     return hash_index;
   }
