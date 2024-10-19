@@ -19,11 +19,11 @@ This function shall be a multiplcation with *mult* and a right shift with *shift
       return (reinterpret_cast<std::size_t>(type) * mult) >> shift;
     }
 ```
-So the art is, to find ***perfect*** values for ***mult*** and *shift* in a given range of ***elements***.
-Each ***elenent*** is a pair of type_id and the target, witch we wount to fast as possible for thah  type_id. 
+So the art is, to find *perfect* values for *mult* and *shift* in a given range of *elements*.
+Each *elenent* is a pair of type_id and the target, witch we wount to fast as possible for thah  type_id. 
 To make this a task, that can end before the next big bang, the table containig the targets neads spare space.
-The algorithm starts with litle spare and tries to find values for ***mult*** and ***shift***, so that the result of ***apply_formula(type_id)*** is unique for every type_id.
-If this fails, the spare space is increased, and the search for ***mult*** and ***shift*** is repeated.
+The algorithm starts with litle spare and tries to find values for *mult* and *shift*, so that the result of *apply_formula(type_id)* is unique for every type_id.
+If this fails, the spare space is increased, and the search for *mult* and *shift* is repeated.
 
 This table shows the initial spare_base value for some sizes of "elements":
 ```
@@ -68,11 +68,11 @@ This table shows, how the spare_base relates to the table size. The values shoul
  | 19 | 524288 |
  | 20 | 1048576 |
 
-For a given ***sparse_base*** the ***shift*** is set to
+For a given *sparse_base* the *shift* is set to
 ```
     hash_index.shift = 8 * sizeof(type_id) - sparse_base;
 ```
-Then the the algorithms trys to find via an random number generator a ***mult*** that maps each ***type_id*** to its own index.
+Then the the algorithms trys to find via an random number generator a *mult* that maps each *type_id* to its own index.
 ```
 static std::optional<hash_index> find_hash_for_sparse_base(
     const auto& elements, std::size_t sparse_base) {
