@@ -72,5 +72,26 @@ For a given ***sparse_base*** the ***shift*** is set to
 ```
     hash_index.shift = 8 * sizeof(type_id) - sparse_base;
 ```
-Then the the algorithms trys to find via an random number generator a ***mult*** that maps each "
+Then the the algorithms trys to find via an random number generator a ***mult*** that maps each ***type_id*** to its own index.
+```
+static std::optional<hash_index> find_hash_for_sparse_base(
+    const auto& elements, std::size_t sparse_base) {
+  hash_index hash_index;
+  hash_index.shift = 8 * sizeof(type_id) - sparse_base;
+  hash_index.table.resize(size_for_sparse_base(sparse_base));
+  hash_index.length = 0;
+
+  std::default_random_engine random_engine(13081963);
+  std::uniform_int_distribution<std::uintptr_t> uniform_dist;
+
+  for (std::size_t attempts = 0; attempts < 100000; ++attempts)
+    if (can_hash_input_values(elements, hash_index,
+                              (uniform_dist(random_engine) | 1)))
+      return hash_index;
+
+  return {};
+}
+``` 
+The spare factor is increasd, if this fails 100000 times.  
+
 
