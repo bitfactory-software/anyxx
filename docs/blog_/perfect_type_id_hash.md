@@ -21,5 +21,12 @@ This function shall be a multiplcation with ***mult*** and a right shift with **
 ```
 So the art is, to find ***perfect*** values for ***mult*** and ***shift***.
 
+| size    | inital_sparse_factor |
+| ------- | -------------------- |
+| 5       | 4   |          
+| 25      | 6   |
+| 625     | 11  |
+
+
 
 
