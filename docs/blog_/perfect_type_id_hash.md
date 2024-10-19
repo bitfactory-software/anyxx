@@ -6,10 +6,15 @@ nav_order: 40
 
 # Jean-Louis Leroy's "perfect typeid hash"
 
-For his [yomm2](https://github.com/jll63/yomm2) library Jean-Louis Leroy developed an fast algorithm to find from the addres of a std::type_info to a pointer.
+For his [yomm2](https://github.com/jll63/yomm2) library Jean-Louis Leroy developed an fast algorithm to **find from the addres of a std::type_info to a pointer**.
+Because he published it under the permissive BOOST we could use the algorithm for this library and refactor it for our purposes.
 
+We will provide a short walk throug  it:
 
-In our last experiment, we put std::any with a simple typeid dispath in a race against v-tables. 
-In this installment we will power up this dispatch and battle once again!
+The goal of the hash index is, to compute as fast as possible a hash vale from the ***std::type_info* ***, that can be directly used as an index in an array (std::vector) containig the searched target:
+```
+    index_t apply_formula(type_id type) const {
+      return (reinterpret_cast<std::size_t>(type) * mult) >> shift;
+    }
+```
 
-We stumbled into this adventure, because we saw a chance, to escape the vistor pattern hell.
