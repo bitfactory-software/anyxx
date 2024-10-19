@@ -68,4 +68,9 @@ This table shows, how the spare_base relates to the table size. The values shoul
  | 19 | 524288 |
  | 20 | 1048576 |
 
+For a given ***sparse_base*** the ***shift*** is set to
+```
+    hash_index.shift = 8 * sizeof(type_id) - sparse_base;
+```
+Then the the algorithms trys to find via an random number generator a ***mult*** that maps each "
 
