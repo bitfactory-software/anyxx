@@ -145,8 +145,7 @@ TEST_CASE("erase lifetiem test") {
   TRACE_OFFSET(int, std::type_info const*);
   TRACE_OFFSET(char const*, std::type_info const*);
   TRACE_OFFSET(std::string, std::type_info const*);
-  TRACE_OFFSET(std::string, std::type_info const*);
-
+  
   Data::destrucor_runs = 0;
   {
     auto unique_data_ptr = erased::make_unique_data_ptr<data_aligned<Data>>();
