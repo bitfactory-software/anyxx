@@ -11,10 +11,15 @@ Because he published it under the permissive BOOST we could use the algorithm fo
 
 We will provide a short walk throug  it:
 
-The goal of the hash index is, to compute as fast as possible a hash vale from the ***std::type_info* ***, that can be directly used as an index in an array (std::vector) containig the searched target:
+The goal of the hash index is, to compute as fast as possible a hash value from the ***std::type_info* ***, that can be directly used as an index in an array (std::vector) containig the searched target, where all possible values for the ***std::type_info* *** (=type_id from now on) are known.
+
+This function shall be a multiplcation with ***mult*** and a right shift with ***shift***:
 ```
     index_t apply_formula(type_id type) const {
       return (reinterpret_cast<std::size_t>(type) * mult) >> shift;
     }
 ```
+So the art is, to find ***perfect*** values for ***mult*** and ***shift***.
+
+
 
