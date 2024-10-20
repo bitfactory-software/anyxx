@@ -50,7 +50,8 @@ struct observer : META {
   observer(observer&&) = default;
   template <typename T>
   observer(T&& v)
-    requires(!std::derived_from<std::decay_t<T>, observer>)
+    requires(!std::derived_from<std::decay_t<T>, observer> &&
+             !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void>)
       : META(std::in_place_type<T>), data_(&v) {}
   observer(void_t v, const META& meta) : data_(v), META(meta) {}
   VOID data_ = nullptr;
@@ -96,7 +97,8 @@ struct typed_observer
   typed_observer(const observer_t& o)
       : select_observer_t<std::remove_reference_t<T>, META>(o) {}
   typed_observer(T&& v)
-      : select_observer_t<std::remove_reference_t<T>, META>(std::forward<T>(v)) {}
+      : select_observer_t<std::remove_reference_t<T>, META>(
+            std::forward<T>(v)) {}
   conrete_t& operator*() const {
     return *static_cast<conrete_t*>(this->data());
   }

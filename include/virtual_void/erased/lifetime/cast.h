@@ -14,14 +14,14 @@ TO lifetime_cast(FROM const&);
 
 template <>
 const_observer<> lifetime_cast<const_observer<>>(shared_const const& shared_const) {
-  return shared_const.data();
+  return { shared_const.data(), data::has_no_meta{std::in_place_type<void> } };
 }
 template <>
 const_observer<> lifetime_cast<const_observer<>>(unique const& unique) {
-  return unique.data();
+  return { unique.data(), data::has_no_meta{std::in_place_type<void> } };
 }
 template <>
 const_observer<> lifetime_cast<const_observer<>>(value const& value) {
-  return value.data();
+  return { value.data(), data::has_no_meta{std::in_place_type<void> } };
 }
 }  // namespace virtual_void::erased
