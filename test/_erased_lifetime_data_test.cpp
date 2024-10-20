@@ -5,24 +5,13 @@
 #include <vector>
 
 #include "../include/virtual_void/erased/data/typed.h"
+#include "../include/virtual_void/erased/data/shared_const_ptr.h"
+#include "../include/virtual_void/erased/data/unique_ptr.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
 namespace virtual_void::erased {
-
-
-template <typename META_DATA>
-using data_deleter = void (*)(META_DATA*);
-template <typename META_DATA>
-using unique_data_ptr = std::unique_ptr<META_DATA, data_deleter<META_DATA>>;
-template <typename T, typename... ARGS>
-auto make_unique_data_ptr(ARGS&&... args) {
-  using meta_data_t = T::meta_data_t;
-  auto deleter = +[](meta_data_t* meta) { delete static_cast<T*>(meta); };
-  return unique_data_ptr<meta_data_t>(
-      new T(std::in_place, std::forward<ARGS>(args)...), deleter);
-}
 
 template <typename META_DATA>
 struct value_v_table_t {
@@ -104,8 +93,8 @@ ASSERT_OFFSET(int, std::type_info const*, 8 + offset_for_v_table);
 ASSERT_OFFSET(char const*, std::type_info const*, 8 + offset_for_v_table);
 ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
-#define TRACE_OFFSET_EMPTY(T)                                        \
-  {                                                                  \
+#define TRACE_OFFSET_EMPTY(T)                                         \
+  {                                                                   \
     using TYPE = data::typed<T>;                                      \
     std::cout << "data::typed<" << #T << "> offsetof(the_data_): "    \
               << offsetof(data::typed<TYPE>, the_data_) << std::endl; \
@@ -113,8 +102,8 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
 #define TRACE_OFFSET(T, META_DATA)                                        \
   {                                                                       \
-    using TYPE = data::typed<T, data::with_meta<META_DATA>>;                  \
-    std::cout << "data::typed<" << #T << ", " << #META_DATA                \
+    using TYPE = data::typed<T, data::with_meta<META_DATA>>;              \
+    std::cout << "data::typed<" << #T << ", " << #META_DATA               \
               << "> offsetof(the_data_): " << offsetof(TYPE, the_data_)   \
               << ", offsetof(meta_data_): " << offsetof(TYPE, meta_data_) \
               << std::endl;                                               \
@@ -141,17 +130,17 @@ TEST_CASE("erase lifetiem test") {
 TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
-    auto unique_data_ptr = erased::make_unique_data_ptr<data::typed<Data>>();
-    REQUIRE(unerase_cast<Data>(*unique_data_ptr)->s_ == "hello world");
+    auto unique_ptr = erased::data::make_unique<data::typed<Data>>();
+    REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
 
   Data::destrucor_runs = 0;
   {
-    auto unique_data_ptr =
-        erased::make_unique_data_ptr<data::typed<Data, data::with_type_info>>();
-    REQUIRE(unerase_cast<Data>(*unique_data_ptr)->s_ == "hello world");
+    auto unique_ptr =
+        erased::data::make_unique<data::typed<Data, data::with_type_info>>();
+    REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -160,7 +149,7 @@ TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<data::with_no_meta const> sp =
-        std::make_shared<data::typed<Data>>(std::in_place);
+        data::make_shared_const<data::typed<Data>>();
     REQUIRE(unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -169,8 +158,7 @@ TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<data::with_type_info const> sp =
-        std::make_shared<data::typed<Data, data::with_type_info> const>(
-            std::in_place);
+        data::make_shared_const<data::typed<Data, data::with_type_info> const>();
     REQUIRE(unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
