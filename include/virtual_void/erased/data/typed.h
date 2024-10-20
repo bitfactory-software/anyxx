@@ -37,19 +37,19 @@ void const* no_meta::data() const {
 };
 
 template <typename META_DATA>
-struct ritch_meta_data {
+struct with_meta {
   META_DATA meta_data_;
   template <typename T>
-  ritch_meta_data(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
+  with_meta(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
   void* data() {
-    return &static_cast<typed_data<int, ritch_meta_data<META_DATA>>*>(this)
+    return &static_cast<typed_data<int, with_meta<META_DATA>>*>(this)
                 ->the_data_;
   }
   void const* data() const {
-    return &static_cast<typed_data<int, ritch_meta_data<META_DATA>> const*>(this)
+    return &static_cast<typed_data<int, with_meta<META_DATA>> const*>(this)
                 ->the_data_;
   }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~ritch_meta_data() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
 };
 
 struct type_info_ptr_holder {
@@ -59,10 +59,10 @@ struct type_info_ptr_holder {
       : type_info_(&typeid(std::decay_t<T>)) {}
 };
 
-struct type_info_meta_data : ritch_meta_data<type_info_ptr_holder> {
-  using ritch_meta_data::ritch_meta_data;
+struct with_type_info : with_meta<type_info_ptr_holder> {
+  using with_meta::with_meta;
   type_info_ptr type_info() const {
-    return ritch_meta_data<type_info_ptr_holder>::meta_data_.type_info_;
+    return with_meta<type_info_ptr_holder>::meta_data_.type_info_;
   }
 };
 

@@ -79,7 +79,7 @@ auto make_value_data_ptr(ARGS&&... args) {
 using namespace virtual_void;
 using namespace virtual_void::erased;
 
-#define DATA_ALIGNED(T, META_DATA) typed_data<T, ritch_meta_data<META_DATA>>
+#define DATA_ALIGNED(T, META_DATA) typed_data<T, with_meta<META_DATA>>
 
 #define ASSERT_OFFSET_EMPTY(T, o) \
   static_assert(offsetof(typed_data<T>, the_data_) == o);
@@ -113,7 +113,7 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
 #define TRACE_OFFSET(T, META_DATA)                                        \
   {                                                                       \
-    using TYPE = typed_data<T, ritch_meta_data<META_DATA>>;                  \
+    using TYPE = typed_data<T, with_meta<META_DATA>>;                  \
     std::cout << "typed_data<" << #T << ", " << #META_DATA                \
               << "> offsetof(the_data_): " << offsetof(TYPE, the_data_)   \
               << ", offsetof(meta_data_): " << offsetof(TYPE, meta_data_) \
@@ -150,7 +150,7 @@ TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_data_ptr =
-        erased::make_unique_data_ptr<typed_data<Data, type_info_meta_data>>();
+        erased::make_unique_data_ptr<typed_data<Data, with_type_info>>();
     REQUIRE(unerase_data_cast<Data>(*unique_data_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -168,8 +168,8 @@ TEST_CASE("erase lifetiem test shared") {
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<type_info_meta_data const> sp =
-        std::make_shared<typed_data<Data, type_info_meta_data> const>(
+    std::shared_ptr<with_type_info const> sp =
+        std::make_shared<typed_data<Data, with_type_info> const>(
             std::in_place);
     REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -188,8 +188,8 @@ TEST_CASE("erase lifetiem test value") {
 
   Data::destrucor_runs = 0;
   {
-    value_ptr<type_info_meta_data> vp =
-        make_value_data_ptr<typed_data<Data, type_info_meta_data>>();
+    value_ptr<with_type_info> vp =
+        make_value_data_ptr<typed_data<Data, with_type_info>>();
     REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
