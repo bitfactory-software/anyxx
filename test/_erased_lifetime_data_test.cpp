@@ -159,7 +159,7 @@ TEST_CASE("erase lifetiem test unique") {
 TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<empty_meta_data const> sp =
+    std::shared_ptr<no_meta const> sp =
         std::make_shared<typed_data<Data>>(std::in_place);
     REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -179,7 +179,7 @@ TEST_CASE("erase lifetiem test shared") {
 TEST_CASE("erase lifetiem test value") {
   Data::destrucor_runs = 0;
   {
-    value_ptr<empty_meta_data> vp = make_value_data_ptr<typed_data<Data>>();
+    value_ptr<no_meta> vp = make_value_data_ptr<typed_data<Data>>();
     REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;

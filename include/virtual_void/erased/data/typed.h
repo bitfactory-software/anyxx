@@ -10,16 +10,16 @@ namespace virtual_void::erased {
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
 #endif  // DEBUG
 
-struct empty_meta_data {
+struct no_meta {
   template <typename T>
-  empty_meta_data(std::in_place_type_t<T>) {}
+  no_meta(std::in_place_type_t<T>) {}
   type_info_ptr type_info() const { return {}; }
   void* data();
   void const* data() const;
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~empty_meta_data() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~no_meta() = default;
 };
 
-template <typename T, typename META_DATA = empty_meta_data>
+template <typename T, typename META_DATA = no_meta>
 struct typed_data : META_DATA {
   using meta_data_t = META_DATA;
   T the_data_;
@@ -29,11 +29,11 @@ struct typed_data : META_DATA {
         the_data_(std::forward<ARGS>(args)...) {}
 };
 
-void* empty_meta_data::data() {
-  return &static_cast<typed_data<int, empty_meta_data>*>(this)->the_data_;
+void* no_meta::data() {
+  return &static_cast<typed_data<int, no_meta>*>(this)->the_data_;
 };
-void const* empty_meta_data::data() const {
-  return &static_cast<typed_data<int, empty_meta_data> const*>(this)->the_data_;
+void const* no_meta::data() const {
+  return &static_cast<typed_data<int, no_meta> const*>(this)->the_data_;
 };
 
 template <typename META_DATA>
