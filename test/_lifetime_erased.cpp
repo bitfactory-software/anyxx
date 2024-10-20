@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "../include/virtual_void/erased/data/has_no_meta.h"
 #include "../include/virtual_void/erased/lifetime/data.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/shared_const.h"
@@ -17,31 +18,31 @@ using namespace virtual_void;
 namespace {
 TEST_CASE("erased/lifetime/data") {
   {
-    auto u1 = std::make_unique<erased::concrete_data<int> >(1);
+    auto u1 = std::make_unique<erased::concrete_data<int>>(1);
     REQUIRE(*erased::reconcrete_cast<int>(*u1) == 1);
   }
   {
-    const auto u1 = std::make_unique<erased::concrete_data<int> >(1);
+    const auto u1 = std::make_unique<erased::concrete_data<int>>(1);
     REQUIRE(*erased::reconcrete_cast<int>(*u1) == 1);
   }
 }
 TEST_CASE("erased/lifetime/observer") {
   {
-    static_assert(std::same_as<erased::select_observer<std::string>::type,
-                               erased::mutable_observer>);
-    static_assert(std::same_as<erased::select_observer<const std::string>::type,
-                               erased::const_observer>);
+    static_assert(std::same_as<erased::select_observer_t<std::string>,
+                               erased::mutable_observer<>>);
+    static_assert(std::same_as<erased::select_observer_t<const std::string>,
+                               erased::const_observer<>>);
 
     std::string s{"hallo"};
-    auto mo = erased::mutable_observer(s);
+    auto mo = erased::mutable_observer<>(s);
     static_assert(std::same_as<erased::typed_observer<std::string>::conrete_t,
                                std::string>);
     static_assert(
         std::same_as<erased::typed_observer<std::string const>::conrete_t,
                      std::string const>);
-    auto co = erased::const_observer(s);
+    auto co = erased::const_observer<>(s);
     auto tmo = erased::typed_observer<std::string>(mo);
-    static_assert(std::derived_from<decltype(tmo), erased::mutable_observer>);
+    static_assert(std::derived_from<decltype(tmo), erased::mutable_observer<>>);
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
@@ -52,9 +53,9 @@ TEST_CASE("erased/lifetime/observer") {
   {
     const std::string s{"hallo"};
     // auto mo = erased::mutable_observer( &s ); // shall not compile
-    auto co = erased::const_observer(s);
+    auto co = erased::const_observer<>(s);
     auto tco = erased::typed_observer<std::string const>(co);
-    static_assert(std::derived_from<decltype(tco), erased::const_observer>);
+    static_assert(std::derived_from<decltype(tco), erased::const_observer<>>);
     REQUIRE(*tco == "hallo");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   }

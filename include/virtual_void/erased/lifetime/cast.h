@@ -13,15 +13,15 @@ template <typename TO, typename FROM>
 TO lifetime_cast(FROM const&);
 
 template <>
-const_observer lifetime_cast<const_observer>(shared_const const& shared_const) {
+const_observer<> lifetime_cast<const_observer<>>(shared_const const& shared_const) {
   return shared_const.data();
 }
 template <>
-const_observer lifetime_cast<const_observer>(unique const& unique) {
+const_observer<> lifetime_cast<const_observer<>>(unique const& unique) {
   return unique.data();
 }
 template <>
-const_observer lifetime_cast<const_observer>(value const& value) {
+const_observer<> lifetime_cast<const_observer<>>(value const& value) {
   return value.data();
 }
 }  // namespace virtual_void::erased
