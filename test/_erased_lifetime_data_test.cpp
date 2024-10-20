@@ -87,7 +87,7 @@ TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr =
-        erased::data::make_unique<data::typed<Data, data::with_type_info>>();
+        erased::data::make_unique<data::typed<Data, data::has_type_info>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -96,7 +96,7 @@ TEST_CASE("erase lifetiem test unique") {
 TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::base_with_no_meta const> sp =
+    std::shared_ptr<data::with_no_meta const> sp =
         data::make_shared_const<data::typed<Data>>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -105,8 +105,8 @@ TEST_CASE("erase lifetiem test shared") {
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::base_with_type_info const> sp =
-        data::make_shared_const<data::typed<Data, data::with_type_info> const>();
+    std::shared_ptr<data::with_type_info const> sp =
+        data::make_shared_const<data::typed<Data, data::has_type_info> const>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -115,7 +115,7 @@ TEST_CASE("erase lifetiem test shared") {
 TEST_CASE("erase lifetiem test value") {
   Data::destrucor_runs = 0;
   {
-    data::value_ptr<data::base_with_no_meta> vp = data::make_value<data::typed<Data,data::with_no_meta>>();
+    data::value_ptr<data::with_no_meta> vp = data::make_value<data::typed<Data,data::has_no_meta>>();
     REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
@@ -124,8 +124,8 @@ TEST_CASE("erase lifetiem test value") {
 
   Data::destrucor_runs = 0;
   {
-    data::value_ptr<data::base_with_type_info> vp =
-        data::make_value<data::typed<Data, data::with_type_info>>();
+    data::value_ptr<data::with_type_info> vp =
+        data::make_value<data::typed<Data, data::has_type_info>>();
     REQUIRE(data::unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;

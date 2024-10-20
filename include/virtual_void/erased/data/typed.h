@@ -10,14 +10,14 @@ namespace virtual_void::erased::data {
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
 #endif  // DEBUG
 
-struct with_no_meta {
+struct has_no_meta {
   template <typename T>
-  with_no_meta(std::in_place_type_t<T>) {}
+  has_no_meta(std::in_place_type_t<T>) {}
   type_info_ptr type_info() const { return {}; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_no_meta() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_no_meta() = default;
 };
 
-template <typename META_DATA = with_no_meta>
+template <typename META_DATA = has_no_meta>
 struct base : META_DATA {
   template <typename T>
   base(std::in_place_type_t<T>) : META_DATA(std::in_place_type<T>) {}
@@ -25,7 +25,7 @@ struct base : META_DATA {
   void const* data() const;
 };
 
-template <typename T, typename META_DATA = with_no_meta>
+template <typename T, typename META_DATA = has_no_meta>
 struct typed : base<META_DATA> {
   using meta_data_t = META_DATA;
   using base_t = base<META_DATA>;
@@ -60,17 +60,17 @@ struct with_meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
 };
 
-struct with_type_info {
+struct has_type_info {
   std::type_info const* type_info_;
   template <typename T>
-  with_type_info(std::in_place_type_t<T>)
+  has_type_info(std::in_place_type_t<T>)
       : type_info_(&typeid(std::decay_t<T>)) {}
   type_info_ptr type_info() const { return type_info_; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_type_info() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_type_info() = default;
 };
 
-using base_with_no_meta = base<with_no_meta>;
-using base_with_type_info = base<with_type_info>;
+using with_no_meta = base<has_no_meta>;
+using with_type_info = base<has_type_info>;
 
 template <typename TO, typename DATA>
 TO const* unerase_cast(DATA const& data) {
