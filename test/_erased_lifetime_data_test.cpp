@@ -1,8 +1,8 @@
+#include <any>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <any>
 
 #include "../include/virtual_void/erased/lifetime/data.h"
 #include "include/catch.hpp"
@@ -13,6 +13,7 @@ namespace virtual_void::erased {
 
 struct empty_meta_t {
   void* data();
+  void const* data() const;
 };
 
 template <typename T, typename M = empty_meta_t>
@@ -24,12 +25,29 @@ struct data_aligned : M {
 void* empty_meta_t::data() {
   return &static_cast<data_aligned<int, empty_meta_t>*>(this)->t;
 };
+void const* empty_meta_t::data() const {
+  return &static_cast<data_aligned<int, empty_meta_t> const*>(this)->t;
+};
 
 template <typename M>
 struct ritch_meta_t {
   M m;
-  void* data() { return &static_cast<data_aligned<int, ritch_meta_t<M>>*>(this)->t; }
+  void* data() {
+    return &static_cast<data_aligned<int, ritch_meta_t<M>>*>(this)->t;
+  }
+  void const* data() const {
+    return &static_cast<data_aligned<int, ritch_meta_t<M>> const*>(this)->t;
+  }
 };
+
+template <typename TO, typename DATA>
+const TO* unerase_data_cast(const DATA& data) {
+  return static_cast<TO*>(data.data());
+}
+template <typename TO, typename DATA>
+TO* unerase_data_cast(DATA& data) {
+  return static_cast<TO*>(data.data());
+}
 
 template <typename M>
 using data_deleter = void (*)(M*);
@@ -124,7 +142,7 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8);
 
 #define TRACE_OFFSET(T, M)                                            \
   {                                                                   \
-    using TYPE = data_aligned<T, ritch_meta_t<M>>;                          \
+    using TYPE = data_aligned<T, ritch_meta_t<M>>;                    \
     std::cout << "data_aligned<" << #T << ", " << #M                  \
               << "> offsetof(t): " << offsetof(TYPE, t)               \
               << ", offsetof(m): " << offsetof(TYPE, m) << std::endl; \
@@ -132,6 +150,7 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8);
 
 struct Data {
   static int destrucor_runs;
+  std::string s_ = "hello world";
   ~Data() { ++destrucor_runs; }
 };
 int Data::destrucor_runs = 0;
@@ -146,29 +165,61 @@ TEST_CASE("erase lifetiem test") {
   TRACE_OFFSET(int, std::type_info const*);
   TRACE_OFFSET(char const*, std::type_info const*);
   TRACE_OFFSET(std::string, std::type_info const*);
-  
+}
+TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_data_ptr = erased::make_unique_data_ptr<data_aligned<Data>>();
+    REQUIRE(unerase_data_cast<Data>(*unique_data_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
 
+  Data::destrucor_runs = 0;
+  {
+    auto unique_data_ptr = erased::make_unique_data_ptr<
+        data_aligned<Data, ritch_meta_t<const std::type_info*>>>();
+    REQUIRE(unerase_data_cast<Data>(*unique_data_ptr)->s_ == "hello world");
+    REQUIRE(Data::destrucor_runs == 0);
+  }
+  REQUIRE(Data::destrucor_runs == 1);
+}
+TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<empty_meta_t> sp = std::make_shared<data_aligned<Data>>();
+    REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
 
   Data::destrucor_runs = 0;
   {
+    std::shared_ptr<ritch_meta_t<const std::type_info*>> sp = std::make_shared<
+        data_aligned<Data, ritch_meta_t<const std::type_info*>>>();
+    REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
+    REQUIRE(Data::destrucor_runs == 0);
+  }
+  REQUIRE(Data::destrucor_runs == 1);
+}
+TEST_CASE("erase lifetiem test value") {
+  Data::destrucor_runs = 0;
+  {
     value_ptr<empty_meta_t> vp = make_value_data_ptr<data_aligned<Data>>();
+    REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
   }
   REQUIRE(Data::destrucor_runs == 2);
 
-  //std::any  any_string{ std::string("hello world")};
-  //auto y = any_string;
+  Data::destrucor_runs = 0;
+  {
+    value_ptr<ritch_meta_t<const std::type_info*>> vp = make_value_data_ptr<data_aligned< Data, ritch_meta_t<const std::type_info*>>>();
+    REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
+    REQUIRE(Data::destrucor_runs == 0);
+    auto vp2 = vp;
+  }
+  REQUIRE(Data::destrucor_runs == 2);
+  // std::any  any_string{ std::string("hello world")};
+  // auto y = any_string;
 }
