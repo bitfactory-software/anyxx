@@ -11,9 +11,16 @@ using namespace Catch::Matchers;
 
 namespace virtual_void::erased {
 
+#ifdef _DEBUG
+    #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL virtual
+#else
+    #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
+#endif  // DEBUG
+
 struct empty_meta_t {
   void* data();
   void const* data() const;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~empty_meta_t() = default;
 };
 
 template <typename T, typename M = empty_meta_t>
@@ -38,6 +45,7 @@ struct ritch_meta_t {
   void const* data() const {
     return &static_cast<data_aligned<int, ritch_meta_t<M>> const*>(this)->t;
   }
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~ritch_meta_t() = default;
 };
 
 template <typename TO, typename DATA>
@@ -122,15 +130,23 @@ using namespace virtual_void::erased;
 #define ASSERT_OFFSET(T, M, o) \
   static_assert(offsetof(DATA_ALIGNED(T, M), t) == o);
 
-ASSERT_OFFSET_EMPTY(char, 0);
-ASSERT_OFFSET_EMPTY(int, 0);
-ASSERT_OFFSET_EMPTY(char const*, 0)
-ASSERT_OFFSET_EMPTY(std::string, 0)
+#ifdef _DEBUG
+    #define OFFSET_FOR_V_TABLE 8u
+#else
+    #define OFFSET_FOR_V_TABLE 0u
+#endif
+static const constexpr std::size_t offset_for_v_table = OFFSET_FOR_V_TABLE;
 
-ASSERT_OFFSET(char, std::type_info const*, 8);
-ASSERT_OFFSET(int, std::type_info const*, 8);
-ASSERT_OFFSET(char const*, std::type_info const*, 8);
-ASSERT_OFFSET(std::string, std::type_info const*, 8);
+
+ASSERT_OFFSET_EMPTY(char, offset_for_v_table);
+ASSERT_OFFSET_EMPTY(int, offset_for_v_table);
+ASSERT_OFFSET_EMPTY(char const*, offset_for_v_table)
+ASSERT_OFFSET_EMPTY(std::string, offset_for_v_table)
+
+ASSERT_OFFSET(char, std::type_info const*, 8 + offset_for_v_table);
+ASSERT_OFFSET(int, std::type_info const*, 8 + offset_for_v_table);
+ASSERT_OFFSET(char const*, std::type_info const*, 8 + offset_for_v_table);
+ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
 #define TRACE_OFFSET_EMPTY(T)                                         \
   {                                                                   \
