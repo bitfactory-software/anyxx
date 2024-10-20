@@ -2,6 +2,9 @@
 
 #include "../../forward.h"
 
+#include "has_no_meta.h"
+#include "has_type_info.h"
+
 namespace virtual_void::erased::data {
 
 #ifdef _DEBUG
@@ -9,13 +12,6 @@ namespace virtual_void::erased::data {
 #else
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
 #endif  // DEBUG
-
-struct has_no_meta {
-  template <typename T>
-  has_no_meta(std::in_place_type_t<T>) {}
-  type_info_ptr type_info() const { return {}; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_no_meta() = default;
-};
 
 template <typename META_DATA = has_no_meta>
 struct base : META_DATA {
@@ -58,15 +54,6 @@ struct with_meta {
                 ->the_data_;
   }
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
-};
-
-struct has_type_info {
-  std::type_info const* type_info_;
-  template <typename T>
-  has_type_info(std::in_place_type_t<T>)
-      : type_info_(&typeid(std::decay_t<T>)) {}
-  type_info_ptr type_info() const { return type_info_; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_type_info() = default;
 };
 
 using with_no_meta = base<has_no_meta>;

@@ -56,4 +56,13 @@ concept MtableDispatchableVoid = requires(const DISPATCH& void_) {
 
 class error;
 
+struct has_type_info;
+struct has_no_meta;
+
 }  // namespace virtual_void
+
+#ifdef _DEBUG
+#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL virtual
+#else
+#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
+#endif  // DEBUG
