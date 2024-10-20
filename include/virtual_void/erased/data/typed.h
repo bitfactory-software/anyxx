@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../forward.h"
+
 namespace virtual_void::erased {
 
 #ifdef _DEBUG
@@ -7,8 +9,6 @@ namespace virtual_void::erased {
 #else
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
 #endif  // DEBUG
-
-using type_info_ptr = std::type_info const*;
 
 struct empty_meta_data {
   template <typename T>
