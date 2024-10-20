@@ -79,10 +79,10 @@ auto make_value_data_ptr(ARGS&&... args) {
 using namespace virtual_void;
 using namespace virtual_void::erased;
 
-#define DATA_ALIGNED(T, META_DATA) typed_data<T, with_meta<META_DATA>>
+#define DATA_ALIGNED(T, META_DATA) data::typed<T, data::with_meta<META_DATA>>
 
 #define ASSERT_OFFSET_EMPTY(T, o) \
-  static_assert(offsetof(typed_data<T>, the_data_) == o);
+  static_assert(offsetof(data::typed<T>, the_data_) == o);
 
 #define ASSERT_OFFSET(T, META_DATA, o) \
   static_assert(offsetof(DATA_ALIGNED(T, META_DATA), the_data_) == o);
@@ -106,15 +106,15 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
 #define TRACE_OFFSET_EMPTY(T)                                        \
   {                                                                  \
-    using TYPE = typed_data<T>;                                      \
-    std::cout << "typed_data<" << #T << "> offsetof(the_data_): "    \
-              << offsetof(typed_data<TYPE>, the_data_) << std::endl; \
+    using TYPE = data::typed<T>;                                      \
+    std::cout << "data::typed<" << #T << "> offsetof(the_data_): "    \
+              << offsetof(data::typed<TYPE>, the_data_) << std::endl; \
   }
 
 #define TRACE_OFFSET(T, META_DATA)                                        \
   {                                                                       \
-    using TYPE = typed_data<T, with_meta<META_DATA>>;                  \
-    std::cout << "typed_data<" << #T << ", " << #META_DATA                \
+    using TYPE = data::typed<T, data::with_meta<META_DATA>>;                  \
+    std::cout << "data::typed<" << #T << ", " << #META_DATA                \
               << "> offsetof(the_data_): " << offsetof(TYPE, the_data_)   \
               << ", offsetof(meta_data_): " << offsetof(TYPE, meta_data_) \
               << std::endl;                                               \
@@ -141,8 +141,8 @@ TEST_CASE("erase lifetiem test") {
 TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
-    auto unique_data_ptr = erased::make_unique_data_ptr<typed_data<Data>>();
-    REQUIRE(unerase_data_cast<Data>(*unique_data_ptr)->s_ == "hello world");
+    auto unique_data_ptr = erased::make_unique_data_ptr<data::typed<Data>>();
+    REQUIRE(unerase_cast<Data>(*unique_data_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -150,8 +150,8 @@ TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_data_ptr =
-        erased::make_unique_data_ptr<typed_data<Data, with_type_info>>();
-    REQUIRE(unerase_data_cast<Data>(*unique_data_ptr)->s_ == "hello world");
+        erased::make_unique_data_ptr<data::typed<Data, data::with_type_info>>();
+    REQUIRE(unerase_cast<Data>(*unique_data_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -159,19 +159,19 @@ TEST_CASE("erase lifetiem test unique") {
 TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<no_meta const> sp =
-        std::make_shared<typed_data<Data>>(std::in_place);
-    REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
+    std::shared_ptr<data::with_no_meta const> sp =
+        std::make_shared<data::typed<Data>>(std::in_place);
+    REQUIRE(unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<with_type_info const> sp =
-        std::make_shared<typed_data<Data, with_type_info> const>(
+    std::shared_ptr<data::with_type_info const> sp =
+        std::make_shared<data::typed<Data, data::with_type_info> const>(
             std::in_place);
-    REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
+    REQUIRE(unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -179,8 +179,8 @@ TEST_CASE("erase lifetiem test shared") {
 TEST_CASE("erase lifetiem test value") {
   Data::destrucor_runs = 0;
   {
-    value_ptr<no_meta> vp = make_value_data_ptr<typed_data<Data>>();
-    REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
+    value_ptr<data::with_no_meta> vp = make_value_data_ptr<data::typed<Data>>();
+    REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
   }
@@ -188,9 +188,9 @@ TEST_CASE("erase lifetiem test value") {
 
   Data::destrucor_runs = 0;
   {
-    value_ptr<with_type_info> vp =
-        make_value_data_ptr<typed_data<Data, with_type_info>>();
-    REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
+    value_ptr<data::with_type_info> vp =
+        make_value_data_ptr<data::typed<Data, data::with_type_info>>();
+    REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
   }

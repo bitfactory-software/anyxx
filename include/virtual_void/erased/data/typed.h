@@ -2,7 +2,7 @@
 
 #include "../../forward.h"
 
-namespace virtual_void::erased {
+namespace virtual_void::erased::data {
 
 #ifdef _DEBUG
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL virtual
@@ -10,30 +10,30 @@ namespace virtual_void::erased {
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
 #endif  // DEBUG
 
-struct no_meta {
+struct with_no_meta {
   template <typename T>
-  no_meta(std::in_place_type_t<T>) {}
+  with_no_meta(std::in_place_type_t<T>) {}
   type_info_ptr type_info() const { return {}; }
   void* data();
   void const* data() const;
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~no_meta() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_no_meta() = default;
 };
 
-template <typename T, typename META_DATA = no_meta>
-struct typed_data : META_DATA {
+template <typename T, typename META_DATA = with_no_meta>
+struct typed : META_DATA {
   using meta_data_t = META_DATA;
   T the_data_;
   template <typename... ARGS>
-  typed_data(std::in_place_t in_place, ARGS&&... args)
+  typed(std::in_place_t in_place, ARGS&&... args)
       : META_DATA(std::in_place_type<T>),
         the_data_(std::forward<ARGS>(args)...) {}
 };
 
-void* no_meta::data() {
-  return &static_cast<typed_data<int, no_meta>*>(this)->the_data_;
+void* with_no_meta::data() {
+  return &static_cast<typed<int, with_no_meta>*>(this)->the_data_;
 };
-void const* no_meta::data() const {
-  return &static_cast<typed_data<int, no_meta> const*>(this)->the_data_;
+void const* with_no_meta::data() const {
+  return &static_cast<typed<int, with_no_meta> const*>(this)->the_data_;
 };
 
 template <typename META_DATA>
@@ -42,11 +42,11 @@ struct with_meta {
   template <typename T>
   with_meta(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
   void* data() {
-    return &static_cast<typed_data<int, with_meta<META_DATA>>*>(this)
+    return &static_cast<typed<int, with_meta<META_DATA>>*>(this)
                 ->the_data_;
   }
   void const* data() const {
-    return &static_cast<typed_data<int, with_meta<META_DATA>> const*>(this)
+    return &static_cast<typed<int, with_meta<META_DATA>> const*>(this)
                 ->the_data_;
   }
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
@@ -67,11 +67,11 @@ struct with_type_info : with_meta<type_info_ptr_holder> {
 };
 
 template <typename TO, typename DATA>
-TO const* unerase_data_cast(DATA const& data) {
+TO const* unerase_cast(DATA const& data) {
   return static_cast<TO const*>(data.data());
 }
 template <typename TO, typename DATA>
-TO* unerase_data_cast(DATA& data) {
+TO* unerase_cast(DATA& data) {
   return static_cast<TO*>(data.data());
 }
 
