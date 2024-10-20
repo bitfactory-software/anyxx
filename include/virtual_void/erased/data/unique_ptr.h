@@ -12,9 +12,9 @@ using unique_ptr = std::unique_ptr<META_DATA, data_deleter<META_DATA>>;
 
 template <typename T, typename... ARGS>
 auto make_unique(ARGS&&... args) {
-  using meta_data_t = T::meta_data_t;
-  auto deleter = +[](meta_data_t* meta) { delete static_cast<T*>(meta); };
-  return unique_ptr<meta_data_t>(
+  using base_t = T::base_t;
+  auto deleter = +[](base_t* meta) { delete static_cast<T*>(meta); };
+  return unique_ptr<base_t>(
       new T(std::in_place, std::forward<ARGS>(args)...), deleter);
 }
 
