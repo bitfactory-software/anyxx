@@ -4,85 +4,13 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/lifetime/data.h"
+#include "../include/virtual_void/erased/data/typed.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
 namespace virtual_void::erased {
 
-#ifdef _DEBUG
-#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL virtual
-#else
-#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
-#endif  // DEBUG
-
-using type_info_ptr = std::type_info const*;
-
-struct empty_meta_data {
-  template <typename T>
-  empty_meta_data(std::in_place_type_t<T>) {}
-  type_info_ptr type_info() const { return {}; }
-  void* data();
-  void const* data() const;
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~empty_meta_data() = default;
-};
-
-template <typename T, typename META_DATA = empty_meta_data>
-struct typed_data : META_DATA {
-  using meta_data_t = META_DATA;
-  T the_data_;
-  template <typename... ARGS>
-  typed_data(std::in_place_t in_place, ARGS&&... args)
-      : META_DATA(std::in_place_type<T>),
-        the_data_(std::forward<ARGS>(args)...) {}
-};
-
-void* empty_meta_data::data() {
-  return &static_cast<typed_data<int, empty_meta_data>*>(this)->the_data_;
-};
-void const* empty_meta_data::data() const {
-  return &static_cast<typed_data<int, empty_meta_data> const*>(this)->the_data_;
-};
-
-template <typename META_DATA>
-struct ritch_meta_t {
-  META_DATA meta_data_;
-  template <typename T>
-  ritch_meta_t(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
-  void* data() {
-    return &static_cast<typed_data<int, ritch_meta_t<META_DATA>>*>(this)
-                ->the_data_;
-  }
-  void const* data() const {
-    return &static_cast<typed_data<int, ritch_meta_t<META_DATA>> const*>(this)
-                ->the_data_;
-  }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~ritch_meta_t() = default;
-};
-
-struct type_info_ptr_holder {
-  std::type_info const* type_info_;
-  template <typename T>
-  type_info_ptr_holder(std::in_place_type_t<T>)
-      : type_info_(&typeid(std::decay_t<T>)) {}
-};
-
-struct type_info_meta_data : ritch_meta_t<type_info_ptr_holder> {
-  using ritch_meta_t::ritch_meta_t;
-  type_info_ptr type_info() const {
-    return ritch_meta_t<type_info_ptr_holder>::meta_data_.type_info_;
-  }
-};
-
-template <typename TO, typename DATA>
-TO const* unerase_data_cast(DATA const& data) {
-  return static_cast<TO const*>(data.data());
-}
-template <typename TO, typename DATA>
-TO* unerase_data_cast(DATA& data) {
-  return static_cast<TO*>(data.data());
-}
 
 template <typename META_DATA>
 using data_deleter = void (*)(META_DATA*);
@@ -151,7 +79,7 @@ auto make_value_data_ptr(ARGS&&... args) {
 using namespace virtual_void;
 using namespace virtual_void::erased;
 
-#define DATA_ALIGNED(T, META_DATA) typed_data<T, ritch_meta_t<META_DATA>>
+#define DATA_ALIGNED(T, META_DATA) typed_data<T, ritch_meta_data<META_DATA>>
 
 #define ASSERT_OFFSET_EMPTY(T, o) \
   static_assert(offsetof(typed_data<T>, the_data_) == o);
@@ -185,7 +113,7 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
 #define TRACE_OFFSET(T, META_DATA)                                        \
   {                                                                       \
-    using TYPE = typed_data<T, ritch_meta_t<META_DATA>>;                  \
+    using TYPE = typed_data<T, ritch_meta_data<META_DATA>>;                  \
     std::cout << "typed_data<" << #T << ", " << #META_DATA                \
               << "> offsetof(the_data_): " << offsetof(TYPE, the_data_)   \
               << ", offsetof(meta_data_): " << offsetof(TYPE, meta_data_) \

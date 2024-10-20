@@ -3,6 +3,8 @@
 #include <typeindex>
 
 namespace virtual_void {
+using type_info_ptr = std::type_info const*;
+
 class m_table_t;
 template <typename CLASS>
 constexpr m_table_t* m_table_of();
