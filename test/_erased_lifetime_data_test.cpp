@@ -41,8 +41,8 @@ struct ritch_meta_t {
 };
 
 template <typename TO, typename DATA>
-const TO* unerase_data_cast(const DATA& data) {
-  return static_cast<TO*>(data.data());
+TO const* unerase_data_cast(DATA const& data) {
+  return static_cast<TO const*>(data.data());
 }
 template <typename TO, typename DATA>
 TO* unerase_data_cast(DATA& data) {
@@ -178,7 +178,7 @@ TEST_CASE("erase lifetiem test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_data_ptr = erased::make_unique_data_ptr<
-        data_aligned<Data, ritch_meta_t<const std::type_info*>>>();
+        data_aligned<Data, ritch_meta_t<std::type_info const*>>>();
     REQUIRE(unerase_data_cast<Data>(*unique_data_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -187,7 +187,8 @@ TEST_CASE("erase lifetiem test unique") {
 TEST_CASE("erase lifetiem test shared") {
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<empty_meta_t> sp = std::make_shared<data_aligned<Data>>();
+    std::shared_ptr<empty_meta_t const> sp =
+        std::make_shared<data_aligned<Data> const>();
     REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -195,8 +196,9 @@ TEST_CASE("erase lifetiem test shared") {
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<ritch_meta_t<const std::type_info*>> sp = std::make_shared<
-        data_aligned<Data, ritch_meta_t<const std::type_info*>>>();
+    std::shared_ptr<ritch_meta_t<std::type_info const*> const> sp =
+        std::make_shared<
+            data_aligned<Data, ritch_meta_t<std::type_info const*>>>();
     REQUIRE(unerase_data_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -214,7 +216,8 @@ TEST_CASE("erase lifetiem test value") {
 
   Data::destrucor_runs = 0;
   {
-    value_ptr<ritch_meta_t<const std::type_info*>> vp = make_value_data_ptr<data_aligned< Data, ritch_meta_t<const std::type_info*>>>();
+    value_ptr<ritch_meta_t<std::type_info const*>> vp = make_value_data_ptr<
+        data_aligned<Data, ritch_meta_t<std::type_info const*>>>();
     REQUIRE(unerase_data_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
