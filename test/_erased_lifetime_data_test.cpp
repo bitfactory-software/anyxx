@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <any>
 
 #include "../include/virtual_void/erased/lifetime/data.h"
 #include "include/catch.hpp"
@@ -25,9 +26,9 @@ void* empty_meta_t::data() {
 };
 
 template <typename M>
-struct meta_t {
+struct ritch_meta_t {
   M m;
-  void* data() { return &static_cast<data_aligned<int, meta_t<M>>*>(this)->t; }
+  void* data() { return &static_cast<data_aligned<int, ritch_meta_t<M>>*>(this)->t; }
 };
 
 template <typename M>
@@ -95,7 +96,7 @@ auto make_value_data_ptr(ARGS&&... args) {
 using namespace virtual_void;
 using namespace virtual_void::erased;
 
-#define DATA_ALIGNED(T, M) data_aligned<T, meta_t<M>>
+#define DATA_ALIGNED(T, M) data_aligned<T, ritch_meta_t<M>>
 
 #define ASSERT_OFFSET_EMPTY(T, o) \
   static_assert(offsetof(data_aligned<T>, t) == o);
@@ -123,7 +124,7 @@ ASSERT_OFFSET(std::string, std::type_info const*, 8);
 
 #define TRACE_OFFSET(T, M)                                            \
   {                                                                   \
-    using TYPE = data_aligned<T, meta_t<M>>;                          \
+    using TYPE = data_aligned<T, ritch_meta_t<M>>;                          \
     std::cout << "data_aligned<" << #T << ", " << #M                  \
               << "> offsetof(t): " << offsetof(TYPE, t)               \
               << ", offsetof(m): " << offsetof(TYPE, m) << std::endl; \
@@ -167,4 +168,7 @@ TEST_CASE("erase lifetiem test") {
     auto vp2 = vp;
   }
   REQUIRE(Data::destrucor_runs == 2);
+
+  //std::any  any_string{ std::string("hello world")};
+  //auto y = any_string;
 }
