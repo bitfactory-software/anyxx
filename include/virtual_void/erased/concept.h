@@ -8,11 +8,10 @@ concept base_of = std::derived_from<DERIVED, BASE>;
 template <class E>
 concept is_erased_lifetime_holder = requires(E e, int i) {
   typename E::void_t;
-  { E::is_const } -> std::convertible_to<bool>;
   typename E::make_erased;
-
+  { E::is_const } -> std::convertible_to<bool>;
   { E::make_erased()(i) } -> base_of<E>;
-  { e.data() } -> std::convertible_to<const void*>;
+  { e.data() } -> std::convertible_to<typename E::void_t>;
 };
 
 template <is_erased_lifetime_holder LIFETIME_HOLDER, typename FROM>
