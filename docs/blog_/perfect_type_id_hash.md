@@ -33,6 +33,7 @@ This table shows the initial *spare_base* value for some sizes of *elements*:
     return sparse_base;
   }
 ```
+
 <div class="table1" markdown="1">
 | size    | inital_sparse_base | 
 |--------:|-------------------:|
@@ -50,6 +51,7 @@ This table shows, how the spare_base relates to the table size. The values shoul
     return std::size_t(1) << sparse_base;
   }
 ```
+
 <div class="table2" markdown="1">
 | sparse_base | table.size    |
 |------------:|--------------:|
