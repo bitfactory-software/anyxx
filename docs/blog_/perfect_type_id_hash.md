@@ -20,8 +20,8 @@ This function shall be a multiplcation with *mult* and a right shift with *shift
     }
 ```
 So the art is, to find *perfect* values for *mult* and *shift* in a given range of *elements*.
-Each *elenent* is a pair of type_id and the target, witch we wount to fast as possible for thah  type_id. 
-To make this a task, that can end before the next big bang, the table containig the targets neads spare space.
+Each *elenent* is a pair of type_id and a target, witch we wount to find as fast as possible for a given type_id. 
+To make this a task easier, the generated target table leaves spare entries.
 The algorithm starts with litle spare and tries to find values for *mult* and *shift*, so that the result of *apply_formula(type_id)* is unique for every type_id.
 If this fails, the spare space is increased, and the search for *mult* and *shift* is repeated.
 
