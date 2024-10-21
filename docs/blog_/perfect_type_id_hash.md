@@ -82,7 +82,7 @@ For a given *sparse_base* the *shift* is set to
 ```
     hash_index.shift = 8 * sizeof(type_id) - sparse_base;
 ```
-Then the the algorithms trys to find via an random number generator a *mult* that maps each *type_id* to its own index.
+Then the algorithm trys to find via an random number generator a *mult* that maps each *type_id* to its own index.
 ```
 static std::optional<hash_index> find_hash_for_sparse_base(
     const auto& elements, std::size_t sparse_base) {
