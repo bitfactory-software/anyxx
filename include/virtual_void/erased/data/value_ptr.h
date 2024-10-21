@@ -30,22 +30,44 @@ constexpr value_v_table<typename T::base_t> value_v_table_of =
 template <typename BASE>
 class value_ptr {
  public:
+  value_ptr() = default;
   template <typename DATA>
   value_ptr(DATA* v)
       : ptr_(v), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
   value_ptr(value_ptr const& rhs)
       : ptr_(rhs.v_table_->copy(rhs.ptr_)), v_table_(rhs.v_table_) {}
-  ~value_ptr() { v_table_->destroy(ptr_); }
+  value_ptr& operator=(const value_ptr& rhs) {
+    value_ptr clone{rhs};
+    swap(*this, clone);
+    return *this;
+  }
+  value_ptr(value_ptr&& rhs) {
+    swap(*this, rhs);
+  }
+  value_ptr& operator=(value_ptr&& rhs) {
+    swap(*this, rhs);
+    return *this;
+  }
+  ~value_ptr() {
+    if (v_table_) v_table_->destroy(ptr_);
+  }
   BASE* value() { return ptr_; }
   BASE const* value() const { return ptr_; }
   BASE& operator*() { return *value(); }
   const BASE& operator*() const { return *value(); }
   BASE* operator->() { return value(); }
   const BASE* operator->() const { return value(); }
+  explicit operator bool() const { return value() != nullptr; }
+
+  friend void swap(value_ptr& lhs, value_ptr& rhs) {
+    using namespace std;
+    swap(lhs.ptr_, rhs.ptr_);
+    swap(lhs.v_table_, rhs.v_table_);
+  }
 
  private:
-  BASE* ptr_;
-  const value_v_table<BASE>* v_table_;
+  BASE* ptr_ = nullptr;
+  const value_v_table<BASE>* v_table_ = nullptr;
 };
 
 template <typename T, typename... ARGS>

@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <vector>
 
-#include "../erased/lifetime/value.h"
+#include "../erased/data/value_ptr.h"
 
 namespace virtual_void::open_object {
 
@@ -18,31 +18,33 @@ std::size_t& type_member_count_of() {
 template <typename OBJECT_TYPE>
 struct members {
   members() : table_(type_member_count_of<OBJECT_TYPE>()) {}
-  std::vector<erased::value> table_;
+  std::vector<erased::data::value_ptr<erased::data::base<erased::data::has_no_meta>>> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
+    using value_t = typename OBJECT_MEMBER::value_t;
+    using value_data_t = erased::data::typed<value_t>;
     table_[OBJECT_MEMBER::get_index()] =
-        erased::make_value<typename OBJECT_MEMBER::value_t>(
-            std::forward<ARG>(arg));
+        erased::data::make_value<value_data_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {
     const auto& value = table_[OBJECT_MEMBER::get_index()];
     if (!value) return {};
-    return reconcrete_cast<typename OBJECT_MEMBER::value_t>(value);
+    return unerase_cast<typename OBJECT_MEMBER::value_t>(*value);
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t* get(OBJECT_MEMBER) {
     auto& value = table_[OBJECT_MEMBER::get_index()];
     if (!value) return {};
-    return reconcrete_cast<typename OBJECT_MEMBER::value_t>(value);
+    return unerase_cast<typename OBJECT_MEMBER::value_t>(*value);
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t& operator[](OBJECT_MEMBER) {
     if (auto value = get(OBJECT_MEMBER())) {
       return *value;
     }
-    set(OBJECT_MEMBER{}, typename OBJECT_MEMBER::value_t{});
+    using value_t = typename OBJECT_MEMBER::value_t;
+    set(OBJECT_MEMBER{}, value_t());
     return *get(OBJECT_MEMBER{});
   }
 };
