@@ -6,7 +6,7 @@ nav_order: 40
 
 # Jean-Louis Leroy's "perfect typeid hash"
 
-For his [yomm2](https://github.com/jll63/yomm2) library Jean-Louis Leroy developed an fast algorithm to **find from the addres of a std::type_info to a pointer**.
+For his [yomm2](https://github.com/jll63/yomm2) library Jean-Louis Leroy developed an fast algorithm to **find a pointer** from the **address of a std::type_info**.
 Because he published it under the permissive BOOST license, we could use the algorithm for this library and refactor it for our purposes.
 
 We will provide here a short walk through:
