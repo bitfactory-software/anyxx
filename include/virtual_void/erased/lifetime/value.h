@@ -14,9 +14,9 @@ using value_data_ptr = data::value_ptr<data::with_no_meta>;
 template <>
 struct data_trait<value_data_ptr> : data_trait_base<value_data_ptr> {
   using void_t = void*;
-  static auto data(const auto& ptr) { return ptr.value()->data(); }
-  static auto data(auto& ptr) { return ptr.value()->data(); }
+  static void* data(const auto& ptr) { return ptr.value()->data(); }
   static auto meta(const auto& ptr) { ptr.value()->meta(); }
+  static bool has_value(const auto& ptr) { return ptr; }
   template <typename... ARGS>
   static value_data_ptr construct_from(ARGS&&... args) {
     return data::make_value(forward<ARGS>(args)...);

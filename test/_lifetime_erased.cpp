@@ -128,7 +128,7 @@ TEST_CASE("erased/lifetime/value") {
     struct A {
       std::string s;
     };
-    auto u1 = value(std::in_place_type<A>, "hallo");
+    auto u1 = value("hallo");
     REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
     auto u2 = u1;
     REQUIRE(reconcrete_cast<A>(u1)->s.data() !=
@@ -150,12 +150,12 @@ TEST_CASE("erased/lifetime/value") {
     REQUIRE(*t1 == 2);
   }
   {
-    auto t1 = make_value<std::string>("hallo");
+    auto t1 = typed_value<std::string>("hallo");
     REQUIRE(*t1 == "hallo");
   }
   {
     std::string a = "hallo";
-    auto t1 = make_value_t{}(a);
+    auto t1 = data_trait<value_data_ptr>{}(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -163,7 +163,7 @@ TEST_CASE("erased/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = make_value_t{}(a);
+    auto t1 = data_trait<value_data_ptr>{}(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }

@@ -51,12 +51,9 @@ class value_ptr {
   ~value_ptr() {
     if (v_table_) v_table_->destroy(ptr_);
   }
-  BASE* value() { return ptr_; }
-  BASE const* value() const { return ptr_; }
-  BASE& operator*() { return *value(); }
-  const BASE& operator*() const { return *value(); }
-  BASE* operator->() { return value(); }
-  const BASE* operator->() const { return value(); }
+  BASE* value() const { return ptr_; }
+  BASE& operator*() const { return *value(); }
+  BASE* operator->() const{ return value(); }
   explicit operator bool() const { return value() != nullptr; }
 
   friend void swap(value_ptr& lhs, value_ptr& rhs) {

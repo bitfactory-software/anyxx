@@ -18,6 +18,7 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::erased;
 
+namespace virtual_void::erased::data {
 template <typename META_DATA> // obsolate! replace with base<>!
 struct with_meta {
   META_DATA meta_data_;
@@ -32,6 +33,7 @@ struct with_meta {
   }
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
 };
+}
 
 #define DATA_ALIGNED(T, META_DATA) data::typed<T, data::with_meta<META_DATA>>
 
