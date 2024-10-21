@@ -33,6 +33,7 @@ This table shows the initial *spare_base* value for some sizes of *elements*:
     return sparse_base;
   }
 ```
+<div class="table1" markdown="1">
 | size    | inital_sparse_base | 
 |--------:|-------------------:|
 | 10    | 4                    |
@@ -41,6 +42,7 @@ This table shows the initial *spare_base* value for some sizes of *elements*:
 | 10000 | 14 |
 | 100000 | 17 |
 | 1000000 | 21 |
+</div>
 
 This table shows, how the spare_base relates to the table size. The values should be familar
 ```
@@ -48,6 +50,7 @@ This table shows, how the spare_base relates to the table size. The values shoul
     return std::size_t(1) << sparse_base;
   }
 ```
+<div class="table2" markdown="1">
 | sparse_base | table.size    |
 |------------:|--------------:|
 | 4 | 16 |
@@ -67,6 +70,7 @@ This table shows, how the spare_base relates to the table size. The values shoul
 | 18 | 262144 |
 | 19 | 524288 |
 | 20 | 1048576 |
+</div>
 
 For a given *sparse_base* the *shift* is set to
 ```
