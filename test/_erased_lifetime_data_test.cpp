@@ -18,6 +18,21 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::erased;
 
+template <typename META_DATA> // obsolate! replace with base<>!
+struct with_meta {
+  META_DATA meta_data_;
+  template <typename T>
+  with_meta(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
+  void* data() {
+    return &static_cast<typed<int, with_meta<META_DATA>>*>(this)->the_data_;
+  }
+  void const* data() const {
+    return &static_cast<typed<int, with_meta<META_DATA>> const*>(this)
+                ->the_data_;
+  }
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
+};
+
 #define DATA_ALIGNED(T, META_DATA) data::typed<T, data::with_meta<META_DATA>>
 
 #define ASSERT_OFFSET_EMPTY(T, o) \

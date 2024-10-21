@@ -12,24 +12,28 @@ namespace virtual_void::erased {
 template <typename VOID>
 bool is_const_void;
 template <>
-bool is_const_void<void*> = false;
+constexpr bool is_const_void<void*> = false;
 template <>
-bool is_const_void<void const*> = true;
+constexpr bool is_const_void<void const*> = true;
 
 template <typename DATA_PTR>
 struct lifetime_handle;
 
 template <typename DATA_PTR>
-struct data_trait {
-  using void_t = const void*;
-  static auto data(const auto& ptr);
-  static auto data(auto& ptr);
-  static auto meta(const auto& ptr);
-  template <typename T>
-  static DATA_PTR construct_from(T&&);
-  template <typename ARG>
-  auto operator()(ARG&& arg) {
-    return lifetime_handle<DATA_PTR>(std::forward<ARG>(arg));
+struct data_trait;
+// using void_t = const void*;
+// static auto data(const auto& ptr);
+// static auto data(auto& ptr);
+// static auto meta(const auto& ptr);
+// template <typename T>
+// static DATA_PTR construct_from(T&&);
+// template <typename ARG>
+
+template <typename DATA_PTR>
+struct data_trait_base {
+  template <typename... ARGS>
+  auto operator()(ARGS&&... args) {
+    return lifetime_handle<DATA_PTR>(std::forward<ARGS>(args)...);
   }  // for migration to lifteime_handle! delete after migration!
 };
 
@@ -37,17 +41,22 @@ template <typename DATA_PTR>
 struct lifetime_handle {
   DATA_PTR data_ = nullptr;
 
-  using void_t = data_trait<DATA_PTR>::void_t;
+  using trait_t = data_trait<DATA_PTR>;
+  using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
-  using make_erased = data_trait<DATA_PTR>;
+  using make_erased = trait_t;
 
-  auto data() const { return data_trait::data(data_); }
-  auto data()
+  void const* data()
+    requires is_const
+  {
+    return trait_t::data(data_);
+  }
+  void* data()
     requires !is_const
   {
-    return data_trait::data(data_);
+    return trait_t::data(data_);
   }
-  auto meta() const { return data_trait::meta(data_); }
+  auto meta() const { return trait_t::meta(data_); }
 
   lifetime_handle(const lifetime_handle&) = default;
   lifetime_handle(lifetime_handle&) = default;

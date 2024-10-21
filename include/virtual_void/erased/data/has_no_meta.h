@@ -5,6 +5,7 @@
 namespace virtual_void::erased::data {
 
 struct has_no_meta {
+  const has_no_meta* meta() const { return this; }
   template <typename T>
   has_no_meta(std::in_place_type_t<T>) {}
   type_info_ptr type_info() const { return {}; }

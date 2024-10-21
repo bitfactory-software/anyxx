@@ -41,20 +41,6 @@ void const* base<META_DATA>::data() const {
   return &static_cast<typed<int, META_DATA> const*>(this)->the_data_;
 };
 
-template <typename META_DATA>
-struct with_meta {
-  META_DATA meta_data_;
-  template <typename T>
-  with_meta(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
-  void* data() {
-    return &static_cast<typed<int, with_meta<META_DATA>>*>(this)->the_data_;
-  }
-  void const* data() const {
-    return &static_cast<typed<int, with_meta<META_DATA>> const*>(this)
-                ->the_data_;
-  }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
-};
 
 using with_no_meta = base<has_no_meta>;
 using with_type_info = base<has_type_info>;
