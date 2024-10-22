@@ -39,13 +39,13 @@ void const* base<META_DATA>::value() const {
   return &static_cast<holder<int, META_DATA> const*>(this)->value_;
 };
 
-template <typename TO, typename BASE>
-TO const* unerase_cast(BASE const& data) {
-  return static_cast<TO const*>(data.value());
+template <typename TO, typename META_DATA>
+TO const* unerase_cast(base<META_DATA> const& holded) {
+  return static_cast<TO const*>(holded.value());
 }
-template <typename TO, typename BASE>
-TO* unerase_cast(BASE& data) {
-  return static_cast<TO*>(data.value());
+template <typename TO, typename META_DATA>
+TO* unerase_cast(base<META_DATA>& holded) {
+  return static_cast<TO*>(holded.value());
 }
 
 }  // namespace virtual_void::erased::data

@@ -18,34 +18,49 @@ using namespace TestDomain;
 namespace {
 
 TEST_CASE("m_table/lifetime/observer") {
-  static_assert(std::same_as<erased::select_observer_t<std::string,erased::data::has_m_table>,
-                             m_table::mutable_observer>);
-  static_assert(std::same_as<erased::select_observer_t<const std::string,erased::data::has_m_table>,
-                             m_table::const_observer>);
-
   std::string s{"hallo"};
   auto mo = m_table::mutable_observer(s);
   REQUIRE(mo.data() == &s);
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
-  REQUIRE(mo.get_m_table() == m_table_of<std::string>());
+  REQUIRE(mo.meta()->get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   static_assert(
-      std::derived_from<m_table::mutable_observer, erased::observer<void*,erased::data::has_m_table>>);
+      std::derived_from<m_table::mutable_observer,
+                        erased::lifetime_handle<erased::data::observer_ptr<
+                            void*, erased::data::has_m_table>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
-  static_assert(std::same_as<m_table::typed_observer<std::string>::conrete_t,
-                             std::string>);
   static_assert(
-      std::same_as<m_table::typed_observer<std::string const>::conrete_t,
+      std::same_as<m_table::typed_mutable_observer<std::string>::value_t,
+                   std::string>);
+  static_assert(
+      std::same_as<m_table::typed_const_observer<std::string const>::value_t,
                    std::string const>);
   auto co = m_table::const_observer(s);
   REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
-  auto tmo = m_table::typed_observer<std::string>(mo);
-  static_assert(std::derived_from<decltype(tmo), m_table::mutable_observer>);
-  REQUIRE(*tmo == "hallo");
-  *tmo = "world";
-  REQUIRE(s == "world");
-  REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
-  REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
+  {
+    REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
+    auto tmo = as<std::string>(std::move(mo));
+    static_assert(std::derived_from<decltype(tmo), m_table::mutable_observer>);
+    REQUIRE(*tmo == "hallo");
+    *tmo = "world";
+    REQUIRE(s == "world");
+    REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
+  }
+  {
+    mo = m_table::mutable_observer(s);
+    REQUIRE(*reconcrete_cast<const std::string>(mo) == "world");
+    *reconcrete_cast<std::string>(mo) = "hallo";
+    REQUIRE(s == "hallo");
+    auto tmo = as<std::string>(mo);
+    REQUIRE(*reconcrete_cast<std::string>(mo) == "hallo");
+    REQUIRE(mo);
+    static_assert(std::derived_from<decltype(tmo), m_table::mutable_observer>);
+    REQUIRE(*tmo == "hallo");
+    *tmo = "world";
+    REQUIRE(s == "world");
+    REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
+    REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
+  }
   // auto tmo2 = m_table::typed_observer< std::string * >{ co }; // shall not
   // compile
 }

@@ -49,10 +49,10 @@ struct lifetime_handle {
 
   lifetime_handle(const lifetime_handle&) = default;
   lifetime_handle(lifetime_handle&) = default;
-  lifetime_handle(lifetime_handle&&) = default;
+  lifetime_handle(lifetime_handle&&) noexcept = default;
   lifetime_handle& operator=(const lifetime_handle&) = default;
   lifetime_handle& operator=(lifetime_handle&) = default;
-  lifetime_handle& operator=(lifetime_handle&&) = default;
+  lifetime_handle& operator=(lifetime_handle&&) noexcept = default;
   template <typename V>
   explicit lifetime_handle(V&& v)
     requires(!std::derived_from<std::decay_t<V>, lifetime_handle> &&
@@ -115,7 +115,7 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
   typed_lifetime_handle& operator=(typed_lifetime_handle&&) = default;
   template <typename FROM>
   explicit typed_lifetime_handle(FROM&& from)
-    requires(!std::derived_from<std::decay_t<V>, lifetime_handle_t> &&
+    requires(!std::derived_from<std::decay_t<FROM>, lifetime_handle_t> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
       : lifetime_handle_t(std::in_place_type<V>, std::forward<FROM>(from)) {}
   explicit typed_lifetime_handle(DATA_PTR data) : lifetime_handle(std::move(data)) {}
@@ -141,17 +141,13 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
   explicit typed_lifetime_handle(lifetime_handle_t&& lifetime_handle)
       : lifetime_handle_t(std::move(lifetime_handle)) {}
   template <typename V, typename DATA_PTR>
-  friend auto as(lifetime_handle<DATA_PTR>&& source);
+  friend auto as(lifetime_handle<DATA_PTR> source);
 };
 
 template <typename V, typename DATA_PTR>
-auto as(lifetime_handle<DATA_PTR>&& source) {
+auto as(lifetime_handle<DATA_PTR> source) {
   return typed_lifetime_handle<V, DATA_PTR>{std::move(source)};
 }
-// template <typename V, typename DATA_PTR>
-// auto as(const lifetime_handle<DATA_PTR>& source) {
-//   return typed_lifetime_handle<V, DATA_PTR>{source};
-// }
 
 // static_assert(is_erased_lifetime_holder<mutable_lifetime_handle<>>);
 // static_assert(is_erased_lifetime_holder<const_lifetime_handle<>>);
