@@ -146,8 +146,10 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
 };
 
 template <typename V, typename DATA_PTR>
-auto as(lifetime_handle<DATA_PTR> source)
-{
+auto as(lifetime_handle<DATA_PTR> source) {
+  if constexpr (lifetime_handle<DATA_PTR>::is_const) {
+      static_assert(std::is_const_v<V>);
+  }
   return typed_lifetime_handle<V, DATA_PTR>{std::move(source)};
 }
 
