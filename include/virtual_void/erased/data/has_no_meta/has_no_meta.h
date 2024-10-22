@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../forward.h"
+#include "../typed.h"
 
 namespace virtual_void::erased::data {
 
@@ -11,5 +11,7 @@ struct has_no_meta {
   type_info_ptr type_info() const { return {}; }
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_no_meta() = default;
 };
+
+using with_no_meta = base<has_no_meta>;
 
 }  // namespace virtual_void::erased::data

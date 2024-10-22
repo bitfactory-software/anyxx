@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/data/has_no_meta.h"
+#include "../include/virtual_void/erased/data/has_no_meta/has_no_meta.h"
 #include "../include/virtual_void/erased/lifetime/data.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/shared_const.h"

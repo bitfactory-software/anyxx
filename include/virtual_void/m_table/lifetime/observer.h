@@ -5,19 +5,19 @@
 
 #include "../../erased/lifetime/observer.h"
 #include "../../forward.h"
-#include "../data/has_m_table.h"
+#include "../../erased/data/has_m_table/has_m_table.h"
 
 namespace virtual_void::m_table {
 
 template <typename VOID>
-using observer = erased::observer<VOID, data::has_m_table>;
+using observer = erased::observer<VOID, erased::data::has_m_table>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 static_assert(const_observer::is_const);
 static_assert(!mutable_observer::is_const);
 
 template <typename T>
-using typed_observer = erased::typed_observer<T, data::has_m_table>;   
+using typed_observer = erased::typed_observer<T, erased::data::has_m_table>;   
 
 struct make_mutable_observer {
   template <typename FROM>

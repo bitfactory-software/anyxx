@@ -18,9 +18,9 @@ using namespace TestDomain;
 namespace {
 
 TEST_CASE("m_table/lifetime/observer") {
-  static_assert(std::same_as<erased::select_observer_t<std::string,m_table::data::has_m_table>,
+  static_assert(std::same_as<erased::select_observer_t<std::string,erased::data::has_m_table>,
                              m_table::mutable_observer>);
-  static_assert(std::same_as<erased::select_observer_t<const std::string,m_table::data::has_m_table>,
+  static_assert(std::same_as<erased::select_observer_t<const std::string,erased::data::has_m_table>,
                              m_table::const_observer>);
 
   std::string s{"hallo"};
@@ -30,7 +30,7 @@ TEST_CASE("m_table/lifetime/observer") {
   REQUIRE(mo.get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   static_assert(
-      std::derived_from<m_table::mutable_observer, erased::observer<void*,m_table::data::has_m_table>>);
+      std::derived_from<m_table::mutable_observer, erased::observer<void*,erased::data::has_m_table>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(std::same_as<m_table::typed_observer<std::string>::conrete_t,
                              std::string>);

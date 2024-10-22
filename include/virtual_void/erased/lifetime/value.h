@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../data/has_no_meta.h"
+#include "../data/has_no_meta/has_no_meta.h"
 #include "../data/value_ptr.h"
 #include "../lifetime_handle.h"
 

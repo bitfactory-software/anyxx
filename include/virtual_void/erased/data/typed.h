@@ -2,9 +2,6 @@
 
 #include "../../forward.h"
 
-#include "has_no_meta.h"
-#include "has_type_info.h"
-
 namespace virtual_void::erased::data {
 
 #ifdef _DEBUG
@@ -13,7 +10,7 @@ namespace virtual_void::erased::data {
 #define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
 #endif  // DEBUG
 
-template <typename META_DATA = has_no_meta>
+template <typename META_DATA>
 struct base : META_DATA {
   template <typename V>
   base(std::in_place_type_t<V>) : META_DATA(std::in_place_type<V>) {}
@@ -21,7 +18,7 @@ struct base : META_DATA {
   void const* value() const;
 };
 
-template <typename V, typename META_DATA = has_no_meta>
+template <typename V, typename META_DATA>
 struct typed : base<META_DATA> {
   using meta_data_t = META_DATA;
   using base_t = base<META_DATA>;
@@ -41,9 +38,6 @@ template <typename META_DATA>
 void const* base<META_DATA>::value() const {
   return &static_cast<typed<int, META_DATA> const*>(this)->value_;
 };
-
-using with_no_meta = base<has_no_meta>;
-using with_type_info = base<has_type_info>;
 
 template <typename TO, typename BASE>
 TO const* unerase_cast(BASE const& data) {

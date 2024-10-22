@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../m_table.h"
+#include "../../../m_table/m_table.h"
+#include "../typed.h"
 
-namespace virtual_void::m_table::data {
+namespace virtual_void::erased::data {
 
 struct has_m_table {
   m_table_t* m_table_;
@@ -13,5 +14,7 @@ struct has_m_table {
   m_table_t* get_m_table() const { return m_table_; }
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_m_table() = default;
 };
+
+using with_type_info = base<has_type_info>;
 
 }  // namespace virtual_void::erased::data

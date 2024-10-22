@@ -5,6 +5,7 @@
 #include <typeindex>
 #include <vector>
 
+#include "../erased/data/has_no_meta/has_no_meta.h"
 #include "../erased/data/value_ptr.h"
 
 namespace virtual_void::open_object {
@@ -18,11 +19,11 @@ std::size_t& type_member_count_of() {
 template <typename OBJECT_TYPE>
 struct members {
   members() : table_(type_member_count_of<OBJECT_TYPE>()) {}
-  std::vector<erased::data::value_ptr<erased::data::base<erased::data::has_no_meta>>> table_;
+  std::vector<erased::data::value_ptr<erased::data::with_no_meta>> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
-    using value_data_t = erased::data::typed<value_t>;
+    using value_data_t = erased::data::typed<value_t,erased::data::has_no_meta>;
     table_[OBJECT_MEMBER::get_index()] =
         erased::data::make_value<value_data_t>(std::forward<ARG>(arg));
   }
