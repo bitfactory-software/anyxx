@@ -84,7 +84,7 @@ struct make_unique_t {
   }
 };
 
-static_assert(erased::is_erased_lifetime_holder<unique>);
-static_assert(erased::is_erased_lifetime_holder<typed_unique<int> >);
+static_assert(erased::is_virtual_void<unique>);
+static_assert(erased::is_virtual_void<typed_unique<int> >);
 
 }  // namespace virtual_void::erased

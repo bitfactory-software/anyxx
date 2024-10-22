@@ -108,7 +108,7 @@ struct make_shared_const_t {
         std::forward<FROM>(from));
   }
 };
-static_assert(erased::is_erased_lifetime_holder<shared_const>);
-static_assert(erased::is_erased_lifetime_holder<typed_shared_const<int> >);
+static_assert(erased::is_virtual_void<shared_const>);
+static_assert(erased::is_virtual_void<typed_shared_const<int> >);
 
 }  // namespace virtual_void::m_table

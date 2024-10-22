@@ -119,7 +119,7 @@ struct make_shared_const_t {
   }
 };
 
-static_assert(is_erased_lifetime_holder<shared_const>);
-static_assert(is_erased_lifetime_holder<typed_shared_const<int> >);
+static_assert(is_virtual_void<shared_const>);
+static_assert(is_virtual_void<typed_shared_const<int> >);
 
 }  // namespace virtual_void::erased

@@ -30,35 +30,35 @@ struct interface_base {
         }){};
 };
 
-template <is_erased_lifetime_holder LIFETIME_HOLDER>
+template <is_virtual_void VIRTUAL_VOID>
 class base {
  public:
-  using lifetime_holder_t = LIFETIME_HOLDER;
-  using interface_t = interface_base<typename LIFETIME_HOLDER::void_t>;
+  using virtual_void_t = VIRTUAL_VOID;
+  using interface_t = interface_base<typename VIRTUAL_VOID::void_t>;
   template <typename>
   using is_already_base =
       std::false_type;  // base is always at the bottom of the interface chain.
  protected:
-  lifetime_holder_t lifetime_holder_ = nullptr;
+  virtual_void_t lifetime_holder_ = nullptr;
   interface_t* interface_impementation_ = nullptr;
 
  public:
-  base(lifetime_holder_t lifetime_holder, interface_t* v_table)
+  base(virtual_void_t lifetime_holder, interface_t* v_table)
       : lifetime_holder_(std::move(lifetime_holder)),
         interface_impementation_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   base(CONSTRUCTED_WITH&& constructed_with)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
-                                base<LIFETIME_HOLDER>>)
-      : lifetime_holder_(virtual_void::erased::erase_to<lifetime_holder_t>(
+                                base<VIRTUAL_VOID>>)
+      : lifetime_holder_(virtual_void::erased::erase_to<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     static interface_t imlpemented_interface{
-        virtual_void::erased::unerase<LIFETIME_HOLDER, CONSTRUCTED_WITH>()};
+        virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     interface_impementation_ = &imlpemented_interface;
   }
   template <typename OTHER>
   base(const OTHER& other)
-    requires(std::derived_from<OTHER, base<LIFETIME_HOLDER>>)
+    requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
       : lifetime_holder_(other.get_lifetime_holder()),
         interface_impementation_(other.get_interface()) {}
   base(const base&) = default;
@@ -103,7 +103,7 @@ std::optional<TO> interface_cast(const FROM& from)
 template <typename TO, typename FROM>
 TO interface_lifetime_cast(const FROM& from) {
   return TO(
-      lifetime_cast<typename TO::lifetime_holder_t>(from.get_lifetime_holder()),
+      lifetime_cast<typename TO::virtual_void_t>(from.get_lifetime_holder()),
       v_table_cast<TO>(from.get_interface()));
 }
 
@@ -195,7 +195,7 @@ TO interface_lifetime_cast(const FROM& from) {
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                   \
   type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_   \
     requires(virtual_void::erased::const_correct_for_lifetime_holder<       \
-             void const_, lifetime_holder_t>)                              \
+             void const_, virtual_void_t>)                              \
   {                                                                         \
     return static_cast<interface_t*>(interface_impementation_)              \
         ->name(base_t::lifetime_holder_.data()                              \
@@ -232,16 +232,16 @@ TO interface_lifetime_cast(const FROM& from) {
     };                                                                         \
   };                                                                           \
                                                                                \
-  template <virtual_void::erased::is_erased_lifetime_holder LIFETIME_HOLDER>   \
-  struct n : BASE<LIFETIME_HOLDER> {                                           \
+  template <virtual_void::erased::is_virtual_void VIRTUAL_VOID>   \
+  struct n : BASE<VIRTUAL_VOID> {                                           \
    public:                                                                     \
-    using lifetime_holder_t = LIFETIME_HOLDER;                                 \
-    using void_t = LIFETIME_HOLDER::void_t;                                    \
-    using base_t = BASE<LIFETIME_HOLDER>;                                      \
+    using virtual_void_t = VIRTUAL_VOID;                                 \
+    using void_t = VIRTUAL_VOID::void_t;                                    \
+    using base_t = BASE<VIRTUAL_VOID>;                                      \
     using interface_base_t = base_t::interface_t;                              \
     using interface_t = n##interface<interface_base_t>;                        \
     using query_interface_unique_t =                                           \
-        n##interface<virtual_void::erased::base<lifetime_holder_t>>;           \
+        n##interface<virtual_void::erased::base<virtual_void_t>>;           \
     template <typename T>                                                      \
     using is_already_base =                                                    \
         std::conditional_t<std::is_same_v<T, query_interface_unique_t>,        \
@@ -256,7 +256,7 @@ TO interface_lifetime_cast(const FROM& from) {
     using base_t::interface_impementation_;                                    \
                                                                                \
    public:                                                                     \
-    n(lifetime_holder_t lifetime_holder, interface_t* v_table)                 \
+    n(virtual_void_t lifetime_holder, interface_t* v_table)                 \
         : base_t(std::move(lifetime_holder), v_table) {}                       \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
@@ -264,7 +264,7 @@ TO interface_lifetime_cast(const FROM& from) {
           !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)   \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       static interface_t imlpemented_interface{                                \
-          virtual_void::erased::unerase<LIFETIME_HOLDER, CONSTRUCTED_WITH>()}; \
+          virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()}; \
       interface_impementation_ = &imlpemented_interface;                       \
     }                                                                          \
     template <typename OTHER>                                                  \

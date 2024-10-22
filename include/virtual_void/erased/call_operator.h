@@ -24,23 +24,23 @@ struct call_operator_interface : BASE_V_TABLE {
   }
 };
 
-template <is_erased_lifetime_holder LIFETIME_HOLDER,
+template <is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE, typename CONST, typename RET,
           typename... ARGS>
 struct call_operator_facade;
-template <is_erased_lifetime_holder LIFETIME_HOLDER,
+template <is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE, typename CONST, typename RET,
           typename... ARGS>
-struct call_operator_facade<LIFETIME_HOLDER, BASE, CONST, RET(ARGS...)>
-    : BASE<LIFETIME_HOLDER> {
+struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
+    : BASE<VIRTUAL_VOID> {
  public:
-  using lifetime_holder_t = LIFETIME_HOLDER;
-  using void_t = LIFETIME_HOLDER::void_t;
-  using base_t = BASE<LIFETIME_HOLDER>;
+  using virtual_void_t = VIRTUAL_VOID;
+  using void_t = VIRTUAL_VOID::void_t;
+  using base_t = BASE<VIRTUAL_VOID>;
   using interface_base_t = base_t::interface_t;
   using interface_t = call_operator_interface<interface_base_t, RET, ARGS...>;
   using query_interface_unique_t =
-      call_operator_interface<virtual_void::erased::base<lifetime_holder_t>,
+      call_operator_interface<virtual_void::erased::base<virtual_void_t>,
                               void>;
   template <typename T>
   using is_already_base =
@@ -55,14 +55,14 @@ struct call_operator_facade<LIFETIME_HOLDER, BASE, CONST, RET(ARGS...)>
   using base_t::lifetime_holder_;
 
  public:
-  call_operator_facade(lifetime_holder_t lifetime_holder, interface_t* v_table)
+  call_operator_facade(virtual_void_t lifetime_holder, interface_t* v_table)
       : base_t(std::move(lifetime_holder), v_table) {}
   template <typename CONSTRUCTED_WITH>
   call_operator_facade(CONSTRUCTED_WITH&& v)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static interface_t imlpemented_interface{
-        virtual_void::erased::unerase<LIFETIME_HOLDER, CONSTRUCTED_WITH>()};
+        virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     interface_impementation_ = &imlpemented_interface;
   }
   template <typename OTHER>
@@ -71,7 +71,7 @@ struct call_operator_facade<LIFETIME_HOLDER, BASE, CONST, RET(ARGS...)>
       : base_t(other) {}
   RET operator()(ARGS&&... args) const
     requires(virtual_void::erased::const_correct_for_lifetime_holder<
-             CONST, lifetime_holder_t>)
+             CONST, virtual_void_t>)
   {
     return static_cast<interface_t*>(interface_impementation_)
         ->call_op(base_t::lifetime_holder_.data(), std::forward<ARGS>(args)...);
@@ -83,14 +83,14 @@ struct call_operator_facade<LIFETIME_HOLDER, BASE, CONST, RET(ARGS...)>
  protected:
   call_operator_facade() = default;
 };
-template <typename SIG, is_erased_lifetime_holder LIFETIME_HOLDER,
+template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
 using call_operator =
-    call_operator_facade<LIFETIME_HOLDER, BASE, const void, SIG>;
+    call_operator_facade<VIRTUAL_VOID, BASE, const void, SIG>;
 
-template <typename SIG, is_erased_lifetime_holder LIFETIME_HOLDER,
+template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base >
 using mutable_call_operator =
-    call_operator_facade<LIFETIME_HOLDER, BASE, void, SIG>;
+    call_operator_facade<VIRTUAL_VOID, BASE, void, SIG>;
 
 };  // namespace virtual_void::erased

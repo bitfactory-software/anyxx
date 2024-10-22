@@ -75,11 +75,11 @@ using typed_mutable_observer = typed_observer<V, void*>;
 static_assert(const_observer::is_const);
 static_assert(!mutable_observer::is_const);
 
-static_assert(is_erased_lifetime_holder<const_observer>);
-static_assert(is_erased_lifetime_holder<mutable_observer>);
-static_assert(is_erased_lifetime_holder<mutable_observer>);
-static_assert(is_erased_lifetime_holder<const_observer>);
-static_assert(is_erased_lifetime_holder<typed_const_observer<int>>);
-static_assert(is_erased_lifetime_holder<typed_mutable_observer<int>>);
+static_assert(is_virtual_void<const_observer>);
+static_assert(is_virtual_void<mutable_observer>);
+static_assert(is_virtual_void<mutable_observer>);
+static_assert(is_virtual_void<const_observer>);
+static_assert(is_virtual_void<typed_const_observer<int>>);
+static_assert(is_virtual_void<typed_mutable_observer<int>>);
 
 }  // namespace virtual_void::erased
