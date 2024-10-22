@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/call_operator.h"
+#include "../include/virtual_void/erased/interface.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/value.h"
 #include "include/catch.hpp"
@@ -13,13 +13,10 @@ using namespace Catch::Matchers;
 
 namespace virtual_void::erased {
 template <typename SIG>
-using function =
-    virtual_void::erased::call_operator<SIG, erased::value,
-                                        virtual_void::erased::base>;
+using function = erased::call_operator<SIG, erased::value, erased::base>;
 template <typename SIG>
 using ref_function =
-    virtual_void::erased::call_operator<SIG, erased::mutable_observer,
-                                        virtual_void::erased::base>;
+    erased::call_operator<SIG, erased::mutable_observer, erased::base>;
 }  // namespace virtual_void::erased
 
 using namespace virtual_void;

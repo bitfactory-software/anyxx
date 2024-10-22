@@ -9,7 +9,7 @@
 #include "../include/virtual_void/erased/data/shared_const_ptr.h"
 #include "../include/virtual_void/erased/data/unique_ptr.h"
 #include "../include/virtual_void/erased/data/value_ptr.h"
-#include "../include/virtual_void/erased/lifetime_handle.h"
+#include "../include/virtual_void/erased/virtual_void.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

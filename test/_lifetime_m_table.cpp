@@ -26,7 +26,7 @@ TEST_CASE("m_table/lifetime/observer") {
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   static_assert(
       std::derived_from<m_table::mutable_observer,
-                        erased::lifetime_handle<erased::data::observer_ptr<
+                        erased::virtual_void<erased::data::observer_ptr<
                             void*, erased::data::has_m_table>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(

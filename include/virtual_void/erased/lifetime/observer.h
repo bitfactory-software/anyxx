@@ -5,7 +5,7 @@
 
 #include "../../erased/data/has_no_meta/has_no_meta.h"
 #include "../../erased/data/observer_ptr.h"
-#include "../../erased/lifetime_handle.h"
+#include "../../erased/virtual_void.h"
 
 namespace virtual_void::erased {
 
@@ -46,13 +46,13 @@ struct data_trait<observer_ptr<VOID>> : data_trait_base<observer_ptr<VOID>> {
   }
   template <typename FROM>
   auto operator()(FROM& from) {
-    return lifetime_handle<observer_ptr<VOID>>(from);
+    return virtual_void<observer_ptr<VOID>>(from);
   }  // for migration to lifteime_handle! delete after migration!
   template <typename FROM>
   auto operator()(const FROM& from)
     requires observer_ptr<VOID>::is_const
   {
-    return lifetime_handle<observer_ptr<VOID>>(from);
+    return virtual_void<observer_ptr<VOID>>(from);
   }  // for migration to lifteime_handle! delete after migration!
 };
 
@@ -61,12 +61,12 @@ struct data_trait<observer_ptr<VOID>> : data_trait_base<observer_ptr<VOID>> {
 namespace virtual_void::erased {
 
 template <typename VOID>
-using observer = lifetime_handle<observer_ptr<VOID>>;
+using observer = virtual_void<observer_ptr<VOID>>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 
 template <typename V, typename VOID>
-using typed_observer = typed_lifetime_handle<V, observer_ptr<VOID>>;
+using typed_observer = virtual_typed<V, observer_ptr<VOID>>;
 template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>

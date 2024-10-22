@@ -17,7 +17,7 @@ template <>
 constexpr bool is_const_void<void const*> = true;
 
 template <typename DATA_PTR>
-struct lifetime_handle;
+struct virtual_void;
 
 template <typename DATA_PTR>
 struct data_trait;
@@ -33,12 +33,12 @@ template <typename DATA_PTR>
 struct data_trait_base {
   template <typename FROM>
   auto operator()(FROM&& from) {
-    return lifetime_handle<DATA_PTR>(std::forward<FROM>(from));
+    return virtual_void<DATA_PTR>(std::forward<FROM>(from));
   }  // for migration to lifteime_handle! delete after migration!
 };
 
 template <typename DATA_PTR>
-struct lifetime_handle {
+struct virtual_void {
   DATA_PTR data_ = nullptr;
 
   using data_t = DATA_PTR;
@@ -47,22 +47,22 @@ struct lifetime_handle {
   static constexpr bool is_const = is_const_void<void_t>;
   using make_erased = trait_t;
 
-  lifetime_handle(const lifetime_handle&) = default;
-  lifetime_handle(lifetime_handle&) = default;
-  lifetime_handle(lifetime_handle&&) noexcept = default;
-  lifetime_handle& operator=(const lifetime_handle&) = default;
-  lifetime_handle& operator=(lifetime_handle&) = default;
-  lifetime_handle& operator=(lifetime_handle&&) noexcept = default;
+  virtual_void(const virtual_void&) = default;
+  virtual_void(virtual_void&) = default;
+  virtual_void(virtual_void&&) noexcept = default;
+  virtual_void& operator=(const virtual_void&) = default;
+  virtual_void& operator=(virtual_void&) = default;
+  virtual_void& operator=(virtual_void&&) noexcept = default;
   template <typename V>
-  explicit lifetime_handle(V&& v)
-    requires(!std::derived_from<std::decay_t<V>, lifetime_handle> &&
+  explicit virtual_void(V&& v)
+    requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
       : data_(trait_t::construct_from(std::forward<V>(v))) {}
   template <typename V, typename... ARGS>
-  lifetime_handle(std::in_place_type_t<V>, ARGS&&... args)
+  virtual_void(std::in_place_type_t<V>, ARGS&&... args)
       : data_(trait_t::construct_in_place(std::in_place_type<V>,
                                           std::forward<ARGS>(args)...)) {}
-  explicit lifetime_handle(DATA_PTR data) : data_(std::move(data)) {}
+  explicit virtual_void(DATA_PTR data) : data_(std::move(data)) {}
 
   // only for migration to lifetime handle, remove and replace use to "value()"!
   void const* data() const
@@ -91,35 +91,35 @@ struct lifetime_handle {
 };
 
 template <typename U, typename DATA_PTR>
-auto reconcrete_cast(lifetime_handle<DATA_PTR> const& o) {
+auto reconcrete_cast(virtual_void<DATA_PTR> const& o) {
   return static_cast<U const*>(o.data());
 }
 template <typename U, typename DATA_PTR>
-auto reconcrete_cast(lifetime_handle<DATA_PTR> const& o)
-  requires !lifetime_handle<DATA_PTR>::is_const
+auto reconcrete_cast(virtual_void<DATA_PTR> const& o)
+  requires !virtual_void<DATA_PTR>::is_const
 {
   return static_cast<U*>(o.data());
 }
 
 template <typename V, typename DATA_PTR>
-struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
+struct virtual_typed : public virtual_void<DATA_PTR> {
   using value_t = V;
-  using lifetime_handle_t = lifetime_handle<DATA_PTR>;
+  using lifetime_handle_t = virtual_void<DATA_PTR>;
   using lifetime_handle_t::lifetime_handle_t;
 
-  typed_lifetime_handle(const typed_lifetime_handle&) = default;
-  typed_lifetime_handle(typed_lifetime_handle&) = default;
-  typed_lifetime_handle(typed_lifetime_handle&&) = default;
-  typed_lifetime_handle& operator=(const typed_lifetime_handle&) = default;
-  typed_lifetime_handle& operator=(typed_lifetime_handle&) = default;
-  typed_lifetime_handle& operator=(typed_lifetime_handle&&) = default;
+  virtual_typed(const virtual_typed&) = default;
+  virtual_typed(virtual_typed&) = default;
+  virtual_typed(virtual_typed&&) = default;
+  virtual_typed& operator=(const virtual_typed&) = default;
+  virtual_typed& operator=(virtual_typed&) = default;
+  virtual_typed& operator=(virtual_typed&&) = default;
   template <typename FROM>
-  explicit typed_lifetime_handle(FROM&& from)
+  explicit virtual_typed(FROM&& from)
     requires(!std::derived_from<std::decay_t<FROM>, lifetime_handle_t> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
       : lifetime_handle_t(std::in_place_type<V>, std::forward<FROM>(from)) {}
-  explicit typed_lifetime_handle(DATA_PTR data)
-      : lifetime_handle(std::move(data)) {}
+  explicit virtual_typed(DATA_PTR data)
+      : virtual_void(std::move(data)) {}
 
   value_t const& operator*() const {
     return *static_cast<value_t*>(this->value());
@@ -139,18 +139,18 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
   }
 
  private:
-  explicit typed_lifetime_handle(lifetime_handle_t&& lifetime_handle)
-      : lifetime_handle_t(std::move(lifetime_handle)) {}
+  explicit virtual_typed(lifetime_handle_t&& virtual_void)
+      : lifetime_handle_t(std::move(virtual_void)) {}
   template <typename V, typename DATA_PTR>
-  friend auto as(lifetime_handle<DATA_PTR> source);
+  friend auto as(virtual_void<DATA_PTR> source);
 };
 
 template <typename V, typename DATA_PTR>
-auto as(lifetime_handle<DATA_PTR> source) {
-  if constexpr (lifetime_handle<DATA_PTR>::is_const) {
+auto as(virtual_void<DATA_PTR> source) {
+  if constexpr (virtual_void<DATA_PTR>::is_const) {
     static_assert(std::is_const_v<V>);
   }
-  return typed_lifetime_handle<V, DATA_PTR>{std::move(source)};
+  return virtual_typed<V, DATA_PTR>{std::move(source)};
 }
 
 }  // namespace virtual_void::erased

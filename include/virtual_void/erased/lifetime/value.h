@@ -5,7 +5,7 @@
 
 #include "../data/has_no_meta/has_no_meta.h"
 #include "../data/value_ptr.h"
-#include "../lifetime_handle.h"
+#include "../virtual_void.h"
 
 namespace virtual_void::erased {
 
@@ -30,9 +30,9 @@ struct data_trait<value_data_ptr> : data_trait_base<value_data_ptr> {
   }
 };
 
-using value = lifetime_handle<value_data_ptr>;
+using value = virtual_void<value_data_ptr>;
 template <typename T>
-using typed_value = typed_lifetime_handle<T, value_data_ptr>;
+using typed_value = virtual_typed<T, value_data_ptr>;
 
 static_assert(erased::is_erased_lifetime_holder<value>);
 static_assert(erased::is_erased_lifetime_holder<typed_value<int>>);

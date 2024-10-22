@@ -122,10 +122,10 @@ TEST_CASE("erased/lifetime/value") {
   }
   {
     auto u1 = value(A{"hallo"});
-    static_assert(std::same_as<decltype(u1), lifetime_handle<value_data_ptr>>);
+    static_assert(std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
     static_assert(
-        !std::derived_from<std::decay_t<decltype(u1)>,
-                           lifetime_handle<lifetime_handle<value_data_ptr>>> &&
+        std::derived_from<std::decay_t<decltype(u1)>,
+                           erased::virtual_void<value_data_ptr>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);

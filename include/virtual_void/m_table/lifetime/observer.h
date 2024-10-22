@@ -5,7 +5,7 @@
 
 #include "../../erased/data/has_m_table/has_m_table.h"
 #include "../../erased/data/observer_ptr.h"
-#include "../../erased/lifetime_handle.h"
+#include "../../erased/virtual_void.h"
 
 namespace virtual_void::m_table {
 template <typename VOID>
@@ -40,12 +40,12 @@ struct data_trait<m_table::observer_ptr<VOID>>
 namespace virtual_void::m_table {
 
 template <typename VOID>
-using observer = erased::lifetime_handle<m_table::observer_ptr<VOID>>;
+using observer = erased::virtual_void<m_table::observer_ptr<VOID>>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 
 template <typename V, typename VOID>
-using typed_observer = erased::typed_lifetime_handle<V, m_table::observer_ptr<VOID>>;
+using typed_observer = erased::virtual_typed<V, m_table::observer_ptr<VOID>>;
 template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>
