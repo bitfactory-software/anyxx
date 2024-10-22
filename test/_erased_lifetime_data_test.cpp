@@ -6,7 +6,7 @@
 
 #include "../include/virtual_void/erased/data/has_no_meta/has_no_meta.h"
 #include "../include/virtual_void/erased/data/shared_const_ptr.h"
-#include "../include/virtual_void/erased/data/typed.h"
+#include "../include/virtual_void/erased/data/holder.h"
 #include "../include/virtual_void/erased/data/unique_ptr.h"
 #include "../include/virtual_void/erased/data/value_ptr.h"
 #include "../include/virtual_void/erased/lifetime_handle.h"
