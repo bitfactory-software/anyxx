@@ -18,7 +18,7 @@ using function =
                                         virtual_void::erased::base>;
 template <typename SIG>
 using ref_function =
-    virtual_void::erased::call_operator<SIG, erased::mutable_observer<>,
+    virtual_void::erased::call_operator<SIG, erased::mutable_observer,
                                         virtual_void::erased::base>;
 }  // namespace virtual_void::erased
 

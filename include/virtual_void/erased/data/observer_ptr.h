@@ -25,8 +25,14 @@ struct observer_ptr : META {
   observer_ptr(const observer_ptr&) = default;
   observer_ptr(observer_ptr&) = default;
   template <typename T>
-  observer_ptr(T&& v)
-    requires(!std::derived_from<std::decay_t<T>, observer_ptr> &&
+  observer_ptr(T& v)
+    requires(!std::derived_from<T, observer_ptr> &&
+             !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void> &&
+             !is_const)
+      : META(std::in_place_type<T>), ptr_(&v) {}
+  template <typename T>
+  observer_ptr(const T& v)
+    requires(!std::derived_from<T, observer_ptr> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void>)
       : META(std::in_place_type<T>), ptr_(&v) {}
   observer_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}

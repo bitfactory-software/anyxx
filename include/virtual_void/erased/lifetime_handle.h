@@ -118,7 +118,8 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
     requires(!std::derived_from<std::decay_t<FROM>, lifetime_handle_t> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
       : lifetime_handle_t(std::in_place_type<V>, std::forward<FROM>(from)) {}
-  explicit typed_lifetime_handle(DATA_PTR data) : lifetime_handle(std::move(data)) {}
+  explicit typed_lifetime_handle(DATA_PTR data)
+      : lifetime_handle(std::move(data)) {}
 
   value_t const& operator*() const {
     return *static_cast<value_t*>(this->value());
@@ -145,7 +146,8 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
 };
 
 template <typename V, typename DATA_PTR>
-auto as(lifetime_handle<DATA_PTR> source) {
+auto as(lifetime_handle<DATA_PTR> source)
+{
   return typed_lifetime_handle<V, DATA_PTR>{std::move(source)};
 }
 

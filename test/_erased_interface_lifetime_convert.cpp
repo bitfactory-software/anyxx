@@ -25,7 +25,7 @@ struct X {
 ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 
 using to_string_sc = to_string_i<erased::shared_const>;
-using to_string_co = to_string_i<erased::const_observer<>>;
+using to_string_co = to_string_i<erased::const_observer>;
 
 namespace virtual_void::erased {
 template <typename ERASED_TO>
@@ -48,7 +48,7 @@ TEST_CASE("interface lifetime cast") {
   // static_assert( std::same_as<std::decay_t<void const *>,
   // std::add_const_t<void*>);
 
-  auto o1 = lifetime_cast<erased::const_observer<>>(sc.get_lifetime_holder());
+  auto o1 = lifetime_cast<erased::const_observer>(sc.get_lifetime_holder());
   auto x = erased::reconcrete_cast<X>(o1);
   auto x1 = static_cast<X const *>(sc.get_lifetime_holder().data());
   REQUIRE(x->s_ == "hallo");
@@ -57,5 +57,5 @@ TEST_CASE("interface lifetime cast") {
   REQUIRE(co.to_string() == "hallo");
   static_assert(
       std::same_as<to_string_co::interface_t, to_string_sc::interface_t>);
-  REQUIRE(co.is_derived_from<erased::base<erased::const_observer<>>>());
+  REQUIRE(co.is_derived_from<erased::base<erased::const_observer>>());
 }

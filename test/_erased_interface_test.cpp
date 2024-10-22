@@ -36,15 +36,15 @@ ERASED_INTERFACE(shape_i, (INTERFACE_CONST_METHOD(void, draw, position),
 
 using shape_vv = shape_i<virtual_void::m_table::shared_const>;
 
-using shape_base_v = shape_base<erased::const_observer<>>;
+using shape_base_v = shape_base<erased::const_observer>;
 
 using shape =
     virtual_void::erased::call_operator<std::string(std::string),
-                                        erased::const_observer<>, shape_d_i>;
-using shapeX = shape_d_i<erased::const_observer<>>;
-using shapeXX = shape_d_i<erased::const_observer<>>;
+                                        erased::const_observer, shape_d_i>;
+using shapeX = shape_d_i<erased::const_observer>;
+using shapeXX = shape_d_i<erased::const_observer>;
 
-using full_shape_observer = shape_i<erased::mutable_observer<>>;
+using full_shape_observer = shape_i<erased::mutable_observer>;
 
 struct circle {
   double radius;
@@ -147,7 +147,7 @@ TEST_CASE("dynamic interface const_observer") {
   print_shape(r);
   print_shape(p);
 
-  using erased_const_observer = erased::const_observer<>;
+  using erased_const_observer = erased::const_observer;
   static_assert(
       std::is_base_of_v<virtual_void::erased::base<erased_const_observer>,
                         shape>);
@@ -158,9 +158,9 @@ TEST_CASE("dynamic interface const_observer") {
 
   //    virtual_void::erased::base< void* > base_v = shape_circle; ->
   //    interface_cast may not compile!
-  virtual_void::erased::base<erased::const_observer<>> base_shape =
+  virtual_void::erased::base<erased::const_observer> base_shape =
       shape_circle;
-  virtual_void::erased::base<erased::const_observer<>> base_shapeX =
+  virtual_void::erased::base<erased::const_observer> base_shapeX =
       shape_circleX;
 
   REQUIRE(base_shape.is_derived_from<shape>());

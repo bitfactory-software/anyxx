@@ -32,21 +32,16 @@ TEST_CASE("erased/lifetime/data") {
 }
 TEST_CASE("erased/lifetime/observer") {
   {
-    static_assert(std::same_as<erased::select_observer_t<std::string>,
-                               erased::mutable_observer<>>);
-    static_assert(std::same_as<erased::select_observer_t<const std::string>,
-                               erased::const_observer<>>);
-
     std::string s{"hallo"};
-    auto mo = erased::mutable_observer<>(s);
-    static_assert(std::same_as<erased::typed_observer<std::string>::conrete_t,
+    auto mo = erased::mutable_observer(s);
+    static_assert(std::same_as<erased::typed_const_observer<std::string>::value_t,
                                std::string>);
     static_assert(
-        std::same_as<erased::typed_observer<std::string const>::conrete_t,
+        std::same_as<erased::typed_mutable_observer<std::string const>::value_t,
                      std::string const>);
-    auto co = erased::const_observer<>(s);
-    auto tmo = erased::typed_observer<std::string>(mo);
-    static_assert(std::derived_from<decltype(tmo), erased::mutable_observer<>>);
+    auto co = erased::const_observer(s);
+    auto tmo = as<std::string>(mo);
+    static_assert(std::derived_from<decltype(tmo), erased::mutable_observer>);
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
@@ -56,10 +51,12 @@ TEST_CASE("erased/lifetime/observer") {
   }
   {
     const std::string s{"hallo"};
-    // auto mo = erased::mutable_observer( &s ); // shall not compile
-    auto co = erased::const_observer<>(s);
-    auto tco = erased::typed_observer<std::string const>(co);
-    static_assert(std::derived_from<decltype(tco), erased::const_observer<>>);
+    //auto mo = erased::mutable_observer( &s ); // shall not compile
+    auto co = erased::const_observer(s);
+    static_assert(std::is_const_v<std::remove_reference_t<std::string const>> == true);
+    static_assert(erased::typed_observer<std::string const, void*>::is_const == false);
+    auto tco = as<std::string const>(co);
+    static_assert(std::derived_from<decltype(tco), erased::const_observer>);
     REQUIRE(*tco == "hallo");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   }

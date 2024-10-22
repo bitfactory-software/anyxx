@@ -36,7 +36,7 @@ struct test_interface {
 TEST_CASE("_interface_const_correct prototyping") {
   using namespace virtual_void;
   static_assert(!test_trait<void*>::is_const);
-  static_assert(erased::const_observer<>::is_const);
+  static_assert(erased::const_observer::is_const);
   test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
@@ -63,10 +63,10 @@ TEST_CASE("_interface_const_correct void (const) *") {
 
   using const_function =
       virtual_void::erased::call_operator<std::string(),
-                                          erased::const_observer<>>;
+                                          erased::const_observer>;
   using mutating_function =
       virtual_void::erased::mutable_call_operator<void(std::string),
-                                                  erased::mutable_observer<>>;
+                                                  erased::mutable_observer>;
 
   {
     functor function_object;
@@ -125,7 +125,7 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   {
     functor const const_function_object;
     const_function cf = const_function_object;
-    // mutating_function mf = const_function_object; // <- may not compile!
+    //mutating_function mf = const_function_object; // <- may not compile!
     REQUIRE(cf() == "hallo");
   }
 
