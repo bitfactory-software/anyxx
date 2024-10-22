@@ -4,13 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/data/typed.h"
 #include "../include/virtual_void/erased/data/shared_const_ptr.h"
+#include "../include/virtual_void/erased/data/typed.h"
 #include "../include/virtual_void/erased/data/unique_ptr.h"
 #include "../include/virtual_void/erased/data/value_ptr.h"
-
 #include "../include/virtual_void/erased/lifetime/lifetime_handle.h"
-
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
@@ -19,13 +17,13 @@ using namespace virtual_void;
 using namespace virtual_void::erased;
 
 namespace virtual_void::erased::data {
-template <typename META_DATA> // obsolate! replace with base<>!
+template <typename META_DATA>  // obsolate! replace with base<>!
 struct with_meta {
   META_DATA meta_data_;
   template <typename T>
   with_meta(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
   void* data() {
-    return &static_cast<typed<int, with_meta<META_DATA>>*>(this)->the_data_;
+    return &static_cast<typed<int, with_meta<META_DATA>>*>(this)->value_;
   }
   void const* data() const {
     return &static_cast<typed<int, with_meta<META_DATA>> const*>(this)
@@ -33,15 +31,15 @@ struct with_meta {
   }
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
 };
-}
+}  // namespace virtual_void::erased::data
 
 #define DATA_ALIGNED(T, META_DATA) data::typed<T, data::with_meta<META_DATA>>
 
 #define ASSERT_OFFSET_EMPTY(T, o) \
-  static_assert(offsetof(data::typed<T>, the_data_) == o);
+  static_assert(offsetof(data::typed<T>, value_) == o);
 
 #define ASSERT_OFFSET(T, META_DATA, o) \
-  static_assert(offsetof(DATA_ALIGNED(T, META_DATA), the_data_) == o);
+  static_assert(offsetof(DATA_ALIGNED(T, META_DATA), value_) == o);
 
 #ifdef _DEBUG
 #define OFFSET_FOR_V_TABLE 8u
@@ -60,19 +58,19 @@ ASSERT_OFFSET(int, std::type_info const*, 8 + offset_for_v_table);
 ASSERT_OFFSET(char const*, std::type_info const*, 8 + offset_for_v_table);
 ASSERT_OFFSET(std::string, std::type_info const*, 8 + offset_for_v_table);
 
-#define TRACE_OFFSET_EMPTY(T)                                         \
-  {                                                                   \
-    using TYPE = data::typed<T>;                                      \
-    std::cout << "data::typed<" << #T << "> offsetof(the_data_): "    \
-              << offsetof(data::typed<TYPE>, the_data_) << std::endl; \
+#define TRACE_OFFSET_EMPTY(T)                                      \
+  {                                                                \
+    using TYPE = data::typed<T>;                                   \
+    std::cout << "data::typed<" << #T << "> offsetof(the_data_): " \
+              << offsetof(data::typed<TYPE>, value_) << std::endl; \
   }
 
-#define TRACE_OFFSET(T, META_DATA)                                        \
-  {                                                                       \
-    using TYPE = data::typed<T, data::with_meta<META_DATA>>;              \
-    std::cout << "data::typed<" << #T << ", " << #META_DATA               \
-              << "> offsetof(the_data_): " << offsetof(TYPE, the_data_)   \
-              << std::endl;                                               \
+#define TRACE_OFFSET(T, META_DATA)                                   \
+  {                                                                  \
+    using TYPE = data::typed<T, data::with_meta<META_DATA>>;         \
+    std::cout << "data::typed<" << #T << ", " << #META_DATA          \
+              << "> offsetof(the_data_): " << offsetof(TYPE, value_) \
+              << std::endl;                                          \
   }
 //              << ", offsetof(meta_data_): " << offsetof(TYPE, meta_data_) \
 
@@ -134,7 +132,8 @@ TEST_CASE("erase lifetiem test shared") {
 TEST_CASE("erase lifetiem test value") {
   Data::destrucor_runs = 0;
   {
-    data::value_ptr<data::with_no_meta> vp = data::make_value<data::typed<Data,data::has_no_meta>>();
+    data::value_ptr<data::with_no_meta> vp =
+        data::make_value<data::typed<Data, data::has_no_meta>>();
     REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;

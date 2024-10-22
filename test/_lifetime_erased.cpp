@@ -15,6 +15,10 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 
+struct A {
+    std::string s;
+};
+
 namespace {
 TEST_CASE("erased/lifetime/data") {
   {
@@ -70,9 +74,6 @@ TEST_CASE("erased/lifetime/unique") {
     REQUIRE(*erased::reconcrete_cast<int>(u1) == 1);
   }
   {
-    struct A {
-      std::string s;
-    };
     auto u1 = erased::unique(std::in_place_type<A>, "hallo");
     REQUIRE(*erased::reconcrete_cast<std::string>(u1) == "hallo");
   }
@@ -99,9 +100,6 @@ TEST_CASE("erased/lifetime/shared_const") {
     REQUIRE(*erased::reconcrete_cast<int>(u1) == 1);
   }
   {
-    struct A {
-      std::string s;
-    };
     auto u1 = erased::shared_const(std::in_place_type<A>, "hallo");
     REQUIRE(*erased::reconcrete_cast<std::string>(u1) == "hallo");
   }
@@ -125,10 +123,15 @@ TEST_CASE("erased/lifetime/value") {
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    struct A {
-      std::string s;
-    };
-    auto u1 = value("hallo");
+    auto u1 = value(A{"hallo"});
+    static_assert(std::same_as<decltype(u1), lifetime_handle<value_data_ptr>>);
+    static_assert(!std::derived_from<std::decay_t<decltype(u1)>, lifetime_handle<lifetime_handle<value_data_ptr>>> &&
+             !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
+    auto& u1cr = u1;
+    auto a = reconcrete_cast<A>(u1);
+    REQUIRE(a->s == "hallo");
+    auto a1 = reconcrete_cast<A>(u1cr);
+    REQUIRE(a1->s == "hallo");
     REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
     auto u2 = u1;
     REQUIRE(reconcrete_cast<A>(u1)->s.data() !=
@@ -137,6 +140,18 @@ TEST_CASE("erased/lifetime/value") {
     reconcrete_cast<A>(u2)->s = "world";
     REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
     REQUIRE(reconcrete_cast<A>(u2)->s == "world");
+  }
+  {
+    //auto v1 = typed_value<std::string>(std::string("hallo"));
+    auto v1 = typed_value<std::string>("hallo");
+    static_assert( std::same_as<std::decay_t<decltype(*v1)>, std::string>);
+    REQUIRE(*v1 == std::string{"hallo"});
+    auto v2 = std::move(v1);
+    REQUIRE(!v1);
+    REQUIRE(*v2 == "hallo");
+    v1 = std::move(v2);
+    REQUIRE(!v2);
+    REQUIRE(*v1 == "hallo");
   }
   {
     auto t1 = typed_value<int>(1);
