@@ -148,21 +148,9 @@ struct typed_lifetime_handle : public lifetime_handle<DATA_PTR> {
 template <typename V, typename DATA_PTR>
 auto as(lifetime_handle<DATA_PTR> source) {
   if constexpr (lifetime_handle<DATA_PTR>::is_const) {
-      static_assert(std::is_const_v<V>);
+    static_assert(std::is_const_v<V>);
   }
   return typed_lifetime_handle<V, DATA_PTR>{std::move(source)};
 }
-
-// static_assert(is_erased_lifetime_holder<mutable_lifetime_handle<>>);
-// static_assert(is_erased_lifetime_holder<const_lifetime_handle<>>);
-// static_assert(
-//     is_erased_lifetime_holder<mutable_lifetime_handle<data::has_type_info>>);
-// static_assert(
-//     is_erased_lifetime_holder<const_lifetime_handle<data::has_type_info>>);
-// static_assert(is_erased_lifetime_holder<
-//               typed_lifetime_handle<int const, data::has_type_info>>);
-// static_assert(
-//     is_erased_lifetime_holder<typed_lifetime_handle<int,
-//     data::has_type_info>>);
 
 }  // namespace virtual_void::erased
