@@ -8,7 +8,7 @@
 #include "../include/virtual_void/erased/data/typed.h"
 #include "../include/virtual_void/erased/data/unique_ptr.h"
 #include "../include/virtual_void/erased/data/value_ptr.h"
-#include "../include/virtual_void/erased/lifetime/lifetime_handle.h"
+#include "../include/virtual_void/erased/lifetime_handle.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

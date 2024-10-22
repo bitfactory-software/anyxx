@@ -3,9 +3,9 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../concept.h"
-#include "../data/has_no_meta.h"
-#include "../data/has_type_info.h"
+#include "concept.h"
+#include "data/has_no_meta.h"
+#include "data/has_type_info.h"
 
 namespace virtual_void::erased {
 

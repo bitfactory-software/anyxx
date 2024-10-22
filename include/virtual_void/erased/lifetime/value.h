@@ -5,7 +5,7 @@
 
 #include "../data/has_no_meta.h"
 #include "../data/value_ptr.h"
-#include "lifetime_handle.h"
+#include "../lifetime_handle.h"
 
 namespace virtual_void::erased {
 
