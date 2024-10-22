@@ -23,7 +23,8 @@ struct members {
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
-    using value_data_t = erased::data::typed<value_t,erased::data::has_no_meta>;
+    using value_data_t =
+        erased::data::holder<value_t, erased::data::has_no_meta>;
     table_[OBJECT_MEMBER::get_index()] =
         erased::data::make_value<value_data_t>(std::forward<ARG>(arg));
   }

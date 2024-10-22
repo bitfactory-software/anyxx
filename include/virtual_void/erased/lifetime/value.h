@@ -15,7 +15,7 @@ template <>
 struct data_trait<value_data_ptr> : data_trait_base<value_data_ptr> {
   using void_t = void*;
   template <typename V>
-  using typed_t = data::typed<V, data::has_no_meta>;
+  using typed_t = data::holder<V, data::has_no_meta>;
   static void* value(const auto& ptr) { return ptr.value(); }
   static auto meta(const auto& ptr) { ptr.meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
