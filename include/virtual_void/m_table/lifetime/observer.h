@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/data/observer_ptr.h"
+#include "../../erased/lifetime/observer.h"
 #include "../../erased/virtual_void.h"
 
 namespace virtual_void::m_table {
@@ -16,23 +16,7 @@ namespace virtual_void::erased {
 
 template <typename VOID>
 struct data_trait<m_table::observer_ptr<VOID>>
-    : data_trait_base<m_table::observer_ptr<VOID>> {
-  using void_t = VOID;
-  static void_t value(const auto& ptr) { return ptr.value(); }
-  static auto meta(const auto& ptr) { return ptr.meta(); }
-  static bool has_value(const auto& ptr) {
-    return static_cast<bool>(ptr.value());
-  }
-  template <typename V>
-  static auto construct_from(V&& v) {
-    return m_table::observer_ptr<VOID>(std::forward<V>(v));
-  }
-  template <typename V, typename... ARGS>
-  static auto construct_in_place(std::in_place_type_t<V>,
-                                                ARGS&&... args) {
-    static_assert(sizeof...(ARGS) == 1);
-    return m_table::observer_ptr<VOID>(std::forward<ARGS>(args)...);
-  }
+    : observer_data_trait<m_table::observer_ptr<VOID>> {
 };
 
 }  // namespace virtual_void::erased

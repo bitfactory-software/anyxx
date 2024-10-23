@@ -17,7 +17,7 @@ using observer_ptr =
 namespace virtual_void::erased {
 
 template <typename DATA_PTR>
-struct observer_data_trait
+struct observer_data_trait  
     : data_trait_base<DATA_PTR> {
   using void_t = DATA_PTR::void_t;
   static void_t value(const auto& ptr) { return ptr.value(); }
@@ -27,33 +27,33 @@ struct observer_data_trait
   }
   template <typename V>
   static auto construct_from(V& v) {
-    return observer_ptr<void_t>(v);
+    return DATA_PTR(v);
   }
   template <typename V>
   static auto construct_from(const V& v)
-    requires observer_ptr<void_t>::is_const
+    requires DATA_PTR::is_const
   {
-    return observer_ptr<void_t>(v);
+    return DATA_PTR(v);
   }
   template <typename V, typename ARG>
   static auto construct_in_place(std::in_place_type_t<V>, ARG& arg) {
-    return observer_ptr<void_t>(arg);
+    return DATA_PTR(arg);
   }
   template <typename V, typename ARG>
   static auto construct_in_place(std::in_place_type_t<V>, const ARG& arg)
-    requires observer_ptr<void_t>::is_const
+    requires DATA_PTR::is_const
   {
-    return observer_ptr<void_t>(arg);
+    return DATA_PTR(arg);
   }
   template <typename FROM>
   auto operator()(FROM& from) {
-    return virtual_void<observer_ptr<void_t>>(from);
+    return virtual_void<DATA_PTR>(from);
   }  // for migration to lifteime_handle! delete after migration!
   template <typename FROM>
   auto operator()(const FROM& from)
-    requires observer_ptr<void_t>::is_const
+    requires DATA_PTR::is_const
   {
-    return virtual_void<observer_ptr<void_t>>(from);
+    return virtual_void<DATA_PTR>(from);
   }  // for migration to lifteime_handle! delete after migration!
 };
 
