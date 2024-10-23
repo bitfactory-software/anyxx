@@ -19,6 +19,7 @@ struct is_const_void<void const*> {
 template <typename VOID, typename META>
 struct observer_ptr : META {
   using void_t = VOID;
+  using meta_t = META;
   static constexpr bool is_const = is_const_void<VOID>::value;
 
   observer_ptr() = default;
