@@ -5,10 +5,10 @@
 namespace virtual_void::erased {
 
 template <typename BASE_V_TABLE, typename RET, typename... ARGS>
-struct call_operator_interface : BASE_V_TABLE {
+struct call_operator_v_table : BASE_V_TABLE {
   using interface_base_t = BASE_V_TABLE;
   using void_t = interface_base_t::void_t;
-  using v_table_t = call_operator_interface;
+  using v_table_t = call_operator_v_table;
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(v_table_t) == from
                ? true
@@ -16,7 +16,7 @@ struct call_operator_interface : BASE_V_TABLE {
   }
   RET (*call_op)(void_t, ARGS&&...);
   template <typename UNERASE>
-  call_operator_interface(UNERASE unerase)
+  call_operator_v_table(UNERASE unerase)
       : BASE_V_TABLE(unerase), call_op([](void_t _vp, ARGS&&... args) {
           return (*UNERASE{}(_vp))(std::forward<ARGS>(args)...);
         }) {
@@ -38,9 +38,9 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
   using void_t = VIRTUAL_VOID::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
   using interface_base_t = base_t::v_table_t;
-  using v_table_t = call_operator_interface<interface_base_t, RET, ARGS...>;
+  using v_table_t = call_operator_v_table<interface_base_t, RET, ARGS...>;
   using query_interface_unique_t =
-      call_operator_interface<virtual_void::erased::base<virtual_void_t>,
+      call_operator_v_table<virtual_void::erased::base<virtual_void_t>,
                               void>;
   template <typename T>
   using is_already_base =
