@@ -157,7 +157,7 @@ TEST_CASE("dynamic interface const_observer") {
   shapeX shape_circleX{circle{33.3}};
 
   //    virtual_void::erased::base< void* > base_v = shape_circle; ->
-  //    interface_cast may not compile!
+  //    v_table_cast may not compile!
   virtual_void::erased::base<erased::const_observer> base_shape =
       shape_circle;
   virtual_void::erased::base<erased::const_observer> base_shapeX =
@@ -169,18 +169,18 @@ TEST_CASE("dynamic interface const_observer") {
   REQUIRE(shape_circleX.is_derived_from<shapeX>());
   static_assert(std::derived_from<shape, shape_base_v>);
   static_assert(std::derived_from<shapeX, shape_base_v>);
-  REQUIRE(virtual_void::erased::interface_cast<shapeX>(base_shape));
-  REQUIRE(!virtual_void::erased::interface_cast<shape>(shape_circleX));
+  REQUIRE(virtual_void::erased::v_table_cast<shapeX>(base_shape));
+  REQUIRE(!virtual_void::erased::v_table_cast<shape>(shape_circleX));
 
   shape_base_v shape_circle_base = shape_circle;
   {
     shape shape_is_circle =
-        virtual_void::erased::static_interface_cast<shape>(shape_circle_base);
+        virtual_void::erased::static_v_table_cast<shape>(shape_circle_base);
     print_shape(shape_is_circle);
   }
   {
     auto shape_is_circle =
-        virtual_void::erased::interface_cast<shape>(shape_circle_base);
+        virtual_void::erased::v_table_cast<shape>(shape_circle_base);
     REQUIRE(shape_is_circle);
     print_shape(*shape_is_circle);
   }

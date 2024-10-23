@@ -87,13 +87,13 @@ void set_is_derived_from(auto interface) {
 }
 
 template <typename TO, typename FROM>
-TO static_interface_cast(const FROM& from)
+TO static_v_table_cast(const FROM& from)
   requires(std::derived_from<TO, FROM>)
 {
   return *static_cast<const TO*>(&from);
 }
 template <typename TO, typename FROM>
-std::optional<TO> interface_cast(const FROM& from)
+std::optional<TO> v_table_cast(const FROM& from)
   requires(std::derived_from<TO, FROM>)
 {
   if (from.is_derived_from<TO>()) return {*static_cast<const TO*>(&from)};
