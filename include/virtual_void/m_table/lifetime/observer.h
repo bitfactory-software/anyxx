@@ -40,8 +40,6 @@ static_assert(!mutable_observer::is_const);
 
 static_assert(erased::is_virtual_void<const_observer>);
 static_assert(erased::is_virtual_void<mutable_observer>);
-static_assert(erased::is_virtual_void<mutable_observer>);
-static_assert(erased::is_virtual_void<const_observer>);
 static_assert(erased::is_virtual_void<typed_const_observer<int>>);
 static_assert(erased::is_virtual_void<typed_mutable_observer<int>>);
 
