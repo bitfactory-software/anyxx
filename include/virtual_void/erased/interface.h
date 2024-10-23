@@ -40,12 +40,12 @@ class base {
       std::false_type;  // base is always at the bottom of the interface chain.
  protected:
   virtual_void_t virtual_void_ = nullptr;
-  v_table_t* interface_impementation_ = nullptr;
+  v_table_t* v_table_ = nullptr;
 
  public:
   base(virtual_void_t virtual_void, v_table_t* v_table)
       : virtual_void_(std::move(virtual_void)),
-        interface_impementation_(v_table) {}
+        v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   base(CONSTRUCTED_WITH&& constructed_with)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
@@ -54,21 +54,21 @@ class base {
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     static v_table_t imlpemented_interface{
         virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
-    interface_impementation_ = &imlpemented_interface;
+    v_table_ = &imlpemented_interface;
   }
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
       : virtual_void_(*other),
-        interface_impementation_(other.get_interface()) {}
+        v_table_(other.get_interface()) {}
   base(const base&) = default;
   base(base&) = default;
   base(base&&) = default;
   auto& operator*() const { return virtual_void_; }
   auto& operator*() { return virtual_void_; }
-  v_table_t* get_interface() const { return interface_impementation_; }
+  v_table_t* get_interface() const { return v_table_; }
   bool is_derived_from(const std::type_info& from) const {
-    return interface_impementation_->_is_derived_from(from);
+    return v_table_->_is_derived_from(from);
   }
   template <typename FROM>
   bool is_derived_from() const {
@@ -197,7 +197,7 @@ TO interface_lifetime_cast(const FROM& from) {
     requires(virtual_void::erased::const_correct_for_lifetime_holder<       \
              void const_, virtual_void_t>)                                  \
   {                                                                         \
-    return static_cast<v_table_t*>(interface_impementation_)                \
+    return static_cast<v_table_t*>(v_table_)                \
         ->name(base_t::virtual_void_.data()                                 \
                    __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   }
@@ -253,7 +253,7 @@ TO interface_lifetime_cast(const FROM& from) {
                                                                                \
    protected:                                                                  \
     using base_t::virtual_void_;                                               \
-    using base_t::interface_impementation_;                                    \
+    using base_t::v_table_;                                    \
                                                                                \
    public:                                                                     \
     n(virtual_void_t virtual_void, v_table_t* v_table)                         \
@@ -265,7 +265,7 @@ TO interface_lifetime_cast(const FROM& from) {
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       static v_table_t imlpemented_interface{                                  \
           virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};    \
-      interface_impementation_ = &imlpemented_interface;                       \
+      v_table_ = &imlpemented_interface;                       \
     }                                                                          \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \

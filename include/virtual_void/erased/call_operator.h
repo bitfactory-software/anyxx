@@ -48,7 +48,7 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
                 "An interface my only be once in instanciated for a facade");
 
  protected:
-  using base_t::interface_impementation_;
+  using base_t::v_table_;
   using base_t::virtual_void_;
 
  public:
@@ -60,7 +60,7 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static v_table_t imlpemented_interface{
         virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
-    interface_impementation_ = &imlpemented_interface;
+    v_table_ = &imlpemented_interface;
   }
   template <typename OTHER>
   call_operator_facade(const OTHER& other)
@@ -70,7 +70,7 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     requires(virtual_void::erased::const_correct_for_lifetime_holder<
              CONST, virtual_void_t>)
   {
-    return static_cast<v_table_t*>(interface_impementation_)
+    return static_cast<v_table_t*>(v_table_)
         ->call_op(base_t::virtual_void_.data(), std::forward<ARGS>(args)...);
   }
   call_operator_facade(const call_operator_facade&) = default;
