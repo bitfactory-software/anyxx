@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../include/virtual_void/typeid/lifetime/observer.h"
+#include "../include/virtual_void/typeid/lifetime/value.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 
@@ -11,6 +12,10 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::typeid_;
+
+struct A {
+  std::string s;
+};
 
 namespace {
 
@@ -98,4 +103,71 @@ TEST_CASE("typeid_/lifetime/observer") {
 //  REQUIRE(d->data == "unique hallo");
 //}
 //
+TEST_CASE("typeid_/lifetime/value") {
+  using namespace typeid_;
+  {
+    auto u1 = value(1);
+    REQUIRE(*reconcrete_cast<int>(u1) == 1);
+  }
+  {
+    auto u1 = value(A{"hallo"});
+    static_assert(std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
+    static_assert(
+        std::derived_from<std::decay_t<decltype(u1)>,
+                           erased::virtual_void<value_data_ptr>> &&
+        !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
+    auto& u1cr = u1;
+    auto a = reconcrete_cast<A>(u1);
+    REQUIRE(a->s == "hallo");
+    auto a1 = reconcrete_cast<A>(u1cr);
+    REQUIRE(a1->s == "hallo");
+    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
+    auto u2 = u1;
+    REQUIRE(reconcrete_cast<A>(u1)->s.data() !=
+            reconcrete_cast<A>(u2)->s.data());
+    REQUIRE(reconcrete_cast<A>(u2)->s == "hallo");
+    reconcrete_cast<A>(u2)->s = "world";
+    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
+    REQUIRE(reconcrete_cast<A>(u2)->s == "world");
+  }
+  {
+    auto v1 = typed_value<std::string>("hallo");
+    static_assert(std::same_as<std::decay_t<decltype(*v1)>, std::string>);
+    REQUIRE(*v1 == std::string{"hallo"});
+    auto v2 = std::move(v1);
+    REQUIRE(!v1);
+    REQUIRE(*v2 == "hallo");
+    v1 = std::move(v2);
+    REQUIRE(!v2);
+    REQUIRE(*v1 == "hallo");
+  }
+  {
+    auto t1 = typed_value<int>(1);
+    *t1 = 2;
+    REQUIRE(*t1 == 2);
+    auto e1 = t1;
+    REQUIRE(t1);  // !moved
+    REQUIRE(e1.data());
+    t1 = as<int>(std::move(e1));
+    REQUIRE(!e1);  // !moved
+    REQUIRE(*t1 == 2);
+  }
+  {
+    auto t1 = typed_value<std::string>("hallo");
+    REQUIRE(*t1 == "hallo");
+  }
+  {
+    std::string a = "hallo";
+    auto t1 = erased::data_trait<value_data_ptr>{}(a);
+    REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
+  }
+  {
+    struct x_t {
+      std::string s_;
+    };
+    x_t a{"hallo"};
+    auto t1 = erased::data_trait<value_data_ptr>{}(a);
+    REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
+  }
+}
 }  // namespace
