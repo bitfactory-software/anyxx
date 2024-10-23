@@ -34,6 +34,6 @@ struct has_m_table {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_m_table() = default;
 };
 
-using with_has_m_table = base<has_m_table>;
+using with_m_table = base<has_m_table>;
 
 }  // namespace virtual_void::erased::data
