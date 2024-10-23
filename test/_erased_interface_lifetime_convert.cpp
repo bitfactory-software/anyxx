@@ -31,8 +31,8 @@ namespace virtual_void::erased {
 template <typename ERASED_TO>
 auto v_table_cast(const auto &v_table) {
   static_assert(
-      std::same_as<to_string_co::interface_t, to_string_sc::interface_t>);
-  return static_cast<typename ERASED_TO::interface_t *>(v_table);
+      std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
+  return static_cast<typename ERASED_TO::v_table_t *>(v_table);
 }
 }  // namespace virtual_void::erased
 
@@ -56,6 +56,6 @@ TEST_CASE("interface lifetime cast") {
   to_string_co co = interface_lifetime_cast<to_string_co>(sc);
   REQUIRE(co.to_string() == "hallo");
   static_assert(
-      std::same_as<to_string_co::interface_t, to_string_sc::interface_t>);
+      std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
   REQUIRE(co.is_derived_from<erased::base<erased::const_observer>>());
 }

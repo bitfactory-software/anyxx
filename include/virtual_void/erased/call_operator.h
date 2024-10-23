@@ -37,8 +37,8 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = VIRTUAL_VOID::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
-  using interface_base_t = base_t::interface_t;
-  using interface_t = call_operator_interface<interface_base_t, RET, ARGS...>;
+  using interface_base_t = base_t::v_table_t;
+  using v_table_t = call_operator_interface<interface_base_t, RET, ARGS...>;
   using query_interface_unique_t =
       call_operator_interface<virtual_void::erased::base<virtual_void_t>,
                               void>;
@@ -55,13 +55,13 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
   using base_t::lifetime_holder_;
 
  public:
-  call_operator_facade(virtual_void_t lifetime_holder, interface_t* v_table)
+  call_operator_facade(virtual_void_t lifetime_holder, v_table_t* v_table)
       : base_t(std::move(lifetime_holder), v_table) {}
   template <typename CONSTRUCTED_WITH>
   call_operator_facade(CONSTRUCTED_WITH&& v)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
-    static interface_t imlpemented_interface{
+    static v_table_t imlpemented_interface{
         virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     interface_impementation_ = &imlpemented_interface;
   }
@@ -73,7 +73,7 @@ struct call_operator_facade<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     requires(virtual_void::erased::const_correct_for_lifetime_holder<
              CONST, virtual_void_t>)
   {
-    return static_cast<interface_t*>(interface_impementation_)
+    return static_cast<v_table_t*>(interface_impementation_)
         ->call_op(base_t::lifetime_holder_.data(), std::forward<ARGS>(args)...);
   }
   call_operator_facade(const call_operator_facade&) = default;
