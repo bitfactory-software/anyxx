@@ -44,8 +44,7 @@ class base {
 
  public:
   base(virtual_void_t virtual_void, v_table_t* v_table)
-      : virtual_void_(std::move(virtual_void)),
-        v_table_(v_table) {}
+      : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   base(CONSTRUCTED_WITH&& constructed_with)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
@@ -59,8 +58,7 @@ class base {
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
-      : virtual_void_(*other),
-        v_table_(other.get_v_table()) {}
+      : virtual_void_(*other), v_table_(other.get_v_table()) {}
   base(const base&) = default;
   base(base&) = default;
   base(base&&) = default;
@@ -188,44 +186,44 @@ TO interface_lifetime_cast(const FROM& from) {
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...)      \
   name =                                                                       \
       [](void_t _vp __VA_OPT__(, _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-        return v_table_map{}.name((UNERASE{}(_vp))__VA_OPT__(, ) __VA_OPT__( \
+        return v_table_map{}.name((UNERASE{}(_vp))__VA_OPT__(, ) __VA_OPT__(   \
             _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                        \
       };
 
-#define _detail_INTERFACE_METHOD(type, name, const_, ...)                   \
-  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_   \
-    requires(virtual_void::erased::const_correct_for_lifetime_holder<       \
-             void const_, virtual_void_t>)                                  \
-  {                                                                         \
-    return static_cast<v_table_t*>(v_table_)                \
-        ->name(base_t::virtual_void_.data()                                 \
-                   __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_INTERFACE_METHOD(type, name, const_, ...)                 \
+  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
+    requires(virtual_void::erased::const_correct_for_lifetime_holder<     \
+             void const_, virtual_void_t>)                                \
+  {                                                                       \
+    return static_cast<v_table_t*>(v_table_)->name(                       \
+        base_t::virtual_void_.data()                                      \
+            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
   }
 
 #define ERASED_INTERFACE_(n, BASE, l)                                          \
   template <typename T>                                                        \
-  struct n##_default_v_table_map {                                           \
+  struct n##_default_v_table_map {                                             \
     _detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, _detail_EXPAND_LIST l) \
   };                                                                           \
   template <typename T>                                                        \
-  struct n##_v_table_map : n##_default_v_table_map<T> {};                  \
+  struct n##_v_table_map : n##_default_v_table_map<T> {};                      \
                                                                                \
   template <typename BASE_V_TABLE>                                             \
-  struct n##v_table : BASE_V_TABLE {                                         \
-    using v_table_base_t = BASE_V_TABLE;                                     \
-    using void_t = v_table_base_t::void_t;                                   \
-    using v_table_t = n##v_table;                                            \
+  struct n##v_table : BASE_V_TABLE {                                           \
+    using v_table_base_t = BASE_V_TABLE;                                       \
+    using void_t = v_table_base_t::void_t;                                     \
+    using v_table_t = n##v_table;                                              \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
                  ? true                                                        \
-                 : v_table_base_t::static_is_derived_from(from);             \
+                 : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
                                                                                \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)      \
                                                                                \
         template <typename UNERASE>                                            \
-        n##v_table(UNERASE unerase) : v_table_base_t(unerase) {            \
-      using v_table_map = n##_v_table_map<typename UNERASE::type>;         \
+        n##v_table(UNERASE unerase) : v_table_base_t(unerase) {                \
+      using v_table_map = n##_v_table_map<typename UNERASE::type>;             \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       virtual_void::erased::set_is_derived_from<v_table_t>(this);              \
@@ -238,22 +236,21 @@ TO interface_lifetime_cast(const FROM& from) {
     using virtual_void_t = VIRTUAL_VOID;                                       \
     using void_t = VIRTUAL_VOID::void_t;                                       \
     using base_t = BASE<VIRTUAL_VOID>;                                         \
-    using v_table_base_t = base_t::v_table_t;                                \
-    using v_table_t = n##v_table<v_table_base_t>;                          \
-    using query_v_table_unique_t =                                           \
-        n##v_table<virtual_void::erased::base<virtual_void_t>>;              \
+    using v_table_base_t = base_t::v_table_t;                                  \
+    using v_table_t = n##v_table<v_table_base_t>;                              \
+    using query_v_table_unique_t =                                             \
+        n##v_table<virtual_void::erased::base<virtual_void_t>>;                \
     template <typename T>                                                      \
     using is_already_base =                                                    \
-        std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,        \
+        std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,          \
                            std::true_type,                                     \
                            typename base_t::template is_already_base<T>>;      \
-    static_assert(                                                             \
-        !base_t::is_already_base<query_v_table_unique_t>::value,             \
-        "An v_table my only be once in instanciated for a facade");          \
+    static_assert(!base_t::is_already_base<query_v_table_unique_t>::value,     \
+                  "A v_table may be instanciated only once per interface");    \
                                                                                \
    protected:                                                                  \
     using base_t::virtual_void_;                                               \
-    using base_t::v_table_;                                    \
+    using base_t::v_table_;                                                    \
                                                                                \
    public:                                                                     \
     n(virtual_void_t virtual_void, v_table_t* v_table)                         \
@@ -263,9 +260,9 @@ TO interface_lifetime_cast(const FROM& from) {
       requires(                                                                \
           !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)   \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      static v_table_t imlpemented_v_table{                                  \
+      static v_table_t imlpemented_v_table{                                    \
           virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};    \
-      v_table_ = &imlpemented_v_table;                       \
+      v_table_ = &imlpemented_v_table;                                         \
     }                                                                          \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
