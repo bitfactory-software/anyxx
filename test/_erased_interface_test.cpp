@@ -59,19 +59,19 @@ struct circle {
 };
 
 template <>
-struct shape_base1_interface_map<const circle> {
+struct shape_base1_v_table_map<const circle> {
   auto draw(circle const* x, position p) const {
     std::cout
-        << " A Circle Is Recorded VIA circle_shape_base1_interface_map At "
+        << " A Circle Is Recorded VIA circle_shape_base1_v_table_map At "
         << p.x << " " << p.y << std::endl;
   }
 };
 
 template <>
-struct shape_i_interface_map<const circle>
-    : shape_i_default_interface_map<circle const> {
+struct shape_i_v_table_map<const circle>
+    : shape_i_default_v_table_map<circle const> {
   auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_shape_i_interface_map At "
+    std::cout << " A Circle Is Recorded VIA circle_shape_i_v_table_map At "
               << p.x << " " << p.y << std::endl;
   }
 };
@@ -132,7 +132,7 @@ void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 // compile! void should_not_compile(shape_double_base_error s) {}//should not
 // compile!
 
-TEST_CASE("dynamic interface const_observer") {
+TEST_CASE("dynamic v_table const_observer") {
   using namespace virtual_void;
 
   circle c{12.3};
