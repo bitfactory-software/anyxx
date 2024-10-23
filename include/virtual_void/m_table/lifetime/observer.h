@@ -3,21 +3,21 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include "../../erased/data/observer_ptr.h"
 #include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/lifetime/observer.h"
-#include "../../erased/virtual_void.h"
+#include "../../erased/lifetime/observer_trait.h"
 
 namespace virtual_void::m_table {
 template <typename VOID>
-using observer_ptr = erased::data::observer_ptr<VOID, erased::data::has_m_table>;
+using observer_ptr =
+    erased::data::observer_ptr<VOID, erased::data::has_m_table>;
 }
 
 namespace virtual_void::erased {
 
 template <typename VOID>
 struct data_trait<m_table::observer_ptr<VOID>>
-    : observer_data_trait<m_table::observer_ptr<VOID>> {
-};
+    : observer_trait<m_table::observer_ptr<VOID>> {};
 
 }  // namespace virtual_void::erased
 
