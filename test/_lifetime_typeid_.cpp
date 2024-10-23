@@ -11,7 +11,6 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::typeid_;
-using namespace TestDomain;
 
 namespace {
 
