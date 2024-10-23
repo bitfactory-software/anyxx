@@ -59,13 +59,13 @@ class base {
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
-      : lifetime_holder_(other.get_lifetime_holder()),
+      : lifetime_holder_(*other),
         interface_impementation_(other.get_interface()) {}
   base(const base&) = default;
   base(base&) = default;
   base(base&&) = default;
-  auto& get_lifetime_holder() const { return lifetime_holder_; }
-  auto& get_lifetime_holder() { return lifetime_holder_; }
+  auto& operator*() const { return lifetime_holder_; }
+  auto& operator*() { return lifetime_holder_; }
   interface_t* get_interface() const { return interface_impementation_; }
   bool is_derived_from(const std::type_info& from) const {
     return interface_impementation_->_is_derived_from(from);
@@ -103,7 +103,7 @@ std::optional<TO> interface_cast(const FROM& from)
 template <typename TO, typename FROM>
 TO interface_lifetime_cast(const FROM& from) {
   return TO(
-      lifetime_cast<typename TO::virtual_void_t>(from.get_lifetime_holder()),
+      lifetime_cast<typename TO::virtual_void_t>(*from),
       v_table_cast<TO>(from.get_interface()));
 }
 

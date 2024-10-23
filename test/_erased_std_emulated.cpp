@@ -35,10 +35,10 @@ TEST_CASE("erased std emulated function") {
   {
     functor_t functor{"hallo"};
     erased::function<std::string(const std::string)> f{functor};
-    REQUIRE(reconcrete_cast<functor_t>(f.get_lifetime_holder())->s_ == "hallo");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");
-    REQUIRE(reconcrete_cast<functor_t>(f.get_lifetime_holder())->s_ ==
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ ==
             "hallo world");
   }
   {
@@ -49,10 +49,10 @@ TEST_CASE("erased std emulated function") {
   {
     functor_t functor{"hallo"};
     erased::ref_function<std::string(const std::string)> f{functor};
-    REQUIRE(reconcrete_cast<functor_t>(f.get_lifetime_holder())->s_ == "hallo");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
-    REQUIRE(reconcrete_cast<functor_t>(f.get_lifetime_holder())->s_ ==
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ ==
             "hallo world");
   }
   {

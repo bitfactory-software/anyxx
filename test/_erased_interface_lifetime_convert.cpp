@@ -48,9 +48,9 @@ TEST_CASE("interface lifetime cast") {
   // static_assert( std::same_as<std::decay_t<void const *>,
   // std::add_const_t<void*>);
 
-  auto o1 = lifetime_cast<erased::const_observer>(sc.get_lifetime_holder());
+  auto o1 = lifetime_cast<erased::const_observer>(*sc);
   auto x = erased::reconcrete_cast<X>(o1);
-  auto x1 = static_cast<X const *>(sc.get_lifetime_holder().data());
+  auto x1 = static_cast<X const *>((*sc).data());
   REQUIRE(x->s_ == "hallo");
 
   to_string_co co = interface_lifetime_cast<to_string_co>(sc);

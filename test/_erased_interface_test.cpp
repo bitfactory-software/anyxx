@@ -205,7 +205,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   auto& c1 = *sc;
   REQUIRE_THAT(c1.perimeter(), WithinAbs(77.2, 77.3));
   shape_vv circle_shape_vv = sc;
-  auto unerased_circle = as<circle>(circle_shape_vv.get_lifetime_holder());
+  auto unerased_circle = as<circle>(*circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
   REQUIRE_THAT(circle_shape_vv.perimeter(), WithinAbs(77.2, 77.3));
@@ -234,6 +234,6 @@ TEST_CASE("base") {
   {
     x_t a{"hallo"};
     value_base vb(a);
-    REQUIRE(reconcrete_cast<x_t>(vb.get_lifetime_holder())->s_ == "hallo");
+    REQUIRE(reconcrete_cast<x_t>(*vb)->s_ == "hallo");
   }
 }
