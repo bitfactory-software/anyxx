@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "../include/virtual_void/erased/data/has_no_meta/has_no_meta.h"
-#include "../include/virtual_void/erased/lifetime/data.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/shared_const.h"
 #include "../include/virtual_void/erased/lifetime/unique.h"
@@ -20,16 +19,6 @@ struct A {
 };
 
 namespace {
-TEST_CASE("erased/lifetime/data") {
-  {
-    auto u1 = std::make_unique<erased::concrete_data<int>>(1);
-    REQUIRE(*erased::reconcrete_cast<int>(*u1) == 1);
-  }
-  {
-    const auto u1 = std::make_unique<erased::concrete_data<int>>(1);
-    REQUIRE(*erased::reconcrete_cast<int>(*u1) == 1);
-  }
-}
 TEST_CASE("erased/lifetime/observer") {
   {
     std::string s{"hallo"};
