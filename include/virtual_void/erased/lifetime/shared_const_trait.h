@@ -19,13 +19,17 @@ struct shared_const_trait
 
   template <typename V>
   struct uneraser {
-    auto operator()(const ptr_t& ptr) { return unerase_cast<V const>(*ptr); };
+    using type = V;
+    auto operator()(void const* erased) {
+      auto const& ptr = *static_cast<ptr_t const*>(erased);
+      return unerase_cast<V const>(*ptr);
+    };
   };
 
   static void const* value(const auto& ptr) { return ptr->value(); }
   static auto meta(const auto& ptr) { return ptr->meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
-  
+
   template <typename V>
   static auto construct_from(V&& v) {
     return data::make_shared_const<typed_t<std::decay_t<V>>>(
