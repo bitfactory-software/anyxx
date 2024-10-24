@@ -197,11 +197,11 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   regular_polygon p{4, 32};
   std::cout << "print_shape_vv ********************************" << std::endl;
 
-  auto sc = m_table::make_shared_const<circle>(circle{c});
+  m_table::typed_shared_const< circle > sc{ c };
   static_assert(std::is_base_of_v<m_table::shared_const,
                                   m_table::typed_shared_const<circle>>);
-  auto& c1 = *sc;
-  REQUIRE_THAT(c1.value_.perimeter(), WithinAbs(77.2, 77.3));
+  auto& c1 = sc;
+  REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   shape_vv circle_shape_vv = sc;
   auto unerased_circle = erased::reconcrete_cast<circle const>(*circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
