@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../include/virtual_void/typeid/lifetime/observer.h"
+#include "../include/virtual_void/typeid/lifetime/shared_const.h"
 #include "../include/virtual_void/typeid/lifetime/value.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
@@ -12,6 +13,7 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::typeid_;
+using namespace TestDomain;
 
 struct A {
   std::string s;
@@ -67,27 +69,27 @@ TEST_CASE("typeid_/lifetime/observer") {
   // compile
 }
 
-//TEST_CASE("m_table/lifetime/shared_const") {
-//  auto d = make_shared_const<D>("shared hallo");
-//  shared_const x = as<D>(d);
-//  auto d1 = as<D>(x);
-//  REQUIRE(d->data == "shared hallo");
-//  REQUIRE(d.type() == typeid(D));
-//  static_assert(std::derived_from<D, A1>);
-//  typed_shared_const<A1> a1 = d1;
-//  typed_shared_const<A1> a2 = A1{"a2->OK"};
-//  typed_shared_const<A1> a3{std::in_place, "a3 in_place->OK"};
-//  A1 a1_pur{"a1_pur"};
-//  typed_shared_const<A1> a4{a1_pur};
-//  auto& a1r = *a2;
-//  auto s1 = a1r.data;
-//  auto s = a2->data;
-//  REQUIRE(a2->data == "a2->OK");
-//  REQUIRE(a3->data == "a3 in_place->OK");
-//  REQUIRE(a4->data == "a1_pur");
-//}
+TEST_CASE("typeid_/lifetime/shared_const") {
+  auto d = shared_const{D{"shared hallo"}};
+  shared_const x = as<D const>(d);
+  auto d1 = as<D const>(x);
+  REQUIRE(d1->data == "shared hallo");
+  REQUIRE(d1.meta()->type_info() == &typeid(D));
+  static_assert(std::derived_from<D, A1>);
+  auto a1 = as<A1>(d1);
+  typed_shared_const<A1> a2{ A1{"a2->OK"} };
+  typed_shared_const<A1> a3{std::in_place, "a3 in_place->OK"};
+  A1 a1_pur{"a1_pur"};
+  typed_shared_const<A1> a4{a1_pur};
+  auto& a1r = *a2;
+  auto s1 = a1r.data;
+  auto s = a2->data;
+  REQUIRE(a2->data == "a2->OK");
+  REQUIRE(a3->data == "a3 in_place->OK");
+  REQUIRE(a4->data == "a1_pur");
+}
 //
-//TEST_CASE("m_table/lifetime/unique") {
+// TEST_CASE("m_table/lifetime/unique") {
 //  auto c1 = make_unique<C>("unique c1");
 //  REQUIRE(c1->data == "unique c1");
 //  auto c2 = typed_unique<C>(std::in_place, "unique c2");
@@ -111,10 +113,11 @@ TEST_CASE("typeid_/lifetime/value") {
   }
   {
     auto u1 = value(A{"hallo"});
-    static_assert(std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
+    static_assert(
+        std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                           erased::virtual_void<value_data_ptr>> &&
+                          erased::virtual_void<value_data_ptr>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);

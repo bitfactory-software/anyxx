@@ -3,24 +3,15 @@
 #include <stdexcept>
 #include <type_traits>
 
-namespace virtual_void::erased::data {
+#include "../../forward.h"
 
-template <typename VOID>
-struct is_const_void {};
-template <>
-struct is_const_void<void*> {
-  static constexpr bool value = false;
-};
-template <>
-struct is_const_void<void const*> {
-  static constexpr bool value = true;
-};
+namespace virtual_void::erased::data {
 
 template <typename VOID, typename META>
 struct observer_ptr : META {
   using void_t = VOID;
   using meta_t = META;
-  static constexpr bool is_const = is_const_void<VOID>::value;
+  static constexpr bool is_const = is_const_void<VOID>;
 
   observer_ptr() = default;
   observer_ptr(const observer_ptr&) = default;

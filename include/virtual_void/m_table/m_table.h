@@ -1,6 +1,7 @@
 #pragma once
 
 #include <typeindex>
+#include <vector>
 
 #include "../error.h"
 #include "../forward.h"

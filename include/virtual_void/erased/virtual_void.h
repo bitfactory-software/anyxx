@@ -1,20 +1,15 @@
 #pragma once
 
+#include <concepts>
 #include <stdexcept>
 #include <type_traits>
 
+#include "../forward.h"
 #include "concept.h"
 #include "data/has_no_meta/has_no_meta.h"
 #include "data/has_type_info/has_type_info.h"
 
 namespace virtual_void::erased {
-
-template <typename VOID>
-bool is_const_void;
-template <>
-constexpr bool is_const_void<void*> = false;
-template <>
-constexpr bool is_const_void<void const*> = true;
 
 template <typename DATA_PTR>
 struct virtual_void;
@@ -94,8 +89,8 @@ auto reconcrete_cast(virtual_void<DATA_PTR> const& o)
 template <typename V, typename DATA_PTR>
 struct virtual_typed : public virtual_void<DATA_PTR> {
   using value_t = V;
-  using lifetime_handle_t = virtual_void<DATA_PTR>;
-  using lifetime_handle_t::lifetime_handle_t;
+  using virtual_void_t = virtual_void<DATA_PTR>;
+  using virtual_void_t::virtual_void_t;
 
   virtual_typed(const virtual_typed&) = default;
   virtual_typed(virtual_typed&) = default;
@@ -105,13 +100,13 @@ struct virtual_typed : public virtual_void<DATA_PTR> {
   virtual_typed& operator=(virtual_typed&&) = default;
   template <typename FROM>
   explicit virtual_typed(FROM&& from)
-    requires(!std::derived_from<std::decay_t<FROM>, lifetime_handle_t> &&
+    requires(!std::derived_from<std::decay_t<FROM>, virtual_void_t> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : lifetime_handle_t(std::in_place_type<V>, std::forward<FROM>(from)) {}
+      : virtual_void_t(std::in_place_type<V>, std::forward<FROM>(from)) {}
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
-      : lifetime_handle_t(std::in_place_type<V>, std::forward<ARGS>(args)...) {}
-  explicit virtual_typed(DATA_PTR data) : virtual_void(std::move(data)) {}
+      : virtual_void_t(std::in_place_type<V>, std::forward<ARGS>(args)...) {}
+  explicit virtual_typed(DATA_PTR data) : virtual_void_t(std::move(data)) {}
 
   value_t const& operator*() const {
     return *static_cast<value_t*>(this->value());
@@ -120,19 +115,19 @@ struct virtual_typed : public virtual_void<DATA_PTR> {
     return static_cast<value_t*>(this->value());
   }
   value_t& operator*() const
-    requires !lifetime_handle_t::is_const
+    requires !virtual_void_t::is_const
   {
     return *static_cast<value_t*>(this->value());
   }
   value_t* operator->() const
-    requires !lifetime_handle_t::is_const
+    requires !virtual_void_t::is_const
   {
     return static_cast<value_t*>(this->value());
   }
 
  private:
-  explicit virtual_typed(lifetime_handle_t&& virtual_void)
-      : lifetime_handle_t(std::move(virtual_void)) {}
+  explicit virtual_typed(virtual_void_t&& virtual_void)
+      : virtual_void_t(std::move(virtual_void)) {}
   template <typename V, typename DATA_PTR>
   friend auto as(virtual_void<DATA_PTR> source);
 };
@@ -143,6 +138,17 @@ auto as(virtual_void<DATA_PTR> source) {
   //   static_assert(std::is_const_v<V>);
   // }
   return virtual_typed<V, DATA_PTR>{std::move(source)};
+}
+
+template <typename TO, typename FROM, typename DATA_PTR>
+auto as(virtual_typed<FROM, DATA_PTR> source)
+  requires std::convertible_to<FROM*, TO*>
+{
+  if constexpr (virtual_typed<FROM, DATA_PTR>::is_const) {
+    return virtual_typed<TO const, DATA_PTR>{std::move(source.ptr_)};
+  } else {
+    return virtual_typed<TO, DATA_PTR>{std::move(source.ptr_)};
+  }
 }
 
 }  // namespace virtual_void::erased

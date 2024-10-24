@@ -3,17 +3,17 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../../erased/data/has_m_table/has_m_table.h"
+#include "../../erased/data/has_type_info/has_type_info.h"
 #include "../../erased/lifetime/value_trait.h"
 
 namespace virtual_void::typeid_ {
-using value_data_ptr = erased::data::value_ptr<erased::data::with_m_table>;
+using value_data_ptr = erased::data::value_ptr<erased::data::with_type_info>;
 }
 
 namespace virtual_void::erased {
 using namespace virtual_void;
 template <>
-struct data_trait<typeid_::value_data_ptr> : value_trait<data::has_m_table> {};
+struct data_trait<typeid_::value_data_ptr> : value_trait<data::has_type_info> {};
 }  // namespace virtual_void::erased
 
 namespace virtual_void::typeid_ {

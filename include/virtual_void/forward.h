@@ -5,6 +5,13 @@
 namespace virtual_void {
 using type_info_ptr = std::type_info const*;
 
+template <typename VOID>
+bool is_const_void;
+template <>
+constexpr bool is_const_void<void*> = false;
+template <>
+constexpr bool is_const_void<void const*> = true;
+
 class m_table_t;
 template <typename CLASS>
 constexpr m_table_t* m_table_of();
