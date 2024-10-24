@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 
-#include "../../include/virtual_void/utillities/unnamed__.h"
 #include "../../include/virtual_void/m_table/lifetime/shared_const.h"
 #include "../../include/virtual_void/m_table/open_method.h"
+#include "../../include/virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 
 using std::cout;
@@ -15,6 +15,10 @@ using std::string;
 namespace {
 
 using shared_const_node = virtual_void::m_table::shared_const;
+
+static_assert(virtual_void::erased::is_virtual_void<shared_const_node>);
+ static_assert(virtual_void::erased::is_data_pointer<virtual_void::m_table::shared_const_data_ptr>);
+
 
 struct Plus {
   Plus(shared_const_node left, shared_const_node right)
@@ -113,12 +117,12 @@ auto __ = as_lisp.define<Integer>(
 TEST_CASE("21_Tree_TE_dispach_via_m_table") {
   virtual_void::m_table::fix_m_tables(tree_domain);
 
-  using virtual_void::m_table::make_shared_const;
+  using namespace virtual_void;
 
-  auto expr = make_shared_const<Times>(
-      make_shared_const<Integer>(2),
-      make_shared_const<Plus>(make_shared_const<Integer>(3),
-                              make_shared_const<Integer>(4)));
+  m_table::shared_const_data_ptr expr = m_table::make_shared_const<Times>(
+      m_table::make_shared_const<Integer>(2),
+      m_table::make_shared_const<Plus>(m_table::make_shared_const<Integer>(3),
+                                       m_table::make_shared_const<Integer>(4)));
 
   REQUIRE(value(expr) == 14);
   std::stringstream out;

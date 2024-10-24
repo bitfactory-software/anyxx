@@ -62,8 +62,8 @@ class base {
   base(const base&) = default;
   base(base&) = default;
   base(base&&) = default;
-  auto& operator*() const { return virtual_void_; }
-  auto& operator*() { return virtual_void_; }
+  virtual_void_t const& operator*() const { return virtual_void_; }
+  virtual_void_t& operator*() { return virtual_void_; }
   v_table_t* get_v_table() const { return v_table_; }
   bool is_derived_from(const std::type_info& from) const {
     return v_table_->_is_derived_from(from);

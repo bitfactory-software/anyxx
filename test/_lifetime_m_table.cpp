@@ -71,15 +71,15 @@ TEST_CASE("m_table/lifetime/observer") {
 }
 
 TEST_CASE("m_table/lifetime/shared_const") {
-  auto d = make_shared_const<D>("shared hallo");
-  shared_const x = as<D>(d);
-  auto d1 = as<D>(x);
-  REQUIRE(d->data == "shared hallo");
-  REQUIRE(d.type() == typeid(D));
+  auto d = m_table::make_shared_const<D>("shared hallo");
+  shared_const x{ d };
+  auto d1 = as<D const>(x);
+  REQUIRE(d1->data == "shared hallo" );
+  REQUIRE(d->type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
-  typed_shared_const<A1> a1 = d1;
-  typed_shared_const<A1> a2 = A1{"a2->OK"};
-  typed_shared_const<A1> a3{std::in_place, "a3 in_place->OK"};
+  typed_shared_const<A1> a1{ *d1 };
+  typed_shared_const<A1> a2{ A1{"a2->OK"} };
+  typed_shared_const<A1> a3{ "a3 in_place->OK" };
   A1 a1_pur{"a1_pur"};
   typed_shared_const<A1> a4{a1_pur};
   auto& a1r = *a2;

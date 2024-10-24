@@ -20,16 +20,6 @@ template <typename DATA_PTR>
 struct virtual_void;
 
 template <typename DATA_PTR>
-struct data_trait;
-// using void_t = const void*;
-// static auto data(const auto& ptr);
-// static auto data(auto& ptr);
-// static auto meta(const auto& ptr);
-// static bool has_value(const auto& ptr);
-// template <typename V>
-// static DATA_PTR construct_from(V&&);
-
-template <typename DATA_PTR>
 struct data_trait_base {
   template <typename FROM>
   auto operator()(FROM&& from) {
@@ -39,7 +29,7 @@ struct data_trait_base {
 
 template <typename DATA_PTR>
 struct virtual_void {
-  DATA_PTR data_ = nullptr;
+  DATA_PTR ptr_ = nullptr;
 
   using data_t = DATA_PTR;
   using trait_t = data_trait<DATA_PTR>;
@@ -57,12 +47,12 @@ struct virtual_void {
   explicit virtual_void(V&& v)
     requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : data_(trait_t::construct_from(std::forward<V>(v))) {}
+      : ptr_(trait_t::construct_from(std::forward<V>(v))) {}
   template <typename V, typename... ARGS>
   virtual_void(std::in_place_type_t<V>, ARGS&&... args)
-      : data_(trait_t::construct_in_place(std::in_place_type<V>,
+      : ptr_(trait_t::construct_in_place(std::in_place_type<V>,
                                           std::forward<ARGS>(args)...)) {}
-  explicit virtual_void(DATA_PTR data) : data_(std::move(data)) {}
+  virtual_void(DATA_PTR data) : ptr_(std::move(data)) {}
 
   // only for migration to lifetime handle, remove and replace use to "value()"!
   void const* data() const
@@ -79,15 +69,15 @@ struct virtual_void {
   void const* value() const
     requires is_const
   {
-    return trait_t::value(data_);
+    return trait_t::value(ptr_);
   }
   void* value() const
     requires !is_const
   {
-    return trait_t::value(data_);
+    return trait_t::value(ptr_);
   }
-  auto meta() const { return trait_t::meta(data_); }
-  explicit operator bool() const { return trait_t::has_value(data_); }
+  auto meta() const { return trait_t::meta(ptr_); }
+  explicit operator bool() const { return trait_t::has_value(ptr_); }
 };
 
 template <typename U, typename DATA_PTR>
@@ -147,9 +137,9 @@ struct virtual_typed : public virtual_void<DATA_PTR> {
 
 template <typename V, typename DATA_PTR>
 auto as(virtual_void<DATA_PTR> source) {
-  if constexpr (virtual_void<DATA_PTR>::is_const) {
-    static_assert(std::is_const_v<V>);
-  }
+  //if constexpr (virtual_void<DATA_PTR>::is_const) {
+  //  static_assert(std::is_const_v<V>);
+  //}
   return virtual_typed<V, DATA_PTR>{std::move(source)};
 }
 

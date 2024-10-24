@@ -19,7 +19,7 @@ namespace {
 
 namespace DB {
 using FactoryFunction =
-    std::function<virtual_void::m_table::shared_const(const std::string&)>;
+    std::function<virtual_void::m_table::shared_const_data_ptr(const std::string&)>;
 using SinkFunction =
     std::function<void(const virtual_void::m_table::shared_const&)>;
 
@@ -131,7 +131,7 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
 
   db.Query("junk", [](const virtual_void::m_table::shared_const& e) {
     // call open method
-    std::cout << "type_info: " << e.type().name() << ": " << toString(e)
+    std::cout << "type_info: " << e.meta()->type_info()->name() << ": " << toString(e)
               << std::endl;
 
     try {

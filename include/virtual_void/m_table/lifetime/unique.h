@@ -14,6 +14,7 @@
 
 #include "../../erased/concept.h"
 #include "../m_table.h"
+#include "data.h"
 
 namespace virtual_void::m_table {
 

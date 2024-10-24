@@ -12,103 +12,35 @@
 #include <unordered_map>
 #include <vector>
 
-#include "../../erased/concept.h"
-#include "data.h"
+#include "../../erased/data/has_m_table/has_m_table.h"
+#include "../../erased/lifetime/shared_const_trait.h"
+#include "../../erased/virtual_void.h"
 
 namespace virtual_void::m_table {
+using shared_const_data_ptr =
+    erased::data::shared_const_ptr<erased::data::with_m_table>;
+}
+namespace virtual_void::erased {
+template <>
+struct data_trait<m_table::shared_const_data_ptr>
+    : shared_const_trait<data::has_m_table> {};
+}  // namespace virtual_void::erased
+namespace virtual_void::m_table {
 
+static_assert(erased::is_data_pointer<shared_const_data_ptr>);
+
+using shared_const = erased::virtual_void<shared_const_data_ptr>;
 template <typename T>
-class typed_shared_const;
-struct make_shared_const_t;
-using shared_abstract_data_ptr = std::shared_ptr<abstract_data>;
+using typed_shared_const =
+    erased::virtual_typed<T const, shared_const_data_ptr>;
 
-class shared_const {
- protected:
-  shared_abstract_data_ptr ptr_;
-
- public:
-  shared_const(const shared_abstract_data_ptr& ptr) : ptr_(ptr) {}
-  using void_t = void const*;
-  static constexpr bool is_const = true;
-  using make_erased = make_shared_const_t;
-
-  const void* data() const { return ptr_->data_; }
-  const std::type_info& type() const { return ptr_->m_table_->type(); }
-  const m_table_t* m_table() const { return ptr_->m_table_; };
-};
-static_assert(MtableDispatchableVoid<const shared_const, const void*>);
-
-template <typename T>
-class typed_shared_const : public shared_const {
- private:
-  typed_shared_const(shared_const&& ptr) noexcept
-      : shared_const(std::move(ptr)) {}
-
- public:
-  using conrete_t = const T;
-  using shared_const::shared_const;
-  typed_shared_const(T&& v) noexcept
-      : shared_const(std::make_shared<concrete_data<T> >(std::forward<T>(v))) {}
-  typed_shared_const(const T& v) noexcept
-      : shared_const(std::make_shared<concrete_data<T> >(T{v})) {}
-  template <typename... ARGS>
-  typed_shared_const(std::in_place_t, ARGS&&... args) noexcept
-      : shared_const(std::make_shared<concrete_data<T> >(
-            std::in_place, std::forward<ARGS>(args)...)) {}
-  template <typename T, typename... ARGS>
-  friend typed_shared_const<T> make_shared_const(ARGS&&... args);
-  template <typename T>
-  friend typed_shared_const<T> as(shared_const source);
-  template <typename DERIVED>
-  typed_shared_const(const typed_shared_const<DERIVED>& rhs) noexcept
-    requires(std::derived_from<DERIVED, T> && !std::same_as<DERIVED, T>)
-      : shared_const(rhs) {}
-  template <typename DERIVED>
-  typed_shared_const(typed_shared_const<DERIVED>&& rhs) noexcept
-    requires(std::derived_from<DERIVED, T> && !std::same_as<DERIVED, T>)
-      : shared_const(std::move(rhs)) {}
-  template <typename DERIVED>
-  typed_shared_const& operator=(const typed_shared_const<DERIVED>& rhs) noexcept
-    requires(std::derived_from<DERIVED, T> && !std::same_as<DERIVED, T>)
-  {
-    typed_shared_const clone{rhs};
-    swap(*this, clone);
-    return *this;
-  }
-  template <typename DERIVED>
-  typed_shared_const& operator=(typed_shared_const<DERIVED>&& rhs) noexcept
-    requires(std::derived_from<DERIVED, T> && !std::same_as<DERIVED, T>)
-  {
-    (*this) = std::move(rhs);
-    return *this;
-  }
-  friend void swap(typed_shared_const& rhs, typed_shared_const& lhs) noexcept {
-    using std::swap;
-    swap(rhs.ptr_, lhs.ptr_);
-  }
-  const T& operator*() const noexcept { return *static_cast<const T*>(data()); }
-  const T* operator->() const noexcept { return static_cast<const T*>(data()); }
-};
-static_assert(
-    MtableDispatchableVoid<const typed_shared_const<nullptr_t>, const void*>);
 template <typename T, typename... ARGS>
-typed_shared_const<T> make_shared_const(ARGS&&... args) {
-  return {std::in_place, std::forward<ARGS>(args)...};
+auto make_shared_const(ARGS&&... args) {
+  return erased::data::make_shared_const<erased::data::holder<const T, erased::data::has_m_table>>(
+      std::forward<ARGS>(args)...);
 }
-template <typename T>
-typed_shared_const<T> as(shared_const source) {
-  if (source.type() != typeid(T))
-    throw error("source is: " + std::string(source.type().name()) + ".");
-  return typed_shared_const<T>{std::move(source)};
-}
-struct make_shared_const_t {
-  template <typename FROM>
-  shared_const operator()(FROM&& from) {
-    return make_shared_const<std::remove_cvref_t<FROM> >(
-        std::forward<FROM>(from));
-  }
-};
+
 static_assert(erased::is_virtual_void<shared_const>);
-static_assert(erased::is_virtual_void<typed_shared_const<int> >);
+static_assert(erased::is_virtual_void<typed_shared_const<int>>);
 
 }  // namespace virtual_void::m_table

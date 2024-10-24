@@ -8,6 +8,7 @@
 #include "../class_hierarchy/class_hierarchy.h"
 #include "../open_method/domain.h"
 #include "../open_method/table.h"
+#include "../erased/virtual_void.h"
 #include "m_table.h"
 
 namespace virtual_void::m_table {
@@ -57,24 +58,36 @@ class open_method<R(ARGS...)> : public open_method_base {
     return define_erased(typeid(CLASS), fp);
   }
   template <typename... OTHER_ARGS>
-  R operator()(const virtual_void_t& param, OTHER_ARGS&&... args) const {
-    const m_table_t& m_table = *param.first;
+  R operator()(m_table_t const& m_table, dispatch_t data, OTHER_ARGS&&... args) const {
     auto erased_function =
         reinterpret_cast<erased_function_t>(m_table[m_table_index()]);
-    return (erased_function)(param.second, std::forward<OTHER_ARGS>(args)...);
+    return (erased_function)(data, std::forward<OTHER_ARGS>(args)...);
+  }
+  template <typename DATA_PTR, typename... OTHER_ARGS>
+  R operator()(const erased::virtual_void<DATA_PTR>& virtual_void_, OTHER_ARGS&&... args) const {
+    const m_table_t& m_table = *virtual_void_.meta()->m_table();
+    return (*this)(*virtual_void_.meta()->m_table(), virtual_void_.data(), std::forward<OTHER_ARGS>(args)...);
+  }
+  template <erased::is_data_pointer DATA_PTR, typename... OTHER_ARGS>
+  R operator()(const DATA_PTR& ptr, OTHER_ARGS&&... args) const {
+    erased::virtual_void< DATA_PTR > virtual_void_{ptr};
+    return (*this)(virtual_void_, std::forward<OTHER_ARGS>(args)...);
+  }
+  template <typename... OTHER_ARGS>
+  R operator()(const virtual_void_t& param, OTHER_ARGS&&... args) const {
+    return (*this)(*param.first, param.second, std::forward<OTHER_ARGS>(args)...);
   }
   template <typename POINTER, typename... OTHER_ARGS>
   R operator()(const POINTER& pointer, OTHER_ARGS&&... args) const
     requires MtableDispatchableVoid<POINTER, dispatch_t>
   {
-    return call(pointer, std::forward<OTHER_ARGS>(args)...);
+    return (*this)(*pointer.m_table(), pointer.data(), std::forward<OTHER_ARGS>(args)...);
   }
   template <typename POINTER, typename... OTHER_ARGS>
   R call(const POINTER& pointer, OTHER_ARGS&&... args) const
     requires MtableDispatchableVoid<POINTER, dispatch_t>
   {
-    virtual_void_t param{pointer.m_table(), pointer.data()};
-    return (*this)(param, std::forward<OTHER_ARGS>(args)...);
+    return (*this)(pointer, std::forward<OTHER_ARGS>(args)...);
   }
 };
 

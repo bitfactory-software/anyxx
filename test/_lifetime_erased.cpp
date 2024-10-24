@@ -47,11 +47,13 @@ TEST_CASE("erased/lifetime/observer") {
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
     REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
-    // auto tmo2 = as< std::string >( co ); // shall not compile
+    // tmo = as< std::string >( co ); // shall not compile!
+    auto tmo2 = as<std::string>(co);
+    static_assert(decltype(tmo2)::is_const);
   }
   {
     const std::string s{"hallo"};
-    //auto mo = erased::mutable_observer( &s ); // shall not compile
+    //auto mo = erased::mutable_observer(s);  // shall not compile
     auto co = erased::const_observer(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);
@@ -109,7 +111,7 @@ TEST_CASE("erased/lifetime/shared_const") {
     auto e1 = t1;
     REQUIRE(t1);  // !moved
     REQUIRE(e1.data());
-    t1 = as<int>(std::move(e1));
+    t1 = as<int const>(std::move(e1));
     REQUIRE(!e1);  // !moved
     REQUIRE(*t1 == 1);
   }
@@ -122,10 +124,11 @@ TEST_CASE("erased/lifetime/value") {
   }
   {
     auto u1 = value(A{"hallo"});
-    static_assert(std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
+    static_assert(
+        std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                           erased::virtual_void<value_data_ptr>> &&
+                          erased::virtual_void<value_data_ptr>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
