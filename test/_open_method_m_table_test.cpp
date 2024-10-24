@@ -65,7 +65,7 @@ TEST_CASE("m_table open_method") {
                                  C c;
                                  auto virtual_void =
                                      virtual_void::to_m_table_void(&c);
-                                 auto u = make_unique<C>();
+                                 auto u = unique{C{}};
                                  auto expected = typeid(C).name();
                                  auto r = toString(u);
                                  auto r1 = toString(virtual_void);

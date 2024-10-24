@@ -1,6 +1,5 @@
 #pragma once
 
-#include <stdexcept>
 #include <type_traits>
 
 #include "../data/holder.h"

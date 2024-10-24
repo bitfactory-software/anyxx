@@ -1,8 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
 #include "unique_trait.h"
 
 namespace virtual_void::erased {

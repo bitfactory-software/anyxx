@@ -1,71 +1,27 @@
 #pragma once
 
-#include <assert.h>
+#include "../../erased/data/has_m_table/has_m_table.h"
+#include "../../erased/lifetime/unique_trait.h"
+#include "../../erased/virtual_void.h"
 
-#include <algorithm>
-#include <functional>
-#include <map>
-#include <memory>
-#include <stdexcept>
-#include <type_traits>
-#include <typeindex>
-#include <unordered_map>
-#include <vector>
+namespace virtual_void::m_table {
+using unique_data_ptr = erased::data::unique_ptr<erased::data::with_m_table>;
+}
 
-#include "../../erased/concept.h"
-#include "../m_table.h"
-#include "data.h"
+namespace virtual_void::erased {
+template <>
+struct data_trait<m_table::unique_data_ptr>
+    : unique_trait<data::has_m_table> {};
+
+}  // namespace virtual_void::erased
 
 namespace virtual_void::m_table {
 
-using unique_abstract_data_ptr = std::unique_ptr<abstract_data>;
-class unique {
-  unique_abstract_data_ptr ptr_;
-
- protected:
-  unique(unique_abstract_data_ptr&& ptr) : ptr_(std::move(ptr)) {}
-
- public:
-  using void_t = void*;
-  static constexpr bool is_const = false;
-  void* data() const { return ptr_->data_; }
-  const std::type_info& type() const { return ptr_->m_table_->type(); }
-  const m_table_t* m_table() const { return ptr_->m_table_; };
-};
-static_assert(MtableDispatchableVoid<const unique, void*>);
-static_assert(MtableDispatchableVoid<const unique, const void*>);
-
+using unique = erased::virtual_void<m_table::unique_data_ptr>;
 template <typename T>
-class typed_unique : public unique {
-  template <typename T>
-  friend auto as(unique&& source);
-  typed_unique(unique&& u) noexcept : unique(std::move(u)) {}
+using typed_unique = erased::virtual_typed<T, m_table::unique_data_ptr>;
 
- public:
-  using conrete_t = T;
-  using unique::unique;
-  typed_unique(T&& v) noexcept
-      : unique(std::make_unique<concrete_data<T> >(std::move(v))) {}
-  template <typename... ARGS>
-  typed_unique(std::in_place_t, ARGS&&... args) noexcept
-      : unique(std::make_unique<concrete_data<T> >(
-            std::in_place, std::forward<ARGS>(args)...)) {}
-  T& operator*() const { return *static_cast<T*>(data()); }
-  T* operator->() const { return static_cast<T*>(data()); }
-};
-static_assert(MtableDispatchableVoid<const typed_unique<nullptr_t>, void*>);
-static_assert(
-    MtableDispatchableVoid<const typed_unique<nullptr_t>, const void*>);
-
-template <typename T>
-auto as(unique&& source) {
-  if (source.type() != typeid(T))
-    throw error("source is: " + std::string(source.type().name()) + ".");
-  return typed_unique<T>{std::move(source)};
-}
-template <typename T, typename... ARGS>
-typed_unique<T> make_unique(ARGS&&... args) {
-  return {std::in_place, std::forward<ARGS>(args)...};
-}
+static_assert(erased::is_virtual_void<typed_unique<int> >);
+static_assert(erased::is_virtual_void<m_table::unique>);
 
 }  // namespace virtual_void::m_table

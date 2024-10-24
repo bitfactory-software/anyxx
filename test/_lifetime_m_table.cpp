@@ -71,14 +71,14 @@ TEST_CASE("m_table/lifetime/observer") {
 }
 
 TEST_CASE("m_table/lifetime/shared_const") {
-  shared_const x{ std::in_place_type<D>, "shared hallo" };
+  shared_const x{std::in_place_type<D>, "shared hallo"};
   auto d1 = as<D const>(x);
-  REQUIRE(d1->data == "shared hallo" );
+  REQUIRE(d1->data == "shared hallo");
   REQUIRE(d1.meta()->type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
-  typed_shared_const<A1> a1{ *d1 };
-  typed_shared_const<A1> a2{ A1{"a2->OK"} };
-  typed_shared_const<A1> a3{ "a3 in_place->OK" };
+  typed_shared_const<A1> a1{*d1};
+  typed_shared_const<A1> a2{A1{"a2->OK"}};
+  typed_shared_const<A1> a3{"a3 in_place->OK"};
   A1 a1_pur{"a1_pur"};
   typed_shared_const<A1> a4{a1_pur};
   auto& a1r = *a2;
@@ -90,8 +90,8 @@ TEST_CASE("m_table/lifetime/shared_const") {
 }
 
 TEST_CASE("m_table/lifetime/unique") {
-  auto c1 = make_unique<C>("unique c1");
-  REQUIRE(c1->data == "unique c1");
+  auto c1 = unique(std::in_place_type<C>, "unique c1");
+  REQUIRE(erased::reconcrete_cast<C>(c1)->data == "unique c1");
   auto c2 = typed_unique<C>(std::in_place, "unique c2");
   REQUIRE(c2->data == "unique c2");
   auto c3 = typed_unique<C>(C{"unique c3"});
@@ -99,7 +99,7 @@ TEST_CASE("m_table/lifetime/unique") {
   auto c4 = std::move(c3);
   REQUIRE(c4->data == "unique c3");
 
-  auto d1 = make_unique<D>("unique hallo");
+  auto d1 = unique(std::in_place_type<D>, "unique hallo");
   unique x{std::move(d1)};
   auto d = as<D>(std::move(x));
   REQUIRE(d->data == "unique hallo");
@@ -112,10 +112,11 @@ TEST_CASE("m_table/lifetime/value") {
   }
   {
     auto u1 = value(A{"hallo"});
-    static_assert(std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
+    static_assert(
+        std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                           erased::virtual_void<value_data_ptr>> &&
+                          erased::virtual_void<value_data_ptr>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
