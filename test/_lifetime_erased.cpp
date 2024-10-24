@@ -79,7 +79,9 @@ TEST_CASE("erased/lifetime/unique") {
     REQUIRE(*erased::reconcrete_cast<std::string>(u1) == "hallo");
   }
   {
-    auto t1 = erased::typed_unique(1);
+    auto t1 = erased::typed_unique<int>(1);
+    static_assert( !t1.is_const );
+    static_assert( std::same_as< decltype(t1)::value_t, int > );
     *t1 = 2;
     REQUIRE(*t1 == 2);
     // auto e1 = t1; // shall not compile!
