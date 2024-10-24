@@ -61,9 +61,8 @@ struct circle {
 template <>
 struct shape_base1_v_table_map<const circle> {
   auto draw(circle const* x, position p) const {
-    std::cout
-        << " A Circle Is Recorded VIA circle_shape_base1_v_table_map At "
-        << p.x << " " << p.y << std::endl;
+    std::cout << " A Circle Is Recorded VIA circle_shape_base1_v_table_map At "
+              << p.x << " " << p.y << std::endl;
   }
 };
 
@@ -158,8 +157,7 @@ TEST_CASE("dynamic v_table const_observer") {
 
   //    virtual_void::erased::base< void* > base_v = shape_circle; ->
   //    v_table_cast may not compile!
-  virtual_void::erased::base<erased::const_observer> base_shape =
-      shape_circle;
+  virtual_void::erased::base<erased::const_observer> base_shape = shape_circle;
   virtual_void::erased::base<erased::const_observer> base_shapeX =
       shape_circleX;
 
@@ -197,16 +195,20 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   regular_polygon p{4, 32};
   std::cout << "print_shape_vv ********************************" << std::endl;
 
-  m_table::typed_shared_const< circle > sc{ c };
+  m_table::typed_shared_const<circle> sc{c};
   static_assert(std::is_base_of_v<m_table::shared_const,
                                   m_table::typed_shared_const<circle>>);
   auto& c1 = sc;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   shape_vv circle_shape_vv = sc;
-  auto unerased_circle = erased::reconcrete_cast<circle const>(*circle_shape_vv);
+  auto unerased_circle =
+      erased::reconcrete_cast<circle const>(*circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
-  REQUIRE_THAT(circle_shape_vv.perimeter(), WithinAbs(77.2, 77.3));
+  {
+    auto perimeter = circle_shape_vv.perimeter();
+    REQUIRE_THAT(perimeter, WithinAbs(77.2, 77.3));
+  }
   print_shape_vv(sc);
   print_shape_vv(circle_shape_vv);
   print_shape_vv(c);

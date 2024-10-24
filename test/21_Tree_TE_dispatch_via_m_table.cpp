@@ -14,26 +14,24 @@ using std::string;
 
 namespace {
 
-using shared_const_node = virtual_void::m_table::shared_const;
+using node = virtual_void::m_table::shared_const;
 
-static_assert(virtual_void::erased::is_virtual_void<shared_const_node>);
- static_assert(virtual_void::erased::is_data_pointer<virtual_void::m_table::shared_const_data_ptr>);
-
+static_assert(virtual_void::erased::is_virtual_void<node>);
+static_assert(virtual_void::erased::is_data_pointer<
+              virtual_void::m_table::shared_const_data_ptr>);
 
 struct Plus {
-  Plus(shared_const_node left, shared_const_node right)
-      : left(left), right(right) {}
+  Plus(node left, node right) : left(left), right(right) {}
 
-  shared_const_node left, right;
+  node left, right;
   //    ~Plus() { cout << "~Plus()" << "\n"; } // to show, that
   //    virtual_void::typed_shared_const will call the rigtht destructor
 };
 
 struct Times {
-  Times(shared_const_node left, shared_const_node right)
-      : left(left), right(right) {}
+  Times(node left, node right) : left(left), right(right) {}
 
-  shared_const_node left, right;
+  node left, right;
   //    ~Times() { cout << "~Times()" << "\n"; }
 };
 
@@ -119,10 +117,7 @@ TEST_CASE("21_Tree_TE_dispach_via_m_table") {
 
   using namespace virtual_void;
 
-  m_table::shared_const_data_ptr expr = m_table::make_shared_const<Times>(
-      m_table::make_shared_const<Integer>(2),
-      m_table::make_shared_const<Plus>(m_table::make_shared_const<Integer>(3),
-                                       m_table::make_shared_const<Integer>(4)));
+  auto expr = node{Times{{Integer{2}}, {Plus{Integer{3}, Integer{4}}}}};
 
   REQUIRE(value(expr) == 14);
   std::stringstream out;

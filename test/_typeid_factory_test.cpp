@@ -45,7 +45,7 @@ TEST_CASE("typeid factory") {
     factory.seal_for_runtime();
     auto test = [&]<typename T>() {
       auto cv = factory(typeid(T));
-      REQUIRE(cv.type() == typeid(T));
+      REQUIRE(cv.meta()->type_info() == &typeid(T));
       auto tp = static_cast<const T*>(cv.data());
       REQUIRE(tp->data == typeid(T).name());
     };

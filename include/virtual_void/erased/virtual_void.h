@@ -44,7 +44,7 @@ struct virtual_void {
   virtual_void& operator=(virtual_void&) = default;
   virtual_void& operator=(virtual_void&&) noexcept = default;
   template <typename V>
-  explicit virtual_void(V&& v)
+  virtual_void(V&& v)
     requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
       : ptr_(trait_t::construct_from(std::forward<V>(v))) {}
