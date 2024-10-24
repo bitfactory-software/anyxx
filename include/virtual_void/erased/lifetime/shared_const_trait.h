@@ -17,14 +17,6 @@ struct shared_const_trait
   template <typename V>
   using typed_t = data::holder<V, META>;
 
-  template <typename V>
-  struct uneraser {
-    using type = V;
-    auto operator()(void const* erased) {
-      return static_cast<V const *>(erased);
-    };
-  };
-
   static void const* value(const auto& ptr) { return ptr->value(); }
   static auto meta(const auto& ptr) { return ptr->meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }

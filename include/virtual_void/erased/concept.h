@@ -45,8 +45,7 @@ auto unerase() {
   if constexpr (is_virtual_void<constructed_with_t>) {
     using trait_t = typename VIRTUAL_VOID::trait_t;
     using value_t = typename constructed_with_t::value_t;
-    using uneraser_t = trait_t::template uneraser<value_t>;
-    return uneraser_t();
+    return static_cast_uneraser<value_t>();
   } else {
     if constexpr (VIRTUAL_VOID::is_const) {
       return static_cast_uneraser<constructed_with_t const>();
