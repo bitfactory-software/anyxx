@@ -29,10 +29,121 @@ ERASED_INTERFACE_(shape_d_i, shape_base,
                   (INTERFACE_CONST_METHOD(double, area),
                    INTERFACE_CONST_METHOD(double, perimeter)))
 
-ERASED_INTERFACE(shape_i, (INTERFACE_CONST_METHOD(void, draw, position),
-                           INTERFACE_CONST_METHOD(int, count_sides),
-                           INTERFACE_CONST_METHOD(double, area),
-                           INTERFACE_CONST_METHOD(double, perimeter)))
+template <typename T>
+struct shape_i_default_v_table_map {
+  auto draw(T const* x, position _sig) {
+    return x->draw(std::forward<decltype(_sig)>(_sig));
+  };
+  auto count_sides(T const* x) { return x->count_sides(); };
+  auto area(T const* x) { return x->area(); };
+  auto perimeter(T const* x) { return x->perimeter(); };
+};
+template <typename T>
+struct shape_i_v_table_map : shape_i_default_v_table_map<T> {};
+template <typename BASE_V_TABLE>
+struct shape_iv_table : BASE_V_TABLE {
+  using v_table_base_t = BASE_V_TABLE;
+  using void_t = v_table_base_t::void_t;
+  using v_table_t = shape_iv_table;
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(v_table_t) == from
+               ? true
+               : v_table_base_t::static_is_derived_from(from);
+  }
+  void (*draw)(void_t, position);
+  int (*count_sides)(void_t);
+  double (*area)(void_t);
+  double (*perimeter)(void_t);
+  template <typename UNERASE>
+  shape_iv_table(UNERASE unerase) : v_table_base_t(unerase) {
+    using v_table_map = shape_i_v_table_map<typename UNERASE::type>;
+    draw = [](void_t _vp, position _sig) {
+      return v_table_map{}.draw((UNERASE{}(_vp)),
+                                std::forward<decltype(_sig)>(_sig));
+    };
+    count_sides = [](void_t _vp) {
+      return v_table_map{}.count_sides((UNERASE{}(_vp)));
+    };
+    area = [](void_t _vp) { return v_table_map{}.area((UNERASE{}(_vp))); };
+    perimeter = [](void_t _vp) {
+      return v_table_map{}.perimeter((UNERASE{}(_vp)));
+    };
+    ;
+    virtual_void::erased::set_is_derived_from<v_table_t>(this);
+  };
+};
+template <virtual_void::erased::is_virtual_void VIRTUAL_VOID>
+struct shape_i : virtual_void::erased::base<VIRTUAL_VOID> {
+ public:
+  using virtual_void_t = VIRTUAL_VOID;
+  using void_t = VIRTUAL_VOID::void_t;
+  using base_t = virtual_void::erased::base<VIRTUAL_VOID>;
+  using v_table_base_t = base_t::v_table_t;
+  using v_table_t = shape_iv_table<v_table_base_t>;
+  using query_v_table_unique_t =
+      shape_iv_table<virtual_void::erased::base<virtual_void_t>>;
+  template <typename T>
+  using is_already_base =
+      std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
+                         std::true_type,
+                         typename base_t::template is_already_base<T>>;
+  static_assert(!base_t::is_already_base<query_v_table_unique_t>::value,
+                "A v_table may be instanciated only once per interface");
+
+ protected:
+  using base_t::v_table_;
+  using base_t::virtual_void_;
+
+ public:
+  shape_i(virtual_void_t virtual_void, v_table_t* v_table)
+      : base_t(std::move(virtual_void), v_table) {}
+  template <typename CONSTRUCTED_WITH>
+  shape_i(CONSTRUCTED_WITH&& v)
+    requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
+      : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
+    static v_table_t imlpemented_v_table{
+        virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
+    v_table_ = &imlpemented_v_table;
+  }
+  template <typename OTHER>
+  shape_i(const OTHER& other)
+    requires(std::derived_from<OTHER, base_t>)
+      : base_t(other) {}
+  void draw(position _sig) const
+    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+             void const, virtual_void_t>)
+  {
+    return static_cast<v_table_t*>(v_table_)->draw(
+        base_t::virtual_void_.data(), std::forward<decltype(_sig)>(_sig));
+  }
+  int count_sides() const
+    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+             void const, virtual_void_t>)
+  {
+    return static_cast<v_table_t*>(v_table_)->count_sides(
+        base_t::virtual_void_.data());
+  }
+  double area() const
+    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+             void const, virtual_void_t>)
+  {
+    return static_cast<v_table_t*>(v_table_)->area(
+        base_t::virtual_void_.data());
+  }
+  double perimeter() const
+    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+             void const, virtual_void_t>)
+  {
+    return static_cast<v_table_t*>(v_table_)->perimeter(
+        base_t::virtual_void_.data());
+  }
+  shape_i(const shape_i&) = default;
+  shape_i(shape_i&) = default;
+  shape_i(shape_i&&) = default;
+
+ protected:
+  shape_i() = default;
+};
 
 using shape_vv = shape_i<virtual_void::m_table::shared_const>;
 

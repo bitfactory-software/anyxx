@@ -1,6 +1,7 @@
 #pragma once
 
 #include <any>
+#include <iostream>
 
 #include "../include/virtual_void/m_table/lifetime/shared_const.h"
 #include "../include/virtual_void/m_table/lifetime/unique.h"
@@ -40,11 +41,13 @@ TEST_CASE("typeid factory") {
     using classes = type_list<D, C1, C2>;
     open_method::fill_with_overloads(
         classes{}, factory, []<typename T>() -> m_table::shared_const {
-          return m_table::make_shared_const<T>(typeid(T).name());
+          return m_table::shared_const{std::in_place_type<T>, typeid(T).name()};
         });
     factory.seal_for_runtime();
     auto test = [&]<typename T>() {
       auto cv = factory(typeid(T));
+      std::cout << cv.meta()->type_info()->name() << std::endl;
+      std::cout << typeid(T).name() << std::endl;
       REQUIRE(cv.meta()->type_info() == &typeid(T));
       auto tp = static_cast<const T*>(cv.data());
       REQUIRE(tp->data == typeid(T).name());

@@ -21,8 +21,7 @@ struct shared_const_trait
   struct uneraser {
     using type = V;
     auto operator()(void const* erased) {
-      auto const& ptr = *static_cast<ptr_t const*>(erased);
-      return unerase_cast<V const>(*ptr);
+      return static_cast<V const *>(erased);
     };
   };
 
