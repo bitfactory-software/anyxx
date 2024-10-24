@@ -76,6 +76,7 @@ TEST_CASE("typeid_/lifetime/shared_const") {
   REQUIRE(d1->data == "shared hallo");
   REQUIRE(d1.meta()->type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
+  typed_shared_const<A1> a0{ *d1 };
   auto a1 = as<A1>(d1);
   typed_shared_const<A1> a2{ A1{"a2->OK"} };
   typed_shared_const<A1> a3{std::in_place, "a3 in_place->OK"};
