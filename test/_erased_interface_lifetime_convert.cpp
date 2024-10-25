@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../include/virtual_void/erased/behavior/interface.h"
-#include "../include/virtual_void/erased/lifetime/cast.h"
+#include "../include/virtual_void/erased/data/has_no_meta/cast.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

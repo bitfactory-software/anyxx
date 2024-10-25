@@ -5,7 +5,7 @@
 
 #include "../../erased/data/observer_ptr.h"
 #include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/lifetime/observer_trait.h"
+#include "../../erased/data/observer_trait.h"
 
 namespace virtual_void::m_table {
 template <typename VOID>

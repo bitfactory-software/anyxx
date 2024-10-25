@@ -5,8 +5,8 @@
 
 #include "../include/virtual_void/erased/behavior/call_operator.h"
 #include "../include/virtual_void/erased/behavior/interface.h"
-#include "../include/virtual_void/erased/lifetime/observer.h"
-#include "../include/virtual_void/erased/lifetime/value.h"
+#include "../include/virtual_void/erased/data/has_no_meta/observer.h"
+#include "../include/virtual_void/erased/data/has_no_meta/value.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

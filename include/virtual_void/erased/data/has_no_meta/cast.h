@@ -3,8 +3,6 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../data/observer_ptr.h"
-
 #include "observer.h"
 #include "shared_const.h"
 #include "unique.h"

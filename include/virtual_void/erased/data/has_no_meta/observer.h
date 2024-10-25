@@ -3,9 +3,9 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../../erased/data/has_no_meta/has_no_meta.h"
-#include "../../erased/data/observer_ptr.h"
-#include "observer_trait.h"
+#include "has_no_meta.h"
+#include "../observer_ptr.h"
+#include "../observer_trait.h"
 
 namespace virtual_void::erased {
 

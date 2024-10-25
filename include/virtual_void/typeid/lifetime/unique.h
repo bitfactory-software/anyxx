@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../erased/data/has_type_info/has_type_info.h"
-#include "../../erased/lifetime/unique_trait.h"
+#include "../../erased/data/unique_trait.h"
 #include "../../erased/virtual_void.h"
 
 namespace virtual_void::typeid_ {

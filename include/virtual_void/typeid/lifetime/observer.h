@@ -5,7 +5,7 @@
 
 #include "../../erased/data/has_type_info/has_type_info.h"
 #include "../../erased/data/observer_ptr.h"
-#include "../../erased/lifetime/observer_trait.h"
+#include "../../erased/data/observer_trait.h"
 
 namespace virtual_void::typeid_ {
 template <typename VOID>

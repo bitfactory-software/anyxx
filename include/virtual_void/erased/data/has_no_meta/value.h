@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../data/has_no_meta/has_no_meta.h"
-#include "value_trait.h"
+#include "has_no_meta.h"
+#include "../value_trait.h"
 
 namespace virtual_void::erased {
 

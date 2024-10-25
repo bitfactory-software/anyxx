@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/lifetime/value_trait.h"
+#include "../../erased/data/value_trait.h"
 
 namespace virtual_void::m_table {
 using value_data_ptr = erased::data::value_ptr<erased::data::with_m_table>;

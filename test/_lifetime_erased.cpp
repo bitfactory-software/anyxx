@@ -4,10 +4,10 @@
 #include <vector>
 
 #include "../include/virtual_void/erased/data/has_no_meta/has_no_meta.h"
-#include "../include/virtual_void/erased/lifetime/observer.h"
-#include "../include/virtual_void/erased/lifetime/shared_const.h"
-#include "../include/virtual_void/erased/lifetime/unique.h"
-#include "../include/virtual_void/erased/lifetime/value.h"
+#include "../include/virtual_void/erased/data/has_no_meta/observer.h"
+#include "../include/virtual_void/erased/data/has_no_meta/shared_const.h"
+#include "../include/virtual_void/erased/data/has_no_meta/unique.h"
+#include "../include/virtual_void/erased/data/has_no_meta/value.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

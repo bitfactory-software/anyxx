@@ -4,7 +4,7 @@
 #include <type_traits>
 
 #include "../../erased/data/has_type_info/has_type_info.h"
-#include "../../erased/lifetime/value_trait.h"
+#include "../../erased/data/value_trait.h"
 
 namespace virtual_void::typeid_ {
 using value_data_ptr = erased::data::value_ptr<erased::data::with_type_info>;

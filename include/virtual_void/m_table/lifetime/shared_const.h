@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/lifetime/shared_const_trait.h"
+#include "../../erased/data/shared_const_trait.h"
 #include "../../erased/virtual_void.h"
 
 namespace virtual_void::m_table {

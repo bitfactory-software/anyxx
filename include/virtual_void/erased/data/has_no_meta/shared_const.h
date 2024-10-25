@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "shared_const_trait.h"
+#include "../shared_const_trait.h"
 
 namespace virtual_void::erased {
 
