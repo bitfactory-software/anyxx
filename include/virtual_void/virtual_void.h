@@ -1,7 +1,7 @@
 #pragma once
 
 #include "class_hierarchy/class_hierarchy.h"
-#include "erased/interface.h"
+#include "erased/behavior/interface.h"
 #include "erased/lifetime/observer.h"
 #include "erased/lifetime/shared_const.h"
 #include "erased/lifetime/unique.h"

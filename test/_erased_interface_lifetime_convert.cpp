@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/behavior/interface.h"
 #include "../include/virtual_void/erased/lifetime/cast.h"
 #include "include/catch.hpp"
 

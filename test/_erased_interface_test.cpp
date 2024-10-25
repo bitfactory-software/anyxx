@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/call_operator.h"
-#include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/behavior/call_operator.h"
+#include "../include/virtual_void/erased/behavior/interface.h"
 #include "../include/virtual_void/erased/lifetime/observer.h"
 #include "../include/virtual_void/erased/lifetime/value.h"
 #include "../include/virtual_void/m_table/lifetime/shared_const.h"

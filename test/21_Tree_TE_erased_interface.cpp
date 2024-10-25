@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../include/virtual_void/erased/data/shared_const_ptr.h"
-#include "../include/virtual_void/erased/interface.h"
+#include "../include/virtual_void/erased/behavior/interface.h"
 #include "../include/virtual_void/erased/lifetime/shared_const.h"
 #include "include/catch.hpp"
 
