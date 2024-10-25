@@ -5,8 +5,8 @@
 
 #include "../include/virtual_void/erased/data/has_m_table/shared_const.h"
 #include "../include/virtual_void/erased/data/has_m_table/unique.h"
-#include "../include/virtual_void/erased/open_method/algorithm.h"
-#include "../include/virtual_void/erased/open_method/typeid/factory.h"
+#include "../include/virtual_void/erased/dispatch/open_method/algorithm.h"
+#include "../include/virtual_void/erased/dispatch/open_method/typeid/factory.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 

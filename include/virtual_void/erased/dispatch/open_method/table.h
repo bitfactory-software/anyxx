@@ -3,9 +3,9 @@
 #include <typeindex>
 #include <unordered_map>
 
-#include "../../perfect_typeid_hash/index_table.h"
-#include "../../error.h"
-#include "../../forward.h"
+#include "../../../perfect_typeid_hash/index_table.h"
+#include "../../../error.h"
+#include "../../../forward.h"
 
 namespace virtual_void::open_method {
 

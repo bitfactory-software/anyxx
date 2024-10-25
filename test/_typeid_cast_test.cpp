@@ -6,10 +6,10 @@
 
 #include "include/catch.hpp"
 
-#include "../include/virtual_void/erased/open_method/typeid/open_method.h"
-#include "../include/virtual_void/erased/open_method/m_table/open_method.h"
+#include "../include/virtual_void/erased/dispatch/open_method/typeid/open_method.h"
+#include "../include/virtual_void/erased/dispatch/open_method/m_table/open_method.h"
 #include "../include/virtual_void/typeid_cast/cast.h"
-#include "../include/virtual_void/erased/open_method/algorithm.h"
+#include "../include/virtual_void/erased/dispatch/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
