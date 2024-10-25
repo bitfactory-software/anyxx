@@ -218,11 +218,9 @@ TO interface_lifetime_cast(const FROM& from) {
                  ? true                                                        \
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
-                                                                               \
-    _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l)      \
-                                                                               \
-        template <typename UNERASE>                                            \
-        n##v_table(UNERASE unerase) : v_table_base_t(unerase) {                \
+    _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
+    template <typename UNERASE>                                                \
+    n##v_table(UNERASE unerase) : v_table_base_t(unerase) {                    \
       using v_table_map = n##_v_table_map<typename UNERASE::type>;             \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
