@@ -83,8 +83,11 @@ This library offers an efficient implentation with two indirections and typesafe
 
 ### *ad hoc* type erasure versus architectural *type tunnel*
 **type erasure** as we see it today, and how it is supported by the well known libraries, share often this pattern:
-An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements from the has an **type erasing** parameter.
+
+An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements from the **type erasing** parameter.
+
 This technique solves many problems, but stops working, as soon as the information passed to the **type eraser** participates in *inversion of control*.
+
 This **virtual_void** library is designed to solve this problem with **type tunneling**. Recovering the *erased* information, and casting to different *interfaces* of that information is here the key.  
 
 
