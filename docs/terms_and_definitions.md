@@ -6,22 +6,27 @@ nav_order: 2
 # terms and definitions in context of this documentation
 
 ###  erased interface
-An object, which members are function pointers, and every function has as first parameter "self". This is a pointer to (eventually const )void.
+An object, which members are function pointers, and every function has as **first parameter *self***. This is a pointer to (eventually *const*) *void*.
 
 ###  implemented erased interface
 An object derived from an interface, with no additional members and where all members point to vaild functions.
-These funtion are filled by a templated constructor. The template parameter is called the unerased type.
+These funtion are filled by a templated constructor. The template parameter is called the **unerased** type.
 In this functions will "self" parameter be casted back to a pointer to the unerased type, and correct function for the "unerased" type wil be called. The default for the called function is a member function with the same name and signature as specified for the interface function. This behaviour can be cutomized in an **interface map** for the unerased type.
 
-### lifetime holder
-An object that manages the lifetime of an other object in a defined way and delivers a void pointer of that object. In our library the member function delivering this pointer is "data()". There are four archetypes:
-- observer: Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: const and mutable, for read only or modifying access to the referenced object.
-- shard const: Ownership as std::shard_ptr. The delivered address is a pointer to const.
-- unique: Ownership as std::unique_ptr. The delivered address is a pointer to a mutable object.
-- value: Every value object holds an own copy. Same semantics as 'int'. The delivered access is mutable.
+### virtual_void
+An object that **erases** the real **type** und the **lifetime** of **an** other **object**. In delivers a *void* pointer of that object. In our library the member function delivering this pointer is "data()". There are four archetypes:
+- observer: Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read only or modifying access to the referenced object.
+- *shard_const*: Ownership as std::shard_ptr. The delivered address is a pointer to *const void*
+- *unique*: Ownership as std::unique_ptr. The delivered address is *void* a pointer to a *mutable* object.
+- *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*.
+An *virtual_void* object referncees an *meta* object.
+Thera are three kinds of meta object in the library:
+- *has_no_meta*
+- *has_type_info*
+- *has_m_table* has *type_info* and a pointer to a *m_table* for fast dispatch in an *open method*
 
-### erased versus concrete lifetime holders
-An erased lifetime holder holds no compiletime information about the "holded" object. Only if the holder is decoratet with some "virtual meta data", there is a dynamic and safe cast of the void pointer to conrete pointer possible.
+### virtual_void versus typed_void 
+A *virtual_void* holds no compiletime information about the *holded* object. Only if *virtual_void* has *runtime meta data", there is a dynamic and safe cast of the *void* pointer to conrete pointer possible.
 virtual_void has two kinds of such meta data:
 - typeid
 - m_table
@@ -59,8 +64,12 @@ A crosscast usualy tests, if one interface can be reached from an other, and if 
 An open method is a freestanding callable, which acts like a virtual member function. Open member functions are an reciepe to solve the [expression problem]. An opem method is the simplies but very usefull case of [open multi methods]. With an open method you can add functions, whitch behaviour is determined by the type of its (first) arguent, but you do not need to change the definition of that type. 
 
 ### open type
-A type is an open type, if you can add data members without changing the definition of that object. This can be trivially implemented by an map from some kinde of tag to an any. An implentation with v-table like performance and an typesafe interface is more elaborated.
+A type is an open type, if you can add data members without changing the definition of that object. This can be trivially implemented by an map from some kind of tag to an any. This library offers an implentation with two indirections and typesafe access.
 
+### *ad hoc* type erasure versus architectural *type tunnel*
+**type erasure** as we see it today demonstrated in around the web and how it is supported by the well known libraries, share often this pattern:
+An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements from the has an **type erasing** parameter.
+This technique solves many problems, but stopps working, 
 
 
 
