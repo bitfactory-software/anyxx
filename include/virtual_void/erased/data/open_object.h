@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <vector>
 
-#include "has_no_meta/has_no_meta.h"
+#include "has_no_meta/meta.h"
 #include "value_ptr.h"
 
 namespace virtual_void::open_object {

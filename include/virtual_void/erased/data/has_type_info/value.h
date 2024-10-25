@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "has_type_info.h"
+#include "meta.h"
 #include "../value_trait.h"
 
 namespace virtual_void::typeid_ {

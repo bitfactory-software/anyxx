@@ -1,6 +1,6 @@
 #pragma once
 
-#include "has_type_info.h"
+#include "meta.h"
 #include "../unique_trait.h"
 
 namespace virtual_void::typeid_ {

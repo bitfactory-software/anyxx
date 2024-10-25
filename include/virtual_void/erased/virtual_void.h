@@ -6,8 +6,8 @@
 
 #include "../forward.h"
 #include "concept.h"
-#include "data/has_no_meta/has_no_meta.h"
-#include "data/has_type_info/has_type_info.h"
+#include "data/has_no_meta/meta.h"
+#include "data/has_type_info/meta.h"
 
 namespace virtual_void::erased {
 

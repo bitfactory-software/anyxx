@@ -3,18 +3,23 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "has_no_meta.h"
 #include "../observer_ptr.h"
 #include "../observer_trait.h"
+#include "meta.h"
+
+namespace virtual_void::erased::data::has_no_meta {
+
+template <typename VOID>
+using observer_ptr = data::observer_ptr<VOID, has_no_meta>;
+}
 
 namespace virtual_void::erased {
+template <typename VOID>
+struct data_trait<data::has_no_meta::observer_ptr<VOID>>
+    : observer_trait<data::has_no_meta::observer_ptr<VOID>> {};
+}  // namespace virtual_void::erased
 
-template <typename VOID>
-using observer_ptr =
-    erased::data::observer_ptr<VOID, erased::data::has_no_meta>;
-template <typename VOID>
-struct data_trait<observer_ptr<VOID>>
-    : observer_trait<observer_ptr<VOID>> {};
+namespace virtual_void::erased::data::has_no_meta {
 
 template <typename VOID>
 using observer = virtual_void<observer_ptr<VOID>>;
@@ -38,4 +43,4 @@ static_assert(is_virtual_void<const_observer>);
 static_assert(is_virtual_void<typed_const_observer<int>>);
 static_assert(is_virtual_void<typed_mutable_observer<int>>);
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void::erased::data::has_no_meta

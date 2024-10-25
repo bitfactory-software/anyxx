@@ -3,28 +3,28 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "has_m_table.h"
+#include "meta.h"
 #include "../observer_trait.h"
 #include "../observer_ptr.h"
 
-namespace virtual_void::m_table {
+namespace virtual_void::erased::data::has_m_table {
 template <typename VOID>
 using observer_ptr =
-    erased::data::observer_ptr<VOID, erased::data::has_m_table>;
+    data::observer_ptr<VOID, has_m_table>;
 }
 
 namespace virtual_void::erased {
 
 template <typename VOID>
-struct data_trait<m_table::observer_ptr<VOID>>
-    : observer_trait<m_table::observer_ptr<VOID>> {};
+struct data_trait<data::has_m_table::observer_ptr<VOID>>
+    : observer_trait<data::has_m_table::observer_ptr<VOID>> {};
 
 }  // namespace virtual_void::erased
 
-namespace virtual_void::m_table {
+namespace virtual_void::erased::data::has_m_table {
 
 template <typename VOID>
-using observer = erased::virtual_void<m_table::observer_ptr<VOID>>;
+using observer = erased::virtual_void<observer_ptr<VOID>>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 

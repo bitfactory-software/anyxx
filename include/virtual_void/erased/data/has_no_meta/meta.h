@@ -2,7 +2,7 @@
 
 #include "../holder.h"
 
-namespace virtual_void::erased::data {
+namespace virtual_void::erased::data::has_no_meta {
 
 struct has_no_meta {
   const has_no_meta* meta() const { return this; }

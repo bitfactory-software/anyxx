@@ -6,7 +6,7 @@
 #include "../../../error.h"
 #include "../../../forward.h"
 
-namespace virtual_void {
+namespace virtual_void::erased::data::has_m_table {
 
 class m_table_t {
  public:

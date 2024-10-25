@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "has_type_info.h"
+#include "meta.h"
 #include "../observer_trait.h"
 #include "../observer_ptr.h"
 

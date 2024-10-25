@@ -3,7 +3,7 @@
 #include "m_table.h"
 #include "../holder.h"
 
-namespace virtual_void::erased::data {
+namespace virtual_void::erased::data::has_m_table {
 
 struct has_m_table {
   m_table_t* m_table_ = nullptr;
