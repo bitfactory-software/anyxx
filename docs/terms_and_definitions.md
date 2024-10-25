@@ -30,7 +30,7 @@ A *virtual_void* holds no compiletime information about the *holded* object. Onl
 virtual_void has two kinds of such meta data:
 - typeid
 - m_table
-A concrete lifetime holdder delivers the a pointer to an object of type, with which the object was constructed. A concrete lifeteime holder can alwayes be converted in an erased lifetime holder.
+A  *virtual_typed* is a typed wrapper atop of *virtual void*. If the *virtual void* holds in its meta an *type info*, the cast to *virtual_void* is a safe cast.
 
 ### static cast vs dynamic cast
 - A static cast
@@ -69,7 +69,13 @@ A type is an open type, if you can add data members without changing the definit
 ### *ad hoc* type erasure versus architectural *type tunnel*
 **type erasure** as we see it today demonstrated in around the web and how it is supported by the well known libraries, share often this pattern:
 An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements from the has an **type erasing** parameter.
-This technique solves many problems, but stopps working, 
+This technique solves many problems, but stopps working, as soon as the information passed to the **type erasure** participates in *inversion of control*.
+This **virtual_void** library is designed to solve this problem. 
+
+
+
+
+
 
 
 
