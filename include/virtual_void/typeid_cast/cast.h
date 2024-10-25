@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../forward.h"
-#include "../open_method/algorithm.h"
+#include "../erased/open_method/algorithm.h"
 
 namespace virtual_void::typeid_cast {
 

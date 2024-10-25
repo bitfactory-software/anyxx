@@ -2,9 +2,9 @@
 
 #include <typeindex>
 
-#include "../forward.h"
-#include "../open_method/domain.h"
-#include "../open_method/table.h"
+#include "../../../forward.h"
+#include "../domain.h"
+#include "../table.h"
 
 namespace virtual_void::typeid_ {
 

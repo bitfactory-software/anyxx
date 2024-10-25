@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../m_table/m_table.h"
+#include "m_table.h"
 #include "../holder.h"
 
 namespace virtual_void::erased::data {

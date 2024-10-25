@@ -8,7 +8,7 @@
 
 #include "../include/std26/proxy.h"
 
-#include "../include/virtual_void/typeid/open_method.h"
+#include "../include/virtual_void/erased/open_method/typeid/open_method.h"
 #include "../include/virtual_void/utillities/unnamed__.h"
 
 namespace
