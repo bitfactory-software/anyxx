@@ -5,6 +5,7 @@
 
 #include "../include/virtual_void/typeid/lifetime/observer.h"
 #include "../include/virtual_void/typeid/lifetime/shared_const.h"
+#include "../include/virtual_void/typeid/lifetime/unique.h"
 #include "../include/virtual_void/typeid/lifetime/value.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
@@ -89,23 +90,23 @@ TEST_CASE("typeid_/lifetime/shared_const") {
   REQUIRE(a3->data == "a3 in_place->OK");
   REQUIRE(a4->data == "a1_pur");
 }
-//
-// TEST_CASE("m_table/lifetime/unique") {
-//  auto c1 = make_unique<C>("unique c1");
-//  REQUIRE(c1->data == "unique c1");
-//  auto c2 = typed_unique<C>(std::in_place, "unique c2");
-//  REQUIRE(c2->data == "unique c2");
-//  auto c3 = typed_unique<C>(C{"unique c3"});
-//  REQUIRE(c3->data == "unique c3");
-//  auto c4 = std::move(c3);
-//  REQUIRE(c4->data == "unique c3");
-//
-//  auto d1 = make_unique<D>("unique hallo");
-//  unique x{std::move(d1)};
-//  auto d = as<D>(std::move(x));
-//  REQUIRE(d->data == "unique hallo");
-//}
-//
+
+TEST_CASE("typeid_/lifetime/unique") {
+  auto c1 = unique(std::in_place_type<C>, "unique c1");
+  REQUIRE(erased::reconcrete_cast<C>(c1)->data == "unique c1");
+  auto c2 = typed_unique<C>(std::in_place, "unique c2");
+  REQUIRE(c2->data == "unique c2");
+  auto c3 = typed_unique<C>(C{"unique c3"});
+  REQUIRE(c3->data == "unique c3");
+  auto c4 = std::move(c3);
+  REQUIRE(c4->data == "unique c3");
+
+  auto d1 = unique(std::in_place_type<D>, "unique hallo");
+  unique x{std::move(d1)};
+  auto d = as<D>(std::move(x));
+  REQUIRE(d->data == "unique hallo");
+}
+
 TEST_CASE("typeid_/lifetime/value") {
   using namespace typeid_;
   {

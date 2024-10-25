@@ -104,6 +104,7 @@ TEST_CASE("m_table/lifetime/unique") {
   auto d = as<D>(std::move(x));
   REQUIRE(d->data == "unique hallo");
 }
+
 TEST_CASE("m_table/lifetime/value") {
   using namespace m_table;
   {
