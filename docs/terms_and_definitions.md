@@ -75,7 +75,7 @@ A *crosscas*t usualy tests, if one interface can be reached from an other, and i
 Open member functions are an reciepe to solve the [expression problem]. An opem method is the simpliest, but very usefull, case of [open multi methods]. With an open method you can add a function, whitch behaviour is determined by the type of its (first) arguent, but you do not need to change the definition of that type. 
 
 ### open type
-#### A type is an **open type**, where you can add data members without changing the definition of that object. 
+#### An **open type** is behaves like a *struct*, where you can add data members without changing the definition of that *struct*. 
 
 This could be trivially implemented by an map from some kind of tag to an any.
 This library offers an efficient implentation with two indirections and typesafe access.
