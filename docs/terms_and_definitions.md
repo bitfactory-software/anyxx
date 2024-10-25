@@ -59,8 +59,9 @@ Staic downcasts are guesses and as such unsafe. Dynamic downcasts are per defini
 ### lifetime cast
 #### A *virtual_void* can be casted to an other *virtual_void*, in the sense of an *upcast*.
 
-- a "smart" lifteime holder ("shared", "uniqe", "value") can be casted to an "observer"
-- a mutable liftime holder can be casted to an read only "observer".
+- a **smart** *virtual_void* (**shared**, **uniqe**, **value**) can be casted to an **observer**
+- a **mutable**  *virtual_void* can be casted to an *read only observer**.
+
 But not in the other direction.
 
 ### crosscast
