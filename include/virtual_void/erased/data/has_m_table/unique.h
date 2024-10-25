@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/data/unique_trait.h"
-#include "../../erased/virtual_void.h"
+#include "has_m_table.h"
+#include "../unique_trait.h"
+#include "../../virtual_void.h"
 
 namespace virtual_void::m_table {
 using unique_data_ptr = erased::data::unique_ptr<erased::data::with_m_table>;

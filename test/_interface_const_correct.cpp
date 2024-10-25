@@ -7,7 +7,7 @@
 #include "../include/virtual_void/erased/behavior/interface.h"
 #include "../include/virtual_void/erased/data/has_no_meta/observer.h"
 #include "../include/virtual_void/erased/data/has_no_meta/unique.h"
-#include "../include/virtual_void/m_table/lifetime/shared_const.h"
+#include "../include/virtual_void/erased/data/has_m_table/shared_const.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

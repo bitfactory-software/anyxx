@@ -3,33 +3,32 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../../erased/data/observer_ptr.h"
-#include "../../erased/data/has_m_table/has_m_table.h"
-#include "../../erased/data/observer_trait.h"
+#include "has_type_info.h"
+#include "../observer_trait.h"
+#include "../observer_ptr.h"
 
-namespace virtual_void::m_table {
+namespace virtual_void::typeid_ {
 template <typename VOID>
 using observer_ptr =
-    erased::data::observer_ptr<VOID, erased::data::has_m_table>;
+    erased::data::observer_ptr<VOID, erased::data::has_type_info>;
 }
 
 namespace virtual_void::erased {
-
 template <typename VOID>
-struct data_trait<m_table::observer_ptr<VOID>>
-    : observer_trait<m_table::observer_ptr<VOID>> {};
+struct data_trait<typeid_::observer_ptr<VOID>>
+    : observer_trait<typeid_::observer_ptr<VOID>> {};
 
 }  // namespace virtual_void::erased
 
-namespace virtual_void::m_table {
+namespace virtual_void::typeid_ {
 
 template <typename VOID>
-using observer = erased::virtual_void<m_table::observer_ptr<VOID>>;
+using observer = erased::virtual_void<typeid_::observer_ptr<VOID>>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 
 template <typename V, typename VOID>
-using typed_observer = erased::virtual_typed<V, m_table::observer_ptr<VOID>>;
+using typed_observer = erased::virtual_typed<V, typeid_::observer_ptr<VOID>>;
 template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>
@@ -43,4 +42,4 @@ static_assert(erased::is_virtual_void<mutable_observer>);
 static_assert(erased::is_virtual_void<typed_const_observer<int>>);
 static_assert(erased::is_virtual_void<typed_mutable_observer<int>>);
 
-}  // namespace virtual_void::m_table
+}  // namespace virtual_void::typeid_

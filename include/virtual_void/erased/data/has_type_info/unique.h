@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../../erased/data/has_type_info/has_type_info.h"
-#include "../../erased/data/unique_trait.h"
-#include "../../erased/virtual_void.h"
+#include "has_type_info.h"
+#include "../unique_trait.h"
 
 namespace virtual_void::typeid_ {
 using unique_data_ptr = erased::data::unique_ptr<erased::data::with_type_info>;

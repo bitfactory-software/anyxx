@@ -1,8 +1,7 @@
 #pragma once
 
-#include "../../erased/data/has_type_info/has_type_info.h"
-#include "../../erased/data/shared_const_trait.h"
-#include "../../erased/virtual_void.h"
+#include "has_type_info.h"
+#include "../shared_const_trait.h"
 
 namespace virtual_void::typeid_ {
 using shared_const_data_ptr =
