@@ -14,13 +14,15 @@ These funtion are filled by a templated constructor. The template parameter is c
 In this functions will "self" parameter be casted back to a pointer to the unerased type, and correct function for the "unerased" type wil be called. The default for the called function is a member function with the same name and signature as specified for the interface function. This behaviour can be cutomized in an **interface map** for the unerased type.
 
 ### virtual_void
-An object that **erases** the real **type** und the **lifetime** of **an** other **object**. In delivers a *void* pointer of that object. In our library the member function delivering this pointer is "data()". There are four archetypes:
+
+#### An object that **erases** the real **type** und the **lifetime** of **an** other **object**. In delivers a *void* pointer of that object. In our library the member function delivering this pointer is "data()". There are four archetypes:
 - observer: Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read only or modifying access to the referenced object.
 - *shard_const*: Ownership as std::shard_ptr. The delivered address is a pointer to *const void*
 - *unique*: Ownership as std::unique_ptr. The delivered address is *void* a pointer to a *mutable* object.
 - *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*.
 An *virtual_void* object referncees an *meta* object.
-Thera are three kinds of meta object in the library:
+
+####Thera are three kinds of meta object in the library:
 - *has_no_meta*
 - *has_type_info*
 - *has_m_table* has *type_info* and a pointer to a *m_table* for fast dispatch in an *open method*
