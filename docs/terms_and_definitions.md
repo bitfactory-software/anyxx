@@ -3,7 +3,7 @@ title: terms and definitions
 nav_order: 2
 ---
 
-# terms and definitions in context of this documentation
+# terms and definitions in context of this library
 
 ###  erased interface
 An object, which members are function pointers, and every function has as **first parameter *self***. This is a pointer to (eventually *const*) *void*.
