@@ -22,7 +22,7 @@ In this functions will "self" parameter be casted back to a pointer to the unera
 - *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*.
 An *virtual_void* object referncees an *meta* object.
 
-#### There are three kinds of meta object in the library:
+#### There are three kinds of meta objects in the library:
 - *has_no_meta*
 - *has_type_info*
 - *has_m_table* has *type_info* and a pointer to a *m_table* for fast dispatch in an *open method*
