@@ -5,8 +5,8 @@
 #include <typeindex>
 #include <vector>
 
-#include "../erased/data/has_no_meta/has_no_meta.h"
-#include "../erased/data/value_ptr.h"
+#include "has_no_meta/has_no_meta.h"
+#include "value_ptr.h"
 
 namespace virtual_void::open_object {
 
