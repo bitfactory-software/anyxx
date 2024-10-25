@@ -4,15 +4,17 @@
 #include <iostream>
 #include <typeinfo>
 
+#include "../include/virtual_void/erased/data/has_m_table/observer.h"
 #include "../include/virtual_void/erased/data/has_m_table/shared_const.h"
 #include "../include/virtual_void/erased/data/has_m_table/unique.h"
-#include "../include/virtual_void/erased/dispatch/open_method/m_table/open_method.h"
 #include "../include/virtual_void/erased/dispatch/open_method/algorithm.h"
+#include "../include/virtual_void/erased/dispatch/open_method/m_table/open_method.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 
 namespace {
 
+using namespace virtual_void::erased::data::has_m_table;
 using namespace virtual_void::m_table;
 using namespace TestDomain;
 
@@ -23,7 +25,7 @@ using to_string_method = open_method<std::string(const void*)>;
 template <typename T>
 auto call(const to_string_method& method) {
   T t;
-  return method(virtual_void::to_m_table_void(&t));
+  return method(const_observer(t));
 }
 
 TEST_CASE("m_table open_method") {
@@ -63,8 +65,7 @@ TEST_CASE("m_table open_method") {
     virtual_void::class_hierarchy::visit_classes<classes>(
         virtual_void::overload{[&]<typename C> {
                                  C c;
-                                 auto virtual_void =
-                                     virtual_void::to_m_table_void(&c);
+                                 auto virtual_void = const_observer(c);
                                  auto u = unique{C{}};
                                  auto expected = typeid(C).name();
                                  auto r = toString(u);

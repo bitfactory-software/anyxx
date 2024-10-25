@@ -1,8 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
 #include "../observer_ptr.h"
 #include "../observer_trait.h"
 #include "meta.h"

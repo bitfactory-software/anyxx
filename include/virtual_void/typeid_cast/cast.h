@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../forward.h"
+#include "../erased/data/has_type_info/observer.h"
 #include "../erased/dispatch/open_method/algorithm.h"
 
 namespace virtual_void::typeid_cast {
@@ -27,7 +27,7 @@ struct const_cast_implementation {
   };
   template <typename FROM>
   auto operator()(const FROM* from, const std::type_info& to) {
-    return cast_implementation_<const_, typeid_const_void, FROM>(from, to);
+    return cast_implementation_<const_, erased::data::has_type_info::const_observer, FROM>(from, to);
   }
 };
 struct cast_implementation {
@@ -37,7 +37,7 @@ struct cast_implementation {
   };
   template <typename FROM>
   auto operator()(FROM* from, const std::type_info& to) {
-    return cast_implementation_<non_const_, typeid_void, FROM>(from, to);
+    return cast_implementation_<non_const_, erased::data::has_type_info::mutable_observer, FROM>(from, to);
   }
 };
 template <template <typename SIG> typename OPEN_METHOD>

@@ -1,24 +1,22 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
-#include "meta.h"
 #include "../value_trait.h"
+#include "meta.h"
+
+namespace virtual_void::erased::data::has_no_meta {
+using value_data_ptr = data::value_ptr<with_no_meta>;
+}
 
 namespace virtual_void::erased {
-
-using value_data_ptr = data::value_ptr<data::with_no_meta>;
-
 template <>
-struct data_trait<value_data_ptr> : value_trait<data::has_no_meta> {
-};
+struct data_trait<data::has_no_meta::value_data_ptr>
+    : value_trait<data::has_no_meta::has_no_meta> {};
+}  // namespace virtual_void::erased
 
+namespace virtual_void::erased::data::has_no_meta {
 using value = virtual_void<value_data_ptr>;
 template <typename T>
 using typed_value = virtual_typed<T, value_data_ptr>;
-
 static_assert(erased::is_virtual_void<value>);
 static_assert(erased::is_virtual_void<typed_value<int>>);
-
-}  // namespace virtual_void::erased
+}  // namespace virtual_void::erased::data::has_no_meta

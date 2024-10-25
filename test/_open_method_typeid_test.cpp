@@ -6,18 +6,18 @@
 
 #include "include/catch.hpp"
 
+#include "../include/virtual_void/erased/data/has_type_info/observer.h"
 #include "../include/virtual_void/erased/dispatch/open_method/typeid/open_method.h"
 #include "../include/virtual_void/erased/dispatch/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
-
-namespace
+::namespace
 {
-	using namespace virtual_void::typeid_;
+	using namespace virtual_void::erased::data::has_type_info;
 
 	auto ToString = []( const auto* t )->std::string{ return typeid( *t ).name(); };  
 
-	using to_string_method = open_method< std::string( const void* ) >;
+	using to_string_method = virtual_void::typeid_::open_method< std::string( const void* ) >;
 
 	template< typename T > std::string call( const to_string_method& method )
 	{ 
@@ -30,7 +30,7 @@ namespace
 		using namespace TestDomain;
 
 		{
-			domain open_methods;
+			virtual_void::open_method::domain open_methods;
 			to_string_method toString( open_methods );
 				
 			toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
