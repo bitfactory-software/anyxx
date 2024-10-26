@@ -38,7 +38,7 @@ struct with_meta {
 
 #define ASSERT_OFFSET_EMPTY(T, o) \
   static_assert(                  \
-      offsetof(DATA_ALIGNED(T, data::has_no_meta::has_no_meta), value_) == o);
+      offsetof(DATA_ALIGNED(T, data::has_no_meta::meta), value_) == o);
 
 #define ASSERT_OFFSET(T, META_DATA, o) \
   static_assert(offsetof(DATA_ALIGNED(T, META_DATA), value_) == o);
@@ -64,7 +64,7 @@ ASSERT_OFFSET(std::string, data::has_type_info::has_type_info,
 
 #define TRACE_OFFSET_EMPTY(T)                                     \
   {                                                               \
-    using TYPE = data::holder<T, data::has_no_meta::has_no_meta>; \
+    using TYPE = data::holder<T, data::has_no_meta::meta>; \
     std::cout << "data::holder<" << #T                            \
               << "> offsetof(value_): " << offsetof(TYPE, value_) \
               << std::endl;                                       \
@@ -101,7 +101,7 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr =
-        erased::data::make_unique<data::holder<Data, data::has_no_meta::has_no_meta>>();
+        erased::data::make_unique<data::holder<Data, data::has_no_meta::meta>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -120,7 +120,7 @@ TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<data::has_no_meta::with_no_meta const> sp =
-        data::make_shared_const<data::holder<Data, data::has_no_meta::has_no_meta>>();
+        data::make_shared_const<data::holder<Data, data::has_no_meta::meta>>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -139,7 +139,7 @@ TEST_CASE("erase lifetime test value") {
   Data::destrucor_runs = 0;
   {
     data::value_ptr<data::has_no_meta::with_no_meta> vp =
-        data::make_value<data::holder<Data, data::has_no_meta::has_no_meta>>();
+        data::make_value<data::holder<Data, data::has_no_meta::meta>>();
     REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;

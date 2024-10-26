@@ -10,7 +10,7 @@ using value_data_ptr = data::value_ptr<with_no_meta>;
 namespace virtual_void::erased {
 template <>
 struct data_trait<data::has_no_meta::value_data_ptr>
-    : value_trait<data::has_no_meta::has_no_meta> {};
+    : value_trait<data::has_no_meta::meta> {};
 }  // namespace virtual_void::erased
 
 namespace virtual_void::erased::data::has_no_meta {
