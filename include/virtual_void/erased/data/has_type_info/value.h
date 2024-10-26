@@ -15,7 +15,7 @@ namespace virtual_void::erased {
 using namespace virtual_void;
 template <>
 struct data_trait<data::has_type_info::value_data_ptr>
-    : value_trait<data::has_type_info::has_type_info> {};
+    : value_trait<data::has_type_info::meta> {};
 }  // namespace virtual_void::erased
 
 namespace virtual_void::erased::data::has_type_info {

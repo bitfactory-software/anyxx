@@ -55,11 +55,11 @@ ASSERT_OFFSET_EMPTY(int, offset_for_v_table);
 ASSERT_OFFSET_EMPTY(char const*, offset_for_v_table)
 ASSERT_OFFSET_EMPTY(std::string, offset_for_v_table)
 
-ASSERT_OFFSET(char, data::has_type_info::has_type_info, 8 + offset_for_v_table);
-ASSERT_OFFSET(int, data::has_type_info::has_type_info, 8 + offset_for_v_table);
-ASSERT_OFFSET(char const*, data::has_type_info::has_type_info,
+ASSERT_OFFSET(char, data::has_type_info::meta, 8 + offset_for_v_table);
+ASSERT_OFFSET(int, data::has_type_info::meta, 8 + offset_for_v_table);
+ASSERT_OFFSET(char const*, data::has_type_info::meta,
               8 + offset_for_v_table);
-ASSERT_OFFSET(std::string, data::has_type_info::has_type_info,
+ASSERT_OFFSET(std::string, data::has_type_info::meta,
               8 + offset_for_v_table);
 
 #define TRACE_OFFSET_EMPTY(T)                                     \
@@ -92,10 +92,10 @@ TEST_CASE("erase lifetime test") {
   TRACE_OFFSET_EMPTY(char const*);
   TRACE_OFFSET_EMPTY(std::string);
 
-  TRACE_OFFSET(char, data::has_type_info::has_type_info);
-  TRACE_OFFSET(int, data::has_type_info::has_type_info);
-  TRACE_OFFSET(char const*, data::has_type_info::has_type_info);
-  TRACE_OFFSET(std::string, data::has_type_info::has_type_info);
+  TRACE_OFFSET(char, data::has_type_info::meta);
+  TRACE_OFFSET(int, data::has_type_info::meta);
+  TRACE_OFFSET(char const*, data::has_type_info::meta);
+  TRACE_OFFSET(std::string, data::has_type_info::meta);
 }
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
@@ -110,7 +110,7 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr =
-        erased::data::make_unique<data::holder<Data, data::has_type_info::has_type_info>>();
+        erased::data::make_unique<data::holder<Data, data::has_type_info::meta>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -129,7 +129,7 @@ TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<data::has_type_info::with_type_info const> sp = data::make_shared_const<
-        data::holder<Data, data::has_type_info::has_type_info> const>();
+        data::holder<Data, data::has_type_info::meta> const>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -149,7 +149,7 @@ TEST_CASE("erase lifetime test value") {
   Data::destrucor_runs = 0;
   {
     data::value_ptr<data::has_type_info::with_type_info> vp =
-        data::make_value<data::holder<Data, data::has_type_info::has_type_info>>();
+        data::make_value<data::holder<Data, data::has_type_info::meta>>();
     REQUIRE(data::unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;

@@ -4,37 +4,37 @@
 
 namespace virtual_void::erased::data::has_type_info {
 
-struct has_type_info {
+struct meta {
   std::type_info const* type_info_ = nullptr;
 
   const auto* get_meta() const { return this; }
 
   template <typename T>
-  has_type_info(std::in_place_type_t<T>)
-      : has_type_info(typeid(std::decay_t<T>)) {}
-  has_type_info(std::type_info const& type_info)
+  meta(std::in_place_type_t<T>)
+      : meta(typeid(std::decay_t<T>)) {}
+  meta(std::type_info const& type_info)
       : type_info_(&type_info) {}
 
-  has_type_info() noexcept = default;
-  has_type_info(const has_type_info&) = default;
-  has_type_info(has_type_info&) = default;
-  has_type_info(has_type_info&& rhs) noexcept { swap(*this, rhs); }
-  has_type_info& operator=(has_type_info&& rhs) noexcept {
-    has_type_info destroy_this{};
+  meta() noexcept = default;
+  meta(const meta&) = default;
+  meta(meta&) = default;
+  meta(meta&& rhs) noexcept { swap(*this, rhs); }
+  meta& operator=(meta&& rhs) noexcept {
+    meta destroy_this{};
     swap(*this, destroy_this);
     swap(*this, rhs);
     return *this;
   }
-  friend void swap(has_type_info& lhs, has_type_info& rhs) noexcept {
+  friend void swap(meta& lhs, meta& rhs) noexcept {
     using namespace std;
     swap(lhs.type_info_, rhs.type_info_);
   }
 
   type_info_ptr type_info() const { return type_info_; }
 
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_type_info() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-using with_type_info = base<has_type_info>;
+using with_type_info = base<meta>;
 
 }  // namespace virtual_void::erased::data

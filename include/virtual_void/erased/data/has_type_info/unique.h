@@ -11,7 +11,7 @@ using unique_data_ptr =
 namespace virtual_void::erased {
 template <>
 struct data_trait<data::has_type_info::unique_data_ptr>
-    : unique_trait<data::has_type_info::has_type_info> {};
+    : unique_trait<data::has_type_info::meta> {};
 
 }  // namespace virtual_void::erased
 

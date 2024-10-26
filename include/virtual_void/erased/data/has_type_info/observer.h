@@ -9,7 +9,7 @@
 
 namespace virtual_void::erased::data::has_type_info {
 template <typename VOID>
-using observer_ptr = data::observer_ptr<VOID, has_type_info>;
+using observer_ptr = data::observer_ptr<VOID, meta>;
 }
 
 namespace virtual_void::erased {

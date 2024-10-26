@@ -32,7 +32,7 @@ TEST_CASE("has_type_info/lifetime/observer") {
   static_assert(
       std::derived_from<mutable_observer,
                         erased::virtual_void<
-                            erased::data::observer_ptr<void*, has_type_info>>>);
+                            erased::data::observer_ptr<void*, meta>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
       std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
