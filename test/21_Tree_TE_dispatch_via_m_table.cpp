@@ -14,11 +14,7 @@ using std::string;
 
 namespace {
 
-using node = virtual_void::m_table::shared_const;
-
-static_assert(virtual_void::erased::is_virtual_void<node>);
-static_assert(virtual_void::erased::is_data_pointer<
-              virtual_void::m_table::shared_const_data_ptr>);
+using node = virtual_void::erased::data::has_m_table::shared_const;
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}

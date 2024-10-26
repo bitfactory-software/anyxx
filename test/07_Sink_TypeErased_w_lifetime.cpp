@@ -10,18 +10,18 @@
 
 #include "../../include/std26/proxy.h"
 #include "../../include/virtual_void/erased/data/has_m_table/shared_const.h"
-#include "../../include/virtual_void/erased/dispatch/open_method/m_table/open_method.h"
 #include "../../include/virtual_void/erased/dispatch/open_method/algorithm.h"
+#include "../../include/virtual_void/erased/dispatch/open_method/m_table/open_method.h"
 #include "../../include/virtual_void/typeid_cast/cast.h"
 #include "include/catch.hpp"
+
+using namespace virtual_void::erased::data::has_m_table;
 
 namespace {
 
 namespace DB {
-using FactoryFunction =
-    std::function<virtual_void::m_table::shared_const_data_ptr(const std::string&)>;
-using SinkFunction =
-    std::function<void(const virtual_void::m_table::shared_const&)>;
+using FactoryFunction = std::function<shared_const(const std::string&)>;
+using SinkFunction = std::function<void(const shared_const&)>;
 
 struct System {
   std::map<std::string, FactoryFunction> factories;
@@ -114,25 +114,22 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   virtual_void::m_table::fix_m_tables(applicationDomain);
 
   db.factories["i"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<IntData>(
-        std::atoi(data.c_str()));
+    return shared_const{IntData(std::atoi(data.c_str()))};
   };
   db.factories["s"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<StringData>(data);
+    return shared_const{StringData(data)};
   };
   db.factories["ss"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<SuperStringData>(data,
-                                                                     "boss");
+    return shared_const{SuperStringData(data, "boss")};
   };
   db.factories["d"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<DoubleData>(
-        std::atof(data.c_str()));
+    return shared_const{DoubleData(std::atof(data.c_str()))};
   };
 
-  db.Query("junk", [](const virtual_void::m_table::shared_const& e) {
+  db.Query("junk", [](const shared_const& e) {
     // call open method
-    std::cout << "type_info: " << e.meta()->type_info()->name() << ": " << toString(e)
-              << std::endl;
+    std::cout << "type_info: " << e.meta()->type_info()->name() << ": "
+              << toString(e) << std::endl;
 
     try {
       // call open method

@@ -11,7 +11,9 @@ struct has_type_info {
 
   template <typename T>
   has_type_info(std::in_place_type_t<T>)
-      : type_info_(&typeid(std::decay_t<T>)) {}
+      : has_type_info(typeid(std::decay_t<T>)) {}
+  has_type_info(std::type_info const& type_info)
+      : type_info_(&type_info) {}
 
   has_type_info() noexcept = default;
   has_type_info(const has_type_info&) = default;

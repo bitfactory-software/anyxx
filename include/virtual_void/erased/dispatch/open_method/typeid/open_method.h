@@ -4,7 +4,7 @@
 
 #include "../../../../utillities/ensure_function_ptr.h"
 #include "../../../../utillities/overload.h"
-#include "../../../../utillities/type_list.h"
+#include "../../../data/has_type_info/observer.h"
 #include "open_method_base.h"
 
 namespace virtual_void::typeid_ {
@@ -20,7 +20,7 @@ class open_method<R(ARGS...)> : public open_method_base {
   using dispatch_t = typename first_t<ARGS...>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
-  using param_t = std::pair<const std::type_info&, dispatch_t>;
+  using param_t = erased::data::has_type_info::observer<dispatch_t>;
   using erased_function_t = R (*)(ARGS...);
 
  public:
@@ -39,12 +39,13 @@ class open_method<R(ARGS...)> : public open_method_base {
   }
   template <typename... OTHER_ARGS>
   R operator()(const param_t& param, OTHER_ARGS&&... args) const {
-    return (*this)(param.first, param.second,
+    return (*this)(*param.meta()->type_info(), param.data(),
                    std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename... OTHER_ARGS>
   R operator()(CLASS* param, OTHER_ARGS&&... args) const {
-    return (*this)(to_typeid_void(param), std::forward<OTHER_ARGS>(args)...);
+    return (*this)(typeid(*param), static_cast<dispatch_t>(param),
+                   std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename... OTHER_ARGS>
   R operator()(const std::shared_ptr<CLASS>& param,

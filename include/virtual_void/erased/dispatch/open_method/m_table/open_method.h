@@ -107,7 +107,7 @@ class open_method<R(ARGS...)> : public open_method_base {
 template <typename CLASSES>
 constexpr nullptr_t declare_classes(m_table_map& registry) {
   class_hierarchy::visit_classes<CLASSES, true>(
-      overload{[&]<typename C> { registry[&typeid(C)] = m_table_of<C>(); },
+      overload{[&]<typename C> { registry[&typeid(C)] = erased::data::has_m_table::m_table_of<C>(); },
                [&]<typename C, typename B> {}});
   return {};
 }

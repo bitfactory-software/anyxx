@@ -11,7 +11,8 @@
 #include "../include/virtual_void/erased/dispatch/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
-::namespace
+
+namespace
 {
 	using namespace virtual_void::erased::data::has_type_info;
 
@@ -30,7 +31,7 @@
 		using namespace TestDomain;
 
 		{
-			virtual_void::open_method::domain open_methods;
+			virtual_void::typeid_::domain open_methods;
 			to_string_method toString( open_methods );
 				
 			toString.define< A1 >( +[]( const A1* x )->std::string{ return ToString( x ); } );
@@ -38,7 +39,7 @@
 
 			REQUIRE( call< A1 >( toString ) == typeid( A1 ).name() );
 
-			auto tv = virtual_void::to_typeid_void( static_cast< A1* >( nullptr ) );
+			auto tv = static_cast< A1* >( nullptr );
 			REQUIRE( toString( tv ) == typeid( A1 ).name() );
 			try
 			{
@@ -52,7 +53,7 @@
 		}
 
 		{
-			domain open_methods;
+			virtual_void::typeid_::domain open_methods;
 			to_string_method toString( open_methods );
 			using classes = virtual_void::type_list< D, C1, C2 >;
 			virtual_void::open_method::fill_with_overloads( classes{}, toString, ToString );

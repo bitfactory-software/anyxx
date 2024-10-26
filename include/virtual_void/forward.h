@@ -12,19 +12,6 @@ constexpr bool is_const_void<void*> = false;
 template <>
 constexpr bool is_const_void<void const*> = true;
 
-
-using typeid_const_void = std::pair<const std::type_info&, const void*>;
-using typeid_void = std::pair<const std::type_info&, void*>;
-
-template <typename P>
-auto to_typeid_void(const P* p) {
-  return typeid_const_void{typeid(*p), p};
-}
-template <typename P>
-auto to_typeid_void(P* p) {
-  return typeid_void{typeid(*p), p};
-}
-
 template <typename>
 struct self_pointer;
 template <>

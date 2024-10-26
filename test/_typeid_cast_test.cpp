@@ -64,9 +64,9 @@ TEST_CASE( "typeid_cast_test" )
 	typeid_cast::fill_const_cast_for( classes{}, m_table_const_cast );
 	virtual_void::m_table::fix_m_tables( m_tableTestDomain );
 
-	run_cast_test< classes >( typeid_const_cast, []( auto top ){ return data::has_type_info::const_observer( top ); } );
+	run_cast_test< classes >( typeid_const_cast, []( auto& top ){ return erased::data::has_type_info::const_observer( top ); } );
 
-	run_cast_test< classes >( m_table_const_cast, []( auto top ){ return data::has_m_table::const_observer( top ); } );
+	run_cast_test< classes >( m_table_const_cast, []( auto& top ){ return erased::data::has_m_table::const_observer( top ); } );
 }
 }
 

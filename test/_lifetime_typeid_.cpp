@@ -106,7 +106,6 @@ TEST_CASE("has_type_info/lifetime/unique") {
 }
 
 TEST_CASE("has_type_info/lifetime/value") {
-  using namespace has_type_info;
   {
     auto u1 = value(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);

@@ -29,17 +29,14 @@ TEST_CASE("m_table/lifetime/observer") {
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   REQUIRE(mo.meta()->get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
-  static_assert(
-      std::derived_from<mutable_observer,
-                        erased::virtual_void<observer_ptr<
-                            void*, has_m_table>>>);
+  static_assert(std::derived_from<
+                mutable_observer,
+                erased::virtual_void<observer_ptr<void*>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
-      std::same_as<typed_mutable_observer<std::string>::value_t,
-                   std::string>);
-  static_assert(
-      std::same_as<typed_const_observer<std::string const>::value_t,
-                   std::string const>);
+      std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
+  static_assert(std::same_as<typed_const_observer<std::string const>::value_t,
+                             std::string const>);
   auto co = const_observer(s);
   REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   {
@@ -106,7 +103,6 @@ TEST_CASE("m_table/lifetime/unique") {
 }
 
 TEST_CASE("m_table/lifetime/value") {
-  using namespace m_table;
   {
     auto u1 = value(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);

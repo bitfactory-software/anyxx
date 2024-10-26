@@ -121,6 +121,7 @@ TEST_CASE("21_Tree_TE_dispatch_via_type_info") {
       make_shared<Integer>(2),
       make_shared<Plus>(make_shared<Integer>(3), make_shared<Integer>(4)));
 
+  value(expr) == 14;
   REQUIRE(value(expr) == 14);
   std::stringstream out;
   out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
