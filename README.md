@@ -3,5 +3,5 @@
 Welome! Go to [docs]
 
 
-[docs]: https://andreaspfaffenbichler.github.io/virtual_void
+[docs]: https://www.alexweb.io/virtual_void
 
