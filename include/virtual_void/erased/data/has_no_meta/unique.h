@@ -4,7 +4,7 @@
 #include "meta.h"
 
 namespace virtual_void::erased::data::has_no_meta {
-using unique_data_ptr = data::unique_ptr<with_no_meta>;
+using unique_data_ptr = data::unique_ptr<base<meta>>;
 }
 
 namespace virtual_void::erased {

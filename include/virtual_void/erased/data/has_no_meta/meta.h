@@ -13,6 +13,4 @@ struct meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-using with_no_meta = base<meta>;
-
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::erased::data::has_no_meta

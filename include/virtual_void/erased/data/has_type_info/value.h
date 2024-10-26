@@ -8,7 +8,7 @@
 
 namespace virtual_void::erased::data::has_type_info {
 using value_data_ptr =
-    data::value_ptr<erased::data::has_type_info::with_type_info>;
+    data::value_ptr<base<meta>>;
 }
 
 namespace virtual_void::erased {

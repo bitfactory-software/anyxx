@@ -10,10 +10,8 @@ struct meta {
   const auto* get_meta() const { return this; }
 
   template <typename T>
-  meta(std::in_place_type_t<T>)
-      : meta(typeid(std::decay_t<T>)) {}
-  meta(std::type_info const& type_info)
-      : type_info_(&type_info) {}
+  meta(std::in_place_type_t<T>) : meta(typeid(std::decay_t<T>)) {}
+  meta(std::type_info const& type_info) : type_info_(&type_info) {}
 
   meta() noexcept = default;
   meta(const meta&) = default;
@@ -35,6 +33,4 @@ struct meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-using with_type_info = base<meta>;
-
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::erased::data::has_type_info

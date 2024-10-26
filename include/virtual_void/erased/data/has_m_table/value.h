@@ -7,7 +7,7 @@
 #include "meta.h"
 
 namespace virtual_void::erased::data::has_m_table {
-using value_data_ptr = value_ptr<with_m_table>;
+using value_data_ptr = value_ptr<base<meta>>;
 }
 
 namespace virtual_void::erased {

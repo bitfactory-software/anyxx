@@ -4,7 +4,7 @@
 #include "../unique_trait.h"
 
 namespace virtual_void::erased::data::has_m_table {
-using unique_data_ptr = unique_ptr<with_m_table>;
+using unique_data_ptr = unique_ptr<base<meta>>;
 }
 
 namespace virtual_void::erased {

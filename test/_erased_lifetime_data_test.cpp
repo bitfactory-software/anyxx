@@ -119,7 +119,7 @@ TEST_CASE("erase lifetime test unique") {
 TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::has_no_meta::with_no_meta const> sp =
+    std::shared_ptr<data::base<data::has_no_meta::meta> const> sp =
         data::make_shared_const<data::holder<Data, data::has_no_meta::meta>>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -128,7 +128,7 @@ TEST_CASE("erase lifetime test shared") {
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::has_type_info::with_type_info const> sp = data::make_shared_const<
+    std::shared_ptr<data::base<data::has_type_info::meta> const> sp = data::make_shared_const<
         data::holder<Data, data::has_type_info::meta> const>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -138,7 +138,7 @@ TEST_CASE("erase lifetime test shared") {
 TEST_CASE("erase lifetime test value") {
   Data::destrucor_runs = 0;
   {
-    data::value_ptr<data::has_no_meta::with_no_meta> vp =
+    data::value_ptr<data::base<data::has_no_meta::meta>> vp =
         data::make_value<data::holder<Data, data::has_no_meta::meta>>();
     REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -148,7 +148,7 @@ TEST_CASE("erase lifetime test value") {
 
   Data::destrucor_runs = 0;
   {
-    data::value_ptr<data::has_type_info::with_type_info> vp =
+    data::value_ptr<data::base<data::has_type_info::meta>> vp =
         data::make_value<data::holder<Data, data::has_type_info::meta>>();
     REQUIRE(data::unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);

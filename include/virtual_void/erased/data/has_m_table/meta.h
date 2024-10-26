@@ -1,7 +1,7 @@
 #pragma once
 
-#include "m_table.h"
 #include "../holder.h"
+#include "m_table.h"
 
 namespace virtual_void::erased::data::has_m_table {
 
@@ -9,10 +9,9 @@ struct meta {
   m_table_t* m_table_ = nullptr;
 
   const auto* get_meta() const { return this; }
-  
+
   template <typename T>
-  meta (std::in_place_type_t<T>)
-      : m_table_(m_table_of<std::decay_t<T>>()) {}
+  meta(std::in_place_type_t<T>) : m_table_(m_table_of<std::decay_t<T>>()) {}
 
   meta() noexcept = default;
   meta(const meta&) = default;
@@ -34,6 +33,4 @@ struct meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-using with_m_table = base<meta>;
-
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::erased::data::has_m_table
