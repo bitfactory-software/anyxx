@@ -17,7 +17,7 @@ struct unique_trait
   using typed_t = data::holder<V, META>;
 
   static void* value(const auto& ptr) { return ptr->value(); }
-  static auto meta(const auto& ptr) { return ptr->meta(); }
+  static auto meta(const auto& ptr) { return ptr->get_meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename V>

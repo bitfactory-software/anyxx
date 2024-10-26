@@ -5,35 +5,35 @@
 
 namespace virtual_void::erased::data::has_m_table {
 
-struct has_m_table {
+struct meta {
   m_table_t* m_table_ = nullptr;
 
-  const has_m_table* meta() const { return this; }
+  const auto* get_meta() const { return this; }
   
   template <typename T>
-  has_m_table(std::in_place_type_t<T>)
+  meta (std::in_place_type_t<T>)
       : m_table_(m_table_of<std::decay_t<T>>()) {}
 
-  has_m_table() noexcept = default;
-  has_m_table(const has_m_table&) = default;
-  has_m_table(has_m_table&) = default;
-  has_m_table(has_m_table&& rhs) noexcept { swap(*this, rhs); }
-  has_m_table& operator=(has_m_table&& rhs) noexcept {
-    has_m_table destroy_this{};
+  meta() noexcept = default;
+  meta(const meta&) = default;
+  meta(meta&) = default;
+  meta(meta&& rhs) noexcept { swap(*this, rhs); }
+  meta& operator=(meta&& rhs) noexcept {
+    meta destroy_this{};
     swap(*this, destroy_this);
     swap(*this, rhs);
     return *this;
   }
-  friend void swap(has_m_table& lhs, has_m_table& rhs) noexcept {
+  friend void swap(meta& lhs, meta& rhs) noexcept {
     using namespace std;
     swap(lhs.m_table_, rhs.m_table_);
   }
 
   type_info_ptr type_info() const { return &get_m_table()->type(); }
   m_table_t* get_m_table() const { return m_table_; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~has_m_table() = default;
+  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-using with_m_table = base<has_m_table>;
+using with_m_table = base<meta>;
 
 }  // namespace virtual_void::erased::data

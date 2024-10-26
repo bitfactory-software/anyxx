@@ -65,7 +65,6 @@ auto make_node(ARGS&&... args) {
 }  // namespace
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
-  //    using virtual_void::m_table::make_shared_const;
   using namespace virtual_void;
 
   static_assert(erased::is_virtual_void<erased::data::has_no_meta::typed_shared_const<Times>>);

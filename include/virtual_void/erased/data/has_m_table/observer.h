@@ -9,7 +9,7 @@
 
 namespace virtual_void::erased::data::has_m_table {
 template <typename VOID>
-using observer_ptr = data::observer_ptr<VOID, has_m_table>;
+using observer_ptr = data::observer_ptr<VOID, meta>;
 }
 
 namespace virtual_void::erased {

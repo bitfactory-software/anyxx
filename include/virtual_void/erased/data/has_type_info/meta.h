@@ -7,7 +7,7 @@ namespace virtual_void::erased::data::has_type_info {
 struct has_type_info {
   std::type_info const* type_info_ = nullptr;
 
-  const has_type_info* meta() const { return this; }
+  const auto* get_meta() const { return this; }
 
   template <typename T>
   has_type_info(std::in_place_type_t<T>)

@@ -5,7 +5,7 @@
 namespace virtual_void::erased::data::has_no_meta {
 
 struct has_no_meta {
-  const has_no_meta* meta() const { return this; }
+  const auto* get_meta() const { return this; }
   template <typename T>
   has_no_meta(std::in_place_type_t<T>) {}
   has_no_meta() = default;

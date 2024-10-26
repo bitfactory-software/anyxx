@@ -11,7 +11,7 @@ template <typename DATA_PTR>
 struct observer_trait : data_trait_base<DATA_PTR> {
   using void_t = DATA_PTR::void_t;
   static void_t value(const auto& ptr) { return ptr.value(); }
-  static auto meta(const auto& ptr) { return ptr.meta(); }
+  static auto meta(const auto& ptr) { return ptr.get_meta(); }
   static bool has_value(const auto& ptr) {
     return static_cast<bool>(ptr.value());
   }
