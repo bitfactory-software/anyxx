@@ -76,7 +76,20 @@
   _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL l
 #define _detail_INTERFACE_FREE_LIMP_H(l) _detail_INTERFACE_LAMBDA_TO_FREE_IMPL l
 #define _detail_INTERFACE_METHOD_H(l) _detail_INTERFACE_METHOD l
+
+#define _detail_INTERFACE_TEMPLATE_ARGS_LIMP_H(l) \
+  _detail_INTERFACE_TEMPLATE_ARGS l
+
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
+
+#define _detail_INTERFACE_TEMPLATE_ARG(_typename) , _typename
+#define _detail_INTERFACE_TEMPLATE_ARGS(ts) \
+  _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_ARG, _detail_EXPAND_LIST ts)
+
+#define _detail_INTERFACE_TEMPLATE_FORMAL_ARG(t) , typename t
+#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(ts)             \
+  _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_FORMAL_ARG, \
+                        _detail_EXPAND_LIST ts)
 
 #define _detail_INTERFACE_MAP_IMPL(type, name, const_, ...)                  \
   auto name(                                                                 \
@@ -94,26 +107,28 @@
             _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                        \
       };
 
-#define _detail_INTERFACE_METHOD(type, name, const_, ...)                     \
-  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_     \
-    requires(                                                                 \
-        virtual_void::erased::const_correct_for_virtual_void<void const_,     \
-                                                             virtual_void_t>) \
-  {                                                                           \
-    return static_cast<v_table_t*>(v_table_)->name(                           \
-        base_t::virtual_void_.data()                                          \
-            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
+#define _detail_INTERFACE_METHOD(type, name, const_, ...)                 \
+  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
+    requires(::virtual_void::erased::const_correct_for_virtual_void<      \
+             void const_, virtual_void_t>)                                \
+  {                                                                       \
+    return static_cast<v_table_t*>(v_table_)->name(                       \
+        base_t::virtual_void_.data()                                      \
+            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
   }
 
-#define ERASED_INTERFACE_(n, BASE, l)                                          \
-  template <typename T>                                                        \
+#define ERASED_INTERFACE_TEMPLATE_(t, n, BASE, l)                              \
+  template <typename T _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(t)>              \
   struct n##_default_v_table_map {                                             \
     _detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, _detail_EXPAND_LIST l) \
   };                                                                           \
-  template <typename T>                                                        \
-  struct n##_v_table_map : n##_default_v_table_map<T> {};                      \
+  template <typename T _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(t)>              \
+  struct n##_v_table_map                                                       \
+      : n##_default_v_table_map<T _detail_foreach_macro(                       \
+            _detail_INTERFACE_TEMPLATE_ARGS_LIMP_H, _detail_EXPAND_LIST t)> {  \
+  };                                                                           \
                                                                                \
-  template <typename BASE_V_TABLE>                                             \
+  template <typename BASE_V_TABLE _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(t)>   \
   struct n##v_table : BASE_V_TABLE {                                           \
     using v_table_base_t = BASE_V_TABLE;                                       \
     using void_t = v_table_base_t::void_t;                                     \
@@ -133,14 +148,16 @@
     };                                                                         \
   };                                                                           \
                                                                                \
-  template <virtual_void::erased::is_virtual_void VIRTUAL_VOID>                \
+  template <::virtual_void::erased::is_virtual_void VIRTUAL_VOID               \
+                _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(t)>                     \
   struct n : BASE<VIRTUAL_VOID> {                                              \
    public:                                                                     \
     using virtual_void_t = VIRTUAL_VOID;                                       \
     using void_t = VIRTUAL_VOID::void_t;                                       \
     using base_t = BASE<VIRTUAL_VOID>;                                         \
     using v_table_base_t = base_t::v_table_t;                                  \
-    using v_table_t = n##v_table<v_table_base_t>;                              \
+    using v_table_t =                                                          \
+        n##v_table<v_table_base_t _detail_INTERFACE_TEMPLATE_ARG(t)>;          \
     using query_v_table_unique_t =                                             \
         n##v_table<virtual_void::erased::interface::base<virtual_void_t>>;     \
     template <typename T>                                                      \
@@ -164,7 +181,7 @@
           !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)   \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       static v_table_t imlpemented_v_table{                                    \
-          virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};    \
+          ::virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};  \
       v_table_ = &imlpemented_v_table;                                         \
     }                                                                          \
     template <typename OTHER>                                                  \
@@ -180,10 +197,18 @@
     n() = default;                                                             \
   };
 
+#define ERASED_INTERFACE_(n, BASE, l) ERASED_INTERFACE_TEMPLATE_((T), n, BASE, l)
+
 #define ERASED_INTERFACE(name, l) \
-  ERASED_INTERFACE_(name, virtual_void::erased::interface::base, l)
+  ERASED_INTERFACE_(name, ::virtual_void::erased::interface::base, l)
+
+#define ERASED_INTERFACE_TEMPLATE(t, n, l) \
+  ERASED_INTERFACE_TEMPLATE_(t, n, ::virtual_void::erased::interface::base, l)
+
 #define INTERFACE_METHOD_(...) (__VA_ARGS__)
+
 #define INTERFACE_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, , __VA_ARGS__)
+
 #define INTERFACE_CONST_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, const, __VA_ARGS__)
