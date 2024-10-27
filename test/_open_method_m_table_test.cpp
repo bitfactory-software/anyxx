@@ -14,8 +14,10 @@
 
 namespace {
 
-using namespace virtual_void::erased::data::has_m_table;
-using namespace virtual_void::erased::open_method::via_m_table;
+using namespace ::virtual_void;
+using namespace ::virtual_void::erased;
+using namespace ::virtual_void::erased::data::has_m_table;
+using namespace ::virtual_void::erased::open_method::via_m_table;
 using namespace TestDomain;
 
 auto ToString = [](const auto* t) -> std::string { return typeid(*t).name(); };
@@ -37,7 +39,7 @@ TEST_CASE("m_table open_method") {
         +[](const A1* x) -> std::string { return ToString(x); });
 
     declare_classes<D>(testDomain);
-    virtual_void::open_method::interpolate(testDomain);
+    open_method::interpolate(testDomain);
     REQUIRE(toString.is_defined<D>());
     fix_m_tables(testDomain);
     REQUIRE(call<D>(toString) == typeid(A1).name());  // call for base class
@@ -47,7 +49,7 @@ TEST_CASE("m_table open_method") {
     to_string_method toString(testDomain);
 
     declare_classes<D>(testDomain);
-    virtual_void::open_method::fill_with_overloads<D>(toString, ToString);
+    open_method::fill_with_overloads<D>(toString, ToString);
     REQUIRE(toString.is_defined<D>());
     fix_m_tables(testDomain);
     REQUIRE(
@@ -57,13 +59,13 @@ TEST_CASE("m_table open_method") {
   {
     domain testDomain;
     to_string_method toString(testDomain);
-    using classes = virtual_void::type_list<D, C1, C2>;
+    using classes = type_list<D, C1, C2>;
     declare_classes(classes{}, testDomain);
-    virtual_void::open_method::fill_with_overloads(classes{}, toString,
+    open_method::fill_with_overloads(classes{}, toString,
                                                    ToString);
     fix_m_tables(testDomain);
-    virtual_void::class_hierarchy::visit_classes<classes>(
-        virtual_void::overload{[&]<typename C> {
+    class_hierarchy::visit_classes<classes>(
+        overload{[&]<typename C> {
                                  C c;
                                  auto virtual_void = const_observer(c);
                                  auto u = unique{C{}};

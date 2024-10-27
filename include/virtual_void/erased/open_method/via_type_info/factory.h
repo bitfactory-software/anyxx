@@ -2,13 +2,13 @@
 
 #include "open_method_base.h"
 
-namespace virtual_void::typeid_ {
+namespace virtual_void::erased::open_method::via_type_info {
 
 template <typename R, typename... ARGS>
 class factory;
 
 template <typename R, typename... ARGS>
-class factory<R(ARGS...)> : public open_method_base {
+class factory<R(ARGS...)> : public declaration_base {
  public:
   using factory_function_t = R (*)(ARGS...);
 

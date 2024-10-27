@@ -6,20 +6,20 @@
 #include "../domain.h"
 #include "../table.h"
 
-namespace virtual_void::typeid_ {
+namespace virtual_void::erased::open_method::via_type_info {
 
-class open_method_base;
-using domain = virtual_void::open_method::domain<open_method_base>;
+class declaration_base;
+using domain = open_method::domain<declaration_base>;
 
-class open_method_base : public virtual_void::open_method::table {
+class declaration_base : public open_method::table {
  protected:
   using dispatch_target_index_t =
       perfect_typeid_hash::index_table<dispatch_target_t>;
   std::unique_ptr<dispatch_target_index_t> dispatch_target_index_;
 
  public:
-  open_method_base() = default;
-  explicit open_method_base(domain& domain) {
+  declaration_base() = default;
+  explicit declaration_base(domain& domain) {
     domain.open_methods.push_back(this);
   }
   void seal_for_runtime() {
@@ -38,4 +38,4 @@ inline void seal_for_runtime(domain& domain) {
   for (const auto& method : domain.open_methods) method->seal_for_runtime();
 }
 
-}  // namespace virtual_void::typeid_
+}  // namespace virtual_void::erased::open_method::via_type_info

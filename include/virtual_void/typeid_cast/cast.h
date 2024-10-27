@@ -46,7 +46,7 @@ using const_cast_method =
 template <template <typename SIG> typename OPEN_METHOD>
 using cast_method = OPEN_METHOD<void*(const void*, const std::type_info& to)>;
 void fill_const_cast_for(auto classes, auto& method) {
-  virtual_void::open_method::fill_with_overloads(classes, method,
+  erased::open_method::fill_with_overloads(classes, method,
                                                  const_cast_implementation{});
 }
 template <typename... CLASSES>

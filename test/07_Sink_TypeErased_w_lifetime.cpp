@@ -107,7 +107,7 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
     std::cout << "string: " << s->data << std::endl;
   });
 
-  virtual_void::open_method::fill_with_overloads(
+  virtual_void::erased::open_method::fill_with_overloads(
       classes{}, toString, [](const auto* x) { return ToString_(x); });
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, typeid_const_cast);
   virtual_void::erased::open_method::via_m_table::declare_classes(classes{}, applicationDomain);

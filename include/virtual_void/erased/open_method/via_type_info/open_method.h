@@ -7,12 +7,12 @@
 #include "../../data/has_type_info/observer.h"
 #include "open_method_base.h"
 
-namespace virtual_void::typeid_ {
+namespace virtual_void::erased::open_method::via_type_info {
 
 template <typename R, typename... ARGS>
-class open_method;
+class declare;
 template <typename R, typename... ARGS>
-class open_method<R(ARGS...)> : public open_method_base {
+class declare<R(ARGS...)> : public declaration_base {
   static_assert(std::same_as<first_t<ARGS...>, void*> ||
                 std::same_as<first_t<ARGS...>, const void*>);
 
@@ -24,7 +24,7 @@ class open_method<R(ARGS...)> : public open_method_base {
   using erased_function_t = R (*)(ARGS...);
 
  public:
-  using open_method_base::open_method_base;
+  using declaration_base::declaration_base;
   template <typename CLASS, typename FUNCTION>
   auto define(FUNCTION f) {
     if (dispatch_target_index_) throw error("Already sealed for runtime.");
@@ -54,4 +54,4 @@ class open_method<R(ARGS...)> : public open_method_base {
   }
 };
 
-}  // namespace virtual_void::typeid_
+}  // namespace virtual_void::erased::open_method::via_type_info

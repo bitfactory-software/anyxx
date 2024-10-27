@@ -3,7 +3,7 @@
 #include "../../class_hierarchy/class_hierarchy.h"
 #include "table.h"
 
-namespace virtual_void::open_method {
+namespace virtual_void::erased::open_method {
 
 template <typename METHOD_BASE>
 struct domain {

@@ -99,9 +99,9 @@ std::string ToString_( const X& x )
 
 TEST_CASE( "proxy prototype" ) 
 {
-    using namespace virtual_void;
-    typeid_::domain testDomain;
-    auto update = typeid_::open_method< void (void*, const std::string& ) >{ testDomain };
+    using namespace virtual_void::erased;
+    open_method::via_type_info::domain testDomain;
+    auto update = open_method::via_type_info::declare< void (void*, const std::string& ) >{ testDomain };
     auto __ = update.define< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
     update.seal_for_runtime();
 

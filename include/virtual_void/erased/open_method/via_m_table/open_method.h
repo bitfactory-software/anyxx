@@ -19,11 +19,11 @@ using open_methods = std::vector<declaration_base*>;
 using m_table_map = std::unordered_map<std::type_info const*,
                                        erased::data::has_m_table::m_table_t*>;
 
-struct domain : ::virtual_void::open_method::domain<declaration_base> {
+struct domain : open_method::domain<declaration_base> {
   m_table_map m_table_map;
 };
 
-class declaration_base : public ::virtual_void::open_method::table {
+class declaration_base : public open_method::table {
   const int m_table_index_ = -1;
 
  public:
@@ -119,7 +119,7 @@ constexpr nullptr_t declare_classes(m_table_map& registry) {
 template <typename CLASSES>
 constexpr nullptr_t declare_classes(CLASSES classes, domain& domain) {
   declare_classes<CLASSES>(domain.m_table_map);
-  return ::virtual_void::open_method::declare_classes(classes, domain);
+  return ::virtual_void::erased::open_method::declare_classes(classes, domain);
 }
 
 template <typename... CLASSES>
