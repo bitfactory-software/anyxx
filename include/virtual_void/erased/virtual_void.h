@@ -31,7 +31,7 @@ concept has_virtual_void_trait =
 
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
 VIRTUAL_VOID erase_to(FROM&& from) {
-  if constexpr (is_virtual_void<std::remove_reference_t<FROM> >) {
+  if constexpr (is_virtual_void<std::remove_reference_t<FROM>>) {
     return from;
   } else {
     return VIRTUAL_VOID::make_erased()(std::forward<FROM>(from));
@@ -66,7 +66,9 @@ concept const_correct_for_virtual_void =
      !VIRTUAL_VOID::is_const);
 
 template <typename DATA>
-struct virtual_void;
+class virtual_void;
+template <typename V, typename DATA>
+class virtual_typed;
 
 template <typename DATA>
 struct virtual_void_trait_base {
@@ -77,9 +79,10 @@ struct virtual_void_trait_base {
 };
 
 template <typename DATA>
-struct virtual_void {
+class virtual_void {
   DATA ptr_ = nullptr;
 
+ public:
   using data_t = DATA;
   using trait_t = virtual_void_trait<DATA>;
   using void_t = trait_t::void_t;
@@ -127,6 +130,10 @@ struct virtual_void {
   }
   auto meta() const { return trait_t::meta(ptr_); }
   explicit operator bool() const { return trait_t::has_value(ptr_); }
+
+  template <typename TO, typename FROM, typename DATA>
+  friend auto as(virtual_typed<FROM, DATA> source)
+    requires std::convertible_to<FROM*, TO*>;
 };
 
 template <typename U, typename DATA>
@@ -141,7 +148,8 @@ auto reconcrete_cast(virtual_void<DATA> const& o)
 }
 
 template <typename V, typename DATA>
-struct virtual_typed : public virtual_void<DATA> {
+class virtual_typed : public virtual_void<DATA> {
+ public:
   using value_t = V;
   using virtual_void_t = virtual_void<DATA>;
   using virtual_void_t::virtual_void_t;
