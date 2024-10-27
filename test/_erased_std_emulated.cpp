@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/data/has_no_meta/observer.h"
-#include "../include/virtual_void/erased/data/has_no_meta/value.h"
 #include "../include/virtual_void/erased/dispatch/interface/call_operator.h"
 #include "../include/virtual_void/erased/dispatch/interface/interface.h"
+#include "../include/virtual_void/erased/data/has_no_meta/observer.h"
+#include "../include/virtual_void/erased/data/has_no_meta/value.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
@@ -38,7 +38,8 @@ TEST_CASE("erased std emulated function") {
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");
-    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo world");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ ==
+            "hallo world");
   }
   {
     erased::function<std::string(const std::string)> f{
@@ -51,7 +52,8 @@ TEST_CASE("erased std emulated function") {
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
-    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo world");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ ==
+            "hallo world");
   }
   {
     auto func = [](auto s) { return s; };
