@@ -5,7 +5,7 @@
 #include "../../../utillities/ensure_function_ptr.h"
 #include "../../../utillities/overload.h"
 #include "../../data/has_type_info/observer.h"
-#include "open_method_base.h"
+#include "declaration_base.h"
 
 namespace virtual_void::erased::open_method::via_type_info {
 

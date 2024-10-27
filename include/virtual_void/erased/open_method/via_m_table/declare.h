@@ -34,12 +34,12 @@ class declaration_base : public open_method::table {
   int m_table_index() const { return m_table_index_; }
 };
 
+using m_table_t = data::has_m_table::m_table_t;
+
 template <typename DISPATCH, typename VOID>
-concept MtableDispatchableVoid = requires(const DISPATCH& void_) {
+concept is_m_table_dispachable_virtual_void = requires(const DISPATCH& void_) {
   { void_.data() } -> std::convertible_to<VOID>;
-  {
-    void_.m_table()
-  } -> std::convertible_to<const erased::data::has_m_table::m_table_t*>;
+  { void_.m_table() } -> std::convertible_to<const m_table_t*>;
 };
 
 template <typename R, typename... ARGS>
@@ -93,14 +93,14 @@ class declare<R(ARGS...)> : public declaration_base {
   }
   template <typename POINTER, typename... OTHER_ARGS>
   R operator()(const POINTER& pointer, OTHER_ARGS&&... args) const
-    requires MtableDispatchableVoid<POINTER, dispatch_t>
+    requires is_m_table_dispachable_virtual_void<POINTER, dispatch_t>
   {
     return (*this)(*pointer.m_table(), pointer.data(),
                    std::forward<OTHER_ARGS>(args)...);
   }
   template <typename POINTER, typename... OTHER_ARGS>
   R call(const POINTER& pointer, OTHER_ARGS&&... args) const
-    requires MtableDispatchableVoid<POINTER, dispatch_t>
+    requires is_m_table_dispachable_virtual_void<POINTER, dispatch_t>
   {
     return (*this)(pointer, std::forward<OTHER_ARGS>(args)...);
   }
@@ -148,4 +148,4 @@ inline void fix_m_tables(const domain& domain) {
     fix_m_tables(domain.m_table_map, *method);
 }
 
-}  // namespace virtual_void::m_table
+}  // namespace virtual_void::erased::open_method::via_m_table

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "open_method_base.h"
+#include "declaration_base.h"
 
 namespace virtual_void::erased::open_method::via_type_info {
 

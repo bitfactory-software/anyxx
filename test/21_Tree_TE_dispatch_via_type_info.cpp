@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "../../include/virtual_void/erased/open_method/via_type_info/open_method.h"
+#include "../../include/virtual_void/erased/open_method/via_type_info/declare.h"
 #include "../../include/virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 
