@@ -6,7 +6,7 @@
 #include <string>
 
 #include "../../include/virtual_void/utillities/unnamed__.h"
-#include "../../include/virtual_void/erased/dispatch/open_method/typeid/open_method.h"
+#include "../../include/virtual_void/erased/open_method/typeid/open_method.h"
 #include "include/catch.hpp"
 
 using std::cout;

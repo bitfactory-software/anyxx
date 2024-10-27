@@ -2,12 +2,12 @@
 
 #include <typeindex>
 
-#include "../../../../class_hierarchy/class_hierarchy.h"
-#include "../../../../utillities/ensure_function_ptr.h"
-#include "../../../../utillities/overload.h"
-#include "../../../../utillities/type_list.h"
-#include "../../../data/has_m_table/m_table.h"
-#include "../../../virtual_void.h"
+#include "../../../class_hierarchy/class_hierarchy.h"
+#include "../../../utillities/ensure_function_ptr.h"
+#include "../../../utillities/overload.h"
+#include "../../../utillities/type_list.h"
+#include "../../data/has_m_table/m_table.h"
+#include "../../virtual_void.h"
 #include "../domain.h"
 #include "../table.h"
 

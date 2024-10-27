@@ -9,7 +9,7 @@
 #include "../include/std26/proxy.h"
 
 #include "../include/virtual_void/erased/data/has_type_info/observer.h"
-#include "../include/virtual_void/erased/dispatch/open_method/typeid/open_method.h"
+#include "../include/virtual_void/erased/open_method/typeid/open_method.h"
 #include "../include/virtual_void/utillities/unnamed__.h"
 
 namespace

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../erased/data/has_type_info/observer.h"
-#include "../erased/dispatch/open_method/algorithm.h"
+#include "../erased/open_method/algorithm.h"
 
 namespace virtual_void::typeid_cast {
 
