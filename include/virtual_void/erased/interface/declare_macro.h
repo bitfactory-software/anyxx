@@ -94,14 +94,15 @@
             _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                        \
       };
 
-#define _detail_INTERFACE_METHOD(type, name, const_, ...)                 \
-  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
-    requires(virtual_void::erased::const_correct_for_virtual_void<     \
-             void const_, virtual_void_t>)                                \
-  {                                                                       \
-    return static_cast<v_table_t*>(v_table_)->name(                       \
-        base_t::virtual_void_.data()                                      \
-            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
+#define _detail_INTERFACE_METHOD(type, name, const_, ...)                     \
+  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_     \
+    requires(                                                                 \
+        virtual_void::erased::const_correct_for_virtual_void<void const_,     \
+                                                             virtual_void_t>) \
+  {                                                                           \
+    return static_cast<v_table_t*>(v_table_)->name(                           \
+        base_t::virtual_void_.data()                                          \
+            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
   }
 
 #define ERASED_INTERFACE_(n, BASE, l)                                          \
@@ -128,7 +129,7 @@
       using v_table_map = n##_v_table_map<typename UNERASE::type>;             \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
-      virtual_void::erased::set_is_derived_from<v_table_t>(this);              \
+      virtual_void::erased::interface::set_is_derived_from<v_table_t>(this);   \
     };                                                                         \
   };                                                                           \
                                                                                \
@@ -141,7 +142,7 @@
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t = n##v_table<v_table_base_t>;                              \
     using query_v_table_unique_t =                                             \
-        n##v_table<virtual_void::erased::base<virtual_void_t>>;                \
+        n##v_table<virtual_void::erased::interface::base<virtual_void_t>>;     \
     template <typename T>                                                      \
     using is_already_base =                                                    \
         std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,          \
@@ -180,7 +181,7 @@
   };
 
 #define ERASED_INTERFACE(name, l) \
-  ERASED_INTERFACE_(name, virtual_void::erased::base, l)
+  ERASED_INTERFACE_(name, virtual_void::erased::interface::base, l)
 #define INTERFACE_METHOD_(...) (__VA_ARGS__)
 #define INTERFACE_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, , __VA_ARGS__)

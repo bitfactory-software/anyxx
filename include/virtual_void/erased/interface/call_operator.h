@@ -2,7 +2,7 @@
 
 #include "base.h"
 
-namespace virtual_void::erased {
+namespace virtual_void::erased::interface {
 
 template <typename BASE_V_TABLE, typename RET, typename... ARGS>
 struct call_operator_v_table : BASE_V_TABLE {
@@ -89,4 +89,4 @@ template <typename SIG, is_virtual_void VIRTUAL_VOID,
 using mutable_call_operator =
     call_operator_interface<VIRTUAL_VOID, BASE, void, SIG>;
 
-};  // namespace virtual_void::erased
+};  // namespace virtual_void::erased::interface

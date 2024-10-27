@@ -63,10 +63,10 @@ TEST_CASE("_interface_const_correct void (const) *") {
   using namespace virtual_void;
 
   using const_function =
-      virtual_void::erased::call_operator<std::string(),
+      virtual_void::erased::interface::call_operator<std::string(),
                                           erased::data::has_no_meta::const_observer>;
   using mutating_function =
-      virtual_void::erased::mutable_call_operator<void(std::string),
+      virtual_void::erased::interface::mutable_call_operator<void(std::string),
                                                   erased::data::has_no_meta::mutable_observer>;
 
   {
@@ -102,9 +102,9 @@ TEST_CASE("_interface_const_correct void (const) *") {
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
-      virtual_void::erased::call_operator<std::string(),
+      virtual_void::erased::interface::call_operator<std::string(),
                                           erased::data::has_m_table::shared_const>;
-  using mutating_function = virtual_void::erased::mutable_call_operator<
+  using mutating_function = virtual_void::erased::interface::mutable_call_operator<
       void(std::string), erased::data::has_m_table::shared_const>;
 
   {
