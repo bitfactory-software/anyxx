@@ -110,28 +110,28 @@ struct shape_i : virtual_void::erased::base<VIRTUAL_VOID> {
     requires(std::derived_from<OTHER, base_t>)
       : base_t(other) {}
   void draw(position _sig) const
-    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+    requires(virtual_void::erased::const_correct_for_virtual_void<
              void const, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->draw(
         base_t::virtual_void_.data(), std::forward<decltype(_sig)>(_sig));
   }
   int count_sides() const
-    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+    requires(virtual_void::erased::const_correct_for_virtual_void<
              void const, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->count_sides(
         base_t::virtual_void_.data());
   }
   double area() const
-    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+    requires(virtual_void::erased::const_correct_for_virtual_void<
              void const, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->area(
         base_t::virtual_void_.data());
   }
   double perimeter() const
-    requires(virtual_void::erased::const_correct_for_lifetime_holder<
+    requires(virtual_void::erased::const_correct_for_virtual_void<
              void const, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->perimeter(

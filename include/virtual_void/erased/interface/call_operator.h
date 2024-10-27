@@ -67,7 +67,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     requires(std::derived_from<OTHER, base_t>)
       : base_t(other) {}
   RET operator()(ARGS&&... args) const
-    requires(const_correct_for_lifetime_holder<CONST, virtual_void_t>)
+    requires(const_correct_for_virtual_void<CONST, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->call_op(
         base_t::virtual_void_.data(), std::forward<ARGS>(args)...);

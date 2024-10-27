@@ -56,7 +56,7 @@ auto unerase() {
 }
 
 template <typename VOID, typename VIRTUAL_VOID>
-concept const_correct_for_lifetime_holder =
+concept const_correct_for_virtual_void =
     ((std::is_const_v<VOID> == VIRTUAL_VOID::is_const) ||
      !VIRTUAL_VOID::is_const);
 
