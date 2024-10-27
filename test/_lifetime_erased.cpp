@@ -162,7 +162,7 @@ TEST_CASE("erased/lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = virtual_void::erased::data_trait<value_data_ptr>{}(a);
+    auto t1 = virtual_void::erased::virtual_void_trait<value_data_ptr>{}(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -170,7 +170,7 @@ TEST_CASE("erased/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = virtual_void::erased::data_trait<value_data_ptr>{}(a);
+    auto t1 = virtual_void::erased::virtual_void_trait<value_data_ptr>{}(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }

@@ -18,11 +18,11 @@ concept is_virtual_void = requires(E e, int i) {
 };
 
 template <typename DATA_PTR>
-struct data_trait;
+struct virtual_void_trait;
 
 template <class PTR>
 concept is_data_pointer =
-    requires(PTR ptr) { typename data_trait<PTR>::void_t; };
+    requires(PTR ptr) { typename virtual_void_trait<PTR>::void_t; };
 
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
 VIRTUAL_VOID erase_to(FROM&& from) {

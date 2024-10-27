@@ -9,7 +9,7 @@ using shared_const_data_ptr = shared_const_ptr<base<meta>>;
 
 namespace virtual_void::erased {
 template <>
-struct data_trait<erased::data::has_m_table::shared_const_data_ptr>
+struct virtual_void_trait<erased::data::has_m_table::shared_const_data_ptr>
     : shared_const_trait<erased::data::has_m_table::meta> {};
 }  // namespace virtual_void::erased
 

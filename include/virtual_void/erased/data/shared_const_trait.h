@@ -11,7 +11,7 @@ namespace virtual_void::erased {
 
 template <typename META>
 struct shared_const_trait
-    : data_trait_base<data::shared_const_ptr<data::base<META>>> {
+    : virtual_void_trait_base<data::shared_const_ptr<data::base<META>>> {
   using void_t = void const*;
   using ptr_t = data::shared_const_ptr<data::base<META>>;
   template <typename V>

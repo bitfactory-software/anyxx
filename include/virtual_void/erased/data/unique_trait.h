@@ -10,7 +10,7 @@ namespace virtual_void::erased {
 
 template <typename META>
 struct unique_trait
-    : data_trait_base<data::unique_ptr<data::base<META>>> {
+    : virtual_void_trait_base<data::unique_ptr<data::base<META>>> {
   using void_t = void*;
   using ptr_t = data::unique_ptr<data::base<META>>;
   template <typename V>

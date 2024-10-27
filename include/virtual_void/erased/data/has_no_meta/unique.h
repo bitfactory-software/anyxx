@@ -9,7 +9,7 @@ using unique_data_ptr = data::unique_ptr<base<meta>>;
 
 namespace virtual_void::erased {
 template <>
-struct data_trait<data::has_no_meta::unique_data_ptr>
+struct virtual_void_trait<data::has_no_meta::unique_data_ptr>
     : unique_trait<data::has_no_meta::meta> {};
 }  // namespace virtual_void::erased
 

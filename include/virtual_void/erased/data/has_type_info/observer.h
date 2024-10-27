@@ -14,7 +14,7 @@ using observer_ptr = data::observer_ptr<VOID, meta>;
 
 namespace virtual_void::erased {
 template <typename VOID>
-struct data_trait<data::has_type_info::observer_ptr<VOID>>
+struct virtual_void_trait<data::has_type_info::observer_ptr<VOID>>
     : observer_trait<data::has_type_info::observer_ptr<VOID>> {};
 }  // namespace virtual_void::erased
 

@@ -9,7 +9,7 @@
 namespace virtual_void::erased {
 
 template <typename META>
-struct value_trait : data_trait_base<data::value_ptr<data::base<META>>> {
+struct value_trait : virtual_void_trait_base<data::value_ptr<data::base<META>>> {
   using void_t = void*;
   template <typename V>
   using typed_t = data::holder<V, META>;

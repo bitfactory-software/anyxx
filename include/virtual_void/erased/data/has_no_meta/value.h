@@ -9,7 +9,7 @@ using value_data_ptr = data::value_ptr<base<meta>>;
 
 namespace virtual_void::erased {
 template <>
-struct data_trait<data::has_no_meta::value_data_ptr>
+struct virtual_void_trait<data::has_no_meta::value_data_ptr>
     : value_trait<data::has_no_meta::meta> {};
 }  // namespace virtual_void::erased
 

@@ -15,7 +15,7 @@ template <typename DATA_PTR>
 struct virtual_void;
 
 template <typename DATA_PTR>
-struct data_trait_base {
+struct virtual_void_trait_base {
   template <typename FROM>
   auto operator()(FROM&& from) {
     return virtual_void<DATA_PTR>(std::forward<FROM>(from));
@@ -27,7 +27,7 @@ struct virtual_void {
   DATA_PTR ptr_ = nullptr;
 
   using data_t = DATA_PTR;
-  using trait_t = data_trait<DATA_PTR>;
+  using trait_t = virtual_void_trait<DATA_PTR>;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using make_erased = trait_t;
