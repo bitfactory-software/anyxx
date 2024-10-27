@@ -13,10 +13,10 @@ using namespace Catch::Matchers;
 
 namespace virtual_void::erased {
 template <typename SIG>
-using function = erased::call_operator<SIG, erased::data::has_no_meta::value, erased::base>;
+using function = erased::call_operator<SIG, erased::data::has_no_meta::value>;
 template <typename SIG>
 using ref_function =
-    erased::call_operator<SIG, erased::data::has_no_meta::mutable_observer, erased::base>;
+    erased::call_operator<SIG, erased::data::has_no_meta::mutable_observer>;
 }  // namespace virtual_void::erased
 
 using namespace virtual_void;
