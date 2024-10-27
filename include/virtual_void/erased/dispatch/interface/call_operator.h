@@ -38,7 +38,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
   using v_table_base_t = base_t::v_table_t;
   using v_table_t = call_operator_v_table<v_table_base_t, RET, ARGS...>;
   using query_v_table_unique_t =
-      call_operator_v_table<virtual_void::erased::base<virtual_void_t>, void>;
+      call_operator_v_table<base<virtual_void_t>, void>;
   template <typename T>
   using is_already_base =
       std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
@@ -59,7 +59,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static v_table_t imlpemented_v_table{
-        virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
+        unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     v_table_ = &imlpemented_v_table;
   }
   template <typename OTHER>
@@ -67,8 +67,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     requires(std::derived_from<OTHER, base_t>)
       : base_t(other) {}
   RET operator()(ARGS&&... args) const
-    requires(virtual_void::erased::const_correct_for_lifetime_holder<
-             CONST, virtual_void_t>)
+    requires(const_correct_for_lifetime_holder<CONST, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->call_op(
         base_t::virtual_void_.data(), std::forward<ARGS>(args)...);
@@ -82,7 +81,8 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
 };
 template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
-using call_operator = call_operator_interface<VIRTUAL_VOID, BASE, const void, SIG>;
+using call_operator =
+    call_operator_interface<VIRTUAL_VOID, BASE, const void, SIG>;
 
 template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
