@@ -6,8 +6,8 @@
 
 #include "include/catch.hpp"
 
-#include "../include/virtual_void/erased/open_method/typeid/open_method.h"
-#include "../include/virtual_void/erased/open_method/m_table/open_method.h"
+#include "../include/virtual_void/erased/open_method/via_type_info/open_method.h"
+#include "../include/virtual_void/erased/open_method/via_m_table/open_method.h"
 #include "../include/virtual_void/typeid_cast/cast.h"
 #include "../include/virtual_void/erased/open_method/algorithm.h"
 #include "../include/virtual_void/erased/data/has_m_table/observer.h"
