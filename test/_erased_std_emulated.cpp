@@ -6,7 +6,7 @@
 #include "../include/virtual_void/erased/data/has_no_meta/observer.h"
 #include "../include/virtual_void/erased/data/has_no_meta/value.h"
 #include "../include/virtual_void/erased/interface/call_operator.h"
-#include "../include/virtual_void/erased/interface/interface.h"
+#include "../include/virtual_void/erased/interface/declare_macro.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

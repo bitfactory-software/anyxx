@@ -1,6 +1,6 @@
 #pragma once
 
-#include "interface.h"
+#include "base.h"
 
 namespace virtual_void::erased {
 
