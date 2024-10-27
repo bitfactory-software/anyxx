@@ -12,7 +12,7 @@
 #include <type_traits>
 #include <typeinfo>
 
-#include "../concept.h"
+#include "../virtual_void.h"
 
 namespace virtual_void::erased {
 
