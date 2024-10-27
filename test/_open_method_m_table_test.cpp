@@ -15,12 +15,12 @@
 namespace {
 
 using namespace virtual_void::erased::data::has_m_table;
-using namespace virtual_void::m_table;
+using namespace virtual_void::erased::open_method::via_m_table;
 using namespace TestDomain;
 
 auto ToString = [](const auto* t) -> std::string { return typeid(*t).name(); };
 
-using to_string_method = open_method<std::string(const void*)>;
+using to_string_method = declare<std::string(const void*)>;
 
 template <typename T>
 auto call(const to_string_method& method) {

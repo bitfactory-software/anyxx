@@ -59,14 +59,14 @@ std::string ToString_(const SuperStringData* x) {
   return x->data + " -> " + x->more;
 }
 
-virtual_void::m_table::domain applicationDomain;
+virtual_void::erased::open_method::via_m_table::domain applicationDomain;
 
 auto entityToOut =
-    virtual_void::m_table::open_method<void(const void*)>{applicationDomain};
-auto toString = virtual_void::m_table::open_method<std::string(const void*)>{
+    virtual_void::erased::open_method::via_m_table::declare<void(const void*)>{applicationDomain};
+auto toString = virtual_void::erased::open_method::via_m_table::declare<std::string(const void*)>{
     applicationDomain};
 auto typeid_const_cast = virtual_void::typeid_cast::const_cast_method<
-    virtual_void::m_table::open_method>{applicationDomain};
+    virtual_void::erased::open_method::via_m_table::declare>{applicationDomain};
 
 void IntToOut(const IntData* i) {
   std::cout << "int: " << i->data << std::endl;
@@ -110,8 +110,8 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   virtual_void::open_method::fill_with_overloads(
       classes{}, toString, [](const auto* x) { return ToString_(x); });
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, typeid_const_cast);
-  virtual_void::m_table::declare_classes(classes{}, applicationDomain);
-  virtual_void::m_table::fix_m_tables(applicationDomain);
+  virtual_void::erased::open_method::via_m_table::declare_classes(classes{}, applicationDomain);
+  virtual_void::erased::open_method::via_m_table::fix_m_tables(applicationDomain);
 
   db.factories["i"] = [](const std::string& data) {
     return shared_const{IntData(std::atoi(data.c_str()))};
