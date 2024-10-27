@@ -79,7 +79,7 @@ class open_method<R(ARGS...)> : public open_method_base {
     return (*this)(*virtual_void_.meta()->get_m_table(), virtual_void_.data(),
                    std::forward<OTHER_ARGS>(args)...);
   }
-  template <erased::is_data_pointer DATA_PTR, typename... OTHER_ARGS>
+  template <erased::has_virtual_void_trait DATA_PTR, typename... OTHER_ARGS>
   R operator()(const DATA_PTR& ptr, OTHER_ARGS&&... args) const {
     erased::virtual_void<DATA_PTR> virtual_void_{ptr};
     return (*this)(virtual_void_, std::forward<OTHER_ARGS>(args)...);

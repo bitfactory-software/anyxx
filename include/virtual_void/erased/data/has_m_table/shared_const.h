@@ -14,7 +14,7 @@ struct virtual_void_trait<erased::data::has_m_table::shared_const_data_ptr>
 }  // namespace virtual_void::erased
 
 namespace virtual_void::erased::data::has_m_table {
-static_assert(is_data_pointer<shared_const_data_ptr>);
+static_assert(has_virtual_void_trait<shared_const_data_ptr>);
 using shared_const = virtual_void<shared_const_data_ptr>;
 template <typename T>
 using typed_shared_const = virtual_typed<T const, shared_const_data_ptr>;

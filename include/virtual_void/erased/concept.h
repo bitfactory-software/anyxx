@@ -21,7 +21,7 @@ template <typename DATA_PTR>
 struct virtual_void_trait;
 
 template <class PTR>
-concept is_data_pointer =
+concept has_virtual_void_trait =
     requires(PTR ptr) { typename virtual_void_trait<PTR>::void_t; };
 
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
