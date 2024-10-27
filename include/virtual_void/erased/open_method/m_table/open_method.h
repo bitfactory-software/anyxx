@@ -73,15 +73,15 @@ class open_method<R(ARGS...)> : public open_method_base {
         reinterpret_cast<erased_function_t>(m_table[m_table_index()]);
     return (erased_function)(data, std::forward<OTHER_ARGS>(args)...);
   }
-  template <typename DATA_PTR, typename... OTHER_ARGS>
-  R operator()(const erased::virtual_void<DATA_PTR>& virtual_void_,
+  template <typename DATA, typename... OTHER_ARGS>
+  R operator()(const erased::virtual_void<DATA>& virtual_void_,
                OTHER_ARGS&&... args) const {
     return (*this)(*virtual_void_.meta()->get_m_table(), virtual_void_.data(),
                    std::forward<OTHER_ARGS>(args)...);
   }
-  template <erased::has_virtual_void_trait DATA_PTR, typename... OTHER_ARGS>
-  R operator()(const DATA_PTR& ptr, OTHER_ARGS&&... args) const {
-    erased::virtual_void<DATA_PTR> virtual_void_{ptr};
+  template <erased::has_virtual_void_trait DATA, typename... OTHER_ARGS>
+  R operator()(const DATA& ptr, OTHER_ARGS&&... args) const {
+    erased::virtual_void<DATA> virtual_void_{ptr};
     return (*this)(virtual_void_, std::forward<OTHER_ARGS>(args)...);
   }
   template <typename... OTHER_ARGS>

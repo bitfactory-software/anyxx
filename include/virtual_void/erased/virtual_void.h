@@ -22,7 +22,7 @@ concept is_virtual_void = requires(E e, int i) {
   { e.data() } -> std::convertible_to<typename E::void_t>;
 };
 
-template <typename DATA_PTR>
+template <typename DATA>
 struct virtual_void_trait;
 
 template <class PTR>
@@ -65,23 +65,23 @@ concept const_correct_for_virtual_void =
     ((std::is_const_v<VOID> == VIRTUAL_VOID::is_const) ||
      !VIRTUAL_VOID::is_const);
 
-template <typename DATA_PTR>
+template <typename DATA>
 struct virtual_void;
 
-template <typename DATA_PTR>
+template <typename DATA>
 struct virtual_void_trait_base {
   template <typename FROM>
   auto operator()(FROM&& from) {
-    return virtual_void<DATA_PTR>(std::forward<FROM>(from));
+    return virtual_void<DATA>(std::forward<FROM>(from));
   }  // for migration to lifteime_handle! delete after migration!
 };
 
-template <typename DATA_PTR>
+template <typename DATA>
 struct virtual_void {
-  DATA_PTR ptr_ = nullptr;
+  DATA ptr_ = nullptr;
 
-  using data_t = DATA_PTR;
-  using trait_t = virtual_void_trait<DATA_PTR>;
+  using data_t = DATA;
+  using trait_t = virtual_void_trait<DATA>;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using make_erased = trait_t;
@@ -101,7 +101,7 @@ struct virtual_void {
   virtual_void(std::in_place_type_t<V>, ARGS&&... args)
       : ptr_(trait_t::construct_in_place(std::in_place_type<V>,
                                          std::forward<ARGS>(args)...)) {}
-  virtual_void(DATA_PTR data) : ptr_(std::move(data)) {}
+  virtual_void(DATA data) : ptr_(std::move(data)) {}
 
   // only for migration to lifetime handle, remove and replace use to "value()"!
   void const* data() const
@@ -129,21 +129,21 @@ struct virtual_void {
   explicit operator bool() const { return trait_t::has_value(ptr_); }
 };
 
-template <typename U, typename DATA_PTR>
-auto reconcrete_cast(virtual_void<DATA_PTR> const& o) {
+template <typename U, typename DATA>
+auto reconcrete_cast(virtual_void<DATA> const& o) {
   return static_cast<U const*>(o.data());
 }
-template <typename U, typename DATA_PTR>
-auto reconcrete_cast(virtual_void<DATA_PTR> const& o)
-  requires !virtual_void<DATA_PTR>::is_const
+template <typename U, typename DATA>
+auto reconcrete_cast(virtual_void<DATA> const& o)
+  requires !virtual_void<DATA>::is_const
 {
   return static_cast<U*>(o.data());
 }
 
-template <typename V, typename DATA_PTR>
-struct virtual_typed : public virtual_void<DATA_PTR> {
+template <typename V, typename DATA>
+struct virtual_typed : public virtual_void<DATA> {
   using value_t = V;
-  using virtual_void_t = virtual_void<DATA_PTR>;
+  using virtual_void_t = virtual_void<DATA>;
   using virtual_void_t::virtual_void_t;
 
   virtual_typed(const virtual_typed&) = default;
@@ -160,7 +160,7 @@ struct virtual_typed : public virtual_void<DATA_PTR> {
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
       : virtual_void_t(std::in_place_type<V>, std::forward<ARGS>(args)...) {}
-  explicit virtual_typed(DATA_PTR data) : virtual_void_t(std::move(data)) {}
+  explicit virtual_typed(DATA data) : virtual_void_t(std::move(data)) {}
 
   value_t const& operator*() const {
     return *static_cast<value_t*>(this->value());
@@ -182,26 +182,26 @@ struct virtual_typed : public virtual_void<DATA_PTR> {
  private:
   explicit virtual_typed(virtual_void_t&& virtual_void)
       : virtual_void_t(std::move(virtual_void)) {}
-  template <typename V, typename DATA_PTR>
-  friend auto as(virtual_void<DATA_PTR> source);
+  template <typename V, typename DATA>
+  friend auto as(virtual_void<DATA> source);
 };
 
-template <typename V, typename DATA_PTR>
-auto as(virtual_void<DATA_PTR> source) {
-  // if constexpr (virtual_void<DATA_PTR>::is_const) {
+template <typename V, typename DATA>
+auto as(virtual_void<DATA> source) {
+  // if constexpr (virtual_void<DATA>::is_const) {
   //   static_assert(std::is_const_v<V>);
   // }
-  return virtual_typed<V, DATA_PTR>{std::move(source)};
+  return virtual_typed<V, DATA>{std::move(source)};
 }
 
-template <typename TO, typename FROM, typename DATA_PTR>
-auto as(virtual_typed<FROM, DATA_PTR> source)
+template <typename TO, typename FROM, typename DATA>
+auto as(virtual_typed<FROM, DATA> source)
   requires std::convertible_to<FROM*, TO*>
 {
-  if constexpr (virtual_typed<FROM, DATA_PTR>::is_const) {
-    return virtual_typed<TO const, DATA_PTR>{std::move(source.ptr_)};
+  if constexpr (virtual_typed<FROM, DATA>::is_const) {
+    return virtual_typed<TO const, DATA>{std::move(source.ptr_)};
   } else {
-    return virtual_typed<TO, DATA_PTR>{std::move(source.ptr_)};
+    return virtual_typed<TO, DATA>{std::move(source.ptr_)};
   }
 }
 
