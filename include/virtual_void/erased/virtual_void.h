@@ -80,7 +80,7 @@ struct virtual_void_trait_base {
 
 template <typename DATA>
 class virtual_void {
-  DATA ptr_ = nullptr;
+  DATA data_ = nullptr;
 
  public:
   using data_t = DATA;
@@ -99,12 +99,12 @@ class virtual_void {
   virtual_void(V&& v)
     requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : ptr_(trait_t::construct_from(std::forward<V>(v))) {}
+      : data_(trait_t::construct_from(std::forward<V>(v))) {}
   template <typename V, typename... ARGS>
   virtual_void(std::in_place_type_t<V>, ARGS&&... args)
-      : ptr_(trait_t::construct_in_place(std::in_place_type<V>,
+      : data_(trait_t::construct_in_place(std::in_place_type<V>,
                                          std::forward<ARGS>(args)...)) {}
-  virtual_void(DATA data) : ptr_(std::move(data)) {}
+  virtual_void(DATA data) : data_(std::move(data)) {}
 
   // only for migration to lifetime handle, remove and replace use to "value()"!
   void const* data() const
@@ -121,15 +121,15 @@ class virtual_void {
   void const* value() const
     requires is_const
   {
-    return trait_t::value(ptr_);
+    return trait_t::value(data_);
   }
   void* value() const
     requires !is_const
   {
-    return trait_t::value(ptr_);
+    return trait_t::value(data_);
   }
-  auto meta() const { return trait_t::meta(ptr_); }
-  explicit operator bool() const { return trait_t::has_value(ptr_); }
+  auto meta() const { return trait_t::meta(data_); }
+  explicit operator bool() const { return trait_t::has_value(data_); }
 
   template <typename TO, typename FROM, typename DATA>
   friend auto as(virtual_typed<FROM, DATA> source)
@@ -207,9 +207,9 @@ auto as(virtual_typed<FROM, DATA> source)
   requires std::convertible_to<FROM*, TO*>
 {
   if constexpr (virtual_typed<FROM, DATA>::is_const) {
-    return virtual_typed<TO const, DATA>{std::move(source.ptr_)};
+    return virtual_typed<TO const, DATA>{std::move(source.data_)};
   } else {
-    return virtual_typed<TO, DATA>{std::move(source.ptr_)};
+    return virtual_typed<TO, DATA>{std::move(source.data_)};
   }
 }
 
