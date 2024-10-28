@@ -24,8 +24,7 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-ERASED_INTERFACE_TEMPLATE(INTERFACE_TYPENAMES(A,B), to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
-ERASED_INTERFACE_TEMPLATE((), to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
+ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 
 using to_string_sc = to_string_i<erased::data::has_no_meta::shared_const>;
 using to_string_co = to_string_i<erased::data::has_no_meta::const_observer>;
