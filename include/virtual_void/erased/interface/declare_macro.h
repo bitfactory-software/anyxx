@@ -86,22 +86,17 @@
 #define _typename _typename1
 #define _typename1(t) t
 
-#define _detail_INTERFACE_TEMPLATE_ARG_H(l) _detail_INTERFACE_TEMPLATE_ARG l
-#define _detail_INTERFACE_TEMPLATE_ARG(_typename) , typename _typename
-#define _detail_INTERFACE_TEMPLATE_ARGS(...) \
-  __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS1(__VA_ARGS__))
-#define _detail_INTERFACE_TEMPLATE_ARGS1(h, ...) \
-  typename _typename h __VA_OPT__(               \
-      _detail_INTERFACE_TEMPLATE_ARGS2((__VA_ARGS__)))
-#define _detail_INTERFACE_TEMPLATE_ARGS2(l) \
-  _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
-
 #define _detail_INTERFACE_TEMPLATE_FORMAL_ARG_H(l) \
   _detail_INTERFACE_TEMPLATE_FORMAL_ARG l
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARG(t, ...) , typename t
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(ts)               \
+#define _detail_INTERFACE_TEMPLATE_FORMAL_ARG(_typename) , typename _typename
+#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(...) \
+  __VA_OPT__(_detail_INTERFACE_TEMPLATE_FORMAL_ARGS1(__VA_ARGS__))
+#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS1(h, ...) \
+  typename _typename h __VA_OPT__(                      \
+      _detail_INTERFACE_TEMPLATE_FORMAL_ARGS2((__VA_ARGS__)))
+#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS2(l)               \
   _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_FORMAL_ARG_H, \
-                        _detail_EXPAND_LIST ts)
+                        _detail_EXPAND_LIST l)
 
 #define _detail_TA_H(l) _detail_TA l
 
@@ -136,16 +131,17 @@
   }
 
 #define ERASED_INTERFACE_TEMPLATE_(t, n, BASE, l)                              \
-  template <_detail_INTERFACE_TEMPLATE_ARGS(_add_head((T), t))>                \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
   struct n##_default_v_table_map {                                             \
     _detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, _detail_EXPAND_LIST l) \
   };                                                                           \
-  template <_detail_INTERFACE_TEMPLATE_ARGS(_add_head((T), t))>                \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
   struct n##_v_table_map                                                       \
-      : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(               \
+      : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(        \
             _add_head((T), t))> {};                                            \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_ARGS(_add_head((BASE_V_TABLE), t))>     \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+      _add_head((BASE_V_TABLE), t))>                                           \
   struct n##v_table : BASE_V_TABLE {                                           \
     using v_table_base_t = BASE_V_TABLE;                                       \
     using void_t = v_table_base_t::void_t;                                     \
@@ -158,25 +154,27 @@
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
     template <typename UNERASE>                                                \
     n##v_table(UNERASE unerase) : v_table_base_t(unerase) {                    \
-      using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
-          _add_head((UNERASE::type), t))>;                                     \
+      using v_table_map =                                                      \
+          n##_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(              \
+              _add_head((UNERASE::type), t))>;                                 \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::erased::interface::set_is_derived_from<v_table_t>(this); \
     };                                                                         \
   };                                                                           \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_ARGS(_add_head((VIRTUAL_VOID), t))>     \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+      _add_head((VIRTUAL_VOID), t))>                                           \
   struct n : BASE<VIRTUAL_VOID> {                                              \
    public:                                                                     \
     using virtual_void_t = VIRTUAL_VOID;                                       \
     using void_t = VIRTUAL_VOID::void_t;                                       \
     using base_t = BASE<VIRTUAL_VOID>;                                         \
     using v_table_base_t = base_t::v_table_t;                                  \
-    using v_table_t = n##v_table<_detail_INTERFACE_TEMPLATE_ARGS(              \
+    using v_table_t = n##v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(       \
         _add_head((v_table_base_t), t))>;                                      \
     using query_v_table_unique_t =                                             \
-        n##v_table<_detail_INTERFACE_TEMPLATE_ARGS(_add_head(                  \
+        n##v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head(           \
             (::virtual_void::erased::interface::base<virtual_void_t>), t))>;   \
     template <typename T>                                                      \
     using is_already_base =                                                    \
