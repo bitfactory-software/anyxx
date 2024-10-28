@@ -98,6 +98,15 @@
   _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_FORMAL_ARG_H, \
                         _detail_EXPAND_LIST l)
 
+#define _detail_INTERFACE_TEMPLATE_ARG_H(l) _detail_INTERFACE_TEMPLATE_ARG l
+#define _detail_INTERFACE_TEMPLATE_ARG(_typename) , _typename
+#define _detail_INTERFACE_TEMPLATE_ARGS(...) \
+  __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS1(__VA_ARGS__))
+#define _detail_INTERFACE_TEMPLATE_ARGS1(h, ...) \
+  _typename h __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS2((__VA_ARGS__)))
+#define _detail_INTERFACE_TEMPLATE_ARGS2(l) \
+  _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
+
 #define _detail_TA_H(l) _detail_TA l
 
 #define _detail_TA(type) , type
@@ -154,9 +163,8 @@
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
     template <typename UNERASE>                                                \
     n##v_table(UNERASE unerase) : v_table_base_t(unerase) {                    \
-      using v_table_map =                                                      \
-          n##_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(              \
-              _add_head((UNERASE::type), t))>;                                 \
+      using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
+          _add_head((typename UNERASE::type), t))>;                            \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::erased::interface::set_is_derived_from<v_table_t>(this); \
