@@ -3,17 +3,17 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/typeid/lifetime/observer.h"
-#include "../include/virtual_void/typeid/lifetime/shared_const.h"
-#include "../include/virtual_void/typeid/lifetime/unique.h"
-#include "../include/virtual_void/typeid/lifetime/value.h"
+#include "../include/virtual_void/erased/data/has_type_info/observer.h"
+#include "../include/virtual_void/erased/data/has_type_info/shared_const.h"
+#include "../include/virtual_void/erased/data/has_type_info/unique.h"
+#include "../include/virtual_void/erased/data/has_type_info/value.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace virtual_void::typeid_;
+using namespace virtual_void::erased::data::has_type_info;
 using namespace TestDomain;
 
 struct A {
@@ -22,64 +22,62 @@ struct A {
 
 namespace {
 
-TEST_CASE("typeid_/lifetime/observer") {
+TEST_CASE("has_type_info/lifetime/observer") {
   std::string s{"hallo"};
-  auto mo = typeid_::mutable_observer(s);
+  auto mo = mutable_observer(s);
   REQUIRE(mo.data() == &s);
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   REQUIRE(mo.meta()->type_info() == &typeid(std::string));
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   static_assert(
-      std::derived_from<typeid_::mutable_observer,
-                        erased::virtual_void<erased::data::observer_ptr<
-                            void*, erased::data::has_type_info>>>);
+      std::derived_from<mutable_observer,
+                        erased::virtual_void<
+                            erased::data::observer_ptr<void*, meta>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
-      std::same_as<typeid_::typed_mutable_observer<std::string>::value_t,
-                   std::string>);
-  static_assert(
-      std::same_as<typeid_::typed_const_observer<std::string const>::value_t,
-                   std::string const>);
-  auto co = typeid_::const_observer(s);
+      std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
+  static_assert(std::same_as<typed_const_observer<std::string const>::value_t,
+                             std::string const>);
+  auto co = const_observer(s);
   REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   {
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
     auto tmo = as<std::string>(std::move(mo));
-    static_assert(std::derived_from<decltype(tmo), typeid_::mutable_observer>);
+    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
   }
   {
-    mo = typeid_::mutable_observer(s);
+    mo = mutable_observer(s);
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "world");
     *reconcrete_cast<std::string>(mo) = "hallo";
     REQUIRE(s == "hallo");
     auto tmo = as<std::string>(mo);
     REQUIRE(*reconcrete_cast<std::string>(mo) == "hallo");
     REQUIRE(mo);
-    static_assert(std::derived_from<decltype(tmo), typeid_::mutable_observer>);
+    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
     REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
   }
-  // auto tmo2 = typeid_::typed_observer< std::string * >{ co }; // shall not
+  // auto tmo2 = typed_observer< std::string * >{ co }; // shall not
   // compile
 }
 
-TEST_CASE("typeid_/lifetime/shared_const") {
+TEST_CASE("has_type_info/lifetime/shared_const") {
   auto d = shared_const{D{"shared hallo"}};
   shared_const x = as<D const>(d);
   auto d1 = as<D const>(x);
   REQUIRE(d1->data == "shared hallo");
   REQUIRE(d1.meta()->type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
-  typed_shared_const<A1> a0{ *d1 };
+  typed_shared_const<A1> a0{*d1};
   auto a1 = as<A1>(d1);
-  typed_shared_const<A1> a2{ A1{"a2->OK"} };
+  typed_shared_const<A1> a2{A1{"a2->OK"}};
   typed_shared_const<A1> a3{std::in_place, "a3 in_place->OK"};
   A1 a1_pur{"a1_pur"};
   typed_shared_const<A1> a4{a1_pur};
@@ -91,7 +89,7 @@ TEST_CASE("typeid_/lifetime/shared_const") {
   REQUIRE(a4->data == "a1_pur");
 }
 
-TEST_CASE("typeid_/lifetime/unique") {
+TEST_CASE("has_type_info/lifetime/unique") {
   auto c1 = unique(std::in_place_type<C>, "unique c1");
   REQUIRE(erased::reconcrete_cast<C>(c1)->data == "unique c1");
   auto c2 = typed_unique<C>(std::in_place, "unique c2");
@@ -107,8 +105,7 @@ TEST_CASE("typeid_/lifetime/unique") {
   REQUIRE(d->data == "unique hallo");
 }
 
-TEST_CASE("typeid_/lifetime/value") {
-  using namespace typeid_;
+TEST_CASE("has_type_info/lifetime/value") {
   {
     auto u1 = value(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
@@ -116,10 +113,10 @@ TEST_CASE("typeid_/lifetime/value") {
   {
     auto u1 = value(A{"hallo"});
     static_assert(
-        std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
+        std::same_as<decltype(u1), erased::virtual_void<value_DATA>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                          erased::virtual_void<value_data_ptr>> &&
+                          erased::virtual_void<value_DATA>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
@@ -163,7 +160,7 @@ TEST_CASE("typeid_/lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = erased::data_trait<value_data_ptr>{}(a);
+    auto t1 = erased::virtual_void_trait<value_DATA>{}(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -171,7 +168,7 @@ TEST_CASE("typeid_/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = erased::data_trait<value_data_ptr>{}(a);
+    auto t1 = erased::virtual_void_trait<value_DATA>{}(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }

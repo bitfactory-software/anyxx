@@ -3,17 +3,17 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/m_table/lifetime/observer.h"
-#include "../include/virtual_void/m_table/lifetime/shared_const.h"
-#include "../include/virtual_void/m_table/lifetime/unique.h"
-#include "../include/virtual_void/m_table/lifetime/value.h"
+#include "../include/virtual_void/erased/data/has_m_table/observer.h"
+#include "../include/virtual_void/erased/data/has_m_table/shared_const.h"
+#include "../include/virtual_void/erased/data/has_m_table/unique.h"
+#include "../include/virtual_void/erased/data/has_m_table/value.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace virtual_void::m_table;
+using namespace virtual_void::erased::data::has_m_table;
 using namespace TestDomain;
 
 struct A {
@@ -24,49 +24,46 @@ namespace {
 
 TEST_CASE("m_table/lifetime/observer") {
   std::string s{"hallo"};
-  auto mo = m_table::mutable_observer(s);
+  auto mo = mutable_observer(s);
   REQUIRE(mo.data() == &s);
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   REQUIRE(mo.meta()->get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
-  static_assert(
-      std::derived_from<m_table::mutable_observer,
-                        erased::virtual_void<erased::data::observer_ptr<
-                            void*, erased::data::has_m_table>>>);
+  static_assert(std::derived_from<
+                mutable_observer,
+                erased::virtual_void<observer_ptr<void*>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
-      std::same_as<m_table::typed_mutable_observer<std::string>::value_t,
-                   std::string>);
-  static_assert(
-      std::same_as<m_table::typed_const_observer<std::string const>::value_t,
-                   std::string const>);
-  auto co = m_table::const_observer(s);
+      std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
+  static_assert(std::same_as<typed_const_observer<std::string const>::value_t,
+                             std::string const>);
+  auto co = const_observer(s);
   REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   {
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
     auto tmo = as<std::string>(std::move(mo));
-    static_assert(std::derived_from<decltype(tmo), m_table::mutable_observer>);
+    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
   }
   {
-    mo = m_table::mutable_observer(s);
+    mo = mutable_observer(s);
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "world");
     *reconcrete_cast<std::string>(mo) = "hallo";
     REQUIRE(s == "hallo");
     auto tmo = as<std::string>(mo);
     REQUIRE(*reconcrete_cast<std::string>(mo) == "hallo");
     REQUIRE(mo);
-    static_assert(std::derived_from<decltype(tmo), m_table::mutable_observer>);
+    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
     REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
   }
-  // auto tmo2 = m_table::typed_observer< std::string * >{ co }; // shall not
+  // auto tmo2 = typed_observer< std::string * >{ co }; // shall not
   // compile
 }
 
@@ -106,7 +103,6 @@ TEST_CASE("m_table/lifetime/unique") {
 }
 
 TEST_CASE("m_table/lifetime/value") {
-  using namespace m_table;
   {
     auto u1 = value(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
@@ -114,10 +110,10 @@ TEST_CASE("m_table/lifetime/value") {
   {
     auto u1 = value(A{"hallo"});
     static_assert(
-        std::same_as<decltype(u1), erased::virtual_void<value_data_ptr>>);
+        std::same_as<decltype(u1), erased::virtual_void<value_DATA>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                          erased::virtual_void<value_data_ptr>> &&
+                          erased::virtual_void<value_DATA>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
@@ -161,7 +157,7 @@ TEST_CASE("m_table/lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = erased::data_trait<value_data_ptr>{}(a);
+    auto t1 = erased::virtual_void_trait<value_DATA>{}(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -169,7 +165,7 @@ TEST_CASE("m_table/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = erased::data_trait<value_data_ptr>{}(a);
+    auto t1 = erased::virtual_void_trait<value_DATA>{}(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }

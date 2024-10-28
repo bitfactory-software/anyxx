@@ -47,9 +47,9 @@ struct observer_ptr : META {
 };
 
 template <typename META>
-using const_observer = observer_ptr<void const*, META>;
+using const_observer_ptr = observer_ptr<void const*, META>;
 template <typename META>
-using mutable_observer = observer_ptr<void*, META>;
+using mutable_observer_ptr = observer_ptr<void*, META>;
 
 template <typename TO, typename META_DATA>
 TO const* unerase_cast(observer_ptr<void const*, META_DATA> const& observed) {

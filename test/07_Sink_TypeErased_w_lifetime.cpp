@@ -9,19 +9,19 @@
 #include <vector>
 
 #include "../../include/std26/proxy.h"
-#include "../../include/virtual_void/m_table/lifetime/shared_const.h"
-#include "../../include/virtual_void/m_table/open_method.h"
-#include "../../include/virtual_void/open_method/algorithm.h"
+#include "../../include/virtual_void/erased/data/has_m_table/shared_const.h"
+#include "../../include/virtual_void/erased/open_method/algorithm.h"
+#include "../../include/virtual_void/erased/open_method/via_m_table/declare.h"
 #include "../../include/virtual_void/typeid_cast/cast.h"
 #include "include/catch.hpp"
+
+using namespace virtual_void::erased::data::has_m_table;
 
 namespace {
 
 namespace DB {
-using FactoryFunction =
-    std::function<virtual_void::m_table::shared_const_data_ptr(const std::string&)>;
-using SinkFunction =
-    std::function<void(const virtual_void::m_table::shared_const&)>;
+using FactoryFunction = std::function<shared_const(const std::string&)>;
+using SinkFunction = std::function<void(const shared_const&)>;
 
 struct System {
   std::map<std::string, FactoryFunction> factories;
@@ -59,14 +59,14 @@ std::string ToString_(const SuperStringData* x) {
   return x->data + " -> " + x->more;
 }
 
-virtual_void::m_table::domain applicationDomain;
+virtual_void::erased::open_method::via_m_table::domain applicationDomain;
 
 auto entityToOut =
-    virtual_void::m_table::open_method<void(const void*)>{applicationDomain};
-auto toString = virtual_void::m_table::open_method<std::string(const void*)>{
+    virtual_void::erased::open_method::via_m_table::declare<void(const void*)>{applicationDomain};
+auto toString = virtual_void::erased::open_method::via_m_table::declare<std::string(const void*)>{
     applicationDomain};
 auto typeid_const_cast = virtual_void::typeid_cast::const_cast_method<
-    virtual_void::m_table::open_method>{applicationDomain};
+    virtual_void::erased::open_method::via_m_table::declare>{applicationDomain};
 
 void IntToOut(const IntData* i) {
   std::cout << "int: " << i->data << std::endl;
@@ -107,32 +107,29 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
     std::cout << "string: " << s->data << std::endl;
   });
 
-  virtual_void::open_method::fill_with_overloads(
+  virtual_void::erased::open_method::fill_with_overloads(
       classes{}, toString, [](const auto* x) { return ToString_(x); });
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, typeid_const_cast);
-  virtual_void::m_table::declare_classes(classes{}, applicationDomain);
-  virtual_void::m_table::fix_m_tables(applicationDomain);
+  virtual_void::erased::open_method::via_m_table::declare_classes(classes{}, applicationDomain);
+  virtual_void::erased::open_method::via_m_table::fix_m_tables(applicationDomain);
 
   db.factories["i"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<IntData>(
-        std::atoi(data.c_str()));
+    return shared_const{IntData(std::atoi(data.c_str()))};
   };
   db.factories["s"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<StringData>(data);
+    return shared_const{StringData(data)};
   };
   db.factories["ss"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<SuperStringData>(data,
-                                                                     "boss");
+    return shared_const{SuperStringData(data, "boss")};
   };
   db.factories["d"] = [](const std::string& data) {
-    return virtual_void::m_table::make_shared_const<DoubleData>(
-        std::atof(data.c_str()));
+    return shared_const{DoubleData(std::atof(data.c_str()))};
   };
 
-  db.Query("junk", [](const virtual_void::m_table::shared_const& e) {
+  db.Query("junk", [](const shared_const& e) {
     // call open method
-    std::cout << "type_info: " << e.meta()->type_info()->name() << ": " << toString(e)
-              << std::endl;
+    std::cout << "type_info: " << e.meta()->type_info()->name() << ": "
+              << toString(e) << std::endl;
 
     try {
       // call open method

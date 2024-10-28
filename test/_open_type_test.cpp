@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/open_object/open_object.h"
+#include "../include/virtual_void/erased/data/open_object.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

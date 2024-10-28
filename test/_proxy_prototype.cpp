@@ -8,7 +8,8 @@
 
 #include "../include/std26/proxy.h"
 
-#include "../include/virtual_void/typeid/open_method.h"
+#include "../include/virtual_void/erased/data/has_type_info/observer.h"
+#include "../include/virtual_void/erased/open_method/via_type_info/declare.h"
 #include "../include/virtual_void/utillities/unnamed__.h"
 
 namespace
@@ -98,9 +99,9 @@ std::string ToString_( const X& x )
 
 TEST_CASE( "proxy prototype" ) 
 {
-    using namespace virtual_void;
-    typeid_::domain testDomain;
-    auto update = typeid_::open_method< void (void*, const std::string& ) >{ testDomain };
+    using namespace virtual_void::erased;
+    open_method::via_type_info::domain testDomain;
+    auto update = open_method::via_type_info::declare< void (void*, const std::string& ) >{ testDomain };
     auto __ = update.define< X >( +[]( X* x, const std::string& u ){ x->s += u; } );
     update.seal_for_runtime();
 
@@ -115,14 +116,15 @@ TEST_CASE( "proxy prototype" )
     
     REQUIRE( pro::proxy_reflect<MetaData>(cp).type_info.name() == typeid( X ).name() );
 
-    update( &o, "->updated" );
+    update( o, "->updated" );
     REQUIRE( ToString_( o ) == "world->updated" );
 
     auto dataOriginal = GetData( *op );
     auto dataWriteable = GetData( *cp );
     REQUIRE( dataOriginal != dataWriteable ); 
 
-    update( std::pair< const std::type_info&, void* >{ pro::proxy_reflect<MetaData>(cp).type_info, dataWriteable }, "->updated!!!" );
+    const std::type_info& type_info = pro::proxy_reflect<MetaData>(cp).type_info;
+    update( type_info, dataWriteable, "->updated!!!" );
     REQUIRE( ToString( *cp ) == "hallo->updated!!!" );
 }
 

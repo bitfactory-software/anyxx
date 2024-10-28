@@ -3,20 +3,20 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/call_operator.h"
-#include "../include/virtual_void/erased/interface.h"
-#include "../include/virtual_void/erased/lifetime/observer.h"
-#include "../include/virtual_void/erased/lifetime/value.h"
+#include "../include/virtual_void/erased/data/has_no_meta/observer.h"
+#include "../include/virtual_void/erased/data/has_no_meta/value.h"
+#include "../include/virtual_void/erased/interface/call_operator.h"
+#include "../include/virtual_void/erased/interface/declare_macro.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
 namespace virtual_void::erased {
 template <typename SIG>
-using function = erased::call_operator<SIG, erased::value, erased::base>;
+using function = erased::interface::call_operator<SIG, erased::data::has_no_meta::value>;
 template <typename SIG>
 using ref_function =
-    erased::call_operator<SIG, erased::mutable_observer, erased::base>;
+    erased::interface::call_operator<SIG, erased::data::has_no_meta::mutable_observer>;
 }  // namespace virtual_void::erased
 
 using namespace virtual_void;
@@ -38,8 +38,7 @@ TEST_CASE("erased std emulated function") {
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");
-    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ ==
-            "hallo world");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo world");
   }
   {
     erased::function<std::string(const std::string)> f{
@@ -52,8 +51,7 @@ TEST_CASE("erased std emulated function") {
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
-    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ ==
-            "hallo world");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo world");
   }
   {
     auto func = [](auto s) { return s; };

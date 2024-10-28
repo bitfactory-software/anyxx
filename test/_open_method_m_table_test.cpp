@@ -4,26 +4,30 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "../include/virtual_void/m_table/lifetime/shared_const.h"
-#include "../include/virtual_void/m_table/lifetime/unique.h"
-#include "../include/virtual_void/m_table/open_method.h"
-#include "../include/virtual_void/open_method/algorithm.h"
+#include "../include/virtual_void/erased/data/has_m_table/observer.h"
+#include "../include/virtual_void/erased/data/has_m_table/shared_const.h"
+#include "../include/virtual_void/erased/data/has_m_table/unique.h"
+#include "../include/virtual_void/erased/open_method/algorithm.h"
+#include "../include/virtual_void/erased/open_method/via_m_table/declare.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 
 namespace {
 
-using namespace virtual_void::m_table;
+using namespace ::virtual_void;
+using namespace ::virtual_void::erased;
+using namespace ::virtual_void::erased::data::has_m_table;
+using namespace ::virtual_void::erased::open_method::via_m_table;
 using namespace TestDomain;
 
 auto ToString = [](const auto* t) -> std::string { return typeid(*t).name(); };
 
-using to_string_method = open_method<std::string(const void*)>;
+using to_string_method = declare<std::string(const void*)>;
 
 template <typename T>
 auto call(const to_string_method& method) {
   T t;
-  return method(virtual_void::to_m_table_void(&t));
+  return method(const_observer(t));
 }
 
 TEST_CASE("m_table open_method") {
@@ -35,7 +39,7 @@ TEST_CASE("m_table open_method") {
         +[](const A1* x) -> std::string { return ToString(x); });
 
     declare_classes<D>(testDomain);
-    virtual_void::open_method::interpolate(testDomain);
+    open_method::interpolate(testDomain);
     REQUIRE(toString.is_defined<D>());
     fix_m_tables(testDomain);
     REQUIRE(call<D>(toString) == typeid(A1).name());  // call for base class
@@ -45,7 +49,7 @@ TEST_CASE("m_table open_method") {
     to_string_method toString(testDomain);
 
     declare_classes<D>(testDomain);
-    virtual_void::open_method::fill_with_overloads<D>(toString, ToString);
+    open_method::fill_with_overloads<D>(toString, ToString);
     REQUIRE(toString.is_defined<D>());
     fix_m_tables(testDomain);
     REQUIRE(
@@ -55,16 +59,15 @@ TEST_CASE("m_table open_method") {
   {
     domain testDomain;
     to_string_method toString(testDomain);
-    using classes = virtual_void::type_list<D, C1, C2>;
+    using classes = type_list<D, C1, C2>;
     declare_classes(classes{}, testDomain);
-    virtual_void::open_method::fill_with_overloads(classes{}, toString,
+    open_method::fill_with_overloads(classes{}, toString,
                                                    ToString);
     fix_m_tables(testDomain);
-    virtual_void::class_hierarchy::visit_classes<classes>(
-        virtual_void::overload{[&]<typename C> {
+    class_hierarchy::visit_classes<classes>(
+        overload{[&]<typename C> {
                                  C c;
-                                 auto virtual_void =
-                                     virtual_void::to_m_table_void(&c);
+                                 auto virtual_void = const_observer(c);
                                  auto u = unique{C{}};
                                  auto expected = typeid(C).name();
                                  auto r = toString(u);
