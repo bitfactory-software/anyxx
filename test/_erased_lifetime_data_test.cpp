@@ -18,22 +18,6 @@ using namespace virtual_void;
 using namespace virtual_void::erased;
 
 namespace virtual_void::erased::data {
-template <typename META_DATA>  // obsolate! replace with base<>!
-struct with_meta {
-  META_DATA meta_data_;
-  template <typename T>
-  with_meta(std::in_place_type_t<T>) : meta_data_(std::in_place_type<T>) {}
-  void* data() {
-    return &static_cast<allocation_holder<int, with_meta<META_DATA>>*>(this)
-                ->value_;
-  }
-  void const* data() const {
-    return &static_cast<allocation_holder<int, with_meta<META_DATA>> const*>(
-                this)
-                ->the_data_;
-  }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~with_meta() = default;
-};
 }  // namespace virtual_void::erased::data
 
 #define DATA_ALIGNED(T, META_DATA) data::allocation_holder<T, META_DATA>
