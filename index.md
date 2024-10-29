@@ -29,15 +29,16 @@ The library is **header only**
 The name of the library originates in its fundamental design idea:
 - hide the concrete data behind a (possible "smart") **pointer to void**,
 - pair this with a pointer to static meta data to interprete and recover the hidden data
-- and use such pairs as the external interfaces, to seperate usage and implementation details as much as possible. So we can say, the pointer is only **virtual void**. 
+- and use such pairs as the external interfaces, to seperate usage and implementation details as much as possible. So we can say, the pointer is **virtual void**. 
 
 ## programming in the large
 
 ### runtime versus compiletime dispatch
 
-Dispatch on behalf of a type is - like function calls - a fundamental software construction principle. 
-They allow the building of layerd abstraction levels.
+Dispatch on behalf of a type is - like function calls - a fundamental software construction principle to allow the building of layerd abstraction levels.
+
 Static dispatch is the dispatch of chioce in C++. Foremost because of performance and binary size.
+
 But eceeds a program a certain size, it is no longer possible to use static disapch for all and everything. 
 
 Reasons are:
