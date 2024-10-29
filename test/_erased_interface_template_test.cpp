@@ -18,9 +18,6 @@ struct X {
 };
 
 namespace {
-// ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
-//                           (INTERFACE_CONST_METHOD(VALUE, at, KEY),
-//                            INTERFACE_CONST_METHOD(std::size_t, size)))
 ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
                           (INTERFACE_CONST_METHOD(VALUE, at, KEY),
                            INTERFACE_CONST_METHOD(std::size_t, size)))
