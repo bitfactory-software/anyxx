@@ -110,10 +110,10 @@ TEST_CASE("m_table/lifetime/value") {
   {
     auto u1 = value(A{"hallo"});
     static_assert(
-        std::same_as<decltype(u1), erased::virtual_void<value_DATA>>);
+        std::same_as<decltype(u1), erased::virtual_void<value_data>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                          erased::virtual_void<value_DATA>> &&
+                          erased::virtual_void<value_data>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
@@ -157,7 +157,7 @@ TEST_CASE("m_table/lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = erased::virtual_void_trait<value_DATA>{}(a);
+    auto t1 = erased::virtual_void_trait<value_data>{}(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -165,7 +165,7 @@ TEST_CASE("m_table/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = erased::virtual_void_trait<value_DATA>{}(a);
+    auto t1 = erased::virtual_void_trait<value_data>{}(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }
