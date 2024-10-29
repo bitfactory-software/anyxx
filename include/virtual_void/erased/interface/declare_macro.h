@@ -113,21 +113,21 @@
 
 #define _detail_INTERFACE_MAP_LIMP_H(l) _detail_INTERFACE_MAP_IMPL l
 
-#define _detail_INTERFACE_MAP_IMPL(type, name, const_, ...)                  \
-  auto name(                                                                 \
-      T const_* x __VA_OPT__(, _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-    return x->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+#define _detail_INTERFACE_MAP_IMPL(type, name, const_, ...)               \
+  auto name(T const_* x __VA_OPT__(                                       \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {             \
+    return x->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 
 #define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, const_, ...) \
   type (*name)(void_t __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...)      \
-  name =                                                                       \
-      [](void_t _vp __VA_OPT__(, _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) { \
-        return v_table_map{}.name((UNERASE{}(_vp))__VA_OPT__(, ) __VA_OPT__(   \
-            _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                        \
-      };
+#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...) \
+  name = [](void_t _vp __VA_OPT__(                                        \
+             , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
+    return v_table_map{}.name((UNERASE{}(_vp))__VA_OPT__(, ) __VA_OPT__(  \
+        _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                       \
+  };
 
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                 \
   type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
