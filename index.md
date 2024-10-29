@@ -55,11 +55,11 @@ If the callback would not need more concrete (type) information abount the passe
 
 ### runtime versus compiletime 
 
-In the general case, the "hot" runtime path an the bottleneck are easy diagnosed with profilers, once it gets a problem.
+In the general case, the "hot" runtime path and the bottleneck are easy diagnosed with profilers.
 When the problem is spottet, the soultion is - so our expirience - not so far away.  
 In contrary, when build time has grown to a problem, there is seldom an easy way out. 
-While a software system grows lager, keeping the edit-compile-run loop short, needs constan smart decisssions.
-The fundamental design principals here are loose-coupling and information hiding.
+While a software system grows lager, keeping the edit-compile-run loop short, needs constant smart decisssions.
+The fundamental design principals here are **loose-coupling** and **information hiding**.
 
 ### From "OO style" to "type erasure" runtime dispatch to "type tunneling"
 
