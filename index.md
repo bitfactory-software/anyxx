@@ -80,6 +80,20 @@ Because we found no library, which fullfilled this demands, we came up with this
 We call a "lossless type erasing" technique "type tunneling".
 To symbolize the "hide the type information" and bring it "back to light".
 
+## coupling and separation
+
+Thight coupling allows information easy to flow and enhances productivity. If, in the other Hand, the "Things" couplet are fast moving, the coupling gets a burden. 
+
+So we want to separate the moving parts.
+
+Examples:
+
+You will for sure couple with the used Progrmming Language as deep as possible to exploit its benefit. 
+
+You probably want to seperat from the details of the operating system, to easy portation.
+
+You probably want also to separate the different aspects of your application, because you know
+
 
 
 
