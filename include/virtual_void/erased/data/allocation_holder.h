@@ -4,12 +4,6 @@
 
 namespace virtual_void::erased::data {
 
-#ifdef _DEBUG
-#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL virtual
-#else
-#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
-#endif  // DEBUG
-
 template <typename META_DATA>
 struct allocation_base : META_DATA {
   template <typename V>

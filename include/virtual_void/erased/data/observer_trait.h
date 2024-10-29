@@ -35,16 +35,6 @@ struct observer_trait : virtual_void_trait_base<DATA> {
   {
     return DATA(arg);
   }
-  template <typename FROM>
-  auto operator()(FROM& from) {
-    return virtual_void<DATA>(from);
-  }  // for migration to lifteime_handle! delete after migration!
-  template <typename FROM>
-  auto operator()(const FROM& from)
-    requires DATA::is_const
-  {
-    return virtual_void<DATA>(from);
-  }  // for migration to lifteime_handle! delete after migration!
 };
 
 }  // namespace virtual_void::erased
