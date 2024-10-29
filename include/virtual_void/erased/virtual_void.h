@@ -15,10 +15,10 @@ concept base_of = std::derived_from<DERIVED, BASE>;
 template <class E>
 concept is_virtual_void = requires(E e, int i) {
   typename E::void_t;
-  typename E::make_erased;
+//  typename E::make_erased;
   // typename E::trait_t;
   { E::is_const } -> std::convertible_to<bool>;
-  { E::make_erased()(i) } -> base_of<E>;
+//  { E::make_erased()(i) } -> base_of<E>;
   { e.data() } -> std::convertible_to<typename E::void_t>;
 };
 
@@ -72,10 +72,10 @@ class virtual_typed;
 
 template <typename DATA>
 struct virtual_void_trait_base {
-  template <typename FROM>
-  auto operator()(FROM&& from) {
-    return virtual_void<DATA>(std::forward<FROM>(from));
-  }  // for migration to lifteime_handle! delete after migration!
+  //template <typename FROM>
+  //auto operator()(FROM&& from) {
+  //  return virtual_void<DATA>(std::forward<FROM>(from));
+  //}  // for migration to lifteime_handle! delete after migration!
 };
 
 template <typename DATA>

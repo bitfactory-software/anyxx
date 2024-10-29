@@ -234,7 +234,7 @@ TEST_CASE("base") {
   };
   {
     x_t a{"hallo"};
-    value erased = erase_to<value>(a);
+    value erased{a};
     REQUIRE(reconcrete_cast<x_t>(erased)->s_ == "hallo");
   }
   {

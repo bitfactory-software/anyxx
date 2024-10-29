@@ -157,7 +157,7 @@ TEST_CASE("m_table/lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = erased::virtual_void_trait<value_data>{}(a);
+    auto t1 = value(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -165,7 +165,7 @@ TEST_CASE("m_table/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = erased::virtual_void_trait<value_data>{}(a);
+    auto t1 = value(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }

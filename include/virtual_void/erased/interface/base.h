@@ -49,8 +49,7 @@ class base {
   base(CONSTRUCTED_WITH&& constructed_with)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
                                 base<VIRTUAL_VOID>>)
-      : virtual_void_(erase_to<virtual_void_t>(
-            std::forward<CONSTRUCTED_WITH>(constructed_with))) {
+      : virtual_void_(std::forward<CONSTRUCTED_WITH>(constructed_with)) {
     static v_table_t imlpemented_v_table{
         unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     v_table_ = &imlpemented_v_table;
