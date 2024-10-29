@@ -45,5 +45,5 @@ TEST_CASE("erased template test") {
       };
   test_map_t_i_lambda(map_string_to_int);
 
-  test_map_t_i_template< std::string, int >(map_string_to_int);
+  test_map_t_i_template<std::string, int>(map_string_to_int);
 }
