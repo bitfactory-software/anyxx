@@ -7,7 +7,10 @@ permalink: /
 
 # virtual void
 
-## a "type tunnel" vocabulary for programming in the large
+## A "type tunnel" vocabulary for programming in the large
+
+This is a library with building blocks for large software systems:
+
 - lifetimehandles
 - interfaces
   - deriveable
@@ -17,19 +20,24 @@ permalink: /
 - object casts
 - open types
 
+They offer
 
-These types are orthogonal building blocks for large software systems with 
 - loose coupling and
 - performance on par with virtual function calls.
 
-The work as a foundating vocabulary, to "factor out" the dependencies between the components in the system.  
+They work as a foundating vocabulary, to *factor out* the dependencies between the components in the system.  
 
 The library is **header only** 
 
 The name of the library originates in its fundamental design idea:
-- hide the concrete data behind a (possible "smart") **pointer to void**,
-- pair this with a pointer to static meta data to interprete and recover the hidden data
-- and use such pairs as the external interfaces, to seperate usage and implementation details as much as possible. So we can say, the pointer is **virtual void**. 
+
+- **hide** the concrete **data** behind a (possible "smart") **pointer to void**,
+- pair this with a pointer to **static meta** data to interprete and **recover** the hidden data
+- use such pairs to **connect the concrete data** via **interfaces** and **open methods**
+
+to seperate usage and implementation details as much as possible. 
+
+This makes the pointer seeming not *void* rather **virtual void**. 
 
 ## programming in the large
 
@@ -86,13 +94,15 @@ Thight coupling allows information easy to flow and enhances productivity. If, i
 
 So we want to separate the moving parts.
 
-Examples:
+***Examples***:
 
 You will for sure couple with the used Progrmming Language as deep as possible to exploit its benefit. 
 
 You probably want to seperat from the details of the operating system, to easy portation.
 
-You probably want also to separate the different aspects of your application, because you know
+You surly also want to separate different aspects of your application, because you know, they will change, and yout want to keep the changes as localy as possible.
+
+To decide to use this library, you have to ballance the benefits of sepaerating your internal dependencies versus the tight coupling into **virtual void**
 
 
 
