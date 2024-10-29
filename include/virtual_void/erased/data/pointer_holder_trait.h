@@ -7,9 +7,9 @@
 
 namespace virtual_void::erased {
 
-template <typename DATA>
-struct pointer_holder_trait : virtual_void_trait_base<DATA> {
-  using void_t = DATA::void_t;
+template <typename VIRTUAL_VOID>
+struct pointer_holder_trait : virtual_void_trait_base<VIRTUAL_VOID> {
+  using void_t = VIRTUAL_VOID::void_t;
   static void_t value(const auto& ptr) { return ptr.value(); }
   static auto meta(const auto& ptr) { return ptr.get_meta(); }
   static bool has_value(const auto& ptr) {
@@ -17,34 +17,24 @@ struct pointer_holder_trait : virtual_void_trait_base<DATA> {
   }
   template <typename V>
   static auto construct_from(V& v) {
-    return DATA(v);
+    return VIRTUAL_VOID(v);
   }
   template <typename V>
   static auto construct_from(const V& v)
-    requires DATA::is_const
+    requires VIRTUAL_VOID::is_const
   {
-    return DATA(v);
+    return VIRTUAL_VOID(v);
   }
   template <typename V, typename ARG>
   static auto construct_in_place(std::in_place_type_t<V>, ARG& arg) {
-    return DATA(arg);
+    return VIRTUAL_VOID(arg);
   }
   template <typename V, typename ARG>
   static auto construct_in_place(std::in_place_type_t<V>, const ARG& arg)
-    requires DATA::is_const
+    requires VIRTUAL_VOID::is_const
   {
-    return DATA(arg);
+    return VIRTUAL_VOID(arg);
   }
-  template <typename FROM>
-  auto operator()(FROM& from) {
-    return virtual_void<DATA>(from);
-  }  // for migration to lifteime_handle! delete after migration!
-  template <typename FROM>
-  auto operator()(const FROM& from)
-    requires DATA::is_const
-  {
-    return virtual_void<DATA>(from);
-  }  // for migration to lifteime_handle! delete after migration!
 };
 
 }  // namespace virtual_void::erased
