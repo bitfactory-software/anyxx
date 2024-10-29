@@ -90,8 +90,7 @@ To symbolize the "hide the type information" and bring it "back to light".
 
 ### Coupling and Separation
 
-Thight coupling allows information easy to flow and enhances productivity. If, in the other Hand, the "Things" couplet are fast moving, the coupling gets a burden. 
-
+Thight coupling allows information easy to flow and enhances productivity. Contrary, if the "Things" coupled are fast moving, the coupling gets a burden. 
 So we want to separate the moving parts.
 
 ***Examples***:
