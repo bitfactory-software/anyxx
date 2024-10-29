@@ -1,4 +1,4 @@
-# virtual void : some vocabulary for programming in the large
+# **virtual void** : Some vocabulary for programming in the large
 
 Welome! Go to [docs]
 
