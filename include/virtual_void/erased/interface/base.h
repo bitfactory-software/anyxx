@@ -1,13 +1,5 @@
 #pragma once
 
-//
-// developed from:
-// https://github.com/AlexCodesApps/virtual_void::erased/blob/main/dynamic_v_table.hpp
-//
-// for Microsoft C++, you must enable the C-Preprocessor with this flag:
-// /Zc:preprocessor (see CMakeLists.txt for example)
-//
-
 #include <optional>
 #include <type_traits>
 #include <typeinfo>
