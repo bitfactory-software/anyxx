@@ -2,8 +2,6 @@
 
 #include "memory"
 
-#include "holder.h"
-
 namespace virtual_void::erased::data {
 
 template <typename META_DATA>

@@ -4,7 +4,7 @@
 #include "meta.h"
 
 namespace virtual_void::erased::data::has_type_info {
-using shared_const_DATA = erased::data::shared_const_ptr<base<meta>>;
+using shared_const_DATA = erased::data::shared_const_ptr<allocation_base<meta>>;
 }
 
 namespace virtual_void::erased {

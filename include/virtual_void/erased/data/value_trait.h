@@ -9,10 +9,10 @@
 namespace virtual_void::erased {
 
 template <typename META>
-struct value_trait : virtual_void_trait_base<data::value_ptr<data::base<META>>> {
+struct value_trait : virtual_void_trait_base<data::value_ptr<data::allocation_base<META>>> {
   using void_t = void*;
   template <typename V>
-  using typed_t = data::holder<V, META>;
+  using typed_t = data::allocation_holder<V, META>;
   static void* value(const auto& ptr) { return ptr.value(); }
   static auto meta(const auto& ptr) { ptr.meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }

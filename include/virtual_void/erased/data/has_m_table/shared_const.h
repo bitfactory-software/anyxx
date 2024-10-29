@@ -4,7 +4,7 @@
 #include "meta.h"
 
 namespace virtual_void::erased::data::has_m_table {
-using shared_const_DATA = shared_const_ptr<base<meta>>;
+using shared_const_DATA = shared_const_ptr<allocation_base<meta>>;
 }
 
 namespace virtual_void::erased {

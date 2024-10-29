@@ -1,6 +1,6 @@
 #pragma once
 
-#include "holder.h"
+#include <memory>
 
 namespace virtual_void::erased::data {
 

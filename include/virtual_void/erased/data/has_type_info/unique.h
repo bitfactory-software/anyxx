@@ -5,7 +5,7 @@
 
 namespace virtual_void::erased::data::has_type_info {
 using unique_DATA =
-    erased::data::unique_ptr<base<meta>>;
+    erased::data::unique_ptr<allocation_base<meta>>;
 }
 
 namespace virtual_void::erased {
