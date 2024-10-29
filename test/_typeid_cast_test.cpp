@@ -4,12 +4,12 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "../include/virtual_void/erased/data/has_m_table/observer.h"
-#include "../include/virtual_void/erased/data/has_type_info/observer.h"
-#include "../include/virtual_void/erased/open_method/algorithm.h"
-#include "../include/virtual_void/erased/open_method/via_m_table/declare.h"
-#include "../include/virtual_void/erased/open_method/via_type_info/declare.h"
-#include "../include/virtual_void/typeid_cast/cast.h"
+#include "virtual_void/erased/data/has_m_table/observer.h"
+#include "virtual_void/erased/data/has_type_info/observer.h"
+#include "virtual_void/erased/open_method/algorithm.h"
+#include "virtual_void/erased/open_method/via_m_table/declare.h"
+#include "virtual_void/erased/open_method/via_type_info/declare.h"
+#include "virtual_void/typeid_cast/cast.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 

@@ -8,9 +8,9 @@
 
 #include "../include/std26/proxy.h"
 
-#include "../include/virtual_void/erased/data/has_type_info/observer.h"
-#include "../include/virtual_void/erased/open_method/via_type_info/declare.h"
-#include "../include/virtual_void/utillities/unnamed__.h"
+#include "virtual_void/erased/data/has_type_info/observer.h"
+#include "virtual_void/erased/open_method/via_type_info/declare.h"
+#include "virtual_void/utillities/unnamed__.h"
 
 namespace
 {

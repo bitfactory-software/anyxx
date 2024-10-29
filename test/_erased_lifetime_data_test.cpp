@@ -4,12 +4,12 @@
 #include <string>
 #include <vector>
 
-#include "../include/virtual_void/erased/data/allocation_holder.h"
-#include "../include/virtual_void/erased/data/has_no_meta/meta.h"
-#include "../include/virtual_void/erased/data/shared_const_ptr.h"
-#include "../include/virtual_void/erased/data/unique_ptr.h"
-#include "../include/virtual_void/erased/data/value_ptr.h"
-#include "../include/virtual_void/erased/virtual_void.h"
+#include "virtual_void/erased/data/allocation_holder.h"
+#include "virtual_void/erased/data/has_no_meta/meta.h"
+#include "virtual_void/erased/data/shared_const_ptr.h"
+#include "virtual_void/erased/data/unique_ptr.h"
+#include "virtual_void/erased/data/value_ptr.h"
+#include "virtual_void/erased/virtual_void.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

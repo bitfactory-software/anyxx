@@ -3,10 +3,10 @@
 #include <any>
 #include <iostream>
 
-#include "../include/virtual_void/erased/data/has_m_table/shared_const.h"
-#include "../include/virtual_void/erased/data/has_m_table/unique.h"
-#include "../include/virtual_void/erased/open_method/algorithm.h"
-#include "../include/virtual_void/erased/open_method/via_type_info/factory.h"
+#include "virtual_void/erased/data/has_m_table/shared_const.h"
+#include "virtual_void/erased/data/has_m_table/unique.h"
+#include "virtual_void/erased/open_method/algorithm.h"
+#include "virtual_void/erased/open_method/via_type_info/factory.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 

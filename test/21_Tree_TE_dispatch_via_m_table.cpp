@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 
-#include "../../include/virtual_void/erased/data/has_m_table/shared_const.h"
-#include "../../include/virtual_void/erased/open_method/via_m_table/declare.h"
-#include "../../include/virtual_void/utillities/unnamed__.h"
+#include "virtual_void/erased/data/has_m_table/shared_const.h"
+#include "virtual_void/erased/open_method/via_m_table/declare.h"
+#include "virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 
 using std::cout;

@@ -9,10 +9,10 @@
 #include <vector>
 
 #include "../../include/std26/proxy.h"
-#include "../../include/virtual_void/erased/data/has_m_table/shared_const.h"
-#include "../../include/virtual_void/erased/open_method/algorithm.h"
-#include "../../include/virtual_void/erased/open_method/via_m_table/declare.h"
-#include "../../include/virtual_void/typeid_cast/cast.h"
+#include "virtual_void/erased/data/has_m_table/shared_const.h"
+#include "virtual_void/erased/open_method/algorithm.h"
+#include "virtual_void/erased/open_method/via_m_table/declare.h"
+#include "virtual_void/typeid_cast/cast.h"
 #include "include/catch.hpp"
 
 using namespace virtual_void::erased::data::has_m_table;

@@ -13,6 +13,8 @@ if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
+include_directories( "./include" )
+
 project ("virtual_void")
 
 # Include sub-projects.

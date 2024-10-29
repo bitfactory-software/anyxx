@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../include/virtual_void/class_hierarchy/class_hierarchy.h"
+#include "virtual_void/class_hierarchy/class_hierarchy.h"
 
 namespace TestDomain {
 struct A1 {

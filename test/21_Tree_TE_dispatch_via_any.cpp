@@ -5,8 +5,8 @@
 #include <iostream>
 #include <string>
 
-#include "../../include/virtual_void/any_dispatch/method.h"
-#include "../../include/virtual_void/utillities/unnamed__.h"
+#include "virtual_void/any_dispatch/method.h"
+#include "virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 
 using std::cout;
