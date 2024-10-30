@@ -76,44 +76,38 @@ template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
     (const_correct_for_virtual_void_data<VOID, typename VIRTUAL_VOID::data_t>);
 
-template <typename DATA>
-class virtual_void;
 template <typename V, typename DATA>
 class virtual_typed;
 
 template <typename DATA>
-class virtual_void {
- public:
-  DATA data_ = nullptr;
-
- public:
-  using data_t = DATA;
-  using trait_t = virtual_void_trait<DATA>;
-  using void_t = trait_t::void_t;
-  static constexpr bool is_const = is_const_void<void_t>::value;
-  using make_erased = trait_t;
-
-  virtual_void(const virtual_void&) = default;
-  virtual_void(virtual_void&) = default;
-  virtual_void(virtual_void&&) noexcept = default;
-  virtual_void& operator=(const virtual_void&) = default;
-  virtual_void& operator=(virtual_void&) = default;
-  virtual_void& operator=(virtual_void&&) noexcept = default;
-  template <typename V>
-  virtual_void(V&& v)
-    requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
-             !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : data_(trait_t::construct_from(std::forward<V>(v))) {}
-  template <typename V, typename... ARGS>
-  virtual_void(std::in_place_type_t<V>, ARGS&&... args)
-      : data_(trait_t::construct_in_place(std::in_place_type<V>,
-                                          std::forward<ARGS>(args)...)) {}
-  virtual_void(DATA data) : data_(std::move(data)) {}
-
-  template <typename TO, typename FROM, typename DATA>
-  friend auto as(virtual_typed<FROM, DATA> source)
-    requires std::convertible_to<FROM*, TO*>;
-};
+using virtual_void = DATA;
+// public:
+//  DATA data_ = nullptr;
+//
+// public:
+//  using data_t = DATA;
+//  using trait_t = virtual_void_trait<DATA>;
+//  using void_t = trait_t::void_t;
+//  static constexpr bool is_const = is_const_void<void_t>::value;
+//  using make_erased = trait_t;
+//
+//  virtual_void(const virtual_void&) = default;
+//  virtual_void(virtual_void&) = default;
+//  virtual_void(virtual_void&&) noexcept = default;
+//  virtual_void& operator=(const virtual_void&) = default;
+//  virtual_void& operator=(virtual_void&) = default;
+//  virtual_void& operator=(virtual_void&&) noexcept = default;
+//  template <typename V>
+//  virtual_void(V&& v)
+//    requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
+//             !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
+//      : data_(trait_t::construct_from(std::forward<V>(v))) {}
+//  template <typename V, typename... ARGS>
+//  virtual_void(std::in_place_type_t<V>, ARGS&&... args)
+//      : data_(trait_t::construct_in_place(std::in_place_type<V>,
+//                                          std::forward<ARGS>(args)...)) {}
+//  virtual_void(DATA data) : data_(std::move(data)) {}
+//};
 
 template <typename VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {
@@ -150,11 +144,16 @@ auto reconcrete_cast(virtual_void<DATA> const& o)
 }
 
 template <typename V, typename DATA>
-class virtual_typed : public virtual_void<DATA> {
+class virtual_typed {
+ private:
+  DATA data_;
+
  public:
+  using data_t = DATA;
+  using trait_t = virtual_void_trait<DATA>;
+  using void_t = trait_t::void_t;
+  static constexpr bool is_const = is_const_void<void_t>::value;
   using value_t = V;
-  using virtual_void_t = virtual_void<DATA>;
-  using virtual_void_t::virtual_void_t;
 
   virtual_typed(const virtual_typed&) = default;
   virtual_typed(virtual_typed&) = default;
@@ -164,34 +163,35 @@ class virtual_typed : public virtual_void<DATA> {
   virtual_typed& operator=(virtual_typed&&) = default;
   template <typename FROM>
   explicit virtual_typed(FROM&& from)
-    requires(!std::derived_from<std::decay_t<FROM>, virtual_void_t> &&
+    requires(!std::same_as<std::decay_t<FROM>, virtual_typed> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : virtual_void_t(std::in_place_type<V>, std::forward<FROM>(from)) {}
+      : data_(trait_t::construct_in_place(std::in_place_type<FROM>,
+                                          std::forward<FROM>(from))) {}
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
-      : virtual_void_t(std::in_place_type<V>, std::forward<ARGS>(args)...) {}
-  explicit virtual_typed(DATA data) : virtual_void_t(std::move(data)) {}
+      : data_(trait_t::construct_in_place(std::in_place_type<V>,
+                                          std::forward<ARGS>(args)...)) {}
+
+  explicit virtual_typed(DATA data) : data_(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *static_cast<value_t*>(get_data(*this));
+    return *static_cast<value_t*>(get_data(data_));
   }
   value_t const* operator->() const {
-    return static_cast<value_t*>(get_data(*this));
+    return static_cast<value_t*>(get_data(data_));
   }
   value_t& operator*() const
-    requires !virtual_void_t::is_const
+    requires !is_const
   {
-    return *static_cast<value_t*>(get_data(*this));
+    return *static_cast<value_t*>(get_data(data_));
   }
   value_t* operator->() const
-    requires !virtual_void_t::is_const
+    requires !is_const
   {
-    return static_cast<value_t*>(get_data(*this));
+    return static_cast<value_t*>(get_data(data_));
   }
 
  private:
-  explicit virtual_typed(virtual_void_t&& virtual_void)
-      : virtual_void_t(std::move(virtual_void)) {}
   template <typename V, typename DATA>
   friend auto as(virtual_void<DATA> source);
 };
