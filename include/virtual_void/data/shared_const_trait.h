@@ -7,7 +7,7 @@
 #include "../data/shared_const_ptr.h"
 #include "../virtual_void.h"
 
-namespace virtual_void::erased {
+namespace virtual_void {
 
 template <typename META>
 struct shared_const_trait
@@ -32,4 +32,4 @@ struct shared_const_trait
   }
 };
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void

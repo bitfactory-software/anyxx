@@ -12,12 +12,12 @@
 #include "../domain.h"
 #include "../table.h"
 
-namespace virtual_void::erased::open_method::via_m_table {
+namespace virtual_void::open_method::via_m_table {
 
 class declaration_base;
 using open_methods = std::vector<declaration_base*>;
 using m_table_map = std::unordered_map<std::type_info const*,
-                                       erased::data::has_m_table::m_table_t*>;
+                                       data::has_m_table::m_table_t*>;
 
 struct domain : open_method::domain<declaration_base> {
   m_table_map m_table_map;
@@ -55,7 +55,7 @@ class declare<R(ARGS...)> : public declaration_base {
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
   using virtual_void_t =
-      std::pair<const erased::data::has_m_table::m_table_t*, dispatch_t>;
+      std::pair<const data::has_m_table::m_table_t*, dispatch_t>;
   using erased_function_t = R (*)(ARGS...);
 
  private:
@@ -69,21 +69,21 @@ class declare<R(ARGS...)> : public declaration_base {
     return define_erased(typeid(CLASS), fp);
   }
   template <typename... OTHER_ARGS>
-  R operator()(erased::data::has_m_table::m_table_t const& m_table,
+  R operator()(data::has_m_table::m_table_t const& m_table,
                dispatch_t data, OTHER_ARGS&&... args) const {
     auto erased_function =
         reinterpret_cast<erased_function_t>(m_table[m_table_index()]);
     return (erased_function)(data, std::forward<OTHER_ARGS>(args)...);
   }
   template <typename DATA, typename... OTHER_ARGS>
-  R operator()(const erased::virtual_void<DATA>& virtual_void_,
+  R operator()(const virtual_void<DATA>& virtual_void_,
                OTHER_ARGS&&... args) const {
     return (*this)(*virtual_void_.meta()->get_m_table(), virtual_void_.data(),
                    std::forward<OTHER_ARGS>(args)...);
   }
-  template <erased::has_virtual_void_trait DATA, typename... OTHER_ARGS>
+  template <has_virtual_void_trait DATA, typename... OTHER_ARGS>
   R operator()(const DATA& ptr, OTHER_ARGS&&... args) const {
-    erased::virtual_void<DATA> virtual_void_{ptr};
+    virtual_void<DATA> virtual_void_{ptr};
     return (*this)(virtual_void_, std::forward<OTHER_ARGS>(args)...);
   }
   template <typename... OTHER_ARGS>
@@ -110,7 +110,7 @@ template <typename CLASSES>
 constexpr nullptr_t declare_classes(m_table_map& registry) {
   class_hierarchy::visit_classes<CLASSES, true>(overload{
       [&]<typename C> {
-        registry[&typeid(C)] = erased::data::has_m_table::m_table_of<C>();
+        registry[&typeid(C)] = data::has_m_table::m_table_of<C>();
       },
       [&]<typename C, typename B> {}});
   return {};
@@ -119,7 +119,7 @@ constexpr nullptr_t declare_classes(m_table_map& registry) {
 template <typename CLASSES>
 constexpr nullptr_t declare_classes(CLASSES classes, domain& domain) {
   declare_classes<CLASSES>(domain.m_table_map);
-  return ::virtual_void::erased::open_method::declare_classes(classes, domain);
+  return ::virtual_void::open_method::declare_classes(classes, domain);
 }
 
 template <typename... CLASSES>
@@ -148,4 +148,4 @@ inline void fix_m_tables(const domain& domain) {
     fix_m_tables(domain.m_table_map, *method);
 }
 
-}  // namespace virtual_void::erased::open_method::via_m_table
+}  // namespace virtual_void::open_method::via_m_table

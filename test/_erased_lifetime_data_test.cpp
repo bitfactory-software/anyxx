@@ -15,10 +15,10 @@
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace virtual_void::erased;
+using namespace virtual_void;
 
-namespace virtual_void::erased::data {
-}  // namespace virtual_void::erased::data
+namespace virtual_void::data {
+}  // namespace virtual_void::data
 
 #define DATA_ALIGNED(T, META_DATA) data::allocation_holder<T, META_DATA>
 
@@ -84,7 +84,7 @@ TEST_CASE("erase lifetime test") {
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
-    auto unique_ptr = erased::data::make_unique<
+    auto unique_ptr = data::make_unique<
         data::allocation_holder<Data, data::has_no_meta::meta>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -93,7 +93,7 @@ TEST_CASE("erase lifetime test unique") {
 
   Data::destrucor_runs = 0;
   {
-    auto unique_ptr = erased::data::make_unique<
+    auto unique_ptr = data::make_unique<
         data::allocation_holder<Data, data::has_type_info::meta>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);

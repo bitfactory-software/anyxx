@@ -7,7 +7,7 @@
 #include "data/has_no_meta/meta.h"
 #include "data/has_type_info/meta.h"
 
-namespace virtual_void::erased {
+namespace virtual_void {
 
 template <class BASE, class DERIVED>
 concept base_of = std::derived_from<DERIVED, BASE>;
@@ -213,4 +213,4 @@ auto as(virtual_typed<FROM, DATA> source)
   }
 }
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void

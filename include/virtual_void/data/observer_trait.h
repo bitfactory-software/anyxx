@@ -5,7 +5,7 @@
 
 #include "../../virtual_void.h"
 
-namespace virtual_void::erased {
+namespace virtual_void {
 
 template <typename VIRTUAL_VOID>
 struct observer_trait : virtual_void_trait_base<VIRTUAL_VOID> {
@@ -37,4 +37,4 @@ struct observer_trait : virtual_void_trait_base<VIRTUAL_VOID> {
   }
 };
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void

@@ -131,7 +131,7 @@
 
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                 \
   type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
-    requires(::virtual_void::erased::const_correct_for_virtual_void<      \
+    requires(::virtual_void::const_correct_for_virtual_void<      \
              void const_, virtual_void_t>)                                \
   {                                                                       \
     return static_cast<v_table_t*>(v_table_)->name(                       \
@@ -167,7 +167,7 @@
           _add_head((typename UNERASE::type), t))>;                            \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
-      ::virtual_void::erased::interface::set_is_derived_from<v_table_t>(this); \
+      ::virtual_void::interface::set_is_derived_from<v_table_t>(this); \
     };                                                                         \
   };                                                                           \
                                                                                \
@@ -183,7 +183,7 @@
         _add_head((v_table_base_t), t))>;                                      \
     using query_v_table_unique_t =                                             \
         n##v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head(           \
-            (::virtual_void::erased::interface::base<virtual_void_t>), t))>;   \
+            (::virtual_void::interface::base<virtual_void_t>), t))>;   \
     template <typename T>                                                      \
     using is_already_base =                                                    \
         std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,          \
@@ -205,7 +205,7 @@
           !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)   \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       static v_table_t imlpemented_v_table{                                    \
-          ::virtual_void::erased::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};  \
+          ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};  \
       v_table_ = &imlpemented_v_table;                                         \
     }                                                                          \
     template <typename OTHER>                                                  \
@@ -224,10 +224,10 @@
 #define ERASED_INTERFACE_(n, BASE, l) ERASED_INTERFACE_TEMPLATE_((), n, BASE, l)
 
 #define ERASED_INTERFACE(name, l) \
-  ERASED_INTERFACE_(name, ::virtual_void::erased::interface::base, l)
+  ERASED_INTERFACE_(name, ::virtual_void::interface::base, l)
 
 #define ERASED_INTERFACE_TEMPLATE(t, n, l) \
-  ERASED_INTERFACE_TEMPLATE_(t, n, ::virtual_void::erased::interface::base, l)
+  ERASED_INTERFACE_TEMPLATE_(t, n, ::virtual_void::interface::base, l)
 
 #define INTERFACE_METHOD_(...) (__VA_ARGS__)
 

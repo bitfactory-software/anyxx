@@ -2,7 +2,7 @@
 
 #include "../../forward.h"
 
-namespace virtual_void::erased::data::has_type_info {
+namespace virtual_void::data::has_type_info {
 
 struct meta {
   std::type_info const* type_info_ = nullptr;
@@ -33,4 +33,4 @@ struct meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-}  // namespace virtual_void::erased::data::has_type_info
+}  // namespace virtual_void::data::has_type_info

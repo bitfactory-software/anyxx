@@ -11,13 +11,13 @@
 
 using namespace Catch::Matchers;
 
-namespace virtual_void::erased {
+namespace virtual_void {
 template <typename SIG>
-using function = erased::interface::call_operator<SIG, erased::data::has_no_meta::value>;
+using function = interface::call_operator<SIG, data::has_no_meta::value>;
 template <typename SIG>
 using ref_function =
-    erased::interface::call_operator<SIG, erased::data::has_no_meta::mutable_observer>;
-}  // namespace virtual_void::erased
+    interface::call_operator<SIG, data::has_no_meta::mutable_observer>;
+}  // namespace virtual_void
 
 using namespace virtual_void;
 
@@ -31,23 +31,23 @@ struct functor_t {
   }
 };
 
-TEST_CASE("erased std emulated function") {
+TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
-    erased::function<std::string(const std::string)> f{functor};
+    function<std::string(const std::string)> f{functor};
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo world");
   }
   {
-    erased::function<std::string(const std::string)> f{
+    function<std::string(const std::string)> f{
         [](auto s) { return s; }};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t functor{"hallo"};
-    erased::ref_function<std::string(const std::string)> f{functor};
+    ref_function<std::string(const std::string)> f{functor};
     REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
@@ -55,7 +55,7 @@ TEST_CASE("erased std emulated function") {
   }
   {
     auto func = [](auto s) { return s; };
-    erased::ref_function<std::string(const std::string)> f{func};
+    ref_function<std::string(const std::string)> f{func};
     REQUIRE(f("hello world") == "hello world");
   }
 }

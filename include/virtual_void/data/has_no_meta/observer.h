@@ -4,19 +4,19 @@
 #include "../observer_trait.h"
 #include "meta.h"
 
-namespace virtual_void::erased::data::has_no_meta {
+namespace virtual_void::data::has_no_meta {
 
 template <typename VOID>
 using observer_ptr = data::observer_ptr<VOID, meta>;
 }
 
-namespace virtual_void::erased {
+namespace virtual_void {
 template <typename VOID>
 struct virtual_void_trait<data::has_no_meta::observer_ptr<VOID>>
     : observer_trait<data::has_no_meta::observer_ptr<VOID>> {};
-}  // namespace virtual_void::erased
+}  // namespace virtual_void
 
-namespace virtual_void::erased::data::has_no_meta {
+namespace virtual_void::data::has_no_meta {
 template <typename VOID>
 using observer = virtual_void<observer_ptr<VOID>>;
 using const_observer = observer<void const*>;
@@ -35,4 +35,4 @@ static_assert(is_virtual_void<mutable_observer>);
 static_assert(is_virtual_void<const_observer>);
 static_assert(is_virtual_void<typed_const_observer<int>>);
 static_assert(is_virtual_void<typed_mutable_observer<int>>);
-}  // namespace virtual_void::erased::data::has_no_meta
+}  // namespace virtual_void::data::has_no_meta

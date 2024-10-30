@@ -37,7 +37,7 @@ struct test_interface {
 TEST_CASE("_interface_const_correct prototyping") {
   using namespace virtual_void;
   static_assert(!test_trait<void*>::is_const);
-  static_assert(erased::data::has_no_meta::const_observer::is_const);
+  static_assert(data::has_no_meta::const_observer::is_const);
   test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
@@ -63,11 +63,11 @@ TEST_CASE("_interface_const_correct void (const) *") {
   using namespace virtual_void;
 
   using const_function =
-      virtual_void::erased::interface::call_operator<std::string(),
-                                          erased::data::has_no_meta::const_observer>;
+      interface::call_operator<std::string(),
+                                          data::has_no_meta::const_observer>;
   using mutating_function =
-      virtual_void::erased::interface::mutable_call_operator<void(std::string),
-                                                  erased::data::has_no_meta::mutable_observer>;
+      interface::mutable_call_operator<void(std::string),
+                                                  data::has_no_meta::mutable_observer>;
 
   {
     functor function_object;
@@ -102,10 +102,10 @@ TEST_CASE("_interface_const_correct void (const) *") {
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
-      virtual_void::erased::interface::call_operator<std::string(),
-                                          erased::data::has_m_table::shared_const>;
-  using mutating_function = virtual_void::erased::interface::mutable_call_operator<
-      void(std::string), erased::data::has_m_table::shared_const>;
+      interface::call_operator<std::string(),
+                                          data::has_m_table::shared_const>;
+  using mutating_function = interface::mutable_call_operator<
+      void(std::string), data::has_m_table::shared_const>;
 
   {
     functor function_object;

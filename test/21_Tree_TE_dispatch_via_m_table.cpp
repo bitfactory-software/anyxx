@@ -14,7 +14,7 @@ using std::string;
 
 namespace {
 
-using node = virtual_void::erased::data::has_m_table::shared_const;
+using node = virtual_void::data::has_m_table::shared_const;
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}
@@ -40,7 +40,7 @@ struct Integer {
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-virtual_void::erased::open_method::via_m_table::domain tree_domain;
+virtual_void::open_method::via_m_table::domain tree_domain;
 
 }  // namespace
 
@@ -53,14 +53,14 @@ template <>
 struct class_<Integer> : bases<> {};
 
 auto __ =
-    virtual_void::erased::open_method::via_m_table::declare_classes<Plus, Times, Integer>(tree_domain);
+    open_method::via_m_table::declare_classes<Plus, Times, Integer>(tree_domain);
 }  // namespace virtual_void::class_hierarchy
 
 namespace {
 // -----------------------------------------------------------------------------
 // evaluate
 
-auto value = virtual_void::erased::open_method::via_m_table::declare<int(const void*)>{tree_domain};
+auto value = virtual_void::open_method::via_m_table::declare<int(const void*)>{tree_domain};
 
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
@@ -74,7 +74,7 @@ auto __ = value.define<Integer>([](auto expr) { return expr->value; });
 // render as Forth
 
 auto as_forth =
-    virtual_void::erased::open_method::via_m_table::declare<string(const void*)>{tree_domain};
+    virtual_void::open_method::via_m_table::declare<string(const void*)>{tree_domain};
 
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
@@ -91,7 +91,7 @@ auto __ = as_forth.define<Integer>(
 // render as Lisp
 
 auto as_lisp =
-    virtual_void::erased::open_method::via_m_table::declare<string(const void*)>{tree_domain};
+    virtual_void::open_method::via_m_table::declare<string(const void*)>{tree_domain};
 
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
@@ -109,7 +109,7 @@ auto __ = as_lisp.define<Integer>(
 // -----------------------------------------------------------------------------
 
 TEST_CASE("21_Tree_TE_dispach_via_m_table") {
-  virtual_void::erased::open_method::via_m_table::fix_m_tables(tree_domain);
+  virtual_void::open_method::via_m_table::fix_m_tables(tree_domain);
 
   using namespace virtual_void;
 

@@ -13,7 +13,7 @@ using std::cout;
 using std::string;
 
 using namespace ::virtual_void;
-using namespace ::virtual_void::erased;
+using namespace ::virtual_void;
 
 namespace {
 

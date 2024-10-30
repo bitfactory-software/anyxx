@@ -6,7 +6,7 @@
 
 #include "../virtual_void.h"
 
-namespace virtual_void::erased::interface {
+namespace virtual_void::interface {
 
 template <typename VOID>
 struct v_table_base {
@@ -101,5 +101,5 @@ TO interface_lifetime_cast(const FROM& from) {
 }
 
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void
 

@@ -5,7 +5,7 @@
 #include "unique.h"
 #include "value.h"
 
-namespace virtual_void::erased::data::has_no_meta {
+namespace virtual_void::data::has_no_meta {
 template <typename TO, typename FROM>
 TO lifetime_cast(FROM const&);
 
@@ -21,4 +21,4 @@ template <>
 const_observer lifetime_cast<const_observer>(value const& value) {
   return const_observer{ data::observer_ptr{value.data(), meta{std::in_place_type<void> } } };
 }
-}  // namespace virtual_void::erased
+}  // namespace virtual_void

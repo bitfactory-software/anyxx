@@ -3,7 +3,7 @@
 #include "../../forward.h"
 #include "m_table.h"
 
-namespace virtual_void::erased::data::has_m_table {
+namespace virtual_void::data::has_m_table {
 
 struct meta {
   m_table_t* m_table_ = nullptr;
@@ -33,4 +33,4 @@ struct meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-}  // namespace virtual_void::erased::data::has_m_table
+}  // namespace virtual_void::data::has_m_table

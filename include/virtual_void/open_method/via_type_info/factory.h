@@ -2,7 +2,7 @@
 
 #include "declaration_base.h"
 
-namespace virtual_void::erased::open_method::via_type_info {
+namespace virtual_void::open_method::via_type_info {
 
 template <typename R, typename... ARGS>
 class factory;

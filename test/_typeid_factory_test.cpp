@@ -19,9 +19,9 @@ TEST_CASE("typeid factory") {
 
   {
     auto any_factory =
-        erased::open_method::via_type_info::factory<std::any()>{};
+        open_method::via_type_info::factory<std::any()>{};
     using classes = type_list<D, C1, C2>;
-    erased::open_method::fill_with_overloads(classes{}, any_factory,
+    open_method::fill_with_overloads(classes{}, any_factory,
                                              []<typename T>() -> std::any {
                                                // std::cout << "construct any
                                                // for " << typeid( T ).name() <<
@@ -39,13 +39,13 @@ TEST_CASE("typeid factory") {
   }
 
   {
-    auto factory = erased::open_method::via_type_info::factory<
-        erased::data::has_m_table::shared_const()>{};
+    auto factory = open_method::via_type_info::factory<
+        data::has_m_table::shared_const()>{};
     using classes = type_list<D, C1, C2>;
-    erased::open_method::fill_with_overloads(
+    open_method::fill_with_overloads(
         classes{}, factory,
-        []<typename T>() -> erased::data::has_m_table::shared_const {
-          return erased::data::has_m_table::shared_const{std::in_place_type<T>,
+        []<typename T>() -> data::has_m_table::shared_const {
+          return data::has_m_table::shared_const{std::in_place_type<T>,
                                                          typeid(T).name()};
         });
     factory.seal_for_runtime();
@@ -62,13 +62,13 @@ TEST_CASE("typeid factory") {
                  [&]<typename C, typename B> {}});
   }
   {
-    auto factory = erased::open_method::via_type_info::factory<
-        erased::data::has_m_table::unique()>{};
+    auto factory = open_method::via_type_info::factory<
+        data::has_m_table::unique()>{};
     using classes = type_list<D, C1, C2>;
-    erased::open_method::fill_with_overloads(
+    open_method::fill_with_overloads(
         classes{}, factory,
-        []<typename T>() -> erased::data::has_m_table::unique {
-          return erased::data::has_m_table::unique(std::in_place_type<T>,
+        []<typename T>() -> data::has_m_table::unique {
+          return data::has_m_table::unique(std::in_place_type<T>,
                                                    typeid(T).name());
         });
     factory.seal_for_runtime();

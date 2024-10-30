@@ -34,18 +34,18 @@ ERASED_INTERFACE_(shape_base, shape_base1,
 			INTERFACE_CONST_METHOD(double, area),
 			INTERFACE_CONST_METHOD(double, perimeter)))
 
-	using shape_vv = shape_i<erased::data::has_m_table::shared_const>;
+	using shape_vv = shape_i<data::has_m_table::shared_const>;
 
-using shape_base_v = shape_base<erased::data::has_no_meta::const_observer>;
+using shape_base_v = shape_base<data::has_no_meta::const_observer>;
 
-using shape = virtual_void::erased::interface::call_operator<
-	std::string(std::string), erased::data::has_no_meta::const_observer,
+using shape = interface::call_operator<
+	std::string(std::string), data::has_no_meta::const_observer,
 	shape_d_i>;
-using shapeX = shape_d_i<erased::data::has_no_meta::const_observer>;
-using shapeXX = shape_d_i<erased::data::has_no_meta::const_observer>;
+using shapeX = shape_d_i<data::has_no_meta::const_observer>;
+using shapeXX = shape_d_i<data::has_no_meta::const_observer>;
 
 using full_shape_observer =
-shape_i<erased::data::has_no_meta::mutable_observer>;
+shape_i<data::has_no_meta::mutable_observer>;
 
 struct circle {
 	double radius;
@@ -128,7 +128,7 @@ void print_shape(const shape s) {
 void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 
 // using shape_double_base_error = shape_d_i<
-// erased::data::has_no_meta::const_observer, virtual_void::erased::bases<
+// data::has_no_meta::const_observer, bases<
 // shape_base, shape_base > >; //should not compile! void
 // should_not_compile(shape_double_base_error s) {}//should not compile!
 
@@ -147,22 +147,22 @@ TEST_CASE("dynamic v_table const_observer") {
 	print_shape(r);
 	print_shape(p);
 
-	using erased_const_observer = erased::data::has_no_meta::const_observer;
+	using erased_const_observer = data::has_no_meta::const_observer;
 	static_assert(
 		std::is_base_of_v<
-		virtual_void::erased::interface::base<erased_const_observer>, shape>);
+		interface::base<erased_const_observer>, shape>);
 	static_assert(std::is_base_of_v<shape_base_v, shape>);
 	static_assert(std::derived_from<shape, shape_base_v>);
 	shape shape_circle{ circle{33.3} };
 	shapeX shape_circleX{ circle{33.3} };
 
-	//    virtual_void::erased::base< void* > base_v = shape_circle; ->
+	//    base< void* > base_v = shape_circle; ->
 	//    v_table_cast may not compile!
-	virtual_void::erased::interface::base<
-		erased::data::has_no_meta::const_observer>
+	interface::base<
+		data::has_no_meta::const_observer>
 		base_shape = shape_circle;
-	virtual_void::erased::interface::base<
-		erased::data::has_no_meta::const_observer>
+	interface::base<
+		data::has_no_meta::const_observer>
 		base_shapeX = shape_circleX;
 
 	REQUIRE(base_shape.is_derived_from<shape>());
@@ -171,11 +171,11 @@ TEST_CASE("dynamic v_table const_observer") {
 	REQUIRE(shape_circleX.is_derived_from<shapeX>());
 	static_assert(std::derived_from<shape, shape_base_v>);
 	static_assert(std::derived_from<shapeX, shape_base_v>);
-	REQUIRE(virtual_void::erased::interface::v_table_cast<shapeX>(base_shape));
-	REQUIRE(!virtual_void::erased::interface::v_table_cast<shape>(shape_circleX));
+	REQUIRE(interface::v_table_cast<shapeX>(base_shape));
+	REQUIRE(!interface::v_table_cast<shape>(shape_circleX));
 	{
 		shape upcasted_shape =
-			virtual_void::erased::interface::static_v_table_cast<shape>(
+			interface::static_v_table_cast<shape>(
 				base_shape);
 		print_shape(upcasted_shape);
 	}
@@ -184,13 +184,13 @@ TEST_CASE("dynamic v_table const_observer") {
 	shape_base_v shape_circle_base = shape_circle;
 	{
 		shape shape_is_circle =
-			virtual_void::erased::interface::static_v_table_cast<shape>(
+			interface::static_v_table_cast<shape>(
 				shape_circle_base);
 		print_shape(shape_is_circle);
 	}
 	{
 		auto shape_is_circle =
-			virtual_void::erased::interface::v_table_cast<shape>(shape_circle_base);
+			interface::v_table_cast<shape>(shape_circle_base);
 		REQUIRE(shape_is_circle);
 		print_shape(*shape_is_circle);
 	}
@@ -205,16 +205,16 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 	regular_polygon p{ 4, 32 };
 	std::cout << "print_shape_vv ********************************" << std::endl;
 
-	virtual_void::erased::data::has_m_table::typed_shared_const<circle> sc{ c };
+	data::has_m_table::typed_shared_const<circle> sc{ c };
 	static_assert(
 		std::is_base_of_v<
-		virtual_void::erased::data::has_m_table::shared_const,
-		virtual_void::erased::data::has_m_table::typed_shared_const<circle>>);
+		data::has_m_table::shared_const,
+		data::has_m_table::typed_shared_const<circle>>);
 	auto& c1 = sc;
 	REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
 	shape_vv circle_shape_vv = sc;
 	auto unerased_circle =
-		erased::reconcrete_cast<circle const>(*circle_shape_vv);
+		reconcrete_cast<circle const>(*circle_shape_vv);
 	REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
 	auto x = circle_shape_vv;
 	{
@@ -231,8 +231,8 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 
 TEST_CASE("base") {
 	using namespace virtual_void;
-	using namespace virtual_void::erased;
-	using value = erased::data::has_no_meta::value;
+	using namespace virtual_void;
+	using value = data::has_no_meta::value;
 
 	using value_base = interface::base<value>;
 

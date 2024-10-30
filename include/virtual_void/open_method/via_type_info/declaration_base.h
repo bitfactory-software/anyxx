@@ -6,7 +6,7 @@
 #include "../domain.h"
 #include "../table.h"
 
-namespace virtual_void::erased::open_method::via_type_info {
+namespace virtual_void::open_method::via_type_info {
 
 class declaration_base;
 using domain = open_method::domain<declaration_base>;
@@ -38,4 +38,4 @@ inline void seal_for_runtime(domain& domain) {
   for (const auto& method : domain.open_methods) method->seal_for_runtime();
 }
 
-}  // namespace virtual_void::erased::open_method::via_type_info
+}  // namespace virtual_void::open_method::via_type_info

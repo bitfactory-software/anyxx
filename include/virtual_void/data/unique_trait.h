@@ -6,7 +6,7 @@
 #include "../data/unique_ptr.h"
 #include "../virtual_void.h"
 
-namespace virtual_void::erased {
+namespace virtual_void {
 
 template <typename META>
 struct unique_trait
@@ -31,4 +31,4 @@ struct unique_trait
   }
 };
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void

@@ -7,7 +7,7 @@
 #include "../forward.h"
 #include "../perfect_typeid_hash/index_table.h"
 
-namespace virtual_void::erased::open_method {
+namespace virtual_void::open_method {
 
 class table {
  public:

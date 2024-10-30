@@ -99,7 +99,7 @@ std::string ToString_( const X& x )
 
 TEST_CASE( "proxy prototype" ) 
 {
-    using namespace virtual_void::erased;
+    using namespace virtual_void;
     open_method::via_type_info::domain testDomain;
     auto update = open_method::via_type_info::declare< void (void*, const std::string& ) >{ testDomain };
     auto __ = update.define< X >( +[]( X* x, const std::string& u ){ x->s += u; } );

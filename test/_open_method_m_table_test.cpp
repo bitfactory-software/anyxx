@@ -15,9 +15,9 @@
 namespace {
 
 using namespace ::virtual_void;
-using namespace ::virtual_void::erased;
-using namespace ::virtual_void::erased::data::has_m_table;
-using namespace ::virtual_void::erased::open_method::via_m_table;
+using namespace ::virtual_void;
+using namespace ::virtual_void::data::has_m_table;
+using namespace ::virtual_void::open_method::via_m_table;
 using namespace TestDomain;
 
 auto ToString = [](const auto* t) -> std::string { return typeid(*t).name(); };

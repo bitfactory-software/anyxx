@@ -2,7 +2,7 @@
 
 #include "../../forward.h"
 
-namespace virtual_void::erased::data {
+namespace virtual_void::data {
 
 template <typename PTR, typename VOID, typename META>
 struct pointer_holder : META {
@@ -38,4 +38,4 @@ struct pointer_holder : META {
   PTR ptr_ = nullptr;
 };
 
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::data

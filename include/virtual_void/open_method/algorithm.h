@@ -2,7 +2,7 @@
 
 #include "domain.h"
 
-namespace virtual_void::erased::open_method {
+namespace virtual_void::open_method {
 
 template <typename CLASS>
 void fill_with_overload(auto& method, const auto& wrapper) {

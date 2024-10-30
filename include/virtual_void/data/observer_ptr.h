@@ -5,7 +5,7 @@
 
 #include "../../forward.h"
 
-namespace virtual_void::erased::data {
+namespace virtual_void::data {
 
 template <typename VOID, typename META>
 struct observer_ptr : META {
@@ -60,4 +60,4 @@ TO* unerase_cast(observer_ptr<void*, META_DATA>& observed) {
   return static_cast<TO*>(observed.value());
 }
 
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::data

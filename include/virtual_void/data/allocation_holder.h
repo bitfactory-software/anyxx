@@ -2,7 +2,7 @@
 
 #include "../forward.h"
 
-namespace virtual_void::erased::data {
+namespace virtual_void::data {
 
 template <typename META_DATA>
 struct allocation_base : META_DATA {
@@ -42,4 +42,4 @@ TO* unerase_cast(allocation_base<META_DATA>& holded) {
   return static_cast<TO*>(holded.value());
 }
 
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::data

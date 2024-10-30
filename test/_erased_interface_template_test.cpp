@@ -10,7 +10,7 @@
 
 using namespace Catch::Matchers;
 
-using namespace ::virtual_void::erased;
+using namespace ::virtual_void;
 
 struct X {
   std::string s_;
@@ -46,7 +46,7 @@ void test_map_t_i_template(
   REQUIRE(map_i.at("two") == 2);
 }
 
-TEST_CASE("erased template test") {
+TEST_CASE("interface template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_map_t_i_lambda =
@@ -67,7 +67,7 @@ TEST_CASE("erased template test") {
   test_map_s_t_i_lambda(map_string_to_int);
 }
 
-TEST_CASE("erased template test2") {
+TEST_CASE("interface template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_map_s_t_i_lambda =

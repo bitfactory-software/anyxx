@@ -2,7 +2,7 @@
 
 #include "../../forward.h"
 
-namespace virtual_void::erased::data::has_no_meta {
+namespace virtual_void::data::has_no_meta {
 
 struct meta {
   const auto* get_meta() const { return this; }
@@ -13,4 +13,4 @@ struct meta {
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-}  // namespace virtual_void::erased::data::has_no_meta
+}  // namespace virtual_void::data::has_no_meta

@@ -7,7 +7,7 @@
 #include "../../data/has_type_info/observer.h"
 #include "declaration_base.h"
 
-namespace virtual_void::erased::open_method::via_type_info {
+namespace virtual_void::open_method::via_type_info {
 
 template <typename R, typename... ARGS>
 class declare;
@@ -20,7 +20,7 @@ class declare<R(ARGS...)> : public declaration_base {
   using dispatch_t = typename first_t<ARGS...>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
-  using param_t = erased::data::has_type_info::observer<dispatch_t>;
+  using param_t = data::has_type_info::observer<dispatch_t>;
   using erased_function_t = R (*)(ARGS...);
 
  public:
@@ -54,4 +54,4 @@ class declare<R(ARGS...)> : public declaration_base {
   }
 };
 
-}  // namespace virtual_void::erased::open_method::via_type_info
+}  // namespace virtual_void::open_method::via_type_info

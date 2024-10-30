@@ -13,8 +13,8 @@
 #include "class_hierarchy_test_hierarchy.h"
 
 using namespace ::virtual_void;
-using namespace ::virtual_void::erased;
-using namespace ::virtual_void::erased::data::has_type_info;
+using namespace ::virtual_void;
+using namespace ::virtual_void::data::has_type_info;
 
 namespace
 {

@@ -13,7 +13,7 @@
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace virtual_void::erased::data::has_m_table;
+using namespace ::virtual_void::data::has_m_table;
 using namespace TestDomain;
 
 struct A {
@@ -31,7 +31,7 @@ TEST_CASE("m_table/lifetime/observer") {
   REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
   static_assert(std::derived_from<
                 mutable_observer,
-                erased::virtual_void<observer_ptr<void*>>>);
+                ::virtual_void::virtual_void<observer_ptr<void*>>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
       std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
@@ -88,7 +88,7 @@ TEST_CASE("m_table/lifetime/shared_const") {
 
 TEST_CASE("m_table/lifetime/unique") {
   auto c1 = unique(std::in_place_type<C>, "unique c1");
-  REQUIRE(erased::reconcrete_cast<C>(c1)->data == "unique c1");
+  REQUIRE(reconcrete_cast<C>(c1)->data == "unique c1");
   auto c2 = typed_unique<C>(std::in_place, "unique c2");
   REQUIRE(c2->data == "unique c2");
   auto c3 = typed_unique<C>(C{"unique c3"});
@@ -110,10 +110,10 @@ TEST_CASE("m_table/lifetime/value") {
   {
     auto u1 = value(A{"hallo"});
     static_assert(
-        std::same_as<decltype(u1), erased::virtual_void<value_data>>);
+        std::same_as<decltype(u1), ::virtual_void::virtual_void<value_data>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                          erased::virtual_void<value_data>> &&
+                          ::virtual_void::virtual_void<value_data>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);

@@ -12,7 +12,7 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void::erased::data::has_no_meta;
+using namespace virtual_void::data::has_no_meta;
 
 struct A {
   std::string s;
@@ -115,10 +115,10 @@ TEST_CASE("lifetime/value") {
   {
     auto u1 = value(A{"hallo"});
     static_assert(
-        std::same_as<decltype(u1), virtual_void::erased::virtual_void<value_data>>);
+        std::same_as<decltype(u1), virtual_void::virtual_void<value_data>>);
     static_assert(
         std::derived_from<std::decay_t<decltype(u1)>,
-                          virtual_void::erased::virtual_void<value_data>> &&
+                          virtual_void::virtual_void<value_data>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);

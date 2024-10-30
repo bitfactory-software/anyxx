@@ -2,7 +2,7 @@
 
 #include "allocation_holder.h"
 
-namespace virtual_void::erased::data {
+namespace virtual_void::data {
 
 template <typename BASE>
 struct value_v_table {
@@ -82,4 +82,4 @@ auto make_value(ARGS&&... args) {
   return value_ptr<base_t>(new T(std::in_place, std::forward<ARGS>(args)...));
 }
 
-}  // namespace virtual_void::erased::data
+}  // namespace virtual_void::data

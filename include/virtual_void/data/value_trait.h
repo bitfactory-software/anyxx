@@ -6,7 +6,7 @@
 #include "../data/value_ptr.h"
 #include "../virtual_void.h"
 
-namespace virtual_void::erased {
+namespace virtual_void {
 
 template <typename META>
 struct value_trait : virtual_void_trait_base<data::value_ptr<data::allocation_base<META>>> {
@@ -26,4 +26,4 @@ struct value_trait : virtual_void_trait_base<data::value_ptr<data::allocation_ba
   }
 };
 
-}  // namespace virtual_void::erased
+}  // namespace virtual_void
