@@ -21,7 +21,7 @@ concept is_virtual_void = requires(E e, int i) {
   // typename E::trait_t;
   { E::is_const } -> std::convertible_to<bool>;
   //  { E::make_erased()(i) } -> base_of<E>;
-  { e.data() } -> std::convertible_to<typename E::void_t>;
+  { get_data(e) } -> std::convertible_to<typename E::void_t>;
 };
 
 template <typename DATA>
@@ -63,12 +63,11 @@ auto unerase() {
 }
 
 template <typename DATA>
-concept is_const_data =
-    std::is_const_v<typename virtual_void_trait<DATA>::void_t>;
+concept is_const_data = is_const_void<typename virtual_void_trait<DATA>::void_t>::value;
 
 template <typename VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
-    ((std::is_const_v<VOID> == is_const_data<DATA>) || (!is_const_data<DATA>));
+    ((is_const_void<VOID>::value == is_const_data<DATA>) || (!is_const_data<DATA>));
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
@@ -87,7 +86,7 @@ class virtual_void {
   using data_t = DATA;
   using trait_t = virtual_void_trait<DATA>;
   using void_t = trait_t::void_t;
-  static constexpr bool is_const = is_const_void<void_t>;
+  static constexpr bool is_const = is_const_void<void_t>::value;
   using make_erased = trait_t;
 
   virtual_void(const virtual_void&) = default;
@@ -126,15 +125,15 @@ class virtual_void {
     requires std::convertible_to<FROM*, TO*>;
 };
 
-template <is_virtual_void VIRTUAL_VOID>
+template <typename VIRTUAL_VOID>
 void const* get_data(VIRTUAL_VOID const& vv)
-  requires is_const_data<VIRTUAL_VOID::data_t>
+  requires VIRTUAL_VOID::is_const
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
 }
-template <is_virtual_void VIRTUAL_VOID>
+template <typename VIRTUAL_VOID>
 void* get_data(VIRTUAL_VOID const& vv)
-  requires !is_const_data<VIRTUAL_VOID::data_t>
+  requires !VIRTUAL_VOID::is_const
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
 }

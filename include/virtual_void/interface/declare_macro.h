@@ -132,7 +132,7 @@
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                 \
   type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
     requires(::virtual_void::const_correct_for_virtual_void<      \
-             void const_, virtual_void_t>)                                \
+             void const_*, virtual_void_t>)                                \
   {                                                                       \
     return static_cast<v_table_t*>(v_table_)->name(                       \
         base_t::virtual_void_.data()                                      \

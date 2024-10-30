@@ -82,11 +82,11 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
 template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
 using call_operator =
-    call_operator_interface<VIRTUAL_VOID, BASE, const void, SIG>;
+    call_operator_interface<VIRTUAL_VOID, BASE, const void*, SIG>;
 
 template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
 using mutable_call_operator =
-    call_operator_interface<VIRTUAL_VOID, BASE, void, SIG>;
+    call_operator_interface<VIRTUAL_VOID, BASE, void*, SIG>;
 
 };  // namespace virtual_void::interface
