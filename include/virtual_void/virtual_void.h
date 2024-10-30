@@ -60,11 +60,15 @@ auto unerase() {
   }
 }
 
+template <typename DATA>
+concept is_const_data =
+      std::is_const_v<typename virtual_void_trait<DATA>::void_t>;
+
 template <typename VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
     ((std::is_const_v<VOID> ==
-      std::is_const_v<typename virtual_void_trait<DATA>::void_t>) ||
-     (!std::is_const_v<typename virtual_void_trait<DATA>::void_t>));
+      is_const_data<DATA>) ||
+     (!is_const_data<DATA>));
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
@@ -121,6 +125,17 @@ class virtual_void {
   friend auto as(virtual_typed<FROM, DATA> source)
     requires std::convertible_to<FROM*, TO*>;
 };
+
+  //void const* data() const
+  //  requires is_const
+  //{
+  //  return trait_t::value(data_);
+  //}
+  //void* data() const
+  //  requires !is_const
+  //{
+  //  return trait_t::value(data_);
+  //}
 
 template <typename U, typename DATA>
 auto reconcrete_cast(virtual_void<DATA> const& o) {
