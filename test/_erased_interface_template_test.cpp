@@ -32,6 +32,10 @@ namespace {
     struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
       auto to_string(int const* x) -> std::string { return std::to_string(*x); };
     };
+    template<>
+    struct to_string_i_v_table_map<double> : to_string_i_default_v_table_map<double> {
+      auto to_string(double const* x) -> std::string { return std::to_string(*x); };
+    };
 }  // namespace
 
 template <typename KEY, typename VALUE>
@@ -59,6 +63,17 @@ TEST_CASE("erased template test") {
       [](map_s_t_i<data::has_type_info::const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
+      };
+  test_map_s_t_i_lambda(map_string_to_int);
+}
+
+TEST_CASE("erased template test2") {
+  std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
+
+  auto test_map_s_t_i_lambda =
+      [](map_s_t_i<data::has_type_info::const_observer, std::string> map_i) {
+        REQUIRE(map_i.at("one").to_string() == "1.000000");
+        REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
   test_map_s_t_i_lambda(map_string_to_int);
 }
