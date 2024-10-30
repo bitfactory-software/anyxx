@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../forward.h"
+#include "../../forward.h"
 
 namespace virtual_void::erased::data::has_no_meta {
 

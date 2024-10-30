@@ -1,17 +1,17 @@
 #pragma once
 
-#include "../../../forward.h"
-#include "m_table.h"
+#include "../../forward.h"
 
-namespace virtual_void::erased::data::has_m_table {
+namespace virtual_void::erased::data::has_type_info {
 
 struct meta {
-  m_table_t* m_table_ = nullptr;
+  std::type_info const* type_info_ = nullptr;
 
   const auto* get_meta() const { return this; }
 
   template <typename T>
-  meta(std::in_place_type_t<T>) : m_table_(m_table_of<std::decay_t<T>>()) {}
+  meta(std::in_place_type_t<T>) : meta(typeid(std::decay_t<T>)) {}
+  meta(std::type_info const& type_info) : type_info_(&type_info) {}
 
   meta() noexcept = default;
   meta(const meta&) = default;
@@ -25,12 +25,12 @@ struct meta {
   }
   friend void swap(meta& lhs, meta& rhs) noexcept {
     using namespace std;
-    swap(lhs.m_table_, rhs.m_table_);
+    swap(lhs.type_info_, rhs.type_info_);
   }
 
-  type_info_ptr type_info() const { return &get_m_table()->type(); }
-  m_table_t* get_m_table() const { return m_table_; }
+  type_info_ptr type_info() const { return type_info_; }
+
   DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
 };
 
-}  // namespace virtual_void::erased::data::has_m_table
+}  // namespace virtual_void::erased::data::has_type_info

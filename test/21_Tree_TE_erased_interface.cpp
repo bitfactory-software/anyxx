@@ -5,9 +5,9 @@
 #include <memory>
 #include <string>
 
-#include "virtual_void/erased/data/shared_const_ptr.h"
-#include "virtual_void/erased/interface/declare_macro.h"
-#include "virtual_void/erased/data/has_no_meta/shared_const.h"
+#include "virtual_void/data/shared_const_ptr.h"
+#include "virtual_void/interface/declare_macro.h"
+#include "virtual_void/data/has_no_meta/shared_const.h"
 #include "include/catch.hpp"
 
 using std::cout;

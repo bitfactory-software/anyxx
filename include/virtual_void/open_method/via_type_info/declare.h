@@ -2,8 +2,8 @@
 
 #include <typeindex>
 
-#include "../../../utillities/ensure_function_ptr.h"
-#include "../../../utillities/overload.h"
+#include "../../utillities/ensure_function_ptr.h"
+#include "../../utillities/overload.h"
 #include "../../data/has_type_info/observer.h"
 #include "declaration_base.h"
 

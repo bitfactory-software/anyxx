@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#include "virtual_void/erased/data/has_m_table/shared_const.h"
-#include "virtual_void/erased/open_method/via_m_table/declare.h"
+#include "virtual_void/data/has_m_table/shared_const.h"
+#include "virtual_void/open_method/via_m_table/declare.h"
 #include "virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 

@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "virtual_void/erased/data/has_no_meta/observer.h"
-#include "virtual_void/erased/data/has_no_meta/value.h"
-#include "virtual_void/erased/interface/call_operator.h"
-#include "virtual_void/erased/interface/declare_macro.h"
+#include "virtual_void/data/has_no_meta/observer.h"
+#include "virtual_void/data/has_no_meta/value.h"
+#include "virtual_void/interface/call_operator.h"
+#include "virtual_void/interface/declare_macro.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;

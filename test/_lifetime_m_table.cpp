@@ -3,10 +3,10 @@
 #include <string>
 #include <vector>
 
-#include "virtual_void/erased/data/has_m_table/observer.h"
-#include "virtual_void/erased/data/has_m_table/shared_const.h"
-#include "virtual_void/erased/data/has_m_table/unique.h"
-#include "virtual_void/erased/data/has_m_table/value.h"
+#include "virtual_void/data/has_m_table/observer.h"
+#include "virtual_void/data/has_m_table/shared_const.h"
+#include "virtual_void/data/has_m_table/unique.h"
+#include "virtual_void/data/has_m_table/value.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 

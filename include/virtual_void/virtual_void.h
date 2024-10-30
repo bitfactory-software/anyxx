@@ -3,7 +3,7 @@
 #include <concepts>
 #include <type_traits>
 
-#include "../forward.h"
+#include "forward.h"
 #include "data/has_no_meta/meta.h"
 #include "data/has_type_info/meta.h"
 

@@ -4,11 +4,11 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "virtual_void/erased/data/has_m_table/observer.h"
-#include "virtual_void/erased/data/has_m_table/shared_const.h"
-#include "virtual_void/erased/data/has_m_table/unique.h"
-#include "virtual_void/erased/open_method/algorithm.h"
-#include "virtual_void/erased/open_method/via_m_table/declare.h"
+#include "virtual_void/data/has_m_table/observer.h"
+#include "virtual_void/data/has_m_table/shared_const.h"
+#include "virtual_void/data/has_m_table/unique.h"
+#include "virtual_void/open_method/algorithm.h"
+#include "virtual_void/open_method/via_m_table/declare.h"
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
 

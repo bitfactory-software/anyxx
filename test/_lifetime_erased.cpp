@@ -3,11 +3,11 @@
 #include <string>
 #include <vector>
 
-#include "virtual_void/erased/data/has_no_meta/meta.h"
-#include "virtual_void/erased/data/has_no_meta/observer.h"
-#include "virtual_void/erased/data/has_no_meta/shared_const.h"
-#include "virtual_void/erased/data/has_no_meta/unique.h"
-#include "virtual_void/erased/data/has_no_meta/value.h"
+#include "virtual_void/data/has_no_meta/meta.h"
+#include "virtual_void/data/has_no_meta/observer.h"
+#include "virtual_void/data/has_no_meta/shared_const.h"
+#include "virtual_void/data/has_no_meta/unique.h"
+#include "virtual_void/data/has_no_meta/value.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
@@ -19,7 +19,7 @@ struct A {
 };
 
 namespace {
-TEST_CASE("erased/lifetime/observer") {
+TEST_CASE("lifetime/observer") {
   {
     std::string s{"hallo"};
     auto mo = mutable_observer(s);
@@ -54,7 +54,7 @@ TEST_CASE("erased/lifetime/observer") {
     REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   }
 }
-TEST_CASE("erased/lifetime/unique") {
+TEST_CASE("lifetime/unique") {
   {
     auto u1 = unique(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
@@ -82,7 +82,7 @@ TEST_CASE("erased/lifetime/unique") {
     REQUIRE(*t1 == 2);
   }
 }
-TEST_CASE("erased/lifetime/shared_const") {
+TEST_CASE("lifetime/shared_const") {
   {
     auto u1 = shared_const(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
@@ -107,7 +107,7 @@ TEST_CASE("erased/lifetime/shared_const") {
     REQUIRE(*t1 == 1);
   }
 }
-TEST_CASE("erased/lifetime/value") {
+TEST_CASE("lifetime/value") {
   {
     auto u1 = value(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
@@ -174,5 +174,5 @@ TEST_CASE("erased/lifetime/value") {
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }
-TEST_CASE("erased/lifetime/convert") {}
+TEST_CASE("lifetime/convert") {}
 }  // namespace
