@@ -59,16 +59,16 @@ auto unerase() {
     }
   }
 }
-template <typename VOID, typename VIRTUAL_VOID_TRAIT>
-concept const_correct_for_virtual_void_trait =
+
+template <typename VOID, typename DATA>
+concept const_correct_for_virtual_void_data =
     ((std::is_const_v<VOID> ==
-      std::is_const_v<typename VIRTUAL_VOID_TRAIT::void_t>) ||
-     (!std::is_const_v<typename VIRTUAL_VOID_TRAIT::void_t>));
+      std::is_const_v<typename virtual_void_trait<DATA>::void_t>) ||
+     (!std::is_const_v<typename virtual_void_trait<DATA>::void_t>));
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
-    (const_correct_for_virtual_void_trait<VOID,
-                                          typename VIRTUAL_VOID::trait_t>);
+    (const_correct_for_virtual_void_data<VOID, typename VIRTUAL_VOID::data_t>);
 
 template <typename DATA>
 class virtual_void;
