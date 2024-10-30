@@ -9,7 +9,7 @@
 namespace virtual_void {
 
 template <typename META>
-struct value_trait : virtual_void_trait_base<data::value_ptr<data::allocation_base<META>>> {
+struct value_trait {
   using void_t = void*;
   template <typename V>
   using typed_t = data::allocation_holder<V, META>;

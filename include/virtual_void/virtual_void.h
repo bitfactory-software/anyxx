@@ -71,14 +71,6 @@ template <typename V, typename DATA>
 class virtual_typed;
 
 template <typename DATA>
-struct virtual_void_trait_base {
-  //template <typename FROM>
-  //auto operator()(FROM&& from) {
-  //  return virtual_void<DATA>(std::forward<FROM>(from));
-  //}  // for migration to lifteime_handle! delete after migration!
-};
-
-template <typename DATA>
 class virtual_void {
   DATA data_ = nullptr;
 

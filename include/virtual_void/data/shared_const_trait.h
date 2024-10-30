@@ -10,8 +10,7 @@
 namespace virtual_void {
 
 template <typename META>
-struct shared_const_trait
-    : virtual_void_trait_base<data::shared_const_ptr<data::allocation_base<META>>> {
+struct shared_const_trait {
   using void_t = void const*;
   using ptr_t = data::shared_const_ptr<data::allocation_base<META>>;
   template <typename V>

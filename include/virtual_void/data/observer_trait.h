@@ -8,7 +8,7 @@
 namespace virtual_void {
 
 template <typename VIRTUAL_VOID>
-struct observer_trait : virtual_void_trait_base<VIRTUAL_VOID> {
+struct observer_trait {
   using void_t = VIRTUAL_VOID::void_t;
   static void_t value(const auto& ptr) { return ptr.value(); }
   static auto meta(const auto& ptr) { return ptr.get_meta(); }

@@ -9,8 +9,7 @@
 namespace virtual_void {
 
 template <typename META>
-struct unique_trait
-    : virtual_void_trait_base<data::unique_ptr<data::allocation_base<META>>> {
+struct unique_trait {
   using void_t = void*;
   using ptr_t = data::unique_ptr<data::allocation_base<META>>;
   template <typename V>
@@ -22,8 +21,7 @@ struct unique_trait
 
   template <typename V>
   static auto construct_from(V&& v) {
-    return data::make_unique<typed_t<std::decay_t<V>>>(
-        std::forward<V>(v));
+    return data::make_unique<typed_t<std::decay_t<V>>>(std::forward<V>(v));
   }
   template <typename V, typename... ARGS>
   static auto construct_in_place(std::in_place_type_t<V>, ARGS&&... args) {
