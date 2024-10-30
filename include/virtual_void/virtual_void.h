@@ -15,6 +15,8 @@ concept base_of = std::derived_from<DERIVED, BASE>;
 template <class E>
 concept is_virtual_void = requires(E e, int i) {
   typename E::void_t;
+  typename E::data_t;
+  typename E::trait_t;
   //  typename E::make_erased;
   // typename E::trait_t;
   { E::is_const } -> std::convertible_to<bool>;
@@ -124,16 +126,18 @@ class virtual_void {
     requires std::convertible_to<FROM*, TO*>;
 };
 
-// void const* data() const
-//   requires is_const
-//{
-//   return trait_t::value(data_);
-// }
-// void* data() const
-//   requires !is_const
-//{
-//   return trait_t::value(data_);
-// }
+template <is_virtual_void VIRTUAL_VOID>
+void const* get_data(VIRTUAL_VOID const& vv)
+  requires is_const_data<VIRTUAL_VOID::data_t>
+{
+  return VIRTUAL_VOID::trait_t::value(vv.data_);
+}
+template <is_virtual_void VIRTUAL_VOID>
+void* get_data(VIRTUAL_VOID const& vv)
+  requires !is_const_data<VIRTUAL_VOID::data_t>
+{
+  return VIRTUAL_VOID::trait_t::value(vv.data_);
+}
 
 template <typename U, typename DATA>
 auto reconcrete_cast(virtual_void<DATA> const& o) {
