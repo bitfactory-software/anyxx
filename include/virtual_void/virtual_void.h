@@ -63,11 +63,13 @@ auto unerase() {
 }
 
 template <typename DATA>
-concept is_const_data = is_const_void<typename virtual_void_trait<DATA>::void_t>::value;
+concept is_const_data =
+    is_const_void<typename virtual_void_trait<DATA>::void_t>::value;
 
 template <typename VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
-    ((is_const_void<VOID>::value == is_const_data<DATA>) || (!is_const_data<DATA>));
+    ((is_const_void<VOID>::value == is_const_data<DATA>) ||
+     (!is_const_data<DATA>));
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
@@ -127,13 +129,13 @@ class virtual_void {
 
 template <typename VIRTUAL_VOID>
 void const* get_data(VIRTUAL_VOID const& vv)
-  requires VIRTUAL_VOID::is_const
+  requires std::same_as<void const*, typename virtual_void_trait<typename VIRTUAL_VOID::data_t>::void_t>
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
 }
 template <typename VIRTUAL_VOID>
 void* get_data(VIRTUAL_VOID const& vv)
-  requires !VIRTUAL_VOID::is_const
+  requires std::same_as<void*, typename virtual_void_trait<typename VIRTUAL_VOID::data_t>::void_t>
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
 }
