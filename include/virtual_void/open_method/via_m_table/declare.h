@@ -78,7 +78,7 @@ class declare<R(ARGS...)> : public declaration_base {
   template <typename DATA, typename... OTHER_ARGS>
   R operator()(const virtual_void<DATA>& virtual_void_,
                OTHER_ARGS&&... args) const {
-    return (*this)(*virtual_void_.meta()->get_m_table(), virtual_void_.data(),
+    return (*this)(*virtual_void_.meta()->get_m_table(), get_data(virtual_void_),
                    std::forward<OTHER_ARGS>(args)...);
   }
   template <has_virtual_void_trait DATA, typename... OTHER_ARGS>

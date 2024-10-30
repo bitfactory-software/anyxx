@@ -44,7 +44,7 @@ TEST_CASE("interface lifetime cast") {
 
   auto o1 = data::has_no_meta::lifetime_cast<data::has_no_meta::const_observer>(*sc);
   auto x = reconcrete_cast<X>(o1);
-  auto x1 = static_cast<X const *>((*sc).data());
+  auto x1 = static_cast<X const *>(get_data(*sc));
   REQUIRE(x->s_ == "hallo");
 
   to_string_co co = interface::interface_lifetime_cast<to_string_co>(sc);

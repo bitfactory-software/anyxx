@@ -25,10 +25,10 @@ namespace {
 TEST_CASE("m_table/lifetime/observer") {
   std::string s{"hallo"};
   auto mo = mutable_observer(s);
-  REQUIRE(mo.data() == &s);
-  REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
+  REQUIRE(get_data(mo) == &s);
+  REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(mo.meta()->get_m_table() == m_table_of<std::string>());
-  REQUIRE(*static_cast<std::string const*>(mo.data()) == "hallo");
+  REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(std::derived_from<
                 mutable_observer,
                 ::virtual_void::virtual_void<observer_ptr<void*>>>);
@@ -146,7 +146,7 @@ TEST_CASE("m_table/lifetime/value") {
     REQUIRE(*t1 == 2);
     auto e1 = t1;
     REQUIRE(t1);  // !moved
-    REQUIRE(e1.data());
+    REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
     REQUIRE(!e1);  // !moved
     REQUIRE(*t1 == 2);

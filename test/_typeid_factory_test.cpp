@@ -54,7 +54,7 @@ TEST_CASE("typeid factory") {
       std::cout << cv.meta()->type_info()->name() << std::endl;
       std::cout << typeid(T).name() << std::endl;
       REQUIRE(cv.meta()->type_info() == &typeid(T));
-      auto tp = static_cast<const T*>(cv.data());
+      auto tp = static_cast<const T*>(get_data(cv));
       REQUIRE(tp->data == typeid(T).name());
     };
     class_hierarchy::visit_classes<classes>(
@@ -75,7 +75,7 @@ TEST_CASE("typeid factory") {
     auto test = [&]<typename T>() {
       auto cv = factory(typeid(T));
       REQUIRE(cv.meta()->type_info() == &typeid(T));
-      auto tp = static_cast<const T*>(cv.data());
+      auto tp = static_cast<const T*>(get_data(cv));
       REQUIRE(tp->data == typeid(T).name());
     };
     class_hierarchy::visit_classes<classes>(

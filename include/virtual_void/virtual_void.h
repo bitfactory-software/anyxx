@@ -82,6 +82,7 @@ class virtual_typed;
 
 template <typename DATA>
 class virtual_void {
+ public:
   DATA data_ = nullptr;
 
  public:
@@ -108,17 +109,6 @@ class virtual_void {
                                           std::forward<ARGS>(args)...)) {}
   virtual_void(DATA data) : data_(std::move(data)) {}
 
-  void const* data() const
-    requires is_const
-  {
-    return trait_t::value(data_);
-  }
-  void* data() const
-    requires !is_const
-  {
-    return trait_t::value(data_);
-  }
-
   auto meta() const { return trait_t::meta(data_); }
   explicit operator bool() const { return trait_t::has_value(data_); }
 
@@ -142,13 +132,13 @@ void* get_data(VIRTUAL_VOID const& vv)
 
 template <typename U, typename DATA>
 auto reconcrete_cast(virtual_void<DATA> const& o) {
-  return static_cast<U const*>(o.data());
+  return static_cast<U const*>(get_data(o));
 }
 template <typename U, typename DATA>
 auto reconcrete_cast(virtual_void<DATA> const& o)
   requires !virtual_void<DATA>::is_const
 {
-  return static_cast<U*>(o.data());
+  return static_cast<U*>(get_data(o));
 }
 
 template <typename V, typename DATA>
@@ -175,20 +165,20 @@ class virtual_typed : public virtual_void<DATA> {
   explicit virtual_typed(DATA data) : virtual_void_t(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *static_cast<value_t*>(this->data());
+    return *static_cast<value_t*>(get_data(*this));
   }
   value_t const* operator->() const {
-    return static_cast<value_t*>(this->data());
+    return static_cast<value_t*>(get_data(*this));
   }
   value_t& operator*() const
     requires !virtual_void_t::is_const
   {
-    return *static_cast<value_t*>(this->data());
+    return *static_cast<value_t*>(get_data(*this));
   }
   value_t* operator->() const
     requires !virtual_void_t::is_const
   {
-    return static_cast<value_t*>(this->data());
+    return static_cast<value_t*>(get_data(*this));
   }
 
  private:

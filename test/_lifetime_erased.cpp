@@ -76,7 +76,7 @@ TEST_CASE("lifetime/unique") {
     // auto e1 = t1; // shall not compile!
     auto e1 = std::move(t1);
     REQUIRE(!t1);  // moved
-    REQUIRE(e1.data());
+    REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
     REQUIRE(!e1);  // moved
     REQUIRE(*t1 == 2);
@@ -101,7 +101,7 @@ TEST_CASE("lifetime/shared_const") {
     REQUIRE(*t1 == 1);
     auto e1 = t1;
     REQUIRE(t1);  // !moved
-    REQUIRE(e1.data());
+    REQUIRE(get_data(e1));
     t1 = as<int const>(std::move(e1));
     REQUIRE(!e1);  // !moved
     REQUIRE(*t1 == 1);
@@ -151,7 +151,7 @@ TEST_CASE("lifetime/value") {
     REQUIRE(*t1 == 2);
     auto e1 = t1;
     REQUIRE(t1);  // !moved
-    REQUIRE(e1.data());
+    REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
     REQUIRE(!e1);  // !moved
     REQUIRE(*t1 == 2);
