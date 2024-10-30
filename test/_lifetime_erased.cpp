@@ -75,10 +75,10 @@ TEST_CASE("lifetime/unique") {
     REQUIRE(*t1 == 2);
     // auto e1 = t1; // shall not compile!
     auto e1 = std::move(t1);
-    REQUIRE(!t1);  // moved
+    REQUIRE(!has_data(t1));  // moved
     REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
-    REQUIRE(!e1);  // moved
+    REQUIRE(!has_data(e1));  // moved
     REQUIRE(*t1 == 2);
   }
 }
@@ -100,10 +100,10 @@ TEST_CASE("lifetime/shared_const") {
     //*t1 = 2; // shall not compile!
     REQUIRE(*t1 == 1);
     auto e1 = t1;
-    REQUIRE(t1);  // !moved
+    REQUIRE(has_data(t1));  // !moved
     REQUIRE(get_data(e1));
     t1 = as<int const>(std::move(e1));
-    REQUIRE(!e1);  // !moved
+    REQUIRE(!has_data(e1));  // !moved
     REQUIRE(*t1 == 1);
   }
 }
@@ -139,10 +139,10 @@ TEST_CASE("lifetime/value") {
     static_assert(std::same_as<std::decay_t<decltype(*v1)>, std::string>);
     REQUIRE(*v1 == std::string{"hallo"});
     auto v2 = std::move(v1);
-    REQUIRE(!v1);
+    REQUIRE(!has_data(v1));
     REQUIRE(*v2 == "hallo");
     v1 = std::move(v2);
-    REQUIRE(!v2);
+    REQUIRE(!has_data(v2));
     REQUIRE(*v1 == "hallo");
   }
   {
@@ -150,10 +150,10 @@ TEST_CASE("lifetime/value") {
     *t1 = 2;
     REQUIRE(*t1 == 2);
     auto e1 = t1;
-    REQUIRE(t1);  // !moved
+    REQUIRE(has_data(t1));  // !moved
     REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
-    REQUIRE(!e1);  // !moved
+    REQUIRE(!has_data(e1));  // !moved
     REQUIRE(*t1 == 2);
   }
   {

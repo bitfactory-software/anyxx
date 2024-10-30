@@ -110,13 +110,15 @@ class virtual_void {
                                           std::forward<ARGS>(args)...)) {}
   virtual_void(DATA data) : data_(std::move(data)) {}
 
-  explicit operator bool() const { return trait_t::has_value(data_); }
-
   template <typename TO, typename FROM, typename DATA>
   friend auto as(virtual_typed<FROM, DATA> source)
     requires std::convertible_to<FROM*, TO*>;
 };
 
+template <typename VIRTUAL_VOID>
+bool has_data(VIRTUAL_VOID const& vv) {
+  return VIRTUAL_VOID::trait_t::has_value(vv.data_);
+}
 template <typename VIRTUAL_VOID>
 void const* get_data(VIRTUAL_VOID const& vv)
   requires std::same_as<void const*, typename virtual_void_trait<
@@ -131,7 +133,6 @@ void* get_data(VIRTUAL_VOID const& vv)
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
 }
-
 template <typename VIRTUAL_VOID>
 auto get_meta(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<typename VIRTUAL_VOID::data_t>::meta(vv.data_);
