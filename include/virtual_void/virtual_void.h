@@ -98,28 +98,17 @@ class virtual_void {
                                          std::forward<ARGS>(args)...)) {}
   virtual_void(DATA data) : data_(std::move(data)) {}
 
-  // only for migration to lifetime handle, remove and replace use to "value()"!
   void const* data() const
     requires is_const
   {
-    return value();
+    return trait_t::value(data_);
   }
   void* data() const
     requires !is_const
   {
-    return value();
+    return trait_t::value(data_);
   }
 
-  void const* value() const
-    requires is_const
-  {
-    return trait_t::value(data_);
-  }
-  void* value() const
-    requires !is_const
-  {
-    return trait_t::value(data_);
-  }
   auto meta() const { return trait_t::meta(data_); }
   explicit operator bool() const { return trait_t::has_value(data_); }
 
@@ -163,20 +152,20 @@ class virtual_typed : public virtual_void<DATA> {
   explicit virtual_typed(DATA data) : virtual_void_t(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *static_cast<value_t*>(this->value());
+    return *static_cast<value_t*>(this->data());
   }
   value_t const* operator->() const {
-    return static_cast<value_t*>(this->value());
+    return static_cast<value_t*>(this->data());
   }
   value_t& operator*() const
     requires !virtual_void_t::is_const
   {
-    return *static_cast<value_t*>(this->value());
+    return *static_cast<value_t*>(this->data());
   }
   value_t* operator->() const
     requires !virtual_void_t::is_const
   {
-    return static_cast<value_t*>(this->value());
+    return static_cast<value_t*>(this->data());
   }
 
  private:
