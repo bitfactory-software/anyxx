@@ -3,9 +3,9 @@
 #include <concepts>
 #include <type_traits>
 
-#include "forward.h"
 #include "data/has_no_meta/meta.h"
 #include "data/has_type_info/meta.h"
+#include "forward.h"
 
 namespace virtual_void {
 
@@ -15,10 +15,10 @@ concept base_of = std::derived_from<DERIVED, BASE>;
 template <class E>
 concept is_virtual_void = requires(E e, int i) {
   typename E::void_t;
-//  typename E::make_erased;
+  //  typename E::make_erased;
   // typename E::trait_t;
   { E::is_const } -> std::convertible_to<bool>;
-//  { E::make_erased()(i) } -> base_of<E>;
+  //  { E::make_erased()(i) } -> base_of<E>;
   { e.data() } -> std::convertible_to<typename E::void_t>;
 };
 
@@ -59,11 +59,16 @@ auto unerase() {
     }
   }
 }
+template <typename VOID, typename VIRTUAL_VOID_TRAIT>
+concept const_correct_for_virtual_void_trait =
+    ((std::is_const_v<VOID> ==
+      std::is_const_v<typename VIRTUAL_VOID_TRAIT::void_t>) ||
+     (!std::is_const_v<typename VIRTUAL_VOID_TRAIT::void_t>));
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
-    ((std::is_const_v<VOID> == VIRTUAL_VOID::is_const) ||
-     !VIRTUAL_VOID::is_const);
+    (const_correct_for_virtual_void_trait<VOID,
+                                          typename VIRTUAL_VOID::trait_t>);
 
 template <typename DATA>
 class virtual_void;
@@ -95,7 +100,7 @@ class virtual_void {
   template <typename V, typename... ARGS>
   virtual_void(std::in_place_type_t<V>, ARGS&&... args)
       : data_(trait_t::construct_in_place(std::in_place_type<V>,
-                                         std::forward<ARGS>(args)...)) {}
+                                          std::forward<ARGS>(args)...)) {}
   virtual_void(DATA data) : data_(std::move(data)) {}
 
   void const* data() const
