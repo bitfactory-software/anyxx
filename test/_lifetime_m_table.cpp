@@ -27,7 +27,7 @@ TEST_CASE("m_table/lifetime/observer") {
   auto mo = mutable_observer(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(mo.meta()->get_m_table() == m_table_of<std::string>());
+  REQUIRE(get_meta(mo)->get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(std::derived_from<
                 mutable_observer,
@@ -71,7 +71,7 @@ TEST_CASE("m_table/lifetime/shared_const") {
   shared_const x{std::in_place_type<D>, "shared hallo"};
   auto d1 = as<D const>(x);
   REQUIRE(d1->data == "shared hallo");
-  REQUIRE(d1.meta()->type_info() == &typeid(D));
+  REQUIRE(get_meta(d1)->type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
   typed_shared_const<A1> a1{*d1};
   typed_shared_const<A1> a2{A1{"a2->OK"}};

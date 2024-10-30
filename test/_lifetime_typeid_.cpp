@@ -27,7 +27,7 @@ TEST_CASE("has_type_info/lifetime/observer") {
   auto mo = mutable_observer(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(mo.meta()->type_info() == &typeid(std::string));
+  REQUIRE(get_meta(mo)->type_info() == &typeid(std::string));
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(
       std::derived_from<mutable_observer,
@@ -73,7 +73,7 @@ TEST_CASE("has_type_info/lifetime/shared_const") {
   shared_const x = as<D const>(d);
   auto d1 = as<D const>(x);
   REQUIRE(d1->data == "shared hallo");
-  REQUIRE(d1.meta()->type_info() == &typeid(D));
+  REQUIRE(get_meta(d1)->type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
   typed_shared_const<A1> a0{*d1};
   auto a1 = as<A1>(d1);

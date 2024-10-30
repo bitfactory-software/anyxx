@@ -22,6 +22,7 @@ concept is_virtual_void = requires(E e, int i) {
   { E::is_const } -> std::convertible_to<bool>;
   //  { E::make_erased()(i) } -> base_of<E>;
   { get_data(e) } -> std::convertible_to<typename E::void_t>;
+  //  { e.meta()->type_info() } -> std::convertible_to<std::type_info const*>;
 };
 
 template <typename DATA>
@@ -109,7 +110,6 @@ class virtual_void {
                                           std::forward<ARGS>(args)...)) {}
   virtual_void(DATA data) : data_(std::move(data)) {}
 
-  auto meta() const { return trait_t::meta(data_); }
   explicit operator bool() const { return trait_t::has_value(data_); }
 
   template <typename TO, typename FROM, typename DATA>
@@ -119,15 +119,22 @@ class virtual_void {
 
 template <typename VIRTUAL_VOID>
 void const* get_data(VIRTUAL_VOID const& vv)
-  requires std::same_as<void const*, typename virtual_void_trait<typename VIRTUAL_VOID::data_t>::void_t>
+  requires std::same_as<void const*, typename virtual_void_trait<
+                                         typename VIRTUAL_VOID::data_t>::void_t>
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
 }
 template <typename VIRTUAL_VOID>
 void* get_data(VIRTUAL_VOID const& vv)
-  requires std::same_as<void*, typename virtual_void_trait<typename VIRTUAL_VOID::data_t>::void_t>
+  requires std::same_as<
+      void*, typename virtual_void_trait<typename VIRTUAL_VOID::data_t>::void_t>
 {
   return VIRTUAL_VOID::trait_t::value(vv.data_);
+}
+
+template <typename VIRTUAL_VOID>
+auto get_meta(VIRTUAL_VOID const& vv) {
+  return virtual_void_trait<typename VIRTUAL_VOID::data_t>::meta(vv.data_);
 }
 
 template <typename U, typename DATA>

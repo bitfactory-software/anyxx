@@ -39,7 +39,7 @@ class declare<R(ARGS...)> : public declaration_base {
   }
   template <typename... OTHER_ARGS>
   R operator()(const param_t& param, OTHER_ARGS&&... args) const {
-    return (*this)(*param.meta()->type_info(), get_data(param),
+    return (*this)(*get_meta(param)->type_info(), get_data(param),
                    std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename... OTHER_ARGS>
