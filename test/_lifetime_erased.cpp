@@ -3,16 +3,17 @@
 #include <string>
 #include <vector>
 
+#include "include/catch.hpp"
 #include "virtual_void/data/has_no_meta/meta.h"
 #include "virtual_void/data/has_no_meta/observer.h"
 #include "virtual_void/data/has_no_meta/shared_const.h"
 #include "virtual_void/data/has_no_meta/unique.h"
 #include "virtual_void/data/has_no_meta/value.h"
-#include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
 using namespace virtual_void::data::has_no_meta;
+using namespace virtual_void;
 
 struct A {
   std::string s;
@@ -24,14 +25,12 @@ TEST_CASE("lifetime/observer") {
     std::string s{"hallo"};
     auto mo = mutable_observer(s);
     static_assert(
-        std::same_as<typed_const_observer<std::string>::value_t,
-                     std::string>);
+        std::same_as<typed_const_observer<std::string>::value_t, std::string>);
     static_assert(
         std::same_as<typed_mutable_observer<std::string const>::value_t,
                      std::string const>);
     auto co = const_observer(s);
     auto tmo = as<std::string>(mo);
-    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     *tmo = "world";
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
@@ -42,35 +41,33 @@ TEST_CASE("lifetime/observer") {
   }
   {
     const std::string s{"hallo"};
-    //auto mo = mutable_observer(s);  // shall not compile
+    // auto mo = mutable_observer(s);  // shall not compile
     auto co = const_observer(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);
-    static_assert(typed_observer<std::string const, void*>::is_const ==
-                  false);
+    static_assert(typed_observer<std::string const, void*>::is_const == false);
     auto tco = as<std::string const>(co);
-    static_assert(std::derived_from<decltype(tco), const_observer>);
     REQUIRE(*tco == "hallo");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   }
 }
 TEST_CASE("lifetime/unique") {
   {
-    auto u1 = unique(1);
+    auto u1 = erased<unique>(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    const auto u1 = unique(1);
+    const auto u1 = erased<unique>(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    auto u1 = unique(std::in_place_type<A>, "hallo");
+    auto u1 = erased_in_place<unique, A>("hallo");
     REQUIRE(*reconcrete_cast<std::string>(u1) == "hallo");
   }
   {
     auto t1 = typed_unique<int>(1);
-    static_assert( !t1.is_const );
-    static_assert( std::same_as< decltype(t1)::value_t, int > );
+    static_assert(!t1.is_const);
+    static_assert(std::same_as<decltype(t1)::value_t, int>);
     *t1 = 2;
     REQUIRE(*t1 == 2);
     // auto e1 = t1; // shall not compile!
@@ -84,15 +81,15 @@ TEST_CASE("lifetime/unique") {
 }
 TEST_CASE("lifetime/shared_const") {
   {
-    auto u1 = shared_const(1);
+    auto u1 = erased<shared_const>(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    const auto u1 = shared_const(1);
+    const auto u1 = erased<shared_const>(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    auto u1 = shared_const(std::in_place_type<A>, "hallo");
+    auto u1 = erased_in_place<shared_const, A>("hallo");
     REQUIRE(*reconcrete_cast<std::string>(u1) == "hallo");
   }
   {
@@ -109,16 +106,13 @@ TEST_CASE("lifetime/shared_const") {
 }
 TEST_CASE("lifetime/value") {
   {
-    auto u1 = value(1);
+    auto u1 = erased<value>(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    auto u1 = value(A{"hallo"});
+    auto u1 = erased_in_place<value,A>("hallo");
+    static_assert(std::same_as<decltype(u1), value_data>);
     static_assert(
-        std::same_as<decltype(u1), virtual_void::virtual_void<value_data>>);
-    static_assert(
-        std::derived_from<std::decay_t<decltype(u1)>,
-                          virtual_void::virtual_void<value_data>> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
@@ -162,7 +156,7 @@ TEST_CASE("lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = value(a);
+    auto t1 = erased<value>(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -170,7 +164,7 @@ TEST_CASE("lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = value(a);
+    auto t1 = erased<value>(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }

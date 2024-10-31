@@ -4,10 +4,10 @@
 #include <iostream>
 #include <string>
 
+#include "include/catch.hpp"
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/open_method/via_m_table/declare.h"
 #include "virtual_void/utillities/unnamed__.h"
-#include "include/catch.hpp"
 
 using std::cout;
 using std::string;
@@ -15,6 +15,10 @@ using std::string;
 namespace {
 
 using node = virtual_void::data::has_m_table::shared_const;
+template <typename V, typename... ARGS>
+auto make_node(ARGS&&... args) {
+  return erased<node, V>(std::forward<ARGS>(args)...);
+}
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}
@@ -52,15 +56,16 @@ struct class_<Times> : bases<> {};
 template <>
 struct class_<Integer> : bases<> {};
 
-auto __ =
-    open_method::via_m_table::declare_classes<Plus, Times, Integer>(tree_domain);
+auto __ = open_method::via_m_table::declare_classes<Plus, Times, Integer>(
+    tree_domain);
 }  // namespace virtual_void::class_hierarchy
 
 namespace {
 // -----------------------------------------------------------------------------
 // evaluate
 
-auto value = virtual_void::open_method::via_m_table::declare<int(const void*)>{tree_domain};
+auto value = virtual_void::open_method::via_m_table::declare<int(const void*)>{
+    tree_domain};
 
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
@@ -74,7 +79,8 @@ auto __ = value.define<Integer>([](auto expr) { return expr->value; });
 // render as Forth
 
 auto as_forth =
-    virtual_void::open_method::via_m_table::declare<string(const void*)>{tree_domain};
+    virtual_void::open_method::via_m_table::declare<string(const void*)>{
+        tree_domain};
 
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
@@ -91,7 +97,8 @@ auto __ = as_forth.define<Integer>(
 // render as Lisp
 
 auto as_lisp =
-    virtual_void::open_method::via_m_table::declare<string(const void*)>{tree_domain};
+    virtual_void::open_method::via_m_table::declare<string(const void*)>{
+        tree_domain};
 
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
@@ -113,7 +120,10 @@ TEST_CASE("21_Tree_TE_dispach_via_m_table") {
 
   using namespace virtual_void;
 
-  auto expr = node{Times{{Integer{2}}, {Plus{Integer{3}, Integer{4}}}}};
+  auto expr = erased_in_place<node, Times>(
+      erased_in_place<node, Integer>(2),
+      erased_in_place<node, Plus>(erased_in_place<node, Integer>(3),
+                                  erased_in_place<node, Integer>(4)));
 
   REQUIRE(value(expr) == 14);
   std::stringstream out;

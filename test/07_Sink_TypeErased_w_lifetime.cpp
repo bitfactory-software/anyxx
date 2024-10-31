@@ -16,6 +16,7 @@
 #include "include/catch.hpp"
 
 using namespace virtual_void::data::has_m_table;
+using namespace virtual_void;
 
 namespace {
 
@@ -114,16 +115,16 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   virtual_void::open_method::via_m_table::fix_m_tables(applicationDomain);
 
   db.factories["i"] = [](const std::string& data) {
-    return shared_const{IntData(std::atoi(data.c_str()))};
+    return erased_in_place<shared_const,IntData>(std::atoi(data.c_str()));
   };
   db.factories["s"] = [](const std::string& data) {
-    return shared_const{StringData(data)};
+    return erased_in_place<shared_const,StringData>(data);
   };
   db.factories["ss"] = [](const std::string& data) {
-    return shared_const{SuperStringData(data, "boss")};
+    return erased_in_place<shared_const,SuperStringData>(data, "boss");
   };
   db.factories["d"] = [](const std::string& data) {
-    return shared_const{DoubleData(std::atof(data.c_str()))};
+    return erased_in_place<shared_const,DoubleData>(std::atof(data.c_str()));
   };
 
   db.Query("junk", [](const shared_const& e) {

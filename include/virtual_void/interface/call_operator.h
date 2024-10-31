@@ -33,7 +33,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
-  using void_t = VIRTUAL_VOID::void_t;
+  using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t = call_operator_v_table<v_table_base_t, RET, ARGS...>;

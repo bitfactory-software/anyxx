@@ -20,7 +20,7 @@ struct virtual_void_trait<data::has_type_info::observer_ptr<VOID>>
 
 namespace virtual_void::data::has_type_info {
 template <typename VOID>
-using observer = virtual_void<observer_ptr<VOID>>;
+using observer = observer_ptr<VOID>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 template <typename V, typename VOID>
@@ -33,6 +33,6 @@ static_assert(const_observer::is_const);
 static_assert(!mutable_observer::is_const);
 static_assert(is_virtual_void<const_observer>);
 static_assert(is_virtual_void<mutable_observer>);
-static_assert(is_virtual_void<typed_const_observer<int>>);
-static_assert(is_virtual_void<typed_mutable_observer<int>>);
+static_assert(is_virtual_typed<typed_const_observer<int>>);
+static_assert(is_virtual_typed<typed_mutable_observer<int>>);
 }  // namespace virtual_void::data::has_type_info

@@ -135,7 +135,7 @@
                                                             virtual_void_t>) \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
-        get_data(base_t::virtual_void_)                                      \
+        virtual_void::get_data(base_t::virtual_void_)                        \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
@@ -176,8 +176,8 @@
   struct n : BASE<VIRTUAL_VOID> {                                              \
    public:                                                                     \
     using virtual_void_t = VIRTUAL_VOID;                                       \
-    using void_t = VIRTUAL_VOID::void_t;                                       \
     using base_t = BASE<VIRTUAL_VOID>;                                         \
+    using void_t = typename base_t::void_t;                                    \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t = n##v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(       \
         _add_head((v_table_base_t), t))>;                                      \

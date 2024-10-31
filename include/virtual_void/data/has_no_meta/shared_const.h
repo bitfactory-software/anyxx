@@ -14,9 +14,9 @@ struct virtual_void_trait<data::has_no_meta::shared_const_data>
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_no_meta {
-using shared_const = virtual_void<shared_const_data>;
+using shared_const = shared_const_data;
 template <typename T>
 using typed_shared_const = virtual_typed<T const, shared_const_data>;
 static_assert(is_virtual_void<shared_const>);
-static_assert(is_virtual_void<typed_shared_const<int> >);
+static_assert(is_virtual_typed<typed_shared_const<int> >);
 }  // namespace virtual_void::data::has_no_meta

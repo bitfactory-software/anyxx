@@ -67,9 +67,9 @@ auto make_node(ARGS&&... args) {
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace virtual_void;
 
-  static_assert(is_virtual_void<data::has_no_meta::typed_shared_const<Times>>);
-  static_assert(is_virtual_void<data::has_no_meta::typed_shared_const<Plus>>);
-  static_assert(is_virtual_void<data::has_no_meta::typed_shared_const<Integer>>);
+  static_assert(is_virtual_typed<data::has_no_meta::typed_shared_const<Times>>);
+  static_assert(is_virtual_typed<data::has_no_meta::typed_shared_const<Plus>>);
+  static_assert(is_virtual_typed<data::has_no_meta::typed_shared_const<Integer>>);
 
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

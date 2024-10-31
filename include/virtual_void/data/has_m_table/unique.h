@@ -15,9 +15,9 @@ struct virtual_void_trait<data::has_m_table::unique_data>
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_m_table {
-using unique = virtual_void<unique_data>;
+using unique = unique_data;
 template <typename T>
 using typed_unique = virtual_typed<T, unique_data>;
-static_assert(is_virtual_void<typed_unique<int> >);
 static_assert(is_virtual_void<unique>);
+static_assert(is_virtual_typed<typed_unique<int> >);
 }  // namespace virtual_void::m_table

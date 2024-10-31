@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
+#include "class_hierarchy_test_hierarchy.h"
+#include "include/catch.hpp"
 #include "virtual_void/data/has_m_table/observer.h"
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/data/has_m_table/unique.h"
 #include "virtual_void/data/has_m_table/value.h"
-#include "class_hierarchy_test_hierarchy.h"
-#include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
@@ -29,9 +29,7 @@ TEST_CASE("m_table/lifetime/observer") {
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(get_meta(mo)->get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  static_assert(std::derived_from<
-                mutable_observer,
-                ::virtual_void::virtual_void<observer_ptr<void*>>>);
+  static_assert(std::derived_from<mutable_observer, observer_ptr<void*>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
       std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
@@ -42,7 +40,6 @@ TEST_CASE("m_table/lifetime/observer") {
   {
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
     auto tmo = as<std::string>(std::move(mo));
-    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
@@ -56,7 +53,6 @@ TEST_CASE("m_table/lifetime/observer") {
     auto tmo = as<std::string>(mo);
     REQUIRE(*reconcrete_cast<std::string>(mo) == "hallo");
     REQUIRE(has_data(mo));
-    static_assert(std::derived_from<decltype(tmo), mutable_observer>);
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
@@ -68,7 +64,7 @@ TEST_CASE("m_table/lifetime/observer") {
 }
 
 TEST_CASE("m_table/lifetime/shared_const") {
-  shared_const x{std::in_place_type<D>, "shared hallo"};
+  auto x = erased_in_place<shared_const, D>("shared hallo");
   auto d1 = as<D const>(x);
   REQUIRE(d1->data == "shared hallo");
   REQUIRE(get_meta(d1)->type_info() == &typeid(D));
@@ -87,7 +83,7 @@ TEST_CASE("m_table/lifetime/shared_const") {
 }
 
 TEST_CASE("m_table/lifetime/unique") {
-  auto c1 = unique(std::in_place_type<C>, "unique c1");
+  auto c1 = erased_in_place<unique, C>("unique c1");
   REQUIRE(reconcrete_cast<C>(c1)->data == "unique c1");
   auto c2 = typed_unique<C>(std::in_place, "unique c2");
   REQUIRE(c2->data == "unique c2");
@@ -96,7 +92,7 @@ TEST_CASE("m_table/lifetime/unique") {
   auto c4 = std::move(c3);
   REQUIRE(c4->data == "unique c3");
 
-  auto d1 = unique(std::in_place_type<D>, "unique hallo");
+  auto d1 = erased_in_place<unique, D>("unique hallo");
   unique x{std::move(d1)};
   auto d = as<D>(std::move(x));
   REQUIRE(d->data == "unique hallo");
@@ -104,16 +100,14 @@ TEST_CASE("m_table/lifetime/unique") {
 
 TEST_CASE("m_table/lifetime/value") {
   {
-    auto u1 = value(1);
+    auto u1 = erased<value>(1);
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    auto u1 = value(A{"hallo"});
+    auto u1 = erased<value>(A{"hallo"});
+    static_assert(std::same_as<decltype(u1), value_data>);
     static_assert(
-        std::same_as<decltype(u1), ::virtual_void::virtual_void<value_data>>);
-    static_assert(
-        std::derived_from<std::decay_t<decltype(u1)>,
-                          ::virtual_void::virtual_void<value_data>> &&
+        std::derived_from<std::decay_t<decltype(u1)>, value_data> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
@@ -157,7 +151,7 @@ TEST_CASE("m_table/lifetime/value") {
   }
   {
     std::string a = "hallo";
-    auto t1 = value(a);
+    auto t1 = erased<value>(a);
     REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
   }
   {
@@ -165,7 +159,7 @@ TEST_CASE("m_table/lifetime/value") {
       std::string s_;
     };
     x_t a{"hallo"};
-    auto t1 = value(a);
+    auto t1 = erased<value>(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }
