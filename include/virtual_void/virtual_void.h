@@ -181,14 +181,14 @@ void const* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void const*,
                         typename virtual_void_trait<VIRTUAL_VOID>::void_t>
 {
-  return virtual_void_trait<VIRTUAL_VOID>::value(vv.data_);
+  return get_data(vv.data_);
 }
 template <typename V, typename VIRTUAL_VOID>
 void* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void*,
                         typename virtual_void_trait<VIRTUAL_VOID>::void_t>
 {
-  return virtual_void_trait<VIRTUAL_VOID>::value(vv.data_);
+  return get_data(vv.data_);
 }
 template <typename V, typename VIRTUAL_VOID>
 auto get_meta(virtual_typed<V, VIRTUAL_VOID> const& vv) {
