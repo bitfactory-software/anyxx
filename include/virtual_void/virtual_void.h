@@ -175,7 +175,7 @@ struct virtual_typed {
   explicit virtual_typed(FROM&& from)
     requires(!std::same_as<std::decay_t<FROM>, virtual_typed> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : data_(trait_t::construct_in_place(std::in_place_type<FROM>,
+      : data_(trait_t::construct_in_place(std::in_place_type<V>,
                                           std::forward<FROM>(from))) {}
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
