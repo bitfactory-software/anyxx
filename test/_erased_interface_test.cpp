@@ -198,7 +198,11 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   data::has_m_table::typed_shared_const<circle> sc{c};
   auto& c1 = sc;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
-  shape_vv circle_shape_vv = sc;
+  static_assert(
+      std::same_as<data::has_m_table::typed_shared_const<circle>::data_t,
+                   data::has_m_table::shared_const>);
+  static_assert(is_virtual_typed<decltype(sc)>);
+  shape_vv circle_shape_vv{*sc};
   auto unerased_circle = reconcrete_cast<circle const>(*circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
@@ -206,7 +210,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, WithinAbs(77.2, 77.3));
   }
-  print_shape_vv(sc);
+  print_shape_vv(*sc);
   print_shape_vv(circle_shape_vv);
   print_shape_vv(c);
   print_shape_vv(s);

@@ -3,12 +3,12 @@
 #include <any>
 #include <iostream>
 
+#include "class_hierarchy_test_hierarchy.h"
+#include "include/catch.hpp"
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/data/has_m_table/unique.h"
 #include "virtual_void/open_method/algorithm.h"
 #include "virtual_void/open_method/via_type_info/factory.h"
-#include "class_hierarchy_test_hierarchy.h"
-#include "include/catch.hpp"
 
 using namespace virtual_void;
 
@@ -18,16 +18,15 @@ TEST_CASE("typeid factory") {
   using namespace TestDomain;
 
   {
-    auto any_factory =
-        open_method::via_type_info::factory<std::any()>{};
+    auto any_factory = open_method::via_type_info::factory<std::any()>{};
     using classes = type_list<D, C1, C2>;
     open_method::fill_with_overloads(classes{}, any_factory,
-                                             []<typename T>() -> std::any {
-                                               // std::cout << "construct any
-                                               // for " << typeid( T ).name() <<
-                                               // std::endl;
-                                               return std::any(T());
-                                             });
+                                     []<typename T>() -> std::any {
+                                       // std::cout << "construct any
+                                       // for " << typeid( T ).name() <<
+                                       // std::endl;
+                                       return std::any(T());
+                                     });
     any_factory.seal_for_runtime();
     auto test = [&]<typename T>() {
       auto a = any_factory(typeid(T));
@@ -45,8 +44,8 @@ TEST_CASE("typeid factory") {
     open_method::fill_with_overloads(
         classes{}, factory,
         []<typename T>() -> data::has_m_table::shared_const {
-          return data::has_m_table::shared_const{std::in_place_type<T>,
-                                                         typeid(T).name()};
+          return erased_in_place<data::has_m_table::shared_const, T>(
+              typeid(T).name());
         });
     factory.seal_for_runtime();
     auto test = [&]<typename T>() {
@@ -62,14 +61,13 @@ TEST_CASE("typeid factory") {
                  [&]<typename C, typename B> {}});
   }
   {
-    auto factory = open_method::via_type_info::factory<
-        data::has_m_table::unique()>{};
+    auto factory =
+        open_method::via_type_info::factory<data::has_m_table::unique()>{};
     using classes = type_list<D, C1, C2>;
     open_method::fill_with_overloads(
-        classes{}, factory,
-        []<typename T>() -> data::has_m_table::unique {
-          return data::has_m_table::unique(std::in_place_type<T>,
-                                                   typeid(T).name());
+        classes{}, factory, []<typename T>() -> data::has_m_table::unique {
+          return erased_in_place<data::has_m_table::unique, T>(
+              typeid(T).name());
         });
     factory.seal_for_runtime();
     auto test = [&]<typename T>() {

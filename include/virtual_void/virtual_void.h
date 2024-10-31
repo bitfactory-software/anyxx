@@ -53,7 +53,7 @@ struct virtual_typed;
 
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
 VIRTUAL_VOID erased(FROM&& from) {
-  return virtual_void_trait<VIRTUAL_VOID>::make_erased()(
+  return virtual_void_trait<VIRTUAL_VOID>::construct_from(
       std::forward<FROM>(from));
 }
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
@@ -83,7 +83,7 @@ auto unerase() {
     using value_t = typename constructed_with_t::value_t;
     return static_cast_uneraser<value_t>();
   } else {
-    if constexpr (is_const_void<VIRTUAL_VOID>) {
+    if constexpr (is_const_data<VIRTUAL_VOID>) {
       return static_cast_uneraser<constructed_with_t const>();
     } else {
       return static_cast_uneraser<constructed_with_t>();
@@ -202,6 +202,10 @@ struct virtual_typed {
   }
 };
 
+template <typename V, typename VIRTUAL_VOID>
+bool has_data(virtual_typed<V, VIRTUAL_VOID> const& vv) {
+  return has_data(vv.data_);
+}
 template <typename V, typename VIRTUAL_VOID>
 void const* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void const*,

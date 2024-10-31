@@ -15,7 +15,6 @@
 namespace {
 
 using namespace ::virtual_void;
-using namespace ::virtual_void;
 using namespace ::virtual_void::data::has_m_table;
 using namespace ::virtual_void::open_method::via_m_table;
 using namespace TestDomain;
@@ -68,7 +67,7 @@ TEST_CASE("m_table open_method") {
         overload{[&]<typename C> {
                                  C c;
                                  auto virtual_void = const_observer(c);
-                                 auto u = unique{C{}};
+                                 auto u = erased<unique>(C{});
                                  auto expected = typeid(C).name();
                                  auto r = toString(u);
                                  auto r1 = toString(virtual_void);

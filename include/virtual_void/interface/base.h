@@ -26,7 +26,7 @@ template <is_virtual_void VIRTUAL_VOID>
 class base {
  public:
   using virtual_void_t = VIRTUAL_VOID;
-  using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;                                    \
+  using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
   using v_table_t = v_table_base<void_t>;
   template <typename>
   using is_already_base =
@@ -41,12 +41,17 @@ class base {
   template <typename CONSTRUCTED_WITH>
   base(CONSTRUCTED_WITH&& constructed_with)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
-                                base<VIRTUAL_VOID>>)
-      : virtual_void_(std::forward<CONSTRUCTED_WITH>(constructed_with)) {
+                                base<VIRTUAL_VOID>> &&
+             !is_virtual_void<CONSTRUCTED_WITH> &&
+             !is_virtual_typed<CONSTRUCTED_WITH>)
+      : virtual_void_(erased<virtual_void_t>(
+            std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     static v_table_t imlpemented_v_table{
         unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     v_table_ = &imlpemented_v_table;
   }
+  //template <typename CONSTRUCTED_WITH>
+  //base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
@@ -101,6 +106,4 @@ TO interface_lifetime_cast(const FROM& from) {
             pure_v_table_cast<TO>(from.get_v_table()));
 }
 
-
-}  // namespace virtual_void
-
+}  // namespace virtual_void::interface
