@@ -91,36 +91,6 @@ auto unerase() {
   }
 }
 
-// template <typename DATA>
-// using virtual_void = DATA;
-//  public:
-//   DATA data_ = nullptr;
-//
-//  public:
-//   using data_t = DATA;
-//   using trait_t = virtual_void_trait<DATA>;
-//   using void_t = trait_t::void_t;
-//   static constexpr bool is_const = is_const_void<void_t>::value;
-//   using make_erased = trait_t;
-//
-//   virtual_void(const virtual_void&) = default;
-//   virtual_void(virtual_void&) = default;
-//   virtual_void(virtual_void&&) noexcept = default;
-//   virtual_void& operator=(const virtual_void&) = default;
-//   virtual_void& operator=(virtual_void&) = default;
-//   virtual_void& operator=(virtual_void&&) noexcept = default;
-//   template <typename V>
-//   virtual_void(V&& v)
-//     requires(!std::derived_from<std::decay_t<V>, virtual_void> &&
-//              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-//       : data_(trait_t::construct_from(std::forward<V>(v))) {}
-//   template <typename V, typename... ARGS>
-//   virtual_void(std::in_place_type_t<V>, ARGS&&... args)
-//       : data_(trait_t::construct_in_place(std::in_place_type<V>,
-//                                           std::forward<ARGS>(args)...)) {}
-//   virtual_void(DATA data) : data_(std::move(data)) {}
-// };
-
 template <typename VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::has_value(vv);
