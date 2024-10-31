@@ -35,9 +35,13 @@ TEST_CASE("lifetime/observer") {
     REQUIRE(s == "world");
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
     REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
+    {
+      const std::string cs;
+      //mutable_observer xx(cs);  // shall not compile!
+    }
     // tmo = as< std::string >( co ); // shall not compile!
-    auto tmo2 = as<std::string>(co);
-    static_assert(decltype(tmo2)::is_const);
+    auto co2 = as<std::string>(co);
+    static_assert(decltype(co2)::is_const);
   }
   {
     const std::string s{"hallo"};
@@ -110,7 +114,7 @@ TEST_CASE("lifetime/value") {
     REQUIRE(*reconcrete_cast<int>(u1) == 1);
   }
   {
-    auto u1 = erased_in_place<value,A>("hallo");
+    auto u1 = erased_in_place<value, A>("hallo");
     static_assert(std::same_as<decltype(u1), value_data>);
     static_assert(
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
