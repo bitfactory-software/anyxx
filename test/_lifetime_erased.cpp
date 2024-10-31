@@ -20,6 +20,11 @@ struct A {
 };
 
 namespace {
+    template< typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER >
+    constexpr bool compiles1 = requires(CONST_OBSERVER co, TYPED_MUTABLE_STRING_OBSERVER mo){
+        mo = as<std::string>(co);
+    };
+
 TEST_CASE("lifetime/observer") {
   {
     std::string s{"hallo"};
@@ -40,6 +45,7 @@ TEST_CASE("lifetime/observer") {
       //mutable_observer xx(cs);  // shall not compile!
     }
     // tmo = as< std::string >( co ); // shall not compile!
+    static_assert(!compiles1<const_observer, typed_mutable_observer<std::string>>);
     auto co2 = as<std::string>(co);
     static_assert(decltype(co2)::is_const);
   }
