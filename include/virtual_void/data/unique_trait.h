@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-#include "../data/allocation_holder.h"
+#include "../data/decorated_data.h"
 #include "../data/unique_ptr.h"
 #include "../virtual_void.h"
 
