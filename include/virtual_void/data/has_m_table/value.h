@@ -7,7 +7,7 @@
 #include "meta.h"
 
 namespace virtual_void::data::has_m_table {
-using value_data = value_ptr<allocation_base<meta>>;
+using value_data = value_ptr<decoration_base<meta>>;
 }
 
 namespace virtual_void {

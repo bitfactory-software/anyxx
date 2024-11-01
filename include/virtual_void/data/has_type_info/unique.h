@@ -5,7 +5,7 @@
 
 namespace virtual_void::data::has_type_info {
 using unique_data =
-    data::unique_ptr<allocation_base<meta>>;
+    data::unique_ptr<decoration_base<meta>>;
 }
 
 namespace virtual_void {

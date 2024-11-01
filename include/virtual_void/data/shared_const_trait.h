@@ -12,9 +12,9 @@ namespace virtual_void {
 template <typename META>
 struct shared_const_trait {
   using void_t = void const*;
-  using ptr_t = data::shared_const_ptr<data::allocation_base<META>>;
+  using ptr_t = data::shared_const_ptr<data::decoration_base<META>>;
   template <typename V>
-  using typed_t = data::allocation_holder<V, META>;
+  using typed_t = data::decorated_data<V, META>;
 
   static void const* value(const auto& ptr) { return ptr->value(); }
   static auto meta(const auto& ptr) { return ptr->get_meta(); }

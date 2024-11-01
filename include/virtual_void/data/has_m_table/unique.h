@@ -4,7 +4,7 @@
 #include "../unique_trait.h"
 
 namespace virtual_void::data::has_m_table {
-using unique_data = unique_ptr<allocation_base<meta>>;
+using unique_data = unique_ptr<decoration_base<meta>>;
 }
 
 namespace virtual_void {

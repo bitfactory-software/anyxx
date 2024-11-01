@@ -4,7 +4,7 @@
 #include "meta.h"
 
 namespace virtual_void::data::has_no_meta {
-using shared_const_data = data::shared_const_ptr<allocation_base<meta>>;
+using shared_const_data = data::shared_const_ptr<decoration_base<meta>>;
 };
 
 namespace virtual_void {
