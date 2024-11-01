@@ -11,6 +11,8 @@ template <typename VIRTUAL_VOID>
 struct observer_trait {
   using void_t = VIRTUAL_VOID::void_t;
   using meta_t = VIRTUAL_VOID::meta_t;
+  static constexpr bool is_const = is_const_void<void_t>;
+
   static void_t value(const auto& ptr) { return ptr.ptr_; }
   static auto meta(const auto& ptr) { return ptr.get_meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr.ptr_); }
@@ -21,7 +23,7 @@ struct observer_trait {
   }
   template <typename V>
   static auto construct_from(const V& v)
-    requires(VIRTUAL_VOID::is_const)
+    requires(is_const)
   {
     return VIRTUAL_VOID(static_cast<void_t>(&v), meta_t(std::in_place_type<V>));
   }

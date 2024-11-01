@@ -12,12 +12,6 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 
-const double M_PI = 3.14;
-
-struct position {
-  float x, y;
-};
-
 struct X {
   std::string s_;
   std::string to_string() const { return s_; }

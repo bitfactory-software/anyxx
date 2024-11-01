@@ -27,8 +27,8 @@ template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>
 using typed_mutable_observer = typed_observer<V, void*>;
-static_assert(const_observer::is_const);
-static_assert(!mutable_observer::is_const);
+static_assert(observer_trait<const_observer>::is_const);
+static_assert(!observer_trait<mutable_observer>::is_const);
 //static_assert(std::is_same_v<const_observer::void_t,void const*>);
 //static_assert(std::is_same_v<observer_trait<const_observer::data_t>::void_t,void const*>);
 //static_assert(is_const_void<void const*>::value);
