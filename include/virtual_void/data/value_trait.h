@@ -1,8 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
 #include "../data/value_ptr.h"
 #include "../virtual_void.h"
 

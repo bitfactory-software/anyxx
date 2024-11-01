@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-
 #include "../data/decorated_data.h"
 #include "../data/unique_ptr.h"
 #include "../virtual_void.h"
