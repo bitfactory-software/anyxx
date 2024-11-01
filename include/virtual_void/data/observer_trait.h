@@ -3,7 +3,7 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../../virtual_void.h"
+#include "../virtual_void.h"
 
 namespace virtual_void {
 
