@@ -8,7 +8,7 @@ template <typename VOID, typename META>
 struct observer_ptr : META {
   using void_t = VOID;
   using meta_t = META;
-  static constexpr bool is_const = is_const_void1<VOID>;
+  static constexpr bool is_const = is_const_void<VOID>;
 
   observer_ptr() = default;
   observer_ptr(const observer_ptr&) = default;

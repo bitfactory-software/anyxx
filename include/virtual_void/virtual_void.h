@@ -47,16 +47,16 @@ template <>
 struct is_const_void_<void const*> : std::true_type {};
 
 template <typename VOID>
-concept is_const_void1 =
+concept is_const_void =
     is_const_void_<VOID>::value;
 
 template <typename DATA>
 concept is_const_data =
-    is_const_void1<typename virtual_void_trait<DATA>::void_t>;
+    is_const_void<typename virtual_void_trait<DATA>::void_t>;
 
 template <typename VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
-    ((is_const_void1<VOID> == is_const_data<DATA>) ||
+    ((is_const_void<VOID> == is_const_data<DATA>) ||
      (!is_const_data<DATA>));
 
 template <typename VOID, typename VIRTUAL_VOID>
@@ -147,7 +147,7 @@ struct virtual_typed {
   using data_t = DATA;
   using trait_t = virtual_void_trait<DATA>;
   using void_t = trait_t::void_t;
-  static constexpr bool is_const = is_const_void1<void_t>;
+  static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
 
   virtual_typed(const virtual_typed&) = default;
