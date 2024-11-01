@@ -5,13 +5,6 @@
 namespace virtual_void {
 using type_info_ptr = std::type_info const*;
 
-template <typename VOID>
-struct is_const_void;
-template <>
-struct is_const_void<void*> : std::false_type {};
-template <>
-struct is_const_void<void const*> : std::true_type {};
-
 template <typename>
 struct self_pointer;
 template <>
