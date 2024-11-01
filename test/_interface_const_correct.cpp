@@ -37,7 +37,7 @@ struct test_interface {
 TEST_CASE("_interface_const_correct prototyping") {
   using namespace virtual_void;
   static_assert(!test_trait<void*>::is_const);
-  static_assert(observer_trait<data::has_no_meta::const_observer>::is_const);
+  static_assert(virtual_void_trait<data::has_no_meta::const_observer>::is_const);
   test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 

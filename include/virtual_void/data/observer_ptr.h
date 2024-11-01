@@ -6,9 +6,7 @@ namespace virtual_void::data {
 
 template <typename VOID, typename META>
 struct observer_ptr : META {
-  using void_t = VOID;
-  using meta_t = META;
-
+  
   observer_ptr() = default;
   observer_ptr(const observer_ptr&) = default;
   observer_ptr(observer_ptr&) = default;
@@ -20,7 +18,7 @@ struct observer_ptr : META {
     return *this;
   }
 
-  observer_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}
+  observer_ptr(VOID v, const META& meta) : ptr_(v), META(meta) {}
   template <is_virtual_void RHS>
   observer_ptr(RHS const& rhs)
     requires(is_const_data<observer_ptr> == is_const_data<RHS>)

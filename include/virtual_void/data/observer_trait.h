@@ -4,10 +4,10 @@
 
 namespace virtual_void {
 
-template <typename VIRTUAL_VOID>
+template <typename VIRTUAL_VOID, typename VOID, typename META>
 struct observer_trait {
-  using void_t = VIRTUAL_VOID::void_t;
-  using meta_t = VIRTUAL_VOID::meta_t;
+  using void_t = VOID;
+  using meta_t = META;
   static constexpr bool is_const = is_const_void<void_t>;
 
   static void_t value(const auto& ptr) { return ptr.ptr_; }
