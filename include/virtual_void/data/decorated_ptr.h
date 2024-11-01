@@ -1,34 +1,16 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
-#include "../../forward.h"
+#include "../virtual_void.h"
 
 namespace virtual_void::data {
 
-template <typename META, typename PTR>
+template <typename PTR, typename META>
 struct decorated_ptr : META {
-  using meta_t = META;
   PTR ptr_ = nullptr;
-
-  decorated_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}
 
   decorated_ptr() = default;
   decorated_ptr(const decorated_ptr&) = default;
   decorated_ptr(decorated_ptr&) = default;
-  template <typename T>
-  decorated_ptr(T& v)
-    requires(!std::derived_from<T, decorated_ptr> &&
-             !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void>)
-      : META(std::in_place_type<T>), ptr_(&v) {}
-  template <typename T>
-  decorated_ptr(const T& v)
-    requires(!std::derived_from<T, decorated_ptr> &&
-             !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void> &&
-             is_const)
-      : META(std::in_place_type<T>), ptr_(&v) {}
-
   decorated_ptr(decorated_ptr&& rhs) noexcept { swap(*this, rhs); }
   decorated_ptr& operator=(decorated_ptr&& rhs) noexcept {
     decorated_ptr destroy_this{};
@@ -36,6 +18,13 @@ struct decorated_ptr : META {
     swap(*this, rhs);
     return *this;
   }
+
+  decorated_ptr(PTR v, const META& meta) : ptr_(v), META(meta) {}
+  template <is_virtual_void RHS>
+  decorated_ptr(RHS const& rhs)
+    requires(is_const_data<decorated_ptr> == is_const_data<RHS>)
+      : META(*get_meta(rhs)), ptr_(get_data(rhs)) {}
+
   friend void swap(decorated_ptr& lhs, decorated_ptr& rhs) noexcept {
     using namespace std;
     swap(lhs.ptr_, rhs.ptr_);
