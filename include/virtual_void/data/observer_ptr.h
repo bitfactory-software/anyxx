@@ -33,7 +33,6 @@ struct observer_ptr : META {
   }
 
   VOID ptr_ = nullptr;
-  VOID value() const { return ptr_; }
 };
 
 template <typename META>
