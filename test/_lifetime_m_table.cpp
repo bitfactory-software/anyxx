@@ -24,7 +24,7 @@ namespace {
 
 TEST_CASE("m_table/lifetime/observer") {
   std::string s{"hallo"};
-  auto mo = mutable_observer(s);
+  auto mo = erased<mutable_observer>(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(get_meta(mo)->get_m_table() == m_table_of<std::string>());
@@ -35,7 +35,7 @@ TEST_CASE("m_table/lifetime/observer") {
       std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
   static_assert(std::same_as<typed_const_observer<std::string const>::value_t,
                              std::string const>);
-  auto co = const_observer(s);
+  auto co = erased<const_observer>(s);
   REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
   {
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
@@ -46,7 +46,7 @@ TEST_CASE("m_table/lifetime/observer") {
     REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
   }
   {
-    mo = mutable_observer(s);
+    mo = erased<mutable_observer>(s);
     REQUIRE(*reconcrete_cast<const std::string>(mo) == "world");
     *reconcrete_cast<std::string>(mo) = "hallo";
     REQUIRE(s == "hallo");

@@ -6,6 +6,7 @@
 
 #include "virtual_void/data/decorated_data.h"
 #include "virtual_void/data/has_no_meta/meta.h"
+#include "virtual_void/data/has_type_info/meta.h"
 #include "virtual_void/data/shared_const_ptr.h"
 #include "virtual_void/data/unique_ptr.h"
 #include "virtual_void/data/value_ptr.h"

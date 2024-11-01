@@ -38,7 +38,8 @@ void run_cast_test(const auto& castMethod, auto make_dispatch_var) {
 
 TEST_CASE("typeid_cast_test") {
   using namespace TestDomain;
-  using namespace ::virtual_void::open_method;
+  using namespace virtual_void;
+  using namespace virtual_void::open_method;
 
   using classes = virtual_void::type_list<D, C1, C2>;
 
@@ -58,11 +59,11 @@ TEST_CASE("typeid_cast_test") {
   via_m_table::fix_m_tables(m_tableTestDomain);
 
   run_cast_test<classes>(typeid_const_cast, [](auto& top) {
-    return ::virtual_void::data::has_type_info::const_observer(top);
+    return erased<data::has_type_info::const_observer>(top);
   });
 
   run_cast_test<classes>(m_table_const_cast, [](auto& top) {
-    return ::virtual_void::data::has_m_table::const_observer(top);
+    return erased<data::has_m_table::const_observer>(top);
   });
 }
 }  // namespace

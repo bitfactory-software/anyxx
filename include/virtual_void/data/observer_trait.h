@@ -10,30 +10,31 @@ namespace virtual_void {
 template <typename VIRTUAL_VOID>
 struct observer_trait {
   using void_t = VIRTUAL_VOID::void_t;
+  using meta_t = VIRTUAL_VOID::meta_t;
   static void_t value(const auto& ptr) { return ptr.ptr_; }
   static auto meta(const auto& ptr) { return ptr.get_meta(); }
-  static bool has_value(const auto& ptr) {
-    return static_cast<bool>(ptr.ptr_);
-  }
+  static bool has_value(const auto& ptr) { return static_cast<bool>(ptr.ptr_); }
+
   template <typename V>
   static auto construct_from(V& v) {
-    return VIRTUAL_VOID(v);
+    return VIRTUAL_VOID(static_cast<void_t>(&v), meta_t(std::in_place_type<V>));
   }
   template <typename V>
   static auto construct_from(const V& v)
+    requires(VIRTUAL_VOID::is_const)
+  {
+    return VIRTUAL_VOID(static_cast<void_t>(&v), meta_t(std::in_place_type<V>));
+  }
+
+  template <typename V>
+  static auto construct_in_place(std::in_place_type_t<V>, V& arg) {
+    return construct_from(arg);
+  }
+  template <typename V>
+  static auto construct_in_place(std::in_place_type_t<V>, const V& arg)
     requires VIRTUAL_VOID::is_const
   {
-    return VIRTUAL_VOID(v);
-  }
-  template <typename V, typename ARG>
-  static auto construct_in_place(std::in_place_type_t<V>, ARG& arg) {
-    return VIRTUAL_VOID(arg);
-  }
-  template <typename V, typename ARG>
-  static auto construct_in_place(std::in_place_type_t<V>, const ARG& arg)
-    requires VIRTUAL_VOID::is_const
-  {
-    return VIRTUAL_VOID(arg);
+    return construct_from(arg);
   }
 };
 

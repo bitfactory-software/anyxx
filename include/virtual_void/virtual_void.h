@@ -3,8 +3,6 @@
 #include <concepts>
 #include <type_traits>
 
-#include "data/has_no_meta/meta.h"
-#include "data/has_type_info/meta.h"
 #include "forward.h"
 
 namespace virtual_void {
@@ -14,6 +12,12 @@ concept base_of = std::derived_from<DERIVED, BASE>;
 
 template <typename DATA>
 struct virtual_void_trait;
+
+template <class META>
+concept is_meta = requires(META meta){
+  { meta.get_meta() } -> std::convertible_to<META const*>;
+  { meta.type_info() }->  std::convertible_to<type_info_ptr>;
+};
 
 template <class PTR>
 concept has_virtual_void_trait =

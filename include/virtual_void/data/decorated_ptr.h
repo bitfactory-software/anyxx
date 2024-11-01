@@ -10,7 +10,10 @@ namespace virtual_void::data {
 template <typename META, typename PTR>
 struct decorated_ptr : META {
   using meta_t = META;
- 
+  PTR ptr_ = nullptr;
+
+  decorated_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}
+
   decorated_ptr() = default;
   decorated_ptr(const decorated_ptr&) = default;
   decorated_ptr(decorated_ptr&) = default;
@@ -25,7 +28,6 @@ struct decorated_ptr : META {
              !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void> &&
              is_const)
       : META(std::in_place_type<T>), ptr_(&v) {}
-  decorated_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}
 
   decorated_ptr(decorated_ptr&& rhs) noexcept { swap(*this, rhs); }
   decorated_ptr& operator=(decorated_ptr&& rhs) noexcept {
@@ -39,8 +41,6 @@ struct decorated_ptr : META {
     swap(lhs.ptr_, rhs.ptr_);
     swap(static_cast<META&>(lhs), static_cast<META&>(rhs));
   }
-
-  PTR ptr_ = nullptr;
 };
 
 }  // namespace virtual_void::data

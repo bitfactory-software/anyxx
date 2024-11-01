@@ -42,12 +42,12 @@ TEST_CASE("interface lifetime cast") {
   // static_assert( std::same_as<std::decay_t<void const *>,
   // std::add_const_t<void*>);
 
-  auto o1 = data::has_no_meta::lifetime_cast<data::has_no_meta::const_observer>(*sc);
+  auto o1 = *sc;
   auto x = reconcrete_cast<X>(o1);
   auto x1 = static_cast<X const *>(get_data(*sc));
   REQUIRE(x->s_ == "hallo");
 
-  to_string_co co = interface::interface_lifetime_cast<to_string_co>(sc);
+  to_string_co co = sc;
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
   REQUIRE(co.is_derived_from<interface::base<data::has_no_meta::const_observer>>());

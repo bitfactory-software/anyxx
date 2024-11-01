@@ -26,7 +26,7 @@ using to_string_method = declare<std::string(const void*)>;
 template <typename T>
 auto call(const to_string_method& method) {
   T t;
-  return method(const_observer(t));
+  return method(erased<const_observer>(t));
 }
 
 TEST_CASE("m_table open_method") {
@@ -66,7 +66,7 @@ TEST_CASE("m_table open_method") {
     class_hierarchy::visit_classes<classes>(
         overload{[&]<typename C> {
                                  C c;
-                                 auto virtual_void = const_observer(c);
+                                 auto virtual_void = erased<const_observer>(c);
                                  auto u = erased<unique>(C{});
                                  auto expected = typeid(C).name();
                                  auto r = toString(u);

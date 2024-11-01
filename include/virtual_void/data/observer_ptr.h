@@ -1,9 +1,6 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
-#include "../../forward.h"
+#include "../virtual_void.h"
 
 namespace virtual_void::data {
 
@@ -16,19 +13,6 @@ struct observer_ptr : META {
   observer_ptr() = default;
   observer_ptr(const observer_ptr&) = default;
   observer_ptr(observer_ptr&) = default;
-  template <typename T>
-  observer_ptr(T& v)
-    requires(!std::derived_from<T, observer_ptr> &&
-             !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void>)
-      : META(std::in_place_type<T>), ptr_(&v) {}
-  template <typename T>
-  observer_ptr(const T& v)
-    requires(!std::derived_from<T, observer_ptr> &&
-             !std::same_as<std::decay_t<std::remove_pointer_t<T>>, void> &&
-             is_const)
-      : META(std::in_place_type<T>), ptr_(&v) {}
-  observer_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}
-
   observer_ptr(observer_ptr&& rhs) noexcept { swap(*this, rhs); }
   observer_ptr& operator=(observer_ptr&& rhs) noexcept {
     observer_ptr destroy_this{};
@@ -36,6 +20,13 @@ struct observer_ptr : META {
     swap(*this, rhs);
     return *this;
   }
+
+  observer_ptr(void_t v, const META& meta) : ptr_(v), META(meta) {}
+  template <is_virtual_void RHS>
+  observer_ptr(RHS const& rhs)
+    requires(is_const_data<observer_ptr> == is_const_data<RHS>)
+      : META(*get_meta(rhs)), ptr_(get_data(rhs)) {}
+
   friend void swap(observer_ptr& lhs, observer_ptr& rhs) noexcept {
     using namespace std;
     swap(lhs.ptr_, rhs.ptr_);

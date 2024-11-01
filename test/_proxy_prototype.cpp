@@ -116,7 +116,7 @@ TEST_CASE( "proxy prototype" )
     
     REQUIRE( pro::proxy_reflect<MetaData>(cp).type_info.name() == typeid( X ).name() );
 
-    update( o, "->updated" );
+    update( &o, "->updated" );
     REQUIRE( ToString_( o ) == "world->updated" );
 
     auto dataOriginal = GetData( *op );

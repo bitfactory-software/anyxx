@@ -28,13 +28,13 @@ namespace {
 TEST_CASE("lifetime/observer") {
   {
     std::string s{"hallo"};
-    auto mo = mutable_observer(s);
+    auto mo = erased<mutable_observer>(s);
     static_assert(
         std::same_as<typed_const_observer<std::string>::value_t, std::string>);
     static_assert(
         std::same_as<typed_mutable_observer<std::string const>::value_t,
                      std::string const>);
-    auto co = const_observer(s);
+    auto co = erased<const_observer>(s);
     auto tmo = as<std::string>(mo);
     *tmo = "world";
     REQUIRE(s == "world");
@@ -52,7 +52,7 @@ TEST_CASE("lifetime/observer") {
   {
     const std::string s{"hallo"};
     // auto mo = mutable_observer(s);  // shall not compile
-    auto co = const_observer(s);
+    auto co = erased<const_observer>(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);
     static_assert(typed_observer<std::string const, void*>::is_const == false);
