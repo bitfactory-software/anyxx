@@ -10,10 +10,10 @@ namespace virtual_void {
 template <typename VIRTUAL_VOID>
 struct observer_trait {
   using void_t = VIRTUAL_VOID::void_t;
-  static void_t value(const auto& ptr) { return ptr.value(); }
+  static void_t value(const auto& ptr) { return ptr.ptr_; }
   static auto meta(const auto& ptr) { return ptr.get_meta(); }
   static bool has_value(const auto& ptr) {
-    return static_cast<bool>(ptr.value());
+    return static_cast<bool>(ptr.ptr_);
   }
   template <typename V>
   static auto construct_from(V& v) {
