@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../data/value_ptr.h"
+#include "../data/make_value_decorated_data.h"
 #include "../virtual_void.h"
 
 namespace virtual_void {

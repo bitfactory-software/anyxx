@@ -4,7 +4,7 @@
 #include "meta.h"
 
 namespace virtual_void::data::has_m_table {
-using shared_const_data = shared_const_ptr<decoration_base<meta>>;
+using shared_const_data = shared_const_decorated_data<decoration_base<meta>>;
 }
 
 namespace virtual_void {

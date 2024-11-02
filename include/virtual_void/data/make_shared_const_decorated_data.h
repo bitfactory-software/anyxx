@@ -5,7 +5,7 @@
 namespace virtual_void::data {
 
 template <typename META_DATA>
-using shared_const_ptr = std::shared_ptr<META_DATA const>;
+using shared_const_decorated_data = std::shared_ptr<META_DATA const>;
 
 template <typename T, typename... ARGS>
 auto make_shared_const_decorated_data(ARGS&&... args) {
