@@ -26,7 +26,7 @@ struct members {
     using value_data_t =
         data::decorated_data<value_t, data::has_no_meta::meta>;
     table_[OBJECT_MEMBER::get_index()] =
-        data::make_value<value_data_t>(std::forward<ARG>(arg));
+        data::make_value_decorated_data<value_data_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {

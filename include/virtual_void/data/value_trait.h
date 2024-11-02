@@ -15,11 +15,11 @@ struct value_trait {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
   template <typename V>
   static auto construct_from(V&& v) {
-    return data::make_value<typed_t<std::decay_t<V>>>(std::forward<V>(v));
+    return data::make_value_decorated_data<typed_t<std::decay_t<V>>>(std::forward<V>(v));
   }
   template <typename V, typename... ARGS>
   static auto construct_in_place(std::in_place_type_t<V>, ARGS&&... args) {
-    return data::make_value<typed_t<V>>(std::forward<ARGS>(args)...);
+    return data::make_value_decorated_data<typed_t<V>>(std::forward<ARGS>(args)...);
   }
 };
 

@@ -36,7 +36,7 @@ class value_ptr {
   value_ptr() = default;
   template <typename DATA>
   value_ptr(DATA* ptr)
-    requires std::derived_from<DATA, BASE>
+    requires std::is_convertible_v<DATA*, BASE*>
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
   value_ptr(value_ptr const& rhs)
       : ptr_(rhs.v_table_->copy(rhs.ptr_)), v_table_(rhs.v_table_) {}
@@ -45,9 +45,7 @@ class value_ptr {
     swap(*this, clone);
     return *this;
   }
-  value_ptr(value_ptr&& rhs) noexcept {
-    swap(*this, rhs);
-  }
+  value_ptr(value_ptr&& rhs) noexcept { swap(*this, rhs); }
   value_ptr& operator=(value_ptr&& rhs) noexcept {
     value_ptr destroy_this{};
     swap(*this, destroy_this);
@@ -74,8 +72,16 @@ class value_ptr {
   const value_v_table<BASE>* v_table_ = nullptr;
 };
 
+template <typename BASE, typename T, typename... ARGS>
+auto make_value(ARGS&&... args)
+  requires std::is_convertible_v<T*, BASE*>
+{
+  auto deleter = +[](BASE* meta) { delete static_cast<T*>(meta); };
+  return value_ptr<BASE>(new T(std::in_place, std::forward<ARGS>(args)...));
+}
+
 template <typename T, typename... ARGS>
-auto make_value(ARGS&&... args) {
+auto make_value_decorated_data(ARGS&&... args) {
   using base_t = T::base_t;
   static_assert(std::derived_from<T, base_t>);
   auto deleter = +[](base_t* meta) { delete static_cast<T*>(meta); };
