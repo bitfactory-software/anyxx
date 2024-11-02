@@ -9,6 +9,7 @@
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/data/has_m_table/unique.h"
 #include "virtual_void/data/has_m_table/value.h"
+#include "virtual_void/data/has_m_table/shared_const_ptr.h"
 
 #include "a.h"
 
@@ -159,6 +160,17 @@ TEST_CASE("m_table/lifetime/value") {
     x_t a{"hallo"};
     auto t1 = erased<value>(a);
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
+  }
+}
+TEST_CASE("m_table/shared_const_ptr") {
+  {
+    auto ptr = std::make_shared<A>("hallo");
+    REQUIRE(ptr->s == "hallo");
+    shared_const_ptr sp1 =
+        virtual_void_trait<shared_const_ptr>::construct_from(ptr);
+    auto u1 = erased<shared_const_ptr>(ptr);
+    A const* a = reconcrete_cast<A>(u1);
+    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
   }
 }
 }  // namespace

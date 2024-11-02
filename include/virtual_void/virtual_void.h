@@ -14,9 +14,9 @@ template <typename DATA>
 struct virtual_void_trait;
 
 template <class META>
-concept is_meta = requires(META meta){
+concept is_meta = requires(META meta) {
   { meta.get_meta() } -> std::convertible_to<META const*>;
-  { meta.type_info() }->  std::convertible_to<type_info_ptr>;
+  { meta.type_info() } -> std::convertible_to<type_info_ptr>;
 };
 
 template <class PTR>
@@ -47,8 +47,7 @@ template <>
 struct is_const_void_<void const*> : std::true_type {};
 
 template <typename VOID>
-concept is_const_void =
-    is_const_void_<VOID>::value;
+concept is_const_void = is_const_void_<VOID>::value;
 
 template <typename DATA>
 concept is_const_data =
@@ -56,8 +55,7 @@ concept is_const_data =
 
 template <typename VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
-    ((is_const_void<VOID> == is_const_data<DATA>) ||
-     (!is_const_data<DATA>));
+    ((is_const_void<VOID> == is_const_data<DATA>) || (!is_const_data<DATA>));
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
@@ -85,6 +83,11 @@ VIRTUAL_VOID erased_in_place(ARGS&&... args) {
       std::in_place_type<V>, std::forward<ARGS>(args)...);
 }
 
+struct virtual_void_default_unerase {
+  template <typename CONSTRUCTED_WITH>
+  using unerased_type = CONSTRUCTED_WITH;
+};
+
 template <typename T>
 struct static_cast_uneraser {
   using type = T;
@@ -93,15 +96,16 @@ struct static_cast_uneraser {
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
 auto unerase() {
   using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
+  using trait_t = virtual_void_trait<VIRTUAL_VOID>;
   if constexpr (is_virtual_void<constructed_with_t>) {
-    using trait_t = typename virtual_void_trait<VIRTUAL_VOID>::trait_t;
     using value_t = typename constructed_with_t::value_t;
     return static_cast_uneraser<value_t>();
   } else {
+    using value_t = trait_t::template unerased_type<constructed_with_t>;
     if constexpr (is_const_data<VIRTUAL_VOID>) {
-      return static_cast_uneraser<constructed_with_t const>();
+      return static_cast_uneraser<value_t const>();
     } else {
-      return static_cast_uneraser<constructed_with_t>();
+      return static_cast_uneraser<value_t>();
     }
   }
 }

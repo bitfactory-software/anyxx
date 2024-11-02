@@ -6,7 +6,8 @@
 #include <string>
 
 #include "include/catch.hpp"
-#include "virtual_void/data/has_no_meta/shared_const.h"
+// #include "virtual_void/data/has_no_meta/shared_const.h"
+#include "virtual_void/data/has_no_meta/shared_const_ptr.h"
 #include "virtual_void/data/make_shared_const_decorated_data.h"
 #include "virtual_void/interface/declare_macro.h"
 
@@ -22,7 +23,9 @@ ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value_),
                           INTERFACE_CONST_METHOD(string, as_forth),
                           INTERFACE_CONST_METHOD(string, as_lisp)))
 
-using node = node_i<shared_const>;
+// alternative: using node = node_i<shared_const>; less code, but intrusive
+// lifetime management
+using node = node_i<shared_const_ptr>;
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}
@@ -59,20 +62,21 @@ struct Integer {
   int int_;
 };
 
+//alternative for node = node_i<shared_const>:
+// template <typename NODE, typename... ARGS>
+// auto make_node(ARGS&&... args) {
+//  return node{NODE(std::forward<ARGS>(args)...)};
+//}
+
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
-  return node{NODE(std::forward<ARGS>(args)...)};
+  return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
 }
 
 }  // namespace
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace virtual_void;
-
-  static_assert(is_virtual_typed<data::has_no_meta::typed_shared_const<Times>>);
-  static_assert(is_virtual_typed<data::has_no_meta::typed_shared_const<Plus>>);
-  static_assert(
-      is_virtual_typed<data::has_no_meta::typed_shared_const<Integer>>);
 
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

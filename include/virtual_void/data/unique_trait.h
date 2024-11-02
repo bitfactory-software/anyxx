@@ -7,7 +7,7 @@
 namespace virtual_void {
 
 template <typename META>
-struct unique_trait {
+struct unique_trait : virtual_void_default_unerase {
   using void_t = void*;
   template <typename V>
   using typed_t = data::decorated_data<V, META>;
