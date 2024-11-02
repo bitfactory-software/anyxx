@@ -25,29 +25,29 @@ constexpr value_v_table value_v_table_of =
     value_v_table(std::in_place_type<DATA>);
 
 template <typename BASE>
-class value_ptr {
+class erased_value {
  public:
-  value_ptr() = default;
+  erased_value() = default;
   template <typename DATA>
-  value_ptr(DATA* ptr)
+  erased_value(DATA* ptr)
     requires std::is_convertible_v<DATA*, BASE*>
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
-  value_ptr(value_ptr const& rhs)
+  erased_value(erased_value const& rhs)
       : ptr_(static_cast<BASE*>(rhs.v_table_->copy(rhs.ptr_))),
         v_table_(rhs.v_table_) {}
-  value_ptr& operator=(const value_ptr& rhs) {
-    value_ptr clone{rhs};
+  erased_value& operator=(const erased_value& rhs) {
+    erased_value clone{rhs};
     swap(*this, clone);
     return *this;
   }
-  value_ptr(value_ptr&& rhs) noexcept { swap(*this, rhs); }
-  value_ptr& operator=(value_ptr&& rhs) noexcept {
-    value_ptr destroy_this{};
+  erased_value(erased_value&& rhs) noexcept { swap(*this, rhs); }
+  erased_value& operator=(erased_value&& rhs) noexcept {
+    erased_value destroy_this{};
     swap(*this, destroy_this);
     swap(*this, rhs);
     return *this;
   }
-  ~value_ptr() {
+  ~erased_value() {
     if (v_table_) v_table_->destroy(ptr_);
   }
   auto& operator*() const
@@ -59,7 +59,7 @@ class value_ptr {
   BASE* get() const { return ptr_; }
   explicit operator bool() const { return ptr_ != nullptr; }
 
-  friend void swap(value_ptr& lhs, value_ptr& rhs) noexcept {
+  friend void swap(erased_value& lhs, erased_value& rhs) noexcept {
     using namespace std;
     swap(lhs.ptr_, rhs.ptr_);
     swap(lhs.v_table_, rhs.v_table_);
@@ -74,7 +74,7 @@ template <typename BASE, typename T, typename... ARGS>
 auto make_value(ARGS&&... args)
   requires std::is_convertible_v<T*, BASE*>
 {
-  return value_ptr<BASE>(new T(std::forward<ARGS>(args)...));
+  return erased_value<BASE>(new T(std::forward<ARGS>(args)...));
 }
 
 }  // namespace virtual_void::data

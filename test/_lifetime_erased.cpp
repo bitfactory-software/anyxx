@@ -121,7 +121,7 @@ TEST_CASE("lifetime/value") {
   }
   {
     auto u1 = erased_in_place<value, A>("hallo");
-    static_assert(std::same_as<decltype(u1), value_data>);
+    static_assert(std::same_as<decltype(u1), value>);
     static_assert(
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;

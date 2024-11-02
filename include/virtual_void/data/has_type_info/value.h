@@ -7,20 +7,19 @@
 #include "meta.h"
 
 namespace virtual_void::data::has_type_info {
-using value_data = value_ptr<decoration_base<meta>>;
+using value = erased_value<decoration_base<meta>>;
 }
 
 namespace virtual_void {
 using namespace virtual_void;
 template <>
-struct virtual_void_trait<data::has_type_info::value_data>
+struct virtual_void_trait<data::has_type_info::value>
     : value_trait<data::has_type_info::meta> {};
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_type_info {
-using value = value_data;
 template <typename T>
-using typed_value = virtual_typed<T, value_data>;
+using typed_value = virtual_typed<T, value>;
 static_assert(is_virtual_void<value>);
 static_assert(is_virtual_typed<typed_value<int>>);
 }  // namespace virtual_void::data::has_type_info

@@ -105,9 +105,9 @@ TEST_CASE("m_table/lifetime/value") {
   }
   {
     auto u1 = erased<value>(A{"hallo"});
-    static_assert(std::same_as<decltype(u1), value_data>);
+    static_assert(std::same_as<decltype(u1), value>);
     static_assert(
-        std::derived_from<std::decay_t<decltype(u1)>, value_data> &&
+        std::derived_from<std::decay_t<decltype(u1)>, value> &&
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
     auto a = reconcrete_cast<A>(u1);
