@@ -1,8 +1,6 @@
 #pragma once
 
-#include "decorated_data.h"
-
-namespace virtual_void {
+namespace virtual_void::data {
 
 struct value_v_table {
   using destroy_fn = void(void*) noexcept;

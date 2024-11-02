@@ -124,7 +124,7 @@ TEST_CASE("erase lifetime test shared") {
 TEST_CASE("erase lifetime test value") {
   Data::destrucor_runs = 0;
   {
-    value_ptr<data::decoration_base<data::has_no_meta::meta>> vp =
+    data::value_ptr<data::decoration_base<data::has_no_meta::meta>> vp =
         data::make_value_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
     REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -134,7 +134,7 @@ TEST_CASE("erase lifetime test value") {
 
   Data::destrucor_runs = 0;
   {
-    value_ptr<data::decoration_base<data::has_type_info::meta>> vp =
+    data::value_ptr<data::decoration_base<data::has_type_info::meta>> vp =
         data::make_value_decorated_data<data::decorated_data<Data, data::has_type_info::meta>>();
     REQUIRE(data::unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);

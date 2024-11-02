@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../utillities/value_ptr.h"
+#include "erased_value.h"
 #include "decorated_data.h"
 
 namespace virtual_void::data {
