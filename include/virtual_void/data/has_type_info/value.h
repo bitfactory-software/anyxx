@@ -7,8 +7,7 @@
 #include "meta.h"
 
 namespace virtual_void::data::has_type_info {
-using value_data =
-    data::value_ptr<decoration_base<meta>>;
+using value_data = value_ptr<decoration_base<meta>>;
 }
 
 namespace virtual_void {

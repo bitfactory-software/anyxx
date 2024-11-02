@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <vector>
 
-#include "value_ptr.h"
+#include "../utillities/value_ptr.h"
 
 namespace virtual_void::open_object {
 
@@ -18,12 +18,12 @@ std::size_t& type_member_count_of() {
 template <typename OBJECT_TYPE>
 struct members {
   members() : table_(type_member_count_of<OBJECT_TYPE>()) {}
-  std::vector<data::value_ptr<void>> table_;
+  std::vector<value_ptr<void>> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
     table_[OBJECT_MEMBER::get_index()] =
-        data::make_value<void, value_t>(std::forward<ARG>(arg));
+        make_value<void, value_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {
