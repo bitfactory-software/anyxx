@@ -57,7 +57,7 @@ class value_ptr {
   }
   BASE& operator*() const { return *ptr_; }
   BASE* operator->() const { return ptr_; }
-  auto value() const { return ptr_->value(); }
+  BASE* get() const { return ptr_; }
   auto meta() const { ptr_->meta(); }
   explicit operator bool() const { return ptr_ != nullptr; }
 

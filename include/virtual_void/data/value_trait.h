@@ -10,7 +10,7 @@ struct value_trait {
   using void_t = void*;
   template <typename V>
   using typed_t = data::decorated_data<V, META>;
-  static void* value(const auto& ptr) { return ptr.value(); }
+  static void* value(const auto& ptr) { return ptr.get()->value(); }
   static auto meta(const auto& ptr) { ptr.meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
   template <typename V>
