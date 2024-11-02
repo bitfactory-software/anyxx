@@ -1,15 +1,13 @@
 #pragma once
 
-#include "memory"
+#include "erased_shared_const.h"
 
 namespace virtual_void::data {
 
-template <typename META_DATA>
-using shared_const_decorated_data = std::shared_ptr<META_DATA const>;
-
 template <typename T, typename... ARGS>
 auto make_shared_const_decorated_data(ARGS&&... args) {
-  return std::make_shared<T const>(std::in_place, std::forward<ARGS>(args)...);
+  return make_erased_shared_const<typename T::base_t, T>(
+      std::in_place, std::forward<ARGS>(args)...);
 }
 
 }  // namespace virtual_void::data
