@@ -9,7 +9,6 @@ namespace virtual_void {
 template <typename META>
 struct unique_trait {
   using void_t = void*;
-  using ptr_t = data::unique_ptr<data::decoration_base<META>>;
   template <typename V>
   using typed_t = data::decorated_data<V, META>;
 
