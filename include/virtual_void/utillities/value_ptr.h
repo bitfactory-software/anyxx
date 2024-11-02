@@ -53,11 +53,7 @@ class value_ptr {
   ~value_ptr() {
     if (v_table_) v_table_->destroy(ptr_);
   }
-  auto operator*() const
-    requires(!std::same_as<BASE, void>)
-  {
-    return *ptr_;
-  }
+  auto operator*() const { return *ptr_; }
   BASE* operator->() const { return ptr_; }
   BASE* get() const { return ptr_; }
   explicit operator bool() const { return ptr_ != nullptr; }
