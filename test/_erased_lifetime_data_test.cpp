@@ -7,7 +7,7 @@
 #include "virtual_void/data/decorated_data.h"
 #include "virtual_void/data/has_no_meta/meta.h"
 #include "virtual_void/data/has_type_info/meta.h"
-#include "virtual_void/data/shared_const_ptr.h"
+#include "virtual_void/data/make_shared_const_decorated_data.h"
 #include "virtual_void/data/make_unique_decorated_data.h"
 #include "virtual_void/data/value_ptr.h"
 #include "virtual_void/virtual_void.h"
@@ -105,7 +105,7 @@ TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<data::decoration_base<data::has_no_meta::meta> const> sp =
-        data::make_shared_const<data::decorated_data<Data, data::has_no_meta::meta>>();
+        data::make_shared_const_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -114,7 +114,7 @@ TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
     std::shared_ptr<data::decoration_base<data::has_type_info::meta> const> sp =
-        data::make_shared_const<
+        data::make_shared_const_decorated_data<
             data::decorated_data<Data, data::has_type_info::meta> const>();
     REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
