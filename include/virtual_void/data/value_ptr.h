@@ -84,7 +84,6 @@ template <typename T, typename... ARGS>
 auto make_value_decorated_data(ARGS&&... args) {
   using base_t = T::base_t;
   static_assert(std::derived_from<T, base_t>);
-  auto deleter = +[](base_t* meta) { delete static_cast<T*>(meta); };
   return value_ptr<base_t>(new T(std::in_place, std::forward<ARGS>(args)...));
 }
 
