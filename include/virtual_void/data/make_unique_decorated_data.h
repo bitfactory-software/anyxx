@@ -11,7 +11,7 @@ template <typename META_DATA>
 using unique_ptr = std::unique_ptr<META_DATA, data_deleter<META_DATA>>;
 
 template <typename T, typename... ARGS>
-auto make_unique(ARGS&&... args) {
+auto make_unique_decorated_data(ARGS&&... args) {
   using base_t = T::base_t;
   auto deleter = +[](base_t* meta) { delete static_cast<T*>(meta); };
   return unique_ptr<base_t>(

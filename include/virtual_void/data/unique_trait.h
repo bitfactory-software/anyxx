@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../data/decorated_data.h"
-#include "../data/unique_ptr.h"
+#include "../data/make_unique_decorated_data.h"
 #include "../virtual_void.h"
 
 namespace virtual_void {
@@ -19,11 +19,11 @@ struct unique_trait {
 
   template <typename V>
   static auto construct_from(V&& v) {
-    return data::make_unique<typed_t<std::decay_t<V>>>(std::forward<V>(v));
+    return data::make_unique_decorated_data<typed_t<std::decay_t<V>>>(std::forward<V>(v));
   }
   template <typename V, typename... ARGS>
   static auto construct_in_place(std::in_place_type_t<V>, ARGS&&... args) {
-    return data::make_unique<typed_t<V>>(std::forward<ARGS>(args)...);
+    return data::make_unique_decorated_data<typed_t<V>>(std::forward<ARGS>(args)...);
   }
 };
 

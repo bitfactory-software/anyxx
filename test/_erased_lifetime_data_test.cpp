@@ -8,7 +8,7 @@
 #include "virtual_void/data/has_no_meta/meta.h"
 #include "virtual_void/data/has_type_info/meta.h"
 #include "virtual_void/data/shared_const_ptr.h"
-#include "virtual_void/data/unique_ptr.h"
+#include "virtual_void/data/make_unique_decorated_data.h"
 #include "virtual_void/data/value_ptr.h"
 #include "virtual_void/virtual_void.h"
 #include "include/catch.hpp"
@@ -85,7 +85,7 @@ TEST_CASE("erase lifetime test") {
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
-    auto unique_ptr = data::make_unique<
+    auto unique_ptr = data::make_unique_decorated_data<
         data::decorated_data<Data, data::has_no_meta::meta>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
@@ -94,7 +94,7 @@ TEST_CASE("erase lifetime test unique") {
 
   Data::destrucor_runs = 0;
   {
-    auto unique_ptr = data::make_unique<
+    auto unique_ptr = data::make_unique_decorated_data<
         data::decorated_data<Data, data::has_type_info::meta>>();
     REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
