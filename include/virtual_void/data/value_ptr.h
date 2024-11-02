@@ -77,7 +77,7 @@ auto make_value(ARGS&&... args)
   requires std::is_convertible_v<T*, BASE*>
 {
   auto deleter = +[](BASE* meta) { delete static_cast<T*>(meta); };
-  return value_ptr<BASE>(new T(std::in_place, std::forward<ARGS>(args)...));
+  return value_ptr<BASE>(new T(std::forward<ARGS>(args)...));
 }
 
 template <typename T, typename... ARGS>
