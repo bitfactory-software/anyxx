@@ -1,29 +1,29 @@
 #pragma once
 
-#include "../observer_ptr.h"
+#include "../observer.h"
 #include "../observer_trait.h"
 #include "meta.h"
 
 namespace virtual_void::data::has_no_meta {
 
 template <typename VOID>
-using observer_ptr = data::observer_ptr<VOID, meta>;
+using observer = data::observer<VOID, meta>;
 }
 
 namespace virtual_void {
 template <typename VOID>
-struct virtual_void_trait<data::has_no_meta::observer_ptr<VOID>>
-    : observer_trait<data::has_no_meta::observer_ptr<VOID>, VOID,
+struct virtual_void_trait<data::has_no_meta::observer<VOID>>
+    : observer_trait<data::has_no_meta::observer<VOID>, VOID,
                      data::has_no_meta::meta> {};
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_no_meta {
 template <typename VOID>
-using observer = observer_ptr<VOID>;
+using observer = observer<VOID>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 template <typename V, typename VOID>
-using typed_observer = virtual_typed<V, observer_ptr<VOID>>;
+using typed_observer = virtual_typed<V, observer<VOID>>;
 template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>

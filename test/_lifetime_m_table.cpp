@@ -29,7 +29,7 @@ TEST_CASE("m_table/lifetime/observer") {
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(get_meta(mo)->get_m_table() == m_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  static_assert(std::derived_from<mutable_observer, observer_ptr<void*>>);
+  static_assert(std::derived_from<mutable_observer, observer<void*>>);
   REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
   static_assert(
       std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
