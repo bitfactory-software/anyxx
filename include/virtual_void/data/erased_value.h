@@ -71,7 +71,7 @@ class erased_value {
 };
 
 template <typename BASE, typename T, typename... ARGS>
-auto make_value(ARGS&&... args)
+auto make_erased_value(ARGS&&... args)
   requires std::is_convertible_v<T*, BASE*>
 {
   return erased_value<BASE>(new T(std::forward<ARGS>(args)...));

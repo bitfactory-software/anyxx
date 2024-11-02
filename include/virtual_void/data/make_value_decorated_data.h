@@ -9,7 +9,7 @@ template <typename T, typename... ARGS>
 auto make_value_decorated_data(ARGS&&... args) {
   using base_t = T::base_t;
   static_assert(std::derived_from<T, base_t>);
-  return make_value<base_t, T>(std::in_place, std::forward<ARGS>(args)...);
+  return make_erased_value<base_t, T>(std::in_place, std::forward<ARGS>(args)...);
 }
 
 }  // namespace virtual_void::data

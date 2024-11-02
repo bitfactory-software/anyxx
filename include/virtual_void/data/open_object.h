@@ -23,7 +23,7 @@ struct members {
   void set(OBJECT_MEMBER, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
     table_[OBJECT_MEMBER::get_index()] =
-        data::make_value<void, value_t>(std::forward<ARG>(arg));
+        data::make_erased_value<void, value_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {
