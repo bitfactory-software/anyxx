@@ -4,22 +4,19 @@
 
 namespace virtual_void::data {
 
-template <typename BASE>
 struct value_v_table {
-  using destroy_fn = void(BASE*) noexcept;
-  using copy_fn = BASE*(const BASE*);
+  using destroy_fn = void(void*) noexcept;
+  using copy_fn = void*(const void*);
   template <class DATA>
   constexpr value_v_table(std::in_place_type_t<DATA>)
-    requires std::derived_from<DATA, BASE>
       : destroy(&destroy_impl<DATA>), copy(&copy_impl<DATA>) {}
   template <class DATA>
-  static void destroy_impl(BASE* target) noexcept
-    requires std::derived_from<DATA, BASE>
+  static void destroy_impl(void* target) noexcept
   {
     ::delete static_cast<DATA*>(target);
   }
   template <class DATA>
-  static BASE* copy_impl(BASE const* source) {
+  static void* copy_impl(void const* source) {
     return ::new DATA(*static_cast<DATA const*>(source));
   }
   destroy_fn* destroy;
@@ -27,8 +24,8 @@ struct value_v_table {
 };
 
 template <class DATA>
-constexpr value_v_table<typename DATA::base_t> value_v_table_of =
-    value_v_table<typename DATA::base_t>(std::in_place_type<DATA>);
+constexpr value_v_table value_v_table_of =
+    value_v_table(std::in_place_type<DATA>);
 
 template <typename BASE>
 class value_ptr {
@@ -39,7 +36,7 @@ class value_ptr {
     requires std::is_convertible_v<DATA*, BASE*>
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
   value_ptr(value_ptr const& rhs)
-      : ptr_(rhs.v_table_->copy(rhs.ptr_)), v_table_(rhs.v_table_) {}
+      : ptr_(static_cast<BASE*>(rhs.v_table_->copy(rhs.ptr_))), v_table_(rhs.v_table_) {}
   value_ptr& operator=(const value_ptr& rhs) {
     value_ptr clone{rhs};
     swap(*this, clone);
@@ -69,7 +66,7 @@ class value_ptr {
 
  private:
   BASE* ptr_ = nullptr;
-  const value_v_table<BASE>* v_table_ = nullptr;
+  const value_v_table* v_table_ = nullptr;
 };
 
 template <typename BASE, typename T, typename... ARGS>
