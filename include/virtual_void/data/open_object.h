@@ -5,7 +5,6 @@
 #include <typeindex>
 #include <vector>
 
-#include "has_no_meta/meta.h"
 #include "value_ptr.h"
 
 namespace virtual_void::open_object {
@@ -19,26 +18,24 @@ std::size_t& type_member_count_of() {
 template <typename OBJECT_TYPE>
 struct members {
   members() : table_(type_member_count_of<OBJECT_TYPE>()) {}
-  std::vector<data::value_ptr<data::decoration_base<data::has_no_meta::meta>>> table_;
+  std::vector<data::value_ptr<void>> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
-    using value_data_t =
-        data::decorated_data<value_t, data::has_no_meta::meta>;
     table_[OBJECT_MEMBER::get_index()] =
-        data::make_value_decorated_data<value_data_t>(std::forward<ARG>(arg));
+        data::make_value<void, value_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {
     const auto& value = table_[OBJECT_MEMBER::get_index()];
     if (!value) return {};
-    return unerase_cast<typename OBJECT_MEMBER::value_t>(*value);
+    return static_cast<typename OBJECT_MEMBER::value_t const*>(value.get());
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t* get(OBJECT_MEMBER) {
     auto& value = table_[OBJECT_MEMBER::get_index()];
     if (!value) return {};
-    return unerase_cast<typename OBJECT_MEMBER::value_t>(*value);
+    return static_cast<typename OBJECT_MEMBER::value_t*>(value.get());
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t& operator[](OBJECT_MEMBER) {

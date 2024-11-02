@@ -11,8 +11,7 @@ struct value_v_table {
   constexpr value_v_table(std::in_place_type_t<DATA>)
       : destroy(&destroy_impl<DATA>), copy(&copy_impl<DATA>) {}
   template <class DATA>
-  static void destroy_impl(void* target) noexcept
-  {
+  static void destroy_impl(void* target) noexcept {
     ::delete static_cast<DATA*>(target);
   }
   template <class DATA>
@@ -36,7 +35,8 @@ class value_ptr {
     requires std::is_convertible_v<DATA*, BASE*>
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
   value_ptr(value_ptr const& rhs)
-      : ptr_(static_cast<BASE*>(rhs.v_table_->copy(rhs.ptr_))), v_table_(rhs.v_table_) {}
+      : ptr_(static_cast<BASE*>(rhs.v_table_->copy(rhs.ptr_))),
+        v_table_(rhs.v_table_) {}
   value_ptr& operator=(const value_ptr& rhs) {
     value_ptr clone{rhs};
     swap(*this, clone);
@@ -52,7 +52,11 @@ class value_ptr {
   ~value_ptr() {
     if (v_table_) v_table_->destroy(ptr_);
   }
-  BASE& operator*() const { return *ptr_; }
+  auto& operator*() const
+    requires(!std::same_as<void, BASE>)
+  {
+    return *ptr_;
+  }
   BASE* operator->() const { return ptr_; }
   BASE* get() const { return ptr_; }
   auto meta() const { ptr_->meta(); }
