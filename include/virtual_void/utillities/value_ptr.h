@@ -60,7 +60,6 @@ class value_ptr {
   }
   BASE* operator->() const { return ptr_; }
   BASE* get() const { return ptr_; }
-  auto meta() const { ptr_->meta(); }
   explicit operator bool() const { return ptr_ != nullptr; }
 
   friend void swap(value_ptr& lhs, value_ptr& rhs) noexcept {
