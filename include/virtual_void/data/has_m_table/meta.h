@@ -37,7 +37,7 @@ struct meta {
 
   type_info_ptr type_info() const { return &get_m_table()->type(); }
   m_table_t* get_m_table() const { return m_table_; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
+  VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };
 
 }  // namespace virtual_void::data::has_m_table

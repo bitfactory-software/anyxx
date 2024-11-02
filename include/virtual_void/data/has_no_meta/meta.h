@@ -12,7 +12,7 @@ struct meta {
   meta(const META&) {}
   meta() = default;
   type_info_ptr type_info() const { return {}; }
-  DATA_ALIGNED_DESRTUCTOR_VIRTUAL ~meta() = default;
+  VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };
 
 }  // namespace virtual_void::data::has_no_meta

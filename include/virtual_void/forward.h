@@ -23,7 +23,7 @@ class error;
 }  // namespace virtual_void
 
 #ifdef _DEBUG
-#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL virtual
+#define VIRTUAL_DESTRUCTOR_FOR_DEBUGGING virtual
 #else
-#define DATA_ALIGNED_DESRTUCTOR_VIRTUAL
+#define VIRTUAL_DESTRUCTOR_FOR_DEBUGGING
 #endif  // DEBUG
