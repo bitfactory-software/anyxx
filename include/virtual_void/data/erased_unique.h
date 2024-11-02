@@ -1,13 +1,11 @@
 #pragma once
 
-#include <memory>
+#include "erased_unique_ptr.h"
 
 namespace virtual_void::data {
 
 template <typename BASE>
-using data_deleter = void (*)(BASE*);
-template <typename BASE>
-using erased_unique = std::unique_ptr<BASE, data_deleter<BASE>>;
+using erased_unique = erased_unique_ptr<BASE>;
 
 template <typename BASE, typename T, typename... ARGS>
 auto make_erased_unique(ARGS&&... args) {
