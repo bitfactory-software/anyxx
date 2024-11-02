@@ -6,7 +6,7 @@
 
 namespace virtual_void::data {
 
-template <typename VOID, typename META>
-using shared_const_ptr = decorated_ptr<std::shared_ptr<void>, META>;
+template <typename META>
+using shared_const_ptr = decorated_ptr<std::shared_ptr<void const>, META>;
 
 }  // namespace virtual_void::data

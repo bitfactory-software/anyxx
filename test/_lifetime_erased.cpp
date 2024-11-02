@@ -7,6 +7,7 @@
 #include "virtual_void/data/has_no_meta/meta.h"
 #include "virtual_void/data/has_no_meta/observer.h"
 #include "virtual_void/data/has_no_meta/shared_const.h"
+#include "virtual_void/data/has_no_meta/shared_const_ptr.h"
 #include "virtual_void/data/has_no_meta/unique.h"
 #include "virtual_void/data/has_no_meta/value.h"
 
@@ -18,9 +19,10 @@ using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void;
 
 namespace {
-    template< typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER >
-    constexpr bool compiles1 = requires(CONST_OBSERVER co, TYPED_MUTABLE_STRING_OBSERVER mo){
-        mo = as<std::string>(co);
+template <typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER>
+constexpr bool compiles1 =
+    requires(CONST_OBSERVER co, TYPED_MUTABLE_STRING_OBSERVER mo) {
+      mo = as<std::string>(co);
     };
 
 TEST_CASE("lifetime/observer") {
@@ -40,10 +42,11 @@ TEST_CASE("lifetime/observer") {
     REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
     {
       const std::string cs;
-      //mutable_observer xx(cs);  // shall not compile!
+      // mutable_observer xx(cs);  // shall not compile!
     }
     // tmo = as< std::string >( co ); // shall not compile!
-    static_assert(!compiles1<const_observer, typed_mutable_observer<std::string>>);
+    static_assert(
+        !compiles1<const_observer, typed_mutable_observer<std::string>>);
     auto co2 = as<std::string>(co);
     static_assert(decltype(co2)::is_const);
   }
@@ -176,5 +179,15 @@ TEST_CASE("lifetime/value") {
     REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
   }
 }
-TEST_CASE("lifetime/convert") {}
+TEST_CASE("lifetime/shared_const_ptr") {
+  {
+    auto ptr = std::make_shared<A>("hallo");
+    REQUIRE(ptr->s == "hallo");
+    shared_const_ptr sp1 =
+        virtual_void_trait<shared_const_ptr>::construct_from(ptr);
+    auto u1 = erased<shared_const_ptr>(ptr);
+    A const* a = reconcrete_cast<A>(u1);
+    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
+  }
+}
 }  // namespace

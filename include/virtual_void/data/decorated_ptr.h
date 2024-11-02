@@ -6,7 +6,7 @@ namespace virtual_void::data {
 
 template <typename PTR, typename META>
 struct decorated_ptr : META {
-  PTR ptr_ = nullptr;
+  PTR ptr_;
 
   decorated_ptr() = default;
   decorated_ptr(const decorated_ptr&) = default;
@@ -20,10 +20,10 @@ struct decorated_ptr : META {
   }
 
   decorated_ptr(PTR v, const META& meta) : ptr_(v), META(meta) {}
-  template <is_virtual_void RHS>
-  decorated_ptr(RHS const& rhs)
-    requires(is_const_data<decorated_ptr> == is_const_data<RHS>)
-      : META(*get_meta(rhs)), ptr_(get_data(rhs)) {}
+  //template <is_virtual_void RHS>
+  //decorated_ptr(RHS const& rhs)
+  //  requires(is_const_data<decorated_ptr> == is_const_data<RHS>)
+  //    : META(*get_meta(rhs)), ptr_(rhs) {}
 
   friend void swap(decorated_ptr& lhs, decorated_ptr& rhs) noexcept {
     using namespace std;
