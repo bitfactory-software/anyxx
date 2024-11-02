@@ -10,15 +10,13 @@
 #include "virtual_void/data/has_type_info/unique.h"
 #include "virtual_void/data/has_type_info/value.h"
 
+#include "a.h"
+
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace ::virtual_void::data::has_type_info;
 using namespace TestDomain;
-
-struct A {
-  std::string s;
-};
 
 namespace {
 

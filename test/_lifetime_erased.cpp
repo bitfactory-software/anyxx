@@ -10,14 +10,12 @@
 #include "virtual_void/data/has_no_meta/unique.h"
 #include "virtual_void/data/has_no_meta/value.h"
 
+#include "a.h"
+
 using namespace Catch::Matchers;
 
 using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void;
-
-struct A {
-  std::string s;
-};
 
 namespace {
     template< typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER >
@@ -72,7 +70,7 @@ TEST_CASE("lifetime/unique") {
   }
   {
     auto u1 = erased_in_place<unique, A>("hallo");
-    REQUIRE(*reconcrete_cast<std::string>(u1) == "hallo");
+    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
   }
   {
     auto t1 = typed_unique<int>(1);
@@ -100,7 +98,7 @@ TEST_CASE("lifetime/shared_const") {
   }
   {
     auto u1 = erased_in_place<shared_const, A>("hallo");
-    REQUIRE(*reconcrete_cast<std::string>(u1) == "hallo");
+    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
   }
   {
     auto t1 = typed_shared_const<int>(1);

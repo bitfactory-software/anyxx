@@ -10,15 +10,13 @@
 #include "virtual_void/data/has_m_table/unique.h"
 #include "virtual_void/data/has_m_table/value.h"
 
+#include "a.h"
+
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace ::virtual_void::data::has_m_table;
 using namespace TestDomain;
-
-struct A {
-  std::string s;
-};
 
 namespace {
 
