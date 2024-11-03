@@ -147,11 +147,15 @@ auto unsafe_unerase_cast(VIRTUAL_VOID const& o)
 class type_mismatch_error : error {
   using error::error;
 };
-template <typename U, is_virtual_void VIRTUAL_VOID>
-void check_type_match(VIRTUAL_VOID const& o) {
-  if (auto type_info = get_meta(o)->type_info();
+template <typename U, typename META>
+void check_type_match(META const* meta) {
+  if (auto type_info = meta->type_info();
       type_info && *type_info != typeid(U))
     throw type_mismatch_error("type mismatch");
+}
+template <typename U, is_virtual_void VIRTUAL_VOID>
+void check_type_match(VIRTUAL_VOID const& o) {
+    check_type_match<U>(get_meta(o));
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {

@@ -182,6 +182,7 @@ TEST_CASE("has_type_info/unique_ptr") {
     REQUIRE(ptr->s == "hallo");
     auto u1 = erased<unique_ptr>(std::move(ptr));
     A const* a = unerase_cast<A>(u1);
+    REQUIRE_THROWS_AS(unerase_cast<std::string>(u1), type_mismatch_error);
     REQUIRE(unerase_cast<A>(u1)->s == "hallo");
     auto typed = as<A>(std::move(u1));
     REQUIRE(typed->s == "hallo");
