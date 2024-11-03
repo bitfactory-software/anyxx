@@ -40,6 +40,7 @@ TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
     function<std::string(const std::string)> f{functor};
+    data::has_no_meta::meta const* m = get_meta(*f);
     REQUIRE(unerase_cast<functor_t>(*f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");

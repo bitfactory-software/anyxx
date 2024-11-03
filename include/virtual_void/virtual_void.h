@@ -3,6 +3,7 @@
 #include <concepts>
 #include <type_traits>
 
+#include "error.h"
 #include "forward.h"
 
 namespace virtual_void {
@@ -133,20 +134,31 @@ auto get_meta(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::meta(vv);
 }
 
+class type_mismatch_error : error {
+  using error::error;
+};
+template <typename U, is_virtual_void VIRTUAL_VOID>
+void check_type_match(VIRTUAL_VOID const& o) {
+  if (auto type_info = get_meta(o)->type_info();
+      type_info && *type_info != typeid(U))
+    throw type_mismatch_error("type mismatch");
+}
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {
+  check_type_match<U>(o);
   return static_cast<U const*>(get_data(o));
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o)
   requires(!is_const_data<VIRTUAL_VOID>)
 {
+  check_type_match<U>(o);
   return static_cast<U*>(get_data(o));
 }
 
 template <typename V, is_virtual_void VIRTUAL_VOID>
 struct virtual_typed {
-  VIRTUAL_VOID data_;
+  VIRTUAL_VOID virtual_void_;
 
   using data_t = VIRTUAL_VOID;
   using trait_t = virtual_void_trait<VIRTUAL_VOID>;
@@ -164,54 +176,58 @@ struct virtual_typed {
   explicit virtual_typed(FROM&& from)
     requires(!std::same_as<std::decay_t<FROM>, virtual_typed> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : data_(trait_t::construct_in_place(std::in_place_type<V>,
-                                          std::forward<FROM>(from))) {}
+      : virtual_void_(trait_t::construct_in_place(std::in_place_type<V>,
+                                          std::forward<FROM>(from))) {
+    check_type_match<V>(virtual_void_);
+  }
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
-      : data_(trait_t::construct_in_place(std::in_place_type<V>,
-                                          std::forward<ARGS>(args)...)) {}
+      : virtual_void_(trait_t::construct_in_place(std::in_place_type<V>,
+                                          std::forward<ARGS>(args)...)) {
+    check_type_match<V>(virtual_void_);
+  }
 
-  explicit virtual_typed(VIRTUAL_VOID data) : data_(std::move(data)) {}
+  explicit virtual_typed(VIRTUAL_VOID data) : virtual_void_(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *static_cast<value_t*>(get_data(data_));
+    return *static_cast<value_t*>(get_data(virtual_void_));
   }
   value_t const* operator->() const {
-    return static_cast<value_t*>(get_data(data_));
+    return static_cast<value_t*>(get_data(virtual_void_));
   }
   value_t& operator*() const
     requires !is_const
   {
-    return *static_cast<value_t*>(get_data(data_));
+    return *static_cast<value_t*>(get_data(virtual_void_));
   }
   value_t* operator->() const
     requires !is_const
   {
-    return static_cast<value_t*>(get_data(data_));
+    return static_cast<value_t*>(get_data(virtual_void_));
   }
 };
 
 template <typename V, typename VIRTUAL_VOID>
 bool has_data(virtual_typed<V, VIRTUAL_VOID> const& vv) {
-  return has_data(vv.data_);
+  return has_data(vv.virtual_void_);
 }
 template <typename V, typename VIRTUAL_VOID>
 void const* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void const*,
                         typename virtual_void_trait<VIRTUAL_VOID>::void_t>
 {
-  return get_data(vv.data_);
+  return get_data(vv.virtual_void_);
 }
 template <typename V, typename VIRTUAL_VOID>
 void* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void*,
                         typename virtual_void_trait<VIRTUAL_VOID>::void_t>
 {
-  return get_data(vv.data_);
+  return get_data(vv.virtual_void_);
 }
 template <typename V, typename VIRTUAL_VOID>
 auto get_meta(virtual_typed<V, VIRTUAL_VOID> const& vv) {
-  return virtual_void_trait<VIRTUAL_VOID>::meta(vv.data_);
+  return virtual_void_trait<VIRTUAL_VOID>::meta(vv.virtual_void_);
 }
 
 template <typename V, is_virtual_void DATA>
@@ -224,9 +240,9 @@ auto as(virtual_typed<FROM, DATA> source)
   requires std::convertible_to<FROM*, TO*>
 {
   if constexpr (virtual_typed<FROM, DATA>::is_const) {
-    return virtual_typed<TO const, DATA>{std::move(source.data_)};
+    return virtual_typed<TO const, DATA>{std::move(source.virtual_void_)};
   } else {
-    return virtual_typed<TO, DATA>{std::move(source.data_)};
+    return virtual_typed<TO, DATA>{std::move(source.virtual_void_)};
   }
 }
 

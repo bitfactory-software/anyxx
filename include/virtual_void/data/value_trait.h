@@ -11,7 +11,7 @@ struct value_trait : virtual_void_default_unerase {
   template <typename V>
   using typed_t = data::decorated_data<V, META>;
   static void* value(const auto& ptr) { return ptr.get()->value(); }
-  static auto meta(const auto& ptr) { ptr.meta(); }
+  static auto meta(const auto& ptr) { return ptr.get()->get_meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
   template <typename V>
   static auto construct_from(V&& v) {
