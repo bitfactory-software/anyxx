@@ -7,8 +7,11 @@
 #include <utility>
 #include <vector>
 
-#include "virtual_void/any_dispatch/method.h"
+//#include "virtual_void/any_dispatch/method.h"
 #include "include/catch.hpp"
+
+import virtual_void;
+using namespace virtual_void;
 
 namespace {
 

@@ -8,15 +8,15 @@
 #include <utility>
 #include <vector>
 
-#include "../../include/std26/proxy.h"
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/open_method/algorithm.h"
 #include "virtual_void/open_method/via_m_table/declare.h"
 #include "virtual_void/typeid_cast/cast.h"
 #include "include/catch.hpp"
 
-using namespace virtual_void::data::has_m_table;
+//import virtual_void;
 using namespace virtual_void;
+using namespace virtual_void::data::has_m_table;
 
 namespace {
 

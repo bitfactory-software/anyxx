@@ -8,8 +8,9 @@
 
 #include "../include/std26/proxy.h"
 
-#include "virtual_void/data/has_type_info/observer.h"
-#include "virtual_void/open_method/via_type_info/declare.h"
+import virtual_void;
+using namespace virtual_void;
+
 #include "virtual_void/utillities/unnamed__.h"
 
 namespace

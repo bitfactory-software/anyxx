@@ -3,7 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "virtual_void/perfect_typeid_hash/index_table.h"
+import virtual_void;
+using namespace virtual_void;
+
 #include "include/catch.hpp"
 
 TEST_CASE("build perfect typeid hash index") {

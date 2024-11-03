@@ -5,6 +5,7 @@
 
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
+
 #include "virtual_void/data/has_m_table/observer.h"
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/data/has_m_table/unique.h"
@@ -16,6 +17,7 @@
 
 using namespace Catch::Matchers;
 
+//import virtual_void;
 using namespace virtual_void;
 using namespace ::virtual_void::data::has_m_table;
 using namespace TestDomain;

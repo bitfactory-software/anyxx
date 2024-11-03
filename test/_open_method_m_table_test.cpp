@@ -9,14 +9,17 @@
 #include "virtual_void/data/has_m_table/unique.h"
 #include "virtual_void/open_method/algorithm.h"
 #include "virtual_void/open_method/via_m_table/declare.h"
-#include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
+
+//import virtual_void;
+using namespace virtual_void;
+using namespace virtual_void::data::has_m_table;
+using namespace virtual_void::open_method::via_m_table;
+
+#include "class_hierarchy_test_hierarchy.h"
 
 namespace {
 
-using namespace ::virtual_void;
-using namespace ::virtual_void::data::has_m_table;
-using namespace ::virtual_void::open_method::via_m_table;
 using namespace TestDomain;
 
 auto ToString = [](const auto* t) -> std::string { return typeid(*t).name(); };

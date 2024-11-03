@@ -8,7 +8,7 @@
 //#include "virtual_void/data/has_no_meta/observer.h"
 //#include "virtual_void/data/has_no_meta/shared_const.h"
 #include "virtual_void/interface/declare_macro.h"
-import m1;
+import virtual_void;
 
 using namespace Catch::Matchers;
 

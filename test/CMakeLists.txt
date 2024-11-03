@@ -11,14 +11,6 @@ include_directories([SYSTEM] "D:/BitFactory/third_party_2024/vcpkg/installed/x64
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_library(virtual_void)
-# Add the module file to the library
-target_sources(virtual_void
-  PUBLIC
-    FILE_SET CXX_MODULES FILES
-    "virtual_void.cppm"
-)
-
 # Add source to this project's executable.
 add_executable (test "include/catch.cpp"
     "_class_hierarchy_test.cpp"

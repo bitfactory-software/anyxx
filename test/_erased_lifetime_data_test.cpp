@@ -4,18 +4,18 @@
 #include <string>
 #include <vector>
 
-#include "virtual_void/data/decorated_data.h"
-#include "virtual_void/data/has_no_meta/meta.h"
-#include "virtual_void/data/has_type_info/meta.h"
-#include "virtual_void/data/make_shared_const_decorated_data.h"
-#include "virtual_void/data/make_unique_decorated_data.h"
-#include "virtual_void/data/make_value_decorated_data.h"
-#include "virtual_void/virtual_void.h"
+//#include "virtual_void/data/decorated_data.h"
+//#include "virtual_void/data/has_no_meta/meta.h"
+//#include "virtual_void/data/has_type_info/meta.h"
+//#include "virtual_void/data/make_shared_const_decorated_data.h"
+//#include "virtual_void/data/make_unique_decorated_data.h"
+//#include "virtual_void/data/make_value_decorated_data.h"
+//#include "virtual_void/virtual_void.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
+import virtual_void;
 using namespace virtual_void;
 
 #define DATA_ALIGNED(T, META_DATA) data::decorated_data<T, META_DATA>

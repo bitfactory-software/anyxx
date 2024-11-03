@@ -16,6 +16,7 @@
 
 using namespace Catch::Matchers;
 
+//import virtual_void;
 using namespace virtual_void;
 using namespace ::virtual_void::data::has_type_info;
 using namespace TestDomain;
