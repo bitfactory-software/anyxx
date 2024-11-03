@@ -2,8 +2,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <concepts>
 
 #include "virtual_void/data/has_no_meta/observer.h"
+#include "virtual_void/data/has_no_meta/unique_ptr.h"
 #include "virtual_void/data/has_no_meta/value.h"
 #include "virtual_void/interface/call_operator.h"
 #include "virtual_void/interface/declare_macro.h"
@@ -17,6 +19,9 @@ using function = interface::call_operator<SIG, data::has_no_meta::value>;
 template <typename SIG>
 using ref_function =
     interface::call_operator<SIG, data::has_no_meta::mutable_observer>;
+template <typename SIG>
+using move_only_function =
+    interface::call_operator<SIG, data::has_no_meta::unique_ptr>;
 }  // namespace virtual_void
 
 using namespace virtual_void;
@@ -57,6 +62,18 @@ TEST_CASE("std emulated function") {
     auto func = [](auto s) { return s; };
     ref_function<std::string(const std::string)> f{func};
     REQUIRE(f("hello world") == "hello world");
+  }
+  {
+    move_only_function<std::string(const std::string)> f{std::make_unique<functor_t>("hello")};
+    REQUIRE(f(" world") == "hello");
+    REQUIRE(reconcrete_cast<functor_t>(*f)->s_ == "hello world");
+    static_assert(!std::assignable_from<
+        move_only_function<std::string(const std::string)>, 
+        move_only_function<std::string(const std::string)>>);
+    move_only_function<std::string(const std::string)> f2 = std::move(f); 
+    REQUIRE(!has_data(*f));
+    REQUIRE(f2(", bye") == "hello world");
+    REQUIRE(reconcrete_cast<functor_t>(*f2)->s_ == "hello world, bye");
   }
 }
 }  // namespace
