@@ -193,20 +193,20 @@ struct virtual_typed {
   explicit virtual_typed(VIRTUAL_VOID data) : virtual_void_(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *static_cast<value_t*>(get_data(virtual_void_));
+    return *unsafe_unerase_cast<value_t const>(virtual_void_);
   }
   value_t const* operator->() const {
-    return static_cast<value_t*>(get_data(virtual_void_));
+    return unsafe_unerase_cast<value_t const>(virtual_void_);
   }
   value_t& operator*() const
     requires !is_const
   {
-    return *static_cast<value_t*>(get_data(virtual_void_));
+    return *unsafe_unerase_cast<value_t>(virtual_void_);
   }
   value_t* operator->() const
     requires !is_const
   {
-    return static_cast<value_t*>(get_data(virtual_void_));
+    return unsafe_unerase_cast<value_t>(virtual_void_);
   }
 };
 
