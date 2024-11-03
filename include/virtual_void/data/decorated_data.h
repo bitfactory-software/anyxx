@@ -34,22 +34,22 @@ void const* decoration_base<META_DATA>::value() const {
 };
 
 template <typename TO, typename META_DATA>
-TO const* unsafe_unerase_cast(decoration_base<META_DATA> const& holded) {
+TO const* unchecked_unerase_cast(decoration_base<META_DATA> const& holded) {
   return static_cast<TO const*>(holded.value());
 }
 template <typename TO, typename META_DATA>
-TO* unsafe_unerase_cast(decoration_base<META_DATA>& holded) {
+TO* unchecked_unerase_cast(decoration_base<META_DATA>& holded) {
   return static_cast<TO*>(holded.value());
 }
 template <typename TO, typename META_DATA>
 TO const* unerase_cast(decoration_base<META_DATA> const& holded) {
   check_type_match<TO>(holded.get_meta());
-  return unsafe_unerase_cast<TO>(holded);
+  return unchecked_unerase_cast<TO>(holded);
 }
 template <typename TO, typename META_DATA>
 TO* unerase_cast(decoration_base<META_DATA>& holded) {
   check_type_match<TO>(holded.get_meta());
-  return unsafe_unerase_cast<TO>(holded);
+  return unchecked_unerase_cast<TO>(holded);
 }
 
 }  // namespace virtual_void::data

@@ -153,11 +153,11 @@ auto get_meta(VIRTUAL_VOID const& vv) {
 }
 
 template <typename U, is_virtual_void VIRTUAL_VOID>
-auto unsafe_unerase_cast(VIRTUAL_VOID const& o) {
+auto unchecked_unerase_cast(VIRTUAL_VOID const& o) {
   return static_cast<U const*>(get_data(o));
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
-auto unsafe_unerase_cast(VIRTUAL_VOID const& o)
+auto unchecked_unerase_cast(VIRTUAL_VOID const& o)
   requires(!is_const_data<VIRTUAL_VOID>)
 {
   return static_cast<U*>(get_data(o));
@@ -178,7 +178,7 @@ void check_type_match(VIRTUAL_VOID const& o) {
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {
   check_type_match<U>(o);
-  return unsafe_unerase_cast<U>(o);
+  return unchecked_unerase_cast<U>(o);
 }
 
 template <typename V, is_virtual_void VIRTUAL_VOID>
@@ -215,20 +215,20 @@ struct virtual_typed {
   explicit virtual_typed(VIRTUAL_VOID data) : virtual_void_(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *unsafe_unerase_cast<value_t const>(virtual_void_);
+    return *unchecked_unerase_cast<value_t const>(virtual_void_);
   }
   value_t const* operator->() const {
-    return unsafe_unerase_cast<value_t const>(virtual_void_);
+    return unchecked_unerase_cast<value_t const>(virtual_void_);
   }
   value_t& operator*() const
     requires !is_const
   {
-    return *unsafe_unerase_cast<value_t>(virtual_void_);
+    return *unchecked_unerase_cast<value_t>(virtual_void_);
   }
   value_t* operator->() const
     requires !is_const
   {
-    return unsafe_unerase_cast<value_t>(virtual_void_);
+    return unchecked_unerase_cast<value_t>(virtual_void_);
   }
 };
 
