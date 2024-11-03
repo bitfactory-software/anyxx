@@ -134,6 +134,16 @@ auto get_meta(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::meta(vv);
 }
 
+template <typename U, is_virtual_void VIRTUAL_VOID>
+auto unsafe_unerase_cast(VIRTUAL_VOID const& o) {
+  return static_cast<U const*>(get_data(o));
+}
+template <typename U, is_virtual_void VIRTUAL_VOID>
+auto unsafe_unerase_cast(VIRTUAL_VOID const& o)
+  requires(!is_const_data<VIRTUAL_VOID>)
+{
+  return static_cast<U*>(get_data(o));
+}
 class type_mismatch_error : error {
   using error::error;
 };
@@ -146,14 +156,7 @@ void check_type_match(VIRTUAL_VOID const& o) {
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {
   check_type_match<U>(o);
-  return static_cast<U const*>(get_data(o));
-}
-template <typename U, is_virtual_void VIRTUAL_VOID>
-auto unerase_cast(VIRTUAL_VOID const& o)
-  requires(!is_const_data<VIRTUAL_VOID>)
-{
-  check_type_match<U>(o);
-  return static_cast<U*>(get_data(o));
+  return unsafe_unerase_cast<U>(o);
 }
 
 template <typename V, is_virtual_void VIRTUAL_VOID>
