@@ -3,15 +3,15 @@
 #include <string>
 #include <vector>
 
+#include "a.h"
 #include "include/catch.hpp"
 #include "virtual_void/data/has_no_meta/meta.h"
 #include "virtual_void/data/has_no_meta/observer.h"
 #include "virtual_void/data/has_no_meta/shared_const.h"
 #include "virtual_void/data/has_no_meta/shared_const_ptr.h"
 #include "virtual_void/data/has_no_meta/unique.h"
+#include "virtual_void/data/has_no_meta/unique_ptr.h"
 #include "virtual_void/data/has_no_meta/value.h"
-
-#include "a.h"
 
 using namespace Catch::Matchers;
 
@@ -190,4 +190,19 @@ TEST_CASE("lifetime/shared_const_ptr") {
     REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
   }
 }
+//TEST_CASE("lifetime/unique_ptr") {
+//  {
+//    auto ptr = std::make_unique<A>("hallo");
+//    REQUIRE(ptr->s == "hallo");
+//    unique_ptr up1 =
+//        virtual_void_trait<unique_ptr>::construct_from(std::move(ptr));
+//  }
+//  {
+//    auto ptr = std::make_unique<A>("hallo");
+//    REQUIRE(ptr->s == "hallo");
+//    auto u1 = erased<shared_const_ptr>(ptr);
+//    A const* a = reconcrete_cast<A>(u1);
+//    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
+//  }
+//}
 }  // namespace

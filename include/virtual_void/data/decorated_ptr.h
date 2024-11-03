@@ -19,7 +19,7 @@ struct decorated_ptr : META {
     return *this;
   }
 
-  decorated_ptr(PTR v, const META& meta) : ptr_(v), META(meta) {}
+  decorated_ptr(PTR ptr, const META& meta) : ptr_(std::move(ptr)), META(meta) {}
   //template <is_virtual_void RHS>
   //decorated_ptr(RHS const& rhs)
   //  requires(is_const_data<decorated_ptr> == is_const_data<RHS>)

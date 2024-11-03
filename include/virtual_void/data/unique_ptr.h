@@ -5,5 +5,5 @@
 
 namespace virtual_void::data {
 template <typename META>
-using unique_ptr = decorated_ptr<erased_unique_ptr<void>, META>;
-}  // namespace virtual_void::data#pragma once
+using unique_ptr = decorated_ptr<void_erased_unique_ptr, META>;
+}  // namespace virtual_void::data

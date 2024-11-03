@@ -1,4 +1,5 @@
 #include <string>
+#include "virtual_void/forward.h"
 
 struct A {
   A(const std::string sp) : s(sp) {}
