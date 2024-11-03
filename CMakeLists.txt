@@ -1,21 +1,28 @@
-﻿# CMakeList.txt : Top-level CMake project file, do global configuration
-# and include sub-projects here.
-#
-cmake_minimum_required (VERSION 3.8)
-
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
-endif()
-
+﻿cmake_minimum_required(VERSION 3.28)
 if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
 include_directories( "./include" )
 
-project ("virtual_void" CXX)
-
-# Include sub-projects.
+project(virtual_void CXX)
 add_subdirectory ("test")
+
+
+# Turning off extensions avoids an issue with the clang 16 compiler
+# clang 17 and greater can avoid this setting
+set(CMAKE_CXX_EXTENSIONS OFF)
+# Set the version of C++ for the project
+set(CMAKE_CXX_STANDARD 20)
+# Create a library
+add_library(foo)
+# Add the module file to the library
+target_sources(foo
+  PUBLIC
+    FILE_SET CXX_MODULES FILES
+      foo.cppm
+)
+# Create an executable
+add_executable(hello main.cxx)
+# Link to the library foo
+target_link_libraries(hello foo)

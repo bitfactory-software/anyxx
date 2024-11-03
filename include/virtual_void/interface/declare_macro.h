@@ -8,8 +8,6 @@
 // /Zc:preprocessor (see CMakeLists.txt for example)
 //
 
-#include "base.h"
-
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))

@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 
+#include "virtual_void/interface/base.h"
 #include "virtual_void/data/has_no_meta/value.h"
 #include "virtual_void/data/has_type_info/observer.h"
 #include "virtual_void/interface/declare_macro.h"

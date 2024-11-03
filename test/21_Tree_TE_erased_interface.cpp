@@ -7,6 +7,7 @@
 
 #include "include/catch.hpp"
 // #include "virtual_void/data/has_no_meta/shared_const.h"
+#include "virtual_void/interface/base.h"
 #include "virtual_void/data/has_no_meta/shared_const_ptr.h"
 #include "virtual_void/data/make_shared_const_decorated_data.h"
 #include "virtual_void/interface/declare_macro.h"
