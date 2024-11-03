@@ -203,6 +203,8 @@ TEST_CASE("lifetime/unique_ptr") {
     auto u1 = erased<unique_ptr>(std::move(ptr));
     A const* a = unerase_cast<A>(u1);
     REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    auto typed = as<A>(std::move(u1));
+    REQUIRE(typed->s == "hallo");
   }
 }
 }  // namespace
