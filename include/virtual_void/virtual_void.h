@@ -110,34 +110,34 @@ auto unerase() {
   }
 }
 
-template <typename VIRTUAL_VOID>
+template <is_virtual_void VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::has_value(vv);
 }
-template <typename VIRTUAL_VOID>
+template <is_virtual_void VIRTUAL_VOID>
 void const* get_data(VIRTUAL_VOID const& vv)
   requires std::same_as<void const*,
                         typename virtual_void_trait<VIRTUAL_VOID>::void_t>
 {
   return virtual_void_trait<VIRTUAL_VOID>::value(vv);
 }
-template <typename VIRTUAL_VOID>
+template <is_virtual_void VIRTUAL_VOID>
 void* get_data(VIRTUAL_VOID const& vv)
   requires std::same_as<void*,
                         typename virtual_void_trait<VIRTUAL_VOID>::void_t>
 {
   return virtual_void_trait<VIRTUAL_VOID>::value(vv);
 }
-template <typename VIRTUAL_VOID>
+template <is_virtual_void VIRTUAL_VOID>
 auto get_meta(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::meta(vv);
 }
 
-template <typename U, typename VIRTUAL_VOID>
+template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {
   return static_cast<U const*>(get_data(o));
 }
-template <typename U, typename VIRTUAL_VOID>
+template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o)
   requires(!is_const_data<VIRTUAL_VOID>)
 {
