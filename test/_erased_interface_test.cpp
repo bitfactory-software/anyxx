@@ -199,7 +199,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   auto& c1 = sc;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   static_assert(
-      std::same_as<data::has_m_table::typed_shared_const<circle>::data_t,
+      std::same_as<data::has_m_table::typed_shared_const<circle>::virtual_void_t,
                    data::has_m_table::shared_const>);
   static_assert(is_virtual_typed<decltype(sc)>);
   shape_vv circle_shape_vv{sc};

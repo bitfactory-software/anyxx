@@ -30,7 +30,7 @@ concept is_virtual_void = has_virtual_void_trait<E>;
 template <class E>
 concept is_virtual_typed = requires(E e) {
   typename E::void_t;
-  typename E::data_t;
+  typename E::virtual_void_t;
   typename E::trait_t;
   //  typename E::make_erased;
   // typename E::trait_t;
@@ -160,7 +160,7 @@ template <typename V, is_virtual_void VIRTUAL_VOID>
 struct virtual_typed {
   VIRTUAL_VOID virtual_void_;
 
-  using data_t = VIRTUAL_VOID;
+  using virtual_void_t = VIRTUAL_VOID;
   using trait_t = virtual_void_trait<VIRTUAL_VOID>;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
