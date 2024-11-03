@@ -15,7 +15,7 @@ endif()
 
 include_directories( "./include" )
 
-project ("virtual_void")
+project ("virtual_void" CXX)
 
 # Include sub-projects.
 add_subdirectory ("test")
