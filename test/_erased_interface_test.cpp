@@ -203,7 +203,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
                    data::has_m_table::shared_const>);
   static_assert(is_virtual_typed<decltype(sc)>);
   shape_vv circle_shape_vv{sc};
-  auto unerased_circle = reconcrete_cast<circle const>(*circle_shape_vv);
+  auto unerased_circle = unerase_cast<circle const>(*circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
   {
@@ -231,11 +231,11 @@ TEST_CASE("base") {
   {
     x_t a{"hallo"};
     auto e = erased<value>(a);
-    REQUIRE(reconcrete_cast<x_t>(e)->s_ == "hallo");
+    REQUIRE(unerase_cast<x_t>(e)->s_ == "hallo");
   }
   {
     x_t a{"hallo"};
     value_base vb(a);
-    REQUIRE(reconcrete_cast<x_t>(*vb)->s_ == "hallo");
+    REQUIRE(unerase_cast<x_t>(*vb)->s_ == "hallo");
   }
 }

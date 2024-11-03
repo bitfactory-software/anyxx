@@ -28,34 +28,34 @@ TEST_CASE("has_type_info/lifetime/observer") {
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(get_meta(mo)->type_info() == &typeid(std::string));
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
+  REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");
   static_assert(
       std::same_as<typed_mutable_observer<std::string>::value_t, std::string>);
   static_assert(std::same_as<typed_const_observer<std::string const>::value_t,
                              std::string const>);
   auto co = erased<const_observer>(s);
-  REQUIRE(*reconcrete_cast<const std::string>(co) == "hallo");
+  REQUIRE(*unerase_cast<const std::string>(co) == "hallo");
   {
-    REQUIRE(*reconcrete_cast<const std::string>(mo) == "hallo");
+    REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");
     auto tmo = as<std::string>(std::move(mo));
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
-    REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
+    REQUIRE(*unerase_cast<const std::string>(co) == "world");
   }
   {
     mo = erased<mutable_observer>(s);
-    REQUIRE(*reconcrete_cast<const std::string>(mo) == "world");
-    *reconcrete_cast<std::string>(mo) = "hallo";
+    REQUIRE(*unerase_cast<const std::string>(mo) == "world");
+    *unerase_cast<std::string>(mo) = "hallo";
     REQUIRE(s == "hallo");
     auto tmo = as<std::string>(mo);
-    REQUIRE(*reconcrete_cast<std::string>(mo) == "hallo");
+    REQUIRE(*unerase_cast<std::string>(mo) == "hallo");
     REQUIRE(has_data(mo));
     REQUIRE(*tmo == "hallo");
     *tmo = "world";
     REQUIRE(s == "world");
-    REQUIRE(*reconcrete_cast<const std::string>(co) == "world");
-    REQUIRE(*reconcrete_cast<std::string>(mo) == "world");
+    REQUIRE(*unerase_cast<const std::string>(co) == "world");
+    REQUIRE(*unerase_cast<std::string>(mo) == "world");
   }
   // auto tmo2 = typed_observer< std::string * >{ co }; // shall not
   // compile
@@ -83,7 +83,7 @@ TEST_CASE("has_type_info/lifetime/shared_const") {
 
 TEST_CASE("has_type_info/lifetime/unique") {
   auto c1 = erased_in_place<unique, C>("unique c1");
-  REQUIRE(reconcrete_cast<C>(c1)->data == "unique c1");
+  REQUIRE(unerase_cast<C>(c1)->data == "unique c1");
   auto c2 = typed_unique<C>(std::in_place, "unique c2");
   REQUIRE(c2->data == "unique c2");
   auto c3 = typed_unique<C>(C{"unique c3"});
@@ -100,23 +100,23 @@ TEST_CASE("has_type_info/lifetime/unique") {
 TEST_CASE("has_type_info/lifetime/value") {
   {
     auto u1 = erased<value>(1);
-    REQUIRE(*reconcrete_cast<int>(u1) == 1);
+    REQUIRE(*unerase_cast<int>(u1) == 1);
   }
   {
     auto u1 = erased<value>(A{"hallo"});
     auto& u1cr = u1;
-    auto a = reconcrete_cast<A>(u1);
+    auto a = unerase_cast<A>(u1);
     REQUIRE(a->s == "hallo");
-    auto a1 = reconcrete_cast<A>(u1cr);
+    auto a1 = unerase_cast<A>(u1cr);
     REQUIRE(a1->s == "hallo");
-    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
+    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
     auto u2 = u1;
-    REQUIRE(reconcrete_cast<A>(u1)->s.data() !=
-            reconcrete_cast<A>(u2)->s.data());
-    REQUIRE(reconcrete_cast<A>(u2)->s == "hallo");
-    reconcrete_cast<A>(u2)->s = "world";
-    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
-    REQUIRE(reconcrete_cast<A>(u2)->s == "world");
+    REQUIRE(unerase_cast<A>(u1)->s.data() !=
+            unerase_cast<A>(u2)->s.data());
+    REQUIRE(unerase_cast<A>(u2)->s == "hallo");
+    unerase_cast<A>(u2)->s = "world";
+    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    REQUIRE(unerase_cast<A>(u2)->s == "world");
   }
   {
     auto v1 = typed_value<std::string>("hallo");
@@ -147,7 +147,7 @@ TEST_CASE("has_type_info/lifetime/value") {
   {
     std::string a = "hallo";
     auto t1 = erased<value>(a);
-    REQUIRE(*reconcrete_cast<std::string>(t1) == "hallo");
+    REQUIRE(*unerase_cast<std::string>(t1) == "hallo");
   }
   {
     struct x_t {
@@ -155,7 +155,7 @@ TEST_CASE("has_type_info/lifetime/value") {
     };
     x_t a{"hallo"};
     auto t1 = erased<value>(a);
-    REQUIRE(reconcrete_cast<x_t>(t1)->s_ == "hallo");
+    REQUIRE(unerase_cast<x_t>(t1)->s_ == "hallo");
   }
 }
 TEST_CASE("has_type_info/shared_const_ptr") {
@@ -165,8 +165,8 @@ TEST_CASE("has_type_info/shared_const_ptr") {
     shared_const_ptr sp1 =
         virtual_void_trait<shared_const_ptr>::construct_from(ptr);
     auto u1 = erased<shared_const_ptr>(ptr);
-    A const* a = reconcrete_cast<A>(u1);
-    REQUIRE(reconcrete_cast<A>(u1)->s == "hallo");
+    A const* a = unerase_cast<A>(u1);
+    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
   }
 }
 }  // namespace

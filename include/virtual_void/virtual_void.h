@@ -134,11 +134,11 @@ auto get_meta(VIRTUAL_VOID const& vv) {
 }
 
 template <typename U, typename DATA>
-auto reconcrete_cast(DATA const& o) {
+auto unerase_cast(DATA const& o) {
   return static_cast<U const*>(get_data(o));
 }
 template <typename U, typename DATA>
-auto reconcrete_cast(DATA const& o)
+auto unerase_cast(DATA const& o)
   requires(!is_const_data<DATA>)
 {
   return static_cast<U*>(get_data(o));

@@ -36,7 +36,7 @@ TEST_CASE("interface lifetime cast") {
   // std::add_const_t<void*>);
 
   auto o1 = *sc;
-  auto x = reconcrete_cast<X>(o1);
+  auto x = unerase_cast<X>(o1);
   auto x1 = static_cast<X const *>(get_data(*sc));
   REQUIRE(x->s_ == "hallo");
 
