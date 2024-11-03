@@ -2,7 +2,7 @@
 
 #include <typeindex>
 
-#include "../../forward.h"
+#include "../../virtual_void.h"
 #include "../domain.h"
 #include "../table.h"
 

@@ -2,11 +2,29 @@
 
 #include <concepts>
 #include <type_traits>
-
-#include "error.h"
-#include "forward.h"
+#include <typeinfo>
+#include <stdexcept>
 
 namespace virtual_void {
+
+using type_info_ptr = std::type_info const*;
+
+template <typename>
+struct self_pointer;
+template <>
+struct self_pointer<void*> {
+  template <typename CLASS>
+  using type = CLASS*;
+};
+template <>
+struct self_pointer<const void*> {
+  template <typename CLASS>
+  using type = const CLASS*;
+};
+
+class error : public std::runtime_error {
+  using std::runtime_error::runtime_error;
+};
 
 template <class BASE, class DERIVED>
 concept base_of = std::derived_from<DERIVED, BASE>;

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../../virtual_void.h"
+#include "../../utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.h"
+
 
 namespace virtual_void::data::has_no_meta {
 

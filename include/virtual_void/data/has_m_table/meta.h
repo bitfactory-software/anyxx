@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../../forward.h"
+#include "../../virtual_void.h"
+#include "../../utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.h"
 #include "m_table.h"
 
 namespace virtual_void::data::has_m_table {
