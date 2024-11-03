@@ -133,13 +133,13 @@ auto get_meta(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::meta(vv);
 }
 
-template <typename U, typename DATA>
-auto unerase_cast(DATA const& o) {
+template <typename U, typename VIRTUAL_VOID>
+auto unerase_cast(VIRTUAL_VOID const& o) {
   return static_cast<U const*>(get_data(o));
 }
-template <typename U, typename DATA>
-auto unerase_cast(DATA const& o)
-  requires(!is_const_data<DATA>)
+template <typename U, typename VIRTUAL_VOID>
+auto unerase_cast(VIRTUAL_VOID const& o)
+  requires(!is_const_data<VIRTUAL_VOID>)
 {
   return static_cast<U*>(get_data(o));
 }
