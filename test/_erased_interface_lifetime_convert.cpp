@@ -3,12 +3,15 @@
 #include <string>
 #include <vector>
 
+#include "include/catch.hpp"
 #include "virtual_void/data/has_no_meta/observer.h"
 #include "virtual_void/data/has_no_meta/shared_const.h"
 #include "virtual_void/interface/declare_macro.h"
-#include "include/catch.hpp"
+// import m1;
 
 using namespace Catch::Matchers;
+
+//TEST_CASE("module interface") { REQUIRE(hello_world() == "hello world"); }
 
 using namespace virtual_void;
 
@@ -25,8 +28,8 @@ using to_string_co = to_string_i<data::has_no_meta::const_observer>;
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{X{"hallo"}};
   REQUIRE(sc.to_string() == "hallo");
-  REQUIRE(sc.is_derived_from<
-          interface::base<data::has_no_meta::shared_const>>());
+  REQUIRE(
+      sc.is_derived_from<interface::base<data::has_no_meta::shared_const>>());
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const *>>, void>);
@@ -43,5 +46,6 @@ TEST_CASE("interface lifetime cast") {
   to_string_co co = sc;
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
-  REQUIRE(co.is_derived_from<interface::base<data::has_no_meta::const_observer>>());
+  REQUIRE(
+      co.is_derived_from<interface::base<data::has_no_meta::const_observer>>());
 }

@@ -271,4 +271,4 @@ auto as(virtual_typed<FROM, DATA> source)
   }
 }
 
-}  // namespace virtual_void
+}  // VIRTUAL_VOID_EXPORT namespace virtual_void

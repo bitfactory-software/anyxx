@@ -18,9 +18,6 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void;
 
-namespace virtual_void::data {
-}  // namespace virtual_void::data
-
 #define DATA_ALIGNED(T, META_DATA) data::decorated_data<T, META_DATA>
 
 #define ASSERT_OFFSET_EMPTY(T, o)                                             \
