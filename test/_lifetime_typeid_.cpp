@@ -10,6 +10,7 @@
 #include "virtual_void/data/has_type_info/unique.h"
 #include "virtual_void/data/has_type_info/value.h"
 #include "virtual_void/data/has_type_info/shared_const_ptr.h"
+#include "virtual_void/data/has_type_info/unique_ptr.h"
 
 #include "a.h"
 
@@ -167,6 +168,23 @@ TEST_CASE("has_type_info/shared_const_ptr") {
     auto u1 = erased<shared_const_ptr>(ptr);
     A const* a = unerase_cast<A>(u1);
     REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+  }
+}
+TEST_CASE("has_type_info/unique_ptr") {
+  {
+    auto ptr = std::make_unique<A>("hallo");
+    REQUIRE(ptr->s == "hallo");
+    unique_ptr up1 =
+        virtual_void_trait<unique_ptr>::construct_from(std::move(ptr));
+  }
+  {
+    auto ptr = std::make_unique<A>("hallo");
+    REQUIRE(ptr->s == "hallo");
+    auto u1 = erased<unique_ptr>(std::move(ptr));
+    A const* a = unerase_cast<A>(u1);
+    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    auto typed = as<A>(std::move(u1));
+    REQUIRE(typed->s == "hallo");
   }
 }
 }  // namespace
