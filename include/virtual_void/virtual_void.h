@@ -61,7 +61,7 @@ template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
     (const_correct_for_virtual_void_data<VOID, VIRTUAL_VOID>);
 
-template <typename V, typename DATA>
+template <typename V, is_virtual_void DATA>
 struct virtual_typed;
 
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
@@ -144,12 +144,12 @@ auto unerase_cast(VIRTUAL_VOID const& o)
   return static_cast<U*>(get_data(o));
 }
 
-template <typename V, typename DATA>
+template <typename V, is_virtual_void VIRTUAL_VOID>
 struct virtual_typed {
-  DATA data_;
+  VIRTUAL_VOID data_;
 
-  using data_t = DATA;
-  using trait_t = virtual_void_trait<DATA>;
+  using data_t = VIRTUAL_VOID;
+  using trait_t = virtual_void_trait<VIRTUAL_VOID>;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
@@ -171,7 +171,7 @@ struct virtual_typed {
       : data_(trait_t::construct_in_place(std::in_place_type<V>,
                                           std::forward<ARGS>(args)...)) {}
 
-  explicit virtual_typed(DATA data) : data_(std::move(data)) {}
+  explicit virtual_typed(VIRTUAL_VOID data) : data_(std::move(data)) {}
 
   value_t const& operator*() const {
     return *static_cast<value_t*>(get_data(data_));
