@@ -4,14 +4,14 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "virtual_void/data/has_m_table/observer.h"
-#include "virtual_void/data/has_m_table/shared_const.h"
-#include "virtual_void/data/has_m_table/unique.h"
-#include "virtual_void/open_method/algorithm.h"
-#include "virtual_void/open_method/via_m_table/declare.h"
+//#include "virtual_void/data/has_m_table/observer.h"
+//#include "virtual_void/data/has_m_table/shared_const.h"
+//#include "virtual_void/data/has_m_table/unique.h"
+//#include "virtual_void/open_method/algorithm.h"
+//#include "virtual_void/open_method/via_m_table/declare.h"
 #include "include/catch.hpp"
 
-//import virtual_void;
+import virtual_void;
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;
 using namespace virtual_void::open_method::via_m_table;

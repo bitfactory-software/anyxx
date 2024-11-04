@@ -5,9 +5,11 @@
 #include <iostream>
 #include <string>
 
-#include "virtual_void/any_dispatch/method.h"
+//#include "virtual_void/any_dispatch/method.h"
 #include "virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
+
+import virtual_void;
 
 using std::cout;
 using std::string;

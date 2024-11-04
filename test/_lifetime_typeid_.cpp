@@ -5,18 +5,18 @@
 
 #include "class_hierarchy_test_hierarchy.h"
 #include "include/catch.hpp"
-#include "virtual_void/data/has_type_info/observer.h"
-#include "virtual_void/data/has_type_info/shared_const.h"
-#include "virtual_void/data/has_type_info/unique.h"
-#include "virtual_void/data/has_type_info/value.h"
-#include "virtual_void/data/has_type_info/shared_const_ptr.h"
-#include "virtual_void/data/has_type_info/unique_ptr.h"
+//#include "virtual_void/data/has_type_info/observer.h"
+//#include "virtual_void/data/has_type_info/shared_const.h"
+//#include "virtual_void/data/has_type_info/unique.h"
+//#include "virtual_void/data/has_type_info/value.h"
+//#include "virtual_void/data/has_type_info/shared_const_ptr.h"
+//#include "virtual_void/data/has_type_info/unique_ptr.h"
 
 #include "a.h"
 
 using namespace Catch::Matchers;
 
-//import virtual_void;
+import virtual_void;
 using namespace virtual_void;
 using namespace ::virtual_void::data::has_type_info;
 using namespace TestDomain;

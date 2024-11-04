@@ -5,13 +5,14 @@
 #include <memory>
 #include <string>
 
-#include "virtual_void/open_method/via_type_info/declare.h"
+//#include "virtual_void/open_method/via_type_info/declare.h"
 #include "virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 
 using std::cout;
 using std::string;
 
+import virtual_void;
 using namespace virtual_void;
 
 namespace {

@@ -6,13 +6,13 @@
 
 #include "include/catch.hpp"
 
-#include "virtual_void/data/has_type_info/observer.h"
-#include "virtual_void/open_method/via_type_info/declare.h"
-#include "virtual_void/open_method/algorithm.h"
+//#include "virtual_void/data/has_type_info/observer.h"
+//#include "virtual_void/open_method/via_type_info/declare.h"
+//#include "virtual_void/open_method/algorithm.h"
 
 #include "class_hierarchy_test_hierarchy.h"
 
-//import virtual_void;
+import virtual_void;
 using namespace virtual_void;
 using namespace virtual_void::data::has_type_info;
 

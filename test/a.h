@@ -1,5 +1,5 @@
 #include <string>
-#include "virtual_void/virtual_void.h"
+//#include "virtual_void/virtual_void.h"
 #include "virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.h"
 
 struct A {
