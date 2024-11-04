@@ -8,13 +8,13 @@
 #include <utility>
 #include <vector>
 
-#include "virtual_void/data/has_m_table/shared_const.h"
-#include "virtual_void/open_method/algorithm.h"
-#include "virtual_void/open_method/via_m_table/declare.h"
-#include "virtual_void/typeid_cast/cast.h"
+//#include "virtual_void/data/has_m_table/shared_const.h"
+//#include "virtual_void/open_method/algorithm.h"
+//#include "virtual_void/open_method/via_m_table/declare.h"
+//#include "virtual_void/typeid_cast/cast.h"
 #include "include/catch.hpp"
 
-//import virtual_void;
+import virtual_void;
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;
 
@@ -139,10 +139,10 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
       std::cout << "error: " << e.what() << std::endl;
     }
 
-    // cast back from erased -> "unerase"
-    if (auto stringData = virtual_void::typeid_cast::cast_to<const StringData>(
-            typeid_const_cast, e))
-      std::cout << "stringData: " << stringData->data << std::endl;
+    //// cast back from erased -> "unerase"
+    //if (auto stringData = virtual_void::typeid_cast::cast_to<const StringData>(
+    //        typeid_const_cast, e))
+    //  std::cout << "stringData: " << stringData->data << std::endl;
   });
 }
 
