@@ -1,7 +1,7 @@
 #pragma once
 
-//#include "virtual_void/class_hierarchy/class_hierarchy.h"
-import virtual_void;
+#include "virtual_void/class_hierarchy/class_hierarchy.h"
+//import virtual_void;
 
 namespace TestDomain {
 struct A1 {

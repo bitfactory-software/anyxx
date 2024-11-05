@@ -5,11 +5,11 @@
 #include <iostream>
 #include <string>
 
-//#include "virtual_void/any_dispatch/method_typeid_hash.h"
+#include "virtual_void/any_dispatch/method_typeid_hash.h"
 #include "virtual_void/utillities/unnamed__.h"
 #include "include/catch.hpp"
 
-import virtual_void;
+//import virtual_void;
 
 using std::cout;
 using std::string;
