@@ -6,7 +6,7 @@
 #include <string>
 
 #include "include/catch.hpp"
-// #include "virtual_void/data/has_no_meta/shared_const.h"
+#include "virtual_void/data/has_no_meta/shared_const.h"
 #include "virtual_void/interface/base.h"
 #include "virtual_void/data/has_no_meta/shared_const_ptr.h"
 #include "virtual_void/data/make_shared_const_decorated_data.h"
@@ -15,10 +15,12 @@
 using std::cout;
 using std::string;
 
-namespace {
-
+//import virtual_void;
 using namespace virtual_void;
 using namespace virtual_void::data::has_no_meta;
+
+namespace {
+
 
 ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value),
                           INTERFACE_CONST_METHOD(string, as_forth),

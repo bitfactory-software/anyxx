@@ -2,6 +2,7 @@
 
 #include "../data/has_type_info/observer.h"
 #include "../open_method/algorithm.h"
+#include "../virtual_void.h"
 
 namespace virtual_void::typeid_cast {
 
@@ -42,7 +43,7 @@ struct cast_implementation {
 };
 template <template <typename SIG> typename OPEN_METHOD>
 using const_cast_method =
-    OPEN_METHOD<const void*(const void*, const std::type_info& to)>;
+    OPEN_METHOD<void const* (void const*, const std::type_info& to)>;
 template <template <typename SIG> typename OPEN_METHOD>
 using cast_method = OPEN_METHOD<void*(const void*, const std::type_info& to)>;
 void fill_const_cast_for(auto classes, auto& method) {
@@ -61,7 +62,7 @@ void fill_cast_for(auto& method) {
   fill_cast_for(type_list<CLASSES...>{}, method);
 }
 template <typename TO>
-auto cast_to(const auto& cast, const auto& from) {
+auto cast_to(const auto& cast, is_virtual_void auto const& from) {
   if (auto void_ = cast(from, typeid(std::remove_const_t<TO>)))
     return static_cast<TO*>(void_);
   return static_cast<TO*>(nullptr);

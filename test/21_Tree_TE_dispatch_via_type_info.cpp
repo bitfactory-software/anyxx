@@ -12,6 +12,7 @@
 using std::cout;
 using std::string;
 
+//import virtual_void;
 using namespace virtual_void;
 
 namespace {

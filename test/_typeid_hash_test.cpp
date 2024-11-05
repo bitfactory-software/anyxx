@@ -3,8 +3,9 @@
 #include <string>
 #include <vector>
 
-import virtual_void;
-using namespace virtual_void;
+//import virtual_void;
+
+#include "virtual_void/perfect_typeid_hash/index_table.h"
 
 #include "include/catch.hpp"
 

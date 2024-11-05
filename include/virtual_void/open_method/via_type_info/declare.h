@@ -2,9 +2,9 @@
 
 #include <typeindex>
 
+#include "../../data/has_type_info/observer.h"
 #include "../../utillities/ensure_function_ptr.h"
 #include "../../utillities/overload.h"
-#include "../../data/has_type_info/observer.h"
 #include "declaration_base.h"
 
 namespace virtual_void::open_method::via_type_info {
@@ -37,8 +37,10 @@ class declare<R(ARGS...)> : public declaration_base {
     auto f = lookup<erased_function_t>(type_info);
     return f(dispatched, std::forward<OTHER_ARGS>(args)...);
   }
-  template <typename... OTHER_ARGS>
-  R operator()(const param_t& param, OTHER_ARGS&&... args) const {
+  template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
+  R operator()(const VIRTUAL_VOID& param, OTHER_ARGS&&... args) const
+//    requires const_correct_for_virtual_void<dispatch_t, VIRTUAL_VOID>
+  {
     return (*this)(*get_meta(param)->type_info(), get_data(param),
                    std::forward<OTHER_ARGS>(args)...);
   }

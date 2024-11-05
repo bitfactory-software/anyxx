@@ -3,7 +3,8 @@
 #include <string>
 #include <vector>
 
-#include "class_hierarchy_test_hierarchy.h"
+#include "a.h"
+
 #include "include/catch.hpp"
 
 #include "virtual_void/data/has_m_table/observer.h"
@@ -13,13 +14,14 @@
 #include "virtual_void/data/has_m_table/shared_const_ptr.h"
 #include "virtual_void/data/has_m_table/unique_ptr.h"
 
-#include "a.h"
 
 using namespace Catch::Matchers;
 
 //import virtual_void;
+#include "class_hierarchy_test_hierarchy.h"
+
 using namespace virtual_void;
-using namespace ::virtual_void::data::has_m_table;
+using namespace virtual_void::data::has_m_table;
 using namespace TestDomain;
 
 namespace {

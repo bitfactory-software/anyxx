@@ -12,6 +12,8 @@
 using std::cout;
 using std::string;
 
+//import virtual_void;
+
 namespace {
 
 using node = virtual_void::data::has_m_table::shared_const;

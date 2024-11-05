@@ -4,16 +4,16 @@
 #include <vector>
 #include <concepts>
 
-//#include "virtual_void/data/has_no_meta/observer.h"
-//#include "virtual_void/data/has_no_meta/unique_ptr.h"
-//#include "virtual_void/data/has_no_meta/value.h"
-//#include "virtual_void/interface/call_operator.h"
+#include "virtual_void/data/has_no_meta/observer.h"
+#include "virtual_void/data/has_no_meta/unique_ptr.h"
+#include "virtual_void/data/has_no_meta/value.h"
+#include "virtual_void/interface/call_operator.h"
 #include "virtual_void/interface/declare_macro.h"
 #include "include/catch.hpp"
 
 using namespace Catch::Matchers;
 
-import virtual_void;
+//import virtual_void;
 using namespace virtual_void;
 
 namespace virtual_void {

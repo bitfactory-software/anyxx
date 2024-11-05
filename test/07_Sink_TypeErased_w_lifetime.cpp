@@ -8,13 +8,13 @@
 #include <utility>
 #include <vector>
 
+#include "include/catch.hpp"
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/open_method/algorithm.h"
 #include "virtual_void/open_method/via_m_table/declare.h"
 #include "virtual_void/typeid_cast/cast.h"
-#include "include/catch.hpp"
 
-//import virtual_void;
+// import virtual_void;
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;
 
@@ -63,9 +63,11 @@ std::string ToString_(const SuperStringData* x) {
 virtual_void::open_method::via_m_table::domain applicationDomain;
 
 auto entityToOut =
-    virtual_void::open_method::via_m_table::declare<void(const void*)>{applicationDomain};
-auto toString = virtual_void::open_method::via_m_table::declare<std::string(const void*)>{
-    applicationDomain};
+    virtual_void::open_method::via_m_table::declare<void(const void*)>{
+        applicationDomain};
+auto toString =
+    virtual_void::open_method::via_m_table::declare<std::string(const void*)>{
+        applicationDomain};
 auto typeid_const_cast = virtual_void::typeid_cast::const_cast_method<
     virtual_void::open_method::via_m_table::declare>{applicationDomain};
 
@@ -111,20 +113,21 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   virtual_void::open_method::fill_with_overloads(
       classes{}, toString, [](const auto* x) { return ToString_(x); });
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, typeid_const_cast);
-  virtual_void::open_method::via_m_table::declare_classes(classes{}, applicationDomain);
+  virtual_void::open_method::via_m_table::declare_classes(classes{},
+                                                          applicationDomain);
   virtual_void::open_method::via_m_table::fix_m_tables(applicationDomain);
 
   db.factories["i"] = [](const std::string& data) {
-    return erased_in_place<shared_const,IntData>(std::atoi(data.c_str()));
+    return erased_in_place<shared_const, IntData>(std::atoi(data.c_str()));
   };
   db.factories["s"] = [](const std::string& data) {
-    return erased_in_place<shared_const,StringData>(data);
+    return erased_in_place<shared_const, StringData>(data);
   };
   db.factories["ss"] = [](const std::string& data) {
-    return erased_in_place<shared_const,SuperStringData>(data, "boss");
+    return erased_in_place<shared_const, SuperStringData>(data, "boss");
   };
   db.factories["d"] = [](const std::string& data) {
-    return erased_in_place<shared_const,DoubleData>(std::atof(data.c_str()));
+    return erased_in_place<shared_const, DoubleData>(std::atof(data.c_str()));
   };
 
   db.Query("junk", [](const shared_const& e) {
