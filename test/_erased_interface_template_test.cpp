@@ -3,16 +3,17 @@
 #include <map>
 #include <string>
 
-#include "virtual_void/interface/base.h"
-#include "virtual_void/data/has_no_meta/value.h"
-#include "virtual_void/data/has_type_info/observer.h"
-#include "virtual_void/interface/declare_macro.h"
 #include "include/catch.hpp"
+#include "virtual_void/data/has_no_meta/observer.h"
+#include "virtual_void/data/has_no_meta/value.h"
+#include "virtual_void/interface/base.h"
+#include "virtual_void/interface/declare_macro.h"
 
 using namespace Catch::Matchers;
 
-//import virtual_void;
+// import virtual_void;
 using namespace virtual_void;
+using namespace data::has_no_meta;
 
 struct X {
   std::string s_;
@@ -20,29 +21,38 @@ struct X {
 };
 
 namespace {
-    ERASED_INTERFACE(to_string_i,
-                          (INTERFACE_CONST_METHOD(std::string, to_string)))
+ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 
-    ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
+ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
                           (INTERFACE_CONST_METHOD(VALUE const&, at, KEY),
                            INTERFACE_CONST_METHOD(std::size_t, size)))
 
-    ERASED_INTERFACE_TEMPLATE(((KEY)), map_s_t_i,
-                          (INTERFACE_CONST_METHOD(to_string_i<data::has_no_meta::value>, at, KEY)))
+ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_tt_i,
+                          (INTERFACE_CONST_METHOD(VALUE, at, KEY),
+                           INTERFACE_CONST_METHOD(std::size_t, size)))
 
-    template<>
-    struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
-      auto to_string(int const* x) -> std::string { return std::to_string(*x); };
-    };
-    template<>
-    struct to_string_i_v_table_map<double> : to_string_i_default_v_table_map<double> {
-      auto to_string(double const* x) -> std::string { return std::to_string(*x); };
-    };
+ERASED_INTERFACE_TEMPLATE(((KEY)), map_s_t_i,
+                          (INTERFACE_CONST_METHOD(to_string_i<const_observer>,
+                                                  at, KEY)))
+
+template <>
+struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
+  auto to_string(int const* x) -> std::string { return std::to_string(*x); };
+};
+template <>
+struct to_string_i_v_table_map<int const> : to_string_i_v_table_map<int> {};
+template <>
+struct to_string_i_v_table_map<double>
+    : to_string_i_default_v_table_map<double> {
+  auto to_string(double const* x) -> std::string { return std::to_string(*x); };
+};
+template <>
+struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
+};
 }  // namespace
 
 template <typename KEY, typename VALUE>
-void test_map_t_i_template(
-    map_t_i<data::has_type_info::const_observer, KEY, VALUE> map_i) {
+void test_map_t_i_template(map_t_i<const_observer, KEY, VALUE> map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -52,7 +62,7 @@ TEST_CASE("interface template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_map_t_i_lambda =
-      [](map_t_i<data::has_type_info::const_observer, std::string, int> map_i) {
+      [](map_t_i<const_observer, std::string, int> map_i) {
         REQUIRE(map_i.size() == 2);
         REQUIRE(map_i.at("one") == 1);
         REQUIRE(map_i.at("two") == 2);
@@ -62,7 +72,7 @@ TEST_CASE("interface template test") {
   test_map_t_i_template<std::string, int>(map_string_to_int);
 
   auto test_map_s_t_i_lambda =
-      [](map_s_t_i<data::has_type_info::const_observer, std::string> map_i) {
+      [](map_s_t_i<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
@@ -73,9 +83,29 @@ TEST_CASE("interface template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_map_s_t_i_lambda =
-      [](map_s_t_i<data::has_type_info::const_observer, std::string> map_i) {
+      [](map_s_t_i<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
   test_map_s_t_i_lambda(map_string_to_int);
+}
+
+TEST_CASE("interface template test3") {
+  std::map<int, std::map<std::string, std::map<int, double>>> map = {
+      {1, {{"one", {{1, 3.14}, {2, 6.28}}}, {"two", {{3, 3.333}}}}},
+      {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
+
+  auto test_map_lambda =
+      [](map_tt_i<const_observer, int,
+                  map_tt_i<const_observer, std::string,
+                           map_t_i<const_observer, int, double>>>
+             map_i) {
+        auto x = map_i.at(1);
+        auto y = x.at("one");
+        auto z = y.at(1);
+        REQUIRE(z == 3.14);
+        REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
+        REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
+      };
+  test_map_lambda(map);
 }
