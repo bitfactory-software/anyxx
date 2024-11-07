@@ -27,8 +27,16 @@ ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
                           (INTERFACE_CONST_METHOD(VALUE const&, at, KEY),
                            INTERFACE_CONST_METHOD(std::size_t, size)))
 
+ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
+                          (INTERFACE_METHOD(VALUE &, at, KEY),
+                           INTERFACE_CONST_METHOD(std::size_t, size)))
+
 ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_tt_i,
                           (INTERFACE_CONST_METHOD(VALUE, at, KEY),
+                           INTERFACE_CONST_METHOD(std::size_t, size)))
+
+ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_tt_i,
+                          (INTERFACE_METHOD(VALUE, at, KEY),
                            INTERFACE_CONST_METHOD(std::size_t, size)))
 
 ERASED_INTERFACE_TEMPLATE(((KEY)), map_s_t_i,
@@ -108,4 +116,20 @@ TEST_CASE("interface template test3") {
         REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
       };
   test_map_lambda(map);
+
+  auto test_map_lambda_mutate =
+      [](map_mutable_tt_i<mutable_observer, int,
+                  map_mutable_tt_i<mutable_observer, std::string,
+                           map_mutable_t_i<mutable_observer, int, double>>>
+             map_i) {
+        auto x = map_i.at(1);
+        auto y = x.at("one");
+        auto z = y.at(1);
+        REQUIRE(z == 3.14);
+        REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
+        REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
+        map_i.at(2).at("one").at(4) = 8.28;
+      };
+  test_map_lambda_mutate(map);
+  REQUIRE(map[ 2 ][ "one" ][ 4 ] == 8.28);
 }
