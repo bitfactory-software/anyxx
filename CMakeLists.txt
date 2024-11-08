@@ -8,5 +8,3 @@ include_directories( "./include" )
 project(virtual_void CXX)
 add_subdirectory ("test")
 add_subdirectory ("lib")
-
-
