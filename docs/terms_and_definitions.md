@@ -1,8 +1,3 @@
----
-title: terms and definitions
-nav_order: 2
----
-
 # terms and definitions in context of this library
 
 ###  erased interface
