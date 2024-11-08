@@ -1,4 +1,4 @@
-[Terms and Definitions](/docs/terms_and_definitions.md) / [Examples](#Examples) / [API](#API) / [FAQ](#FAQ)
+[Terms and Definitions](/docs/terms_and_definitions.md) / [Tutorials](/tutorials/tutorial___1.md) / [Tests and Examples](/test/)
 
 # virtual void
 
@@ -7,7 +7,7 @@
 This is a library with building blocks for large software systems:
 
 - lifetimehandles
-- interfaces
+- interfaces 
   - deriveable
   - upcastable
   - downcastable
