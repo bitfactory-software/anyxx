@@ -1,5 +1,18 @@
-﻿#include "tutorial_lifetime___1.md"
+﻿// <!--
+#if 0
+// -->
 
+## virtual_void tutoral: step 1_
+
+The virtual_void lifetime classes are used to transfer typed information with least possible coupling.
+They are a generalization of std::any.
+The functional equivalent auf std::any in virtual_void is named *virtual_void::data::has_type_info::value**.
+A simple usage looks like this:
+
+// <!--
+```cpp
+#endif begin sample
+// -->
 #include <virtual_void/data/has_type_info/value.h>
 
 #include <iostream>
@@ -26,4 +39,10 @@ TEST_CASE("tutorial lifetime 1, example 1") {
     else  if(auto d = unerase_cast<double>(&value)) cout << *d << endl;
     else  if(auto a = unerase_cast<A>(&value)) cout << a->name << endl;
     else  cout << "unknown" << endl;
-}
+}// <!--
+#if 0 end of sample
+// -->
+```
+// <!--
+#endif
+// -->
