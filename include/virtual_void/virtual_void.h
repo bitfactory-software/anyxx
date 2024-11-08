@@ -168,13 +168,18 @@ auto unchecked_unerase_cast(VIRTUAL_VOID const& o)
 {
   return static_cast<U*>(get_data(o));
 }
+template <typename U, typename META>
+bool type_match(META const* meta) {
+  if (auto type_info = meta->type_info(); type_info && *type_info != typeid(U))
+    return false;
+  return true;
+}
 class type_mismatch_error : error {
   using error::error;
 };
 template <typename U, typename META>
 void check_type_match(META const* meta) {
-  if (auto type_info = meta->type_info(); type_info && *type_info != typeid(U))
-    throw type_mismatch_error("type mismatch");
+  if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 void check_type_match(VIRTUAL_VOID const& o) {
@@ -184,6 +189,18 @@ template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {
   check_type_match<U>(o);
   return unchecked_unerase_cast<U>(o);
+}
+template <typename U, is_virtual_void VIRTUAL_VOID>
+U const* unerase_cast(VIRTUAL_VOID const* o) {
+  if (type_match<U>(get_meta(*o))) return unchecked_unerase_cast<U>(*o);
+  return nullptr;
+}
+template <typename U, is_virtual_void VIRTUAL_VOID>
+U* unerase_cast(VIRTUAL_VOID const* o)
+  requires(!is_const_data<VIRTUAL_VOID>)
+{
+  if (type_match<U>(get_meta(*o))) return unchecked_unerase_cast<U>(*o);
+  return nullptr;
 }
 
 template <typename V, is_virtual_void VIRTUAL_VOID>

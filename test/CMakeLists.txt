@@ -1,8 +1,4 @@
-﻿# CMakeList.txt : CMake project for perfect_hash, include source and define
-# project specific logic here.
-#
-
-if (MSVC)
+﻿if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
