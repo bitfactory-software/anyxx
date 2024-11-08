@@ -70,7 +70,7 @@ class base {
   bool is_derived_from() const {
     return is_derived_from(typeid(FROM::v_table_t));
   }
-
+  void operator()() const {}
  protected:
   base() = default;
 };

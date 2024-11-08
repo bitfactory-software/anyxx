@@ -4,7 +4,7 @@
 
 namespace virtual_void::interface {
 
-template <typename BASE_V_TABLE, typename RET, typename... ARGS>
+template <typename BASE_V_TABLE, typename CONST, typename RET, typename... ARGS>
 struct call_operator_v_table : BASE_V_TABLE {
   using v_table_base_t = BASE_V_TABLE;
   using void_t = v_table_base_t::void_t;
@@ -17,10 +17,13 @@ struct call_operator_v_table : BASE_V_TABLE {
   RET (*call_op)(void_t, ARGS&&...);
   template <typename UNERASE>
   call_operator_v_table(UNERASE unerase)
-      : BASE_V_TABLE(unerase), call_op([](void_t _vp, ARGS&&... args) {
-          return (*UNERASE{}(_vp))(std::forward<ARGS>(args)...);
-        }) {
-    set_is_derived_from<v_table_t>(this);
+      : BASE_V_TABLE(unerase) {
+    if constexpr (const_correct_target_for_data<CONST, void_t>) {
+      call_op = [](void_t _vp, ARGS&&... args) {
+        return (*UNERASE{}(_vp))(std::forward<ARGS>(args)...);
+      };
+      set_is_derived_from<v_table_t>(this);
+    }
   }
 };
 
@@ -36,16 +39,17 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
   using v_table_base_t = base_t::v_table_t;
-  using v_table_t = call_operator_v_table<v_table_base_t, RET, ARGS...>;
+  using v_table_t = call_operator_v_table<v_table_base_t, CONST, RET, ARGS...>;
   using query_v_table_unique_t =
-      call_operator_v_table<base<virtual_void_t>, void>;
+      call_operator_v_table<base<virtual_void_t>, CONST, RET, ARGS...>;
   template <typename T>
   using is_already_base =
       std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
                          std::true_type,
                          typename base_t::template is_already_base<T>>;
   static_assert(!base_t::is_already_base<query_v_table_unique_t>::value,
-                "An v_table my only be once in instanciated for a interface");
+                "A v_table may only instanciated once in an interface");
+  using base_t::operator();
 
  protected:
   using base_t::v_table_;

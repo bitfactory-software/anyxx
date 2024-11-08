@@ -1,9 +1,9 @@
 #pragma once
 
 #include <concepts>
+#include <stdexcept>
 #include <type_traits>
 #include <typeinfo>
-#include <stdexcept>
 
 namespace virtual_void {
 
@@ -69,12 +69,18 @@ template <typename VOID>
 concept is_const_void = is_const_void_<VOID>::value;
 
 template <typename DATA>
-concept is_const_data =
-    is_const_void<typename virtual_void_trait<DATA>::void_t>;
+using data_void = virtual_void_trait<DATA>::void_t;
+
+template <typename DATA>
+concept is_const_data = is_const_void<data_void<DATA>>;
+
+template <typename TARGET, typename DATA>
+concept const_correct_target_for_data =
+    ((is_const_void<TARGET> == is_const_void<DATA>) || (!is_const_void<DATA>));
 
 template <typename VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
-    ((is_const_void<VOID> == is_const_data<DATA>) || (!is_const_data<DATA>));
+    const_correct_target_for_data<VOID, data_void<DATA>>;
 
 template <typename VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
@@ -167,13 +173,12 @@ class type_mismatch_error : error {
 };
 template <typename U, typename META>
 void check_type_match(META const* meta) {
-  if (auto type_info = meta->type_info();
-      type_info && *type_info != typeid(U))
+  if (auto type_info = meta->type_info(); type_info && *type_info != typeid(U))
     throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 void check_type_match(VIRTUAL_VOID const& o) {
-    check_type_match<U>(get_meta(o));
+  check_type_match<U>(get_meta(o));
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unerase_cast(VIRTUAL_VOID const& o) {
@@ -202,13 +207,13 @@ struct virtual_typed {
     requires(!std::same_as<std::decay_t<FROM>, virtual_typed> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
       : virtual_void_(trait_t::construct_in_place(std::in_place_type<V>,
-                                          std::forward<FROM>(from))) {
+                                                  std::forward<FROM>(from))) {
     check_type_match<V>(virtual_void_);
   }
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
-      : virtual_void_(trait_t::construct_in_place(std::in_place_type<V>,
-                                          std::forward<ARGS>(args)...)) {
+      : virtual_void_(trait_t::construct_in_place(
+            std::in_place_type<V>, std::forward<ARGS>(args)...)) {
     check_type_match<V>(virtual_void_);
   }
 
@@ -271,4 +276,4 @@ auto as(virtual_typed<FROM, DATA> source)
   }
 }
 
-}  // VIRTUAL_VOID_EXPORT namespace virtual_void
+}  // namespace virtual_void
