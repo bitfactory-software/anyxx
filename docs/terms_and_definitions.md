@@ -1,6 +1,6 @@
-# terms and definitions in context of this library
+# Terms and definitions in context of this library
 
-###  erased interface
+###  Erased interface
 An object, which members are function pointers, and every function has as **first parameter *self***. This is a pointer to (eventually *const*) *void*.
 
 ###  implemented erased interface
@@ -11,19 +11,25 @@ In this functions will "self" parameter be casted back to a pointer to the unera
 
 ### virtual_void
 
-#### An object that **erases** the real **type** und the **lifetime** of **an** other **object**. It delivers a *void* pointer of that object. In our library the member function delivering this pointer is "data()". There are four archetypes:
+#### A concept describing an object that **erases** the **type** und the **lifetime** of **an** other **object**. 
+
+It must delivers a *void* pointer of that object and a pointer to a *meta* object. 
+Responsible for the descrition of such types is the spezialized *virtual_void_trait*. 
+
+The library offers this  *lifetime* holders 
 - observer: Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read only or modifying access to the referenced object.
-- *shard_const*: Ownership as std::shard_ptr. The delivered address is a pointer to *const void*
+- *shard_const*: Ownership as std::shard_ptr. The delivered address is a pointer to *const void*. The *meta* is allocated along the concrete data.
+- *shared_ptr* pairs a std::shared_ptr<void> with the *meta*. Use instead of shared_const if you cannot control the construction of the object, that you want to *erase*    
 - *unique*: Ownership as std::unique_ptr. The delivered address is *void* a pointer to a *mutable* object.
+- *unique_ptr* pairs a std::unique_ptr<void> with the *meta*. Use instead of unique if you cannot control the construction of the object, that you want to *erase*    
 - *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*.
-An *virtual_void* object referncees an *meta* object.
 
 #### There are three kinds of meta objects in the library:
 - *has_no_meta*
 - *has_type_info*
 - *has_m_table* has *type_info* and a pointer to a *m_table* for fast dispatch in an *open method*
 
-### virtual_void versus typed_void 
+### 'virtual_void' versus 'typed_void' 
 #### A *virtual_void* holds no compiletime information about the *holded* object. 
 
 Only if *virtual_void* has *runtime meta data", there is a dynamic and safe cast of the *void* pointer to conrete pointer possible.
@@ -44,12 +50,13 @@ A  *virtual_typed* is a typed wrapper atop of *virtual void*. If the *virtual vo
   - all dynamic casts are safe
   - dynamic cast need code to run
 
-### upcast vs downcast
+### 'upcast' vs 'downcast'
 #### An *upcast* is a *conversion* from a more detailed type to a general one.
 
-A dowcast is conversione from a more general type to a more detailed ond.
+#### A *downcast* is conversione from a more general type to a more detailed ond.
+
 For upcast and downcasts must the types be related within the language rules.
-Staic downcasts are guesses and as such unsafe. Dynamic downcasts are per definition safe.
+Staic downcasts are guesses and as such unsafe. Dynamic downcasts are per definition safe an a kind of *type query*.
 
 ### lifetime cast
 #### A *virtual_void* can be casted to an other *virtual_void*, in the sense of an *upcast*.
