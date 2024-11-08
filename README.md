@@ -36,7 +36,7 @@ This makes the pointer seeming not *void* rather **virtual void**.
 
 ## Programming in the large
 
-### *Runtime** versus *compiletime* **dispatch**
+### *Runtime* versus *compiletime* **dispatch**
 
 Dispatch on behalf of a type is - like function calls - a fundamental software construction principle to allow the building of layerd abstraction levels.
 
