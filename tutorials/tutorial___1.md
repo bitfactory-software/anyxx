@@ -3,7 +3,7 @@
 // -->
 
 <a name="t1"></a>
-## virtual_void tutoral 1.1
+## virtual_void tutoral 1
 
 The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
 They are a generalization of *std::any*.
@@ -157,7 +157,67 @@ TEST_CASE("tutorial 1/3") {
 // -->
 ```
 
+<a name="t4"></a>
 
+When you know, you have to pass the ``value``s of your ``vector`` to an ``ostream``, you can request this behavioir via an ``virtual_void::interfcace``.
+
+For our case, we could do it this way:
+
+// <!--
+```cpp
+#endif begin sample
+// -->
+
+#include <virtual_void/data/has_type_info/value.h>
+#include <virtual_void/interface/base.h>
+#include <virtual_void/interface/declare_macro.h>
+
+#include <iostream>
+#include <vector>
+
+#include "catch.hpp"
+
+namespace tutorial_4 
+{
+ERASED_INTERFACE(to_ostream,
+                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&))) // 1
+}
+
+namespace tutorial_4 
+{
+struct to_ostream_shift_right_v_table_map { // 2
+  void draw(auto* this_, std::ostream& o) { o << *this_; }
+};
+template <>
+struct to_ostream_v_table_map<std::string> // 3
+    : to_ostream_shift_right_v_table_map {};
+template <>
+struct to_ostream_v_table_map<int> : to_ostream_shift_right_v_table_map {}; // 4
+template <>
+struct to_ostream_v_table_map<double> : to_ostream_shift_right_v_table_map {}; // 4
+}
+
+TEST_CASE("tutorial 1/4") {
+  using namespace std;
+  using namespace std::literals::string_literals;
+  using namespace virtual_void::data::has_no_meta; // 5
+
+  struct A {
+    string name;
+    void draw(std::ostream& o) const { o << name; } // 6
+  };
+
+  vector<to_ostream<value>> values{to_ostream<value>("Hello"s), to_ostream<value>(42),
+                       to_ostream<value>(3.14)}; // 7
+  values.emplace_back(A{"world"}); // 8
+  
+  for (auto value : values) value.draw(cout), cout << endl; // 9
+}
+
+// <!-- end of sample
+#if 0 
+// -->
+```
 
 // <!--
 ```cpp

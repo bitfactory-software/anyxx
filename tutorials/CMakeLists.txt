@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 20)
 # Add source to this project's executable.
 add_executable (tutorial___1 "../test/include/catch.cpp"
     "tutorial___1.cpp"
-)
+ "tutorial___2.cpp")
 
 target_link_libraries(tutorial___1 virtual_void)
 

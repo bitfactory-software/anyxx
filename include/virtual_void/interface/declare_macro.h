@@ -201,15 +201,18 @@
     n(CONSTRUCTED_WITH&& v)                                                    \
       requires(                                                                \
           !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t> && \
-          !is_virtual_void<std::remove_cvref_t<CONSTRUCTED_WITH>> &&           \
-          !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>>)            \
+          !virtual_void::is_virtual_void<                                      \
+              std::remove_cvref_t<CONSTRUCTED_WITH>> &&                        \
+          !virtual_void::is_virtual_typed<                                     \
+              std::remove_cvref_t<CONSTRUCTED_WITH>>)                          \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       static v_table_t imlpemented_v_table{                                    \
           ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};          \
       v_table_ = &imlpemented_v_table;                                         \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
-    n(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : n(*vt) {}   \
+    n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
+        : n(*vt) {}                                                            \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
       requires(std::derived_from<OTHER, base_t>)                               \
