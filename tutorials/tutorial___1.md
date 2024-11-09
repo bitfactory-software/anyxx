@@ -149,7 +149,7 @@ TEST_CASE("tutorial 1/3") {
   domain domain;
   declare<void(void* const, ostream&)> draw{domain};
   open_method::fill_with_overloads<string, int, double>(
-      draw, [](auto* x, ostream& o) { o << *x; });
+      draw, [](auto* x, ostream& o) { o << *x; }); // <-- 1)
   draw.define<A>([](auto* x, ostream& o) { o << x->name; });
   draw.seal_for_runtime();
 
@@ -160,6 +160,9 @@ TEST_CASE("tutorial 1/3") {
 #if 0 
 // -->
 ```
+
+``// <-- 1`` shows the call to the algorithm ``fill_with_overloads``. It instanciates the third parameter, (a template function object) for each type argument, and ```declares``` this function object for instanciated type in the open method ``draw``.
+
 
 <a name="t4"></a>
 
