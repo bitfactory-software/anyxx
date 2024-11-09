@@ -13,7 +13,7 @@
   - downcastable
 - open methods [Tutorial](/tutorials/tutorial___1.md/#t2)
 - object casts
-- open types
+- open objects [Tutorial](/tutorials/tutorial___2.md/#t1)
 
 To enable
 
