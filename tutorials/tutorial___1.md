@@ -86,13 +86,13 @@ TEST_CASE("tutorial 1/2") {
   draw.define<A>([](auto* x, ostream& o) { o << x->name; });
   draw.seal_for_runtime();
 
-  for (auto value : values)
-      draw(value, cout), cout << endl;
+  for (auto value : values) draw(value, cout), cout << endl;
 }
 // <!-- end of sample
 #if 0 
 // -->
 ```
+
 This technique allows us to decouple three aspects of one type:
 - construction
 - usage
@@ -103,7 +103,53 @@ All three aspects are only coupled via the *vocabulary type* **value**.
 If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case *operator <<( std::ostream&, X)*, the library provides a shortcut for you: 
 
 // <!--
-#endif
+```cpp
+#endif begin sample
+// -->
+
+#include <virtual_void/data/has_type_info/value.h>
+#include <virtual_void/open_method/algorithm.h>
+#include <virtual_void/open_method/via_type_info/declare.h>
+
+#include <iostream>
+#include <vector>
+
+#include "catch.hpp"
+
+TEST_CASE("tutorial 1/3") {
+  using namespace std;
+  using namespace std::literals::string_literals;
+  using namespace virtual_void::data::has_type_info;
+  using namespace virtual_void::open_method::via_type_info;
+  using namespace virtual_void;
+
+  struct A {
+    string name;
+  };
+
+  vector<value> values{erased<value>("Hello"s), erased<value>(42),
+                       erased<value>(3.14), erased<value>(A{"world"})};
+
+  domain domain;
+  declare<void(void* const, ostream&)> draw{domain};
+  open_method::fill_with_overloads<string, int, double>(
+      draw, [](auto* x, ostream& o) { o << *x; });
+  draw.define<A>([](auto* x, ostream& o) { o << x->name; });
+  draw.seal_for_runtime();
+
+  for (auto value : values) draw(value, cout), cout << endl;
+}
+
+// <!-- end of sample
+#if 0 
+// -->
+```
+
+
+
+// <!--
+```cpp
+#endif begin sample
 // -->
 
 

@@ -130,7 +130,9 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
     return erased_in_place<shared_const, DoubleData>(std::atof(data.c_str()));
   };
 
-  db.Query("junk", [](const shared_const& e) {
+  int ok = 0;
+  int fail = 0;
+  db.Query("junk", [&](const shared_const& e) {
     // call open method
     std::cout << "type_info: " << get_meta(e)->type_info()->name() << ": "
               << toString(e) << std::endl;
@@ -138,8 +140,11 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
     try {
       // call open method
       entityToOut(e);
-    } catch (std::exception& e) {
-      std::cout << "error: " << e.what() << std::endl;
+      ++ok;
+    } catch (std::exception& ex) {
+      std::cout << "error: " << ex.what() << ": "
+                << get_meta(e)->type_info()->name() << std::endl;
+      ++fail;
     }
 
     // cast back from erased -> "unerase"
@@ -147,6 +152,8 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
             typeid_const_cast, e))
       std::cout << "stringData: " << stringData->data << std::endl;
   });
+  REQUIRE(ok == 4);    // String, int
+  REQUIRE(fail == 2);  // Double, SuperString
 }
 
 }  // namespace

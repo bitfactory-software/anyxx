@@ -1,8 +1,8 @@
 #pragma once
 
+#include <map>
 #include <typeindex>
 #include <vector>
-#include <map>
 
 #include "../utillities/overload.h"
 #include "../utillities/type_list.h"
@@ -21,17 +21,24 @@ struct bases {
   using bases_ = type_list<BASES...>;
 };
 
+template <class CLASS>
+concept is_registered_class =
+    requires(CLASS) { typename class_<CLASS>::bases_; };
+
 template <typename CLASS, bool deep = true>
 constexpr void visit_class(auto visitor) {
   visitor.template operator()<CLASS>();
-  using bases = class_<CLASS>::bases_;
-  bases::for_each([&]<typename BASE>() {
-    visitor.template operator()<CLASS, BASE>();
-    if constexpr (deep) {
-      visit_class<BASE, deep>(visitor);
-    }
-  });
+  if constexpr (is_registered_class<CLASS>) {
+    using bases = class_<CLASS>::bases_;
+    bases::for_each([&]<typename BASE>() {
+      visitor.template operator()<CLASS, BASE>();
+      if constexpr (deep) {
+        visit_class<BASE, deep>(visitor);
+      }
+    });
+  }
 }
+
 template <typename CLASSES, bool deep = true>
 constexpr void visit_classes(auto visitor) {
   CLASSES::for_each(

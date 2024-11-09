@@ -18,6 +18,8 @@ void dump(const classes_with_bases& registry) {
 void test_class_hierarchy() {
   using namespace TestDomain;
 
+  static_assert(is_registered_class<A1>);
+
   std::cout << "\n";
   std::cout << "class_hierarchy::test"
             << "\n";
