@@ -93,13 +93,17 @@ TEST_CASE("tutorial 1/2") {
 #if 0 
 // -->
 ```
+This technique allows us to decouple three aspects of one type:
+- construction
+- usage
+- functionality
 
+All three aspects are only coupled via the *vocabulary type* **value**.
+
+If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case *operator <<( std::ostream&, X)*, the library provides a shortcut for you: 
 
 // <!--
 #endif
 // -->
 
-This technique allows us to decouple three things:
-- construction
-- usage
-- functionality
+
