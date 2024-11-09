@@ -163,6 +163,9 @@ TEST_CASE("tutorial 1/3") {
 
 ``// <-- 1`` shows the call to the algorithm ``fill_with_overloads``. It instanciates the third parameter, (a template function object) for each type argument, and ```declares``` this function object for the instanciated type in the open method ``draw``.
 
+The usage of ``open_method::via_type_info`` is the most easy way to add *type tunneled* functionality, but has a small runtime penalty.
+
+Next we will take a look to th most efficient way to do this with *virtual void* ``interface``s.
 
 <a name="t4"></a>
 
@@ -174,7 +177,6 @@ For our case, we could do it this way:
 ```cpp
 #endif begin sample
 // -->
-
 #include <virtual_void/data/has_no_meta/value.h>
 #include <virtual_void/interface/base.h>
 #include <virtual_void/interface/declare_macro.h>
@@ -184,52 +186,57 @@ For our case, we could do it this way:
 
 #include "catch.hpp"
 
-namespace tutorial_4 
-{
+namespace tutorial_1_4 {
 ERASED_INTERFACE(to_ostream,
-                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&))) // 1
+                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&)))  // 1
 }
 
-namespace tutorial_4 
-{
-struct to_ostream_shift_right_v_table_map { // 2
+namespace tutorial_1_4 {
+struct to_ostream_shift_right_v_table_map {  // 3
   void draw(auto* this_, std::ostream& o) { o << *this_; }
 };
 template <>
-struct to_ostream_v_table_map<std::string> // 2
+struct to_ostream_v_table_map<std::string>  // 2
     : to_ostream_shift_right_v_table_map {};
 template <>
-struct to_ostream_v_table_map<int> : to_ostream_shift_right_v_table_map {}; // 2
+struct to_ostream_v_table_map<int> : to_ostream_shift_right_v_table_map {  // 2
+};
 template <>
-struct to_ostream_v_table_map<double> : to_ostream_shift_right_v_table_map {}; // 2
-}
+struct to_ostream_v_table_map<double>
+    : to_ostream_shift_right_v_table_map {  // 2
+};
+
+struct A {
+  std::string name;
+  void draw(std::ostream& o) const { o << name; }  // 4
+};
+}  // namespace tutorial_1_4
 
 TEST_CASE("tutorial 1/4") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_no_meta; // 5
+  using namespace virtual_void::data::has_no_meta;  // 5
+  using namespace tutorial_1_4;
 
-  struct A {
-    string name;
-    void draw(std::ostream& o) const { o << name; } // 4
-  };
+  vector<to_ostream<value>> values{to_ostream<value>("Hello"s),
+                                   to_ostream<value>(42),
+                                   to_ostream<value>(3.14)};  // 6
+  values.emplace_back(A{"world"});                            // 7
 
-  vector<to_ostream<value>> values{to_ostream<value>("Hello"s), to_ostream<value>(42),
-                       to_ostream<value>(3.14)}; // 7
-  values.emplace_back(A{"world"}); // 8
-  
-  for (auto value : values) value.draw(cout), cout << endl; // 9
+  for (auto value : values) value.draw(cout), cout << endl;  // 8
 }
-
 // <!-- end of sample
 #if 0 
 // -->
 ```
+
 - // 1: declares the interface: it is named ``to_ostream``, has one ``const`` method. This method takes one  ``std::ostream&`` parameter.
 - // 2: because ``std::string``,``int`` and ``double`` have no member function ``drwa``, we must *map* the interface method for these types. We can do this be specialicing the *v_table_map* of ``to_ostream`` named ``to_ostream_v_table_map`` in the same ``namespace`` where ``to_ostream`` was definend.
 - // 3: because ``std::string``,``int`` and ``double`` share the same implementation of ``draw`` we delgate it to a helper struct named ``to_ostream_shift_right_v_table_map`` where we can write ``draw`` as a function template.
 - // 4: ``struct A`` has a member function ``void draw(std::ostream& o) const`` witch will be choosen by ``to_ostream`` as default behaviour.
-- // 5: in this case, we need no 
+- // 5: in this case, we need no *meta info* in our application, so we can take a sleaker ``value`` without any overhead.
+- // 6/7: declares a vector of ``values`` witch support the interface ``to_ostream``. In the initializer list, once have to request the *type erasure* by spelling out the target type, whereas in the case of emplace, this can be done automatic.
+- // 8: the application of interface 
 
 ```cpp
 #endif begin sample
