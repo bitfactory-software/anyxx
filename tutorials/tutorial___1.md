@@ -2,7 +2,7 @@
 #if 0
 // -->
 
-## virtual_void tutoral: step 1_
+## virtual_void tutoral 1
 
 The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
 They are a generalization of *std::any*.
