@@ -230,7 +230,7 @@ TEST_CASE("tutorial 1/4") {
 // -->
 ```
 
-- // 1: Declares the interface: it is named ``to_ostream``, has one ``const`` method. This method ``draw`` takes one  ``std::ostream&`` parameter.
+- // 1: Declares the interface: it is named ``to_ostream`` and has one ``const`` method. This method ``draw`` takes one  ``std::ostream&`` parameter.
 - // 2: Because ``std::string``,``int`` and ``double`` have no member function ``draw``, we must *map* this method for these types. We can do this be specialicing the *v_table_map* of ``to_ostream`` named ``to_ostream_v_table_map`` in the same ``namespace`` where ``to_ostream`` was definend.
 - // 3: Because ``std::string``,``int`` and ``double`` share the same implementation of ``draw`` we delgate it to a helper struct named ``to_ostream_shift_right_v_table_map`` where we can write ``draw`` as a function template.
 - // 4: ``struct A`` has a member function ``void draw(std::ostream& o) const`` witch will be choosen by ``to_ostream``. This is the default behaviour.
