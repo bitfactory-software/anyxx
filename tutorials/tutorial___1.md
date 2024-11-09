@@ -236,7 +236,7 @@ TEST_CASE("tutorial 1/4") {
 - // 4: ``struct A`` has a member function ``void draw(std::ostream& o) const`` witch will be choosen by ``to_ostream`` as default behaviour.
 - // 5: in this case, we need no *meta info* in our application, so we can take a sleaker ``value`` without any overhead.
 - // 6/7: declares a vector of ``values`` witch support the interface ``to_ostream``. In the initializer list, once have to request the *type erasure* by spelling out the target type, whereas in the case of emplace, this can be done automatic.
-- // 8: the application of interface 
+- // 8: the application of interface ``to_ostream.draw``
 
 ```cpp
 #endif begin sample
