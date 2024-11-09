@@ -13,7 +13,7 @@
 - object casts
 - open types
 
-To enaable
+To enable
 
 - loose coupling and
 - performance on par with virtual function calls.
