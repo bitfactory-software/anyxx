@@ -6,12 +6,12 @@
 
 ## Building blocks for *programming in the large*
 
-- lifetime handles [Tutorial](/tutorials/tutorial___1.md/#1)
+- lifetime handles [Tutorial](/tutorials/tutorial___1.md/#t1)
 - interfaces 
   - deriveable
   - upcastable
   - downcastable
-- open methods [Tutorial](/tutorials/tutorial___1.md/#1)
+- open methods [Tutorial](/tutorials/tutorial___1.md/#t2)
 - object casts
 - open types
 
