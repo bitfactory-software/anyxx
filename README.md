@@ -2,9 +2,9 @@
 
 # virtual_void : The *type tunnel* vocabulary for programming in the large
 
-This is a library with building blocks for large software systems:
+## Building blocks for *promming in the large*
 
-- lifetimehandles
+- lifetime handles
 - interfaces 
   - deriveable
   - upcastable
@@ -13,7 +13,7 @@ This is a library with building blocks for large software systems:
 - object casts
 - open types
 
-They offer
+To enaable
 
 - loose coupling and
 - performance on par with virtual function calls.
