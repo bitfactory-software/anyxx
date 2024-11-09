@@ -6,8 +6,8 @@ An object, which members are function pointers, and every function has as **firs
 ###  implemented erased interface
 #### An object derived from an interface, with no additional members and where all members point to vaild functions.
 
-These funtion are filled by a templated constructor. The template parameter is called the **unerased** type.
-In this functions will "self" parameter be casted back to a pointer to the unerased type, and correct function for the "unerased" type wil be called. The default for the called function is a member function with the same name and signature as specified for the interface function. This behaviour can be cutomized in an **interface map** for the unerased type.
+These funtion are implemented via a templated constructor. The template parameter is called the **unerased** type.
+In this functions is the "self" parameter  casted back to a pointer to the unerased type, and the correct function for the "unerased" type wil be called. The default for the called function is a member function with the same name and signature as the specified interface function. This behaviour can be cutomized in an **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial___1.md/#t4)
 
 ### virtual_void
 
@@ -22,7 +22,7 @@ The library offers this  *lifetime* holders
 - *shared_ptr* pairs a std::shared_ptr<void> with the *meta*. Use instead of shared_const if you cannot control the construction of the object, that you want to *erase*    
 - *unique*: Ownership as std::unique_ptr. The delivered address is *void* a pointer to a *mutable* object.
 - *unique_ptr* pairs a std::unique_ptr<void> with the *meta*. Use instead of unique if you cannot control the construction of the object, that you want to *erase*    
-- *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*.
+- *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
 
 #### There are three kinds of meta objects in the library:
 - *has_no_meta*
@@ -75,7 +75,7 @@ A *crosscas*t usualy tests, if one interface can be reached from an other, and i
 ### open method
 #### An **open method** is a freestanding callable, which acts like a virtual member function. 
 
-Open member functions are an reciepe to solve the [expression problem]. An opem method is the simpliest, but very usefull, case of [open multi methods]. With an open method you can add a function, whitch behaviour is determined by the type of its (first) arguent, but you do not need to change the definition of that type. 
+Open member functions are an reciepe to solve the [expression problem]. An opem method is the simpliest, but very usefull, case of [open multi methods]. With an open method you can add a function, whitch behaviour is determined by the type of its (first) arguent, but you do not need to change the definition of that type. [Tutorial](/tutorials/tutorial___1.md/#t2)
 
 ### open type
 #### An **open type** is behaves like a *struct*, where you can add data members without changing the definition of that *struct*. 
