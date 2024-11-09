@@ -1,8 +1,6 @@
 [Terms and Definitions](/docs/terms_and_definitions.md) / [Tutorials](/tutorials/tutorial___1.md) / [Tests and Examples](/test/)
 
-# virtual void
-
-## A "type tunnel" vocabulary for programming in the large
+# virtual_void : The *type tunnel* vocabulary for programming in the large
 
 This is a library with building blocks for large software systems:
 
