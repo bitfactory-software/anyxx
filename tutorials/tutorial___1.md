@@ -6,7 +6,9 @@
 
 The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
 They are a generalization of *std::any*.
-The functional equivalent auf *std::any* in *virtual_void* is *virtual_void::data::has_type_info::value**.
+
+The functional equivalent auf *std::any* in *virtual_void* is *virtual_void::data::has_type_info::value*.
+
 A simple usage looks like this:
 
 // <!--
