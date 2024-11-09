@@ -47,12 +47,17 @@ TEST_CASE("tutorial 1/1") {
 // -->
 ```
 If you have used *std::any* before, this should be familar to.
-With such a type, you have one word, in our case *value*, with witch you can the pice of data around.
+With such a type, you have one word, in our case *value*, with witch you can pass a piece of data around.
+
 The downside, is the long list of "if's" to unpack the information. 
+
 Also you have to bundle all knowledge of all possible types that are maybe in the *value* at the recieving side of the *type tunnel*.
+
 Wouldn't it be nice, to take this burden away from the reciever?.
 
-*virtual_void* has here some tools for you. One is an *open method*. That would look like this:
+*virtual_void* has here some tools for you. One is an *open method*. 
+
+With such an *open method* in place, our code look like this:
 
 // <!--
 ```cpp
