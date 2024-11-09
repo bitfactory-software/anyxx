@@ -52,10 +52,8 @@ For example, imagine a std::variant for some hundred different alternatives.
 This is where **programming in the large** begins and runtime dispatch is the proven means.
 
 At this point arises another problem, when it comes to "inversion of control" in regard to the type of the parameter objectds passed into the callback:
-- In static dispatch, the have usually the full type information.
-- In dynamic dispatch, the original type is usualy abstracted away (either via a base class or "type erasure") and must be casted back to acces more concrete inforamtion.
-
-If the callback would not need more concrete (type) information abount the passed in paramter, there would be no need for inversion control.
+- In static dispatch, the have the full type information.
+- In dynamic dispatch, the original type is usualy abstracted away (either via a base class or "type erasure") and must be casted back to access more concrete information.
 
 ### *Runtime* versus *compiletime*
 
