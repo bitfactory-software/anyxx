@@ -230,13 +230,13 @@ TEST_CASE("tutorial 1/4") {
 // -->
 ```
 
-- // 1: declares the interface: it is named ``to_ostream``, has one ``const`` method. This method takes one  ``std::ostream&`` parameter.
-- // 2: because ``std::string``,``int`` and ``double`` have no member function ``drwa``, we must *map* the interface method for these types. We can do this be specialicing the *v_table_map* of ``to_ostream`` named ``to_ostream_v_table_map`` in the same ``namespace`` where ``to_ostream`` was definend.
-- // 3: because ``std::string``,``int`` and ``double`` share the same implementation of ``draw`` we delgate it to a helper struct named ``to_ostream_shift_right_v_table_map`` where we can write ``draw`` as a function template.
-- // 4: ``struct A`` has a member function ``void draw(std::ostream& o) const`` witch will be choosen by ``to_ostream`` as default behaviour.
-- // 5: in this case, we need no *meta info* in our application, so we can take a sleaker ``value`` without any overhead.
-- // 6/7: declares a vector of ``values`` witch support the interface ``to_ostream``. In the initializer list, once have to request the *type erasure* by spelling out the target type, whereas in the case of emplace, this can be done automatic.
-- // 8: the application of interface ``to_ostream.draw``
+- // 1: Declares the interface: it is named ``to_ostream``, has one ``const`` method. This method ``draw`` takes one  ``std::ostream&`` parameter.
+- // 2: Because ``std::string``,``int`` and ``double`` have no member function ``draw``, we must *map* this method for these types. We can do this be specialicing the *v_table_map* of ``to_ostream`` named ``to_ostream_v_table_map`` in the same ``namespace`` where ``to_ostream`` was definend.
+- // 3: Because ``std::string``,``int`` and ``double`` share the same implementation of ``draw`` we delgate it to a helper struct named ``to_ostream_shift_right_v_table_map`` where we can write ``draw`` as a function template.
+- // 4: ``struct A`` has a member function ``void draw(std::ostream& o) const`` witch will be choosen by ``to_ostream``. This is the default behaviour.
+- // 5: In this example, we need no *meta info*. So we take a sleaker ``value`` without any overhead.
+- // 6/7: Declares and fills a vector of ``values`` witch support the interface ``to_ostream``. In the initializer list, we have to request the *type erasure* by spelling out the target type, whereas in the case of ``emplace``, this can be done automatic.
+- // 8: The application of interface ``to_ostream.draw``
 
 ```cpp
 #endif begin sample
