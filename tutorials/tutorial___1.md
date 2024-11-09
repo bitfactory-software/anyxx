@@ -112,7 +112,11 @@ This technique allows us to decouple three aspects of one type:
 All three aspects are only coupled via the *vocabulary type* ``value``.
 
 <a name="t3"></a>
-If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case ``operator <<( std::ostream&, X)``, the library provides a shortcut for you: 
+If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case
+```cpp
+operator <<( std::ostream&, X)
+```
+the library provides a shortcut for you: 
 
 // <!--
 ```cpp
