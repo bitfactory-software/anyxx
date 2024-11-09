@@ -1,4 +1,4 @@
-[Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorial___1.md) / [Tests and Examples](/test/)
+[Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials_toc.md) / [Tests and Examples](/test/)
 
 # virtual_void : The *type tunnel* vocabulary for programming in the large
 
