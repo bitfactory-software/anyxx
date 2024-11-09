@@ -8,7 +8,7 @@
 The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
 They are a generalization of *std::any*.
 
-The functional equivalent auf *std::any* in *virtual_void* is *virtual_void::data::has_type_info::value*.
+The functional equivalent auf ``std::any`` in *virtual_void* is ``virtual_void::data::has_type_info::value``.
 
 A simple usage looks like this:
 
@@ -50,9 +50,9 @@ TEST_CASE("tutorial 1/1") {
 If you have used *std::any* before, this should be familar to.
 With such a type, you have one word, in our case *value*, with witch you can pass a piece of data around.
 
-The downside, is the long list of "if's" to unpack the information. 
+The downside, is the long list of ``if``s to unpack the information. 
 
-Also you have to bundle all knowledge of all possible types that are maybe in the *value* at the recieving side of the *type tunnel*.
+Also you have to bundle all knowledge of all possible types that are maybe in the ``value`` at the recieving side of the *type tunnel*.
 
 Wouldn't it be nice, to take this burden away from the reciever?.
 
@@ -109,7 +109,7 @@ This technique allows us to decouple three aspects of one type:
 - usage
 - functionality
 
-All three aspects are only coupled via the *vocabulary type* **value**.
+All three aspects are only coupled via the *vocabulary type* ``value``.
 
 <a name="t3"></a>
 If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case ``operator <<( std::ostream&, X)``, the library provides a shortcut for you: 
