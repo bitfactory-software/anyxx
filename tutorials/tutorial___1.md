@@ -2,7 +2,7 @@
 #if 0
 // -->
 
-## virtual_void tutoral 1
+## virtual_void tutoral 1.1
 
 The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
 They are a generalization of *std::any*.
@@ -55,9 +55,12 @@ Also you have to bundle all knowledge of all possible types that are maybe in th
 
 Wouldn't it be nice, to take this burden away from the reciever?.
 
+## virtual_void tutoral 1.2
+
 *virtual_void* has here some tools for you. One is an *open method*. 
 
 With such an *open method* in place, our code look like this:
+
 
 // <!--
 ```cpp
@@ -106,6 +109,8 @@ This technique allows us to decouple three aspects of one type:
 - functionality
 
 All three aspects are only coupled via the *vocabulary type* **value**.
+
+## virtual_void tutoral 1.3
 
 If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case *operator <<( std::ostream&, X)*, the library provides a shortcut for you: 
 
