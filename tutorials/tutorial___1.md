@@ -51,6 +51,7 @@ Also you have to bundle all knowledge of all possible types that are maybe in th
 Wouldn't it be nice, to take this burden away from the reciever?.
 
 *virtual_void* has here some tools for you. One is an *open method*. That would look like this:
+
 // <!--
 ```cpp
 #endif begin sample
@@ -97,3 +98,8 @@ TEST_CASE("tutorial 1/2") {
 // <!--
 #endif
 // -->
+
+This technique allows us to decouple three things:
+- construction
+- usage
+- functionality
