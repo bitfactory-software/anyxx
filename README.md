@@ -2,7 +2,7 @@
 
 # virtual_void : The *type tunnel* vocabulary for programming in the large
 
-## Building blocks for *promming in the large*
+## Building blocks for *programming in the large*
 
 - lifetime handles
 - interfaces 
