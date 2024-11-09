@@ -3,7 +3,7 @@
 // -->
 
 <a name="t1"></a>
-## virtual_void tutoral 1
+## virtual_void tutoral 1: type erasure and type tunneling basics
 
 The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
 They are a generalization of *std::any*.
