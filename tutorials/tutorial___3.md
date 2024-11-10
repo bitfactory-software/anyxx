@@ -63,6 +63,7 @@ TEST_CASE("tutorial 4/1") {
   using namespace std::literals::string_literals;
   using namespace virtual_void::data::has_no_meta;
   using namespace tutorial_4_1;
+  cout << endl << "*** tutorial 4/1" << endl;
 
   vector<to_ostream<value>> values{to_ostream<value>("Hello"s),
                                    to_ostream<value>(42),
@@ -80,13 +81,102 @@ We changed two things
 - // 1 here is the override definition of ``operator <<`` for the interface template ``to_ostream<VV>&)``. It's implementation calls the interface memberfunction draw and returns the ostream object als reference to enamle chainig calls.
 - // 2 uses this operator as usual to direct the output to ``std::cout``
 
-Because this is a standard pattern, there is a prepared standard solution in ``virtual_void``.
-
 <a name="t2"></a> 
+
+Because this is a standard pattern, there is a prepared standard solution in [``virtual_void\interface\ostream_shift_left_operator.h``](virtual_void\include\virtual_void\interface\ostream_shift_left_operator.h):
+```cpp
+#include <ostream>
+
+#include "base.h"
+#include "declare_macro.h"
+
+namespace virtual_void::interface {
+
+ERASED_INTERFACE(ostreamable, 
+                 (INTERFACE_CONST_METHOD(void, to_ostream, std::ostream&))) \\ 1
+
+template <typename T> \\ 2a
+concept is_ostreamable = requires(T const& t, std::ostream o) {
+  { o << t } -> std::same_as<std::ostream&>;
+};
+
+static_assert(is_ostreamable<double>); \\ 2b
+
+template <typename OSTREAMABLE>
+  requires is_ostreamable<OSTREAMABLE>
+struct ostreamable_v_table_map<OSTREAMABLE> \\ 3
+    : ostreamable_default_v_table_map<OSTREAMABLE> {
+  void to_ostream(OSTREAMABLE const* x, std::ostream& o) { o << (*x); };
+};
+
+template <virtual_void::is_virtual_void VV> \\ 4
+std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 4
+  i.to_ostream(o);
+  return o;
+}
+
+};  // namespace virtual_void::interface
+```
+
+- \\ 1 defines an interface ``ostreamable`` with one member function ``to_ostream``, and a parameter ``std::ostream&``.
+- \\ 2a introduces the concept ``is_ostreamable`` to tell us, if a type supports the ideomatic usage of ``<<`` for output streaming.
+- \\ 2b is a quick self test of ``is_ostreamable``.
+- \\ 3 directs the implementation of ``ostreamable::to_ostream`` for all types conforming to ``is_ostreamable`` to their coresponding ``...<<(ostream&...)`` operator.
+- \\ 4 defines the ``...<<(ostream&, const ostreamable<>&)`` as pure syntactic sugar.
+
+When applied to our example, this leads to this:
 
 // <!--
 ```cpp
 #endif begin sample
 // -->
+#include <virtual_void/data/has_no_meta/value.h>
+#include <virtual_void/interface/ostream_shift_left_operator.h>
 
+#include <iostream>
+#include <vector>
 
+#include "catch.hpp"
+
+namespace tutorial_4_2 {
+
+struct A {
+  std::string name;
+  void to_ostream(std::ostream& o) const { o << name; } // 2a
+  // 2b alterantive to 'to_ostream' 
+  //friend std::ostream& operator<<(std::ostream& o, const A& a) {
+  //  return o << a.name;
+  //}
+};
+}  // namespace tutorial_4_2
+
+TEST_CASE("tutorial 4/2") {
+  using namespace std;
+  using namespace std::literals::string_literals;
+  using namespace virtual_void::interface;
+  using namespace virtual_void::data::has_no_meta;
+  using namespace tutorial_4_2;
+  cout << endl << "*** tutorial 4/2" << endl;
+
+  vector<ostreamable<value>> values{ostreamable<value>("Hello"s), //1
+                                    ostreamable<value>(42),
+                                    ostreamable<value>(3.14)};
+  values.emplace_back(A{"world"});
+
+  for (auto value : values) cout << value << endl;  // 2
+}
+// <!-- end of sample
+#if 0
+// -->
+```
+
+We see
+- // 1 The vector requests ``ostreamable<values>``. The standard types all support ``std::ostream& operator<<(std::ostream& o, const ...& x)`` and are therefore ostreamble.
+- // 2a ``A`` has a become member function to_ostream, whitch is picked up, because A is no ``is_ostreamable``.
+- // 2b Instead of 2a, we could have given a the ``<<`` operator, witch makes A now ``is_ostreamable``.
+
+- <a name="t3"></a> 
+// <!--
+```cpp
+#endif begin sample
+// -->

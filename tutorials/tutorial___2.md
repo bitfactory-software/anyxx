@@ -71,6 +71,7 @@ static struct init {
 
 TEST_CASE("tutorial 2/1") {
   using namespace application;
+  std::cout << std::endl << "*** tutorial 2/1" << std::endl;
   core::customer a_customer{
       .name = "google", .address = "don't mail me", .vat_number = "4711"};
   core::hook1(a_customer);

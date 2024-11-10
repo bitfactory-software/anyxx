@@ -28,6 +28,7 @@ TEST_CASE("tutorial 1/1") {
   using namespace std::literals::string_literals;
   using namespace virtual_void::data::has_type_info;
   using namespace virtual_void;
+  cout << endl << "*** tutorial 1/1" << endl;
 
   struct A {
     string name;
@@ -81,6 +82,7 @@ TEST_CASE("tutorial 1/2") {
   using namespace virtual_void::data::has_type_info;
   using namespace virtual_void::open_method::via_type_info;
   using namespace virtual_void;
+  cout << endl << "*** tutorial 1/2" << endl;
 
   struct A {
     string name;
@@ -138,6 +140,7 @@ TEST_CASE("tutorial 1/3") {
   using namespace virtual_void::data::has_type_info;
   using namespace virtual_void::open_method::via_type_info;
   using namespace virtual_void;
+  cout << endl << "*** tutorial 1/3" << endl;
 
   struct A {
     string name;
@@ -217,6 +220,7 @@ TEST_CASE("tutorial 1/4") {
   using namespace std::literals::string_literals;
   using namespace virtual_void::data::has_no_meta;  // 5
   using namespace tutorial_1_4;
+  cout << endl << "*** tutorial 1/4" << endl;
 
   vector<to_ostream<value>> values{to_ostream<value>("Hello"s),
                                    to_ostream<value>(42),
