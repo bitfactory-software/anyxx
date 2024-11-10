@@ -8,3 +8,4 @@
 
 - [Overloading operators for an interface](/tutorials/tutorial___3.md)
   - [Custom operator<<](/tutorials/tutorial___3.md/#t1)
+  - [std::ostream opertor<<](/tutorials/tutorial___3.md/#t2)
