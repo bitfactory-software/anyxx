@@ -7,7 +7,7 @@
 ## Building blocks for *programming in the large*
 
 - lifetime handles [Tutorial](/tutorials/tutorial___1.md/#t1)
-- interfaces [Tutorial](/tutorials/tutorial___1.md/#t4)
+- interfaces [Tutorial](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
   - deriveable
   - upcastable
   - downcastable
