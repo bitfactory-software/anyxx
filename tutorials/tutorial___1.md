@@ -238,6 +238,8 @@ TEST_CASE("tutorial 1/4") {
 - // 6/7: Declares and fills a vector of ``values`` witch support the interface ``to_ostream``. In the initializer list, we have to request the *type erasure* by spelling out the target type, whereas in the case of ``emplace``, this can be done automatic.
 - // 8: The application of interface ``to_ostream.draw``
 
+Curious, how things can be further simplified? Take a look at [interface operator overloading](tutorial___3.md)
+
 ```cpp
 #endif begin sample
 // -->

@@ -3,6 +3,7 @@
 #include <optional>
 #include <type_traits>
 #include <typeinfo>
+#include <utility>
 
 #include "../virtual_void.h"
 

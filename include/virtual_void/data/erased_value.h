@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 namespace virtual_void::data {
 
 struct value_v_table {
