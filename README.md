@@ -6,14 +6,14 @@
 
 ## Building blocks for *programming in the large*
 
-- lifetime handles [Tutorial](/tutorials/tutorial___1.md/#t1)
-- interfaces [Tutorial](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
+- lifetime handles [Quick start](/tutorials/tutorial___1.md/#t1)
+- interfaces [Quick start](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
   - deriveable
   - upcastable
   - downcastable
-- open methods [Tutorial](/tutorials/tutorial___1.md/#t2)
+- open methods [Quick start](/tutorials/tutorial___1.md/#t2)
 - object casts
-- open objects [Tutorial](/tutorials/tutorial___2.md/#t1)
+- open objects [Quick start](/tutorials/tutorial___2.md/#t1)
 
 To enable
 
