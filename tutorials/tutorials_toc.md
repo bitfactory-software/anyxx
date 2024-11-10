@@ -6,3 +6,5 @@
   
 - [Instrumenting a type for additional members used by a plugin](/tutorials/tutorial___2.md/#t1)
 
+- [Overloading operators for an interface](/tutorials/tutorial___3.md)
+  - [Custom operator<<](/tutorials/tutorial___3.md/#t1)
