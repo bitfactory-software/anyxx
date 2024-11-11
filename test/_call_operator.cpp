@@ -38,32 +38,8 @@ struct functor2_t {
 }  // namespace
 
 template <typename VV>
-using call1 = call_operator<std::string(), const_, VV>;
-
-template <typename VV>
 using overloaded_function_object =
-    call_operator<std::string(const std::string), mutable_, VV, call1>;
-
-template <class...>
-struct make_overloaded_call_operator;
-
-template <class SIG>
-struct make_overloaded_call_operator<SIG> {
-  template <virtual_void::is_virtual_void VV>
-  using type = call_operator_interface<VV, base, const_, SIG>;
-};
-
-template <class SIG, class... SIGS>
-struct make_overloaded_call_operator<SIG, SIGS...> {
-  template <virtual_void::is_virtual_void VV>
-  using type = call_operator_interface<
-      VV, typename make_overloaded_call_operator<SIGS...>::type, const_,
-      SIG>;
-};
-
-template <virtual_void::is_virtual_void VV, class... SIGS>
-using overloaded_call_operator =
-    make_overloaded_call_operator<SIGS...>::template type<VV>;
+    overloaded_call_operator<VV, std::string(const std::string), mutable_, std::string(), const_>;
 
 namespace {
 template <template <typename> typename F, typename OBSERVER>
@@ -99,7 +75,7 @@ TEST_CASE("make_overloaded_call_operator") {
   functor2_t functor{"hallo"};
 
   auto f = overloaded_call_operator<
-      const_observer, std::string(const std::string& s), std::string()>{
+      const_observer, std::string(const std::string& s), const_, std::string(), const_>{
       functor};
 
   REQUIRE(f() == "hallo");

@@ -88,4 +88,25 @@ template <typename SIG, is_const_specifier CONST_SPECIFIER, is_virtual_void VIRT
 using call_operator =
     call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, SIG>;
 
+template <class...>
+struct make_overloaded_call_operator;
+
+template <class SIG, is_const_specifier CONST_SPECIFIER>
+struct make_overloaded_call_operator<SIG, CONST_SPECIFIER> {
+  template <virtual_void::is_virtual_void VV>
+  using type = call_operator_interface<VV, base, CONST_SPECIFIER, SIG>;
+};
+
+template <class SIG, is_const_specifier CONST_SPECIFIER, class... SIGS>
+struct make_overloaded_call_operator<SIG, CONST_SPECIFIER, SIGS...> {
+  template <virtual_void::is_virtual_void VV>
+  using type = call_operator_interface<
+      VV, typename make_overloaded_call_operator<SIGS...>::type, CONST_SPECIFIER,
+      SIG>;
+};
+
+template <virtual_void::is_virtual_void VV, class... SIGS>
+using overloaded_call_operator =
+    make_overloaded_call_operator<SIGS...>::template type<VV>;
+
 };  // namespace virtual_void::interface
