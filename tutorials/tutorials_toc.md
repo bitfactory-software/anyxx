@@ -1,4 +1,4 @@
-- [Storing different types in std::vector and streaming them to std::cout](tutorial___1.m) 
+- [Storing different types in std::vector and streaming them to std::cout](tutorial___1.md) 
   - [Simple ''value'' usage](/tutorials/tutorial___1.md/#t1)
   - [Simple ''open_method'' usage](/tutorials/tutorial___1.md/#t2)
   - [''open_method'' fill with overloads](/tutorials/tutorial___1.md/#t2)
