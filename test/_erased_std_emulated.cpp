@@ -19,13 +19,13 @@ using namespace virtual_void;
 
 namespace virtual_void {
 template <typename SIG>
-using function = interface::call_operator<SIG, const_, data::has_no_meta::value>;
+using function = interface::call_operator<data::has_no_meta::value, SIG>;
 template <typename SIG>
 using ref_function =
-    interface::call_operator<SIG, const_, data::has_no_meta::mutable_observer>;
+    interface::call_operator<data::has_no_meta::mutable_observer, SIG>;
 template <typename SIG>
 using move_only_function =
-    interface::call_operator<SIG, const_, data::has_no_meta::unique_ptr>;
+    interface::call_operator<data::has_no_meta::unique_ptr, SIG>;
 }  // namespace virtual_void
 
 using namespace virtual_void;

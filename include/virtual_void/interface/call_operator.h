@@ -83,7 +83,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)
  protected:
   call_operator_interface() = default;
 };
-template <typename SIG, is_const_specifier CONST_SPECIFIER, is_virtual_void VIRTUAL_VOID,
+template <is_virtual_void VIRTUAL_VOID, typename SIG, is_const_specifier CONST_SPECIFIER = const_,
           template <typename> typename BASE = base>
 using call_operator =
     call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, SIG>;
