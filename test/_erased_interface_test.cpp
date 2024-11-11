@@ -42,7 +42,7 @@ using shape_vv = shape_i<data::has_m_table::shared_const>;
 using shape_base_v = shape_base<data::has_no_meta::const_observer>;
 
 using shape =
-    interface::call_operator<std::string(std::string),
+    interface::call_operator<std::string(std::string), const_,
                              data::has_no_meta::const_observer, shape_d_i>;
 using shapeX = shape_d_i<data::has_no_meta::const_observer>;
 using shapeXX = shape_d_i<data::has_no_meta::const_observer>;

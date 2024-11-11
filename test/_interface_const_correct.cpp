@@ -66,10 +66,10 @@ TEST_CASE("_interface_const_correct void (const) *") {
   using namespace virtual_void;
 
   using const_function =
-      interface::call_operator<std::string(),
+      interface::call_operator<std::string(), const_, 
                                           data::has_no_meta::const_observer>;
   using mutating_function =
-      interface::mutable_call_operator<void(std::string),
+      interface::call_operator<void(std::string), mutable_,
                                                   data::has_no_meta::mutable_observer>;
 
   {
@@ -105,10 +105,10 @@ TEST_CASE("_interface_const_correct void (const) *") {
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
-      interface::call_operator<std::string(),
+      interface::call_operator<std::string(), const_,
                                           data::has_m_table::shared_const>;
-  using mutating_function = interface::mutable_call_operator<
-      void(std::string), data::has_m_table::shared_const>;
+  using mutating_function = interface::call_operator<
+      void(std::string), mutable_, data::has_m_table::shared_const>;
 
   {
     functor function_object;

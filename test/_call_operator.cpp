@@ -38,11 +38,11 @@ struct functor2_t {
 }  // namespace
 
 template <typename VV>
-using call1 = call_operator<std::string(), VV>;
+using call1 = call_operator<std::string(), const_, VV>;
 
 template <typename VV>
 using overloaded_function_object =
-    mutable_call_operator<std::string(const std::string), VV, call1>;
+    call_operator<std::string(const std::string), mutable_, VV, call1>;
 
 template <class...>
 struct make_overloaded_call_operator;
