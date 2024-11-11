@@ -57,24 +57,37 @@ class base {
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
-      : virtual_void_(*other), v_table_(other.get_v_table()) {}
+      : virtual_void_(get_virtual_void(other)), v_table_(get_v_table(other)) {}
   base(const base&) = default;
   base(base&) = default;
   base(base&&) = default;
-  virtual_void_t const& operator*() const { return virtual_void_; }
-  virtual_void_t& operator*() { return virtual_void_; }
-  v_table_t* get_v_table() const { return v_table_; }
-  bool is_derived_from(const std::type_info& from) const {
-    return v_table_->_is_derived_from(from);
+
+  template <is_virtual_void VV>
+  friend class base;
+
+  template <is_virtual_void VV>
+  friend auto& get_virtual_void(base<VV> const& interface) {
+    return interface.virtual_void_;
   }
-  template <typename FROM>
-  bool is_derived_from() const {
-    return is_derived_from(typeid(FROM::v_table_t));
+  template <is_virtual_void VV>
+  friend auto& get_v_table(base<VV> const& interface) {
+    return interface.v_table_;
   }
+
   void operator()() const {}
+
  protected:
   base() = default;
 };
+
+template <is_virtual_void VV>
+bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
+  return get_v_table(interface)->_is_derived_from(from);
+}
+template <typename FROM, is_virtual_void VV>
+bool is_derived_from(base<VV> const& interface) {
+  return is_derived_from(typeid(FROM::v_table_t), interface);
+}
 
 template <typename V_TABLE>
 void set_is_derived_from(auto v_table) {
@@ -93,7 +106,7 @@ template <typename TO, typename FROM>
 std::optional<TO> v_table_cast(const FROM& from)
   requires(std::derived_from<TO, FROM>)
 {
-  if (from.is_derived_from<TO>()) return {*static_cast<const TO*>(&from)};
+  if (is_derived_from<TO>(from)) return {*static_cast<const TO*>(&from)};
   return {};
 }
 

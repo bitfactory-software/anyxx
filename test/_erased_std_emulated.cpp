@@ -1,15 +1,15 @@
 #include <cmath>
+#include <concepts>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <concepts>
 
 import virtual_void;
-//#include "virtual_void/data/has_no_meta/observer.h"
-//#include "virtual_void/data/has_no_meta/unique_ptr.h"
-//#include "virtual_void/data/has_no_meta/value.h"
-//#include "virtual_void/interface/call_operator.h"
-//#include "virtual_void/interface/declare_macro.h"
+// #include "virtual_void/data/has_no_meta/observer.h"
+// #include "virtual_void/data/has_no_meta/unique_ptr.h"
+// #include "virtual_void/data/has_no_meta/value.h"
+// #include "virtual_void/interface/call_operator.h"
+// #include "virtual_void/interface/declare_macro.h"
 
 #include "include/catch.hpp"
 
@@ -44,24 +44,23 @@ TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
     function<std::string(const std::string)> f{functor};
-    data::has_no_meta::meta const* m = get_meta(*f);
-    REQUIRE(unerase_cast<functor_t>(*f)->s_ == "hallo");
+    data::has_no_meta::meta const* m = get_meta(get_virtual_void(f));
+    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");
-    REQUIRE(unerase_cast<functor_t>(*f)->s_ == "hallo world");
+    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo world");
   }
   {
-    function<std::string(const std::string)> f{
-        [](auto s) { return s; }};
+    function<std::string(const std::string)> f{[](auto s) { return s; }};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t functor{"hallo"};
     ref_function<std::string(const std::string)> f{functor};
-    REQUIRE(unerase_cast<functor_t>(*f)->s_ == "hallo");
+    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
-    REQUIRE(unerase_cast<functor_t>(*f)->s_ == "hallo world");
+    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo world");
   }
   {
     auto func = [](auto s) { return s; };
@@ -69,16 +68,18 @@ TEST_CASE("std emulated function") {
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    move_only_function<std::string(const std::string)> f{std::make_unique<functor_t>("hello")};
+    move_only_function<std::string(const std::string)> f{
+        std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
-    REQUIRE(unerase_cast<functor_t>(*f)->s_ == "hello world");
+    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hello world");
     static_assert(!std::assignable_from<
-        move_only_function<std::string(const std::string)>, 
-        move_only_function<std::string(const std::string)>>);
-    move_only_function<std::string(const std::string)> f2 = std::move(f); 
-    REQUIRE(!has_data(*f));
+                  move_only_function<std::string(const std::string)>,
+                  move_only_function<std::string(const std::string)>>);
+    move_only_function<std::string(const std::string)> f2 = std::move(f);
+    REQUIRE(!has_data(get_virtual_void(f)));
     REQUIRE(f2(", bye") == "hello world");
-    REQUIRE(unerase_cast<functor_t>(*f2)->s_ == "hello world, bye");
+    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f2))->s_ ==
+            "hello world, bye");
   }
 }
 }  // namespace

@@ -8,10 +8,10 @@
 import virtual_void;
 #include "virtual_void/interface/declare_macro.h"
 
-//#include "virtual_void/data/has_m_table/shared_const.h"
-//#include "virtual_void/data/has_no_meta/observer.h"
-//#include "virtual_void/data/has_no_meta/value.h"
-//#include "virtual_void/interface/call_operator.h"
+// #include "virtual_void/data/has_m_table/shared_const.h"
+// #include "virtual_void/data/has_no_meta/observer.h"
+// #include "virtual_void/data/has_no_meta/value.h"
+// #include "virtual_void/interface/call_operator.h"
 
 using namespace Catch::Matchers;
 
@@ -163,10 +163,10 @@ TEST_CASE("dynamic v_table const_observer") {
   interface::base<data::has_no_meta::const_observer> base_shapeX =
       shape_circleX;
 
-  REQUIRE(base_shape.is_derived_from<shape>());
-  REQUIRE(base_shape.is_derived_from<shapeX>());
-  REQUIRE(!shape_circleX.is_derived_from<shape>());
-  REQUIRE(shape_circleX.is_derived_from<shapeX>());
+  REQUIRE(is_derived_from<shape>(base_shape));
+  REQUIRE(is_derived_from<shapeX>(base_shape));
+  REQUIRE(!is_derived_from<shape>(shape_circleX));
+  REQUIRE(is_derived_from<shapeX>(shape_circleX));
   static_assert(std::derived_from<shape, shape_base_v>);
   static_assert(std::derived_from<shapeX, shape_base_v>);
   REQUIRE(interface::v_table_cast<shapeX>(base_shape));
@@ -201,12 +201,13 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   data::has_m_table::typed_shared_const<circle> sc{c};
   auto& c1 = sc;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
-  static_assert(
-      std::same_as<data::has_m_table::typed_shared_const<circle>::virtual_void_t,
-                   data::has_m_table::shared_const>);
+  static_assert(std::same_as<
+                data::has_m_table::typed_shared_const<circle>::virtual_void_t,
+                data::has_m_table::shared_const>);
   static_assert(is_virtual_typed<decltype(sc)>);
   shape_vv circle_shape_vv{sc};
-  auto unerased_circle = unerase_cast<circle const>(*circle_shape_vv);
+  auto unerased_circle =
+      unerase_cast<circle const>(get_virtual_void(circle_shape_vv));
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
   {
@@ -239,6 +240,6 @@ TEST_CASE("base") {
   {
     x_t a{"hallo"};
     value_base vb(a);
-    REQUIRE(unerase_cast<x_t>(*vb)->s_ == "hallo");
+    REQUIRE(unerase_cast<x_t>(get_virtual_void(vb))->s_ == "hallo");
   }
 }

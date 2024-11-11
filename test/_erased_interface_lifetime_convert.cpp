@@ -32,7 +32,7 @@ TEST_CASE("interface lifetime cast") {
   to_string_sc sc{X{"hallo"}};
   REQUIRE(sc.to_string() == "hallo");
   REQUIRE(
-      sc.is_derived_from<interface::base<data::has_no_meta::shared_const>>());
+      is_derived_from<interface::base<data::has_no_meta::shared_const>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const *>>, void>);
@@ -41,14 +41,14 @@ TEST_CASE("interface lifetime cast") {
   // static_assert( std::same_as<std::decay_t<void const *>,
   // std::add_const_t<void*>);
 
-  auto o1 = *sc;
+  auto o1 = get_virtual_void(sc);
   auto x = unerase_cast<X>(o1);
-  auto x1 = static_cast<X const *>(get_data(*sc));
+  auto x1 = static_cast<X const *>(get_data(get_virtual_void(sc)));
   REQUIRE(x->s_ == "hallo");
 
   to_string_co co = sc;
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
   REQUIRE(
-      co.is_derived_from<interface::base<data::has_no_meta::const_observer>>());
+      is_derived_from<interface::base<data::has_no_meta::const_observer>>(co));
 }
