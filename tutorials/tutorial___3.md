@@ -172,8 +172,8 @@ TEST_CASE("tutorial 4/2") {
 
 We see
 - // 1 The vector requests ``ostreamable<values>``. The standard types all support ``std::ostream& operator<<(std::ostream& o, const ...& x)`` and are therefore ostreamble.
-- // 2a ``A`` has a become member function to_ostream, whitch is picked up, because A is no ``is_ostreamable``.
-- // 2b Instead of 2a, we could have given ``A`` the ``<<`` operator, witch makes A now ``is_ostreamable``.
+- // 2a ``A`` has a become member function to_ostream, whitch is picked up, because ``A`` is no ``is_ostreamable``.
+- // 2b Instead of 2a, we could have given ``A`` the ``<<`` operator, witch makes ``A`` now ``is_ostreamable``.
 
 - <a name="t3"></a> 
 // <!--
