@@ -31,9 +31,7 @@ Let us step through an example:
 #include "catch.hpp"
 
 namespace application::core {
-struct customer; // 1a
-using customer_open_object = virtual_void::open_object::members<customer>;  // 1b
-struct customer : customer_open_object { // 1c
+struct customer : virtual_void::open_object::members<customer> { // 1
   std::string name;
   std::string address;
   std::string vat_number;
@@ -41,28 +39,23 @@ struct customer : customer_open_object { // 1c
 }  // namespace application::core
 
 namespace application::feature_plugin {
-struct usage_hint;  // 2a
-using usage_hint_customer_member =
-    virtual_void::open_object::member<core::customer, usage_hint,
-                                      std::string>;  // 2b
-struct usage_hint : usage_hint_customer_member {};   // 2c
+struct usage_hint : virtual_void::open_object::member
+                    <core::customer, usage_hint, std::string> {}; // 2
 }  // namespace application::feature_plugin
 
-const virtual_void::open_object::member_table_index<application::core::customer>
-    application::feature_plugin::usage_hint_customer_member::index;  // 3
 
 namespace application::core {
-std::function<void(customer&)> hook1;        // 4a
-std::function<void(customer const&)> hook2;  // 4b
+std::function<void(customer&)> hook1;        // 3a
+std::function<void(customer const&)> hook2;  // 3b
 }  // namespace application::core
 
 namespace application::feature_plugin {
 static struct init {
   init() {
-    application::core::hook1 = [](core::customer& customer) {  // 5a
+    application::core::hook1 = [](core::customer& customer) {  // 4a
       customer[usage_hint{}] = "handle with care";
     };
-    application::core::hook2 = [](core::customer const& customer) {  // 5b
+    application::core::hook2 = [](core::customer const& customer) {  // 4b
       std::cout << *customer.get(usage_hint{}) << std::endl;
     };
   }
@@ -82,11 +75,10 @@ TEST_CASE("tutorial 2/1") {
 // -->
 ```
 
-- // 1a-c prepare ``customer`` for usage with ``open_object::members``.
-- // 2a-c define the interface for the ``open_object::member`` ``usage_count`` in ``customer`` with type ``std::string``.
-- // 3 defines the static storeage, where the index of ``usage_count`` in the ``members`` ``std::vector`` is stored.
-- // 4a/b are inversion of control ``hook``s to call into plugin code.
-- // 5a/b fills the hooks with the plugin logic. Here we access ``usage_count`` in ``customer``.
+- // 1 prepare ``customer`` for usage with ``open_object::members``.
+- // 2 define the interface for the ``open_object::member`` ``usage_count`` in ``customer`` with type ``std::string``.
+- // 3a/b are inversion of control ``hook``s to call into plugin code.
+- // 4a/b fills the hooks with the plugin logic. Here we access ``usage_count`` in ``customer``.
 
 // <!--
 ```cpp

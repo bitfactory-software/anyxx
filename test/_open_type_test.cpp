@@ -18,13 +18,6 @@ struct test_object : members<test_object> {};  // name your open_object
 struct test_member : member<test_object, test_member, std::string> {
 };  // define your meber
 
-const member_table_index<test_object>
-    member<test_object, test_member, std::string>::
-        index;  // declare the static index, witch is used by "mebers" to access
-                // this member. This static variable must be reachable from each
-                // translation unit, that wants to access the memebers from
-                // test_object for each accces
-
 TEST_CASE("open object 1") {
   REQUIRE(open_object::type_member_count_of<test_object>() == 1);
   test_object a_test_object;

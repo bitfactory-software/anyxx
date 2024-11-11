@@ -48,21 +48,15 @@ struct members {
   }
 };
 
-template <typename OBJECT_TYPE>
-struct member_table_index {
-  const std::size_t value;
-  member_table_index() : value(type_member_count_of<OBJECT_TYPE>()) {
-    ++type_member_count_of<OBJECT_TYPE>();
-  }
-};
+template <typename OBJECT_TYPE, typename MEMBER_TYPE >
+const int member_table_index = type_member_count_of<OBJECT_TYPE>()++;
 
 template <typename OBJECT_TYPE, typename MEMBER_TYPE, typename VALUE_TYPE>
 struct member {
   using object_t = OBJECT_TYPE;
   using member_t = MEMBER_TYPE;
   using value_t = VALUE_TYPE;
-  static const member_table_index<OBJECT_TYPE> index;
-  static std::size_t get_index() { return member_t::index.value; }
+  static std::size_t get_index() { return member_table_index<OBJECT_TYPE, MEMBER_TYPE>; }
 };
 
 }  // namespace virtual_void::open_object
