@@ -4,15 +4,17 @@
 #include <vector>
 
 #include "include/catch.hpp"
-#include "virtual_void/data/has_m_table/shared_const.h"
-#include "virtual_void/data/has_no_meta/observer.h"
-#include "virtual_void/data/has_no_meta/value.h"
-#include "virtual_void/interface/call_operator.h"
+
+import virtual_void;
 #include "virtual_void/interface/declare_macro.h"
+
+//#include "virtual_void/data/has_m_table/shared_const.h"
+//#include "virtual_void/data/has_no_meta/observer.h"
+//#include "virtual_void/data/has_no_meta/value.h"
+//#include "virtual_void/interface/call_operator.h"
 
 using namespace Catch::Matchers;
 
-//import virtual_void;
 using namespace virtual_void;
 
 const double M_PI = 3.14;

@@ -4,14 +4,16 @@
 #include <string>
 
 #include "include/catch.hpp"
-#include "virtual_void/data/has_no_meta/observer.h"
-#include "virtual_void/data/has_no_meta/value.h"
-#include "virtual_void/interface/base.h"
+
+import virtual_void;
 #include "virtual_void/interface/declare_macro.h"
+
+//#include "virtual_void/data/has_no_meta/observer.h"
+//#include "virtual_void/data/has_no_meta/value.h"
+//#include "virtual_void/interface/base.h"
 
 using namespace Catch::Matchers;
 
-// import virtual_void;
 using namespace virtual_void;
 using namespace data::has_no_meta;
 

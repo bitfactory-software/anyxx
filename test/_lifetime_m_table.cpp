@@ -7,17 +7,17 @@
 
 #include "include/catch.hpp"
 
-#include "virtual_void/data/has_m_table/observer.h"
-#include "virtual_void/data/has_m_table/shared_const.h"
-#include "virtual_void/data/has_m_table/unique.h"
-#include "virtual_void/data/has_m_table/value.h"
-#include "virtual_void/data/has_m_table/shared_const_ptr.h"
-#include "virtual_void/data/has_m_table/unique_ptr.h"
+import virtual_void;
+//#include "virtual_void/data/has_m_table/observer.h"
+//#include "virtual_void/data/has_m_table/shared_const.h"
+//#include "virtual_void/data/has_m_table/unique.h"
+//#include "virtual_void/data/has_m_table/value.h"
+//#include "virtual_void/data/has_m_table/shared_const_ptr.h"
+//#include "virtual_void/data/has_m_table/unique_ptr.h"
 
 
 using namespace Catch::Matchers;
 
-//import virtual_void;
 #include "class_hierarchy_test_hierarchy.h"
 
 using namespace virtual_void;

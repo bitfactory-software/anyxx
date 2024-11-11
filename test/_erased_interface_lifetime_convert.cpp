@@ -4,11 +4,13 @@
 #include <vector>
 
 #include "include/catch.hpp"
-#include "virtual_void/interface/base.h"
-#include "virtual_void/data/has_no_meta/observer.h"
-#include "virtual_void/data/has_no_meta/shared_const.h"
+
+import virtual_void;
 #include "virtual_void/interface/declare_macro.h"
-//import virtual_void;
+
+//#include "virtual_void/interface/base.h"
+//#include "virtual_void/data/has_no_meta/observer.h"
+//#include "virtual_void/data/has_no_meta/shared_const.h"
 
 using namespace Catch::Matchers;
 
