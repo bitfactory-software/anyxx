@@ -7,8 +7,8 @@
 
 | meta data placement | description |
 |-|-|
-| decorated pointer | |
-| decorated data | |
+| ``decorated_ptr`` | |
+| ``decorated_data`` | |
 
 | type | meta data placement| lifetime requirements | description |
 |------|-|-------|--------|
