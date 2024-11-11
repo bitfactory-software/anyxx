@@ -1,6 +1,6 @@
 | meta data kind | description |
 |-|-|
-| ``no_meta_data`` | Pure ``void`` pointer, no safe cast back. Usefull if application can store meta information elsewhere.</br> Example usage: ``open_object`` |
+| ``no_meta_data`` | - Pure ``void`` pointer.</br>-No memory overhead.</br>No safe cast back.</br>Usefull if application can store meta information elsewhere.</br>**Example** usage: ``open_object`` |
 | ``has_type_info`` | |
 | ``has_m_table`` | |
 
