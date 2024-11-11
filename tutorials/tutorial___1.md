@@ -92,7 +92,7 @@ TEST_CASE("tutorial 1/2") {
                        erased<value>(3.14), erased<value>(A{"world"})};
 
   domain domain;
-  declare<void(void* const, ostream&)> draw{domain};
+  declare<void(mutable_ const, ostream&)> draw{domain};
   draw.define<string>([](auto* x, ostream& o) { o << *x; });
   draw.define<int>([](auto* x, ostream& o) { o << *x; });
   draw.define<double>([](auto* x, ostream& o) { o << *x; });
@@ -150,7 +150,7 @@ TEST_CASE("tutorial 1/3") {
                        erased<value>(3.14), erased<value>(A{"world"})};
 
   domain domain;
-  declare<void(void* const, ostream&)> draw{domain};
+  declare<void(const_, ostream&)> draw{domain};
   open_method::fill_with_overloads<string, int, double>(
       draw, [](auto* x, ostream& o) { o << *x; }); // <-- 1)
   draw.define<A>([](auto* x, ostream& o) { o << x->name; });

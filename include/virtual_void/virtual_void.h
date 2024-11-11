@@ -58,12 +58,30 @@ concept is_virtual_typed = requires(E e) {
   //  { e.meta()->type_info() } -> std::convertible_to<std::type_info const*>;
 };
 
+struct mutable_ {};
+struct const_ {};
 template <typename VOID>
 struct is_const_void_;
 template <>
 struct is_const_void_<void*> : std::false_type {};
 template <>
 struct is_const_void_<void const*> : std::true_type {};
+template <>
+struct is_const_void_<mutable_> : std::false_type {};
+template <>
+struct is_const_void_<const_> : std::true_type {};
+template <typename CONST_SPECIFIER>
+struct void_;
+template <>
+struct void_<mutable_> {
+  using type = void*;
+};
+template <>
+struct void_<const_> {
+  using type = void const*;
+};
+template <typename CONST_SPECIFIER>
+using void_t = void_<CONST_SPECIFIER>::type;
 
 template <typename VOID>
 concept is_const_void = is_const_void_<VOID>::value;
@@ -179,7 +197,8 @@ class type_mismatch_error : error {
 };
 template <typename U, typename META>
 void check_type_match(META const* meta) {
-  if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
+  if (auto type_info = meta->type_info(); type_info && *type_info != typeid(U))
+    throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 void check_type_match(VIRTUAL_VOID const& o) {

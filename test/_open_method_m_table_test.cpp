@@ -24,7 +24,7 @@ using namespace TestDomain;
 
 auto ToString = [](const auto* t) -> std::string { return typeid(*t).name(); };
 
-using to_string_method = declare<std::string(const void*)>;
+using to_string_method = declare<std::string(virtual_void::const_)>;
 
 template <typename T>
 auto call(const to_string_method& method) {

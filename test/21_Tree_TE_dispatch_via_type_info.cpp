@@ -65,7 +65,7 @@ open_method::via_type_info::domain tree_open_methods;
 // evaluate
 
 auto value =
-    open_method::via_type_info::declare<int(const void*)>{tree_open_methods};
+    open_method::via_type_info::declare<int(virtual_void::const_)>{tree_open_methods};
 
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
@@ -79,7 +79,7 @@ auto __ = value.define<Integer>([](auto expr) { return expr->value; });
 // render as Forth
 
 auto as_forth =
-    open_method::via_type_info::declare<string(const void*)>{tree_open_methods};
+    open_method::via_type_info::declare<string(virtual_void::const_)>{tree_open_methods};
 
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
@@ -96,7 +96,7 @@ auto __ = as_forth.define<Integer>(
 // render as Lisp
 
 auto as_lisp =
-    open_method::via_type_info::declare<string(const void*)>{tree_open_methods};
+    open_method::via_type_info::declare<string(virtual_void::const_)>{tree_open_methods};
 
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";

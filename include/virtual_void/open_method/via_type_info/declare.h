@@ -13,15 +13,16 @@ template <typename R, typename... ARGS>
 class declare;
 template <typename R, typename... ARGS>
 class declare<R(ARGS...)> : public declaration_base {
-  static_assert(std::same_as<first_t<ARGS...>, void*> ||
-                std::same_as<first_t<ARGS...>, const void*>);
+  static_assert(std::same_as<first_t<ARGS...>, mutable_> ||
+                std::same_as<first_t<ARGS...>, const_>);
 
  public:
-  using dispatch_t = typename first_t<ARGS...>;
+  using const_specifier = typename first_t<ARGS...>;
+  using dispatch_t = void_t<const_specifier>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
   using param_t = data::has_type_info::observer<dispatch_t>;
-  using erased_function_t = R (*)(ARGS...);
+  using erased_function_t = typename translate_erased_function< R, ARGS...>::type;
 
  public:
   using declaration_base::declaration_base;

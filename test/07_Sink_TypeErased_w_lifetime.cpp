@@ -63,10 +63,10 @@ std::string ToString_(const SuperStringData* x) {
 virtual_void::open_method::via_m_table::domain applicationDomain;
 
 auto entityToOut =
-    virtual_void::open_method::via_m_table::declare<void(const void*)>{
+    virtual_void::open_method::via_m_table::declare<void(virtual_void::const_)>{
         applicationDomain};
 auto toString =
-    virtual_void::open_method::via_m_table::declare<std::string(const void*)>{
+    virtual_void::open_method::via_m_table::declare<std::string(virtual_void::const_)>{
         applicationDomain};
 auto typeid_const_cast = virtual_void::typeid_cast::const_cast_method<
     virtual_void::open_method::via_m_table::declare>{applicationDomain};

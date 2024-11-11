@@ -43,7 +43,7 @@ struct cast_implementation {
 };
 template <template <typename SIG> typename OPEN_METHOD>
 using const_cast_method =
-    OPEN_METHOD<void const* (void const*, const std::type_info& to)>;
+    OPEN_METHOD<void const*(const_, const std::type_info& to)>;
 template <template <typename SIG> typename OPEN_METHOD>
 using cast_method = OPEN_METHOD<void*(const void*, const std::type_info& to)>;
 void fill_const_cast_for(auto classes, auto& method) {

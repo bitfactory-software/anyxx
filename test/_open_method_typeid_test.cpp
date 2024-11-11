@@ -21,7 +21,7 @@ namespace
 
 	auto ToString = []( const auto* t )->std::string{ return typeid( *t ).name(); };  
 
-	using to_string_method = open_method::via_type_info::declare< std::string( const void* ) >;
+	using to_string_method = open_method::via_type_info::declare< std::string(virtual_void::const_) >;
 
 	template< typename T > std::string call( const to_string_method& method )
 	{ 
