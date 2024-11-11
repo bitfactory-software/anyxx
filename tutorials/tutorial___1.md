@@ -16,12 +16,12 @@ A simple usage looks like this:
 ```cpp
 #endif begin sample
 // -->
-#include <virtual_void/data/has_type_info/value.h>
-
 #include <iostream>
 #include <vector>
-
 #include "catch.hpp"
+
+import virtual_void;
+
 
 TEST_CASE("tutorial 1/1") {
   using namespace std;
@@ -65,16 +65,15 @@ With such an *open method* in place, our code look like this:
 
 
 // <!--
-```cpp
+```
 #endif begin sample
 // -->
-#include <virtual_void/data/has_type_info/value.h>
-#include <virtual_void/open_method/via_type_info/declare.h>
-
 #include <iostream>
 #include <vector>
-
 #include "catch.hpp"
+
+import virtual_void;
+
 
 TEST_CASE("tutorial 1/2") {
   using namespace std;
@@ -130,15 +129,11 @@ the library provides a shortcut for you:
 ```cpp
 #endif begin sample
 // -->
-
-#include <virtual_void/data/has_type_info/value.h>
-#include <virtual_void/open_method/algorithm.h>
-#include <virtual_void/open_method/via_type_info/declare.h>
-
 #include <iostream>
 #include <vector>
-
 #include "catch.hpp"
+
+import virtual_void;
 
 TEST_CASE("tutorial 1/3") {
   using namespace std;
@@ -186,14 +181,12 @@ For our case, we could do it this way:
 ```cpp
 #endif begin sample
 // -->
-#include <virtual_void/data/has_no_meta/value.h>
-#include <virtual_void/interface/base.h>
-#include <virtual_void/interface/declare_macro.h>
-
 #include <iostream>
 #include <vector>
-
 #include "catch.hpp"
+
+import virtual_void;
+#include <virtual_void/interface/declare_macro.h>
 
 namespace tutorial_1_4 {
 ERASED_INTERFACE(to_ostream,
