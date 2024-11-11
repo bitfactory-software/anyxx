@@ -10,10 +10,11 @@ This is a usefull feature.
 For example, you have some objects of type customer in the core of your system.
 Here you keep al the usual name, address and payment data.
 One day, one of your plugins, need *only* one more field. (/irony off)
-This is with an language like above no problem. 
+This is with onoe of the above languages no problem. 
+
 In contrary to c++.
 
-When you foresee such demands and have library support for *open objects*, you can adapt the classes, where such a demand could arise.
+When you foresee such demands and have the right library support for *open objects*, you can prepare the classes, where such a demand could arise.
 (Or at least, you can adapt the class the first time you encounter this scenario.)
 
 Let us step through an example:
