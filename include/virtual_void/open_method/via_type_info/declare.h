@@ -13,8 +13,7 @@ template <typename R, typename... ARGS>
 class declare;
 template <typename R, typename... ARGS>
 class declare<R(ARGS...)> : public declaration_base {
-  static_assert(std::same_as<first_t<ARGS...>, mutable_> ||
-                std::same_as<first_t<ARGS...>, const_>);
+  static_assert(is_const_specifier<first_t<ARGS...>>);
 
  public:
   using const_specifier = typename first_t<ARGS...>;

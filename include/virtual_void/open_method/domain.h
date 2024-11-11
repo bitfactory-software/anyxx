@@ -14,7 +14,7 @@ struct domain {
 template <typename RET, typename... ARGS>
 struct translate_erased_function;
 
-template <typename RET, typename CONST_SPECIFIER, typename... OTHER_ARGS>
+template <typename RET, is_const_specifier CONST_SPECIFIER, typename... OTHER_ARGS>
 struct translate_erased_function<RET, CONST_SPECIFIER, OTHER_ARGS...> {
   using type = RET (*)(void_t<CONST_SPECIFIER>, OTHER_ARGS...);
 };

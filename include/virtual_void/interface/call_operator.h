@@ -4,7 +4,7 @@
 
 namespace virtual_void::interface {
 
-template <typename BASE_V_TABLE, typename CONST, typename RET, typename... ARGS>
+template <typename BASE_V_TABLE, typename VOID, typename RET, typename... ARGS>
 struct call_operator_v_table : BASE_V_TABLE {
   using v_table_base_t = BASE_V_TABLE;
   using void_t = v_table_base_t::void_t;
@@ -18,7 +18,7 @@ struct call_operator_v_table : BASE_V_TABLE {
   template <typename UNERASE>
   call_operator_v_table(UNERASE unerase)
       : BASE_V_TABLE(unerase) {
-    if constexpr (const_correct_target_for_data<CONST, void_t>) {
+    if constexpr (const_correct_target_for_data<VOID, void_t>) {
       call_op = [](void_t _vp, ARGS&&... args) {
         return (*UNERASE{}(_vp))(std::forward<ARGS>(args)...);
       };
@@ -28,20 +28,20 @@ struct call_operator_v_table : BASE_V_TABLE {
 };
 
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
-          typename CONST, typename RET, typename... ARGS>
+          is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
 struct call_operator_interface;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
-          typename CONST, typename RET, typename... ARGS>
-struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
+          is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
+struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
     : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
   using v_table_base_t = base_t::v_table_t;
-  using v_table_t = call_operator_v_table<v_table_base_t, CONST, RET, ARGS...>;
+  using v_table_t = call_operator_v_table<v_table_base_t, CONST_SPECIFIER, RET, ARGS...>;
   using query_v_table_unique_t =
-      call_operator_v_table<base<virtual_void_t>, CONST, RET, ARGS...>;
+      call_operator_v_table<base<virtual_void_t>, virtual_void::void_t<CONST_SPECIFIER>, RET, ARGS...>;
   template <typename T>
   using is_already_base =
       std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
@@ -71,7 +71,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
     requires(std::derived_from<OTHER, base_t>)
       : base_t(other) {}
   RET operator()(ARGS&&... args) const
-    requires(const_correct_for_virtual_void<CONST, virtual_void_t>)
+    requires(const_correct_for_virtual_void<virtual_void::void_t<CONST_SPECIFIER>, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->call_op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
@@ -86,11 +86,11 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST, RET(ARGS...)>
 template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
 using call_operator =
-    call_operator_interface<VIRTUAL_VOID, BASE, const void*, SIG>;
+    call_operator_interface<VIRTUAL_VOID, BASE, const_, SIG>;
 
 template <typename SIG, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE = base>
 using mutable_call_operator =
-    call_operator_interface<VIRTUAL_VOID, BASE, void*, SIG>;
+    call_operator_interface<VIRTUAL_VOID, BASE, mutable_, SIG>;
 
 };  // namespace virtual_void::interface

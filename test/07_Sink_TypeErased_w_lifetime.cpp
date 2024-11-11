@@ -9,12 +9,14 @@
 #include <vector>
 
 #include "include/catch.hpp"
-#include "virtual_void/data/has_m_table/shared_const.h"
-#include "virtual_void/open_method/algorithm.h"
-#include "virtual_void/open_method/via_m_table/declare.h"
-#include "virtual_void/typeid_cast/cast.h"
 
-// import virtual_void;
+import virtual_void;
+
+//#include "virtual_void/data/has_m_table/shared_const.h"
+//#include "virtual_void/open_method/algorithm.h"
+//#include "virtual_void/open_method/via_m_table/declare.h"
+//#include "virtual_void/typeid_cast/cast.h"
+
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;
 

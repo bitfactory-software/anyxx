@@ -50,14 +50,14 @@ struct make_overloaded_call_operator;
 template <class SIG>
 struct make_overloaded_call_operator<SIG> {
   template <virtual_void::is_virtual_void VV>
-  using type = call_operator_interface<VV, base, const void*, SIG>;
+  using type = call_operator_interface<VV, base, const_, SIG>;
 };
 
 template <class SIG, class... SIGS>
 struct make_overloaded_call_operator<SIG, SIGS...> {
   template <virtual_void::is_virtual_void VV>
   using type = call_operator_interface<
-      VV, typename make_overloaded_call_operator<SIGS...>::type, const void*,
+      VV, typename make_overloaded_call_operator<SIGS...>::type, const_,
       SIG>;
 };
 
