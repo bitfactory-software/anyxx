@@ -79,8 +79,8 @@ With such an *open method* in place, our code look like this:
 TEST_CASE("tutorial 1/2") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_type_info;
-  using namespace virtual_void::open_method::via_type_info;
+  using namespace virtual_void::data::has_type_info; //1
+  using namespace virtual_void::open_method::via_type_info; // 2
   using namespace virtual_void;
   cout << endl << "*** tutorial 1/2" << endl;
 
@@ -92,19 +92,25 @@ TEST_CASE("tutorial 1/2") {
                        erased<value>(3.14), erased<value>(A{"world"})};
 
   domain domain;
-  declare<void(mutable_ const, ostream&)> draw{domain};
-  draw.define<string>([](auto* x, ostream& o) { o << *x; });
-  draw.define<int>([](auto* x, ostream& o) { o << *x; });
-  draw.define<double>([](auto* x, ostream& o) { o << *x; });
-  draw.define<A>([](auto* x, ostream& o) { o << x->name; });
+  declare<void(const_, ostream&)> draw{domain}; // 3
+  draw.define<string>([](auto* x, ostream& o) { o << *x; }); // 4a
+  draw.define<int>([](auto* x, ostream& o) { o << *x; }); // 4b
+  draw.define<double>([](auto* x, ostream& o) { o << *x; }); // 4c
+  draw.define<A>([](auto* x, ostream& o) { o << x->name; }); // 4d
   draw.seal_for_runtime();
 
-  for (auto value : values) draw(value, cout), cout << endl;
+  for (auto value : values) draw(value, cout), cout << endl; // 5
 }
 // <!-- end of sample
 #if 0 
 // -->
 ```
+
+- // 1 We use the erased ``data`` that carries meta information for ``type_info``.
+- // 2 We will use an open method ``via_type_info``. This kind of ``open_method`` uses a *perfact hash* from a ``type_info`` to the target function.
+- // 3 ``declare`` `s the name and the signature of the open method. The first parameter type must be ``const_`` or ``mutable_``. 
+- // 4a-d ``define`` the target function for a type. This function gets registered for the types ``type_info``.
+- // 5 because our vaules carry meta information for ``type_info`` (see // 1), we can call to the ``open_method`` ``draw`` with a ``value`` as the first parameter..
 
 This technique allows us to decouple three aspects of one type:
 - construction
@@ -152,7 +158,7 @@ TEST_CASE("tutorial 1/3") {
   domain domain;
   declare<void(const_, ostream&)> draw{domain};
   open_method::fill_with_overloads<string, int, double>(
-      draw, [](auto* x, ostream& o) { o << *x; }); // <-- 1)
+      draw, [](auto* x, ostream& o) { o << *x; }); // 1
   draw.define<A>([](auto* x, ostream& o) { o << x->name; });
   draw.seal_for_runtime();
 
