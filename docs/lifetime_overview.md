@@ -10,7 +10,7 @@
 | decorated pointer | |
 | decorated data | |
 
-| type | meta data placement| lifetime requirements | description & usage |
+| type | meta data placement| lifetime requirements | description |
 |------|-|-------|--------|
 | const_observer | decorated pointer | | |
 | mutable_observer | decorated pointer | | |
