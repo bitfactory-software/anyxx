@@ -30,11 +30,11 @@ struct operator_v_table : BASE_V_TABLE {
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE, is_const_specifier CONST_SPECIFIER,
           typename RET, typename... ARGS>
-struct operator_interface;
+struct operator_;
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE, is_const_specifier CONST_SPECIFIER,
           typename RET, typename... ARGS>
-struct operator_interface<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
+struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
                           RET(ARGS...)> : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
@@ -60,10 +60,10 @@ struct operator_interface<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
   using base_t::virtual_void_;
 
  public:
-  operator_interface(virtual_void_t virtual_void, v_table_t* v_table)
+  operator_(virtual_void_t virtual_void, v_table_t* v_table)
       : base_t(std::move(virtual_void), v_table) {}
   template <typename CONSTRUCTED_WITH>
-  operator_interface(CONSTRUCTED_WITH&& v)
+  operator_(CONSTRUCTED_WITH&& v)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static v_table_t imlpemented_v_table{
@@ -71,7 +71,7 @@ struct operator_interface<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
     v_table_ = &imlpemented_v_table;
   }
   template <typename OTHER>
-  operator_interface(const OTHER& other)
+  operator_(const OTHER& other)
     requires(std::derived_from<OTHER, base_t>)
       : base_t(other) {}
   // RET operator()(ARGS&&... args) const
@@ -88,12 +88,12 @@ struct operator_interface<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
     return static_cast<v_table_t*>(v_table_)->call_op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
   }
-  operator_interface(const operator_interface&) = default;
-  operator_interface(operator_interface&) = default;
-  operator_interface(operator_interface&&) = default;
+  operator_(const operator_&) = default;
+  operator_(operator_&) = default;
+  operator_(operator_&&) = default;
 
  protected:
-  operator_interface() = default;
+  operator_() = default;
 };
 
 };  // namespace virtual_void::interface
