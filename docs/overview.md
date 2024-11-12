@@ -8,7 +8,7 @@
 | meta data placement | description |
 |-|-|
 | ``decorated_ptr`` | Pointer to *meta data* beneth *(smart)pointer* to *erased data*.</br>One copy per pointer. |
-| ``decorated_data`` | Meta allocated with erased data.</br>One copy per erasd data. |
+| ``decorated_data`` | Meta allocated with erased data.</br>One copy per erased data. |
 
 | type | meta data placement| lifetime requirements | description |
 |------|-|-------|--------|
