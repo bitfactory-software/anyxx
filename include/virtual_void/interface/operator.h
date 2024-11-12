@@ -15,12 +15,12 @@ struct operator_v_table : BASE_V_TABLE {
                ? true
                : BASE_V_TABLE::static_is_derived_from(from);
   }
-  RET (*call_op)(void_t, ARGS&&...);
+  RET (*op)(void_t, ARGS&&...);
   template <typename UNERASE>
   operator_v_table(UNERASE unerase) : BASE_V_TABLE(unerase) {
     if constexpr (const_correct_target_for_data<VOID, void_t>) {
-      call_op = [](void_t _vp, ARGS&&... args) {
-        return (*UNERASE{}(_vp))(std::forward<ARGS>(args)...);
+      op = [](void_t _vp, ARGS&&... args) -> RET {
+        return TARGET{}(UNERASE{}(_vp), std::forward<ARGS>(args)...);
       };
       set_is_derived_from<v_table_t>(this);
     }
@@ -34,8 +34,8 @@ struct operator_;
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE, is_const_specifier CONST_SPECIFIER,
           typename RET, typename... ARGS>
-struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
-                          RET(ARGS...)> : BASE<VIRTUAL_VOID> {
+struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
+    : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
@@ -85,7 +85,7 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
     requires(const_correct_for_virtual_void<
              virtual_void::void_t<CONST_SPECIFIER>, virtual_void_t>)
   {
-    return static_cast<v_table_t*>(v_table_)->call_op(
+    return static_cast<v_table_t*>(v_table_)->op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
   }
   operator_(const operator_&) = default;

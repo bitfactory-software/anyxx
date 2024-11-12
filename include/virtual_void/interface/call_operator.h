@@ -7,7 +7,7 @@ namespace virtual_void::interface {
 
 struct call_operator_target {
   template <typename... ARGS>
-  auto operator()(auto self, ARGS&&... args) const {
+  decltype(auto) operator()(auto self, ARGS&&... args) const {
     return (*self)(std::forward<ARGS>(args)...);
   }
 };

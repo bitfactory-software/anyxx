@@ -75,6 +75,7 @@ class base {
   }
 
   void operator()() const {}
+  void* operator[](void*) const {}
 
  protected:
   base() = default;
