@@ -15,7 +15,7 @@
 | ``decorated_ptr`` | Pointer to *meta data* beneth *(smart)pointer* to *erased data*.</br>One copy per pointer. |
 | ``decorated_data`` | Meta allocated with erased data.</br>One copy per erased data. |
 
-## 'Liftime habdle' + 'Meta data decoration' maka a ``is_virtual_void`` model 
+## A 'Lifetime handle' with a 'Meta data decoration' maka a ``is_virtual_void`` model: 
 
 | Lifetime type | Meta data decoration | Lifetime requirements | Concurrency considerations / Notes  | 
 |------|-|-------|--------|
