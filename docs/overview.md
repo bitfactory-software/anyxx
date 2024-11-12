@@ -10,7 +10,7 @@
 | ``decorated_ptr`` | Pointer to *meta data* beneth *(smart)pointer* to *erased data*.</br>One copy per pointer. |
 | ``decorated_data`` | Meta allocated with erased data.</br>One copy per erased data. |
 
-| Type | Meta data placement| Lifetime requirements | Description |
+| Lifetime category | Meta data placement| Lifetime requirements | Description |
 |------|-|-------|--------|
 | ``const_observer`` | ``decorated_ptr`` | | |
 | ``mutable_observer`` | ``decorated_ptr`` | | |
