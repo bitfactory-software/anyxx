@@ -1,3 +1,5 @@
+# Aspects of *erased data* in ``virtual_void``  
+
 | Meta data kind | Description |
 |-|-|
 | ``no_meta_data`` | - Pure ``void`` pointer.</br>-No memory overhead.</br>-No safe cast back.</  br>- Usefull if application can store meta information elsewhere.</br>- **Usage**:  implementation of ``open_object``, ad hoc ``interface`` usage. |
