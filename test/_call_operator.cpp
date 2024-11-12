@@ -43,11 +43,11 @@ using overloaded_function_object =
 
 namespace {
 template <template <typename> typename F, typename OBSERVER>
-constexpr bool call_mutable = requires(functor_t functor, std::string s) {
+concept call_mutable = requires(functor_t functor, std::string s) {
   F<OBSERVER>{functor}(" world") == s;
 };
 template <template <typename> typename F, typename OBSERVER>
-constexpr bool call_const = requires(functor_t const functor, std::string s) {
+concept call_const = requires(functor_t const functor, std::string s) {
   F<OBSERVER>{functor}() == s;
 };
 }  // namespace
