@@ -19,5 +19,5 @@
 | ``shared_const_ptr`` | ``..._ptr`` | Same as ``std::shared_ptr``.</br>Use, if </br>- you can not control construction, or</br>- you interact with code unaware of ``virtual_void``. | Threadsave.</br>Makes additional *type erased* shared_ptr to original data. |
 | ``shared_const`` | ``..._data`` | Same as ``std::shared_ptr``.</br>Use, if you can control full lifetime in ``virtual_void`` aware code. | Threadsave.</br>Use if lifteime  |
 | ``unique_ptr`` | ``..._ptr`` | Same as ``std::unique_ptr``.</br>Use, if </br>- you can not control construction, or</br>- you interact with code unaware of ``virtual_void``. | Takes *type erased* ownership original data. | 
-| ``unique`` | ``..._data`` | | |
-| ``value`` | ``..._data`` | | |
+| ``unique`` | ``..._data`` | Same as ``std::unique_ptr``.</br>Use, if you can control full lifetime in ``virtual_void`` aware code. | |
+| ``value`` | ``..._data`` | Same as ``std::any`` | Thredasafe. |
