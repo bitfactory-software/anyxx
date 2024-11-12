@@ -19,7 +19,7 @@
 
 | Lifetime type | Meta data decoration | Lifetime requirements | Concurrency considerations / Notes  | 
 |------|-|-------|--------|
-| ``const_observer`` | ``..._ptr`` | Observed object must outlive call. | If observed object is ``const``, threadsave. |
+| ``const_observer`` | ``..._ptr`` | Observed object must outlive call. | Threadsave, if observed object is ``const`` turing lifetime of observer. |
 | ``mutable_observer`` | ``..._ptr`` | Observed object must outlive call. | Not threadsave. |
 | ``shared_const_ptr`` | ``..._ptr`` | Same as ``std::shared_ptr``.</br>Use, if </br>- you can not control construction, or</br>- you interact with code unaware of ``virtual_void``. | Threadsave.</br>Makes additional *type erased* shared_ptr to original data. |
 | ``shared_const`` | ``..._data`` | Same as ``std::shared_ptr``.</br>Use, if you can control full lifetime in ``virtual_void`` aware code. | Threadsave.</br>Use if lifteime  |
