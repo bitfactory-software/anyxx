@@ -5,17 +5,17 @@
 | ``has_m_table`` | - Pointer to ``m_table`` and indirect to ``type_info`` of type known at construction.</br>- **Enables** same options as ``has_type_info``</br>- **Enables** ``open_method::via_m_table``  |
 
 
-| Meta data placement | Description |
+| Meta data decoration | Description |
 |-|-|
 | ``decorated_ptr`` | Pointer to *meta data* beneth *(smart)pointer* to *erased data*.</br>One copy per pointer. |
 | ``decorated_data`` | Meta allocated with erased data.</br>One copy per erased data. |
 
-| Lifetime type | Meta data placement| Lifetime requirements | Description |
+| Lifetime type | Meta data decoration | Lifetime requirements | Description |
 |------|-|-------|--------|
-| ``const_observer`` | ``decorated_ptr`` | | |
-| ``mutable_observer`` | ``decorated_ptr`` | | |
-| ``shared_const_ptr`` | ``decorated_ptr`` | | |
-| ``shared_const`` | ``decorated_data`` | | |
-| ``unique_ptr`` | ``decorated_ptr`` | | | 
-| ``unique`` | ``decorated_data`` | | |
-| ``value`` | ``decorated_data`` | | |
+| ``const_observer`` | ``..._ptr`` | | |
+| ``mutable_observer`` | ``..._ptr`` | | |
+| ``shared_const_ptr`` | ``..._ptr`` | | |
+| ``shared_const`` | ``..._data`` | | |
+| ``unique_ptr`` | ``..._ptr`` | | | 
+| ``unique`` | ``..._data`` | | |
+| ``value`` | ``..._data`` | | |
