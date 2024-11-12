@@ -16,8 +16,8 @@
 |------|-|-------|--------|
 | ``const_observer`` | ``..._ptr`` | Observed object must outlive call. | If observed object is ``const``, threadsave. |
 | ``mutable_observer`` | ``..._ptr`` | Observed object must outlive call. | Not threadsave. |
-| ``shared_const_ptr`` | ``..._ptr`` | Same as ``std::shared_ptr``. | Threadsave.</br>Makes additional *type erased* shared_ptr to original data.</br>Use, if </br>- you can not control construction, or</br>- you interact with code unaware of ``virtual_void``. |
-| ``shared_const`` | ``..._data`` | | |
+| ``shared_const_ptr`` | ``..._ptr`` | Same as ``std::shared_ptr``.</br>Use, if </br>- you can not control construction, or</br>- you interact with code unaware of ``virtual_void``. | Threadsave.</br>Makes additional *type erased* shared_ptr to original data. |
+| ``shared_const`` | ``..._data`` | Same as ``std::shared_ptr``.</br>Use, if </br>- you can control full liftime in ``virtual_void`` aware code. | Threadsave.</br>Use if lifteime  |
 | ``unique_ptr`` | ``..._ptr`` | | | 
 | ``unique`` | ``..._data`` | | |
 | ``value`` | ``..._data`` | | |
