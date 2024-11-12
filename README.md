@@ -6,7 +6,7 @@
 
 ## Building blocks for *programming in the large*
 
-- lifetime handles [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](doc/erased_data_overview.md)
+- lifetime handles [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - interfaces [Quick start](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
   - deriveable
   - upcastable
