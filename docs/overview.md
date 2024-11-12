@@ -10,11 +10,11 @@
 | ``decorated_ptr`` | Pointer to *meta data* beneth *(smart)pointer* to *erased data*.</br>One copy per pointer. |
 | ``decorated_data`` | Meta allocated with erased data.</br>One copy per erased data. |
 
-| Lifetime type | Meta data decoration | Lifetime requirements | Description |
+| Lifetime type | Meta data decoration | Lifetime requirements | Concurrency considerations / Notes  | 
 |------|-|-------|--------|
-| ``const_observer`` | ``..._ptr`` | | |
-| ``mutable_observer`` | ``..._ptr`` | | |
-| ``shared_const_ptr`` | ``..._ptr`` | | |
+| ``const_observer`` | ``..._ptr`` | Observed object must outlive call. | If observed object is ``const``, threadsave. |
+| ``mutable_observer`` | ``..._ptr`` | Observed object must outlive call. | Not threadsave. |
+| ``shared_const_ptr`` | ``..._ptr`` | Same as ``std::shared_ptr``. | Threadsave.</br>Makes additional *type erased* shared_ptr to original data. |
 | ``shared_const`` | ``..._data`` | | |
 | ``unique_ptr`` | ``..._ptr`` | | | 
 | ``unique`` | ``..._data`` | | |
