@@ -1,15 +1,15 @@
 #pragma once
 
 #include "base.h"
-#include "operator.h"
+//#include "operator.h"
 
 namespace virtual_void::interface {
 
 template <typename TARGET, typename BASE_V_TABLE, typename VOID, typename RET, typename... ARGS>
-struct call_operator_v_table : BASE_V_TABLE {
+struct operator_v_table : BASE_V_TABLE {
   using v_table_base_t = BASE_V_TABLE;
   using void_t = v_table_base_t::void_t;
-  using v_table_t = call_operator_v_table;
+  using v_table_t = operator_v_table;
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(v_table_t) == from
                ? true
@@ -17,7 +17,7 @@ struct call_operator_v_table : BASE_V_TABLE {
   }
   RET (*call_op)(void_t, ARGS&&...);
   template <typename UNERASE>
-  call_operator_v_table(UNERASE unerase) : BASE_V_TABLE(unerase) {
+  operator_v_table(UNERASE unerase) : BASE_V_TABLE(unerase) {
     if constexpr (const_correct_target_for_data<VOID, void_t>) {
       call_op = [](void_t _vp, ARGS&&... args) {
         return (*UNERASE{}(_vp))(std::forward<ARGS>(args)...);
@@ -36,10 +36,10 @@ struct call_operator_v_table : BASE_V_TABLE {
 
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
           is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
-struct call_operator_interface;
+struct operator_interface;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
           is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
-struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
+struct operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
                                RET(ARGS...)> : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
@@ -47,9 +47,9 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
   using base_t = BASE<VIRTUAL_VOID>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =
-      call_operator_v_table<call_op_target, v_table_base_t, CONST_SPECIFIER, RET, ARGS...>;
+      operator_v_table<call_op_target, v_table_base_t, CONST_SPECIFIER, RET, ARGS...>;
   using query_v_table_unique_t =
-      call_operator_v_table<call_op_target, base<virtual_void_t>,
+      operator_v_table<call_op_target, base<virtual_void_t>,
                             virtual_void::void_t<CONST_SPECIFIER>, RET,
                             ARGS...>;
   template <typename T>
@@ -66,10 +66,10 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
   using base_t::virtual_void_;
 
  public:
-  call_operator_interface(virtual_void_t virtual_void, v_table_t* v_table)
+  operator_interface(virtual_void_t virtual_void, v_table_t* v_table)
       : base_t(std::move(virtual_void), v_table) {}
   template <typename CONSTRUCTED_WITH>
-  call_operator_interface(CONSTRUCTED_WITH&& v)
+  operator_interface(CONSTRUCTED_WITH&& v)
     requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static v_table_t imlpemented_v_table{
@@ -77,7 +77,7 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
     v_table_ = &imlpemented_v_table;
   }
   template <typename OTHER>
-  call_operator_interface(const OTHER& other)
+  operator_interface(const OTHER& other)
     requires(std::derived_from<OTHER, base_t>)
       : base_t(other) {}
   //RET operator()(ARGS&&... args) const
@@ -94,12 +94,12 @@ struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
     return static_cast<v_table_t*>(v_table_)->call_op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
   }
-  call_operator_interface(const call_operator_interface&) = default;
-  call_operator_interface(call_operator_interface&) = default;
-  call_operator_interface(call_operator_interface&&) = default;
+  operator_interface(const operator_interface&) = default;
+  operator_interface(operator_interface&) = default;
+  operator_interface(operator_interface&&) = default;
 
  protected:
-  call_operator_interface() = default;
+  operator_interface() = default;
 };
 
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
@@ -108,16 +108,16 @@ struct call_operator_interface_X;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
           is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
 struct call_operator_interface_X<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
-                               RET(ARGS...)> : call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)> {
-    using call_operator_interface_t =  call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>;
-    using call_operator_interface_t::call_operator_interface_t;
+                               RET(ARGS...)> : operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)> {
+    using operator_interface_t =  operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>;
+    using operator_interface_t::operator_interface_t;
 
-    using call_operator_interface_t::operator();
+    using operator_interface_t::operator();
   RET operator()(ARGS&&... args) const
     requires(const_correct_for_virtual_void<
              virtual_void::void_t<CONST_SPECIFIER>, VIRTUAL_VOID>)
   {
-    return call_operator_interface_t::invoke(std::forward<ARGS>(args)...);
+    return operator_interface_t::invoke(std::forward<ARGS>(args)...);
   }
 };
 
@@ -130,11 +130,11 @@ struct call_operator_interface_X<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
 //
 // template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
 //           is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
-// struct call_operator_interface;
+// struct operator_interface;
 //
 // template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
 //           is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
-// struct call_operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
+// struct operator_interface<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
 //                                RET(ARGS...)>
 //     : operator_interface<call_op_target, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
 //                          RET(ARGS...)> {
