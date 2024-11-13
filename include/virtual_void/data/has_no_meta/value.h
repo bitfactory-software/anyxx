@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../value_trait.h"
+#include "../value.h"
 #include "meta.h"
 
 namespace virtual_void::data::has_no_meta {
-using value = erased_value<decoration_base<meta>>;
+using value = data::value<meta>;
 }
 
 namespace virtual_void {

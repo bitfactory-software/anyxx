@@ -1,17 +1,14 @@
 #pragma once
 
-#include <stdexcept>
-#include <type_traits>
-
 #include "../value_trait.h"
+#include "../value.h"
 #include "meta.h"
 
 namespace virtual_void::data::has_m_table {
-using value = erased_value<decoration_base<meta>>;
+using value = data::value<meta>;
 }
 
 namespace virtual_void {
-using namespace virtual_void;
 template <>
 struct virtual_void_trait<data::has_m_table::value>
     : value_trait<data::has_m_table::meta> {};

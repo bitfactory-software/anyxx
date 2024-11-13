@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../shared_const_trait.h"
+#include "../shared_const.h"
 #include "meta.h"
 
 namespace virtual_void::data::has_m_table {
-using shared_const = erased_shared_const<decoration_base<meta>>;
+using shared_const = data::shared_const<meta>;
 }
 
 namespace virtual_void {

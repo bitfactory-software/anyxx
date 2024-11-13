@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../unique_trait.h"
+#include "../unique.h"
 #include "meta.h"
 
 namespace virtual_void::data::has_type_info {
-using unique = erased_unique<decoration_base<meta>>;
+using unique = data::unique<meta>;
 }
 
 namespace virtual_void {
