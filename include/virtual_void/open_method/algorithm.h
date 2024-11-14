@@ -6,7 +6,7 @@ namespace virtual_void::open_method {
 
 template <typename CLASS>
 void fill_with_overload(auto& method, const auto& wrapper) {
-  if (!method.is_defined<CLASS>()) method.define<CLASS>(wrapper);
+  if (!method.template is_defined<CLASS>()) method.template define<CLASS>(wrapper);
 }
 template <typename TYPE_LIST>
 void fill_with_overloads(TYPE_LIST, auto& method, const auto& wrapper) {

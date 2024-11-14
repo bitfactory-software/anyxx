@@ -51,7 +51,7 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
       std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
                          std::true_type,
                          typename base_t::template is_already_base<T>>;
-  static_assert(!base_t::is_already_base<query_v_table_unique_t>::value,
+  static_assert(!base_t::template is_already_base<query_v_table_unique_t>::value,
                 "A v_table may only instanciated once in an interface");
   using base_t::operator();
 
