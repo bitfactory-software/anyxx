@@ -39,8 +39,10 @@ concept is_meta = requires(META meta) {
 };
 
 template <class PTR>
-concept has_virtual_void_trait =
-    requires(PTR ptr) { typename virtual_void_trait<PTR>::void_t; };
+concept has_virtual_void_trait = requires(PTR ptr) {
+  typename virtual_void_trait<PTR>::void_t;
+  typename virtual_void_trait<PTR>::meta_t;
+};
 
 template <class E>
 concept is_virtual_void = has_virtual_void_trait<E>;
