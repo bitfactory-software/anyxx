@@ -32,7 +32,7 @@ TEST_CASE("prototype") {
   factories<meta, X> registry;
 
   enable_copy<to_string_i>(registry);
-  get_value_i<const_observer> get_value_i_co = query_interface<get_value_i<const_observer>>(registry);
+//  get_value_i<const_observer> get_value_i_co = query_interface<get_value_i<const_observer>>(registry);
 
   // virtual_void::interface::cast query_interface;
   // enable<X, to_string_i>( query_interface );
@@ -42,7 +42,5 @@ TEST_CASE("prototype") {
   X x{3.14};
   to_string_i<const_observer> to_string_i_co{x};
   REQUIRE(to_string_i_co.to_string() == "3.14");
-  auto 
-  REQUIRE(to_string_i_co.to_string() == "3.14");
-
+ 
 }

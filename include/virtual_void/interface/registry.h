@@ -46,11 +46,11 @@ void enable_copy(factories<META, CLASS>& this_) {
 };
 
 
-template <template< is_virtual_void > class INTERFACE, is_virtual_void VV>
-struct query_interface_;
-template<template< is_virtual_void > class INTERFACE, is_virtual_void VV>
-struct query_interface_<INTERFACE<VV>> {
-    
-};
+//template <template< is_virtual_void > class INTERFACE, is_virtual_void VV>
+//struct query_interface_;
+//template<template< is_virtual_void > class INTERFACE, is_virtual_void VV>
+//struct query_interface_<INTERFACE<VV>> {
+//    
+//};
 
 };  // namespace virtual_void::interface
