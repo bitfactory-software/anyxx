@@ -2,12 +2,12 @@
 
 #include "include/catch.hpp"
 
-// import virtual_void;
+//import virtual_void;
+#include "virtual_void/interface/declare_macro.h"
 
 #include "virtual_void/data/has_type_info/observer.h"
 #include "virtual_void/data/has_type_info/shared_const.h"
 #include "virtual_void/interface/base.h"
-#include "virtual_void/interface/declare_macro.h"
 #include "virtual_void/interface/registry.h"
 
 using namespace virtual_void;
@@ -29,10 +29,10 @@ ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value, double)))
 }  // namespace
 
 TEST_CASE("prototype") {
-  factories<meta, X> registry;
-
-  enable_copy<to_string_i>(registry);
-//  get_value_i<const_observer> get_value_i_co = query_interface<get_value_i<const_observer>>(registry);
+  enable_const_observer_copy<get_value_i, X, meta>(const_observer_copy<X, meta>);
+  const_observer_copy<X, meta>.seal_for_runtime();
+  //  get_value_i<const_observer> get_value_i_co =
+  //  query_interface<get_value_i<const_observer>>(registry);
 
   // virtual_void::interface::cast query_interface;
   // enable<X, to_string_i>( query_interface );
@@ -41,6 +41,12 @@ TEST_CASE("prototype") {
 
   X x{3.14};
   to_string_i<const_observer> to_string_i_co{x};
-  REQUIRE(to_string_i_co.to_string() == "3.14");
- 
+  REQUIRE(to_string_i_co.to_string() == "3.140000");
+  auto base =
+      const_observer_copy<X, meta>.construct<get_value_i<const_observer>>(
+          get_virtual_void(to_string_i_co));
+  auto i =
+      interface::static_v_table_cast<get_value_i<const_observer>>(base);
+  REQUIRE(i.get_value() == 3.14);
+  std::cout << "prototype: " << i.get_value() << "\n";
 }

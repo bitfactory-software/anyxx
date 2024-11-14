@@ -24,9 +24,14 @@ class factory<R(ARGS...)> : public declaration_base {
     return f(std::forward<ARGS>(args)...);
   }
   template <typename CLASS>
-  R operator()(ARGS&&... args) const  // to simplify tests!
+  R construct(ARGS&&... args) const  // to simplify tests!
   {
     return (*this)(typeid(CLASS), std::forward<ARGS>(args)...);
+  }
+  template <typename CLASS>
+  R operator()(ARGS&&... args) const  // to simplify tests!
+  {
+    return construct<CLASS>(std::forward<ARGS>(args)...);
   }
 
  private:
