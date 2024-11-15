@@ -11,6 +11,7 @@ template <typename R, typename... ARGS>
 class factory<R(ARGS...)> : public declaration_base {
  public:
   using factory_function_t = R (*)(ARGS...);
+  declaration_base::declaration_base;
 
  public:
   template <typename CLASS, typename FACTORY>

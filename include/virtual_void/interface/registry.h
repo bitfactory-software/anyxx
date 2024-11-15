@@ -9,7 +9,7 @@
 
 namespace virtual_void::interface {
 
-inline virtual_void::open_method::via_type_info::domain conversion_domain;
+inline virtual_void::open_method::via_type_info::domain query_interface_domain;
 
 template <is_virtual_void TO, is_virtual_void FROM = TO>
 using copy =
@@ -24,9 +24,9 @@ using move =
     virtual_void::open_method::via_type_info::factory<base<TO>(FROM&&)>;
 
 template <typename CLASS, typename META>
-copy<virtual_void::data::const_observer<META>> const_observer_copy;
+copy<virtual_void::data::const_observer<META>> const_observer_copy{query_interface_domain};
 template <typename META>
-copies<virtual_void::data::const_observer<META>> const_observer_copies;
+copies<virtual_void::data::const_observer<META>> const_observer_copies{query_interface_domain};
 
 template <typename CLASS, typename META>
 copy<virtual_void::data::mutable_observer<META>> mutable_observer_copy;

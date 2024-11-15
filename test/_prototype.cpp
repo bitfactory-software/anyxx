@@ -2,12 +2,12 @@
 
 #include "include/catch.hpp"
 
-// import virtual_void;
-#include "virtual_void/data/has_type_info/observer.h"
-#include "virtual_void/data/has_type_info/shared_const.h"
-#include "virtual_void/interface/base.h"
+import virtual_void;
+// #include "virtual_void/data/has_type_info/observer.h"
+// #include "virtual_void/data/has_type_info/shared_const.h"
+// #include "virtual_void/interface/base.h"
+// #include "virtual_void/interface/registry.h"
 #include "virtual_void/interface/declare_macro.h"
-#include "virtual_void/interface/registry.h"
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
@@ -29,8 +29,7 @@ ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value, double)))
 
 TEST_CASE("prototype") {
   enable_const_observer_copy<get_value_i, X, meta>();
-  const_observer_copy<X, meta>.seal_for_runtime();
-  const_observer_copies<meta>.seal_for_runtime();
+  seal_for_runtime(query_interface_domain);
 
   // virtual_void::interface::cast query_interface;
   // enable<X, to_string_i>( query_interface );
