@@ -45,7 +45,7 @@ find_copy_factory_method<TO, FROM> find_copy{query_interface_domain};
 
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
           typename META>
-auto default_const_observer_interface() {
+auto default_copy_to_interface() {
   return +[](virtual_void::data::const_observer<META> const& from)
              -> base<virtual_void::data::const_observer<META>> {
     return INTERFACE<virtual_void::data::const_observer<META>>{
@@ -69,7 +69,7 @@ template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           typename META>
 void enable_const_observer_copy() {
   enable_const_observer_copy<TO_INTERFACE, CLASS, META>(
-      default_const_observer_interface<TO_INTERFACE, CLASS, META>());
+      default_copy_to_interface<TO_INTERFACE, CLASS, META>());
 }
 
 //template <is_virtual_void TO, is_virtual_void FROM>
