@@ -31,8 +31,8 @@ TEST_CASE("prototype") {
   enable_interface_copy<get_value_i, X, const_observer>();
   enable_interface_copy<get_value_i, X, mutable_observer>();
   enable_interface_copy<get_value_i, X, shared_const>();
-  //enable_interface_copy<get_value_i, X, unique>();
-  //enable_interface_copy<get_value_i, X, unique, shared_const>();
+  enable_interface_copy<get_value_i, X, unique>();
+  enable_interface_copy<get_value_i, X, unique, shared_const>();
   seal_for_runtime(query_interface_domain);
 
   X x{3.14};

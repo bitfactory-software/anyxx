@@ -220,12 +220,15 @@
         : base_t(other) {}                                                     \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
         n(const n&) = default;                                                 \
-    n(n&) = default;                                                           \
     n(n&&) = default;                                                          \
                                                                                \
    protected:                                                                  \
     n() = default;                                                             \
+    template <is_virtual_void OTHER>                                           \
+    friend class virtual_void::interface::base;                                \
   };
+
+//    n(n&) = default;                                                           \
 
 #define ERASED_INTERFACE_(n, BASE, l) ERASED_INTERFACE_TEMPLATE_((), n, BASE, l)
 

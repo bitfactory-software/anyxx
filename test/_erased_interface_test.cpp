@@ -222,6 +222,19 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   print_shape_vv(p);
 }
 
+TEST_CASE("dynamic interface has_type_info::unique") {
+  circle c{12.3};
+
+  using shape_unique = shape_i<data::has_type_info::unique>;
+  shape_unique s1{c};
+
+  REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));
+  auto unerased_circle =
+      unerase_cast<circle const>(get_virtual_void(s1));
+  REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
+  print_shape_vv(std::move(s1));
+}
+
 TEST_CASE("base") {
   using namespace virtual_void;
   using namespace virtual_void;
