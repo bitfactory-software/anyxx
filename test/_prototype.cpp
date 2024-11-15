@@ -35,11 +35,6 @@ TEST_CASE("prototype") {
   //enable_interface_copy<get_value_i, X, unique, shared_const>();
   seal_for_runtime(query_interface_domain);
 
-  // virtual_void::interface::cast query_interface;
-  // enable<X, to_string_i>( query_interface );
-  // enable<X, get_value_i>( query_interface );
-  // enable<X, set_value>( query_interface );
-
   X x{3.14};
   to_string_i<const_observer> to_string_i_co{x};
   REQUIRE(to_string_i_co.to_string() == "3.140000");
