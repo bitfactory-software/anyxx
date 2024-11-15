@@ -21,7 +21,6 @@ using move =
 
 template <typename META>
 struct factories {
-
   copy<virtual_void::data::const_observer<META>> const_observer_copy;
   copy<virtual_void::data::mutable_observer<META>> mutable_observer_copy;
   copy<virtual_void::data::shared_const<META>> shared_const_copy;
@@ -43,14 +42,20 @@ copy<virtual_void::data::const_observer<META>> const_observer_copy;
 
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
           typename META>
-void enable_const_observer_copy(copy<virtual_void::data::const_observer<META>>& const_observer_copy) {
+auto make_default_const_observer_copy() {
+  return +[](virtual_void::data::const_observer<META> const& from)
+             -> base<virtual_void::data::const_observer<META>> {
+    return INTERFACE<virtual_void::data::const_observer<META>>{
+        *unchecked_unerase_cast<CLASS>(from)};
+  };
+}
+template <template <is_virtual_void> typename INTERFACE, typename CLASS,
+          typename META>
+void enable_const_observer_copy(
+    copy<virtual_void::data::const_observer<META>>& const_observer_copy) {
   const_observer_copy
       .define<INTERFACE<virtual_void::data::const_observer<META>>>(
-          +[](virtual_void::data::const_observer<META> const& from)
-              -> base<virtual_void::data::const_observer<META>> {
-            return INTERFACE<virtual_void::data::const_observer<META>>{
-                *unchecked_unerase_cast<CLASS>(from)};
-          });
+          make_default_const_observer_copy<INTERFACE, CLASS, META>());
 };
 
 // template <template< is_virtual_void > class INTERFACE, is_virtual_void VV>
