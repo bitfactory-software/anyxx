@@ -23,18 +23,19 @@ copy_factory_method<TO, FROM> copy{query_interface_domain};
 
 template <is_virtual_void TO, is_virtual_void FROM = TO>
 using find_copy_factory_method =
-    virtual_void::open_method::via_type_info::factory<copy_factory_method<TO, FROM> const&()>;
+    virtual_void::open_method::via_type_info::factory<
+        copy_factory_method<TO, FROM> const&()>;
 template <is_virtual_void TO, is_virtual_void FROM = TO>
 find_copy_factory_method<TO, FROM> find_copy{query_interface_domain};
 
-//template <typename CLASS, typename META>
-//copy<virtual_void::data::mutable_observer<META>> mutable_observer_copy;
-//template <typename CLASS, typename META>
-//copy<virtual_void::data::shared_const<META>> shared_const_copy;
-// copy<virtual_void::data::unique<META>> unique_copy;
-// copy<virtual_void::data::unique<META>,
-//      virtual_void::data::shared_const<META>>
-//      unique_copy_from_shared_const;
+// template <typename CLASS, typename META>
+// copy<virtual_void::data::mutable_observer<META>> mutable_observer_copy;
+// template <typename CLASS, typename META>
+// copy<virtual_void::data::shared_const<META>> shared_const_copy;
+//  copy<virtual_void::data::unique<META>> unique_copy;
+//  copy<virtual_void::data::unique<META>,
+//       virtual_void::data::shared_const<META>>
+//       unique_copy_from_shared_const;
 
 // move<virtual_void::data::shared_const<META>,
 //      virtual_void::data::unique<META>>
@@ -44,57 +45,53 @@ find_copy_factory_method<TO, FROM> find_copy{query_interface_domain};
 //     move_to_unique;
 
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
-          typename META>
+          is_virtual_void TO, is_virtual_void FROM = TO>
 auto default_copy_to_interface() {
-  return +[](virtual_void::data::const_observer<META> const& from)
-             -> base<virtual_void::data::const_observer<META>> {
-    return INTERFACE<virtual_void::data::const_observer<META>>{
-        *unchecked_unerase_cast<CLASS>(from)};
+  return +[](FROM const& from) -> base<TO> {
+    return INTERFACE<TO>{*unchecked_unerase_cast<CLASS>(from)};
   };
 }
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
-          typename META, typename IMPLEMENATAION>
-void enable_const_observer_copy(IMPLEMENATAION impl) {
-  using target_virtual_void_t =
-      virtual_void::data::const_observer<META>;
-    using target_interface_t =
-      TO_INTERFACE<target_virtual_void_t>;
-  copy<CLASS, target_virtual_void_t>.define<target_interface_t>(impl);
-  if (!find_copy<target_virtual_void_t>.is_defined<CLASS>())
-    find_copy<target_virtual_void_t>.define<CLASS>(
-        +[]() -> auto const& { return copy<CLASS, target_virtual_void_t>; });
+          is_virtual_void TO, is_virtual_void FROM = TO>
+void enable_interface_copy(auto impl) {
+  using target_interface_t = TO_INTERFACE<TO>;
+  copy<CLASS, TO, FROM>.define<target_interface_t>(impl);
+  if (!find_copy<TO, FROM>.is_defined<CLASS>())
+    find_copy<TO, FROM>.define<CLASS>(
+        +[]() -> auto const& { return copy<CLASS, TO, FROM>; });
 };
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
-          typename META>
-void enable_const_observer_copy() {
-  enable_const_observer_copy<TO_INTERFACE, CLASS, META>(
-      default_copy_to_interface<TO_INTERFACE, CLASS, META>());
+          is_virtual_void TO, is_virtual_void FROM = TO>
+void enable_interface_copy() {
+  enable_interface_copy<TO_INTERFACE, CLASS, TO, FROM>(
+      default_copy_to_interface<TO_INTERFACE, CLASS, TO, FROM>());
 }
 
-//template <is_virtual_void TO, is_virtual_void FROM>
-//const auto& copy_factory_(const std::type_info& type_info) {
-//  using meta_t = typename virtual_void_trait<TO>::meta_t;
-//  using from_meta_t = virtual_void_trait<FROM>::meta_t;
-//  static_assert(std::is_same_v<meta_t, from_meta_t>);
-//  return copies < TO, FROM
+// template <is_virtual_void TO, is_virtual_void FROM>
+// const auto& copy_factory_(const std::type_info& type_info) {
+//   using meta_t = typename virtual_void_trait<TO>::meta_t;
+//   using from_meta_t = virtual_void_trait<FROM>::meta_t;
+//   static_assert(std::is_same_v<meta_t, from_meta_t>);
+//   return copies < TO, FROM
 //
-//         if constexpr (std::same_as<TO, FROM>) {
-//    if constexpr (std::same_as<virtual_void::data::const_observer<meta_t>,
-//                               TO>) {
-//      return const_observer_copies<meta_t>(type_info);
-//    } else if constexpr (std::same_as<
-//                             virtual_void::data::mutable_observer<meta_t>,
-//                             TO>) {
-//    } else if constexpr (std::same_as<virtual_void::data::shared_const<meta_t>,
-//                                      TO>) {
-//    }
-//  }
-//  else {
-//    static_assert(false);
-//    return {};
-//  }
-//}
+//          if constexpr (std::same_as<TO, FROM>) {
+//     if constexpr (std::same_as<virtual_void::data::const_observer<meta_t>,
+//                                TO>) {
+//       return const_observer_copies<meta_t>(type_info);
+//     } else if constexpr (std::same_as<
+//                              virtual_void::data::mutable_observer<meta_t>,
+//                              TO>) {
+//     } else if constexpr
+//     (std::same_as<virtual_void::data::shared_const<meta_t>,
+//                                       TO>) {
+//     }
+//   }
+//   else {
+//     static_assert(false);
+//     return {};
+//   }
+// }
 
 // template <template< is_virtual_void > class INTERFACE,
 // is_virtual_void VV> struct query_interface_; template<template<

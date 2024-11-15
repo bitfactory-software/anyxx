@@ -28,7 +28,11 @@ ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value, double)))
 }  // namespace
 
 TEST_CASE("prototype") {
-  enable_const_observer_copy<get_value_i, X, meta>();
+  enable_interface_copy<get_value_i, X, const_observer>();
+  enable_interface_copy<get_value_i, X, mutable_observer>();
+  enable_interface_copy<get_value_i, X, shared_const>();
+  //enable_interface_copy<get_value_i, X, unique>();
+  //enable_interface_copy<get_value_i, X, unique, shared_const>();
   seal_for_runtime(query_interface_domain);
 
   // virtual_void::interface::cast query_interface;
