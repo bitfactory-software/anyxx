@@ -2,12 +2,11 @@
 
 #include "include/catch.hpp"
 
-//import virtual_void;
-#include "virtual_void/interface/declare_macro.h"
-
+// import virtual_void;
 #include "virtual_void/data/has_type_info/observer.h"
 #include "virtual_void/data/has_type_info/shared_const.h"
 #include "virtual_void/interface/base.h"
+#include "virtual_void/interface/declare_macro.h"
 #include "virtual_void/interface/registry.h"
 
 using namespace virtual_void;
@@ -29,8 +28,10 @@ ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value, double)))
 }  // namespace
 
 TEST_CASE("prototype") {
-  enable_const_observer_copy<get_value_i, X, meta>(const_observer_copy<X, meta>);
+  enable_const_observer_copy<get_value_i, X, meta>();
+//      const_observer_copy<X, meta>);
   const_observer_copy<X, meta>.seal_for_runtime();
+  const_observer_copies<meta>.seal_for_runtime();
   //  get_value_i<const_observer> get_value_i_co =
   //  query_interface<get_value_i<const_observer>>(registry);
 
@@ -45,8 +46,12 @@ TEST_CASE("prototype") {
   auto base =
       const_observer_copy<X, meta>.construct<get_value_i<const_observer>>(
           get_virtual_void(to_string_i_co));
-  auto i =
-      interface::static_v_table_cast<get_value_i<const_observer>>(base);
+  auto i = interface::static_v_table_cast<get_value_i<const_observer>>(base);
   REQUIRE(i.get_value() == 3.14);
   std::cout << "prototype: " << i.get_value() << "\n";
+
+  get_value_i<const_observer> i1 =
+      query_interface<get_value_i<const_observer>>(to_string_i_co);
+  REQUIRE(i1.get_value() == 3.14);
+  std::cout << "prototype i1: " << i1.get_value() << "\n";
 }
