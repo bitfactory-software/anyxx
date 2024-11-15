@@ -29,11 +29,8 @@ ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value, double)))
 
 TEST_CASE("prototype") {
   enable_const_observer_copy<get_value_i, X, meta>();
-//      const_observer_copy<X, meta>);
   const_observer_copy<X, meta>.seal_for_runtime();
   const_observer_copies<meta>.seal_for_runtime();
-  //  get_value_i<const_observer> get_value_i_co =
-  //  query_interface<get_value_i<const_observer>>(registry);
 
   // virtual_void::interface::cast query_interface;
   // enable<X, to_string_i>( query_interface );

@@ -54,18 +54,22 @@ auto default_const_observer_interface() {
   };
 }
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
-          typename META>
-void enable_const_observer_copy() {
+          typename META, typename IMPLEMENATAION>
+void enable_const_observer_copy(IMPLEMENATAION impl) {
   using target_interface_t =
       TO_INTERFACE<virtual_void::data::const_observer<META>>;
-  const_observer_copy<CLASS, META>.define<target_interface_t>(
-      default_const_observer_interface<TO_INTERFACE, CLASS, META>());
+  const_observer_copy<CLASS, META>.define<target_interface_t>(impl);
   if (!const_observer_copies<META>.is_defined<CLASS>())
     const_observer_copies<META>.define<CLASS>(
-        +[]() -> copy<virtual_void::data::const_observer<META>> const& {
-          return const_observer_copy<CLASS, META>;
-        });
+        +[]() -> auto const& { return const_observer_copy<CLASS, META>; });
 };
+
+template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
+          typename META>
+void enable_const_observer_copy() {
+  enable_const_observer_copy<TO_INTERFACE, CLASS, META>(
+      default_const_observer_interface<TO_INTERFACE, CLASS, META>());
+}
 
 template <is_virtual_void TO, is_virtual_void FROM>
 const auto& copy_factory(const std::type_info& type_info) {
@@ -88,10 +92,10 @@ const auto& copy_factory(const std::type_info& type_info) {
   }
 }
 
-// template <template< is_virtual_void > class INTERFACE, is_virtual_void VV>
-// struct query_interface_;
-// template<template< is_virtual_void > class INTERFACE, is_virtual_void VV>
-// struct query_interface_<INTERFACE<VV>> {
+// template <template< is_virtual_void > class INTERFACE,
+// is_virtual_void VV> struct query_interface_; template<template<
+// is_virtual_void > class INTERFACE, is_virtual_void VV> struct
+// query_interface_<INTERFACE<VV>> {
 //
 // };
 
@@ -109,5 +113,4 @@ FROM_INTERFACE query_interface(const FROM_INTERFACE& from_interface) {
   auto base = copy.construct<TO_INTERFACE>(vv_from);
   return static_v_table_cast<FROM_INTERFACE>(base);
 }
-
 };  // namespace virtual_void::interface
