@@ -41,20 +41,20 @@ ERASED_INTERFACE_(set_value_i, get_value_i,
 }  // namespace
 
 TEST_CASE("prototype") {
-  enable_interface_copy<get_value_i, X, const_observer>();
-  enable_interface_copy<get_value_i, X, mutable_observer>();
-  enable_interface_copy<get_value_i, X, shared_const>();
-  enable_interface_copy<get_value_i, X, unique>();
-  enable_interface_copy<get_value_i, X, unique, shared_const>();
-  enable_interface_copy<set_value_i, X, unique, shared_const>();
+  enable_copy_cast<get_value_i, X, const_observer>();
+  enable_copy_cast<get_value_i, X, mutable_observer>();
+  enable_copy_cast<get_value_i, X, shared_const>();
+  enable_copy_cast<get_value_i, X, unique>();
+  enable_copy_cast<get_value_i, X, unique, shared_const>();
+  enable_copy_cast<set_value_i, X, unique, shared_const>();
 
-  enable_interface_move<to_string_i, X, unique, unique>();
-  enable_interface_move<get_value_i, X, shared_const, unique>();
+  enable_move_cast<to_string_i, X, unique, unique>();
+  enable_move_cast<get_value_i, X, shared_const, unique>();
   REQUIRE(find_move<shared_const, unique>.is_defined<X>());
   REQUIRE(move<X, shared_const, unique>.is_defined<get_value_i<shared_const>>());
   static_assert( std::same_as<decltype(move<X, shared_const, unique>)::result_t, base<shared_const>> );
 
-  seal_for_runtime(query_interface_domain);
+  seal_for_runtime(cast_domain);
 
   move_factory_method<shared_const, unique> const & move_unique_to_shared = find_move<shared_const, unique>.construct<X>();
 
@@ -69,7 +69,7 @@ TEST_CASE("prototype") {
     std::cout << "prototype: " << i.get_value() << "\n";
 
     get_value_i<const_observer> i1 =
-        query_interface<get_value_i<const_observer>>(to_string_i_co);
+        copy_cast<get_value_i<const_observer>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "prototype i1: " << i1.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1)) ==
@@ -82,18 +82,18 @@ TEST_CASE("prototype") {
     std::cout << "prototype shared_const i0: " << i0.to_string() << "\n";
 
     get_value_i<shared_const> i1 =
-        query_interface<get_value_i<shared_const>>(i0);
+        copy_cast<get_value_i<shared_const>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "prototype shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1)) == get_data(get_virtual_void(i0)));
 
-    get_value_i<unique> iu1 = query_interface<get_value_i<unique>>(i0);
+    get_value_i<unique> iu1 = copy_cast<get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
     std::cout << "prototype shared_const/unique iu1: " << iu1.get_value()
               << "\n";
     REQUIRE(get_data(get_virtual_void(iu1)) != get_data(get_virtual_void(i0)));
 
-    set_value_i<unique> sv0 = query_interface<set_value_i<unique>>(i0);
+    set_value_i<unique> sv0 = copy_cast<set_value_i<unique>>(i0);
     REQUIRE(get_data(get_virtual_void(sv0)) != get_data(get_virtual_void(i0)));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "prototype shared_const/unique sv0: " << sv0.get_value()
@@ -109,7 +109,7 @@ TEST_CASE("prototype") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "prototype unique i0: " << i0.to_string() << "\n";
 
-    base<unique> i1b = query_interface<get_value_i<unique>>(i0);
+    base<unique> i1b = copy_cast<get_value_i<unique>>(i0);
     auto i1 =
         std::move(static_v_table_cast<get_value_i<unique>>(std::move(i1b)));
 
@@ -117,18 +117,18 @@ TEST_CASE("prototype") {
     std::cout << "prototype unique i1: " << i1.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1)) != get_data(get_virtual_void(i0)));
 
-    auto i1c = query_interface<get_value_i<unique>>(i0);
+    auto i1c = copy_cast<get_value_i<unique>>(i0);
 
     REQUIRE(i1c.get_value() == 3.14);
     std::cout << "prototype unique i1c: " << i1c.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1c)) != get_data(get_virtual_void(i0)));
 
-    auto i1d = query_interface_moved<to_string_i<unique>>(std::move(i1c));
+    auto i1d = move_cast<to_string_i<unique>>(std::move(i1c));
     REQUIRE(get_data(get_virtual_void(i1d)));
     REQUIRE(!has_data(get_virtual_void(i1c)));  // moved!
     REQUIRE(i1d.to_string() == "3.140000");
 
-    auto i1e = query_interface_moved<get_value_i<shared_const>>(std::move(i1d));
+    auto i1e = move_cast<get_value_i<shared_const>>(std::move(i1d));
     REQUIRE(get_data(get_virtual_void(i1e)));
     REQUIRE(!has_data(get_virtual_void(i1d)));  // moved!
     REQUIRE(i1e.get_value() == 3.14);
