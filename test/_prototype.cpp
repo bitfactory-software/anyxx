@@ -50,14 +50,19 @@ TEST_CASE("prototype") {
 
   enable_interface_move<to_string_i, X, unique, unique>();
   enable_interface_move<get_value_i, X, shared_const, unique>();
+  REQUIRE(find_move<shared_const, unique>.is_defined<X>());
+  REQUIRE(move<X, shared_const, unique>.is_defined<get_value_i<shared_const>>());
+  static_assert( std::same_as<decltype(move<X, shared_const, unique>)::result_t, base<shared_const>> );
 
   seal_for_runtime(query_interface_domain);
+
+  move_factory_method<shared_const, unique> const & move_unique_to_shared = find_move<shared_const, unique>.construct<X>();
 
   {
     X x{3.14};
     to_string_i<const_observer> to_string_i_co{x};
     REQUIRE(to_string_i_co.to_string() == "3.140000");
-    auto base = copy<X, const_observer>.construct<get_value_i<const_observer>>(
+    auto base = copy<X, const_observer, const_observer>.construct<get_value_i<const_observer>>(
         get_virtual_void(to_string_i_co));
     auto i = interface::static_v_table_cast<get_value_i<const_observer>>(base);
     REQUIRE(i.get_value() == 3.14);

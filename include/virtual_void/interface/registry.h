@@ -11,47 +11,45 @@ namespace virtual_void::interface {
 
 inline virtual_void::open_method::via_type_info::domain query_interface_domain;
 
-
-template <is_virtual_void TO, is_virtual_void FROM = TO>
+template <is_virtual_void TO, is_virtual_void FROM>
 using copy_factory_method =
     virtual_void::open_method::via_type_info::factory<base<TO>(const FROM&)>;
 
-template <typename CLASS, is_virtual_void TO, is_virtual_void FROM = TO>
+template <typename CLASS, is_virtual_void TO, is_virtual_void FROM>
 copy_factory_method<TO, FROM> copy{query_interface_domain};
 
-template <is_virtual_void TO, is_virtual_void FROM = TO>
+template <is_virtual_void TO, is_virtual_void FROM>
 using find_copy_factory_method =
     virtual_void::open_method::via_type_info::factory<
         copy_factory_method<TO, FROM> const&()>;
 
-template <is_virtual_void TO, is_virtual_void FROM = TO>
+template <is_virtual_void TO, is_virtual_void FROM>
 find_copy_factory_method<TO, FROM> find_copy{query_interface_domain};
 
-
-template <is_virtual_void TO, is_virtual_void FROM = TO>
+template <is_virtual_void TO, is_virtual_void FROM>
 using move_factory_method =
     virtual_void::open_method::via_type_info::factory<base<TO>(FROM&&)>;
 
-template <typename CLASS, is_virtual_void TO, is_virtual_void FROM = TO>
+template <typename CLASS, is_virtual_void TO, is_virtual_void FROM>
 move_factory_method<TO, FROM> move{query_interface_domain};
 
-template <typename CLASS, is_virtual_void TO, is_virtual_void FROM = TO>
+template <is_virtual_void TO, is_virtual_void FROM>
 using find_move_factory_method =
     virtual_void::open_method::via_type_info::factory<
         move_factory_method<TO, FROM> const&()>;
 
-template <is_virtual_void TO, is_virtual_void FROM = TO>
+template <is_virtual_void TO, is_virtual_void FROM>
 find_move_factory_method<TO, FROM> find_move{query_interface_domain};
 
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
-          is_virtual_void TO, is_virtual_void FROM = TO>
+          is_virtual_void TO, is_virtual_void FROM>
 auto default_copy_to_interface() {
   return +[](FROM const& from) -> base<TO> {
     return INTERFACE<TO>{*unchecked_unerase_cast<CLASS>(from)};
   };
 }
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
-          is_virtual_void TO, is_virtual_void FROM = TO>
+          is_virtual_void TO, is_virtual_void FROM>
 auto default_copy_to_interface()
   requires std::copy_constructible<FROM> && std::same_as<TO, FROM>
 {
