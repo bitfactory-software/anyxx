@@ -83,6 +83,10 @@ class base {
     return interface.virtual_void_;
   }
   template <is_virtual_void VV>
+  friend auto move_virtual_void(base<VV>&& interface) {
+    return std::move(interface.virtual_void_);
+  }
+  template <is_virtual_void VV>
   friend auto& get_v_table(base<VV> const& interface) {
     return interface.v_table_;
   }

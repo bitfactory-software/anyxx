@@ -40,6 +40,10 @@ TEST_CASE("prototype") {
   enable_interface_copy<get_value_i, X, unique>();
   enable_interface_copy<get_value_i, X, unique, shared_const>();
   enable_interface_copy<set_value_i, X, unique, shared_const>();
+
+  enable_interface_move<to_string_i, X, unique, unique>();
+  enable_interface_move<get_value_i, X, shared_const, unique>();
+
   seal_for_runtime(query_interface_domain);
 
   {
@@ -106,5 +110,15 @@ TEST_CASE("prototype") {
     REQUIRE(i1c.get_value() == 3.14);
     std::cout << "prototype unique i1c: " << i1c.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1c)) != get_data(get_virtual_void(i0)));
+
+    auto i1d = query_interface_moved<to_string_i<unique>>(std::move(i1c));
+    REQUIRE(get_data(get_virtual_void(i1d)));
+    REQUIRE(!has_data(get_virtual_void(i1c)));  // moved!
+    REQUIRE(i1d.to_string() == "3.140000");
+
+    auto i1e = query_interface_moved<get_value_i<shared_const>>(std::move(i1d));
+    REQUIRE(get_data(get_virtual_void(i1e)));
+    REQUIRE(!has_data(get_virtual_void(i1d)));  // moved!
+    REQUIRE(i1e.get_value() == 3.14);
   }
 }

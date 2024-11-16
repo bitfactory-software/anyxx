@@ -5,5 +5,5 @@
 
 namespace virtual_void::data {
 template <typename META>
-using shared_const_ptr = decorated_ptr<erased_shared_const_ptr<void>, META>;
+using shared_const_ptr = decorated_ptr<erased_shared_const_ptr<void const>, META>;
 }  // namespace virtual_void::data
