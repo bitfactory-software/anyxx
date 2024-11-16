@@ -85,7 +85,7 @@ auto default_move_to_interface() {
   return +[](FROM&& from) -> base<TO> {
     typename INTERFACE<TO>::v_table_t* v_table =
         &INTERFACE<TO>::template imlpemented_v_table<CLASS>;
-    return INTERFACE<TO>(std::move(from), v_table);
+    return base<TO>(std::move(from), v_table);
   };
 }
 
