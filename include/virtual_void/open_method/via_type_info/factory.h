@@ -2,8 +2,6 @@
 
 #include "declaration_base.h"
 
-#include <iostream>
-
 namespace virtual_void::open_method::via_type_info {
 
 template <typename R, typename... ARGS>
@@ -24,8 +22,6 @@ class factory<R(ARGS...)> : public declaration_base {
                          reinterpret_cast<factory_function_t>(fp));
   }
   R operator()(const std::type_info& type_info, ARGS&&... args) const {
-      std::cout << "R: " << typeid(R).name() << "\n";
-
     auto f = lookup<factory_function_t>(type_info);
     return f(std::forward<ARGS>(args)...);
   }
