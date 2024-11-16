@@ -51,6 +51,18 @@ auto default_copy_to_interface() {
     return INTERFACE<TO>{*unchecked_unerase_cast<CLASS>(from)};
   };
 }
+template <template <is_virtual_void> typename INTERFACE, typename CLASS,
+          is_virtual_void TO, is_virtual_void FROM = TO>
+auto default_copy_to_interface()
+  requires std::copy_constructible<FROM> && std::same_as<TO, FROM>
+{
+  return +[](FROM const& from) -> base<TO> {
+    typename INTERFACE<TO>::v_table_t* v_table =
+        &INTERFACE<TO>::template imlpemented_v_table<CLASS>;
+    return INTERFACE<TO>(from, v_table);
+  };
+};
+
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
 void enable_interface_copy(auto impl) {
@@ -111,7 +123,23 @@ FROM_INTERFACE query_interface(const FROM_INTERFACE& from_interface) {
   const auto& vv_from = get_virtual_void(from_interface);
   auto const& type_info = *get_meta(vv_from)->type_info();
   auto const& copy = find_copy<vv_to_t, vv_from_t>(type_info);
-  auto base = copy.construct<TO_INTERFACE>(vv_from);
-  return static_v_table_cast<FROM_INTERFACE>(base);
+  base<vv_to_t> b = copy.construct<TO_INTERFACE>(vv_from);
+  return std::move(static_v_table_cast<FROM_INTERFACE>(std::move(b)));
 }
+
+template <typename TO_INTERFACE, typename FROM_INTERFACE>
+auto query_interface_(const FROM_INTERFACE& from_interface) {
+  using vv_to_t = typename TO_INTERFACE::virtual_void_t;
+  using vv_from_t = typename FROM_INTERFACE::virtual_void_t;
+  static_assert(is_virtual_void<vv_to_t>);
+  static_assert(is_virtual_void<vv_from_t>);
+  const auto& vv_from = get_virtual_void(from_interface);
+  auto const& type_info = *get_meta(vv_from)->type_info();
+  auto const& copy = find_copy<vv_to_t, vv_from_t>(type_info);
+  base<vv_to_t> b = copy.construct<TO_INTERFACE>(vv_from);
+  return b;
+//  TO_INTERFACE to = static_v_table_cast<FROM_INTERFACE>(std::move(b));
+  //return std::move(static_v_table_cast<FROM_INTERFACE>(std::move(b)));
+}
+
 };  // namespace virtual_void::interface

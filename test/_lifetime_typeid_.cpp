@@ -95,7 +95,8 @@ TEST_CASE("has_type_info/lifetime/unique") {
   auto c4 = std::move(c3);
   REQUIRE(c4->data == "unique c3");
 
-  auto d1 = erased_in_place<unique, D>("unique hallo");
+  unique d1 = erased_in_place<unique, D>("unique hallo");
+  static_assert(is_virtual_void<unique>);
   unique x{std::move(d1)};
   auto d = as<D>(std::move(x));
   REQUIRE(d->data == "unique hallo");

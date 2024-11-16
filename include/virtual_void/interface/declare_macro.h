@@ -191,6 +191,10 @@
         !base_t::template is_already_base<query_v_table_unique_t>::value,      \
         "A v_table may be instanciated only once per interface");              \
                                                                                \
+    template <typename CONSTRUCTED_WITH>                                       \
+    static inline v_table_t imlpemented_v_table{                               \
+        ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};            \
+                                                                               \
    protected:                                                                  \
     using base_t::virtual_void_;                                               \
     using base_t::v_table_;                                                    \
@@ -207,9 +211,7 @@
           !virtual_void::is_virtual_typed<                                     \
               std::remove_cvref_t<CONSTRUCTED_WITH>>)                          \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      static v_table_t imlpemented_v_table{                                    \
-          ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};          \
-      v_table_ = &imlpemented_v_table;                                         \
+      v_table_ = &imlpemented_v_table<CONSTRUCTED_WITH>;                       \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
@@ -218,6 +220,10 @@
     n(const OTHER& other)                                                      \
       requires(std::derived_from<OTHER, base_t>)                               \
         : base_t(other) {}                                                     \
+    template <typename OTHER>                                                  \
+    n(const OTHER&& other)                                                     \
+      requires(std::derived_from<OTHER, base_t>)                               \
+        : base_t(std::move(other)) {}                                          \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
         n(const n&) = default;                                                 \
     n(n&&) = default;                                                          \
