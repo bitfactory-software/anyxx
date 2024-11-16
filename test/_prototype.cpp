@@ -13,13 +13,20 @@ using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data::has_type_info;
 
-namespace {
+namespace test_query_interface {
+
 struct X {
   double d_;
   std::string to_string() const { return std::to_string(d_); }
   double get_value() const { return d_; }
   void set_value(double d) { d_ = d; }
 };
+
+}
+
+using namespace test_query_interface;
+
+namespace {
 
 // ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string,
 // to_string))) ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double,
