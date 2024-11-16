@@ -86,6 +86,9 @@ class base {
   friend auto& get_v_table(base<VV> const& interface) {
     return interface.v_table_;
   }
+  template <typename TO, typename FROM>
+  friend TO static_v_table_cast(FROM from)
+    requires(std::derived_from<TO, FROM>);
 
   void operator()() const {}
   void* operator[](void*) const {}
@@ -110,29 +113,25 @@ void set_is_derived_from(auto v_table) {
   };
 }
 
+template <typename TO>
+auto pure_v_table_cast(const auto& v_table) {
+  return static_cast<typename TO::v_table_t*>(v_table);
+}
+
 template <typename TO, typename FROM>
-TO static_v_table_cast(const FROM& from)
+TO static_v_table_cast(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
-  return *static_cast<const TO*>(&from);
+  return TO{std::move(from.virtual_void_),
+            pure_v_table_cast<TO>(from.v_table_)};
 }
-template <typename TO, typename FROM>
-TO static_v_table_cast(FROM&& from)
-  requires(std::derived_from<TO, FROM>)
-{
-  return std::move(*static_cast<const TO*>(&from));
-}
+
 template <typename TO, typename FROM>
 std::optional<TO> v_table_cast(const FROM& from)
   requires(std::derived_from<TO, FROM>)
 {
-  if (is_derived_from<TO>(from)) return {*static_cast<const TO*>(&from)};
+  if (is_derived_from<TO>(from)) return {static_v_table_cast<TO>(from)};
   return {};
-}
-
-template <typename ERASED_TO>
-auto pure_v_table_cast(const auto& v_table) {
-  return static_cast<typename ERASED_TO::v_table_t*>(v_table);
 }
 
 template <typename TO, typename FROM>

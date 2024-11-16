@@ -68,6 +68,11 @@ TEST_CASE("prototype") {
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "prototype shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1)) == get_data(get_virtual_void(i0)));
+
+    get_value_i<unique> iu1 = query_interface<get_value_i<unique>>(i0);
+    REQUIRE(iu1.get_value() == 3.14);
+    std::cout << "prototype shared_const iu1: " << iu1.get_value() << "\n";
+    REQUIRE(get_data(get_virtual_void(iu1)) != get_data(get_virtual_void(i0)));
   }
   {
     X x{3.14};
@@ -75,15 +80,18 @@ TEST_CASE("prototype") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "prototype unique i0: " << i0.to_string() << "\n";
 
-    auto i01 = std::move(i0);
+    base<unique> i1b = query_interface<get_value_i<unique>>(i0);
+    auto i1 =
+        std::move(static_v_table_cast<get_value_i<unique>>(std::move(i1b)));
 
-    //      get_value_i<unique> i1 =
-//    base<unique> i1b = query_interface_<get_value_i<unique>>(i0);
-//    auto i1 = std::move(static_v_table_cast<get_value_i<unique>>(std::move(i1b)));
+    REQUIRE(i1.get_value() == 3.14);
+    std::cout << "prototype unique i1: " << i1.get_value() << "\n";
+    REQUIRE(get_data(get_virtual_void(i1)) != get_data(get_virtual_void(i0)));
 
-    // REQUIRE(i1.get_value() == 3.14);
-    // std::cout << "prototype unique i1: " << i1.get_value() << "\n";
-    // REQUIRE(get_data(get_virtual_void(i1)) ==
-    // get_data(get_virtual_void(i0)));
+    auto i1c = query_interface<get_value_i<unique>>(i0);
+
+    REQUIRE(i1c.get_value() == 3.14);
+    std::cout << "prototype unique i1c: " << i1c.get_value() << "\n";
+    REQUIRE(get_data(get_virtual_void(i1c)) != get_data(get_virtual_void(i0)));
   }
 }
