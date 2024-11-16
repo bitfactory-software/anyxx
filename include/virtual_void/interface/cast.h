@@ -11,6 +11,8 @@ namespace virtual_void::interface {
 
 inline virtual_void::open_method::via_type_info::domain cast_domain;
 
+inline void seal_casts() { seal_for_runtime(cast_domain); }
+
 template <is_virtual_void TO, is_virtual_void FROM>
 using copy_factory_method =
     virtual_void::open_method::via_type_info::factory<base<TO>(const FROM&)>;

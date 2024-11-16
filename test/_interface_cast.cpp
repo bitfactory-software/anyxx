@@ -54,7 +54,7 @@ TEST_CASE("prototype") {
   REQUIRE(move<X, shared_const, unique>.is_defined<get_value_i<shared_const>>());
   static_assert( std::same_as<decltype(move<X, shared_const, unique>)::result_t, base<shared_const>> );
 
-  seal_for_runtime(cast_domain);
+  seal_casts();
 
   move_factory_method<shared_const, unique> const & move_unique_to_shared = find_move<shared_const, unique>.construct<X>();
 
