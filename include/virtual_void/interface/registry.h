@@ -28,14 +28,6 @@ using find_copy_factory_method =
 template <is_virtual_void TO, is_virtual_void FROM = TO>
 find_copy_factory_method<TO, FROM> find_copy{query_interface_domain};
 
-// template <typename CLASS, typename META>
-// copy<virtual_void::data::mutable_observer<META>> mutable_observer_copy;
-// template <typename CLASS, typename META>
-// copy<virtual_void::data::shared_const<META>> shared_const_copy;
-//  copy<virtual_void::data::unique<META>> unique_copy;
-//  copy<virtual_void::data::unique<META>,
-//       virtual_void::data::shared_const<META>>
-//       unique_copy_from_shared_const;
 
 // move<virtual_void::data::shared_const<META>,
 //      virtual_void::data::unique<META>>
@@ -79,40 +71,6 @@ void enable_interface_copy() {
   enable_interface_copy<TO_INTERFACE, CLASS, TO, FROM>(
       default_copy_to_interface<TO_INTERFACE, CLASS, TO, FROM>());
 }
-
-// template <is_virtual_void TO, is_virtual_void FROM>
-// const auto& copy_factory_(const std::type_info& type_info) {
-//   using meta_t = typename virtual_void_trait<TO>::meta_t;
-//   using from_meta_t = virtual_void_trait<FROM>::meta_t;
-//   static_assert(std::is_same_v<meta_t, from_meta_t>);
-//   return copies < TO, FROM
-//
-//          if constexpr (std::same_as<TO, FROM>) {
-//     if constexpr (std::same_as<virtual_void::data::const_observer<meta_t>,
-//                                TO>) {
-//       return const_observer_copies<meta_t>(type_info);
-//     } else if constexpr (std::same_as<
-//                              virtual_void::data::mutable_observer<meta_t>,
-//                              TO>) {
-//     } else if constexpr
-//     (std::same_as<virtual_void::data::shared_const<meta_t>,
-//                                       TO>) {
-//     }
-//   }
-//   else {
-//     static_assert(false);
-//     return {};
-//   }
-// }
-
-// template <template< is_virtual_void > class INTERFACE,
-// is_virtual_void VV> struct query_interface_; template<template<
-// is_virtual_void > class INTERFACE, is_virtual_void VV> struct
-// query_interface_<INTERFACE<VV>> {
-//
-// };
-
-// template<typename
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
 TO_INTERFACE query_interface(const FROM_INTERFACE& from_interface) {
