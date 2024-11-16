@@ -28,7 +28,8 @@ struct X {
 
 ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double, get_value)))
-ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value, double)))
+ERASED_INTERFACE_(set_value_i, get_value_i,
+                  (INTERFACE_METHOD(void, set_value, double)))
 
 }  // namespace
 
@@ -38,6 +39,7 @@ TEST_CASE("prototype") {
   enable_interface_copy<get_value_i, X, shared_const>();
   enable_interface_copy<get_value_i, X, unique>();
   enable_interface_copy<get_value_i, X, unique, shared_const>();
+  enable_interface_copy<set_value_i, X, unique, shared_const>();
   seal_for_runtime(query_interface_domain);
 
   {
@@ -71,8 +73,19 @@ TEST_CASE("prototype") {
 
     get_value_i<unique> iu1 = query_interface<get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
-    std::cout << "prototype shared_const iu1: " << iu1.get_value() << "\n";
+    std::cout << "prototype shared_const/unique iu1: " << iu1.get_value()
+              << "\n";
     REQUIRE(get_data(get_virtual_void(iu1)) != get_data(get_virtual_void(i0)));
+
+    set_value_i<unique> sv0 = query_interface<set_value_i<unique>>(i0);
+    REQUIRE(get_data(get_virtual_void(sv0)) != get_data(get_virtual_void(i0)));
+    REQUIRE(sv0.get_value() == 3.14);
+    std::cout << "prototype shared_const/unique sv0: " << sv0.get_value()
+              << "\n";
+    sv0.set_value(sv0.get_value() * 2);
+    REQUIRE(sv0.get_value() == 6.28);
+    std::cout << "prototype shared_const/unique sv0 (*2): " << sv0.get_value()
+              << "\n";
   }
   {
     X x{3.14};
