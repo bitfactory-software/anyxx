@@ -28,11 +28,6 @@ using namespace test_query_interface;
 
 namespace {
 
-// ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string,
-// to_string))) ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double,
-// get_value))) ERASED_INTERFACE(set_value_i, (INTERFACE_METHOD(void, set_value,
-// double)))
-
 ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double, get_value)))
 ERASED_INTERFACE_(set_value_i, get_value_i,
