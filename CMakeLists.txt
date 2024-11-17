@@ -6,8 +6,6 @@ endif()
 include(../third_party_2025/vcpkg/scripts/buildsystems/vcpkg.cmake)
 
 set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /third_party_2025/vcpkg/scripts/)
-set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ../third_party_2025/vcpkg/installed/x64-windows/lib)
-set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} ../third_party_2025/vcpkg/installed/x64-windows/lib/manual-link)
 
 include_directories( "./include" )
 include_directories( "./test/include" )
