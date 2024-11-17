@@ -4,9 +4,11 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_library(virtual_void)
+file(GLOB_RECURSE virtual_void_headers "../include/virtual_void/*.h")
+
+add_library(virtual_void ${virtual_void_headers})
 target_sources(virtual_void
   PUBLIC
     FILE_SET CXX_MODULES FILES
-    "virtual_void.cppm"
+    "virtual_void.cppm"  
 )

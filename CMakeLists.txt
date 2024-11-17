@@ -11,8 +11,8 @@ find_package(Catch2 3 REQUIRED)
 include_directories( "./include" )
 
 project(virtual_void CXX)
-add_subdirectory ("test")
 add_subdirectory ("lib")
+add_subdirectory ("test")
 add_subdirectory ("tutorials")
 
 include(CTest)
