@@ -7,7 +7,7 @@
 #include <vector>
 #include <functional>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 namespace {
 

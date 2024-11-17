@@ -8,7 +8,7 @@
 #include <utility>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 import virtual_void;
 

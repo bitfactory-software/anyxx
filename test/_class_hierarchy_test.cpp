@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "class_hierarchy_test_hierarchy.h"
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 namespace virtual_void::class_hierarchy {
 namespace {
@@ -66,6 +66,8 @@ void test_class_hierarchy() {
     std::cout << "declare_deep< C1, C2 >"
               << "\n";
     dump(registry);
+
+    REQUIRE(false);
   }
 }
 }  // namespace

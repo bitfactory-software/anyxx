@@ -5,7 +5,7 @@
 
 #include "class_hierarchy_test_hierarchy.h"
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 import virtual_void;
 //#include "virtual_void/data/has_type_info/observer.h"

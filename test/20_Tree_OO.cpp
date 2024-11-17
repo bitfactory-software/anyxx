@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 using std::cout;
 using std::string;

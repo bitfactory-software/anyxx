@@ -230,7 +230,7 @@
                                                                                \
    protected:                                                                  \
     n() = default;                                                             \
-    template <is_virtual_void OTHER>                                           \
+    template <virtual_void::is_virtual_void OTHER>                             \
     friend class virtual_void::interface::base;                                \
     template <typename TO, typename FROM>                                      \
     friend TO virtual_void::interface::static_v_table_cast(FROM from)          \

@@ -11,7 +11,7 @@ import virtual_void;
 //#include "virtual_void/open_method/algorithm.h"
 //#include "virtual_void/open_method/via_m_table/declare.h"
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;

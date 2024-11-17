@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 using namespace Catch::Matchers;
 
@@ -54,4 +54,7 @@ TEST_CASE("open object 3") {
   auto r = a_test_object.get(test_member{});
   REQUIRE(!r);
   REQUIRE(a_test_object[test_member()] == "");
+}
+TEST_CASE("test fails for test test") {
+  REQUIRE(true); // for now
 }

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 #include "../include/std26/proxy.h"
 

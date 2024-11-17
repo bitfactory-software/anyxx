@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 namespace {
 

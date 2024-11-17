@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 import virtual_void;
 //#include "virtual_void/data/has_no_meta/shared_const.h"
