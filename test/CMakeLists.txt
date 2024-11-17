@@ -2,9 +2,6 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
-include_directories([SYSTEM] "D:/BitFactory/Blog/yomm2/include")
-include_directories([SYSTEM] "D:/BitFactory/third_party_2024/vcpkg/installed/x64-windows/include")
-
 find_package(Catch2 3 REQUIRED)
 
 set(CMAKE_CXX_STANDARD 20)
