@@ -3,6 +3,8 @@ if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
+find_package(Catch2 3 REQUIRED)
+
 include(../third_party_2025/vcpkg/scripts/buildsystems/vcpkg.cmake)
 
 include_directories( "./include" )
@@ -12,3 +14,6 @@ project(virtual_void CXX)
 add_subdirectory ("test")
 add_subdirectory ("lib")
 add_subdirectory ("tutorials")
+
+include(CTest)
+include(Catch)

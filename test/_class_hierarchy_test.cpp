@@ -66,6 +66,8 @@ void test_class_hierarchy() {
     std::cout << "declare_deep< C1, C2 >"
               << "\n";
     dump(registry);
+
+    REQUIRE(false);
   }
 }
 }  // namespace
