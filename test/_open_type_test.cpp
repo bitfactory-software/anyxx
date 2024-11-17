@@ -55,3 +55,6 @@ TEST_CASE("open object 3") {
   REQUIRE(!r);
   REQUIRE(a_test_object[test_member()] == "");
 }
+TEST_CASE("test fails for test test") {
+  REQUIRE(false);
+}

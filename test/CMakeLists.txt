@@ -38,6 +38,5 @@ target_link_libraries(test_all
 enable_testing()
 
 include(Catch)
-catch_discover_tests(test_all TEST_SPEC)
-
+catch_discover_tests(test_all)
 

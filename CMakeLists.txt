@@ -3,9 +3,10 @@ if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
-find_package(Catch2 3 REQUIRED)
 
 include(../third_party_2025/vcpkg/scripts/buildsystems/vcpkg.cmake)
+
+find_package(Catch2 3 REQUIRED)
 
 include_directories( "./include" )
 include_directories( "./test/include" )
