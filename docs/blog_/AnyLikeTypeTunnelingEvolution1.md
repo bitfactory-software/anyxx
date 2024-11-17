@@ -31,7 +31,7 @@ Let's look at the usage of the algorithm:
 #include <string>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 #include "virtual_void/perfect_typeid_hash/index_table.h"
 

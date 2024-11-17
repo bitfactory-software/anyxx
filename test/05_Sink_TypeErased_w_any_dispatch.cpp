@@ -7,7 +7,7 @@
 #include <utility>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 //import virtual_void;
 #include "virtual_void/any_dispatch/method.h"

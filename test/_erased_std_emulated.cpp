@@ -11,7 +11,7 @@ import virtual_void;
 // #include "virtual_void/interface/call_operator.h"
 // #include "virtual_void/interface/declare_macro.h"
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 using namespace Catch::Matchers;
 

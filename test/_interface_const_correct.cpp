@@ -10,7 +10,7 @@ import virtual_void;
 // #include "virtual_void/data/has_no_meta/unique.h"
 // #include "virtual_void/data/has_m_table/shared_const.h"
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 using namespace Catch::Matchers;
 

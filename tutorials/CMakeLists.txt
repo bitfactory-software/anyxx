@@ -3,24 +3,22 @@
 endif()
 
 set(CMAKE_CXX_STANDARD 20)
+find_package(Catch2 3 REQUIRED)
 
 # Add source to this project's executable.
 add_executable (tutorial___1 
-    "../test/include/catch.cpp"
     "tutorial___1.cpp"
 )
 add_executable (tutorial___2
-    "../test/include/catch.cpp"
     "tutorial___2.cpp"
 )
 add_executable (tutorial___3
-    "../test/include/catch.cpp"
     "tutorial___3.cpp"
 )
 
-target_link_libraries(tutorial___1 virtual_void)
-target_link_libraries(tutorial___2 virtual_void)
-target_link_libraries(tutorial___3 virtual_void)
+target_link_libraries(tutorial___1 virtual_void Catch2::Catch2WithMain)
+target_link_libraries(tutorial___2 virtual_void Catch2::Catch2WithMain)
+target_link_libraries(tutorial___3 virtual_void Catch2::Catch2WithMain)
 
 set_property(TARGET test PROPERTY CXX_STANDARD 20)
 

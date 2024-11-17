@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 import virtual_void;
 #include "virtual_void/interface/declare_macro.h"

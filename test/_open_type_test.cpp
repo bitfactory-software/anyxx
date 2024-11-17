@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "include/catch.hpp"
+#include <catch.hpp>
 
 using namespace Catch::Matchers;
 

@@ -9,7 +9,7 @@
 
 // #include <yorel/yomm2/keywords.hpp>
 //
-// #include "include/catch.hpp"
+// #include <catch.hpp>
 //
 // using std::cout;
 // using std::make_shared;
