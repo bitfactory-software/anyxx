@@ -47,20 +47,6 @@ struct Integer : Node {
 
 open_method::via_type_info::domain tree_open_methods;
 
-//+++ no special meta data needed. the dispatch information comes from the
-// typeid() via the c++ vtable
-//
-// namespace virtual_void::class_hierarchy
-//{
-//    template<> struct class_< Node > : base {};
-//    template<> struct class_< Plus > : bases< Node >{};
-//    template<> struct class_< Times > : bases< Node >{};
-//    template<> struct class_< Integer > : bases< Node >{};
-//
-//	auto __ = declare_classes< Node, Plus, Times, Integer >( tree_domain );
-//}
-//---
-
 // -----------------------------------------------------------------------------
 // evaluate
 

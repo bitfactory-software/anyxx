@@ -50,7 +50,6 @@ TEST_CASE("m_table open_method") {
     domain testDomain;
     to_string_method toString(testDomain);
 
-    declare_classes<D>(testDomain);
     open_method::fill_with_overloads<D>(toString, ToString);
     REQUIRE(toString.is_defined<D>());
     REQUIRE(
@@ -61,7 +60,6 @@ TEST_CASE("m_table open_method") {
     domain testDomain;
     to_string_method toString(testDomain);
     using classes = type_list<D, C1, C2>;
-    declare_classes(classes{}, testDomain);
     open_method::fill_with_overloads(classes{}, toString,
                                                    ToString);
     class_hierarchy::visit_classes<classes>(

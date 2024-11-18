@@ -48,18 +48,6 @@ struct Integer {
 
 virtual_void::open_method::via_m_table::domain tree_domain;
 
-}  // namespace
-
-namespace virtual_void::class_hierarchy {
-template <>
-struct class_<Plus> : bases<> {};
-template <>
-struct class_<Times> : bases<> {};
-template <>
-struct class_<Integer> : bases<> {};
-
-auto __ = open_method::via_m_table::declare_classes<Plus, Times, Integer>(
-    tree_domain);
 }  // namespace virtual_void::class_hierarchy
 
 namespace {

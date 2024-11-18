@@ -1,4 +1,5 @@
 ﻿#include <any>
+#include <catch.hpp>
 #include <functional>
 #include <iostream>
 #include <map>
@@ -8,14 +9,12 @@
 #include <utility>
 #include <vector>
 
-#include <catch.hpp>
-
 import virtual_void;
 
-//#include "virtual_void/data/has_m_table/shared_const.h"
-//#include "virtual_void/open_method/algorithm.h"
-//#include "virtual_void/open_method/via_m_table/declare.h"
-//#include "virtual_void/typeid_cast/cast.h"
+// #include "virtual_void/data/has_m_table/shared_const.h"
+// #include "virtual_void/open_method/algorithm.h"
+// #include "virtual_void/open_method/via_m_table/declare.h"
+// #include "virtual_void/typeid_cast/cast.h"
 
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;
@@ -67,9 +66,8 @@ virtual_void::open_method::via_m_table::domain applicationDomain;
 auto entityToOut =
     virtual_void::open_method::via_m_table::declare<void(virtual_void::const_)>{
         applicationDomain};
-auto toString =
-    virtual_void::open_method::via_m_table::declare<std::string(virtual_void::const_)>{
-        applicationDomain};
+auto toString = virtual_void::open_method::via_m_table::declare<std::string(
+    virtual_void::const_)>{applicationDomain};
 auto typeid_const_cast = virtual_void::typeid_cast::const_cast_method<
     virtual_void::open_method::via_m_table::declare>{applicationDomain};
 
@@ -115,9 +113,7 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   virtual_void::open_method::fill_with_overloads(
       classes{}, toString, [](const auto* x) { return ToString_(x); });
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, typeid_const_cast);
-  virtual_void::open_method::via_m_table::declare_classes(classes{},
-                                                          applicationDomain);
-
+  
   db.factories["i"] = [](const std::string& data) {
     return erased_in_place<shared_const, IntData>(std::atoi(data.c_str()));
   };
