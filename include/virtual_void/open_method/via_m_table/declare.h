@@ -99,8 +99,8 @@ class declare<R(ARGS...)> : public declaration_base {
   template <typename... OTHER_ARGS>
   R operator()(data::has_m_table::m_table_t const& m_table, dispatch_t data,
                OTHER_ARGS&&... args) const {
-    auto erased_function =
-        reinterpret_cast<erased_function_t>(m_table[m_table_index()]);
+    auto erased_function = reinterpret_cast<erased_function_t>(
+        m_table.at(m_table_index(), get_default()));
     return (erased_function)(data, std::forward<OTHER_ARGS>(args)...);
   }
   template <is_virtual_void DATA, typename... OTHER_ARGS>

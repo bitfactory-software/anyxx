@@ -23,9 +23,11 @@ class m_table_t {
     set_method(method_index, m_table_target);
   }
   constexpr void clear() { table_.clear(); }
-  constexpr auto at(int method_index) const { return table_.at(method_index); }
-  constexpr auto operator[](int method_index) const {
-    return table_[method_index];
+  constexpr auto at(int method_index, auto default_target) const {
+    if (table_.size() > method_index)
+      return table_[method_index];
+    else
+      return reinterpret_cast<m_table_target_t>(default_target);
   }
   constexpr m_table_target_t find(int method_index) const {
     if (table_.size() > method_index) return table_.at(method_index);
