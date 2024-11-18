@@ -75,7 +75,6 @@ TEST_CASE("typeid_cast_test via_m_table") {
 
   declare_classes(classes{}, m_tableTestDomain);
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, m_table_const_cast);
-  via_m_table::fix_m_tables(m_tableTestDomain);
 
   run_cast_test<classes>(m_table_const_cast, [](auto& top) {
     return erased<data::has_m_table::const_observer>(top);

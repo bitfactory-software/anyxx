@@ -149,25 +149,4 @@ constexpr nullptr_t declare_classes(domain& domain) {
   return declare_classes(::virtual_void::type_list<CLASSES...>{}, domain);
 }
 
-inline void set_m_table(auto type_info, auto m_table,
-                        const declaration_base& method) {
-  //auto target = method.is_defined(*type_info);
-  //if (!target) target = method.get_default();
-  //m_table->set_method(method.m_table_index(), target);
-}
-inline void fix_m_tables(const m_table_map& m_table_map,
-                         const declaration_base& method) {
-  for (auto [type_info, m_tabele] : m_table_map)
-    set_m_table(type_info, m_tabele, method);
-}
-inline void fix_m_tables(const open_methods& domain,
-                         const m_table_map& m_table_map) {
-  for (const auto& method : domain) fix_m_tables(m_table_map, *method);
-}
-
-inline void fix_m_tables(const domain& domain) {
-  for (const auto& method : domain.open_methods)
-    fix_m_tables(domain.m_table_map, *method);
-}
-
 }  // namespace virtual_void::open_method::via_m_table

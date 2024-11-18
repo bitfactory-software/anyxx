@@ -44,7 +44,6 @@ TEST_CASE("m_table open_method") {
     declare_classes<D>(testDomain);
     open_method::interpolate(testDomain);
     REQUIRE(toString.is_defined<D>());
-    fix_m_tables(testDomain);
     REQUIRE(call<D>(toString) == typeid(A1).name());  // call for base class
   }
   {
@@ -54,7 +53,6 @@ TEST_CASE("m_table open_method") {
     declare_classes<D>(testDomain);
     open_method::fill_with_overloads<D>(toString, ToString);
     REQUIRE(toString.is_defined<D>());
-    fix_m_tables(testDomain);
     REQUIRE(
         call<D>(toString) ==
         typeid(D).name());  // call for function found via fill_with_overloads
@@ -66,7 +64,6 @@ TEST_CASE("m_table open_method") {
     declare_classes(classes{}, testDomain);
     open_method::fill_with_overloads(classes{}, toString,
                                                    ToString);
-    fix_m_tables(testDomain);
     class_hierarchy::visit_classes<classes>(
         overload{[&]<typename C> {
                                  C c;

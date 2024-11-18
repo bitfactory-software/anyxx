@@ -117,7 +117,6 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, typeid_const_cast);
   virtual_void::open_method::via_m_table::declare_classes(classes{},
                                                           applicationDomain);
-  virtual_void::open_method::via_m_table::fix_m_tables(applicationDomain);
 
   db.factories["i"] = [](const std::string& data) {
     return erased_in_place<shared_const, IntData>(std::atoi(data.c_str()));

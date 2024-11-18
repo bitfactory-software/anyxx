@@ -118,7 +118,6 @@ auto __ = as_lisp.define<Integer>(
 // -----------------------------------------------------------------------------
 
 TEST_CASE("21_Tree_TE_dispach_via_m_table") {
-  virtual_void::open_method::via_m_table::fix_m_tables(tree_domain);
 
   using namespace virtual_void;
 
