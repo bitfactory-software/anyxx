@@ -3,21 +3,17 @@
 #include <typeindex>
 #include <unordered_map>
 
-#include "../virtual_void.h"
 #include "../perfect_typeid_hash/index_table.h"
+#include "../virtual_void.h"
 
 namespace virtual_void::open_method {
 
-class table {
+template <typename TARGET = void (*)()>
+class default_target {
  public:
-  using dispatch_target_t = void (*)();
-  using dispatch_target_index_t =
-      perfect_typeid_hash::index_table<dispatch_target_t>;
+  using dispatch_target_t = TARGET;
 
  private:
-  using method_map_t =
-      std::unordered_map<std::type_info const*, dispatch_target_t>;
-  method_map_t map_;
   dispatch_target_t default_ =
       reinterpret_cast<dispatch_target_t>(&throw_not_found);
 
@@ -27,6 +23,20 @@ class table {
     default_ = reinterpret_cast<dispatch_target_t>(f);
   }
   auto get_default() const { return default_; }
+};
+
+class table : default_target<> {
+ public:
+  using dispatch_target_t = default_target<>::dispatch_target_t;
+  using dispatch_target_index_t =
+      perfect_typeid_hash::index_table<dispatch_target_t>;
+
+ private:
+  using method_map_t =
+      std::unordered_map<std::type_info const*, dispatch_target_t>;
+  method_map_t map_;
+
+ public:
   auto define_erased(const std::type_info& register_type_info, auto f) {
     auto t = reinterpret_cast<dispatch_target_t>(f);
     if (is_defined(register_type_info))

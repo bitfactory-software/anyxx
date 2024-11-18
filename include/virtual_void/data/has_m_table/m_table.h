@@ -27,6 +27,10 @@ class m_table_t {
   constexpr auto operator[](int method_index) const {
     return table_[method_index];
   }
+  constexpr m_table_target_t find(int method_index) const {
+    if (table_.size() > method_index) return table_.at(method_index);
+    return {};
+  }
 
  private:
   const std::type_info& type_info_;
@@ -42,4 +46,4 @@ constexpr m_table_t* m_table_of() {
   return &m_table_;
 }
 
-}  // namespace virtual_void
+}  // namespace virtual_void::data::has_m_table

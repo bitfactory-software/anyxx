@@ -21,17 +21,49 @@ using m_table_map =
 
 struct domain : open_method::domain<declaration_base> {
   m_table_map m_table_map;
+  ~domain() {
+    for (auto entry : m_table_map) entry.second->clear();
+  }
 };
 
-class declaration_base : public open_method::table {
+class declaration_base : public open_method::default_target<> {
   const int m_table_index_ = -1;
+  domain& domain_;
 
  public:
+  using dispatch_target_t = declaration_base::dispatch_target_t;
+  struct definition {};
+
   explicit declaration_base(domain& domain)
-      : m_table_index_((int)domain.open_methods.size()) {
+      : m_table_index_((int)domain.open_methods.size()), domain_(domain) {
     domain.open_methods.push_back(this);
   }
   int m_table_index() const { return m_table_index_; }
+  auto define_erased(data::has_m_table::m_table_t* m_table, auto f) {
+    auto t = reinterpret_cast<dispatch_target_t>(f);
+    m_table->set_method(m_table_index(), t);
+    return definition{};
+  }
+  auto define_erased(const std::type_info& type_info, auto f) {
+    auto m_table = domain_.m_table_map[&type_info];
+    return define_erased(m_table, f);
+  }
+  template <typename CLASS>
+  auto define_erased(auto f) {
+    auto m_table = data::has_m_table::m_table_of<CLASS>();
+    domain_.m_table_map[&typeid(CLASS)] = m_table;
+    return define_erased(m_table, f);
+  }
+  template <typename CLASS>
+  dispatch_target_t is_defined() const {
+    return data::has_m_table::m_table_of<CLASS>()->find(m_table_index());
+  }
+  dispatch_target_t is_defined(const std::type_info& type_info) const {
+    if (auto found = domain_.m_table_map.find(&type_info);
+        found != domain_.m_table_map.end())
+      return found->second->find(m_table_index());
+    return {};
+  }
 };
 
 using m_table_t = data::has_m_table::m_table_t;
@@ -55,17 +87,14 @@ class declare<R(ARGS...)> : public declaration_base {
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
   using pair_t = std::pair<const data::has_m_table::m_table_t*, dispatch_t>;
-  using erased_function_t = typename translate_erased_function< R, ARGS...>::type;
-
- private:
-  table table_;
-
- public:
+  using erased_function_t =
+      typename translate_erased_function<R, ARGS...>::type;
   using declaration_base::declaration_base;
+
   template <typename CLASS, typename FUNCTION>
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
-    return define_erased(typeid(CLASS), fp);
+    return declaration_base::define_erased<CLASS>(fp);
   }
   template <typename... OTHER_ARGS>
   R operator()(data::has_m_table::m_table_t const& m_table, dispatch_t data,
