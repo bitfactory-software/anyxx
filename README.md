@@ -4,7 +4,7 @@
 
 *Please refer to [Terms and Definitions](/terms_and_definitions.md) to clarify the meaning of used catchphrases in the context of this library* 
 
-## Building blocks for *programming in the large*
+## Building block vocabulary for *programming in the large*
 
 - lifetime handles [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - interfaces [Quick start](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
@@ -42,7 +42,7 @@ Dispatch on behalf of a type is - like function calls - a fundamental software c
 
 Static dispatch is the dispatch of chioce in C++. Foremost because of performance and binary size.
 
-But eceeds a program a certain size, it is no longer possible to use static disapch for all and everything. 
+But eceeds a program a certain size, it is no longer possible to use static dispatch for all and everything. 
 
 Reasons are:
 - you do not know all your types all the time
@@ -51,13 +51,13 @@ Reasons are:
 For example, imagine a std::variant for some hundred different alternatives.
 This is where **programming in the large** begins and runtime dispatch is the proven means.
 
-At this point arises another problem, when it comes to "inversion of control" in regard to the type of the parameter objectds passed into the callback:
+At this point arises another problem, when it comes to "inversion of control" in regard to the type of the parameter objects passed into the callback:
 - In static dispatch, the have the full type information.
 - In dynamic dispatch, the original type is usualy abstracted away (either via a base class or "type erasure") and must be casted back to access more concrete information.
 
 ### *Runtime* versus *compiletime*
 
-In the general case, the "hot" runtime path and the bottleneck are easy diagnosed with profilers.
+In the general case, the hot runtime path and the causing bottleneck are easy diagnosed with profilers.
 When the problem is spottet, the soultion is - so our expirience - not so far away.  
 In contrary, when build time has grown to a problem, there is seldom an easy way out. 
 While a software system grows lager, keeping the edit-compile-run loop short, needs constant smart decisssions.
@@ -94,7 +94,7 @@ You probably want to seperat from the details of the operating system, to easy p
 
 You surly also want to separate different aspects of your application, because you know, they will change, and yout want to keep the changes as localy as possible.
 
-For the decission over using this library, once have to ballance the benefits of sepaerating internal dependencies versus the tight coupling into **virtual void**.
+For the decission over using this library, once have to ballance the benefits of separating internal dependencies versus the tight coupling into **virtual void**.
 
 
 
