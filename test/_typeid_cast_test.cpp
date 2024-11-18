@@ -44,15 +44,6 @@ void run_cast_test(const auto& castMethod, auto make_dispatch_var) {
       [&]<typename, typename> {}});
 }
 
-// +++
-// BUG in MSVC 17.11.5:
-// works here, but importing this from module virtual_void fails: looses const
-// for 1st "const void*" param
-//
-// template <template <typename SIG> typename
-// OPEN_METHOD> using const_cast_method
-//     OPEN_METHOD<void const* (void const*, const std::type_info& to)>;
-// ---
 
 TEST_CASE("typeid_cast_test via_type_info") {
   using classes = virtual_void::type_list<D, C1, C2>;
