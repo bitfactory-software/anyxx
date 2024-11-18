@@ -10,7 +10,7 @@
 #include "../../virtual_void.h"
 #include "../algorithm.h"
 #include "../domain.h"
-#include "../table.h"
+#include "../default_target.h"
 
 namespace virtual_void::open_method::via_m_table {
 
