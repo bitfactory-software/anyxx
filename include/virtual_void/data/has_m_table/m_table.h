@@ -24,10 +24,11 @@ class m_table_t {
   }
   constexpr void clear() { table_.clear(); }
   constexpr auto at(int method_index, auto default_target) const {
-    if (table_.size() > method_index)
-      return table_[method_index];
-    else
+    if (table_.size() <= method_index)
       return reinterpret_cast<m_table_target_t>(default_target);
+    auto target = table_[method_index];
+    if (!target) return reinterpret_cast<m_table_target_t>(default_target);
+    return target;
   }
   constexpr m_table_target_t find(int method_index) const {
     if (table_.size() > method_index) return table_.at(method_index);

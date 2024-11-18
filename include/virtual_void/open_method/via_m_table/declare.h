@@ -151,9 +151,9 @@ constexpr nullptr_t declare_classes(domain& domain) {
 
 inline void set_m_table(auto type_info, auto m_table,
                         const declaration_base& method) {
-  auto target = method.is_defined(*type_info);
-  if (!target) target = method.get_default();
-  m_table->set_method(method.m_table_index(), target);
+  //auto target = method.is_defined(*type_info);
+  //if (!target) target = method.get_default();
+  //m_table->set_method(method.m_table_index(), target);
 }
 inline void fix_m_tables(const m_table_map& m_table_map,
                          const declaration_base& method) {
