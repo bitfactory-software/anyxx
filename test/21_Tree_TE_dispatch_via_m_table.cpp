@@ -1,10 +1,10 @@
 ﻿// virtual_void variant of this yomm2 example via virtual_void m_tables
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <catch.hpp>
 #include <iostream>
 #include <string>
 
-#include <catch.hpp>
 #include "virtual_void/data/has_m_table/shared_const.h"
 #include "virtual_void/open_method/via_m_table/declare.h"
 #include "virtual_void/utillities/unnamed__.h"
@@ -12,7 +12,7 @@
 using std::cout;
 using std::string;
 
-//import virtual_void;
+// import virtual_void;
 
 namespace {
 
@@ -46,16 +46,17 @@ struct Integer {
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-virtual_void::open_method::via_m_table::domain value_domain;
-
-}  // namespace virtual_void::class_hierarchy
+}  // namespace
 
 namespace {
 // -----------------------------------------------------------------------------
 // evaluate
 
-auto value = virtual_void::open_method::via_m_table::declare<int(virtual_void::const_)>{
-    value_domain};
+virtual_void::open_method::via_m_table::domain value_domain;
+
+auto value =
+    virtual_void::open_method::via_m_table::declare<int(virtual_void::const_)>{
+        value_domain};
 
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
@@ -70,9 +71,8 @@ auto __ = value.define<Integer>([](auto expr) { return expr->value; });
 
 virtual_void::open_method::via_m_table::domain generator_domain;
 
-auto as_forth =
-    virtual_void::open_method::via_m_table::declare<string(virtual_void::const_)>{
-        generator_domain};
+auto as_forth = virtual_void::open_method::via_m_table::declare<string(
+    virtual_void::const_)>{generator_domain};
 
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
@@ -88,9 +88,8 @@ auto __ = as_forth.define<Integer>(
 // -----------------------------------------------------------------------------
 // render as Lisp
 
-auto as_lisp =
-    virtual_void::open_method::via_m_table::declare<string(virtual_void::const_)>{
-        generator_domain};
+auto as_lisp = virtual_void::open_method::via_m_table::declare<string(
+    virtual_void::const_)>{generator_domain};
 
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
@@ -108,7 +107,6 @@ auto __ = as_lisp.define<Integer>(
 // -----------------------------------------------------------------------------
 
 TEST_CASE("21_Tree_TE_dispach_via_m_table") {
-
   using namespace virtual_void;
 
   auto expr = erased_in_place<node, Times>(
