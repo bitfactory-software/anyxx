@@ -94,7 +94,7 @@ You probably want to seperat from the details of the operating system, to easy p
 
 You surly also want to separate different aspects of your application, because you know, they will change, and yout want to keep the changes as localy as possible.
 
-For the decission over using this library, once have to ballance the benefits of sepaerating internal dependencies versus the tight coupling into **virtual void**.
+For the decission over using this library, once have to ballance the benefits of separating internal dependencies versus the tight coupling into **virtual void**.
 
 
 
