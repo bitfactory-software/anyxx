@@ -46,7 +46,7 @@ struct Integer {
 // =============================================================================
 // add behavior to existing classes, without changing them
 
-virtual_void::open_method::via_m_table::domain tree_domain;
+virtual_void::open_method::via_m_table::domain value_domain;
 
 }  // namespace virtual_void::class_hierarchy
 
@@ -55,7 +55,7 @@ namespace {
 // evaluate
 
 auto value = virtual_void::open_method::via_m_table::declare<int(virtual_void::const_)>{
-    tree_domain};
+    value_domain};
 
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
@@ -68,9 +68,11 @@ auto __ = value.define<Integer>([](auto expr) { return expr->value; });
 // -----------------------------------------------------------------------------
 // render as Forth
 
+virtual_void::open_method::via_m_table::domain generator_domain;
+
 auto as_forth =
     virtual_void::open_method::via_m_table::declare<string(virtual_void::const_)>{
-        tree_domain};
+        generator_domain};
 
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
@@ -88,7 +90,7 @@ auto __ = as_forth.define<Integer>(
 
 auto as_lisp =
     virtual_void::open_method::via_m_table::declare<string(virtual_void::const_)>{
-        tree_domain};
+        generator_domain};
 
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";

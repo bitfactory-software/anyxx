@@ -1,5 +1,6 @@
 #pragma once
 
+#include <set>
 #include <typeindex>
 
 #include "../../class_hierarchy/class_hierarchy.h"
@@ -9,8 +10,8 @@
 #include "../../utillities/type_list.h"
 #include "../../virtual_void.h"
 #include "../algorithm.h"
-#include "../domain.h"
 #include "../default_target.h"
+#include "../domain.h"
 
 namespace virtual_void::open_method::via_m_table {
 
@@ -20,9 +21,13 @@ using m_table_map =
     std::unordered_map<std::type_info const*, data::has_m_table::m_table_t*>;
 
 struct domain : open_method::domain<declaration_base> {
+  static inline std::set<domain*> domains;
   m_table_map m_table_map;
+  const int domain_index;
+  domain() : domain_index(domains.size()) { domains.insert(this); }
   ~domain() {
     for (auto entry : m_table_map) entry.second->clear();
+    domains.erase(this);
   }
 };
 
@@ -33,15 +38,16 @@ class declaration_base : public open_method::default_target<> {
  public:
   using dispatch_target_t = declaration_base::dispatch_target_t;
   struct definition {};
+  int domain_index() const { return domain_.domain_index; }
+  int m_table_index() const { return m_table_index_; }
 
   explicit declaration_base(domain& domain)
       : m_table_index_((int)domain.open_methods.size()), domain_(domain) {
     domain.open_methods.push_back(this);
   }
-  int m_table_index() const { return m_table_index_; }
   auto define_erased(data::has_m_table::m_table_t* m_table, auto f) {
     auto t = reinterpret_cast<dispatch_target_t>(f);
-    m_table->set_method(m_table_index(), t);
+    m_table->set_method(domain_index(), m_table_index(), t);
     return definition{};
   }
   auto define_erased(const std::type_info& type_info, auto f) {
@@ -56,12 +62,12 @@ class declaration_base : public open_method::default_target<> {
   }
   template <typename CLASS>
   dispatch_target_t is_defined() const {
-    return data::has_m_table::m_table_of<CLASS>()->find(m_table_index());
+    return data::has_m_table::m_table_of<CLASS>()->find(domain_index(), m_table_index());
   }
   dispatch_target_t is_defined(const std::type_info& type_info) const {
     if (auto found = domain_.m_table_map.find(&type_info);
         found != domain_.m_table_map.end())
-      return found->second->find(m_table_index());
+      return found->second->find(domain_index(), m_table_index());
     return {};
   }
 };
@@ -100,7 +106,7 @@ class declare<R(ARGS...)> : public declaration_base {
   R operator()(data::has_m_table::m_table_t const& m_table, dispatch_t data,
                OTHER_ARGS&&... args) const {
     auto erased_function = reinterpret_cast<erased_function_t>(
-        m_table.at(m_table_index(), get_default()));
+        m_table.at(domain_index(), m_table_index(), get_default()));
     return (erased_function)(data, std::forward<OTHER_ARGS>(args)...);
   }
   template <is_virtual_void DATA, typename... OTHER_ARGS>
