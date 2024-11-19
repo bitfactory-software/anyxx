@@ -10,7 +10,7 @@
 #include <catch.hpp>
 
 //import virtual_void;
-#include "virtual_void/any_dispatch/method.h"
+#include "virtual_void/any_dispatch/method.hpp"
 
 namespace {
 

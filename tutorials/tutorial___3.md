@@ -17,9 +17,9 @@ Here is how this works out:
 ```cpp
 #endif begin sample
 // -->
-#include <virtual_void/data/has_no_meta/value.h>
-#include <virtual_void/interface/base.h>
-#include <virtual_void/interface/declare_macro.h>
+#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 
 #include <iostream>
 #include <vector>
@@ -87,8 +87,8 @@ Because this is a standard pattern, there is a prepared standard solution in [``
 ```cpp
 #include <ostream>
 
-#include "base.h"
-#include "declare_macro.h"
+#include "base.hpp"
+#include "declare_macro.hpp"
 
 namespace virtual_void::interface {
 
@@ -130,8 +130,8 @@ When applied to our example, this leads to this:
 ```cpp
 #endif begin sample
 // -->
-#include <virtual_void/data/has_no_meta/value.h>
-#include <virtual_void/interface/ostream_shift_left_operator.h>
+#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/interface/ostream_shift_left_operator.hpp>
 
 #include <iostream>
 #include <vector>

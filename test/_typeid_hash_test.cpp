@@ -4,7 +4,7 @@
 #include <vector>
 
 import virtual_void;
-//#include "virtual_void/perfect_typeid_hash/index_table.h"
+//#include "virtual_void/perfect_typeid_hash/index_table.hpp"
 
 #include <catch.hpp>
 

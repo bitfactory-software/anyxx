@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "class_hierarchy_test_hierarchy.h"
+#include "class_hierarchy_test_hierarchy.hpp"
 #include <catch.hpp>
 
 namespace virtual_void::class_hierarchy {

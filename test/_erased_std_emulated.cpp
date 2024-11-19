@@ -5,11 +5,11 @@
 #include <vector>
 
 import virtual_void;
-// #include "virtual_void/data/has_no_meta/observer.h"
-// #include "virtual_void/data/has_no_meta/unique_ptr.h"
-// #include "virtual_void/data/has_no_meta/value.h"
-// #include "virtual_void/interface/call_operator.h"
-// #include "virtual_void/interface/declare_macro.h"
+// #include "virtual_void/data/has_no_meta/observer.hpp"
+// #include "virtual_void/data/has_no_meta/unique_ptr.hpp"
+// #include "virtual_void/data/has_no_meta/value.hpp"
+// #include "virtual_void/interface/call_operator.hpp"
+// #include "virtual_void/interface/declare_macro.hpp"
 
 #include <catch.hpp>
 

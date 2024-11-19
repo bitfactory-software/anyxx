@@ -5,8 +5,8 @@
 #include <iostream>
 #include <string>
 
-#include "virtual_void/any_dispatch/method.h"
-#include "virtual_void/utillities/unnamed__.h"
+#include "virtual_void/any_dispatch/method.hpp"
+#include "virtual_void/utillities/unnamed__.hpp"
 #include <catch.hpp>
 
 //import virtual_void;

@@ -23,7 +23,7 @@ Let us step through an example:
 ```cpp
 #endif begin sample
 // -->
-#include <virtual_void/open_object/members.h>
+#include <virtual_void/open_object/members.hpp>
 
 #include <functional>
 #include <iostream>

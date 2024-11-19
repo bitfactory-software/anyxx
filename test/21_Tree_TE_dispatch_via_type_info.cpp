@@ -5,8 +5,8 @@
 #include <memory>
 #include <string>
 
-#include "virtual_void/open_method/via_type_info/declare.h"
-#include "virtual_void/utillities/unnamed__.h"
+#include "virtual_void/open_method/via_type_info/declare.hpp"
+#include "virtual_void/utillities/unnamed__.hpp"
 #include <catch.hpp>
 
 using std::cout;

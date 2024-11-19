@@ -3,17 +3,17 @@
 #include <string>
 #include <vector>
 
-#include "a.h"
+#include "a.hpp"
 #include <catch.hpp>
 
 import virtual_void;
-//#include "virtual_void/data/has_no_meta/meta.h"
-//#include "virtual_void/data/has_no_meta/observer.h"
-//#include "virtual_void/data/has_no_meta/shared_const.h"
-//#include "virtual_void/data/has_no_meta/shared_const_ptr.h"
-//#include "virtual_void/data/has_no_meta/unique.h"
-//#include "virtual_void/data/has_no_meta/unique_ptr.h"
-//#include "virtual_void/data/has_no_meta/value.h"
+//#include "virtual_void/data/has_no_meta/meta.hpp"
+//#include "virtual_void/data/has_no_meta/observer.hpp"
+//#include "virtual_void/data/has_no_meta/shared_const.hpp"
+//#include "virtual_void/data/has_no_meta/shared_const_ptr.hpp"
+//#include "virtual_void/data/has_no_meta/unique.hpp"
+//#include "virtual_void/data/has_no_meta/unique_ptr.hpp"
+//#include "virtual_void/data/has_no_meta/value.hpp"
 
 using namespace Catch::Matchers;
 

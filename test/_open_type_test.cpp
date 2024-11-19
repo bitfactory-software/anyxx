@@ -8,7 +8,7 @@
 using namespace Catch::Matchers;
 
 import virtual_void;
-//#include "virtual_void/open_object/members.h"
+//#include "virtual_void/open_object/members.hpp"
 
 using namespace virtual_void;
 using namespace virtual_void::open_object;

@@ -4,7 +4,7 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
-file(GLOB_RECURSE virtual_void_headers "../include/virtual_void/*.h")
+file(GLOB_RECURSE virtual_void_headers "../include/virtual_void/*.hpp")
 
 add_library(virtual_void ${virtual_void_headers})
 target_sources(virtual_void

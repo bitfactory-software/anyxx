@@ -186,7 +186,7 @@ For our case, we could do it this way:
 #include "catch.hpp"
 
 import virtual_void;
-#include <virtual_void/interface/declare_macro.h>
+#include <virtual_void/interface/declare_macro.hpp>
 
 namespace tutorial_1_4 {
 ERASED_INTERFACE(to_ostream,

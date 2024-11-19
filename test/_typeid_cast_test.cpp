@@ -4,16 +4,16 @@
 #include <iostream>
 #include <typeinfo>
 
-#include "class_hierarchy_test_hierarchy.h"
+#include "class_hierarchy_test_hierarchy.hpp"
 #include <catch.hpp>
 
 import virtual_void;
-//#include "virtual_void/data/has_m_table/observer.h"
-//#include "virtual_void/data/has_type_info/observer.h"
-//#include "virtual_void/open_method/algorithm.h"
-//#include "virtual_void/open_method/via_m_table/declare.h"
-//#include "virtual_void/open_method/via_type_info/declare.h"
-//#include "virtual_void/typeid_cast/cast.h"
+//#include "virtual_void/data/has_m_table/observer.hpp"
+//#include "virtual_void/data/has_type_info/observer.hpp"
+//#include "virtual_void/open_method/algorithm.hpp"
+//#include "virtual_void/open_method/via_m_table/declare.hpp"
+//#include "virtual_void/open_method/via_type_info/declare.hpp"
+//#include "virtual_void/typeid_cast/cast.hpp"
 
 
 using namespace TestDomain;

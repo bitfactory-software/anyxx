@@ -3,22 +3,22 @@
 #include <string>
 #include <vector>
 
-#include "a.h"
+#include "a.hpp"
 
 #include <catch.hpp>
 
 import virtual_void;
-//#include "virtual_void/data/has_m_table/observer.h"
-//#include "virtual_void/data/has_m_table/shared_const.h"
-//#include "virtual_void/data/has_m_table/unique.h"
-//#include "virtual_void/data/has_m_table/value.h"
-//#include "virtual_void/data/has_m_table/shared_const_ptr.h"
-//#include "virtual_void/data/has_m_table/unique_ptr.h"
+//#include "virtual_void/data/has_m_table/observer.hpp"
+//#include "virtual_void/data/has_m_table/shared_const.hpp"
+//#include "virtual_void/data/has_m_table/unique.hpp"
+//#include "virtual_void/data/has_m_table/value.hpp"
+//#include "virtual_void/data/has_m_table/shared_const_ptr.hpp"
+//#include "virtual_void/data/has_m_table/unique_ptr.hpp"
 
 
 using namespace Catch::Matchers;
 
-#include "class_hierarchy_test_hierarchy.h"
+#include "class_hierarchy_test_hierarchy.hpp"
 
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;
