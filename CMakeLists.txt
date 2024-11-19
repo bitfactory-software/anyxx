@@ -3,6 +3,8 @@ if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
+message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include(../third_party_2025/vcpkg/scripts/buildsystems/vcpkg.cmake)
 
@@ -17,3 +19,4 @@ add_subdirectory ("tutorials")
 
 include(CTest)
 include(Catch)
+

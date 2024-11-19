@@ -5,11 +5,12 @@
 #include "../data/unique.h"
 #include "../data/value.h"
 #include "../open_method/via_type_info/factory.h"
+#include "../VV_EXPORT.h"
 #include "base.h"
 
 namespace virtual_void::interface {
 
-inline virtual_void::open_method::via_type_info::domain cast_domain;
+VV_EXPORT inline virtual_void::open_method::via_type_info::domain cast_domain;
 
 inline void seal_casts() { seal_for_runtime(cast_domain); }
 

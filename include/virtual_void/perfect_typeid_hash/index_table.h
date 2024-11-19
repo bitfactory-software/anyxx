@@ -11,12 +11,14 @@
 #include <typeindex>
 #include <typeinfo>
 
+#include "../VV_EXPORT.h"
+
 namespace perfect_typeid_hash {
 
 using type_id = const std::type_info*;
 using index_t = std::size_t;
 
-const type_id unused_element = (type_id)-1;
+VV_EXPORT inline type_id unused_element = (type_id)-1;
 
 template <typename TARGET>
 struct index_table {

@@ -12,6 +12,7 @@
 #include "../algorithm.h"
 #include "../default_target.h"
 #include "../domain.h"
+#include "../../VV_EXPORT.h"
 
 namespace virtual_void::open_method::via_m_table {
 
@@ -21,7 +22,7 @@ using m_table_map =
     std::unordered_map<std::type_info const*, data::has_m_table::m_table_t*>;
 
 struct domain : open_method::domain<declaration_base> {
-  static inline std::set<domain*> domains;
+  VV_EXPORT static inline std::set<domain*> domains;
   m_table_map m_table_map;
   const int domain_index;
   domain() : domain_index(domains.size()) { domains.insert(this); }

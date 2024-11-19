@@ -12,6 +12,7 @@ target_sources(virtual_void
     FILE_SET CXX_MODULES FILES
     "virtual_void.cppm"  
 )
+target_compile_definitions(virtual_void PUBLIC VV_STATIC)
 
 add_library(virtual_void_shared SHARED ${virtual_void_headers})
 target_sources(virtual_void_shared
@@ -19,3 +20,4 @@ target_sources(virtual_void_shared
     FILE_SET CXX_MODULES FILES
     "virtual_void.cppm"  
 )
+target_compile_definitions(virtual_void_shared PUBLIC VV_SHARED)
