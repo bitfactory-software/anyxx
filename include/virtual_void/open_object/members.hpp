@@ -9,11 +9,15 @@
 
 namespace virtual_void::open_object {
 
+
 template <typename OBJECT_TYPE>
-std::size_t& type_member_count_of() {
+std::size_t& type_member_count_of_impl() {
   static std::size_t c;
   return c;
 }
+
+template <typename OBJECT_TYPE>
+std::size_t& type_member_count_of() { return type_member_count_of_impl<OBJECT_TYPE>(); } ;
 
 template <typename OBJECT_TYPE>
 struct members {
