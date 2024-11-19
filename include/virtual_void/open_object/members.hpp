@@ -9,8 +9,6 @@
 
 namespace virtual_void::open_object {
 
-
-
 template <typename OBJECT_TYPE>
 std::size_t type_member_count_of = 0;
 
@@ -21,18 +19,18 @@ struct members {
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
-    table_[OBJECT_MEMBER::get_index()] =
+    table_[OBJECT_MEMBER::index] =
         data::make_erased_value<void, value_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER) const {
-    const auto& value = table_[OBJECT_MEMBER::get_index()];
+    const auto& value = table_[OBJECT_MEMBER::index];
     if (!value) return {};
     return static_cast<typename OBJECT_MEMBER::value_t const*>(value.get());
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t* get(OBJECT_MEMBER) {
-    auto& value = table_[OBJECT_MEMBER::get_index()];
+    auto& value = table_[OBJECT_MEMBER::index];
     if (!value) return {};
     return static_cast<typename OBJECT_MEMBER::value_t*>(value.get());
   }
@@ -47,15 +45,12 @@ struct members {
   }
 };
 
-template <typename OBJECT_TYPE, typename MEMBER_TYPE >
-const int member_table_index = type_member_count_of<OBJECT_TYPE>++;
-
 template <typename OBJECT_TYPE, typename MEMBER_TYPE, typename VALUE_TYPE>
 struct member {
   using object_t = OBJECT_TYPE;
   using member_t = MEMBER_TYPE;
   using value_t = VALUE_TYPE;
-  static std::size_t get_index() { return member_table_index<OBJECT_TYPE, MEMBER_TYPE>; }
+  inline static std::size_t index = type_member_count_of<OBJECT_TYPE>++;
 };
 
 }  // namespace virtual_void::open_object
