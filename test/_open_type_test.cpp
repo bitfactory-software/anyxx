@@ -19,7 +19,7 @@ struct test_member : member<test_object, test_member, std::string> {
 };  // define your meber
 
 TEST_CASE("open object 1") {
-  REQUIRE(open_object::type_member_count_of<test_object>() == 1);
+  REQUIRE(open_object::type_member_count_of<test_object> == 1);
   test_object a_test_object;
   auto value = a_test_object.get(test_member());
   REQUIRE(!value);

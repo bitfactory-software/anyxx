@@ -10,18 +10,13 @@
 namespace virtual_void::open_object {
 
 
-template <typename OBJECT_TYPE>
-std::size_t& type_member_count_of_impl() {
-  static std::size_t c;
-  return c;
-}
 
 template <typename OBJECT_TYPE>
-std::size_t& type_member_count_of() { return type_member_count_of_impl<OBJECT_TYPE>(); } ;
+std::size_t type_member_count_of = 0;
 
 template <typename OBJECT_TYPE>
 struct members {
-  members() : table_(type_member_count_of<OBJECT_TYPE>()) {}
+  members() : table_(type_member_count_of<OBJECT_TYPE>) {}
   std::vector<data::erased_value<void>> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER, ARG&& arg) {
@@ -53,7 +48,7 @@ struct members {
 };
 
 template <typename OBJECT_TYPE, typename MEMBER_TYPE >
-const int member_table_index = type_member_count_of<OBJECT_TYPE>()++;
+const int member_table_index = type_member_count_of<OBJECT_TYPE>++;
 
 template <typename OBJECT_TYPE, typename MEMBER_TYPE, typename VALUE_TYPE>
 struct member {
