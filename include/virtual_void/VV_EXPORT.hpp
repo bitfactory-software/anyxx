@@ -1,5 +1,4 @@
 #pragma once
-//
 
 #ifndef VV_EXPORT
 #define VV_EXPORT
