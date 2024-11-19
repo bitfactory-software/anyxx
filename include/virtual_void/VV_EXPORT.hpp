@@ -1,9 +1,14 @@
 #pragma once
 //
-#ifdef VV_SHARED
-#pragma message("build VV_SHARED")
-#define VV_EXPORT  __declspec(dllexport)
-#else
+
+#ifndef VV_EXPORT
 #define VV_EXPORT
-#pragma message("build not VV_SHARED")
-#endif // !VV_EXPORT
+#endif
+
+#ifdef VV_SHARED
+#ifdef _MSVC_LANG
+#undef VV_EXPORT
+#define VV_EXPORT __declspec(dllexport)
+#endif
+
+#endif  // !VV_EXPORT

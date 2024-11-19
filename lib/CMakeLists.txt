@@ -4,6 +4,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
+message( "CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
+
 file(GLOB_RECURSE virtual_void_headers "../include/virtual_void/*.hpp")
 
 add_library(virtual_void ${virtual_void_headers})
