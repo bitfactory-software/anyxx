@@ -6,7 +6,7 @@ endif()
 message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-include(../vcpkg/scripts/buildsystems/vcpkg.cmake)
+include($ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 
 find_package(Catch2 3 REQUIRED)
 
