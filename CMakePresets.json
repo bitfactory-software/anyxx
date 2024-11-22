@@ -1,18 +1,21 @@
 ﻿{
   "version": 3,
-  "cmakeMinimumRequired": {
-    "major": 3,
-    "minor": 21,
-    "patch": 0
-  },
   "configurePresets": [
     {
+      "name": "vcpkg",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    },
+    {
       "name": "conf-common",
+      "inherits": "vcpkg",
       "description": "General settings that apply to all configurations",
       "hidden": true,
-      "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
-      "installDir": "${sourceDir}/out/install/${presetName}",
+      "installDir": "${sourceDir}/out/install/${presetName}"
     },
     {
       "name": "conf-windows-common",
@@ -42,6 +45,7 @@
       "displayName": "msvc Debug (Developer Mode)",
       "description": "Target Windows with the msvc compiler, debug build type",
       "inherits": "conf-windows-common",
+      "hidden": false,
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl",
         "CMAKE_CXX_COMPILER": "cl",
@@ -51,6 +55,7 @@
     },
     {
       "name": "windows-msvc-release-developer-mode",
+      "hidden": false,
       "displayName": "msvc Release (Developer Mode)",
       "description": "Target Windows with the msvc compiler, release build type",
       "inherits": "conf-windows-common",
@@ -63,6 +68,7 @@
     },
     {
       "name": "windows-msvc-release-user-mode",
+      "hidden": false,
       "displayName": "msvc Release (User Mode)",
       "description": "Target Windows with the msvc compiler, release build type",
       "inherits": "conf-windows-common",

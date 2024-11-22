@@ -1,1 +1,1 @@
-export VCPKG_ROOT=../vcpkg
+setx VCPKG_ROOT=../vcpkg
