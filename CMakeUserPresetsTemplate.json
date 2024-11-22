@@ -7,6 +7,14 @@
       "environment": {
         "VCPKG_ROOT": "../vcpkg"
       }
+    },
+    {
+      "name": "windows-msvc-debug-developer-mode-user",
+      "inherits": "windows-msvc-debug-developer-mode",
+      "displayName": "msvc Debug (Developer Mode) + vcpkg",
+      "environment": {
+        "VCPKG_ROOT": "../vcpkg"
+      }
     }
   ]
 }
