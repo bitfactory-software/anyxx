@@ -3,7 +3,6 @@ if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
 
-include(GNUInstallDirs)
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 
 message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
@@ -13,7 +12,7 @@ message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
 
 project(virtual_void CXX)
 
-find_package(Catch2 3 REQUIRED)
+include(GNUInstallDirs)
 
 include_directories( "./include" )
 
@@ -21,7 +20,5 @@ add_subdirectory ("src")
 add_subdirectory ("test")
 add_subdirectory ("tutorials")
 
-include(CTest)
-include(Catch)
 
 
