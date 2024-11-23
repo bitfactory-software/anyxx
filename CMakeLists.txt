@@ -4,6 +4,7 @@ if (MSVC)
 endif()
 
 include(GNUInstallDirs)
+set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 
 message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -22,6 +23,5 @@ add_subdirectory ("tutorials")
 
 include(CTest)
 include(Catch)
-
 
 
