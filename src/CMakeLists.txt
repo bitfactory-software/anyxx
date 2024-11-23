@@ -24,22 +24,25 @@ target_sources(virtual_void_shared
 )
 target_compile_definitions(virtual_void_shared PUBLIC VV_SHARED)
 
-#[[
+message("CMAKE_INSTALL_LIBDIR: " ${CMAKE_INSTALL_LIBDIR})
+message("CMAKE_INSTALL_BINDIR: " ${CMAKE_INSTALL_BINDIR})
+
 # Install the library and its headers
-install(TARGETS virtual_void
+install(TARGETS virtual_void_lib
         EXPORT virtual_void_targets
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
 
-install(FILES ${virtual_void_headers} DESTINATION include)
+#install(FILES ${virtual_void_headers} DESTINATION include)
 
 # Generate and install *-targets.cmake
-install(EXPORT virtual_void_targets
-        FILE virtual_void-targets.cmake
+install(EXPORT virtual_void_lib_targets
+        FILE virtual_void_lib-targets.cmake
         NAMESPACE virtual_void::
         DESTINATION share/virtual_void)
 
+#[[
 # Generate the config file in the current binary dir (this ensures it's not placed directly in source)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void-config.cmake"
 "include(CMakeFindDependencyMacro)\n"

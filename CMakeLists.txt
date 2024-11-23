@@ -23,7 +23,5 @@ add_subdirectory ("tutorials")
 include(CTest)
 include(Catch)
 
-message("CMAKE_INSTALL_LIBDIR: " ${CMAKE_INSTALL_LIBDIR})
-message("CMAKE_INSTALL_BINDIR: " ${CMAKE_INSTALL_BINDIR})
 
 
