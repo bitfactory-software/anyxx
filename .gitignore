@@ -364,3 +364,5 @@ FodyWeavers.xsd
 *.idb
 /build
 /CMakeUserPresets.json
+/CMakeFiles
+/CMakeCache.txt
