@@ -1,0 +1,18 @@
+{
+  "name": "virtual-void",
+  "version": "0.0.1",
+  "homepage": "https://github.com/bitfactory-software/virtual_void",
+  "description": "virtual_void : The type tunnel vocabulary for programming in the large",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name" : "vcpkg-cmake",
+      "host" : true
+    },
+    {
+      "name" : "vcpkg-cmake-config",
+      "host" : true
+    },
+    "catch2"
+  ]
+}
