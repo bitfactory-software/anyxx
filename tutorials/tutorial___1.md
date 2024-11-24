@@ -107,7 +107,7 @@ TEST_CASE("tutorial 1/2") {
 
 - // 1 We use the erased ``data`` that carries meta information for ``type_info``.
 - // 2 We will use an open method ``via_type_info``. This kind of ``open_method`` uses a *perfect hash* from a ``type_info`` to the target function.
-- // 3 ``declare`` `s the name and the signature of the ``open method``. The first parameter type must be `` const_ `` or `` mutable_ ``. 
+- // 3 ``declare`` `s the name and the signature of the ``open method``. The first parameter type must be `` const``_ or `` mutable``_. 
 - // 4a-d ``define`` the target function for a type. This function gets registered for the types ``type_info``.
 - // 5 because our vaules carry meta information for ``type_info`` (see // 1), we can call to the ``open_method`` ``draw`` with a ``value`` as the first parameter..
 
