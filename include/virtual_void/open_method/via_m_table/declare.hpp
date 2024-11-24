@@ -57,13 +57,13 @@ class declaration_base : public open_method::default_target<> {
   }
   template <typename CLASS>
   auto define_erased(auto f) {
-    auto m_table = data::has_m_table::m_table_of<CLASS>();
+    auto m_table = &data::has_m_table::m_table_of<CLASS>;
     domain_.m_table_map[&typeid(CLASS)] = m_table;
     return define_erased(m_table, f);
   }
   template <typename CLASS>
   dispatch_target_t is_defined() const {
-    return data::has_m_table::m_table_of<CLASS>()->find(domain_index(), m_table_index());
+    return data::has_m_table::m_table_of<CLASS>.find(domain_index(), m_table_index());
   }
   dispatch_target_t is_defined(const std::type_info& type_info) const {
     if (auto found = domain_.m_table_map.find(&type_info);
@@ -139,7 +139,7 @@ template <typename CLASSES>
 constexpr nullptr_t declare_classes(m_table_map& registry) {
   class_hierarchy::visit_classes<CLASSES, true>(
       overload{[&]<typename C> {
-                 registry[&typeid(C)] = data::has_m_table::m_table_of<C>();
+                 registry[&typeid(C)] = &data::has_m_table::m_table_of<C>;
                },
                [&]<typename C, typename B> {}});
   return {};

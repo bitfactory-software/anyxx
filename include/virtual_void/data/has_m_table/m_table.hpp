@@ -55,9 +55,6 @@ class m_table_t {
   }
 };
 template <typename CLASS>
-constexpr m_table_t* m_table_of() {
-  static m_table_t m_table_{typeid(CLASS)};
-  return &m_table_;
-}
+inline m_table_t m_table_of = {typeid(CLASS)};
 
 }  // namespace virtual_void::data::has_m_table
