@@ -20,8 +20,6 @@ target_link_libraries(tutorial___1 virtual_void_lib Catch2::Catch2WithMain)
 target_link_libraries(tutorial___2 virtual_void_lib Catch2::Catch2WithMain)
 target_link_libraries(tutorial___3 virtual_void_lib Catch2::Catch2WithMain)
 
-enable_testing()
-include(CTest)
 include(Catch)
 catch_discover_tests(tutorial___1)
 catch_discover_tests(tutorial___2)

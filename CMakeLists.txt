@@ -16,9 +16,13 @@ include(GNUInstallDirs)
 
 include_directories( "./include" )
 
+find_package(Catch2 3 REQUIRED)
+enable_testing()
+
 add_subdirectory ("src")
 add_subdirectory ("test")
 add_subdirectory ("tutorials")
 
+include(CTest)
 
 

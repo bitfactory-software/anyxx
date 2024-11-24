@@ -40,8 +40,7 @@ struct customer : virtual_void::open_object::members<customer> { // 1
 }  // namespace application::core
 
 namespace application::feature_plugin {
-struct usage_hint : virtual_void::open_object::member
-                    <core::customer, usage_hint, std::string> {}; // 2
+inline const virtual_void::open_object::member<core::customer, std::string> usage_hint;
 }  // namespace application::feature_plugin
 
 
@@ -54,10 +53,10 @@ namespace application::feature_plugin {
 static struct init {
   init() {
     application::core::hook1 = [](core::customer& customer) {  // 4a
-      customer[usage_hint{}] = "handle with care";
+      customer[usage_hint] = "handle with care";
     };
     application::core::hook2 = [](core::customer const& customer) {  // 4b
-      std::cout << *customer.get(usage_hint{}) << std::endl;
+      std::cout << *customer.get(usage_hint) << std::endl;
     };
   }
 } init_here;
