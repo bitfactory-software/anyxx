@@ -6,14 +6,15 @@
 
 ## Building block vocabulary for *programming in the large*
 
-- lifetime handles [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
-- interfaces [Quick start](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
-  - deriveable
-  - upcastable
-  - downcastable
-- open methods [Quick start](/tutorials/tutorial___1.md/#t2)
-- object casts
-- open objects [Quick start](/tutorials/tutorial___2.md/#t1)
+- to hide the representatation with lifetime handles  [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
+- to hide the functionality with
+- - interfaces [Quick start](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
+  - - - deriveable
+  - - - upcastable
+  - - - downcastable
+- - open methods [Quick start](/tutorials/tutorial___1.md/#t2)
+- allow extentable types with open_objects [Quick start](/tutorials/tutorial___2.md)
+- to obtain types with runtime casts
 
 To enable
 
@@ -22,7 +23,7 @@ To enable
 
 They work as a foundating vocabulary, to *factor out* the dependencies between the components in the system.  
 
-The library is **header only** 
+The library is implemented in a c++20 module. It can be used as a static or as a dynamic/shared object library. 
 
 The name of the library originates in its fundamental design idea:
 
