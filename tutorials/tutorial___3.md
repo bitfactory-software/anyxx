@@ -78,7 +78,7 @@ TEST_CASE("tutorial 4/1") {
 ```
 
 We changed two things
-- // 1 here is the override definition of ``operator <<`` for the interface template ``to_ostream<VV>&)``. It's implementation calls the interface memberfunction draw and returns the ostream object als reference to enamle chainig calls.
+- // 1 here is the override definition of ``operator <<`` for the interface template ``to_ostream<VV>&)``. It's implementation calls the interface memberfunction ``draw`` and returns the ``ostream`` object als reference to enable chainig calls.
 - // 2 uses this operator as usual to direct the output to ``std::cout``
 
 <a name="t2"></a> 
