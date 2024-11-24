@@ -40,7 +40,7 @@ struct customer : virtual_void::open_object::members<customer> { // 1
 }  // namespace application::core
 
 namespace application::feature_plugin {
-inline const virtual_void::open_object::member<core::customer, std::string> usage_hint;
+inline const virtual_void::open_object::member<core::customer, std::string> usage_hint; // 2
 }  // namespace application::feature_plugin
 
 
