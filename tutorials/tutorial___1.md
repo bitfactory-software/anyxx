@@ -169,7 +169,7 @@ TEST_CASE("tutorial 1/3") {
 
 The usage of ``open_method::via_type_info`` is on one hand the most easy way to add *type tunneled* functionality, but has in the other a small runtime penalty.
 
-Next we will take a look to th most efficient way to do this with *virtual void* ``interface``s.
+Next we will take a look to the most efficient way to do this with *virtual void*: ``Interface``s.
 
 <a name="t4"></a>
 
