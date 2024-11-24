@@ -93,23 +93,23 @@ Because this is a standard pattern, there is a prepared standard solution in [``
 namespace virtual_void::interface {
 
 ERASED_INTERFACE(ostreamable, 
-                 (INTERFACE_CONST_METHOD(void, to_ostream, std::ostream&))) \\ 1
+                 (INTERFACE_CONST_METHOD(void, to_ostream, std::ostream&))) // 1
 
 template <typename T> \\ 2a
 concept is_ostreamable = requires(T const& t, std::ostream o) {
   { o << t } -> std::same_as<std::ostream&>;
 };
 
-static_assert(is_ostreamable<double>); \\ 2b
+static_assert(is_ostreamable<double>); // 2b
 
 template <typename OSTREAMABLE>
   requires is_ostreamable<OSTREAMABLE>
-struct ostreamable_v_table_map<OSTREAMABLE> \\ 3
+struct ostreamable_v_table_map<OSTREAMABLE> // 3
     : ostreamable_default_v_table_map<OSTREAMABLE> {
   void to_ostream(OSTREAMABLE const* x, std::ostream& o) { o << (*x); };
 };
 
-template <virtual_void::is_virtual_void VV> \\ 4
+template <virtual_void::is_virtual_void VV> // 4
 std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 4
   i.to_ostream(o);
   return o;
@@ -118,11 +118,11 @@ std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 4
 };  // namespace virtual_void::interface
 ```
 
-- \\ 1 defines an interface ``ostreamable`` with one member function ``to_ostream``, and a parameter ``std::ostream&``.
-- \\ 2a introduces the concept ``is_ostreamable`` to tell us, if a type supports the ideomatic usage of ``<<`` for output streaming.
-- \\ 2b is a quick self test of ``is_ostreamable``.
-- \\ 3 directs the implementation of ``ostreamable::to_ostream`` for all types conforming to ``is_ostreamable`` to their coresponding ``...<<(ostream&...)`` operator.
-- \\ 4 defines the ``...<<(ostream&, const ostreamable<>&)`` as pure syntactic sugar.
+- // 1 defines an interface ``ostreamable`` with one member function ``to_ostream``, and a parameter ``std::ostream&``.
+- // 2a introduces the concept ``is_ostreamable`` to tell us, if a type supports the ideomatic usage of ``<<`` for output streaming.
+- // 2b is a quick self test of ``is_ostreamable``.
+- // 3 directs the implementation of ``ostreamable::to_ostream`` for all types conforming to ``is_ostreamable`` to their coresponding ``...<<(ostream&...)`` operator.
+- // 4 defines the ``...<<(ostream&, const ostreamable<>&)`` as pure syntactic sugar.
 
 When applied to our example, this leads to this:
 
