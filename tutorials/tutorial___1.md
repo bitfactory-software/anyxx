@@ -165,7 +165,7 @@ TEST_CASE("tutorial 1/3") {
 // -->
 ```
 
-``// <-- 1`` shows the call to the algorithm ``fill_with_overloads``. It instanciates the third parameter, (a template function object) for each type argument, and ``declare`` `s that function object for the instanciated type in the open method ``draw``.
+``// <-- 1`` shows the call to the algorithm ``fill_with_overloads``. It instanciates the second parameter, (a template function object) for each type argument, and ``declare`` `s that function object for the instanciated type in the open method ``draw``.
 
 The usage of ``open_method::via_type_info`` is on one hand the most easy way to add *type tunneled* functionality, but has in the other a small runtime penalty.
 
