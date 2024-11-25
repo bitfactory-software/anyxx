@@ -1,9 +1,0 @@
-virtual-void provides two CMake targets, choose one:
-
-static library 
-find_package(virtual_void CONFIG REQUIRED)
-target_link_libraries(main PRIVATE virtual_void::virtual_void)
-
-dynamic library 
-find_package(virtual_void CONFIG REQUIRED)
-target_link_libraries(main PRIVATE virtual_void::virtual_void_shared)
