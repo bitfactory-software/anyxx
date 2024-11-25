@@ -43,7 +43,7 @@ install(TARGETS virtual_void
 
 # Generate and install *-targets.cmake
 install(EXPORT virtual_void_targets
-        FILE virtual_void_targets.cmake
+        FILE virtual_void-targets.cmake
         CXX_MODULES_DIRECTORY cxx-modules
         NAMESPACE virtual_void::
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/virtual_void)
@@ -54,7 +54,7 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void-config.cmake"
 "message(\"virtual_void-config.cmake\")\n"
 "include(CMakeFindDependencyMacro)\n"
 "find_dependency(Catch2 CONFIG REQUIRED)\n"
-"include(\"\${CMAKE_CURRENT_LIST_DIR}/virtual_void-lib-targets.cmake\")\n"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/virtual_void-targets.cmake\")\n"
 )
 
 # Install the generated config file
