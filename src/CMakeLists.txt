@@ -21,4 +21,4 @@ if (MSVC)
         target_compile_definitions(virtual_void PUBLIC VV_STATIC)
     endif()
 endif()
-
+target_compile_features(virtual_void PUBLIC cxx_std_20)
