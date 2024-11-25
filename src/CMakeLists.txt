@@ -8,7 +8,7 @@ message( "CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
 
 file(GLOB_RECURSE virtual_void_headers "../include/virtual_void/*.hpp")
 
-add_library(virtual_void_lib ${virtual_void_headers})
+add_library(virtual_void_lib STATIC ${virtual_void_headers})
 target_sources(virtual_void_lib
   PUBLIC
     FILE_SET CXX_MODULES FILES

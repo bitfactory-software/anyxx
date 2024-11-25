@@ -56,6 +56,6 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
 
 # Install the generated config file
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
-        DESTINATION share/virtual_void)
+        DESTINATION share/virtual_void_lib)
 
 
