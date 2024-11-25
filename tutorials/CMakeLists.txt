@@ -2,6 +2,8 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
+if(NOT DEFINED NO_TEST)
+
 set(CMAKE_CXX_STANDARD 20)
 find_package(Catch2 3 REQUIRED)
 
@@ -24,3 +26,5 @@ include(Catch)
 catch_discover_tests(tutorial___1)
 catch_discover_tests(tutorial___2)
 catch_discover_tests(tutorial___3)
+
+endif()

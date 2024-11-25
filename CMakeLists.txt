@@ -46,6 +46,7 @@ install(EXPORT virtual_void_lib_targets
         NAMESPACE virtual_void::
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/virtual_void)
 
+
 # Generate the config file in the current binary dir (this ensures it's not placed directly in source)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
 "include(CMakeFindDependencyMacro)\n"

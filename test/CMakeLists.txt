@@ -2,6 +2,7 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
+if(NOT DEFINED NO_TEST)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -19,3 +20,4 @@ target_link_libraries(test_all
 include(Catch)
 catch_discover_tests(test_all)
 
+endif()
