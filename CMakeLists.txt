@@ -31,8 +31,8 @@ message("CMAKE_INSTALL_DATAROOTDIR: " "${CMAKE_INSTALL_DATAROOTDIR}")
 message("CMAKE_CURRENT_BINARY_DIR: " "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Install the library and its headers
-install(TARGETS virtual_void_lib
-        EXPORT virtual_void_lib_targets
+install(TARGETS virtual_void
+        EXPORT virtual_void_targets
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
@@ -42,23 +42,23 @@ install(TARGETS virtual_void_lib
 #install(FILES ${virtual_void_headers} DESTINATION include)
 
 # Generate and install *-targets.cmake
-install(EXPORT virtual_void_lib_targets
-        FILE virtual_void_lib-targets.cmake
+install(EXPORT virtual_void_targets
+        FILE virtual_void_targets.cmake
         CXX_MODULES_DIRECTORY cxx-modules
         NAMESPACE virtual_void::
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/virtual_void)
 
 
 # Generate the config file in the current binary dir (this ensures it's not placed directly in source)
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
-"message(\"virtual_void_lib-config.cmake\")\n"
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void-config.cmake"
+"message(\"virtual_void-config.cmake\")\n"
 "include(CMakeFindDependencyMacro)\n"
 "find_dependency(Catch2 CONFIG REQUIRED)\n"
 "include(\"\${CMAKE_CURRENT_LIST_DIR}/virtual_void-lib-targets.cmake\")\n"
 )
 
 # Install the generated config file
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/virtual_void-config.cmake"
         DESTINATION share/virtual_void)
 
 

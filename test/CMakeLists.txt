@@ -11,7 +11,7 @@ file(GLOB_RECURSE test_all_cpp_files "*.cpp")
 add_executable (test_all ${test_all_cpp_files} ${test_all_hpp_files})
 
 target_link_libraries(test_all 
-    virtual_void_shared
+    virtual_void
     Catch2::Catch2WithMain
 )
 
