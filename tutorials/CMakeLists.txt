@@ -2,8 +2,6 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
-if(NOT DEFINED NO_TEST)
-
 set(CMAKE_CXX_STANDARD 20)
 find_package(Catch2 3 REQUIRED)
 
@@ -18,13 +16,11 @@ add_executable (tutorial___3
     "tutorial___3.cpp"
 )
 
-target_link_libraries(tutorial___1 virtual_void_lib Catch2::Catch2WithMain)
-target_link_libraries(tutorial___2 virtual_void_lib Catch2::Catch2WithMain)
-target_link_libraries(tutorial___3 virtual_void_lib Catch2::Catch2WithMain)
+target_link_libraries(tutorial___1 virtual_void_shared Catch2::Catch2WithMain)
+target_link_libraries(tutorial___2 virtual_void_shared Catch2::Catch2WithMain)
+target_link_libraries(tutorial___3 virtual_void_shared Catch2::Catch2WithMain)
 
 include(Catch)
 catch_discover_tests(tutorial___1)
 catch_discover_tests(tutorial___2)
 catch_discover_tests(tutorial___3)
-
-endif()

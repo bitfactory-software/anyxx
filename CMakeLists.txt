@@ -27,6 +27,8 @@ include(CTest)
 
 message("CMAKE_INSTALL_LIBDIR: " "${CMAKE_INSTALL_LIBDIR}")
 message("CMAKE_INSTALL_BINDIR: " "${CMAKE_INSTALL_BINDIR}")
+message("CMAKE_INSTALL_DATAROOTDIR: " "${CMAKE_INSTALL_DATAROOTDIR}")
+message("CMAKE_CURRENT_BINARY_DIR: " "${CMAKE_CURRENT_BINARY_DIR}")
 
 # Install the library and its headers
 install(TARGETS virtual_void_lib
@@ -49,6 +51,7 @@ install(EXPORT virtual_void_lib_targets
 
 # Generate the config file in the current binary dir (this ensures it's not placed directly in source)
 file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
+"message(\"virtual_void_lib-config.cmake\")\n"
 "include(CMakeFindDependencyMacro)\n"
 "find_dependency(Catch2 CONFIG REQUIRED)\n"
 "include(\"\${CMAKE_CURRENT_LIST_DIR}/virtual_void-lib-targets.cmake\")\n"
@@ -56,6 +59,6 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
 
 # Install the generated config file
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/virtual_void_lib-config.cmake"
-        DESTINATION share/virtual_void_lib)
+        DESTINATION share/virtual_void)
 
 

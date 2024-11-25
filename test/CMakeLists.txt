@@ -2,8 +2,6 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
-if(NOT DEFINED NO_TEST)
-
 set(CMAKE_CXX_STANDARD 20)
 
 file(GLOB_RECURSE test_all_hpp_files "*.hpp")
@@ -19,5 +17,3 @@ target_link_libraries(test_all
 
 include(Catch)
 catch_discover_tests(test_all)
-
-endif()
