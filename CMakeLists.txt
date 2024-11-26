@@ -41,7 +41,7 @@ install(TARGETS virtual_void
 )
 
 install(DIRECTORY src/virtual_void/ # tailing slash is important here!
-    DESTINATION include/irtual_void
+    DESTINATION include/virtual_void
 )
 # Generate and install *-targets.cmake
 install(EXPORT virtual_void_targets
