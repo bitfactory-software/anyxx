@@ -4,13 +4,13 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
-target_include_directories(virtual_void PRIVATE "./include")
 
 file(GLOB_RECURSE test_all_hpp_files "*.hpp")
 file(GLOB_RECURSE test_all_cpp_files "*.cpp")
 
 # Add source to this project's executable.
 add_executable (test_all ${test_all_cpp_files} ${test_all_hpp_files})
+target_include_directories(test_all PRIVATE "D:/BitFactory/vcpkg/installed/x64-windows/include")
 
 target_link_libraries(test_all 
     virtual_void
