@@ -15,6 +15,7 @@ project(virtual_void CXX)
 include(GNUInstallDirs)
 
 include_directories( "./include" )
+include_directories( "./src" )
 
 find_package(Catch2 3 REQUIRED)
 enable_testing()
