@@ -30,6 +30,7 @@ message("CMAKE_INSTALL_LIBDIR: " "${CMAKE_INSTALL_LIBDIR}")
 message("CMAKE_INSTALL_BINDIR: " "${CMAKE_INSTALL_BINDIR}")
 message("CMAKE_INSTALL_DATAROOTDIR: " "${CMAKE_INSTALL_DATAROOTDIR}")
 message("CMAKE_CURRENT_BINARY_DIR: " "${CMAKE_CURRENT_BINARY_DIR}")
+message("PROJECT_SOURCE_DIR: " "${PROJECT_SOURCE_DIR}")
 
 # Install the library and its headers
 install(TARGETS virtual_void
@@ -39,10 +40,9 @@ install(TARGETS virtual_void
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "src/*.hpp")
-message("VIRTUAL_VOID_HEADERS: " "${VIRTUAL_VOID_HEADERS}")
-install(FILES ${VIRTUAL_VOID_HEADERS} DESTINATION include)
-
+install(DIRECTORY src/virtual_void/ # tailing slash is important here!
+    DESTINATION include/irtual_void
+)
 # Generate and install *-targets.cmake
 install(EXPORT virtual_void_targets
         FILE virtual_void-targets.cmake
