@@ -83,7 +83,7 @@ We changed two things
 
 <a name="t2"></a> 
 
-Because this is a standard pattern, there is a prepared standard solution in [``virtual_void\interface\ostream_shift_left_operator.h``](virtual_void\include\virtual_void\interface\ostream_shift_left_operator.h):
+Because this is a standard pattern, there is a prepared standard solution in [``virtual_void/interface/ostream_shift_left_operator.h``](virtual_void/include\virtual_void/interface\ostream_shift_left_operator.h):
 ```cpp
 #include <ostream>
 

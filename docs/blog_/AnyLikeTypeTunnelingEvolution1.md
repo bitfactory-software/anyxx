@@ -78,7 +78,7 @@ And we are at the results:
 -------------------------------------------------------------------------------
 20_Tree_OO
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void\test\20_Tree_OO.cpp(63)
+D:\BitFactory\Blog\virtual_void/test\20_Tree_OO.cpp(63)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time
@@ -98,7 +98,7 @@ benchmark name                       samples       iterations    est run time
 -------------------------------------------------------------------------------
 21_Tree_TE_dispach_via_any_dispatch
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void\test\21_Tree_TE_dispatch_via_any.cpp(88)
+D:\BitFactory\Blog\virtual_void/test\21_Tree_TE_dispatch_via_any.cpp(88)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time
@@ -120,7 +120,7 @@ as_lisp                                        100           111     1.4208 ms
 -------------------------------------------------------------------------------
 21_Tree_TE_dispatch_via_any_and_type_index
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void\test\21_Tree_TE_dispatch_via_any_and_type_index.cpp(88)
+D:\BitFactory\Blog\virtual_void/test\21_Tree_TE_dispatch_via_any_and_type_index.cpp(88)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time

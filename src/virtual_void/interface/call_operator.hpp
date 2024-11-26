@@ -1,6 +1,5 @@
 #pragma once
 
-#include "base.hpp"
 #include "operator.hpp"
 
 namespace virtual_void::interface {

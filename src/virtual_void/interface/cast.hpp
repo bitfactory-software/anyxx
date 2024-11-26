@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../VV_EXPORT.hpp"
 #include "../data/observer.hpp"
 #include "../data/shared_const.hpp"
 #include "../data/unique.hpp"
@@ -9,8 +10,8 @@
 
 namespace virtual_void::interface {
 
-VIRTUAL_VOID_EXPORT inline virtual_void::open_method::via_type_info::domain cast_domain;
-
+ VV_EXPORT inline virtual_void::open_method::via_type_info::domain cast_domain;
+ 
 inline void seal_casts() { seal_for_runtime(cast_domain); }
 
 template <is_virtual_void TO, is_virtual_void FROM>

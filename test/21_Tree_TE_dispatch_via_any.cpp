@@ -9,7 +9,7 @@
 #include "virtual_void/utillities/unnamed__.hpp"
 #include <catch.hpp>
 
-//import virtual_void;
+//#include "virtual_void/all.hpp"
 
 using std::cout;
 using std::string;

@@ -11,7 +11,8 @@
 using std::cout;
 using std::string;
 
-import virtual_void;
+#include "virtual_void/open_method/via_type_info/declare.hpp"
+
 using namespace virtual_void;
 
 namespace {

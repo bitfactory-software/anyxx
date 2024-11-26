@@ -37,19 +37,13 @@ install(TARGETS virtual_void
         ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-        FILE_SET CXX_MODULES DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/virtual_void/miu
-        FILE_SET HEADERS
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}   # Same as default, could be omitted
-        INCLUDES
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
 )
 
-#install(FILES ${virtual_void_headers} DESTINATION include)
+install(FILES ${virtual_void_headers} DESTINATION include)
 
 # Generate and install *-targets.cmake
 install(EXPORT virtual_void_targets
         FILE virtual_void-targets.cmake
-        CXX_MODULES_DIRECTORY .
         NAMESPACE virtual_void::
         DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/virtual_void)
 

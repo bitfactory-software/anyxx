@@ -58,7 +58,7 @@ On my laptop, i got this number with standard releas mode and MSVC 17
 -------------------------------------------------------------------------------
 20_Tree_OO
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void\test\20_Tree_OO.cpp(63)
+D:\BitFactory\Blog\virtual_void/test\20_Tree_OO.cpp(63)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time
@@ -76,7 +76,7 @@ benchmark name                       samples       iterations    est run time
 -------------------------------------------------------------------------------
 21_Tree_TE_dispach_via_any_dispatch
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void\test\21_Tree_TE_dispatch_via_any.cpp(88)
+D:\BitFactory\Blog\virtual_void/test\21_Tree_TE_dispatch_via_any.cpp(88)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time

@@ -7,11 +7,10 @@
 
 #include <catch.hpp>
 
-import virtual_void;
-//#include "virtual_void/data/has_no_meta/shared_const.hpp"
-//#include "virtual_void/interface/base.hpp"
-//#include "virtual_void/data/has_no_meta/shared_const_ptr.hpp"
-//#include "virtual_void/data/make_shared_const_decorated_data.hpp"
+#include "virtual_void/data/has_no_meta/shared_const.hpp"
+#include "virtual_void/interface/base.hpp"
+#include "virtual_void/data/has_no_meta/shared_const_ptr.hpp"
+#include "virtual_void/data/make_shared_const_decorated_data.hpp"
 
 #include "virtual_void/interface/declare_macro.hpp"
 

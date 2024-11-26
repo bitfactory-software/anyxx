@@ -1,6 +1,5 @@
 #pragma once
 
-#include "base.hpp"
 #include "operator.hpp"
 #include "../utillities/type_list.hpp"
 

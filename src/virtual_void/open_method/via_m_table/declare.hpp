@@ -3,6 +3,7 @@
 #include <set>
 #include <typeindex>
 
+#include "../../VV_EXPORT.hpp"
 #include "../../class_hierarchy/class_hierarchy.hpp"
 #include "../../data/has_m_table/m_table.hpp"
 #include "../../utillities/ensure_function_ptr.hpp"
@@ -21,7 +22,7 @@ using m_table_map =
     std::unordered_map<std::type_info const*, data::has_m_table::m_table_t*>;
 
 struct domain : open_method::domain<declaration_base> {
-  VIRTUAL_VOID_EXPORT static inline std::set<domain*> domains;
+  VV_EXPORT static inline std::set<domain*> domains;
   m_table_map m_table_map;
   const int domain_index;
   domain() : domain_index(domains.size()) { domains.insert(this); }
@@ -62,7 +63,8 @@ class declaration_base : public open_method::default_target<> {
   }
   template <typename CLASS>
   dispatch_target_t is_defined() const {
-    return data::has_m_table::m_table_of<CLASS>()->find(domain_index(), m_table_index());
+    return data::has_m_table::m_table_of<CLASS>()->find(domain_index(),
+                                                        m_table_index());
   }
   dispatch_target_t is_defined(const std::type_info& type_info) const {
     if (auto found = domain_.m_table_map.find(&type_info);

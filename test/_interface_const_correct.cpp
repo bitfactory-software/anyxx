@@ -3,12 +3,11 @@
 #include <string>
 #include <vector>
 
-import virtual_void;
-// #include "virtual_void/interface/call_operator.hpp"
-// #include "virtual_void/interface/declare_macro.hpp"
-// #include "virtual_void/data/has_no_meta/observer.hpp"
-// #include "virtual_void/data/has_no_meta/unique.hpp"
-// #include "virtual_void/data/has_m_table/shared_const.hpp"
+ #include "virtual_void/interface/call_operator.hpp"
+ #include "virtual_void/interface/declare_macro.hpp"
+ #include "virtual_void/data/has_no_meta/observer.hpp"
+ #include "virtual_void/data/has_no_meta/unique.hpp"
+ #include "virtual_void/data/has_m_table/shared_const.hpp"
 
 #include <catch.hpp>
 

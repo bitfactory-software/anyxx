@@ -78,20 +78,17 @@ class base {
   template <is_virtual_void OTHER>
   friend class base;
 
-  template <is_virtual_void VV>
-  friend auto& get_virtual_void(base<VV> const& interface) {
+  friend inline auto& get_virtual_void(base<VIRTUAL_VOID> const& interface) {
     return interface.virtual_void_;
   }
-  template <is_virtual_void VV>
-  friend auto move_virtual_void(base<VV>&& interface) {
+  friend inline auto move_virtual_void(base<VIRTUAL_VOID>&& interface) {
     return std::move(interface.virtual_void_);
   }
-  template <is_virtual_void VV>
-  friend auto& get_v_table(base<VV> const& interface) {
+  friend inline auto& get_v_table(base<VIRTUAL_VOID> const& interface) {
     return interface.v_table_;
   }
   template <typename TO, typename FROM>
-  friend TO static_v_table_cast(FROM from)
+  friend inline TO static_v_table_cast(FROM from)
     requires(std::derived_from<TO, FROM>);
 
   void operator()() const {}

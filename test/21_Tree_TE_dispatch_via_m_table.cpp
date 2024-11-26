@@ -10,7 +10,8 @@
 using std::cout;
 using std::string;
 
-import virtual_void;
+#include "virtual_void/data/has_m_table/shared_const.hpp"
+#include "virtual_void/open_method/via_m_table/declare.hpp"
 
 namespace {
 
