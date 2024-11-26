@@ -14,9 +14,6 @@ project(virtual_void CXX)
 
 include(GNUInstallDirs)
 
-include_directories( "./include" )
-include_directories( "./src" )
-
 find_package(Catch2 3 REQUIRED)
 enable_testing()
 
@@ -43,6 +40,7 @@ install(TARGETS virtual_void
 install(DIRECTORY src/virtual_void/ # tailing slash is important here!
     DESTINATION include/virtual_void
 )
+
 # Generate and install *-targets.cmake
 install(EXPORT virtual_void_targets
         FILE virtual_void-targets.cmake

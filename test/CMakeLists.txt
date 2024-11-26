@@ -4,6 +4,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
+target_include_directories(virtual_void PRIVATE "./include")
+
 file(GLOB_RECURSE test_all_hpp_files "*.hpp")
 file(GLOB_RECURSE test_all_cpp_files "*.cpp")
 
