@@ -39,7 +39,9 @@ install(TARGETS virtual_void
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-install(FILES ${virtual_void_headers} DESTINATION include)
+file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "src/*.hpp")
+message("VIRTUAL_VOID_HEADERS: " "${VIRTUAL_VOID_HEADERS}")
+install(FILES ${VIRTUAL_VOID_HEADERS} DESTINATION include)
 
 # Generate and install *-targets.cmake
 install(EXPORT virtual_void_targets
