@@ -2,6 +2,7 @@
 
 #include <set>
 #include <typeindex>
+#include <unordered_map>
 
 #include "../../VV_EXPORT.hpp"
 #include "../../class_hierarchy/class_hierarchy.hpp"
