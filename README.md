@@ -71,7 +71,8 @@ But, as the understanding of decomposing software grows, we see the "OO style" i
 
 It is now consensus that separation of the interface from the underlying object is the way to go. The type gets "erased" from the interface.
 On the contrary, by doing so, we lose this connection, which had shown its usefulness in countless huge and successful software projects.
-So a v-table interface of an object can be used:
+
+A v-table interface of an object can be used:
 - To cast back to that object itself
 - To "downcast" the interface to a more specific one, and
 - To "crosscast" to another interface.
