@@ -10,5 +10,5 @@
 | cermony overhead: general | no | seal_for_runtime() must be called before usage.</br>Typically in controlled from ``main`` after all *.dll/so* are loaded. | no |
 | dynamic library load handling? | no | seal_for_runtime() must be called after all *.dll/so* are loaded. | no |
 | dynamic library unload safe before 'normal' termination phase? | yes | not supported | yes. |
-| Alternatives</br>(With other tradeoffs) | </br>proxy, </br>Dyno, </br>AnyAny, </br>Zoo, </br>boost::type_erasure</br>All have no downcast</br>can be faster because of inlined data and v-table | yomm2, a little faster, but needs ``this`` with v-table.    | yomm2 ... |
+| Alternatives</br>(With other tradeoffs) | </br>proxy, </br>Dyno, </br>AnyAny, </br>Zoo, </br>boost::type_erasure</br>All have no downcast</br>can be faster because of inlined data and v-table | yomm2, a little faster, but needs ``this`` with ``v-table``.    | yomm2 ... |
 
