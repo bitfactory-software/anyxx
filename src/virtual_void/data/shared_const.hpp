@@ -1,9 +1,10 @@
 #pragma once
 
-#include "erased_shared_const.hpp"
+#include <memory>
+
 #include "decorated_data.hpp"
 
 namespace virtual_void::data {
 template <typename META>
-using shared_const = erased_shared_const<decoration_base<META>>;
+using shared_const = std::shared_ptr<decoration_base<META> const>;
 }  // namespace virtual_void::data
