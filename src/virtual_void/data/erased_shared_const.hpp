@@ -1,7 +1,5 @@
 #pragma once
 
-#include "erased_shared_const_ptr.hpp"
-
 namespace virtual_void::data {
 
 template <typename BASE>
