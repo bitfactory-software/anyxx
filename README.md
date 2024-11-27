@@ -90,7 +90,7 @@ So we want to separate the moving parts.
 
 ***Examples***:
 
-You will, for sure, couple with the used programming language as deeply as possible to exploit its benefits.
+You will, for sure, couple with the used programming language as deeply as possible (as long as the language promisses backward compatibility) to exploit its benefits.
 
 You probably want to separate from the details of the operating system for easier portability.
 
