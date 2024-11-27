@@ -7,7 +7,7 @@
 ## Building block vocabulary for *programming in the large*
 
 - To hide the representation with lifetime handles: [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
-- To hide the functionality with:
+- To hide the functionality with: [Overview](docs/erased_functionality.md)
     - Interfaces: [Quick start](/tutorials/tutorial___1.md/#t4) [Operators](/tutorials/tutorial___3.md/#t1)
         - Derivable
         - Upcastable
