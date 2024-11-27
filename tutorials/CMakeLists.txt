@@ -2,18 +2,18 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
-set(CMAKE_CXX_STANDARD 20)
-find_package(Catch2 3 REQUIRED)
-
 # Add source to this project's executable.
 add_executable (tutorial___1 
     "tutorial___1.cpp"
+    "tutorial___1.md"
 )
 add_executable (tutorial___2
     "tutorial___2.cpp"
+    "tutorial___2.md"
 )
 add_executable (tutorial___3
     "tutorial___3.cpp"
+    "tutorial___3.md"
 )
 
 target_link_libraries(tutorial___1 virtual_void Catch2::Catch2WithMain)
