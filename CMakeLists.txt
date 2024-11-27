@@ -15,6 +15,7 @@ project(virtual_void CXX)
 include(GNUInstallDirs)
 
 find_package(Catch2 3 REQUIRED)
+
 enable_testing()
 
 add_subdirectory ("src")
