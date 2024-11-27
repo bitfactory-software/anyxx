@@ -21,8 +21,6 @@ struct virtual_void_trait<data::has_m_table::observer<VOID>>
 
 namespace virtual_void::data::has_m_table {
 
-template <typename VOID>
-using observer = observer<VOID>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 template <typename V, typename VOID>

@@ -18,8 +18,6 @@ struct virtual_void_trait<data::has_no_meta::observer<VOID>>
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_no_meta {
-template <typename VOID>
-using observer = observer<VOID>;
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
 template <typename V, typename VOID>
