@@ -23,7 +23,7 @@ To enable:
 
 They work as a foundational vocabulary to *factor out* the dependencies between the components in the system.
 
-The library is implemented in a C++20. It can be used as a static or as a dynamic library.
+The library is implemented in C++20. It can be used as a static or as a dynamic library.
 
 The name of the library originates from its fundamental design idea:
 
