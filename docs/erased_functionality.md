@@ -1,6 +1,6 @@
 # Comparison of *erased functionality* in ``virtual_void``  
 
-| Type | **Interface** | **Open method**  | **Open method** |
+| Type | ``interface`` | **Open method**  | **Open method** |
 |-|-|-|-|
 | meta data requirement | none |  via ``type_info`` </or>``m_table`` |  via ``m_table`` |
 | Runtime penalty</br>``virtual`` function = 1 |  1 | 2.5 | 1.8 |
