@@ -35,7 +35,7 @@ to separate usage and implementation details as much as possible.
 
 This makes the pointer seem not *void* but rather **virtual void**.
 
-## programming on a large scale
+## Programming on a large scale
 
 ### *Runtime* versus *compile-time* **dispatch**
 
@@ -62,7 +62,14 @@ If you have a runtime performance problem, the hot runtime path and the causing 
 When the problem is spotted, the solution is - in our experience - not far away.
 In contrast, when build time has grown to a problem, there is seldom an easy way out.
 While a software system grows larger, keeping the edit-compile-run loop short requires constant smart decisions.
-The fundamental design principles here are **loose-coupling** and **information hiding**.
+The fundamental design principles here are **physical loose-coupling** and **information hiding**.
+
+### *Logical* versus *physical* coupling
+
+A C++ `template` allows a **loose coupled logical design**, because the client can be **any** `typename`. 
+It requests, in contrast, a **strong physical coupling** between the client and the template, because the serving template must be fully known on the client side.
+
+The interception of this cascading coupling is the aim of this library.
 
 ### From *OO* to *type erasure* to *type tunneling*
 
@@ -90,7 +97,7 @@ So we want to separate the moving parts.
 
 ***Examples***:
 
-You will, for sure, couple with the used programming language as deeply as possible (as long as the language promisses backward compatibility) to exploit its benefits.
+You will, for sure, couple with the used programming language as deeply as possible (as long as the language promises backward compatibility) to exploit its benefits.
 
 You probably want to separate from the details of the operating system for easier portability.
 
