@@ -3,13 +3,13 @@
 // -->
 
 <a name="t1"></a> 
-## virtual_void tutoral 3: interface operator overloading
+## virtual_void Tutorial 3: Interface Operator Overloading
 
-Let us pick up this [this example in tutorial 1](tutorial___1.md/#t4).
+Let us pick up [this example from tutorial 1](tutorial___1.md/#t4).
 
-We left with an interface, that has a function ``draw``, witch recieves a parameter with type ``ostream``.
-All types implementing this function, do this with the ideomatic overload of ``operator <<``.
-Wouldn't it be nice, to use such an overload also for the application of our interface?
+We are left with an interface that has a function `draw`, which receives a parameter of type `std::ostream`.  
+All types implementing this function do so with the idiomatic overload of `operator <<`.  
+Wouldn't it be nice to use such an overload also for the application of our interface?
 
 Here is how this works out:
 
@@ -118,11 +118,11 @@ std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 4
 };  // namespace virtual_void::interface
 ```
 
-- // 1 defines an interface ``ostreamable`` with one member function ``to_ostream``, and a parameter ``std::ostream&``.
-- // 2a introduces the concept ``is_ostreamable`` to tell us, if a type supports the ideomatic usage of ``<<`` for output streaming.
-- // 2b is a quick self test of ``is_ostreamable``.
-- // 3 directs the implementation of ``ostreamable::to_ostream`` for all types conforming to ``is_ostreamable`` to their coresponding ``...<<(ostream&...)`` operator.
-- // 4 defines the ``...<<(ostream&, const ostreamable<>&)`` as pure syntactic sugar.
+- // 1 defines an interface `ostreamable` with one member function `to_ostream`, and a parameter `std::ostream&`.
+- // 2a introduces the concept `is_ostreamable` to tell us if a type supports the idiomatic usage of `<<` for output streaming.
+- // 2b is a quick self-test of `is_ostreamable`.
+- // 3 directs the implementation of `ostreamable::to_ostream` for all types conforming to `is_ostreamable` to their corresponding `...<<(std::ostream&...)` operator.
+- // 4 defines the `...<<(std::ostream&, const ostreamable<>&)` as pure syntactic sugar.
 
 When applied to our example, this leads to this:
 
@@ -170,10 +170,10 @@ TEST_CASE("tutorial 4/2") {
 // -->
 ```
 
-We see
-- // 1 The vector requests ``ostreamable<values>``. The standard types all support ``std::ostream& operator<<(std::ostream& o, const ...& x)`` and are therefore ostreamble.
-- // 2a ``A`` has a become member function to_ostream, whitch is picked up, because ``A`` is no ``is_ostreamable``.
-- // 2b Instead of 2a, we could have given ``A`` the ``<<`` operator, witch makes ``A`` also ``is_ostreamable``.
+We see:
+- // 1 The vector requests `ostreamable<values>`. The standard types all support `std::ostream& operator<<(std::ostream& o, const ...& x)` and are therefore ostreamable.
+- // 2a `A` has a member function `to_ostream`, which is picked up because `A` is not `is_ostreamable`.
+- // 2b Instead of 2a, we could have given `A` the `<<` operator, which makes `A` also `is_ostreamable`.
 
 - <a name="t3"></a> 
 // <!--
