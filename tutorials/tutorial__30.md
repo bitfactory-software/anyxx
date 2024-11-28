@@ -5,17 +5,9 @@
 <a name="t1"></a>
 ## virtual_void Tutorial 30: Interface basics
 
-The *virtual_void* lifetime classes are used to transfer typed information with the least possible coupling.  
-They are a generalization of *std::any*.
+The *virtual_void* interfaces combine an *erased liftime handle* with *erased function*.
 
-The functional equivalent of `std::any` in *virtual_void* is `virtual_void::data::has_type_info::value`.
-
-A simple usage looks like this:
-
-
-When you know you have to pass the `value`s of your `vector` to an `ostream`, you can request this behavior via a `virtual_void::interface`.
-
-For our case, we could do it this way:
+A the typical usage is typical shown with shape. So do we.
 
 // <!--
 ```cpp
@@ -30,60 +22,120 @@ For our case, we could do it this way:
 #include "virtual_void/data/has_no_meta/value.hpp"
 
 namespace tutorial_30_1 {
-ERASED_INTERFACE(to_ostream,
+ERASED_INTERFACE(drawable,
                  (INTERFACE_CONST_METHOD(void, draw, std::ostream&)))  // 1
-}
 
-namespace tutorial_30_1 {
-struct to_ostream_shift_right_v_table_map {  // 3
-  void draw(auto* this_, std::ostream& o) { o << *this_; }
-};
-template <>
-struct to_ostream_v_table_map<std::string>  // 2
-    : to_ostream_shift_right_v_table_map {};
-template <>
-struct to_ostream_v_table_map<int> : to_ostream_shift_right_v_table_map {  // 2
-};
-template <>
-struct to_ostream_v_table_map<double>
-    : to_ostream_shift_right_v_table_map {  // 2
+struct circle { // 2
+  double r;
+  void draw(std::ostream& o) const { o << "circle with r: " << r; }  
 };
 
-struct A {
-  std::string name;
-  void draw(std::ostream& o) const { o << name; }  // 4
+struct rectangle { // 3
+  double h, w;
+  void draw(std::ostream& o) const { o << "rectangle with h: " << h << " x w: " << w; }  
 };
+
 }  // namespace tutorial_30_1
 
 TEST_CASE("tutorial 30/1") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_no_meta;  // 5
+  using namespace virtual_void::data::has_no_meta;  // 4
   using namespace tutorial_30_1;
-  cout << endl << "*** tutorial 1/4" << endl;
+  cout << endl << "*** tutorial 30/1" << endl;
 
-  vector<to_ostream<value>> values{to_ostream<value>("Hello"s),
-                                   to_ostream<value>(42),
-                                   to_ostream<value>(3.14)};  // 6
-  values.emplace_back(A{"world"});                            // 7
+  vector<drawable<value>> drawables; // 5 
+  drawables.emplace_back(circle{1.0}); // 6
+  drawables.emplace_back(rectangle{2.0, 3.0});  // 7
 
-  for (auto value : values) value.draw(cout), cout << endl;  // 8
+  for (const auto& drawable : drawables) drawable.draw(cout), cout << endl;  // 8
 }
 // <!-- end of sample
 #if 0 
-// -->
 ```
+// -->
+- // 1: Declares the interface: it is named drawable and has one const method. This method draw takes one std::ostream& parameter.
+- // 2,3: circle and rectangle are two simple structs. Both have a const method draw with a std::ostream& parameter.
+- // 4: In this example, we need no meta info. So we take a sleeker value without any overhead.
+- // 5: Declares a vector drawables of values which support the interface drawable.
+- // 6/7: add a circle and a rectangle to drawables.
+- // 8: loops over the the drawables and calls the draw functions of shape and rectangel via the interface drawable.
 
-- // 1: Declares the interface: it is named `to_ostream` and has one `const` method. This method `draw` takes one `std::ostream&` parameter.
-- // 2: Because `std::string`, `int`, and `double` have no member function `draw`, we must *map* this method for these types. We can do this by specializing the *v_table_map* of `to_ostream`, named `to_ostream_v_table_map`, in the same `namespace` where `to_ostream` was defined.
-- // 3: Because `std::string`, `int`, and `double` share the same implementation of `draw`, we delegate it to a helper struct named `to_ostream_shift_right_v_table_map` where we can write `draw` as a function template.
-- // 4: `struct A` has a member function `void draw(std::ostream& o) const` which will be chosen by `to_ostream`. This is the default behavior.
-- // 5: In this example, we need no *meta info*. So we take a sleeker `value` without any overhead.
-- // 6/7: Declares and fills a vector of `values` which support the interface `to_ostream`. In the initializer list, we have to request the *type erasure* by spelling out the target type, whereas in the case of `emplace`, this can be done automatically.
-- // 8: The application of interface `to_ostream.draw`.
+This is the most basic application of an interface.
 
-Curious how things can be further simplified? Take a look at [interface operator overloading](tutorial__33.md).
+<a name="t2"></a> What hapens, when we want to draw a std::string?. The obvious way is to make a
 
+```cpp
+struct text {
+  std::string s;
+  void draw(std::ostream& o) const { ... << s << ... }  
+};
+```
+But a virtual_void::interface offers here a customiazion point, called v_table_map.
+
+With this tool, the programm looks like this:
+
+```cpp
+#endif begin sample
+// -->
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include "catch.hpp"
+
+#include "virtual_void/interface/declare_macro.hpp"
+#include "virtual_void/interface/base.hpp"
+#include "virtual_void/data/has_no_meta/value.hpp"
+
+namespace tutorial_30_2 {
+ERASED_INTERFACE(drawable,
+                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&)))
+
+struct circle {
+  double r;
+  void draw(std::ostream& o) const { o << "circle with r: " << r; }  
+};
+
+struct rectangle {
+  double h, w;
+  void draw(std::ostream& o) const { o << "rectangle with h: " << h << " x w: " << w; }  
+};
+
+template <>
+struct drawable_v_table_map<std::string> { // 1 
+  auto draw(std::string const* s, std::ostream& o) const { // 2
+    o << "text via v_table_map: " << *s; // 3
+  }
+};
+
+}  // namespace tutorial_30_2
+
+TEST_CASE("tutorial 30/2") {
+  using namespace std;
+  using namespace virtual_void::data::has_no_meta;
+  using namespace tutorial_30_2;
+  cout << endl << "*** tutorial 30/2" << endl;
+
+  vector<drawable<value>> drawables;
+  drawables.emplace_back(circle{1.0});
+  drawables.emplace_back(rectangle{2.0, 3.0});
+  drawables.emplace_back(std::string{"hello world"}); // 4
+
+  for (const auto& drawable : drawables) drawable.draw(cout), cout << endl;
+}
+// <!-- end of sample
+#if 0 
+```
+// -->
+
+Let us walk through the changes:
+
+- // 1: Specializes the template ``drawable``*_v_table_map* for ``std::string``.
+- // 2/3: Implement `draw` for `std::string const*`
+- // 4: With this in place, we can add a `std::string` to `drawables`
+
+That is it.
 
 ```cpp
 #endif begin sample
