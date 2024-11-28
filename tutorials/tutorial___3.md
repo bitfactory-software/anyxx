@@ -13,8 +13,8 @@ Wouldn't it be nice to use such an overload also for the application of our inte
 
 Here is how this works out:
 
-// <!--
 ```cpp
+// <!--
 #endif begin sample
 // -->
 #include <virtual_void/data/has_no_meta/value.hpp>
@@ -126,8 +126,8 @@ std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 4
 
 When applied to our example, this leads to this:
 
-// <!--
 ```cpp
+// <!--
 #endif begin sample
 // -->
 #include <virtual_void/data/has_no_meta/value.hpp>
@@ -176,7 +176,7 @@ We see:
 - // 2b Instead of 2a, we could have given `A` the `<<` operator, which makes `A` also `is_ostreamable`.
 
 - <a name="t3"></a> 
-// <!--
 ```cpp
+// <!--
 #endif begin sample
 // -->
