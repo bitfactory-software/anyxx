@@ -105,11 +105,11 @@ TEST_CASE("tutorial 1/2") {
 // -->
 ```
 
-- // 1. We use the erased `data` that carries meta-information for `type_info`.
-- // 2. We will use an open method `via_type_info`. This kind of `open_method` uses a *perfect hash* from a `type_info` to the target function.
-- // 3. `declare` declares the name and the signature of the `open_method`. The first parameter type must be `const_` or `mutable_`.
-- // 4a-d. `define` defines the target function for a type. This function gets registered for the type's `type_info`.
-- // 5. Because our values carry meta-information for `type_info` (see // 1), we can call the `open_method` `draw` with a `value` as the first parameter.
+- // 1 We use the erased `data` that carries meta-information for `type_info`.
+- // 2 We will use an open method `via_type_info`. This kind of `open_method` uses a *perfect hash* from a `type_info` to the target function.
+- // 3 `declare` declares the name and the signature of the `open_method`. The first parameter type must be `const_` or `mutable_`.
+- // 4a-d `define` defines the target function for a type. This function gets registered for the type's `type_info`.
+- // 5 Because our values carry meta-information for `type_info` (see // 1), we can call the `open_method` `draw` with a `value` as the first parameter.
 
 This technique allows us to decouple three aspects of one type:
 - construction
@@ -168,7 +168,7 @@ TEST_CASE("tutorial 1/3") {
 // -->
 ```
 
-`// <-- 1` shows the call to the algorithm `fill_with_overloads`. It instantiates the second parameter (a template function object) for each type argument, and `declare` registers that function object for the instantiated type in the open method `draw`.
+- // 1 shows the call to the algorithm `fill_with_overloads`. It instantiates the second parameter (a template function object) for each type argument, and `define`s that function object for the instantiated type in the open method `draw`.
 
 The usage of `open_method::via_type_info` is, on one hand, the easiest way to add *type tunneled* functionality, but, on the other hand, it comes with a small runtime penalty.
 
