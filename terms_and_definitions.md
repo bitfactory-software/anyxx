@@ -7,7 +7,7 @@ An object whose members are function pointers, and every function has as **its f
 #### An object derived from an interface, with no additional members, and where all members point to valid functions.
 
 These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
-In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature as the specified interface function. This behavior can be customized in a **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial___1.md/#t4)
+In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature as the specified interface function. This behavior can be customized in a **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
 
 ### virtual_void
 #### A concept describing an object that **erases** the **type** and the **lifetime** of **another** object.

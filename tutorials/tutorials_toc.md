@@ -6,6 +6,6 @@
   
 - [Instrumenting a type for additional members used by a plugin](tutorial___2.md/#t1)
 
-- [Overloading operators for an interface](tutorial___3.md)
-  - [Custom operator<<](tutorial___3.md/#t1)
-  - [std::ostream operator<<](tutorial___3.md/#t2)
+- [Overloading operators for an interface](tutorial__33.md)
+  - [Custom operator<<](tutorial__33.md/#t1)
+  - [std::ostream operator<<](tutorial__33.md/#t2)

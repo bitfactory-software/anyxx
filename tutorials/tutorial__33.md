@@ -5,7 +5,7 @@
 <a name="t1"></a> 
 ## virtual_void Tutorial 3: Interface Operator Overloading
 
-Let us pick up [this example from tutorial 1](tutorial___1.md/#t4).
+Let us pick up [this example from tutorial 30](tutorial__30.md).
 
 We are left with an interface that has a function `draw`, which receives a parameter of type `std::ostream`.  
 All types implementing this function do so with the idiomatic overload of `operator <<`.  
