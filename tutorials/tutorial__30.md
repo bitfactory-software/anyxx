@@ -54,16 +54,16 @@ TEST_CASE("tutorial 30/1") {
 #if 0 
 ```
 // -->
-- // 1: Declares the interface: it is named drawable and has one const method. This method draw takes one std::ostream& parameter.
-- // 2,3: circle and rectangle are two simple structs. Both have a const method draw with a std::ostream& parameter.
-- // 4: In this example, we need no meta info. So we take a sleeker value without any overhead.
-- // 5: Declares a vector drawables of values which support the interface drawable.
-- // 6/7: add a circle and a rectangle to drawables.
-- // 8: loops over the the drawables and calls the draw functions of shape and rectangel via the interface drawable.
+- // 1: Declares the `interface`: it is named `drawable` and has one `const` method. This method `draw` takes one `std::ostream&` parameter.
+- // 2,3: `circle` and `rectangle` are two simple `struct`s. Both have a `const` method `draw` with a `std::ostream&` parameter.
+- // 4: In this example, we need no `meta` info. So we take a sleeker `value` without any overhead.
+- // 5: Declares a `std::vector` `drawables` of `value`s which support the `interface` `drawable`.
+- // 6/7: add a `circle` and a `rectangle` to drawables.
+- // 8: loops over the the `drawables` and calls the `draw` functions of `shape` and `rectangle` via the `interface` `drawable`.
 
-This is the most basic application of an interface.
+This is the most basic application of an `interface`.
 
-<a name="t2"></a> What hapens, when we want to draw a std::string?. The obvious way is to make a
+<a name="t2"></a> What hapens, when we want to draw a `std::string`?. The obvious way is to make a
 
 ```cpp
 struct text {
@@ -71,7 +71,7 @@ struct text {
   void draw(std::ostream& o) const { ... << s << ... }  
 };
 ```
-But a virtual_void::interface offers here a customiazion point, called v_table_map.
+But a virtual_void::interface offers here a customiazion point, called `v_table_map`.
 
 With this tool, the programm looks like this:
 
@@ -131,7 +131,7 @@ TEST_CASE("tutorial 30/2") {
 
 Let us walk through the changes:
 
-- // 1: Specializes the template ``drawable``*_v_table_map* for ``std::string``.
+- // 1: Specializes the `template` `drawable`*_v_table_map* for `std::string`.
 - // 2/3: Implement `draw` for `std::string const*`
 - // 4: With this in place, we can add a `std::string` to `drawables`
 
