@@ -2,7 +2,7 @@
 
 | type / namespace                    | C++ `virtual` functions      | ``interface``   | ``open_method::via_type_info``                    | ``open_method::via_m_table``                                        |
 |:-                                  |:- |:-               |:-                                                |:-                                                                  |
-| meta data requirement              | | none            | ``via_type_info`` </br>``via_m_table``            | ``via_m_table``                                                    |
+| meta data requirement              | Derived from base class | none            | ``with_type_info`` </br>``with_m_table``            | ``with_m_table``                                                    |
 | Runtime penalty |  1 |  1              | 2.5                                              | 1.8                                                                 |
 | Memory Footprint</br>per function(f) and implemeting type(t) [byte] | O(1) | O(1)           | O(1 + x) </br> Ø(x) ~ 0.3                         | O( ``all domains`` + ``functions_in_domain``)</br> see bellow      |
 | static meta data                   | yes (v-table) | yes (v-table)   | no                                               | yes (m-table)                                                      |
