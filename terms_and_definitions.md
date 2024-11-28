@@ -1,103 +1,97 @@
-# Terms and definitions in context of this library
+# Terms and Definitions in Context of This Library
 
-###  Erased interface
-An object, which members are function pointers, and every function has as **first parameter *self***. This is a pointer to (eventually *const*) *void*.
+### Erased Interface
+An object whose members are function pointers, and every function has as **its first parameter *self***. This is a pointer to (eventually *const*) *void*.
 
-###  implemented erased interface
-#### An object derived from an interface, with no additional members and where all members point to vaild functions.
+### Implemented Erased Interface
+#### An object derived from an interface, with no additional members, and where all members point to valid functions.
 
-These funtion are implemented via a templated constructor. The template parameter is called the **unerased** type.
-In this functions is the "self" parameter  casted back to a pointer to the unerased type, and the correct function for the "unerased" type wil be called. The default for the called function is a member function with the same name and signature as the specified interface function. This behaviour can be cutomized in an **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial___1.md/#t4)
+These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
+In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature as the specified interface function. This behavior can be customized in a **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial___1.md/#t4)
 
 ### virtual_void
+#### A concept describing an object that **erases** the **type** and the **lifetime** of **another** object.
 
-#### A concept describing an object that **erases** the **type** und the **lifetime** of **an** other **object**. 
+It must deliver a *void* pointer of that object and a pointer to a *meta* object.  
+Responsible for the description of such types is the specialized *virtual_void_trait*.  
 
-It must delivers a *void* pointer of that object and a pointer to a *meta* object. 
-Responsible for the descrition of such types is the spezialized *virtual_void_trait*. 
-
-The library offers this  *lifetime* holders 
-- observer: Takes no ownership. The Creator of such an observer is responsible for asuring, that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read only or modifying access to the referenced object.
-- *shard_const*: Ownership as std::shard_ptr. The delivered address is a pointer to *const void*. The *meta* is allocated along the concrete data.
-- *shared_ptr* pairs a std::shared_ptr<void> with the *meta*. Use instead of shared_const if you cannot control the construction of the object, that you want to *erase*    
-- *unique*: Ownership as std::unique_ptr. The delivered address is *void* a pointer to a *mutable* object.
-- *unique_ptr* pairs a std::unique_ptr<void> with the *meta*. Use instead of unique if you cannot control the construction of the object, that you want to *erase*    
-- *value*: Every value object holds an own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
+The library offers these *lifetime* holders:
+- **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.
+- **shared_const**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*. The *meta* is allocated along with the concrete data.
+- **shared_ptr**: Pairs a `std::shared_ptr<void>` with the *meta*. Use instead of shared_const if you cannot control the construction of the object that you want to *erase*.
+- **unique**: Ownership as `std::unique_ptr`. The delivered address is a pointer to a *mutable* object.
+- **unique_ptr**: Pairs a `std::unique_ptr<void>` with the *meta*. Use instead of unique if you cannot control the construction of the object that you want to *erase*.
+- **value**: Every value object holds its own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
 
 #### There are three kinds of meta objects in the library:
 - *has_no_meta*
 - *has_type_info*
-- *has_m_table* has *type_info* and a pointer to a *m_table* for fast dispatch in an *open method*
+- *has_m_table*: Has *type_info* and a pointer to an *m_table* for fast dispatch in an *open method*.
 
-### 'virtual_void' versus 'typed_void' 
-#### A *virtual_void* holds no compiletime information about the *holded* object. 
+### 'virtual_void' Versus 'typed_void'
+#### A *virtual_void* holds no compile-time information about the *held* object.
 
-Only if *virtual_void* has *runtime meta data", there is a dynamic and safe cast of the *void* pointer to conrete pointer possible.
-virtual_void has two kinds of such meta data:
-- typeid
-- m_table
-A  *virtual_typed* is a typed wrapper atop of *virtual void*. If the *virtual void* holds in its meta an *type info*, the cast to *virtual_void* is a safe cast.
+Only if *virtual_void* has *runtime meta-data*, is there a dynamic and safe cast of the *void* pointer to a concrete pointer possible.  
+*virtual_void* has two kinds of such meta-data:
+- **typeid**
+- **m_table**
 
-### static cast vs dynamic cast
-#### A *static cast*
-  - is in the language type rules and always checked ba the compiler. 
-  - Upcasts are always safe und static. 
-  - Static dowcasts are unsafe.
-  - Static casts are only a syntactic construct an leave no trace in the binary code.
-#### A *dynamic cast* is
-  - a runtime query to test if the casted object is of this type
-  - if such a query succeeds, is determined by the programm
-  - all dynamic casts are safe
-  - dynamic cast need code to run
+A *virtual_typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* holds in its meta an *type_info*, the cast to *virtual_void* is a safe cast.
 
-### 'upcast' vs 'downcast'
+### Static Cast vs Dynamic Cast
+#### A *static cast*:
+  - Is in the language type rules and always checked by the compiler.
+  - Upcasts are always safe and static.
+  - Static downcasts are unsafe.
+  - Static casts are only a syntactic construct and leave no trace in the binary code.
+
+#### A *dynamic cast*:
+  - Is a runtime query to test if the casted object is of this type.
+  - If such a query succeeds, it is determined by the program.
+  - All dynamic casts are safe.
+  - Dynamic casts need code to run.
+
+### 'Upcast' vs 'Downcast'
 #### An *upcast* is a *conversion* from a more detailed type to a general one.
 
-#### A *downcast* is conversione from a more general type to a more detailed ond.
+#### A *downcast* is a conversion from a more general type to a more detailed one.
 
-For upcast and downcasts must the types be related within the language rules.
-Staic downcasts are guesses and as such unsafe. Dynamic downcasts are per definition safe an a kind of *type query*.
+For upcasts and downcasts, the types must be related within the language rules.  
+Static downcasts are guesses and as such are unsafe. Dynamic downcasts are by definition safe and a kind of *type query*.
 
-### lifetime cast
-#### A *virtual_void* can be casted to an other *virtual_void*, in the sense of an *upcast*.
+### Lifetime Cast
+#### A *virtual_void* can be cast to another *virtual_void*, in the sense of an *upcast*.
 
-- a **smart** *virtual_void* (**shared**, **uniqe**, **value**) can be casted to an **observer**
-- a **mutable**  *virtual_void* can be casted to an *read only observer**.
+- A **smart** *virtual_void* (**shared**, **unique**, **value**) can be cast to an **observer**.
+- A **mutable** *virtual_void* can be cast to a *read-only observer*.
 
 But not in the other direction.
 
-### crosscast
-#### While *up-* and *downcasts* are within related types, *crosscasts* are between unrelated types. 
+### Crosscast
+#### While *up-* and *downcasts* are within related types, *crosscasts* are between unrelated types.
 
-Such types are typicaly virtual base types (an interface).  
-A *crosscas*t usualy tests, if one interface can be reached from an other, and if so give access to it.
+Such types are typically virtual base types (an interface).  
+A *crosscast* usually tests if one interface can be reached from another, and if so, provides access to it.
 
-### open method
-#### An **open method** is a freestanding callable, which acts like a virtual member function. 
+### Open Method
+#### An **open method** is a freestanding callable, which acts like a virtual member function.
 
-Open member functions are an reciepe to solve the [expression problem]. An opem method is the simpliest, but very usefull, case of [open multi methods]. With an open method you can add a function, whitch behaviour is determined by the type of its (first) arguent, but you do not need to change the definition of that type. [Tutorial](/tutorials/tutorial___1.md/#t2)
+Open member functions are a recipe to solve the [expression problem]. An open method is the simplest but very useful case of [open multi-methods]. With an open method, you can add a function whose behavior is determined by the type of its (first) argument, but you do not need to change the definition of that type. [Tutorial](/tutorials/tutorial___1.md/#t2)
 
-### open type
-#### An **open type** is behaves like a *struct*, where you can add data members without changing the definition of that *struct*. 
+### Open Type
+#### An **open type** behaves like a *struct*, where you can add data members without changing the definition of that *struct*.
 
-This could be trivially implemented by an map from some kind of tag to an any.
-This library offers an efficient implentation with two indirections and typesafe access.
+This could be trivially implemented by a map from some kind of tag to an `any`.  
+This library offers an efficient implementation with two indirections and type-safe access.
 
-### *ad hoc* type erasure versus architectural *type tunnel*
-**type erasure** as we see it today, and how it is supported by the well known libraries, share often this pattern:
+### *Ad hoc* Type Erasure Versus Architectural *Type Tunnel*
+**Type erasure**, as we see it today, and how it is supported by well-known libraries, often shares this pattern:
 
-An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements from the **type erasing** parameter.
+An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements of the **type-erasing** parameter.
 
-This technique solves many problems, but stops working, as soon as the information passed to the **type eraser** participates in *inversion of control*.
+This technique solves many problems but stops working as soon as the information passed to the **type eraser** participates in *inversion of control*.
 
-This **virtual_void** library is designed to solve this problem with **type tunneling**. Recovering the *erased* information, and casting to different *interfaces* of that information is here the key.  
+This **virtual_void** library is designed to solve this problem with **type tunneling**. Recovering the *erased* information and casting to different *interfaces* of that information is the key.
 
-
-
-
-
-
-
-
-[expression problem]: https://en.wikipedia.org/wiki/Expression_problem
-[open multi methods]: https://en.wikipedia.org/wiki/Multiple_dispatch
+[expression problem]: https://en.wikipedia.org/wiki/Expression_problem  
+[open multi-methods]: https://en.wikipedia.org/wiki/Multiple_dispatch
