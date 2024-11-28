@@ -64,8 +64,8 @@ Wouldn't it be nice to take this burden away from the receiver?
 With such an *open method* in place, our code looks like this:
 
 
+```cpp
 // <!--
-```
 #endif begin sample
 // -->
 #include <iostream>
