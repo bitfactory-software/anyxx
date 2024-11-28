@@ -3,12 +3,12 @@
 // -->
 
 <a name="t1"></a>
-## virtual_void tutoral 1: type erasure and type tunneling basics
+## virtual_void Tutorial 1: Type Erasure and Type Tunneling Basics
 
-The *virtual_void* lifetime classes are used to transfer typed information with least possible coupling.
+The *virtual_void* lifetime classes are used to transfer typed information with the least possible coupling.  
 They are a generalization of *std::any*.
 
-The functional equivalent auf ``std::any`` in *virtual_void* is ``virtual_void::data::has_type_info::value``.
+The functional equivalent of `std::any` in *virtual_void* is `virtual_void::data::has_type_info::value`.
 
 A simple usage looks like this:
 
@@ -48,20 +48,20 @@ TEST_CASE("tutorial 1/1") {
 #if 0
 // -->
 ```
-If you have used *std::any* before, this should be familar to.
-With such a type, you have one word, in our case *value*, with witch you can pass a piece of data around.
+If you have used *std::any* before, this should be familiar to you.  
+With such a type, you have one word, in our case *value*, with which you can pass a piece of data around.
 
-The downside, is the long list of ``if``s to unpack the information. 
+The downside is the long list of `if` statements to unpack the information.  
 
-Also you have to bundle all knowledge of all possible types that are maybe in the ``value`` at the recieving side of the *type tunnel*.
+Additionally, you have to bundle all knowledge of all possible types that might be in the `value` on the receiving side of the *type tunnel*.
 
-Wouldn't it be nice, to take this burden away from the reciever?.
+Wouldn't it be nice to take this burden away from the receiver?
 
 <a name="t2"></a>
 
-*virtual_void* has here some tools for you. One is an *open method*. 
+*virtual_void* provides some tools for this. One of them is an *open method*.  
 
-With such an *open method* in place, our code look like this:
+With such an *open method* in place, our code looks like this:
 
 
 // <!--
@@ -105,21 +105,22 @@ TEST_CASE("tutorial 1/2") {
 // -->
 ```
 
-- // 1 We use the erased ``data`` that carries meta information for ``type_info``.
-- // 2 We will use an open method ``via_type_info``. This kind of ``open_method`` uses a *perfect hash* from a ``type_info`` to the target function.
-- // 3 ``declare``'s the name and the signature of the ``open_method``. The first parameter type must be ``const_`` or ``mutable_``. 
-- // 4a-d ``define`` the target function for a type. This function gets registered for the types ``type_info``.
-- // 5 because our vaules carry meta information for ``type_info`` (see // 1), we can call to the ``open_method`` ``draw`` with a ``value`` as the first parameter..
+- // 1. We use the erased `data` that carries meta-information for `type_info`.
+- // 2. We will use an open method `via_type_info`. This kind of `open_method` uses a *perfect hash* from a `type_info` to the target function.
+- // 3. `declare` defines the name and the signature of the `open_method`. The first parameter type must be `const_` or `mutable_`.
+- // 4a-d. `define` defines the target function for a type. This function gets registered for the type's `type_info`.
+- // 5. Because our values carry meta-information for `type_info` (see // 1), we can call the `open_method` `draw` with a `value` as the first parameter.
 
 This technique allows us to decouple three aspects of one type:
 - construction
 - usage
 - functionality
 
-All three aspects are only coupled via the *vocabulary type* ``value``.
+All three aspects are only coupled via the *vocabulary type* `value`.
 
 <a name="t3"></a>
-If you have a group of types, that support the same compiletime interface for a dessired behaviour, in our case
+If you have a group of types that support the same compile-time interface for a desired behavior, in our case:
+
 ```cpp
 operator <<( std::ostream&, X)
 ```
@@ -167,15 +168,15 @@ TEST_CASE("tutorial 1/3") {
 // -->
 ```
 
-``// <-- 1`` shows the call to the algorithm ``fill_with_overloads``. It instanciates the second parameter, (a template function object) for each type argument, and ``declare`` `s that function object for the instanciated type in the open method ``draw``.
+`// <-- 1` shows the call to the algorithm `fill_with_overloads`. It instantiates the second parameter (a template function object) for each type argument, and `declare` registers that function object for the instantiated type in the open method `draw`.
 
-The usage of ``open_method::via_type_info`` is on one hand the most easy way to add *type tunneled* functionality, but has in the other a small runtime penalty.
+The usage of `open_method::via_type_info` is, on one hand, the easiest way to add *type tunneled* functionality, but, on the other hand, it comes with a small runtime penalty.
 
-Next we will take a look to the most efficient way to do this with *virtual void*: ``Interface``s.
+Next, we will take a look at the most efficient way to do this with *virtual_void*: `Interface`s.
 
 <a name="t4"></a>
 
-When you know, you have to pass the ``value``s of your ``vector`` to an ``ostream``, you can request this behavioir via an ``virtual_void::interfcace``.
+When you know you have to pass the `value`s of your `vector` to an `ostream`, you can request this behavior via a `virtual_void::interface`.
 
 For our case, we could do it this way:
 
@@ -236,15 +237,16 @@ TEST_CASE("tutorial 1/4") {
 // -->
 ```
 
-- // 1: Declares the interface: it is named ``to_ostream`` and has one ``const`` method. This method ``draw`` takes one  ``std::ostream&`` parameter.
-- // 2: Because ``std::string``,``int`` and ``double`` have no member function ``draw``, we must *map* this method for these types. We can do this be specialicing the *v_table_map* of ``to_ostream`` named ``to_ostream_v_table_map`` in the same ``namespace`` where ``to_ostream`` was definend.
-- // 3: Because ``std::string``,``int`` and ``double`` share the same implementation of ``draw`` we delgate it to a helper struct named ``to_ostream_shift_right_v_table_map`` where we can write ``draw`` as a function template.
-- // 4: ``struct A`` has a member function ``void draw(std::ostream& o) const`` witch will be choosen by ``to_ostream``. This is the default behaviour.
-- // 5: In this example, we need no *meta info*. So we take a sleaker ``value`` without any overhead.
-- // 6/7: Declares and fills a vector of ``values`` witch support the interface ``to_ostream``. In the initializer list, we have to request the *type erasure* by spelling out the target type, whereas in the case of ``emplace``, this can be done automatic.
-- // 8: The application of interface ``to_ostream.draw``
+- // 1: Declares the interface: it is named `to_ostream` and has one `const` method. This method `draw` takes one `std::ostream&` parameter.
+- // 2: Because `std::string`, `int`, and `double` have no member function `draw`, we must *map* this method for these types. We can do this by specializing the *v_table_map* of `to_ostream`, named `to_ostream_v_table_map`, in the same `namespace` where `to_ostream` was defined.
+- // 3: Because `std::string`, `int`, and `double` share the same implementation of `draw`, we delegate it to a helper struct named `to_ostream_shift_right_v_table_map` where we can write `draw` as a function template.
+- // 4: `struct A` has a member function `void draw(std::ostream& o) const` which will be chosen by `to_ostream`. This is the default behavior.
+- // 5: In this example, we need no *meta info*. So we take a sleeker `value` without any overhead.
+- // 6/7: Declares and fills a vector of `values` which support the interface `to_ostream`. In the initializer list, we have to request the *type erasure* by spelling out the target type, whereas in the case of `emplace`, this can be done automatically.
+- // 8: The application of interface `to_ostream.draw`.
 
-Curious, how things can be further simplified? Take a look at [interface operator overloading](tutorial___3.md)
+Curious how things can be further simplified? Take a look at [interface operator overloading](tutorial___3.md).
+
 
 ```cpp
 #endif begin sample
