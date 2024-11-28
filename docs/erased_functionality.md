@@ -1,6 +1,6 @@
 # Comparison of *erased functionality* in ``virtual_void``  
 
-| Category / Namespace                    | REFERENCE:</br>`C++ virtual`      | ``interface``   | ``open_method::via_type_info``                    | ``open_method::via_m_table``                                        |
+| Kind                    | REFERENCE:</br>`C++ virtual`      | ``interface``   | ``open_method::via_type_info``                    | ``open_method::via_m_table``                                        |
 |:-                                  |:- |:-               |:-                                                |:-                                                                  |
 | meta data requirement              | Derived from base class | none            | ``with_type_info`` </br>``with_m_table``            | ``with_m_table``                                                    |
 | Runtime penalty |  1 |  1              | 2.5                                              | 1.8                                                                 |
