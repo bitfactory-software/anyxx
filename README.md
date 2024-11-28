@@ -58,7 +58,7 @@ At this point arises another problem, when it comes to "inversion of control" in
 
 ### *Runtime* versus *compile-time*
 
-In the general case, the hot runtime path and the causing bottleneck are easily diagnosed with profilers.
+If you have a runtime performance problem, the hot runtime path and the causing bottleneck are easily diagnosed with profilers.
 When the problem is spotted, the solution is - in our experience - not far away.
 In contrast, when build time has grown to a problem, there is seldom an easy way out.
 While a software system grows larger, keeping the edit-compile-run loop short requires constant smart decisions.
