@@ -43,7 +43,7 @@ Dispatch on behalf of a type is - like function calls - a fundamental software c
 
 Static dispatch is the dispatch of choice in C++. Foremost because of performance and binary size.
 
-But once a program exceeds a certain size, it is no longer possible to use static dispatch for all and everything.
+But once a program exceeds a certain size, it is no longer possible to use static dispatch for everything.
 
 Reasons are:
 - You do not know all your types all the time
