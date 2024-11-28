@@ -1,10 +1,10 @@
 [Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorials_toc.md) / [Tests and Examples](/test/)
 
-# virtual_void: The *type tunnel* vocabulary for programming in the large
+# virtual_void: The *type tunnel* vocabulary for programming on a large scale
 
 *Please refer to [Terms and Definitions](/terms_and_definitions.md) to clarify the meaning of used catchphrases in the context of this library.*
 
-## Building block vocabulary for *programming in the large*
+## Building block vocabulary for *programming on a large scale*
 
 - To hide the representation with lifetime handles: [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - To hide the functionality with: [Overview](docs/erased_functionality.md)
@@ -35,7 +35,7 @@ to separate usage and implementation details as much as possible.
 
 This makes the pointer seem not *void* but rather **virtual void**.
 
-## Programming in the large
+## programming on a large scale
 
 ### *Runtime* versus *compile-time* **dispatch**
 
@@ -50,7 +50,7 @@ Reasons are:
 - You cannot use all your types all the time because of restricted build resources: time and space.
 
 For example, imagine a std::variant for some hundred different alternatives.
-This is where **programming in the large** begins and runtime dispatch is the proven means.
+This is where **programming on a large scale** begins and runtime dispatch is the proven means.
 
 At this point arises another problem, when it comes to "inversion of control" in regard to the type of the parameter objects passed into the callback:
 - In static dispatch, you have the full type information.
@@ -77,7 +77,7 @@ A v-table interface of an object can be used:
 - To "downcast" the interface to a more specific one, and
 - To "crosscast" to another interface.
 
-A vocabulary for programming in the large must support those casts.
+A vocabulary for programming on a large scale must support those casts.
 Because we found no library that fulfilled these demands, we came up with this one.
 
 We call a *lossless type erasing* technique **type tunneling**.
