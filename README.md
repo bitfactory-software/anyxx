@@ -39,7 +39,7 @@ This makes the pointer seem not *void* but rather **virtual void**.
 
 ### *Runtime* versus *compile-time* **dispatch**
 
-Dispatch on behalf of a type is - like function calls - a fundamental software construction principle to allow the building of layered abstraction levels.
+[Dispatch](medium.com/ingeniouslysimple/static-and-dynamic-dispatch-324d3dc890a3) on behalf of a type is - like function calls - a fundamental software construction principle to allow the building of layered abstraction levels.
 
 Static dispatch is the dispatch of choice in C++. Foremost because of performance and binary size.
 
