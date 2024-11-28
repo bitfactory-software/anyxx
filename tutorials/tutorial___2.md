@@ -3,18 +3,18 @@
 // -->
 
 <a name="t1"></a> 
-## virtual_void tutoral 2: Open objects
+## virtual_void Tutorial 2: Open Objects
 
-In interpreted langugages like *python* and *java script*, one can easily enhance an object at runtime. 
-This is a usefull feature.
-For example, you have some objects of type customer in the core of your system.
-Here you keep al the usual name, address and payment data.
-One day, one of your plugins, need *only* one more field. (/irony off)
-This is with onoe of the above languages no problem. 
+In interpreted languages like *Python* and *JavaScript*, one can easily enhance an object at runtime.  
+This is a useful feature.  
+For example, you have some objects of type `Customer` in the core of your system.  
+Here you keep all the usual name, address, and payment data.  
+One day, one of your plugins needs *only* one more field. (/irony off)  
+This is no problem with one of the above languages.  
 
-In contrary to c++.
+In contrast to C++.
 
-When you foresee such demands and have the right library support for *open objects*, you can prepare the classes, where such a demand could arise.
+When you foresee such demands and have the right library support for *open objects*, you can prepare the classes where such a demand could arise.  
 (Or at least, you can adapt the class the first time you encounter this scenario.)
 
 Let us step through an example:
