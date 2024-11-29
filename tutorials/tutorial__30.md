@@ -5,9 +5,9 @@
 <a name="t1"></a>
 ## virtual_void Tutorial 30: Interface basics
 
-The *virtual_void* interfaces combine an *erased liftime handle* with *erased function*.
+The *virtual_void* interfaces combine an *erased liftime handle* with *erased function*(s).
 
-A the typical usage is typical shown with shape. So do we.
+A the typical usage is typical shown with *shape*s*. So do we.
 
 // <!--
 ```cpp
