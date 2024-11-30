@@ -93,15 +93,15 @@ TEST_CASE("tutorial 30/1") {
 #if 0 
 ```
 // -->
-- // 5: Declares an `interface` `edged` derived from `drawable`. It adds one more `const` method  `edges`.
-- // 6a,b: `rectangle` and `regular_polygon` implement this `interface` `edged` via their meber function `edges`.
-- // 7a/b drawables ia a `vector` of `drawable<value>`s and 7a adds a `circle` like in the previous sample [Tutorial 30](tutorial_30).
-- // 8a/b adds `edged<values>` for a `rectangle` and a `regular_polygon` to `drawables`. This `interface` `edged` is implicit **upcasted** to `drawable`. 
-- // 9 We provide for the predicate callback a lambda. Here we test via a `v_table_cast<edged<value>>`, if the drawable is `edged` and eventually returns a **dowcasted** `edged`. This can we now be use to check, if the object shold be `draw`n.   
+- // 5: Declares an `interface` `edged` derived from `drawable`. It adds one more `const` method `edges`.
+- // 6a/b: `rectangle` and `regular_polygon` implement this `interface` `edged` via their member function `edges`.
+- // 7a/b: `drawables` is a `vector` of `drawable<value>`s and 7a adds a `circle` like in the previous sample [Tutorial 30](tutorial_30).
+- // 8a/b: Adds `edged<values>` for a `rectangle` and a `regular_polygon` to `drawables`. This `interface` `edged` is implicitly **upcasted** to `drawable`.
+- // 9: We provide for the predicate callback a lambda. Here we test via a `v_table_cast<edged<value>>`, if the drawable is `edged` and eventually returns a **downcasted** `edged`. This can now be used to check if the object should be `draw`n.
 
 This `v_table_cast` has a variant named `unchecked_v_table_cast`. `v_table_cast` corresponds to `dynamic_cast` and `unchecked_v_table_cast` to `static_cast` in vanilla C++.
 
-### For this functionality, it is crucial that the `interface` is constructed with the deriavtion expected in the callbacks.
+### For this functionality, it is crucial that the `interface` is constructed with the derivation expected in the callbacks.
 
 ```cpp
 #endif begin sample
