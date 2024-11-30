@@ -101,7 +101,9 @@ TEST_CASE("tutorial 30/1") {
 
 This `v_table_cast` has a variant named `unchecked_v_table_cast`. `v_table_cast` corresponds to `dynamic_cast` and `unchecked_v_table_cast` to `static_cast` in vanilla C++.
 
-### For this functionality, it is crucial that the `interface` is constructed with the derivation expected in the callbacks.
+> ℹ️ 
+> For this functionality, it is crucial that the `interface` is constructed with the derivation expected in the callbacks.
+
 
 ```cpp
 #endif begin sample
