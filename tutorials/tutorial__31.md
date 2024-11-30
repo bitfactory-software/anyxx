@@ -3,20 +3,18 @@
 // -->
 
 <a name="t1"></a>
-## virtual_void Tutorial 31: Interface up- and downcasts
+## virtual_void Tutorial 31: Interface Up- and Downcasts
 
-In contrary some other type erasure libraries, to e.g. [proxy](https://github.com/microsoft/proxy), *virtual_void* interfaces are not optimized to be faster then  vanilla C++ virtual functions.
-The are optimized to retain their type an construction time, so they can be downcasted to it, after passing some other level of abstractions.
+In contrast to some other type erasure libraries, such as [proxy](https://github.com/microsoft/proxy), *virtual_void* interfaces are not optimized to be faster than vanilla C++ virtual functions. They are optimized to retain their type at construction time, so they can be downcasted to it after passing through some other levels of abstraction.
 
-
-- // 1a/b: In our example we will use two `namespace`s, `basic_layer` and `shape_layer` to demonstrate those different abstractonn layers.
+- // 1a/b: In our example, we will use two `namespace`s, `basic_layer` and `shape_layer`, to demonstrate these different abstraction layers.
 - // 2: Declares the `interface`: it is named `drawable` and has one `const` method. This method `draw` takes one `std::ostream&` parameter.
-- // 3: `draw` is a function. In real world code, this function would be declared in a .hpp file and defined in a .cpp file. 
-    - Its first parameter is a `vector` of `drawable`s `value`s. 
+- // 3: `draw` is a function. In real-world code, this function would be declared in a .hpp file and defined in a .cpp file.
+    - Its first parameter is a `vector` of `drawable`'s `value`s.
     - Its second parameter `pred` is a predicate on `drawable<value>`.
-- // 4: The `pred` is used to filter the elemtes in `drawables` for actual drawing.
+- // 4: The `pred` is used to filter the elements in `drawables` for actual drawing.
 
-So far, the introduction. See below the sample code for further explanations. 
+So far, the introduction. See below the sample code for further explanations.
 
 // <!--
 ```cpp
