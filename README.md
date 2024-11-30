@@ -9,9 +9,9 @@
 - To hide the representation with lifetime handles: [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - To hide the functionality with: [Overview](docs/erased_functionality.md)
     - Interfaces: [Quick start](/tutorials/tutorial__30.md) [Operators](/tutorials/tutorial__33.md/#t1)
-        - Derivable
-        - Upcastable
-        - Downcastable
+        - Derivable [tutorial](tutorial__31.md)
+        - Upcastable [tutorial](tutorial__31.md)
+        - Downcastable [tutorial](tutorial__31.md)
     - Open methods: [Quick start](/tutorials/tutorial___1.md/#t2)
 - Allow extendable types with open_objects: [Quick start](/tutorials/tutorial___2.md)
 - To obtain types with runtime casts
