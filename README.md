@@ -62,7 +62,8 @@ If you have a runtime performance problem, the hot runtime path and the causing 
 When the problem is spotted, the solution is - in our experience - not far away.
 In contrast, when build time has grown to a problem, there is seldom an easy way out.
 While a software system grows larger, keeping the edit-compile-run loop short requires constant smart decisions.
-The fundamental design principles here are **physical loose-coupling** and **information hiding**.
+The fundamental design principles here is **physical loose-coupling** by reducing the compiltime dependencies between the compnents - functions and types - in the programm.
+
 
 ### *Logical* versus *physical* coupling
 
