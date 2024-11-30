@@ -8,6 +8,7 @@
 - [''interface'' basic usage](tutorial__30.md)
     - [basic usage](tutorial__30.md/#t1)
     - [v-table map](tutorial__30.md/#t2)
+- [''interface'' up- and downcast](tutorial__31.md)
 - [Overloading operators for an interface](tutorial__33.md)
   - [Custom operator<<](tutorial__33.md/#t1)
   - [std::ostream operator<<](tutorial__33.md/#t2)
