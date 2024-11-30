@@ -233,7 +233,7 @@
     template <virtual_void::is_virtual_void OTHER>                             \
     friend class virtual_void::interface::base;                                \
     template <typename TO, typename FROM>                                      \
-    friend TO virtual_void::interface::static_v_table_cast(FROM from)          \
+    friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)          \
       requires(std::derived_from<TO, FROM>);                                   \
   };
 

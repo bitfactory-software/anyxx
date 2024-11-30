@@ -117,7 +117,7 @@ TO_INTERFACE copy_cast(const FROM_INTERFACE& from_interface) {
   auto const& type_info = *get_meta(vv_from)->type_info();
   auto const& copy = find_copy<vv_to_t, vv_from_t>(type_info);
   base<vv_to_t> b = copy.construct<TO_INTERFACE>(vv_from);
-  return std::move(static_v_table_cast<TO_INTERFACE>(std::move(b)));
+  return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
 }
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
@@ -130,7 +130,7 @@ TO_INTERFACE move_cast(FROM_INTERFACE&& from_interface) {
   auto const& type_info = *get_meta(vv_from)->type_info();
   auto const& move = find_move<vv_to_t, vv_from_t>(type_info);
   base<vv_to_t> b = move.construct<TO_INTERFACE>(std::move(vv_from));
-  return std::move(static_v_table_cast<TO_INTERFACE>(std::move(b)));
+  return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
 }
 
 };  // namespace virtual_void::interface

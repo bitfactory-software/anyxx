@@ -88,7 +88,7 @@ class base {
     return interface.v_table_;
   }
   template <typename TO, typename FROM>
-  friend inline TO static_v_table_cast(FROM from)
+  friend inline TO unchecked_v_table_cast(FROM from)
     requires(std::derived_from<TO, FROM>);
 
   void operator()() const {}
@@ -120,7 +120,7 @@ auto pure_v_table_cast(const auto& v_table) {
 }
 
 template <typename TO, typename FROM>
-TO static_v_table_cast(FROM from)
+TO unchecked_v_table_cast(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
   return TO{std::move(from.virtual_void_),
@@ -131,7 +131,7 @@ template <typename TO, typename FROM>
 std::optional<TO> v_table_cast(const FROM& from)
   requires(std::derived_from<TO, FROM>)
 {
-  if (is_derived_from<TO>(from)) return {static_v_table_cast<TO>(from)};
+  if (is_derived_from<TO>(from)) return {unchecked_v_table_cast<TO>(from)};
   return {};
 }
 

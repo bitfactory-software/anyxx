@@ -59,7 +59,7 @@ TEST_CASE("prototype") {
     REQUIRE(to_string_i_co.to_string() == "3.140000");
     auto base = copy<X, const_observer, const_observer>.construct<get_value_i<const_observer>>(
         get_virtual_void(to_string_i_co));
-    auto i = interface::static_v_table_cast<get_value_i<const_observer>>(base);
+    auto i = interface::unchecked_v_table_cast<get_value_i<const_observer>>(base);
     REQUIRE(i.get_value() == 3.14);
     std::cout << "prototype: " << i.get_value() << "\n";
 
@@ -106,7 +106,7 @@ TEST_CASE("prototype") {
 
     base<unique> i1b = copy_cast<get_value_i<unique>>(i0);
     auto i1 =
-        std::move(static_v_table_cast<get_value_i<unique>>(std::move(i1b)));
+        std::move(unchecked_v_table_cast<get_value_i<unique>>(std::move(i1b)));
 
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "prototype unique i1: " << i1.get_value() << "\n";

@@ -172,14 +172,14 @@ TEST_CASE("dynamic v_table const_observer") {
   REQUIRE(interface::v_table_cast<shapeX>(base_shape));
   REQUIRE(!interface::v_table_cast<shape>(shape_circleX));
   {
-    shape upcasted_shape = interface::static_v_table_cast<shape>(base_shape);
+    shape upcasted_shape = interface::unchecked_v_table_cast<shape>(base_shape);
     print_shape(upcasted_shape);
   }
 
   shape_base_v shape_circle_base = shape_circle;
   {
     shape shape_is_circle =
-        interface::static_v_table_cast<shape>(shape_circle_base);
+        interface::unchecked_v_table_cast<shape>(shape_circle_base);
     print_shape(shape_is_circle);
   }
   {
