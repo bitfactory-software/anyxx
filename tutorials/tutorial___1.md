@@ -16,12 +16,10 @@ A simple usage looks like this:
 ```cpp
 #endif begin sample
 // -->
+#include <catch.hpp>
 #include <iostream>
 #include <vector>
-#include "catch.hpp"
-
-#include "virtual_void/data/has_type_info/value.hpp"
-
+#include <virtual_void/data/has_type_info/value.hpp>
 
 TEST_CASE("tutorial 1/1") {
   using namespace std;
@@ -36,13 +34,20 @@ TEST_CASE("tutorial 1/1") {
 
   vector<value> values{erased<value>("Hello"s), erased<value>(42),
                        erased<value>(3.14), erased<value>(A{"world"})};
-
+  stringstream out;
   for (auto value : values)
-    if (auto s = unerase_cast<string>(&value)) cout << *s << endl;
-    else if(auto i = unerase_cast<int>(&value)) cout << *i << endl;
-    else  if(auto d = unerase_cast<double>(&value)) cout << *d << endl;
-    else  if(auto a = unerase_cast<A>(&value)) cout << a->name << endl;
-    else  cout << "unknown" << endl;
+    if (auto s = unerase_cast<string>(&value))
+      out << *s << endl;
+    else if (auto i = unerase_cast<int>(&value))
+      out << *i << endl;
+    else if (auto d = unerase_cast<double>(&value))
+      out << *d << endl;
+    else if (auto a = unerase_cast<A>(&value))
+      out << a->name << endl;
+    else
+      out << "unknown" << endl;
+
+  REQUIRE(out.str() == "Hello\n42\n3.14\nworld\n");
 }
 // <!-- end of sample
 #if 0
@@ -70,16 +75,16 @@ With such an *open method* in place, our code looks like this:
 // -->
 #include <iostream>
 #include <vector>
-#include "catch.hpp"
 
+#include "catch.hpp"
 #include "virtual_void/data/has_type_info/value.hpp"
 #include "virtual_void/open_method/via_type_info/declare.hpp"
 
 TEST_CASE("tutorial 1/2") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_type_info; //1
-  using namespace virtual_void::open_method::via_type_info; // 2
+  using namespace virtual_void::data::has_type_info;         // 1
+  using namespace virtual_void::open_method::via_type_info;  // 2
   using namespace virtual_void;
   cout << endl << "*** tutorial 1/2" << endl;
 
@@ -89,16 +94,18 @@ TEST_CASE("tutorial 1/2") {
 
   vector<value> values{erased<value>("Hello"s), erased<value>(42),
                        erased<value>(3.14), erased<value>(A{"world"})};
-
   domain domain;
-  declare<void(const_, ostream&)> draw{domain}; // 3
-  draw.define<string>([](auto* x, ostream& o) { o << *x; }); // 4a
-  draw.define<int>([](auto* x, ostream& o) { o << *x; }); // 4b
-  draw.define<double>([](auto* x, ostream& o) { o << *x; }); // 4c
-  draw.define<A>([](auto* x, ostream& o) { o << x->name; }); // 4d
+  declare<void(const_, ostream&)> draw{domain};               // 3
+  draw.define<string>([](auto* x, ostream& o) { o << *x; });  // 4a
+  draw.define<int>([](auto* x, ostream& o) { o << *x; });     // 4b
+  draw.define<double>([](auto* x, ostream& o) { o << *x; });  // 4c
+  draw.define<A>([](auto* x, ostream& o) { o << x->name; });  // 4d
   draw.seal_for_runtime();
 
-  for (auto value : values) draw(value, cout), cout << endl; // 5
+  stringstream out;
+  for (auto value : values) draw(value, out), out << endl;  // 5
+
+  REQUIRE(out.str() == "Hello\n42\n3.14\nworld\n");
 }
 // <!-- end of sample
 #if 0 
@@ -160,9 +167,11 @@ TEST_CASE("tutorial 1/3") {
   draw.define<A>([](auto* x, ostream& o) { o << x->name; });
   draw.seal_for_runtime();
 
-  for (auto value : values) draw(value, cout), cout << endl;
-}
+  stringstream out;
+  for (auto value : values) draw(value, out), out << endl;
 
+  REQUIRE(out.str() == "Hello\n42\n3.14\nworld\n");
+}
 // <!-- end of sample
 #if 0 
 // -->
