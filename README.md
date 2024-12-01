@@ -2,7 +2,8 @@
 
 # virtual_void: The *type tunnel* vocabulary for *programming on a large scale*
 
-| ℹ️ Please refer to [Terms and Definitions](/terms_and_definitions.md) to clarify the meaning of used catchphrases in the context of this library.*
+> ℹ️
+> Please refer to [Terms and Definitions](/terms_and_definitions.md) to clarify the meaning of used catchphrases in the context of this library.*
 
 ## Building block vocabulary for *programming on a large scale*
 
