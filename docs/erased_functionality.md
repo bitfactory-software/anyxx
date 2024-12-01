@@ -17,7 +17,7 @@
 [^1]: How m_tables work:
     - Every `open_method::via_m_table` has a unique index.
     - Every `class` defining an `open_method::via_m_table` has an `m_table` with an entry for every `open_method`.
-    - A pointer to the `m_table` is must be passed to invoke the `open_method`.
+    - A pointer to the `m_table` must be passed to invoke the `open_method`.
     - The function called is `m_table[method_index]`.
 
-[^2]: If for an invoking type is no target found, the ``default_target`` gets called. It's default is to throw an exception. This can be coverriden by the `define_default(...)` member function of the `open_method`. If it is not possible, there is an algorithm `open_method::interpolate`. This algorithm uses the meta data of the classes registerd with `declare_classes`, to set the target to the implementation of the *nearest* base class with a defined function. The fallback is again the ``default_target``.
+[^2]: If for an invoking type no target is found, the `default_target` gets called. Its default is to throw an exception. This can be overridden by the `define_default(...)` member function of the `open_method`. If it is not possible, there is an algorithm `open_method::interpolate`. This algorithm uses the meta data of the classes registered with `declare_classes` to set the target to the implementation of the *nearest* base class with a defined function. The fallback is again the `default_target`.
