@@ -23,16 +23,15 @@ Let us step through an example:
 ```cpp
 #endif begin sample
 // -->
-#include <virtual_void/open_object/members.hpp>
-
 #include <functional>
 #include <iostream>
 #include <string>
+#include <virtual_void/open_object/members.hpp>
 
 #include "catch.hpp"
 
 namespace application::core {
-struct customer : virtual_void::open_object::members<customer> { // 1
+struct customer : virtual_void::open_object::members<customer> {  // 1
   std::string name;
   std::string address;
   std::string vat_number;
@@ -40,13 +39,13 @@ struct customer : virtual_void::open_object::members<customer> { // 1
 }  // namespace application::core
 
 namespace application::feature_plugin {
-inline const virtual_void::open_object::member<core::customer, std::string> usage_hint; // 2
+inline const virtual_void::open_object::member<core::customer, std::string>
+    usage_hint;  // 2
 }  // namespace application::feature_plugin
 
-
 namespace application::core {
-std::function<void(customer&)> hook1;        // 3a
-std::function<void(customer const&)> hook2;  // 3b
+std::function<void(customer&)> hook1;                         // 3a
+std::function<void(std::ostream& o, customer const&)> hook2;  // 3b
 }  // namespace application::core
 
 namespace application::feature_plugin {
@@ -55,8 +54,9 @@ static struct init {
     application::core::hook1 = [](core::customer& customer) {  // 4a
       customer[usage_hint] = "handle with care";
     };
-    application::core::hook2 = [](core::customer const& customer) {  // 4b
-      std::cout << *customer.get(usage_hint) << std::endl;
+    application::core::hook2 = [](std::ostream& o,
+                                  core::customer const& customer) {  // 4b
+      o << *customer.get(usage_hint) << std::endl;
     };
   }
 } init_here;
@@ -68,7 +68,9 @@ TEST_CASE("tutorial 2/1") {
   core::customer a_customer{
       .name = "google", .address = "don't mail me", .vat_number = "4711"};
   core::hook1(a_customer);
-  core::hook2(a_customer);
+  std::stringstream out;
+  core::hook2(out, a_customer);
+  REQUIRE(out.str() == "handle with care\n");
 }
 // <!-- end of sample
 #if 0
