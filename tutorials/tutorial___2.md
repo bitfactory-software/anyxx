@@ -70,6 +70,7 @@ TEST_CASE("tutorial 2/1") {
   core::hook1(a_customer);
   std::stringstream out;
   core::hook2(out, a_customer);
+
   REQUIRE(out.str() == "handle with care\n");
 }
 // <!-- end of sample

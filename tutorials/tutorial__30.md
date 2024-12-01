@@ -48,7 +48,10 @@ TEST_CASE("tutorial 30/1") {
   drawables.emplace_back(circle{1.0}); // 6
   drawables.emplace_back(rectangle{2.0, 3.0});  // 7
 
-  for (const auto& drawable : drawables) drawable.draw(cout), cout << endl;  // 8
+  stringstream out;
+  for (const auto& drawable : drawables) drawable.draw(out), out << endl;  // 8
+
+  REQUIRE(out.str() == "circle with r: 1\nrectangle with h: 2 x w: 3\n");
 }
 // <!-- end of sample
 #if 0 
@@ -78,7 +81,6 @@ With this tool, the programm looks like this:
 ```cpp
 #endif begin sample
 // -->
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -122,7 +124,10 @@ TEST_CASE("tutorial 30/2") {
   drawables.emplace_back(rectangle{2.0, 3.0});
   drawables.emplace_back(std::string{"hello world"}); // 4
 
-  for (const auto& drawable : drawables) drawable.draw(cout), cout << endl;
+  stringstream out;
+  for (const auto& drawable : drawables) drawable.draw(out), out << endl;
+
+  REQUIRE(out.str() == "circle with r: 1\nrectangle with h: 2 x w: 3\ntext via v_table_map: hello world\n");
 }
 // <!-- end of sample
 #if 0 
@@ -132,7 +137,7 @@ TEST_CASE("tutorial 30/2") {
 Let us walk through the changes:
 
 - // 1: Specializes the `template` `drawable`*_v_table_map* for `std::string`.
-- // 2/3: Implement `draw` for `std::string const*`
+- // 2/3: Implement `draw` for `std::string const*`. Note: You have leeway here!
 - // 4: With this in place, we can add a `std::string` to `drawables`
 
 That is it.
