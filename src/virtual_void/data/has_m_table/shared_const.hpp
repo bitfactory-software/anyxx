@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../shared_const_trait.hpp"
-#include "../shared_const.hpp"
-#include "meta.hpp"
+#include <virtual_void/data/shared_const_trait.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/has_m_table/meta.hpp>
 
 namespace virtual_void::data::has_m_table {
 using shared_const = data::shared_const<meta>;

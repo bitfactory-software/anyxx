@@ -5,7 +5,7 @@
 #include <map>
 #include <typeindex>
 
-#include "virtual_void/perfect_typeid_hash/index_table.hpp"
+#include <virtual_void/perfect_typeid_hash/index_table.hpp>
 
 namespace any_dispatch {
 template <typename R, typename ANY, typename... ARGS>

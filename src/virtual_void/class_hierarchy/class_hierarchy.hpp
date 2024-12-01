@@ -4,9 +4,9 @@
 #include <typeindex>
 #include <vector>
 
-#include "../utillities/overload.hpp"
-#include "../utillities/type_list.hpp"
-#include "../virtual_void.hpp"
+#include <virtual_void/utillities/overload.hpp>
+#include <virtual_void/utillities/type_list.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::class_hierarchy {
 

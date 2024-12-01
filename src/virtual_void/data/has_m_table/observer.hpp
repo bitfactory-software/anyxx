@@ -3,9 +3,9 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "../observer.hpp"
-#include "../observer_trait.hpp"
-#include "meta.hpp"
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/observer_trait.hpp>
+#include <virtual_void/data/has_m_table/meta.hpp>
 
 namespace virtual_void::data::has_m_table {
 template <typename VOID>

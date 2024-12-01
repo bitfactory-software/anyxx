@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../virtual_void.hpp"
-#include "../../utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp"
-#include "m_table.hpp"
+#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
+#include <virtual_void/data/has_m_table/m_table.hpp>
 
 namespace virtual_void::data::has_m_table {
 

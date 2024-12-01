@@ -3,7 +3,7 @@
 #include <typeindex>
 #include <vector>
 
-#include "../../virtual_void.hpp"
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data::has_m_table {
 
