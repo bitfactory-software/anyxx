@@ -68,10 +68,8 @@ auto __ = value.define<Integer>([](auto expr) { return expr->value; });
 // -----------------------------------------------------------------------------
 // render as Forth
 
-virtual_void::open_method::via_m_table::domain generator_domain;
-
 auto as_forth = virtual_void::open_method::via_m_table::declare<string(
-    virtual_void::const_)>{generator_domain};
+    virtual_void::const_)>{value_domain};
 
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
@@ -88,7 +86,7 @@ auto __ = as_forth.define<Integer>(
 // render as Lisp
 
 auto as_lisp = virtual_void::open_method::via_m_table::declare<string(
-    virtual_void::const_)>{generator_domain};
+    virtual_void::const_)>{value_domain};
 
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
