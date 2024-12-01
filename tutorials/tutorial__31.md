@@ -3,7 +3,7 @@
 // -->
 
 <a name="t1"></a>
-## virtual_void Tutorial 31: Interface Up- and Downcasts
+## virtual_void Tutorial 31/1: Interface Up- and Downcasts
 
 In contrast to some other type erasure libraries, such as [proxy](https://github.com/microsoft/proxy), *virtual_void* interfaces are not optimized to be faster than vanilla C++ virtual functions. They are optimized to retain their type at construction time, so they can be downcasted to it after passing through some other levels of abstraction.
 
@@ -105,7 +105,7 @@ TEST_CASE("tutorial 31/1") {
 This `v_table_cast` has a variant named `unchecked_v_table_cast`. `v_table_cast` corresponds to `dynamic_cast` and `unchecked_v_table_cast` to `static_cast` in vanilla C++.
 
 > ℹ️ 
-> For this functionality, it is crucial that the `interface` is constructed with the derivation expected in the callbacks.
+> For this functionality, it is crucial that the `interface` is constructed with the derivation expected in the callbacks (See 8a in the example above!).
 
 
 ```cpp
