@@ -95,7 +95,7 @@ TEST_CASE("tutorial 30/1") {
 // -->
 - // 5: Declares an `interface` `edged` derived from `drawable`. It adds one more `const` method `edges`.
 - // 6a/b: `rectangle` and `regular_polygon` implement this `interface` `edged` via their member function `edges`.
-- // 7a/b: `drawables` is a `vector` of `drawable<value>`s and 7a adds a `circle` like in the previous sample [Tutorial 30](tutorial_30).
+- // 7a/b: `drawables` is a `vector` of `drawable<value>`s and 7b adds a `circle` like in the previous sample [Tutorial 30](tutorial_30).
 - // 8a/b: Adds `edged<values>` for a `rectangle` and a `regular_polygon` to `drawables`. This `interface` `edged` is implicitly **upcasted** to `drawable`.
 - // 9: We provide for the predicate callback a lambda. Here we test via a `v_table_cast<edged<value>>`, if the drawable is `edged` and eventually returns a **downcasted** `edged`. This can now be used to check if the object should be `draw`n.
 
