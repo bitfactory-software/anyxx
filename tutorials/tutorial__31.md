@@ -37,10 +37,10 @@ ERASED_INTERFACE(drawable,
 
 using drawable_value = drawable<virtual_void::data::has_no_meta::value>;
 using drawable_values = std::vector<drawable_value>;
-void draw(drawable_values& drawables,
+void draw(std::ostream& o, drawable_values& drawables,
           std::function<bool(drawable_value const&)> pred) { // 3
   for (auto drawable : drawables | std::views::filter(pred)) // 4
-    drawable.draw(std::cout), std::cout << std::endl;
+    drawable.draw(o), std::cout << std::endl;
 }
 }  // namespace tutorial_31_1::basic_layer
 
@@ -70,7 +70,7 @@ struct regular_polygon {
 };
 }  // namespace tutorial_31_1::shape_layer
 
-TEST_CASE("tutorial 30/1") {
+TEST_CASE("tutorial 31/1") {
   using namespace std;
   using namespace virtual_void;
   using namespace virtual_void::data::has_no_meta;
@@ -83,11 +83,14 @@ TEST_CASE("tutorial 30/1") {
   drawables.emplace_back(edged<value>{rectangle{2.0, 3.0}}); // 8a     
   drawables.emplace_back(edged<value>{regular_polygon{8, 4.0}}); // 8a
 
-  basic_layer::draw(drawables, [](basic_layer::drawable_value const& d) {
+  stringstream out;
+  basic_layer::draw(out, drawables, [](basic_layer::drawable_value const& d) {
     if (auto e = interface::v_table_cast<edged<value>>(d)) // 9
       return e->edges() > 4;
     return false;
   });
+
+  REQUIRE(out.str() == "regular_polygon with sides: 8, side_length: 4");
 }
 // <!-- end of sample
 #if 0 
