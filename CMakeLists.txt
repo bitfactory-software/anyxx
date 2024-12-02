@@ -5,10 +5,11 @@ endif()
 
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 
+message( "CMAKE_CURRENT_SOURCE_DIR: " ${CMAKE_CURRENT_SOURCE_DIR})
 message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
+message( "CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
 
 project(virtual_void CXX)
 
@@ -16,9 +17,26 @@ include(GNUInstallDirs)
 
 find_package(Catch2 3 REQUIRED)
 
+if (MSVC)
+    add_compile_options(/Zc:preprocessor)
+endif()
+set(CMAKE_CXX_STANDARD 20)
+
+# +++ virtual_void library
+file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "./virtual_void/*.hpp")
+add_library(virtual_void ${VIRTUAL_VOID_HEADERS} "./virtual_void/virtual_void.cpp")
+target_include_directories(virtual_void PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
+)
+if (BUILD_SHARED_LIBS AND MSVC)
+    target_compile_definitions(virtual_void PRIVATE VV_SHARED)
+endif()
+target_compile_features(virtual_void PUBLIC cxx_std_20)
+# --- virtual_void library
+
 enable_testing()
 
-add_subdirectory ("src")
 add_subdirectory ("test")
 add_subdirectory ("tutorials")
 
@@ -38,7 +56,7 @@ install(TARGETS virtual_void
         RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-install(DIRECTORY src/virtual_void/ # tailing slash is important here!
+install(DIRECTORY virtual_void/ # tailing slash is important here!
     DESTINATION include/virtual_void
 )
 
