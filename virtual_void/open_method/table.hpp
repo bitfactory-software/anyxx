@@ -3,9 +3,9 @@
 #include <typeindex>
 #include <unordered_map>
 
-#include "../perfect_typeid_hash/index_table.hpp"
-#include "../virtual_void.hpp"
-#include "default_target.hpp"
+#include <virtual_void/perfect_typeid_hash/index_table.hpp>
+#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/open_method/default_target.hpp>
 
 namespace virtual_void::open_method {
 

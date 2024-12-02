@@ -1,6 +1,6 @@
 #pragma once
 
-#include "declaration_base.hpp"
+#include <virtual_void/open_method/via_type_info/declaration_base.hpp>
 
 namespace virtual_void::open_method::via_type_info {
 

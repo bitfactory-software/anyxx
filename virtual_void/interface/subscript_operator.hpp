@@ -1,7 +1,7 @@
 #pragma once
 
-#include "operator.hpp"
-#include "../utillities/type_list.hpp"
+#include <virtual_void/utillities/type_list.hpp>
+#include <virtual_void/interface/operator.hpp>
 
 namespace virtual_void::interface {
 

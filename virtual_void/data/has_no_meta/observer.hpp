@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../observer.hpp"
-#include "../observer_trait.hpp"
-#include "meta.hpp"
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/observer_trait.hpp>
+#include <virtual_void/data/has_no_meta/meta.hpp>
 
 namespace virtual_void::data::has_no_meta {
 

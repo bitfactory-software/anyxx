@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base.hpp"
+#include <virtual_void/interface/base.hpp>
 
 namespace virtual_void::interface {
 

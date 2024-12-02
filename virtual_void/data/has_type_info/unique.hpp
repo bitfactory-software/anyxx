@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../unique_trait.hpp"
-#include "../unique.hpp"
-#include "meta.hpp"
+#include <virtual_void/data/unique_trait.hpp>
+#include <virtual_void/data/unique.hpp>
+#include <virtual_void/data/has_type_info/meta.hpp>
 
 namespace virtual_void::data::has_type_info {
 using unique = data::unique<meta>;

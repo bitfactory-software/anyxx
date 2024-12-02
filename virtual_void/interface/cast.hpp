@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../VV_EXPORT.hpp"
-#include "../data/observer.hpp"
-#include "../data/shared_const.hpp"
-#include "../data/unique.hpp"
-#include "../data/value.hpp"
-#include "../open_method/via_type_info/factory.hpp"
-#include "base.hpp"
+#include <virtual_void/utillities/VV_EXPORT.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/unique.hpp>
+#include <virtual_void/data/value.hpp>
+#include <virtual_void/open_method/via_type_info/factory.hpp>
+#include <virtual_void/interface/base.hpp>
 
 namespace virtual_void::interface {
 

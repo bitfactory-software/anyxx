@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../unique_ptr_trait.hpp"
-#include "meta.hpp"
+#include <virtual_void/data/unique_ptr_trait.hpp>
+#include <virtual_void/data/has_no_meta/meta.hpp>
 
 namespace virtual_void::data::has_no_meta {
 using unique_ptr = data::unique_ptr<meta>;

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../value_trait.hpp"
-#include "../value.hpp"
-#include "meta.hpp"
+#include <virtual_void/data/value_trait.hpp>
+#include <virtual_void/data/value.hpp>
+#include <virtual_void/data/has_type_info/meta.hpp>
 
 namespace virtual_void::data::has_type_info {
 using value = data::value<meta>;

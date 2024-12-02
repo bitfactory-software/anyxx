@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../class_hierarchy/class_hierarchy.hpp"
+#include <virtual_void/class_hierarchy/class_hierarchy.hpp>
 
 namespace virtual_void::open_method {
 

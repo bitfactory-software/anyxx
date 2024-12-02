@@ -4,16 +4,16 @@
 #include <typeindex>
 #include <unordered_map>
 
-#include "../../VV_EXPORT.hpp"
-#include "../../class_hierarchy/class_hierarchy.hpp"
-#include "../../data/has_m_table/m_table.hpp"
-#include "../../utillities/ensure_function_ptr.hpp"
-#include "../../utillities/overload.hpp"
-#include "../../utillities/type_list.hpp"
-#include "../../virtual_void.hpp"
-#include "../algorithm.hpp"
-#include "../default_target.hpp"
-#include "../domain.hpp"
+#include <virtual_void/utillities/VV_EXPORT.hpp>
+#include <virtual_void/class_hierarchy/class_hierarchy.hpp>
+#include <virtual_void/data/has_m_table/m_table.hpp>
+#include <virtual_void/utillities/ensure_function_ptr.hpp>
+#include <virtual_void/utillities/overload.hpp>
+#include <virtual_void/utillities/type_list.hpp>
+#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/open_method/algorithm.hpp>
+#include <virtual_void/open_method/default_target.hpp>
+#include <virtual_void/open_method/domain.hpp>
 
 namespace virtual_void::open_method::via_m_table {
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../data/has_type_info/observer.hpp"
-#include "../open_method/algorithm.hpp"
-#include "../virtual_void.hpp"
+#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/open_method/algorithm.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::typeid_cast {
 

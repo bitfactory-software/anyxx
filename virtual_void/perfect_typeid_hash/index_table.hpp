@@ -11,7 +11,7 @@
 #include <typeindex>
 #include <typeinfo>
 
-#include "../VV_EXPORT.hpp"
+#include <virtual_void/utillities/VV_EXPORT.hpp>
 
 namespace perfect_typeid_hash {
 

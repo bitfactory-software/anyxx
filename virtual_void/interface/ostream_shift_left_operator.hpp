@@ -2,8 +2,8 @@
 
 #include <ostream>
 
-#include "base.hpp"
-#include "declare_macro.hpp"
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 
 namespace virtual_void::interface {
 

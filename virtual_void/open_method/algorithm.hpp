@@ -1,6 +1,6 @@
 #pragma once
 
-#include "domain.hpp"
+#include <virtual_void/open_method/domain.hpp>
 
 namespace virtual_void::open_method {
 
