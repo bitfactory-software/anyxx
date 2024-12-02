@@ -4,8 +4,8 @@
 
 namespace virtual_void::data {
 
-template <typename VOID, typename META>
-using observer = decorated_ptr<VOID, META>;
+template <typename VV_VOID, typename META>
+using observer = decorated_ptr<VV_VOID, META>;
 
 template <typename META>
 using const_observer = observer<void const*, META>;

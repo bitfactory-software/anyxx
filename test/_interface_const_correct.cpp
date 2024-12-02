@@ -26,11 +26,11 @@ template <>
 struct test_trait<void*> {
   static const bool is_const = false;
 };
-template <typename VOID>
+template <typename VV_VOID>
 struct test_interface {
-  VOID member = nullptr;
+  VV_VOID member = nullptr;
   std::string f(int)
-    requires(!test_trait<VOID>::is_const)
+    requires(!test_trait<VV_VOID>::is_const)
   {
     return "mutable";
   }

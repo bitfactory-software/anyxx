@@ -8,14 +8,14 @@
 #include <virtual_void/data/has_m_table/meta.hpp>
 
 namespace virtual_void::data::has_m_table {
-template <typename VOID>
-using observer = data::observer<VOID, meta>;
+template <typename VV_VOID>
+using observer = data::observer<VV_VOID, meta>;
 }
 
 namespace virtual_void {
-template <typename VOID>
-struct virtual_void_trait<data::has_m_table::observer<VOID>>
-    : observer_trait<data::has_m_table::observer<VOID>, VOID,
+template <typename VV_VOID>
+struct virtual_void_trait<data::has_m_table::observer<VV_VOID>>
+    : observer_trait<data::has_m_table::observer<VV_VOID>, VV_VOID,
                      data::has_m_table::meta> {};
 }  // namespace virtual_void
 
@@ -23,8 +23,8 @@ namespace virtual_void::data::has_m_table {
 
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
-template <typename V, typename VOID>
-using typed_observer = virtual_typed<V, observer<VOID>>;
+template <typename V, typename VV_VOID>
+using typed_observer = virtual_typed<V, observer<VV_VOID>>;
 template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>

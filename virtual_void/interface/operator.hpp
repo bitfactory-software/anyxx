@@ -4,7 +4,7 @@
 
 namespace virtual_void::interface {
 
-template <typename TARGET, typename BASE_V_TABLE, typename VOID, typename RET,
+template <typename TARGET, typename BASE_V_TABLE, typename VV_VOID, typename RET,
           typename... ARGS>
 struct operator_v_table : BASE_V_TABLE {
   using v_table_base_t = BASE_V_TABLE;
@@ -18,7 +18,7 @@ struct operator_v_table : BASE_V_TABLE {
   RET (*op)(void_t, ARGS&&...);
   template <typename UNERASE>
   operator_v_table(UNERASE unerase) : BASE_V_TABLE(unerase) {
-    if constexpr (const_correct_target_for_data<VOID, void_t>) {
+    if constexpr (const_correct_target_for_data<VV_VOID, void_t>) {
       op = [](void_t _vp, ARGS&&... args) -> RET {
         return TARGET{}(UNERASE{}(_vp), std::forward<ARGS>(args)...);
       };

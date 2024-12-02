@@ -4,21 +4,21 @@
 
 namespace virtual_void {
 
-template <typename VIRTUAL_VOID, typename VOID, typename META>
-struct observer_trait : decorated_ptr_trait<VOID, META> {
-  using base_trait = decorated_ptr_trait<VOID, META>;
+template <typename VIRTUAL_VOID, typename VV_VOID, typename META>
+struct observer_trait : decorated_ptr_trait<VV_VOID, META> {
+  using base_trait = decorated_ptr_trait<VV_VOID, META>;
 
-  static VOID value(const auto& ptr) { return ptr.ptr_; }
+  static VV_VOID value(const auto& ptr) { return ptr.ptr_; }
 
   template <typename V>
   static auto construct_from(V& v) {
-    return VIRTUAL_VOID(static_cast<VOID>(&v), META(std::in_place_type<V>));
+    return VIRTUAL_VOID(static_cast<VV_VOID>(&v), META(std::in_place_type<V>));
   }
   template <typename V>
   static auto construct_from(const V& v)
     requires(base_trait::is_const)
   {
-    return VIRTUAL_VOID(static_cast<VOID>(&v), META(std::in_place_type<V>));
+    return VIRTUAL_VOID(static_cast<VV_VOID>(&v), META(std::in_place_type<V>));
   }
 
   template <typename V>

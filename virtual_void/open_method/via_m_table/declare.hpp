@@ -71,9 +71,9 @@ class declaration_base : public open_method::default_target<> {
 
 using m_table_t = data::has_m_table::m_table_t;
 
-template <typename DISPATCH, typename VOID>
+template <typename DISPATCH, typename VV_VOID>
 concept is_m_table_dispachable_virtual_void = requires(const DISPATCH& void_) {
-  { void_.data() } -> std::convertible_to<VOID>;
+  { void_.data() } -> std::convertible_to<VV_VOID>;
   { void_.m_table() } -> std::convertible_to<const m_table_t*>;
 };
 

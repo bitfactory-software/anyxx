@@ -66,7 +66,7 @@ template <typename CS>
 concept is_const_specifier =
     (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
 
-template <typename VOID>
+template <typename VV_VOID>
 struct is_const_void_;
 template <>
 struct is_const_void_<void*> : std::false_type {};
@@ -89,8 +89,8 @@ struct void_<const_> {
 template <is_const_specifier CONST_SPECIFIER>
 using void_t = void_<CONST_SPECIFIER>::type;
 
-template <typename VOID>
-concept is_const_void = is_const_void_<VOID>::value;
+template <typename VV_VOID>
+concept is_const_void = is_const_void_<VV_VOID>::value;
 
 template <typename DATA>
 using data_void = virtual_void_trait<DATA>::void_t;
@@ -102,13 +102,13 @@ template <typename TARGET, typename DATA>
 concept const_correct_target_for_data =
     ((is_const_void<TARGET> == is_const_void<DATA>) || (!is_const_void<DATA>));
 
-template <typename VOID, typename DATA>
+template <typename VV_VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
-    const_correct_target_for_data<VOID, data_void<DATA>>;
+    const_correct_target_for_data<VV_VOID, data_void<DATA>>;
 
-template <typename VOID, typename VIRTUAL_VOID>
+template <typename VV_VOID, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
-    (const_correct_for_virtual_void_data<VOID, VIRTUAL_VOID>);
+    (const_correct_for_virtual_void_data<VV_VOID, VIRTUAL_VOID>);
 
 template <typename V, is_virtual_void DATA>
 struct virtual_typed;
