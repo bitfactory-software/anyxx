@@ -9,8 +9,8 @@ The *virtual_void* interfaces combines an *erased liftime handle* with *erased f
 
 Usually usage is shown with *shape*s . And thats exactly what we are gonna do now:
 
-// <!--
 ```cpp
+// <!--
 #endif begin sample
 // -->
 #include <iostream>
@@ -55,8 +55,8 @@ TEST_CASE("tutorial 30/1") {
 }
 // <!-- end of sample
 #if 0 
-```
 // -->
+```
 - // 1: Declares the `interface`: it is named `drawable` and has one `const` method. This method `draw` takes one `std::ostream&` parameter.
 - // 2,3: `circle` and `rectangle` are two simple `struct`s. Both have a `const` method `draw` with a `std::ostream&` parameter.
 - // 4: In this example, we need no `meta` info. So we take a sleeker `value` without any overhead.
@@ -131,8 +131,8 @@ TEST_CASE("tutorial 30/2") {
 }
 // <!-- end of sample
 #if 0 
-```
 // -->
+```
 
 Let us walk through the changes:
 
