@@ -7,6 +7,8 @@
 
 #include <virtual_void/virtual_void.hpp>
 
+#undef interface
+
 namespace virtual_void::interface {
 
 template <typename VV_VOID>
