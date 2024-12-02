@@ -28,7 +28,7 @@ Let us step through an example:
 #include <string>
 #include <virtual_void/open_object/members.hpp>
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 namespace application::core {
 struct customer : virtual_void::open_object::members<customer> {  // 1

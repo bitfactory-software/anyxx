@@ -76,7 +76,7 @@ With such an *open method* in place, our code looks like this:
 #include <iostream>
 #include <vector>
 
-#include "catch.hpp"
+#include <catch.hpp>
 #include "virtual_void/data/has_type_info/value.hpp"
 #include "virtual_void/open_method/via_type_info/declare.hpp"
 
@@ -139,7 +139,7 @@ the library provides a shortcut for you:
 // -->
 #include <iostream>
 #include <vector>
-#include "catch.hpp"
+#include <catch.hpp>
 
 #include "virtual_void/data/has_type_info/value.hpp"
 #include "virtual_void/open_method/via_type_info/declare.hpp"

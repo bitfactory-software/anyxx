@@ -135,7 +135,7 @@ When applied to our example, this leads to this:
 #include <iostream>
 #include <vector>
 
-#include "catch.hpp"
+#include <catch.hpp>
 
 namespace tutorial_33_2 {
 

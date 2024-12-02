@@ -15,7 +15,7 @@ A the typical usage is typical shown with *shape*s*. So do we.
 // -->
 #include <iostream>
 #include <vector>
-#include "catch.hpp"
+#include <catch.hpp>
 
 #include "virtual_void/interface/declare_macro.hpp"
 #include "virtual_void/interface/base.hpp"
@@ -84,7 +84,7 @@ With this tool, the programm looks like this:
 #include <iostream>
 #include <vector>
 #include <string>
-#include "catch.hpp"
+#include <catch.hpp>
 
 #include "virtual_void/interface/declare_macro.hpp"
 #include "virtual_void/interface/base.hpp"

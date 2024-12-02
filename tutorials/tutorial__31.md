@@ -26,7 +26,7 @@ So far, the introduction. See below the sample code for further explanations.
 #include <ranges>
 #include <vector>
 
-#include "catch.hpp"
+#include <catch.hpp>
 #include "virtual_void/data/has_no_meta/value.hpp"
 #include "virtual_void/interface/base.hpp"
 #include "virtual_void/interface/declare_macro.hpp"
