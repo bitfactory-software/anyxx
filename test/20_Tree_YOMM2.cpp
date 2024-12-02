@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 
- #include "yorel/yomm2/keywords.hpp"
+ #include "yorel/yomm2/keywords.hpp>
 
  #include <catch.hpp>
 

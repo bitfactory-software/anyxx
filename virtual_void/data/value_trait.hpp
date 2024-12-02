@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../data/make_value_decorated_data.hpp"
-#include "../virtual_void.hpp"
+#include <virtual_void/data/make_value_decorated_data.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void {
 

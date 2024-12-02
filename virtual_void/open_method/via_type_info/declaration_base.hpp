@@ -2,9 +2,9 @@
 
 #include <typeindex>
 
-#include "../../virtual_void.hpp"
-#include "../domain.hpp"
-#include "../table.hpp"
+#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/open_method/domain.hpp>
+#include <virtual_void/open_method/table.hpp>
 
 namespace virtual_void::open_method::via_type_info {
 

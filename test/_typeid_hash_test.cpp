@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "virtual_void/perfect_typeid_hash/index_table.hpp"
+#include <virtual_void/perfect_typeid_hash/index_table.hpp>
 
 #include <catch.hpp>
 

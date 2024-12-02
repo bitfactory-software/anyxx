@@ -77,8 +77,8 @@ With such an *open method* in place, our code looks like this:
 #include <vector>
 
 #include <catch.hpp>
-#include "virtual_void/data/has_type_info/value.hpp"
-#include "virtual_void/open_method/via_type_info/declare.hpp"
+#include <virtual_void/data/has_type_info/value.hpp>
+#include <virtual_void/open_method/via_type_info/declare.hpp>
 
 TEST_CASE("tutorial 1/2") {
   using namespace std;
@@ -141,9 +141,9 @@ the library provides a shortcut for you:
 #include <vector>
 #include <catch.hpp>
 
-#include "virtual_void/data/has_type_info/value.hpp"
-#include "virtual_void/open_method/via_type_info/declare.hpp"
-#include "virtual_void/open_method/algorithm.hpp"
+#include <virtual_void/data/has_type_info/value.hpp>
+#include <virtual_void/open_method/via_type_info/declare.hpp>
+#include <virtual_void/open_method/algorithm.hpp>
 
 TEST_CASE("tutorial 1/3") {
   using namespace std;

@@ -33,7 +33,7 @@ Let's look at the usage of the algorithm:
 
 #include <catch.hpp>
 
-#include "virtual_void/perfect_typeid_hash/index_table.hpp"
+#include <virtual_void/perfect_typeid_hash/index_table.hpp>
 
 
 TEST_CASE( "build perfect typeid hash index" ) {

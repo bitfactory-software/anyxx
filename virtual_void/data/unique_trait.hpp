@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../data/decorated_data.hpp"
-#include "../data/make_unique_decorated_data.hpp"
-#include "../virtual_void.hpp"
+#include <virtual_void/data/decorated_data.hpp>
+#include <virtual_void/data/make_unique_decorated_data.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void {
 

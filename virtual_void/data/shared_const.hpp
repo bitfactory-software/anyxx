@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "decorated_data.hpp"
+#include <virtual_void/data/decorated_data.hpp>
 
 namespace virtual_void::data {
 template <typename META>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "erased_unique_ptr.hpp"
+#include <virtual_void/data/erased_unique_ptr.hpp>
 
 namespace virtual_void::data {
 

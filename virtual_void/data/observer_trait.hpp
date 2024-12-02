@@ -1,6 +1,6 @@
 #pragma once
 
-#include "decorated_ptr_trait.hpp"
+#include <virtual_void/data/decorated_ptr_trait.hpp>
 
 namespace virtual_void {
 

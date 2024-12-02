@@ -7,12 +7,12 @@
 
 #include <catch.hpp>
 
-#include "virtual_void/data/has_m_table/observer.hpp"
-#include "virtual_void/data/has_m_table/shared_const.hpp"
-#include "virtual_void/data/has_m_table/unique.hpp"
-#include "virtual_void/data/has_m_table/value.hpp"
-#include "virtual_void/data/has_m_table/shared_const_ptr.hpp"
-#include "virtual_void/data/has_m_table/unique_ptr.hpp"
+#include <virtual_void/data/has_m_table/observer.hpp>
+#include <virtual_void/data/has_m_table/shared_const.hpp>
+#include <virtual_void/data/has_m_table/unique.hpp>
+#include <virtual_void/data/has_m_table/value.hpp>
+#include <virtual_void/data/has_m_table/shared_const_ptr.hpp>
+#include <virtual_void/data/has_m_table/unique_ptr.hpp>
 
 using namespace Catch::Matchers;
 

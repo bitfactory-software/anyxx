@@ -17,9 +17,9 @@ A the typical usage is typical shown with *shape*s*. So do we.
 #include <vector>
 #include <catch.hpp>
 
-#include "virtual_void/interface/declare_macro.hpp"
-#include "virtual_void/interface/base.hpp"
-#include "virtual_void/data/has_no_meta/value.hpp"
+#include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
 
 namespace tutorial_30_1 {
 ERASED_INTERFACE(drawable,
@@ -86,9 +86,9 @@ With this tool, the programm looks like this:
 #include <string>
 #include <catch.hpp>
 
-#include "virtual_void/interface/declare_macro.hpp"
-#include "virtual_void/interface/base.hpp"
-#include "virtual_void/data/has_no_meta/value.hpp"
+#include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
 
 namespace tutorial_30_2 {
 ERASED_INTERFACE(drawable,

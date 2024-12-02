@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../virtual_void.hpp"
-#include "erased_std_ptr_trait.hpp"
-#include "unique_ptr.hpp"
+#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/data/erased_std_ptr_trait.hpp>
+#include <virtual_void/data/unique_ptr.hpp>
 
 namespace virtual_void {
 

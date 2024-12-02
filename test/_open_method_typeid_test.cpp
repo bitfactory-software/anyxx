@@ -6,9 +6,9 @@
 
 #include <catch.hpp>
 
-#include "virtual_void/data/has_type_info/observer.hpp"
-#include "virtual_void/open_method/via_type_info/declare.hpp"
-#include "virtual_void/open_method/algorithm.hpp"
+#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/open_method/via_type_info/declare.hpp>
+#include <virtual_void/open_method/algorithm.hpp>
 
 #include "class_hierarchy_test_hierarchy.hpp"
 

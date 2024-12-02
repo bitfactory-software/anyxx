@@ -5,8 +5,8 @@
 #include <iostream>
 #include <string>
 
-#include "virtual_void/any_dispatch/method_typeid_hash.hpp"
-#include "virtual_void/utillities/unnamed__.hpp"
+#include <virtual_void/any_dispatch/method_typeid_hash.hpp>
+#include <virtual_void/utillities/unnamed__.hpp>
 #include <catch.hpp>
 
 using std::cout;

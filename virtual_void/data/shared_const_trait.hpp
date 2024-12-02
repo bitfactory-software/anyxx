@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../virtual_void.hpp"
-#include "decorated_data.hpp"
-#include "make_shared_const_decorated_data.hpp"
+#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/data/decorated_data.hpp>
+#include <virtual_void/data/make_shared_const_decorated_data.hpp>
 
 namespace virtual_void {
 

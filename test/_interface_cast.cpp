@@ -2,12 +2,12 @@
 
 #include <catch.hpp>
 
-#include "virtual_void/data/has_type_info/observer.hpp"
-#include "virtual_void/data/has_type_info/shared_const.hpp"
-#include "virtual_void/data/has_type_info/unique.hpp"
-#include "virtual_void/interface/base.hpp"
-#include "virtual_void/interface/cast.hpp"
-#include "virtual_void/interface/declare_macro.hpp"
+#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/data/has_type_info/shared_const.hpp>
+#include <virtual_void/data/has_type_info/unique.hpp>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/cast.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::interface;

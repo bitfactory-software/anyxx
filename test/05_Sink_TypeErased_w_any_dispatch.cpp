@@ -9,8 +9,7 @@
 
 #include <catch.hpp>
 
-//#include "virtual_void/all.hpp"
-#include "virtual_void/any_dispatch/method.hpp"
+#include <virtual_void/any_dispatch/method.hpp>
 
 namespace {
 

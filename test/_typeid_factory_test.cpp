@@ -6,10 +6,10 @@
 #include "class_hierarchy_test_hierarchy.hpp"
 #include <catch.hpp>
 
-#include "virtual_void/data/has_m_table/shared_const.hpp"
-#include "virtual_void/data/has_m_table/unique.hpp"
-#include "virtual_void/open_method/algorithm.hpp"
-#include "virtual_void/open_method/via_type_info/factory.hpp"
+#include <virtual_void/data/has_m_table/shared_const.hpp>
+#include <virtual_void/data/has_m_table/unique.hpp>
+#include <virtual_void/open_method/algorithm.hpp>
+#include <virtual_void/open_method/via_type_info/factory.hpp>
 
 using namespace virtual_void;
 

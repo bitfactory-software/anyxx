@@ -9,10 +9,10 @@
 #include <utility>
 #include <vector>
 
- #include "virtual_void/data/has_m_table/shared_const.hpp"
- #include "virtual_void/open_method/algorithm.hpp"
- #include "virtual_void/open_method/via_m_table/declare.hpp"
- #include "virtual_void/typeid_cast/cast.hpp"
+ #include <virtual_void/data/has_m_table/shared_const.hpp>
+ #include <virtual_void/open_method/algorithm.hpp>
+ #include <virtual_void/open_method/via_m_table/declare.hpp>
+ #include <virtual_void/typeid_cast/cast.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::data::has_m_table;

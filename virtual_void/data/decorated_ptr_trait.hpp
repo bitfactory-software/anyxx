@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../virtual_void.hpp"
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void {
 

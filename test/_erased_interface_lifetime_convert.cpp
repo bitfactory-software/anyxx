@@ -5,11 +5,11 @@
 
 #include <catch.hpp>
 
-#include "virtual_void/interface/declare_macro.hpp"
+#include <virtual_void/interface/declare_macro.hpp>
 
-#include "virtual_void/interface/base.hpp"
-#include "virtual_void/data/has_no_meta/observer.hpp"
-#include "virtual_void/data/has_no_meta/shared_const.hpp"
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/shared_const.hpp>
 
 using namespace Catch::Matchers;
 

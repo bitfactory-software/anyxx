@@ -1,6 +1,6 @@
 #pragma once
 
-#include "decorated_ptr.hpp"
+#include <virtual_void/data/decorated_ptr.hpp>
 
 namespace virtual_void::data {
 template <typename META>
