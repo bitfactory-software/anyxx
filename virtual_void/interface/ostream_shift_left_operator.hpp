@@ -2,6 +2,8 @@
 
 #include <ostream>
 
+#undef interface 
+
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 

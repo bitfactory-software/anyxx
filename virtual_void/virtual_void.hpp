@@ -5,6 +5,8 @@
 #include <type_traits>
 #include <typeinfo>
 
+#undef interface 
+
 namespace virtual_void {
 
 using type_info_ptr = std::type_info const*;

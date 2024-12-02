@@ -1,5 +1,7 @@
 #pragma once
 
+#undef interface 
+
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/interface/operator.hpp>
 

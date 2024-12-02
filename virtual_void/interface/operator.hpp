@@ -1,5 +1,7 @@
 #pragma once
 
+#undef interface 
+
 #include <virtual_void/interface/base.hpp>
 
 namespace virtual_void::interface {

@@ -1,5 +1,7 @@
 #pragma once
 
+#undef interface 
+
 //
 // developed from:
 // https://github.com/AlexCodesApps/virtual_void::blob/main/dynamic_v_table.hpp

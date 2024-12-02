@@ -1,5 +1,7 @@
 #pragma once
 
+#undef interface 
+
 #include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>

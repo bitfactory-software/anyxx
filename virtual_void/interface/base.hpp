@@ -33,7 +33,7 @@ class base {
   using is_already_base =
       std::false_type;  // base is always at the bottom of the v_table chain.
  protected:
-  virtual_void_t virtual_void_ = nullptr;
+  virtual_void_t virtual_void_ = {};
   v_table_t* v_table_ = nullptr;
 
  public:
