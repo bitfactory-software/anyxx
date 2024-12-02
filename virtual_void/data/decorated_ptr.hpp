@@ -6,7 +6,7 @@ namespace virtual_void::data {
 
 template <typename PTR, typename META>
 struct decorated_ptr : META {
-  PTR ptr_;
+    PTR ptr_ = nullptr;
 
   decorated_ptr() = default;
   decorated_ptr(const decorated_ptr&) = default;

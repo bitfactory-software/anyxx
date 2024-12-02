@@ -22,7 +22,7 @@ struct System {
   File file;
   std::map<std::string, FactoryFunction> factories;
   void Query(std::string what, const SinkFunction& sink) {
-    for (auto [type, data] : file) sink(factories[type](data));
+    for (auto& [type, data] : file) sink(factories[type](data));
   }
 };
 }  // namespace DB
@@ -40,11 +40,11 @@ struct DoubleData {
 
 auto AnyToOut = any_dispatch::method<void, const std::any&>{};
 
-void IntToOut(const IntData* i) {
+static void IntToOut(const IntData* i) {
   std::cout << "int: " << i->data << std::endl;
 }
 
-void AnywhereInTheApplication() { AnyToOut.define<const IntData>(&IntToOut); }
+static void AnywhereInTheApplication() { AnyToOut.define<const IntData>(&IntToOut); }
 }  // namespace Application
 
 TEST_CASE("05_Sink_TypeErased_w_any_dispatch") {

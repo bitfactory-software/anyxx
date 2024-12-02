@@ -24,7 +24,7 @@ namespace
 
 	template< typename T > std::string call( const to_string_method& method )
 	{ 
-		T t;
+		T t = {};
 		return method( &t );
 	}
 
