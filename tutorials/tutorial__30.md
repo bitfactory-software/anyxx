@@ -5,12 +5,12 @@
 <a name="t1"></a>
 ## virtual_void Tutorial 30: Interface basics
 
-The *virtual_void* interfaces combine an *erased liftime handle* with *erased function*(s).
+The *virtual_void* interfaces combines an *erased liftime handle* with *erased function*(s).
 
-A the typical usage is typical shown with *shape*s*. So do we.
+Usually usage is shown with *shape*s . And thats exactly what we are gonna do now:
 
-// <!--
 ```cpp
+// <!--
 #endif begin sample
 // -->
 #include <iostream>
@@ -55,8 +55,8 @@ TEST_CASE("tutorial 30/1") {
 }
 // <!-- end of sample
 #if 0 
-```
 // -->
+```
 - // 1: Declares the `interface`: it is named `drawable` and has one `const` method. This method `draw` takes one `std::ostream&` parameter.
 - // 2,3: `circle` and `rectangle` are two simple `struct`s. Both have a `const` method `draw` with a `std::ostream&` parameter.
 - // 4: In this example, we need no `meta` info. So we take a sleeker `value` without any overhead.
@@ -74,7 +74,7 @@ struct text {
   void draw(std::ostream& o) const { ... << s << ... }  
 };
 ```
-But a virtual_void::interface offers here a customiazion point, called `v_table_map`.
+But a virtual_void::interface offers a customiazion point, called `v_table_map`.
 
 With this tool, the programm looks like this:
 
@@ -131,18 +131,14 @@ TEST_CASE("tutorial 30/2") {
 }
 // <!-- end of sample
 #if 0 
-```
 // -->
+```
 
 Let us walk through the changes:
 
 - // 1: Specializes the `template` `drawable`*_v_table_map* for `std::string`.
-- // 2/3: Implement `draw` for `std::string const*`. Note: You have leeway here!
+- // 2/3: Implements `draw` for `std::string const*`. Note: You have leeway here!
 - // 4: With this in place, we can add a `std::string` to `drawables`
 
 That is it.
-
-```cpp
-#endif begin sample
-// -->
 

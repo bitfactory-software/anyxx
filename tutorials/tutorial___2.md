@@ -79,13 +79,8 @@ TEST_CASE("tutorial 2/1") {
 ```
 
 - // 1 prepare ``customer`` for usage with ``open_object::members``.
-- // 2 define the ``open_object::member`` ``usage_count`` in ``customer`` with type ``std::string``.
+- // 2 define the ``open_object::member`` ``usage_hint`` in ``customer`` with type ``std::string``.
 - // 3a/b are inversion of control ``hook``s to call into plugin code.
-- // 4a/b fills the hooks with the plugin logic. Here we access ``usage_count`` in ``customer``.
-
-// <!--
-```cpp
-#endif begin sample
-// -->
+- // 4a/b fills the hooks with the plugin logic. Here we access ``usage_hint`` in ``customer``.
 
 
