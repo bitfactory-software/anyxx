@@ -83,4 +83,7 @@ TEST_CASE("tutorial 2/1") {
 - // 3a/b are inversion of control ``hook``s to call into plugin code.
 - // 4a/b fills the hooks with the plugin logic. Here we access ``usage_hint`` in ``customer``.
 
-
+// <!--
+```cpp
+#endif begin sample
+// -->

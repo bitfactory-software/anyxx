@@ -142,3 +142,7 @@ Let us walk through the changes:
 
 That is it.
 
+// <!--
+```cpp
+#endif begin sample
+// -->

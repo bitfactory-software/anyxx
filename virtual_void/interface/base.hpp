@@ -95,6 +95,9 @@ class base {
 
   void operator()() const {}
   void* operator[](void*) const {}
+  explicit operator bool() const {
+     return get_data(get_virtual_void(*this)) != nullptr;
+  }
 
  protected:
   base() = default;

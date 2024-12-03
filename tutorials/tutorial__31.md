@@ -16,7 +16,7 @@ In contrast to some other type erasure libraries, such as [proxy](https://github
 
 So far, the introduction. See below the sample code for further explanations.
 
-// <!--
+//<!--
 ```cpp
 #endif begin sample
 // -->
@@ -95,7 +95,7 @@ TEST_CASE("tutorial 31/1") {
 // <!-- end of sample
 #if 0 
 ```
-// -->
+-->
 - // 5: Declares an `interface` `edged` derived from `drawable`. It adds one more `const` method `edges`.
 - // 6a/b: `rectangle` and `regular_polygon` implement this `interface` `edged` via their member function `edges`.
 - // 7a/b: `drawables` is a `vector` of `drawable<value>`s and 7b adds a `circle` like in the previous sample [Tutorial 30](tutorial_30).
@@ -106,7 +106,6 @@ This `v_table_cast` has a variant named `unchecked_v_table_cast`. `v_table_cast`
 
 > ℹ️ 
 > For this functionality, it is crucial that the `interface` is constructed with the derivation expected in the callbacks (See 8a in the example above!).
-
 
 ```cpp
 #endif begin sample
