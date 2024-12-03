@@ -160,10 +160,23 @@ TEST_CASE("dynamic v_table const_observer") {
   data::has_no_meta::const_observer o1 = virtual_void::erased<data::has_no_meta::const_observer>(c);
   data::has_no_meta::const_observer o2 = o1;
 
-  using shabe_base1_observer = shape_base1<data::has_no_meta::const_observer>;
-  shabe_base1_observer sb1;
-  shabe_base1_observer sb2{c};
-  sb1 = sb2;
+  {
+      using shape_base1_const_observer = shape_base1<data::has_no_meta::const_observer>;
+      shape_base1_const_observer sb1;
+      shape_base1_const_observer sb2{c};
+      sb1 = sb2;
+  }
+  {
+      using shape_base1_mutable_observer = shape_base1<data::has_no_meta::mutable_observer>;
+      shape_base1_mutable_observer sb1;
+      shape_base1_mutable_observer sb2{c};
+      sb1 = sb2;
+  }
+  {
+      using shape_base1_mutable_observer = shape_base1<data::has_no_meta::mutable_observer>;
+      shape_base1_mutable_observer sb1{c};
+      shape_base1_mutable_observer sb2{std::move(sb1)};
+  }
 
   //    base< void* > base_v = shape_circle; ->
   //    v_table_cast may not compile!

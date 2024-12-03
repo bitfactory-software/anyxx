@@ -10,8 +10,8 @@ struct decorated_ptr : META {
 
   decorated_ptr() = default;
   decorated_ptr(const decorated_ptr& other) : META(other), ptr_(other.ptr_) {}
-  decorated_ptr(decorated_ptr&) = default;
-  decorated_ptr(decorated_ptr&& rhs) noexcept { swap(*this, rhs); }
+  decorated_ptr(decorated_ptr&& rhs) noexcept
+      : META(std::move(*(META*)&rhs)), ptr_(std::move(rhs.ptr_)) {}
   decorated_ptr& operator=(decorated_ptr const& rhs) noexcept {
     decorated_ptr new_{rhs};
     swap(*this, new_);

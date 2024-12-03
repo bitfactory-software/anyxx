@@ -70,8 +70,9 @@ class base {
   base& operator=(OTHER&& other)
     requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
   {
-    virtual_void_(std::move(other.virtual_void_));
-    v_table_(get_v_table(other));
+    virtual_void_ = std::move(other.virtual_void_);
+    v_table_ = get_v_table(other);
+    return *this;
   }
   base(const base&) = default;
   // base(base&) requires(std::is_copy_constructible_v<base>) = default;
