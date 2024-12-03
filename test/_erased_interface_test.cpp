@@ -157,6 +157,14 @@ TEST_CASE("dynamic v_table const_observer") {
   shape shape_circle{circle{33.3}};
   shapeX shape_circleX{circle{33.3}};
 
+  data::has_no_meta::const_observer o1 = virtual_void::erased<data::has_no_meta::const_observer>(c);
+  data::has_no_meta::const_observer o2 = o1;
+
+  using shabe_base1_observer = shape_base1<data::has_no_meta::const_observer>;
+  shabe_base1_observer sb1;
+  shabe_base1_observer sb2{c};
+  sb1 = sb2;
+
   //    base< void* > base_v = shape_circle; ->
   //    v_table_cast may not compile!
   interface::base<data::has_no_meta::const_observer> base_shape = shape_circle;

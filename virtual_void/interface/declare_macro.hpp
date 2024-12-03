@@ -1,6 +1,6 @@
 #pragma once
 
-#undef interface 
+#undef interface
 
 //
 // developed from:
@@ -174,7 +174,6 @@
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((VIRTUAL_VOID), t))>                                           \
   struct n : BASE<VIRTUAL_VOID> {                                              \
-   public:                                                                     \
     using virtual_void_t = VIRTUAL_VOID;                                       \
     using base_t = BASE<VIRTUAL_VOID>;                                         \
     using void_t = typename base_t::void_t;                                    \
@@ -197,11 +196,9 @@
     static inline v_table_t imlpemented_v_table{                               \
         ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};            \
                                                                                \
-   protected:                                                                  \
     using base_t::virtual_void_;                                               \
     using base_t::v_table_;                                                    \
                                                                                \
-   public:                                                                     \
     n(virtual_void_t virtual_void, v_table_t* v_table)                         \
         : base_t(std::move(virtual_void), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                       \
@@ -227,15 +224,16 @@
       requires(std::derived_from<OTHER, base_t>)                               \
         : base_t(std::move(other)) {}                                          \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
-        n(const n&) = default;                                                 \
-    n(n&&) = default;                                                          \
                                                                                \
-   protected:                                                                  \
     n() = default;                                                             \
+    n(n const&) = default;                                                     \
+    n(n&&) = default;                                                          \
+    n& operator=(n const&) = default;                                          \
+    n& operator=(n&&) = default;                                               \
     template <virtual_void::is_virtual_void OTHER>                             \
     friend class virtual_void::interface::base;                                \
     template <typename TO, typename FROM>                                      \
-    friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)          \
+    friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \
       requires(std::derived_from<TO, FROM>);                                   \
   };
 

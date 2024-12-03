@@ -39,6 +39,7 @@ class base {
   v_table_t* v_table_ = nullptr;
 
  public:
+  base() = default;
   base(virtual_void_t virtual_void, v_table_t* v_table)
       : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
@@ -76,6 +77,7 @@ class base {
   // base(base&) requires(std::is_copy_constructible_v<base>) = default;
   base(base&& rhs)
       : virtual_void_(std::move(rhs.virtual_void_)), v_table_(rhs.v_table_) {}
+  base& operator=(base const& other) = default;
 
   template <is_virtual_void OTHER>
   friend class base;
@@ -85,6 +87,9 @@ class base {
   }
   friend inline auto move_virtual_void(base<VIRTUAL_VOID>&& interface) {
     return std::move(interface.virtual_void_);
+  }
+  friend inline auto get_interface_data(base<VIRTUAL_VOID> const& interface) {
+    return  get_data(get_virtual_void(interface));
   }
   friend inline auto& get_v_table(base<VIRTUAL_VOID> const& interface) {
     return interface.v_table_;
@@ -99,8 +104,6 @@ class base {
      return get_data(get_virtual_void(*this)) != nullptr;
   }
 
- protected:
-  base() = default;
 };
 
 template <is_virtual_void VV>

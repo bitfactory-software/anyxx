@@ -13,6 +13,10 @@ struct meta {
   template <is_meta META>
   meta(const META&) {}
   meta() = default;
+  meta(meta const&) = default;
+  meta(meta&&) = default;
+  meta& operator=(meta const&) = default;
+  meta& operator=(meta&&) = default;
   type_info_ptr type_info() const { return {}; }
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };

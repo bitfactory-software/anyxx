@@ -25,6 +25,7 @@ struct meta {
   meta(const meta&) = default;
   meta(meta&) = default;
   meta(meta&& rhs) noexcept { swap(*this, rhs); }
+  meta& operator=(meta const&) = default;
   meta& operator=(meta&& rhs) noexcept {
     meta destroy_this{};
     swap(*this, destroy_this);
