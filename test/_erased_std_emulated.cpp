@@ -74,7 +74,7 @@ TEST_CASE("std emulated function") {
     static_assert(!std::assignable_from<
                   move_only_function<std::string(const std::string)>,
                   move_only_function<std::string(const std::string)>>);
-    move_only_function<std::string(const std::string)> f2 = std::move(f);
+    move_only_function<std::string(const std::string)> f2 { std::move(f) };
     REQUIRE(!has_data(get_virtual_void(f)));
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unerase_cast<functor_t>(get_virtual_void(f2))->s_ ==

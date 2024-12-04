@@ -12,6 +12,7 @@ struct unique_trait : virtual_void_default_unerase {
   using void_t = void*;
   template <typename V>
   using typed_t = data::decorated_data<V, META>;
+  static constexpr bool is_constructibile_from_const = true;
 
   static void* value(const auto& ptr) { return ptr->value(); }
   static auto meta(const auto& ptr) { return ptr->get_meta(); }

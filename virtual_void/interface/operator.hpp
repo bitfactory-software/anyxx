@@ -1,13 +1,13 @@
 #pragma once
 
-#undef interface 
+#undef interface
 
 #include <virtual_void/interface/base.hpp>
 
 namespace virtual_void::interface {
 
-template <typename TARGET, typename BASE_V_TABLE, typename VV_VOID, typename RET,
-          typename... ARGS>
+template <typename TARGET, typename BASE_V_TABLE, typename VV_VOID,
+          typename RET, typename... ARGS>
 struct operator_v_table : BASE_V_TABLE {
   using v_table_base_t = BASE_V_TABLE;
   using void_t = v_table_base_t::void_t;
@@ -53,8 +53,9 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
       std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
                          std::true_type,
                          typename base_t::template is_already_base<T>>;
-  static_assert(!base_t::template is_already_base<query_v_table_unique_t>::value,
-                "A v_table may only instanciated once in an interface");
+  static_assert(
+      !base_t::template is_already_base<query_v_table_unique_t>::value,
+      "A v_table may only instanciated once in an interface");
   using base_t::operator();
 
  protected:
@@ -66,7 +67,7 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
       : base_t(std::move(virtual_void), v_table) {}
   template <typename CONSTRUCTED_WITH>
   operator_(CONSTRUCTED_WITH&& v)
-    requires(!std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t>)
+    requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static v_table_t imlpemented_v_table{
         unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};

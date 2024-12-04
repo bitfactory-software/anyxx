@@ -8,6 +8,7 @@ namespace virtual_void {
 
 template <typename META>
 struct unique_ptr_trait : erased_std_ptr_trait<std::unique_ptr, void*, META> {
+  static constexpr bool is_constructibile_from_const = true;
   template <typename V>
   static auto construct_from(std::unique_ptr<V>&& p) {
     return data::unique_ptr<META>{data::void_erase_unique_ptr(std::move(p)),

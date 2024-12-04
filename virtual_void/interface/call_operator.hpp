@@ -1,6 +1,6 @@
 #pragma once
 
-#undef interface 
+#undef interface
 
 #include <virtual_void/interface/operator.hpp>
 
@@ -18,15 +18,14 @@ template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
 struct call_operator_;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
           is_const_specifier CONST_SPECIFIER, typename RET, typename... ARGS>
-struct call_operator_<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
-                               RET(ARGS...)>
+struct call_operator_<VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
     : operator_<call_operator_target, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
-                         RET(ARGS...)> {
-  using operator_t =
-      operator_<call_operator_target, VIRTUAL_VOID, BASE, CONST_SPECIFIER,
-                         RET(ARGS...)>;
+                RET(ARGS...)> {
+  using operator_t = operator_<call_operator_target, VIRTUAL_VOID, BASE,
+                               CONST_SPECIFIER, RET(ARGS...)>;
+  
   using operator_t::operator_t;
-
+  
   using operator_t::operator();
   RET operator()(ARGS&&... args) const
     requires(const_correct_for_virtual_void<
@@ -39,8 +38,7 @@ struct call_operator_<VIRTUAL_VOID, BASE, CONST_SPECIFIER,
 template <is_virtual_void VIRTUAL_VOID, typename SIG,
           is_const_specifier CONST_SPECIFIER = const_,
           template <typename> typename BASE = base>
-using call_operator =
-    call_operator_<VIRTUAL_VOID, BASE, CONST_SPECIFIER, SIG>;
+using call_operator = call_operator_<VIRTUAL_VOID, BASE, CONST_SPECIFIER, SIG>;
 
 template <class...>
 struct make_overloaded_call_operator;
@@ -54,9 +52,9 @@ struct make_overloaded_call_operator<SIG, CONST_SPECIFIER> {
 template <class SIG, is_const_specifier CONST_SPECIFIER, class... SIGS>
 struct make_overloaded_call_operator<SIG, CONST_SPECIFIER, SIGS...> {
   template <virtual_void::is_virtual_void VV>
-  using type = call_operator_<
-      VV, typename make_overloaded_call_operator<SIGS...>::type,
-      CONST_SPECIFIER, SIG>;
+  using type =
+      call_operator_<VV, typename make_overloaded_call_operator<SIGS...>::type,
+                     CONST_SPECIFIER, SIG>;
 };
 
 template <virtual_void::is_virtual_void VV, class... SIGS>

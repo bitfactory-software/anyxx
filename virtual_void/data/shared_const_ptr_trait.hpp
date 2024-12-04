@@ -9,6 +9,7 @@ namespace virtual_void {
 template <typename META>
 struct shared_const_ptr_trait
     : erased_std_ptr_trait<std::shared_ptr, void const*, META> {
+  static constexpr bool is_constructibile_from_const = true;
   template <typename V>
   static auto construct_from(std::shared_ptr<V> const& v) {
     return data::shared_const_ptr<META>{

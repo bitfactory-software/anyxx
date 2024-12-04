@@ -151,10 +151,10 @@
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((BASE_V_TABLE), t))>                                           \
-  struct n##v_table : BASE_V_TABLE {                                           \
+  struct n##_v_table : BASE_V_TABLE {                                          \
     using v_table_base_t = BASE_V_TABLE;                                       \
     using void_t = v_table_base_t::void_t;                                     \
-    using v_table_t = n##v_table;                                              \
+    using v_table_t = n##_v_table;                                             \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
                  ? true                                                        \
@@ -162,7 +162,7 @@
     }                                                                          \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
     template <typename UNERASE>                                                \
-    n##v_table(UNERASE unerase) : v_table_base_t(unerase) {                    \
+    n##_v_table(UNERASE unerase) : v_table_base_t(unerase) {                   \
       using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
           _add_head((typename UNERASE::type), t))>;                            \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
@@ -178,10 +178,10 @@
     using base_t = BASE<VIRTUAL_VOID>;                                         \
     using void_t = typename base_t::void_t;                                    \
     using v_table_base_t = base_t::v_table_t;                                  \
-    using v_table_t = n##v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(       \
+    using v_table_t = n##_v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(      \
         _add_head((v_table_base_t), t))>;                                      \
     using query_v_table_unique_t =                                             \
-        n##v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                     \
+        n##_v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                    \
             _add_head((::virtual_void::interface::base<virtual_void_t>), t))>; \
     template <typename T>                                                      \
     using is_already_base =                                                    \
@@ -203,12 +203,8 @@
         : base_t(std::move(virtual_void), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
-      requires(                                                                \
-          !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, base_t> && \
-          !virtual_void::is_virtual_void<                                      \
-              std::remove_cvref_t<CONSTRUCTED_WITH>> &&                        \
-          !virtual_void::is_virtual_typed<                                     \
-              std::remove_cvref_t<CONSTRUCTED_WITH>>)                          \
+      requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
+                                                           VIRTUAL_VOID>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = &imlpemented_v_table<CONSTRUCTED_WITH>;                       \
     }                                                                          \
