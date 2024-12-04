@@ -130,7 +130,7 @@
   };
 
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                    \
-  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_    \
+  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const     \
     requires(::virtual_void::const_correct_for_virtual_void<void const_*,    \
                                                             virtual_void_t>) \
   {                                                                          \
@@ -225,7 +225,7 @@
         : base_t(std::move(other)) {}                                          \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
                                                                                \
-    n() = default;                                                             \
+        n() = default;                                                         \
     n(n const&) = default;                                                     \
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
