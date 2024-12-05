@@ -193,8 +193,11 @@
         "A v_table may be instanciated only once per interface");              \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
-    static inline v_table_t imlpemented_v_table{                               \
-        ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};            \
+    static v_table_t* imlpemented_v_table() {                                  \
+      static v_table_t v_table{                                                \
+          ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};          \
+      return &v_table;                                                         \
+    }                                                                          \
                                                                                \
     using base_t::virtual_void_;                                               \
     using base_t::v_table_;                                                    \
@@ -206,7 +209,7 @@
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
                                                            VIRTUAL_VOID>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      v_table_ = &imlpemented_v_table<CONSTRUCTED_WITH>;                       \
+      v_table_ = imlpemented_v_table<CONSTRUCTED_WITH>();                      \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
