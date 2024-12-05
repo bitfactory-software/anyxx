@@ -105,7 +105,7 @@ class base {
     requires(std::derived_from<TO, FROM>);
 
   void operator()() const {}
-  void* operator[](void*) const {}
+  void* operator[](void*) const { return {}; }
   explicit operator bool() const {
     return get_data(get_virtual_void(*this)) != nullptr;
   }
