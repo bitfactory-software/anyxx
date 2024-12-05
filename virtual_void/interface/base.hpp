@@ -30,7 +30,7 @@ class base;
 template <typename CONSTRUCTED_WITH, typename VIRTUAL_VOID>
 concept constructibile_for =
     !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
-                      base<VIRTUAL_VOID>> &&
+                       base<VIRTUAL_VOID>> &&
     !is_virtual_void<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
@@ -91,18 +91,15 @@ class base {
   template <is_virtual_void OTHER>
   friend class base;
 
-  friend inline auto& get_virtual_void(base<VIRTUAL_VOID> const& interface) {
-    return interface.virtual_void_;
-  }
-  friend inline auto move_virtual_void(base<VIRTUAL_VOID>&& interface) {
-    return std::move(interface.virtual_void_);
-  }
-  friend inline auto get_interface_data(base<VIRTUAL_VOID> const& interface) {
-    return get_data(get_virtual_void(interface));
-  }
-  friend inline auto& get_v_table(base<VIRTUAL_VOID> const& interface) {
-    return interface.v_table_;
-  }
+  template <is_virtual_void VIRTUAL_VOID>
+  friend inline auto& get_virtual_void(base<VIRTUAL_VOID> const& interface);
+  template <is_virtual_void VIRTUAL_VOID>
+  friend inline auto move_virtual_void(base<VIRTUAL_VOID>&& interface);
+  template <is_virtual_void VIRTUAL_VOID>
+  friend inline auto get_interface_data(base<VIRTUAL_VOID> const& interface);
+  template <is_virtual_void VIRTUAL_VOID>
+  friend inline auto& get_v_table(base<VIRTUAL_VOID> const& interface);
+
   template <typename TO, typename FROM>
   friend inline TO unchecked_v_table_cast(FROM from)
     requires(std::derived_from<TO, FROM>);
@@ -113,6 +110,23 @@ class base {
     return get_data(get_virtual_void(*this)) != nullptr;
   }
 };
+
+template <is_virtual_void VIRTUAL_VOID>
+auto& get_virtual_void(base<VIRTUAL_VOID> const& interface) {
+  return interface.virtual_void_;
+}
+template <is_virtual_void VIRTUAL_VOID>
+auto move_virtual_void(base<VIRTUAL_VOID>&& interface) {
+  return std::move(interface.virtual_void_);
+}
+template <is_virtual_void VIRTUAL_VOID>
+auto get_interface_data(base<VIRTUAL_VOID> const& interface) {
+  return get_data(get_virtual_void(interface));
+}
+template <is_virtual_void VIRTUAL_VOID>
+inline auto& get_v_table(base<VIRTUAL_VOID> const& interface) {
+  return interface.v_table_;
+}
 
 template <is_virtual_void VV>
 bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
