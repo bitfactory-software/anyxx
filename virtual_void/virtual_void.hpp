@@ -269,12 +269,20 @@ struct virtual_typed {
   value_t const* operator->() const {
     return unchecked_unerase_cast<value_t const>(virtual_void_);
   }
+  value_t const* get() const {
+    return unchecked_unerase_cast<value_t const>(virtual_void_);
+  }
   value_t& operator*() const
     requires !is_const
   {
     return *unchecked_unerase_cast<value_t>(virtual_void_);
   }
   value_t* operator->() const
+    requires !is_const
+  {
+    return unchecked_unerase_cast<value_t>(virtual_void_);
+  }
+  value_t* get() const
     requires !is_const
   {
     return unchecked_unerase_cast<value_t>(virtual_void_);
