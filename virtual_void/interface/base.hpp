@@ -84,7 +84,7 @@ class base {
   }
   base(const base&) = default;
   // base(base&) requires(std::is_copy_constructible_v<base>) = default;
-  base(base&& rhs)
+  base(base&& rhs) noexcept
       : virtual_void_(std::move(rhs.virtual_void_)), v_table_(rhs.v_table_) {}
   base& operator=(base const& other) = default;
 

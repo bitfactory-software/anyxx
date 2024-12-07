@@ -34,25 +34,29 @@ ERASED_INTERFACE_(set_value_i, get_value_i,
 }  // namespace
 
 TEST_CASE("prototype") {
-  enable_copy_cast<get_value_i, X, const_observer>();
-  enable_copy_cast<get_value_i, X, mutable_observer>();
-  enable_copy_cast<get_value_i, X, shared_const>();
-  enable_copy_cast<get_value_i, X, unique>();
-  enable_copy_cast<get_value_i, X, unique, shared_const>();
-  enable_copy_cast<set_value_i, X, unique, shared_const>();
+  {
+    enable_copy_cast<get_value_i, X, const_observer>();
+    enable_copy_cast<get_value_i, X, mutable_observer>();
+    enable_copy_cast<get_value_i, X, shared_const>();
+    enable_copy_cast<get_value_i, X, unique>();
+    enable_copy_cast<get_value_i, X, unique, shared_const>();
+    enable_copy_cast<set_value_i, X, unique, shared_const>();
+    enable_copy_cast<to_string_i, X, const_observer, unique>();
+    enable_copy_cast<set_value_i, X, mutable_observer, unique>();
 
-  enable_move_cast<to_string_i, X, unique, unique>();
-  enable_move_cast<get_value_i, X, shared_const, unique>();
-  REQUIRE(find_move<shared_const, unique>.is_defined<X>());
-  REQUIRE(
-      move<X, shared_const, unique>.is_defined<get_value_i<shared_const>>());
-  static_assert(std::same_as<decltype(move<X, shared_const, unique>)::result_t,
-                             base<shared_const>>);
+    enable_move_cast<to_string_i, X, unique, unique>();
+    enable_move_cast<get_value_i, X, shared_const, unique>();
+    REQUIRE(find_move<shared_const, unique>.is_defined<X>());
+    REQUIRE(
+        move<X, shared_const, unique>.is_defined<get_value_i<shared_const>>());
+    static_assert(
+        std::same_as<decltype(move<X, shared_const, unique>)::result_t,
+                     base<shared_const>>);
+    seal_casts();
 
-  seal_casts();
-
-  move_factory_method<shared_const, unique> const& move_unique_to_shared =
-      find_move<shared_const, unique>.construct<X>();
+    move_factory_method<shared_const, unique> const& move_unique_to_shared =
+        find_move<shared_const, unique>.construct<X>();
+  }
 
   {
     X x{3.14};
@@ -110,8 +114,8 @@ TEST_CASE("prototype") {
     std::cout << "prototype unique i0: " << i0.to_string() << "\n";
 
     base<unique> i1b = copy_cast<get_value_i<unique>>(i0);
-    auto i1 =
-        std::move(unchecked_v_table_cast<get_value_i<unique>>(std::move(i1b)));
+    auto i1{
+        std::move(unchecked_v_table_cast<get_value_i<unique>>(std::move(i1b)))};
 
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "prototype unique i1: " << i1.get_value() << "\n";
@@ -125,12 +129,28 @@ TEST_CASE("prototype") {
 
     auto i1d = move_cast<to_string_i<unique>>(std::move(i1c));
     REQUIRE(get_data(get_virtual_void(i1d)));
-    REQUIRE(!has_data(get_virtual_void(i1c)));  // moved!
+#pragma warning(push)
+#pragma warning(disable : 26800)
+    REQUIRE(!get_virtual_void(i1c));  // moved!
+#pragma warning(pop)
     REQUIRE(i1d.to_string() == "3.140000");
 
     auto i1e = move_cast<get_value_i<shared_const>>(std::move(i1d));
     REQUIRE(get_data(get_virtual_void(i1e)));
-    REQUIRE(!has_data(get_virtual_void(i1d)));  // moved!
+#pragma warning(push)
+#pragma warning(disable : 26800)
+    REQUIRE(!get_virtual_void(i1d));  // moved!
+#pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
+
+    auto ui1 = erased<unique>(x);
+    auto to_string_co = query_interface<to_string_i<const_observer>>(ui1);
+    REQUIRE(to_string_co.to_string() == "3.140000");
+
+    auto set_value_mo = query_interface<set_value_i<mutable_observer>>(ui1);
+    REQUIRE(set_value_mo.get_value() == 3.14);
+    set_value_mo.set_value(1.44);
+    REQUIRE(to_string_co.to_string() == "1.440000");
+    REQUIRE(unerase_cast<X>(&ui1)->get_value() == 1.44);
   }
 }
