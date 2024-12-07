@@ -1,12 +1,13 @@
 #pragma once
 
-#include <virtual_void/data/unique_trait.hpp>
-#include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/has_m_table/meta.hpp>
+#include <virtual_void/data/unique.hpp>
+#include <virtual_void/data/unique_trait.hpp>
 
 namespace virtual_void::data::has_m_table {
 using unique = data::unique<meta>;
-}
+inline auto unique_nullptr() { return data::unique_nullptr<meta>(); }
+}  // namespace virtual_void::data::has_m_table
 
 namespace virtual_void {
 template <>

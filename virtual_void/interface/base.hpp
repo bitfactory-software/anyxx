@@ -107,7 +107,7 @@ class base {
   void operator()() const {}
   void* operator[](void*) const { return {}; }
   explicit operator bool() const {
-    return get_data(get_virtual_void(*this)) != nullptr;
+    return static_cast<bool>(get_virtual_void(*this));
   }
 };
 

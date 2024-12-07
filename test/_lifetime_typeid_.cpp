@@ -27,7 +27,12 @@ namespace {
 TEST_CASE("has_type_info/lifetime/observer") {
   std::string s{"hallo"};
   auto mo = erased<mutable_observer>(s);
+    mutable_observer o1;
+ REQUIRE(!o1);
+  o1 = mo;
+  REQUIRE(o1);
   REQUIRE(get_data(mo) == &s);
+  REQUIRE(get_data(o1) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(get_meta(mo)->type_info() == &typeid(std::string));
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
@@ -99,6 +104,11 @@ TEST_CASE("has_type_info/lifetime/unique") {
   unique x{std::move(d1)};
   auto d = as<D>(std::move(x));
   REQUIRE(d->data == "unique hallo");
+  virtual_typed<D, unique> d2 = as<D>(unique_nullptr());
+  REQUIRE(!d2);
+  d2 = std::move(d);
+  REQUIRE(d2->data == "unique hallo");
+  REQUIRE(d2);
 }
 
 TEST_CASE("has_type_info/lifetime/value") {

@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <typeinfo>
 
-#undef interface 
+#undef interface
 
 namespace virtual_void {
 
@@ -240,6 +240,7 @@ struct virtual_typed {
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
 
+  virtual_typed() = default;
   virtual_typed(const virtual_typed&) = default;
   virtual_typed(virtual_typed&) = default;
   virtual_typed(virtual_typed&&) = default;
@@ -287,6 +288,7 @@ struct virtual_typed {
   {
     return unchecked_unerase_cast<value_t>(virtual_void_);
   }
+  explicit operator bool() const { return static_cast<bool>(virtual_void_); }
 };
 
 template <typename V, typename VIRTUAL_VOID>

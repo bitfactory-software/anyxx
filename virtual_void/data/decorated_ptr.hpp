@@ -35,6 +35,8 @@ struct decorated_ptr : META {
     swap(lhs.ptr_, rhs.ptr_);
     swap(static_cast<META&>(lhs), static_cast<META&>(rhs));
   }
+
+  explicit operator bool() const { return static_cast<bool>(ptr_); }
 };
 
 }  // namespace virtual_void::data
