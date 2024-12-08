@@ -24,7 +24,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 # +++ virtual_void library
 file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "./virtual_void/*.hpp")
-add_library(virtual_void ${VIRTUAL_VOID_HEADERS} "./virtual_void/virtual_void.cpp")
+file(GLOB_RECURSE VIRTUAL_VOID_SOURCES "./virtual_void/*.cpp")
+add_library(virtual_void ${VIRTUAL_VOID_HEADERS} ${VIRTUAL_VOID_SOURCES})
 target_include_directories(virtual_void PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode

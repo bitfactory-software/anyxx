@@ -1,10 +1,9 @@
 #pragma once
 
 #include <typeindex>
-
-#include <virtual_void/virtual_void.hpp>
 #include <virtual_void/open_method/domain.hpp>
 #include <virtual_void/open_method/table.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::open_method::via_type_info {
 
@@ -23,8 +22,9 @@ class declaration_base : public open_method::table {
     domain.open_methods.push_back(this);
   }
   void seal_for_runtime() {
-    dispatch_target_index_ =
-        std::make_unique<dispatch_target_index_t>(make_lookup_table());
+    if (!dispatch_target_index_)
+      dispatch_target_index_ =
+          std::make_unique<dispatch_target_index_t>(make_lookup_table());
   }
   template <typename ERASED_FUNCTION_TYPE>
   auto lookup(const std::type_info& type_info) const {

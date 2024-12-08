@@ -7,64 +7,24 @@
 #include <virtual_void/interface/cast.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
+#include "_interface_cast_enable.hpp"
+
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data::has_type_info;
 
-namespace test_query_interface {
-
-struct X {
-  double d_;
-  std::string to_string() const { return std::to_string(d_); }
-  double get_value() const { return d_; }
-  void set_value(double d) { d_ = d; }
-};
-
-}  // namespace test_query_interface
-
 using namespace test_query_interface;
 
-namespace {
-
-ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
-ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double, get_value)))
-ERASED_INTERFACE_(set_value_i, get_value_i,
-                  (INTERFACE_METHOD(void, set_value, double)))
-
-}  // namespace
-
-TEST_CASE("prototype") {
-  {
-    enable_copy_cast<get_value_i, X, const_observer>();
-    enable_copy_cast<get_value_i, X, mutable_observer>();
-    enable_copy_cast<get_value_i, X, shared_const>();
-    enable_copy_cast<get_value_i, X, unique>();
-    enable_copy_cast<get_value_i, X, unique, shared_const>();
-    enable_copy_cast<set_value_i, X, unique, shared_const>();
-    enable_copy_cast<to_string_i, X, const_observer, unique>();
-    enable_copy_cast<set_value_i, X, mutable_observer, unique>();
-
-    enable_move_cast<to_string_i, X, unique, unique>();
-    enable_move_cast<get_value_i, X, shared_const, unique>();
-    REQUIRE(find_move<shared_const, unique>.is_defined<X>());
-    REQUIRE(
-        move<X, shared_const, unique>.is_defined<get_value_i<shared_const>>());
-    static_assert(
-        std::same_as<decltype(move<X, shared_const, unique>)::result_t,
-                     base<shared_const>>);
-    seal_casts();
-
-    move_factory_method<shared_const, unique> const& move_unique_to_shared =
-        find_move<shared_const, unique>.construct<X>();
-  }
+TEST_CASE("_interface_cast") {
+  test_query_interface::enable_casts();
 
   {
     X x{3.14};
     to_string_i<const_observer> to_string_i_co{x};
     REQUIRE(to_string_i_co.to_string() == "3.140000");
-    auto base =
-        copy<X, const_observer, const_observer>.construct<get_value_i<const_observer>>(
-            get_virtual_void(to_string_i_co));
+    auto base = copy<X, const_observer, const_observer>()
+                    .construct<get_value_i<const_observer>>(
+                        get_virtual_void(to_string_i_co));
     auto i =
         interface::unchecked_v_table_cast<get_value_i<const_observer>>(base);
     REQUIRE(i.get_value() == 3.14);

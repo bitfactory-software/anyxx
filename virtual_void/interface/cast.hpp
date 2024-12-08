@@ -12,16 +12,20 @@
 
 namespace virtual_void::interface {
 
-VV_EXPORT inline virtual_void::open_method::via_type_info::domain cast_domain;
+using cast_domain_t = virtual_void::open_method::via_type_info::domain;
 
-inline void seal_casts() { seal_for_runtime(cast_domain); }
+VV_EXPORT cast_domain_t& cast_domain();
+VV_EXPORT void seal_casts();
 
 template <is_virtual_void TO, is_virtual_void FROM>
 using copy_factory_method =
     virtual_void::open_method::via_type_info::factory<base<TO>(const FROM&)>;
 
 template <typename CLASS, is_virtual_void TO, is_virtual_void FROM>
-copy_factory_method<TO, FROM> copy{cast_domain};
+copy_factory_method<TO, FROM>& copy() {
+  static copy_factory_method<TO, FROM> copy_factory{cast_domain()};
+  return copy_factory;
+}
 
 template <is_virtual_void TO, is_virtual_void FROM>
 using find_copy_factory_method =
@@ -29,14 +33,17 @@ using find_copy_factory_method =
         copy_factory_method<TO, FROM> const&()>;
 
 template <is_virtual_void TO, is_virtual_void FROM>
-find_copy_factory_method<TO, FROM> find_copy{cast_domain};
+find_copy_factory_method<TO, FROM>& find_copy() {
+  static find_copy_factory_method<TO, FROM> find_copy_method{cast_domain()};
+  return find_copy_method;
+}
 
 template <is_virtual_void TO, is_virtual_void FROM>
 using move_factory_method =
     virtual_void::open_method::via_type_info::factory<base<TO>(FROM&&)>;
 
 template <typename CLASS, is_virtual_void TO, is_virtual_void FROM>
-move_factory_method<TO, FROM> move{cast_domain};
+inline move_factory_method<TO, FROM> move{cast_domain()};
 
 template <is_virtual_void TO, is_virtual_void FROM>
 using find_move_factory_method =
@@ -44,7 +51,7 @@ using find_move_factory_method =
         move_factory_method<TO, FROM> const&()>;
 
 template <is_virtual_void TO, is_virtual_void FROM>
-find_move_factory_method<TO, FROM> find_move{cast_domain};
+inline find_move_factory_method<TO, FROM> find_move{cast_domain()};
 
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM>
@@ -69,10 +76,10 @@ template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
 void enable_copy_cast(auto impl) {
   using target_interface_t = TO_INTERFACE<TO>;
-  copy<CLASS, TO, FROM>.define<target_interface_t>(impl);
-  if (!find_copy<TO, FROM>.is_defined<CLASS>())
-    find_copy<TO, FROM>.define<CLASS>(
-        +[]() -> auto const& { return copy<CLASS, TO, FROM>; });
+  copy<CLASS, TO, FROM>().define<target_interface_t>(impl);
+  if (!find_copy<TO, FROM>().is_defined<CLASS>())
+    find_copy<TO, FROM>().define<CLASS>(
+        +[]() -> auto const& { return copy<CLASS, TO, FROM>(); });
 };
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
@@ -114,7 +121,7 @@ TO_INTERFACE query_interface(VV_FROM const& vv_from) {
   using vv_to_t = typename TO_INTERFACE::virtual_void_t;
   static_assert(is_virtual_void<vv_to_t>);
   auto const& type_info = *get_meta(vv_from)->type_info();
-  auto const& copy = find_copy<vv_to_t, VV_FROM>(type_info);
+  auto const& copy = find_copy<vv_to_t, VV_FROM>()(type_info);
   base<vv_to_t> b = copy.construct<TO_INTERFACE>(vv_from);
   return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
 }

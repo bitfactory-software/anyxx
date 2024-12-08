@@ -10,6 +10,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/unique.hpp>
 
 using namespace Catch::Matchers;
 
@@ -24,6 +25,9 @@ ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 
 using to_string_sc = to_string_i<data::has_no_meta::shared_const>;
 using to_string_co = to_string_i<data::has_no_meta::const_observer>;
+
+using to_string_u = to_string_i<data::has_no_meta::unique>;
+using to_string_mo = to_string_i<data::has_no_meta::mutable_observer>;
 
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{X{"hallo"}};
@@ -48,4 +52,9 @@ TEST_CASE("interface lifetime cast") {
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
   REQUIRE(
       is_derived_from<interface::base<data::has_no_meta::const_observer>>(co));
+
+  to_string_u u{X{"hallo"}};
+  REQUIRE(u.to_string() == "hallo");
+  to_string_mo mo{u};
+  REQUIRE(mo.to_string() == "hallo");
 }
