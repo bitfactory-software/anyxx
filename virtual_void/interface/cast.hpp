@@ -2,13 +2,10 @@
 
 #undef interface
 
-#include <virtual_void/data/observer.hpp>
-#include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/open_method/via_type_info/factory.hpp>
 #include <virtual_void/utillities/VV_EXPORT.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::interface {
 
@@ -33,17 +30,18 @@ using find_copy_factory_method =
         copy_factory_method<TO, FROM> const&()>;
 
 template <is_virtual_void TO, is_virtual_void FROM>
-find_copy_factory_method<TO, FROM>& find_copy() {
-  static find_copy_factory_method<TO, FROM> find_copy_method{cast_domain()};
-  return find_copy_method;
-}
+find_copy_factory_method<TO, FROM>&
+find_copy();  // primary template, must be specialized!
 
 template <is_virtual_void TO, is_virtual_void FROM>
 using move_factory_method =
     virtual_void::open_method::via_type_info::factory<base<TO>(FROM&&)>;
 
 template <typename CLASS, is_virtual_void TO, is_virtual_void FROM>
-inline move_factory_method<TO, FROM> move{cast_domain()};
+move_factory_method<TO, FROM>& move() {
+  static move_factory_method<TO, FROM>& move_factory{cast_domain()};
+  return move_factory;
+}
 
 template <is_virtual_void TO, is_virtual_void FROM>
 using find_move_factory_method =
@@ -51,7 +49,8 @@ using find_move_factory_method =
         move_factory_method<TO, FROM> const&()>;
 
 template <is_virtual_void TO, is_virtual_void FROM>
-inline find_move_factory_method<TO, FROM> find_move{cast_domain()};
+find_move_factory_method<TO, FROM>&
+find_move();  // primary template, must be specialized!
 
 template <template <is_virtual_void> typename INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM>

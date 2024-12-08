@@ -46,7 +46,7 @@ class m_table_t {
 
 template <typename CLASS>
 constexpr m_table_t* m_table_of() {
-  static m_table_t m_table_{typeid(CLASS)};
+  static m_table_t m_table_{typeid_of<CLASS>()};
   return &m_table_;
 }
 

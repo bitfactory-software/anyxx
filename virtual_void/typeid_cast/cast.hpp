@@ -11,7 +11,7 @@ auto cast_implementation_(auto* from, const std::type_info& to) {
   typename CONST<void>::type found = nullptr;
   class_hierarchy::visit_class<FROM>(
       overload{[&]<typename C> {
-                 if (!found && typeid(FROM) == to)
+                 if (!found && typeid_of<FROM>() == to)
                    found = static_cast<CONST<void>::type>(from);
                },
                [&]<typename, typename B> {
@@ -28,7 +28,8 @@ struct const_cast_implementation {
   };
   template <typename FROM>
   auto operator()(const FROM* from, const std::type_info& to) {
-    return cast_implementation_<const_, data::has_type_info::const_observer, FROM>(from, to);
+    return cast_implementation_<const_, data::has_type_info::const_observer,
+                                FROM>(from, to);
   }
 };
 struct cast_implementation {
@@ -38,7 +39,9 @@ struct cast_implementation {
   };
   template <typename FROM>
   auto operator()(FROM* from, const std::type_info& to) {
-    return cast_implementation_<non_const_, data::has_type_info::mutable_observer, FROM>(from, to);
+    return cast_implementation_<non_const_,
+                                data::has_type_info::mutable_observer, FROM>(
+        from, to);
   }
 };
 template <template <typename SIG> typename OPEN_METHOD>
@@ -48,7 +51,7 @@ template <template <typename SIG> typename OPEN_METHOD>
 using cast_method = OPEN_METHOD<void*(const void*, const std::type_info& to)>;
 void fill_const_cast_for(auto classes, auto& method) {
   open_method::fill_with_overloads(classes, method,
-                                                 const_cast_implementation{});
+                                   const_cast_implementation{});
 }
 template <typename... CLASSES>
 void fill_const_cast_for(auto& method) {
@@ -63,7 +66,7 @@ void fill_cast_for(auto& method) {
 }
 template <typename TO>
 auto cast_to(const auto& cast, is_virtual_void auto const& from) {
-  if (auto void_ = cast(from, typeid(std::remove_const_t<TO>)))
+  if (auto void_ = cast(from, typeid_of<std::remove_const_t<TO>>()))
     return static_cast<TO*>(void_);
   return static_cast<TO*>(nullptr);
 }

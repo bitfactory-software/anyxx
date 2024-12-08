@@ -8,3 +8,4 @@ interface::cast_domain_t& interface::cast_domain() {
 }
 
 void interface::seal_casts() { seal_for_runtime(cast_domain()); }
+

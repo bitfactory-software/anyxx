@@ -54,7 +54,7 @@ class declaration_base : public open_method::default_target<> {
   template <typename CLASS>
   auto define_erased(auto f) {
     auto m_table = data::has_m_table::m_table_of<CLASS>();
-    domain_.m_table_map[&typeid(CLASS)] = m_table;
+    domain_.m_table_map[&typeid_of<CLASS>()] = m_table;
     return define_erased(m_table, f);
   }
   template <typename CLASS>
@@ -135,7 +135,7 @@ template <typename CLASSES>
 constexpr nullptr_t declare_classes(m_table_map& registry) {
   class_hierarchy::visit_classes<CLASSES, true>(
       overload{[&]<typename C> {
-                 registry[&typeid(C)] = data::has_m_table::m_table_of<C>();
+                 registry[&typeid_of<C>()] = data::has_m_table::m_table_of<C>();
                },
                [&]<typename C, typename B> {}});
   return {};

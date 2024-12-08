@@ -6,6 +6,7 @@
 #include <virtual_void/utillities/ensure_function_ptr.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/open_method/via_type_info/declaration_base.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::open_method::via_type_info {
 
@@ -29,7 +30,7 @@ class declare<R(ARGS...)> : public declaration_base {
   auto define(FUNCTION f) {
     if (dispatch_target_index_) throw error("Already sealed for runtime.");
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
-    return define_erased(typeid(CLASS), fp);
+    return define_erased(typeid_of<CLASS>(), fp);
   }
   template <typename... OTHER_ARGS>
   R operator()(const std::type_info& type_info, dispatch_t dispatched,

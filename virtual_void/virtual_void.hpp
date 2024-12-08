@@ -10,6 +10,7 @@
 namespace virtual_void {
 
 using type_info_ptr = std::type_info const*;
+template<typename T> const std::type_info& typeid_of(){ return typeid(T); }; // remove this! require explicit registering!
 
 template <typename>
 struct self_pointer;
@@ -196,7 +197,7 @@ auto unchecked_unerase_cast(VIRTUAL_VOID const& o)
 }
 template <typename U, typename META>
 bool type_match(META const* meta) {
-  if (auto type_info = meta->type_info(); type_info && *type_info != typeid(U))
+  if (auto type_info = meta->type_info(); type_info && *type_info != typeid_of<U>())
     return false;
   return true;
 }
@@ -205,7 +206,7 @@ class type_mismatch_error : error {
 };
 template <typename U, typename META>
 void check_type_match(META const* meta) {
-  if (auto type_info = meta->type_info(); type_info && *type_info != typeid(U))
+  if (auto type_info = meta->type_info(); type_info && *type_info != typeid_of<U>())
     throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>

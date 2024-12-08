@@ -4,15 +4,29 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
+file(GLOB component_base_hpp_files "./component_base/*.hpp")
+file(GLOB component_base_cpp_files "./component_base/*.cpp")
+add_library(component_base ${component_base_hpp_files} ${component_base_cpp_files})
+set_target_properties(component_base PROPERTIES LINKER_LANGUAGE CXX)
+target_link_libraries(component_base 
+    virtual_void
+)
+target_include_directories(component_base PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
+)
+if (BUILD_SHARED_LIBS AND MSVC)
+    target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
+endif()
+target_compile_features(component_base PUBLIC cxx_std_20)
 
-file(GLOB_RECURSE test_all_hpp_files "*.hpp")
-file(GLOB_RECURSE test_all_cpp_files "*.cpp")
 
-# Add source to this project's executable.
+file(GLOB test_all_hpp_files "*.hpp")
+file(GLOB test_all_cpp_files "*.cpp")
 add_executable (test_all ${test_all_cpp_files} ${test_all_hpp_files})
-
 target_link_libraries(test_all 
     virtual_void
+    component_base
     Catch2::Catch2WithMain
 )
 

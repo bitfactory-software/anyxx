@@ -1,7 +1,7 @@
 #pragma once
 
-#include <virtual_void/virtual_void.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data::has_type_info {
 
@@ -11,7 +11,7 @@ struct meta {
   const auto* get_meta() const { return this; }
 
   template <typename T>
-  meta(std::in_place_type_t<T>) : meta(typeid(std::decay_t<T>)) {}
+  meta(std::in_place_type_t<T>) : meta(typeid(T)) {}
   meta(std::type_info const& type_info) : type_info_(&type_info) {}
   template <is_meta META>
   meta(const META& rhs) : meta(rhs.gtype_info()) {}

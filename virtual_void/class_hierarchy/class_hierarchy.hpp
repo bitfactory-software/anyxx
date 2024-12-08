@@ -53,9 +53,9 @@ struct class_with_bases {
 using classes_with_bases = std::map<std::type_index, class_with_bases>;
 
 constexpr auto declare_visitor(classes_with_bases& registry) {
-  return overload{[&]<typename C> { registry[typeid(C)].self = &typeid(C); },
+  return overload{[&]<typename C> { registry[typeid_of<C>()].self = &typeid_of<C>(); },
                   [&]<typename C, typename B> {
-                    registry[typeid(C)].bases.emplace_back(&typeid(B));
+                    registry[typeid_of<C>()].bases.emplace_back(&typeid_of<B>());
                   }};
 }
 template <typename CLASS, bool deep = true>

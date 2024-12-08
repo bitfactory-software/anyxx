@@ -1,6 +1,7 @@
 #pragma once
 
 #include <virtual_void/open_method/via_type_info/declaration_base.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::open_method::via_type_info {
 
@@ -18,7 +19,7 @@ class factory<R(ARGS...)> : public declaration_base {
   template <typename CLASS, typename FACTORY>
   auto define(FACTORY f) {
     auto fp = ensure_factory_ptr<CLASS>(f);
-    return define_erased(typeid(CLASS),
+    return define_erased(typeid_of<CLASS>(),
                          reinterpret_cast<factory_function_t>(fp));
   }
   R operator()(const std::type_info& type_info, ARGS&&... args) const {
@@ -28,7 +29,7 @@ class factory<R(ARGS...)> : public declaration_base {
   template <typename CLASS>
   R construct(ARGS&&... args) const  // to simplify tests!
   {
-    return (*this)(typeid(CLASS), std::forward<ARGS>(args)...);
+    return (*this)(typeid_of<CLASS>(), std::forward<ARGS>(args)...);
   }
   template <typename CLASS>
   R operator()(ARGS&&... args) const  // to simplify tests!

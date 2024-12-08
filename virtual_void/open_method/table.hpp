@@ -36,7 +36,7 @@ class table : default_target<> {
   }
   template <typename C>
   auto is_defined() const {
-    return is_defined(typeid(C));
+    return is_defined(typeid_of<C>());
   }
   dispatch_target_index_t make_lookup_table() const {
     return dispatch_target_index_t{map_, get_default()};
