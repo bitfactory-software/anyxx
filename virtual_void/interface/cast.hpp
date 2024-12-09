@@ -116,7 +116,7 @@ void enable_move_cast() {
 }
 
 template <typename TO_INTERFACE, is_virtual_void VV_FROM>
-TO_INTERFACE query_interface(VV_FROM const& vv_from) {
+TO_INTERFACE attach_interface(VV_FROM const& vv_from) {
   using vv_to_t = typename TO_INTERFACE::virtual_void_t;
   static_assert(is_virtual_void<vv_to_t>);
   auto const& type_info = *get_meta(vv_from)->type_info();
@@ -127,20 +127,22 @@ TO_INTERFACE query_interface(VV_FROM const& vv_from) {
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
 TO_INTERFACE copy_cast(const FROM_INTERFACE& from_interface) {
-  return query_interface<TO_INTERFACE>(get_virtual_void(from_interface));
+  return attach_interface<TO_INTERFACE>(get_virtual_void(from_interface));
+}
+
+template <typename TO_INTERFACE, is_virtual_void VV_FROM>
+TO_INTERFACE move_to_interface(VV_FROM&& vv_from) {
+  using vv_to_t = typename TO_INTERFACE::virtual_void_t;
+  auto const& type_info = *get_meta(vv_from)->type_info();
+  auto const& move = find_move<vv_to_t, VV_FROM>()(type_info);
+  base<vv_to_t> b = move.construct<TO_INTERFACE>(std::move(vv_from));
+  return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
 }
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
 TO_INTERFACE move_cast(FROM_INTERFACE&& from_interface) {
-  using vv_to_t = typename TO_INTERFACE::virtual_void_t;
-  using vv_from_t = typename FROM_INTERFACE::virtual_void_t;
-  static_assert(is_virtual_void<vv_to_t>);
-  static_assert(is_virtual_void<vv_from_t>);
-  auto vv_from = move_virtual_void(std::move(from_interface));
-  auto const& type_info = *get_meta(vv_from)->type_info();
-  auto const& move = find_move<vv_to_t, vv_from_t>()(type_info);
-  base<vv_to_t> b = move.construct<TO_INTERFACE>(std::move(vv_from));
-  return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
+  return move_to_interface<TO_INTERFACE>(
+      move_virtual_void(std::move(from_interface)));
 }
 
 };  // namespace virtual_void::interface

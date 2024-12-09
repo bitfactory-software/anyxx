@@ -57,7 +57,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(sv0.get_value() == 6.28);
     std::cout << "shared_const/unique sv0 (*2): " << sv0.get_value() << "\n";
     auto esc = test_query_interface::sc_X(42);
-    auto esc_i = query_interface<get_value_i<shared_const>>(esc);
+    auto esc_i = attach_interface<get_value_i<shared_const>>(esc);
     REQUIRE(esc_i.get_value() == 42);
   }
   {
@@ -96,12 +96,16 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i1e.get_value() == 3.14);
 
     unique ui1{ test_query_interface::u_X(3.14) };
-    auto to_string_co = query_interface<to_string_i<const_observer>>(ui1);
+    auto to_string_co = attach_interface<to_string_i<const_observer>>(ui1);
     REQUIRE(to_string_co.to_string() == "3.140000");
 
-    auto set_value_mo = query_interface<set_value_i<mutable_observer>>(ui1);
+    auto set_value_mo = attach_interface<set_value_i<mutable_observer>>(ui1);
     REQUIRE(set_value_mo.get_value() == 3.14);
     set_value_mo.set_value(1.44);
     REQUIRE(to_string_co.to_string() == "1.440000");
+
+    auto ux11 = test_query_interface::u_X(42.0);
+    auto gv_i_sc = move_to_interface<get_value_i<shared_const>>(std::move(ux11));
+    REQUIRE(gv_i_sc.get_value() == 42);
   }
 }
