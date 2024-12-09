@@ -38,6 +38,7 @@ COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_type_info::const_obser
 COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_type_info::shared_const> get_to_string_i_sc(double v);
 COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_type_info::unique> get_to_string_i_u(double v);
 COMPONENT_BASE_EXPORT virtual_void::data::has_type_info::shared_const sc_X(double v);
+COMPONENT_BASE_EXPORT virtual_void::data::has_type_info::unique u_X(double v);
 
 }
 

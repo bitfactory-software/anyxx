@@ -7,7 +7,7 @@
 #include <virtual_void/interface/cast.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
-#include "./component_base/_interface_cast_enable.hpp"
+#include "./component_base/component_base.hpp"
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
@@ -79,31 +79,29 @@ TEST_CASE("_interface_cast") {
     std::cout << "unique i1c: " << i1c.get_value() << "\n";
     REQUIRE(get_data(get_virtual_void(i1c)) != get_data(get_virtual_void(i0)));
 
-    //    auto i1d = move_cast<to_string_i<unique>>(std::move(i1c));
-    //    REQUIRE(get_data(get_virtual_void(i1d)));
-    // #pragma warning(push)
-    // #pragma warning(disable : 26800)
-    //    REQUIRE(!get_virtual_void(i1c));  // moved!
-    // #pragma warning(pop)
-    //    REQUIRE(i1d.to_string() == "3.140000");
-    //
-    //    auto i1e = move_cast<get_value_i<shared_const>>(std::move(i1d));
-    //    REQUIRE(get_data(get_virtual_void(i1e)));
-    // #pragma warning(push)
-    // #pragma warning(disable : 26800)
-    //    REQUIRE(!get_virtual_void(i1d));  // moved!
-    // #pragma warning(pop)
-    //    REQUIRE(i1e.get_value() == 3.14);
-    //
-    //    auto ui1 = erased<unique>(x);
-    //    auto to_string_co = query_interface<to_string_i<const_observer>>(ui1);
-    //    REQUIRE(to_string_co.to_string() == "3.140000");
-    //
-    //    auto set_value_mo =
-    //    query_interface<set_value_i<mutable_observer>>(ui1);
-    //    REQUIRE(set_value_mo.get_value() == 3.14);
-    //    set_value_mo.set_value(1.44);
-    //    REQUIRE(to_string_co.to_string() == "1.440000");
-    //    REQUIRE(unerase_cast<X>(&ui1)->get_value() == 1.44);
+    auto i1d = move_cast<to_string_i<unique>>(std::move(i1c));
+    REQUIRE(get_data(get_virtual_void(i1d)));
+#pragma warning(push)
+#pragma warning(disable : 26800)
+    REQUIRE(!get_virtual_void(i1c));  // moved!
+#pragma warning(pop)
+    REQUIRE(i1d.to_string() == "3.140000");
+
+    auto i1e = move_cast<get_value_i<shared_const>>(std::move(i1d));
+    REQUIRE(get_data(get_virtual_void(i1e)));
+#pragma warning(push)
+#pragma warning(disable : 26800)
+    REQUIRE(!get_virtual_void(i1d));  // moved!
+#pragma warning(pop)
+    REQUIRE(i1e.get_value() == 3.14);
+
+    unique ui1{ test_query_interface::u_X(3.14) };
+    auto to_string_co = query_interface<to_string_i<const_observer>>(ui1);
+    REQUIRE(to_string_co.to_string() == "3.140000");
+
+    auto set_value_mo = query_interface<set_value_i<mutable_observer>>(ui1);
+    REQUIRE(set_value_mo.get_value() == 3.14);
+    set_value_mo.set_value(1.44);
+    REQUIRE(to_string_co.to_string() == "1.440000");
   }
 }

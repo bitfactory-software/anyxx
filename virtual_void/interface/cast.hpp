@@ -39,7 +39,7 @@ using move_factory_method =
 
 template <typename CLASS, is_virtual_void TO, is_virtual_void FROM>
 move_factory_method<TO, FROM>& move() {
-  static move_factory_method<TO, FROM>& move_factory{cast_domain()};
+  static move_factory_method<TO, FROM> move_factory{cast_domain()};
   return move_factory;
 }
 
@@ -102,10 +102,10 @@ template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
 void enable_move_cast(auto impl) {
   using target_interface_t = TO_INTERFACE<TO>;
-  move<CLASS, TO, FROM>.define<target_interface_t>(impl);
-  if (!find_move<TO, FROM>.is_defined<CLASS>())
-    find_move<TO, FROM>.define<CLASS>(
-        +[]() -> auto const& { return move<CLASS, TO, FROM>; });
+  move<CLASS, TO, FROM>().define<target_interface_t>(impl);
+  if (!find_move<TO, FROM>().is_defined<CLASS>())
+    find_move<TO, FROM>().define<CLASS>(
+        +[]() -> auto const& { return move<CLASS, TO, FROM>(); });
 };
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
@@ -138,7 +138,7 @@ TO_INTERFACE move_cast(FROM_INTERFACE&& from_interface) {
   static_assert(is_virtual_void<vv_from_t>);
   auto vv_from = move_virtual_void(std::move(from_interface));
   auto const& type_info = *get_meta(vv_from)->type_info();
-  auto const& move = find_move<vv_to_t, vv_from_t>(type_info);
+  auto const& move = find_move<vv_to_t, vv_from_t>()(type_info);
   base<vv_to_t> b = move.construct<TO_INTERFACE>(std::move(vv_from));
   return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
 }

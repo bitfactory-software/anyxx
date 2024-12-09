@@ -1,4 +1,4 @@
-#include "_interface_cast_enable.hpp"
+#include "component_base.hpp"
 
 #include <assert.h>
 
@@ -38,6 +38,7 @@ void test_query_interface::enable_casts() {
   enable_copy_cast<set_value_i, X, mutable_observer, unique>();
 
   enable_move_cast<to_string_i, X, unique, unique>();
+  assert((find_move<unique, unique>().is_defined<X>()));
   enable_move_cast<get_value_i, X, shared_const, unique>();
 }
 
@@ -64,6 +65,9 @@ test_query_interface::get_to_string_i_u(double v) {
 virtual_void::data::has_type_info::shared_const test_query_interface::sc_X(
     double v) {
   return virtual_void::erased<shared_const>(X{v});
+}
+virtual_void::data::has_type_info::unique test_query_interface::u_X(double v) {
+  return virtual_void::erased<unique>(X{v});
 }
 
 VV_TYPEID_OF_DEFINE(test_query_interface::to_string_i<
