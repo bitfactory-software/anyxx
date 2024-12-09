@@ -27,19 +27,19 @@ static X x{3.14};
 }  // namespace test::component_base
 
 void test::component_base::enable_casts() {
-  enable_copy_cast<get_value_i, X, const_observer>();
+  enable_attach_interface<get_value_i, X, const_observer>();
   assert((find_copy<const_observer, const_observer>().is_defined<X>()));
-  enable_copy_cast<get_value_i, X, mutable_observer>();
-  enable_copy_cast<get_value_i, X, shared_const>();
-  enable_copy_cast<get_value_i, X, unique>();
-  enable_copy_cast<get_value_i, X, unique, shared_const>();
-  enable_copy_cast<set_value_i, X, unique, shared_const>();
-  enable_copy_cast<to_string_i, X, const_observer, unique>();
-  enable_copy_cast<set_value_i, X, mutable_observer, unique>();
+  enable_attach_interface<get_value_i, X, mutable_observer>();
+  enable_attach_interface<get_value_i, X, shared_const>();
+  enable_attach_interface<get_value_i, X, unique>();
+  enable_attach_interface<get_value_i, X, unique, shared_const>();
+  enable_attach_interface<set_value_i, X, unique, shared_const>();
+  enable_attach_interface<to_string_i, X, const_observer, unique>();
+  enable_attach_interface<set_value_i, X, mutable_observer, unique>();
 
-  enable_move_cast<to_string_i, X, unique, unique>();
+  enable_move_to_interface<to_string_i, X, unique, unique>();
   assert((find_move<unique, unique>().is_defined<X>()));
-  enable_move_cast<get_value_i, X, shared_const, unique>();
+  enable_move_to_interface<get_value_i, X, shared_const, unique>();
 }
 
 to_string_i<virtual_void::data::has_type_info::const_observer>

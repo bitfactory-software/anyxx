@@ -73,7 +73,7 @@ auto default_copy()
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
-void enable_copy_cast(auto impl) {
+void enable_attach_interface(auto impl) {
   using target_interface_t = TO_INTERFACE<TO>;
   copy<CLASS, TO, FROM>().define<target_interface_t>(impl);
   if (!find_copy<TO, FROM>().is_defined<CLASS>())
@@ -83,8 +83,8 @@ void enable_copy_cast(auto impl) {
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
-void enable_copy_cast() {
-  enable_copy_cast<TO_INTERFACE, CLASS, TO, FROM>(
+void enable_attach_interface() {
+  enable_attach_interface<TO_INTERFACE, CLASS, TO, FROM>(
       default_copy<TO_INTERFACE, CLASS, TO, FROM>());
 }
 
@@ -100,7 +100,7 @@ auto default_move() {
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
-void enable_move_cast(auto impl) {
+void enable_move_to_interface(auto impl) {
   using target_interface_t = TO_INTERFACE<TO>;
   move<CLASS, TO, FROM>().define<target_interface_t>(impl);
   if (!find_move<TO, FROM>().is_defined<CLASS>())
@@ -110,8 +110,8 @@ void enable_move_cast(auto impl) {
 
 template <template <is_virtual_void> typename TO_INTERFACE, typename CLASS,
           is_virtual_void TO, is_virtual_void FROM = TO>
-void enable_move_cast() {
-  enable_move_cast<TO_INTERFACE, CLASS, TO, FROM>(
+void enable_move_to_interface() {
+  enable_move_to_interface<TO_INTERFACE, CLASS, TO, FROM>(
       default_move<TO_INTERFACE, CLASS, TO, FROM>());
 }
 
