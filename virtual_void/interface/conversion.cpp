@@ -1,4 +1,4 @@
-#include <virtual_void/interface/cast.hpp>
+#include <virtual_void/interface/conversion.hpp>
 
 using namespace virtual_void;
 

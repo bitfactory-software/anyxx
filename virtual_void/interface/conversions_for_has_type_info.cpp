@@ -1,4 +1,4 @@
-#include <virtual_void/interface/cast_has_type_info.hpp>
+#include <virtual_void/interface/conversions_for_has_type_info.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::interface;

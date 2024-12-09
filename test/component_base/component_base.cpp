@@ -4,7 +4,7 @@
 
 #include <virtual_void/data/has_type_info/typeid_of.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/cast_has_type_info.hpp>
+#include <virtual_void/interface/conversions_for_has_type_info.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 using namespace test::component_base;

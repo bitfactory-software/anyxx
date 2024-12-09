@@ -6,7 +6,7 @@
 #include <virtual_void/data/has_type_info/shared_const.hpp>
 #include <virtual_void/data/has_type_info/unique.hpp>
 #include <virtual_void/data/has_type_info/value.hpp>
-#include <virtual_void/interface/cast.hpp>
+#include <virtual_void/interface/conversion.hpp>
 #include <virtual_void/utillities/VV_EXPORT.hpp>
 
 #define VV_FIND_COPY_DECLARE(to, from)                                 \
