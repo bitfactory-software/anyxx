@@ -7,13 +7,13 @@
 #include <virtual_void/interface/cast_has_type_info.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
-using namespace test_query_interface;
+using namespace test::component_base;
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data::has_type_info;
 
-namespace test_query_interface {
+namespace test::component_base {
 
 struct X {
   double d_;
@@ -24,9 +24,9 @@ struct X {
 
 static X x{3.14};
 
-}  // namespace test_query_interface
+}  // namespace test::component_base
 
-void test_query_interface::enable_casts() {
+void test::component_base::enable_casts() {
   enable_copy_cast<get_value_i, X, const_observer>();
   assert((find_copy<const_observer, const_observer>().is_defined<X>()));
   enable_copy_cast<get_value_i, X, mutable_observer>();
@@ -43,7 +43,7 @@ void test_query_interface::enable_casts() {
 }
 
 to_string_i<virtual_void::data::has_type_info::const_observer>
-test_query_interface::get_to_string_i_co() {
+test::component_base::get_to_string_i_co() {
   auto p = &x;
   to_string_i<virtual_void::data::has_type_info::const_observer> i{x};
   auto meta = get_meta(get_virtual_void(i));
@@ -54,37 +54,37 @@ test_query_interface::get_to_string_i_co() {
   return i;
 }
 to_string_i<virtual_void::data::has_type_info::shared_const>
-test_query_interface::get_to_string_i_sc(double v) {
+test::component_base::get_to_string_i_sc(double v) {
   return X{v};
 }
 to_string_i<virtual_void::data::has_type_info::unique>
-test_query_interface::get_to_string_i_u(double v) {
+test::component_base::get_to_string_i_u(double v) {
   return X{v};
 }
 
-virtual_void::data::has_type_info::shared_const test_query_interface::sc_X(
+virtual_void::data::has_type_info::shared_const test::component_base::sc_X(
     double v) {
   return virtual_void::erased<shared_const>(X{v});
 }
-virtual_void::data::has_type_info::unique test_query_interface::u_X(double v) {
+virtual_void::data::has_type_info::unique test::component_base::u_X(double v) {
   return virtual_void::erased<unique>(X{v});
 }
 
-VV_TYPEID_OF_DEFINE(test_query_interface::to_string_i<
+VV_TYPEID_OF_DEFINE(test::component_base::to_string_i<
                     virtual_void::data::has_type_info::const_observer>);
-VV_TYPEID_OF_DEFINE(test_query_interface::to_string_i<
+VV_TYPEID_OF_DEFINE(test::component_base::to_string_i<
                     virtual_void::data::has_type_info::unique>);
 
-VV_TYPEID_OF_DEFINE(test_query_interface::get_value_i<
+VV_TYPEID_OF_DEFINE(test::component_base::get_value_i<
                     virtual_void::data::has_type_info::const_observer>);
-VV_TYPEID_OF_DEFINE(test_query_interface::get_value_i<
+VV_TYPEID_OF_DEFINE(test::component_base::get_value_i<
                     virtual_void::data::has_type_info::mutable_observer>);
-VV_TYPEID_OF_DEFINE(test_query_interface::get_value_i<
+VV_TYPEID_OF_DEFINE(test::component_base::get_value_i<
                     virtual_void::data::has_type_info::shared_const>);
-VV_TYPEID_OF_DEFINE(test_query_interface::get_value_i<
+VV_TYPEID_OF_DEFINE(test::component_base::get_value_i<
                     virtual_void::data::has_type_info::unique>);
 
-VV_TYPEID_OF_DEFINE(test_query_interface::set_value_i<
+VV_TYPEID_OF_DEFINE(test::component_base::set_value_i<
                     virtual_void::data::has_type_info::mutable_observer>);
-VV_TYPEID_OF_DEFINE(test_query_interface::set_value_i<
+VV_TYPEID_OF_DEFINE(test::component_base::set_value_i<
                     virtual_void::data::has_type_info::unique>);

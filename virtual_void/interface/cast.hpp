@@ -126,7 +126,7 @@ TO_INTERFACE attach_interface(VV_FROM const& vv_from) {
 }
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
-TO_INTERFACE copy_cast(const FROM_INTERFACE& from_interface) {
+TO_INTERFACE attach_interface(const FROM_INTERFACE& from_interface) {
   return attach_interface<TO_INTERFACE>(get_virtual_void(from_interface));
 }
 
@@ -140,7 +140,7 @@ TO_INTERFACE move_to_interface(VV_FROM&& vv_from) {
 }
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
-TO_INTERFACE move_cast(FROM_INTERFACE&& from_interface) {
+TO_INTERFACE move_to_interface(FROM_INTERFACE&& from_interface) {
   return move_to_interface<TO_INTERFACE>(
       move_virtual_void(std::move(from_interface)));
 }

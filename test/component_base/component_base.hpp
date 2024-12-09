@@ -25,7 +25,7 @@ using namespace virtual_void::interface;
 #endif
 #endif
 
-namespace test_query_interface {
+namespace test::component_base {
 
 ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
 ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double, get_value)))
@@ -42,13 +42,13 @@ COMPONENT_BASE_EXPORT virtual_void::data::has_type_info::unique u_X(double v);
 
 }
 
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::to_string_i<virtual_void::data::has_type_info::const_observer>);
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::to_string_i<virtual_void::data::has_type_info::unique>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::to_string_i<virtual_void::data::has_type_info::const_observer>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::to_string_i<virtual_void::data::has_type_info::unique>);
 
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::get_value_i<virtual_void::data::has_type_info::const_observer>);
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::get_value_i<virtual_void::data::has_type_info::mutable_observer>);
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::get_value_i<virtual_void::data::has_type_info::shared_const>);
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::get_value_i<virtual_void::data::has_type_info::unique>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::get_value_i<virtual_void::data::has_type_info::const_observer>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::get_value_i<virtual_void::data::has_type_info::mutable_observer>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::get_value_i<virtual_void::data::has_type_info::shared_const>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::get_value_i<virtual_void::data::has_type_info::unique>);
 
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::set_value_i<virtual_void::data::has_type_info::mutable_observer>);
-VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test_query_interface::set_value_i<virtual_void::data::has_type_info::unique>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::set_value_i<virtual_void::data::has_type_info::mutable_observer>);
+VV_TYPEID_OF_DECLARE(COMPONENT_BASE_EXPORT, test::component_base::set_value_i<virtual_void::data::has_type_info::unique>);
