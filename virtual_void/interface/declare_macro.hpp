@@ -224,7 +224,8 @@
         : base_t(std::move(other)) {}                                          \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
                                                                                \
-        n() = default;                                                         \
+    auto const* operator->() const { return this; }                            \
+    n() = default;                                                             \
     n(n const&) = default;                                                     \
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
