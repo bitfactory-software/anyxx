@@ -19,7 +19,7 @@ struct operator_v_table : BASE_V_TABLE {
   }
   RET (*op)(void_t, ARGS&&...);
   template <is_uneraser UNERASER>
-  operator_v_table(UNERASER uneraser) : BASE_V_TABLE(uneraser) {
+  operator_v_table(UNERASER u) : BASE_V_TABLE(u) {
     if constexpr (const_correct_target_for_data<CONSTNESS, void_t>) {
       op = [](void_t _vp, ARGS&&... args) -> RET {
         return TARGET{}(UNERASER{}(_vp), std::forward<ARGS>(args)...);

@@ -125,7 +125,7 @@
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...) \
   name = [](void_t _vp __VA_OPT__(                                        \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
-    return v_table_map{}.name((UNERASED{}(_vp))__VA_OPT__(, ) __VA_OPT__( \
+    return v_table_map{}.name((UNERASER{}(_vp))__VA_OPT__(, ) __VA_OPT__( \
         _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                       \
   };
 
@@ -161,15 +161,25 @@
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
-    template <typename UNERASED>                                               \
-    n##_v_table(UNERASED unerased) : v_table_base_t(unerased) {                \
+    template <virtual_void::is_uneraser UNERASER>                              \
+    n##_v_table(UNERASER unerased) : v_table_base_t(unerased) {                \
       using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
-          _add_head((typename UNERASED::type), t))>;                           \
+          _add_head((typename UNERASER::type), t))>;                           \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
     };                                                                         \
   };                                                                           \
+                                                                               \
+  template <virtual_void::is_uneraser UNERASER,                                \
+            _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+                _add_head((BASE_V_TABLE), t))>                                 \
+  auto n##_v_table_imlpementation() {                                          \
+    static n##_v_table<_detail_INTERFACE_TEMPLATE_ARGS(                        \
+        _add_head((BASE_V_TABLE), t))>                                         \
+        v_table{UNERASER{}};                                                   \
+    return &v_table;                                                           \
+  }                                                                            \
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((VIRTUAL_VOID), t))>                                           \
@@ -182,10 +192,10 @@
         _add_head((v_table_base_t), t))>;                                      \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
-    static v_table_t* imlpemented_v_table() {                                  \
-      static v_table_t v_table{                                                \
-          ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>()};         \
-      return &v_table;                                                         \
+    static auto imlpemented_v_table() {                                        \
+      return n##_v_table_imlpementation<                                       \
+          ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>,            \
+          _detail_INTERFACE_TEMPLATE_ARGS(_add_head((v_table_base_t), t))>();  \
     }                                                                          \
                                                                                \
     using base_t::virtual_void_;                                               \
@@ -211,6 +221,7 @@
     n(const OTHER&& other)                                                     \
       requires(std::derived_from<OTHER, base_t>)                               \
         : base_t(std::move(other)) {}                                          \
+                                                                               \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
                                                                                \
         auto const*                                                            \
