@@ -122,15 +122,18 @@ concept is_const_data = is_const_void<data_void<DATA>>;
 
 template <typename TARGET, typename DATA>
 concept const_correct_target_for_data =
-    ((is_const_void<TARGET> == is_const_void<DATA>) || (!is_const_void<DATA>));
+    ereasurness<TARGET> && ereasurness<DATA> &&
+    (((is_const_void<TARGET> == is_const_void<DATA>) ||
+      (!is_const_void<DATA>)));
 
 template <typename VV_VOID, typename DATA>
 concept const_correct_for_virtual_void_data =
     const_correct_target_for_data<VV_VOID, data_void<DATA>>;
 
-template <typename VV_VOID, typename VIRTUAL_VOID>
+template <typename TARGET, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
-    (const_correct_for_virtual_void_data<VV_VOID, VIRTUAL_VOID>);
+    ereasurness<TARGET> && is_virtual_void<VIRTUAL_VOID> &&
+    (const_correct_for_virtual_void_data<TARGET, VIRTUAL_VOID>);
 
 template <typename V, is_virtual_void DATA>
 struct virtual_typed;
@@ -157,6 +160,11 @@ VIRTUAL_VOID erased_in_place(ARGS&&... args) {
 struct virtual_void_default_unerase {
   template <typename CONSTRUCTED_WITH>
   using unerased_type = CONSTRUCTED_WITH;
+};
+
+template <typename UNERASER>
+concept uneraser = requires(UNERASER u, mutable_void mv) {
+  { u(mv) } -> std::convertible_to<typename UNERASER::type*>;
 };
 
 template <typename T>
