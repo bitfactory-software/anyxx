@@ -6,7 +6,7 @@
 
 namespace virtual_void::interface {
 
-template <typename TARGET, typename BASE_V_TABLE, constness CONSTNESS,
+template <typename TARGET, typename BASE_V_TABLE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_v_table : BASE_V_TABLE {
   using v_table_base_t = BASE_V_TABLE;
@@ -30,7 +30,7 @@ struct operator_v_table : BASE_V_TABLE {
 };
 
 template <is_uneraser UNERASER, typename TARGET, typename BASE_V_TABLE,
-          constness CONSTNESS, typename RET, typename... ARGS>
+          is_constness CONSTNESS, typename RET, typename... ARGS>
 operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>*
 implemented_operator_v_table() {
   static operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>
@@ -39,11 +39,11 @@ implemented_operator_v_table() {
 }
 
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
-          template <typename> typename BASE, constness CONSTNESS, typename RET,
+          template <typename> typename BASE, is_constness CONSTNESS, typename RET,
           typename... ARGS>
 struct operator_;
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
-          template <typename> typename BASE, constness CONSTNESS, typename RET,
+          template <typename> typename BASE, is_constness CONSTNESS, typename RET,
           typename... ARGS>
 struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<VIRTUAL_VOID> {

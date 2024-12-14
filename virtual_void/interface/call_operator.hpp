@@ -14,10 +14,10 @@ struct call_operator_target {
 };
 
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
-          constness CONSTNESS, typename RET, typename... ARGS>
+          is_constness CONSTNESS, typename RET, typename... ARGS>
 struct call_operator_;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
-          constness CONSTNESS, typename RET, typename... ARGS>
+          is_constness CONSTNESS, typename RET, typename... ARGS>
 struct call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : operator_<call_operator_target, VIRTUAL_VOID, BASE, CONSTNESS,
                 RET(ARGS...)> {
@@ -36,20 +36,20 @@ struct call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
 };
 
 template <is_virtual_void VIRTUAL_VOID, typename SIG,
-          constness CONSTNESS = const_,
+          is_constness CONSTNESS = const_,
           template <typename> typename BASE = base>
 using call_operator = call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, SIG>;
 
 template <class...>
 struct make_overloaded_call_operator;
 
-template <class SIG, constness CONSTNESS>
+template <class SIG, is_constness CONSTNESS>
 struct make_overloaded_call_operator<SIG, CONSTNESS> {
   template <virtual_void::is_virtual_void VV>
   using type = call_operator_<VV, base, CONSTNESS, SIG>;
 };
 
-template <class SIG, constness CONSTNESS, class... SIGS>
+template <class SIG, is_constness CONSTNESS, class... SIGS>
 struct make_overloaded_call_operator<SIG, CONSTNESS, SIGS...> {
   template <virtual_void::is_virtual_void VV>
   using type =

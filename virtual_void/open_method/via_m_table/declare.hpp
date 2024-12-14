@@ -82,7 +82,7 @@ class declare;
 
 template <typename R, typename... ARGS>
 class declare<R(ARGS...)> : public declaration_base {
-  static_assert(constness<first_t<ARGS...>>);
+  static_assert(is_constness<first_t<ARGS...>>);
 
  public:
   using CONSTNESS = typename first_t<ARGS...>;

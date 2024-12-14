@@ -69,7 +69,7 @@ concept is_virtual_typed = requires(E e) {
 struct mutable_ {};
 struct const_ {};
 template <typename CS>
-concept constness = (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
+concept is_constness = (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -78,9 +78,9 @@ concept voidness =
     (std::same_as<V, const_void> || std::same_as<V, mutable_void>);
 
 template <typename X>
-concept ereasurness = constness<X> || voidness<X>;
+concept is_ereasurness = is_constness<X> || voidness<X>;
 
-template <ereasurness ERASURENESS>
+template <is_ereasurness ERASURENESS>
 struct void_;
 template <>
 struct void_<mutable_> {
@@ -98,10 +98,10 @@ template <>
 struct void_<const_void> {
   using type = void const*;
 };
-template <ereasurness ERASURENESS>
+template <is_ereasurness ERASURENESS>
 using void_t = void_<ERASURENESS>::type;
 
-template <ereasurness ERASURENESS>
+template <is_ereasurness ERASURENESS>
 struct is_const_void_;
 template <>
 struct is_const_void_<void*> : std::false_type {};
@@ -122,7 +122,7 @@ concept is_const_data = is_const_void<data_void<DATA>>;
 
 template <typename TARGET, typename DATA>
 concept const_correct_target_for_data =
-    ereasurness<TARGET> && ereasurness<DATA> &&
+    is_ereasurness<TARGET> && is_ereasurness<DATA> &&
     (((is_const_void<TARGET> == is_const_void<DATA>) ||
       (!is_const_void<DATA>)));
 
@@ -132,7 +132,7 @@ concept const_correct_for_virtual_void_data =
 
 template <typename TARGET, typename VIRTUAL_VOID>
 concept const_correct_for_virtual_void =
-    ereasurness<TARGET> && is_virtual_void<VIRTUAL_VOID> &&
+    is_ereasurness<TARGET> && is_virtual_void<VIRTUAL_VOID> &&
     (const_correct_for_virtual_void_data<TARGET, VIRTUAL_VOID>);
 
 template <typename V, is_virtual_void DATA>

@@ -15,10 +15,10 @@ struct subscript_operator_target {
 };
 
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
-          constness CONSTNESS, typename RET, typename... ARGS>
+          is_constness CONSTNESS, typename RET, typename... ARGS>
 struct subscript_operator_;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
-          constness CONSTNESS, typename RET, typename... ARGS>
+          is_constness CONSTNESS, typename RET, typename... ARGS>
 struct subscript_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : operator_<subscript_operator_target< RET, ARGS...>, VIRTUAL_VOID, BASE, CONSTNESS,
                 RET(ARGS...)> {
@@ -36,7 +36,7 @@ struct subscript_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
 };
 
 template <is_virtual_void VIRTUAL_VOID, typename SIG,
-          constness CONSTNESS = const_,
+          is_constness CONSTNESS = const_,
           template <typename> typename BASE = base>
 using subscript_operator =
     subscript_operator_<VIRTUAL_VOID, BASE, CONSTNESS, SIG>;
@@ -44,13 +44,13 @@ using subscript_operator =
 template <class...>
 struct make_overloaded_subscript_operator;
 
-template <class SIG, constness CONSTNESS>
+template <class SIG, is_constness CONSTNESS>
 struct make_overloaded_subscript_operator<SIG, CONSTNESS> {
   template <virtual_void::is_virtual_void VV>
   using type = subscript_operator_<VV, base, CONSTNESS, SIG>;
 };
 
-template <class SIG, constness CONSTNESS, class... SIGS>
+template <class SIG, is_constness CONSTNESS, class... SIGS>
 struct make_overloaded_subscript_operator<SIG, CONSTNESS, SIGS...> {
   template <virtual_void::is_virtual_void VV>
   using type = subscript_operator_<
