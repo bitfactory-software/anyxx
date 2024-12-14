@@ -13,6 +13,7 @@ namespace virtual_void::interface {
 template <voidness VOIDNESS>
 struct v_table_base {
   using void_t = VOIDNESS;
+  using const_t = const_t<VOIDNESS>;
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(v_table_base) == from;
   }
@@ -27,6 +28,18 @@ template <voidness VOIDNESS>
 v_table_base<VOIDNESS>* base_v_table_imlpementation() {
   static v_table_base<VOIDNESS> v_table{nullptr};
   return &v_table;
+}
+
+template <is_constness CONSTNESS>
+int next_i_table_index_value() {
+  static int i = 0;
+  return i++;
+};
+
+template <typename V_TABLE>
+int i_table_index() {
+  static int i = next_i_table_index_value<typename V_TABLE::const_t>();
+  return i;
 }
 
 template <is_virtual_void VIRTUAL_VOID>

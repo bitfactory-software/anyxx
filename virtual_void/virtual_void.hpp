@@ -102,6 +102,27 @@ template <is_ereasurness ERASURENESS>
 using void_t = void_<ERASURENESS>::type;
 
 template <is_ereasurness ERASURENESS>
+struct constness_type;
+template <>
+struct constness_type<mutable_> {
+  using type = mutable_;
+};
+template <>
+struct constness_type<const_> {
+  using type = const_;
+};
+template <>
+struct constness_type<mutable_void> {
+  using type = mutable_;
+};
+template <>
+struct constness_type<const_void> {
+  using type = const_;
+};
+template <is_ereasurness ERASURENESS>
+using const_t = constness_type<ERASURENESS>::type;
+
+template <is_ereasurness ERASURENESS>
 struct is_const_void_;
 template <>
 struct is_const_void_<void*> : std::false_type {};
