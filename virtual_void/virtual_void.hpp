@@ -163,7 +163,7 @@ struct virtual_void_default_unerase {
 };
 
 template <typename UNERASER>
-concept uneraser = requires(UNERASER u, mutable_void mv) {
+concept is_uneraser = requires(UNERASER u, mutable_void mv) {
   { u(mv) } -> std::convertible_to<typename UNERASER::type*>;
 };
 

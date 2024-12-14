@@ -18,18 +18,18 @@ struct operator_v_table : BASE_V_TABLE {
                : BASE_V_TABLE::static_is_derived_from(from);
   }
   RET (*op)(void_t, ARGS&&...);
-  template <typename UNERASED>
-  operator_v_table(UNERASED unerased) : BASE_V_TABLE(unerased) {
+  template <is_uneraser UNERASER>
+  operator_v_table(UNERASER uneraser) : BASE_V_TABLE(uneraser) {
     if constexpr (const_correct_target_for_data<CONSTNESS, void_t>) {
       op = [](void_t _vp, ARGS&&... args) -> RET {
-        return TARGET{}(UNERASED{}(_vp), std::forward<ARGS>(args)...);
+        return TARGET{}(UNERASER{}(_vp), std::forward<ARGS>(args)...);
       };
       set_is_derived_from<v_table_t>(this);
     }
   }
 };
 
-template <typename UNERASER, typename TARGET, typename BASE_V_TABLE,
+template <is_uneraser UNERASER, typename TARGET, typename BASE_V_TABLE,
           constness CONSTNESS, typename RET, typename... ARGS>
 operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>*
 implemented_operator_v_table() {
