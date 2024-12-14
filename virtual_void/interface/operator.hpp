@@ -29,6 +29,15 @@ struct operator_v_table : BASE_V_TABLE {
   }
 };
 
+template <typename UNERASER, typename TARGET, typename BASE_V_TABLE,
+          constness CONSTNESS, typename RET, typename... ARGS>
+operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>*
+implemented_operator_v_table() {
+  static operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>
+      imlpemented_v_table{UNERASER{}};
+  return &imlpemented_v_table;
+}
+
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
           template <typename> typename BASE, constness CONSTNESS, typename RET,
           typename... ARGS>
@@ -60,7 +69,9 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     static v_table_t imlpemented_v_table{
         unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
-    v_table_ = &imlpemented_v_table;
+    v_table_ = implemented_operator_v_table<
+        decltype(unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()), TARGET,
+        v_table_base_t, CONSTNESS, RET, ARGS...>();
   }
   template <typename OTHER>
   operator_(const OTHER& other)
