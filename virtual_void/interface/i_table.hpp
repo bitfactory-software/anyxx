@@ -2,31 +2,27 @@
 
 #include <typeindex>
 #include <vector>
-
-#include <virtual_void/virtual_void.hpp>
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::interface {
 
-template<is_constness CONSTNESS> 
-class i_table {
+template <is_constness CONSTNESS>
+class i_table_variant {
  public:
   using i_table_target_t = v_table_base<void_t<CONSTNESS>>*;
+
  private:
-  const std::type_info& type_info_;
   std::vector<i_table_target_t> table_;
+
  public:
-  constexpr i_table(const std::type_info& type_info)
-      : type_info_(type_info) {}
-  constexpr const std::type_info& type() const { return type_info_; }
   constexpr void register_interface(int index, i_table_target_t target) {
     ensure_size(index);
     table_[index] = target;
   }
   constexpr void clear() { table_.clear(); }
   constexpr i_table_target_t at(int method_index) const {
-    if (table_.size() <= method_index)
-      return {};
+    if (table_.size() <= method_index) return {};
     auto target = table_[method_index];
     return target;
   }
@@ -40,10 +36,52 @@ class i_table {
   }
 };
 
-template <typename CLASS, is_constness CONSTNESS>
-constexpr i_table<CONSTNESS>* i_table_of() {
-  static i_table<CONSTNESS> table{typeid_of<CLASS>()};
+class i_table {
+ public:
+ private:
+  const std::type_info& type_info_;
+  i_table_variant<const_> const_table_;
+  i_table_variant<mutable_> mutable_table_;
+
+ public:
+  constexpr i_table(const std::type_info& type_info) : type_info_(type_info) {}
+  constexpr const std::type_info& type() const { return type_info_; }
+  constexpr i_table_variant<const_>* get_const() {
+    return &const_table_;
+  }
+  constexpr i_table_variant<const_> const* get_const() const {
+    return &const_table_;
+  }
+  constexpr i_table_variant<mutable_>* get_mutable() {
+    return &mutable_table_;
+  }
+  constexpr i_table_variant<mutable_> const* get_mutable() const {
+    return &mutable_table_;
+  }
+
+  template <is_constness CONSTNESS>
+  interface::i_table_variant<CONSTNESS> const* get() const {
+    if constexpr (std::same_as<CONSTNESS, const_>) {
+      return get_const();
+    } else {
+      get_mutable();
+    }
+  }
+
+  template <is_constness CONSTNESS>
+  interface::i_table_variant<CONSTNESS>* get() {
+    if constexpr (std::same_as<CONSTNESS, const_>) {
+      return get_const();
+    } else {
+      get_mutable();
+    }
+  }
+};
+
+template <typename CLASS>
+constexpr i_table* i_table_of() {
+  static i_table table{typeid_of<CLASS>()};
   return &table;
 }
 
-}  // namespace virtual_void::data::has_i_table
+}  // namespace virtual_void::interface

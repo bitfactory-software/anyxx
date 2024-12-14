@@ -29,8 +29,7 @@ TEST_CASE("i_table/lifetime/observer") {
   auto mo = erased<mutable_observer>(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(get_meta(mo)->get_i_table<const_>() ==
-          i_table_of<std::string, const_>());
+  REQUIRE(get_meta(mo)->get_i_table() == i_table_of<std::string>());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(std::derived_from<mutable_observer, observer<void*>>);
   REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");
