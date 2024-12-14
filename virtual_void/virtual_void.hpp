@@ -166,23 +166,35 @@ template <typename UNERASER>
 concept is_uneraser = requires(UNERASER u, mutable_void mv) {
   { u(mv) } -> std::convertible_to<typename UNERASER::type*>;
 };
-
 template <typename T>
 struct static_cast_uneraser {
   using type = T;
   auto operator()(auto from) { return static_cast<T*>(from); }
 };
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
-auto unerase() {
+struct unerased {
   using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
   using trait_t = virtual_void_trait<VIRTUAL_VOID>;
-    using value_t = trait_t::template unerased_type<constructed_with_t>;
-    if constexpr (is_const_data<VIRTUAL_VOID>) {
-      return static_cast_uneraser<value_t const>();
-    } else {
-      return static_cast_uneraser<value_t>();
-    }
-}
+  using type = trait_t::template unerased_type<constructed_with_t>;
+};
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
+using unerased_type = unerased<VIRTUAL_VOID, CONSTRUCTED_WITH>::type;
+
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH, bool is_const>
+struct make_uneraser;
+
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
+struct make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, true> {
+  using unerased = unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>;
+  using type = static_cast_uneraser<unerased const>;
+};
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
+struct make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, false> {
+  using unerased = unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>;
+  using type = static_cast_uneraser<unerased>;
+};
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
+using uneraser = make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, is_const_data<VIRTUAL_VOID>>::type;
 
 template <is_virtual_void VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {

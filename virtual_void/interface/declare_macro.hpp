@@ -125,7 +125,7 @@
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...) \
   name = [](void_t _vp __VA_OPT__(                                        \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
-    return v_table_map{}.name((UNERASED{}(_vp))__VA_OPT__(, ) __VA_OPT__(  \
+    return v_table_map{}.name((UNERASED{}(_vp))__VA_OPT__(, ) __VA_OPT__( \
         _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                       \
   };
 
@@ -184,7 +184,7 @@
     template <typename CONSTRUCTED_WITH>                                       \
     static v_table_t* imlpemented_v_table() {                                  \
       static v_table_t v_table{                                                \
-          ::virtual_void::unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};          \
+          ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>()};         \
       return &v_table;                                                         \
     }                                                                          \
                                                                                \

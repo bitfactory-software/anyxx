@@ -67,10 +67,8 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
   operator_(CONSTRUCTED_WITH&& v)
     requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
-    static v_table_t imlpemented_v_table{
-        unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
     v_table_ = implemented_operator_v_table<
-        decltype(unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()), TARGET,
+        uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>, TARGET,
         v_table_base_t, CONSTNESS, RET, ARGS...>();
   }
   template <typename OTHER>
