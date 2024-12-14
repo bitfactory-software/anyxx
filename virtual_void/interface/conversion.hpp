@@ -66,7 +66,7 @@ auto default_copy()
 {
   return +[](FROM const& from) -> base<TO> {
     typename INTERFACE<TO>::v_table_t* v_table =
-        INTERFACE<TO>::template imlpemented_v_table<CLASS>();
+        INTERFACE<TO>::template v_table_imlpementation<CLASS>();
     return INTERFACE<TO>(from, v_table);
   };
 };
@@ -93,7 +93,7 @@ template <template <is_virtual_void> typename INTERFACE, typename CLASS,
 auto default_move() {
   return +[](FROM&& from) -> base<TO> {
     typename INTERFACE<TO>::v_table_t* v_table =
-        INTERFACE<TO>::template imlpemented_v_table<CLASS>();
+        INTERFACE<TO>::template v_table_imlpementation<CLASS>();
     return base<TO>(std::move(from), v_table);
   };
 }

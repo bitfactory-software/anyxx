@@ -192,7 +192,7 @@
         _add_head((v_table_base_t), t))>;                                      \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
-    static auto imlpemented_v_table() {                                        \
+    static auto v_table_imlpementation() {                                        \
       return n##_v_table_imlpementation<                                       \
           ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>,            \
           _detail_INTERFACE_TEMPLATE_ARGS(_add_head((v_table_base_t), t))>();  \
@@ -208,7 +208,7 @@
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
                                                            VIRTUAL_VOID>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      v_table_ = imlpemented_v_table<CONSTRUCTED_WITH>();                      \
+      v_table_ = v_table_imlpementation<CONSTRUCTED_WITH>();                      \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \

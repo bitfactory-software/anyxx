@@ -24,9 +24,9 @@ struct v_table_base {
 };
 
 template <voidness VOIDNESS>
-v_table_base<VOIDNESS>* imlpemented_base_v_table() {
-  static v_table_base<VOIDNESS> imlpemented_v_table{nullptr};
-  return &imlpemented_v_table;
+v_table_base<VOIDNESS>* base_v_table_imlpementation() {
+  static v_table_base<VOIDNESS> v_table{nullptr};
+  return &v_table;
 }
 
 template <is_virtual_void VIRTUAL_VOID>
@@ -61,7 +61,7 @@ class base {
     requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    v_table_ = imlpemented_base_v_table<void_t>();
+    v_table_ = base_v_table_imlpementation<void_t>();
   }
   template <typename CONSTRUCTED_WITH>
   base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}

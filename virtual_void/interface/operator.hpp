@@ -34,8 +34,8 @@ template <is_uneraser UNERASER, typename TARGET, typename BASE_V_TABLE,
 operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>*
 implemented_operator_v_table() {
   static operator_v_table<TARGET, BASE_V_TABLE, CONSTNESS, RET, ARGS...>
-      imlpemented_v_table{UNERASER{}};
-  return &imlpemented_v_table;
+      v_table{UNERASER{}};
+  return &v_table;
 }
 
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
