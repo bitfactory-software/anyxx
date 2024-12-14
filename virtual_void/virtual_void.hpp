@@ -176,17 +176,12 @@ template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
 auto unerase() {
   using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
   using trait_t = virtual_void_trait<VIRTUAL_VOID>;
-  if constexpr (is_virtual_void<constructed_with_t>) {
-    using value_t = typename constructed_with_t::value_t;
-    return static_cast_uneraser<value_t>();
-  } else {
     using value_t = trait_t::template unerased_type<constructed_with_t>;
     if constexpr (is_const_data<VIRTUAL_VOID>) {
       return static_cast_uneraser<value_t const>();
     } else {
       return static_cast_uneraser<value_t>();
     }
-  }
 }
 
 template <is_virtual_void VIRTUAL_VOID>
