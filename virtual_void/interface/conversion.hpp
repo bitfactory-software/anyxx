@@ -115,6 +115,19 @@ void enable_move_to_interface() {
       default_move<TO_INTERFACE, CLASS, TO, FROM>());
 }
 
+//template <typename TO_INTERFACE, is_virtual_void VV_FROM>
+//TO_INTERFACE attach_interface_x(VV_FROM const& vv_from) {
+//  using vv_to_t = typename TO_INTERFACE::virtual_void_t;
+//  using v_table_to = typename TO_INTERFACE::virtual_void_t;
+//  static_assert(is_virtual_void<vv_to_t>);
+//  auto const& type_info = *get_meta(vv_from)->type_info();
+//  auto const& copy = find_copy<vv_to_t, VV_FROM>()(type_info);
+//  auto i_table* = get_meta(vv_from)->get_i_table<data_const_t<vv_to_t>>();
+//  auto v_table* = i_table->at(i_table_index<v_table_to>());
+//  base<vv_to_t> b = copy.construct<TO_INTERFACE>(vv_from);
+//  return std::move(unchecked_v_table_cast<TO_INTERFACE>(std::move(b)));
+//}
+
 template <typename TO_INTERFACE, is_virtual_void VV_FROM>
 TO_INTERFACE attach_interface(VV_FROM const& vv_from) {
   using vv_to_t = typename TO_INTERFACE::virtual_void_t;

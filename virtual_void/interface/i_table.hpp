@@ -21,18 +21,18 @@ class i_table_variant {
     table_[index] = target;
   }
   constexpr void clear() { table_.clear(); }
-  constexpr i_table_target_t at(int method_index) const {
-    if (table_.size() <= method_index) return {};
-    auto target = table_[method_index];
+  constexpr i_table_target_t at(int v_table_index) const {
+    if (table_.size() <= v_table_index) return {};
+    auto target = table_[v_table_index];
     return target;
   }
-  constexpr i_table_target_t find(int method_index) const {
-    if (table_.size() > method_index) return table_[method_index];
+  constexpr i_table_target_t find(int v_table_index) const {
+    if (table_.size() > v_table_index) return table_[v_table_index];
     return {};
   }
-  constexpr void ensure_size(std::size_t method_index) {
-    if (table_.size() <= method_index)
-      table_.insert(table_.end(), 1 + method_index - table_.size(), {});
+  constexpr void ensure_size(std::size_t v_table_index) {
+    if (table_.size() <= v_table_index)
+      table_.insert(table_.end(), 1 + v_table_index - table_.size(), {});
   }
 };
 
