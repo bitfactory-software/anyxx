@@ -13,9 +13,9 @@ struct domain {
 template <typename RET, typename... ARGS>
 struct translate_erased_function;
 
-template <typename RET, is_const_specifier CONST_SPECIFIER, typename... OTHER_ARGS>
-struct translate_erased_function<RET, CONST_SPECIFIER, OTHER_ARGS...> {
-  using type = RET (*)(void_t<CONST_SPECIFIER>, OTHER_ARGS...);
+template <typename RET, constness CONSTNESS, typename... OTHER_ARGS>
+struct translate_erased_function<RET, CONSTNESS, OTHER_ARGS...> {
+  using type = RET (*)(void_t<CONSTNESS>, OTHER_ARGS...);
 };
 
 }  // namespace virtual_void::open_method

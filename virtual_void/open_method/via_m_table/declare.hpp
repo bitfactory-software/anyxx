@@ -82,11 +82,11 @@ class declare;
 
 template <typename R, typename... ARGS>
 class declare<R(ARGS...)> : public declaration_base {
-  static_assert(is_const_specifier<first_t<ARGS...>>);
+  static_assert(constness<first_t<ARGS...>>);
 
  public:
-  using const_specifier = typename first_t<ARGS...>;
-  using dispatch_t = void_t<const_specifier>;
+  using CONSTNESS = typename first_t<ARGS...>;
+  using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
   using pair_t = std::pair<const data::has_m_table::m_table_t*, dispatch_t>;

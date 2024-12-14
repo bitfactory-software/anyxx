@@ -66,7 +66,7 @@ concept is_virtual_typed = requires(E e) {
 struct mutable_ {};
 struct const_ {};
 template <typename CS>
-concept is_const_specifier =
+concept constness =
     (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
 
 template <typename VV_VOID>
@@ -79,7 +79,7 @@ template <>
 struct is_const_void_<mutable_> : std::false_type {};
 template <>
 struct is_const_void_<const_> : std::true_type {};
-template <is_const_specifier CONST_SPECIFIER>
+template <constness CONSTNESS>
 struct void_;
 template <>
 struct void_<mutable_> {
@@ -89,8 +89,8 @@ template <>
 struct void_<const_> {
   using type = void const*;
 };
-template <is_const_specifier CONST_SPECIFIER>
-using void_t = void_<CONST_SPECIFIER>::type;
+template <constness CONSTNESS>
+using void_t = void_<CONSTNESS>::type;
 
 template <typename VV_VOID>
 concept is_const_void = is_const_void_<VV_VOID>::value;

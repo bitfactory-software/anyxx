@@ -30,13 +30,13 @@ struct operator_v_table : BASE_V_TABLE {
 };
 
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
-          template <typename> typename BASE, is_const_specifier CONST_SPECIFIER,
+          template <typename> typename BASE, constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_;
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
-          template <typename> typename BASE, is_const_specifier CONST_SPECIFIER,
+          template <typename> typename BASE, constness CONSTNESS,
           typename RET, typename... ARGS>
-struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
+struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
@@ -44,10 +44,10 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
   using base_t = BASE<VIRTUAL_VOID>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =
-      operator_v_table<TARGET, v_table_base_t, CONST_SPECIFIER, RET, ARGS...>;
+      operator_v_table<TARGET, v_table_base_t, CONSTNESS, RET, ARGS...>;
   using query_v_table_unique_t =
       operator_v_table<TARGET, base<virtual_void_t>,
-                       virtual_void::void_t<CONST_SPECIFIER>, RET, ARGS...>;
+                       virtual_void::void_t<CONSTNESS>, RET, ARGS...>;
   template <typename T>
   using is_already_base =
       std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
@@ -79,14 +79,14 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONST_SPECIFIER, RET(ARGS...)>
       : base_t(other) {}
   // RET operator()(ARGS&&... args) const
   //   requires(const_correct_for_virtual_void<
-  //            virtual_void::void_t<CONST_SPECIFIER>, virtual_void_t>)
+  //            virtual_void::void_t<CONSTNESS>, virtual_void_t>)
   //{
   //   return static_cast<v_table_t*>(v_table_)->call_op(
   //       get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
   // }
   RET invoke(ARGS&&... args) const
     requires(const_correct_for_virtual_void<
-             virtual_void::void_t<CONST_SPECIFIER>, virtual_void_t>)
+             virtual_void::void_t<CONSTNESS>, virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
