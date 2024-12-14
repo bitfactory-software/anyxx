@@ -125,7 +125,7 @@
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...) \
   name = [](void_t _vp __VA_OPT__(                                        \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
-    return v_table_map{}.name((UNERASE{}(_vp))__VA_OPT__(, ) __VA_OPT__(  \
+    return v_table_map{}.name((UNERASED{}(_vp))__VA_OPT__(, ) __VA_OPT__(  \
         _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                       \
   };
 
@@ -161,10 +161,10 @@
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
-    template <typename UNERASE>                                                \
-    n##_v_table(UNERASE unerase) : v_table_base_t(unerase) {                   \
+    template <typename UNERASED>                                               \
+    n##_v_table(UNERASED unerased) : v_table_base_t(unerased) {                \
       using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
-          _add_head((typename UNERASE::type), t))>;                            \
+          _add_head((typename UNERASED::type), t))>;                           \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
@@ -213,7 +213,10 @@
         : base_t(std::move(other)) {}                                          \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
                                                                                \
-    auto const* operator->() const { return this; }                            \
+        auto const*                                                            \
+        operator->() const {                                                   \
+      return this;                                                             \
+    }                                                                          \
     n() = default;                                                             \
     n(n const&) = default;                                                     \
     n(n&&) = default;                                                          \

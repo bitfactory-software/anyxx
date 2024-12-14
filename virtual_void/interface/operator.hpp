@@ -18,11 +18,11 @@ struct operator_v_table : BASE_V_TABLE {
                : BASE_V_TABLE::static_is_derived_from(from);
   }
   RET (*op)(void_t, ARGS&&...);
-  template <typename UNERASE>
-  operator_v_table(UNERASE unerase) : BASE_V_TABLE(unerase) {
+  template <typename UNERASED>
+  operator_v_table(UNERASED unerased) : BASE_V_TABLE(unerased) {
     if constexpr (const_correct_target_for_data<VV_VOID, void_t>) {
       op = [](void_t _vp, ARGS&&... args) -> RET {
-        return TARGET{}(UNERASE{}(_vp), std::forward<ARGS>(args)...);
+        return TARGET{}(UNERASED{}(_vp), std::forward<ARGS>(args)...);
       };
       set_is_derived_from<v_table_t>(this);
     }
@@ -30,12 +30,12 @@ struct operator_v_table : BASE_V_TABLE {
 };
 
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
-          template <typename> typename BASE, constness CONSTNESS,
-          typename RET, typename... ARGS>
+          template <typename> typename BASE, constness CONSTNESS, typename RET,
+          typename... ARGS>
 struct operator_;
 template <typename TARGET, is_virtual_void VIRTUAL_VOID,
-          template <typename> typename BASE, constness CONSTNESS,
-          typename RET, typename... ARGS>
+          template <typename> typename BASE, constness CONSTNESS, typename RET,
+          typename... ARGS>
 struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<VIRTUAL_VOID> {
  public:
@@ -74,8 +74,8 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
   //       get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
   // }
   RET invoke(ARGS&&... args) const
-    requires(const_correct_for_virtual_void<
-             virtual_void::void_t<CONSTNESS>, virtual_void_t>)
+    requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
+                                            virtual_void_t>)
   {
     return static_cast<v_table_t*>(v_table_)->op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
