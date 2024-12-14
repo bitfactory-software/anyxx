@@ -10,7 +10,10 @@
 namespace virtual_void {
 
 using type_info_ptr = std::type_info const*;
-template<typename T> const std::type_info& typeid_of(){ return typeid(T); }; // remove this! require explicit registering!
+template <typename T>
+const std::type_info& typeid_of() {
+  return typeid(T);
+};  // remove this! require explicit registering!
 
 template <typename>
 struct self_pointer;
@@ -66,8 +69,7 @@ concept is_virtual_typed = requires(E e) {
 struct mutable_ {};
 struct const_ {};
 template <typename CS>
-concept constness =
-    (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
+concept constness = (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -75,16 +77,8 @@ template <typename V>
 concept voidness =
     (std::same_as<V, const_void> || std::same_as<V, mutable_void>);
 
-template <typename VV_VOID>
-struct is_const_void_;
-template <>
-struct is_const_void_<void*> : std::false_type {};
-template <>
-struct is_const_void_<void const*> : std::true_type {};
-template <>
-struct is_const_void_<mutable_> : std::false_type {};
-template <>
-struct is_const_void_<const_> : std::true_type {};
+template <typename X>
+concept ereasurness = constness<X> || voidness<X>;
 
 template <constness CONSTNESS>
 struct void_;
@@ -99,8 +93,19 @@ struct void_<const_> {
 template <constness CONSTNESS>
 using void_t = void_<CONSTNESS>::type;
 
-template <typename VV_VOID>
-concept is_const_void = is_const_void_<VV_VOID>::value;
+template <ereasurness ERASURENESS>
+struct is_const_void_;
+template <>
+struct is_const_void_<void*> : std::false_type {};
+template <>
+struct is_const_void_<void const*> : std::true_type {};
+template <>
+struct is_const_void_<mutable_> : std::false_type {};
+template <>
+struct is_const_void_<const_> : std::true_type {};
+
+template <typename ERASURENESS>
+concept is_const_void = is_const_void_<ERASURENESS>::value;
 
 template <typename DATA>
 using data_void = virtual_void_trait<DATA>::void_t;
@@ -204,7 +209,8 @@ auto unchecked_unerase_cast(VIRTUAL_VOID const& o)
 }
 template <typename U, typename META>
 bool type_match(META const* meta) {
-  if (auto type_info = meta->type_info(); type_info && *type_info != typeid_of<U>())
+  if (auto type_info = meta->type_info();
+      type_info && *type_info != typeid_of<U>())
     return false;
   return true;
 }
@@ -213,7 +219,8 @@ class type_mismatch_error : error {
 };
 template <typename U, typename META>
 void check_type_match(META const* meta) {
-  if (auto type_info = meta->type_info(); type_info && *type_info != typeid_of<U>())
+  if (auto type_info = meta->type_info();
+      type_info && *type_info != typeid_of<U>())
     throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
