@@ -180,17 +180,6 @@
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t = n##_v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(      \
         _add_head((v_table_base_t), t))>;                                      \
-    using query_v_table_unique_t =                                             \
-        n##_v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                    \
-            _add_head((::virtual_void::interface::base<virtual_void_t>), t))>; \
-    template <typename T>                                                      \
-    using is_already_base =                                                    \
-        std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,          \
-                           std::true_type,                                     \
-                           typename base_t::template is_already_base<T>>;      \
-    static_assert(                                                             \
-        !base_t::template is_already_base<query_v_table_unique_t>::value,      \
-        "A v_table may be instanciated only once per interface");              \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
     static v_table_t* imlpemented_v_table() {                                  \

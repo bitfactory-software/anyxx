@@ -42,9 +42,6 @@ class base {
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
   using v_table_t = v_table_base<void_t>;
-  template <typename>
-  using is_already_base =
-      std::false_type;  // base is always at the bottom of the v_table chain.
 
  protected:
   virtual_void_t virtual_void_ = {};

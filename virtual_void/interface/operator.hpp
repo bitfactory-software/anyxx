@@ -45,17 +45,6 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =
       operator_v_table<TARGET, v_table_base_t, CONSTNESS, RET, ARGS...>;
-  using query_v_table_unique_t =
-      operator_v_table<TARGET, base<virtual_void_t>,
-                       virtual_void::void_t<CONSTNESS>, RET, ARGS...>;
-  template <typename T>
-  using is_already_base =
-      std::conditional_t<std::is_same_v<T, query_v_table_unique_t>,
-                         std::true_type,
-                         typename base_t::template is_already_base<T>>;
-  static_assert(
-      !base_t::template is_already_base<query_v_table_unique_t>::value,
-      "A v_table may only instanciated once in an interface");
   using base_t::operator();
 
  protected:
