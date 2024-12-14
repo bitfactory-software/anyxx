@@ -17,12 +17,17 @@ struct v_table_base {
     return typeid(v_table_base) == from;
   }
   bool (*_is_derived_from)(const std::type_info&);
-  template <typename UNERASE>
-  v_table_base(UNERASE)
+  v_table_base(auto unused)
       : _is_derived_from([](const std::type_info& from) {
           return static_is_derived_from(from);
         }){};
 };
+
+template <voidness VOIDNESS>
+v_table_base<VOIDNESS>* imlpemented_base_v_table() {
+  static v_table_base<VOIDNESS> imlpemented_v_table{nullptr};
+  return &imlpemented_v_table;
+}
 
 template <is_virtual_void VIRTUAL_VOID>
 class base;
@@ -56,9 +61,7 @@ class base {
     requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    static v_table_t imlpemented_v_table{
-        unerase<VIRTUAL_VOID, CONSTRUCTED_WITH>()};
-    v_table_ = &imlpemented_v_table;
+    v_table_ = imlpemented_base_v_table<void_t>();
   }
   template <typename CONSTRUCTED_WITH>
   base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}
