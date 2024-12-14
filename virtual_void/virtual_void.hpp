@@ -69,6 +69,12 @@ template <typename CS>
 concept constness =
     (std::same_as<CS, mutable_> || std::same_as<CS, const_>);
 
+using const_void = void const*;
+using mutable_void = void*;
+template <typename V>
+concept voidness =
+    (std::same_as<V, const_void> || std::same_as<V, mutable_void>);
+
 template <typename VV_VOID>
 struct is_const_void_;
 template <>
@@ -79,6 +85,7 @@ template <>
 struct is_const_void_<mutable_> : std::false_type {};
 template <>
 struct is_const_void_<const_> : std::true_type {};
+
 template <constness CONSTNESS>
 struct void_;
 template <>
