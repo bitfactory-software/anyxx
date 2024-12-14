@@ -80,7 +80,7 @@ concept voidness =
 template <typename X>
 concept ereasurness = constness<X> || voidness<X>;
 
-template <constness CONSTNESS>
+template <ereasurness ERASURENESS>
 struct void_;
 template <>
 struct void_<mutable_> {
@@ -90,8 +90,16 @@ template <>
 struct void_<const_> {
   using type = void const*;
 };
-template <constness CONSTNESS>
-using void_t = void_<CONSTNESS>::type;
+template <>
+struct void_<mutable_void> {
+  using type = void*;
+};
+template <>
+struct void_<const_void> {
+  using type = void const*;
+};
+template <ereasurness ERASURENESS>
+using void_t = void_<ERASURENESS>::type;
 
 template <ereasurness ERASURENESS>
 struct is_const_void_;
@@ -103,7 +111,6 @@ template <>
 struct is_const_void_<mutable_> : std::false_type {};
 template <>
 struct is_const_void_<const_> : std::true_type {};
-
 template <typename ERASURENESS>
 concept is_const_void = is_const_void_<ERASURENESS>::value;
 
