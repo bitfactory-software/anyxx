@@ -10,9 +10,9 @@
 
 namespace virtual_void::interface {
 
-template <typename VV_VOID>
+template <voidness VOIDNESS>
 struct v_table_base {
-  using void_t = VV_VOID;
+  using void_t = VOIDNESS;
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(v_table_base) == from;
   }
