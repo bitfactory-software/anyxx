@@ -137,6 +137,8 @@ concept is_const_void = is_const_void_<ERASURENESS>::value;
 
 template <typename DATA>
 using data_void = virtual_void_trait<DATA>::void_t;
+template <typename DATA>
+using data_const_t = const_t<typename virtual_void_trait<DATA>::void_t>;
 
 template <typename DATA>
 concept is_const_data = is_const_void<data_void<DATA>>;
