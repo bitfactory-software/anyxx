@@ -46,6 +46,18 @@ struct copy_converter<has_i_table::mutable_observer, FROM> {
                                          *virtual_void::get_meta(from)};
   }
 };
+template <>
+struct copy_converter<has_i_table::shared_const, has_i_table::shared_const> {
+  auto operator()(const auto& from) {
+    return from;
+  }
+};
+template <>
+struct copy_converter<has_i_table::value, has_i_table::value> {
+  auto operator()(const auto& from) {
+    return from;
+  }
+};
 template <is_virtual_void FROM>
   requires std::same_as<meta_t<FROM>, has_i_table::meta>
 struct copy_converter<has_i_table::unique, FROM> {

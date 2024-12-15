@@ -1,8 +1,8 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <virtual_void/data/has_type_info/observer.hpp>
-#include <virtual_void/data/has_type_info/shared_const.hpp>
-#include <virtual_void/data/has_type_info/unique.hpp>
+#include <virtual_void/data/has_i_table/observer.hpp>
+#include <virtual_void/data/has_i_table/shared_const.hpp>
+#include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 
@@ -10,14 +10,12 @@
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
-using namespace virtual_void::data::has_type_info;
+using namespace virtual_void::data::has_i_table;
 
 using namespace test::component_base;
 
 TEST_CASE("_interface_cast") {
   test::component_base::enable_casts();
-
-  seal_casts();
 
   {
     to_string_i<const_observer> to_string_i_co{

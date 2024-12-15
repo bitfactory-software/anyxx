@@ -55,13 +55,7 @@ class i_table {
         }) {}
   constexpr const std::type_info& type() const { return type_info_; }
   constexpr i_table_variant<const_>* get_const() { return &const_table_; }
-  constexpr i_table_variant<const_> const* get_const() const {
-    return &const_table_;
-  }
   constexpr i_table_variant<mutable_>* get_mutable() { return &mutable_table_; }
-  constexpr i_table_variant<mutable_> const* get_mutable() const {
-    return &mutable_table_;
-  }
 
   auto copy_construct(const_void from) { return copy_construct_(from); }
 };
@@ -71,11 +65,11 @@ constexpr const std::type_info& get_type_info(i_table const* t) {
 }
 
 template <is_constness CONSTNESS>
-constexpr interface::i_table_variant<CONSTNESS>* get(i_table const* t) {
+constexpr interface::i_table_variant<CONSTNESS>* get(i_table* t) {
   if constexpr (std::same_as<CONSTNESS, const_>) {
     return t->get_const();
   } else {
-    t->get_mutable();
+    return t->get_mutable();
   }
 }
 
@@ -89,10 +83,14 @@ template <typename CLASS, typename V_TABLE>
 void is_a() {
   auto i_table_index_ = i_table_index<V_TABLE>();
   using v_table_t_constness = typename V_TABLE::const_t;
+  static_assert(is_constness<v_table_t_constness>);
   auto i_table_ = get<v_table_t_constness>(i_table_of<CLASS>());
-  auto v_table_ =
-      V_TABLE::implementation <
-      static_cast_uneraser<const_qualified<CLASS, v_table_t_constness>>();
+  static_assert(
+      is_uneraser<
+          static_cast_uneraser<const_qualified<v_table_t_constness, CLASS>>>);
+  using uneraser =
+      static_cast_uneraser<const_qualified<v_table_t_constness, CLASS>>;
+  auto v_table_ = V_TABLE::template imlpementation<uneraser>();
   i_table_->register_interface(i_table_index_, v_table_);
 }
 

@@ -112,6 +112,19 @@ TEST_CASE("_data_conversion copy") {
   }
   {
     auto vv1 = erased<has_i_table::shared_const>(s1);
+    auto vv2 = data::copy_convert_to<has_i_table::shared_const>(vv1);
+    REQUIRE(get_data(vv1) == get_data(vv2));
+  }
+  {
+    auto vv1 = erased<has_i_table::value>(s1);
+    auto vv2 = data::copy_convert_to<has_i_table::value>(vv1);
+    auto sc1 = unerase_cast<std::string>(vv1);
+    auto sc2 = unerase_cast<std::string>(vv2);
+    REQUIRE(*sc1 == *sc2);
+    REQUIRE(get_data(vv1) != get_data(vv2));
+  }
+  {
+    auto vv1 = erased<has_i_table::shared_const>(s1);
     auto vv2 = data::copy_convert_to<has_i_table::unique>(vv1);
     REQUIRE(*unerase_cast<std::string>(vv1) == *unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) != get_data(vv2));
