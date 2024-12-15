@@ -9,6 +9,7 @@ struct decorated_ptr : META {
   PTR ptr_ = nullptr;
 
   decorated_ptr() = default;
+  decorated_ptr(PTR& ptr, META const& meta) : META(meta), ptr_(ptr) {}
   decorated_ptr(const decorated_ptr& other) : META(other), ptr_(other.ptr_) {}
   decorated_ptr(decorated_ptr&& rhs) noexcept
       : META(std::move(*(META*)&rhs)), ptr_(std::move(rhs.ptr_)) {}

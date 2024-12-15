@@ -6,6 +6,7 @@
 #include <virtual_void/open_method/via_type_info/factory.hpp>
 #include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/data/copy_convert.hpp>
 
 namespace virtual_void::interface {
 

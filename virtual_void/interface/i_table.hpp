@@ -2,6 +2,7 @@
 
 #include <typeindex>
 #include <vector>
+#include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -42,19 +43,22 @@ class i_table {
   const std::type_info& type_info_;
   i_table_variant<const_> const_table_;
   i_table_variant<mutable_> mutable_table_;
+  using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
+  copy_construct_t* copy_construct_;
 
  public:
-  constexpr i_table(const std::type_info& type_info) : type_info_(type_info) {}
+  template <typename CLASS>
+  constexpr i_table(std::in_place_type_t<CLASS>)
+      : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
+          return erased<data::has_i_table::unique>(
+              *static_cast<CLASS const*>(from));
+        }) {}
   constexpr const std::type_info& type() const { return type_info_; }
-  constexpr i_table_variant<const_>* get_const() {
-    return &const_table_;
-  }
+  constexpr i_table_variant<const_>* get_const() { return &const_table_; }
   constexpr i_table_variant<const_> const* get_const() const {
     return &const_table_;
   }
-  constexpr i_table_variant<mutable_>* get_mutable() {
-    return &mutable_table_;
-  }
+  constexpr i_table_variant<mutable_>* get_mutable() { return &mutable_table_; }
   constexpr i_table_variant<mutable_> const* get_mutable() const {
     return &mutable_table_;
   }
@@ -76,11 +80,17 @@ class i_table {
       get_mutable();
     }
   }
+
+  auto copy_construct(const_void from) { return copy_construct_(from); }
 };
+
+constexpr const std::type_info& get_type_info(i_table const* t) {
+  return t->type();
+}
 
 template <typename CLASS>
 constexpr i_table* i_table_of() {
-  static i_table table{typeid_of<CLASS>()};
+  static i_table table{std::in_place_type<CLASS>};
   return &table;
 }
 

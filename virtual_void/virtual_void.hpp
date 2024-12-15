@@ -53,6 +53,9 @@ concept has_virtual_void_trait = requires(PTR ptr) {
 template <class E>
 concept is_virtual_void = has_virtual_void_trait<E>;
 
+template <is_virtual_void VV>
+using meta_t = typename virtual_void_trait<VV>::meta_t;
+
 template <class E>
 concept is_virtual_typed = requires(E e) {
   typename E::void_t;
@@ -203,7 +206,8 @@ struct unerased {
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
 using unerased_type = unerased<VIRTUAL_VOID, CONSTRUCTED_WITH>::type;
 
-template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH, bool is_const>
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH,
+          bool is_const>
 struct make_uneraser;
 
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
@@ -217,7 +221,8 @@ struct make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, false> {
   using type = static_cast_uneraser<unerased>;
 };
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
-using uneraser = make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, is_const_data<VIRTUAL_VOID>>::type;
+using uneraser = make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH,
+                               is_const_data<VIRTUAL_VOID>>::type;
 
 template <is_virtual_void VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {
