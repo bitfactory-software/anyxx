@@ -86,7 +86,7 @@ constexpr i_table* i_table_of() {
 }
 
 template <typename CLASS, typename V_TABLE>
-inline void is_a() {
+void is_a() {
   auto i_table_index_ = i_table_index<V_TABLE>();
   using v_table_t_constness = typename V_TABLE::const_t;
   auto i_table_ = get<v_table_t_constness>(i_table_of<CLASS>());
