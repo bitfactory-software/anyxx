@@ -206,6 +206,17 @@ struct unerased {
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
 using unerased_type = unerased<VIRTUAL_VOID, CONSTRUCTED_WITH>::type;
 
+template <is_constness CONSTNESS, typename T>
+struct const_qualified_ {
+  using type = T;
+};
+template <typename T>
+struct const_qualified_<const_, T> {
+  using type = T const;
+};
+template <is_constness CONSTNESS, typename T>
+using const_qualified = typename const_qualified_<CONSTNESS, T>::type;
+
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH,
           bool is_const>
 struct make_uneraser;

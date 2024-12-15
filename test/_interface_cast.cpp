@@ -5,7 +5,6 @@
 #include <virtual_void/data/has_type_info/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
 
 #include "./component_base/component_base.hpp"
 

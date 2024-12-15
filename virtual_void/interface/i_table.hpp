@@ -85,12 +85,15 @@ constexpr i_table* i_table_of() {
   return &table;
 }
 
-//template<typename CLASS, typename V_TABLE>
-//inline void is_a() { auto i_table_index_ = i_table_index<V_TABLE>(); 
-//  using v_table_t_constness = typename v_table_t::const_t;
-//  auto i_table = get<v_table_t_constness>(i_table_of<CLASS>());
-//  auto v_table = 
-//  i_table->register_interface(i_table_index_,);
-//}
+template <typename CLASS, typename V_TABLE>
+inline void is_a() {
+  auto i_table_index_ = i_table_index<V_TABLE>();
+  using v_table_t_constness = typename V_TABLE::const_t;
+  auto i_table_ = get<v_table_t_constness>(i_table_of<CLASS>());
+  auto v_table_ =
+      V_TABLE::implementation <
+      static_cast_uneraser<const_qualified<CLASS, v_table_t_constness>>();
+  i_table_->register_interface(i_table_index_, v_table_);
+}
 
 }  // namespace virtual_void::interface
