@@ -11,7 +11,7 @@ namespace virtual_void::interface {
 template <is_constness CONSTNESS>
 class i_table_variant {
  public:
-  using i_table_target_t = v_table_base<void_t<CONSTNESS>>*;
+  using i_table_target_t = base_v_table<void_t<CONSTNESS>>*;
 
  private:
   std::vector<i_table_target_t> table_;

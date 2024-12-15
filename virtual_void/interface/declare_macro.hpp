@@ -149,10 +149,9 @@
       : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(        \
             _add_head((T), t))> {};                                            \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
-      _add_head((BASE_V_TABLE), t))>                                           \
-  struct n##_v_table : BASE_V_TABLE {                                          \
-    using v_table_base_t = BASE_V_TABLE;                                       \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((VOIDNESS), t))>  \
+  struct n##_v_table : BASE##_v_table<VOIDNESS> {                              \
+    using v_table_base_t = BASE##_v_table<VOIDNESS>;                           \
     using void_t = v_table_base_t::void_t;                                     \
     using v_table_t = n##_v_table;                                             \
     static bool static_is_derived_from(const std::type_info& from) {           \
@@ -185,7 +184,7 @@
     using void_t = typename base_t::void_t;                                    \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t = n##_v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(      \
-        _add_head((v_table_base_t), t))>;                                      \
+        _add_head((void_t), t))>;                                              \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
     static auto v_table_imlpementation() {                                     \

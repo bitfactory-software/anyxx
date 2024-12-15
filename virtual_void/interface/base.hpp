@@ -11,22 +11,22 @@
 namespace virtual_void::interface {
 
 template <voidness VOIDNESS>
-struct v_table_base {
+struct base_v_table {
   using void_t = VOIDNESS;
   using const_t = const_t<VOIDNESS>;
   static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(v_table_base) == from;
+    return typeid(base_v_table) == from;
   }
   bool (*_is_derived_from)(const std::type_info&);
-  v_table_base(auto unused)
+  base_v_table(auto unused)
       : _is_derived_from([](const std::type_info& from) {
           return static_is_derived_from(from);
         }){};
 };
 
 template <voidness VOIDNESS>
-v_table_base<VOIDNESS>* base_v_table_imlpementation() {
-  static v_table_base<VOIDNESS> v_table{nullptr};
+base_v_table<VOIDNESS>* base_v_table_imlpementation() {
+  static base_v_table<VOIDNESS> v_table{nullptr};
   return &v_table;
 }
 
@@ -59,7 +59,9 @@ class base {
  public:
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
-  using v_table_t = v_table_base<void_t>;
+  template<voidness VOIDNESS> using 
+  v_table_template = base_v_table<VOIDNESS>;
+  using v_table_t = v_table_template<void_t>;
 
  protected:
   virtual_void_t virtual_void_ = {};

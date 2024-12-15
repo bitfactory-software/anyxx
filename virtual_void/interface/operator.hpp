@@ -51,6 +51,8 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
+  template<voidness VOIDNESS> using 
+  v_table_template = base_t::template v_table_template<VOIDNESS>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =
       operator_v_table<TARGET, v_table_base_t, CONSTNESS, RET, ARGS...>;
