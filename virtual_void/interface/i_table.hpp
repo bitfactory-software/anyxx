@@ -63,24 +63,6 @@ class i_table {
     return &mutable_table_;
   }
 
-  template <is_constness CONSTNESS>
-  interface::i_table_variant<CONSTNESS> const* get() const {
-    if constexpr (std::same_as<CONSTNESS, const_>) {
-      return get_const();
-    } else {
-      get_mutable();
-    }
-  }
-
-  template <is_constness CONSTNESS>
-  interface::i_table_variant<CONSTNESS>* get() {
-    if constexpr (std::same_as<CONSTNESS, const_>) {
-      return get_const();
-    } else {
-      get_mutable();
-    }
-  }
-
   auto copy_construct(const_void from) { return copy_construct_(from); }
 };
 
@@ -88,10 +70,27 @@ constexpr const std::type_info& get_type_info(i_table const* t) {
   return t->type();
 }
 
+template <is_constness CONSTNESS>
+constexpr interface::i_table_variant<CONSTNESS>* get(i_table const* t) {
+  if constexpr (std::same_as<CONSTNESS, const_>) {
+    return t->get_const();
+  } else {
+    t->get_mutable();
+  }
+}
+
 template <typename CLASS>
 constexpr i_table* i_table_of() {
   static i_table table{std::in_place_type<CLASS>};
   return &table;
 }
+
+//template<typename CLASS, typename V_TABLE>
+//inline void is_a() { auto i_table_index_ = i_table_index<V_TABLE>(); 
+//  using v_table_t_constness = typename v_table_t::const_t;
+//  auto i_table = get<v_table_t_constness>(i_table_of<CLASS>());
+//  auto v_table = 
+//  i_table->register_interface(i_table_index_,);
+//}
 
 }  // namespace virtual_void::interface
