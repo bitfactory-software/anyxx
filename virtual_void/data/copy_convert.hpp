@@ -15,12 +15,6 @@ namespace virtual_void::data {
 template <is_virtual_void TO, is_virtual_void FROM>
 struct copy_converter;
 
-//template <is_virtual_void T>
-//  requires std::copy_constructible<T>
-//struct copy_converter<T, T> {
-//  auto operator()(const auto& from) { return from; }
-//};
-
 template <is_virtual_void FROM>
 struct copy_converter<has_no_meta::const_observer, FROM> {
   auto operator()(const auto& from) {

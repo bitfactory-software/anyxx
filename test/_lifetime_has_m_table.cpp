@@ -130,11 +130,14 @@ TEST_CASE("m_table/lifetime/value") {
     static_assert(std::same_as<std::decay_t<decltype(*v1)>, std::string>);
     REQUIRE(*v1 == std::string{"hallo"});
     auto v2 = std::move(v1);
+#pragma warning( push )
+#pragma warning( disable : 26800)
     REQUIRE(!has_data(v1));
     REQUIRE(*v2 == "hallo");
     v1 = std::move(v2);
     REQUIRE(!has_data(v2));
     REQUIRE(*v1 == "hallo");
+#pragma warning( pop )
   }
   {
     auto t1 = typed_value<int>(1);
@@ -144,8 +147,11 @@ TEST_CASE("m_table/lifetime/value") {
     REQUIRE(has_data(t1));  // !moved
     REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
+#pragma warning( push )
+#pragma warning( disable : 26800)
     REQUIRE(!has_data(e1));  // !moved
     REQUIRE(*t1 == 2);
+#pragma warning( pop )
   }
   {
     auto t1 = typed_value<std::string>("hallo");
