@@ -169,17 +169,13 @@
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
     };                                                                         \
-  };                                                                           \
                                                                                \
-  template <virtual_void::is_uneraser UNERASER,                                \
-            _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
-                _add_head((BASE_V_TABLE), t))>                                 \
-  auto n##_v_table_imlpementation() {                                          \
-    static n##_v_table<_detail_INTERFACE_TEMPLATE_ARGS(                        \
-        _add_head((BASE_V_TABLE), t))>                                         \
-        v_table{UNERASER{}};                                                   \
-    return &v_table;                                                           \
-  }                                                                            \
+    template <virtual_void::is_uneraser UNERASER>                              \
+    static auto imlpementation() {                                             \
+      static n##_v_table v_table{UNERASER{}};                                  \
+      return &v_table;                                                         \
+    }                                                                          \
+  };                                                                           \
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((VIRTUAL_VOID), t))>                                           \
@@ -192,10 +188,9 @@
         _add_head((v_table_base_t), t))>;                                      \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
-    static auto v_table_imlpementation() {                                        \
-      return n##_v_table_imlpementation<                                       \
-          ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>,            \
-          _detail_INTERFACE_TEMPLATE_ARGS(_add_head((v_table_base_t), t))>();  \
+    static auto v_table_imlpementation() {                                     \
+      return v_table_t::template imlpementation<                               \
+          ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>>();         \
     }                                                                          \
                                                                                \
     using base_t::virtual_void_;                                               \
@@ -208,7 +203,7 @@
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
                                                            VIRTUAL_VOID>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      v_table_ = v_table_imlpementation<CONSTRUCTED_WITH>();                      \
+      v_table_ = v_table_imlpementation<CONSTRUCTED_WITH>();                   \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
