@@ -15,7 +15,6 @@ using namespace virtual_void::data::has_i_table;
 using namespace test::component_base;
 
 TEST_CASE("_interface_cast") {
-  test::component_base::enable_casts();
 
   {
     to_string_i<const_observer> to_string_i_co{

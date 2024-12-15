@@ -32,7 +32,6 @@ ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double, get_value)))
 ERASED_INTERFACE_(set_value_i, get_value_i,
                   (INTERFACE_METHOD(void, set_value, double)))
 
-COMPONENT_BASE_EXPORT void enable_casts();
 
 COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::const_observer> get_to_string_i_co();
 COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::shared_const> get_to_string_i_sc(double v);
