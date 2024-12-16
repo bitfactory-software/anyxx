@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
+#include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 #undef interface
@@ -31,10 +32,11 @@ base_v_table<VOIDNESS>* base_v_table_imlpementation() {
 }
 
 template <is_constness CONSTNESS>
-int next_i_table_index_value() {
-  static int i = 0;
-  return i++;
-};
+int next_i_table_index_value();
+template <>
+VV_EXPORT int next_i_table_index_value<const_>();
+template <>
+VV_EXPORT int next_i_table_index_value<mutable_>();
 
 template <typename V_TABLE>
 int i_table_index() {
@@ -59,8 +61,8 @@ class base {
  public:
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
-  template<voidness VOIDNESS> using 
-  v_table_template = base_v_table<VOIDNESS>;
+  template <voidness VOIDNESS>
+  using v_table_template = base_v_table<VOIDNESS>;
   using v_table_t = v_table_template<void_t>;
 
  protected:
