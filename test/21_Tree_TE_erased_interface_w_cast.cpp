@@ -1,21 +1,17 @@
 ﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <catch.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
-
-#include <catch.hpp>
-
+#include <virtual_void/data/has_i_table/observer.hpp>
+#include <virtual_void/data/has_i_table/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/data/has_i_table/shared_const.hpp>
-#include <virtual_void/data/has_i_table/observer.hpp>
-#include <virtual_void/interface/is_a_macro.hpp>
-#include <virtual_void/interface/i_table.hpp>
 #include <virtual_void/interface/conversion.hpp>
-
 #include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/interface/i_table.hpp>
 
 using std::cout;
 using std::string;
@@ -25,16 +21,22 @@ using namespace virtual_void::data::has_i_table;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
-
 ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value),
                           INTERFACE_CONST_METHOD(string, as_forth)))
-
 using node = node_i<shared_const>;
+}  // namespace _21_Tree_TE_erased_interface_w_cast
+VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::node_i)
 
+namespace _21_Tree_TE_erased_interface_w_cast {
 ERASED_INTERFACE(lisp_i, (INTERFACE_CONST_METHOD(string, as_lisp)))
+}
+VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
 
-auto as_lisp_(auto const& v) { return attach_interface<lisp_i<const_observer>>(v).as_lisp(); }
+namespace _21_Tree_TE_erased_interface_w_cast {
 
+auto as_lisp_(auto const& v) {
+  return attach_interface<lisp_i<const_observer>>(v).as_lisp();
+}
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}
@@ -48,7 +50,7 @@ struct Plus {
 
   node left, right;
 };
-VV_IS_A_CONST(Plus,lisp_i);
+VV_IS_A_CONST(Plus, lisp_i);
 
 struct Times {
   Times(node left, node right) : left(left), right(right) {}
@@ -62,7 +64,7 @@ struct Times {
 
   node left, right;
 };
-VV_IS_A_CONST(Times,lisp_i);
+VV_IS_A_CONST(Times, lisp_i);
 
 struct Integer {
   explicit Integer(int value) : int_(value) {}
@@ -72,15 +74,14 @@ struct Integer {
 
   int int_;
 };
-VV_IS_A_CONST(Integer,lisp_i);
-
+VV_IS_A_CONST(Integer, lisp_i);
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
   return NODE{std::forward<ARGS>(args)...};
 }
 
-}  // namespace
+}  // namespace _21_Tree_TE_erased_interface_w_cast
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;
@@ -101,3 +102,6 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   BENCHMARK("21_Tree_TE_dynamic_interface as_lisp") { return as_lisp_(expr); };
 #endif  // !_DEBUG
 }
+
+VV_DEFINE_V_TABLE_INDEX(_21_Tree_TE_erased_interface_w_cast ::node_i)
+VV_DEFINE_V_TABLE_INDEX(_21_Tree_TE_erased_interface_w_cast ::lisp_i)

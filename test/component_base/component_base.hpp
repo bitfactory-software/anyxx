@@ -1,14 +1,12 @@
 
 #include <string>
-
-#include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
-
 #include <virtual_void/data/has_i_table/observer.hpp>
 #include <virtual_void/data/has_i_table/shared_const.hpp>
 #include <virtual_void/data/has_i_table/unique.hpp>
-#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/typeid_of_macro.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
@@ -21,7 +19,7 @@ using namespace virtual_void::interface;
 #ifdef _MSVC_LANG
 #undef COMPONENT_BASE_EXPORT
 #define COMPONENT_BASE_EXPORT __declspec(dllexport)
-#pragma message ("component_base -> dll")
+#pragma message("component_base -> dll")
 #endif
 #endif
 
@@ -32,12 +30,23 @@ ERASED_INTERFACE(get_value_i, (INTERFACE_CONST_METHOD(double, get_value)))
 ERASED_INTERFACE_(set_value_i, get_value_i,
                   (INTERFACE_METHOD(void, set_value, double)))
 
-
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::const_observer> get_to_string_i_co();
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::shared_const> get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::unique> get_to_string_i_u(double v);
-COMPONENT_BASE_EXPORT virtual_void::data::has_i_table::shared_const sc_X(double v);
+COMPONENT_BASE_EXPORT
+to_string_i<virtual_void::data::has_i_table::const_observer>
+get_to_string_i_co();
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::shared_const>
+get_to_string_i_sc(double v);
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_i_table::unique>
+get_to_string_i_u(double v);
+COMPONENT_BASE_EXPORT virtual_void::data::has_i_table::shared_const sc_X(
+    double v);
 COMPONENT_BASE_EXPORT virtual_void::data::has_i_table::unique u_X(double v);
 
-}
+}  // namespace test::component_base
 
+
+ VV_DECLARE_V_TABLE_INDEX(COMPONENT_BASE_EXPORT,
+                          test::component_base::get_value_i)
+ VV_DECLARE_V_TABLE_INDEX(COMPONENT_BASE_EXPORT,
+                          test::component_base::set_value_i)
+ VV_DECLARE_V_TABLE_INDEX(COMPONENT_BASE_EXPORT,
+                          test::component_base::to_string_i)

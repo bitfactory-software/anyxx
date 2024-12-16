@@ -39,10 +39,12 @@ template <>
 VV_EXPORT int next_i_table_index_value<mutable_>();
 
 template <typename V_TABLE>
-int i_table_index() {
+int i_table_index_implemntation() {
   static int i = next_i_table_index_value<typename V_TABLE::const_t>();
   return i;
 }
+template <typename V_TABLE>
+int i_table_index();
 
 template <is_virtual_void VIRTUAL_VOID>
 class base;

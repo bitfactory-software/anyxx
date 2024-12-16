@@ -1,5 +1,9 @@
 #pragma once
 
+#include <virtual_void/utillities/static_init.hpp>
+#include <virtual_void/utillities/unnamed__.hpp>
+#include <virtual_void/interface/base.hpp>
+
 #undef interface
 
 //
@@ -251,3 +255,43 @@
 
 #define INTERFACE_CONST_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, const, __VA_ARGS__)
+
+#define VV_IS_A_MUTABLE(class_, interface_)                          \
+  namespace {                                                        \
+  virtual_void::static_init __{[]() {                                \
+    virtual_void::interface::is_a<                                   \
+        class_, interface_##_v_table<virtual_void::mutable_void>>(); \
+  }};                                                                \
+  }
+
+#define VV_IS_A_CONST(class_, interface_)                            \
+  namespace {                                                        \
+  virtual_void::static_init __{[]() {                                \
+    virtual_void::interface::is_a<                                   \
+        class_, interface_##_v_table<virtual_void::const_void>>();   \
+    virtual_void::interface::is_a<                                   \
+        class_, interface_##_v_table<virtual_void::mutable_void>>(); \
+  }};                                                                \
+  }
+
+#define VV_DECLARE_V_TABLE_INDEX(export_, interface_)                         \
+  template <typename>                                                         \
+  struct interface_##_v_table;                                                \
+  template <>                                                                 \
+  int export_                                                                 \
+  virtual_void::interface::i_table_index<interface_##_v_table<const_void>>(); \
+  template <>                                                                 \
+  int export_ virtual_void::interface::i_table_index<                         \
+      interface_##_v_table<mutable_void>>();
+
+#define VV_DEFINE_V_TABLE_INDEX(interface_)                                    \
+  template <>                                                                  \
+  int virtual_void::interface::i_table_index<                                  \
+      interface_##_v_table<virtual_void::const_void>>() {                      \
+    return i_table_index_implemntation < interface_##_v_table<const_void>>();   \
+  }                                                                            \
+  template <>                                                                  \
+  int virtual_void::interface::i_table_index<                                  \
+      interface_##_v_table<virtual_void::mutable_void>>() {                    \
+    return i_table_index_implemntation < interface_##_v_table<mutable_void>>(); \
+  }

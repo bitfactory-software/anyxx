@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/is_a_macro.hpp>
 #include <virtual_void/interface/i_table.hpp>
 
 using namespace test::component_base;
@@ -11,6 +10,7 @@ using namespace test::component_base;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data::has_i_table;
+
 
 namespace test::component_base {
 
@@ -25,9 +25,9 @@ static X x{3.14};
 
 }  // namespace test::component_base
 
-VV_IS_A_CONST(X,get_value_i);
-VV_IS_A_MUTABLE(X,set_value_i);
-VV_IS_A_CONST(X,to_string_i);
+VV_IS_A_CONST(X, get_value_i);
+VV_IS_A_MUTABLE(X, set_value_i);
+VV_IS_A_CONST(X, to_string_i);
 
 to_string_i<virtual_void::data::has_i_table::const_observer>
 test::component_base::get_to_string_i_co() {
@@ -57,3 +57,6 @@ virtual_void::data::has_i_table::unique test::component_base::u_X(double v) {
   return virtual_void::erased<unique>(X{v});
 }
 
+VV_DEFINE_V_TABLE_INDEX(test::component_base::get_value_i)
+VV_DEFINE_V_TABLE_INDEX(test::component_base::set_value_i)
+VV_DEFINE_V_TABLE_INDEX(test::component_base::to_string_i)
