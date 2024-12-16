@@ -195,7 +195,8 @@ concept is_uneraser = requires(UNERASER u, mutable_void mv) {
 template <typename T>
 struct static_cast_uneraser {
   using type = T;
-  auto operator()(auto from) { return static_cast<T*>(from); }
+  auto operator()(mutable_void from) { return static_cast<T*>(from); }
+  auto operator()(const_void from) { return static_cast<T const*>(from); }
 };
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
 struct unerased {
@@ -231,9 +232,9 @@ struct make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, false> {
   using unerased = unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>;
   using type = static_cast_uneraser<unerased>;
 };
-template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
-using uneraser = make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH,
-                               is_const_data<VIRTUAL_VOID>>::type;
+template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH,
+          bool is_const = is_const_data<VIRTUAL_VOID>>
+using uneraser = make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, is_const>::type;
 
 template <is_virtual_void VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {

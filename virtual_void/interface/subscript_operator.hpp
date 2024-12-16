@@ -1,17 +1,15 @@
 #pragma once
 
-#undef interface 
+#undef interface
 
-#include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/interface/operator.hpp>
+#include <virtual_void/utillities/type_list.hpp>
 
 namespace virtual_void::interface {
 
-template<typename RET, typename ARG>
+template <typename RET, typename ARG>
 struct subscript_operator_target {
-  auto operator()(auto self, ARG arg) const -> RET{
-    return (*self)[arg];
-  }
+  auto operator()(auto self, ARG arg) const -> RET { return (*self)[arg]; }
 };
 
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
@@ -20,16 +18,16 @@ struct subscript_operator_;
 template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
           is_constness CONSTNESS, typename RET, typename... ARGS>
 struct subscript_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
-    : operator_<subscript_operator_target< RET, ARGS...>, VIRTUAL_VOID, BASE, CONSTNESS,
-                RET(ARGS...)> {
-  using operator_t = operator_<subscript_operator_target< RET, ARGS...>, VIRTUAL_VOID, BASE,
-                               CONSTNESS, RET(ARGS...)>;
+    : operator_<subscript_operator_target<RET, ARGS...>, VIRTUAL_VOID, BASE,
+                CONSTNESS, RET(ARGS...)> {
+  using operator_t = operator_<subscript_operator_target<RET, ARGS...>,
+                               VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>;
   using operator_t::operator_t;
   using operator_t::operator[];
 
   RET operator[](first_t<ARGS...> arg) const
-    requires(const_correct_for_virtual_void<
-             virtual_void::void_t<CONSTNESS>, VIRTUAL_VOID>)
+    requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
+                                            VIRTUAL_VOID>)
   {
     return operator_t::invoke(first_t<ARGS...>(arg));
   }
@@ -54,8 +52,8 @@ template <class SIG, is_constness CONSTNESS, class... SIGS>
 struct make_overloaded_subscript_operator<SIG, CONSTNESS, SIGS...> {
   template <virtual_void::is_virtual_void VV>
   using type = subscript_operator_<
-      VV, typename make_overloaded_subscript_operator<SIGS...>::type,
-      CONSTNESS, SIG>;
+      VV, typename make_overloaded_subscript_operator<SIGS...>::type, CONSTNESS,
+      SIG>;
 };
 
 template <virtual_void::is_virtual_void VV, class... SIGS>

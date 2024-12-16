@@ -17,14 +17,14 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 
 namespace virtual_void {
-template <typename SIG>
-using function = interface::call_operator<data::has_no_meta::value, SIG>;
-template <typename SIG>
+template <typename SIG, is_constness CONSTNESS = mutable_>
+using function = interface::call_operator<data::has_no_meta::value, SIG, CONSTNESS>;
+template <typename SIG, is_constness CONSTNESS = mutable_>
 using ref_function =
-    interface::call_operator<data::has_no_meta::mutable_observer, SIG>;
-template <typename SIG>
+    interface::call_operator<data::has_no_meta::mutable_observer, SIG, CONSTNESS>;
+template <typename SIG, is_constness CONSTNESS = mutable_>
 using move_only_function =
-    interface::call_operator<data::has_no_meta::unique_ptr, SIG>;
+    interface::call_operator<data::has_no_meta::unique_ptr, SIG, CONSTNESS>;
 }  // namespace virtual_void
 
 using namespace virtual_void;

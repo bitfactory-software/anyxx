@@ -21,15 +21,15 @@ template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
 struct call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : operator_<call_operator_target, VIRTUAL_VOID, BASE, CONSTNESS,
                 RET(ARGS...)> {
-  using operator_t = operator_<call_operator_target, VIRTUAL_VOID, BASE,
-                               CONSTNESS, RET(ARGS...)>;
-  
+  using operator_t = operator_<call_operator_target, VIRTUAL_VOID,
+                               BASE, CONSTNESS, RET(ARGS...)>;
+
   using operator_t::operator_t;
-  
+
   using operator_t::operator();
   RET operator()(ARGS&&... args) const
-    requires(const_correct_for_virtual_void<
-             virtual_void::void_t<CONSTNESS>, VIRTUAL_VOID>)
+    requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
+                                            VIRTUAL_VOID>)
   {
     return operator_t::invoke(std::forward<ARGS>(args)...);
   }
