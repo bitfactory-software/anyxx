@@ -397,7 +397,7 @@ auto as(DATA source) {
 
 template <typename TO, typename FROM, typename DATA>
 auto as(virtual_typed<FROM, DATA> source)
-  requires std::convertible_to<FROM*, TO*>
+  requires std::convertible_to<FROM*, TO*> || std::convertible_to<TO*, FROM*>
 {
   if constexpr (virtual_typed<FROM, DATA>::is_const) {
     return virtual_typed<TO const, DATA>{std::move(source.virtual_void_)};
