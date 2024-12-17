@@ -278,7 +278,6 @@
   }
 
 #define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
-  struct interface_##_v_table;                        \
   template <>                                         \
   int export_ virtual_void::interface::i_table_index<interface_##_v_table>();
 
