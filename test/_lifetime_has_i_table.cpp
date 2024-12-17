@@ -23,19 +23,26 @@ using namespace virtual_void::data::has_i_table;
 using namespace virtual_void::interface;
 using namespace TestDomain;
 
-VV_I_TABLE_OF(A)
-VV_I_TABLE_OF(A1)
-VV_I_TABLE_OF(C)
-VV_I_TABLE_OF(D)
-VV_I_TABLE_OF(int)
-
 namespace {
 struct x_t {
   std::string s_;
 };
 }  // namespace
 
-VV_I_TABLE_OF(x_t)
+template <>
+struct i_table_of<A> : i_table_implementation_of<A> {};
+template <>
+struct i_table_of<A1> : i_table_implementation_of<A1> {};
+template <>
+struct i_table_of<C> : i_table_implementation_of<C> {};
+template <>
+struct i_table_of<D> : i_table_implementation_of<D> {};
+template <>
+struct i_table_of<int> : i_table_implementation_of<int> {};
+template <>
+struct i_table_of<std::string> : i_table_implementation_of<std::string> {};
+template <>
+struct i_table_of<x_t> : i_table_implementation_of<x_t> {};
 
 namespace {
 
@@ -44,7 +51,7 @@ TEST_CASE("i_table/lifetime/observer") {
   auto mo = erased<mutable_observer>(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(get_meta(mo)->get_i_table() == i_table_of<std::string>());
+  REQUIRE(get_meta(mo)->get_i_table() == i_table_of<std::string>{}());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(std::derived_from<mutable_observer, observer<void*>>);
   REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");

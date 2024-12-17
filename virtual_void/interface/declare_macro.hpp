@@ -280,18 +280,3 @@
     return i_table_index_implemntation<interface_##_v_table>();        \
   }
 
-#define VV_DECLARE_I_TABLE_OF(export_, class_) \
-  template <>                                  \
-  virtual_void::interface::i_table* export_    \
-  virtual_void::interface::i_table_of<class_>();
-
-#define VV_DEFINE_I_TABLE_OF(class_)              \
-  template <>                                     \
-  virtual_void::interface::i_table*               \
-  virtual_void::interface::i_table_of<class_>() { \
-    return i_table_of_implementation<class_>();   \
-  }
-
-#define VV_I_TABLE_OF(class_)     \
-  VV_DECLARE_I_TABLE_OF(, class_) \
-  VV_DEFINE_I_TABLE_OF(class_)\

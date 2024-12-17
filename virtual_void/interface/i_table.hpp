@@ -64,19 +64,24 @@ constexpr const std::type_info& get_type_info(i_table const* t) {
 constexpr interface::i_table_variant* get(i_table* t) { return t->get_table(); }
 
 template <typename CLASS>
-constexpr i_table* i_table_of_implementation() {
-  static i_table table{std::in_place_type<CLASS>};
-  return &table;
-}
+struct i_table_implementation_of {
+  constexpr i_table* operator()() const {
+    static i_table table{std::in_place_type<CLASS>};
+    return &table;
+  }
+};
 
 template <typename CLASS>
-constexpr i_table* i_table_of();
+struct i_table_of;
+
+template <typename CLASS>
+constexpr i_table* get_i_table_of(){ return i_table_of<CLASS>{}(); }
 
 template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
     auto i_table_index_ = i_table_index<V_TABLE>();
-    auto i_table_ = get(i_table_of<CLASS>());
+    auto i_table_ = get(get_i_table_of<CLASS>());
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ = V_TABLE::template imlpementation<uneraser>();
     i_table_->register_interface(i_table_index_, v_table_);

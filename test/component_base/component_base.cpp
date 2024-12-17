@@ -11,7 +11,6 @@ using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data::has_i_table;
 
-
 namespace test::component_base {
 
 struct X {
@@ -25,10 +24,13 @@ static X x{3.14};
 
 }  // namespace test::component_base
 
-VV_I_TABLE_OF(test::component_base::X)
-virtual_void::interface::is_a<X, get_value_i_v_table> __;
-virtual_void::interface::is_a<X, set_value_i_v_table> __;
-virtual_void::interface::is_a<X, to_string_i_v_table> __;
+using namespace test::component_base;
+
+template <>
+struct i_table_of<X> : i_table_implementation_of<X> {};
+is_a<X, get_value_i_v_table> __;
+is_a<X, set_value_i_v_table> __;
+is_a<X, to_string_i_v_table> __;
 
 to_string_i<virtual_void::data::has_i_table::const_observer>
 test::component_base::get_to_string_i_co() {

@@ -5,8 +5,10 @@
 
 namespace virtual_void::interface {
 class i_table;
+
 template <typename CLASS>
-constexpr i_table* i_table_of();
+constexpr i_table* get_i_table_of();
+
 constexpr const std::type_info& get_type_info(i_table const*);
 }  // namespace virtual_void::interface
 
@@ -22,7 +24,7 @@ struct meta {
 
   template <typename T>
   constexpr meta(std::in_place_type_t<T>)
-      : i_table_(interface::i_table_of<std::decay_t<T>>()) {}
+      : i_table_(interface::get_i_table_of<std::decay_t<T>>()) {}
   template <is_i_table_meta META>
   constexpr meta(const META& rhs) : i_table_(rhs.i_table_) {}
 

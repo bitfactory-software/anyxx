@@ -17,6 +17,7 @@ using std::cout;
 using std::string;
 
 using namespace virtual_void;
+using namespace virtual_void::interface;
 using namespace virtual_void::data::has_i_table;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
@@ -83,13 +84,16 @@ using namespace _21_Tree_TE_erased_interface_w_cast;
 VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::node_i)
 VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
 
-VV_I_TABLE_OF(Plus)
-VV_I_TABLE_OF(Times)
-VV_I_TABLE_OF(Integer)
+template <>
+struct i_table_of<Plus> : i_table_implementation_of<Plus> {};
+template <>
+struct i_table_of<Times> : i_table_implementation_of<Times> {};
+template <>
+struct i_table_of<Integer> : i_table_implementation_of<Integer> {};
 
-virtual_void::interface::is_a<Plus, lisp_i_v_table> __;
-virtual_void::interface::is_a<Times, lisp_i_v_table> __;
-virtual_void::interface::is_a<Integer, lisp_i_v_table> __;
+is_a<Plus, lisp_i_v_table> __;
+is_a<Times, lisp_i_v_table> __;
+is_a<Integer, lisp_i_v_table> __;
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;

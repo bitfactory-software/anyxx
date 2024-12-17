@@ -29,7 +29,8 @@ using namespace virtual_void::data;
 using namespace virtual_void::interface;
 using namespace TestDomain;
 
-VV_I_TABLE_OF(std::string)
+template <>
+struct i_table_of<std::string> : i_table_implementation_of<std::string> {};
 
 TEST_CASE("_data_conversion copy") {
   std::string s1 = "hallo";
