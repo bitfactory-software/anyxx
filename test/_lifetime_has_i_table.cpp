@@ -9,6 +9,7 @@
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/data/has_i_table/unique_ptr.hpp>
 #include <virtual_void/data/has_i_table/value.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/i_table.hpp>
 
 #include "a.hpp"
@@ -21,6 +22,20 @@ using namespace virtual_void;
 using namespace virtual_void::data::has_i_table;
 using namespace virtual_void::interface;
 using namespace TestDomain;
+
+VV_I_TABLE_OF(A)
+VV_I_TABLE_OF(A1)
+VV_I_TABLE_OF(C)
+VV_I_TABLE_OF(D)
+VV_I_TABLE_OF(int)
+
+namespace {
+struct x_t {
+  std::string s_;
+};
+}  // namespace
+
+VV_I_TABLE_OF(x_t)
 
 namespace {
 
@@ -156,9 +171,6 @@ TEST_CASE("i_table/lifetime/value") {
     REQUIRE(*unerase_cast<std::string>(t1) == "hallo");
   }
   {
-    struct x_t {
-      std::string s_;
-    };
     x_t a{"hallo"};
     auto t1 = erased<value>(a);
     REQUIRE(unerase_cast<x_t>(t1)->s_ == "hallo");

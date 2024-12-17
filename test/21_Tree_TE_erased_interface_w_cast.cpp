@@ -25,12 +25,10 @@ ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value),
                           INTERFACE_CONST_METHOD(string, as_forth)))
 using node = node_i<shared_const>;
 }  // namespace _21_Tree_TE_erased_interface_w_cast
-VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::node_i)
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 ERASED_INTERFACE(lisp_i, (INTERFACE_CONST_METHOD(string, as_lisp)))
 }
-VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
@@ -50,7 +48,6 @@ struct Plus {
 
   node left, right;
 };
-VV_IS_A_CONST(Plus, lisp_i);
 
 struct Times {
   Times(node left, node right) : left(left), right(right) {}
@@ -64,7 +61,6 @@ struct Times {
 
   node left, right;
 };
-VV_IS_A_CONST(Times, lisp_i);
 
 struct Integer {
   explicit Integer(int value) : int_(value) {}
@@ -74,7 +70,6 @@ struct Integer {
 
   int int_;
 };
-VV_IS_A_CONST(Integer, lisp_i);
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
@@ -82,6 +77,22 @@ auto make_node(ARGS&&... args) {
 }
 
 }  // namespace _21_Tree_TE_erased_interface_w_cast
+
+using namespace _21_Tree_TE_erased_interface_w_cast;
+
+VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::node_i)
+VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
+
+VV_I_TABLE_OF(Plus)
+VV_I_TABLE_OF(Times)
+VV_I_TABLE_OF(Integer)
+
+VV_IS_A(_21_Tree_TE_erased_interface_w_cast::Plus,
+        _21_Tree_TE_erased_interface_w_cast::lisp_i)
+VV_IS_A(_21_Tree_TE_erased_interface_w_cast::Times,
+        _21_Tree_TE_erased_interface_w_cast::lisp_i)
+VV_IS_A(_21_Tree_TE_erased_interface_w_cast::Integer,
+        _21_Tree_TE_erased_interface_w_cast::lisp_i)
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;

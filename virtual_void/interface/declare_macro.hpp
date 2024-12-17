@@ -103,13 +103,29 @@
                         _detail_EXPAND_LIST l)
 
 #define _detail_INTERFACE_TEMPLATE_ARG_H(l) _detail_INTERFACE_TEMPLATE_ARG l
+
 #define _detail_INTERFACE_TEMPLATE_ARG(_typename) , _typename
+
 #define _detail_INTERFACE_TEMPLATE_ARGS(...) \
   __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS1(__VA_ARGS__))
+
 #define _detail_INTERFACE_TEMPLATE_ARGS1(h, ...) \
   _typename h __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS2((__VA_ARGS__)))
+
 #define _detail_INTERFACE_TEMPLATE_ARGS2(l) \
   _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
+
+#define _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER_H(...) \
+  __VA_OPT__(template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
+
+#define _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER_H t
+
+#define _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
+  __VA_OPT__(<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
+
+#define _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
 #define _detail_TA_H(l) _detail_TA l
 
@@ -153,10 +169,9 @@
       : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(        \
             _add_head((T), t))> {};                                            \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((VOIDNESS), t))>  \
-  struct n##_v_table : BASE##_v_table<VOIDNESS> {                              \
-    using v_table_base_t = BASE##_v_table<VOIDNESS>;                           \
-    using void_t = v_table_base_t::void_t;                                     \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
+      : BASE##_v_table {                                                       \
+    using v_table_base_t = BASE##_v_table;                                     \
     using v_table_t = n##_v_table;                                             \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -185,10 +200,9 @@
   struct n : BASE<VIRTUAL_VOID> {                                              \
     using virtual_void_t = VIRTUAL_VOID;                                       \
     using base_t = BASE<VIRTUAL_VOID>;                                         \
-    using void_t = typename base_t::void_t;                                    \
     using v_table_base_t = base_t::v_table_t;                                  \
-    using v_table_t = n##_v_table<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(      \
-        _add_head((void_t), t))>;                                              \
+    using v_table_t =                                                          \
+        n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
                                                                                \
     template <typename CONSTRUCTED_WITH>                                       \
     static auto v_table_imlpementation() {                                     \
@@ -256,42 +270,36 @@
 #define INTERFACE_CONST_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, const, __VA_ARGS__)
 
-#define VV_IS_A_MUTABLE(class_, interface_)                          \
-  namespace {                                                        \
-  virtual_void::static_init __{[]() {                                \
-    virtual_void::interface::is_a<                                   \
-        class_, interface_##_v_table<virtual_void::mutable_void>>(); \
-  }};                                                                \
+#define VV_IS_A(class_, interface_)                                \
+  namespace {                                                      \
+  virtual_void::static_init __{[]() {                              \
+    virtual_void::interface::is_a<class_, interface_##_v_table>(); \
+  }};                                                              \
   }
 
-#define VV_IS_A_CONST(class_, interface_)                            \
-  namespace {                                                        \
-  virtual_void::static_init __{[]() {                                \
-    virtual_void::interface::is_a<                                   \
-        class_, interface_##_v_table<virtual_void::const_void>>();   \
-    virtual_void::interface::is_a<                                   \
-        class_, interface_##_v_table<virtual_void::mutable_void>>(); \
-  }};                                                                \
+#define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
+  struct interface_##_v_table;                        \
+  template <>                                         \
+  int export_ virtual_void::interface::i_table_index<interface_##_v_table>();
+
+#define VV_DEFINE_V_TABLE_INDEX(interface_)                            \
+  template <>                                                          \
+  int virtual_void::interface::i_table_index<interface_##_v_table>() { \
+    return i_table_index_implemntation<interface_##_v_table>();        \
   }
 
-#define VV_DECLARE_V_TABLE_INDEX(export_, interface_)                         \
-  template <typename>                                                         \
-  struct interface_##_v_table;                                                \
-  template <>                                                                 \
-  int export_                                                                 \
-  virtual_void::interface::i_table_index<interface_##_v_table<const_void>>(); \
-  template <>                                                                 \
-  int export_ virtual_void::interface::i_table_index<                         \
-      interface_##_v_table<mutable_void>>();
+#define VV_DECLARE_I_TABLE_OF(export_, class_) \
+  template <>                                  \
+  virtual_void::interface::i_table* export_    \
+  virtual_void::interface::i_table_of<class_>();
 
-#define VV_DEFINE_V_TABLE_INDEX(interface_)                                   \
-  template <>                                                                 \
-  int virtual_void::interface::i_table_index<                                 \
-      interface_##_v_table<virtual_void::const_void>>() {                     \
-    return i_table_index_implemntation<interface_##_v_table<const_void>>();   \
-  }                                                                           \
-  template <>                                                                 \
-  int virtual_void::interface::i_table_index<                                 \
-      interface_##_v_table<virtual_void::mutable_void>>() {                   \
-    return i_table_index_implemntation<interface_##_v_table<mutable_void>>(); \
+#define VV_DEFINE_I_TABLE_OF(class_)              \
+  template <>                                     \
+  virtual_void::interface::i_table*               \
+  virtual_void::interface::i_table_of<class_>() { \
+    return i_table_of_implementation<class_>();   \
   }
+
+#define VV_I_TABLE_OF(class_)     \
+  VV_DECLARE_I_TABLE_OF(, class_) \
+  VV_DEFINE_I_TABLE_OF(class_) \

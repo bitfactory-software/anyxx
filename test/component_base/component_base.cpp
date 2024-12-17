@@ -25,9 +25,10 @@ static X x{3.14};
 
 }  // namespace test::component_base
 
-VV_IS_A_CONST(X, get_value_i);
-VV_IS_A_MUTABLE(X, set_value_i);
-VV_IS_A_CONST(X, to_string_i);
+VV_I_TABLE_OF(test::component_base::X)
+VV_IS_A(X, get_value_i)
+VV_IS_A(X, set_value_i)
+VV_IS_A(X, to_string_i)
 
 to_string_i<virtual_void::data::has_i_table::const_observer>
 test::component_base::get_to_string_i_co() {

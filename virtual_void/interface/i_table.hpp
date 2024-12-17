@@ -8,10 +8,9 @@
 
 namespace virtual_void::interface {
 
-template <is_constness CONSTNESS>
 class i_table_variant {
  public:
-  using i_table_target_t = base_v_table<void_t<CONSTNESS>>*;
+  using i_table_target_t = base_v_table*;
 
  private:
   std::vector<i_table_target_t> table_;
@@ -41,8 +40,7 @@ class i_table {
  public:
  private:
   const std::type_info& type_info_;
-  i_table_variant<const_> const_table_;
-  i_table_variant<mutable_> mutable_table_;
+  i_table_variant table_;
   using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
   copy_construct_t* copy_construct_;
 
@@ -54,8 +52,7 @@ class i_table {
               *static_cast<CLASS const*>(from));
         }) {}
   constexpr const std::type_info& type() const { return type_info_; }
-  constexpr i_table_variant<const_>* get_const() { return &const_table_; }
-  constexpr i_table_variant<mutable_>* get_mutable() { return &mutable_table_; }
+  constexpr i_table_variant* get_table() { return &table_; }
 
   auto copy_construct(const_void from) { return copy_construct_(from); }
 };
@@ -64,32 +61,22 @@ constexpr const std::type_info& get_type_info(i_table const* t) {
   return t->type();
 }
 
-template <is_constness CONSTNESS>
-constexpr interface::i_table_variant<CONSTNESS>* get(i_table* t) {
-  if constexpr (std::same_as<CONSTNESS, const_>) {
-    return t->get_const();
-  } else {
-    return t->get_mutable();
-  }
-}
+constexpr interface::i_table_variant* get(i_table* t) { return t->get_table(); }
 
 template <typename CLASS>
-constexpr i_table* i_table_of() {
+constexpr i_table* i_table_of_implementation() {
   static i_table table{std::in_place_type<CLASS>};
   return &table;
 }
 
+template <typename CLASS>
+constexpr i_table* i_table_of();
+
 template <typename CLASS, typename V_TABLE>
 void is_a() {
   auto i_table_index_ = i_table_index<V_TABLE>();
-  using v_table_t_constness = typename V_TABLE::const_t;
-  static_assert(is_constness<v_table_t_constness>);
-  auto i_table_ = get<v_table_t_constness>(i_table_of<CLASS>());
-  static_assert(
-      is_uneraser<
-          static_cast_uneraser<const_qualified<v_table_t_constness, CLASS>>>);
-  using uneraser =
-      static_cast_uneraser<const_qualified<v_table_t_constness, CLASS>>;
+  auto i_table_ = get(i_table_of<CLASS>());
+  using uneraser = static_cast_uneraser<CLASS>;
   auto v_table_ = V_TABLE::template imlpementation<uneraser>();
   i_table_->register_interface(i_table_index_, v_table_);
 }
