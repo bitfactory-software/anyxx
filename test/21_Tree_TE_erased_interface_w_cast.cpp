@@ -87,12 +87,9 @@ VV_I_TABLE_OF(Plus)
 VV_I_TABLE_OF(Times)
 VV_I_TABLE_OF(Integer)
 
-VV_IS_A(_21_Tree_TE_erased_interface_w_cast::Plus,
-        _21_Tree_TE_erased_interface_w_cast::lisp_i)
-VV_IS_A(_21_Tree_TE_erased_interface_w_cast::Times,
-        _21_Tree_TE_erased_interface_w_cast::lisp_i)
-VV_IS_A(_21_Tree_TE_erased_interface_w_cast::Integer,
-        _21_Tree_TE_erased_interface_w_cast::lisp_i)
+virtual_void::interface::is_a<Plus, lisp_i_v_table> __;
+virtual_void::interface::is_a<Times, lisp_i_v_table> __;
+virtual_void::interface::is_a<Integer, lisp_i_v_table> __;
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;

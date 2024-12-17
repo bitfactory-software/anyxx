@@ -26,9 +26,9 @@ static X x{3.14};
 }  // namespace test::component_base
 
 VV_I_TABLE_OF(test::component_base::X)
-VV_IS_A(X, get_value_i)
-VV_IS_A(X, set_value_i)
-VV_IS_A(X, to_string_i)
+virtual_void::interface::is_a<X, get_value_i_v_table> __;
+virtual_void::interface::is_a<X, set_value_i_v_table> __;
+virtual_void::interface::is_a<X, to_string_i_v_table> __;
 
 to_string_i<virtual_void::data::has_i_table::const_observer>
 test::component_base::get_to_string_i_co() {

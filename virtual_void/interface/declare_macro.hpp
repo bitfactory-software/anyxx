@@ -270,11 +270,6 @@
 #define INTERFACE_CONST_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, const, __VA_ARGS__)
 
-#define VV_IS_A(class_, interface_)                               \
-  namespace {                                                     \
-  virtual_void::interface::is_a<class_, interface_##_v_table> __; \
-  }
-
 #define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
   template <>                                         \
   int export_ virtual_void::interface::i_table_index<interface_##_v_table>();
