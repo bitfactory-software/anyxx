@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include <virtual_void/utillities/VV_EXPORT.hpp>
-#include <virtual_void/class_hierarchy/class_hierarchy.hpp>
+#include <virtual_void/meta/meta.hpp>
 #include <virtual_void/data/has_m_table/m_table.hpp>
 #include <virtual_void/utillities/ensure_function_ptr.hpp>
 #include <virtual_void/utillities/overload.hpp>
