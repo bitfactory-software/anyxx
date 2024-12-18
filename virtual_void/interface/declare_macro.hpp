@@ -272,11 +272,10 @@
 
 #define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
   template <>                                         \
-  int export_ virtual_void::interface::i_table_index<interface_##_v_table>();
+  int export_ virtual_void::meta::i_table_index<interface_##_v_table>();
 
-#define VV_DEFINE_V_TABLE_INDEX(interface_)                            \
-  template <>                                                          \
-  int virtual_void::interface::i_table_index<interface_##_v_table>() { \
-    return i_table_index_implemntation<interface_##_v_table>();        \
+#define VV_DEFINE_V_TABLE_INDEX(interface_)                       \
+  template <>                                                     \
+  int virtual_void::meta::i_table_index<interface_##_v_table>() { \
+    return i_table_index_implemntation<interface_##_v_table>();   \
   }
-

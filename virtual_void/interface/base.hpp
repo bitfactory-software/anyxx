@@ -4,6 +4,7 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
+#include <virtual_void/meta/base_v_table.hpp>
 #include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -11,27 +12,7 @@
 
 namespace virtual_void::interface {
 
-struct base_v_table {
-  static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(base_v_table) == from;
-  }
-  bool (*_is_derived_from)(const std::type_info&);
-  base_v_table(auto unused)
-      : _is_derived_from([](const std::type_info& from) {
-          return static_is_derived_from(from);
-        }){};
-};
-
-VV_EXPORT base_v_table* base_v_table_imlpementation();
-VV_EXPORT int next_i_table_index_value();
-
-template <typename V_TABLE>
-int i_table_index_implemntation() {
-  static int i = next_i_table_index_value();
-  return i;
-}
-template <typename V_TABLE>
-int i_table_index();
+using base_v_table = meta::base_v_table;
 
 template <is_virtual_void VIRTUAL_VOID>
 class base;
@@ -50,7 +31,7 @@ class base {
  public:
   using virtual_void_t = VIRTUAL_VOID;
   using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
-  using v_table_t = base_v_table;
+  using v_table_t = meta::base_v_table;
 
  protected:
   virtual_void_t virtual_void_ = {};
@@ -65,7 +46,7 @@ class base {
     requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    v_table_ = base_v_table_imlpementation();
+    v_table_ = meta::base_v_table_imlpementation();
   }
   template <typename CONSTRUCTED_WITH>
   base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}
