@@ -2,15 +2,7 @@
 
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 #include <virtual_void/virtual_void.hpp>
-
-namespace virtual_void::meta {
-class i_table;
-
-template <typename CLASS>
-constexpr i_table* get_i_table_of();
-
-constexpr const std::type_info& get_type_info(i_table const*);
-}
+#include <virtual_void/meta/i_table_forward.hpp>
 
 namespace virtual_void::data::has_i_table {
 
