@@ -1,19 +1,30 @@
 #pragma once
 
 #include <virtual_void/meta/forward.hpp>
+#include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::meta {
 
-class i_table_variant {
+class i_table {
  public:
   using i_table_target_t = interface::base_v_table*;
 
- private:
+private:
+  const std::type_info& type_info_;
   std::vector<i_table_target_t> table_;
+  using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
+  copy_construct_t* copy_construct_;
 
  public:
+  template <typename CLASS>
+  constexpr i_table(std::in_place_type_t<CLASS>)
+      : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
+          return erased<data::has_i_table::unique>(
+              *static_cast<CLASS const*>(from));
+        }) {}
+  constexpr const std::type_info& type() const { return type_info_; }
   constexpr void register_interface(int index, i_table_target_t target) {
     ensure_size(index);
     table_[index] = target;
@@ -32,25 +43,6 @@ class i_table_variant {
     if (table_.size() <= v_table_index)
       table_.insert(table_.end(), 1 + v_table_index - table_.size(), {});
   }
-};
-
-class i_table {
- public:
- private:
-  const std::type_info& type_info_;
-  i_table_variant table_;
-  using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
-  copy_construct_t* copy_construct_;
-
- public:
-  template <typename CLASS>
-  constexpr i_table(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return erased<data::has_i_table::unique>(
-              *static_cast<CLASS const*>(from));
-        }) {}
-  constexpr const std::type_info& type() const { return type_info_; }
-  constexpr i_table_variant* get_table() { return &table_; }
 
   auto copy_construct(const_void from) { return copy_construct_(from); }
 };
@@ -58,8 +50,6 @@ class i_table {
 constexpr const std::type_info& get_type_info(i_table const* t) {
   return t->type();
 }
-
-constexpr i_table_variant* get(i_table* t) { return t->get_table(); }
 
 template <typename CLASS>
 struct i_table_implementation_of {
@@ -81,7 +71,7 @@ template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
     auto i_table_index_ = i_table_index<V_TABLE>();
-    auto i_table_ = get(get_i_table_of<CLASS>());
+    auto i_table_ = get_i_table_of<CLASS>();
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ = V_TABLE::template imlpementation<uneraser>();
     i_table_->register_interface(i_table_index_, v_table_);

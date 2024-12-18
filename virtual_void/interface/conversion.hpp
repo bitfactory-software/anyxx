@@ -14,7 +14,7 @@ auto find_v_table(VV_FROM const& vv_from) {
   using v_table_t = typename TO_INTERFACE::v_table_t;
   auto i_table_idx = i_table_index<typename TO_INTERFACE::v_table_t>();
   auto i_table = get_meta(vv_from)->get_i_table();
-  auto v_table = get(i_table)->at(i_table_idx);
+  auto v_table = i_table->at(i_table_idx);
   return static_cast<TO_INTERFACE::v_table_t*>(v_table);
 }
 
