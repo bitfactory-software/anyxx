@@ -3,12 +3,13 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/i_table.hpp>
+#include <virtual_void/meta/i_table.hpp>
 
 using namespace test::component_base;
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
+using namespace virtual_void::meta;
 using namespace virtual_void::data::has_i_table;
 
 namespace test::component_base {

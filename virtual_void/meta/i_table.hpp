@@ -6,11 +6,11 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void::meta {
 
 class i_table_variant {
  public:
-  using i_table_target_t = base_v_table*;
+  using i_table_target_t = interface::base_v_table*;
 
  private:
   std::vector<i_table_target_t> table_;
@@ -61,7 +61,7 @@ constexpr const std::type_info& get_type_info(i_table const* t) {
   return t->type();
 }
 
-constexpr interface::i_table_variant* get(i_table* t) { return t->get_table(); }
+constexpr i_table_variant* get(i_table* t) { return t->get_table(); }
 
 template <typename CLASS>
 struct i_table_implementation_of {
@@ -75,7 +75,9 @@ template <typename CLASS>
 struct i_table_of;
 
 template <typename CLASS>
-constexpr i_table* get_i_table_of(){ return i_table_of<CLASS>{}(); }
+constexpr i_table* get_i_table_of() {
+  return i_table_of<CLASS>{}();
+}
 
 template <typename CLASS, typename V_TABLE>
 struct is_a {
@@ -88,4 +90,4 @@ struct is_a {
   }
 };
 
-}  // namespace virtual_void::interface
+}  // namespace virtual_void::meta

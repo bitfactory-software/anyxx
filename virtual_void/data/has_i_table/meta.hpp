@@ -3,14 +3,14 @@
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void::meta {
 class i_table;
 
 template <typename CLASS>
 constexpr i_table* get_i_table_of();
 
 constexpr const std::type_info& get_type_info(i_table const*);
-}  // namespace virtual_void::interface
+}
 
 namespace virtual_void::data::has_i_table {
 
@@ -20,11 +20,11 @@ concept is_i_table_meta = is_meta<META> && requires(META meta) {
 };
 
 struct meta {
-  interface::i_table* i_table_ = nullptr;
+  virtual_void::meta::i_table* i_table_ = nullptr;
 
   template <typename T>
   constexpr meta(std::in_place_type_t<T>)
-      : i_table_(interface::get_i_table_of<std::decay_t<T>>()) {}
+      : i_table_(virtual_void::meta::get_i_table_of<std::decay_t<T>>()) {}
   template <is_i_table_meta META>
   constexpr meta(const META& rhs) : i_table_(rhs.i_table_) {}
 
@@ -47,10 +47,10 @@ struct meta {
   constexpr const auto* get_meta() const { return this; }
 
   constexpr type_info_ptr type_info() const {
-    return &interface::get_type_info(get_i_table());
+    return &virtual_void::meta::get_type_info(get_i_table());
   }
 
-  constexpr interface::i_table* get_i_table() const { return i_table_; }
+  constexpr virtual_void::meta::i_table* get_i_table() const { return i_table_; }
 
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };

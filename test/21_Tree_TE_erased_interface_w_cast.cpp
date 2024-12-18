@@ -11,7 +11,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/interface/i_table.hpp>
+#include <virtual_void/meta/i_table.hpp>
 
 using std::cout;
 using std::string;
@@ -19,6 +19,7 @@ using std::string;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data::has_i_table;
+using namespace virtual_void::meta;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 

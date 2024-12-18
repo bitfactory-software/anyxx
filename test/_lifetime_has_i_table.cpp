@@ -10,7 +10,7 @@
 #include <virtual_void/data/has_i_table/unique_ptr.hpp>
 #include <virtual_void/data/has_i_table/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/interface/i_table.hpp>
+#include <virtual_void/meta/i_table.hpp>
 
 #include "a.hpp"
 
@@ -19,6 +19,7 @@ using namespace Catch::Matchers;
 #include "class_hierarchy_test_hierarchy.hpp"
 
 using namespace virtual_void;
+using namespace virtual_void::meta;
 using namespace virtual_void::data::has_i_table;
 using namespace virtual_void::interface;
 using namespace TestDomain;

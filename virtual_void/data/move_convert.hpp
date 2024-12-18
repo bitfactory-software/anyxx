@@ -7,7 +7,7 @@
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/data/has_i_table/value.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/interface/i_table.hpp>
+#include <virtual_void/meta/i_table.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data {
