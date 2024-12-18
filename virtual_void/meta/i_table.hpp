@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/meta/i_table_forward.hpp>
+#include <virtual_void/meta/forward.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/virtual_void.hpp>
 
