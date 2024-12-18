@@ -52,7 +52,7 @@ struct class_with_bases {
 };
 using classes_with_bases = std::map<std::type_index, class_with_bases>;
 
-constexpr auto declare_visitor(classes_with_bases& registry) {
+constexpr auto fill_runtime_registry(classes_with_bases& registry) {
   return overload{[&]<typename C> { registry[typeid_of<C>()].self = &typeid_of<C>(); },
                   [&]<typename C, typename B> {
                     registry[typeid_of<C>()].bases.emplace_back(&typeid_of<B>());
@@ -60,12 +60,12 @@ constexpr auto declare_visitor(classes_with_bases& registry) {
 }
 template <typename CLASS, bool deep = true>
 constexpr nullptr_t declare(classes_with_bases& registry) {
-  meta::visit_class<CLASS, deep>(declare_visitor(registry));
+  meta::visit_class<CLASS, deep>(fill_runtime_registry(registry));
   return {};
 }
 template <typename CLASSES, bool deep = true>
 constexpr nullptr_t declare_classes(classes_with_bases& registry) {
-  meta::visit_classes<CLASSES, deep>(declare_visitor(registry));
+  meta::visit_classes<CLASSES, deep>(fill_runtime_registry(registry));
   return {};
 }
 template <typename CLASS>

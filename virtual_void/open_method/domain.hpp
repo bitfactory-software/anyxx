@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/meta/meta.hpp>
+#include <virtual_void/meta/class.hpp>
 
 namespace virtual_void::open_method {
 
