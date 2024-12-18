@@ -9,7 +9,7 @@ namespace virtual_void::typeid_cast {
 template <template <typename> typename CONST, typename FOUND, typename FROM>
 auto cast_implementation_(auto* from, const std::type_info& to) {
   typename CONST<void>::type found = nullptr;
-  class_hierarchy::visit_class<FROM>(
+  meta::visit_class<FROM>(
       overload{[&]<typename C> {
                  if (!found && typeid_of<FROM>() == to)
                    found = static_cast<CONST<void>::type>(from);

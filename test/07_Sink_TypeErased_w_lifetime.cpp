@@ -77,7 +77,7 @@ void AnywhereInTheApplication() { entityToOut.define<IntData>(&IntToOut); }
 }  // namespace Application
 
 }  // namespace
-namespace virtual_void::class_hierarchy {
+namespace virtual_void::meta {
 using namespace Application;
 template <>
 struct class_<StringData> : base {};
@@ -87,7 +87,7 @@ template <>
 struct class_<IntData> : base {};
 template <>
 struct class_<DoubleData> : base {};
-}  // namespace virtual_void::class_hierarchy
+}  // namespace virtual_void::meta
 
 namespace {
 

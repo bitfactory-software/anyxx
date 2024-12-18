@@ -8,7 +8,7 @@
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::class_hierarchy {
+namespace virtual_void::meta {
 
 template <typename CLASS>
 struct class_;
@@ -60,12 +60,12 @@ constexpr auto declare_visitor(classes_with_bases& registry) {
 }
 template <typename CLASS, bool deep = true>
 constexpr nullptr_t declare(classes_with_bases& registry) {
-  class_hierarchy::visit_class<CLASS, deep>(declare_visitor(registry));
+  meta::visit_class<CLASS, deep>(declare_visitor(registry));
   return {};
 }
 template <typename CLASSES, bool deep = true>
 constexpr nullptr_t declare_classes(classes_with_bases& registry) {
-  class_hierarchy::visit_classes<CLASSES, deep>(declare_visitor(registry));
+  meta::visit_classes<CLASSES, deep>(declare_visitor(registry));
   return {};
 }
 template <typename CLASS>
@@ -95,4 +95,4 @@ inline constexpr void visit_hierarchy(
   visit_bases(found->second.bases, classes_with_bases, visitor);
 }
 
-}  // namespace virtual_void::class_hierarchy
+}  // namespace virtual_void::meta

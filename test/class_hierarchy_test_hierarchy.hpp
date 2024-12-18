@@ -55,7 +55,7 @@ struct D : C, C3 {
 };
 }  // namespace TestDomain
 
-namespace virtual_void::class_hierarchy {
+namespace virtual_void::meta {
 using namespace TestDomain;
 template <>
 struct class_<A1> : base {};
@@ -77,4 +77,4 @@ template <>
 struct class_<C> : base {};
 template <>
 struct class_<D> : bases<C, C3> {};
-};  // namespace virtual_void::class_hierarchy
+};  // namespace virtual_void::meta

@@ -23,13 +23,13 @@ template <typename CLASSES>
 void run_cast_test(const auto& castMethod, auto make_dispatch_var) {
   using namespace TestDomain;
 
-  virtual_void::class_hierarchy::visit_classes<CLASSES>(virtual_void::overload{
+  virtual_void::meta::visit_classes<CLASSES>(virtual_void::overload{
       [&]<typename TOP> {
         const TOP top;
         virtual_void::is_virtual_void auto c_typed_void =
             make_dispatch_var(top);
 
-        virtual_void::class_hierarchy::visit_class<TOP>(virtual_void::overload{
+        virtual_void::meta::visit_class<TOP>(virtual_void::overload{
             [&]<typename X> {
               auto static_cast_result = static_cast<const X*>(&top);
               auto type_id_cast_result =

@@ -6,7 +6,7 @@ namespace virtual_void::open_method {
 
 template <typename METHOD_BASE>
 struct domain {
-  class_hierarchy::classes_with_bases classes;
+  meta::classes_with_bases classes;
   std::vector<METHOD_BASE*> open_methods;
 };
 

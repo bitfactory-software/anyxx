@@ -34,7 +34,7 @@ TEST_CASE("typeid factory")
       auto a = any_factory(typeid(T));
       REQUIRE(a.type() == typeid(T));
     };
-    class_hierarchy::visit_classes<classes>(
+    meta::visit_classes<classes>(
         overload{[&]<typename C> { test.template operator()<C>(); },
                  [&]<typename C, typename B> {}});
   }
@@ -58,7 +58,7 @@ TEST_CASE("typeid factory")
       auto tp = static_cast<const T*>(get_data(cv));
       REQUIRE(tp->data == typeid(T).name());
     };
-    class_hierarchy::visit_classes<classes>(
+    meta::visit_classes<classes>(
         overload{[&]<typename C> { test.template operator()<C>(); },
                  [&]<typename C, typename B> {}});
   }
@@ -78,7 +78,7 @@ TEST_CASE("typeid factory")
       auto tp = static_cast<const T*>(get_data(cv));
       REQUIRE(tp->data == typeid(T).name());
     };
-    class_hierarchy::visit_classes<classes>(
+    meta::visit_classes<classes>(
         overload{[&]<typename C> { test.template operator()<C>(); },
                  [&]<typename C, typename B> {}});
   }

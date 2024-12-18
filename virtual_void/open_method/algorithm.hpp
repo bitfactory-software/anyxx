@@ -10,7 +10,7 @@ void fill_with_overload(auto& method, const auto& wrapper) {
 }
 template <typename TYPE_LIST>
 void fill_with_overloads(TYPE_LIST, auto& method, const auto& wrapper) {
-  class_hierarchy::visit_classes<TYPE_LIST>(
+  meta::visit_classes<TYPE_LIST>(
       overload{[&]<typename C> { fill_with_overload<C>(method, wrapper); },
                [&]<typename C, typename B> {}});
 }
@@ -21,15 +21,15 @@ void fill_with_overloads(auto& method, const auto& wrapper) {
 
 template <typename METHOD>
 inline constexpr auto find_declared_in_bases(
-    const class_hierarchy::classes_with_bases& registry,
-    const class_hierarchy::bases_t& bases, const METHOD& method) {
+    const meta::classes_with_bases& registry,
+    const meta::bases_t& bases, const METHOD& method) {
   typename METHOD::dispatch_target_t found = nullptr;
   visit_bases(bases, registry, [&](const std::type_info& base) {
     if (!found) found = method.is_defined(base);
   });
   return found;
 }
-inline void interpolate(const class_hierarchy::classes_with_bases& classes,
+inline void interpolate(const meta::classes_with_bases& classes,
                         auto* method) {
   for (const auto& [self, class_with_bases] : classes)
     if (!method->is_defined(*class_with_bases.self))
@@ -43,7 +43,7 @@ inline void interpolate(const auto& domain) {
 }
 template <typename CLASSES>
 auto declare_classes(CLASSES, auto& domain) {
-  return class_hierarchy::declare_classes<CLASSES>(domain.classes);
+  return meta::declare_classes<CLASSES>(domain.classes);
 }
 template <typename... CLASSES>
 auto declare_classes(auto& domain) {

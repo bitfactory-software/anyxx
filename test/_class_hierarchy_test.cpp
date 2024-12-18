@@ -5,7 +5,7 @@
 #include "class_hierarchy_test_hierarchy.hpp"
 #include <catch.hpp>
 
-namespace virtual_void::class_hierarchy {
+namespace virtual_void::meta {
 namespace {
 void dump(const classes_with_bases& registry) {
   for (const auto& [_, class_with_bases] : registry) {
@@ -21,7 +21,7 @@ void test_class_hierarchy() {
   static_assert(is_registered_class<A1>);
 
   std::cout << "\n";
-  std::cout << "class_hierarchy::test"
+  std::cout << "meta::test"
             << "\n";
 
   {
@@ -71,4 +71,4 @@ void test_class_hierarchy() {
   }
 }
 }  // namespace
-}  // namespace virtual_void::class_hierarchy
+}  // namespace virtual_void::meta

@@ -133,7 +133,7 @@ class declare<R(ARGS...)> : public declaration_base {
 
 template <typename CLASSES>
 constexpr nullptr_t declare_classes(m_table_map& registry) {
-  class_hierarchy::visit_classes<CLASSES, true>(
+  meta::visit_classes<CLASSES, true>(
       overload{[&]<typename C> {
                  registry[&typeid_of<C>()] = data::has_m_table::m_table_of<C>();
                },

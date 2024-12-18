@@ -61,7 +61,7 @@ TEST_CASE("m_table open_method") {
     using classes = type_list<D, C1, C2>;
     open_method::fill_with_overloads(classes{}, toString,
                                                    ToString);
-    class_hierarchy::visit_classes<classes>(
+    virtual_void::meta::visit_classes<classes>(
         overload{[&]<typename C> {
                                  C c;
                                  auto virtual_void = erased<const_observer>(c);

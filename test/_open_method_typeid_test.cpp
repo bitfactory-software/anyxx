@@ -60,7 +60,7 @@ namespace
 			using classes = type_list< D, C1, C2 >;
 			open_method::fill_with_overloads( classes{}, toString, ToString );
 			seal_for_runtime( open_methods );
-			class_hierarchy::visit_classes< classes >( 
+			virtual_void::meta::visit_classes< classes >( 
 				overload
 				{ [&]< typename C >				{ REQUIRE( call< C >( toString ) == typeid( C ).name() ); }
 				, [&]< typename C, typename B >	{}
