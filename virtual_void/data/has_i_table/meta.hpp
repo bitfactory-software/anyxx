@@ -1,8 +1,8 @@
 #pragma once
 
+#include <virtual_void/meta/forward.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 #include <virtual_void/virtual_void.hpp>
-#include <virtual_void/meta/forward.hpp>
 
 namespace virtual_void::data::has_i_table {
 
@@ -21,20 +21,6 @@ struct meta {
   constexpr meta(const META& rhs) : i_table_(rhs.i_table_) {}
 
   constexpr meta() noexcept = default;
-  constexpr meta(const meta&) = default;
-  constexpr meta(meta&) = default;
-  constexpr meta(meta&& rhs) noexcept { swap(*this, rhs); }
-  constexpr meta& operator=(meta const&) = default;
-  constexpr meta& operator=(meta&& rhs) noexcept {
-    meta destroy_this{};
-    swap(*this, destroy_this);
-    swap(*this, rhs);
-    return *this;
-  }
-  friend constexpr void swap(meta& lhs, meta& rhs) noexcept {
-    using namespace std;
-    swap(lhs.i_table_, rhs.i_table_);
-  }
 
   constexpr const auto* get_meta() const { return this; }
 
@@ -42,7 +28,9 @@ struct meta {
     return &virtual_void::meta::get_type_info(get_i_table());
   }
 
-  constexpr virtual_void::meta::i_table* get_i_table() const { return i_table_; }
+  constexpr virtual_void::meta::i_table* get_i_table() const {
+    return i_table_;
+  }
 
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };
