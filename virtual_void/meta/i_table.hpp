@@ -7,9 +7,7 @@
 
 namespace virtual_void::meta {
 
-VV_EXPORT int next_i_table_index_value();
-
-class index_table_for_v_table_in_i_table {
+class index_for_archetype {
   table<int, -1> table_;
 
  public:
@@ -24,12 +22,12 @@ class index_table_for_v_table_in_i_table {
 
 // archetype index -> index for v_table in i_tablestemplate <typename V_TABLE>
 template <typename V_TABLE>
-index_table_for_v_table_in_i_table& index_for_v_table_in_i_table();
+index_for_archetype& index_for_v_table_in_i_table();
 
 template <typename V_TABLE>
-index_table_for_v_table_in_i_table&
+index_for_archetype&
 index_for_v_table_in_i_table_implementation() {
-  static index_table_for_v_table_in_i_table table;
+  static index_for_archetype table;
   return table;
 }
 

@@ -270,14 +270,14 @@
 #define INTERFACE_CONST_METHOD(ret, name, ...) \
   INTERFACE_METHOD_(ret, name, const, __VA_ARGS__)
 
-#define VV_DECLARE_V_TABLE_INDEX(export_, interface_)             \
-  template <>                                                     \
-  export_ virtual_void::meta::index_table_for_v_table_in_i_table& \
+#define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
+  template <>                                         \
+  export_ virtual_void::meta::index_for_archetype&    \
   virtual_void::meta::index_for_v_table_in_i_table<interface_##_v_table>();
 
 #define VV_DEFINE_V_TABLE_INDEX(interface_)                                  \
   template <>                                                                \
-  virtual_void::meta::index_table_for_v_table_in_i_table&                    \
+  virtual_void::meta::index_for_archetype&                                   \
   virtual_void::meta::index_for_v_table_in_i_table<interface_##_v_table>() { \
     return index_for_v_table_in_i_table_implementation<                      \
         interface_##_v_table>();                                             \
