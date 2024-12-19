@@ -2,20 +2,25 @@
 
 #include <typeindex>
 #include <vector>
-
+#include <virtual_void/meta/table.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::meta {
 
 class m_table_t {
  public:
+  using m_table_target_t = void (*)();
+
+ private:
+  table<m_table_target_t, nullptr> table_;
+  const std::type_info& type_info_;
+
+ public:
   constexpr m_table_t(const std::type_info& type_info)
       : type_info_(type_info) {}
   constexpr const std::type_info& type() const { return type_info_; }
-  using m_table_target_t = void (*)();
   constexpr void set_method(int method_index, m_table_target_t target) {
-    ensure_size(method_index);
-    table_[method_index] = target;
+    table_.register_target(method_index, target);
   }
   template <typename TRAGET>
   constexpr void set_method(int method_index, TRAGET target) {
@@ -24,23 +29,11 @@ class m_table_t {
   }
   constexpr void clear() { table_.clear(); }
   constexpr auto at(int method_index, auto default_target) const {
-    if (table_.size() <= method_index)
-      return reinterpret_cast<m_table_target_t>(default_target);
-    auto target = table_[method_index];
-    if (!target) return reinterpret_cast<m_table_target_t>(default_target);
-    return target;
+    if (auto target = find(method_index)) return target;
+    return reinterpret_cast<m_table_target_t>(default_target);
   }
   constexpr m_table_target_t find(int method_index) const {
-    if (table_.size() > method_index) return table_[method_index];
-    return {};
-  }
-
- private:
-  const std::type_info& type_info_;
-  std::vector<m_table_target_t> table_;
-  constexpr void ensure_size(std::size_t method_index) {
-    if (table_.size() <= method_index)
-      table_.insert(table_.end(), 1 + method_index - table_.size(), {});
+    return table_.at(method_index);
   }
 };
 
@@ -50,4 +43,4 @@ constexpr m_table_t* m_table_of() {
   return &m_table_;
 }
 
-}  // namespace virtual_void::data::has_m_table
+}  // namespace virtual_void::meta
