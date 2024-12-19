@@ -5,7 +5,7 @@
 
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::data::has_m_table {
+namespace virtual_void::meta {
 
 class m_table_t {
  public:

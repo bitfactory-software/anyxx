@@ -3,7 +3,6 @@
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/archetype.hpp>
-#include <virtual_void/meta/forward.hpp>
 
 namespace virtual_void::meta {
 

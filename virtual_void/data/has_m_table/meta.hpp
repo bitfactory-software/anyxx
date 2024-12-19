@@ -1,23 +1,23 @@
 #pragma once
 
-#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/meta/m_table.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
-#include <virtual_void/data/has_m_table/m_table.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data::has_m_table {
 
 template <class META>
 concept is_m_table_meta = is_meta<META> && requires(META meta) {
-  { meta.get_m_table() } -> std::convertible_to<m_table_t*>;
+  { meta.get_m_table() } -> std::convertible_to<virtual_void::meta::m_table_t*>;
 };
 
 struct meta {
-  m_table_t* m_table_ = nullptr;
+  virtual_void::meta::m_table_t* m_table_ = nullptr;
 
   const auto* get_meta() const { return this; }
 
   template <typename T>
-  meta(std::in_place_type_t<T>) : m_table_(m_table_of<std::decay_t<T>>()) {}
+  meta(std::in_place_type_t<T>) : m_table_(virtual_void::meta::m_table_of<std::decay_t<T>>()) {}
   template <is_m_table_meta META>
   meta(const META& rhs) : m_table_(rhs.get_m_table()) {}
 
@@ -38,7 +38,7 @@ struct meta {
   }
 
   type_info_ptr type_info() const { return &get_m_table()->type(); }
-  m_table_t* get_m_table() const { return m_table_; }
+  virtual_void::meta::m_table_t* get_m_table() const { return m_table_; }
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };
 
