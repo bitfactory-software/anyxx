@@ -27,6 +27,17 @@ static X x{3.14};
 
 using namespace test::component_base;
 
+namespace archetype
+{
+   struct A;
+}
+
+template<>
+virtual_void::meta::archetype_t& virtual_void::meta::archetype_instance<archetype::A>(){ return archetype_implementation<archetype::A>(); };
+
+template<>
+struct archetype_for_class<X> : std::type_identity<archetype::A>{};
+
 template <>
 struct i_table_of<X> : i_table_implementation_of<X> {};
 is_a<X, get_value_i_v_table> __;

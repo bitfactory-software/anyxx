@@ -62,7 +62,7 @@ template <is_virtual_void FROM>
   requires std::same_as<meta_t<FROM>, has_i_table::meta>
 struct copy_converter<has_i_table::unique, FROM> {
   auto operator()(const auto& from) {
-    return get_meta(from)->get_i_table()->copy_construct(get_data(from));
+    return get_meta(from)->get_i_table().copy_construct(get_data(from));
   }
 };
 

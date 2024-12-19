@@ -18,14 +18,5 @@ struct base_v_table {
 };
 
 VV_EXPORT base_v_table* base_v_table_imlpementation();
-VV_EXPORT int next_i_table_index_value();
-
-template <typename V_TABLE>
-int i_table_index_implemntation() {
-  static int i = next_i_table_index_value();
-  return i;
-}
-template <typename V_TABLE>
-int i_table_index();
 
 }  // namespace virtual_void::meta

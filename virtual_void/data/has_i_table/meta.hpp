@@ -16,7 +16,7 @@ struct meta {
 
   template <typename T>
   constexpr meta(std::in_place_type_t<T>)
-      : i_table_(virtual_void::meta::get_i_table_of<std::decay_t<T>>()) {}
+      : i_table_(&virtual_void::meta::get_i_table_of<std::decay_t<T>>()) {}
   template <is_i_table_meta META>
   constexpr meta(const META& rhs) : i_table_(rhs.i_table_) {}
 
@@ -28,8 +28,8 @@ struct meta {
     return &virtual_void::meta::get_type_info(get_i_table());
   }
 
-  constexpr virtual_void::meta::i_table* get_i_table() const {
-    return i_table_;
+  constexpr virtual_void::meta::i_table& get_i_table() const {
+    return *i_table_;
   }
 
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;

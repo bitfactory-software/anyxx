@@ -100,6 +100,7 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
+  REQUIRE(get_i_table_of<Times>().size() == 1u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));

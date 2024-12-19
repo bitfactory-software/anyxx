@@ -5,8 +5,8 @@
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/typeid_of_macro.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/meta/i_table.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::interface;

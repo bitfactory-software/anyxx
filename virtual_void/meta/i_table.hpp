@@ -1,61 +1,109 @@
 #pragma once
 
-#include <virtual_void/meta/forward.hpp>
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/meta/archetype.hpp>
+#include <virtual_void/meta/forward.hpp>
 
 namespace virtual_void::meta {
 
+VV_EXPORT int next_i_table_index_value();
+
+template <typename TRAGET, auto DEFAULT>
+class table {
+  std::vector<TRAGET> table_;
+  constexpr void ensure_size(std::size_t v_table_index) {
+    if (table_.size() <= v_table_index)
+      table_.insert(table_.end(), 1 + v_table_index - table_.size(), DEFAULT);
+  }
+
+ public:
+  constexpr table() = default;
+  constexpr table(table const&) = delete;
+  constexpr void register_target(int index, TRAGET target) {
+    ensure_size(index);
+    table_[index] = target;
+  }
+  constexpr void clear() { table_.clear(); }
+
+  constexpr TRAGET at(int v_table_index) const {
+    if (table_.size() <= v_table_index) return DEFAULT;
+    auto target = table_[v_table_index];
+    return target;
+  }
+  constexpr TRAGET find(int v_table_index) const {
+    if (table_.size() > v_table_index) return table_[v_table_index];
+    return DEFAULT;
+  }
+  constexpr auto size() const { return table_.size(); }
+};
+
+class index_table_for_v_table_in_i_table {
+  table<int, -1> table_;
+
+ public:
+  constexpr void register_archetype(int archetype_index,
+                                    int index_for_v_table_in_i_table) {
+    table_.register_target(archetype_index, index_for_v_table_in_i_table);
+  }
+  constexpr int at(int archetype_index) const {
+    return table_.at(archetype_index);
+  }
+};
+
+// archetype index -> index for v_table in i_tablestemplate <typename V_TABLE>
+template <typename V_TABLE>
+index_table_for_v_table_in_i_table& index_for_v_table_in_i_table();
+
+template <typename V_TABLE>
+index_table_for_v_table_in_i_table&
+index_for_v_table_in_i_table_implementation() {
+  static index_table_for_v_table_in_i_table table;
+  return table;
+}
+
 class i_table {
  public:
-  using i_table_target_t = interface::base_v_table*;
+  using v_table_ptr = interface::base_v_table*;
 
-private:
+ private:
+  table<v_table_ptr, nullptr> table_;
   const std::type_info& type_info_;
-  std::vector<i_table_target_t> table_;
+  int archetype_index_ = -1;
   using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
   copy_construct_t* copy_construct_;
 
  public:
   template <typename CLASS>
   constexpr i_table(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
+      : type_info_(typeid_of<CLASS>()),
+        archetype_index_(archetype_of<CLASS>().get_archetype_index()),
+        copy_construct_(+[](const_void from) {
           return erased<data::has_i_table::unique>(
               *static_cast<CLASS const*>(from));
         }) {}
   constexpr const std::type_info& type() const { return type_info_; }
-  constexpr void register_interface(int index, i_table_target_t target) {
-    ensure_size(index);
-    table_[index] = target;
-  }
-  constexpr void clear() { table_.clear(); }
-  constexpr i_table_target_t at(int v_table_index) const {
-    if (table_.size() <= v_table_index) return {};
-    auto target = table_[v_table_index];
-    return target;
-  }
-  constexpr i_table_target_t find(int v_table_index) const {
-    if (table_.size() > v_table_index) return table_[v_table_index];
-    return {};
-  }
-  constexpr void ensure_size(std::size_t v_table_index) {
-    if (table_.size() <= v_table_index)
-      table_.insert(table_.end(), 1 + v_table_index - table_.size(), {});
-  }
-
+  constexpr int get_archetype_index() const { return archetype_index_; }
   auto copy_construct(const_void from) { return copy_construct_(from); }
+
+  constexpr void register_interface(int v_table_index, v_table_ptr v_table) {
+    table_.register_target(v_table_index, v_table);
+  }
+  constexpr v_table_ptr at(int v_table_index) const {
+    return table_.at(v_table_index);
+  }
+  constexpr auto size() const { return table_.size(); }
 };
 
-constexpr const std::type_info& get_type_info(i_table const* t) {
-  return t->type();
+constexpr const std::type_info& get_type_info(i_table const& t) {
+  return t.type();
 }
 
 template <typename CLASS>
 struct i_table_implementation_of {
-  constexpr i_table* operator()() const {
+  static constexpr i_table& instance() {
     static i_table table{std::in_place_type<CLASS>};
-    return &table;
+    return table;
   }
 };
 
@@ -63,18 +111,30 @@ template <typename CLASS>
 struct i_table_of;
 
 template <typename CLASS>
-constexpr i_table* get_i_table_of() {
-  return i_table_of<CLASS>{}();
+constexpr i_table& get_i_table_of() {
+  return i_table_of<CLASS>::instance();
+}
+
+template <typename V_TABLE>
+int get_i_table_idx_for(i_table const& i_table) {
+  auto archetype_index = i_table.get_archetype_index();
+  auto i_table_idx =
+      index_for_v_table_in_i_table<V_TABLE>().at(archetype_index);
+  return i_table_idx;
 }
 
 template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
-    auto i_table_index_ = i_table_index<V_TABLE>();
-    auto i_table_ = get_i_table_of<CLASS>();
+    auto& i_table = get_i_table_of<CLASS>();
+    auto i_table_idx = get_i_table_idx_for<V_TABLE>(i_table);
+    if (i_table_idx < 0)
+      index_for_v_table_in_i_table<V_TABLE>().register_archetype(
+          i_table.get_archetype_index(), i_table_idx = i_table.size());
     using uneraser = static_cast_uneraser<CLASS>;
-    auto v_table_ = V_TABLE::template imlpementation<uneraser>();
-    i_table_->register_interface(i_table_index_, v_table_);
+    auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
+    i_table.register_interface(i_table_idx, v_table_ptr);
+    auto size = get_i_table_of<CLASS>().size();
   }
 };
 
