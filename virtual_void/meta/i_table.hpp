@@ -4,21 +4,9 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/meta/table.hpp>
+#include <virtual_void/meta/index_for_archetype.hpp>
 
 namespace virtual_void::meta {
-
-class index_for_archetype {
-  table<int, -1> table_;
-
- public:
-  constexpr void register_archetype(int archetype_index,
-                                    int index_for_v_table_in_i_table) {
-    table_.register_target(archetype_index, index_for_v_table_in_i_table);
-  }
-  constexpr int at(int archetype_index) const {
-    return table_.at(archetype_index);
-  }
-};
 
 // archetype index -> index for v_table in i_tablestemplate <typename V_TABLE>
 template <typename V_TABLE>
