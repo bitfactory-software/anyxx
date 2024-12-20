@@ -159,7 +159,7 @@
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
-#define ERASED_INTERFACE_TEMPLATE_(t, n, BASE, l)                              \
+#define VV_INTERFACE_TEMPLATE_(t, n, BASE, l)                                  \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
   struct n##_default_v_table_map {                                             \
     _detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, _detail_EXPAND_LIST l) \
@@ -254,28 +254,27 @@
 
 //    n(n&) = default;                                                           \
 
-#define VV_INTERFACE_(n, BASE, l) ERASED_INTERFACE_TEMPLATE_((), n, BASE, l)
+#define VV_INTERFACE_(n, BASE, l) VV_INTERFACE_TEMPLATE_((), n, BASE, l)
 
-#define ERASED_INTERFACE(name, l) \
+#define VV_INTERFACE(name, l) \
   VV_INTERFACE_(name, ::virtual_void::interface::base, l)
 
-#define ERASED_INTERFACE_TEMPLATE(t, n, l) \
-  ERASED_INTERFACE_TEMPLATE_(t, n, ::virtual_void::interface::base, l)
+#define VV_INTERFACE_TEMPLATE(t, n, l) \
+  VV_INTERFACE_TEMPLATE_(t, n, ::virtual_void::interface::base, l)
 
-#define INTERFACE_METHOD_(...) (__VA_ARGS__)
+#define VV_METHOD_(...) (__VA_ARGS__)
 
-#define INTERFACE_METHOD(ret, name, ...) \
-  INTERFACE_METHOD_(ret, name, , __VA_ARGS__)
+#define VV_METHOD(ret, name, ...) VV_METHOD_(ret, name, , __VA_ARGS__)
 
-#define INTERFACE_CONST_METHOD(ret, name, ...) \
-  INTERFACE_METHOD_(ret, name, const, __VA_ARGS__)
+#define VV_CONST_METHOD(ret, name, ...) \
+  VV_METHOD_(ret, name, const, __VA_ARGS__)
 
-#define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
-  template <>                                         \
-  export_ virtual_void::meta::interface_meta&         \
+#define VV_CASTABLE_V_TABLE(export_, interface_) \
+  template <>                                    \
+  export_ virtual_void::meta::interface_meta&    \
   virtual_void::meta::interface_meta_for<interface_##_v_table>();
 
-#define VV_DEFINE_V_TABLE_INDEX(interface_)                           \
+#define VV_CASTABLE_V_TABLE_IMPEMENTATION(interface_)                 \
   template <>                                                         \
   virtual_void::meta::interface_meta&                                 \
   virtual_void::meta::interface_meta_for<interface_##_v_table>() {    \

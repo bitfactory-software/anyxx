@@ -32,8 +32,8 @@ So far, the introduction. See below the sample code for further explanations.
 #include <virtual_void/interface/declare_macro.hpp>
 
 namespace tutorial_31_1::basic_layer { //1a
-ERASED_INTERFACE(drawable,
-                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&))) // 2
+VV_INTERFACE(drawable,
+                 (VV_CONST_METHOD(void, draw, std::ostream&))) // 2
 
 using drawable_value = drawable<virtual_void::data::has_no_meta::value>;
 using drawable_values = std::vector<drawable_value>;
@@ -46,7 +46,7 @@ void draw(std::ostream& o, drawable_values& drawables,
 
 namespace tutorial_31_1::shape_layer { //1b
 VV_INTERFACE_(edged, basic_layer::drawable,
-                  (INTERFACE_CONST_METHOD(int, edges))) // 5
+                  (VV_CONST_METHOD(int, edges))) // 5
 
 struct circle {
   double r;

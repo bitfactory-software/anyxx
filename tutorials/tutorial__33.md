@@ -25,8 +25,7 @@ Here is how this works out:
 #include <virtual_void/interface/declare_macro.hpp>
 
 namespace tutorial_33_1 {
-ERASED_INTERFACE(to_ostream,
-                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&)))
+VV_INTERFACE(to_ostream, (VV_CONST_METHOD(void, draw, std::ostream&)))
 
 template <virtual_void::is_virtual_void VV>
 std::ostream& operator<<(std::ostream& o, const to_ostream<VV>& i) {  // 1
@@ -91,8 +90,7 @@ Because this is a standard pattern, there is a prepared standard solution in [``
 
 namespace virtual_void::interface {
 
-ERASED_INTERFACE(ostreamable, 
-                 (INTERFACE_CONST_METHOD(void, to_ostream, std::ostream&))) // 1
+VV_INTERFACE(ostreamable, (VV_CONST_METHOD(void, to_ostream, std::ostream&))) // 1
 
 template <typename T> \\ 2a
 concept is_ostreamable = requires(T const& t, std::ostream o) {

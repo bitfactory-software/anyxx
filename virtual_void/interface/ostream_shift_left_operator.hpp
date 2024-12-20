@@ -2,15 +2,14 @@
 
 #include <ostream>
 
-#undef interface 
+#undef interface
 
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 namespace virtual_void::interface {
 
-ERASED_INTERFACE(ostreamable,
-                 (INTERFACE_CONST_METHOD(void, to_ostream, std::ostream&)))
+VV_INTERFACE(ostreamable, (VV_CONST_METHOD(void, to_ostream, std::ostream&)))
 
 template <typename T>
 concept is_ostreamable = requires(T const& t, std::ostream o) {

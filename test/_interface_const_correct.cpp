@@ -3,13 +3,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-
+#include <virtual_void/data/has_m_table/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/unique.hpp>
-#include <virtual_void/data/has_m_table/shared_const.hpp>
 
 using namespace Catch::Matchers;
 
@@ -113,7 +112,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
     const_function cf = const_function_object;
     REQUIRE(cf() == "hallo");
     const_function cf2{cf};
-    //cf2 = cf; //should compile
+    // cf2 = cf; //should compile
   }
 
   {
@@ -151,7 +150,8 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
       interface::call_operator<data::has_m_table::shared_const, std::string()>;
   using mutating_function =
-      interface::call_operator<data::has_m_table::shared_const, void(std::string), mutable_>;
+      interface::call_operator<data::has_m_table::shared_const,
+                               void(std::string), mutable_>;
 
   {
     functor function_object;
@@ -195,10 +195,10 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-ERASED_INTERFACE(text_i_const, (INTERFACE_CONST_METHOD(std::string, get_text)))
+VV_INTERFACE(text_i_const, (VV_CONST_METHOD(std::string, get_text)))
 
 VV_INTERFACE_(text_i_mutable, text_i_const,
-                  (INTERFACE_METHOD(void, set_text, std::string const&)))
+              (VV_METHOD(void, set_text, std::string const&)))
 }  // namespace
 
 using const_text_i = text_i_const<data::has_no_meta::const_observer>;
@@ -221,7 +221,8 @@ static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
 using mutable_text_i_const = text_i_mutable<data::has_no_meta::const_observer>;
-using mutable_text_i_mutable = text_i_mutable<data::has_no_meta::mutable_observer>;
+using mutable_text_i_mutable =
+    text_i_mutable<data::has_no_meta::mutable_observer>;
 static_assert(std::same_as<mutable_text_i_mutable::virtual_void_t,
                            data::has_no_meta::mutable_observer>);
 
@@ -243,7 +244,8 @@ static_assert(
     !virtual_void_trait<data::has_no_meta::mutable_observer>::is_const);
 
 static_assert(std::constructible_from<mutable_text_i_mutable, text_object>);
-static_assert(!std::constructible_from<mutable_text_i_mutable, text_object const>);
+static_assert(
+    !std::constructible_from<mutable_text_i_mutable, text_object const>);
 static_assert(can_call_get_text<mutable_text_i_mutable>);
 static_assert(can_call_get_text<mutable_text_i_mutable const>);
 static_assert(can_call_set_text<mutable_text_i_mutable>);

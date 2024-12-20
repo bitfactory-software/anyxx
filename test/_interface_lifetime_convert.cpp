@@ -1,16 +1,13 @@
+#include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <catch.hpp>
-
-#include <virtual_void/interface/declare_macro.hpp>
-
-#include <virtual_void/interface/base.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;
 
@@ -21,7 +18,7 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
+VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 
 using to_string_sc = to_string_i<data::has_no_meta::shared_const>;
 using to_string_co = to_string_i<data::has_no_meta::const_observer>;

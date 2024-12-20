@@ -22,8 +22,7 @@ Usually usage is shown with *shape*s . And thats exactly what we are gonna do no
 #include <virtual_void/data/has_no_meta/value.hpp>
 
 namespace tutorial_30_1 {
-ERASED_INTERFACE(drawable,
-                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&)))  // 1
+VV_INTERFACE(drawable, (VV_CONST_METHOD(void, draw, std::ostream&)))  // 1
 
 struct circle { // 2
   double r;
@@ -91,8 +90,7 @@ With this tool, the programm looks like this:
 #include <virtual_void/data/has_no_meta/value.hpp>
 
 namespace tutorial_30_2 {
-ERASED_INTERFACE(drawable,
-                 (INTERFACE_CONST_METHOD(void, draw, std::ostream&)))
+VV_INTERFACE(drawable, (VV_CONST_METHOD(void, draw, std::ostream&)))
 
 struct circle {
   double r;

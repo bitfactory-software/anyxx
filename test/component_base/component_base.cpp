@@ -27,16 +27,18 @@ static X x{3.14};
 
 using namespace test::component_base;
 
-namespace archetype
-{
-   struct A;
+namespace archetype {
+struct A;
 }
 
-template<>
-virtual_void::meta::archetype_t& virtual_void::meta::archetype_instance<archetype::A>(){ return archetype_implementation<archetype::A>(); };
+template <>
+virtual_void::meta::archetype_t&
+virtual_void::meta::archetype_instance<archetype::A>() {
+  return archetype_implementation<archetype::A>();
+};
 
-template<>
-struct archetype_for_class<X> : std::type_identity<archetype::A>{};
+template <>
+struct archetype_for_class<X> : std::type_identity<archetype::A> {};
 
 template <>
 struct i_table_of<X> : i_table_implementation_of<X> {};
@@ -72,6 +74,6 @@ virtual_void::data::has_i_table::unique test::component_base::u_X(double v) {
   return virtual_void::erased<unique>(X{v});
 }
 
-VV_DEFINE_V_TABLE_INDEX(test::component_base::get_value_i)
-VV_DEFINE_V_TABLE_INDEX(test::component_base::set_value_i)
-VV_DEFINE_V_TABLE_INDEX(test::component_base::to_string_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(test::component_base::get_value_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(test::component_base::set_value_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(test::component_base::to_string_i)

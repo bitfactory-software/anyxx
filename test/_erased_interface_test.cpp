@@ -1,17 +1,14 @@
+#include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <catch.hpp>
-
+#include <virtual_void/data/has_m_table/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/data/has_type_info/unique.hpp>
+#include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-
- #include <virtual_void/data/has_m_table/shared_const.hpp>
- #include <virtual_void/data/has_type_info/unique.hpp>
- #include <virtual_void/data/has_no_meta/observer.hpp>
- #include <virtual_void/data/has_no_meta/value.hpp>
- #include <virtual_void/interface/call_operator.hpp>
 
 using namespace Catch::Matchers;
 
@@ -23,27 +20,25 @@ struct position {
   float x, y;
 };
 
-ERASED_INTERFACE(shape_base1, (INTERFACE_CONST_METHOD(void, draw, position)))
+VV_INTERFACE(shape_base1, (VV_CONST_METHOD(void, draw, position)))
 
-VV_INTERFACE_(shape_base, shape_base1,
-                  (INTERFACE_CONST_METHOD(int, count_sides)))
+VV_INTERFACE_(shape_base, shape_base1, (VV_CONST_METHOD(int, count_sides)))
 
 VV_INTERFACE_(shape_d_i, shape_base,
-                  (INTERFACE_CONST_METHOD(double, area),
-                   INTERFACE_CONST_METHOD(double, perimeter)))
+              (VV_CONST_METHOD(double, area),
+               VV_CONST_METHOD(double, perimeter)))
 
 VV_INTERFACE_(shape_i, shape_base1,
-                  (INTERFACE_CONST_METHOD(int, count_sides),
-                   INTERFACE_CONST_METHOD(double, area),
-                   INTERFACE_CONST_METHOD(double, perimeter)))
+              (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
+               VV_CONST_METHOD(double, perimeter)))
 
 using shape_vv = shape_i<data::has_m_table::shared_const>;
 
 using shape_base_v = shape_base<data::has_no_meta::const_observer>;
 
 using shape =
-    interface::call_operator<data::has_no_meta::const_observer, std::string(std::string), const_,
-                             shape_d_i>;
+    interface::call_operator<data::has_no_meta::const_observer,
+                             std::string(std::string), const_, shape_d_i>;
 using shapeX = shape_d_i<data::has_no_meta::const_observer>;
 using shapeXX = shape_d_i<data::has_no_meta::const_observer>;
 
@@ -157,25 +152,29 @@ TEST_CASE("dynamic v_table const_observer") {
   shape shape_circle{circle{33.3}};
   shapeX shape_circleX{circle{33.3}};
 
-  data::has_no_meta::const_observer o1 = virtual_void::erased<data::has_no_meta::const_observer>(c);
+  data::has_no_meta::const_observer o1 =
+      virtual_void::erased<data::has_no_meta::const_observer>(c);
   data::has_no_meta::const_observer o2 = o1;
 
   {
-      using shape_base1_const_observer = shape_base1<data::has_no_meta::const_observer>;
-      shape_base1_const_observer sb1;
-      shape_base1_const_observer sb2{c};
-      sb1 = sb2;
+    using shape_base1_const_observer =
+        shape_base1<data::has_no_meta::const_observer>;
+    shape_base1_const_observer sb1;
+    shape_base1_const_observer sb2{c};
+    sb1 = sb2;
   }
   {
-      using shape_base1_mutable_observer = shape_base1<data::has_no_meta::mutable_observer>;
-      shape_base1_mutable_observer sb1;
-      shape_base1_mutable_observer sb2{c};
-      sb1 = sb2;
+    using shape_base1_mutable_observer =
+        shape_base1<data::has_no_meta::mutable_observer>;
+    shape_base1_mutable_observer sb1;
+    shape_base1_mutable_observer sb2{c};
+    sb1 = sb2;
   }
   {
-      using shape_base1_mutable_observer = shape_base1<data::has_no_meta::mutable_observer>;
-      shape_base1_mutable_observer sb1{c};
-      shape_base1_mutable_observer sb2{std::move(sb1)};
+    using shape_base1_mutable_observer =
+        shape_base1<data::has_no_meta::mutable_observer>;
+    shape_base1_mutable_observer sb1{c};
+    shape_base1_mutable_observer sb2{std::move(sb1)};
   }
 
   //    base< void* > base_v = shape_circle; ->
@@ -250,8 +249,7 @@ TEST_CASE("dynamic interface has_type_info::unique") {
   shape_unique s1{c};
 
   REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));
-  auto unerased_circle =
-      unerase_cast<circle const>(get_virtual_void(s1));
+  auto unerased_circle = unerase_cast<circle const>(get_virtual_void(s1));
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   print_shape_vv(std::move(s1));
 }

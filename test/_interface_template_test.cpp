@@ -1,15 +1,12 @@
+#include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <map>
 #include <string>
-
-#include <catch.hpp>
-
-#include <virtual_void/interface/declare_macro.hpp>
-
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;
 
@@ -22,27 +19,26 @@ struct X {
 };
 
 namespace {
-ERASED_INTERFACE(to_string_i, (INTERFACE_CONST_METHOD(std::string, to_string)))
+VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 
-ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
-                          (INTERFACE_CONST_METHOD(VALUE const&, at, KEY),
-                           INTERFACE_CONST_METHOD(std::size_t, size)))
+VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
+                      (VV_CONST_METHOD(VALUE const&, at, KEY),
+                       VV_CONST_METHOD(std::size_t, size)))
 
-ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
-                          (INTERFACE_METHOD(VALUE &, at, KEY),
-                           INTERFACE_CONST_METHOD(std::size_t, size)))
+VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
+                      (VV_METHOD(VALUE&, at, KEY),
+                       VV_CONST_METHOD(std::size_t, size)))
 
-ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_tt_i,
-                          (INTERFACE_CONST_METHOD(VALUE, at, KEY),
-                           INTERFACE_CONST_METHOD(std::size_t, size)))
+VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_tt_i,
+                      (VV_CONST_METHOD(VALUE, at, KEY),
+                       VV_CONST_METHOD(std::size_t, size)))
 
-ERASED_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_tt_i,
-                          (INTERFACE_METHOD(VALUE, at, KEY),
-                           INTERFACE_CONST_METHOD(std::size_t, size)))
+VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_tt_i,
+                      (VV_METHOD(VALUE, at, KEY),
+                       VV_CONST_METHOD(std::size_t, size)))
 
-ERASED_INTERFACE_TEMPLATE(((KEY)), map_s_t_i,
-                          (INTERFACE_CONST_METHOD(to_string_i<const_observer>,
-                                                  at, KEY)))
+VV_INTERFACE_TEMPLATE(((KEY)), map_s_t_i,
+                      (VV_CONST_METHOD(to_string_i<const_observer>, at, KEY)))
 
 template <>
 struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
@@ -119,8 +115,9 @@ TEST_CASE("interface template test3") {
   test_map_lambda(map);
 
   auto test_map_lambda_mutate =
-      [](map_mutable_tt_i<mutable_observer, int,
-                  map_mutable_tt_i<mutable_observer, std::string,
+      [](map_mutable_tt_i<
+          mutable_observer, int,
+          map_mutable_tt_i<mutable_observer, std::string,
                            map_mutable_t_i<mutable_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
@@ -132,5 +129,5 @@ TEST_CASE("interface template test3") {
         map_i.at(2).at("one").at(4) = 8.28;
       };
   test_map_lambda_mutate(map);
-  REQUIRE(map[ 2 ][ "one" ][ 4 ] == 8.28);
+  REQUIRE(map[2]["one"][4] == 8.28);
 }

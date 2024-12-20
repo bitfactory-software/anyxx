@@ -23,9 +23,9 @@ using namespace virtual_void::data::has_no_meta;
 namespace {
 
 
-ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value),
-                          INTERFACE_CONST_METHOD(string, as_forth),
-                          INTERFACE_CONST_METHOD(string, as_lisp)))
+VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value),
+                          VV_CONST_METHOD(string, as_forth),
+                          VV_CONST_METHOD(string, as_lisp)))
 
 // alternative: using node = node_i<shared_const>; less code, but intrusive
 // lifetime management

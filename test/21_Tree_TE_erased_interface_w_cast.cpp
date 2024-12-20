@@ -23,14 +23,14 @@ using namespace virtual_void::meta;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
-ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value),
-                          INTERFACE_CONST_METHOD(string, as_forth)))
+VV_INTERFACE(node_i,
+             (VV_CONST_METHOD(int, value), VV_CONST_METHOD(string, as_forth)))
 using node = node_i<shared_const>;
 }  // namespace _21_Tree_TE_erased_interface_w_cast
 
 namespace _21_Tree_TE_erased_interface_w_cast {
-ERASED_INTERFACE(lisp_i, (INTERFACE_CONST_METHOD(string, as_lisp)))
-ERASED_INTERFACE(value2_i, (INTERFACE_CONST_METHOD(int, value2)))
+VV_INTERFACE(lisp_i, (VV_CONST_METHOD(string, as_lisp)))
+VV_INTERFACE(value2_i, (VV_CONST_METHOD(int, value2)))
 }  // namespace _21_Tree_TE_erased_interface_w_cast
 
 namespace _21_Tree_TE_erased_interface_w_cast {
@@ -89,9 +89,9 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::node_i)
-VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
-VV_DECLARE_V_TABLE_INDEX(, _21_Tree_TE_erased_interface_w_cast::value2_i)
+VV_CASTABLE_V_TABLE(, _21_Tree_TE_erased_interface_w_cast::node_i)
+VV_CASTABLE_V_TABLE(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
+VV_CASTABLE_V_TABLE(, _21_Tree_TE_erased_interface_w_cast::value2_i)
 
 template <>
 struct i_table_of<Plus> : i_table_implementation_of<Plus> {};
@@ -130,6 +130,7 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
 #endif  // !_DEBUG
 }
 
-VV_DEFINE_V_TABLE_INDEX(_21_Tree_TE_erased_interface_w_cast ::node_i)
-VV_DEFINE_V_TABLE_INDEX(_21_Tree_TE_erased_interface_w_cast ::lisp_i)
-VV_DEFINE_V_TABLE_INDEX(_21_Tree_TE_erased_interface_w_cast ::value2_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::node_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::lisp_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(
+    _21_Tree_TE_erased_interface_w_cast ::value2_i)
