@@ -9,10 +9,14 @@ namespace virtual_void::meta {
 VV_EXPORT int next_archetype_index_value();
 
 class archetype_t {
-  int index_ = next_archetype_index_value();
+  const int index_ = next_archetype_index_value();
 
  public:
-	 int get_archetype_index() { return index_; }
+  archetype_t() = default;
+  archetype_t(const archetype_t&) = delete;
+  constexpr int get_archetype_index() { return index_; }
+  int interface_count_ = 0;
+  int open_method_count_ = 0;
 };
 
 template <typename ARCHETYPE>
@@ -28,9 +32,8 @@ struct archetype_unspecified;
 template <>
 VV_EXPORT archetype_t& archetype_instance<archetype_unspecified>();
 
-
 template <typename CLASS>
-struct archetype_for_class : std::type_identity<archetype_unspecified>{};
+struct archetype_for_class : std::type_identity<archetype_unspecified> {};
 
 template <typename CLASS>
 using archetype_for_class_t = archetype_for_class<CLASS>::type;

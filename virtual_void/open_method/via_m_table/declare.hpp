@@ -40,10 +40,12 @@ class declaration_base : public open_method::default_target<> {
     domain.open_methods.push_back(this);
   }
   auto define_erased(m_table_t* m_table, auto f) {
+    auto& archetype = m_table->get_archetype();
     auto method_idx = method_index(m_table);
     if (method_idx < 0)
-      index_for_archeytpe_.register_archetype(m_table->get_archetype_index(),
-                                              method_idx = m_table->size());
+      index_for_archeytpe_.register_archetype(
+          archetype.get_archetype_index(),
+          method_idx = archetype.open_method_count_++);
     auto t = reinterpret_cast<dispatch_target_t>(f);
     m_table->set_method(method_idx, t);
     return definition{};

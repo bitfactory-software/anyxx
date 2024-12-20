@@ -25,7 +25,7 @@ class i_table {
  private:
   table<v_table_ptr, nullptr> table_;
   const std::type_info& type_info_;
-  int archetype_index_ = -1;
+  archetype_t& archetype_;
   using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
   copy_construct_t* copy_construct_;
 
@@ -33,13 +33,16 @@ class i_table {
   template <typename CLASS>
   constexpr i_table(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()),
-        archetype_index_(archetype_of<CLASS>().get_archetype_index()),
+        archetype_(archetype_of<CLASS>()),
         copy_construct_(+[](const_void from) {
           return erased<data::has_i_table::unique>(
               *static_cast<CLASS const*>(from));
         }) {}
   constexpr const std::type_info& type() const { return type_info_; }
-  constexpr int get_archetype_index() const { return archetype_index_; }
+  constexpr int get_archetype_index() const {
+    return archetype_.get_archetype_index();
+  }
+  constexpr archetype_t& get_archetype() const { return archetype_; }
   auto copy_construct(const_void from) { return copy_construct_(from); }
 
   constexpr void register_interface(int v_table_index, v_table_ptr v_table) {
@@ -83,10 +86,12 @@ template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
     auto& i_table = get_i_table_of<CLASS>();
+    auto& archetype = i_table.get_archetype();
     auto i_table_idx = get_i_table_idx_for<V_TABLE>(i_table);
     if (i_table_idx < 0)
       index_for_v_table_in_i_table<V_TABLE>().register_archetype(
-          i_table.get_archetype_index(), i_table_idx = i_table.size());
+          archetype.get_archetype_index(),
+          i_table_idx = archetype.interface_count_++);
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
     i_table.register_interface(i_table_idx, v_table_ptr);

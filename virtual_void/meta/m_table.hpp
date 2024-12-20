@@ -26,15 +26,19 @@ class m_table_t {
  private:
   table<m_table_target_t, nullptr> table_;
   const std::type_info& type_info_;
-  int archetype_index_ = -1;
+  archetype_t& archetype_;
 
  public:
+  m_table_t() = delete;
+  m_table_t(const m_table_t&) = delete;
   template <typename CLASS>
   constexpr m_table_t(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()),
-        archetype_index_(archetype_of<CLASS>().get_archetype_index()) {}
+      : type_info_(typeid_of<CLASS>()), archetype_(archetype_of<CLASS>()) {}
   constexpr const std::type_info& type() const { return type_info_; }
-  constexpr int get_archetype_index() const { return archetype_index_; }
+  constexpr int get_archetype_index() const {
+    return archetype_.get_archetype_index();
+  }
+  constexpr archetype_t& get_archetype() const { return archetype_; }
   constexpr void set_method(int method_index, m_table_target_t target) {
     table_.register_target(method_index, target);
   }
