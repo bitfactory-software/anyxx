@@ -40,14 +40,9 @@ class declaration_base : public open_method::default_target<> {
     domain.open_methods.push_back(this);
   }
   auto define_erased(m_table_t* m_table, auto f) {
-    auto& archetype = m_table->get_archetype();
-    auto method_idx = method_index(m_table);
-    if (method_idx < 0)
-      index_for_archeytpe_.register_archetype(
-          archetype.get_archetype_index(),
-          method_idx = archetype.open_method_count_++);
-    auto t = reinterpret_cast<dispatch_target_t>(f);
-    m_table->set_method(method_idx, t);
+    auto method_idx = index_for_archeytpe_(m_table->get_archetype(),
+                                           &meta::archetype_t::open_method_count_);
+    m_table->set_method(method_idx, reinterpret_cast<dispatch_target_t>(f));
     return definition{};
   }
   auto define_erased(const std::type_info& type_info, auto f) {
@@ -76,8 +71,7 @@ class declaration_base : public open_method::default_target<> {
     return {};
   }
   int method_index(m_table_t const* m_table) const {
-    auto archetype_index = m_table->get_archetype_index();
-    return index_for_archeytpe_.at(archetype_index);
+    return index_for_archeytpe_(m_table->get_archetype());
   }
 };
 

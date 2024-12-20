@@ -16,9 +16,10 @@ class table {
  public:
   constexpr table() = default;
   constexpr table(table const&) = delete;
-  constexpr void register_target(int index, TRAGET target) {
+  constexpr auto register_target(int index, TRAGET target) {
     ensure_size(index);
     table_[index] = target;
+    return target;
   }
   constexpr void clear() { table_.clear(); }
 

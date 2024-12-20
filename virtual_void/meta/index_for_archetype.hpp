@@ -5,11 +5,14 @@
 namespace virtual_void::meta {
 
 class index_for_archetype : table<int, -1> {
-
  public:
-  constexpr void register_archetype(int archetype_index, int target_index) {
-    register_target(archetype_index, target_index);
+  int operator()(archetype_t& archetype, int archetype_t::*registered) {
+    auto arechetype_idx = archetype.get_archetype_index();
+    if (auto idx = at(arechetype_idx); idx >= 0) return idx;
+    return register_target(arechetype_idx, (archetype.*registered)++);
   }
-  using table::at;
+  int operator()(archetype_t& archetype) const {
+    return at(archetype.get_archetype_index());
+  }
 };
 }  // namespace virtual_void::meta

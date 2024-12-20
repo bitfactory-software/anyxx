@@ -79,9 +79,7 @@ struct is_a {
   constexpr is_a() {
     auto& i_table = get_i_table_of<CLASS>();
     auto& archetype = i_table.get_archetype();
-    auto i_table_idx = interface_meta_for<V_TABLE>().i_table_index(archetype);
-    if (i_table_idx < 0)
-      i_table_idx = interface_meta_for<V_TABLE>().register_archetype(archetype);
+    auto i_table_idx = interface_meta_for<V_TABLE>().register_archetype(archetype);
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
     i_table.register_interface(i_table_idx, v_table_ptr);
