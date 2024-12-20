@@ -6,6 +6,8 @@
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/meta/interface.hpp>
+#include <virtual_void/meta/i_table.hpp>
 
 namespace virtual_void::interface {
 
@@ -13,7 +15,8 @@ template <typename TO_INTERFACE, is_virtual_void VV_FROM>
 auto find_v_table(VV_FROM const& vv_from) {
   using v_table_t = typename TO_INTERFACE::v_table_t;
   auto& i_table = get_meta(vv_from)->get_i_table();
-  auto i_table_idx = get_i_table_idx_for<v_table_t>(i_table);
+  auto i_table_idx =
+      virtual_void::meta::interface_meta_for<v_table_t>().i_table_index(i_table.get_archetype());
   auto v_table = i_table.at(i_table_idx);
   return static_cast<TO_INTERFACE::v_table_t*>(v_table);
 }

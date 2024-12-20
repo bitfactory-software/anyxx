@@ -272,13 +272,12 @@
 
 #define VV_DECLARE_V_TABLE_INDEX(export_, interface_) \
   template <>                                         \
-  export_ virtual_void::meta::index_for_archetype&    \
-  virtual_void::meta::index_for_v_table_in_i_table<interface_##_v_table>();
+  export_ virtual_void::meta::interface_meta&         \
+  virtual_void::meta::interface_meta_for<interface_##_v_table>();
 
-#define VV_DEFINE_V_TABLE_INDEX(interface_)                                  \
-  template <>                                                                \
-  virtual_void::meta::index_for_archetype&                                   \
-  virtual_void::meta::index_for_v_table_in_i_table<interface_##_v_table>() { \
-    return index_for_v_table_in_i_table_implementation<                      \
-        interface_##_v_table>();                                             \
+#define VV_DEFINE_V_TABLE_INDEX(interface_)                           \
+  template <>                                                         \
+  virtual_void::meta::interface_meta&                                 \
+  virtual_void::meta::interface_meta_for<interface_##_v_table>() {    \
+    return interface_meta_for_implementation<interface_##_v_table>(); \
   }

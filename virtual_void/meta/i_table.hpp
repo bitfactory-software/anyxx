@@ -3,7 +3,7 @@
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/archetype.hpp>
-#include <virtual_void/meta/index_for_archetype.hpp>
+#include <virtual_void/meta/interface.hpp>
 #include <virtual_void/meta/table.hpp>
 
 namespace virtual_void::meta {
@@ -74,24 +74,14 @@ constexpr i_table& get_i_table_of() {
   return i_table_of<CLASS>::instance();
 }
 
-template <typename V_TABLE>
-int get_i_table_idx_for(i_table const& i_table) {
-  auto archetype_index = i_table.get_archetype_index();
-  auto i_table_idx =
-      index_for_v_table_in_i_table<V_TABLE>().at(archetype_index);
-  return i_table_idx;
-}
-
 template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
     auto& i_table = get_i_table_of<CLASS>();
     auto& archetype = i_table.get_archetype();
-    auto i_table_idx = get_i_table_idx_for<V_TABLE>(i_table);
+    auto i_table_idx = interface_meta_for<V_TABLE>().i_table_index(archetype);
     if (i_table_idx < 0)
-      index_for_v_table_in_i_table<V_TABLE>().register_archetype(
-          archetype.get_archetype_index(),
-          i_table_idx = archetype.interface_count_++);
+      i_table_idx = interface_meta_for<V_TABLE>().register_archetype(archetype);
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
     i_table.register_interface(i_table_idx, v_table_ptr);
