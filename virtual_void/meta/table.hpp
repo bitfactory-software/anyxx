@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <virtual_void/meta/forward.hpp>
 
 namespace virtual_void::meta {
@@ -22,14 +23,14 @@ class table {
   constexpr void clear() { table_.clear(); }
 
   constexpr TRAGET at(int index) const {
-    if (table_.size() <= index) return DEFAULT;
-    auto target = table_[index];
-    return target;
-  }
-  constexpr TRAGET find(int index) const {
-    if (table_.size() > index) return table_[index];
+    if (0 <= index && index < table_.size()) return table_[index];
     return DEFAULT;
   }
+  constexpr std::optional<TRAGET> is_defined(int index) const {
+    if (auto found = at(index); found != DEFAULT) return found;
+    return {};
+  };
+
   constexpr auto size() const { return table_.size(); }
 };
 

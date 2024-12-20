@@ -3,18 +3,17 @@
 #include <virtual_void/data/has_i_table/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/archetype.hpp>
-#include <virtual_void/meta/table.hpp>
 #include <virtual_void/meta/index_for_archetype.hpp>
+#include <virtual_void/meta/table.hpp>
 
 namespace virtual_void::meta {
 
-// archetype index -> index for v_table in i_tablestemplate <typename V_TABLE>
+// archetype index -> index for v_table in i_tables
 template <typename V_TABLE>
 index_for_archetype& index_for_v_table_in_i_table();
 
 template <typename V_TABLE>
-index_for_archetype&
-index_for_v_table_in_i_table_implementation() {
+index_for_archetype& index_for_v_table_in_i_table_implementation() {
   static index_for_archetype table;
   return table;
 }

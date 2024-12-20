@@ -129,8 +129,8 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   int fail = 0;
   db.Query("junk", [&](const shared_const& e) {
     // call open method
-    std::cout << "type_info: " << get_meta(e)->type_info()->name() << ": "
-              << toString(e) << std::endl;
+    std::cout << "type_info: " << get_meta(e)->type_info()->name() << ": ";
+    std::cout << toString(e) << std::endl;
 
     try {
       // call open method
