@@ -197,7 +197,7 @@ struct text_object {
 
 ERASED_INTERFACE(text_i_const, (INTERFACE_CONST_METHOD(std::string, get_text)))
 
-ERASED_INTERFACE_(text_i_mutable, text_i_const,
+VV_INTERFACE_(text_i_mutable, text_i_const,
                   (INTERFACE_METHOD(void, set_text, std::string const&)))
 }  // namespace
 

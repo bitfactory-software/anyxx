@@ -45,7 +45,7 @@ void draw(std::ostream& o, drawable_values& drawables,
 }  // namespace tutorial_31_1::basic_layer
 
 namespace tutorial_31_1::shape_layer { //1b
-ERASED_INTERFACE_(edged, basic_layer::drawable,
+VV_INTERFACE_(edged, basic_layer::drawable,
                   (INTERFACE_CONST_METHOD(int, edges))) // 5
 
 struct circle {

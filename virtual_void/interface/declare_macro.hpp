@@ -254,10 +254,10 @@
 
 //    n(n&) = default;                                                           \
 
-#define ERASED_INTERFACE_(n, BASE, l) ERASED_INTERFACE_TEMPLATE_((), n, BASE, l)
+#define VV_INTERFACE_(n, BASE, l) ERASED_INTERFACE_TEMPLATE_((), n, BASE, l)
 
 #define ERASED_INTERFACE(name, l) \
-  ERASED_INTERFACE_(name, ::virtual_void::interface::base, l)
+  VV_INTERFACE_(name, ::virtual_void::interface::base, l)
 
 #define ERASED_INTERFACE_TEMPLATE(t, n, l) \
   ERASED_INTERFACE_TEMPLATE_(t, n, ::virtual_void::interface::base, l)

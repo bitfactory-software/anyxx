@@ -25,14 +25,14 @@ struct position {
 
 ERASED_INTERFACE(shape_base1, (INTERFACE_CONST_METHOD(void, draw, position)))
 
-ERASED_INTERFACE_(shape_base, shape_base1,
+VV_INTERFACE_(shape_base, shape_base1,
                   (INTERFACE_CONST_METHOD(int, count_sides)))
 
-ERASED_INTERFACE_(shape_d_i, shape_base,
+VV_INTERFACE_(shape_d_i, shape_base,
                   (INTERFACE_CONST_METHOD(double, area),
                    INTERFACE_CONST_METHOD(double, perimeter)))
 
-ERASED_INTERFACE_(shape_i, shape_base1,
+VV_INTERFACE_(shape_i, shape_base1,
                   (INTERFACE_CONST_METHOD(int, count_sides),
                    INTERFACE_CONST_METHOD(double, area),
                    INTERFACE_CONST_METHOD(double, perimeter)))
