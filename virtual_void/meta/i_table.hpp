@@ -8,16 +8,6 @@
 
 namespace virtual_void::meta {
 
-// archetype index -> index for v_table in i_tables
-template <typename V_TABLE>
-index_for_archetype& index_for_v_table_in_i_table();
-
-template <typename V_TABLE>
-index_for_archetype& index_for_v_table_in_i_table_implementation() {
-  static index_for_archetype table;
-  return table;
-}
-
 class i_table {
  public:
   using v_table_ptr = interface::base_v_table*;
