@@ -269,12 +269,12 @@
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, const, __VA_ARGS__)
 
-#define VV_CASTABLE_V_TABLE(export_, interface_) \
-  template <>                                    \
-  export_ virtual_void::meta::interface_meta&    \
+#define VV_INTERFACE_META(export_, interface_) \
+  template <>                                  \
+  export_ virtual_void::meta::interface_meta&  \
   virtual_void::meta::interface_meta_for<interface_##_v_table>();
 
-#define VV_CASTABLE_V_TABLE_IMPEMENTATION(interface_)                 \
+#define VV_INTERFACE_META_IMPEMENTATION(interface_)                   \
   template <>                                                         \
   virtual_void::meta::interface_meta&                                 \
   virtual_void::meta::interface_meta_for<interface_##_v_table>() {    \

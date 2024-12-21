@@ -35,12 +35,12 @@ VV_INTERFACE_(shape_i, shape_base1,
                VV_CONST_METHOD(double, perimeter)))
 }  // namespace
 
-VV_CASTABLE_V_TABLE(, shape_base1)
-VV_CASTABLE_V_TABLE(, shape_base)
-VV_CASTABLE_V_TABLE(, shape_d_i)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(shape_base1)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(shape_base)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(shape_d_i)
+VV_INTERFACE_META(, shape_base1)
+VV_INTERFACE_META(, shape_base)
+VV_INTERFACE_META(, shape_d_i)
+VV_INTERFACE_META_IMPEMENTATION(shape_base1)
+VV_INTERFACE_META_IMPEMENTATION(shape_base)
+VV_INTERFACE_META_IMPEMENTATION(shape_d_i)
 
 struct circle {
   double radius;

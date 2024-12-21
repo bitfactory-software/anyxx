@@ -89,9 +89,9 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_CASTABLE_V_TABLE(, _21_Tree_TE_erased_interface_w_cast::node_i)
-VV_CASTABLE_V_TABLE(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
-VV_CASTABLE_V_TABLE(, _21_Tree_TE_erased_interface_w_cast::value2_i)
+VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::node_i)
+VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
+VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::value2_i)
 
 template <>
 struct i_table_of<Plus> : i_table_implementation_of<Plus> {};
@@ -130,7 +130,6 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
 #endif  // !_DEBUG
 }
 
-VV_CASTABLE_V_TABLE_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::node_i)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::lisp_i)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(
-    _21_Tree_TE_erased_interface_w_cast ::value2_i)
+VV_INTERFACE_META_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::node_i)
+VV_INTERFACE_META_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::lisp_i)
+VV_INTERFACE_META_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::value2_i)

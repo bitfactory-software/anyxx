@@ -74,6 +74,6 @@ virtual_void::data::has_i_table::unique test::component_base::u_X(double v) {
   return virtual_void::erased<unique>(X{v});
 }
 
-VV_CASTABLE_V_TABLE_IMPEMENTATION(test::component_base::get_value_i)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(test::component_base::set_value_i)
-VV_CASTABLE_V_TABLE_IMPEMENTATION(test::component_base::to_string_i)
+VV_INTERFACE_META_IMPEMENTATION(test::component_base::get_value_i)
+VV_INTERFACE_META_IMPEMENTATION(test::component_base::set_value_i)
+VV_INTERFACE_META_IMPEMENTATION(test::component_base::to_string_i)
