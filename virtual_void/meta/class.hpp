@@ -3,15 +3,19 @@
 #include <map>
 #include <typeindex>
 #include <vector>
-
+#include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::meta {
 
+struct models_no_archetype {
+  using archetype = archetype_unspecified;
+};
+
 template <typename CLASS>
-struct class_;
+struct class_ : models_no_archetype {};
 
 struct base {
   using bases_ = type_list<>;
@@ -22,8 +26,22 @@ struct bases {
 };
 
 template <class CLASS>
-concept is_registered_class =
-    requires(CLASS) { typename class_<CLASS>::bases_; };
+concept is_registered_class = requires(CLASS) {
+  typename class_<CLASS>::bases_;
+};
+
+template <typename ARCHETYPE>
+struct models {
+  using archetype = ARCHETYPE;
+};
+
+template <typename CLASS>
+using archetype_for_class = class_<CLASS>::archetype;
+
+template <typename CLASS>
+archetype_t& archetype_of() {
+  return archetype_instance<archetype_for_class<CLASS>>();
+}
 
 template <typename CLASS, bool deep = true>
 constexpr void visit_class(auto visitor) {
@@ -53,10 +71,11 @@ struct class_with_bases {
 using classes_with_bases = std::map<std::type_index, class_with_bases>;
 
 constexpr auto fill_runtime_registry(classes_with_bases& registry) {
-  return overload{[&]<typename C> { registry[typeid_of<C>()].self = &typeid_of<C>(); },
-                  [&]<typename C, typename B> {
-                    registry[typeid_of<C>()].bases.emplace_back(&typeid_of<B>());
-                  }};
+  return overload{
+      [&]<typename C> { registry[typeid_of<C>()].self = &typeid_of<C>(); },
+      [&]<typename C, typename B> {
+        registry[typeid_of<C>()].bases.emplace_back(&typeid_of<B>());
+      }};
 }
 template <typename CLASS, bool deep = true>
 constexpr nullptr_t declare(classes_with_bases& registry) {

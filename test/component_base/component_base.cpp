@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/meta/i_table.hpp>
 
 using namespace test::component_base;
@@ -38,7 +39,7 @@ virtual_void::meta::archetype_instance<archetype::A>() {
 };
 
 template <>
-struct archetype_for_class<X> : std::type_identity<archetype::A> {};
+struct virtual_void::meta::class_<X> : models<archetype::A> {};
 
 template <>
 struct i_table_of<X> : i_table_implementation_of<X> {};

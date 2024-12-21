@@ -80,13 +80,13 @@ void AnywhereInTheApplication() { entityToOut.define<IntData>(&IntToOut); }
 namespace virtual_void::meta {
 using namespace Application;
 template <>
-struct class_<StringData> : base {};
+struct class_<StringData> : base, models_no_archetype {};
 template <>
-struct class_<SuperStringData> : bases<StringData> {};
+struct class_<SuperStringData> : bases<StringData>, models_no_archetype {};
 template <>
-struct class_<IntData> : base {};
+struct class_<IntData> : base, models_no_archetype {};
 template <>
-struct class_<DoubleData> : base {};
+struct class_<DoubleData> : base, models_no_archetype {};
 }  // namespace virtual_void::meta
 
 namespace {

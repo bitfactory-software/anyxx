@@ -9,6 +9,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/meta/class.hpp>
 
 using namespace Catch::Matchers;
 
@@ -60,6 +61,9 @@ struct functor {
   std::string operator()() const { return text; }
   void operator()(const std::string& t) { text = t; }
 };
+}
+
+namespace {
 
 using const_function =
     interface::call_operator<data::has_no_meta::const_observer, std::string()>;

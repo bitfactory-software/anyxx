@@ -58,23 +58,23 @@ struct D : C, C3 {
 namespace virtual_void::meta {
 using namespace TestDomain;
 template <>
-struct class_<A1> : base {};
+struct class_<A1> : base, models_no_archetype {};
 template <>
-struct class_<A2> : base {};
+struct class_<A2> : base, models_no_archetype {};
 template <>
-struct class_<B1> : bases<A1> {};
+struct class_<B1> : bases<A1>, models_no_archetype {};
 template <>
-struct class_<B2> : bases<A2> {};
+struct class_<B2> : bases<A2>, models_no_archetype {};
 template <>
-struct class_<B3> : bases<A1, A2> {};
+struct class_<B3> : bases<A1, A2>, models_no_archetype {};
 template <>
-struct class_<C1> : bases<B1> {};
+struct class_<C1> : bases<B1>, models_no_archetype {};
 template <>
-struct class_<C2> : bases<B2> {};
+struct class_<C2> : bases<B2>, models_no_archetype {};
 template <>
-struct class_<C3> : bases<B3> {};
+struct class_<C3> : bases<B3>, models_no_archetype {};
 template <>
-struct class_<C> : base {};
+struct class_<C> : base, models_no_archetype {};
 template <>
-struct class_<D> : bases<C, C3> {};
+struct class_<D> : bases<C, C3>, models_no_archetype {};
 };  // namespace virtual_void::meta

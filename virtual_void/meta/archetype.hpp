@@ -32,15 +32,4 @@ struct archetype_unspecified;
 template <>
 VV_EXPORT archetype_t& archetype_instance<archetype_unspecified>();
 
-template <typename CLASS>
-struct archetype_for_class : std::type_identity<archetype_unspecified> {};
-
-template <typename CLASS>
-using archetype_for_class_t = archetype_for_class<CLASS>::type;
-
-template <typename CLASS>
-archetype_t& archetype_of() {
-  return archetype_instance<archetype_for_class_t<CLASS>>();
-}
-
 }  // namespace virtual_void::meta
