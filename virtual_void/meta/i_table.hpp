@@ -91,7 +91,6 @@ struct is_a {
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
     i_table.register_interface(i_table_idx, v_table_ptr);
-    auto size = get_i_table_of<CLASS>().size();
   }
 };
 
