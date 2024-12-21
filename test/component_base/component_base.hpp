@@ -1,4 +1,3 @@
-
 #include <string>
 #include <virtual_void/data/has_i_table/observer.hpp>
 #include <virtual_void/data/has_i_table/shared_const.hpp>

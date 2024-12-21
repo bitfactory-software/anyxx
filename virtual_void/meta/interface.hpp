@@ -16,6 +16,9 @@ class interface_meta {
   int register_archetype(archetype_t& archetype) {
     return index_(archetype, &archetype_t::interface_count_);
   }
+  int register_archetype_at(archetype_t& archetype, int index) {
+    return index_.register_at(archetype, index);
+  }
   int i_table_index(archetype_t& archetype) {
     return index_(archetype);
   }

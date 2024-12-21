@@ -9,6 +9,7 @@
 #include <virtual_void/data/has_type_info/unique.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/meta/i_table.hpp>
 
 using namespace Catch::Matchers;
 
@@ -20,6 +21,7 @@ struct position {
   float x, y;
 };
 
+namespace {
 VV_INTERFACE(shape_base1, (VV_CONST_METHOD(void, draw, position)))
 
 VV_INTERFACE_(shape_base, shape_base1, (VV_CONST_METHOD(int, count_sides)))
@@ -31,18 +33,14 @@ VV_INTERFACE_(shape_d_i, shape_base,
 VV_INTERFACE_(shape_i, shape_base1,
               (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
                VV_CONST_METHOD(double, perimeter)))
+}  // namespace
 
-using shape_vv = shape_i<data::has_m_table::shared_const>;
-
-using shape_base_v = shape_base<data::has_no_meta::const_observer>;
-
-using shape =
-    interface::call_operator<data::has_no_meta::const_observer,
-                             std::string(std::string), const_, shape_d_i>;
-using shapeX = shape_d_i<data::has_no_meta::const_observer>;
-using shapeXX = shape_d_i<data::has_no_meta::const_observer>;
-
-using full_shape_observer = shape_i<data::has_no_meta::mutable_observer>;
+VV_CASTABLE_V_TABLE(, shape_base1)
+VV_CASTABLE_V_TABLE(, shape_base)
+VV_CASTABLE_V_TABLE(, shape_d_i)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(shape_base1)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(shape_base)
+VV_CASTABLE_V_TABLE_IMPEMENTATION(shape_d_i)
 
 struct circle {
   double radius;
@@ -55,6 +53,44 @@ struct circle {
   double perimeter() const { return circumference(); }
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
+
+template <>
+struct virtual_void::meta::i_table_of<circle>
+    : virtual_void::meta::i_table_implementation_of<circle> {};
+virtual_void::meta::is_a<circle, shape_d_i_v_table> __;
+
+TEST_CASE("class is_a interface") {
+  using namespace virtual_void;
+  using namespace virtual_void::meta;
+
+  auto& unspecified = archetype_instance<archetype_unspecified>();
+  REQUIRE(&get_i_table_of<circle>().get_archetype() == &unspecified);
+  auto& shape_d_i_meta = interface_meta_for<shape_d_i_v_table>();
+  auto shape_d_i_index = shape_d_i_meta.i_table_index(unspecified);
+  REQUIRE(shape_d_i_index >= 0);
+  static_assert(
+      std::same_as<shape_d_i_v_table::v_table_base_t, shape_base_v_table>);
+  auto& shape_base_meta = interface_meta_for<shape_base_v_table>();
+  auto shape_base_index = shape_base_meta.i_table_index(unspecified);
+  REQUIRE(shape_base_index == shape_d_i_index);
+  static_assert(
+      std::same_as<shape_base_v_table::v_table_base_t, shape_base1_v_table>);
+  auto& shape_base1_meta = interface_meta_for<shape_base1_v_table>();
+  auto shape_base1_index = shape_base1_meta.i_table_index(unspecified);
+  REQUIRE(shape_base1_index == shape_base_index);
+}
+
+using shape_vv = shape_i<data::has_m_table::shared_const>;
+
+using shape_base_v = shape_base<data::has_no_meta::const_observer>;
+
+using shape =
+    interface::call_operator<data::has_no_meta::const_observer,
+                             std::string(std::string), const_, shape_d_i>;
+using shapeX = shape_d_i<data::has_no_meta::const_observer>;
+using shapeXX = shape_d_i<data::has_no_meta::const_observer>;
+
+using full_shape_observer = shape_i<data::has_no_meta::mutable_observer>;
 
 template <>
 struct shape_base1_v_table_map<const circle> {
@@ -131,6 +167,7 @@ void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 
 TEST_CASE("dynamic v_table const_observer") {
   using namespace virtual_void;
+  using namespace virtual_void::meta;
 
   circle c{12.3};
   square s{32};
