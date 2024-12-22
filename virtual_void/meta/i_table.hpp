@@ -24,7 +24,7 @@ class i_table {
   template <typename CLASS>
   constexpr i_table(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()),
-        archetype_(archetype_of<CLASS>()),
+        archetype_(runtime<archetype, archetype_for_class<CLASS>>()),
         copy_construct_(+[](const_void from) {
           return erased<data::has_i_table::unique>(
               *static_cast<CLASS const*>(from));

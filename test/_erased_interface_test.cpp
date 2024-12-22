@@ -63,7 +63,7 @@ TEST_CASE("class is_a interface") {
   using namespace virtual_void;
   using namespace virtual_void::meta;
 
-  auto& unspecified = archetype_instance<archetype_unspecified>();
+  auto& unspecified = runtime<archetype, archetype_unspecified>();
   REQUIRE(&get_i_table_of<circle>().get_archetype() == &unspecified);
   auto& shape_d_i_meta = interface_meta_for<shape_d_i_v_table>();
   auto shape_d_i_index = shape_d_i_meta.i_table_index(unspecified);

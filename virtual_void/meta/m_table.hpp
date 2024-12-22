@@ -5,6 +5,7 @@
 #include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/meta/index_for_archetype.hpp>
 #include <virtual_void/meta/table.hpp>
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::meta {
@@ -33,7 +34,7 @@ class m_table_t {
   m_table_t(const m_table_t&) = delete;
   template <typename CLASS>
   constexpr m_table_t(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()), archetype_(archetype_of<CLASS>()) {}
+      : type_info_(typeid_of<CLASS>()), archetype_(runtime<archetype, archetype_for_class<CLASS>>()) {}
   constexpr const std::type_info& type() const { return type_info_; }
   constexpr int get_archetype_index() const {
     return archetype_.get_archetype_index();

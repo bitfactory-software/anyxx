@@ -8,7 +8,7 @@ int meta::next_archetype_index_value() {
   return i++;
 };
 
-template <>
-meta::archetype& meta::archetype_instance<archetype_unspecified>() {
-  return archetype_implementation<archetype_unspecified>();
+template<>
+archetype& virtual_void::meta::runtime<archetype, archetype_unspecified>(){
+  return runtime_implementation<archetype, archetype_unspecified>();
 };

@@ -19,17 +19,8 @@ class archetype {
   int open_method_count_ = 0;
 };
 
-template <typename ARCHETYPE>
-archetype& archetype_instance();
-
-template <typename ARCHETYPE>
-archetype& archetype_implementation() {
-  static archetype archetype_;
-  return archetype_;
-}
-
-struct archetype_unspecified;
-template <>
-VV_EXPORT archetype& archetype_instance<archetype_unspecified>();
+struct archetype_unspecified{};
+template<>
+VV_EXPORT archetype& runtime<archetype, archetype_unspecified>();
 
 }  // namespace virtual_void::meta

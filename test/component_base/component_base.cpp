@@ -29,13 +29,12 @@ static X x{3.14};
 using namespace test::component_base;
 
 namespace archetype {
-struct A;
+    struct A{};
 }
 
-template <>
-virtual_void::meta::archetype&
-virtual_void::meta::archetype_instance<::archetype::A>() {
-  return archetype_implementation<::archetype::A>();
+template<>
+virtual_void::meta::archetype& virtual_void::meta::runtime<virtual_void::meta::archetype, ::archetype::A>() {
+  return runtime_implementation<virtual_void::meta::archetype, ::archetype::A>();
 };
 
 template <>

@@ -38,10 +38,6 @@ struct models {
 template <typename CLASS>
 using archetype_for_class = class_<CLASS>::archetype;
 
-template <typename CLASS>
-archetype& archetype_of() {
-  return archetype_instance<archetype_for_class<CLASS>>();
-}
 
 template <typename CLASS, bool deep = true>
 constexpr void visit_class(auto visitor) {
