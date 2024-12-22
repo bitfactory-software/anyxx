@@ -11,7 +11,7 @@ namespace virtual_void::meta {
 
 class i_table {
  public:
-  using v_table_ptr = interface::base_v_table*;
+  using v_table_ptr = virtual_void::interface::base_v_table*;
 
  private:
   table<v_table_ptr, nullptr> table_;
@@ -75,7 +75,7 @@ template <typename V_TABLE>
 int archetype_index_in_v_table(archetype& archetype) {
   using base_t = V_TABLE::v_table_base_t;
   auto index = archetype_index_in_v_table<base_t>(archetype);
-  auto& interface_meta = interface_meta_for<V_TABLE>();
+  auto& interface_meta = runtime<meta::interface, V_TABLE>();
   if (index < 0)
     return interface_meta.register_archetype(archetype);
   else

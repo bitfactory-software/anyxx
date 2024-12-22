@@ -5,13 +5,13 @@
 
 namespace virtual_void::meta {
 
-class interface_meta {
+class interface {
   // archetype index -> index for v_table in i_tables
   index_for_archetype index_;
 
  public:
-  interface_meta() = default;
-  interface_meta(interface_meta const&) = delete;
+  interface() = default;
+  interface(interface const&) = delete;
 
   int register_archetype(archetype& archetype) {
     return index_(archetype, &archetype::interface_count_);
@@ -23,14 +23,5 @@ class interface_meta {
     return index_(archetype);
   }
 };
-
-template <typename V_TABLE>
-interface_meta& interface_meta_for();
-
-template <typename V_TABLE>
-interface_meta& interface_meta_for_implementation() {
-  static interface_meta meta_;
-  return meta_;
-}
 
 }  // namespace virtual_void::meta

@@ -65,17 +65,17 @@ TEST_CASE("class is_a interface") {
 
   auto& unspecified = runtime<archetype, archetype_unspecified>();
   REQUIRE(&get_i_table_of<circle>().get_archetype() == &unspecified);
-  auto& shape_d_i_meta = interface_meta_for<shape_d_i_v_table>();
+  auto& shape_d_i_meta = runtime<meta::interface, shape_d_i_v_table>();
   auto shape_d_i_index = shape_d_i_meta.i_table_index(unspecified);
   REQUIRE(shape_d_i_index >= 0);
   static_assert(
       std::same_as<shape_d_i_v_table::v_table_base_t, shape_base_v_table>);
-  auto& shape_base_meta = interface_meta_for<shape_base_v_table>();
+  auto& shape_base_meta = runtime<meta::interface, shape_base_v_table>();
   auto shape_base_index = shape_base_meta.i_table_index(unspecified);
   REQUIRE(shape_base_index == shape_d_i_index);
   static_assert(
       std::same_as<shape_base_v_table::v_table_base_t, shape_base1_v_table>);
-  auto& shape_base1_meta = interface_meta_for<shape_base1_v_table>();
+  auto& shape_base1_meta = runtime<meta::interface, shape_base1_v_table>();
   auto shape_base1_index = shape_base1_meta.i_table_index(unspecified);
   REQUIRE(shape_base1_index == shape_base_index);
 }
@@ -216,8 +216,8 @@ TEST_CASE("dynamic v_table const_observer") {
 
   //    base< void* > base_v = shape_circle; ->
   //    v_table_cast may not compile!
-  interface::base<data::has_no_meta::const_observer> base_shape = shape_circle;
-  interface::base<data::has_no_meta::const_observer> base_shapeX =
+  virtual_void::interface::base<data::has_no_meta::const_observer> base_shape = shape_circle;
+  virtual_void::interface::base<data::has_no_meta::const_observer> base_shapeX =
       shape_circleX;
 
   REQUIRE(is_derived_from<shape>(base_shape));
@@ -226,21 +226,21 @@ TEST_CASE("dynamic v_table const_observer") {
   REQUIRE(is_derived_from<shapeX>(shape_circleX));
   static_assert(std::derived_from<shape, shape_base_v>);
   static_assert(std::derived_from<shapeX, shape_base_v>);
-  REQUIRE(interface::v_table_cast<shapeX>(base_shape));
-  REQUIRE(!interface::v_table_cast<shape>(shape_circleX));
+  REQUIRE(virtual_void::interface::v_table_cast<shapeX>(base_shape));
+  REQUIRE(!virtual_void::interface::v_table_cast<shape>(shape_circleX));
   {
-    shape upcasted_shape = interface::unchecked_v_table_cast<shape>(base_shape);
+    shape upcasted_shape = virtual_void::interface::unchecked_v_table_cast<shape>(base_shape);
     print_shape(upcasted_shape);
   }
 
   shape_base_v shape_circle_base = shape_circle;
   {
     shape shape_is_circle =
-        interface::unchecked_v_table_cast<shape>(shape_circle_base);
+        virtual_void::interface::unchecked_v_table_cast<shape>(shape_circle_base);
     print_shape(shape_is_circle);
   }
   {
-    auto shape_is_circle = interface::v_table_cast<shape>(shape_circle_base);
+    auto shape_is_circle = virtual_void::interface::v_table_cast<shape>(shape_circle_base);
     REQUIRE(shape_is_circle);
     print_shape(*shape_is_circle);
   }
