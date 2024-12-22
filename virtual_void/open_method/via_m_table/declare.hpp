@@ -41,7 +41,7 @@ class declaration_base : public open_method::default_target<> {
   }
   auto define_erased(m_table_t* m_table, auto f) {
     auto method_idx = index_for_archeytpe_(m_table->get_archetype(),
-                                           &meta::archetype_t::open_method_count_);
+                                           &meta::archetype::open_method_count_);
     m_table->set_method(method_idx, reinterpret_cast<dispatch_target_t>(f));
     return definition{};
   }

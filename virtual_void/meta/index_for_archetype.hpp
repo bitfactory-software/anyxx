@@ -6,14 +6,14 @@ namespace virtual_void::meta {
 
 class index_for_archetype : table<int, -1> {
  public:
-  int operator()(archetype_t& archetype, int archetype_t::*registered) {
+  int operator()(archetype& archetype, int archetype::*registered) {
     if (auto idx = (*this)(archetype); idx >= 0) return idx;
     return register_at(archetype, (archetype.*registered)++);
   }
-  int register_at(archetype_t& archetype, int index) {
+  int register_at(archetype& archetype, int index) {
     return register_target(archetype.get_archetype_index(), index);
   }
-  int operator()(archetype_t& archetype) const {
+  int operator()(archetype& archetype) const {
     return at(archetype.get_archetype_index());
   }
 };

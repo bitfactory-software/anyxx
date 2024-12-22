@@ -33,13 +33,13 @@ struct A;
 }
 
 template <>
-virtual_void::meta::archetype_t&
-virtual_void::meta::archetype_instance<archetype::A>() {
-  return archetype_implementation<archetype::A>();
+virtual_void::meta::archetype&
+virtual_void::meta::archetype_instance<::archetype::A>() {
+  return archetype_implementation<::archetype::A>();
 };
 
 template <>
-struct virtual_void::meta::class_<X> : models<archetype::A> {};
+struct virtual_void::meta::class_<X> : models<::archetype::A> {};
 
 template <>
 struct i_table_of<X> : i_table_implementation_of<X> {};

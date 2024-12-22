@@ -9,6 +9,6 @@ int meta::next_archetype_index_value() {
 };
 
 template <>
-meta::archetype_t& meta::archetype_instance<archetype_unspecified>() {
+meta::archetype& meta::archetype_instance<archetype_unspecified>() {
   return archetype_implementation<archetype_unspecified>();
 };

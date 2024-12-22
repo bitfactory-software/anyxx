@@ -16,7 +16,7 @@ class i_table {
  private:
   table<v_table_ptr, nullptr> table_;
   const std::type_info& type_info_;
-  archetype_t& archetype_;
+  archetype& archetype_;
   using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
   copy_construct_t* copy_construct_;
 
@@ -33,7 +33,7 @@ class i_table {
   constexpr int get_archetype_index() const {
     return archetype_.get_archetype_index();
   }
-  constexpr archetype_t& get_archetype() const { return archetype_; }
+  constexpr archetype& get_archetype() const { return archetype_; }
   auto copy_construct(const_void from) { return copy_construct_(from); }
 
   constexpr void register_interface(int v_table_index, v_table_ptr v_table) {
@@ -66,13 +66,13 @@ constexpr i_table& get_i_table_of() {
 }
 
 template <typename V_TABLE>
-int archetype_index_in_v_table(archetype_t& archetype);
+int archetype_index_in_v_table(archetype& archetype);
 template <>
-inline int archetype_index_in_v_table<base_v_table>(archetype_t& archetype) {
+inline int archetype_index_in_v_table<base_v_table>(archetype& archetype) {
   return -1;
 }
 template <typename V_TABLE>
-int archetype_index_in_v_table(archetype_t& archetype) {
+int archetype_index_in_v_table(archetype& archetype) {
   using base_t = V_TABLE::v_table_base_t;
   auto index = archetype_index_in_v_table<base_t>(archetype);
   auto& interface_meta = interface_meta_for<V_TABLE>();

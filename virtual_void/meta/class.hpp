@@ -39,7 +39,7 @@ template <typename CLASS>
 using archetype_for_class = class_<CLASS>::archetype;
 
 template <typename CLASS>
-archetype_t& archetype_of() {
+archetype& archetype_of() {
   return archetype_instance<archetype_for_class<CLASS>>();
 }
 

@@ -13,13 +13,13 @@ class interface_meta {
   interface_meta() = default;
   interface_meta(interface_meta const&) = delete;
 
-  int register_archetype(archetype_t& archetype) {
-    return index_(archetype, &archetype_t::interface_count_);
+  int register_archetype(archetype& archetype) {
+    return index_(archetype, &archetype::interface_count_);
   }
-  int register_archetype_at(archetype_t& archetype, int index) {
+  int register_archetype_at(archetype& archetype, int index) {
     return index_.register_at(archetype, index);
   }
-  int i_table_index(archetype_t& archetype) {
+  int i_table_index(archetype& archetype) {
     return index_(archetype);
   }
 };
