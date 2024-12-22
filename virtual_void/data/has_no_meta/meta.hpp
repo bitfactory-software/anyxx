@@ -1,8 +1,7 @@
 #pragma once
 
-#include <virtual_void/virtual_void.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
-
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data::has_no_meta {
 
@@ -17,8 +16,9 @@ struct meta {
   meta(meta&&) = default;
   meta& operator=(meta const&) = default;
   meta& operator=(meta&&) = default;
-  type_info_ptr type_info() const { return {}; }
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~meta() = default;
 };
+
+inline auto get_std_type_info(meta const& m) { return nullptr; }
 
 }  // namespace virtual_void::data::has_no_meta

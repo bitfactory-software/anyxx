@@ -19,10 +19,7 @@ namespace virtual_void::open_method::via_m_table {
 
 class declaration_base;
 using open_methods = std::vector<declaration_base*>;
-using m_table_map =
-    std::unordered_map<std::type_info const*, virtual_void::meta::m_table_t*>;
-
-using m_table_t = virtual_void::meta::m_table_t;
+using m_table_map = std::unordered_map<std::type_info const*, meta::type_info*>;
 
 struct domain : open_method::domain<declaration_base> {
   m_table_map m_table_map;
@@ -39,10 +36,11 @@ class declaration_base : public open_method::default_target<> {
   explicit declaration_base(domain& domain) : domain_(domain) {
     domain.open_methods.push_back(this);
   }
-  auto define_erased(m_table_t* m_table, auto f) {
-    auto method_idx = index_for_archeytpe_(m_table->get_archetype(),
-                                           &meta::archetype::open_method_count_);
-    m_table->set_method(method_idx, reinterpret_cast<dispatch_target_t>(f));
+  auto define_erased(meta::type_info* m_table, auto f) {
+    auto method_idx = index_for_archeytpe_(
+        m_table->get_archetype(), &meta::archetype::open_method_count_);
+    m_table->get_m_table().register_target(method_idx,
+                                       reinterpret_cast<dispatch_target_t>(f));
     return definition{};
   }
   auto define_erased(const std::type_info& type_info, auto f) {
@@ -51,13 +49,13 @@ class declaration_base : public open_method::default_target<> {
   }
   template <typename CLASS>
   auto define_erased(auto f) {
-    auto m_table = meta::m_table_of<CLASS>();
-    domain_.m_table_map[&typeid_of<CLASS>()] = m_table;
+    auto& m_table = meta::runtime<meta::type_info, CLASS>();
+    domain_.m_table_map[&typeid_of<CLASS>()] = &m_table;
     return define_erased(m_table, f);
   }
   template <typename CLASS>
   dispatch_target_t is_defined() const {
-    return is_defined(meta::m_table_of<CLASS>());
+    return is_defined(meta::runtime<meta::type_info, CLASS>());
   }
   dispatch_target_t is_defined(const std::type_info& type_info) const {
     if (auto found = domain_.m_table_map.find(&type_info);
@@ -65,12 +63,12 @@ class declaration_base : public open_method::default_target<> {
       return is_defined(found->second);
     return {};
   }
-  dispatch_target_t is_defined(m_table_t const* m_table) const {
-    if (auto target = m_table->is_defined(method_index(m_table)))
+  dispatch_target_t is_defined(meta::type_info const* m_table) const {
+    if (auto target = m_table->get_m_table().is_defined(method_index(m_table)))
       return *target;
     return {};
   }
-  int method_index(m_table_t const* m_table) const {
+  int method_index(meta::type_info const* m_table) const {
     return index_for_archeytpe_(m_table->get_archetype());
   }
 };
@@ -78,7 +76,7 @@ class declaration_base : public open_method::default_target<> {
 template <typename DISPATCH, typename VV_VOID>
 concept is_m_table_dispachable_virtual_void = requires(const DISPATCH& void_) {
   { void_.data() } -> std::convertible_to<VV_VOID>;
-  { void_.m_table() } -> std::convertible_to<const m_table_t*>;
+  { void_.m_table() } -> std::convertible_to<const meta::type_info*>;
 };
 
 template <typename R, typename... ARGS>
@@ -93,7 +91,7 @@ class declare<R(ARGS...)> : public declaration_base {
   using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
-  using pair_t = std::pair<m_table_t const*, dispatch_t>;
+  using pair_t = std::pair<meta::type_info const*, dispatch_t>;
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
   using declaration_base::declaration_base;
@@ -104,15 +102,15 @@ class declare<R(ARGS...)> : public declaration_base {
     return declaration_base::define_erased<CLASS>(fp);
   }
   template <typename... OTHER_ARGS>
-  R operator()(m_table_t const& m_table, dispatch_t data,
+  R operator()(meta::type_info const& m_table, dispatch_t data,
                OTHER_ARGS&&... args) const {
     auto erased_function = reinterpret_cast<erased_function_t>(
-        m_table.at(method_index(&m_table), get_default()));
+        m_table.get_m_table().at(method_index(&m_table), get_default()));
     return (erased_function)(data, std::forward<OTHER_ARGS>(args)...);
   }
   template <is_virtual_void DATA, typename... OTHER_ARGS>
   R operator()(const DATA& virtual_void_, OTHER_ARGS&&... args) const {
-    return (*this)(*get_meta(virtual_void_)->get_m_table(),
+    return (*this)(*get_meta(virtual_void_)->type_info(),
                    get_data(virtual_void_), std::forward<OTHER_ARGS>(args)...);
   }
   template <typename... OTHER_ARGS>
@@ -139,7 +137,7 @@ template <typename CLASSES>
 constexpr nullptr_t declare_classes(m_table_map& registry) {
   meta::visit_classes<CLASSES, true>(overload{
       [&]<typename C> {
-        registry[&typeid_of<C>()] = virtual_void::meta::m_table_of<C>();
+        registry[&typeid_of<C>()] = &meta::runtime<meta::type_info, C>();
       },
       [&]<typename C, typename B> {}});
   return {};

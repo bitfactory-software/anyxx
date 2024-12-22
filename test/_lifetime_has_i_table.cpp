@@ -3,12 +3,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/has_i_table/observer.hpp>
-#include <virtual_void/data/has_i_table/shared_const.hpp>
-#include <virtual_void/data/has_i_table/shared_const_ptr.hpp>
-#include <virtual_void/data/has_i_table/unique.hpp>
-#include <virtual_void/data/has_i_table/unique_ptr.hpp>
-#include <virtual_void/data/has_i_table/value.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const_ptr.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
+#include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/meta/i_table.hpp>
 
@@ -20,7 +20,7 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::meta;
-using namespace virtual_void::data::has_i_table;
+using namespace virtual_void::data::has_meta_runtime;
 using namespace virtual_void::interface;
 using namespace TestDomain;
 
@@ -30,20 +30,9 @@ struct x_t {
 };
 }  // namespace
 
-template <>
-struct i_table_of<A> : i_table_implementation_of<A> {};
-template <>
-struct i_table_of<A1> : i_table_implementation_of<A1> {};
-template <>
-struct i_table_of<C> : i_table_implementation_of<C> {};
-template <>
-struct i_table_of<D> : i_table_implementation_of<D> {};
-template <>
-struct i_table_of<int> : i_table_implementation_of<int> {};
-template <>
-struct i_table_of<std::string> : i_table_implementation_of<std::string> {};
-template <>
-struct i_table_of<x_t> : i_table_implementation_of<x_t> {};
+VV_RUNTIME_STATIC(type_info, int)
+VV_RUNTIME(,type_info, std::string)
+VV_RUNTIME_STATIC(type_info, x_t)
 
 namespace {
 
@@ -52,7 +41,10 @@ TEST_CASE("i_table/lifetime/observer") {
   auto mo = erased<mutable_observer>(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(&get_meta(mo)->get_i_table() == &get_i_table_of<std::string>());
+  REQUIRE(
+      &get_meta(mo)->type_info()->get_i_table() ==
+      &virtual_void::meta::runtime<virtual_void::meta::type_info, std::string>()
+           .get_i_table());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(std::derived_from<mutable_observer, observer<void*>>);
   REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");
@@ -92,7 +84,7 @@ TEST_CASE("i_table/lifetime/shared_const") {
   auto x = erased_in_place<shared_const, D>("shared hallo");
   auto d1 = as<D const>(x);
   REQUIRE(d1->data == "shared hallo");
-  REQUIRE(get_meta(d1)->type_info() == &typeid(D));
+  REQUIRE(&get_meta(d1)->type_info()->get_type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
   typed_shared_const<A1> a1{*d1};
   typed_shared_const<A1> a2{A1{"a2->OK"}};

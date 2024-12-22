@@ -279,10 +279,12 @@ bool type_match(META const* meta) {
 class type_mismatch_error : error {
   using error::error;
 };
+
+
 template <typename U, typename META>
 void check_type_match(META const* meta) {
-  if (auto type_info = meta->type_info();
-      type_info && *type_info != typeid_of<U>())
+  if (auto type_info = get_std_type_info(*meta);
+      type_info && type_info != &typeid_of<U>())
     throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>

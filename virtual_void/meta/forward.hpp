@@ -20,4 +20,22 @@ auto& runtime_implementation() {
   return runtime;
 }
 
+class type_info;
+
 }  // namespace virtual_void::meta
+
+#define VV_RUNTIME(export_, runtime_, from_) \
+  template <>                                \
+  export_ virtual_void::meta::runtime_&      \
+  virtual_void::meta::runtime<virtual_void::meta::runtime_, from_>();
+
+#define VV_RUNTIME_IMPEMENTATION(runtime_, from_)                      \
+  template <>                                                          \
+  virtual_void::meta::runtime_&                                        \
+  virtual_void::meta::runtime<virtual_void::meta::runtime_, from_>() { \
+    return runtime_implementation<runtime_, from_>();                  \
+  }
+
+#define VV_RUNTIME_STATIC(runtime_, from_) \
+  VV_RUNTIME(, runtime_, from_)            \
+  VV_RUNTIME_IMPEMENTATION(runtime_, from_)\

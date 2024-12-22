@@ -7,7 +7,7 @@
 #include <virtual_void/meta/table.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
-
+/*
 namespace virtual_void::meta {
 
 // archetype index -> index for method in m_tables
@@ -65,3 +65,4 @@ constexpr m_table_t* m_table_of() {
 }
 
 }  // namespace virtual_void::meta
+*/

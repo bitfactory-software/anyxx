@@ -5,21 +5,21 @@
 
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/observer_trait.hpp>
-#include <virtual_void/data/has_i_table/meta.hpp>
+#include <virtual_void/data/has_meta_runtime/meta.hpp>
 
-namespace virtual_void::data::has_i_table {
+namespace virtual_void::data::has_meta_runtime {
 template <typename VV_VOID>
 using observer = data::observer<VV_VOID, meta>;
 }
 
 namespace virtual_void {
 template <typename VV_VOID>
-struct virtual_void_trait<data::has_i_table::observer<VV_VOID>>
-    : observer_trait<data::has_i_table::observer<VV_VOID>, VV_VOID,
-                     data::has_i_table::meta> {};
+struct virtual_void_trait<data::has_meta_runtime::observer<VV_VOID>>
+    : observer_trait<data::has_meta_runtime::observer<VV_VOID>, VV_VOID,
+                     data::has_meta_runtime::meta> {};
 }  // namespace virtual_void
 
-namespace virtual_void::data::has_i_table {
+namespace virtual_void::data::has_meta_runtime {
 
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
@@ -35,4 +35,4 @@ static_assert(is_virtual_void<const_observer>);
 static_assert(is_virtual_void<mutable_observer>);
 static_assert(is_virtual_typed<typed_const_observer<int>>);
 static_assert(is_virtual_typed<typed_mutable_observer<int>>);
-}  // namespace virtual_void::data::has_i_table
+}  // namespace virtual_void::data::has_meta_runtime

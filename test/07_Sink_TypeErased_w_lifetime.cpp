@@ -9,13 +9,14 @@
 #include <utility>
 #include <vector>
 
- #include <virtual_void/data/has_m_table/shared_const.hpp>
+ #include <virtual_void/meta/class.hpp>
+ #include <virtual_void/data/has_meta_runtime/shared_const.hpp>
  #include <virtual_void/open_method/algorithm.hpp>
  #include <virtual_void/open_method/via_m_table/declare.hpp>
  #include <virtual_void/typeid_cast/cast.hpp>
 
 using namespace virtual_void;
-using namespace virtual_void::data::has_m_table;
+using namespace virtual_void::data::has_meta_runtime;
 
 namespace {
 
@@ -51,6 +52,29 @@ struct DoubleData {
   double data;
 };
 
+}  // namespace
+}
+
+namespace virtual_void::meta {
+using namespace Application;
+template <>
+struct class_<StringData> : base, models_no_archetype {};
+template <>
+struct class_<SuperStringData> : bases<StringData>, models_no_archetype {};
+template <>
+struct class_<IntData> : base, models_no_archetype {};
+template <>
+struct class_<DoubleData> : base, models_no_archetype {};
+}  // namespace virtual_void::meta
+
+VV_RUNTIME_STATIC(type_info, Application::StringData)
+VV_RUNTIME_STATIC(type_info, Application::SuperStringData)
+VV_RUNTIME_STATIC(type_info, Application::IntData)
+VV_RUNTIME_STATIC(type_info, Application::DoubleData)
+
+namespace {
+namespace Application {
+
 std::string ToString_(const auto* x) { return std::to_string(x->data); }
 
 std::string ToString_(const StringData* x) { return x->data; }
@@ -75,19 +99,7 @@ void IntToOut(const IntData* i) {
 
 void AnywhereInTheApplication() { entityToOut.define<IntData>(&IntToOut); }
 }  // namespace Application
-
-}  // namespace
-namespace virtual_void::meta {
-using namespace Application;
-template <>
-struct class_<StringData> : base, models_no_archetype {};
-template <>
-struct class_<SuperStringData> : bases<StringData>, models_no_archetype {};
-template <>
-struct class_<IntData> : base, models_no_archetype {};
-template <>
-struct class_<DoubleData> : base, models_no_archetype {};
-}  // namespace virtual_void::meta
+}
 
 namespace {
 
@@ -129,7 +141,7 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
   int fail = 0;
   db.Query("junk", [&](const shared_const& e) {
     // call open method
-    std::cout << "type_info: " << get_meta(e)->type_info()->name() << ": ";
+    std::cout << "type_info: " << get_meta(e)->type_info()->get_type_info().name() << ": ";
     std::cout << toString(e) << std::endl;
 
     try {
@@ -138,7 +150,7 @@ TEST_CASE("07_Sink_TypeErased_w_lifetime") {
       ++ok;
     } catch (std::exception& ex) {
       std::cout << "error: " << ex.what() << ": "
-                << get_meta(e)->type_info()->name() << std::endl;
+                << get_meta(e)->type_info()->get_type_info().name() << std::endl;
       ++fail;
     }
 

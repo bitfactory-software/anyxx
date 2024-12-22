@@ -2,7 +2,7 @@
 
 #include <typeindex>
 
-#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/utillities/ensure_function_ptr.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/open_method/via_type_info/declaration_base.hpp>
@@ -21,7 +21,6 @@ class declare<R(ARGS...)> : public declaration_base {
   using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
-  using param_t = data::has_type_info::observer<dispatch_t>;
   using erased_function_t = typename translate_erased_function< R, ARGS...>::type;
 
  public:

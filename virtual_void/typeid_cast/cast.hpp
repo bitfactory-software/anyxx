@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -28,7 +28,7 @@ struct const_cast_implementation {
   };
   template <typename FROM>
   auto operator()(const FROM* from, const std::type_info& to) {
-    return cast_implementation_<const_, data::has_type_info::const_observer,
+    return cast_implementation_<const_, data::has_meta_runtime::const_observer,
                                 FROM>(from, to);
   }
 };
@@ -40,7 +40,7 @@ struct cast_implementation {
   template <typename FROM>
   auto operator()(FROM* from, const std::type_info& to) {
     return cast_implementation_<non_const_,
-                                data::has_type_info::mutable_observer, FROM>(
+                                data::has_meta_runtime::mutable_observer, FROM>(
         from, to);
   }
 };

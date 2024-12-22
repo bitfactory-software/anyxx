@@ -1,8 +1,8 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <virtual_void/data/has_i_table/observer.hpp>
-#include <virtual_void/data/has_i_table/shared_const.hpp>
-#include <virtual_void/data/has_i_table/unique.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 
@@ -10,7 +10,7 @@
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
-using namespace virtual_void::data::has_i_table;
+using namespace virtual_void::data::has_meta_runtime;
 
 using namespace test::component_base;
 

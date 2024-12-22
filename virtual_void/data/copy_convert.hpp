@@ -2,10 +2,10 @@
 
 #undef interface
 
-#include <virtual_void/data/has_i_table/observer.hpp>
-#include <virtual_void/data/has_i_table/shared_const.hpp>
-#include <virtual_void/data/has_i_table/unique.hpp>
-#include <virtual_void/data/has_i_table/value.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/meta/i_table.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -31,38 +31,38 @@ struct copy_converter<has_no_meta::mutable_observer, FROM> {
   }
 };
 template <is_virtual_void FROM>
-  requires std::same_as<meta_t<FROM>, has_i_table::meta>
-struct copy_converter<has_i_table::const_observer, FROM> {
+  requires std::same_as<meta_t<FROM>, has_meta_runtime::meta>
+struct copy_converter<has_meta_runtime::const_observer, FROM> {
   auto operator()(const auto& from) {
-    return has_i_table::const_observer{virtual_void::get_data(from),
+    return has_meta_runtime::const_observer{virtual_void::get_data(from),
                                        *virtual_void::get_meta(from)};
   }
 };
 template <is_virtual_void FROM>
-  requires std::same_as<meta_t<FROM>, has_i_table::meta>
-struct copy_converter<has_i_table::mutable_observer, FROM> {
+  requires std::same_as<meta_t<FROM>, has_meta_runtime::meta>
+struct copy_converter<has_meta_runtime::mutable_observer, FROM> {
   auto operator()(const auto& from) {
-    return has_i_table::mutable_observer{virtual_void::get_data(from),
+    return has_meta_runtime::mutable_observer{virtual_void::get_data(from),
                                          *virtual_void::get_meta(from)};
   }
 };
 template <>
-struct copy_converter<has_i_table::shared_const, has_i_table::shared_const> {
+struct copy_converter<has_meta_runtime::shared_const, has_meta_runtime::shared_const> {
   auto operator()(const auto& from) {
     return from;
   }
 };
 template <>
-struct copy_converter<has_i_table::value, has_i_table::value> {
+struct copy_converter<has_meta_runtime::value, has_meta_runtime::value> {
   auto operator()(const auto& from) {
     return from;
   }
 };
 template <is_virtual_void FROM>
-  requires std::same_as<meta_t<FROM>, has_i_table::meta>
-struct copy_converter<has_i_table::unique, FROM> {
+  requires std::same_as<meta_t<FROM>, has_meta_runtime::meta>
+struct copy_converter<has_meta_runtime::unique, FROM> {
   auto operator()(const auto& from) {
-    return get_meta(from)->get_i_table().copy_construct(get_data(from));
+    return get_meta(from)->type_info()->copy_construct(get_data(from));
   }
 };
 

@@ -7,8 +7,8 @@
 #include "class_hierarchy_test_hierarchy.hpp"
 #include <catch.hpp>
 
-#include <virtual_void/data/has_m_table/observer.hpp>
-#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/open_method/via_m_table/declare.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
@@ -56,7 +56,7 @@ TEST_CASE("typeid_cast_test via_type_info") {
   via_type_info::seal_for_runtime(typeidTestDomain);
 
   run_cast_test<classes>(typeid_const_cast, [](auto& top) {
-    return erased<data::has_type_info::const_observer>(top);
+    return erased<data::has_meta_runtime::const_observer>(top);
   });
 }
 
@@ -75,7 +75,7 @@ TEST_CASE("typeid_cast_test via_m_table") {
   virtual_void::typeid_cast::fill_const_cast_for(classes{}, m_table_const_cast);
 
   run_cast_test<classes>(m_table_const_cast, [](auto& top) {
-    return erased<data::has_m_table::const_observer>(top);
+    return erased<data::has_meta_runtime::const_observer>(top);
   });
 }
 }  // namespace

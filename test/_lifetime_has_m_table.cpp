@@ -1,26 +1,31 @@
+#include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const_ptr.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
+#include <virtual_void/data/has_meta_runtime/value.hpp>
 
 #include "a.hpp"
-
-#include <catch.hpp>
-
-#include <virtual_void/data/has_m_table/observer.hpp>
-#include <virtual_void/data/has_m_table/shared_const.hpp>
-#include <virtual_void/data/has_m_table/unique.hpp>
-#include <virtual_void/data/has_m_table/value.hpp>
-#include <virtual_void/data/has_m_table/shared_const_ptr.hpp>
-#include <virtual_void/data/has_m_table/unique_ptr.hpp>
 
 using namespace Catch::Matchers;
 
 #include "class_hierarchy_test_hierarchy.hpp"
 
 using namespace virtual_void;
-using namespace virtual_void::data::has_m_table;
+using namespace virtual_void::data::has_meta_runtime;
 using namespace TestDomain;
+
+namespace {
+    struct x_t {
+      std::string s_;
+    };
+}
+VV_RUNTIME_STATIC(type_info,x_t)
 
 namespace {
 
@@ -29,7 +34,8 @@ TEST_CASE("m_table/lifetime/observer") {
   auto mo = erased<mutable_observer>(s);
   REQUIRE(get_data(mo) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(get_meta(mo)->get_m_table() == virtual_void::meta::m_table_of<std::string>());
+  REQUIRE(get_meta(mo)->type_info() ==
+          &virtual_void::meta::runtime<virtual_void::meta::type_info, std::string>());
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   static_assert(std::derived_from<mutable_observer, observer<void*>>);
   REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");
@@ -69,7 +75,7 @@ TEST_CASE("m_table/lifetime/shared_const") {
   auto x = erased_in_place<shared_const, D>("shared hallo");
   auto d1 = as<D const>(x);
   REQUIRE(d1->data == "shared hallo");
-  REQUIRE(get_meta(d1)->type_info() == &typeid(D));
+  REQUIRE(&get_meta(d1)->type_info()->get_type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
   typed_shared_const<A1> a1{*d1};
   typed_shared_const<A1> a2{A1{"a2->OK"}};
@@ -118,8 +124,7 @@ TEST_CASE("m_table/lifetime/value") {
     REQUIRE(a1->s == "hallo");
     REQUIRE(unerase_cast<A>(u1)->s == "hallo");
     auto u2 = u1;
-    REQUIRE(unerase_cast<A>(u1)->s.data() !=
-            unerase_cast<A>(u2)->s.data());
+    REQUIRE(unerase_cast<A>(u1)->s.data() != unerase_cast<A>(u2)->s.data());
     REQUIRE(unerase_cast<A>(u2)->s == "hallo");
     unerase_cast<A>(u2)->s = "world";
     REQUIRE(unerase_cast<A>(u1)->s == "hallo");
@@ -130,14 +135,14 @@ TEST_CASE("m_table/lifetime/value") {
     static_assert(std::same_as<std::decay_t<decltype(*v1)>, std::string>);
     REQUIRE(*v1 == std::string{"hallo"});
     auto v2 = std::move(v1);
-#pragma warning( push )
-#pragma warning( disable : 26800)
+#pragma warning(push)
+#pragma warning(disable : 26800)
     REQUIRE(!has_data(v1));
     REQUIRE(*v2 == "hallo");
     v1 = std::move(v2);
     REQUIRE(!has_data(v2));
     REQUIRE(*v1 == "hallo");
-#pragma warning( pop )
+#pragma warning(pop)
   }
   {
     auto t1 = typed_value<int>(1);
@@ -147,11 +152,11 @@ TEST_CASE("m_table/lifetime/value") {
     REQUIRE(has_data(t1));  // !moved
     REQUIRE(get_data(e1));
     t1 = as<int>(std::move(e1));
-#pragma warning( push )
-#pragma warning( disable : 26800)
+#pragma warning(push)
+#pragma warning(disable : 26800)
     REQUIRE(!has_data(e1));  // !moved
     REQUIRE(*t1 == 2);
-#pragma warning( pop )
+#pragma warning(pop)
   }
   {
     auto t1 = typed_value<std::string>("hallo");
@@ -163,9 +168,6 @@ TEST_CASE("m_table/lifetime/value") {
     REQUIRE(*unerase_cast<std::string>(t1) == "hallo");
   }
   {
-    struct x_t {
-      std::string s_;
-    };
     x_t a{"hallo"};
     auto t1 = erased<value>(a);
     REQUIRE(unerase_cast<x_t>(t1)->s_ == "hallo");

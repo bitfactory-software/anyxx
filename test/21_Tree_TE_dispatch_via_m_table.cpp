@@ -10,12 +10,12 @@
 using std::cout;
 using std::string;
 
-#include <virtual_void/data/has_m_table/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
 #include <virtual_void/open_method/via_m_table/declare.hpp>
 
 namespace {
 
-using node = virtual_void::data::has_m_table::shared_const;
+using node = virtual_void::data::has_meta_runtime::shared_const;
 template <typename V, typename... ARGS>
 auto make_node(ARGS&&... args) {
   return erased<node, V>(std::forward<ARGS>(args)...);
@@ -46,6 +46,10 @@ struct Integer {
 // add behavior to existing classes, without changing them
 
 }  // namespace
+
+VV_RUNTIME_STATIC(type_info, Plus)
+VV_RUNTIME_STATIC(type_info, Times)
+VV_RUNTIME_STATIC(type_info, Integer)
 
 namespace {
 // -----------------------------------------------------------------------------
@@ -102,6 +106,8 @@ auto __ = as_lisp.define<Integer>(
 }  // namespace
 
 // -----------------------------------------------------------------------------
+
+
 
 TEST_CASE("21_Tree_TE_dispach_via_m_table") {
   using namespace virtual_void;

@@ -7,20 +7,27 @@
 
 #include <catch.hpp>
 
-#include <virtual_void/data/has_type_info/observer.hpp>
-#include <virtual_void/data/has_type_info/shared_const.hpp>
-#include <virtual_void/data/has_type_info/unique.hpp>
-#include <virtual_void/data/has_type_info/value.hpp>
-#include <virtual_void/data/has_type_info/shared_const_ptr.hpp>
-#include <virtual_void/data/has_type_info/unique_ptr.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/data/has_meta_runtime/value.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const_ptr.hpp>
+#include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
 
 #include "a.hpp"
 
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace ::virtual_void::data::has_type_info;
+using namespace ::virtual_void::data::has_meta_runtime;
 using namespace TestDomain;
+
+namespace {
+    struct x_t {
+      std::string s_;
+    };
+}
+VV_RUNTIME_STATIC(type_info,x_t)
 
 namespace {
 
@@ -34,7 +41,7 @@ TEST_CASE("has_type_info/lifetime/observer") {
   REQUIRE(get_data(mo) == &s);
   REQUIRE(get_data(o1) == &s);
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
-  REQUIRE(get_meta(mo)->type_info() == &typeid(std::string));
+  REQUIRE(&get_meta(mo)->type_info()->get_type_info() == &typeid(std::string));
   REQUIRE(*static_cast<std::string const*>(get_data(mo)) == "hallo");
   REQUIRE(*unerase_cast<const std::string>(mo) == "hallo");
   static_assert(
@@ -73,7 +80,7 @@ TEST_CASE("has_type_info/lifetime/shared_const") {
   auto d = erased_in_place<shared_const, D>("shared hallo");
   auto d1 = as<D const>(d);
   REQUIRE(d1->data == "shared hallo");
-  REQUIRE(get_meta(d1)->type_info() == &typeid(D));
+  REQUIRE(&get_meta(d1)->type_info()->get_type_info() == &typeid(D));
   static_assert(std::derived_from<D, A1>);
   typed_shared_const<A1> a0{*d1};
   auto a1 = as<A1 const>(d1);
@@ -173,9 +180,6 @@ TEST_CASE("has_type_info/lifetime/value") {
     REQUIRE(*unerase_cast<std::string>(t1) == "hallo");
   }
   {
-    struct x_t {
-      std::string s_;
-    };
     x_t a{"hallo"};
     auto t1 = erased<value>(a);
     REQUIRE(unerase_cast<x_t>(t1)->s_ == "hallo");

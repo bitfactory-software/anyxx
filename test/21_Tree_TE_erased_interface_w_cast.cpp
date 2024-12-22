@@ -5,8 +5,8 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <virtual_void/data/has_i_table/observer.hpp>
-#include <virtual_void/data/has_i_table/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
@@ -18,7 +18,7 @@ using std::string;
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
-using namespace virtual_void::data::has_i_table;
+using namespace virtual_void::data::has_meta_runtime;
 using namespace virtual_void::meta;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
@@ -93,12 +93,9 @@ VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::node_i)
 VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
 VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::value2_i)
 
-template <>
-struct i_table_of<Plus> : i_table_implementation_of<Plus> {};
-template <>
-struct i_table_of<Times> : i_table_implementation_of<Times> {};
-template <>
-struct i_table_of<Integer> : i_table_implementation_of<Integer> {};
+VV_RUNTIME_STATIC(type_info, Plus)
+VV_RUNTIME_STATIC(type_info, Times)
+VV_RUNTIME_STATIC(type_info, Integer)
 
 is_a<Plus, lisp_i_v_table> __;
 is_a<Times, lisp_i_v_table> __;
@@ -112,7 +109,8 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
-  REQUIRE(get_i_table_of<Times>().size() == 2u);
+  auto& type_info = virtual_void::meta::runtime<virtual_void::meta::type_info, Times>();
+  REQUIRE(type_info.get_i_table().size() == 2u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));

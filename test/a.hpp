@@ -1,5 +1,6 @@
 #include <string>
 
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 
 struct A {
@@ -7,3 +8,4 @@ struct A {
   std::string s;
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~A() = default;
 };
+VV_RUNTIME(, type_info, ::A)

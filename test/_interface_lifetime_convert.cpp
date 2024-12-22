@@ -54,4 +54,10 @@ TEST_CASE("interface lifetime cast") {
   REQUIRE(u.to_string() == "hallo");
   to_string_mo mo{u};
   REQUIRE(mo.to_string() == "hallo");
+
+
+  to_string_u u1{X{"hallo"}};
+  REQUIRE(u1.to_string() == "hallo");
+  to_string_co co_from_u{u1};
+  REQUIRE(co_from_u.to_string() == "hallo");
 }

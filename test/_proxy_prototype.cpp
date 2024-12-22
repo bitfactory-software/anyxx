@@ -8,7 +8,7 @@
 
 #include "../include/std26/proxy.h"
 
-#include <virtual_void/data/has_type_info/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 
 using namespace virtual_void;

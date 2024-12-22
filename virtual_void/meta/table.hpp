@@ -23,10 +23,13 @@ class table {
   }
   constexpr void clear() { table_.clear(); }
 
-  constexpr TRAGET at(int index) const {
-    if (0 <= index && index < table_.size()) return table_[index];
-    return DEFAULT;
+  constexpr TRAGET at(int index) const { return at(index, DEFAULT); }
+  constexpr TRAGET at(int index, auto default_target) const {
+    if (0 <= index && index < table_.size())
+      if (auto found = table_[index]; found != DEFAULT) return found;
+    return default_target;
   }
+
   constexpr std::optional<TRAGET> is_defined(int index) const {
     if (auto found = at(index); found != DEFAULT) return found;
     return {};

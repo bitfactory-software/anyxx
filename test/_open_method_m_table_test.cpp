@@ -4,16 +4,16 @@
 #include <iostream>
 #include <typeinfo>
 
-#include <virtual_void/data/has_m_table/observer.hpp>
-#include <virtual_void/data/has_m_table/shared_const.hpp>
-#include <virtual_void/data/has_m_table/unique.hpp>
+#include <virtual_void/data/has_meta_runtime/observer.hpp>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/open_method/via_m_table/declare.hpp>
 
 #include <catch.hpp>
 
 using namespace virtual_void;
-using namespace virtual_void::data::has_m_table;
+using namespace virtual_void::data::has_meta_runtime;
 using namespace virtual_void::open_method::via_m_table;
 
 #include "class_hierarchy_test_hierarchy.hpp"

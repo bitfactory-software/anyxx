@@ -78,3 +78,14 @@ struct class_<C> : base, models_no_archetype {};
 template <>
 struct class_<D> : bases<C, C3>, models_no_archetype {};
 };  // namespace virtual_void::meta
+
+VV_RUNTIME(, type_info, TestDomain::A1)
+VV_RUNTIME(, type_info, TestDomain::A2)
+VV_RUNTIME(, type_info, TestDomain::B1)
+VV_RUNTIME(, type_info, TestDomain::B2)
+VV_RUNTIME(, type_info, TestDomain::B3)
+VV_RUNTIME(, type_info, TestDomain::C1)
+VV_RUNTIME(, type_info, TestDomain::C2)
+VV_RUNTIME(, type_info, TestDomain::C3)
+VV_RUNTIME(, type_info, TestDomain::C)
+VV_RUNTIME(, type_info, TestDomain::D)

@@ -1,22 +1,20 @@
 #pragma once
 
 #include <any>
-#include <iostream>
-
-#include "class_hierarchy_test_hierarchy.hpp"
 #include <catch.hpp>
-
-#include <virtual_void/data/has_m_table/shared_const.hpp>
-#include <virtual_void/data/has_m_table/unique.hpp>
+#include <iostream>
+#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/open_method/via_type_info/factory.hpp>
+
+#include "class_hierarchy_test_hierarchy.hpp"
 
 using namespace virtual_void;
 
 namespace {
 
-TEST_CASE("typeid factory") 
-{
+TEST_CASE("typeid factory") {
   using namespace TestDomain;
 
   {
@@ -41,20 +39,21 @@ TEST_CASE("typeid factory")
 
   {
     auto factory = open_method::via_type_info::factory<
-        data::has_m_table::shared_const()>{};
+        data::has_meta_runtime::shared_const()>{};
     using classes = type_list<D, C1, C2>;
     open_method::fill_with_overloads(
         classes{}, factory,
-        []<typename T>() -> data::has_m_table::shared_const {
-          return erased_in_place<data::has_m_table::shared_const, T>(
+        []<typename T>() -> data::has_meta_runtime::shared_const {
+          return erased_in_place<data::has_meta_runtime::shared_const, T>(
               typeid(T).name());
         });
     factory.seal_for_runtime();
     auto test = [&]<typename T>() {
       auto cv = factory(typeid(T));
-      std::cout << get_meta(cv)->type_info()->name() << std::endl;
+      auto type_info = get_std_type_info(*get_meta(cv));
+      std::cout << type_info->name() << std::endl;
       std::cout << typeid(T).name() << std::endl;
-      REQUIRE(get_meta(cv)->type_info() == &typeid(T));
+      REQUIRE(type_info == &typeid(T));
       auto tp = static_cast<const T*>(get_data(cv));
       REQUIRE(tp->data == typeid(T).name());
     };
@@ -64,17 +63,18 @@ TEST_CASE("typeid factory")
   }
   {
     auto factory =
-        open_method::via_type_info::factory<data::has_m_table::unique()>{};
+        open_method::via_type_info::factory<data::has_meta_runtime::unique()>{};
     using classes = type_list<D, C1, C2>;
     open_method::fill_with_overloads(
-        classes{}, factory, []<typename T>() -> data::has_m_table::unique {
-          return erased_in_place<data::has_m_table::unique, T>(
+        classes{}, factory, []<typename T>() -> data::has_meta_runtime::unique {
+          return erased_in_place<data::has_meta_runtime::unique, T>(
               typeid(T).name());
         });
     factory.seal_for_runtime();
     auto test = [&]<typename T>() {
       auto cv = factory(typeid(T));
-      REQUIRE(get_meta(cv)->type_info() == &typeid(T));
+      auto type_info = get_std_type_info(*get_meta(cv));
+      REQUIRE(type_info == &typeid(T));
       auto tp = static_cast<const T*>(get_data(cv));
       REQUIRE(tp->data == typeid(T).name());
     };
