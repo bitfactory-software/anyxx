@@ -10,9 +10,12 @@
 
 namespace virtual_void::meta {
 
-struct models_no_archetype {
-  using archetype = archetype_unspecified;
+template <typename ARCHETYPE>
+struct models {
+  using archetype = ARCHETYPE;
 };
+
+struct models_no_archetype : models<archetype_unspecified> {};
 
 template <typename CLASS>
 struct class_ : models_no_archetype {};
@@ -26,18 +29,18 @@ struct bases {
 };
 
 template <class CLASS>
-concept is_registered_class = requires(CLASS) {
-  typename class_<CLASS>::bases_;
-};
+concept is_registered_class =
+    requires(CLASS) { typename class_<CLASS>::bases_; };
 
-template <typename ARCHETYPE>
-struct models {
-  using archetype = ARCHETYPE;
+class type_info {
+  const std::type_info& type_info_;
+  archetype& archetype_;
+
+ public:
 };
 
 template <typename CLASS>
 using archetype_for_class = class_<CLASS>::archetype;
-
 
 template <typename CLASS, bool deep = true>
 constexpr void visit_class(auto visitor) {

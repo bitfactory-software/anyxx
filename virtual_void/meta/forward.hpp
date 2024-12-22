@@ -16,7 +16,7 @@ RUNTIME& runtime();
 
 template <typename RUNTIME, typename TYPE>
 auto& runtime_implementation() {
-  static RUNTIME runtime;
+  static RUNTIME runtime{std::in_place_type<TYPE>};
   return runtime;
 }
 

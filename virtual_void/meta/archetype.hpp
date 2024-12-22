@@ -12,15 +12,17 @@ class archetype {
   const int index_ = next_archetype_index_value();
 
  public:
-  archetype() = default;
+  archetype() = delete;
   archetype(const archetype&) = delete;
+  template <typename T>
+  constexpr archetype(std::in_place_type_t<T>) {}
   constexpr int get_archetype_index() { return index_; }
   int interface_count_ = 0;
   int open_method_count_ = 0;
 };
 
-struct archetype_unspecified{};
-template<>
+struct archetype_unspecified {};
+template <>
 VV_EXPORT archetype& runtime<archetype, archetype_unspecified>();
 
 }  // namespace virtual_void::meta

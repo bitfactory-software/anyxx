@@ -15,7 +15,7 @@ class i_table {
 
  private:
   table<v_table_ptr, nullptr> table_;
-  const std::type_info& type_info_;
+  const std::type_info& type_info_ = typeid(nullptr);
   archetype& archetype_;
   using copy_construct_t = auto(const_void) -> data::has_i_table::unique;
   copy_construct_t* copy_construct_;

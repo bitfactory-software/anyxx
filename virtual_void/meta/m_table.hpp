@@ -26,11 +26,11 @@ class m_table_t {
 
  private:
   table<m_table_target_t, nullptr> table_;
-  const std::type_info& type_info_;
-  archetype& archetype_;
+  const std::type_info& type_info_ = typeid(nullptr);
+  archetype& archetype_ = *(archetype*)(nullptr);
 
  public:
-  m_table_t() = delete;
+  m_table_t() = default;
   m_table_t(const m_table_t&) = delete;
   template <typename CLASS>
   constexpr m_table_t(std::in_place_type_t<CLASS>)
