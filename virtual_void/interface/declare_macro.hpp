@@ -270,13 +270,7 @@
   VV_METHOD_(ret, name, const, __VA_ARGS__)
 
 #define VV_INTERFACE_META(export_, interface_)                             \
-  template <>                                                              \
-  export_ virtual_void::meta::interface& virtual_void::meta::runtime< \
-      virtual_void::meta::interface, interface_##_v_table>();
+    VV_RUNTIME(export_, interface, interface_##_v_table)
 
 #define VV_INTERFACE_META_IMPEMENTATION(interface_)                        \
-  template <>                                                              \
-  virtual_void::meta::interface& virtual_void::meta::runtime<         \
-      virtual_void::meta::interface, interface_##_v_table>() {        \
-    return runtime_implementation<interface, interface_##_v_table>(); \
-  }
+    VV_RUNTIME_IMPEMENTATION(interface, interface_##_v_table)

@@ -20,17 +20,22 @@ A simple usage looks like this:
 #include <iostream>
 #include <vector>
 #include <virtual_void/data/has_meta_runtime/value.hpp>
+#include <virtual_void/meta/std_runtime.hpp>
+
+namespace tutorial_1_1{
+  struct A {
+    std::string name;
+  };
+}
+VV_RUNTIME_STATIC(type_info, tutorial_1_1::A) // 1a
 
 TEST_CASE("tutorial 1/1") {
   using namespace std;
   using namespace std::literals::string_literals;
   using namespace virtual_void::data::has_meta_runtime;
   using namespace virtual_void;
+  using namespace tutorial_1_1;
   cout << endl << "*** tutorial 1/1" << endl;
-
-  struct A {
-    string name;
-  };
 
   vector<value> values{erased<value>("Hello"s), erased<value>(42),
                        erased<value>(3.14), erased<value>(A{"world"})};
@@ -79,18 +84,23 @@ With such an *open method* in place, our code looks like this:
 #include <catch.hpp>
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
+#include <virtual_void/meta/std_runtime.hpp>
+
+namespace tutorial_1_2{
+  struct A {
+    std::string name;
+  };
+}
+VV_RUNTIME_STATIC(type_info, tutorial_1_2::A) // 1a
 
 TEST_CASE("tutorial 1/2") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_meta_runtime;         // 1
+  using namespace virtual_void::data::has_meta_runtime;      // 1b
   using namespace virtual_void::open_method::via_type_info;  // 2
   using namespace virtual_void;
+  using namespace tutorial_1_2;
   cout << endl << "*** tutorial 1/2" << endl;
-
-  struct A {
-    string name;
-  };
 
   vector<value> values{erased<value>("Hello"s), erased<value>(42),
                        erased<value>(3.14), erased<value>(A{"world"})};
@@ -112,7 +122,9 @@ TEST_CASE("tutorial 1/2") {
 // -->
 ```
 
-- // 1 We use the erased `data` that carries meta-information for `type_info`.
+- // 1a We make a `virtual_void::meta::type_info` available for `A`. 
+- // 1b This meta data is needed, when you use erased `data`, whitch `has_meta_runtime`. 
+- // 1c for `std::string` and `int` the predefined runtime is made available by this header. 
 - // 2 We will use an open method `via_type_info`. This kind of `open_method` uses a *perfect hash* from a `type_info` to the target function.
 - // 3 `declare` declares the name and the signature of the `open_method`. The first parameter type must be `const_` or `mutable_`.
 - // 4a-d `define` defines the target function for a type. This function gets registered for the type's `type_info`.
@@ -144,6 +156,14 @@ the library provides a shortcut for you:
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
+#include <virtual_void/meta/std_runtime.hpp>
+
+namespace tutorial_1_3{
+  struct A {
+    std::string name;
+  };
+}
+VV_RUNTIME_STATIC(type_info, tutorial_1_3::A)
 
 TEST_CASE("tutorial 1/3") {
   using namespace std;
@@ -151,11 +171,8 @@ TEST_CASE("tutorial 1/3") {
   using namespace virtual_void::data::has_meta_runtime;
   using namespace virtual_void::open_method::via_type_info;
   using namespace virtual_void;
+  using namespace tutorial_1_3;
   cout << endl << "*** tutorial 1/3" << endl;
-
-  struct A {
-    string name;
-  };
 
   vector<value> values{erased<value>("Hello"s), erased<value>(42),
                        erased<value>(3.14), erased<value>(A{"world"})};

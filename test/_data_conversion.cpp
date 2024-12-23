@@ -18,6 +18,7 @@
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/meta/std_runtime.hpp>
 
 #include "a.hpp"
 #include "class_hierarchy_test_hierarchy.hpp"
@@ -30,7 +31,6 @@ using namespace virtual_void::interface;
 using namespace virtual_void::meta;
 using namespace TestDomain;
 
-VV_RUNTIME_STATIC(type_info, std::string)
 
 TEST_CASE("_data_conversion copy") {
   std::string s1 = "hallo";

@@ -3,12 +3,12 @@
 #include <map>
 #include <typeindex>
 #include <vector>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/meta/interface.hpp>
-#include <virtual_void/meta/table.hpp>
 #include <virtual_void/meta/m_table.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/meta/table.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -59,7 +59,7 @@ class type_info {
               *static_cast<CLASS const*>(from));
         }) {}
 
-  constexpr operator const std::type_info&() const{ return get_type_info(); }
+  constexpr operator const std::type_info&() const { return get_type_info(); }
   constexpr const std::type_info& get_type_info() const { return type_info_; }
   constexpr archetype& get_archetype() const { return archetype_; }
   constexpr int get_archetype_index() const {
@@ -175,4 +175,3 @@ struct is_a {
 };
 
 }  // namespace virtual_void::meta
-

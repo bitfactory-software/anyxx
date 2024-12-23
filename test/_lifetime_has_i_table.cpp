@@ -11,6 +11,7 @@
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/meta/i_table.hpp>
+#include <virtual_void/meta/std_runtime.hpp>
 
 #include "a.hpp"
 
@@ -30,8 +31,6 @@ struct x_t {
 };
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, int)
-VV_RUNTIME(,type_info, std::string)
 VV_RUNTIME_STATIC(type_info, x_t)
 
 namespace {
