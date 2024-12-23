@@ -1,4 +1,5 @@
 #include "class_hierarchy_test_hierarchy.hpp"
+#include <virtual_void/meta/type_info.hpp>
 
 VV_RUNTIME_IMPEMENTATION(type_info, TestDomain::A1)
 VV_RUNTIME_IMPEMENTATION(type_info, TestDomain::A2)

@@ -21,6 +21,7 @@ A simple usage looks like this:
 #include <vector>
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/meta/std_runtime.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 namespace tutorial_1_1{
   struct A {
@@ -85,6 +86,7 @@ With such an *open method* in place, our code looks like this:
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 #include <virtual_void/meta/std_runtime.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 namespace tutorial_1_2{
   struct A {
@@ -157,6 +159,7 @@ the library provides a shortcut for you:
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/meta/std_runtime.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 namespace tutorial_1_3{
   struct A {

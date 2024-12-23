@@ -19,6 +19,7 @@
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/meta/std_runtime.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 #include "a.hpp"
 #include "class_hierarchy_test_hierarchy.hpp"

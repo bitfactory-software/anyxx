@@ -9,7 +9,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 using namespace Catch::Matchers;
 

@@ -6,7 +6,7 @@
 
 #include <catch.hpp>
 
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/meta/type_info.hpp>
 #include <virtual_void/data/decorated_data.hpp>
 #include <virtual_void/data/has_no_meta/meta.hpp>
 #include <virtual_void/data/has_meta_runtime/meta.hpp>

@@ -13,6 +13,7 @@
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/data/has_meta_runtime/shared_const_ptr.hpp>
 #include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 #include "a.hpp"
 

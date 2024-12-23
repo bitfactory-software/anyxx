@@ -3,7 +3,7 @@
 #include <set>
 #include <typeindex>
 #include <unordered_map>
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/meta/type_info.hpp>
 #include <virtual_void/meta/index_for_archetype.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/open_method/default_target.hpp>

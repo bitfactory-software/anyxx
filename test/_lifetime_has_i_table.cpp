@@ -11,6 +11,7 @@
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/meta/std_runtime.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 #include "a.hpp"
 
