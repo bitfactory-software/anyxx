@@ -222,6 +222,12 @@
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = v_table_imlpementation<CONSTRUCTED_WITH>();                   \
     }                                                                          \
+    template <typename CONSTRUCT_WITH, typename... ARGS>                       \
+    n(std::in_place_type_t<CONSTRUCT_WITH>, ARGS... args)                      \
+        : base_t(std::in_place_type<CONSTRUCT_WITH>,                           \
+                 std::forward<ARGS>(args)...) {                                \
+      v_table_ = v_table_imlpementation<CONSTRUCT_WITH>();                     \
+    }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
         : n(*vt) {}                                                            \

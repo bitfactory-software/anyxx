@@ -48,6 +48,12 @@ class base {
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     v_table_ = meta::base_v_table_imlpementation();
   }
+  template <typename CONSTRUCT_WITH, typename... ARGS>
+  base(std::in_place_type_t<CONSTRUCT_WITH>, ARGS... args)
+      : virtual_void_(erased_in_place<virtual_void_t, CONSTRUCT_WITH>(
+            std::forward<ARGS>(args)...)) {
+    v_table_ = meta::base_v_table_imlpementation();
+  }
   template <typename CONSTRUCTED_WITH>
   base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}
   template <typename OTHER>

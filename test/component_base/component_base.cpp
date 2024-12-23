@@ -3,8 +3,8 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/meta/type_info.hpp>
 #include <virtual_void/meta/class_implements_interface.hpp>
+#include <virtual_void/meta/type_info.hpp>
 
 using namespace test::component_base;
 
@@ -29,8 +29,8 @@ static X x{3.14};
 using namespace test::component_base;
 
 namespace archetype {
-    struct A{};
-}
+struct A {};
+}  // namespace archetype
 
 VV_RUNTIME_STATIC(archetype, ::archetype::A)
 
@@ -42,10 +42,10 @@ VV_CLASS_IMPLEMENTS_INTERFACE(X, get_value_i);
 VV_CLASS_IMPLEMENTS_INTERFACE(X, set_value_i);
 VV_CLASS_IMPLEMENTS_INTERFACE(X, to_string_i);
 
-to_string_i<virtual_void::data::has_meta_runtime::const_observer>
+to_string_i<const_observer>
 test::component_base::get_to_string_i_co() {
   auto p = &x;
-  to_string_i<virtual_void::data::has_meta_runtime::const_observer> i{x};
+  to_string_i<const_observer> i{x};
   auto meta = get_meta(get_virtual_void(i));
   const std::type_info* type_info = &meta->type_info()->get_type_info();
   const std::type_info* type_info_1 = &typeid(X);
@@ -53,21 +53,22 @@ test::component_base::get_to_string_i_co() {
   auto s = i.to_string();
   return i;
 }
-to_string_i<virtual_void::data::has_meta_runtime::shared_const>
+to_string_i<shared_const>
 test::component_base::get_to_string_i_sc(double v) {
-  return X{v};
+  return {std::in_place_type<X>, v};
 }
-to_string_i<virtual_void::data::has_meta_runtime::unique>
+to_string_i<unique>
 test::component_base::get_to_string_i_u(double v) {
-  return X{v};
+  return {std::in_place_type<X>, v};
 }
 
-virtual_void::data::has_meta_runtime::shared_const test::component_base::sc_X(
+shared_const test::component_base::sc_X(
     double v) {
-  return virtual_void::erased<shared_const>(X{v});
+  return virtual_void::erased_in_place<shared_const, X>(v);
 }
-virtual_void::data::has_meta_runtime::unique test::component_base::u_X(double v) {
-  return virtual_void::erased<unique>(X{v});
+unique test::component_base::u_X(
+    double v) {
+  return virtual_void::erased_in_place<unique, X>(v);
 }
 
 VV_INTERFACE_META_IMPEMENTATION(test::component_base::get_value_i)

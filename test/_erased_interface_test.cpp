@@ -274,7 +274,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   print_shape_vv(c);
   print_shape_vv(s);
   print_shape_vv(r);
-  print_shape_vv(p);
+  print_shape_vv({std::in_place_type<regular_polygon>, 4, 32});
 }
 
 namespace {
