@@ -5,6 +5,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/meta/i_table.hpp>
+#include <virtual_void/meta/class_implements_interface.hpp>
 
 using namespace test::component_base;
 
@@ -38,10 +39,9 @@ template <>
 struct virtual_void::meta::class_<X> : models<::archetype::A> {};
 
 VV_RUNTIME_STATIC(type_info, X)
-
-is_a<X, get_value_i_v_table> __;
-is_a<X, set_value_i_v_table> __;
-is_a<X, to_string_i_v_table> __;
+VV_CLASS_IMPLEMENTS_INTERFACE(X, get_value_i);
+VV_CLASS_IMPLEMENTS_INTERFACE(X, set_value_i);
+VV_CLASS_IMPLEMENTS_INTERFACE(X, to_string_i);
 
 to_string_i<virtual_void::data::has_meta_runtime::const_observer>
 test::component_base::get_to_string_i_co() {

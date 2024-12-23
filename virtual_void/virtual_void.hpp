@@ -195,6 +195,7 @@ concept is_uneraser = requires(UNERASER u, mutable_void mv) {
 template <typename T>
 struct static_cast_uneraser {
   using type = T;
+  using decay_type = std::decay_t<T>;
   auto operator()(mutable_void from) { return static_cast<T*>(from); }
   auto operator()(const_void from) { return static_cast<T const*>(from); }
 };

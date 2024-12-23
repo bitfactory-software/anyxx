@@ -10,7 +10,7 @@
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/meta/i_table.hpp>
+#include <virtual_void/meta/class_implements_interface.hpp>
 
 using namespace Catch::Matchers;
 
@@ -45,9 +45,6 @@ VV_INTERFACE_META_IMPEMENTATION(shape_d_i)
 
 struct circle {
   double radius;
-  void draw(position p) const {
-    std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << std::endl;
-  }
   int count_sides() const { return 1; }
   double area() const { return radius * radius * M_PI; }
   double circumference() const { return radius * 2.0f * M_PI; }
@@ -56,7 +53,7 @@ struct circle {
 };
 
 VV_RUNTIME_STATIC(type_info, circle)
-virtual_void::meta::is_a<circle, shape_d_i_v_table> __;
+VV_CLASS_IMPLEMENTS_INTERFACE(circle, shape_d_i);
 
 
 TEST_CASE("class is_a interface") {
@@ -97,14 +94,6 @@ template <>
 struct shape_base1_v_table_map<circle> {
   auto draw(circle const* x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_shape_base1_v_table_map At "
-              << p.x << " " << p.y << std::endl;
-  }
-};
-
-template <>
-struct shape_i_v_table_map<circle> : shape_i_default_v_table_map<circle const> {
-  auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_shape_i_v_table_map At "
               << p.x << " " << p.y << std::endl;
   }
 };

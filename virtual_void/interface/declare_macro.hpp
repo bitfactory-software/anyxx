@@ -182,7 +182,7 @@
     template <virtual_void::is_uneraser UNERASER>                              \
     n##_v_table(UNERASER unerased) : v_table_base_t(unerased) {                \
       using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
-          _add_head((typename UNERASER::type), t))>;                           \
+          _add_head((typename UNERASER::decay_type), t))>;                     \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
@@ -269,8 +269,8 @@
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, const, __VA_ARGS__)
 
-#define VV_INTERFACE_META(export_, interface_)                             \
-    VV_RUNTIME(export_, interface, interface_##_v_table)
+#define VV_INTERFACE_META(export_, interface_) \
+  VV_RUNTIME(export_, interface, interface_##_v_table)
 
-#define VV_INTERFACE_META_IMPEMENTATION(interface_)                        \
-    VV_RUNTIME_IMPEMENTATION(interface, interface_##_v_table)
+#define VV_INTERFACE_META_IMPEMENTATION(interface_) \
+  VV_RUNTIME_IMPEMENTATION(interface, interface_##_v_table)

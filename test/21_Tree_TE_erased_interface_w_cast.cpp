@@ -11,7 +11,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/meta/i_table.hpp>
+#include <virtual_void/meta/class_implements_interface.hpp>
 
 using std::cout;
 using std::string;
@@ -94,16 +94,16 @@ VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
 VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::value2_i)
 
 VV_RUNTIME_STATIC(type_info, Plus)
+VV_CLASS_IMPLEMENTS_INTERFACE(Plus, lisp_i);
+VV_CLASS_IMPLEMENTS_INTERFACE(Plus, value2_i);
+
 VV_RUNTIME_STATIC(type_info, Times)
+VV_CLASS_IMPLEMENTS_INTERFACE(Times, lisp_i);
+VV_CLASS_IMPLEMENTS_INTERFACE(Times, value2_i);
+
 VV_RUNTIME_STATIC(type_info, Integer)
-
-is_a<Plus, lisp_i_v_table> __;
-is_a<Times, lisp_i_v_table> __;
-is_a<Integer, lisp_i_v_table> __;
-
-is_a<Plus, value2_i_v_table> __;
-is_a<Times, value2_i_v_table> __;
-is_a<Integer, value2_i_v_table> __;
+VV_CLASS_IMPLEMENTS_INTERFACE(Integer, value2_i);
+VV_CLASS_IMPLEMENTS_INTERFACE(Integer, lisp_i);
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;
