@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/meta/index_for_archetype.hpp>
-#include <virtual_void/meta/m_table.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 #include <virtual_void/open_method/default_target.hpp>
 #include <virtual_void/open_method/domain.hpp>

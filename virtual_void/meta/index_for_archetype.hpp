@@ -1,5 +1,6 @@
 #pragma once
 
+#include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/meta/table.hpp>
 
 namespace virtual_void::meta {
