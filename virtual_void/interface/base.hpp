@@ -19,12 +19,8 @@ class base;
 
 template <typename CONSTRUCTED_WITH, typename VIRTUAL_VOID>
 concept constructibile_for =
-    !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>,
-                       base<VIRTUAL_VOID>> &&
-    !is_virtual_void<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
-    !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
-    (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
-     virtual_void_trait<VIRTUAL_VOID>::is_constructibile_from_const);
+    erased_constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID,
+                              base<VIRTUAL_VOID>>;
 
 template <is_virtual_void VIRTUAL_VOID>
 class base {

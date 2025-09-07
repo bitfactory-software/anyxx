@@ -7,6 +7,7 @@
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/open_method/via_type_info/declaration_base.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/utillities/translate_erased_function.hpp>
 
 namespace virtual_void::open_method::via_type_info {
 
