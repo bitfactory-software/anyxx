@@ -20,7 +20,7 @@ find_package(Catch2 3 REQUIRED)
 if (MSVC)
     add_compile_options(/Zc:preprocessor)
 endif()
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 # +++ virtual_void library
 file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "./virtual_void/*.hpp")
