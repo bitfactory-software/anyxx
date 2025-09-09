@@ -193,7 +193,7 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
       : extension_method_index(get_extension_method_head<INTERFACE_NAME>()) {}
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
   auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
-                  OTHER_ARGS... args) {
+                  OTHER_ARGS... args) const {
     auto erased_function =
         reinterpret_cast<erased_function_t>(m.v_table_->at(index));
     return (erased_function)(get_interface_data(m),
