@@ -12,15 +12,71 @@
 
 namespace virtual_void::open_concept {
 
-template <typename INTERFACE_NAME>
-std::size_t extension_method_count_of = 0;
-
 using v_table_function_t = void (*)();
 using v_table_t = std::vector<v_table_function_t>;
+using remebered_implementations_t =
+    std::vector<std::pair<v_table_t&, v_table_function_t>>;
 
-void insert_function(v_table_t& v_table, std::size_t index, auto fp) {
+struct extension_method_index;
+struct extension_method_head {
+  extension_method_head* next = nullptr;
+  extension_method_index* index_head = nullptr;
+
+  extension_method_head(extension_method_head*& head);
+};
+struct extension_method_index {
+  std::size_t index = 0;
+  extension_method_index* next = nullptr;
+  remebered_implementations_t remebered_implementations;
+
+  extension_method_index(extension_method_head& head)
+      : next(head.index_head) {
+    head.index_head = this;
+  }
+};
+
+inline extension_method_head*& get_extension_methods_head() {
+  static extension_method_head* head;
+  return head;
+}
+template <typename INTERFACE_NAME>
+extension_method_head& get_extension_method_head() {
+  static extension_method_head head{get_extension_methods_head()};
+  return head;
+}
+
+inline extension_method_head::extension_method_head(
+    extension_method_head*& head)
+    : next(head) {
+  head = this;
+}
+
+void remember(remebered_implementations_t& remebered_implementations,
+              v_table_t& v_table, auto fp) {
+  remebered_implementations.push_back(
+      {v_table, reinterpret_cast<v_table_function_t>(fp)});
+}
+inline void insert_function(v_table_t& v_table, std::size_t index,
+                            v_table_function_t fp) {
   if (v_table.size() <= index) v_table.resize(index + 1);
-  v_table[index] = reinterpret_cast<v_table_function_t>(fp);
+  v_table[index] = fp;
+}
+inline void activate_extension_method_index(extension_method_index& index,
+                                            int i) {
+  index.index = i;
+  for (auto [v_table, fp] : index.remebered_implementations)
+    insert_function(v_table, i, fp);
+}
+
+inline void activate_extension_methods() {
+  static bool run = false;
+  if (run) return;
+  for (auto head = get_extension_methods_head(); head; head = head->next) {
+    auto i = 0;
+    for (auto index = head->index_head; index; index = index->next)
+      activate_extension_method_index(*index, i++);
+  }
+  run = true;
 }
 
 template <typename INTERFACE_NAME, typename CLASS_NAME>
@@ -122,9 +178,9 @@ template <typename INTERFACE_NAME, typename R, typename... ARGS>
 class extension_method;
 
 template <typename INTERFACE_NAME, typename R, typename... ARGS>
-class extension_method<INTERFACE_NAME, R(ARGS...)> {
+class extension_method<INTERFACE_NAME, R(ARGS...)>
+    : public extension_method_index {
   using interface_t = INTERFACE_NAME;
-  std::size_t index = extension_method_count_of<INTERFACE_NAME> ++;
 
   using CONSTNESS = typename first_t<ARGS...>;
   using dispatch_t = void_t<CONSTNESS>;
@@ -134,6 +190,8 @@ class extension_method<INTERFACE_NAME, R(ARGS...)> {
       typename translate_erased_function<R, ARGS...>::type;
 
  public:
+  extension_method()
+      : extension_method_index(get_extension_method_head<INTERFACE_NAME>()) {}
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
   auto operator()(const model<INTERFACE_NAME, VIRTUAL_VOID>& m,
                   OTHER_ARGS... args) {
@@ -146,7 +204,7 @@ class extension_method<INTERFACE_NAME, R(ARGS...)> {
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
     auto& v_table = v_table_instance<INTERFACE_NAME, CLASS>();
-    insert_function(v_table, index, fp);
+    remember(remebered_implementations, v_table, fp);
     return fp;
   }
 };

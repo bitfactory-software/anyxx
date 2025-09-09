@@ -79,9 +79,15 @@ auto __ = as_lisp.define<Integer>(
 TEST_CASE("21_Tree_TE_open_concept") {
   using namespace virtual_void;
 
+  open_concept::activate_extension_methods();
+
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   REQUIRE(&v_table_instance<node::interface, Times>() == &get_v_table(expr));
+  REQUIRE(v_table_instance<node::interface, Times>().size() == 3u);
+  REQUIRE(v_table_instance<node::interface, Times>()[0]);
+  REQUIRE(v_table_instance<node::interface, Times>()[1]);
+  REQUIRE(v_table_instance<node::interface, Times>()[2]);
 
   auto v = value(expr);
   REQUIRE(v == 14);
