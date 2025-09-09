@@ -122,7 +122,6 @@ struct visitor {
 extension_method<node::interface, void(virtual_void::const_, visitor const&,
                                        std::any*, std::any const&)>
     visit;
-
 }  // namespace node
 namespace {
 inline void visit_left_right(auto const& expr, node::visitor const& visit,
