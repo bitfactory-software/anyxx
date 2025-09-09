@@ -29,8 +29,7 @@ struct extension_method_index {
   extension_method_index* next = nullptr;
   remebered_implementations_t remebered_implementations;
 
-  extension_method_index(extension_method_head& head)
-      : next(head.index_head) {
+  extension_method_index(extension_method_head& head) : next(head.index_head) {
     head.index_head = this;
   }
 };
@@ -114,10 +113,10 @@ class model {
     v_table_ = &v_table_instance<INTERFACE_NAME, CONSTRUCT_WITH>();
   }
   template <typename CONSTRUCTED_WITH>
-  model(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt)
+  model(virtual_typed<CONSTRUCTED_WITH, virtual_void_t> const& vt)
       : model(*vt) {}
   template <typename OTHER>
-  model(const OTHER& other)
+  model(OTHER const& other)
     requires(std::derived_from<OTHER, model<VIRTUAL_VOID>>)
       : virtual_void_(get_virtual_void(other)), v_table_(get_v_table(other)) {}
   template <typename OTHER>
@@ -133,7 +132,7 @@ class model {
     v_table_ = get_v_table(other);
     return *this;
   }
-  model(const model&) = default;
+  model(model const&) = default;
   model(model&& rhs) noexcept
       : virtual_void_(std::move(rhs.virtual_void_)), v_table_(rhs.v_table_) {}
   model& operator=(model const& other) = default;
@@ -193,7 +192,7 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
   extension_method()
       : extension_method_index(get_extension_method_head<INTERFACE_NAME>()) {}
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
-  auto operator()(const model<INTERFACE_NAME, VIRTUAL_VOID>& m,
+  auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
                   OTHER_ARGS... args) {
     auto erased_function =
         reinterpret_cast<erased_function_t>(m.v_table_->at(index));

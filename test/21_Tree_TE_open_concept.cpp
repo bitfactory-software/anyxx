@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/open_concept/open_concept.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
@@ -101,5 +102,49 @@ TEST_CASE("21_Tree_TE_open_concept") {
   BENCHMARK("21_Tree_TE_open_concept as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG
 }
+
+//-----------------------------------------------------------------------------
+
+////-----------------------------------------------------------------------------
+//// visiting vistors
+//extension_method<node::interface, void(virtual_void::const_)> visit;
+//using visitor_t = extension_method<node::interface, void(virtual_void::const_)>;
+//
+//namespace {
+//void visit_left_right(auto expr, visitor_t const& visitor) {
+//  visitor(expr);
+//  visit(expr->left);
+//  visit(expr->right);
+//}
+//}  // namespace
+//auto __ = visit.define<Plus>([](auto expr, visitor_t const& visitor) {
+//  visit_left_right(expr, vistor);
+//});
+//auto __ = visit.define<Times>([](auto expr, visitor_t const& visitor) {
+//  visit_left_right(expr, vistor);
+//});
+//auto __ = visit.define<Integer>(
+//    [](auto expr, visitor_t const& visitor) { visit(expr); });
+//
+//
+//TEST_CASE("21_Tree_TE_open_concept") {
+//  using namespace virtual_void;
+//
+//  open_concept::activate_extension_methods();
+//
+//  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
+//
+//  auto v = value(expr);
+//  REQUIRE(v == 14);
+//  std::stringstream out;
+//  out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
+//  std::cout << out.str() << "\n";
+//  REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
+//
+//#ifndef _DEBUG
+//  BENCHMARK("21_Tree_TE_open_concept value") { return value(expr); };
+//  BENCHMARK("21_Tree_TE_open_concept as_lisp") { return as_lisp(expr); };
+//#endif  // !_DEBUG
+//}
 
 }  // namespace _21_Tree_TE_open_concept
