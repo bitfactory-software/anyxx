@@ -202,14 +202,9 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
 
  public:
   extension_method(extension_method const&) = delete;
-  extension_method(erased_function_t f)
-      : extension_method_index(get_extension_method_head<INTERFACE_NAME>()) {
-    if (f)
-      default_ = f;
-    else
-      default_ =  make_default_noop();
-  }
-  extension_method() : extension_method(nullptr) {}
+  extension_method(erased_function_t f = make_default_noop())
+      : extension_method_index(get_extension_method_head<INTERFACE_NAME>()),
+        default_(f) {}
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
   auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
                   OTHER_ARGS... args) const {
