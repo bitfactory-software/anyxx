@@ -108,62 +108,62 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 ////-----------------------------------------------------------------------------
 // visiting vistors
-namespace node {
-struct visitor {
-  struct interface;
-  using model =
-      virtual_void::open_concept::model<interface,
-                                        data::has_no_meta::const_observer>;
-  using method_t =
-      extension_method<interface,
-                       void(virtual_void::const_, std::any*, std::any const&)>;
-  method_t head, center, tail;
-};
-extension_method<node::interface, void(virtual_void::const_, visitor const&,
-                                       std::any*, std::any const&)>
-    visit;
-}  // namespace node
-namespace {
-inline void visit_left_right(auto const& expr, node::visitor const& visit,
-                             std::any* out, std::any const& in) {
-  node::visitor::model m{*expr};
-  visit.head(m, out, in);
-  node::visit(expr->left, visit, out, in);
-  visit.center(m, out, in);
-  node::visit(expr->right, visit, out, in);
-  visit.tail(m, out, in);
-}
-}  // namespace
-auto __ = node::visit.define<Plus>(
-    [](auto expr, node::visitor const& visit, std::any* out,
-       std::any const& in) { visit_left_right(expr, visit, out, in); });
-auto __ = node::visit.define<Times>(
-    [](auto expr, node::visitor const& visit, std::any* out,
-       std::any const& in) { visit_left_right(expr, visit, out, in); });
-auto __ = node::visit.define<Integer>([](Integer const* expr,
-                                         node::visitor const& visit,
-                                         std::any* out, std::any const& in) {
-  visit.center(node::visitor::model{*expr}, out, in);
-});
-
-TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
-  using namespace virtual_void;
-
-  open_concept::activate_extension_methods();
-
-  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
-
-    auto v = value(expr);
-    REQUIRE(v == 14);
-    std::stringstream out;
-    out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
-    std::cout << out.str() << "\n";
-    REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
-  
-  // #ifndef _DEBUG
-  //  BENCHMARK("21_Tree_TE_open_concept value") { return value(expr); };
-  //  BENCHMARK("21_Tree_TE_open_concept as_lisp") { return as_lisp(expr); };
-  // #endif  // !_DEBUG
-}
+//namespace node {
+//struct visitor {
+//  struct interface;
+//  using model =
+//      virtual_void::open_concept::model<interface,
+//                                        data::has_no_meta::const_observer>;
+//  using method_t =
+//      extension_method<interface,
+//                       void(virtual_void::const_, std::any*, std::any const&)>;
+//  method_t head, center, tail;
+//};
+//extension_method<node::interface, void(virtual_void::const_, visitor const&,
+//                                       std::any*, std::any const&)>
+//    visit;
+//}  // namespace node
+//namespace {
+//inline void visit_left_right(auto const& expr, node::visitor const& visit,
+//                             std::any* out, std::any const& in) {
+//  node::visitor::model m{*expr};
+//  visit.head(m, out, in);
+//  node::visit(expr->left, visit, out, in);
+//  visit.center(m, out, in);
+//  node::visit(expr->right, visit, out, in);
+//  visit.tail(m, out, in);
+//}
+//}  // namespace
+//auto __ = node::visit.define<Plus>(
+//    [](auto expr, node::visitor const& visit, std::any* out,
+//       std::any const& in) { visit_left_right(expr, visit, out, in); });
+//auto __ = node::visit.define<Times>(
+//    [](auto expr, node::visitor const& visit, std::any* out,
+//       std::any const& in) { visit_left_right(expr, visit, out, in); });
+//auto __ = node::visit.define<Integer>([](Integer const* expr,
+//                                         node::visitor const& visit,
+//                                         std::any* out, std::any const& in) {
+//  visit.center(node::visitor::model{*expr}, out, in);
+//});
+//
+//TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
+//  using namespace virtual_void;
+//
+//  open_concept::activate_extension_methods();
+//
+//  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
+//
+//    auto v = value(expr);
+//    REQUIRE(v == 14);
+//    std::stringstream out;
+//    out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
+//    std::cout << out.str() << "\n";
+//    REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
+//  
+//  // #ifndef _DEBUG
+//  //  BENCHMARK("21_Tree_TE_open_concept value") { return value(expr); };
+//  //  BENCHMARK("21_Tree_TE_open_concept as_lisp") { return as_lisp(expr); };
+//  // #endif  // !_DEBUG
+//}
 
 }  // namespace _21_Tree_TE_open_concept

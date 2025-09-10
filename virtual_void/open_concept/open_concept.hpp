@@ -13,6 +13,7 @@
 namespace virtual_void::open_concept {
 
 using v_table_function_t = void (*)();
+inline void default_noop() {}
 using v_table_t = std::vector<v_table_function_t>;
 using remebered_implementations_t =
     std::vector<std::pair<v_table_t&, v_table_function_t>>;
@@ -26,6 +27,7 @@ struct extension_method_head {
 };
 struct extension_method_index {
   std::size_t index = 0;
+
   extension_method_index* next = nullptr;
   remebered_implementations_t remebered_implementations;
 
@@ -187,10 +189,27 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
+  erased_function_t default_;
+  static erased_function_t make_default_noop() {
+    return +[]<typename... ARGS>(ARGS...) -> R {
+      if constexpr (std::same_as<R, void>) {
+        return;
+      } else {
+        return {};
+      }
+    };
+  }
 
  public:
-  extension_method()
-      : extension_method_index(get_extension_method_head<INTERFACE_NAME>()) {}
+  extension_method(extension_method const&) = delete;
+  extension_method(erased_function_t f)
+      : extension_method_index(get_extension_method_head<INTERFACE_NAME>()) {
+    if (f)
+      default_ = f;
+    else
+      default_ =  make_default_noop();
+  }
+  extension_method() : extension_method(nullptr) {}
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
   auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
                   OTHER_ARGS... args) const {
