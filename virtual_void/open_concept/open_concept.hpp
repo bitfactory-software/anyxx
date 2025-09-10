@@ -208,8 +208,12 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
   auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
                   OTHER_ARGS... args) const {
-    auto erased_function =
-        reinterpret_cast<erased_function_t>(m.v_table_->at(index));
+    if (m.v_table_->size() <= index)
+      return default_(nullptr, std::forward<OTHER_ARGS>(args)...);
+    auto target = m.v_table_->at(index);
+    if (!target) return default_(nullptr, std::forward<OTHER_ARGS>(args)...);
+
+    auto erased_function = reinterpret_cast<erased_function_t>(target);
     return (erased_function)(get_interface_data(m),
                              std::forward<OTHER_ARGS>(args)...);
   }
