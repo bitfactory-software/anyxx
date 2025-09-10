@@ -26,7 +26,7 @@ template <class DATA>
 constexpr value_v_table value_v_table_of =
     value_v_table(std::in_place_type<DATA>);
 
-template <typename BASE>
+template <typename BASE = void>
 class erased_value {
  public:
   erased_value() = default;

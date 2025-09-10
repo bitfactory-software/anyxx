@@ -1,12 +1,13 @@
 ﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
-#include <any>
 #include <cassert>
 #include <catch.hpp>
+#include <functional>
 #include <iostream>
 #include <memory>
 #include <string>
+#include <virtual_void/data/erased_value.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/open_concept/open_concept.hpp>
@@ -108,24 +109,24 @@ TEST_CASE("21_Tree_TE_open_concept") {
 ////-----------------------------------------------------------------------------
 // visiting vistors
 namespace node {
+using any = data::erased_value<>;
 struct visitor {
   struct interface;
   using model =
       virtual_void::open_concept::model<interface,
                                         data::has_no_meta::const_observer>;
   using method_t =
-      extension_method<interface,
-                       void(virtual_void::const_, std::any&, std::any const&)>;
+      extension_method<interface, void(virtual_void::const_, any&, any const&)>;
   method_t head, center, tail;
 };
 // this one must be provided be each "node" model:
-extension_method<node::interface, void(virtual_void::const_, visitor const&,
-                                       std::any&, std::any const&)>
+extension_method<node::interface,
+                 void(virtual_void::const_, visitor const&, any&, any const&)>
     visit;
 }  // namespace node
 namespace {
 inline void visit_left_right(auto const& expr, node::visitor const& visit,
-                             std::any& out, std::any const& in) {
+                             node::any& out, node::any const& in) {
   node::visitor::model m{*expr};
   visit.head(m, out, in);
   node::visit(expr->left, visit, out, in);
@@ -135,22 +136,22 @@ inline void visit_left_right(auto const& expr, node::visitor const& visit,
 }
 }  // namespace
 auto __ = node::visit.define<Plus>(
-    [](auto expr, node::visitor const& visit, std::any& out,
-       std::any const& in) { visit_left_right(expr, visit, out, in); });
+    [](auto expr, node::visitor const& visit, node::any& out,
+       node::any const& in) { visit_left_right(expr, visit, out, in); });
 auto __ = node::visit.define<Times>(
-    [](auto expr, node::visitor const& visit, std::any& out,
-       std::any const& in) { visit_left_right(expr, visit, out, in); });
+    [](auto expr, node::visitor const& visit, node::any& out,
+       node::any const& in) { visit_left_right(expr, visit, out, in); });
 auto __ = node::visit.define<Integer>([](Integer const* expr,
                                          node::visitor const& visit,
-                                         std::any& out, std::any const& in) {
+                                         node::any& out, node::any const& in) {
   visit.center(node::visitor::model{*expr}, out, in);
 });
 
 node::visitor dump;
 auto __ = dump.center.define<Integer>(
-    [](Integer const* expr, std::any& out, std::any const&) {
-      auto outstream = std::any_cast<std::stringstream*>(out);
-      (*outstream) << expr->value << ";";
+    [](Integer const* expr, node::any& out, node::any const&) {
+      auto outstream = static_cast<std::stringstream**>(out.get());
+      (**outstream) << expr->value << ";";
     });
 
 TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
@@ -161,16 +162,17 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   std::stringstream outstream;
-  std::any out(&outstream);
-  node::visit(expr, dump, out, std::any{});
+  node::any out = data::make_erased_value<void, std::stringstream*>(&outstream);
+  auto outstream_ptr = static_cast<std::stringstream**>(out.get());
+  node::visit(expr, dump, out, node::any{});
   std::cout << outstream.str() << "\n";
   REQUIRE(outstream.str() == "2;3;4;");
 
 #ifndef _DEBUG
   BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
-    //std::stringstream outstream;
-    //std::any out(&outstream);
-    return node::visit(expr, dump, out, std::any{});
+    // std::stringstream outstream;
+    // node::any out(&outstream);
+    return node::visit(expr, dump, out, node::any{});
   };
 #endif  // !_DEBUG
 }
