@@ -207,7 +207,7 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
         default_(f) {}
   template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
   auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
-                  OTHER_ARGS... args) const {
+                  OTHER_ARGS&&... args) const {
     if (m.v_table_->size() <= index)
       return default_(nullptr, std::forward<OTHER_ARGS>(args)...);
     auto target = m.v_table_->at(index);

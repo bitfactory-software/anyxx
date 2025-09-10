@@ -26,16 +26,15 @@ using model =
     virtual_void::open_concept::model<interface,
                                       data::has_no_meta::shared_const>;
 };  // namespace node
+
 struct Plus {
   Plus(node::model left, node::model right) : left(left), right(right) {}
   node::model left, right;
 };
-
 struct Times {
   Times(node::model left, node::model right) : left(left), right(right) {}
   node::model left, right;
 };
-
 struct Integer {
   explicit Integer(int value) : value(value) {}
   int value;
@@ -108,44 +107,44 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 ////-----------------------------------------------------------------------------
 // visiting vistors
-//namespace node {
-//struct visitor {
-//  struct interface;
-//  using model =
-//      virtual_void::open_concept::model<interface,
-//                                        data::has_no_meta::const_observer>;
-//  using method_t =
-//      extension_method<interface,
-//                       void(virtual_void::const_, std::any*, std::any const&)>;
-//  method_t head, center, tail;
-//};
-//extension_method<node::interface, void(virtual_void::const_, visitor const&,
-//                                       std::any*, std::any const&)>
-//    visit;
-//}  // namespace node
-//namespace {
-//inline void visit_left_right(auto const& expr, node::visitor const& visit,
-//                             std::any* out, std::any const& in) {
-//  node::visitor::model m{*expr};
-//  visit.head(m, out, in);
-//  node::visit(expr->left, visit, out, in);
-//  visit.center(m, out, in);
-//  node::visit(expr->right, visit, out, in);
-//  visit.tail(m, out, in);
-//}
-//}  // namespace
-//auto __ = node::visit.define<Plus>(
-//    [](auto expr, node::visitor const& visit, std::any* out,
-//       std::any const& in) { visit_left_right(expr, visit, out, in); });
-//auto __ = node::visit.define<Times>(
-//    [](auto expr, node::visitor const& visit, std::any* out,
-//       std::any const& in) { visit_left_right(expr, visit, out, in); });
-//auto __ = node::visit.define<Integer>([](Integer const* expr,
-//                                         node::visitor const& visit,
-//                                         std::any* out, std::any const& in) {
-//  visit.center(node::visitor::model{*expr}, out, in);
-//});
-//
+namespace node {
+struct visitor {
+  struct interface;
+  using model =
+      virtual_void::open_concept::model<interface,
+                                        data::has_no_meta::const_observer>;
+  using method_t =
+      extension_method<interface,
+                       void(virtual_void::const_, std::any*, std::any const&)>;
+  method_t head, center, tail;
+};
+extension_method<node::interface, void(virtual_void::const_, visitor const&,
+                                       std::any*, std::any const&)>
+    visit;
+}  // namespace node
+namespace {
+inline void visit_left_right(auto const& expr, node::visitor const& visit,
+                             std::any* out, std::any const& in) {
+  node::visitor::model m{*expr};
+  visit.head(m, out, in);
+  node::visit(expr->left, visit, out, in);
+  visit.center(m, out, in);
+  node::visit(expr->right, visit, out, in);
+  visit.tail(m, out, in);
+}
+}  // namespace
+auto __ = node::visit.define<Plus>(
+    [](auto expr, node::visitor const& visit, std::any* out,
+       std::any const& in) { visit_left_right(expr, visit, out, in); });
+auto __ = node::visit.define<Times>(
+    [](auto expr, node::visitor const& visit, std::any* out,
+       std::any const& in) { visit_left_right(expr, visit, out, in); });
+auto __ = node::visit.define<Integer>([](Integer const* expr,
+                                         node::visitor const& visit,
+                                         std::any* out, std::any const& in) {
+  visit.center(node::visitor::model{*expr}, out, in);
+});
+
 //TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
 //  using namespace virtual_void;
 //
