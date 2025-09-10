@@ -79,4 +79,24 @@ auto make_erased_value(ARGS&&... args)
   return erased_value<BASE>(new T(std::forward<ARGS>(args)...));
 }
 
+template <typename T, typename... ARGS>
+auto make_void_value(ARGS&&... args) {
+  return make_erased_value<void, T>(std::forward<ARGS>(args)...);
+}
+
+template <typename T>
+auto make_void_value(T&& v) {
+  return make_erased_value<void, T>(std::forward<T>(v));
+}
+
+template <typename U>
+U& unerase_cast(erased_value<>& v) {
+  return *static_cast<U*>(v.get());
+}
+template <typename U>
+U const& unerase_cast(erased_value<> const& v) {
+  return *static_cast<U const*>(v.get());
+}
+
+
 }  // namespace virtual_void::data

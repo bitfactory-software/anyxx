@@ -150,8 +150,8 @@ auto __ = node::visit.define<Integer>([](Integer const* expr,
 node::visitor dump;
 auto __ = dump.center.define<Integer>(
     [](Integer const* expr, node::any& out, node::any const&) {
-      auto outstream = static_cast<std::stringstream**>(out.get());
-      (**outstream) << expr->value << ";";
+      auto outstream = unerase_cast<std::stringstream*>(out);
+      (*outstream) << expr->value << ";";
     });
 
 TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
@@ -162,8 +162,8 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   std::stringstream outstream;
-  node::any out = data::make_erased_value<void, std::stringstream*>(&outstream);
-  auto outstream_ptr = static_cast<std::stringstream**>(out.get());
+  node::any out = data::make_void_value(&outstream);
+  auto outstream_ptr = unerase_cast<std::stringstream*>(out);
   node::visit(expr, dump, out, node::any{});
   std::cout << outstream.str() << "\n";
   REQUIRE(outstream.str() == "2;3;4;");
