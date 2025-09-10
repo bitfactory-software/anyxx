@@ -84,11 +84,11 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
-  //REQUIRE(&v_table_instance<node::interface, Times>() == &get_v_table(expr));
-  //REQUIRE(v_table_instance<node::interface, Times>().size() >= 3u);
-  //REQUIRE(v_table_instance<node::interface, Times>()[0]);
-  //REQUIRE(v_table_instance<node::interface, Times>()[1]);
-  //REQUIRE(v_table_instance<node::interface, Times>()[2]);
+  // REQUIRE(&v_table_instance<node::interface, Times>() == &get_v_table(expr));
+  // REQUIRE(v_table_instance<node::interface, Times>().size() >= 3u);
+  // REQUIRE(v_table_instance<node::interface, Times>()[0]);
+  // REQUIRE(v_table_instance<node::interface, Times>()[1]);
+  // REQUIRE(v_table_instance<node::interface, Times>()[2]);
 
   auto v = value(expr);
   REQUIRE(v == 14);
@@ -115,16 +115,17 @@ struct visitor {
                                         data::has_no_meta::const_observer>;
   using method_t =
       extension_method<interface,
-                       void(virtual_void::const_, std::any*, std::any const&)>;
+                       void(virtual_void::const_, std::any&, std::any const&)>;
   method_t head, center, tail;
 };
+// this one must be provided be each "node" model:
 extension_method<node::interface, void(virtual_void::const_, visitor const&,
-                                       std::any*, std::any const&)>
+                                       std::any&, std::any const&)>
     visit;
 }  // namespace node
 namespace {
 inline void visit_left_right(auto const& expr, node::visitor const& visit,
-                             std::any* out, std::any const& in) {
+                             std::any& out, std::any const& in) {
   node::visitor::model m{*expr};
   visit.head(m, out, in);
   node::visit(expr->left, visit, out, in);
@@ -134,35 +135,44 @@ inline void visit_left_right(auto const& expr, node::visitor const& visit,
 }
 }  // namespace
 auto __ = node::visit.define<Plus>(
-    [](auto expr, node::visitor const& visit, std::any* out,
+    [](auto expr, node::visitor const& visit, std::any& out,
        std::any const& in) { visit_left_right(expr, visit, out, in); });
 auto __ = node::visit.define<Times>(
-    [](auto expr, node::visitor const& visit, std::any* out,
+    [](auto expr, node::visitor const& visit, std::any& out,
        std::any const& in) { visit_left_right(expr, visit, out, in); });
 auto __ = node::visit.define<Integer>([](Integer const* expr,
                                          node::visitor const& visit,
-                                         std::any* out, std::any const& in) {
+                                         std::any& out, std::any const& in) {
   visit.center(node::visitor::model{*expr}, out, in);
 });
 
-//TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
-//  using namespace virtual_void;
-//
-//  open_concept::activate_extension_methods();
-//
-//  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
-//
-//    auto v = value(expr);
-//    REQUIRE(v == 14);
-//    std::stringstream out;
-//    out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
-//    std::cout << out.str() << "\n";
-//    REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
-//  
-//  // #ifndef _DEBUG
-//  //  BENCHMARK("21_Tree_TE_open_concept value") { return value(expr); };
-//  //  BENCHMARK("21_Tree_TE_open_concept as_lisp") { return as_lisp(expr); };
-//  // #endif  // !_DEBUG
-//}
+node::visitor dump;
+auto __ = dump.center.define<Integer>(
+    [](Integer const* expr, std::any& out, std::any const&) {
+      auto outstream = std::any_cast<std::stringstream*>(out);
+      (*outstream) << expr->value << ";";
+    });
+
+TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
+  using namespace virtual_void;
+
+  open_concept::activate_extension_methods();
+
+  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
+
+  std::stringstream outstream;
+  std::any out(&outstream);
+  node::visit(expr, dump, out, std::any{});
+  std::cout << outstream.str() << "\n";
+  REQUIRE(outstream.str() == "2;3;4;");
+
+#ifndef _DEBUG
+  BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
+    //std::stringstream outstream;
+    //std::any out(&outstream);
+    return node::visit(expr, dump, out, std::any{});
+  };
+#endif  // !_DEBUG
+}
 
 }  // namespace _21_Tree_TE_open_concept

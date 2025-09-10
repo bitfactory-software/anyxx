@@ -106,13 +106,13 @@ class model {
     requires erased_constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID, base_t>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    v_table_ = &v_table_instance<INTERFACE_NAME, CONSTRUCTED_WITH>();
+    v_table_ = &v_table_instance<INTERFACE_NAME, std::remove_cvref_t<CONSTRUCTED_WITH>>();
   }
   template <typename CONSTRUCT_WITH, typename... ARGS>
   model(std::in_place_type_t<CONSTRUCT_WITH>, ARGS... args)
       : virtual_void_(erased_in_place<virtual_void_t, CONSTRUCT_WITH>(
             std::forward<ARGS>(args)...)) {
-    v_table_ = &v_table_instance<INTERFACE_NAME, CONSTRUCT_WITH>();
+    v_table_ = &v_table_instance<INTERFACE_NAME, std::remove_cvref_t<CONSTRUCT_WITH>>();
   }
   template <typename CONSTRUCTED_WITH>
   model(virtual_typed<CONSTRUCTED_WITH, virtual_void_t> const& vt)
