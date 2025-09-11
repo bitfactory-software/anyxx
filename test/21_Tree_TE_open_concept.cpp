@@ -7,7 +7,6 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <virtual_void/data/erased_value.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/open_concept/open_concept.hpp>
@@ -108,25 +107,30 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 ////-----------------------------------------------------------------------------
 // visiting vistors
+struct in_param {
+  const void* p;
+};
+struct out_param {
+  void* p;
+};
 namespace node {
-using any = data::erased_value<>;
 struct visitor {
   struct interface;
   using model =
       virtual_void::open_concept::model<interface,
                                         data::has_no_meta::const_observer>;
-  using method_t =
-      extension_method<interface, void(virtual_void::const_, any&, any const&)>;
+  using method_t = extension_method<interface, void(virtual_void::const_, out_param const&,
+                                                    in_param const&)>;
   method_t head, center, tail;
 };
 // this one must be provided be each "node" model:
-extension_method<node::interface,
-                 void(virtual_void::const_, visitor const&, any&, any const&)>
+extension_method<node::interface, void(virtual_void::const_, visitor const&,
+                                       out_param const&, in_param const&)>
     visit;
 }  // namespace node
 namespace {
 inline void visit_left_right(auto const& expr, node::visitor const& visit,
-                             node::any& out, node::any const& in) {
+                             out_param const& out, in_param const& in) {
   node::visitor::model m{*expr};
   visit.head(m, out, in);
   node::visit(expr->left, visit, out, in);
@@ -136,45 +140,47 @@ inline void visit_left_right(auto const& expr, node::visitor const& visit,
 }
 }  // namespace
 auto __ = node::visit.define<Plus>(
-    [](auto expr, node::visitor const& visit, node::any& out,
-       node::any const& in) { visit_left_right(expr, visit, out, in); });
+    [](auto expr, node::visitor const& visit, out_param const& out, in_param const& in) {
+      visit_left_right(expr, visit, out, in);
+    });
 auto __ = node::visit.define<Times>(
-    [](auto expr, node::visitor const& visit, node::any& out,
-       node::any const& in) { visit_left_right(expr, visit, out, in); });
+    [](auto expr, node::visitor const& visit, out_param const& out, in_param const& in) {
+      visit_left_right(expr, visit, out, in);
+    });
 auto __ = node::visit.define<Integer>([](Integer const* expr,
-                                         node::visitor const& visit,
-                                         node::any& out, node::any const& in) {
+                                         node::visitor const& visit, out_param const& out,
+                                         in_param const& in) {
   visit.center(node::visitor::model{*expr}, out, in);
 });
 
 node::visitor dump;
 auto __ = dump.center.define<Integer>(
-    [](Integer const* expr, node::any& out, node::any const&) {
-      auto s = unerase_cast<std::string*>(out);
+    [](Integer const* expr, out_param const& out, in_param const&) {
+      auto s = static_cast<std::string*>(out.p);
       (*s) += std::to_string(expr->value) + ";";
     });
 
-//node::visitor dump_as_lisp;
-//auto __ = dump_as_lisp.head.define<Plus>([](auto expr) {
-//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-//});
-//auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
-//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-//});
-//auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
-//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-//});
-//auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
-//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-//});
-//auto __ = dump_as_lisp.define<Times>([](auto expr) {
-//  return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-//});
-//auto __ = dump_as_lisp.center.define<Integer>(
-//    [](Integer const* expr, node::any& out, node::any const&) {
-//      auto s = unerase_cast<std::string*>(out);
-//      (*s) += std::to_string(expr->value);
-//    });
+// node::visitor dump_as_lisp;
+// auto __ = dump_as_lisp.head.define<Plus>([](auto expr) {
+//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+// });
+// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+// });
+// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+// });
+// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+// });
+// auto __ = dump_as_lisp.define<Times>([](auto expr) {
+//   return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+// });
+// auto __ = dump_as_lisp.center.define<Integer>(
+//     [](Integer const* expr, out_param const& out, void const*) {
+//       auto s = unerase_cast<std::string*>(out);
+//       (*s) += std::to_string(expr->value);
+//     });
 
 TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   using namespace virtual_void;
@@ -184,9 +190,8 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   std::string s;
-  node::any out = data::make_void_value(&s);
-  auto outstream_ptr = unerase_cast<std::string*>(out);
-  node::visit(expr, dump, out, node::any{});
+  out_param out{ &s };
+  node::visit(expr, dump, out, in_param{});
   std::cout << s << "\n";
   REQUIRE(s == "2;3;4;");
 
@@ -194,7 +199,7 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
     // std::stringstream outstream;
     // node::any out(&outstream);
-    return node::visit(expr, dump, out, node::any{});
+    return node::visit(expr, dump, out, nullptr);
   };
 #endif  // !_DEBUG
 }
