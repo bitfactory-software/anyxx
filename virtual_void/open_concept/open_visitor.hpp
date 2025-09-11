@@ -17,16 +17,34 @@ struct visitor {
 };
 
 template <typename VISITOR, typename OUT, typename IN>
-struct typed_visitor {
-  VISITOR vistor; 
+class typed_visitor {
+ public:
   template <typename CLASS>
   using self_t = typename VISITOR::method_t::template class_param_t<CLASS>;
   template <typename CLASS>
   using typed_implementation_function_type = auto (*)(self_t<CLASS>, OUT&,
                                                       IN const&) -> void;
+
+// private:
+  VISITOR vistor;
+  template <typename CLASS>
+  auto define(typename VISITOR::method_t& method,
+              typed_implementation_function_type<CLASS> f) {
+    return method.template define<CLASS>(f);
+  }
+
+public:
+    template <typename CLASS>
+  auto define_head(typed_implementation_function_type<CLASS> f) {
+    return define<CLASS>(vistor.head, f);
+  }
   template <typename CLASS>
   auto define_center(typed_implementation_function_type<CLASS> f) {
-    return vistor.center.template define<CLASS>(f);
+    return define<CLASS>(vistor.center, f);
+  }
+  template <typename CLASS>
+  auto define_tail(typed_implementation_function_type<CLASS> f) {
+    return define<CLASS>(vistor.tail, f);
   }
 };
 
