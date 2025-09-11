@@ -6,32 +6,28 @@ namespace virtual_void::open_concept {
 
 template <typename TAG>
 struct visitor {
-
   using in_param = const void*;
   using out_param = void*;
 
   using model =
-      virtual_void::open_concept::model<TAG,
-                                        data::has_no_meta::const_observer>;
+      virtual_void::open_concept::model<TAG, data::has_no_meta::const_observer>;
   using method_t =
-      extension_method<TAG, void(virtual_void::const_, out_param,
-                                       in_param)>;
+      extension_method<TAG, void(virtual_void::const_, out_param, in_param)>;
   method_t head, center, tail;
 };
 
-
-//template <typename VISITOR, typename OUT, typename IN>
-//struct typed_visitor 
-//{
-//  template <typename CLASS, typename FUNCTION>
-//  auto define_center(FUNCTION f) {
-//      auto wrapped = []
-//    auto fp = ensure_function_ptr<CLASS, method_t::class_param_t, R, ARGS...>(f);
-//    auto& v_table = v_table_instance<INTERFACE_NAME, CLASS>();
-//    remember(remebered_implementations, v_table, fp);
-//    return fp;
-//  }
-//
-//};
+template <typename VISITOR, typename OUT, typename IN>
+struct typed_visitor {
+  VISITOR vistor; 
+  template <typename CLASS>
+  using self_t = typename VISITOR::method_t::template class_param_t<CLASS>;
+  template <typename CLASS>
+  using typed_implementation_function_type = auto (*)(self_t<CLASS>, OUT&,
+                                                      IN const&) -> void;
+  template <typename CLASS>
+  auto define_center(typed_implementation_function_type<CLASS> f) {
+    return vistor.center.template define<CLASS>(f);
+  }
+};
 
 }  // namespace virtual_void::open_concept

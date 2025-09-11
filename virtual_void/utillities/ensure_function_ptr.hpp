@@ -4,6 +4,10 @@ namespace virtual_void {
 
 template <typename CLASS, template <typename> typename PARAM, typename R,
           typename DISPATCH, typename... OTHER_ARGS>
+using function_ptr_t = auto(*)(PARAM<CLASS>, OTHER_ARGS...) -> R;
+
+template <typename CLASS, template <typename> typename PARAM, typename R,
+          typename DISPATCH, typename... OTHER_ARGS>
 auto ensure_function_ptr(
     auto functor)  // if functor is a templated operator() from a stateless
                    // function object, instantiate it now!;
