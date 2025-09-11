@@ -147,12 +147,11 @@ auto __ = node::visit.define<Integer>(
       visit.center(node::visitor::model{*expr}, out, in);
     });
 
-node::visitor dump;
-auto __ = dump.center.define<Integer>([](Integer const* expr,
-                                         node::visitor::out_param out,
-                                         node::visitor::in_param) {
-  auto s = static_cast<std::string*>(out);
-  (*s) += std::to_string(expr->value) + ";";
+open_concept::typed_visitor<node::visitor, std::string, nullptr_t> dump;
+auto __ = dump.define_center<Integer>([](Integer const* expr,
+                                         std::string& out,
+                                         nullptr_t const&) {
+  out += std::to_string(expr->value) + ";";
 });
 
 // node::visitor dump_as_lisp;
@@ -188,7 +187,7 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   std::string s;
   node::visitor::out_param out{&s};
   node::visitor::in_param in{&s};
-  node::visit(expr, dump, out, in);
+  node::visit(expr, dump.vistor, out, in);
   std::cout << s << "\n";
   REQUIRE(s == "2;3;4;");
 
