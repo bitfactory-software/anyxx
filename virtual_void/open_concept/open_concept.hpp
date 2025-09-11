@@ -1,10 +1,6 @@
 #pragma once
 
-#include <map>
-#include <optional>
-#include <typeindex>
 #include <vector>
-#include <virtual_void/data/erased_value.hpp>
 #include <virtual_void/utillities/ensure_function_ptr.hpp>
 #include <virtual_void/utillities/translate_erased_function.hpp>
 #include <virtual_void/utillities/type_list.hpp>
