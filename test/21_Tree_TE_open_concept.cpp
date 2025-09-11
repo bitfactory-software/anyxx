@@ -150,9 +150,31 @@ auto __ = node::visit.define<Integer>([](Integer const* expr,
 node::visitor dump;
 auto __ = dump.center.define<Integer>(
     [](Integer const* expr, node::any& out, node::any const&) {
-      auto outstream = unerase_cast<std::stringstream*>(out);
-      (*outstream) << expr->value << ";";
+      auto s = unerase_cast<std::string*>(out);
+      (*s) += std::to_string(expr->value) + ";";
     });
+
+//node::visitor dump_as_lisp;
+//auto __ = dump_as_lisp.head.define<Plus>([](auto expr) {
+//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//});
+//auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//});
+//auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//});
+//auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+//  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//});
+//auto __ = dump_as_lisp.define<Times>([](auto expr) {
+//  return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//});
+//auto __ = dump_as_lisp.center.define<Integer>(
+//    [](Integer const* expr, node::any& out, node::any const&) {
+//      auto s = unerase_cast<std::string*>(out);
+//      (*s) += std::to_string(expr->value);
+//    });
 
 TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   using namespace virtual_void;
@@ -161,12 +183,12 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
 
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
-  std::stringstream outstream;
-  node::any out = data::make_void_value(&outstream);
-  auto outstream_ptr = unerase_cast<std::stringstream*>(out);
+  std::string s;
+  node::any out = data::make_void_value(&s);
+  auto outstream_ptr = unerase_cast<std::string*>(out);
   node::visit(expr, dump, out, node::any{});
-  std::cout << outstream.str() << "\n";
-  REQUIRE(outstream.str() == "2;3;4;");
+  std::cout << s << "\n";
+  REQUIRE(s == "2;3;4;");
 
 #ifndef _DEBUG
   BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
