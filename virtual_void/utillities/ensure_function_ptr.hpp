@@ -12,8 +12,8 @@ auto ensure_function_ptr(
   if constexpr (std::is_pointer_v<functor_t>) {
     return functor;
   } else {
-    return +[](PARAM<CLASS> self, OTHER_ARGS&&... args) -> R {
-      return functor_t{}(self, std::forward<OTHER_ARGS>(args)...);
+    return +[](PARAM<CLASS> self, OTHER_ARGS... args) -> R {
+      return functor_t{}(self, args...);
     };
   }
 }
