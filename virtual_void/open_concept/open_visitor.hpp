@@ -25,7 +25,7 @@ class typed_visitor {
   using typed_implementation_function_type = auto (*)(self_t<CLASS>, OUT&,
                                                       IN const&) -> void;
 
-// private:
+  // private:
   VISITOR vistor;
   template <typename CLASS>
   auto define(typename VISITOR::method_t& method,
@@ -33,8 +33,8 @@ class typed_visitor {
     return method.template define<CLASS>(f);
   }
 
-public:
-    template <typename CLASS>
+ public:
+  template <typename CLASS>
   auto define_head(typed_implementation_function_type<CLASS> f) {
     return define<CLASS>(vistor.head, f);
   }
