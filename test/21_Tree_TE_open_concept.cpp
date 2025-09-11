@@ -115,14 +115,14 @@ struct visitor_tag;
 using visitor = open_concept::visitor<visitor_tag>;
 extension_method<node::interface,
                  void(virtual_void::const_, visitor const&,
-                      visitor::out_param const&, visitor::in_param const&)>
+                      visitor::out_param, visitor::in_param const&)>
     visit;
 }  // namespace node
 
 namespace {
 inline void visit_left_right(auto const& expr, node::visitor const& visit,
-                             node::visitor::out_param const& out,
-                             node::visitor::in_param const& in) {
+                             node::visitor::out_param out,
+                             node::visitor::in_param in) {
   node::visitor::model m{*expr};
   visit.head(m, out, in);
   node::visit(expr->left, visit, out, in);
@@ -132,26 +132,26 @@ inline void visit_left_right(auto const& expr, node::visitor const& visit,
 }
 }  // namespace
 auto __ = node::visit.define<Plus>([](auto expr, node::visitor const& visit,
-                                      node::visitor::out_param const& out,
-                                      node::visitor::in_param const& in) {
+                                      node::visitor::out_param out,
+                                      node::visitor::in_param in) {
   visit_left_right(expr, visit, out, in);
 });
 auto __ = node::visit.define<Times>([](auto expr, node::visitor const& visit,
-                                       node::visitor::out_param const& out,
-                                       node::visitor::in_param const& in) {
+                                       node::visitor::out_param out,
+                                       node::visitor::in_param in) {
   visit_left_right(expr, visit, out, in);
 });
 auto __ = node::visit.define<Integer>(
     [](Integer const* expr, node::visitor const& visit,
-       node::visitor::out_param const& out, node::visitor::in_param const& in) {
+       node::visitor::out_param out, node::visitor::in_param in) {
       visit.center(node::visitor::model{*expr}, out, in);
     });
 
 node::visitor dump;
 auto __ = dump.center.define<Integer>([](Integer const* expr,
-                                         node::visitor::out_param const& out,
-                                         node::visitor::in_param const&) {
-  auto s = static_cast<std::string*>(out.p);
+                                         node::visitor::out_param out,
+                                         node::visitor::in_param) {
+  auto s = static_cast<std::string*>(out);
   (*s) += std::to_string(expr->value) + ";";
 });
 
@@ -172,7 +172,7 @@ auto __ = dump.center.define<Integer>([](Integer const* expr,
 //   return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 // });
 // auto __ = dump_as_lisp.center.define<Integer>(
-//     [](Integer const* expr, node::visitor::out_param const& out, void const*)
+//     [](Integer const* expr, node::visitor::out_param out, node::visitor::in_param)
 //     {
 //       auto s = unerase_cast<std::string*>(out);
 //       (*s) += std::to_string(expr->value);
@@ -187,7 +187,8 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
 
   std::string s;
   node::visitor::out_param out{&s};
-  node::visit(expr, dump, out, node::visitor::in_param{});
+  node::visitor::in_param in{&s};
+  node::visit(expr, dump, out, in);
   std::cout << s << "\n";
   REQUIRE(s == "2;3;4;");
 
