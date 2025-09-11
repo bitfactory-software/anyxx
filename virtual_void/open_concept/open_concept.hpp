@@ -102,13 +102,15 @@ class model {
     requires erased_constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID, base_t>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    v_table_ = &v_table_instance<INTERFACE_NAME, std::remove_cvref_t<CONSTRUCTED_WITH>>();
+    v_table_ = &v_table_instance<INTERFACE_NAME,
+                                 std::remove_cvref_t<CONSTRUCTED_WITH>>();
   }
   template <typename CONSTRUCT_WITH, typename... ARGS>
   model(std::in_place_type_t<CONSTRUCT_WITH>, ARGS... args)
       : virtual_void_(erased_in_place<virtual_void_t, CONSTRUCT_WITH>(
             std::forward<ARGS>(args)...)) {
-    v_table_ = &v_table_instance<INTERFACE_NAME, std::remove_cvref_t<CONSTRUCT_WITH>>();
+    v_table_ = &v_table_instance<INTERFACE_NAME,
+                                 std::remove_cvref_t<CONSTRUCT_WITH>>();
   }
   template <typename CONSTRUCTED_WITH>
   model(virtual_typed<CONSTRUCTED_WITH, virtual_void_t> const& vt)
@@ -177,14 +179,16 @@ class extension_method;
 template <typename INTERFACE_NAME, typename R, typename... ARGS>
 class extension_method<INTERFACE_NAME, R(ARGS...)>
     : public extension_method_index {
+ public:
   using interface_t = INTERFACE_NAME;
-
   using CONSTNESS = typename first_t<ARGS...>;
   using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
+
+ private:
   erased_function_t default_;
   static erased_function_t make_default_noop() {
     return +[]<typename... ARGS>(ARGS...) -> R {
