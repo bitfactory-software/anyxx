@@ -136,7 +136,7 @@ auto __ = node::visit.define<Integer>(
       visit.center(expr, out, in);
     });
 
-open_concept::typed_visitor<node::interface, std::string, nullptr_t> dump;
+open_concept::visitor<node::interface, std::string, nullptr_t> dump;
 auto __ = dump.define_center<Integer>(
     [](Integer const* expr, std::string& out, nullptr_t const&) {
       out += std::to_string(expr->value) + ";";

@@ -4,16 +4,11 @@
 
 namespace virtual_void::open_concept {
 
-template <typename INTERFACE>
-struct visitor_interface {
-  using type = visitor_interface<INTERFACE>;
-};
-
 using visitor_in_param = const void*;
 using visitor_out_param = void*;
 
 template <typename INTERFACE_NAME>
-struct visitor {
+struct visitor_methods {
   using interface_name_t = INTERFACE_NAME;
   using model =
       virtual_void::open_concept::model<INTERFACE_NAME,
@@ -27,22 +22,22 @@ struct visitor {
 template <typename INTERFACE_NAME>
 using visit =
     extension_method<INTERFACE_NAME,
-                     void(virtual_void::const_, visitor<INTERFACE_NAME> const&,
+                     void(virtual_void::const_, visitor_methods<INTERFACE_NAME> const&,
                           visitor_out_param, visitor_in_param const&)>;
 
 template <typename INTERFACE_NAME, typename OUT, typename IN>
-class typed_visitor : public visitor<INTERFACE_NAME> {
+class visitor : public visitor_methods<INTERFACE_NAME> {
  public:
   template <typename CLASS>
   using self_t =
-      typename visitor<INTERFACE_NAME>::method_t::template class_param_t<CLASS>;
+      typename visitor_methods<INTERFACE_NAME>::method_t::template class_param_t<CLASS>;
   template <typename CLASS>
   using typed_implementation_function_type = auto (*)(self_t<CLASS>, OUT&,
                                                       IN const&) -> void;
 
   // private:
   template <typename CLASS>
-  auto define_(typename visitor<INTERFACE_NAME>::method_t& method,
+  auto define_(typename visitor_methods<INTERFACE_NAME>::method_t& method,
                typed_implementation_function_type<CLASS> f) {
     return method.template define<CLASS>(f);
   }
