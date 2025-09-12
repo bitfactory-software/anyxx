@@ -180,9 +180,7 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   std::string s;
-  void* out{&s};
-  void const* in{&s};
-  node::visit(expr, dump.vistor, out, in);
+  node::visit(expr, dump.vistor, &s, nullptr);
   std::cout << s << "\n";
   REQUIRE(s == "2;3;4;");
 
