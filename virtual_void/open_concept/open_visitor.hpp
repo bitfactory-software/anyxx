@@ -16,6 +16,16 @@ struct visitor {
   method_t head, center, tail;
 };
 
+//template <typename INTERFACE>
+//struct visit {
+//  using visitor = open_concept::visitor<visit<INTERFACE>>;
+//
+//  extension_method<INTERFACE,
+//                   void(virtual_void::const_, visitor const&,
+//                        visitor::out_param, visitor::in_param const&)>
+//      method;
+//};
+
 template <typename VISITOR, typename OUT, typename IN>
 class typed_visitor {
  public:
