@@ -120,14 +120,12 @@ extension_method<node::interface,
 }  // namespace node
 
 namespace {
-inline void visit_left_right(auto const& expr, auto const& visit, auto out,
-                             auto in) {
-  node::visitor::model m{*expr};
-  visit.head(m, out, in);
+inline void visit_left_right(auto expr, auto const& visit, auto out, auto in) {
+  visit.head(expr, out, in);
   node::visit(expr->left, visit, out, in);
-  visit.center(m, out, in);
+  visit.center(expr, out, in);
   node::visit(expr->right, visit, out, in);
-  visit.tail(m, out, in);
+  visit.tail(expr, out, in);
 }
 }  // namespace
 auto __ = node::visit.define<Plus>(
@@ -140,7 +138,7 @@ auto __ = node::visit.define<Times>(
     });
 auto __ = node::visit.define<Integer>(
     [](Integer const* expr, auto const& visit, auto out, auto in) {
-      visit.center(node::visitor::model{*expr}, out, in);
+      visit.center(expr, out, in);
     });
 
 open_concept::typed_visitor<node::visitor, std::string, nullptr_t> dump;

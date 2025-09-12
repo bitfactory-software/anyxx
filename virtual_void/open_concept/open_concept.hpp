@@ -5,6 +5,7 @@
 #include <virtual_void/utillities/translate_erased_function.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
 
 namespace virtual_void::open_concept {
 
@@ -105,12 +106,13 @@ class model {
     v_table_ = &v_table_instance<INTERFACE_NAME,
                                  std::remove_cvref_t<CONSTRUCTED_WITH>>();
   }
-  template <typename CONSTRUCT_WITH, typename... ARGS>
-  model(std::in_place_type_t<CONSTRUCT_WITH>, ARGS... args)
-      : virtual_void_(erased_in_place<virtual_void_t, CONSTRUCT_WITH>(
-            std::forward<ARGS>(args)...)) {
+  template <typename CONSTRUCTED_WITH>
+  model(CONSTRUCTED_WITH const* constructed_with)
+    requires erased_constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID, base_t>
+      : virtual_void_(erased<virtual_void_t>(
+            std::forward<CONSTRUCTED_WITH const&>(*constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
-                                 std::remove_cvref_t<CONSTRUCT_WITH>>();
+                                 std::remove_cvref_t<CONSTRUCTED_WITH>>();
   }
   template <typename CONSTRUCTED_WITH>
   model(virtual_typed<CONSTRUCTED_WITH, virtual_void_t> const& vt)
@@ -216,6 +218,10 @@ class extension_method<INTERFACE_NAME, R(ARGS...)>
     auto erased_function = reinterpret_cast<erased_function_t>(target);
     return (erased_function)(get_interface_data(m),
                              std::forward<OTHER_ARGS>(args)...);
+  }
+  template <typename CLASS, typename... OTHER_ARGS>
+  auto operator()(CLASS const* p, OTHER_ARGS&&... args) const {
+    return (*this)(model<INTERFACE_NAME, data::has_no_meta::const_observer>{*p}, std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename FUNCTION>
   auto define(FUNCTION f) {
