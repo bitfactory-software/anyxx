@@ -188,7 +188,8 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
     // std::stringstream outstream;
     // node::any out(&outstream);
-    return node::visit(expr, dump, out, nullptr);
+    std::string s;
+    return node::visit(expr, dump, &s, nullptr);
   };
 #endif  // !_DEBUG
 }
