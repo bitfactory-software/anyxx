@@ -111,27 +111,73 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 // this one must be provided be EACH "node" model:
 namespace node {
-open_concept::visit<node::interface> visit;
+open_concept::visit<node::interface> visit_left_first;
+open_concept::visit<node::interface> visit_right_first;
+open_concept::visit<node::interface> visit_center_first;
 }  // namespace node
 
 namespace {
 inline void visit_left_right(auto expr, auto const& visit, auto out, auto in) {
   visit.head(expr, out, in);
-  node::visit(expr->left, visit, out, in);
+  node::visit_left_first(expr->left, visit, out, in);
   visit.center(expr, out, in);
-  node::visit(expr->right, visit, out, in);
+  node::visit_left_first(expr->right, visit, out, in);
   visit.tail(expr, out, in);
 }
 }  // namespace
-auto __ = node::visit.define<Plus>(
+auto __ = node::visit_left_first.define<Plus>(
     [](auto expr, auto const& visit, auto out, auto in) {
       visit_left_right(expr, visit, out, in);
     });
-auto __ = node::visit.define<Times>(
+auto __ = node::visit_left_first.define<Times>(
     [](auto expr, auto const& visit, auto out, auto in) {
       visit_left_right(expr, visit, out, in);
     });
-auto __ = node::visit.define<Integer>(
+auto __ = node::visit_left_first.define<Integer>(
+    [](Integer const* expr, auto const& visit, auto out, auto in) {
+      visit.center(expr, out, in);
+    });
+
+namespace {
+inline void visit_right_left(auto expr, auto const& visit, auto out, auto in) {
+  visit.tail(expr, out, in);
+  node::visit_right_first(expr->right, visit, out, in);
+  visit.center(expr, out, in);
+  node::visit_right_first(expr->left, visit, out, in);
+  visit.head(expr, out, in);
+}
+}  // namespace
+auto __ = node::visit_right_first.define<Plus>(
+    [](auto expr, auto const& visit, auto out, auto in) {
+      visit_right_left(expr, visit, out, in);
+    });
+auto __ = node::visit_right_first.define<Times>(
+    [](auto expr, auto const& visit, auto out, auto in) {
+      visit_right_left(expr, visit, out, in);
+    });
+auto __ = node::visit_right_first.define<Integer>(
+    [](Integer const* expr, auto const& visit, auto out, auto in) {
+      visit.center(expr, out, in);
+    });
+
+namespace {
+inline void visit_center_left_right(auto expr, auto const& visit, auto out, auto in) {
+  visit.center(expr, out, in);
+  visit.head(expr, out, in);
+  node::visit_center_first(expr->left, visit, out, in);
+  node::visit_center_first(expr->right, visit, out, in);
+  visit.tail(expr, out, in);
+}
+}  // namespace
+auto __ = node::visit_center_first.define<Plus>(
+    [](auto expr, auto const& visit, auto out, auto in) {
+      visit_center_left_right(expr, visit, out, in);
+    });
+auto __ = node::visit_center_first.define<Times>(
+    [](auto expr, auto const& visit, auto out, auto in) {
+      visit_center_left_right(expr, visit, out, in);
+    });
+auto __ = node::visit_center_first.define<Integer>(
     [](Integer const* expr, auto const& visit, auto out, auto in) {
       visit.center(expr, out, in);
     });
@@ -173,7 +219,7 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   std::string s;
-  dump(expr, node::visit, s);
+  dump(expr, node::visit_left_first, s);
   std::cout << s << "\n";
   REQUIRE(s == "2;3;4;");
 
