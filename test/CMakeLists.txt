@@ -2,7 +2,7 @@
     add_compile_options(/Zc:preprocessor)
 endif()
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 file(GLOB component_base_hpp_files "./component_base/*.hpp")
 file(GLOB component_base_cpp_files "./component_base/*.cpp")

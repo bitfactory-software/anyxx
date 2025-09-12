@@ -111,12 +111,7 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 // this one must be provided be EACH "node" model:
 namespace node {
-struct visitor_tag;
-using visitor = open_concept::visitor<visitor_tag>;
-extension_method<node::interface,
-                 void(virtual_void::const_, visitor const&, visitor::out_param,
-                      visitor::in_param const&)>
-    visit;
+open_concept::visit<node::interface> visit;
 }  // namespace node
 
 namespace {
@@ -141,7 +136,7 @@ auto __ = node::visit.define<Integer>(
       visit.center(expr, out, in);
     });
 
-open_concept::typed_visitor<node::visitor, std::string, nullptr_t> dump;
+open_concept::typed_visitor<node::interface, std::string, nullptr_t> dump;
 auto __ = dump.define_center<Integer>(
     [](Integer const* expr, std::string& out, nullptr_t const&) {
       out += std::to_string(expr->value) + ";";
@@ -178,7 +173,7 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
   std::string s;
-  node::visit(expr, dump.vistor, &s, nullptr);
+  node::visit(expr, dump, &s, nullptr);
   std::cout << s << "\n";
   REQUIRE(s == "2;3;4;");
 
