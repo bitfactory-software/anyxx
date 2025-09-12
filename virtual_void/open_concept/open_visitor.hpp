@@ -63,7 +63,7 @@ class visitor : public visitor_methods<INTERFACE_NAME> {
   void operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
                   visit<INTERFACE_NAME> const& visit, OUT& out,
                   IN const& in = {}) const {
-    visit(m, *this, &out, in);
+    visit(m, *this, &out, &in);
   }
   template <typename CLASS>
   auto operator()(CLASS const* p, visit<INTERFACE_NAME> const& visit, OUT& out,

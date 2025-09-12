@@ -117,75 +117,56 @@ open_concept::visit<node::interface> visit_center_first;
 }  // namespace node
 
 namespace {
-inline void visit_left_right(auto expr, auto const& visit, auto out, auto in) {
+auto visit_center = [](auto expr, auto const& visit, auto out, auto in) {
+  visit.center(expr, out, in);
+};
+auto visit_left_right = [](auto expr, auto const& visit, auto out, auto in) {
   visit.head(expr, out, in);
   node::visit_left_first(expr->left, visit, out, in);
   visit.center(expr, out, in);
   node::visit_left_first(expr->right, visit, out, in);
   visit.tail(expr, out, in);
-}
-}  // namespace
-auto __ = node::visit_left_first.define<Plus>(
-    [](auto expr, auto const& visit, auto out, auto in) {
-      visit_left_right(expr, visit, out, in);
-    });
-auto __ = node::visit_left_first.define<Times>(
-    [](auto expr, auto const& visit, auto out, auto in) {
-      visit_left_right(expr, visit, out, in);
-    });
-auto __ = node::visit_left_first.define<Integer>(
-    [](Integer const* expr, auto const& visit, auto out, auto in) {
-      visit.center(expr, out, in);
-    });
-
-namespace {
-inline void visit_right_left(auto expr, auto const& visit, auto out, auto in) {
+};
+auto visit_right_left = [](auto expr, auto const& visit, auto out, auto in) {
   visit.tail(expr, out, in);
   node::visit_right_first(expr->right, visit, out, in);
   visit.center(expr, out, in);
   node::visit_right_first(expr->left, visit, out, in);
   visit.head(expr, out, in);
-}
-}  // namespace
-auto __ = node::visit_right_first.define<Plus>(
-    [](auto expr, auto const& visit, auto out, auto in) {
-      visit_right_left(expr, visit, out, in);
-    });
-auto __ = node::visit_right_first.define<Times>(
-    [](auto expr, auto const& visit, auto out, auto in) {
-      visit_right_left(expr, visit, out, in);
-    });
-auto __ = node::visit_right_first.define<Integer>(
-    [](Integer const* expr, auto const& visit, auto out, auto in) {
-      visit.center(expr, out, in);
-    });
-
-namespace {
-inline void visit_center_left_right(auto expr, auto const& visit, auto out, auto in) {
+};
+auto visit_center_left_right = [](auto expr, auto const& visit, auto out,
+                                  auto in) {
   visit.center(expr, out, in);
   visit.head(expr, out, in);
   node::visit_center_first(expr->left, visit, out, in);
   node::visit_center_first(expr->right, visit, out, in);
   visit.tail(expr, out, in);
-}
+};
 }  // namespace
-auto __ = node::visit_center_first.define<Plus>(
-    [](auto expr, auto const& visit, auto out, auto in) {
-      visit_center_left_right(expr, visit, out, in);
-    });
-auto __ = node::visit_center_first.define<Times>(
-    [](auto expr, auto const& visit, auto out, auto in) {
-      visit_center_left_right(expr, visit, out, in);
-    });
-auto __ = node::visit_center_first.define<Integer>(
-    [](Integer const* expr, auto const& visit, auto out, auto in) {
-      visit.center(expr, out, in);
-    });
+auto __ = node::visit_left_first.define<Plus>(visit_left_right);
+auto __ = node::visit_left_first.define<Times>(visit_left_right);
+auto __ = node::visit_left_first.define<Integer>(visit_center);
 
-open_concept::visitor<node::interface, std::string, nullptr_t> dump;
+auto __ = node::visit_right_first.define<Plus>(visit_right_left);
+auto __ = node::visit_right_first.define<Times>(visit_right_left);
+auto __ = node::visit_right_first.define<Integer>(visit_center);
+
+auto __ = node::visit_center_first.define<Plus>(visit_center_left_right);
+auto __ = node::visit_center_first.define<Times>(visit_center_left_right);
+auto __ = node::visit_center_first.define<Integer>(visit_center);
+
+open_concept::visitor<node::interface, std::string, char> dump;
+auto __ = dump.define_center<Times>(
+    [](auto expr, auto& out, auto const& l) { out += "*"; });
+auto __ = dump.define_head<Plus>(
+    [](auto expr, auto& out, auto const& l) { out += " "; });
+auto __ = dump.define_center<Plus>(
+    [](auto expr, auto& out, auto const& l) { out += "+"; });
+auto __ = dump.define_tail<Plus>(
+    [](auto expr, auto& out, auto const& l) { out += " "; });
 auto __ = dump.define_center<Integer>(
-    [](Integer const* expr, std::string& out, nullptr_t const&) {
-      out += std::to_string(expr->value) + ";";
+    [](auto expr, auto& out, auto const&) {
+      out += std::to_string(expr->value) + " ";
     });
 
 // node::visitor dump_as_lisp;
@@ -218,10 +199,24 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
 
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
 
-  std::string s;
-  dump(expr, node::visit_left_first, s);
-  std::cout << s << "\n";
-  REQUIRE(s == "2;3;4;");
+  {
+    std::string s;
+    dump(expr, node::visit_left_first, s, 'l');
+    std::cout << s << "\n";
+    CHECK(s == "2 * 3 +4  ");
+  }
+  {
+    std::string s;
+    dump(expr, node::visit_center_first, s, 'f');
+    std::cout << s << "\n";
+    CHECK(s == "*2 + 3 4  ");
+  }
+  {
+    std::string s;
+    dump(expr, node::visit_right_first, s, ' ');
+    std::cout << s << "\n";
+    CHECK(s == " 4 +3  *2 ");
+  }
 
 #ifndef _DEBUG
   BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
