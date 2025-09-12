@@ -25,9 +25,10 @@ struct visitor {
 };
 
 template <typename INTERFACE_NAME>
-using visit = extension_method<INTERFACE_NAME,
-                 void(virtual_void::const_, visitor<INTERFACE_NAME> const&,
-                      visitor_out_param, visitor_in_param const&)>;
+using visit =
+    extension_method<INTERFACE_NAME,
+                     void(virtual_void::const_, visitor<INTERFACE_NAME> const&,
+                          visitor_out_param, visitor_in_param const&)>;
 
 template <typename INTERFACE_NAME, typename OUT, typename IN>
 class typed_visitor : public visitor<INTERFACE_NAME> {
@@ -61,6 +62,19 @@ class typed_visitor : public visitor<INTERFACE_NAME> {
   auto define_tail(this auto& self,
                    typed_implementation_function_type<CLASS> f) {
     return self.define_<CLASS>(self.tail, f);
+  }
+
+  template <is_virtual_void VIRTUAL_VOID>
+  void operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
+                  visit<INTERFACE_NAME> const& visit, OUT& out,
+                  IN const& in = {}) const {
+    visit(m, *this, &out, in);
+  }
+  template <typename CLASS>
+  auto operator()(CLASS const* p, visit<INTERFACE_NAME> const& visit, OUT& out,
+                  IN const& in = {}) const {
+    return (*this)(model<INTERFACE_NAME, data::has_no_meta::const_observer>{*p},
+                   out, in);
   }
 };
 
