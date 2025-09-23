@@ -10,7 +10,6 @@
 #include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
-#include <virtual_void/open_method/via_m_table/declare.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 #include <virtual_void/typeid_cast/cast.hpp>
 
@@ -60,22 +59,4 @@ TEST_CASE("typeid_cast_test via_type_info") {
   });
 }
 
-TEST_CASE("typeid_cast_test via_m_table") {
-  using namespace TestDomain;
-  using namespace virtual_void;
-  using namespace virtual_void::open_method;
-
-  using classes = virtual_void::type_list<D, C1, C2>;
-
-  via_m_table::domain m_tableTestDomain;
-  virtual_void::typeid_cast::const_cast_method<via_m_table::declare> m_table_const_cast(m_tableTestDomain);
-  std::cout << typeid(m_table_const_cast).name() << std::endl;
-
-  declare_classes(classes{}, m_tableTestDomain);
-  virtual_void::typeid_cast::fill_const_cast_for(classes{}, m_table_const_cast);
-
-  run_cast_test<classes>(m_table_const_cast, [](auto& top) {
-    return erased<data::has_meta_runtime::const_observer>(top);
-  });
-}
 }  // namespace
