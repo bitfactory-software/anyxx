@@ -3,14 +3,15 @@
 #include <map>
 #include <typeindex>
 #include <vector>
+#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/meta/interface.hpp>
 #include <virtual_void/meta/table.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/interface/base.hpp>
 
 namespace virtual_void::meta {
 
@@ -45,8 +46,8 @@ class type_info {
   using copy_construct_t = auto(const_void) -> data::has_meta_runtime::unique;
   copy_construct_t* copy_construct_;
 
-  table<virtual_void::interface::base_v_table*, nullptr> i_table_;
-  
+  std::vector<virtual_void::interface::base_v_table*> i_table_;
+
  public:
   template <typename CLASS>
   constexpr type_info(std::in_place_type_t<CLASS>)
@@ -57,7 +58,7 @@ class type_info {
               *static_cast<CLASS const*>(from));
         }) {}
 
-  constexpr operator const std::type_info&() const{ return get_type_info(); }
+  constexpr operator const std::type_info&() const { return get_type_info(); }
   constexpr const std::type_info& get_type_info() const { return type_info_; }
   constexpr archetype& get_archetype() const { return archetype_; }
   constexpr int get_archetype_index() const {
@@ -67,6 +68,14 @@ class type_info {
 
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
+
+  virtual_void::interface::base_v_table* get_v_table(std::type_info const& typeid_) {
+    auto& i_table = get_i_table();
+    for (auto v_table : i_table)
+      if (virtual_void::interface::is_derived_from(typeid_, v_table))
+        return v_table;
+   return nullptr;
+ }
 };
 
 template <typename CLASS, bool deep = true>
@@ -162,13 +171,10 @@ struct is_a {
   constexpr is_a() {
     auto& type_info = runtime<meta::type_info, CLASS>();
     auto& i_table = type_info.get_i_table();
-    auto& archetype = type_info.get_archetype();
-    auto i_table_idx = archetype_index_in_v_table<V_TABLE>(archetype);
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
-    i_table.register_target(i_table_idx, v_table_ptr);
+    i_table.push_back(v_table_ptr);
   }
 };
 
 }  // namespace virtual_void::meta
-

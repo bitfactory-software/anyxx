@@ -44,7 +44,7 @@ VV_INTERFACE_META_IMPEMENTATION(shape_base)
 VV_INTERFACE_META_IMPEMENTATION(shape_d_i)
 
 struct circle {
-  double radius;
+  double radius = 10;
   void draw(position p) const {
     std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << std::endl;
   }
@@ -58,7 +58,6 @@ struct circle {
 VV_RUNTIME_STATIC(type_info, circle)
 virtual_void::meta::is_a<circle, shape_d_i_v_table> __;
 
-
 TEST_CASE("class is_a interface") {
   using namespace virtual_void;
   using namespace virtual_void::meta;
@@ -67,18 +66,18 @@ TEST_CASE("class is_a interface") {
   REQUIRE(&meta::runtime<meta::type_info, circle>().get_archetype() ==
           &unspecified);
   auto& shape_d_i_meta = runtime<meta::interface, shape_d_i_v_table>();
-  auto shape_d_i_index = shape_d_i_meta.i_table_index(unspecified);
-  REQUIRE(shape_d_i_index >= 0);
+  auto& circle_i_table = runtime<meta::type_info, circle>().get_i_table();
+  REQUIRE(circle_i_table.size() >= 0);
   static_assert(
       std::same_as<shape_d_i_v_table::v_table_base_t, shape_base_v_table>);
-  auto& shape_base_meta = runtime<meta::interface, shape_base_v_table>();
-  auto shape_base_index = shape_base_meta.i_table_index(unspecified);
-  REQUIRE(shape_base_index == shape_d_i_index);
-  static_assert(
-      std::same_as<shape_base_v_table::v_table_base_t, shape_base1_v_table>);
-  auto& shape_base1_meta = runtime<meta::interface, shape_base1_v_table>();
-  auto shape_base1_index = shape_base1_meta.i_table_index(unspecified);
-  REQUIRE(shape_base1_index == shape_base_index);
+  {
+    circle c{};
+    shape_d_i<data::has_no_meta::mutable_observer> x{c};
+    auto vtable1 = runtime<meta::type_info, circle>().get_v_table(
+        typeid(shape_d_i<data::has_meta_runtime::const_observer>::v_table_t));
+    auto vtable2 = virtual_void::interface::get_v_table(x);
+    REQUIRE(vtable1 == vtable2);
+  }
 }
 
 using shape_vv = shape_i<data::has_meta_runtime::shared_const>;

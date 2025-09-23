@@ -109,6 +109,10 @@ inline auto& get_v_table(base<VIRTUAL_VOID> const& interface) {
   return interface.v_table_;
 }
 
+inline bool is_derived_from(const std::type_info& from,
+                     meta::base_v_table const* base_v_table) {
+  return base_v_table->_is_derived_from(from);
+}
 template <is_virtual_void VV>
 bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
   return get_v_table(interface)->_is_derived_from(from);

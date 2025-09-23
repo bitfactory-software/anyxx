@@ -23,9 +23,6 @@ class interface {
   int register_archetype_at(archetype& archetype, int index) {
     return index_.register_at(archetype, index);
   }
-  int i_table_index(archetype& archetype) {
-    return index_(archetype);
-  }
 };
 
 }  // namespace virtual_void::meta
