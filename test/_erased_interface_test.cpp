@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/meta/interface.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/has_meta_runtime/shared_const.hpp>

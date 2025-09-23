@@ -6,7 +6,6 @@
 #include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/meta/archetype.hpp>
 #include <virtual_void/meta/class.hpp>
-#include <virtual_void/meta/interface.hpp>
 #include <virtual_void/meta/table.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>

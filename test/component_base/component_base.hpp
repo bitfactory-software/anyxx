@@ -1,5 +1,4 @@
 #include <string>
-#include <virtual_void/meta/interface.hpp>
 #include <virtual_void/data/has_meta_runtime/observer.hpp>
 #include <virtual_void/data/has_meta_runtime/shared_const.hpp>
 #include <virtual_void/data/has_meta_runtime/unique.hpp>

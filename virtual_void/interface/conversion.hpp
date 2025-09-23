@@ -7,7 +7,6 @@
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/class.hpp>
-#include <virtual_void/meta/interface.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::interface {
