@@ -18,7 +18,6 @@ class archetype {
   constexpr archetype(std::in_place_type_t<T>) {}
   constexpr int get_archetype_index() { return index_; }
   int interface_count_ = 0;
-  int open_method_count_ = 0;
 };
 
 struct archetype_unspecified {};
