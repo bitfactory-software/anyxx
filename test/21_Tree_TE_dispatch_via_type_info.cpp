@@ -100,9 +100,8 @@ auto __ = as_lisp.define<Integer>(
 // -----------------------------------------------------------------------------
 
 TEST_CASE("21_Tree_TE_dispatch_via_type_info") {
-  // build_m_tables( tree_domain ); no v_tabls, dispatch via
-  // typeindex(type_info)->"define" function
-  open_method::via_type_info::seal_for_runtime(tree_open_methods);
+  
+    open_method::via_type_info::seal_for_runtime(tree_open_methods);
 
   using std::make_shared;
 

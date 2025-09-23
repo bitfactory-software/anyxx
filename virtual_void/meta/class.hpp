@@ -46,8 +46,7 @@ class type_info {
   copy_construct_t* copy_construct_;
 
   table<virtual_void::interface::base_v_table*, nullptr> i_table_;
-  table<void (*)(), nullptr> m_table_;
-
+  
  public:
   template <typename CLASS>
   constexpr type_info(std::in_place_type_t<CLASS>)
@@ -67,9 +66,7 @@ class type_info {
   auto copy_construct(const_void from) { return copy_construct_(from); }
 
   auto& get_i_table() { return i_table_; }
-  auto& get_m_table() { return m_table_; }
   auto& get_i_table() const { return i_table_; }
-  auto& get_m_table() const { return m_table_; }
 };
 
 template <typename CLASS, bool deep = true>
