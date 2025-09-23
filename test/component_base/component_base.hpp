@@ -40,7 +40,3 @@ COMPONENT_BASE_EXPORT virtual_void::data::has_meta_runtime::shared_const sc_X(
 COMPONENT_BASE_EXPORT virtual_void::data::has_meta_runtime::unique u_X(double v);
 
 }  // namespace test::component_base
-
-VV_INTERFACE_META(COMPONENT_BASE_EXPORT, test::component_base::get_value_i)
-VV_INTERFACE_META(COMPONENT_BASE_EXPORT, test::component_base::set_value_i)
-VV_INTERFACE_META(COMPONENT_BASE_EXPORT, test::component_base::to_string_i)

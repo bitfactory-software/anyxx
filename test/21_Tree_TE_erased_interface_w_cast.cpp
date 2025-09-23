@@ -89,10 +89,6 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::node_i)
-VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::lisp_i)
-VV_INTERFACE_META(, _21_Tree_TE_erased_interface_w_cast::value2_i)
-
 VV_RUNTIME_STATIC(type_info, Plus)
 VV_RUNTIME_STATIC(type_info, Times)
 VV_RUNTIME_STATIC(type_info, Integer)
@@ -127,7 +123,3 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   BENCHMARK("21_Tree_TE_dynamic_interface as_lisp") { return as_lisp_(expr); };
 #endif  // !_DEBUG
 }
-
-VV_INTERFACE_META_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::node_i)
-VV_INTERFACE_META_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::lisp_i)
-VV_INTERFACE_META_IMPEMENTATION(_21_Tree_TE_erased_interface_w_cast ::value2_i)

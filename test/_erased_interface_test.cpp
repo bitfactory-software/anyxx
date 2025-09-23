@@ -37,12 +37,6 @@ VV_INTERFACE_(shape_i, shape_base1,
                VV_CONST_METHOD(double, perimeter)))
 }  // namespace
 
-VV_INTERFACE_META(, shape_base1)
-VV_INTERFACE_META(, shape_base)
-VV_INTERFACE_META(, shape_d_i)
-VV_INTERFACE_META_IMPEMENTATION(shape_base1)
-VV_INTERFACE_META_IMPEMENTATION(shape_base)
-VV_INTERFACE_META_IMPEMENTATION(shape_d_i)
 
 struct circle {
   double radius = 10;
@@ -66,7 +60,6 @@ TEST_CASE("class is_a interface") {
   auto& unspecified = runtime<archetype, archetype_unspecified>();
   REQUIRE(&meta::runtime<meta::type_info, circle>().get_archetype() ==
           &unspecified);
-  auto& shape_d_i_meta = runtime<meta::interface, shape_d_i_v_table>();
   auto& circle_i_table = runtime<meta::type_info, circle>().get_i_table();
   REQUIRE(circle_i_table.size() >= 0);
   static_assert(
