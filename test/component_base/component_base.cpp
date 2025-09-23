@@ -27,10 +27,6 @@ static X x{3.14};
 
 using namespace test::component_base;
 
-namespace archetype {
-    struct A{};
-}
-
 template <>
 struct virtual_void::meta::class_<X> {};
 
