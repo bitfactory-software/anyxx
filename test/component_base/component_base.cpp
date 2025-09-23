@@ -31,10 +31,8 @@ namespace archetype {
     struct A{};
 }
 
-VV_RUNTIME_STATIC(archetype, ::archetype::A)
-
 template <>
-struct virtual_void::meta::class_<X> : models<::archetype::A> {};
+struct virtual_void::meta::class_<X> {};
 
 VV_RUNTIME_STATIC(type_info, X)
 

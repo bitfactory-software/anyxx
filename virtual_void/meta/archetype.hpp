@@ -6,22 +6,22 @@
 
 namespace virtual_void::meta {
 
-VV_EXPORT int next_archetype_index_value();
-
-class archetype {
-  const int index_ = next_archetype_index_value();
-
- public:
-  archetype() = delete;
-  archetype(const archetype&) = delete;
-  template <typename T>
-  constexpr archetype(std::in_place_type_t<T>) {}
-  constexpr int get_archetype_index() { return index_; }
-  int interface_count_ = 0;
-};
-
-struct archetype_unspecified {};
-template <>
-VV_EXPORT archetype& runtime<archetype, archetype_unspecified>();
+//VV_EXPORT int next_archetype_index_value();
+//
+//class archetype {
+//  const int index_ = next_archetype_index_value();
+//
+// public:
+//  archetype() = delete;
+//  archetype(const archetype&) = delete;
+//  template <typename T>
+//  constexpr archetype(std::in_place_type_t<T>) {}
+//  constexpr int get_archetype_index() { return index_; }
+//  int interface_count_ = 0;
+//};
+//
+//struct archetype_unspecified {};
+//template <>
+//VV_EXPORT archetype& runtime<archetype, archetype_unspecified>();
 
 }  // namespace virtual_void::meta

@@ -14,18 +14,8 @@
 
 namespace virtual_void::meta {
 
-template <typename ARCHETYPE>
-struct models {
-  using archetype = ARCHETYPE;
-};
-
-struct models_no_archetype : models<archetype_unspecified> {};
-
 template <typename CLASS>
-struct class_ : models_no_archetype {};
-
-template <typename CLASS>
-using archetype_for_class = class_<CLASS>::archetype;
+struct class_{};
 
 struct base {
   using bases_ = type_list<>;
@@ -41,7 +31,6 @@ concept is_registered_class =
 
 class type_info {
   const std::type_info& type_info_;
-  archetype& archetype_;
   using copy_construct_t = auto(const_void) -> data::has_meta_runtime::unique;
   copy_construct_t* copy_construct_;
 
@@ -51,7 +40,6 @@ class type_info {
   template <typename CLASS>
   constexpr type_info(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()),
-        archetype_(runtime<archetype, archetype_for_class<CLASS>>()),
         copy_construct_(+[](const_void from) {
           return erased<data::has_meta_runtime::unique>(
               *static_cast<CLASS const*>(from));
@@ -59,10 +47,6 @@ class type_info {
 
   constexpr operator const std::type_info&() const { return get_type_info(); }
   constexpr const std::type_info& get_type_info() const { return type_info_; }
-  constexpr archetype& get_archetype() const { return archetype_; }
-  constexpr int get_archetype_index() const {
-    return get_archetype().get_archetype_index();
-  }
   auto copy_construct(const_void from) { return copy_construct_(from); }
 
   auto& get_i_table() { return i_table_; }

@@ -56,9 +56,6 @@ TEST_CASE("class is_a interface") {
   using namespace virtual_void;
   using namespace virtual_void::meta;
 
-  auto& unspecified = runtime<archetype, archetype_unspecified>();
-  REQUIRE(&meta::runtime<meta::type_info, circle>().get_archetype() ==
-          &unspecified);
   auto& circle_i_table = runtime<meta::type_info, circle>().get_i_table();
   REQUIRE(circle_i_table.size() >= 0);
   static_assert(
