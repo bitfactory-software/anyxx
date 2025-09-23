@@ -149,23 +149,6 @@ inline constexpr void visit_hierarchy(
   visit_bases(found->second.bases, classes_with_bases, visitor);
 }
 
-template <typename V_TABLE>
-int archetype_index_in_v_table(archetype& archetype);
-template <>
-inline int archetype_index_in_v_table<base_v_table>(archetype& archetype) {
-  return -1;
-}
-template <typename V_TABLE>
-int archetype_index_in_v_table(archetype& archetype) {
-  using base_t = V_TABLE::v_table_base_t;
-  auto index = archetype_index_in_v_table<base_t>(archetype);
-  auto& interface_meta = runtime<meta::interface, V_TABLE>();
-  if (index < 0)
-    return interface_meta.register_archetype(archetype);
-  else
-    return interface_meta.register_archetype_at(archetype, index);
-}
-
 template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {

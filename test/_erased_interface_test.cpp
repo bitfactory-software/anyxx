@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <virtual_void/meta/interface.hpp>
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/has_meta_runtime/shared_const.hpp>
 #include <virtual_void/data/has_meta_runtime/unique.hpp>
@@ -10,7 +12,6 @@
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/meta/i_table.hpp>
 
 using namespace Catch::Matchers;
 

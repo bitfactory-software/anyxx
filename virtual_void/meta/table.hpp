@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <vector>
 #include <virtual_void/meta/forward.hpp>
 
 namespace virtual_void::meta {

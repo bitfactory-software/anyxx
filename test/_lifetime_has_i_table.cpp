@@ -10,7 +10,6 @@
 #include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/meta/i_table.hpp>
 
 #include "a.hpp"
 

@@ -4,7 +4,6 @@
 
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/class.hpp>
-#include <virtual_void/meta/i_table.hpp>
 
 using namespace test::component_base;
 
