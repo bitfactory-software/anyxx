@@ -61,12 +61,7 @@ concept is_virtual_typed = requires(E e) {
   typename E::void_t;
   typename E::erased_data_t;
   typename E::trait_t;
-  //  typename E::make_erased;
-  // typename E::trait_t;
   { E::is_const } -> std::convertible_to<bool>;
-  //  { E::make_erased()(i) } -> base_of<E>;
-  //	{ get_data(e.data_) } -> std::convertible_to<typename E::void_t>;
-  //  { e.meta()->type_info() } -> std::convertible_to<std::type_info const*>;
 };
 
 struct mutable_ {};
