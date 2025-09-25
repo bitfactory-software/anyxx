@@ -93,6 +93,10 @@ VV_RUNTIME_STATIC(type_info, Plus)
 VV_RUNTIME_STATIC(type_info, Times)
 VV_RUNTIME_STATIC(type_info, Integer)
 
+is_a<Plus, node_i_v_table> __;
+is_a<Times, node_i_v_table> __;
+is_a<Integer, node_i_v_table> __;
+
 is_a<Plus, lisp_i_v_table> __;
 is_a<Times, lisp_i_v_table> __;
 is_a<Integer, lisp_i_v_table> __;

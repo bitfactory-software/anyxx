@@ -4,17 +4,16 @@
 #include <typeindex>
 #include <vector>
 #include <virtual_void/data/has_meta_runtime/unique.hpp>
-#include <virtual_void/meta/class.hpp>
 #include <virtual_void/meta/table.hpp>
+#include <virtual_void/interface/base.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
-#include <virtual_void/interface/base.hpp>
 
 namespace virtual_void::meta {
 
 template <typename CLASS>
-struct class_{};
+struct class_ {};
 
 struct base {
   using bases_ = type_list<>;
@@ -38,8 +37,7 @@ class type_info {
  public:
   template <typename CLASS>
   constexpr type_info(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()),
-        copy_construct_(+[](const_void from) {
+      : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
           return erased<data::has_meta_runtime::unique>(
               *static_cast<CLASS const*>(from));
         }) {}
@@ -51,13 +49,18 @@ class type_info {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  virtual_void::interface::base_v_table* get_v_table(std::type_info const& typeid_) {
+  virtual_void::interface::base_v_table* get_v_table(
+      std::type_info const& typeid_) {
     auto& i_table = get_i_table();
     for (auto v_table : i_table)
       if (virtual_void::interface::is_derived_from(typeid_, v_table))
         return v_table;
-   return nullptr;
- }
+    return nullptr;
+  }
+  void register_v_table(virtual_void::interface::base_v_table* v_table) {
+    v_table->type_info = this;;
+    i_table_.push_back(v_table);
+  }
 };
 
 template <typename CLASS, bool deep = true>
@@ -135,11 +138,9 @@ template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
     auto& type_info = runtime<meta::type_info, CLASS>();
-    auto& i_table = type_info.get_i_table();
     using uneraser = static_cast_uneraser<CLASS>;
     auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
-    i_table.push_back(v_table_ptr);
-  }
+    type_info.register_v_table(v_table_ptr);
+  };
 };
-
 }  // namespace virtual_void::meta

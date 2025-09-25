@@ -6,10 +6,13 @@
 
 namespace virtual_void::meta {
 
+class type_info;
+
 struct base_v_table {
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(base_v_table) == from;
   }
+  meta::type_info* type_info = nullptr;
   bool (*_is_derived_from)(const std::type_info&);
   base_v_table(auto unused)
       : _is_derived_from([](const std::type_info& from) {
