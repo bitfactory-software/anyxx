@@ -36,19 +36,19 @@ implemented_operator_v_table() {
   return &v_table;
 }
 
-template <typename TARGET, is_virtual_void VIRTUAL_VOID,
+template <typename TARGET, is_virtual_void ERASED_DATA,
           template <typename> typename BASE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_;
-template <typename TARGET, is_virtual_void VIRTUAL_VOID,
+template <typename TARGET, is_virtual_void ERASED_DATA,
           template <typename> typename BASE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
-struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
-    : BASE<VIRTUAL_VOID> {
+struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
+    : BASE<ERASED_DATA> {
  public:
-  using virtual_void_t = VIRTUAL_VOID;
-  using void_t = typename erased_data_trait<VIRTUAL_VOID>::void_t;
-  using base_t = BASE<VIRTUAL_VOID>;
+  using virtual_void_t = ERASED_DATA;
+  using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
+  using base_t = BASE<ERASED_DATA>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =
       operator_v_table<TARGET, v_table_base_t, CONSTNESS, RET, ARGS...>;
@@ -63,10 +63,10 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
       : base_t(std::move(virtual_void), v_table) {}
   template <typename CONSTRUCTED_WITH>
   operator_(CONSTRUCTED_WITH&& v)
-    requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
+    requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     v_table_ =
-        implemented_operator_v_table<unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>,
+        implemented_operator_v_table<unerased_type<ERASED_DATA, CONSTRUCTED_WITH>,
                                      TARGET, v_table_base_t, CONSTNESS, RET,
                                      ARGS...>();
   }

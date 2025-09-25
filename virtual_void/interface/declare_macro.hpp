@@ -201,10 +201,10 @@
   };                                                                           \
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
-      _add_head((VIRTUAL_VOID), t))>                                           \
-  struct n : BASE<VIRTUAL_VOID> {                                              \
-    using virtual_void_t = VIRTUAL_VOID;                                       \
-    using base_t = BASE<VIRTUAL_VOID>;                                         \
+      _add_head((ERASED_DATA), t))>                                           \
+  struct n : BASE<ERASED_DATA> {                                              \
+    using virtual_void_t = ERASED_DATA;                                       \
+    using base_t = BASE<ERASED_DATA>;                                         \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
@@ -223,10 +223,10 @@
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
-                                                           VIRTUAL_VOID>       \
+                                                           ERASED_DATA>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = v_table_imlpementation<                                       \
-          unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>>();                    \
+          unerased_type<ERASED_DATA, CONSTRUCTED_WITH>>();                    \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \

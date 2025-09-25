@@ -13,15 +13,15 @@ struct call_operator_target {
   }
 };
 
-template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
+template <is_virtual_void ERASED_DATA, template <typename> typename BASE,
           is_constness CONSTNESS, typename RET, typename... ARGS>
 struct call_operator_;
-template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
+template <is_virtual_void ERASED_DATA, template <typename> typename BASE,
           is_constness CONSTNESS, typename RET, typename... ARGS>
-struct call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
-    : operator_<call_operator_target, VIRTUAL_VOID, BASE, CONSTNESS,
+struct call_operator_<ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
+    : operator_<call_operator_target, ERASED_DATA, BASE, CONSTNESS,
                 RET(ARGS...)> {
-  using operator_t = operator_<call_operator_target, VIRTUAL_VOID,
+  using operator_t = operator_<call_operator_target, ERASED_DATA,
                                BASE, CONSTNESS, RET(ARGS...)>;
 
   using operator_t::operator_t;
@@ -29,16 +29,16 @@ struct call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
   using operator_t::operator();
   RET operator()(ARGS&&... args) const
     requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
-                                            VIRTUAL_VOID>)
+                                            ERASED_DATA>)
   {
     return operator_t::invoke(std::forward<ARGS>(args)...);
   }
 };
 
-template <is_virtual_void VIRTUAL_VOID, typename SIG,
+template <is_virtual_void ERASED_DATA, typename SIG,
           is_constness CONSTNESS = const_,
           template <typename> typename BASE = base>
-using call_operator = call_operator_<VIRTUAL_VOID, BASE, CONSTNESS, SIG>;
+using call_operator = call_operator_<ERASED_DATA, BASE, CONSTNESS, SIG>;
 
 template <class...>
 struct make_overloaded_call_operator;

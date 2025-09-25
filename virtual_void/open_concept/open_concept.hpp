@@ -26,12 +26,12 @@ v_table_t& v_table_instance() {
   return v_table;
 }
 
-template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
+template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
 class model {
  public:
-  using virtual_void_t = VIRTUAL_VOID;
-  using void_t = typename erased_data_trait<VIRTUAL_VOID>::void_t;
-  using base_t = model<INTERFACE_NAME, VIRTUAL_VOID>;
+  using virtual_void_t = ERASED_DATA;
+  using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
+  using base_t = model<INTERFACE_NAME, ERASED_DATA>;
 
  protected:
   virtual_void_t virtual_void_ = {};
@@ -43,7 +43,7 @@ class model {
       : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   model(CONSTRUCTED_WITH&& constructed_with)
-    requires erased_constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID, base_t>
+    requires erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA, base_t>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
@@ -51,7 +51,7 @@ class model {
   }
   template <typename CONSTRUCTED_WITH>
   model(CONSTRUCTED_WITH const* constructed_with)
-    requires erased_constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID, base_t>
+    requires erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA, base_t>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH const&>(*constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
@@ -62,16 +62,16 @@ class model {
       : model(*vt) {}
   template <typename OTHER>
   model(OTHER const& other)
-    requires(std::derived_from<OTHER, model<VIRTUAL_VOID>>)
+    requires(std::derived_from<OTHER, model<ERASED_DATA>>)
       : virtual_void_(get_virtual_void(other)), v_table_(get_v_table(other)) {}
   template <typename OTHER>
   model(OTHER&& other)
-    requires(std::derived_from<OTHER, model<VIRTUAL_VOID>>)
+    requires(std::derived_from<OTHER, model<ERASED_DATA>>)
       : virtual_void_(std::move(other.virtual_void_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   model& operator=(OTHER&& other)
-    requires(std::derived_from<OTHER, model<VIRTUAL_VOID>>)
+    requires(std::derived_from<OTHER, model<ERASED_DATA>>)
   {
     virtual_void_ = std::move(other.virtual_void_);
     v_table_ = get_v_table(other);
@@ -87,34 +87,34 @@ class model {
   template <typename INTERFACE_NAME, typename R, typename... ARGS>
   friend class extension_method;
 
-  template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
+  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
   friend inline auto& get_virtual_void(
-      model<INTERFACE_NAME, VIRTUAL_VOID> const& interface);
-  template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
+      model<INTERFACE_NAME, ERASED_DATA> const& interface);
+  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
   friend inline auto move_virtual_void(
-      model<INTERFACE_NAME, VIRTUAL_VOID>&& interface);
-  template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
+      model<INTERFACE_NAME, ERASED_DATA>&& interface);
+  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
   friend inline auto get_interface_data(
-      model<INTERFACE_NAME, VIRTUAL_VOID> const& interface);
-  template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
+      model<INTERFACE_NAME, ERASED_DATA> const& interface);
+  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
   friend inline auto& get_v_table(
-      model<INTERFACE_NAME, VIRTUAL_VOID> const& interface);
+      model<INTERFACE_NAME, ERASED_DATA> const& interface);
 };
 
-template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
-auto& get_virtual_void(model<INTERFACE_NAME, VIRTUAL_VOID> const& m) {
+template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+auto& get_virtual_void(model<INTERFACE_NAME, ERASED_DATA> const& m) {
   return m.virtual_void_;
 }
-template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
-auto move_virtual_void(model<INTERFACE_NAME, VIRTUAL_VOID>&& m) {
+template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+auto move_virtual_void(model<INTERFACE_NAME, ERASED_DATA>&& m) {
   return std::move(m.virtual_void_);
 }
-template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
-auto get_interface_data(model<INTERFACE_NAME, VIRTUAL_VOID> const& m) {
+template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+auto get_interface_data(model<INTERFACE_NAME, ERASED_DATA> const& m) {
   return get_data(get_virtual_void(m));
 }
-template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
-inline auto& get_v_table(model<INTERFACE_NAME, VIRTUAL_VOID> const& m) {
+template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+inline auto& get_v_table(model<INTERFACE_NAME, ERASED_DATA> const& m) {
   return *m.v_table_;
 }
 
@@ -149,8 +149,8 @@ class extension_method<INTERFACE_NAME, R(ARGS...)> {
   extension_method(extension_method const&) = delete;
   extension_method(erased_function_t f = make_default_noop())
       : default_(f) {}
-  template <is_virtual_void VIRTUAL_VOID, typename... OTHER_ARGS>
-  auto operator()(model<INTERFACE_NAME, VIRTUAL_VOID> const& m,
+  template <is_virtual_void ERASED_DATA, typename... OTHER_ARGS>
+  auto operator()(model<INTERFACE_NAME, ERASED_DATA> const& m,
                   OTHER_ARGS&&... args) const {
     if (m.v_table_->size() <= index)
       return default_(nullptr, std::forward<OTHER_ARGS>(args)...);

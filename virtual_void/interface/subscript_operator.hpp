@@ -12,32 +12,32 @@ struct subscript_operator_target {
   auto operator()(auto self, ARG arg) const -> RET { return (*self)[arg]; }
 };
 
-template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
+template <is_virtual_void ERASED_DATA, template <typename> typename BASE,
           is_constness CONSTNESS, typename RET, typename... ARGS>
 struct subscript_operator_;
-template <is_virtual_void VIRTUAL_VOID, template <typename> typename BASE,
+template <is_virtual_void ERASED_DATA, template <typename> typename BASE,
           is_constness CONSTNESS, typename RET, typename... ARGS>
-struct subscript_operator_<VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
-    : operator_<subscript_operator_target<RET, ARGS...>, VIRTUAL_VOID, BASE,
+struct subscript_operator_<ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
+    : operator_<subscript_operator_target<RET, ARGS...>, ERASED_DATA, BASE,
                 CONSTNESS, RET(ARGS...)> {
   using operator_t = operator_<subscript_operator_target<RET, ARGS...>,
-                               VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>;
+                               ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>;
   using operator_t::operator_t;
   using operator_t::operator[];
 
   RET operator[](first_t<ARGS...> arg) const
     requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
-                                            VIRTUAL_VOID>)
+                                            ERASED_DATA>)
   {
     return operator_t::invoke(first_t<ARGS...>(arg));
   }
 };
 
-template <is_virtual_void VIRTUAL_VOID, typename SIG,
+template <is_virtual_void ERASED_DATA, typename SIG,
           is_constness CONSTNESS = const_,
           template <typename> typename BASE = base>
 using subscript_operator =
-    subscript_operator_<VIRTUAL_VOID, BASE, CONSTNESS, SIG>;
+    subscript_operator_<ERASED_DATA, BASE, CONSTNESS, SIG>;
 
 template <class...>
 struct make_overloaded_subscript_operator;
