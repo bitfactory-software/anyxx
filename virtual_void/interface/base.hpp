@@ -156,10 +156,4 @@ std::optional<TO> v_table_cast(const FROM& from)
   return {};
 }
 
-template <typename TO, typename FROM>
-TO interface_lifetime_cast(const FROM& from) {
-  return TO(lifetime_cast<typename TO::erased_data_t>(*from),
-            pure_v_table_cast<TO>(from.get_v_table()));
-}
-
 }  // namespace virtual_void::interface
