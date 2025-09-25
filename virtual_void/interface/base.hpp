@@ -32,17 +32,17 @@ class base {
   using v_table_t = meta::base_v_table;
 
  protected:
-  erased_data_t virtual_void_ = {};
+  erased_data_t erased_data_ = {};
   v_table_t* v_table_ = nullptr;
 
  public:
   base() = default;
   base(erased_data_t virtual_void, v_table_t* v_table)
-      : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
+      : erased_data_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   base(CONSTRUCTED_WITH&& constructed_with)
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
-      : virtual_void_(erased<erased_data_t>(
+      : erased_data_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     using t = unerased_type<ERASED_DATA, CONSTRUCTED_WITH>;
     v_table_ = meta::base_v_table_imlpementation<t>();
@@ -52,27 +52,27 @@ class base {
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
-      : virtual_void_(data::copy_convert_to<ERASED_DATA>(other.virtual_void_)),
+      : erased_data_(data::copy_convert_to<ERASED_DATA>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base(OTHER&& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
-      : virtual_void_(data::move_convert_to<ERASED_DATA>(
-            std::move(other.virtual_void_))),
+      : erased_data_(data::move_convert_to<ERASED_DATA>(
+            std::move(other.erased_data_))),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base& operator=(OTHER&& other)
     requires(std::derived_from<OTHER::v_table_t, v_table_t>)
   {
-    virtual_void_ =
-        data::move_convert_to<ERASED_DATA>(std::move(other.virtual_void_));
+    erased_data_ =
+        data::move_convert_to<ERASED_DATA>(std::move(other.erased_data_));
     v_table_ = get_v_table(other);
     return *this;
   }
   base(const base&) = default;
   // base(base&) requires(std::is_copy_constructible_v<base>) = default;
   base(base&& rhs) noexcept
-      : virtual_void_(std::move(rhs.virtual_void_)), v_table_(rhs.v_table_) {}
+      : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
   base& operator=(base const& other) = default;
 
   template <is_virtual_void OTHER>
@@ -100,11 +100,11 @@ class base {
 
 template <is_virtual_void ERASED_DATA>
 auto& get_virtual_void(base<ERASED_DATA> const& interface) {
-  return interface.virtual_void_;
+  return interface.erased_data_;
 }
 template <is_virtual_void ERASED_DATA>
 auto move_virtual_void(base<ERASED_DATA>&& interface) {
-  return std::move(interface.virtual_void_);
+  return std::move(interface.erased_data_);
 }
 template <is_virtual_void ERASED_DATA>
 auto get_interface_data(base<ERASED_DATA> const& interface) {
@@ -144,7 +144,7 @@ template <typename TO, typename FROM>
 TO unchecked_v_table_cast(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
-  return TO{std::move(from.virtual_void_),
+  return TO{std::move(from.erased_data_),
             pure_v_table_cast<TO>(from.v_table_)};
 }
 

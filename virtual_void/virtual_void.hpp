@@ -320,7 +320,7 @@ U* unerase_cast(ERASED_DATA const* o)
 
 template <typename V, is_virtual_void ERASED_DATA>
 struct virtual_typed {
-  ERASED_DATA virtual_void_;
+  ERASED_DATA erased_data_;
 
   using erased_data_t = ERASED_DATA;
   using trait_t = erased_data_trait<ERASED_DATA>;
@@ -339,67 +339,67 @@ struct virtual_typed {
   explicit virtual_typed(FROM&& from)
     requires(!std::same_as<std::decay_t<FROM>, virtual_typed> &&
              !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : virtual_void_(trait_t::construct_in_place(std::in_place_type<V>,
+      : erased_data_(trait_t::construct_in_place(std::in_place_type<V>,
                                                   std::forward<FROM>(from))) {
-    check_type_match<V>(virtual_void_);
+    check_type_match<V>(erased_data_);
   }
   template <typename... ARGS>
   virtual_typed(std::in_place_t, ARGS&&... args)
-      : virtual_void_(trait_t::construct_in_place(
+      : erased_data_(trait_t::construct_in_place(
             std::in_place_type<V>, std::forward<ARGS>(args)...)) {
-    check_type_match<V>(virtual_void_);
+    check_type_match<V>(erased_data_);
   }
 
-  explicit virtual_typed(ERASED_DATA data) : virtual_void_(std::move(data)) {}
+  explicit virtual_typed(ERASED_DATA data) : erased_data_(std::move(data)) {}
 
   value_t const& operator*() const {
-    return *unchecked_unerase_cast<value_t const>(virtual_void_);
+    return *unchecked_unerase_cast<value_t const>(erased_data_);
   }
   value_t const* operator->() const {
-    return unchecked_unerase_cast<value_t const>(virtual_void_);
+    return unchecked_unerase_cast<value_t const>(erased_data_);
   }
   value_t const* get() const {
-    return unchecked_unerase_cast<value_t const>(virtual_void_);
+    return unchecked_unerase_cast<value_t const>(erased_data_);
   }
   value_t& operator*() const
     requires !is_const
   {
-    return *unchecked_unerase_cast<value_t>(virtual_void_);
+    return *unchecked_unerase_cast<value_t>(erased_data_);
   }
   value_t* operator->() const
     requires !is_const
   {
-    return unchecked_unerase_cast<value_t>(virtual_void_);
+    return unchecked_unerase_cast<value_t>(erased_data_);
   }
   value_t* get() const
     requires !is_const
   {
-    return unchecked_unerase_cast<value_t>(virtual_void_);
+    return unchecked_unerase_cast<value_t>(erased_data_);
   }
-  explicit operator bool() const { return static_cast<bool>(virtual_void_); }
+  explicit operator bool() const { return static_cast<bool>(erased_data_); }
 };
 
 template <typename V, typename ERASED_DATA>
 bool has_data(virtual_typed<V, ERASED_DATA> const& vv) {
-  return has_data(vv.virtual_void_);
+  return has_data(vv.erased_data_);
 }
 template <typename V, typename ERASED_DATA>
 void const* get_data(virtual_typed<V, ERASED_DATA> const& vv)
   requires std::same_as<void const*,
                         typename erased_data_trait<ERASED_DATA>::void_t>
 {
-  return get_data(vv.virtual_void_);
+  return get_data(vv.erased_data_);
 }
 template <typename V, typename ERASED_DATA>
 void* get_data(virtual_typed<V, ERASED_DATA> const& vv)
   requires std::same_as<void*,
                         typename erased_data_trait<ERASED_DATA>::void_t>
 {
-  return get_data(vv.virtual_void_);
+  return get_data(vv.erased_data_);
 }
 template <typename V, typename ERASED_DATA>
 auto get_meta(virtual_typed<V, ERASED_DATA> const& vv) {
-  return erased_data_trait<ERASED_DATA>::meta(vv.virtual_void_);
+  return erased_data_trait<ERASED_DATA>::meta(vv.erased_data_);
 }
 
 template <typename V, is_virtual_void DATA>
@@ -412,9 +412,9 @@ auto as(virtual_typed<FROM, DATA> source)
   requires std::convertible_to<FROM*, TO*> || std::convertible_to<TO*, FROM*>
 {
   if constexpr (virtual_typed<FROM, DATA>::is_const) {
-    return virtual_typed<TO const, DATA>{std::move(source.virtual_void_)};
+    return virtual_typed<TO const, DATA>{std::move(source.erased_data_)};
   } else {
-    return virtual_typed<TO, DATA>{std::move(source.virtual_void_)};
+    return virtual_typed<TO, DATA>{std::move(source.erased_data_)};
   }
 }
 

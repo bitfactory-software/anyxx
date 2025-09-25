@@ -34,17 +34,17 @@ class model {
   using base_t = model<INTERFACE_NAME, ERASED_DATA>;
 
  protected:
-  erased_data_t virtual_void_ = {};
+  erased_data_t erased_data_ = {};
   v_table_t* v_table_ = nullptr;
 
  public:
   model() = default;
   model(erased_data_t virtual_void, v_table_t* v_table)
-      : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
+      : erased_data_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   model(CONSTRUCTED_WITH&& constructed_with)
     requires erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA, base_t>
-      : virtual_void_(erased<erased_data_t>(
+      : erased_data_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
                                  std::remove_cvref_t<CONSTRUCTED_WITH>>();
@@ -52,7 +52,7 @@ class model {
   template <typename CONSTRUCTED_WITH>
   model(CONSTRUCTED_WITH const* constructed_with)
     requires erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA, base_t>
-      : virtual_void_(erased<erased_data_t>(
+      : erased_data_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH const&>(*constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
                                  std::remove_cvref_t<CONSTRUCTED_WITH>>();
@@ -63,23 +63,23 @@ class model {
   template <typename OTHER>
   model(OTHER const& other)
     requires(std::derived_from<OTHER, model<ERASED_DATA>>)
-      : virtual_void_(get_virtual_void(other)), v_table_(get_v_table(other)) {}
+      : erased_data_(get_virtual_void(other)), v_table_(get_v_table(other)) {}
   template <typename OTHER>
   model(OTHER&& other)
     requires(std::derived_from<OTHER, model<ERASED_DATA>>)
-      : virtual_void_(std::move(other.virtual_void_)),
+      : erased_data_(std::move(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   model& operator=(OTHER&& other)
     requires(std::derived_from<OTHER, model<ERASED_DATA>>)
   {
-    virtual_void_ = std::move(other.virtual_void_);
+    erased_data_ = std::move(other.erased_data_);
     v_table_ = get_v_table(other);
     return *this;
   }
   model(model const&) = default;
   model(model&& rhs) noexcept
-      : virtual_void_(std::move(rhs.virtual_void_)), v_table_(rhs.v_table_) {}
+      : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
   model& operator=(model const& other) = default;
 
   template <typename INTERFACE_NAME, is_virtual_void OTHER>
@@ -103,11 +103,11 @@ class model {
 
 template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
 auto& get_virtual_void(model<INTERFACE_NAME, ERASED_DATA> const& m) {
-  return m.virtual_void_;
+  return m.erased_data_;
 }
 template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
 auto move_virtual_void(model<INTERFACE_NAME, ERASED_DATA>&& m) {
-  return std::move(m.virtual_void_);
+  return std::move(m.erased_data_);
 }
 template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
 auto get_interface_data(model<INTERFACE_NAME, ERASED_DATA> const& m) {

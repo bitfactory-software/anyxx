@@ -157,7 +157,7 @@
                                                             erased_data_t>) \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
-        virtual_void::get_data(base_t::virtual_void_)                        \
+        virtual_void::get_data(base_t::erased_data_)                        \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
@@ -215,7 +215,7 @@
       return v_table_t::template imlpementation<CONCRETE>();                   \
     }                                                                          \
                                                                                \
-    using base_t::virtual_void_;                                               \
+    using base_t::erased_data_;                                               \
     using base_t::v_table_;                                                    \
                                                                                \
     n(erased_data_t virtual_void, v_table_t* v_table)                         \

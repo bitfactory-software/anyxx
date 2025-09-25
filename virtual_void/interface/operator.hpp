@@ -56,7 +56,7 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
 
  public:
   using base_t::v_table_;
-  using base_t::virtual_void_;
+  using base_t::erased_data_;
 
  public:
   operator_(erased_data_t virtual_void, v_table_t* v_table)
@@ -79,14 +79,14 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
   //            virtual_void::void_t<CONSTNESS>, erased_data_t>)
   //{
   //   return static_cast<v_table_t*>(v_table_)->call_op(
-  //       get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
+  //       get_data(base_t::erased_data_), std::forward<ARGS>(args)...);
   // }
   RET invoke(ARGS&&... args) const
     requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
                                             erased_data_t>)
   {
     return static_cast<v_table_t*>(v_table_)->op(
-        get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
+        get_data(base_t::erased_data_), std::forward<ARGS>(args)...);
   }
   operator_(const operator_&) = default;
   operator_(operator_&) = default;
