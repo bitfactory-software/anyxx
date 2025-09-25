@@ -4,6 +4,8 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
+#include <virtual_void/data/copy_convert.hpp>
+#include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/meta/base_v_table.hpp>
 #include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -42,24 +44,28 @@ class base {
     requires constructibile_for<CONSTRUCTED_WITH, VIRTUAL_VOID>
       : virtual_void_(erased<virtual_void_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    v_table_ = meta::base_v_table_imlpementation();
+    using t = unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>;
+    v_table_ = meta::base_v_table_imlpementation<t>();
   }
   template <typename CONSTRUCTED_WITH>
   base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}
   template <typename OTHER>
   base(const OTHER& other)
-    requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
-      : virtual_void_(get_virtual_void(other)), v_table_(get_v_table(other)) {}
+    requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
+      : virtual_void_(data::copy_convert_to<VIRTUAL_VOID>(other.virtual_void_)),
+        v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base(OTHER&& other)
-    requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
-      : virtual_void_(std::move(other.virtual_void_)),
+    requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
+      : virtual_void_(data::move_convert_to<VIRTUAL_VOID>(
+            std::move(other.virtual_void_))),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base& operator=(OTHER&& other)
-    requires(std::derived_from<OTHER, base<VIRTUAL_VOID>>)
+    requires(std::derived_from<OTHER::v_table_t, v_table_t>)
   {
-    virtual_void_ = std::move(other.virtual_void_);
+    virtual_void_ =
+        data::move_convert_to<VIRTUAL_VOID>(std::move(other.virtual_void_));
     v_table_ = get_v_table(other);
     return *this;
   }
@@ -110,7 +116,7 @@ inline auto& get_v_table(base<VIRTUAL_VOID> const& interface) {
 }
 
 inline bool is_derived_from(const std::type_info& from,
-                     meta::base_v_table const* base_v_table) {
+                            meta::base_v_table const* base_v_table) {
   return base_v_table->_is_derived_from(from);
 }
 template <is_virtual_void VV>

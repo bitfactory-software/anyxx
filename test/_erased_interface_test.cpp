@@ -294,6 +294,13 @@ TEST_CASE("dynamic interface has_type_info::unique") {
   print_shape_i_co(s1);
 }
 
+namespace {
+  struct x_t {
+    std::string s_;
+  };
+}
+VV_RUNTIME_STATIC(type_info, x_t)
+
 TEST_CASE("base") {
   using namespace virtual_void;
   using namespace virtual_void;
@@ -301,9 +308,6 @@ TEST_CASE("base") {
 
   using value_base = interface::base<value>;
 
-  struct x_t {
-    std::string s_;
-  };
   {
     x_t a{"hallo"};
     auto e = erased<value>(a);

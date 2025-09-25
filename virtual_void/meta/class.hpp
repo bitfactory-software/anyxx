@@ -1,11 +1,13 @@
 #pragma once
 
 #include <map>
+#include <ranges>
 #include <typeindex>
 #include <vector>
 #include <virtual_void/data/has_meta_runtime/unique.hpp>
-#include <virtual_void/meta/table.hpp>
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/meta/forward.hpp>
+#include <virtual_void/meta/table.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -32,7 +34,7 @@ class type_info {
   using copy_construct_t = auto(const_void) -> data::has_meta_runtime::unique;
   copy_construct_t* copy_construct_;
 
-  std::vector<virtual_void::interface::base_v_table*> i_table_;
+  std::vector<base_v_table*> i_table_;
 
  public:
   template <typename CLASS>
@@ -58,10 +60,16 @@ class type_info {
     return nullptr;
   }
   void register_v_table(virtual_void::interface::base_v_table* v_table) {
-    v_table->type_info = this;;
-    i_table_.push_back(v_table);
+    v_table->type_info = this;
+    if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
+      i_table_.push_back(v_table);
   }
 };
+
+template <typename CONCRETE>
+base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
+  meta::runtime<meta::type_info, CONCRETE>().register_v_table(this);
+}
 
 template <typename CLASS, bool deep = true>
 constexpr void visit_class(auto visitor) {
@@ -139,7 +147,6 @@ struct is_a {
   constexpr is_a() {
     auto& type_info = runtime<meta::type_info, CLASS>();
     auto v_table_ptr = V_TABLE::template imlpementation<CLASS>();
-    type_info.register_v_table(v_table_ptr);
   };
 };
 }  // namespace virtual_void::meta

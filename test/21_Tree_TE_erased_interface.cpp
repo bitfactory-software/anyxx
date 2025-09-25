@@ -1,17 +1,14 @@
 ﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <catch.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
-
-#include <catch.hpp>
-
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
-#include <virtual_void/interface/base.hpp>
 #include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
 #include <virtual_void/data/make_shared_const_decorated_data.hpp>
-
+#include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 using std::cout;
@@ -22,10 +19,10 @@ using namespace virtual_void::data::has_no_meta;
 
 namespace {
 
-
-VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value),
-                          VV_CONST_METHOD(string, as_forth),
-                          VV_CONST_METHOD(string, as_lisp)))
+VV_INTERFACE(node_i,
+             (VV_CONST_METHOD(int, value),
+              VV_CONST_METHOD(string, as_forth),
+              VV_CONST_METHOD(string, as_lisp)))
 
 // alternative: using node = node_i<shared_const>; less code, but intrusive
 // lifetime management
@@ -66,11 +63,11 @@ struct Integer {
   int int_;
 };
 
-//alternative for node = node_i<shared_const>:
-// template <typename NODE, typename... ARGS>
-// auto make_node(ARGS&&... args) {
-//  return node{NODE(std::forward<ARGS>(args)...)};
-//}
+// alternative for node = node_i<shared_const>:
+//  template <typename NODE, typename... ARGS>
+//  auto make_node(ARGS&&... args) {
+//   return node{NODE(std::forward<ARGS>(args)...)};
+// }
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
@@ -78,6 +75,10 @@ auto make_node(ARGS&&... args) {
 }
 
 }  // namespace
+
+VV_RUNTIME_STATIC(type_info, Plus)
+VV_RUNTIME_STATIC(type_info, Times)
+VV_RUNTIME_STATIC(type_info, Integer)
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace virtual_void;

@@ -5,6 +5,7 @@
 
 namespace virtual_void::meta {
 class i_table;
+struct base_v_table;
 
 constexpr const std::type_info& get_type_info(i_table const&);
 
@@ -21,18 +22,18 @@ class type_info;
 
 }  // namespace virtual_void::meta
 
-#define VV_RUNTIME(export_, runtime_, from_) \
+#define VV_RUNTIME(export_, runtime_, ...) \
   template <>                                \
   export_ virtual_void::meta::runtime_&      \
-  virtual_void::meta::runtime<virtual_void::meta::runtime_, from_>();
+  virtual_void::meta::runtime<virtual_void::meta::runtime_, __VA_ARGS__>();
 
-#define VV_RUNTIME_IMPEMENTATION(runtime_, from_)                      \
+#define VV_RUNTIME_IMPEMENTATION(runtime_, ...)                      \
   template <>                                                          \
   virtual_void::meta::runtime_&                                        \
-  virtual_void::meta::runtime<virtual_void::meta::runtime_, from_>() { \
-    return runtime_implementation<runtime_, from_>();                  \
+  virtual_void::meta::runtime<virtual_void::meta::runtime_, __VA_ARGS__>() { \
+    return runtime_implementation<runtime_, __VA_ARGS__>();                  \
   }
 
-#define VV_RUNTIME_STATIC(runtime_, from_) \
-  VV_RUNTIME(, runtime_, from_)            \
-  VV_RUNTIME_IMPEMENTATION(runtime_, from_)\
+#define VV_RUNTIME_STATIC(runtime_, ...) \
+  VV_RUNTIME(, runtime_, __VA_ARGS__)            \
+  VV_RUNTIME_IMPEMENTATION(runtime_, __VA_ARGS__)\

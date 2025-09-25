@@ -1,6 +1,7 @@
 #pragma once
 
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/utillities/static_init.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
 
@@ -145,8 +146,9 @@
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...) \
   name = [](void const_* _vp __VA_OPT__(                                  \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
-    return v_table_map{}.name(unchecked_unerase_cast<CONCRETE>(_vp)__VA_OPT__(, ) __VA_OPT__( \
-        _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                       \
+    return v_table_map{}.name(                                            \
+        unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, )              \
+            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
   };
 
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                    \
@@ -179,18 +181,21 @@
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
-    template <typename CONCRETE>                              \
-    n##_v_table(std::in_place_type_t<CONCRETE> concrete) : v_table_base_t(concrete) {                \
+    template <typename CONCRETE>                                               \
+    n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
+        : v_table_base_t(concrete) {                                           \
       using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
-          _add_head((CONCRETE), t))>;                           \
+          _add_head((CONCRETE), t))>;                                          \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
+      virtual_void::meta::runtime<virtual_void::meta::type_info, CONCRETE>()   \
+          .register_v_table(this);                                             \
     };                                                                         \
                                                                                \
-    template <typename CONCRETE>                              \
+    template <typename CONCRETE>                                               \
     static auto imlpementation() {                                             \
-      static n##_v_table v_table{std::in_place_type<CONCRETE>};                                  \
+      static n##_v_table v_table{std::in_place_type<CONCRETE>};                \
       return &v_table;                                                         \
     }                                                                          \
   };                                                                           \
@@ -204,9 +209,10 @@
     using v_table_t =                                                          \
         n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
                                                                                \
-    template <typename CONCRETE>                                       \
+    template <typename CONCRETE>                                               \
     static auto v_table_imlpementation() {                                     \
-      return v_table_t::template imlpementation<CONCRETE>();         \
+      static_assert(!is_interface<CONCRETE>);                                  \
+      return v_table_t::template imlpementation<CONCRETE>();                   \
     }                                                                          \
                                                                                \
     using base_t::virtual_void_;                                               \
@@ -219,18 +225,19 @@
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
                                                            VIRTUAL_VOID>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      v_table_ = v_table_imlpementation<unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>>();                   \
+      v_table_ = v_table_imlpementation<                                       \
+          unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>>();                    \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
         : n(*vt) {}                                                            \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
-      requires(std::derived_from<OTHER, base_t>)                               \
+      requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)        \
         : base_t(other) {}                                                     \
     template <typename OTHER>                                                  \
     n(const OTHER&& other)                                                     \
-      requires(std::derived_from<OTHER, base_t>)                               \
+      requires(std::derived_from<OTHER::v_table_t, v_table_t>)                 \
         : base_t(std::move(other)) {}                                          \
                                                                                \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \
@@ -267,4 +274,3 @@
 
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, const, __VA_ARGS__)
-

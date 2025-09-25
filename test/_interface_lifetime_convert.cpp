@@ -13,6 +13,7 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 
+namespace {
 struct X {
   std::string s_;
   std::string to_string() const { return s_; }
@@ -25,6 +26,9 @@ using to_string_co = to_string_i<data::has_no_meta::const_observer>;
 
 using to_string_u = to_string_i<data::has_no_meta::unique>;
 using to_string_mo = to_string_i<data::has_no_meta::mutable_observer>;
+}  // namespace
+
+VV_RUNTIME_STATIC(type_info, X)
 
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{X{"hallo"}};
@@ -44,6 +48,9 @@ TEST_CASE("interface lifetime cast") {
   auto x1 = static_cast<X const *>(get_data(get_virtual_void(sc)));
   REQUIRE(x->s_ == "hallo");
 
+  static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
+  static_assert(
+      std::derived_from<to_string_sc::v_table_t, to_string_co::v_table_t>);
   to_string_co co = sc;
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
@@ -54,7 +61,6 @@ TEST_CASE("interface lifetime cast") {
   REQUIRE(u.to_string() == "hallo");
   to_string_mo mo{u};
   REQUIRE(mo.to_string() == "hallo");
-
 
   to_string_u u1{X{"hallo"}};
   REQUIRE(u1.to_string() == "hallo");

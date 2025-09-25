@@ -418,12 +418,23 @@ auto as(virtual_typed<FROM, DATA> source)
   }
 }
 
+template <typename I>
+concept is_interface_impl = requires(I) {
+  typename I::void_t;
+  typename I::virtual_void_t;
+  typename I::v_table_t;
+};
+
+template <typename I>
+concept is_interface = is_interface_impl<std::decay_t<I>>;
+
 template <typename CONSTRUCTED_WITH, typename VIRTUAL_VOID, typename BASE>
 concept erased_constructibile_for =
     !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, BASE> &&
     !is_virtual_void<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
-     virtual_void_trait<VIRTUAL_VOID>::is_constructibile_from_const);
+     virtual_void_trait<VIRTUAL_VOID>::is_constructibile_from_const) &&
+    !is_interface<CONSTRUCTED_WITH>;
 
 }  // namespace virtual_void

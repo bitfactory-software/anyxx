@@ -54,7 +54,7 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
       operator_v_table<TARGET, v_table_base_t, CONSTNESS, RET, ARGS...>;
   using base_t::operator();
 
- protected:
+ public:
   using base_t::v_table_;
   using base_t::virtual_void_;
 

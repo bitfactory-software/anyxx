@@ -207,6 +207,8 @@ VV_INTERFACE_(text_i_mutable, text_i_const,
               (VV_METHOD(void, set_text, std::string const&)))
 }  // namespace
 
+VV_RUNTIME_STATIC(type_info, text_object)
+
 using const_text_i = text_i_const<data::has_no_meta::const_observer>;
 using const_text_i_mutable = text_i_const<data::has_no_meta::mutable_observer>;
 
