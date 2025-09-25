@@ -45,13 +45,13 @@ concept is_meta = requires(META meta) {
 };
 
 template <class PTR>
-concept has_virtual_void_trait = requires(PTR ptr) {
+concept has_erased_data_trait = requires(PTR ptr) {
   typename erased_data_trait<PTR>::void_t;
   typename erased_data_trait<PTR>::meta_t;
 };
 
 template <class E>
-concept is_virtual_void = has_virtual_void_trait<E>;
+concept is_virtual_void = has_erased_data_trait<E>;
 
 template <is_virtual_void VV>
 using meta_t = typename erased_data_trait<VV>::meta_t;

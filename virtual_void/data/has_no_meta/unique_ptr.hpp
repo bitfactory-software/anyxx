@@ -14,7 +14,7 @@ struct erased_data_trait<data::has_no_meta::unique_ptr>
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_no_meta {
-static_assert(has_virtual_void_trait<unique_ptr>);
+static_assert(has_erased_data_trait<unique_ptr>);
 template <typename T>
 using typed_unique_ptr = virtual_typed<T const, unique_ptr>;
 static_assert(is_virtual_void<unique_ptr>);
