@@ -59,7 +59,7 @@ using meta_t = typename erased_data_trait<VV>::meta_t;
 template <class E>
 concept is_virtual_typed = requires(E e) {
   typename E::void_t;
-  typename E::virtual_void_t;
+  typename E::erased_data_t;
   typename E::trait_t;
   //  typename E::make_erased;
   // typename E::trait_t;
@@ -322,7 +322,7 @@ template <typename V, is_virtual_void ERASED_DATA>
 struct virtual_typed {
   ERASED_DATA virtual_void_;
 
-  using virtual_void_t = ERASED_DATA;
+  using erased_data_t = ERASED_DATA;
   using trait_t = erased_data_trait<ERASED_DATA>;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
@@ -421,7 +421,7 @@ auto as(virtual_typed<FROM, DATA> source)
 template <typename I>
 concept is_interface_impl = requires(I) {
   typename I::void_t;
-  typename I::virtual_void_t;
+  typename I::erased_data_t;
   typename I::v_table_t;
 };
 

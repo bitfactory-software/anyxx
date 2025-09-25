@@ -231,7 +231,7 @@ static_assert(!can_call_set_text<const_text_i const>);
 using mutable_text_i_const = text_i_mutable<data::has_no_meta::const_observer>;
 using mutable_text_i_mutable =
     text_i_mutable<data::has_no_meta::mutable_observer>;
-static_assert(std::same_as<mutable_text_i_mutable::virtual_void_t,
+static_assert(std::same_as<mutable_text_i_mutable::erased_data_t,
                            data::has_no_meta::mutable_observer>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);

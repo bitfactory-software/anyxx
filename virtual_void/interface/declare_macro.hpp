@@ -154,7 +154,7 @@
 #define _detail_INTERFACE_METHOD(type, name, const_, ...)                    \
   type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const     \
     requires(::virtual_void::const_correct_for_virtual_void<void const_*,    \
-                                                            virtual_void_t>) \
+                                                            erased_data_t>) \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
         virtual_void::get_data(base_t::virtual_void_)                        \
@@ -203,7 +203,7 @@
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((ERASED_DATA), t))>                                           \
   struct n : BASE<ERASED_DATA> {                                              \
-    using virtual_void_t = ERASED_DATA;                                       \
+    using erased_data_t = ERASED_DATA;                                       \
     using base_t = BASE<ERASED_DATA>;                                         \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -218,7 +218,7 @@
     using base_t::virtual_void_;                                               \
     using base_t::v_table_;                                                    \
                                                                                \
-    n(virtual_void_t virtual_void, v_table_t* v_table)                         \
+    n(erased_data_t virtual_void, v_table_t* v_table)                         \
         : base_t(std::move(virtual_void), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
@@ -229,7 +229,7 @@
           unerased_type<ERASED_DATA, CONSTRUCTED_WITH>>();                    \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
-    n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \
+    n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, erased_data_t>& vt) \
         : n(*vt) {}                                                            \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \

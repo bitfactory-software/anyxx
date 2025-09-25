@@ -46,7 +46,7 @@ template <typename TARGET, is_virtual_void ERASED_DATA,
 struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<ERASED_DATA> {
  public:
-  using virtual_void_t = ERASED_DATA;
+  using erased_data_t = ERASED_DATA;
   using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
   using base_t = BASE<ERASED_DATA>;
   using v_table_base_t = base_t::v_table_t;
@@ -59,7 +59,7 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
   using base_t::virtual_void_;
 
  public:
-  operator_(virtual_void_t virtual_void, v_table_t* v_table)
+  operator_(erased_data_t virtual_void, v_table_t* v_table)
       : base_t(std::move(virtual_void), v_table) {}
   template <typename CONSTRUCTED_WITH>
   operator_(CONSTRUCTED_WITH&& v)
@@ -76,14 +76,14 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
       : base_t(other) {}
   // RET operator()(ARGS&&... args) const
   //   requires(const_correct_for_virtual_void<
-  //            virtual_void::void_t<CONSTNESS>, virtual_void_t>)
+  //            virtual_void::void_t<CONSTNESS>, erased_data_t>)
   //{
   //   return static_cast<v_table_t*>(v_table_)->call_op(
   //       get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);
   // }
   RET invoke(ARGS&&... args) const
     requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
-                                            virtual_void_t>)
+                                            erased_data_t>)
   {
     return static_cast<v_table_t*>(v_table_)->op(
         get_data(base_t::virtual_void_), std::forward<ARGS>(args)...);

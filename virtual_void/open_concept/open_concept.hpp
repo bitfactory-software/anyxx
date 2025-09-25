@@ -29,22 +29,22 @@ v_table_t& v_table_instance() {
 template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
 class model {
  public:
-  using virtual_void_t = ERASED_DATA;
+  using erased_data_t = ERASED_DATA;
   using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
   using base_t = model<INTERFACE_NAME, ERASED_DATA>;
 
  protected:
-  virtual_void_t virtual_void_ = {};
+  erased_data_t virtual_void_ = {};
   v_table_t* v_table_ = nullptr;
 
  public:
   model() = default;
-  model(virtual_void_t virtual_void, v_table_t* v_table)
+  model(erased_data_t virtual_void, v_table_t* v_table)
       : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   model(CONSTRUCTED_WITH&& constructed_with)
     requires erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA, base_t>
-      : virtual_void_(erased<virtual_void_t>(
+      : virtual_void_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
                                  std::remove_cvref_t<CONSTRUCTED_WITH>>();
@@ -52,13 +52,13 @@ class model {
   template <typename CONSTRUCTED_WITH>
   model(CONSTRUCTED_WITH const* constructed_with)
     requires erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA, base_t>
-      : virtual_void_(erased<virtual_void_t>(
+      : virtual_void_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH const&>(*constructed_with))) {
     v_table_ = &v_table_instance<INTERFACE_NAME,
                                  std::remove_cvref_t<CONSTRUCTED_WITH>>();
   }
   template <typename CONSTRUCTED_WITH>
-  model(virtual_typed<CONSTRUCTED_WITH, virtual_void_t> const& vt)
+  model(virtual_typed<CONSTRUCTED_WITH, erased_data_t> const& vt)
       : model(*vt) {}
   template <typename OTHER>
   model(OTHER const& other)

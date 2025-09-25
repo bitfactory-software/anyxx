@@ -27,28 +27,28 @@ concept constructibile_for =
 template <is_virtual_void ERASED_DATA>
 class base {
  public:
-  using virtual_void_t = ERASED_DATA;
+  using erased_data_t = ERASED_DATA;
   using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
   using v_table_t = meta::base_v_table;
 
  protected:
-  virtual_void_t virtual_void_ = {};
+  erased_data_t virtual_void_ = {};
   v_table_t* v_table_ = nullptr;
 
  public:
   base() = default;
-  base(virtual_void_t virtual_void, v_table_t* v_table)
+  base(erased_data_t virtual_void, v_table_t* v_table)
       : virtual_void_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   base(CONSTRUCTED_WITH&& constructed_with)
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
-      : virtual_void_(erased<virtual_void_t>(
+      : virtual_void_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     using t = unerased_type<ERASED_DATA, CONSTRUCTED_WITH>;
     v_table_ = meta::base_v_table_imlpementation<t>();
   }
   template <typename CONSTRUCTED_WITH>
-  base(const virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) : base(*vt) {}
+  base(const virtual_typed<CONSTRUCTED_WITH, erased_data_t>& vt) : base(*vt) {}
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
@@ -158,7 +158,7 @@ std::optional<TO> v_table_cast(const FROM& from)
 
 template <typename TO, typename FROM>
 TO interface_lifetime_cast(const FROM& from) {
-  return TO(lifetime_cast<typename TO::virtual_void_t>(*from),
+  return TO(lifetime_cast<typename TO::erased_data_t>(*from),
             pure_v_table_cast<TO>(from.get_v_table()));
 }
 
