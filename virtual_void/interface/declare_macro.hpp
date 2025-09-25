@@ -145,7 +145,7 @@
 #define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, const_, ...) \
   name = [](void const_* _vp __VA_OPT__(                                  \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
-    return v_table_map{}.name((UNERASER{}(_vp))__VA_OPT__(, ) __VA_OPT__( \
+    return v_table_map{}.name(unchecked_unerase_cast<CONCRETE>(_vp)__VA_OPT__(, ) __VA_OPT__( \
         _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                       \
   };
 
@@ -179,18 +179,18 @@
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
-    template <virtual_void::is_uneraser UNERASER>                              \
-    n##_v_table(UNERASER unerased) : v_table_base_t(unerased) {                \
+    template <typename CONCRETE>                              \
+    n##_v_table(std::in_place_type_t<CONCRETE> concrete) : v_table_base_t(concrete) {                \
       using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
-          _add_head((typename UNERASER::type), t))>;                           \
+          _add_head((CONCRETE), t))>;                           \
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
     };                                                                         \
                                                                                \
-    template <virtual_void::is_uneraser UNERASER>                              \
+    template <typename CONCRETE>                              \
     static auto imlpementation() {                                             \
-      static n##_v_table v_table{UNERASER{}};                                  \
+      static n##_v_table v_table{std::in_place_type<CONCRETE>};                                  \
       return &v_table;                                                         \
     }                                                                          \
   };                                                                           \
@@ -204,10 +204,9 @@
     using v_table_t =                                                          \
         n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
                                                                                \
-    template <typename CONSTRUCTED_WITH>                                       \
+    template <typename CONCRETE>                                       \
     static auto v_table_imlpementation() {                                     \
-      return v_table_t::template imlpementation<                               \
-          ::virtual_void::uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH>>();         \
+      return v_table_t::template imlpementation<CONCRETE>();         \
     }                                                                          \
                                                                                \
     using base_t::virtual_void_;                                               \
@@ -220,7 +219,7 @@
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
                                                            VIRTUAL_VOID>       \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      v_table_ = v_table_imlpementation<CONSTRUCTED_WITH>();                   \
+      v_table_ = v_table_imlpementation<unerased_type<VIRTUAL_VOID, CONSTRUCTED_WITH>>();                   \
     }                                                                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, virtual_void_t>& vt) \

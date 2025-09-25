@@ -259,16 +259,26 @@ auto get_meta(VIRTUAL_VOID const& vv) {
   return virtual_void_trait<VIRTUAL_VOID>::meta(vv);
 }
 
+template <typename U>
+auto unchecked_unerase_cast(void const* p) {
+  return static_cast<U const*>(p);
+}
+template <typename U>
+auto unchecked_unerase_cast(void* p) {
+  return static_cast<U*>(p);
+}
+
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unchecked_unerase_cast(VIRTUAL_VOID const& o) {
-  return static_cast<U const*>(get_data(o));
+  return unchecked_unerase_cast<U>(get_data(o));
 }
 template <typename U, is_virtual_void VIRTUAL_VOID>
 auto unchecked_unerase_cast(VIRTUAL_VOID const& o)
   requires(!is_const_data<VIRTUAL_VOID>)
 {
-  return static_cast<U*>(get_data(o));
+  return unchecked_unerase_cast<U>(get_data(o));
 }
+
 template <typename U, typename META>
 bool type_match(META const* meta) {
   if (auto type_info = meta->type_info();

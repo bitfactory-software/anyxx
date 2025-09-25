@@ -110,7 +110,7 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
   auto& type_info = virtual_void::meta::runtime<virtual_void::meta::type_info, Times>();
-  REQUIRE(type_info.get_i_table().size() == 2u);
+  REQUIRE(type_info.get_i_table().size() == 3u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));

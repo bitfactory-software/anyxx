@@ -138,8 +138,7 @@ template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
     auto& type_info = runtime<meta::type_info, CLASS>();
-    using uneraser = static_cast_uneraser<CLASS>;
-    auto v_table_ptr = V_TABLE::template imlpementation<uneraser>();
+    auto v_table_ptr = V_TABLE::template imlpementation<CLASS>();
     type_info.register_v_table(v_table_ptr);
   };
 };
