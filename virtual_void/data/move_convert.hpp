@@ -11,12 +11,12 @@
 
 namespace virtual_void::data {
 
-template <is_virtual_void TO, is_virtual_void FROM>
+template <is_erased_data TO, is_erased_data FROM>
 struct move_converter {
   TO operator()(FROM&& from) { return std::move(from); }
 };
 
-template <voidness VOIDNESS, typename META, is_virtual_void FROM>
+template <voidness VOIDNESS, typename META, is_erased_data FROM>
 struct move_converter<observer<VOIDNESS, META>, FROM> {
   auto operator()(auto&&) { static_assert(false, "no move to observer!"); }
 };

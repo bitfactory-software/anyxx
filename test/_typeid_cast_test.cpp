@@ -25,7 +25,7 @@ void run_cast_test(const auto& castMethod, auto make_dispatch_var) {
   virtual_void::meta::visit_classes<CLASSES>(virtual_void::overload{
       [&]<typename TOP> {
         const TOP top;
-        virtual_void::is_virtual_void auto c_typed_void =
+        virtual_void::is_erased_data auto c_typed_void =
             make_dispatch_var(top);
 
         virtual_void::meta::visit_class<TOP>(virtual_void::overload{

@@ -11,17 +11,17 @@
 
 namespace virtual_void::data {
 
-template <is_virtual_void TO, is_virtual_void FROM>
+template <is_erased_data TO, is_erased_data FROM>
 struct copy_converter;
 
-template <is_virtual_void FROM>
+template <is_erased_data FROM>
 struct copy_converter<has_no_meta::const_observer, FROM> {
   auto operator()(const auto& from) {
     return has_no_meta::const_observer{virtual_void::get_data(from),
                                        has_no_meta::meta{}};
   }
 };
-template <is_virtual_void FROM>
+template <is_erased_data FROM>
   requires(!is_const_data<FROM>)
 struct copy_converter<has_no_meta::mutable_observer, FROM> {
   auto operator()(const auto& from) {
@@ -29,7 +29,7 @@ struct copy_converter<has_no_meta::mutable_observer, FROM> {
                                          has_no_meta::meta{}};
   }
 };
-template <is_virtual_void FROM>
+template <is_erased_data FROM>
   requires std::same_as<meta_t<FROM>, has_meta_runtime::meta>
 struct copy_converter<has_meta_runtime::const_observer, FROM> {
   auto operator()(const auto& from) {
@@ -37,7 +37,7 @@ struct copy_converter<has_meta_runtime::const_observer, FROM> {
                                        *virtual_void::get_meta(from)};
   }
 };
-template <is_virtual_void FROM>
+template <is_erased_data FROM>
   requires std::same_as<meta_t<FROM>, has_meta_runtime::meta>
 struct copy_converter<has_meta_runtime::mutable_observer, FROM> {
   auto operator()(const auto& from) {
@@ -57,7 +57,7 @@ struct copy_converter<has_meta_runtime::value, has_meta_runtime::value> {
     return from;
   }
 };
-template <is_virtual_void FROM>
+template <is_erased_data FROM>
   requires std::same_as<meta_t<FROM>, has_meta_runtime::meta>
 struct copy_converter<has_meta_runtime::unique, FROM> {
   auto operator()(const auto& from) {

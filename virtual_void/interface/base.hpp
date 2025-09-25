@@ -16,7 +16,7 @@ namespace virtual_void::interface {
 
 using base_v_table = meta::base_v_table;
 
-template <is_virtual_void ERASED_DATA>
+template <is_erased_data ERASED_DATA>
 class base;
 
 template <typename CONSTRUCTED_WITH, typename ERASED_DATA>
@@ -24,7 +24,7 @@ concept constructibile_for =
     erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
                               base<ERASED_DATA>>;
 
-template <is_virtual_void ERASED_DATA>
+template <is_erased_data ERASED_DATA>
 class base {
  public:
   using erased_data_t = ERASED_DATA;
@@ -75,16 +75,16 @@ class base {
       : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
   base& operator=(base const& other) = default;
 
-  template <is_virtual_void OTHER>
+  template <is_erased_data OTHER>
   friend class base;
 
-  template <is_virtual_void ERASED_DATA>
+  template <is_erased_data ERASED_DATA>
   friend inline auto& get_virtual_void(base<ERASED_DATA> const& interface);
-  template <is_virtual_void ERASED_DATA>
+  template <is_erased_data ERASED_DATA>
   friend inline auto move_virtual_void(base<ERASED_DATA>&& interface);
-  template <is_virtual_void ERASED_DATA>
+  template <is_erased_data ERASED_DATA>
   friend inline auto get_interface_data(base<ERASED_DATA> const& interface);
-  template <is_virtual_void ERASED_DATA>
+  template <is_erased_data ERASED_DATA>
   friend inline auto& get_v_table(base<ERASED_DATA> const& interface);
 
   template <typename TO, typename FROM>
@@ -98,19 +98,19 @@ class base {
   }
 };
 
-template <is_virtual_void ERASED_DATA>
+template <is_erased_data ERASED_DATA>
 auto& get_virtual_void(base<ERASED_DATA> const& interface) {
   return interface.erased_data_;
 }
-template <is_virtual_void ERASED_DATA>
+template <is_erased_data ERASED_DATA>
 auto move_virtual_void(base<ERASED_DATA>&& interface) {
   return std::move(interface.erased_data_);
 }
-template <is_virtual_void ERASED_DATA>
+template <is_erased_data ERASED_DATA>
 auto get_interface_data(base<ERASED_DATA> const& interface) {
   return get_data(get_virtual_void(interface));
 }
-template <is_virtual_void ERASED_DATA>
+template <is_erased_data ERASED_DATA>
 inline auto& get_v_table(base<ERASED_DATA> const& interface) {
   return interface.v_table_;
 }
@@ -119,11 +119,11 @@ inline bool is_derived_from(const std::type_info& from,
                             meta::base_v_table const* base_v_table) {
   return base_v_table->_is_derived_from(from);
 }
-template <is_virtual_void VV>
+template <is_erased_data VV>
 bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
   return get_v_table(interface)->_is_derived_from(from);
 }
-template <typename FROM, is_virtual_void VV>
+template <typename FROM, is_erased_data VV>
 bool is_derived_from(base<VV> const& interface) {
   return is_derived_from(typeid(FROM::v_table_t), interface);
 }

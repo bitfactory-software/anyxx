@@ -59,7 +59,7 @@ class visitor : public visitor_methods<INTERFACE_NAME> {
     return self.define_<CLASS>(self.tail, f);
   }
 
-  template <is_virtual_void ERASED_DATA>
+  template <is_erased_data ERASED_DATA>
   void operator()(model<INTERFACE_NAME, ERASED_DATA> const& m,
                   visit<INTERFACE_NAME> const& visit, OUT& out,
                   IN const& in = {}) const {

@@ -38,7 +38,7 @@ class declare<R(ARGS...)> : public declaration_base {
     auto f = lookup<erased_function_t>(type_info);
     return f(dispatched, std::forward<OTHER_ARGS>(args)...);
   }
-  template <is_virtual_void ERASED_DATA, typename... OTHER_ARGS>
+  template <is_erased_data ERASED_DATA, typename... OTHER_ARGS>
   R operator()(const ERASED_DATA& param, OTHER_ARGS&&... args) const
 //    requires const_correct_for_virtual_void<dispatch_t, ERASED_DATA>
   {

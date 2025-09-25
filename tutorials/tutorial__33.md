@@ -27,7 +27,7 @@ Here is how this works out:
 namespace tutorial_33_1 {
 VV_INTERFACE(to_ostream, (VV_CONST_METHOD(void, draw, std::ostream&)))
 
-template <virtual_void::is_virtual_void VV>
+template <virtual_void::is_erased_data VV>
 std::ostream& operator<<(std::ostream& o, const to_ostream<VV>& i) {  // 1
   i.draw(o);
   return o;
@@ -106,7 +106,7 @@ struct ostreamable_v_table_map<OSTREAMABLE> // 3
   void to_ostream(OSTREAMABLE const* x, std::ostream& o) { o << (*x); };
 };
 
-template <virtual_void::is_virtual_void VV> // 4
+template <virtual_void::is_erased_data VV> // 4
 std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 4
   i.to_ostream(o);
   return o;

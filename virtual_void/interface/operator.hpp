@@ -36,11 +36,11 @@ implemented_operator_v_table() {
   return &v_table;
 }
 
-template <typename TARGET, is_virtual_void ERASED_DATA,
+template <typename TARGET, is_erased_data ERASED_DATA,
           template <typename> typename BASE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_;
-template <typename TARGET, is_virtual_void ERASED_DATA,
+template <typename TARGET, is_erased_data ERASED_DATA,
           template <typename> typename BASE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>

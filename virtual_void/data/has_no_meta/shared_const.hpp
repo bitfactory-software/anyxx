@@ -17,6 +17,6 @@ struct erased_data_trait<data::has_no_meta::shared_const>
 namespace virtual_void::data::has_no_meta {
 template <typename T>
 using typed_shared_const = virtual_typed<T const, shared_const>;
-static_assert(is_virtual_void<shared_const>);
+static_assert(is_erased_data<shared_const>);
 static_assert(is_virtual_typed<typed_shared_const<int> >);
 }  // namespace virtual_void::data::has_no_meta

@@ -65,7 +65,7 @@ void fill_cast_for(auto& method) {
   fill_cast_for(type_list<CLASSES...>{}, method);
 }
 template <typename TO>
-auto cast_to(const auto& cast, is_virtual_void auto const& from) {
+auto cast_to(const auto& cast, is_erased_data auto const& from) {
   if (auto void_ = cast(from, typeid_of<std::remove_const_t<TO>>()))
     return static_cast<TO*>(void_);
   return static_cast<TO*>(nullptr);

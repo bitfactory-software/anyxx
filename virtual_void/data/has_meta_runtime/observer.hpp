@@ -31,8 +31,8 @@ template <typename V>
 using typed_mutable_observer = typed_observer<V, void*>;
 static_assert(erased_data_trait<const_observer>::is_const);
 static_assert(!erased_data_trait<mutable_observer>::is_const);
-static_assert(is_virtual_void<const_observer>);
-static_assert(is_virtual_void<mutable_observer>);
+static_assert(is_erased_data<const_observer>);
+static_assert(is_erased_data<mutable_observer>);
 static_assert(is_virtual_typed<typed_const_observer<int>>);
 static_assert(is_virtual_typed<typed_mutable_observer<int>>);
 }  // namespace virtual_void::data::has_meta_runtime

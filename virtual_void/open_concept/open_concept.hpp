@@ -26,7 +26,7 @@ v_table_t& v_table_instance() {
   return v_table;
 }
 
-template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
 class model {
  public:
   using erased_data_t = ERASED_DATA;
@@ -82,38 +82,38 @@ class model {
       : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
   model& operator=(model const& other) = default;
 
-  template <typename INTERFACE_NAME, is_virtual_void OTHER>
+  template <typename INTERFACE_NAME, is_erased_data OTHER>
   friend class model;
   template <typename INTERFACE_NAME, typename R, typename... ARGS>
   friend class extension_method;
 
-  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+  template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
   friend inline auto& get_virtual_void(
       model<INTERFACE_NAME, ERASED_DATA> const& interface);
-  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+  template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
   friend inline auto move_virtual_void(
       model<INTERFACE_NAME, ERASED_DATA>&& interface);
-  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+  template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
   friend inline auto get_interface_data(
       model<INTERFACE_NAME, ERASED_DATA> const& interface);
-  template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+  template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
   friend inline auto& get_v_table(
       model<INTERFACE_NAME, ERASED_DATA> const& interface);
 };
 
-template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
 auto& get_virtual_void(model<INTERFACE_NAME, ERASED_DATA> const& m) {
   return m.erased_data_;
 }
-template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
 auto move_virtual_void(model<INTERFACE_NAME, ERASED_DATA>&& m) {
   return std::move(m.erased_data_);
 }
-template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
 auto get_interface_data(model<INTERFACE_NAME, ERASED_DATA> const& m) {
   return get_data(get_virtual_void(m));
 }
-template <typename INTERFACE_NAME, is_virtual_void ERASED_DATA>
+template <typename INTERFACE_NAME, is_erased_data ERASED_DATA>
 inline auto& get_v_table(model<INTERFACE_NAME, ERASED_DATA> const& m) {
   return *m.v_table_;
 }
@@ -149,7 +149,7 @@ class extension_method<INTERFACE_NAME, R(ARGS...)> {
   extension_method(extension_method const&) = delete;
   extension_method(erased_function_t f = make_default_noop())
       : default_(f) {}
-  template <is_virtual_void ERASED_DATA, typename... OTHER_ARGS>
+  template <is_erased_data ERASED_DATA, typename... OTHER_ARGS>
   auto operator()(model<INTERFACE_NAME, ERASED_DATA> const& m,
                   OTHER_ARGS&&... args) const {
     if (m.v_table_->size() <= index)

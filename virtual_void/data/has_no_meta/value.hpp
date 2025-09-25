@@ -17,6 +17,6 @@ struct erased_data_trait<data::has_no_meta::value>
 namespace virtual_void::data::has_no_meta {
 template <typename T>
 using typed_value = virtual_typed<T, value>;
-static_assert(is_virtual_void<value>);
+static_assert(is_erased_data<value>);
 static_assert(is_virtual_typed<typed_value<int>>);
 }  // namespace virtual_void::data::has_no_meta

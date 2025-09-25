@@ -251,7 +251,7 @@
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <virtual_void::is_virtual_void OTHER>                             \
+    template <virtual_void::is_erased_data OTHER>                             \
     friend class virtual_void::interface::base;                                \
     template <typename TO, typename FROM>                                      \
     friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \
