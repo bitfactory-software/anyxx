@@ -47,7 +47,7 @@ struct operator_<TARGET, VIRTUAL_VOID, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<VIRTUAL_VOID> {
  public:
   using virtual_void_t = VIRTUAL_VOID;
-  using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
+  using void_t = typename erased_data_trait<VIRTUAL_VOID>::void_t;
   using base_t = BASE<VIRTUAL_VOID>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =

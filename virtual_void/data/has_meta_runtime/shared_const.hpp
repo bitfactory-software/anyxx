@@ -10,7 +10,7 @@ using shared_const = data::shared_const<meta>;
 
 namespace virtual_void {
 template <>
-struct virtual_void_trait<data::has_meta_runtime::shared_const>
+struct erased_data_trait<data::has_meta_runtime::shared_const>
     : shared_const_trait<data::has_meta_runtime::meta> {};
 }  // namespace virtual_void
 

@@ -190,7 +190,7 @@ TEST_CASE("has_type_info/shared_const_ptr") {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
     shared_const_ptr sp1 =
-        virtual_void_trait<shared_const_ptr>::construct_from(ptr);
+        erased_data_trait<shared_const_ptr>::construct_from(ptr);
     auto u1 = erased<shared_const_ptr>(ptr);
     A const* a = unerase_cast<A>(u1);
     REQUIRE(unerase_cast<A>(u1)->s == "hallo");
@@ -201,7 +201,7 @@ TEST_CASE("has_type_info/unique_ptr") {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
     unique_ptr up1 =
-        virtual_void_trait<unique_ptr>::construct_from(std::move(ptr));
+        erased_data_trait<unique_ptr>::construct_from(std::move(ptr));
   }
   {
     auto ptr = std::make_unique<A>("hallo");

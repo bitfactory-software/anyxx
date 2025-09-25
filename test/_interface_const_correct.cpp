@@ -41,7 +41,7 @@ TEST_CASE("_interface_const_correct prototyping") {
   using namespace virtual_void;
   static_assert(!test_trait<void*>::is_const);
   static_assert(
-      virtual_void_trait<data::has_no_meta::const_observer>::is_const);
+      erased_data_trait<data::has_no_meta::const_observer>::is_const);
   test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
@@ -237,9 +237,9 @@ static_assert(std::same_as<mutable_text_i_mutable::virtual_void_t,
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);
 using void_const =
-    virtual_void_trait<virtual_void::data::has_no_meta::const_observer>::void_t;
+    erased_data_trait<virtual_void::data::has_no_meta::const_observer>::void_t;
 static_assert(is_const_void<void_const>);
-using void_mutable = virtual_void_trait<
+using void_mutable = erased_data_trait<
     virtual_void::data::has_no_meta::mutable_observer>::void_t;
 static_assert(!is_const_void<void_mutable>);
 static_assert(
@@ -247,9 +247,9 @@ static_assert(
       is_const_void<void_mutable>));
 static_assert(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
               is_const_void<void_const>);
-static_assert(virtual_void_trait<data::has_no_meta::const_observer>::is_const);
+static_assert(erased_data_trait<data::has_no_meta::const_observer>::is_const);
 static_assert(
-    !virtual_void_trait<data::has_no_meta::mutable_observer>::is_const);
+    !erased_data_trait<data::has_no_meta::mutable_observer>::is_const);
 
 static_assert(std::constructible_from<mutable_text_i_mutable, text_object>);
 static_assert(

@@ -14,7 +14,7 @@ using observer = data::observer<VV_VOID, meta>;
 
 namespace virtual_void {
 template <typename VV_VOID>
-struct virtual_void_trait<data::has_meta_runtime::observer<VV_VOID>>
+struct erased_data_trait<data::has_meta_runtime::observer<VV_VOID>>
     : observer_trait<data::has_meta_runtime::observer<VV_VOID>, VV_VOID,
                      data::has_meta_runtime::meta> {};
 }  // namespace virtual_void
@@ -29,8 +29,8 @@ template <typename V>
 using typed_const_observer = typed_observer<V, void const*>;
 template <typename V>
 using typed_mutable_observer = typed_observer<V, void*>;
-static_assert(virtual_void_trait<const_observer>::is_const);
-static_assert(!virtual_void_trait<mutable_observer>::is_const);
+static_assert(erased_data_trait<const_observer>::is_const);
+static_assert(!erased_data_trait<mutable_observer>::is_const);
 static_assert(is_virtual_void<const_observer>);
 static_assert(is_virtual_void<mutable_observer>);
 static_assert(is_virtual_typed<typed_const_observer<int>>);

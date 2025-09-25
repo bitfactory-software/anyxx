@@ -36,7 +36,7 @@ template <class BASE, class DERIVED>
 concept base_of = std::derived_from<DERIVED, BASE>;
 
 template <typename DATA>
-struct virtual_void_trait;
+struct erased_data_trait;
 
 template <class META>
 concept is_meta = requires(META meta) {
@@ -46,15 +46,15 @@ concept is_meta = requires(META meta) {
 
 template <class PTR>
 concept has_virtual_void_trait = requires(PTR ptr) {
-  typename virtual_void_trait<PTR>::void_t;
-  typename virtual_void_trait<PTR>::meta_t;
+  typename erased_data_trait<PTR>::void_t;
+  typename erased_data_trait<PTR>::meta_t;
 };
 
 template <class E>
 concept is_virtual_void = has_virtual_void_trait<E>;
 
 template <is_virtual_void VV>
-using meta_t = typename virtual_void_trait<VV>::meta_t;
+using meta_t = typename erased_data_trait<VV>::meta_t;
 
 template <class E>
 concept is_virtual_typed = requires(E e) {
@@ -139,9 +139,9 @@ template <typename ERASURENESS>
 concept is_const_void = is_const_void_<ERASURENESS>::value;
 
 template <typename DATA>
-using data_void = virtual_void_trait<DATA>::void_t;
+using data_void = erased_data_trait<DATA>::void_t;
 template <typename DATA>
-using data_const_t = const_t<typename virtual_void_trait<DATA>::void_t>;
+using data_const_t = const_t<typename erased_data_trait<DATA>::void_t>;
 
 template <typename DATA>
 concept is_const_data = is_const_void<data_void<DATA>>;
@@ -166,7 +166,7 @@ struct virtual_typed;
 
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
 VIRTUAL_VOID erased(FROM&& from) {
-  return virtual_void_trait<VIRTUAL_VOID>::construct_from(
+  return erased_data_trait<VIRTUAL_VOID>::construct_from(
       std::forward<FROM>(from));
 }
 template <is_virtual_void VIRTUAL_VOID, typename FROM>
@@ -179,7 +179,7 @@ VIRTUAL_VOID erase_to(FROM&& from) {
 }
 template <is_virtual_void VIRTUAL_VOID, typename V, typename... ARGS>
 VIRTUAL_VOID erased_in_place(ARGS&&... args) {
-  return virtual_void_trait<VIRTUAL_VOID>::construct_in_place(
+  return erased_data_trait<VIRTUAL_VOID>::construct_in_place(
       std::in_place_type<V>, std::forward<ARGS>(args)...);
 }
 
@@ -201,7 +201,7 @@ struct static_cast_uneraser {
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
 struct unerased {
   using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
-  using trait_t = virtual_void_trait<VIRTUAL_VOID>;
+  using trait_t = erased_data_trait<VIRTUAL_VOID>;
   using type = trait_t::template unerased_type<constructed_with_t>;
 };
 template <is_virtual_void VIRTUAL_VOID, typename CONSTRUCTED_WITH>
@@ -238,25 +238,25 @@ using uneraser = make_uneraser<VIRTUAL_VOID, CONSTRUCTED_WITH, is_const>::type;
 
 template <is_virtual_void VIRTUAL_VOID>
 bool has_data(VIRTUAL_VOID const& vv) {
-  return virtual_void_trait<VIRTUAL_VOID>::has_value(vv);
+  return erased_data_trait<VIRTUAL_VOID>::has_value(vv);
 }
 template <is_virtual_void VIRTUAL_VOID>
 void const* get_data(VIRTUAL_VOID const& vv)
   requires std::same_as<void const*,
-                        typename virtual_void_trait<VIRTUAL_VOID>::void_t>
+                        typename erased_data_trait<VIRTUAL_VOID>::void_t>
 {
-  return virtual_void_trait<VIRTUAL_VOID>::value(vv);
+  return erased_data_trait<VIRTUAL_VOID>::value(vv);
 }
 template <is_virtual_void VIRTUAL_VOID>
 void* get_data(VIRTUAL_VOID const& vv)
   requires std::same_as<void*,
-                        typename virtual_void_trait<VIRTUAL_VOID>::void_t>
+                        typename erased_data_trait<VIRTUAL_VOID>::void_t>
 {
-  return virtual_void_trait<VIRTUAL_VOID>::value(vv);
+  return erased_data_trait<VIRTUAL_VOID>::value(vv);
 }
 template <is_virtual_void VIRTUAL_VOID>
 auto get_meta(VIRTUAL_VOID const& vv) {
-  return virtual_void_trait<VIRTUAL_VOID>::meta(vv);
+  return erased_data_trait<VIRTUAL_VOID>::meta(vv);
 }
 
 template <typename U>
@@ -323,7 +323,7 @@ struct virtual_typed {
   VIRTUAL_VOID virtual_void_;
 
   using virtual_void_t = VIRTUAL_VOID;
-  using trait_t = virtual_void_trait<VIRTUAL_VOID>;
+  using trait_t = erased_data_trait<VIRTUAL_VOID>;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
@@ -386,20 +386,20 @@ bool has_data(virtual_typed<V, VIRTUAL_VOID> const& vv) {
 template <typename V, typename VIRTUAL_VOID>
 void const* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void const*,
-                        typename virtual_void_trait<VIRTUAL_VOID>::void_t>
+                        typename erased_data_trait<VIRTUAL_VOID>::void_t>
 {
   return get_data(vv.virtual_void_);
 }
 template <typename V, typename VIRTUAL_VOID>
 void* get_data(virtual_typed<V, VIRTUAL_VOID> const& vv)
   requires std::same_as<void*,
-                        typename virtual_void_trait<VIRTUAL_VOID>::void_t>
+                        typename erased_data_trait<VIRTUAL_VOID>::void_t>
 {
   return get_data(vv.virtual_void_);
 }
 template <typename V, typename VIRTUAL_VOID>
 auto get_meta(virtual_typed<V, VIRTUAL_VOID> const& vv) {
-  return virtual_void_trait<VIRTUAL_VOID>::meta(vv.virtual_void_);
+  return erased_data_trait<VIRTUAL_VOID>::meta(vv.virtual_void_);
 }
 
 template <typename V, is_virtual_void DATA>
@@ -434,7 +434,7 @@ concept erased_constructibile_for =
     !is_virtual_void<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
-     virtual_void_trait<VIRTUAL_VOID>::is_constructibile_from_const) &&
+     erased_data_trait<VIRTUAL_VOID>::is_constructibile_from_const) &&
     !is_interface<CONSTRUCTED_WITH>;
 
 }  // namespace virtual_void

@@ -10,7 +10,7 @@ using value = data::value<meta>;
 
 namespace virtual_void {
 template <>
-struct virtual_void_trait<data::has_meta_runtime::value>
+struct erased_data_trait<data::has_meta_runtime::value>
     : value_trait<data::has_meta_runtime::meta> {};
 }  // namespace virtual_void
 

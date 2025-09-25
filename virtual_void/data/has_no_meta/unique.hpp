@@ -11,7 +11,7 @@ inline auto unique_nullptr() { return data::unique_nullptr<meta>(); }
 
 namespace virtual_void {
 template <>
-struct virtual_void_trait<data::has_no_meta::unique>
+struct erased_data_trait<data::has_no_meta::unique>
     : unique_trait<data::has_no_meta::meta> {};
 }  // namespace virtual_void
 

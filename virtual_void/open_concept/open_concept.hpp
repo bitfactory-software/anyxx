@@ -30,7 +30,7 @@ template <typename INTERFACE_NAME, is_virtual_void VIRTUAL_VOID>
 class model {
  public:
   using virtual_void_t = VIRTUAL_VOID;
-  using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
+  using void_t = typename erased_data_trait<VIRTUAL_VOID>::void_t;
   using base_t = model<INTERFACE_NAME, VIRTUAL_VOID>;
 
  protected:

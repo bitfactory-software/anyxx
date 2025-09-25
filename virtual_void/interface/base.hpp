@@ -28,7 +28,7 @@ template <is_virtual_void VIRTUAL_VOID>
 class base {
  public:
   using virtual_void_t = VIRTUAL_VOID;
-  using void_t = typename virtual_void_trait<VIRTUAL_VOID>::void_t;
+  using void_t = typename erased_data_trait<VIRTUAL_VOID>::void_t;
   using v_table_t = meta::base_v_table;
 
  protected:
