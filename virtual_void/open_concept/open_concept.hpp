@@ -57,9 +57,6 @@ class model {
     v_table_ = &v_table_instance<INTERFACE_NAME,
                                  std::remove_cvref_t<CONSTRUCTED_WITH>>();
   }
-  template <typename CONSTRUCTED_WITH>
-  model(virtual_typed<CONSTRUCTED_WITH, erased_data_t> const& vt)
-      : model(*vt) {}
   template <typename OTHER>
   model(OTHER const& other)
     requires(std::derived_from<OTHER, model<ERASED_DATA>>)

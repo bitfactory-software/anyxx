@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/meta/class.hpp>
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/has_meta_runtime/shared_const.hpp>
 #include <virtual_void/data/has_meta_runtime/unique.hpp>
@@ -11,6 +10,8 @@
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/interface/virtual_typed.hpp>
+#include <virtual_void/meta/class.hpp>
 
 using namespace Catch::Matchers;
 
@@ -35,7 +36,6 @@ VV_INTERFACE_(shape_i, shape_base1,
               (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
                VV_CONST_METHOD(double, perimeter)))
 }  // namespace
-
 
 struct circle {
   double radius = 10;
@@ -251,15 +251,16 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   regular_polygon p{4, 32};
   std::cout << "print_shape_vv ********************************" << std::endl;
 
-  data::has_meta_runtime::typed_shared_const<circle> sc{c};
-  auto& c1 = sc;
+  using typed_circle_shape_sc_no_meta =
+      interface::virtual_typed<circle,
+                               shape_i<data::has_meta_runtime::shared_const>>;
+  typed_circle_shape_sc_no_meta sc_typed{c};
+  auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
-  static_assert(
-      std::same_as<
-          data::has_meta_runtime::typed_shared_const<circle>::erased_data_t,
-          data::has_meta_runtime::shared_const>);
-  static_assert(is_virtual_typed<decltype(sc)>);
-  shape_vv circle_shape_vv{sc};
+  static_assert(std::same_as<typed_circle_shape_sc_no_meta::erased_data_t,
+                             data::has_meta_runtime::shared_const>);
+  static_assert(interface::is_virtual_typed<decltype(sc_typed)>);
+  shape_vv circle_shape_vv{sc_typed};
   auto unerased_circle =
       unerase_cast<circle const>(get_virtual_void(circle_shape_vv));
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
@@ -268,7 +269,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, WithinAbs(77.2, 77.3));
   }
-  print_shape_vv(sc);
+  print_shape_vv(sc_typed);
   print_shape_vv(circle_shape_vv);
   print_shape_vv(c);
   print_shape_vv(s);
@@ -295,10 +296,10 @@ TEST_CASE("dynamic interface has_type_info::unique") {
 }
 
 namespace {
-  struct x_t {
-    std::string s_;
-  };
-}
+struct x_t {
+  std::string s_;
+};
+}  // namespace
 VV_RUNTIME_STATIC(type_info, x_t)
 
 TEST_CASE("base") {

@@ -21,7 +21,7 @@ struct operator_v_table : BASE_V_TABLE {
   template <typename UNERASED>
   operator_v_table(std::in_place_type_t<UNERASED> u) : BASE_V_TABLE(u) {
     op = [](virtual_void::void_t<CONSTNESS> _vp, ARGS&&... args) -> RET {
-      return TARGET{}(unchecked_unerase_cast<UNERASED>(_vp), std::forward<ARGS>(args)...);
+      return TARGET{}(virtual_void::unchecked_unerase_cast<UNERASED>(_vp), std::forward<ARGS>(args)...);
     };
     set_is_derived_from<v_table_t>(this);
   }

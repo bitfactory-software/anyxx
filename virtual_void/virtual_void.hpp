@@ -56,14 +56,6 @@ concept is_erased_data = has_erased_data_trait<E>;
 template <is_erased_data VV>
 using meta_t = typename erased_data_trait<VV>::meta_t;
 
-template <class E>
-concept is_virtual_typed = requires(E e) {
-  typename E::void_t;
-  typename E::erased_data_t;
-  typename E::trait_t;
-  { E::is_const } -> std::convertible_to<bool>;
-};
-
 struct mutable_ {};
 struct const_ {};
 template <typename CS>
@@ -156,9 +148,6 @@ concept const_correct_for_virtual_void =
     is_ereasurness<TARGET> && is_erased_data<ERASED_DATA> &&
     (const_correct_for_virtual_void_data<TARGET, ERASED_DATA>);
 
-template <typename V, is_erased_data DATA>
-struct virtual_typed;
-
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
   return erased_data_trait<ERASED_DATA>::construct_from(
@@ -213,8 +202,7 @@ struct const_qualified_<const_, T> {
 template <is_constness CONSTNESS, typename T>
 using const_qualified = typename const_qualified_<CONSTNESS, T>::type;
 
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH,
-          bool is_const>
+template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH, bool is_const>
 struct make_uneraser;
 
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
@@ -244,8 +232,7 @@ void const* get_data(ERASED_DATA const& vv)
 }
 template <is_erased_data ERASED_DATA>
 void* get_data(ERASED_DATA const& vv)
-  requires std::same_as<void*,
-                        typename erased_data_trait<ERASED_DATA>::void_t>
+  requires std::same_as<void*, typename erased_data_trait<ERASED_DATA>::void_t>
 {
   return erased_data_trait<ERASED_DATA>::value(vv);
 }
@@ -313,123 +300,11 @@ U* unerase_cast(ERASED_DATA const* o)
   return nullptr;
 }
 
-template <typename V, is_erased_data ERASED_DATA>
-struct virtual_typed {
-  ERASED_DATA erased_data_;
-
-  using erased_data_t = ERASED_DATA;
-  using trait_t = erased_data_trait<ERASED_DATA>;
-  using void_t = trait_t::void_t;
-  static constexpr bool is_const = is_const_void<void_t>;
-  using value_t = V;
-
-  virtual_typed() = default;
-  virtual_typed(const virtual_typed&) = default;
-  virtual_typed(virtual_typed&) = default;
-  virtual_typed(virtual_typed&&) = default;
-  virtual_typed& operator=(const virtual_typed&) = default;
-  virtual_typed& operator=(virtual_typed&) = default;
-  virtual_typed& operator=(virtual_typed&&) = default;
-  template <typename FROM>
-  explicit virtual_typed(FROM&& from)
-    requires(!std::same_as<std::decay_t<FROM>, virtual_typed> &&
-             !std::same_as<std::decay_t<std::remove_pointer_t<V>>, void>)
-      : erased_data_(trait_t::construct_in_place(std::in_place_type<V>,
-                                                  std::forward<FROM>(from))) {
-    check_type_match<V>(erased_data_);
-  }
-  template <typename... ARGS>
-  virtual_typed(std::in_place_t, ARGS&&... args)
-      : erased_data_(trait_t::construct_in_place(
-            std::in_place_type<V>, std::forward<ARGS>(args)...)) {
-    check_type_match<V>(erased_data_);
-  }
-
-  explicit virtual_typed(ERASED_DATA data) : erased_data_(std::move(data)) {}
-
-  value_t const& operator*() const {
-    return *unchecked_unerase_cast<value_t const>(erased_data_);
-  }
-  value_t const* operator->() const {
-    return unchecked_unerase_cast<value_t const>(erased_data_);
-  }
-  value_t const* get() const {
-    return unchecked_unerase_cast<value_t const>(erased_data_);
-  }
-  value_t& operator*() const
-    requires !is_const
-  {
-    return *unchecked_unerase_cast<value_t>(erased_data_);
-  }
-  value_t* operator->() const
-    requires !is_const
-  {
-    return unchecked_unerase_cast<value_t>(erased_data_);
-  }
-  value_t* get() const
-    requires !is_const
-  {
-    return unchecked_unerase_cast<value_t>(erased_data_);
-  }
-  explicit operator bool() const { return static_cast<bool>(erased_data_); }
-};
-
-template <typename V, typename ERASED_DATA>
-bool has_data(virtual_typed<V, ERASED_DATA> const& vv) {
-  return has_data(vv.erased_data_);
-}
-template <typename V, typename ERASED_DATA>
-void const* get_data(virtual_typed<V, ERASED_DATA> const& vv)
-  requires std::same_as<void const*,
-                        typename erased_data_trait<ERASED_DATA>::void_t>
-{
-  return get_data(vv.erased_data_);
-}
-template <typename V, typename ERASED_DATA>
-void* get_data(virtual_typed<V, ERASED_DATA> const& vv)
-  requires std::same_as<void*,
-                        typename erased_data_trait<ERASED_DATA>::void_t>
-{
-  return get_data(vv.erased_data_);
-}
-template <typename V, typename ERASED_DATA>
-auto get_meta(virtual_typed<V, ERASED_DATA> const& vv) {
-  return erased_data_trait<ERASED_DATA>::meta(vv.erased_data_);
-}
-
-template <typename V, is_erased_data DATA>
-auto as(DATA source) {
-  return virtual_typed<V, DATA>{std::move(source)};
-}
-
-template <typename TO, typename FROM, typename DATA>
-auto as(virtual_typed<FROM, DATA> source)
-  requires std::convertible_to<FROM*, TO*> || std::convertible_to<TO*, FROM*>
-{
-  if constexpr (virtual_typed<FROM, DATA>::is_const) {
-    return virtual_typed<TO const, DATA>{std::move(source.erased_data_)};
-  } else {
-    return virtual_typed<TO, DATA>{std::move(source.erased_data_)};
-  }
-}
-
-template <typename I>
-concept is_interface_impl = requires(I) {
-  typename I::void_t;
-  typename I::erased_data_t;
-  typename I::v_table_t;
-};
-
-template <typename I>
-concept is_interface = is_interface_impl<std::decay_t<I>>;
-
 template <typename CONSTRUCTED_WITH, typename ERASED_DATA, typename BASE>
 concept erased_constructibile_for =
     !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, BASE> &&
     !is_erased_data<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
-    !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
-     erased_data_trait<ERASED_DATA>::is_constructibile_from_const) &&
-    !is_interface<CONSTRUCTED_WITH>;
+     erased_data_trait<ERASED_DATA>::is_constructibile_from_const);
 
 }  // namespace virtual_void

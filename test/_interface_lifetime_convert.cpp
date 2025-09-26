@@ -59,6 +59,10 @@ TEST_CASE("interface lifetime cast") {
 
   to_string_u u{X{"hallo"}};
   REQUIRE(u.to_string() == "hallo");
+  static_assert(!interface::is_virtual_typed<to_string_u>);
+  static_assert(interface::is_interface<to_string_u>);
+  static_assert(!interface::constructibile_for<to_string_u, to_string_mo::erased_data_t>);
+  static_assert(std::derived_from<to_string_mo::v_table_t, to_string_u::v_table_t>);
   to_string_mo mo{u};
   REQUIRE(mo.to_string() == "hallo");
 

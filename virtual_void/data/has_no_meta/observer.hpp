@@ -20,12 +20,6 @@ struct erased_data_trait<data::has_no_meta::observer<VV_VOID>>
 namespace virtual_void::data::has_no_meta {
 using const_observer = observer<void const*>;
 using mutable_observer = observer<void*>;
-template <typename V, typename VV_VOID>
-using typed_observer = virtual_typed<V, observer<VV_VOID>>;
-template <typename V>
-using typed_const_observer = typed_observer<V, void const*>;
-template <typename V>
-using typed_mutable_observer = typed_observer<V, void*>;
 static_assert(erased_data_trait<const_observer>::is_const);
 static_assert(!erased_data_trait<mutable_observer>::is_const);
 // static_assert(std::is_same_v<const_observer::void_t,void const*>);
@@ -36,6 +30,4 @@ static_assert(is_erased_data<const_observer>);
 static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<const_observer>);
-static_assert(is_virtual_typed<typed_const_observer<int>>);
-static_assert(is_virtual_typed<typed_mutable_observer<int>>);
 }  // namespace virtual_void::data::has_no_meta

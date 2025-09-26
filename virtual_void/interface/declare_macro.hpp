@@ -151,14 +151,14 @@
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
   };
 
-#define _detail_INTERFACE_METHOD(type, name, const_, ...)                    \
-  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const     \
-    requires(::virtual_void::const_correct_for_virtual_void<void const_*,    \
+#define _detail_INTERFACE_METHOD(type, name, const_, ...)                   \
+  type name(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const    \
+    requires(::virtual_void::const_correct_for_virtual_void<void const_*,   \
                                                             erased_data_t>) \
-  {                                                                          \
-    return static_cast<v_table_t*>(v_table_)->name(                          \
+  {                                                                         \
+    return static_cast<v_table_t*>(v_table_)->name(                         \
         virtual_void::get_data(base_t::erased_data_)                        \
-            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
+            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
   }
 
 #define VV_INTERFACE_TEMPLATE_(t, n, BASE, l)                                  \
@@ -201,36 +201,33 @@
   };                                                                           \
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
-      _add_head((ERASED_DATA), t))>                                           \
-  struct n : BASE<ERASED_DATA> {                                              \
-    using erased_data_t = ERASED_DATA;                                       \
-    using base_t = BASE<ERASED_DATA>;                                         \
+      _add_head((ERASED_DATA), t))>                                            \
+  struct n : BASE<ERASED_DATA> {                                               \
+    using erased_data_t = ERASED_DATA;                                         \
+    using base_t = BASE<ERASED_DATA>;                                          \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
                                                                                \
     template <typename CONCRETE>                                               \
     static auto v_table_imlpementation() {                                     \
-      static_assert(!is_interface<CONCRETE>);                                  \
+      static_assert(!virtual_void::interface::is_interface<CONCRETE>);         \
       return v_table_t::template imlpementation<CONCRETE>();                   \
     }                                                                          \
                                                                                \
-    using base_t::erased_data_;                                               \
+    using base_t::erased_data_;                                                \
     using base_t::v_table_;                                                    \
                                                                                \
-    n(erased_data_t virtual_void, v_table_t* v_table)                         \
+    n(erased_data_t virtual_void, v_table_t* v_table)                          \
         : base_t(std::move(virtual_void), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
       requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH,   \
-                                                           ERASED_DATA>       \
+                                                           ERASED_DATA>        \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = v_table_imlpementation<                                       \
-          unerased_type<ERASED_DATA, CONSTRUCTED_WITH>>();                    \
+          unerased_type<ERASED_DATA, CONSTRUCTED_WITH>>();                     \
     }                                                                          \
-    template <typename CONSTRUCTED_WITH>                                       \
-    n(const virtual_void::virtual_typed<CONSTRUCTED_WITH, erased_data_t>& vt) \
-        : n(*vt) {}                                                            \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
       requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)        \
@@ -251,7 +248,7 @@
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <virtual_void::is_erased_data OTHER>                             \
+    template <virtual_void::is_erased_data OTHER>                              \
     friend class virtual_void::interface::base;                                \
     template <typename TO, typename FROM>                                      \
     friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \

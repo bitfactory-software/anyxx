@@ -15,8 +15,5 @@ struct erased_data_trait<data::has_meta_runtime::unique_ptr>
 
 namespace virtual_void::data::has_meta_runtime {
 static_assert(has_erased_data_trait<unique_ptr>);
-template <typename T>
-using typed_unique_ptr = virtual_typed<T const, unique_ptr>;
 static_assert(is_erased_data<unique_ptr>);
-static_assert(is_virtual_typed<typed_unique_ptr<int>>);
 }  // namespace virtual_void::data::has_meta_runtime
