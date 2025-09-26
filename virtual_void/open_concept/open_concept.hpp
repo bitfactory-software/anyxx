@@ -79,8 +79,8 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
  public:
   extension_method(extension_method const&) = delete;
   extension_method(default_function::type f = default_function::noop) : default_(f) {}
-  template <interface::is_interface MODEL, typename... OTHER_ARGS>
-  auto operator()(MODEL const& m, OTHER_ARGS&&... args) const {
+  template <typename... OTHER_ARGS>
+  auto operator()(const_observer_interface_t const& m, OTHER_ARGS&&... args) const {
     auto& v_table = get_v_table(m)->open_v_table;
     if (v_table.size() <= index_)
       return default_(m, std::forward<OTHER_ARGS>(args)...);
