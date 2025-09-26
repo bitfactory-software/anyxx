@@ -253,7 +253,10 @@
     template <typename TO, typename FROM>                                      \
     friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \
       requires(std::derived_from<TO, FROM>);                                   \
-  };                                                                           \
+    template <virtual_void::is_erased_data OTHER>                              \
+    using type_for =                                                           \
+        n<_detail_INTERFACE_TEMPLATE_ARGS(_add_head((OTHER), t))>;             \
+  };
 
 //    n(n&) = default;                                                           \
 
