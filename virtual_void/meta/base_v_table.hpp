@@ -8,8 +8,6 @@
 namespace virtual_void::meta {
 
 class type_info;
-using open_v_table_function_t = void (*)();
-using open_v_table_t = std::vector<open_v_table_function_t>;
 
 struct base_v_table {
   template <typename CONCRETE>
@@ -21,7 +19,6 @@ struct base_v_table {
   }
 
   meta::type_info* type_info = nullptr;
-  open_v_table_t open_v_table;
 
   bool (*_is_derived_from)(const std::type_info&);
 

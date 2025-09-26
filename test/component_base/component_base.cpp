@@ -42,6 +42,7 @@ test::component_base::get_to_string_i_co() {
   to_string_i<virtual_void::data::has_meta_runtime::const_observer> i{x};
   auto meta = get_meta(get_virtual_void(i));
   const std::type_info* type_info = &meta->type_info()->get_type_info();
+  static_assert(interface::is_interface<to_string_i<virtual_void::data::has_meta_runtime::const_observer>>);
   assert(get_v_table(i)->type_info);
   assert(get_v_table(i)->type_info == &(runtime<meta::type_info, X>()));
   const std::type_info* type_info_1 = &typeid(X);

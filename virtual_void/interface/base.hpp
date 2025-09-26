@@ -16,6 +16,15 @@ namespace virtual_void::interface {
 
 using base_v_table = meta::base_v_table;
 
+using open_v_table_function_t = void (*)();
+using open_v_table_t = std::vector<open_v_table_function_t>;
+
+template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+open_v_table_t* extension_method_table_instance() {
+  static open_v_table_t open_v_table;
+  return &open_v_table;
+}
+
 template <is_erased_data ERASED_DATA>
 class base;
 
@@ -26,7 +35,6 @@ concept is_interface_impl = requires(I i, I::erased_data_t ed) {
   typename I::v_table_t;
   typename I::trait_t;
   { get_virtual_void(i) };
-  { get_v_table(i) };
 };
 
 template <typename I>
@@ -105,8 +113,8 @@ class base {
   friend inline auto move_virtual_void(base<ERASED_DATA>&& interface);
   template <is_erased_data ERASED_DATA>
   friend inline auto get_interface_data(base<ERASED_DATA> const& interface);
-  template <is_erased_data ERASED_DATA>
-  friend inline auto& get_v_table(base<ERASED_DATA> const& interface);
+  template <is_interface I>
+  friend inline auto get_v_table(I const& interface);
 
   template <typename TO, typename FROM>
   friend inline TO unchecked_v_table_cast(FROM from)
@@ -125,7 +133,6 @@ struct interface_t;
 template <typename V_TABLE, is_erased_data ERASED_DATA>
 using interface_for = typename interface_t<V_TABLE, ERASED_DATA>::type;
 
-
 template <is_erased_data ERASED_DATA>
 auto& get_virtual_void(base<ERASED_DATA> const& interface) {
   return interface.erased_data_;
@@ -138,9 +145,19 @@ template <is_erased_data ERASED_DATA>
 auto get_interface_data(base<ERASED_DATA> const& interface) {
   return get_data(get_virtual_void(interface));
 }
-template <is_erased_data ERASED_DATA>
-inline auto& get_v_table(base<ERASED_DATA> const& interface) {
-  return interface.v_table_;
+
+template <typename TO>
+auto pure_v_table_cast(base_v_table* v_table) {
+  return static_cast<TO*>(v_table);
+}
+template <is_interface TO>
+auto pure_v_table_cast(base_v_table* v_table) {
+  return pure_v_table_cast<typename TO::v_table_t>(v_table);
+}
+
+template <is_interface INTERFACE>
+inline auto get_v_table(INTERFACE const& interface) {
+  return pure_v_table_cast<INTERFACE>(interface.v_table_);
 }
 
 inline bool is_derived_from(const std::type_info& from,
@@ -161,11 +178,6 @@ void set_is_derived_from(auto v_table) {
   v_table->_is_derived_from = +[](const std::type_info& from) {
     return V_TABLE::static_is_derived_from(from);
   };
-}
-
-template <typename TO>
-auto pure_v_table_cast(const auto& v_table) {
-  return static_cast<typename TO::v_table_t*>(v_table);
 }
 
 template <typename TO, typename FROM>

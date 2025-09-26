@@ -52,7 +52,7 @@ struct Integer {
 
 //-----------------------------------------------------------------------------
 // evaluate
-static_assert(is_extendable_interface<node::model>);
+static_assert(interface::is_interface<node::model>);
 extension_method<node::model, int(virtual_void::const_)> value;
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });

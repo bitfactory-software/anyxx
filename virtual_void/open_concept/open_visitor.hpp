@@ -8,7 +8,7 @@ namespace virtual_void::open_concept {
 using visitor_in_param = const void*;
 using visitor_out_param = void*;
 
-template <is_extendable_interface INTERFACE>
+template <interface::is_interface INTERFACE>
 struct visitor_methods {
   using method_t =
       extension_method<INTERFACE, void(virtual_void::const_, visitor_in_param,
@@ -16,12 +16,12 @@ struct visitor_methods {
   method_t head, center, tail;
 };
 
-template <is_extendable_interface INTERFACE>
+template <interface::is_interface INTERFACE>
 using visit = extension_method<
     INTERFACE, void(virtual_void::const_, visitor_methods<INTERFACE> const&,
                     visitor_out_param, visitor_in_param const&)>;
 
-template <is_extendable_interface INTERFACE, typename OUT, typename IN>
+template <interface::is_interface INTERFACE, typename OUT, typename IN>
 class visitor : public visitor_methods<INTERFACE> {
  public:
   using extended_v_table_t = typename INTERFACE::v_table_t;

@@ -11,50 +11,40 @@
 
 namespace virtual_void::open_concept {
 
-template <typename V_TABLE>
-concept is_extendable_v_table =
-    std::same_as<typename V_TABLE::v_table_base_t, meta::base_v_table>;
-
-template <typename I>
-concept is_extendable_interface =
-    interface::is_interface<I> && is_extendable_v_table<typename I::v_table_t>;
-
-template <is_extendable_interface I>
+template <interface::is_interface I>
 using extended_v_table = typename I::v_table_t;
 
-template <is_extendable_v_table EXTENDED_V_TABLE>
+template <typename EXTENDED_V_TABLE>
 std::size_t extension_method_count_of = 0;
 
-using open_v_table_t = meta::open_v_table_t;
+using open_v_table_t = interface::open_v_table_t;
 
-void insert_function(open_v_table_t& v_table, std::size_t index, auto fp) {
-  if (v_table.size() <= index) v_table.resize(index + 1);
-  v_table[index] = reinterpret_cast<meta::open_v_table_function_t>(fp);
+void insert_function(open_v_table_t* v_table, std::size_t index, auto fp) {
+  if (v_table->size() <= index) v_table->resize(index + 1);
+  v_table->at(index) = reinterpret_cast<interface::open_v_table_function_t>(fp);
 }
 
-template <is_extendable_v_table EXTENDED_V_TABLE, typename CLASS>
-open_v_table_t& v_table_instance() {
-  return EXTENDED_V_TABLE::template imlpementation<std::decay_t<CLASS>>()
-      ->open_v_table;
-}
-
-template <is_extendable_interface EXTENDED_INTERACE, typename R,
+template <interface::is_interface EXTENDED_INTERACE, typename R,
           typename... ARGS>
 class extension_method;
 
-template <is_extendable_interface EXTENDED_INTERACE, typename R,
+template <interface::is_interface EXTENDED_INTERACE, typename R,
           typename... ARGS>
 class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
  public:
   using interface_t = EXTENDED_INTERACE;
   using extended_v_table_t = extended_v_table<EXTENDED_INTERACE>;
 
-  template <typename CONSTNESS, typename... >
+  template <typename CONSTNESS, typename...>
   struct observer;
-  template < typename... OTHER_ARGS>
-  struct observer<const_, OTHER_ARGS...>{ using type = data::has_no_meta::const_observer; };
   template <typename... OTHER_ARGS>
-  struct observer<mutable_, OTHER_ARGS...>{ using type = data::has_no_meta::mutable_observer; };
+  struct observer<const_, OTHER_ARGS...> {
+    using type = data::has_no_meta::const_observer;
+  };
+  template <typename... OTHER_ARGS>
+  struct observer<mutable_, OTHER_ARGS...> {
+    using type = data::has_no_meta::mutable_observer;
+  };
 
   using observer_interface_t =
       interface_t::template type_for<observer<ARGS...>::type>;
@@ -89,12 +79,11 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   extension_method(default_function::type f = default_function::noop)
       : default_(f) {}
   template <typename... OTHER_ARGS>
-  auto operator()(observer_interface_t const& m,
-                  OTHER_ARGS&&... args) const {
-    auto& v_table = get_v_table(m)->open_v_table;
-    if (v_table.size() <= index_)
+  auto operator()(observer_interface_t const& m, OTHER_ARGS&&... args) const {
+    auto v_table = get_v_table(m)->open_v_table;
+    if (v_table->size() <= index_)
       return default_(m, std::forward<OTHER_ARGS>(args)...);
-    auto target = v_table.at(index_);
+    auto target = v_table->at(index_);
     if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
 
     auto erased_function = reinterpret_cast<erased_function_t>(target);
@@ -103,13 +92,12 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   }
   template <typename CLASS, typename... OTHER_ARGS>
   auto operator()(CLASS const* p, OTHER_ARGS&&... args) const {
-    return (*this)(observer_interface_t{*p},
-                   std::forward<OTHER_ARGS>(args)...);
+    return (*this)(observer_interface_t{*p}, std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename FUNCTION>
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
-    auto& v_table = v_table_instance<extended_v_table_t, CLASS>();
+    auto v_table = interface::extension_method_table_instance<extended_v_table_t, CLASS>();
     insert_function(v_table, index_, fp);
     return fp;
   }
