@@ -253,7 +253,7 @@
     template <typename TO, typename FROM>                                      \
     friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \
       requires(std::derived_from<TO, FROM>);                                   \
-  };
+  };                                                                           \
 
 //    n(n&) = default;                                                           \
 

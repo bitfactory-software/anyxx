@@ -119,6 +119,13 @@ class base {
   }
 };
 
+template <typename V_TABLE, is_erased_data ERASED_DATA>
+struct interface_t;
+
+template <typename V_TABLE, is_erased_data ERASED_DATA>
+using interface_for = typename interface_t<V_TABLE, ERASED_DATA>::type;
+
+
 template <is_erased_data ERASED_DATA>
 auto& get_virtual_void(base<ERASED_DATA> const& interface) {
   return interface.erased_data_;

@@ -9,6 +9,7 @@
 #include <string>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/open_concept/open_concept.hpp>
 #include <virtual_void/open_concept/open_visitor.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
@@ -22,23 +23,27 @@ using namespace virtual_void::open_concept;
 namespace _21_Tree_TE_open_concept {
 
 namespace node {
+
+VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value)))
+
 struct interface;
-using model =
-    virtual_void::open_concept::model<interface,
-                                      data::has_no_meta::shared_const>;
+using model = node_i<data::has_no_meta::shared_const>;
 };  // namespace node
 
 struct Plus {
   Plus(node::model left, node::model right) : left(left), right(right) {}
   node::model left, right;
+  int value() const { return left.value() + right.value(); }
 };
 struct Times {
   Times(node::model left, node::model right) : left(left), right(right) {}
   node::model left, right;
+  int value() const { return left.value() * right.value(); }
 };
 struct Integer {
-  explicit Integer(int value) : value(value) {}
-  int value;
+  explicit Integer(int i_) : i(i_) {}
+  int i;
+  int value() const { return i; }
 };
 
 // =============================================================================
@@ -46,37 +51,48 @@ struct Integer {
 
 //-----------------------------------------------------------------------------
 // evaluate
-extension_method<node::interface, int(virtual_void::const_)> value;
+extension_method<node::model::v_table_t, int(virtual_void::const_)> value;
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
 auto __ = value.define<Times>(
     [](auto expr) { return value(expr->left) * value(expr->right); });
-auto __ = value.define<Integer>([](auto expr) { return expr->value; });
+auto __ = value.define<Integer>([](auto expr) { return expr->i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
-extension_method<node::interface, std::string(virtual_void::const_)> as_forth;
+extension_method<node::model::v_table_t, std::string(virtual_void::const_)>
+    as_forth;
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
 });
 auto __ = as_forth.define<Times>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " *";
 });
-auto __ = as_forth.define<Integer>(
-    [](auto expr) { return std::to_string(expr->value); });
+auto __ =
+    as_forth.define<Integer>([](auto expr) { return std::to_string(expr->i); });
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
-extension_method<node::interface, std::string(virtual_void::const_)> as_lisp;
+extension_method<node::model::v_table_t, std::string(virtual_void::const_)>
+    as_lisp;
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });
 auto __ = as_lisp.define<Times>([](auto expr) {
   return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });
-auto __ = as_lisp.define<Integer>(
-    [](auto expr) { return std::to_string(expr->value); });
+auto __ =
+    as_lisp.define<Integer>([](auto expr) { return std::to_string(expr->i); });
 //-----------------------------------------------------------------------------
+}  // namespace _21_Tree_TE_open_concept
+
+using namespace virtual_void;
+
+VV_RUNTIME_STATIC(type_info, _21_Tree_TE_open_concept::Plus)
+VV_RUNTIME_STATIC(type_info, _21_Tree_TE_open_concept::Times)
+VV_RUNTIME_STATIC(type_info, _21_Tree_TE_open_concept::Integer)
+
+namespace _21_Tree_TE_open_concept {
 
 TEST_CASE("21_Tree_TE_open_concept") {
   using namespace virtual_void;
@@ -104,124 +120,121 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 //-----------------------------------------------------------------------------
 
-////-----------------------------------------------------------------------------
-// visiting vistors
-
-// this one must be provided be EACH "node" model:
-namespace node {
-open_concept::visit<node::interface> visit_left_first;
-open_concept::visit<node::interface> visit_right_first;
-open_concept::visit<node::interface> visit_center_first;
-}  // namespace node
-
-namespace {
-auto visit_center = [](auto expr, auto const& visit, auto out, auto in) {
-  visit.center(expr, out, in);
-};
-auto visit_left_right = [](auto expr, auto const& visit, auto out, auto in) {
-  visit.head(expr, out, in);
-  node::visit_left_first(expr->left, visit, out, in);
-  visit.center(expr, out, in);
-  node::visit_left_first(expr->right, visit, out, in);
-  visit.tail(expr, out, in);
-};
-auto visit_right_left = [](auto expr, auto const& visit, auto out, auto in) {
-  visit.tail(expr, out, in);
-  node::visit_right_first(expr->right, visit, out, in);
-  visit.center(expr, out, in);
-  node::visit_right_first(expr->left, visit, out, in);
-  visit.head(expr, out, in);
-};
-auto visit_center_left_right = [](auto expr, auto const& visit, auto out,
-                                  auto in) {
-  visit.center(expr, out, in);
-  visit.head(expr, out, in);
-  node::visit_center_first(expr->left, visit, out, in);
-  node::visit_center_first(expr->right, visit, out, in);
-  visit.tail(expr, out, in);
-};
-}  // namespace
-auto __ = node::visit_left_first.define<Plus>(visit_left_right);
-auto __ = node::visit_left_first.define<Times>(visit_left_right);
-auto __ = node::visit_left_first.define<Integer>(visit_center);
-
-auto __ = node::visit_right_first.define<Plus>(visit_right_left);
-auto __ = node::visit_right_first.define<Times>(visit_right_left);
-auto __ = node::visit_right_first.define<Integer>(visit_center);
-
-auto __ = node::visit_center_first.define<Plus>(visit_center_left_right);
-auto __ = node::visit_center_first.define<Times>(visit_center_left_right);
-auto __ = node::visit_center_first.define<Integer>(visit_center);
-
-open_concept::visitor<node::interface, std::string, char> dump;
-auto __ = dump.define_center<Times>(
-    [](auto expr, auto& out, auto const& l) { out += "*"; });
-auto __ = dump.define_head<Plus>(
-    [](auto expr, auto& out, auto const& l) { out += " "; });
-auto __ = dump.define_center<Plus>(
-    [](auto expr, auto& out, auto const& l) { out += "+"; });
-auto __ = dump.define_tail<Plus>(
-    [](auto expr, auto& out, auto const& l) { out += " "; });
-auto __ = dump.define_center<Integer>(
-    [](auto expr, auto& out, auto const&) {
-      out += std::to_string(expr->value) + " ";
-    });
-
-// node::visitor dump_as_lisp;
-// auto __ = dump_as_lisp.head.define<Plus>([](auto expr) {
-//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-// });
-// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
-//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-// });
-// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
-//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-// });
-// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
-//   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-// });
-// auto __ = dump_as_lisp.define<Times>([](auto expr) {
-//   return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
-// });
-// auto __ = dump_as_lisp.center.define<Integer>(
-//     [](Integer const* expr, auto out, auto)
-//     {
-//       auto s = unerase_cast<std::string*>(out);
-//       (*s) += std::to_string(expr->value);
+//////-----------------------------------------------------------------------------
+//// visiting vistors
+//
+//// this one must be provided be EACH "node" model:
+// namespace node {
+// open_concept::visit<node::interface> visit_left_first;
+// open_concept::visit<node::interface> visit_right_first;
+// open_concept::visit<node::interface> visit_center_first;
+// }  // namespace node
+//
+// namespace {
+// auto visit_center = [](auto expr, auto const& visit, auto out, auto in) {
+//   visit.center(expr, out, in);
+// };
+// auto visit_left_right = [](auto expr, auto const& visit, auto out, auto in) {
+//   visit.head(expr, out, in);
+//   node::visit_left_first(expr->left, visit, out, in);
+//   visit.center(expr, out, in);
+//   node::visit_left_first(expr->right, visit, out, in);
+//   visit.tail(expr, out, in);
+// };
+// auto visit_right_left = [](auto expr, auto const& visit, auto out, auto in) {
+//   visit.tail(expr, out, in);
+//   node::visit_right_first(expr->right, visit, out, in);
+//   visit.center(expr, out, in);
+//   node::visit_right_first(expr->left, visit, out, in);
+//   visit.head(expr, out, in);
+// };
+// auto visit_center_left_right = [](auto expr, auto const& visit, auto out,
+//                                   auto in) {
+//   visit.center(expr, out, in);
+//   visit.head(expr, out, in);
+//   node::visit_center_first(expr->left, visit, out, in);
+//   node::visit_center_first(expr->right, visit, out, in);
+//   visit.tail(expr, out, in);
+// };
+// }  // namespace
+// auto __ = node::visit_left_first.define<Plus>(visit_left_right);
+// auto __ = node::visit_left_first.define<Times>(visit_left_right);
+// auto __ = node::visit_left_first.define<Integer>(visit_center);
+//
+// auto __ = node::visit_right_first.define<Plus>(visit_right_left);
+// auto __ = node::visit_right_first.define<Times>(visit_right_left);
+// auto __ = node::visit_right_first.define<Integer>(visit_center);
+//
+// auto __ = node::visit_center_first.define<Plus>(visit_center_left_right);
+// auto __ = node::visit_center_first.define<Times>(visit_center_left_right);
+// auto __ = node::visit_center_first.define<Integer>(visit_center);
+//
+// open_concept::visitor<node::interface, std::string, char> dump;
+// auto __ = dump.define_center<Times>(
+//     [](auto expr, auto& out, auto const& l) { out += "*"; });
+// auto __ = dump.define_head<Plus>(
+//     [](auto expr, auto& out, auto const& l) { out += " "; });
+// auto __ = dump.define_center<Plus>(
+//     [](auto expr, auto& out, auto const& l) { out += "+"; });
+// auto __ = dump.define_tail<Plus>(
+//     [](auto expr, auto& out, auto const& l) { out += " "; });
+// auto __ = dump.define_center<Integer>(
+//     [](auto expr, auto& out, auto const&) {
+//       out += std::to_string(expr->value) + " ";
 //     });
-
-TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
-  using namespace virtual_void;
-
-  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
-
-  {
-    std::string s;
-    dump(expr, node::visit_left_first, s, 'l');
-    std::cout << s << "\n";
-    CHECK(s == "2 * 3 +4  ");
-  }
-  {
-    std::string s;
-    dump(expr, node::visit_center_first, s, 'f');
-    std::cout << s << "\n";
-    CHECK(s == "*2 + 3 4  ");
-  }
-  {
-    std::string s;
-    dump(expr, node::visit_right_first, s, ' ');
-    std::cout << s << "\n";
-    CHECK(s == " 4 +3  *2 ");
-  }
-
-#ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
-    // std::stringstream outstream;
-    // node::any out(&outstream);
-    std::string s;
-    return node::visit(expr, dump, &s, nullptr);
-  };
-#endif  // !_DEBUG
-}
-
+//
+//// node::visitor dump_as_lisp;
+//// auto __ = dump_as_lisp.head.define<Plus>([](auto expr) {
+////   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//// });
+//// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+////   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//// });
+//// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+////   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//// });
+//// auto __ = dump_as_lisp.center.define<Plus>([](auto expr) {
+////   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+//// });
+//// auto __ = dump_as_lisp.define<Times>([](auto expr) {
+////   return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) +
+///")"; / }); / auto __ = dump_as_lisp.center.define<Integer>( /     [](Integer
+/// const* expr, auto out, auto) /     { /       auto s =
+/// unerase_cast<std::string*>(out); /       (*s) +=
+/// std::to_string(expr->value); /     });
+//
+// TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
+//  using namespace virtual_void;
+//
+//  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
+//
+//  {
+//    std::string s;
+//    dump(expr, node::visit_left_first, s, 'l');
+//    std::cout << s << "\n";
+//    CHECK(s == "2 * 3 +4  ");
+//  }
+//  {
+//    std::string s;
+//    dump(expr, node::visit_center_first, s, 'f');
+//    std::cout << s << "\n";
+//    CHECK(s == "*2 + 3 4  ");
+//  }
+//  {
+//    std::string s;
+//    dump(expr, node::visit_right_first, s, ' ');
+//    std::cout << s << "\n";
+//    CHECK(s == " 4 +3  *2 ");
+//  }
+//
+// #ifndef _DEBUG
+//  BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
+//    // std::stringstream outstream;
+//    // node::any out(&outstream);
+//    std::string s;
+//    return node::visit(expr, dump, &s, nullptr);
+//  };
+// #endif  // !_DEBUG
+//}
+//
 }  // namespace _21_Tree_TE_open_concept
