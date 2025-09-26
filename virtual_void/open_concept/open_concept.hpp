@@ -54,32 +54,38 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
-  using erased_function_t =
+    using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
 
- private:
-  std::size_t index_ = extension_method_count_of<extended_v_table_t> ++;
-  erased_function_t default_;
-  static erased_function_t make_default_noop() {
-    return +[]<typename... ARGS>(ARGS...) -> R {
+  template <typename... ARGS>
+  struct default_function_impl;
+  template <is_constness CONSTNESS, typename... OTHER_ARGS>
+  struct default_function_impl<CONSTNESS, OTHER_ARGS...> {
+    using type = R (*)(const_observer_interface_t const&, OTHER_ARGS...);
+    static R noop(const_observer_interface_t const&, OTHER_ARGS...) {
       if constexpr (std::same_as<R, void>) {
         return;
       } else {
         return {};
       }
-    };
-  }
+    }
+  };
+  using default_function = default_function_impl<ARGS...>;
+
+ private:
+  std::size_t index_ = extension_method_count_of<extended_v_table_t> ++;
+  default_function::type default_ = default_function::noop;
 
  public:
   extension_method(extension_method const&) = delete;
-  extension_method(erased_function_t f = make_default_noop()) : default_(f) {}
+  extension_method(default_function::type f = default_function::noop) : default_(f) {}
   template <interface::is_interface MODEL, typename... OTHER_ARGS>
   auto operator()(MODEL const& m, OTHER_ARGS&&... args) const {
     auto& v_table = get_v_table(m)->open_v_table;
     if (v_table.size() <= index_)
-      return default_(nullptr, std::forward<OTHER_ARGS>(args)...);
+      return default_(m, std::forward<OTHER_ARGS>(args)...);
     auto target = v_table.at(index_);
-    if (!target) return default_(nullptr, std::forward<OTHER_ARGS>(args)...);
+    if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
 
     auto erased_function = reinterpret_cast<erased_function_t>(target);
     return (erased_function)(get_interface_data(m),
