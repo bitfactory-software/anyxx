@@ -34,8 +34,8 @@ class visitor : public visitor_methods<INTERFACE> {
   using typed_implementation_function_type = auto (*)(self_t<CLASS>, OUT&,
                                                       IN const&) -> void;
 
-  using const_observer_interface_t =
-      typename visitor_method_t::const_observer_interface_t;
+  using observer_interface_t =
+      typename visitor_method_t::observer_interface_t;
 
  private:
   template <typename CLASS>
@@ -61,14 +61,14 @@ class visitor : public visitor_methods<INTERFACE> {
     return self.define_<CLASS>(self.tail, f);
   }
 
-  void operator()(const_observer_interface_t const& m, visit<INTERFACE> const& visit,
+  void operator()(observer_interface_t const& m, visit<INTERFACE> const& visit,
                   OUT& out, IN const& in = {}) const {
     visit(m, *this, &out, &in);
   }
   template <typename CLASS>
   auto operator()(CLASS const* p, visit<INTERFACE> const& visit,
                   OUT& out, IN const& in = {}) const {
-    return (*this)(const_observer_interface_t{*p}, out, in);
+    return (*this)(observer_interface_t{*p}, out, in);
   }
 };
 

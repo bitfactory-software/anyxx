@@ -48,21 +48,29 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
  public:
   using interface_t = EXTENDED_INTERACE;
   using extended_v_table_t = extended_v_table<EXTENDED_INTERACE>;
-  using const_observer_interface_t =
-      interface_t::template type_for<data::has_no_meta::const_observer>;
+
+  template <typename CONSTNESS, typename... >
+  struct observer;
+  template < typename... OTHER_ARGS>
+  struct observer<const_, OTHER_ARGS...>{ using type = data::has_no_meta::const_observer; };
+  template <typename... OTHER_ARGS>
+  struct observer<mutable_, OTHER_ARGS...>{ using type = data::has_no_meta::mutable_observer; };
+
+  using observer_interface_t =
+      interface_t::template type_for<observer<ARGS...>::type>;
   using CONSTNESS = typename first_t<ARGS...>;
   using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
-    using erased_function_t =
+  using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
 
   template <typename... ARGS>
   struct default_function_impl;
   template <is_constness CONSTNESS, typename... OTHER_ARGS>
   struct default_function_impl<CONSTNESS, OTHER_ARGS...> {
-    using type = R (*)(const_observer_interface_t const&, OTHER_ARGS...);
-    static R noop(const_observer_interface_t const&, OTHER_ARGS...) {
+    using type = R (*)(observer_interface_t const&, OTHER_ARGS...);
+    static R noop(observer_interface_t const&, OTHER_ARGS...) {
       if constexpr (std::same_as<R, void>) {
         return;
       } else {
@@ -78,9 +86,11 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
 
  public:
   extension_method(extension_method const&) = delete;
-  extension_method(default_function::type f = default_function::noop) : default_(f) {}
+  extension_method(default_function::type f = default_function::noop)
+      : default_(f) {}
   template <typename... OTHER_ARGS>
-  auto operator()(const_observer_interface_t const& m, OTHER_ARGS&&... args) const {
+  auto operator()(observer_interface_t const& m,
+                  OTHER_ARGS&&... args) const {
     auto& v_table = get_v_table(m)->open_v_table;
     if (v_table.size() <= index_)
       return default_(m, std::forward<OTHER_ARGS>(args)...);
@@ -93,7 +103,7 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   }
   template <typename CLASS, typename... OTHER_ARGS>
   auto operator()(CLASS const* p, OTHER_ARGS&&... args) const {
-    return (*this)(const_observer_interface_t{*p},
+    return (*this)(observer_interface_t{*p},
                    std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename FUNCTION>
