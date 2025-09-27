@@ -4,7 +4,7 @@
 #include <ranges>
 #include <typeindex>
 #include <vector>
-#include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/forward.hpp>
 #include <virtual_void/meta/table.hpp>
@@ -16,7 +16,7 @@ namespace virtual_void::meta {
 
 class type_info {
   const std::type_info& type_info_;
-  using copy_construct_t = auto(const_void) -> data::has_no_meta::unique;
+  using copy_construct_t = auto(const_void) -> data::unique;
   copy_construct_t* copy_construct_;
 
   std::vector<base_v_table*> i_table_;
@@ -25,7 +25,7 @@ class type_info {
   template <typename CLASS>
   constexpr type_info(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return erased<data::has_no_meta::unique>(
+          return erased<data::unique>(
               *static_cast<CLASS const*>(from));
         }) {}
 

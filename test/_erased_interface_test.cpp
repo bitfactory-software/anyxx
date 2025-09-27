@@ -6,7 +6,7 @@
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
@@ -285,7 +285,7 @@ void print_shape_i_co(shape_i<data::const_observer> s) {
 TEST_CASE("dynamic interface has_type_info::unique") {
   circle c{12.3};
 
-  using shape_unique = shape_i<data::has_no_meta::unique>;
+  using shape_unique = shape_i<data::unique>;
   shape_unique s1{c};
 
   REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));

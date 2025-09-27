@@ -50,7 +50,7 @@ to_string_i<virtual_void::data::shared_const>
 test::component_base::get_to_string_i_sc(double v) {
   return X{v};
 }
-to_string_i<virtual_void::data::has_no_meta::unique>
+to_string_i<virtual_void::data::unique>
 test::component_base::get_to_string_i_u(double v) {
   return X{v};
 }
@@ -59,7 +59,7 @@ virtual_void::data::shared_const test::component_base::sc_X(
     double v) {
   return virtual_void::erased<shared_const>(X{v});
 }
-virtual_void::data::has_no_meta::unique test::component_base::u_X(
+virtual_void::data::unique test::component_base::u_X(
     double v) {
   return virtual_void::erased<unique>(X{v});
 }

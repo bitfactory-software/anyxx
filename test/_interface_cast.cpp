@@ -2,7 +2,7 @@
 #include <iostream>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 

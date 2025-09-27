@@ -5,7 +5,7 @@
 #include <vector>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
@@ -24,7 +24,7 @@ VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 using to_string_sc = to_string_i<data::shared_const>;
 using to_string_co = to_string_i<data::const_observer>;
 
-using to_string_u = to_string_i<data::has_no_meta::unique>;
+using to_string_u = to_string_i<data::unique>;
 using to_string_mo = to_string_i<data::mutable_observer>;
 }  // namespace
 

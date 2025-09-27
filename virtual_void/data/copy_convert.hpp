@@ -2,7 +2,7 @@
 
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -37,7 +37,7 @@ struct copy_converter<has_no_meta::value, has_no_meta::value> {
   }
 };
 template <is_erased_data FROM>
-struct copy_converter<has_no_meta::unique, FROM> {
+struct copy_converter<unique, FROM> {
   auto operator()(const auto& from, auto const& runtime) {
     return runtime.copy_construct(get_data(from));
   }
