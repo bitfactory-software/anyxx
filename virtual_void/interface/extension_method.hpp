@@ -9,7 +9,7 @@
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::open_concept {
+namespace virtual_void::interface {
 
 template <interface::is_interface I>
 using extended_v_table = typename I::v_table_t;
@@ -103,4 +103,4 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   }
 };
 
-}  // namespace virtual_void::open_concept
+}  // namespace 

@@ -11,17 +11,17 @@
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/open_concept/open_concept.hpp>
-#include <virtual_void/open_concept/open_visitor.hpp>
+#include <virtual_void/interface/extension_method.hpp>
+#include <virtual_void/interface/open_visitor.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
 
 using std::cout;
 using std::string;
 
 using namespace virtual_void;
-using namespace virtual_void::open_concept;
+using namespace virtual_void::interface;
 
-namespace _21_Tree_TE_open_concept {
+namespace _21_Tree_TE_interface_extension_method {
 
 namespace node {
 
@@ -84,17 +84,17 @@ auto __ = as_lisp.define<Times>([](auto expr) {
 auto __ =
     as_lisp.define<Integer>([](auto expr) { return std::to_string(expr->i); });
 //-----------------------------------------------------------------------------
-}  // namespace _21_Tree_TE_open_concept
+}  // namespace _21_Tree_TE_interface_extension_method
 
 using namespace virtual_void;
 
-VV_RUNTIME_STATIC(type_info, _21_Tree_TE_open_concept::Plus)
-VV_RUNTIME_STATIC(type_info, _21_Tree_TE_open_concept::Times)
-VV_RUNTIME_STATIC(type_info, _21_Tree_TE_open_concept::Integer)
+VV_RUNTIME_STATIC(type_info, _21_Tree_TE_interface_extension_method::Plus)
+VV_RUNTIME_STATIC(type_info, _21_Tree_TE_interface_extension_method::Times)
+VV_RUNTIME_STATIC(type_info, _21_Tree_TE_interface_extension_method::Integer)
 
-namespace _21_Tree_TE_open_concept {
+namespace _21_Tree_TE_interface_extension_method {
 
-TEST_CASE("21_Tree_TE_open_concept") {
+TEST_CASE("21_Tree_TE_interface_extension_method") {
   using namespace virtual_void;
 
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
@@ -113,8 +113,8 @@ TEST_CASE("21_Tree_TE_open_concept") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_open_concept value") { return value(expr); };
-  BENCHMARK("21_Tree_TE_open_concept as_lisp") { return as_lisp(expr); };
+  BENCHMARK("21_Tree_TE_interface_extension_method value") { return value(expr); };
+  BENCHMARK("21_Tree_TE_interface_extension_method as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG
 }
 
@@ -125,9 +125,9 @@ TEST_CASE("21_Tree_TE_open_concept") {
 
 // this one must be provided be EACH "node" model:
 namespace node {
-open_concept::visit<node::model> visit_left_first;
-open_concept::visit<node::model> visit_right_first;
-open_concept::visit<node::model> visit_center_first;
+virtual_void::interface::visit<node::model> visit_left_first;
+virtual_void::interface::visit<node::model> visit_right_first;
+virtual_void::interface::visit<node::model> visit_center_first;
 }  // namespace node
 
 namespace {
@@ -169,7 +169,7 @@ auto __ = node::visit_center_first.define<Plus>(visit_center_left_right);
 auto __ = node::visit_center_first.define<Times>(visit_center_left_right);
 auto __ = node::visit_center_first.define<Integer>(visit_center);
 
-open_concept::visitor<node::model, std::string, char> dump;
+virtual_void::interface::visitor<node::model, std::string, char> dump;
 auto __ = dump.define_center<Times>(
     [](auto expr, auto& out, auto const& l) { out += "*"; });
 auto __ = dump.define_head<Plus>(
@@ -187,7 +187,7 @@ auto pop(std::stack<int>& stack) {
   stack.pop();
   return t;
 }
-open_concept::visitor<node::model, std::stack<int>, char> value_visitor;
+virtual_void::interface::visitor<node::model, std::stack<int>, char> value_visitor;
 auto __ = value_visitor.define_tail<Times>(
     [](auto expr, auto& out, auto const& l) { out.push(pop(out) * pop(out)); });
 auto __ =
@@ -198,7 +198,7 @@ auto __ =
 auto __ = value_visitor.define_center<Integer>(
     [](auto expr, auto& out, auto const&) { out.push(expr->i); });
 
-TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
+TEST_CASE("21_Tree_TE_interface_extension_method_with_visitor") {
   using namespace virtual_void;
 
   auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
@@ -230,15 +230,15 @@ TEST_CASE("21_Tree_TE_open_concept_with_visitor") {
   }
 
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_open_concept_with_visitor value_visitor") {
+  BENCHMARK("21_Tree_TE_interface_extension_method_with_visitor value_visitor") {
     std::stack<int> s;
     value_visitor(expr, node::visit_left_first, s);
   };
-  BENCHMARK("21_Tree_TE_open_concept_with_visitor dump") {
+  BENCHMARK("21_Tree_TE_interface_extension_method_with_visitor dump") {
     std::string s;
     return dump(expr, node::visit_right_first, s);
   };
 #endif  // !_DEBUG
 }
 
-}  // namespace _21_Tree_TE_open_concept
+}  // namespace _21_Tree_TE_interface_extension_method

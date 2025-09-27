@@ -10,19 +10,17 @@
 #include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
 #include <virtual_void/data/has_meta_runtime/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/interface/extension_method.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
 
 #include "a.hpp"
 
 using namespace Catch::Matchers;
 
-#include <virtual_void/open_concept/open_concept.hpp>
-
 using namespace virtual_void;
 using namespace virtual_void::meta;
 using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void::interface;
-using namespace virtual_void::open_concept;
 
 namespace {
 struct x_t {
@@ -64,11 +62,10 @@ auto __ =
 namespace {
 
 TEST_CASE("virtual_typed/interface/extension_method") {
-
-x_t x{"hallo"};
-test_derived_i_mo i{x};
-CHECK(i.to_string() == "hallo");
-CHECK(to_string_otherwise(i) == "hallo otherwise");
+  x_t x{"hallo"};
+  test_derived_i_mo i{x};
+  CHECK(i.to_string() == "hallo");
+  CHECK(to_string_otherwise(i) == "hallo otherwise");
 }
 
 }  // namespace

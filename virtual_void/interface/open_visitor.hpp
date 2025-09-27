@@ -1,9 +1,9 @@
 #pragma once
 
 #include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/open_concept/open_concept.hpp>
+#include <virtual_void/interface/extension_method.hpp>
 
-namespace virtual_void::open_concept {
+namespace virtual_void::interface {
 
 using visitor_in_param = const void*;
 using visitor_out_param = void*;
@@ -72,4 +72,4 @@ class visitor : public visitor_methods<INTERFACE> {
   }
 };
 
-}  // namespace virtual_void::open_concept
+}  // namespace 
