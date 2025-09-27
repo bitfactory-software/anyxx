@@ -15,15 +15,13 @@ template <is_erased_data FROM>
   requires(!is_const_data<FROM>)
 struct copy_converter<has_no_meta::mutable_observer, FROM> {
   auto operator()(const auto& from, auto const& runtime) {
-    return has_no_meta::mutable_observer{virtual_void::get_data(from),
-                                         has_no_meta::meta{}};
+    return has_no_meta::mutable_observer{virtual_void::get_data(from)};
   }
 };
 template <is_erased_data FROM>
 struct copy_converter<has_no_meta::const_observer, FROM> {
   auto operator()(const auto& from, auto const& runtime) {
-    return has_no_meta::const_observer{virtual_void::get_data(from),
-                                       has_no_meta::meta{}};
+    return has_no_meta::const_observer{virtual_void::get_data(from)};
   }
 };
 template <>

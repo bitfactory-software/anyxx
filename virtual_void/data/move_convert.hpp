@@ -9,8 +9,8 @@ struct move_converter {
   TO operator()(FROM&& from) { return std::move(from); }
 };
 
-template <voidness VOIDNESS, typename META, is_erased_data FROM>
-struct move_converter<observer<VOIDNESS, META>, FROM> {
+template <voidness VOIDNESS, is_erased_data FROM>
+struct move_converter<observer<VOIDNESS>, FROM> {
   auto operator()(auto&&) { static_assert(false, "no move to observer!"); }
 };
 

@@ -47,7 +47,6 @@ concept is_meta = requires(META meta) {
 template <class PTR>
 concept has_erased_data_trait = requires(PTR ptr) {
   typename erased_data_trait<PTR>::void_t;
-  typename erased_data_trait<PTR>::meta_t;
 };
 
 template <class E>

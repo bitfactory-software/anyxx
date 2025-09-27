@@ -4,12 +4,10 @@
 
 namespace virtual_void::data {
 
-template <typename VV_VOID, typename META>
-using observer = decorated_ptr<VV_VOID, META>;
+template <typename VV_VOID>
+using observer = decorated_ptr<VV_VOID>;
 
-template <typename META>
-using const_observer = observer<void const*, META>;
-template <typename META>
-using mutable_observer = observer<void*, META>;
+using const_observer = observer<void const*>;
+using mutable_observer = observer<void*>;
 
 }  // namespace virtual_void::data

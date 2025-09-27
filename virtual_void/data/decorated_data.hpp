@@ -4,18 +4,16 @@
 
 namespace virtual_void::data {
 
-template <typename META_DATA>
-struct decoration_base : META_DATA {
+struct decoration_base {
   template <typename V>
-  decoration_base(std::in_place_type_t<V>) : META_DATA(std::in_place_type<V>) {}
+  decoration_base(std::in_place_type_t<V>) {}
   void* value();
   void const* value() const;
 };
 
-template <typename V, typename META_DATA>
-struct decorated_data : decoration_base<META_DATA> {
-  using meta_data_t = META_DATA;
-  using base_t = decoration_base<META_DATA>;
+template <typename V>
+struct decorated_data : decoration_base {
+  using base_t = decoration_base;
   using value_t = V;
   value_t value_;
   template <typename... ARGS>
@@ -24,21 +22,19 @@ struct decorated_data : decoration_base<META_DATA> {
         value_(std::forward<ARGS>(args)...) {}
 };
 
-template <typename META_DATA>
-void* decoration_base<META_DATA>::value() {
-  return &static_cast<decorated_data<int, META_DATA>*>(this)->value_;
+inline void* decoration_base::value() {
+  return &static_cast<decorated_data<int>*>(this)->value_;
 };
-template <typename META_DATA>
-void const* decoration_base<META_DATA>::value() const {
-  return &static_cast<decorated_data<int, META_DATA> const*>(this)->value_;
+inline void const* decoration_base::value() const {
+  return &static_cast<decorated_data<int> const*>(this)->value_;
 };
 
-template <typename TO, typename META_DATA>
-TO const* unchecked_unerase_cast(decoration_base<META_DATA> const& holded) {
+template <typename TO>
+TO const* unchecked_unerase_cast(decoration_base const& holded) {
   return static_cast<TO const*>(holded.value());
 }
-template <typename TO, typename META_DATA>
-TO* unchecked_unerase_cast(decoration_base<META_DATA>& holded) {
+template <typename TO>
+TO* unchecked_unerase_cast(decoration_base& holded) {
   return static_cast<TO*>(holded.value());
 }
 

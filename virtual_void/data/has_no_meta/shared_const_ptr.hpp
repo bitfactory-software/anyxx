@@ -1,16 +1,16 @@
 #pragma once
 
 #include <virtual_void/data/shared_const_ptr_trait.hpp>
-#include <virtual_void/data/has_no_meta/meta.hpp>
+
 
 namespace virtual_void::data::has_no_meta {
-using shared_const_ptr = data::shared_const_ptr<meta>;
+using shared_const_ptr = data::shared_const_ptr;
 }
 
 namespace virtual_void {
 template <>
 struct erased_data_trait<data::has_no_meta::shared_const_ptr>
-    : shared_const_ptr_trait<data::has_no_meta::meta> {};
+    : shared_const_ptr_trait {};
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_no_meta {

@@ -4,6 +4,5 @@
 #include <virtual_void/data/decorated_ptr.hpp>
 
 namespace virtual_void::data {
-template <typename META>
-using unique_ptr = decorated_ptr<void_erased_unique_ptr, META>;
+using unique_ptr = decorated_ptr<void_erased_unique_ptr>;
 }  // namespace virtual_void::data

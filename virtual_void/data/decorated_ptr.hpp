@@ -4,15 +4,15 @@
 
 namespace virtual_void::data {
 
-template <typename PTR, typename META>
-struct decorated_ptr : META {
+template <typename PTR>
+struct decorated_ptr {
   PTR ptr_ = nullptr;
 
   decorated_ptr() = default;
-  decorated_ptr(PTR& ptr, META const& meta) : META(meta), ptr_(ptr) {}
-  decorated_ptr(const decorated_ptr& other) : META(other), ptr_(other.ptr_) {}
+  decorated_ptr(PTR& ptr) : ptr_(ptr) {}
+  decorated_ptr(const decorated_ptr& other) : ptr_(other.ptr_) {}
   decorated_ptr(decorated_ptr&& rhs) noexcept
-      : META(std::move(*(META*)&rhs)), ptr_(std::move(rhs.ptr_)) {}
+      : ptr_(std::move(rhs.ptr_)) {}
   decorated_ptr& operator=(decorated_ptr const& rhs) noexcept {
     decorated_ptr new_{rhs};
     swap(*this, new_);
@@ -25,16 +25,11 @@ struct decorated_ptr : META {
     return *this;
   }
 
-  decorated_ptr(PTR ptr, const META& meta) : ptr_(std::move(ptr)), META(meta) {}
-  // template <is_erased_data RHS>
-  // decorated_ptr(RHS const& rhs)
-  //   requires(is_const_data<decorated_ptr> == is_const_data<RHS>)
-  //     : META(*get_meta(rhs)), ptr_(rhs) {}
+  decorated_ptr(PTR ptr) : ptr_(std::move(ptr)){}
 
   friend void swap(decorated_ptr& lhs, decorated_ptr& rhs) noexcept {
     using namespace std;
     swap(lhs.ptr_, rhs.ptr_);
-    swap(static_cast<META&>(lhs), static_cast<META&>(rhs));
   }
 
   explicit operator bool() const { return static_cast<bool>(ptr_); }

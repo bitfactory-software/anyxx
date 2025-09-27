@@ -6,8 +6,8 @@
 
 namespace virtual_void {
 
-template <template< typename > typename STD_PTR, typename VV_VOID, typename META>
-struct erased_std_ptr_trait : decorated_ptr_trait<VV_VOID, META> {
+template <template< typename > typename STD_PTR, typename VV_VOID>
+struct erased_std_ptr_trait : decorated_ptr_trait<VV_VOID> {
   static VV_VOID value(const auto& ptr) { return ptr.ptr_.get(); }
 
   template <typename>

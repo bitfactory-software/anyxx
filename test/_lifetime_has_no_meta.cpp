@@ -6,7 +6,7 @@
 #include "a.hpp"
 #include <catch.hpp>
 
-#include <virtual_void/data/has_no_meta/meta.hpp>
+
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>

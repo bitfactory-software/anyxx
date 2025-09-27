@@ -2,19 +2,17 @@
 
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/observer_trait.hpp>
-#include <virtual_void/data/has_no_meta/meta.hpp>
 
 namespace virtual_void::data::has_no_meta {
 
 template <typename VV_VOID>
-using observer = data::observer<VV_VOID, meta>;
+using observer = data::observer<VV_VOID>;
 }
 
 namespace virtual_void {
 template <typename VV_VOID>
 struct erased_data_trait<data::has_no_meta::observer<VV_VOID>>
-    : observer_trait<data::has_no_meta::observer<VV_VOID>, VV_VOID,
-                     data::has_no_meta::meta> {};
+    : observer_trait<data::has_no_meta::observer<VV_VOID>, VV_VOID> {};
 }  // namespace virtual_void
 
 namespace virtual_void::data::has_no_meta {

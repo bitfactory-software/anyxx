@@ -5,12 +5,12 @@
 
 namespace virtual_void {
 
-template <typename META>
+
 struct value_trait : virtual_void_default_unerase {
-  using meta_t = META;
+  
   using void_t = void*;
   template <typename V>
-  using typed_t = data::decorated_data<V, META>;
+  using typed_t = data::decorated_data<V>;
   static constexpr bool is_constructibile_from_const = true;
   static void* value(const auto& ptr) { return ptr.get()->value(); }
   static auto meta(const auto& ptr) { return ptr.get()->get_meta(); }

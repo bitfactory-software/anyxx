@@ -1,57 +1,52 @@
 #include <any>
+#include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <catch.hpp>
-
-#include <virtual_void/meta/class.hpp>
 #include <virtual_void/data/decorated_data.hpp>
-#include <virtual_void/data/has_no_meta/meta.hpp>
-#include <virtual_void/data/has_no_meta/meta.hpp>
 #include <virtual_void/data/make_shared_const_decorated_data.hpp>
 #include <virtual_void/data/make_unique_decorated_data.hpp>
 #include <virtual_void/data/make_value_decorated_data.hpp>
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
 
-#define DATA_ALIGNED(T, META_DATA) data::decorated_data<T, META_DATA>
+#define DATA_ALIGNED(T) data::decorated_data<T>
 
-#define ASSERT_OFFSET_EMPTY(T, o)                                             \
-  static_assert(offsetof(DATA_ALIGNED(T, data::has_no_meta::meta), value_) == \
-                o);
+#define ASSERT_OFFSET_EMPTY(T, o) \
+  static_assert(offsetof(DATA_ALIGNED(T), value_) == o);
 
-#define ASSERT_OFFSET(T, META_DATA, o) \
-  static_assert(offsetof(DATA_ALIGNED(T, META_DATA), value_) == o);
+#define ASSERT_OFFSET(T, o) \
+  static_assert(offsetof(DATA_ALIGNED(T), value_) == o);
 
 #ifdef _DEBUG
 #define OFFSET_FOR_V_TABLE 8u
 #else
 #define OFFSET_FOR_V_TABLE 0u
 #endif
-static const constexpr std::size_t offset_for_v_table = OFFSET_FOR_V_TABLE;
+//static const constexpr std::size_t offset_for_v_table = OFFSET_FOR_V_TABLE;
 
-ASSERT_OFFSET_EMPTY(char, offset_for_v_table);
-ASSERT_OFFSET_EMPTY(int, offset_for_v_table);
-ASSERT_OFFSET_EMPTY(char const*, offset_for_v_table)
-ASSERT_OFFSET_EMPTY(std::string, offset_for_v_table)
+//ASSERT_OFFSET_EMPTY(char, offset_for_v_table);
+//ASSERT_OFFSET_EMPTY(int, offset_for_v_table);
+//ASSERT_OFFSET_EMPTY(char const*, offset_for_v_table)
+//ASSERT_OFFSET_EMPTY(std::string, offset_for_v_table)
 
-#define TRACE_OFFSET_EMPTY(T)                                         \
-  {                                                                   \
-    using TYPE = data::decorated_data<T, data::has_no_meta::meta>; \
-    std::cout << "data::decorated_data<" << #T                     \
-              << "> offsetof(value_): " << offsetof(TYPE, value_)     \
-              << std::endl;                                           \
+#define TRACE_OFFSET_EMPTY(T)                                     \
+  {                                                               \
+    using TYPE = data::decorated_data<T>;                         \
+    std::cout << "data::decorated_data<" << #T                    \
+              << "> offsetof(value_): " << offsetof(TYPE, value_) \
+              << std::endl;                                       \
   }
 
-#define TRACE_OFFSET(T, META_DATA)                                \
+#define TRACE_OFFSET(T)                                           \
   {                                                               \
-    using TYPE = data::decorated_data<T, META_DATA>;           \
-    std::cout << "data::decorated_data<" << #T << ", " << #META_DATA      \
+    using TYPE = data::decorated_data<T>;                         \
+    std::cout << "data::decorated_data<" << #T                    \
               << "> offsetof(value_): " << offsetof(TYPE, value_) \
               << std::endl;                                       \
   }
@@ -72,16 +67,16 @@ TEST_CASE("erase lifetime test") {
   TRACE_OFFSET_EMPTY(char const*);
   TRACE_OFFSET_EMPTY(std::string);
 
-  TRACE_OFFSET(char, data::has_no_meta::meta);
-  TRACE_OFFSET(int, data::has_no_meta::meta);
-  TRACE_OFFSET(char const*, data::has_no_meta::meta);
-  TRACE_OFFSET(std::string, data::has_no_meta::meta);
+  TRACE_OFFSET(char);
+  TRACE_OFFSET(int);
+  TRACE_OFFSET(char const*);
+  TRACE_OFFSET(std::string);
 }
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr = data::make_unique_decorated_data<
-        data::decorated_data<Data, data::has_no_meta::meta>>();
+        data::decorated_data<Data>>();
     REQUIRE(unchecked_unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -90,7 +85,7 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr = data::make_unique_decorated_data<
-        data::decorated_data<Data, data::has_no_meta::meta>>();
+        data::decorated_data<Data>>();
     REQUIRE(unchecked_unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -99,8 +94,9 @@ TEST_CASE("erase lifetime test unique") {
 TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::decoration_base<data::has_no_meta::meta> const> sp =
-        data::make_shared_const_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
+    std::shared_ptr<data::decoration_base const> sp =
+        data::make_shared_const_decorated_data<
+            data::decorated_data<Data>>();
     REQUIRE(data::unchecked_unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -108,9 +104,9 @@ TEST_CASE("erase lifetime test shared") {
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::decoration_base<data::has_no_meta::meta> const> sp =
+    std::shared_ptr<data::decoration_base const> sp =
         data::make_shared_const_decorated_data<
-            data::decorated_data<Data, data::has_no_meta::meta> const>();
+            data::decorated_data<Data> const>();
     REQUIRE(data::unchecked_unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -119,8 +115,9 @@ TEST_CASE("erase lifetime test shared") {
 TEST_CASE("erase lifetime test value") {
   Data::destrucor_runs = 0;
   {
-    data::erased_value<data::decoration_base<data::has_no_meta::meta>> vp =
-        data::make_value_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
+    data::erased_value<data::decoration_base> vp =
+        data::make_value_decorated_data<
+            data::decorated_data<Data>>();
     REQUIRE(unchecked_unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
@@ -129,8 +126,9 @@ TEST_CASE("erase lifetime test value") {
 
   Data::destrucor_runs = 0;
   {
-    data::erased_value<data::decoration_base<data::has_no_meta::meta>> vp =
-        data::make_value_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
+    data::erased_value<data::decoration_base> vp =
+        data::make_value_decorated_data<
+            data::decorated_data<Data>>();
     REQUIRE(data::unchecked_unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;

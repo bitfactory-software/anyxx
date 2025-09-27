@@ -6,12 +6,11 @@
 
 namespace virtual_void {
 
-template <typename META>
 struct shared_const_trait : virtual_void_default_unerase {
-  using meta_t = META;
+  
   using void_t = void const*;
   template <typename V>
-  using typed_t = data::decorated_data<V, META>;
+  using typed_t = data::decorated_data<V>;
   static constexpr bool is_constructibile_from_const = true;
 
   static void const* value(const auto& ptr) { return ptr->value(); }

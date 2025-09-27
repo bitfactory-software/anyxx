@@ -4,9 +4,9 @@
 
 namespace virtual_void {
 
-template <typename ERASED_DATA, typename VV_VOID, typename META>
-struct observer_trait : decorated_ptr_trait<VV_VOID, META> {
-  using base_trait = decorated_ptr_trait<VV_VOID, META>;
+template <typename ERASED_DATA, typename VV_VOID>
+struct observer_trait : decorated_ptr_trait<VV_VOID> {
+  using base_trait = decorated_ptr_trait<VV_VOID>;
   static constexpr bool is_constructibile_from_const = base_trait::is_const;
 
   static VV_VOID value(const auto& ptr) { return ptr.ptr_; }
@@ -14,13 +14,13 @@ struct observer_trait : decorated_ptr_trait<VV_VOID, META> {
   template <typename V>
   static auto construct_from(V& v) {
     static_assert(!std::is_const_v<std::remove_reference_t<V>>);
-    return ERASED_DATA(static_cast<VV_VOID>(&v), META(std::in_place_type<V>));
+    return ERASED_DATA(static_cast<VV_VOID>(&v));
   }
   template <typename V>
   static auto construct_from(const V& v)
     requires(base_trait::is_const)
   {
-    return ERASED_DATA(static_cast<VV_VOID>(&v), META(std::in_place_type<V>));
+    return ERASED_DATA(static_cast<VV_VOID>(&v));
   }
 
   template <typename V>
