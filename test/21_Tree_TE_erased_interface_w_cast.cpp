@@ -5,9 +5,9 @@
 #include <memory>
 #include <string>
 #include <virtual_void/meta/class.hpp>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
@@ -17,6 +17,7 @@ using std::string;
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
+using namespace virtual_void::data;
 using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void::meta;
 

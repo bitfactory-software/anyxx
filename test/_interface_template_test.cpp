@@ -3,7 +3,7 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
@@ -11,6 +11,7 @@
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
+using namespace virtual_void::data;
 using namespace data::has_no_meta;
 
 struct X {

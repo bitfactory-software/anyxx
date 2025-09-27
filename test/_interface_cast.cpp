@@ -1,7 +1,7 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
@@ -10,6 +10,7 @@
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
+using namespace virtual_void::data;
 using namespace virtual_void::data::has_no_meta;
 
 using namespace test::component_base;

@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/data/has_no_meta/unique_ptr.hpp>
@@ -17,6 +17,7 @@
 
 using namespace virtual_void;
 using namespace virtual_void::meta;
+using namespace virtual_void::data;
 using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void::interface;
 using namespace TestDomain;

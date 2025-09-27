@@ -7,8 +7,8 @@
 #include <memory>
 #include <stack>
 #include <string>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/extension_method.hpp>
 #include <virtual_void/interface/open_visitor.hpp>
@@ -27,7 +27,7 @@ namespace node {
 VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value)))
 
 struct interface;
-using model = node_i<data::has_no_meta::shared_const>;
+using model = node_i<data::shared_const>;
 };  // namespace node
 
 struct Plus {

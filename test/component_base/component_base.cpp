@@ -10,6 +10,7 @@ using namespace test::component_base;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::meta;
+using namespace virtual_void::data;
 using namespace virtual_void::data::has_no_meta;
 
 namespace test::component_base {
@@ -33,19 +34,19 @@ is_a<X, get_value_i_v_table> __;
 is_a<X, set_value_i_v_table> __;
 is_a<X, to_string_i_v_table> __;
 
-to_string_i<virtual_void::data::has_no_meta::const_observer>
+to_string_i<virtual_void::data::const_observer>
 test::component_base::get_to_string_i_co() {
   auto p = &x;
-  to_string_i<virtual_void::data::has_no_meta::const_observer> i{x};
+  to_string_i<virtual_void::data::const_observer> i{x};
   auto meta = get_v_table(i)->type_info;
   const std::type_info* type_info = &meta->get_type_info();
-  static_assert(interface::is_interface<to_string_i<virtual_void::data::has_no_meta::const_observer>>);
+  static_assert(interface::is_interface<to_string_i<virtual_void::data::const_observer>>);
   const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   auto s = i.to_string();
   return i;
 }
-to_string_i<virtual_void::data::has_no_meta::shared_const>
+to_string_i<virtual_void::data::shared_const>
 test::component_base::get_to_string_i_sc(double v) {
   return X{v};
 }
@@ -54,7 +55,7 @@ test::component_base::get_to_string_i_u(double v) {
   return X{v};
 }
 
-virtual_void::data::has_no_meta::shared_const test::component_base::sc_X(
+virtual_void::data::shared_const test::component_base::sc_X(
     double v) {
   return virtual_void::erased<shared_const>(X{v});
 }

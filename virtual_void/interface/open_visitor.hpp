@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/observer.hpp>
 #include <virtual_void/interface/extension_method.hpp>
 
 namespace virtual_void::interface {

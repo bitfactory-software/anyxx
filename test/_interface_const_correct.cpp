@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/call_operator.hpp>
@@ -41,7 +41,7 @@ TEST_CASE("_interface_const_correct prototyping") {
   using namespace virtual_void;
   static_assert(!test_trait<void*>::is_const);
   static_assert(
-      erased_data_trait<data::has_no_meta::const_observer>::is_const);
+      erased_data_trait<data::const_observer>::is_const);
   test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
@@ -68,9 +68,9 @@ VV_RUNTIME_STATIC(type_info, functor)
 namespace {
 
 using const_function =
-    interface::call_operator<data::has_no_meta::const_observer, std::string()>;
+    interface::call_operator<data::const_observer, std::string()>;
 using mutating_function =
-    interface::call_operator<data::has_no_meta::mutable_observer,
+    interface::call_operator<data::mutable_observer,
                              void(std::string), mutable_>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
@@ -154,9 +154,9 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
-      interface::call_operator<data::has_no_meta::shared_const, std::string()>;
+      interface::call_operator<data::shared_const, std::string()>;
   using mutating_function =
-      interface::call_operator<data::has_no_meta::shared_const,
+      interface::call_operator<data::shared_const,
                                void(std::string), mutable_>;
 
   {
@@ -209,8 +209,8 @@ VV_INTERFACE_(text_i_mutable, text_i_const,
 
 VV_RUNTIME_STATIC(type_info, text_object)
 
-using const_text_i = text_i_const<data::has_no_meta::const_observer>;
-using const_text_i_mutable = text_i_const<data::has_no_meta::mutable_observer>;
+using const_text_i = text_i_const<data::const_observer>;
+using const_text_i_mutable = text_i_const<data::mutable_observer>;
 
 template <class C>
 concept can_call_get_text = requires(C c) {
@@ -228,28 +228,28 @@ static_assert(can_call_get_text<const_text_i const>);
 static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
-using mutable_text_i_const = text_i_mutable<data::has_no_meta::const_observer>;
+using mutable_text_i_const = text_i_mutable<data::const_observer>;
 using mutable_text_i_mutable =
-    text_i_mutable<data::has_no_meta::mutable_observer>;
+    text_i_mutable<data::mutable_observer>;
 static_assert(std::same_as<mutable_text_i_mutable::erased_data_t,
-                           data::has_no_meta::mutable_observer>);
+                           data::mutable_observer>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);
 using void_const =
-    erased_data_trait<virtual_void::data::has_no_meta::const_observer>::void_t;
+    erased_data_trait<virtual_void::data::const_observer>::void_t;
 static_assert(is_const_void<void_const>);
 using void_mutable = erased_data_trait<
-    virtual_void::data::has_no_meta::mutable_observer>::void_t;
+    virtual_void::data::mutable_observer>::void_t;
 static_assert(!is_const_void<void_mutable>);
 static_assert(
     !(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
       is_const_void<void_mutable>));
 static_assert(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
               is_const_void<void_const>);
-static_assert(erased_data_trait<data::has_no_meta::const_observer>::is_const);
+static_assert(erased_data_trait<data::const_observer>::is_const);
 static_assert(
-    !erased_data_trait<data::has_no_meta::mutable_observer>::is_const);
+    !erased_data_trait<data::mutable_observer>::is_const);
 
 static_assert(std::constructible_from<mutable_text_i_mutable, text_object>);
 static_assert(

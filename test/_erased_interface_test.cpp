@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <virtual_void/data/copy_convert.hpp>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
@@ -62,25 +62,25 @@ TEST_CASE("class is_a interface") {
       std::same_as<shape_d_i_v_table::v_table_base_t, shape_base_v_table>);
   {
     circle c{};
-    shape_d_i<data::has_no_meta::mutable_observer> x{c};
+    shape_d_i<data::mutable_observer> x{c};
     auto vtable1 = runtime<meta::type_info, circle>().get_v_table(
-        typeid(shape_d_i<data::has_no_meta::const_observer>::v_table_t));
+        typeid(shape_d_i<data::const_observer>::v_table_t));
     auto vtable2 = virtual_void::interface::get_v_table(x);
     REQUIRE(vtable1 == vtable2);
   }
 }
 
-using shape_vv = shape_i<data::has_no_meta::shared_const>;
+using shape_vv = shape_i<data::shared_const>;
 
-using shape_base_v = shape_base<data::has_no_meta::const_observer>;
+using shape_base_v = shape_base<data::const_observer>;
 
 using shape =
-    interface::call_operator<data::has_no_meta::const_observer,
+    interface::call_operator<data::const_observer,
                              std::string(std::string), const_, shape_d_i>;
-using shapeX = shape_d_i<data::has_no_meta::const_observer>;
-using shapeXX = shape_d_i<data::has_no_meta::const_observer>;
+using shapeX = shape_d_i<data::const_observer>;
+using shapeXX = shape_d_i<data::const_observer>;
 
-using full_shape_observer = shape_i<data::has_no_meta::mutable_observer>;
+using full_shape_observer = shape_i<data::mutable_observer>;
 
 template <>
 struct shape_base1_v_table_map<circle> {
@@ -153,7 +153,7 @@ void print_shape(const shape s) {
 void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 
 // using shape_double_base_error = shape_d_i<
-// data::has_no_meta::const_observer, bases<
+// data::const_observer, bases<
 // shape_base, shape_base > >; //should not compile! void
 // should_not_compile(shape_double_base_error s) {}//should not compile!
 
@@ -173,7 +173,7 @@ TEST_CASE("dynamic v_table const_observer") {
   print_shape(r);
   print_shape(p);
 
-  using erased_const_observer = data::has_no_meta::const_observer;
+  using erased_const_observer = data::const_observer;
   static_assert(
       std::is_base_of_v<interface::base<erased_const_observer>, shape>);
   static_assert(std::is_base_of_v<shape_base_v, shape>);
@@ -181,36 +181,36 @@ TEST_CASE("dynamic v_table const_observer") {
   shape shape_circle{circle{33.3}};
   shapeX shape_circleX{circle{33.3}};
 
-  data::has_no_meta::const_observer o1 =
-      virtual_void::erased<data::has_no_meta::const_observer>(c);
-  data::has_no_meta::const_observer o2 = o1;
+  data::const_observer o1 =
+      virtual_void::erased<data::const_observer>(c);
+  data::const_observer o2 = o1;
 
   {
     using shape_base1_const_observer =
-        shape_base1<data::has_no_meta::const_observer>;
+        shape_base1<data::const_observer>;
     shape_base1_const_observer sb1;
     shape_base1_const_observer sb2{c};
     sb1 = sb2;
   }
   {
     using shape_base1_mutable_observer =
-        shape_base1<data::has_no_meta::mutable_observer>;
+        shape_base1<data::mutable_observer>;
     shape_base1_mutable_observer sb1;
     shape_base1_mutable_observer sb2{c};
     sb1 = sb2;
   }
   {
     using shape_base1_mutable_observer =
-        shape_base1<data::has_no_meta::mutable_observer>;
+        shape_base1<data::mutable_observer>;
     shape_base1_mutable_observer sb1{c};
     shape_base1_mutable_observer sb2{std::move(sb1)};
   }
 
   //    base< void* > base_v = shape_circle; ->
   //    v_table_cast may not compile!
-  virtual_void::interface::base<data::has_no_meta::const_observer> base_shape =
+  virtual_void::interface::base<data::const_observer> base_shape =
       shape_circle;
-  virtual_void::interface::base<data::has_no_meta::const_observer> base_shapeX =
+  virtual_void::interface::base<data::const_observer> base_shapeX =
       shape_circleX;
 
   REQUIRE(is_derived_from<shape>(base_shape));
@@ -253,12 +253,12 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 
   using typed_circle_shape_sc_no_meta =
       interface::virtual_typed<circle,
-                               shape_i<data::has_no_meta::shared_const>>;
+                               shape_i<data::shared_const>>;
   typed_circle_shape_sc_no_meta sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   static_assert(std::same_as<typed_circle_shape_sc_no_meta::erased_data_t,
-                             data::has_no_meta::shared_const>);
+                             data::shared_const>);
   static_assert(interface::is_virtual_typed<decltype(sc_typed)>);
   shape_vv circle_shape_vv{sc_typed};
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
@@ -277,7 +277,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 }
 
 namespace {
-void print_shape_i_co(shape_i<data::has_no_meta::const_observer> s) {
+void print_shape_i_co(shape_i<data::const_observer> s) {
   s.draw({1, 2});
 }
 

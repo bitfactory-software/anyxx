@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/has_no_meta/unique_ptr.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
@@ -20,7 +20,7 @@ using function =
     interface::call_operator<data::has_no_meta::value, SIG, CONSTNESS>;
 template <typename SIG, is_constness CONSTNESS = mutable_>
 using ref_function =
-    interface::call_operator<data::has_no_meta::mutable_observer, SIG,
+    interface::call_operator<data::mutable_observer, SIG,
                              CONSTNESS>;
 template <typename SIG, is_constness CONSTNESS = mutable_>
 using move_only_function =

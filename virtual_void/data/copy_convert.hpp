@@ -1,7 +1,7 @@
 #pragma once
 
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -13,19 +13,19 @@ struct copy_converter;
 
 template <is_erased_data FROM>
   requires(!is_const_data<FROM>)
-struct copy_converter<has_no_meta::mutable_observer, FROM> {
+struct copy_converter<mutable_observer, FROM> {
   auto operator()(const auto& from, auto const& runtime) {
-    return has_no_meta::mutable_observer{virtual_void::get_data(from)};
+    return mutable_observer{virtual_void::get_data(from)};
   }
 };
 template <is_erased_data FROM>
-struct copy_converter<has_no_meta::const_observer, FROM> {
+struct copy_converter<const_observer, FROM> {
   auto operator()(const auto& from, auto const& runtime) {
-    return has_no_meta::const_observer{virtual_void::get_data(from)};
+    return const_observer{virtual_void::get_data(from)};
   }
 };
 template <>
-struct copy_converter<has_no_meta::shared_const, has_no_meta::shared_const> {
+struct copy_converter<shared_const, shared_const> {
   auto operator()(const auto& from, auto const& runtime) {
     return from;
   }

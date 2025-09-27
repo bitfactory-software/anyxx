@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/observer.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/meta/base_v_table.hpp>
 #include <virtual_void/utillities/ensure_function_ptr.hpp>
@@ -39,11 +39,11 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   struct observer;
   template <typename... OTHER_ARGS>
   struct observer<const_, OTHER_ARGS...> {
-    using type = data::has_no_meta::const_observer;
+    using type = data::const_observer;
   };
   template <typename... OTHER_ARGS>
   struct observer<mutable_, OTHER_ARGS...> {
-    using type = data::has_no_meta::mutable_observer;
+    using type = data::mutable_observer;
   };
 
   using observer_interface_t =

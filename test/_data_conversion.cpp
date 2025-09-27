@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <virtual_void/data/copy_convert.hpp>
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/data/has_no_meta/unique_ptr.hpp>
@@ -30,79 +30,79 @@ TEST_CASE("_data_conversion copy") {
   std::string s1 = "hallo";
   auto& runtime = meta::runtime<meta::type_info, std::string>();
   {
-    auto vv1 = erased<has_no_meta::const_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<const_observer>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::mutable_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<mutable_observer>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::mutable_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::mutable_observer>(vv1, runtime);
+    auto vv1 = erased<mutable_observer>(s1);
+    auto vv2 = data::copy_convert_to<mutable_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::const_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<const_observer>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::mutable_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<mutable_observer>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::mutable_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::mutable_observer>(vv1, runtime);
+    auto vv1 = erased<mutable_observer>(s1);
+    auto vv2 = data::copy_convert_to<mutable_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::const_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<const_observer>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::mutable_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<mutable_observer>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::mutable_observer>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::mutable_observer>(vv1, runtime);
+    auto vv1 = erased<mutable_observer>(s1);
+    auto vv2 = data::copy_convert_to<mutable_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::shared_const>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
-    REQUIRE(get_data(vv1) == get_data(vv2));
-  }
-  {
-    auto vv1 = erased<has_no_meta::unique>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv1 = erased<shared_const>(s1);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
     auto vv1 = erased<has_no_meta::unique>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::mutable_observer>(vv1, runtime);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
+    REQUIRE(get_data(vv1) == get_data(vv2));
+  }
+  {
+    auto vv1 = erased<has_no_meta::unique>(s1);
+    auto vv2 = data::copy_convert_to<mutable_observer>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
     auto vv1 = erased<has_no_meta::value>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::const_observer>(vv1, runtime);
+    auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);
     REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
     auto vv1 = erased<has_no_meta::value>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::mutable_observer>(vv1, runtime);
+    auto vv2 = data::copy_convert_to<mutable_observer>(vv1, runtime);
     REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::const_observer>(s1);
+    auto vv1 = erased<const_observer>(s1);
     auto vv2 = data::copy_convert_to<has_no_meta::unique>(vv1, runtime);
     auto sc1 = unchecked_unerase_cast<std::string>(vv1);
     auto sc2 = unchecked_unerase_cast<std::string>(vv2);
@@ -110,8 +110,8 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) != get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::shared_const>(s1);
-    auto vv2 = data::copy_convert_to<has_no_meta::shared_const>(vv1, runtime);
+    auto vv1 = erased<shared_const>(s1);
+    auto vv2 = data::copy_convert_to<shared_const>(vv1, runtime);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
@@ -123,7 +123,7 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) != get_data(vv2));
   }
   {
-    auto vv1 = erased<has_no_meta::shared_const>(s1);
+    auto vv1 = erased<shared_const>(s1);
     auto vv2 = data::copy_convert_to<has_no_meta::unique>(vv1, runtime);
     REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) != get_data(vv2));
@@ -155,7 +155,7 @@ TEST_CASE("_data_conversion move") {
   }
   {
     auto vv1 = erased<has_no_meta::unique>(s1);
-    auto vv2 = data::move_convert_to<has_no_meta::shared_const>(std::move(vv1));
+    auto vv2 = data::move_convert_to<shared_const>(std::move(vv1));
     REQUIRE(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning( push )
 #pragma warning( disable : 26800)

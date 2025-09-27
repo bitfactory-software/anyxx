@@ -7,8 +7,8 @@
 #include <catch.hpp>
 
 
-#include <virtual_void/data/has_no_meta/observer.hpp>
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/data/has_no_meta/unique_ptr.hpp>
@@ -17,6 +17,7 @@
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
+using namespace virtual_void::data;
 using namespace virtual_void::data::has_no_meta;
 
 namespace {
