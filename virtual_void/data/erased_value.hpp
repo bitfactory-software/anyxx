@@ -90,11 +90,11 @@ auto make_void_value(T&& v) {
 }
 
 template <typename U>
-U& unerase_cast(erased_value<>& v) {
+U& unsave_unerase_cast(erased_value<>& v) {
   return *static_cast<U*>(v.get());
 }
 template <typename U>
-U const& unerase_cast(erased_value<> const& v) {
+U const& unsave_unerase_cast(erased_value<> const& v) {
   return *static_cast<U const*>(v.get());
 }
 

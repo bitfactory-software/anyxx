@@ -22,7 +22,7 @@ struct virtual_typed : public INTERFACE {
       : INTERFACE(trait_t::construct_in_place(std::in_place_type<V>,
                                               std::forward<ARGS>(args)...)) {}
   virtual_typed(INTERFACE i) : INTERFACE(i) {
-    check_type_match<V>(this->erased_data_);
+    check_type_match<V>(get_runtime(*this));
   }
 
   value_t const& operator*() const {

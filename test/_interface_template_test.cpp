@@ -57,6 +57,7 @@ template <>
 struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
 };
 }  // namespace
+VV_RUNTIME_STATIC(type_info, int)
 VV_RUNTIME_STATIC(type_info, double)
 VV_RUNTIME_STATIC(type_info, std::map<int,double>)
 VV_RUNTIME_STATIC(type_info, std::map<std::string,int>)

@@ -81,7 +81,8 @@ class base {
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
-      : erased_data_(data::copy_convert_to<ERASED_DATA>(other.erased_data_)),
+      : erased_data_(data::copy_convert_to<ERASED_DATA>(
+            other.erased_data_, *get_v_table(other)->type_info)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base(OTHER&& other)
@@ -160,6 +161,11 @@ inline auto get_v_table(INTERFACE const& interface) {
   return pure_v_table_cast<INTERFACE>(interface.v_table_);
 }
 
+template <is_interface INTERFACE>
+inline const auto& get_runtime(INTERFACE const& interface) {
+  return *get_v_table(interface)->type_info;
+}
+
 inline bool is_derived_from(const std::type_info& from,
                             meta::base_v_table const* base_v_table) {
   return base_v_table->_is_derived_from(from);
@@ -201,11 +207,11 @@ auto unchecked_unerase_cast(INTERFACE const& o) {
 }
 template <typename U, is_interface INTERFACE>
 auto unerase_cast(INTERFACE const& o) {
-  return virtual_void::unerase_cast<U>(get_virtual_void(o));
+  return virtual_void::unerase_cast<U>(get_virtual_void(o), get_runtime(o));
 }
 template <typename U, is_interface INTERFACE>
 auto unerase_cast(INTERFACE const* o) {
-  virtual_void::unerase_cast<U>(get_virtual_void(*o));
+  virtual_void::unerase_cast<U>(get_virtual_void(*o), get_runtime(o));
   return nullptr;
 }
 

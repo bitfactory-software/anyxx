@@ -1,8 +1,8 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <virtual_void/data/has_meta_runtime/observer.hpp>
-#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 
@@ -10,7 +10,7 @@
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
-using namespace virtual_void::data::has_meta_runtime;
+using namespace virtual_void::data::has_no_meta;
 
 using namespace test::component_base;
 
@@ -52,9 +52,6 @@ TEST_CASE("_interface_cast") {
     sv0.set_value(sv0.get_value() * 2);
     REQUIRE(sv0.get_value() == 6.28);
     std::cout << "shared_const/unique sv0 (*2): " << sv0.get_value() << "\n";
-    auto esc = test::component_base::sc_X(42);
-    auto esc_i = attach_interface<get_value_i<shared_const>>(esc);
-    REQUIRE(esc_i.get_value() == 42);
   }
   {
     to_string_i<unique> i0{test::component_base::get_to_string_i_u(3.14)};
@@ -90,18 +87,5 @@ TEST_CASE("_interface_cast") {
     REQUIRE(!get_virtual_void(i1d));  // moved!
 #pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
-
-    unique ui1{ test::component_base::u_X(3.14) };
-    auto to_string_co = attach_interface<to_string_i<const_observer>>(ui1);
-    REQUIRE(to_string_co.to_string() == "3.140000");
-
-    auto set_value_mo = attach_interface<set_value_i<mutable_observer>>(ui1);
-    REQUIRE(set_value_mo.get_value() == 3.14);
-    set_value_mo.set_value(1.44);
-    REQUIRE(to_string_co.to_string() == "1.440000");
-
-    auto ux11 = test::component_base::u_X(42.0);
-    auto gv_i_sc = move_to_interface<get_value_i<shared_const>>(std::move(ux11));
-    REQUIRE(gv_i_sc.get_value() == 42);
   }
 }

@@ -30,11 +30,11 @@ TEST_CASE("lifetime/observer") {
   {
     std::string s{"hallo"};
     auto mo = erased<mutable_observer>(s);
-    *unerase_cast<std::string>(mo) = "world";
+    *unchecked_unerase_cast<std::string>(mo) = "world";
     auto co = erased<const_observer>(s);
     REQUIRE(s == "world");
-    REQUIRE(*unerase_cast<const std::string>(co) == "world");
-    REQUIRE(*unerase_cast<std::string>(mo) == "world");
+    REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "world");
+    REQUIRE(*unchecked_unerase_cast<std::string>(mo) == "world");
     {
       const std::string cs;
       // mutable_observer xx(cs);  // shall not compile!
@@ -47,41 +47,41 @@ TEST_CASE("lifetime/observer") {
     auto co = erased<const_observer>(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);
-    REQUIRE(*unerase_cast<const std::string>(co) == "hallo");
+    REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "hallo");
   }
 }
 TEST_CASE("lifetime/unique") {
   {
     auto u1 = erased<unique>(1);
-    REQUIRE(*unerase_cast<int>(u1) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
     const auto u1 = erased<unique>(1);
-    REQUIRE(*unerase_cast<int>(u1) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
     auto u1 = erased_in_place<unique, A>("hallo");
-    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }
 TEST_CASE("lifetime/shared_const") {
   {
     auto u1 = erased<shared_const>(1);
-    REQUIRE(*unerase_cast<int>(u1) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
     const auto u1 = erased<shared_const>(1);
-    REQUIRE(*unerase_cast<int>(u1) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
     auto u1 = erased_in_place<shared_const, A>("hallo");
-    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }
 TEST_CASE("lifetime/value") {
   {
     auto u1 = erased<value>(1);
-    REQUIRE(*unerase_cast<int>(u1) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
     auto u1 = erased_in_place<value, A>("hallo");
@@ -89,23 +89,23 @@ TEST_CASE("lifetime/value") {
     static_assert(
         !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
     auto& u1cr = u1;
-    auto a = unerase_cast<A>(u1);
+    auto a = unchecked_unerase_cast<A>(u1);
     REQUIRE(a->s == "hallo");
-    auto a1 = unerase_cast<A>(u1cr);
+    auto a1 = unchecked_unerase_cast<A>(u1cr);
     REQUIRE(a1->s == "hallo");
-    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
     auto u2 { u1 };
-    REQUIRE(unerase_cast<A>(u1)->s.data() !=
-            unerase_cast<A>(u2)->s.data());
-    REQUIRE(unerase_cast<A>(u2)->s == "hallo");
-    unerase_cast<A>(u2)->s = "world";
-    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
-    REQUIRE(unerase_cast<A>(u2)->s == "world");
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s.data() !=
+            unchecked_unerase_cast<A>(u2)->s.data());
+    REQUIRE(unchecked_unerase_cast<A>(u2)->s == "hallo");
+    unchecked_unerase_cast<A>(u2)->s = "world";
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(u2)->s == "world");
   }
   {
     std::string a = "hallo";
     auto t1 = erased<value>(a);
-    REQUIRE(*unerase_cast<std::string>(t1) == "hallo");
+    REQUIRE(*unchecked_unerase_cast<std::string>(t1) == "hallo");
   }
   {
     struct x_t {
@@ -113,7 +113,7 @@ TEST_CASE("lifetime/value") {
     };
     x_t a{"hallo"};
     auto t1 = erased<value>(a);
-    REQUIRE(unerase_cast<x_t>(t1)->s_ == "hallo");
+    REQUIRE(unchecked_unerase_cast<x_t>(t1)->s_ == "hallo");
   }
 }
 TEST_CASE("lifetime/shared_const_ptr") {
@@ -123,8 +123,8 @@ TEST_CASE("lifetime/shared_const_ptr") {
     shared_const_ptr sp1 =
         erased_data_trait<shared_const_ptr>::construct_from(ptr);
     auto u1 = erased<shared_const_ptr>(ptr);
-    A const* a = unerase_cast<A>(u1);
-    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    A const* a = unchecked_unerase_cast<A>(u1);
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }
 TEST_CASE("lifetime/unique_ptr") {
@@ -138,8 +138,8 @@ TEST_CASE("lifetime/unique_ptr") {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
     auto u1 = erased<unique_ptr>(std::move(ptr));
-    A const* a = unerase_cast<A>(u1);
-    REQUIRE(unerase_cast<A>(u1)->s == "hallo");
+    A const* a = unchecked_unerase_cast<A>(u1);
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }
 }  // namespace

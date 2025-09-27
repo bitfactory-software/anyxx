@@ -4,9 +4,9 @@
 #include <string>
 #include <vector>
 #include <virtual_void/data/copy_convert.hpp>
-#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
@@ -64,13 +64,13 @@ TEST_CASE("class is_a interface") {
     circle c{};
     shape_d_i<data::has_no_meta::mutable_observer> x{c};
     auto vtable1 = runtime<meta::type_info, circle>().get_v_table(
-        typeid(shape_d_i<data::has_meta_runtime::const_observer>::v_table_t));
+        typeid(shape_d_i<data::has_no_meta::const_observer>::v_table_t));
     auto vtable2 = virtual_void::interface::get_v_table(x);
     REQUIRE(vtable1 == vtable2);
   }
 }
 
-using shape_vv = shape_i<data::has_meta_runtime::shared_const>;
+using shape_vv = shape_i<data::has_no_meta::shared_const>;
 
 using shape_base_v = shape_base<data::has_no_meta::const_observer>;
 
@@ -253,16 +253,15 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 
   using typed_circle_shape_sc_no_meta =
       interface::virtual_typed<circle,
-                               shape_i<data::has_meta_runtime::shared_const>>;
+                               shape_i<data::has_no_meta::shared_const>>;
   typed_circle_shape_sc_no_meta sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   static_assert(std::same_as<typed_circle_shape_sc_no_meta::erased_data_t,
-                             data::has_meta_runtime::shared_const>);
+                             data::has_no_meta::shared_const>);
   static_assert(interface::is_virtual_typed<decltype(sc_typed)>);
   shape_vv circle_shape_vv{sc_typed};
-  auto unerased_circle =
-      unerase_cast<circle const>(get_virtual_void(circle_shape_vv));
+  auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
   {
@@ -286,11 +285,11 @@ void print_shape_i_co(shape_i<data::has_no_meta::const_observer> s) {
 TEST_CASE("dynamic interface has_type_info::unique") {
   circle c{12.3};
 
-  using shape_unique = shape_i<data::has_meta_runtime::unique>;
+  using shape_unique = shape_i<data::has_no_meta::unique>;
   shape_unique s1{c};
 
   REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));
-  auto unerased_circle = unerase_cast<circle const>(get_virtual_void(s1));
+  auto unerased_circle = unerase_cast<circle const>(s1);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   print_shape_i_co(s1);
 }
@@ -312,11 +311,12 @@ TEST_CASE("base") {
   {
     x_t a{"hallo"};
     auto e = erased<value>(a);
-    REQUIRE(unerase_cast<x_t>(e)->s_ == "hallo");
+    REQUIRE(unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
   }
   {
     x_t a{"hallo"};
     value_base vb(a);
-    REQUIRE(unerase_cast<x_t>(get_virtual_void(vb))->s_ == "hallo");
+    REQUIRE(unerase_cast<x_t>(vb)->s_ == "hallo");
+    CHECK_THROWS_AS(unerase_cast<std::string>(vb), type_mismatch_error);
   }
 }

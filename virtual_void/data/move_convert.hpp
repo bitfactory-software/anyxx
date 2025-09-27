@@ -1,12 +1,5 @@
 #pragma once
 
-#undef interface
-
-#include <virtual_void/data/has_meta_runtime/observer.hpp>
-#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
-#include <virtual_void/data/has_meta_runtime/value.hpp>
-#include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data {

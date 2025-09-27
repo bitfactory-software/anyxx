@@ -8,7 +8,7 @@
 The *virtual_void* lifetime classes are used to transfer typed information with the least possible coupling.  
 They are a generalization of *std::any*.
 
-The functional equivalent of `std::any` in *virtual_void* is `virtual_void::data::has_meta_runtime::value`.
+The functional equivalent of `std::any` in *virtual_void* is `virtual_void::data::has_no_meta::value`.
 
 A simple usage looks like this:
 
@@ -19,12 +19,12 @@ A simple usage looks like this:
 #include <catch.hpp>
 #include <iostream>
 #include <vector>
-#include <virtual_void/data/has_meta_runtime/value.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
 
 TEST_CASE("tutorial 1/1") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_meta_runtime;
+  using namespace virtual_void::data::has_no_meta;
   using namespace virtual_void;
   cout << endl << "*** tutorial 1/1" << endl;
 
@@ -77,13 +77,13 @@ With such an *open method* in place, our code looks like this:
 #include <vector>
 
 #include <catch.hpp>
-#include <virtual_void/data/has_meta_runtime/value.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 
 TEST_CASE("tutorial 1/2") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_meta_runtime;         // 1
+  using namespace virtual_void::data::has_no_meta;         // 1
   using namespace virtual_void::open_method::via_type_info;  // 2
   using namespace virtual_void;
   cout << endl << "*** tutorial 1/2" << endl;
@@ -141,14 +141,14 @@ the library provides a shortcut for you:
 #include <vector>
 #include <catch.hpp>
 
-#include <virtual_void/data/has_meta_runtime/value.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/open_method/via_type_info/declare.hpp>
 #include <virtual_void/open_method/algorithm.hpp>
 
 TEST_CASE("tutorial 1/3") {
   using namespace std;
   using namespace std::literals::string_literals;
-  using namespace virtual_void::data::has_meta_runtime;
+  using namespace virtual_void::data::has_no_meta;
   using namespace virtual_void::open_method::via_type_info;
   using namespace virtual_void;
   cout << endl << "*** tutorial 1/3" << endl;

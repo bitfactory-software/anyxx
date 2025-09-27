@@ -236,10 +236,6 @@ void* get_data(ERASED_DATA const& vv)
 {
   return erased_data_trait<ERASED_DATA>::value(vv);
 }
-template <is_erased_data ERASED_DATA>
-auto get_meta(ERASED_DATA const& vv) {
-  return erased_data_trait<ERASED_DATA>::meta(vv);
-}
 
 template <typename U>
 auto unchecked_unerase_cast(void const* p) {
@@ -261,42 +257,36 @@ auto unchecked_unerase_cast(ERASED_DATA const& o)
   return unchecked_unerase_cast<U>(get_data(o));
 }
 
-template <typename U, typename META>
-bool type_match(META const* meta) {
-  if (auto type_info = meta->type_info();
-      type_info && *type_info != typeid_of<U>())
-    return false;
-  return true;
+namespace meta {
+class type_info;
 }
+
+template <typename U>
+bool type_match(meta::type_info const& meta);
+
 class type_mismatch_error : error {
   using error::error;
 };
 
-template <typename U, typename META>
-void check_type_match(META const* meta) {
-  if (auto type_info = get_std_type_info(*meta);
-      type_info && type_info != &typeid_of<U>())
-    throw type_mismatch_error("type mismatch");
+template <typename U>
+void check_type_match(meta::type_info const& meta) {
+  if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_erased_data ERASED_DATA>
-void check_type_match(ERASED_DATA const& o) {
-  check_type_match<U>(get_meta(o));
-}
-template <typename U, is_erased_data ERASED_DATA>
-auto unerase_cast(ERASED_DATA const& o) {
-  check_type_match<U>(o);
+auto unerase_cast(ERASED_DATA const& o, meta::type_info const& meta) {
+  check_type_match<U>(meta);
   return unchecked_unerase_cast<U>(o);
 }
 template <typename U, is_erased_data ERASED_DATA>
-U const* unerase_cast(ERASED_DATA const* o) {
-  if (type_match<U>(get_meta(*o))) return unchecked_unerase_cast<U>(*o);
+U const* unerase_cast(ERASED_DATA const* o, meta::type_info const& meta) {
+  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
   return nullptr;
 }
 template <typename U, is_erased_data ERASED_DATA>
-U* unerase_cast(ERASED_DATA const* o)
+U* unerase_cast(ERASED_DATA const* o, meta::type_info const& meta)
   requires(!is_const_data<ERASED_DATA>)
 {
-  if (type_match<U>(get_meta(*o))) return unchecked_unerase_cast<U>(*o);
+  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
   return nullptr;
 }
 

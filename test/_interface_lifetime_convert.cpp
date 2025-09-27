@@ -44,7 +44,7 @@ TEST_CASE("interface lifetime cast") {
   // std::add_const_t<void*>);
 
   auto o1 = get_virtual_void(sc);
-  auto x = unerase_cast<X>(o1);
+  auto x = unerase_cast<X>(sc);
   auto x1 = static_cast<X const *>(get_data(get_virtual_void(sc)));
   REQUIRE(x->s_ == "hallo");
 

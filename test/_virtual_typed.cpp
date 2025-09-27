@@ -3,41 +3,38 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/has_meta_runtime/observer.hpp>
-#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
-#include <virtual_void/data/has_meta_runtime/shared_const_ptr.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
-#include <virtual_void/data/has_meta_runtime/unique_ptr.hpp>
-#include <virtual_void/data/has_meta_runtime/value.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
+#include <virtual_void/data/has_no_meta/unique.hpp>
+#include <virtual_void/data/has_no_meta/unique_ptr.hpp>
+#include <virtual_void/data/has_no_meta/value.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
 
 #include "a.hpp"
-
-using namespace Catch::Matchers;
-
 #include "class_hierarchy_test_hierarchy.hpp"
 
 using namespace virtual_void;
 using namespace virtual_void::meta;
-using namespace virtual_void::data::has_meta_runtime;
+using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void::interface;
 using namespace TestDomain;
 
-namespace {
+namespace virtual_typed_test {
 struct x_t {
   std::string s_;
 };
 
 VV_INTERFACE(test_i, (VV_CONST_METHOD(std::string, to_string),
                       VV_METHOD(void, from_string, std::string_view)))
-}  // namespace
+}  // namespace virtual_typed_test
+
+using namespace virtual_typed_test;
 
 VV_RUNTIME(, type_info, int)
 VV_RUNTIME(, type_info, std::string)
 VV_RUNTIME_STATIC(type_info, x_t)
-
-namespace {
 
 TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};
@@ -67,16 +64,23 @@ TEST_CASE("virtual_typed/observer/base") {
   CHECK(s.s_ == "world");
 }
 
+namespace virtual_typed_test {
+
 template <>
 struct test_i_v_table_map<x_t> {
   static auto to_string(x_t const* x) { return x->s_; }
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 
-template <typename X>
+}  // namespace virtual_typed_test
+
+namespace {
+
+ template <typename X>
 concept can_call_from_string = requires(X x, std::string_view s) {
   { x.from_string(s) };
 };
+}  // namespace
 
 TEST_CASE("virtual_typed/observer/test_i") {
   x_t s{"hallo"};
@@ -118,5 +122,3 @@ TEST_CASE("virtual_typed/observer/test_i") {
   static_assert(!can_call_from_string<decltype(co_typed)>);
   static_assert(can_call_from_string<decltype(mo_typed)>);
 }
-
-}  // namespace

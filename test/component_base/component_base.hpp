@@ -1,7 +1,7 @@
 #include <string>
-#include <virtual_void/data/has_meta_runtime/observer.hpp>
-#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
-#include <virtual_void/data/has_meta_runtime/unique.hpp>
+#include <virtual_void/data/has_no_meta/observer.hpp>
+#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -28,14 +28,14 @@ VV_INTERFACE(get_value_i, (VV_CONST_METHOD(double, get_value)))
 VV_INTERFACE_(set_value_i, get_value_i, (VV_METHOD(void, set_value, double)))
 
 COMPONENT_BASE_EXPORT
-to_string_i<virtual_void::data::has_meta_runtime::const_observer>
+to_string_i<virtual_void::data::has_no_meta::const_observer>
 get_to_string_i_co();
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_meta_runtime::shared_const>
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_no_meta::shared_const>
 get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_meta_runtime::unique>
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::has_no_meta::unique>
 get_to_string_i_u(double v);
-COMPONENT_BASE_EXPORT virtual_void::data::has_meta_runtime::shared_const sc_X(
+COMPONENT_BASE_EXPORT virtual_void::data::has_no_meta::shared_const sc_X(
     double v);
-COMPONENT_BASE_EXPORT virtual_void::data::has_meta_runtime::unique u_X(double v);
+COMPONENT_BASE_EXPORT virtual_void::data::has_no_meta::unique u_X(double v);
 
 }  // namespace test::component_base

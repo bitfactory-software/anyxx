@@ -51,11 +51,10 @@ TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
     function<std::string(const std::string)> f{functor};
-    data::has_no_meta::meta const* m = get_meta(get_virtual_void(f));
-    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo");
+    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo");
-    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo world");
+    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hallo world");
   }
   {
     function<std::string(const std::string)> f{pure_functor_t{}};
@@ -64,10 +63,10 @@ TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
     ref_function<std::string(const std::string)> f{functor};
-    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo");
+    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
-    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hallo world");
+    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hallo world");
   }
   {
     pure_functor_t ff{};
@@ -78,14 +77,14 @@ TEST_CASE("std emulated function") {
     move_only_function<std::string(const std::string)> f{
         std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
-    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f))->s_ == "hello world");
+    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hello world");
     static_assert(!std::assignable_from<
                   move_only_function<std::string(const std::string)>,
                   move_only_function<std::string(const std::string)>>);
     move_only_function<std::string(const std::string)> f2{std::move(f)};
     REQUIRE(!has_data(get_virtual_void(f)));
     REQUIRE(f2(", bye") == "hello world");
-    REQUIRE(unerase_cast<functor_t>(get_virtual_void(f2))->s_ ==
+    REQUIRE(interface::unerase_cast<functor_t>(f2)->s_ ==
             "hello world, bye");
   }
 }

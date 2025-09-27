@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/has_meta_runtime/shared_const.hpp>
+#include <virtual_void/data/has_no_meta/shared_const.hpp>
 #include <virtual_void/data/has_no_meta/observer.hpp>
 #include <virtual_void/data/has_no_meta/unique.hpp>
 #include <virtual_void/interface/base.hpp>
@@ -154,9 +154,9 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
-      interface::call_operator<data::has_meta_runtime::shared_const, std::string()>;
+      interface::call_operator<data::has_no_meta::shared_const, std::string()>;
   using mutating_function =
-      interface::call_operator<data::has_meta_runtime::shared_const,
+      interface::call_operator<data::has_no_meta::shared_const,
                                void(std::string), mutable_>;
 
   {

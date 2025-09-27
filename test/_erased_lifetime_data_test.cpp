@@ -9,7 +9,7 @@
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/data/decorated_data.hpp>
 #include <virtual_void/data/has_no_meta/meta.hpp>
-#include <virtual_void/data/has_meta_runtime/meta.hpp>
+#include <virtual_void/data/has_no_meta/meta.hpp>
 #include <virtual_void/data/make_shared_const_decorated_data.hpp>
 #include <virtual_void/data/make_unique_decorated_data.hpp>
 #include <virtual_void/data/make_value_decorated_data.hpp>
@@ -39,11 +39,6 @@ ASSERT_OFFSET_EMPTY(char, offset_for_v_table);
 ASSERT_OFFSET_EMPTY(int, offset_for_v_table);
 ASSERT_OFFSET_EMPTY(char const*, offset_for_v_table)
 ASSERT_OFFSET_EMPTY(std::string, offset_for_v_table)
-
-ASSERT_OFFSET(char, data::has_meta_runtime::meta, 8 + offset_for_v_table);
-ASSERT_OFFSET(int, data::has_meta_runtime::meta, 8 + offset_for_v_table);
-ASSERT_OFFSET(char const*, data::has_meta_runtime::meta, 8 + offset_for_v_table);
-ASSERT_OFFSET(std::string, data::has_meta_runtime::meta, 8 + offset_for_v_table);
 
 #define TRACE_OFFSET_EMPTY(T)                                         \
   {                                                                   \
@@ -77,17 +72,17 @@ TEST_CASE("erase lifetime test") {
   TRACE_OFFSET_EMPTY(char const*);
   TRACE_OFFSET_EMPTY(std::string);
 
-  TRACE_OFFSET(char, data::has_meta_runtime::meta);
-  TRACE_OFFSET(int, data::has_meta_runtime::meta);
-  TRACE_OFFSET(char const*, data::has_meta_runtime::meta);
-  TRACE_OFFSET(std::string, data::has_meta_runtime::meta);
+  TRACE_OFFSET(char, data::has_no_meta::meta);
+  TRACE_OFFSET(int, data::has_no_meta::meta);
+  TRACE_OFFSET(char const*, data::has_no_meta::meta);
+  TRACE_OFFSET(std::string, data::has_no_meta::meta);
 }
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr = data::make_unique_decorated_data<
         data::decorated_data<Data, data::has_no_meta::meta>>();
-    REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
+    REQUIRE(unchecked_unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -95,8 +90,8 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr = data::make_unique_decorated_data<
-        data::decorated_data<Data, data::has_meta_runtime::meta>>();
-    REQUIRE(unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
+        data::decorated_data<Data, data::has_no_meta::meta>>();
+    REQUIRE(unchecked_unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -106,17 +101,17 @@ TEST_CASE("erase lifetime test shared") {
   {
     std::shared_ptr<data::decoration_base<data::has_no_meta::meta> const> sp =
         data::make_shared_const_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
-    REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
+    REQUIRE(data::unchecked_unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
 
   Data::destrucor_runs = 0;
   {
-    std::shared_ptr<data::decoration_base<data::has_meta_runtime::meta> const> sp =
+    std::shared_ptr<data::decoration_base<data::has_no_meta::meta> const> sp =
         data::make_shared_const_decorated_data<
-            data::decorated_data<Data, data::has_meta_runtime::meta> const>();
-    REQUIRE(data::unerase_cast<Data>(*sp)->s_ == "hello world");
+            data::decorated_data<Data, data::has_no_meta::meta> const>();
+    REQUIRE(data::unchecked_unerase_cast<Data>(*sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -126,7 +121,7 @@ TEST_CASE("erase lifetime test value") {
   {
     data::erased_value<data::decoration_base<data::has_no_meta::meta>> vp =
         data::make_value_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
-    REQUIRE(unerase_cast<Data>(*vp)->s_ == "hello world");
+    REQUIRE(unchecked_unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
   }
@@ -134,9 +129,9 @@ TEST_CASE("erase lifetime test value") {
 
   Data::destrucor_runs = 0;
   {
-    data::erased_value<data::decoration_base<data::has_meta_runtime::meta>> vp =
-        data::make_value_decorated_data<data::decorated_data<Data, data::has_meta_runtime::meta>>();
-    REQUIRE(data::unerase_cast<Data>(*vp)->s_ == "hello world");
+    data::erased_value<data::decoration_base<data::has_no_meta::meta>> vp =
+        data::make_value_decorated_data<data::decorated_data<Data, data::has_no_meta::meta>>();
+    REQUIRE(data::unchecked_unerase_cast<Data>(*vp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
   }
