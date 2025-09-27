@@ -1,18 +1,16 @@
+#include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include "a.hpp"
-#include <catch.hpp>
-
-
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/shared_const_ptr.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/unique_ptr.hpp>
 #include <virtual_void/data/value.hpp>
+
+#include "a.hpp"
 
 using namespace Catch::Matchers;
 
@@ -78,6 +76,11 @@ TEST_CASE("lifetime/shared_const") {
     auto u1 = erased_in_place<shared_const, A>("hallo");
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
+  {
+    auto x = std::make_shared<A const>("hallo");
+    auto sc = erased<shared_const>(x);
+    REQUIRE(unchecked_unerase_cast<A>(sc)->s == "hallo");
+  }
 }
 TEST_CASE("lifetime/value") {
   {
@@ -95,7 +98,7 @@ TEST_CASE("lifetime/value") {
     auto a1 = unchecked_unerase_cast<A>(u1cr);
     REQUIRE(a1->s == "hallo");
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
-    auto u2 { u1 };
+    auto u2{u1};
     REQUIRE(unchecked_unerase_cast<A>(u1)->s.data() !=
             unchecked_unerase_cast<A>(u2)->s.data());
     REQUIRE(unchecked_unerase_cast<A>(u2)->s == "hallo");

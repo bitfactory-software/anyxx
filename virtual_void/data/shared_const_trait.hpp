@@ -14,6 +14,10 @@ struct shared_const_trait : virtual_void_default_unerase {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename V>
+  static auto construct_from(std::shared_ptr<V const>& v) {
+    return static_pointer_cast<void const>(v);
+  }
+  template <typename V>
   static auto construct_from(V&& v) {
     return construct_in_place(std::in_place_type<V>, std::forward<V>(v));
   }
