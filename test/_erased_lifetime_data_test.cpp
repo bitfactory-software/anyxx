@@ -6,7 +6,6 @@
 #include <vector>
 #include <virtual_void/data/decorated_data.hpp>
 #include <virtual_void/data/make_unique_decorated_data.hpp>
-#include <virtual_void/data/make_value_decorated_data.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -110,7 +109,7 @@ TEST_CASE("erase lifetime test shared") {
 TEST_CASE("erase lifetime test value") {
   Data::destrucor_runs = 0;
   {
-    data::erased_value vp = data::make_value_decorated_data<Data>();
+    data::erased_value vp = data::make_erased_value<Data>();
     REQUIRE(unsave_unerase_cast<Data>(vp).s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
@@ -119,7 +118,7 @@ TEST_CASE("erase lifetime test value") {
 
   Data::destrucor_runs = 0;
   {
-    data::erased_value vp = data::make_value_decorated_data<Data>();
+    data::erased_value vp = data::make_erased_value<Data>();
     REQUIRE(unsave_unerase_cast<Data>(vp).s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
     auto vp2 = vp;
