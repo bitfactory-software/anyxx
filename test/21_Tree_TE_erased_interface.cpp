@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
+#include <virtual_void/data/shared_const_ptr.hpp>
 #include <virtual_void/data/make_shared_const_decorated_data.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
@@ -14,7 +14,7 @@ using std::cout;
 using std::string;
 
 using namespace virtual_void;
-using namespace virtual_void::data::has_no_meta;
+using namespace virtual_void::data;
 
 namespace {
 
