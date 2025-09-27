@@ -2,7 +2,6 @@
 
 #include <virtual_void/virtual_void.hpp>
 #include <virtual_void/data/decorated_ptr_trait.hpp>
-#include <virtual_void/data/shared_const_ptr.hpp>
 
 namespace virtual_void {
 

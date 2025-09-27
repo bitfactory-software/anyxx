@@ -3,7 +3,7 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/data/value.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data {
@@ -31,7 +31,7 @@ struct copy_converter<shared_const, shared_const> {
   }
 };
 template <>
-struct copy_converter<has_no_meta::value, has_no_meta::value> {
+struct copy_converter<value, value> {
   auto operator()(const auto& from, auto const& runtime) {
     return from;
   }
