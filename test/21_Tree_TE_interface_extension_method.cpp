@@ -1,5 +1,4 @@
-﻿// virtual_void variant of this yomm2 example via c++RTTI
-// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
+﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <cassert>
 #include <catch.hpp>
