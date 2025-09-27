@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <virtual_void/data/decorated_data.hpp>
-#include <virtual_void/data/make_unique_decorated_data.hpp>
+#include <virtual_void/data/make_unique.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -74,8 +74,8 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr =
-        data::make_unique_decorated_data<data::decorated_data<Data>>();
-    REQUIRE(unchecked_unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
+        data::make_unique<Data>();
+    REQUIRE(unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -83,8 +83,8 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr =
-        data::make_unique_decorated_data<data::decorated_data<Data>>();
-    REQUIRE(unchecked_unerase_cast<Data>(*unique_ptr)->s_ == "hello world");
+        data::make_unique<Data>();
+    REQUIRE(unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);

@@ -5,7 +5,7 @@
 #include <virtual_void/data/unique_trait.hpp>
 
 namespace virtual_void::data {
-using unique = erased_unique_ptr<decoration_base>;
+using unique = erased_unique_ptr<void>;
 
 inline unique unique_nullptr() {
   return {nullptr, [](auto) {}};
