@@ -5,7 +5,6 @@
 #include <vector>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/shared_const_ptr.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/unique_ptr.hpp>
 #include <virtual_void/data/value.hpp>

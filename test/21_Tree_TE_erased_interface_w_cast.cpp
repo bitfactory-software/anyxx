@@ -7,7 +7,6 @@
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/conversion.hpp>
 #include <virtual_void/interface/declare_macro.hpp>

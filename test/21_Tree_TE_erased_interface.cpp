@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/shared_const_ptr.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
@@ -24,7 +23,7 @@ VV_INTERFACE(node_i,
 
 // alternative: using node = node_i<shared_const>; less code, but intrusive
 // lifetime management
-using node = node_i<shared_const_ptr>;
+using node = node_i<shared_const>;
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}

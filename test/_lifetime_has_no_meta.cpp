@@ -5,7 +5,6 @@
 #include <vector>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/shared_const_ptr.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/unique_ptr.hpp>
 #include <virtual_void/data/value.hpp>
@@ -81,6 +80,11 @@ TEST_CASE("lifetime/shared_const") {
     auto sc = erased<shared_const>(x);
     REQUIRE(unchecked_unerase_cast<A>(sc)->s == "hallo");
   }
+  {
+    auto x = std::make_shared<A>("hallo");
+    auto sc = erased<shared_const>(x);
+    REQUIRE(unchecked_unerase_cast<A>(sc)->s == "hallo");
+  }
 }
 TEST_CASE("lifetime/value") {
   {
@@ -124,9 +128,9 @@ TEST_CASE("lifetime/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    shared_const_ptr sp1 =
-        erased_data_trait<shared_const_ptr>::construct_from(ptr);
-    auto u1 = erased<shared_const_ptr>(ptr);
+    shared_const sp1 =
+        erased_data_trait<shared_const>::construct_from(ptr);
+    auto u1 = erased<shared_const>(ptr);
     A const* a = unchecked_unerase_cast<A>(u1);
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
