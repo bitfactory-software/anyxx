@@ -14,7 +14,6 @@ struct unique_trait : virtual_void_default_unerase {
   static constexpr bool is_constructibile_from_const = true;
 
   static void* value(const auto& ptr) { return ptr.get(); }
-  static auto meta(const auto& ptr) { return ptr->get_meta(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename V>
