@@ -26,16 +26,14 @@ template <class DATA>
 constexpr value_v_table value_v_table_of =
     value_v_table(std::in_place_type<DATA>);
 
-template <typename BASE = void>
 class erased_value {
  public:
   erased_value() = default;
   template <typename DATA>
   erased_value(DATA* ptr)
-    requires std::is_convertible_v<DATA*, BASE*>
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
   erased_value(erased_value const& rhs)
-      : ptr_(static_cast<BASE*>(rhs.v_table_->copy(rhs.ptr_))),
+      : ptr_(rhs.v_table_->copy(rhs.ptr_)),
         v_table_(rhs.v_table_) {}
   erased_value& operator=(const erased_value& rhs) {
     erased_value clone{rhs};
@@ -52,13 +50,7 @@ class erased_value {
   ~erased_value() {
     if (v_table_) v_table_->destroy(ptr_);
   }
-  auto& operator*() const
-    requires(!std::same_as<void, BASE>)
-  {
-    return *ptr_;
-  }
-  BASE* operator->() const { return ptr_; }
-  BASE* get() const { return ptr_; }
+  void* get() const { return ptr_; }
   explicit operator bool() const { return ptr_ != nullptr; }
 
   friend void swap(erased_value& lhs, erased_value& rhs) noexcept {
@@ -68,33 +60,32 @@ class erased_value {
   }
 
  private:
-  BASE* ptr_ = nullptr;
+  void* ptr_ = nullptr;
   const value_v_table* v_table_ = nullptr;
 };
 
-template <typename BASE, typename T, typename... ARGS>
+template <typename T, typename... ARGS>
 auto make_erased_value(ARGS&&... args)
-  requires std::is_convertible_v<T*, BASE*>
 {
-  return erased_value<BASE>(new T(std::forward<ARGS>(args)...));
+  return erased_value(new T(std::forward<ARGS>(args)...));
 }
 
 template <typename T, typename... ARGS>
 auto make_void_value(ARGS&&... args) {
-  return make_erased_value<void, T>(std::forward<ARGS>(args)...);
+  return make_erased_value<T>(std::forward<ARGS>(args)...);
 }
 
 template <typename T>
 auto make_void_value(T&& v) {
-  return make_erased_value<void, T>(std::forward<T>(v));
+  return make_erased_value<T>(std::forward<T>(v));
 }
 
 template <typename U>
-U& unsave_unerase_cast(erased_value<>& v) {
+U& unsave_unerase_cast(erased_value& v) {
   return *static_cast<U*>(v.get());
 }
 template <typename U>
-U const& unsave_unerase_cast(erased_value<> const& v) {
+U const& unsave_unerase_cast(erased_value const& v) {
   return *static_cast<U const*>(v.get());
 }
 

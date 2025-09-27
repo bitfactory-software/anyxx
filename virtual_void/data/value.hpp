@@ -7,7 +7,7 @@
 
 namespace virtual_void::data {
 
-using value = erased_value<decoration_base>;
+using value = erased_value;
 }  // namespace virtual_void::data
 
 namespace virtual_void {
