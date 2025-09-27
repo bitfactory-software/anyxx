@@ -55,30 +55,6 @@ struct D : C, C3 {
 };
 }  // namespace TestDomain
 
-namespace virtual_void::meta {
-using namespace TestDomain;
-template <>
-struct class_<A1> : base {};
-template <>
-struct class_<A2> : base {};
-template <>
-struct class_<B1> : bases<A1> {};
-template <>
-struct class_<B2> : bases<A2> {};
-template <>
-struct class_<B3> : bases<A1, A2> {};
-template <>
-struct class_<C1> : bases<B1> {};
-template <>
-struct class_<C2> : bases<B2> {};
-template <>
-struct class_<C3> : bases<B3> {};
-template <>
-struct class_<C> : base {};
-template <>
-struct class_<D> : bases<C, C3> {};
-};  // namespace virtual_void::meta
-
 VV_RUNTIME(, type_info, TestDomain::A1)
 VV_RUNTIME(, type_info, TestDomain::A2)
 VV_RUNTIME(, type_info, TestDomain::B1)

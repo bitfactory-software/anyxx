@@ -14,21 +14,6 @@
 
 namespace virtual_void::meta {
 
-template <typename CLASS>
-struct class_ {};
-
-struct base {
-  using bases_ = type_list<>;
-};
-template <typename... BASES>
-struct bases {
-  using bases_ = type_list<BASES...>;
-};
-
-template <class CLASS>
-concept is_registered_class =
-    requires(CLASS) { typename class_<CLASS>::bases_; };
-
 class type_info {
   const std::type_info& type_info_;
   using copy_construct_t = auto(const_void) -> data::has_meta_runtime::unique;
@@ -70,28 +55,6 @@ template <typename CONCRETE>
 base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
   meta::runtime<meta::type_info, CONCRETE>().register_v_table(this);
 }
-
-template <typename CLASS, bool deep = true>
-constexpr void visit_class(auto visitor) {
-  visitor.template operator()<CLASS>();
-  if constexpr (is_registered_class<CLASS>) {
-    using bases = class_<CLASS>::bases_;
-    bases::for_each([&]<typename BASE>() {
-      visitor.template operator()<CLASS, BASE>();
-      if constexpr (deep) {
-        visit_class<BASE, deep>(visitor);
-      }
-    });
-  }
-}
-
-template <typename CLASSES, bool deep = true>
-constexpr void visit_classes(auto visitor) {
-  CLASSES::for_each(
-      [&]<typename CLASS>() { visit_class<CLASS, deep>(visitor); });
-}
-
-
 
 template <typename CLASS, typename V_TABLE>
 struct is_a {

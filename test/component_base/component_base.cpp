@@ -27,9 +27,6 @@ static X x{3.14};
 
 using namespace test::component_base;
 
-template <>
-struct virtual_void::meta::class_<X> {};
-
 VV_RUNTIME_STATIC(type_info, X)
 
 is_a<X, get_value_i_v_table> __;
