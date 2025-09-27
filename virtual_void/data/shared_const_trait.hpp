@@ -1,6 +1,5 @@
 #pragma once
 
-#include <virtual_void/data/make_shared_const_decorated_data.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void {
