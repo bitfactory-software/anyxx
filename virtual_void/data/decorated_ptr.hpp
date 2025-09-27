@@ -8,25 +8,6 @@ template <typename PTR>
 struct decorated_ptr {
   PTR ptr_ = nullptr;
 
-  decorated_ptr() = default;
-  decorated_ptr(PTR& ptr) : ptr_(ptr) {}
-  decorated_ptr(const decorated_ptr& other) : ptr_(other.ptr_) {}
-  decorated_ptr(decorated_ptr&& rhs) noexcept
-      : ptr_(std::move(rhs.ptr_)) {}
-  decorated_ptr& operator=(decorated_ptr const& rhs) noexcept {
-    decorated_ptr new_{rhs};
-    swap(*this, new_);
-    return *this;
-  }
-  decorated_ptr& operator=(decorated_ptr&& rhs) noexcept {
-    decorated_ptr destroy_this{};
-    swap(*this, destroy_this);
-    swap(*this, rhs);
-    return *this;
-  }
-
-  decorated_ptr(PTR ptr) : ptr_(std::move(ptr)){}
-
   friend void swap(decorated_ptr& lhs, decorated_ptr& rhs) noexcept {
     using namespace std;
     swap(lhs.ptr_, rhs.ptr_);
