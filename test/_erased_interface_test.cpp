@@ -7,7 +7,7 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
@@ -304,7 +304,7 @@ VV_RUNTIME_STATIC(type_info, x_t)
 TEST_CASE("base") {
   using namespace virtual_void;
   using namespace virtual_void;
-  using value = data::has_no_meta::value;
+  using value = data::value;
 
   using value_base = interface::base<value>;
 

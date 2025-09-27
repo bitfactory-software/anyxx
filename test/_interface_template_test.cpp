@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 #include <virtual_void/data/observer.hpp>
-#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 

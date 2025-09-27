@@ -20,7 +20,7 @@ Here is how this works out:
 #include <catch.hpp>
 #include <iostream>
 #include <vector>
-#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
@@ -127,7 +127,7 @@ When applied to our example, this leads to this:
 // <!--
 #endif begin sample
 // -->
-#include <virtual_void/data/has_no_meta/value.hpp>
+#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/ostream_shift_left_operator.hpp>
 
 #include <iostream>
