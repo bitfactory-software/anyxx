@@ -11,7 +11,7 @@
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
 
 using namespace Catch::Matchers;
 
@@ -75,8 +75,8 @@ using shape_vv = shape_i<data::shared_const>;
 using shape_base_v = shape_base<data::const_observer>;
 
 using shape =
-    interface::call_operator<data::const_observer,
-                             std::string(std::string), const_, shape_d_i>;
+    interface::call_operator<data::const_observer, std::string(std::string),
+                             const_, shape_d_i>;
 using shapeX = shape_d_i<data::const_observer>;
 using shapeXX = shape_d_i<data::const_observer>;
 
@@ -181,35 +181,30 @@ TEST_CASE("dynamic v_table const_observer") {
   shape shape_circle{circle{33.3}};
   shapeX shape_circleX{circle{33.3}};
 
-  data::const_observer o1 =
-      virtual_void::erased<data::const_observer>(c);
+  data::const_observer o1 = virtual_void::erased<data::const_observer>(c);
   data::const_observer o2 = o1;
 
   {
-    using shape_base1_const_observer =
-        shape_base1<data::const_observer>;
+    using shape_base1_const_observer = shape_base1<data::const_observer>;
     shape_base1_const_observer sb1;
     shape_base1_const_observer sb2{c};
     sb1 = sb2;
   }
   {
-    using shape_base1_mutable_observer =
-        shape_base1<data::mutable_observer>;
+    using shape_base1_mutable_observer = shape_base1<data::mutable_observer>;
     shape_base1_mutable_observer sb1;
     shape_base1_mutable_observer sb2{c};
     sb1 = sb2;
   }
   {
-    using shape_base1_mutable_observer =
-        shape_base1<data::mutable_observer>;
+    using shape_base1_mutable_observer = shape_base1<data::mutable_observer>;
     shape_base1_mutable_observer sb1{c};
     shape_base1_mutable_observer sb2{std::move(sb1)};
   }
 
   //    base< void* > base_v = shape_circle; ->
   //    v_table_cast may not compile!
-  virtual_void::interface::base<data::const_observer> base_shape =
-      shape_circle;
+  virtual_void::interface::base<data::const_observer> base_shape = shape_circle;
   virtual_void::interface::base<data::const_observer> base_shapeX =
       shape_circleX;
 
@@ -252,8 +247,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
   std::cout << "print_shape_vv ********************************" << std::endl;
 
   using typed_circle_shape_sc_no_meta =
-      interface::virtual_typed<circle,
-                               shape_i<data::shared_const>>;
+      interface::virtual_typed<circle, shape_i<data::shared_const>>;
   typed_circle_shape_sc_no_meta sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
@@ -277,9 +271,7 @@ TEST_CASE("dynamic interface m_table::shared_const") {
 }
 
 namespace {
-void print_shape_i_co(shape_i<data::const_observer> s) {
-  s.draw({1, 2});
-}
+void print_shape_i_co(shape_i<data::const_observer> s) { s.draw({1, 2}); }
 
 }  // namespace
 TEST_CASE("dynamic interface has_type_info::unique") {

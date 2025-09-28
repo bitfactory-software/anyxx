@@ -3,7 +3,7 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
 
 using namespace test::component_base;
 
@@ -40,7 +40,8 @@ test::component_base::get_to_string_i_co() {
   to_string_i<virtual_void::data::const_observer> i{x};
   auto meta = get_v_table(i)->type_info;
   const std::type_info* type_info = &meta->get_type_info();
-  static_assert(interface::is_interface<to_string_i<virtual_void::data::const_observer>>);
+  static_assert(
+      interface::is_interface<to_string_i<virtual_void::data::const_observer>>);
   const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   auto s = i.to_string();
@@ -50,16 +51,14 @@ to_string_i<virtual_void::data::shared_const>
 test::component_base::get_to_string_i_sc(double v) {
   return X{v};
 }
-to_string_i<virtual_void::data::unique>
-test::component_base::get_to_string_i_u(double v) {
+to_string_i<virtual_void::data::unique> test::component_base::get_to_string_i_u(
+    double v) {
   return X{v};
 }
 
-virtual_void::data::shared_const test::component_base::sc_X(
-    double v) {
+virtual_void::data::shared_const test::component_base::sc_X(double v) {
   return virtual_void::erased<shared_const>(X{v});
 }
-virtual_void::data::unique test::component_base::u_X(
-    double v) {
+virtual_void::data::unique test::component_base::u_X(double v) {
   return virtual_void::erased<unique>(X{v});
 }

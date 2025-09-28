@@ -4,12 +4,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/meta/class.hpp>
-#include <virtual_void/virtual_void.hpp>
-#include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/value.hpp>
-#include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/unique.hpp>
+#include <virtual_void/data/value.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 using namespace Catch::Matchers;
 
@@ -27,8 +27,7 @@ VV_RUNTIME_STATIC(Data)
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
-    auto unique_ptr =
-        data::make_unique<Data>();
+    auto unique_ptr = data::make_unique<Data>();
     REQUIRE(unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
@@ -36,8 +35,7 @@ TEST_CASE("erase lifetime test unique") {
 
   Data::destrucor_runs = 0;
   {
-    auto unique_ptr =
-        data::make_unique<Data>();
+    auto unique_ptr = data::make_unique<Data>();
     REQUIRE(unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }

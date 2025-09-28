@@ -3,13 +3,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
 
 using namespace Catch::Matchers;
 
@@ -40,8 +40,7 @@ struct test_interface {
 TEST_CASE("_interface_const_correct prototyping") {
   using namespace virtual_void;
   static_assert(!test_trait<void*>::is_const);
-  static_assert(
-      erased_data_trait<data::const_observer>::is_const);
+  static_assert(erased_data_trait<data::const_observer>::is_const);
   test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
@@ -61,7 +60,7 @@ struct functor {
   std::string operator()() const { return text; }
   void operator()(const std::string& t) { text = t; }
 };
-}
+}  // namespace
 
 VV_RUNTIME_STATIC(functor)
 
@@ -69,9 +68,8 @@ namespace {
 
 using const_function =
     interface::call_operator<data::const_observer, std::string()>;
-using mutating_function =
-    interface::call_operator<data::mutable_observer,
-                             void(std::string), mutable_>;
+using mutating_function = interface::call_operator<data::mutable_observer,
+                                                   void(std::string), mutable_>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
 // static_assert(std::is_assignable_v<const_function,
@@ -156,8 +154,7 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   using const_function =
       interface::call_operator<data::shared_const, std::string()>;
   using mutating_function =
-      interface::call_operator<data::shared_const,
-                               void(std::string), mutable_>;
+      interface::call_operator<data::shared_const, void(std::string), mutable_>;
 
   {
     functor function_object;
@@ -229,8 +226,7 @@ static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
 using mutable_text_i_const = text_i_mutable<data::const_observer>;
-using mutable_text_i_mutable =
-    text_i_mutable<data::mutable_observer>;
+using mutable_text_i_mutable = text_i_mutable<data::mutable_observer>;
 static_assert(std::same_as<mutable_text_i_mutable::erased_data_t,
                            data::mutable_observer>);
 
@@ -239,8 +235,8 @@ static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);
 using void_const =
     erased_data_trait<virtual_void::data::const_observer>::void_t;
 static_assert(is_const_void<void_const>);
-using void_mutable = erased_data_trait<
-    virtual_void::data::mutable_observer>::void_t;
+using void_mutable =
+    erased_data_trait<virtual_void::data::mutable_observer>::void_t;
 static_assert(!is_const_void<void_mutable>);
 static_assert(
     !(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
@@ -248,8 +244,7 @@ static_assert(
 static_assert(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
               is_const_void<void_const>);
 static_assert(erased_data_trait<data::const_observer>::is_const);
-static_assert(
-    !erased_data_trait<data::mutable_observer>::is_const);
+static_assert(!erased_data_trait<data::mutable_observer>::is_const);
 
 static_assert(std::constructible_from<mutable_text_i_mutable, text_object>);
 static_assert(

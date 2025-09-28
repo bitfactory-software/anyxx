@@ -3,7 +3,7 @@
 #include <vector>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
 #include <virtual_void/utillities/ensure_function_ptr.hpp>
 #include <virtual_void/utillities/translate_erased_function.hpp>
 #include <virtual_void/utillities/type_list.hpp>
@@ -97,10 +97,11 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   template <typename CLASS, typename FUNCTION>
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
-    auto v_table = interface::extension_method_table_instance<extended_v_table_t, CLASS>();
+    auto v_table =
+        interface::extension_method_table_instance<extended_v_table_t, CLASS>();
     insert_function(v_table, index_, fp);
     return fp;
   }
 };
 
-}  // namespace 
+}  // namespace virtual_void::interface

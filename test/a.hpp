@@ -1,6 +1,5 @@
 #include <string>
-
-#include <virtual_void/meta/class.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 
 struct A {
