@@ -27,11 +27,11 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   using extended_v_table_t = extended_v_table<EXTENDED_INTERACE>;
 
   using CONSTNESS = typename first_t<ARGS...>;
+  using VOID = void_t<CONSTNESS>;
   using observer_interface_t =
-      interface_t::template type_for<typename void_<CONSTNESS>::type>;
-  using dispatch_t = void_t<CONSTNESS>;
+      interface_t::template type_for<VOID>;
   template <typename CLASS>
-  using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
+  using class_param_t = self_pointer<VOID>::template type<CLASS>;
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
 
