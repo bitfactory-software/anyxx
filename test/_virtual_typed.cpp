@@ -31,9 +31,9 @@ VV_INTERFACE(test_i, (VV_CONST_METHOD(std::string, to_string),
 
 using namespace virtual_typed_test;
 
-VV_RUNTIME(, type_info, int)
-VV_RUNTIME(, type_info, std::string)
-VV_RUNTIME_STATIC(type_info, x_t)
+VV_RUNTIME(, int)
+VV_RUNTIME(, std::string)
+VV_RUNTIME_STATIC(x_t)
 
 TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};

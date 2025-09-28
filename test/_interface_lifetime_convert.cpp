@@ -28,7 +28,7 @@ using to_string_u = to_string_i<data::unique>;
 using to_string_mo = to_string_i<data::mutable_observer>;
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, X)
+VV_RUNTIME_STATIC(X)
 
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{X{"hallo"}};

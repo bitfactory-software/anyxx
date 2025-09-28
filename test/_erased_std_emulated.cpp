@@ -45,8 +45,8 @@ struct pure_functor_t {
   }
 };
 }
-VV_RUNTIME_STATIC(type_info, functor_t)
-VV_RUNTIME_STATIC(type_info, pure_functor_t)
+VV_RUNTIME_STATIC(functor_t)
+VV_RUNTIME_STATIC(pure_functor_t)
 
 TEST_CASE("std emulated function") {
   {

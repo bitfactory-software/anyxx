@@ -88,9 +88,9 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_RUNTIME_STATIC(type_info, Plus)
-VV_RUNTIME_STATIC(type_info, Times)
-VV_RUNTIME_STATIC(type_info, Integer)
+VV_RUNTIME_STATIC(Plus)
+VV_RUNTIME_STATIC(Times)
+VV_RUNTIME_STATIC(Integer)
 
 is_a<Plus, node_i_v_table> __;
 is_a<Times, node_i_v_table> __;
@@ -108,7 +108,7 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
-  auto& type_info = virtual_void::meta::runtime<virtual_void::meta::type_info, Times>();
+  auto& type_info = virtual_void::meta::runtime<Times>();
   REQUIRE(type_info.get_i_table().size() == 3u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

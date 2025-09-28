@@ -198,8 +198,7 @@
               n##_v_table, CONCRETE>();                                        \
                                                                                \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
-      virtual_void::meta::runtime<virtual_void::meta::type_info, CONCRETE>()   \
-          .register_v_table(this);                                             \
+      virtual_void::meta::runtime<CONCRETE>().register_v_table(this);          \
     };                                                                         \
                                                                                \
     template <typename CONCRETE>                                               \

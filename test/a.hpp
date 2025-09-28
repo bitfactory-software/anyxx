@@ -8,4 +8,4 @@ struct A {
   std::string s;
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~A() = default;
 };
-VV_RUNTIME(, type_info, ::A)
+VV_RUNTIME(, ::A)

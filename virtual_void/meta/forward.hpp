@@ -9,12 +9,14 @@ struct base_v_table;
 
 constexpr const std::type_info& get_type_info(i_table const&);
 
-template <typename RUNTIME, typename TYPE>
-RUNTIME& runtime();
+class runtime_t;
 
-template <typename RUNTIME, typename TYPE>
+template <typename TYPE>
+runtime_t& runtime();
+
+template <typename TYPE>
 auto& runtime_implementation() {
-  static RUNTIME runtime{std::in_place_type<TYPE>};
+  static runtime_t runtime{std::in_place_type<TYPE>};
   return runtime;
 }
 
@@ -22,18 +24,17 @@ class type_info;
 
 }  // namespace virtual_void::meta
 
-#define VV_RUNTIME(export_, runtime_, ...) \
-  template <>                                \
-  export_ virtual_void::meta::runtime_&      \
-  virtual_void::meta::runtime<virtual_void::meta::runtime_, __VA_ARGS__>();
+#define VV_RUNTIME(export_, ...)         \
+  template <>                            \
+  export_ virtual_void::meta::runtime_t& \
+  virtual_void::meta::runtime<__VA_ARGS__>();
 
-#define VV_RUNTIME_IMPEMENTATION(runtime_, ...)                      \
-  template <>                                                          \
-  virtual_void::meta::runtime_&                                        \
-  virtual_void::meta::runtime<virtual_void::meta::runtime_, __VA_ARGS__>() { \
-    return runtime_implementation<runtime_, __VA_ARGS__>();                  \
+#define VV_RUNTIME_IMPEMENTATION(...)                                         \
+  template <>                                                                 \
+  virtual_void::meta::runtime_t& virtual_void::meta::runtime<__VA_ARGS__>() { \
+    return runtime_implementation<__VA_ARGS__>();                             \
   }
 
-#define VV_RUNTIME_STATIC(runtime_, ...) \
-  VV_RUNTIME(, runtime_, __VA_ARGS__)            \
-  VV_RUNTIME_IMPEMENTATION(runtime_, __VA_ARGS__)\
+#define VV_RUNTIME_STATIC(...) \
+  VV_RUNTIME(, __VA_ARGS__)    \
+  VV_RUNTIME_IMPEMENTATION(__VA_ARGS__)\

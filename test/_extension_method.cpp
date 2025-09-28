@@ -31,7 +31,7 @@ VV_INTERFACE_(test_derived_i, test_base_i,
               (VV_METHOD(void, from_string, std::string const&)))
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, x_t)
+VV_RUNTIME_STATIC(x_t)
 
 using test_base_i_co = test_base_i<const_observer>;
 using test_derived_i_mo = test_derived_i<mutable_observer>;

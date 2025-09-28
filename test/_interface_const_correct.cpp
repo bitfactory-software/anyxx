@@ -63,7 +63,7 @@ struct functor {
 };
 }
 
-VV_RUNTIME_STATIC(type_info, functor)
+VV_RUNTIME_STATIC(functor)
 
 namespace {
 
@@ -207,7 +207,7 @@ VV_INTERFACE_(text_i_mutable, text_i_const,
               (VV_METHOD(void, set_text, std::string const&)))
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, text_object)
+VV_RUNTIME_STATIC(text_object)
 
 using const_text_i = text_i_const<data::const_observer>;
 using const_text_i_mutable = text_i_const<data::mutable_observer>;

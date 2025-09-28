@@ -26,8 +26,8 @@ using map_t = std::map<int, std::string>;
 using vector_t = std::vector<std::string>;
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, map_t)
-VV_RUNTIME_STATIC(type_info, vector_t)
+VV_RUNTIME_STATIC(map_t)
+VV_RUNTIME_STATIC(vector_t)
 
 template <typename VV>
 using map_i = subscript_operator<VV, std::string&(int), mutable_>;

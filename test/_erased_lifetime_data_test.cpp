@@ -18,7 +18,7 @@ struct Data {
 };
 int Data::destrucor_runs = 0;
 
-VV_RUNTIME_STATIC(type_info, Data)
+VV_RUNTIME_STATIC(Data)
 
 TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;

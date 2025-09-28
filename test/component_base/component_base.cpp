@@ -28,7 +28,7 @@ static X x{3.14};
 
 using namespace test::component_base;
 
-VV_RUNTIME_STATIC(type_info, X)
+VV_RUNTIME_STATIC(X)
 
 is_a<X, get_value_i_v_table> __;
 is_a<X, set_value_i_v_table> __;

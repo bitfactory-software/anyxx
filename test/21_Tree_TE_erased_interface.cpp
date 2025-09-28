@@ -71,9 +71,9 @@ auto make_node(ARGS&&... args) {
 
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, Plus)
-VV_RUNTIME_STATIC(type_info, Times)
-VV_RUNTIME_STATIC(type_info, Integer)
+VV_RUNTIME_STATIC(Plus)
+VV_RUNTIME_STATIC(Times)
+VV_RUNTIME_STATIC(Integer)
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace virtual_void;

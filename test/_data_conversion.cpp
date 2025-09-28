@@ -22,11 +22,11 @@ using namespace virtual_void::interface;
 using namespace virtual_void::meta;
 using namespace TestDomain;
 
-VV_RUNTIME_STATIC(type_info, std::string)
+VV_RUNTIME_STATIC(std::string)
 
 TEST_CASE("_data_conversion copy") {
   std::string s1 = "hallo";
-  auto& runtime = meta::runtime<meta::type_info, std::string>();
+  auto& runtime = meta::runtime<std::string>();
   {
     auto vv1 = erased<const_observer>(s1);
     auto vv2 = data::copy_convert_to<const_observer>(vv1, runtime);

@@ -19,7 +19,7 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-VV_RUNTIME_STATIC(type_info, X)
+VV_RUNTIME_STATIC(X)
 
 namespace {
 VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
@@ -58,13 +58,13 @@ template <>
 struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
 };
 }  // namespace
-VV_RUNTIME_STATIC(type_info, int)
-VV_RUNTIME_STATIC(type_info, double)
-VV_RUNTIME_STATIC(type_info, std::map<int,double>)
-VV_RUNTIME_STATIC(type_info, std::map<std::string,int>)
-VV_RUNTIME_STATIC(type_info, std::map<std::string, double>)
-VV_RUNTIME_STATIC(type_info, std::map<std::string, std::map<int, double>>)
-VV_RUNTIME_STATIC(type_info, std::map<int, std::map<std::string, std::map<int, double>>>)
+VV_RUNTIME_STATIC(int)
+VV_RUNTIME_STATIC(double)
+VV_RUNTIME_STATIC(std::map<int,double>)
+VV_RUNTIME_STATIC(std::map<std::string,int>)
+VV_RUNTIME_STATIC(std::map<std::string, double>)
+VV_RUNTIME_STATIC(std::map<std::string, std::map<int, double>>)
+VV_RUNTIME_STATIC(std::map<int, std::map<std::string, std::map<int, double>>>)
 
 template <typename KEY, typename VALUE>
 void test_map_t_i_template(map_t_i<const_observer, KEY, VALUE> map_i) {

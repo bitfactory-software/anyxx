@@ -36,8 +36,8 @@ struct functor2_t {
 };
 }  // namespace
 
-VV_RUNTIME_STATIC(type_info, functor_t)
-VV_RUNTIME_STATIC(type_info, functor2_t)
+VV_RUNTIME_STATIC(functor_t)
+VV_RUNTIME_STATIC(functor2_t)
 
 template <typename VV>
 using overloaded_function_object =

@@ -14,7 +14,7 @@
 
 namespace virtual_void::meta {
 
-class type_info {
+class runtime_t {
   const std::type_info& type_info_;
   using copy_construct_t = auto(const_void) -> data::unique;
   copy_construct_t* copy_construct_;
@@ -23,7 +23,7 @@ class type_info {
 
  public:
   template <typename CLASS>
-  constexpr type_info(std::in_place_type_t<CLASS>)
+  constexpr runtime_t(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
           return erased<data::unique>(
               *static_cast<CLASS const*>(from));
@@ -52,13 +52,13 @@ class type_info {
 
 template <typename CONCRETE>
 base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
-  meta::runtime<meta::type_info, CONCRETE>().register_v_table(this);
+  meta::runtime<CONCRETE>().register_v_table(this);
 }
 
 template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
-    auto& type_info = runtime<meta::type_info, CLASS>();
+    auto& type_info = runtime<CLASS>();
     auto v_table_ptr = V_TABLE::template imlpementation<CLASS>();
   };
 };
@@ -66,7 +66,7 @@ struct is_a {
 
 namespace virtual_void {
 template <typename U>
-bool type_match(meta::type_info const& meta) {
+bool type_match(meta::runtime_t const& meta) {
   return &meta.get_type_info() == &typeid_of<U>();
 }
 }  // namespace virtual_void

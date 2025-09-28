@@ -49,21 +49,21 @@ struct circle {
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
 
-VV_RUNTIME_STATIC(type_info, circle)
+VV_RUNTIME_STATIC(circle)
 virtual_void::meta::is_a<circle, shape_d_i_v_table> __;
 
 TEST_CASE("class is_a interface") {
   using namespace virtual_void;
   using namespace virtual_void::meta;
 
-  auto& circle_i_table = runtime<meta::type_info, circle>().get_i_table();
+  auto& circle_i_table = runtime<circle>().get_i_table();
   REQUIRE(circle_i_table.size() >= 0);
   static_assert(
       std::same_as<shape_d_i_v_table::v_table_base_t, shape_base_v_table>);
   {
     circle c{};
     shape_d_i<data::mutable_observer> x{c};
-    auto vtable1 = runtime<meta::type_info, circle>().get_v_table(
+    auto vtable1 = runtime<circle>().get_v_table(
         typeid(shape_d_i<data::const_observer>::v_table_t));
     auto vtable2 = virtual_void::interface::get_v_table(x);
     REQUIRE(vtable1 == vtable2);
@@ -135,9 +135,9 @@ struct regular_polygon {
     return x + "regular_polygon";
   }
 };
-VV_RUNTIME_STATIC(type_info, square)
-VV_RUNTIME_STATIC(type_info, rectangle)
-VV_RUNTIME_STATIC(type_info, regular_polygon)
+VV_RUNTIME_STATIC(square)
+VV_RUNTIME_STATIC(rectangle)
+VV_RUNTIME_STATIC(regular_polygon)
 
 void print_shape_(const auto s) {
   s.draw({4.0, 5.0});
@@ -299,7 +299,7 @@ struct x_t {
   std::string s_;
 };
 }  // namespace
-VV_RUNTIME_STATIC(type_info, x_t)
+VV_RUNTIME_STATIC(x_t)
 
 TEST_CASE("base") {
   using namespace virtual_void;

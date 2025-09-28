@@ -7,7 +7,7 @@
 
 namespace virtual_void::meta {
 
-class type_info;
+class runtime_t;
 
 struct base_v_table {
   template <typename CONCRETE>
@@ -18,7 +18,7 @@ struct base_v_table {
     return typeid(base_v_table) == from;
   }
 
-  meta::type_info* type_info = nullptr;
+  runtime_t* type_info = nullptr;
 
   bool (*_is_derived_from)(const std::type_info&);
 
