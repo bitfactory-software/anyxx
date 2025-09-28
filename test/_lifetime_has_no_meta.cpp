@@ -6,7 +6,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/unique_ptr.hpp>
 #include <virtual_void/data/value.hpp>
 
 #include "a.hpp"
@@ -139,13 +138,15 @@ TEST_CASE("lifetime/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    unique_ptr up1 =
-        erased_data_trait<unique_ptr>::construct_from(std::move(ptr));
+    unique up1 =
+        erased_data_trait<unique>::construct_from(std::move(ptr));
+    A* a = unchecked_unerase_cast<A>(up1);
+    REQUIRE(a->s == "hallo");
   }
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    auto u1 = erased<unique_ptr>(std::move(ptr));
+    auto u1 = erased<unique>(std::move(ptr));
     A* a = unchecked_unerase_cast<A>(u1);
     REQUIRE(a->s == "hallo");
   }
