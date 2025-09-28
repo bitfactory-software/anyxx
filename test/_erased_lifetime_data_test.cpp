@@ -4,7 +4,6 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/make_unique.hpp>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
 
