@@ -21,8 +21,6 @@ VV_INTERFACE(node_i,
               VV_CONST_METHOD(string, as_forth),
               VV_CONST_METHOD(string, as_lisp)))
 
-// alternative: using node = node_i<shared_const>; less code, but intrusive
-// lifetime management
 using node = node_i<shared_const>;
 
 struct Plus {
@@ -60,7 +58,7 @@ struct Integer {
   int int_;
 };
 
-// alternative for node = node_i<shared_const>:
+// alternative :
 //  template <typename NODE, typename... ARGS>
 //  auto make_node(ARGS&&... args) {
 //   return node{NODE(std::forward<ARGS>(args)...)};
