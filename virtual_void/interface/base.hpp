@@ -13,9 +13,7 @@
 
 namespace virtual_void::interface {
 
-using base_v_table = meta::base_v_table;
-
-
+using base_v_table = meta::base_v_table; // for declare_macro.hpp
 template <is_erased_data ERASED_DATA>
 class base;
 
@@ -139,11 +137,11 @@ auto get_interface_data(base<ERASED_DATA> const& interface) {
 }
 
 template <typename TO>
-auto pure_v_table_cast(base_v_table* v_table) {
+auto pure_v_table_cast(meta::base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
 template <is_interface TO>
-auto pure_v_table_cast(base_v_table* v_table) {
+auto pure_v_table_cast(meta::base_v_table* v_table) {
   return pure_v_table_cast<typename TO::v_table_t>(v_table);
 }
 
