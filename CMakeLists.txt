@@ -33,7 +33,7 @@ target_include_directories(virtual_void PUBLIC
 if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(virtual_void PRIVATE VV_SHARED)
 endif()
-target_compile_features(virtual_void PUBLIC cxx_std_20)
+target_compile_features(virtual_void PUBLIC cxx_std_23)
 # --- virtual_void library
 
 enable_testing()

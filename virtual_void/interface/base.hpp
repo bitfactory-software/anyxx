@@ -7,7 +7,6 @@
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
-#include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 #undef interface
