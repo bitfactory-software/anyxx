@@ -16,14 +16,6 @@ namespace virtual_void::interface {
 
 using base_v_table = meta::base_v_table;
 
-using open_v_table_function_t = void (*)();
-using open_v_table_t = std::vector<open_v_table_function_t>;
-
-template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
-open_v_table_t* extension_method_table_instance() {
-  static open_v_table_t open_v_table;
-  return &open_v_table;
-}
 
 template <is_erased_data ERASED_DATA>
 class base;

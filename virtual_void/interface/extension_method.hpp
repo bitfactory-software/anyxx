@@ -17,12 +17,7 @@ using extended_v_table = typename I::v_table_t;
 template <typename EXTENDED_V_TABLE>
 std::size_t extension_method_count_of = 0;
 
-using open_v_table_t = interface::open_v_table_t;
 
-void insert_function(open_v_table_t* v_table, std::size_t index, auto fp) {
-  if (v_table->size() <= index) v_table->resize(index + 1);
-  v_table->at(index) = reinterpret_cast<interface::open_v_table_function_t>(fp);
-}
 
 template <interface::is_interface EXTENDED_INTERACE, typename R,
           typename... ARGS>
@@ -80,7 +75,7 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
       : default_(f) {}
   template <typename... OTHER_ARGS>
   auto operator()(observer_interface_t const& m, OTHER_ARGS&&... args) const {
-    auto v_table = get_v_table(m)->open_v_table;
+    auto v_table = get_v_table(m)->extension_method_table;
     if (v_table->size() <= index_)
       return default_(m, std::forward<OTHER_ARGS>(args)...);
     auto target = v_table->at(index_);
@@ -98,8 +93,8 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
     auto v_table =
-        interface::extension_method_table_instance<extended_v_table_t, CLASS>();
-    insert_function(v_table, index_, fp);
+        meta::extension_method_table_instance<extended_v_table_t, CLASS>();
+    meta::insert_function(v_table, index_, fp);
     return fp;
   }
 };

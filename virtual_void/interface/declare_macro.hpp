@@ -183,7 +183,7 @@
                                                                                \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
                                                                                \
-    virtual_void::interface::open_v_table_t* open_v_table;                     \
+    virtual_void::meta::extension_method_table_t* extension_method_table;      \
                                                                                \
     template <typename CONCRETE>                                               \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
@@ -193,9 +193,9 @@
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
                                                                                \
-      open_v_table =                                                           \
-          ::virtual_void::interface::extension_method_table_instance<          \
-              n##_v_table, CONCRETE>();                                        \
+      extension_method_table =                                                 \
+          ::virtual_void::meta::extension_method_table_instance<n##_v_table,   \
+                                                                CONCRETE>();   \
                                                                                \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
       virtual_void::meta::get_meta_data<CONCRETE>().register_v_table(this);    \

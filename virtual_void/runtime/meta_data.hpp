@@ -46,6 +46,16 @@ inline bool is_derived_from(const std::type_info& from,
   return base_v_table->_is_derived_from(from);
 }
 
+using extension_method_table_function_t = void (*)();
+using extension_method_table_t = std::vector<extension_method_table_function_t>;
+
+void insert_function(extension_method_table_t* v_table, std::size_t index,
+                     auto fp) {
+  if (v_table->size() <= index) v_table->resize(index + 1);
+  v_table->at(index) =
+      reinterpret_cast<meta::extension_method_table_function_t>(fp);
+}
+
 template <typename CONCRETE>
 base_v_table* base_v_table_imlpementation() {
   static base_v_table v_table{std::in_place_type<CONCRETE>};
@@ -98,6 +108,13 @@ struct is_a {
     auto v_table_ptr = V_TABLE::template imlpementation<CLASS>();
   };
 };
+
+template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+extension_method_table_t* extension_method_table_instance() {
+  static extension_method_table_t extension_method_table;
+  return &extension_method_table;
+}
+
 }  // namespace virtual_void::meta
 
 namespace virtual_void {
@@ -112,10 +129,11 @@ bool type_match(meta::meta_data const& meta) {
   export_ virtual_void::meta::meta_data& \
   virtual_void::meta::get_meta_data<__VA_ARGS__>();
 
-#define VV_RUNTIME_IMPEMENTATION(...)                                         \
-  template <>                                                                 \
-  virtual_void::meta::meta_data& virtual_void::meta::get_meta_data<__VA_ARGS__>() { \
-    return runtime_implementation<__VA_ARGS__>();                             \
+#define VV_RUNTIME_IMPEMENTATION(...)                \
+  template <>                                        \
+  virtual_void::meta::meta_data&                     \
+  virtual_void::meta::get_meta_data<__VA_ARGS__>() { \
+    return runtime_implementation<__VA_ARGS__>();    \
   }
 
 #define VV_RUNTIME_STATIC(...) \
