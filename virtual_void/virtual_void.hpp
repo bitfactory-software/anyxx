@@ -132,14 +132,10 @@ concept const_correct_target_for_data =
     (((is_const_void<TARGET> == is_const_void<DATA>) ||
       (!is_const_void<DATA>)));
 
-template <typename VV_VOID, typename DATA>
-concept const_correct_for_virtual_void_data =
-    const_correct_target_for_data<VV_VOID, data_void<DATA>>;
-
 template <typename TARGET, typename ERASED_DATA>
 concept const_correct_for_virtual_void =
     is_ereasurness<TARGET> && is_erased_data<ERASED_DATA> &&
-    (const_correct_for_virtual_void_data<TARGET, ERASED_DATA>);
+    (const_correct_target_for_data<TARGET, data_void<ERASED_DATA>>);
 
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
