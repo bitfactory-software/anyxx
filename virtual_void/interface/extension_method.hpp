@@ -11,39 +11,24 @@
 
 namespace virtual_void::interface {
 
-template <interface::is_interface I>
+template <is_interface I>
 using extended_v_table = typename I::v_table_t;
 
 template <typename EXTENDED_V_TABLE>
 std::size_t extension_method_count_of = 0;
 
-
-
-template <interface::is_interface EXTENDED_INTERACE, typename R,
-          typename... ARGS>
+template <is_interface EXTENDED_INTERACE, typename R, typename... ARGS>
 class extension_method;
 
-template <interface::is_interface EXTENDED_INTERACE, typename R,
-          typename... ARGS>
+template <is_interface EXTENDED_INTERACE, typename R, typename... ARGS>
 class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
  public:
   using interface_t = EXTENDED_INTERACE;
   using extended_v_table_t = extended_v_table<EXTENDED_INTERACE>;
 
-  template <typename CONSTNESS, typename...>
-  struct observer;
-  template <typename... OTHER_ARGS>
-  struct observer<const_, OTHER_ARGS...> {
-    using type = data::const_observer;
-  };
-  template <typename... OTHER_ARGS>
-  struct observer<mutable_, OTHER_ARGS...> {
-    using type = data::mutable_observer;
-  };
-
-  using observer_interface_t =
-      interface_t::template type_for<observer<ARGS...>::type>;
   using CONSTNESS = typename first_t<ARGS...>;
+  using observer_interface_t =
+      interface_t::template type_for<typename void_<CONSTNESS>::type>;
   using dispatch_t = void_t<CONSTNESS>;
   template <typename CLASS>
   using class_param_t = self_pointer<dispatch_t>::template type<CLASS>;
