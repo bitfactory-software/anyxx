@@ -9,12 +9,6 @@
 
 namespace virtual_void {
 
-using type_info_ptr = std::type_info const*;
-template <typename T>
-const std::type_info& typeid_of() {
-  return typeid(T);
-};  // remove this! require explicit registering!
-
 template <typename>
 struct self_pointer;
 template <>

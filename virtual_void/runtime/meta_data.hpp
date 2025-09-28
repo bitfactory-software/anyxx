@@ -11,6 +11,9 @@
 
 namespace virtual_void::meta {
 
+template <typename T>
+const std::type_info& typeid_of();
+
 class meta_data;
 struct base_v_table;
 
@@ -119,21 +122,27 @@ extension_method_table_t* extension_method_table_instance() {
 
 namespace virtual_void {
 template <typename U>
-bool type_match(meta::meta_data const& meta) {
-  return &meta.get_type_info() == &typeid_of<U>();
+bool type_match(meta::meta_data const& meta_data) {
+  return &meta_data.get_type_info() == &meta::typeid_of<std::decay_t<U>>();
 }
 }  // namespace virtual_void
 
-#define VV_RUNTIME(export_, ...)         \
-  template <>                            \
-  export_ virtual_void::meta::meta_data& \
+#define VV_RUNTIME(export_, ...)                                              \
+  template <>                                                                 \
+  export_ const std::type_info& virtual_void::meta::typeid_of<__VA_ARGS__>(); \
+  template <>                                                                 \
+  export_ virtual_void::meta::meta_data&                                      \
   virtual_void::meta::get_meta_data<__VA_ARGS__>();
 
-#define VV_RUNTIME_IMPEMENTATION(...)                \
-  template <>                                        \
-  virtual_void::meta::meta_data&                     \
-  virtual_void::meta::get_meta_data<__VA_ARGS__>() { \
-    return runtime_implementation<__VA_ARGS__>();    \
+#define VV_RUNTIME_IMPEMENTATION(...)                                  \
+  template <>                                                          \
+  const std::type_info& virtual_void::meta::typeid_of<__VA_ARGS__>() { \
+    return typeid(__VA_ARGS__);                                        \
+  }                                                                    \
+  template <>                                                          \
+  virtual_void::meta::meta_data&                                       \
+  virtual_void::meta::get_meta_data<__VA_ARGS__>() {                   \
+    return runtime_implementation<__VA_ARGS__>();                      \
   }
 
 #define VV_RUNTIME_STATIC(...) \
