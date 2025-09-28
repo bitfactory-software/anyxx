@@ -38,14 +38,17 @@ concept base_of = std::derived_from<DERIVED, BASE>;
 template <typename DATA>
 struct erased_data_trait;
 
-template <class META>
-concept is_meta = requires(META meta) {
-  { meta.get_meta() } -> std::convertible_to<META const*>;
-  { meta.type_info() } -> std::convertible_to<type_info_ptr>;
-};
-
 template <class E>
-concept is_erased_data = requires(E) { typename erased_data_trait<E>::void_t; };
+concept is_erased_data = requires(E e) {
+  typename erased_data_trait<E>::void_t;
+  {
+    erased_data_trait<E>::is_constructibile_from_const
+  } -> std::convertible_to<bool>;
+  {
+    erased_data_trait<E>::value(e)
+  } -> std::convertible_to<typename erased_data_trait<E>::void_t>;
+  { erased_data_trait<E>::has_value(e) } -> std::convertible_to<bool>;
+};
 
 struct mutable_ {};
 struct const_ {};
@@ -121,19 +124,17 @@ using data_void = erased_data_trait<DATA>::void_t;
 template <typename DATA>
 using data_const_t = const_t<typename erased_data_trait<DATA>::void_t>;
 
-template <typename DATA>
-concept is_const_data = is_const_void<data_void<DATA>>;
+template <typename ERASED_DATA>
+concept is_const_data = is_const_void<data_void<ERASED_DATA>>;
 
-template <typename TARGET, typename DATA>
-concept const_correct_target_for_data =
-    is_ereasurness<TARGET> && voidness<DATA> &&
-    (((is_const_void<TARGET> == is_const_void<DATA>) ||
-      (!is_const_void<DATA>)));
+template <bool CALL_IS_CONST, bool ERASED_DATA_IS_CONST>
+concept const_correct_call =
+    ((CALL_IS_CONST == ERASED_DATA_IS_CONST) || !ERASED_DATA_IS_CONST);
 
-template <typename TARGET, typename ERASED_DATA>
+template <typename CALL, typename ERASED_DATA>
 concept const_correct_call_for_erased_data =
-    is_ereasurness<TARGET> && is_erased_data<ERASED_DATA> &&
-    (const_correct_target_for_data<TARGET, data_void<ERASED_DATA>>);
+    is_ereasurness<CALL> && is_erased_data<ERASED_DATA> &&
+    (const_correct_call<is_const_void<CALL>, is_const_data<ERASED_DATA>>);
 
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
