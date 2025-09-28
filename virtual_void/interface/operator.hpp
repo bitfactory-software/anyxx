@@ -76,8 +76,7 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
       : base_t(other) {}
 
   RET invoke(ARGS&&... args) const
-    requires(const_correct_call_for_erased_data<virtual_void::void_t<CONSTNESS>,
-                                                erased_data_t>)
+    requires(const_correct_call_for_erased_data<CONSTNESS, erased_data_t>)
   {
     return static_cast<v_table_t*>(v_table_)->op(get_data(base_t::erased_data_),
                                                  std::forward<ARGS>(args)...);

@@ -28,8 +28,7 @@ struct call_operator_<ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
 
   using operator_t::operator();
   RET operator()(ARGS&&... args) const
-    requires(const_correct_call_for_erased_data<virtual_void::void_t<CONSTNESS>,
-                                                ERASED_DATA>)
+    requires(const_correct_call_for_erased_data<CONSTNESS, ERASED_DATA>)
   {
     return operator_t::invoke(std::forward<ARGS>(args)...);
   }
