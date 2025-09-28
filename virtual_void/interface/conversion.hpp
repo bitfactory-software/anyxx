@@ -12,7 +12,7 @@
 namespace virtual_void::interface {
 
 template <typename TO_INTERFACE>
-auto find_v_table(const meta::runtime_t& type_info) -> TO_INTERFACE::v_table_t* {
+auto find_v_table(const meta::meta_data& type_info) -> TO_INTERFACE::v_table_t* {
   using v_table_t = typename TO_INTERFACE::v_table_t;
   auto v_table = type_info.get_v_table(typeid(TO_INTERFACE::v_table_t));
   return static_cast<TO_INTERFACE::v_table_t*>(v_table);
@@ -26,7 +26,7 @@ auto find_v_table(meta::base_v_table* from) -> TO_INTERFACE::v_table_t* {
 
 template <typename TO_INTERFACE, is_erased_data VV_FROM>
 TO_INTERFACE attach_interface(VV_FROM const& vv_from,
-                              const meta::runtime_t& type_info) {
+                              const meta::meta_data& type_info) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   auto v_table = find_v_table<TO_INTERFACE>(type_info);
@@ -46,10 +46,10 @@ TO_INTERFACE attach_interface(const FROM_INTERFACE& from_interface) {
 }
 
 template <typename TO_INTERFACE, is_erased_data VV_FROM>
-TO_INTERFACE move_to_interface(VV_FROM&& vv_from, const meta::runtime_t& runtime) {
+TO_INTERFACE move_to_interface(VV_FROM&& vv_from, const meta::meta_data& get_meta_data) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
-  auto v_table = find_v_table<TO_INTERFACE>(runtime);
+  auto v_table = find_v_table<TO_INTERFACE>(get_meta_data);
   return TO_INTERFACE{move_convert_to<vv_to_t>(std::move(vv_from)), v_table};
 }
 

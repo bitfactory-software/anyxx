@@ -15,7 +15,7 @@
         - Downcastable [tutorial](/tutorials/tutorial__31.md)
     - Open methods: [Quick start](/tutorials/tutorial___1.md/#t2)
 - Allow extendable types with open_objects: [Quick start](/tutorials/tutorial___2.md)
-- To obtain types with runtime casts
+- To obtain types with get_meta_data casts
 
 To enable:
 
@@ -51,7 +51,7 @@ Reasons are:
 - You cannot use all your types all the time because of restricted build resources: time and space.
 
 For example, imagine a std::variant for some hundred different alternatives.
-This is where **programming on a large scale** begins and runtime dispatch is the proven means.
+This is where **programming on a large scale** begins and get_meta_data dispatch is the proven means.
 
 At this point arises another problem, when it comes to "inversion of control" in regard to the type of the parameter objects passed into the callback:
 - In static dispatch, you have the full type information.
@@ -59,7 +59,7 @@ At this point arises another problem, when it comes to "inversion of control" in
 
 ### *Runtime* versus *compile-time*
 
-If you have a runtime performance problem, the hot runtime path and the causing bottleneck are easily diagnosed with profilers.
+If you have a get_meta_data performance problem, the hot get_meta_data path and the causing bottleneck are easily diagnosed with profilers.
 When the problem is spotted, the solution is - in our experience - not far away.
 In contrast, when build time has grown to a problem, there is seldom an easy way out.
 While a software system grows larger, keeping the edit-compile-run loop short requires constant smart decisions.

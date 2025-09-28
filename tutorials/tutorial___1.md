@@ -179,7 +179,7 @@ TEST_CASE("tutorial 1/3") {
 
 - // 1 shows the call to the algorithm `fill_with_overloads`. It instantiates the second parameter (a template function object) for each type argument, and `define`s that function object for the instantiated type in the open method `draw`.
 
-The usage of `open_method::via_type_info` is, on one hand, the easiest way to add *type tunneled* functionality, but, on the other hand, it comes with a small runtime penalty.
+The usage of `open_method::via_type_info` is, on one hand, the easiest way to add *type tunneled* functionality, but, on the other hand, it comes with a small get_meta_data penalty.
 
 Next, we will take a look at the most efficient way to do this with *virtual_void*: `Interface`s.
 

@@ -64,7 +64,7 @@ The searched value is accessd with the [] operator, where the "index" is a point
 
 For the interessted on the inner workings, we will do an extra short blog, to go through the details.
 
-But now let us prepare for our next round in the runtime dispatch battle.
+But now let us prepare for our next round in the get_meta_data dispatch battle.
 
 We install the perfect_typeid_hash::index_table into the [any_dispatch method](https://github.com/andreaspfaffenbichler/virtual_void/blob/master/include/virtual_void/any_dispatch/method_typeid_hash.h).
 

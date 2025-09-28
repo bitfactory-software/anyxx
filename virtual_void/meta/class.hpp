@@ -11,18 +11,17 @@
 
 namespace virtual_void::meta {
 
-class runtime_t;
+class meta_data;
 struct base_v_table;
 
 template <typename TYPE>
-runtime_t& runtime();
+meta_data& get_meta_data();
 
 template <typename TYPE>
 auto& runtime_implementation() {
-  static runtime_t runtime{std::in_place_type<TYPE>};
-  return runtime;
+  static meta_data meta_data{std::in_place_type<TYPE>};
+  return meta_data;
 }
-
 
 struct base_v_table {
   template <typename CONCRETE>
@@ -32,7 +31,7 @@ struct base_v_table {
     return typeid(base_v_table) == from;
   }
 
-  runtime_t* type_info = nullptr;
+  meta_data* type_info = nullptr;
 
   bool (*_is_derived_from)(const std::type_info&);
 
@@ -53,7 +52,7 @@ base_v_table* base_v_table_imlpementation() {
   return &v_table;
 }
 
-class runtime_t {
+class meta_data {
   const std::type_info& type_info_;
   using copy_construct_t = auto(const_void) -> data::unique;
   copy_construct_t* copy_construct_;
@@ -62,7 +61,7 @@ class runtime_t {
 
  public:
   template <typename CLASS>
-  constexpr runtime_t(std::in_place_type_t<CLASS>)
+  constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
           return erased<data::unique>(*static_cast<CLASS const*>(from));
         }) {}
@@ -89,13 +88,13 @@ class runtime_t {
 
 template <typename CONCRETE>
 base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
-  meta::runtime<CONCRETE>().register_v_table(this);
+  meta::get_meta_data<CONCRETE>().register_v_table(this);
 }
 
 template <typename CLASS, typename V_TABLE>
 struct is_a {
   constexpr is_a() {
-    auto& type_info = runtime<CLASS>();
+    auto& type_info = get_meta_data<CLASS>();
     auto v_table_ptr = V_TABLE::template imlpementation<CLASS>();
   };
 };
@@ -103,19 +102,19 @@ struct is_a {
 
 namespace virtual_void {
 template <typename U>
-bool type_match(meta::runtime_t const& meta) {
+bool type_match(meta::meta_data const& meta) {
   return &meta.get_type_info() == &typeid_of<U>();
 }
 }  // namespace virtual_void
 
 #define VV_RUNTIME(export_, ...)         \
   template <>                            \
-  export_ virtual_void::meta::runtime_t& \
-  virtual_void::meta::runtime<__VA_ARGS__>();
+  export_ virtual_void::meta::meta_data& \
+  virtual_void::meta::get_meta_data<__VA_ARGS__>();
 
 #define VV_RUNTIME_IMPEMENTATION(...)                                         \
   template <>                                                                 \
-  virtual_void::meta::runtime_t& virtual_void::meta::runtime<__VA_ARGS__>() { \
+  virtual_void::meta::meta_data& virtual_void::meta::get_meta_data<__VA_ARGS__>() { \
     return runtime_implementation<__VA_ARGS__>();                             \
   }
 

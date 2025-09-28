@@ -56,14 +56,14 @@ TEST_CASE("class is_a interface") {
   using namespace virtual_void;
   using namespace virtual_void::meta;
 
-  auto& circle_i_table = runtime<circle>().get_i_table();
+  auto& circle_i_table = get_meta_data<circle>().get_i_table();
   REQUIRE(circle_i_table.size() >= 0);
   static_assert(
       std::same_as<shape_d_i_v_table::v_table_base_t, shape_base_v_table>);
   {
     circle c{};
     shape_d_i<data::mutable_observer> x{c};
-    auto vtable1 = runtime<circle>().get_v_table(
+    auto vtable1 = get_meta_data<circle>().get_v_table(
         typeid(shape_d_i<data::const_observer>::v_table_t));
     auto vtable2 = virtual_void::interface::get_v_table(x);
     REQUIRE(vtable1 == vtable2);

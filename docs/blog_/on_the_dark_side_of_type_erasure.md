@@ -88,7 +88,7 @@ and
 
 These features are intruding.
 
-So it is understanding, that "type erasure" is the new cool thing in regards to runtime dispatch. 
+So it is understanding, that "type erasure" is the new cool thing in regards to get_meta_data dispatch. 
 
 This reaches so far, that new languages, like "rust" go full in on that concept, and dissmiss the idea of inherritance as a whole.
 

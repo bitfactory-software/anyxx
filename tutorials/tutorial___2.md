@@ -5,7 +5,7 @@
 <a name="t1"></a> 
 ## virtual_void Tutorial 2: Open Objects
 
-In interpreted languages like *Python* and *JavaScript*, one can easily enhance an object at runtime.  
+In interpreted languages like *Python* and *JavaScript*, one can easily enhance an object at get_meta_data.  
 This is a useful feature.  
 For example, you have some objects of type `Customer` in the core of your system.  
 Here you keep all the usual name, address, and payment data.  
