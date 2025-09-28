@@ -3,7 +3,6 @@
 #include <memory>
 
 #include <virtual_void/virtual_void.hpp>
-#include <virtual_void/data/decorated_data.hpp>
 #include <virtual_void/data/shared_const_trait.hpp>
 
 namespace virtual_void::data {

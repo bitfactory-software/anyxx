@@ -1,6 +1,5 @@
 #pragma once
 
-#include <virtual_void/data/decorated_data.hpp>
 #include <virtual_void/data/erased_unique_ptr.hpp>
 #include <virtual_void/data/unique_trait.hpp>
 

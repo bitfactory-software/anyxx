@@ -1,7 +1,6 @@
 #pragma once
 
 #include <virtual_void/data/erased_value.hpp>
-#include <virtual_void/data/decorated_data.hpp>
 #include <virtual_void/data/value_trait.hpp>
 #include <virtual_void/virtual_void.hpp>
 
