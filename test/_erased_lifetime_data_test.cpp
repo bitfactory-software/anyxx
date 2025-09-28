@@ -6,6 +6,10 @@
 #include <vector>
 #include <virtual_void/meta/class.hpp>
 #include <virtual_void/virtual_void.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/value.hpp>
+#include <virtual_void/data/unique.hpp>
+#include <virtual_void/data/observer.hpp>
 
 using namespace Catch::Matchers;
 

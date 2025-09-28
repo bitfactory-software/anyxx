@@ -5,13 +5,53 @@
 #include <typeindex>
 #include <vector>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/interface/base.hpp>
-#include <virtual_void/meta/forward.hpp>
 #include <virtual_void/utillities/overload.hpp>
 #include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::meta {
+
+class runtime_t;
+struct base_v_table;
+
+template <typename TYPE>
+runtime_t& runtime();
+
+template <typename TYPE>
+auto& runtime_implementation() {
+  static runtime_t runtime{std::in_place_type<TYPE>};
+  return runtime;
+}
+
+
+struct base_v_table {
+  template <typename CONCRETE>
+  base_v_table(std::in_place_type_t<CONCRETE> concrete);
+
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(base_v_table) == from;
+  }
+
+  runtime_t* type_info = nullptr;
+
+  bool (*_is_derived_from)(const std::type_info&);
+
+  base_v_table(auto unused)
+      : _is_derived_from([](const std::type_info& from) {
+          return static_is_derived_from(from);
+        }) {};
+};
+
+inline bool is_derived_from(const std::type_info& from,
+                            meta::base_v_table const* base_v_table) {
+  return base_v_table->_is_derived_from(from);
+}
+
+template <typename CONCRETE>
+base_v_table* base_v_table_imlpementation() {
+  static base_v_table v_table{std::in_place_type<CONCRETE>};
+  return &v_table;
+}
 
 class runtime_t {
   const std::type_info& type_info_;
@@ -24,8 +64,7 @@ class runtime_t {
   template <typename CLASS>
   constexpr runtime_t(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return erased<data::unique>(
-              *static_cast<CLASS const*>(from));
+          return erased<data::unique>(*static_cast<CLASS const*>(from));
         }) {}
 
   constexpr operator const std::type_info&() const { return get_type_info(); }
@@ -38,8 +77,7 @@ class runtime_t {
   base_v_table* get_v_table(std::type_info const& typeid_) const {
     auto& i_table = get_i_table();
     for (auto v_table : i_table)
-      if (virtual_void::interface::is_derived_from(typeid_, v_table))
-        return v_table;
+      if (is_derived_from(typeid_, v_table)) return v_table;
     return nullptr;
   }
   void register_v_table(base_v_table* v_table) {
@@ -69,3 +107,18 @@ bool type_match(meta::runtime_t const& meta) {
   return &meta.get_type_info() == &typeid_of<U>();
 }
 }  // namespace virtual_void
+
+#define VV_RUNTIME(export_, ...)         \
+  template <>                            \
+  export_ virtual_void::meta::runtime_t& \
+  virtual_void::meta::runtime<__VA_ARGS__>();
+
+#define VV_RUNTIME_IMPEMENTATION(...)                                         \
+  template <>                                                                 \
+  virtual_void::meta::runtime_t& virtual_void::meta::runtime<__VA_ARGS__>() { \
+    return runtime_implementation<__VA_ARGS__>();                             \
+  }
+
+#define VV_RUNTIME_STATIC(...) \
+  VV_RUNTIME(, __VA_ARGS__)    \
+  VV_RUNTIME_IMPEMENTATION(__VA_ARGS__)\

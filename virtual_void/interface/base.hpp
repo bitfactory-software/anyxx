@@ -6,7 +6,7 @@
 #include <utility>
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/move_convert.hpp>
-#include <virtual_void/meta/base_v_table.hpp>
+#include <virtual_void/meta/class.hpp>
 #include <virtual_void/utillities/VV_EXPORT.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -166,10 +166,6 @@ inline const auto& get_runtime(INTERFACE const& interface) {
   return *get_v_table(interface)->type_info;
 }
 
-inline bool is_derived_from(const std::type_info& from,
-                            meta::base_v_table const* base_v_table) {
-  return base_v_table->_is_derived_from(from);
-}
 template <is_erased_data VV>
 bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
   return get_v_table(interface)->_is_derived_from(from);
