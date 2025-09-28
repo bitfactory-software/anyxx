@@ -146,8 +146,8 @@ TEST_CASE("lifetime/unique_ptr") {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
     auto u1 = erased<unique_ptr>(std::move(ptr));
-    A const* a = unchecked_unerase_cast<A>(u1);
-    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
+    A* a = unchecked_unerase_cast<A>(u1);
+    REQUIRE(a->s == "hallo");
   }
 }
 }  // namespace
