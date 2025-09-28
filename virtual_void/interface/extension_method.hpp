@@ -78,8 +78,8 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
     auto v_table =
-        meta::extension_method_table_instance<extended_v_table_t, CLASS>();
-    meta::insert_function(v_table, index_, fp);
+        runtime::extension_method_table_instance<extended_v_table_t, CLASS>();
+    runtime::insert_function(v_table, index_, fp);
     return fp;
   }
 };

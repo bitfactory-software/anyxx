@@ -13,7 +13,7 @@
 
 namespace virtual_void::interface {
 
-using base_v_table = meta::base_v_table; // for declare_macro.hpp
+using base_v_table = runtime::base_v_table; // for declare_macro.hpp
 template <is_erased_data ERASED_DATA>
 class base;
 
@@ -48,7 +48,7 @@ class base {
  public:
   using erased_data_t = ERASED_DATA;
   using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
-  using v_table_t = meta::base_v_table;
+  using v_table_t = runtime::base_v_table;
   using trait_t = erased_data_trait<erased_data_t>;
 
  protected:
@@ -65,7 +65,7 @@ class base {
       : erased_data_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     using t = unerased_type<ERASED_DATA, CONSTRUCTED_WITH>;
-    v_table_ = meta::base_v_table_imlpementation<t>();
+    v_table_ = runtime::base_v_table_imlpementation<t>();
   }
   template <typename OTHER>
   base(const OTHER& other)
@@ -137,11 +137,11 @@ auto get_interface_data(base<ERASED_DATA> const& interface) {
 }
 
 template <typename TO>
-auto pure_v_table_cast(meta::base_v_table* v_table) {
+auto pure_v_table_cast(runtime::base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
 template <is_interface TO>
-auto pure_v_table_cast(meta::base_v_table* v_table) {
+auto pure_v_table_cast(runtime::base_v_table* v_table) {
   return pure_v_table_cast<typename TO::v_table_t>(v_table);
 }
 

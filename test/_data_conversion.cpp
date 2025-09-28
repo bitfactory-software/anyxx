@@ -19,14 +19,14 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void::interface;
-using namespace virtual_void::meta;
+using namespace virtual_void::runtime;
 using namespace TestDomain;
 
 VV_RUNTIME_STATIC(std::string)
 
 TEST_CASE("_data_conversion copy") {
   std::string s1 = "hallo";
-  auto& get_meta_data = meta::get_meta_data<std::string>();
+  auto& get_meta_data = runtime::get_meta_data<std::string>();
   {
     auto vv1 = erased<const_observer>(s1);
     auto vv2 = data::copy_convert_to<const_observer>(vv1, get_meta_data);

@@ -239,33 +239,33 @@ auto unchecked_unerase_cast(ERASED_DATA const& o)
   return unchecked_unerase_cast<U>(get_data(o));
 }
 
-namespace meta {
+namespace runtime {
 class meta_data;
 }
 
 template <typename U>
-bool type_match(meta::meta_data const& meta);
+bool type_match(runtime::meta_data const& meta);
 
 class type_mismatch_error : error {
   using error::error;
 };
 
 template <typename U>
-void check_type_match(meta::meta_data const& meta) {
+void check_type_match(runtime::meta_data const& meta) {
   if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
 }
 template <typename U, is_erased_data ERASED_DATA>
-auto unerase_cast(ERASED_DATA const& o, meta::meta_data const& meta) {
+auto unerase_cast(ERASED_DATA const& o, runtime::meta_data const& meta) {
   check_type_match<U>(meta);
   return unchecked_unerase_cast<U>(o);
 }
 template <typename U, is_erased_data ERASED_DATA>
-U const* unerase_cast(ERASED_DATA const* o, meta::meta_data const& meta) {
+U const* unerase_cast(ERASED_DATA const* o, runtime::meta_data const& meta) {
   if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
   return nullptr;
 }
 template <typename U, is_erased_data ERASED_DATA>
-U* unerase_cast(ERASED_DATA const* o, meta::meta_data const& meta)
+U* unerase_cast(ERASED_DATA const* o, runtime::meta_data const& meta)
   requires(!is_const_data<ERASED_DATA>)
 {
   if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);

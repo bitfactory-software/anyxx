@@ -12,7 +12,7 @@
 namespace virtual_void::interface {
 
 template <typename TO_INTERFACE>
-auto find_v_table(const meta::meta_data& type_info)
+auto find_v_table(const runtime::meta_data& type_info)
     -> TO_INTERFACE::v_table_t* {
   using v_table_t = typename TO_INTERFACE::v_table_t;
   auto v_table = type_info.get_v_table(typeid(TO_INTERFACE::v_table_t));
@@ -20,14 +20,14 @@ auto find_v_table(const meta::meta_data& type_info)
 }
 
 template <typename TO_INTERFACE>
-auto find_v_table(meta::base_v_table* from) -> TO_INTERFACE::v_table_t* {
+auto find_v_table(runtime::base_v_table* from) -> TO_INTERFACE::v_table_t* {
   using v_table_t = typename TO_INTERFACE::v_table_t;
   return find_v_table<TO_INTERFACE>(*from->type_info);
 }
 
 template <typename TO_INTERFACE, is_erased_data VV_FROM>
 TO_INTERFACE attach_interface(VV_FROM const& vv_from,
-                              const meta::meta_data& type_info) {
+                              const runtime::meta_data& type_info) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   auto v_table = find_v_table<TO_INTERFACE>(type_info);
@@ -36,7 +36,7 @@ TO_INTERFACE attach_interface(VV_FROM const& vv_from,
 
 template <typename TO_INTERFACE, is_erased_data VV_FROM>
 TO_INTERFACE attach_interface(VV_FROM const& vv_from,
-                              meta::base_v_table const* from) {
+                              runtime::base_v_table const* from) {
   return attach_interface<TO_INTERFACE>(vv_from, *from->type_info);
 }
 
@@ -48,7 +48,7 @@ TO_INTERFACE attach_interface(const FROM_INTERFACE& from_interface) {
 
 template <typename TO_INTERFACE, is_erased_data VV_FROM>
 TO_INTERFACE move_to_interface(VV_FROM&& vv_from,
-                               const meta::meta_data& get_meta_data) {
+                               const runtime::meta_data& get_meta_data) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   auto v_table = find_v_table<TO_INTERFACE>(get_meta_data);

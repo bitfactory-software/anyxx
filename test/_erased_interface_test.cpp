@@ -50,11 +50,11 @@ struct circle {
 };
 
 VV_RUNTIME_STATIC(circle)
-virtual_void::meta::is_a<circle, shape_d_i_v_table> __;
+virtual_void::runtime::is_a<circle, shape_d_i_v_table> __;
 
 TEST_CASE("class is_a interface") {
   using namespace virtual_void;
-  using namespace virtual_void::meta;
+  using namespace virtual_void::runtime;
 
   auto& circle_i_table = get_meta_data<circle>().get_i_table();
   REQUIRE(circle_i_table.size() >= 0);
@@ -159,7 +159,7 @@ void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 
 TEST_CASE("dynamic v_table const_observer") {
   using namespace virtual_void;
-  using namespace virtual_void::meta;
+  using namespace virtual_void::runtime;
 
   circle c{12.3};
   square s{32};

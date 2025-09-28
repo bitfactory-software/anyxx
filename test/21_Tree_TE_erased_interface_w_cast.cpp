@@ -18,7 +18,7 @@ using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data;
 using namespace virtual_void::data::has_no_meta;
-using namespace virtual_void::meta;
+using namespace virtual_void::runtime;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
@@ -108,7 +108,7 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
-  auto& type_info = virtual_void::meta::get_meta_data<Times>();
+  auto& type_info = virtual_void::runtime::get_meta_data<Times>();
   REQUIRE(type_info.get_i_table().size() == 3u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),
