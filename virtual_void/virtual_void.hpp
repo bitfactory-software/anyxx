@@ -45,9 +45,7 @@ concept is_meta = requires(META meta) {
 };
 
 template <class E>
-concept is_erased_data = requires(E) {
-  typename erased_data_trait<E>::void_t;
-};
+concept is_erased_data = requires(E) { typename erased_data_trait<E>::void_t; };
 
 struct mutable_ {};
 struct const_ {};
@@ -128,12 +126,12 @@ concept is_const_data = is_const_void<data_void<DATA>>;
 
 template <typename TARGET, typename DATA>
 concept const_correct_target_for_data =
-    is_ereasurness<TARGET> && is_ereasurness<DATA> &&
+    is_ereasurness<TARGET> && voidness<DATA> &&
     (((is_const_void<TARGET> == is_const_void<DATA>) ||
       (!is_const_void<DATA>)));
 
 template <typename TARGET, typename ERASED_DATA>
-concept const_correct_for_virtual_void =
+concept const_correct_call_for_erased_data =
     is_ereasurness<TARGET> && is_erased_data<ERASED_DATA> &&
     (const_correct_target_for_data<TARGET, data_void<ERASED_DATA>>);
 

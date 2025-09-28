@@ -21,15 +21,15 @@ template <is_erased_data ERASED_DATA, template <typename> typename BASE,
 struct call_operator_<ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     : operator_<call_operator_target, ERASED_DATA, BASE, CONSTNESS,
                 RET(ARGS...)> {
-  using operator_t = operator_<call_operator_target, ERASED_DATA,
-                               BASE, CONSTNESS, RET(ARGS...)>;
+  using operator_t = operator_<call_operator_target, ERASED_DATA, BASE,
+                               CONSTNESS, RET(ARGS...)>;
 
   using operator_t::operator_t;
 
   using operator_t::operator();
   RET operator()(ARGS&&... args) const
-    requires(const_correct_for_virtual_void<virtual_void::void_t<CONSTNESS>,
-                                            ERASED_DATA>)
+    requires(const_correct_call_for_erased_data<virtual_void::void_t<CONSTNESS>,
+                                                ERASED_DATA>)
   {
     return operator_t::invoke(std::forward<ARGS>(args)...);
   }
