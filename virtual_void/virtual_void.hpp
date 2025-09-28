@@ -44,16 +44,10 @@ concept is_meta = requires(META meta) {
   { meta.type_info() } -> std::convertible_to<type_info_ptr>;
 };
 
-template <class PTR>
-concept has_erased_data_trait = requires(PTR ptr) {
-  typename erased_data_trait<PTR>::void_t;
-};
-
 template <class E>
-concept is_erased_data = has_erased_data_trait<E>;
-
-template <is_erased_data VV>
-using meta_t = typename erased_data_trait<VV>::meta_t;
+concept is_erased_data = requires(E) {
+  typename erased_data_trait<E>::void_t;
+};
 
 struct mutable_ {};
 struct const_ {};
