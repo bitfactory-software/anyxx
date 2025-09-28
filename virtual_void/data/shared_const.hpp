@@ -1,7 +1,6 @@
 #pragma once
 
 #include <memory>
-#include <virtual_void/data/shared_const_trait.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::data {
