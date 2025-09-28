@@ -4,9 +4,8 @@
 #include <ranges>
 #include <typeindex>
 #include <vector>
+#include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/utillities/overload.hpp>
-#include <virtual_void/utillities/type_list.hpp>
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::runtime {
@@ -104,11 +103,14 @@ base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
   runtime::get_meta_data<CONCRETE>().register_v_table(this);
 }
 
-template <typename CLASS, typename V_TABLE>
-struct is_a {
-  constexpr is_a() {
-    auto& type_info = get_meta_data<CLASS>();
-    auto v_table_ptr = V_TABLE::template imlpementation<CLASS>();
+template <typename CLASS>
+struct class_ {
+  template <template<is_erased_data> typename INTERFACE>
+  struct implements {
+    constexpr implements() {
+      auto& type_info = get_meta_data<CLASS>();
+      auto v_table_ptr = INTERFACE<data::const_observer>::template v_table_imlpementation<CLASS>();
+    };
   };
 };
 

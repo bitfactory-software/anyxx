@@ -28,10 +28,9 @@ static X x{3.14};
 using namespace test::component_base;
 
 VV_RUNTIME_STATIC(X)
-
-is_a<X, get_value_i_v_table> __;
-is_a<X, set_value_i_v_table> __;
-is_a<X, to_string_i_v_table> __;
+class_<X>::implements<get_value_i> __;
+class_<X>::implements<set_value_i> __;
+class_<X>::implements<to_string_i> __;
 
 to_string_i<virtual_void::data::const_observer>
 test::component_base::get_to_string_i_co() {

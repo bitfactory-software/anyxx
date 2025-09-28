@@ -50,7 +50,7 @@ struct circle {
 };
 
 VV_RUNTIME_STATIC(circle)
-virtual_void::runtime::is_a<circle, shape_d_i_v_table> __;
+virtual_void::runtime::class_<circle>::implements<shape_d_i> __;
 
 TEST_CASE("class is_a interface") {
   using namespace virtual_void;
