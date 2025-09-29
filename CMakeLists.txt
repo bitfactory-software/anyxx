@@ -39,7 +39,6 @@ target_compile_features(virtual_void PUBLIC cxx_std_23)
 enable_testing()
 
 add_subdirectory ("test")
-add_subdirectory ("tutorials")
 
 include(CTest)
 
