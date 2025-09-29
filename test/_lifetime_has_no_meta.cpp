@@ -49,15 +49,15 @@ TEST_CASE("lifetime/observer") {
 }
 TEST_CASE("lifetime/unique") {
   {
-    auto u1 = erased<unique>(1);
+    auto u1 = erased<unique>(std::make_unique<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    const auto u1 = erased<unique>(1);
+    const auto u1 = erased<unique>(std::make_unique<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    auto u1 = erased<unique>(A{"hallo"});
+    auto u1 = erased<unique>(std::make_unique<A>("hallo"));
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }

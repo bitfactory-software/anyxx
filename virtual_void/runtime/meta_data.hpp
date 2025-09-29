@@ -76,7 +76,7 @@ class meta_data {
   template <typename CLASS>
   constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return erased<data::unique>(*static_cast<CLASS const*>(from));
+          return erased<data::unique>(std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
         }) {}
 
   constexpr operator const std::type_info&() const { return get_type_info(); }

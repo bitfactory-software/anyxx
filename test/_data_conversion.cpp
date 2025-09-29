@@ -78,12 +78,12 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<unique>(s1);
+    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
     auto vv2 = data::copy_convert_to<const_observer>(vv1, get_meta_data);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<unique>(s1);
+    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
     auto vv2 = data::copy_convert_to<mutable_observer>(vv1, get_meta_data);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
@@ -133,7 +133,7 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) != get_data(vv2));
   }
   {
-    auto vv1 = erased<unique>(s1);
+    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
     auto vv2 = data::copy_convert_to<unique>(vv1, get_meta_data);
     REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) != get_data(vv2));
@@ -142,7 +142,7 @@ TEST_CASE("_data_conversion copy") {
 TEST_CASE("_data_conversion move") {
   std::string s1 = "hallo";
   {
-    auto vv1 = erased<unique>(s1);
+    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
     auto vv2 = data::move_convert_to<unique>(std::move(vv1));
     REQUIRE(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning( push )
@@ -152,7 +152,7 @@ TEST_CASE("_data_conversion move") {
 #pragma warning( pop )
   }
   {
-    auto vv1 = erased<unique>(s1);
+    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
     auto vv2 = data::move_convert_to<shared_const>(std::move(vv1));
     REQUIRE(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning( push )

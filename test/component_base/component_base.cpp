@@ -51,7 +51,7 @@ test::component_base::get_to_string_i_sc(double v) {
 }
 to_string_i<virtual_void::data::unique> test::component_base::get_to_string_i_u(
     double v) {
-  return X{v};
+  return std::make_unique<X>(v);
 }
 
 virtual_void::data::shared_const test::component_base::sc_X(double v) {

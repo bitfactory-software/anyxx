@@ -275,10 +275,10 @@ void print_shape_i_co(shape_i<data::const_observer> s) { s.draw({1, 2}); }
 
 }  // namespace
 TEST_CASE("dynamic interface has_type_info::unique") {
-  circle c{12.3};
+  auto c = std::make_unique<circle>(12.3);
 
   using shape_unique = shape_i<data::unique>;
-  shape_unique s1{c};
+  shape_unique s1{std::move(c)};
 
   REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));
   auto unerased_circle = unerase_cast<circle const>(s1);

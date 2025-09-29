@@ -41,34 +41,11 @@ struct erased_data_trait<data::unique> {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename CONSTRUCTED_WITH>
-  struct unerased_type_impl {
-    using type = CONSTRUCTED_WITH;
-  };
-  template <typename CONSTRUCTED_WITH>
-  struct unerased_type_impl<std::unique_ptr<CONSTRUCTED_WITH>> {
-    using type = CONSTRUCTED_WITH;
-  };
-  template <typename CONSTRUCTED_WITH>
-  using unerased_type = unerased_type_impl<CONSTRUCTED_WITH>::type;
+  using unerased_type = typename CONSTRUCTED_WITH::element_type;
 
   template <typename V>
-  struct construct_from_impl {
-    template <typename X>
-    auto operator()(X&& v) {
-      return data::make_unique<typed_t<V>>(std::forward<X>(v));
-    }
-  };
-  template <typename V>
-  struct construct_from_impl<std::unique_ptr<V>> {
-    template <typename X>
-    auto operator()(X&& v) {
-      return data::move_to_unique(std::move(v));
-    }
-  };
-
-  template <typename V>
-  static auto construct_from(V&& v) {
-    return construct_from_impl<typed_t<V>>{}(std::forward<V>(v));
+  static auto construct_from(std::unique_ptr<V>&& v) {
+    return data::move_to_unique(std::move(v));
   }
 };
 }  // namespace virtual_void
@@ -76,3 +53,12 @@ struct erased_data_trait<data::unique> {
 namespace virtual_void::data {
 static_assert(is_erased_data<unique>);
 }  // namespace virtual_void::data
+
+
+  //template <typename CONSTRUCTED_WITH>
+  //using unerased_type = typename CONSTRUCTED_WITH::value_type;
+
+  //template <typename V>
+  //static auto construct_from(std::unique_ptr<V>&& v) {
+  //  return data::move_to_unique(std::move(v));
+  //}

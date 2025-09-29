@@ -57,7 +57,7 @@ TEST_CASE("interface lifetime cast") {
   REQUIRE(
       is_derived_from<interface::base<data::const_observer>>(co));
 
-  to_string_u u{X{"hallo"}};
+  to_string_u u{ std::make_unique<X>("hallo") };
   REQUIRE(u.to_string() == "hallo");
   static_assert(!interface::is_virtual_typed<to_string_u>);
   static_assert(interface::is_interface<to_string_u>);
@@ -66,7 +66,7 @@ TEST_CASE("interface lifetime cast") {
   to_string_mo mo{u};
   REQUIRE(mo.to_string() == "hallo");
 
-  to_string_u u1{X{"hallo"}};
+  to_string_u u1{ std::make_unique<X>("hallo") };
   REQUIRE(u1.to_string() == "hallo");
   to_string_co co_from_u{u1};
   REQUIRE(co_from_u.to_string() == "hallo");
