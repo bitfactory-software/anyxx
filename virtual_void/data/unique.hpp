@@ -70,10 +70,6 @@ struct erased_data_trait<data::unique> {
   static auto construct_from(V&& v) {
     return construct_from_impl<typed_t<V>>{}(std::forward<V>(v));
   }
-  template <typename V, typename... ARGS>
-  static auto construct_in_place(std::in_place_type_t<V>, ARGS&&... args) {
-    return data::make_unique<typed_t<V>>(std::forward<ARGS>(args)...);
-  }
 };
 }  // namespace virtual_void
 

@@ -33,7 +33,7 @@ struct erased_data_trait<data::shared_const> {
   struct construct_from_impl {
     template <typename X>
     auto operator()(X&& v) {
-      return construct_in_place(std::in_place_type<X>, std::forward<X>(v));
+      return construct<X>(std::forward<X>(v));
     }
   };
   template <typename V>
@@ -55,7 +55,7 @@ struct erased_data_trait<data::shared_const> {
     return construct_from_impl<std::decay_t<V>>{}(std::forward<V>(v));
   }
   template <typename V, typename... ARGS>
-  static auto construct_in_place(std::in_place_type_t<V>, ARGS&&... args) {
+  static auto construct(ARGS&&... args) {
     return static_pointer_cast<void const>(
         std::make_shared<typed_t<V>>(std::forward<ARGS>(args)...));
   }

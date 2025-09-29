@@ -17,10 +17,6 @@ struct virtual_typed : public INTERFACE {
 
   virtual_typed(V const& v) : INTERFACE(v) {}
   virtual_typed(V&& v) : INTERFACE(std::move(v)) {}
-  template <typename... ARGS>
-  virtual_typed(std::in_place_t, ARGS&&... args)
-      : INTERFACE(trait_t::construct_in_place(std::in_place_type<V>,
-                                              std::forward<ARGS>(args)...)) {}
   virtual_typed(INTERFACE i) : INTERFACE(i) {
     check_type_match<V>(get_runtime(*this));
   }

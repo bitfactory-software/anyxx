@@ -34,17 +34,6 @@ struct observer_trait : virtual_void_default_unerase {
   {
     return ERASED_DATA(static_cast<VV_VOID>(&v));
   }
-
-  template <typename V>
-  static auto construct_in_place(std::in_place_type_t<V>, V& arg) {
-    return construct_from(arg);
-  }
-  template <typename V>
-  static auto construct_in_place(std::in_place_type_t<V>, const V& arg)
-    requires is_const
-  {
-    return construct_from(arg);
-  }
 };
 
 template <>
