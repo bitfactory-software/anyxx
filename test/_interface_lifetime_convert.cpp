@@ -31,7 +31,7 @@ using to_string_mo = to_string_i<data::mutable_observer>;
 VV_RUNTIME_STATIC(X)
 
 TEST_CASE("interface lifetime cast") {
-  to_string_sc sc{X{"hallo"}};
+  to_string_sc sc{std::make_shared<X>("hallo")};
   REQUIRE(sc.to_string() == "hallo");
   REQUIRE(
       is_derived_from<interface::base<data::shared_const>>(sc));

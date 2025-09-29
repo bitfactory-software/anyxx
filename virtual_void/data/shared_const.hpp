@@ -30,34 +30,8 @@ struct erased_data_trait<data::shared_const> {
   using unerased_type = unerased_type_impl<CONSTRUCTED_WITH>::type;
 
   template <typename V>
-  struct construct_from_impl {
-    template <typename X>
-    auto operator()(X&& v) {
-      return construct<X>(std::forward<X>(v));
-    }
-  };
-  template <typename V>
-  struct construct_from_impl<std::shared_ptr<V>> {
-    template <typename X>
-    auto operator()(X&& v) {
-      return static_pointer_cast<void const>(std::forward<X>(v));
-    }
-  };
-  template <typename V>
-  struct construct_from_impl<std::shared_ptr<V const>> {
-    template <typename X>
-    auto operator()(X&& v) {
-      return static_pointer_cast<void const>(std::forward<X>(v));
-    }
-  };
-  template <typename V>
-  static auto construct_from(V&& v) {
-    return construct_from_impl<std::decay_t<V>>{}(std::forward<V>(v));
-  }
-  template <typename V, typename... ARGS>
-  static auto construct(ARGS&&... args) {
-    return static_pointer_cast<void const>(
-        std::make_shared<typed_t<V>>(std::forward<ARGS>(args)...));
+  static auto construct_from(std::shared_ptr<V> const& v) {
+    return static_pointer_cast<void const>(v);
   }
 };
 }  // namespace virtual_void

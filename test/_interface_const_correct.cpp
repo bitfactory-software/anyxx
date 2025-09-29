@@ -157,8 +157,7 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
       interface::call_operator<data::shared_const, void(std::string), mutable_>;
 
   {
-    functor function_object;
-    const_function cf = function_object;
+    const_function cf = std::make_shared<functor>();
     static_assert(
         !std::is_assignable_v<mutating_function,
                               const_function>);  // <- may not compile!
@@ -166,8 +165,7 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   }
 
   {
-    functor function_object;
-    const_function const cf = function_object;
+    const_function const cf = std::make_shared<functor>();
     static_assert(
         !std::is_assignable_v<mutating_function,
                               const_function const>);  // <- may not compile!
@@ -175,16 +173,14 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   }
 
   {
-    functor const const_function_object;
-    const_function cf = const_function_object;
+    const_function cf = std::make_shared<functor const>();
     static_assert(!std::is_assignable_v<mutating_function,
                                         functor const>);  // <- may not compile!
     REQUIRE(cf() == "hallo");
   }
 
   {
-    functor const function_object;
-    const_function const cf = function_object;
+    const_function const cf = std::make_shared<functor const>();
     static_assert(!std::is_assignable_v<mutating_function const,
                                         functor const>);  // <- may not compile!
     REQUIRE(cf() == "hallo");

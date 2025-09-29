@@ -96,7 +96,10 @@ namespace _21_Tree_TE_interface_extension_method {
 TEST_CASE("21_Tree_TE_interface_extension_method") {
   using namespace virtual_void;
 
-  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
+  auto expr = node::model{std::make_shared<Times>(
+      std::make_shared<Integer>(2),
+      std::make_shared<Plus>(std::make_shared<Integer>(3),
+                             std::make_shared<Integer>(4)))};
 
   // REQUIRE(&v_table_instance<node::interface, Times>() == &get_v_table(expr));
   // REQUIRE(v_table_instance<node::interface, Times>().size() >= 3u);
@@ -112,8 +115,12 @@ TEST_CASE("21_Tree_TE_interface_extension_method") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_interface_extension_method value") { return value(expr); };
-  BENCHMARK("21_Tree_TE_interface_extension_method as_lisp") { return as_lisp(expr); };
+  BENCHMARK("21_Tree_TE_interface_extension_method value") {
+    return value(expr);
+  };
+  BENCHMARK("21_Tree_TE_interface_extension_method as_lisp") {
+    return as_lisp(expr);
+  };
 #endif  // !_DEBUG
 }
 
@@ -186,7 +193,8 @@ auto pop(std::stack<int>& stack) {
   stack.pop();
   return t;
 }
-virtual_void::interface::visitor<node::model, std::stack<int>, char> value_visitor;
+virtual_void::interface::visitor<node::model, std::stack<int>, char>
+    value_visitor;
 auto __ = value_visitor.define_tail<Times>(
     [](auto expr, auto& out, auto const& l) { out.push(pop(out) * pop(out)); });
 auto __ =
@@ -200,7 +208,10 @@ auto __ = value_visitor.define_center<Integer>(
 TEST_CASE("21_Tree_TE_interface_extension_method_with_visitor") {
   using namespace virtual_void;
 
-  auto expr = node::model{Times{Integer{2}, Plus{Integer{3}, {Integer{4}}}}};
+  auto expr = node::model{std::make_shared<Times>(
+      std::make_shared<Integer>(2),
+      std::make_shared<Plus>(std::make_shared<Integer>(3),
+                             std::make_shared<Integer>(4)))};
 
   {
     std::stack<int> s;
@@ -229,7 +240,8 @@ TEST_CASE("21_Tree_TE_interface_extension_method_with_visitor") {
   }
 
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_interface_extension_method_with_visitor value_visitor") {
+  BENCHMARK(
+      "21_Tree_TE_interface_extension_method_with_visitor value_visitor") {
     std::stack<int> s;
     value_visitor(expr, node::visit_left_first, s);
   };

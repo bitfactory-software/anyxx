@@ -4,6 +4,7 @@
 #include <ranges>
 #include <typeindex>
 #include <vector>
+#include <type_traits>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -100,16 +101,17 @@ class meta_data {
 
 template <typename CONCRETE>
 base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
-  runtime::get_meta_data<CONCRETE>().register_v_table(this);
+  runtime::get_meta_data<std::decay_t<CONCRETE>>().register_v_table(this);
 }
 
 template <typename CLASS>
 struct class_ {
-  template <template<is_erased_data> typename INTERFACE>
+  template <template <is_erased_data> typename INTERFACE>
   struct implements {
     constexpr implements() {
       auto& type_info = get_meta_data<CLASS>();
-      auto v_table_ptr = INTERFACE<data::const_observer>::template v_table_imlpementation<CLASS>();
+      auto v_table_ptr = INTERFACE<
+          data::const_observer>::template v_table_imlpementation<CLASS>();
     };
   };
 };
@@ -144,7 +146,7 @@ bool type_match(runtime::meta_data const& meta_data) {
   }                                                                       \
   template <>                                                             \
   virtual_void::runtime::meta_data&                                       \
-  virtual_void::runtime::get_meta_data<__VA_ARGS__>() {                   \
+  virtual_void::runtime::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
     return runtime_implementation<__VA_ARGS__>();                         \
   }
 

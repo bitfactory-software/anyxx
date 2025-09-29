@@ -73,7 +73,7 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<shared_const>(s1);
+    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
     auto vv2 = data::copy_convert_to<const_observer>(vv1, get_meta_data);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
@@ -108,7 +108,7 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) != get_data(vv2));
   }
   {
-    auto vv1 = erased<shared_const>(s1);
+    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
     auto vv2 = data::copy_convert_to<shared_const>(vv1, get_meta_data);
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
@@ -121,7 +121,7 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) != get_data(vv2));
   }
   {
-    auto vv1 = erased<shared_const>(s1);
+    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
     auto vv2 = data::copy_convert_to<unique>(vv1, get_meta_data);
     REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) != get_data(vv2));

@@ -81,7 +81,7 @@ struct Integer {
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
-  return NODE{std::forward<ARGS>(args)...};
+  return std::make_shared<NODE>(std::forward<ARGS>(args)...);
 }
 
 }  // namespace _21_Tree_TE_erased_interface_w_cast

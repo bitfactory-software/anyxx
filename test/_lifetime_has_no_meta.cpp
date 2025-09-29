@@ -63,15 +63,15 @@ TEST_CASE("lifetime/unique") {
 }
 TEST_CASE("lifetime/shared_const") {
   {
-    auto u1 = erased<shared_const>(1);
+    auto u1 = erased<shared_const>(std::make_shared<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    const auto u1 = erased<shared_const>(1);
+    const auto u1 = erased<shared_const>(std::make_shared<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    auto u1 = erased<shared_const>(A{"hallo"});
+    auto u1 = erased<shared_const>(std::make_shared<A>("hallo"));
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
   {
@@ -127,8 +127,7 @@ TEST_CASE("lifetime/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    shared_const sp1 =
-        erased_data_trait<shared_const>::construct_from(ptr);
+    shared_const sp1 = erased_data_trait<shared_const>::construct_from(ptr);
     auto u1 = erased<shared_const>(ptr);
     A const* a = unchecked_unerase_cast<A>(u1);
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
@@ -138,8 +137,7 @@ TEST_CASE("lifetime/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    unique up1 =
-        erased_data_trait<unique>::construct_from(std::move(ptr));
+    unique up1 = erased_data_trait<unique>::construct_from(std::move(ptr));
     A* a = unchecked_unerase_cast<A>(up1);
     REQUIRE(a->s == "hallo");
   }

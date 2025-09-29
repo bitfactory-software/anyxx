@@ -240,10 +240,10 @@ TEST_CASE("dynamic v_table const_observer") {
 }
 
 TEST_CASE("dynamic interface m_table::shared_const") {
-  circle c{12.3};
-  square s{32};
-  rectangle r{12, 9};
-  regular_polygon p{4, 32};
+  auto c = std::make_shared<circle>(12.3);
+  auto s = std::make_shared<square>(32);
+  auto r = std::make_shared<rectangle>(12, 9);
+  auto p = std::make_shared<regular_polygon>(4, 32);
   std::cout << "print_shape_vv ********************************" << std::endl;
 
   using typed_circle_shape_sc_no_meta =
