@@ -9,7 +9,7 @@
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 
 using namespace Catch::Matchers;

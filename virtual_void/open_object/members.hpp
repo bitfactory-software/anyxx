@@ -5,7 +5,7 @@
 #include <typeindex>
 #include <vector>
 
-#include <virtual_void/data/erased_value.hpp>
+#include <virtual_void/open_object/erased_value.hpp>
 
 namespace virtual_void::open_object {
 

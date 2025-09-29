@@ -7,7 +7,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
@@ -296,18 +295,16 @@ VV_RUNTIME_STATIC(x_t)
 TEST_CASE("base") {
   using namespace virtual_void;
   using namespace virtual_void;
-  using value = data::value;
+  using value = data::shared_const;
 
   using value_base = interface::base<value>;
 
   {
-    x_t a{"hallo"};
-    auto e = erased<value>(a);
+    auto e = erased<value>(std::make_shared<x_t>("hallo"));
     REQUIRE(unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
   }
   {
-    x_t a{"hallo"};
-    value_base vb(a);
+    value_base vb(std::make_shared<x_t>("hallo"));
     REQUIRE(unerase_cast<x_t>(vb)->s_ == "hallo");
     CHECK_THROWS_AS(unerase_cast<std::string>(vb), type_mismatch_error);
   }

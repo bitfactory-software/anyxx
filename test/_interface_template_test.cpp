@@ -4,7 +4,8 @@
 #include <map>
 #include <string>
 #include <virtual_void/data/observer.hpp>
-#include <virtual_void/data/value.hpp>
+#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 

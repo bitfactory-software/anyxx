@@ -7,7 +7,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 #include <virtual_void/virtual_void.hpp>
 
@@ -57,23 +56,4 @@ TEST_CASE("erase lifetime test shared") {
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
-}
-TEST_CASE("erase lifetime test value") {
-  Data::destrucor_runs = 0;
-  {
-    data::erased_value vp = data::make_erased_value<Data>();
-    REQUIRE(unsave_unerase_cast<Data>(vp).s_ == "hello world");
-    REQUIRE(Data::destrucor_runs == 0);
-    auto vp2 = vp;
-  }
-  REQUIRE(Data::destrucor_runs == 2);
-
-  Data::destrucor_runs = 0;
-  {
-    data::erased_value vp = data::make_erased_value<Data>();
-    REQUIRE(unsave_unerase_cast<Data>(vp).s_ == "hello world");
-    REQUIRE(Data::destrucor_runs == 0);
-    auto vp2 = vp;
-  }
-  REQUIRE(Data::destrucor_runs == 2);
 }

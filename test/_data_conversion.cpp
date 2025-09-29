@@ -7,7 +7,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
@@ -88,18 +87,6 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<value>(s1);
-    auto vv2 = data::copy_convert_to<const_observer>(vv1, get_meta_data);
-    REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
-    REQUIRE(get_data(vv1) == get_data(vv2));
-  }
-  {
-    auto vv1 = erased<value>(s1);
-    auto vv2 = data::copy_convert_to<mutable_observer>(vv1, get_meta_data);
-    REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
-    REQUIRE(get_data(vv1) == get_data(vv2));
-  }
-  {
     auto vv1 = erased<const_observer>(s1);
     auto vv2 = data::copy_convert_to<unique>(vv1, get_meta_data);
     auto sc1 = unchecked_unerase_cast<std::string>(vv1);
@@ -113,21 +100,7 @@ TEST_CASE("_data_conversion copy") {
     REQUIRE(get_data(vv1) == get_data(vv2));
   }
   {
-    auto vv1 = erased<value>(s1);
-    auto vv2 = data::copy_convert_to<value>(vv1, get_meta_data);
-    auto sc1 = unchecked_unerase_cast<std::string>(vv1);
-    auto sc2 = unchecked_unerase_cast<std::string>(vv2);
-    REQUIRE(*sc1 == *sc2);
-    REQUIRE(get_data(vv1) != get_data(vv2));
-  }
-  {
     auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = data::copy_convert_to<unique>(vv1, get_meta_data);
-    REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
-    REQUIRE(get_data(vv1) != get_data(vv2));
-  }
-  {
-    auto vv1 = erased<value>(s1);
     auto vv2 = data::copy_convert_to<unique>(vv1, get_meta_data);
     REQUIRE(*unchecked_unerase_cast<std::string>(vv1) == *unchecked_unerase_cast<std::string>(vv2));
     REQUIRE(get_data(vv1) != get_data(vv2));

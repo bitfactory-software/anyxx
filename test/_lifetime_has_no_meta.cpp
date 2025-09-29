@@ -6,7 +6,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
 
 #include "a.hpp"
 
@@ -83,44 +82,6 @@ TEST_CASE("lifetime/shared_const") {
     auto x = std::make_shared<A>("hallo");
     auto sc = erased<shared_const>(x);
     REQUIRE(unchecked_unerase_cast<A>(sc)->s == "hallo");
-  }
-}
-TEST_CASE("lifetime/value") {
-  {
-    auto u1 = erased<value>(1);
-    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
-  }
-  {
-    auto u1 = erased<value>(A{"hallo"});
-    static_assert(std::same_as<decltype(u1), value>);
-    static_assert(
-        !std::same_as<std::decay_t<std::remove_pointer_t<decltype(u1)>>, void>);
-    auto& u1cr = u1;
-    auto a = unchecked_unerase_cast<A>(u1);
-    REQUIRE(a->s == "hallo");
-    auto a1 = unchecked_unerase_cast<A>(u1cr);
-    REQUIRE(a1->s == "hallo");
-    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
-    auto u2{u1};
-    REQUIRE(unchecked_unerase_cast<A>(u1)->s.data() !=
-            unchecked_unerase_cast<A>(u2)->s.data());
-    REQUIRE(unchecked_unerase_cast<A>(u2)->s == "hallo");
-    unchecked_unerase_cast<A>(u2)->s = "world";
-    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
-    REQUIRE(unchecked_unerase_cast<A>(u2)->s == "world");
-  }
-  {
-    std::string a = "hallo";
-    auto t1 = erased<value>(a);
-    REQUIRE(*unchecked_unerase_cast<std::string>(t1) == "hallo");
-  }
-  {
-    struct x_t {
-      std::string s_;
-    };
-    x_t a{"hallo"};
-    auto t1 = erased<value>(a);
-    REQUIRE(unchecked_unerase_cast<x_t>(t1)->s_ == "hallo");
   }
 }
 TEST_CASE("lifetime/shared_const_ptr") {

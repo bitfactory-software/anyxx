@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 #include <virtual_void/data/observer.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/value.hpp>
 #include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
@@ -16,9 +16,9 @@ using namespace virtual_void;
 using namespace virtual_void::data;
 
 namespace virtual_void {
-template <typename SIG, is_constness CONSTNESS = mutable_>
+template <typename SIG, is_constness CONSTNESS = const_>
 using function =
-    interface::call_operator<data::value, SIG, CONSTNESS>;
+    interface::call_operator<data::shared_const, SIG, CONSTNESS>;
 template <typename SIG, is_constness CONSTNESS = mutable_>
 using ref_function =
     interface::call_operator<data::mutable_observer, SIG,
@@ -40,25 +40,29 @@ struct functor_t {
   }
 };
 struct pure_functor_t {
-  std::string operator()(const std::string& s) {
+  std::string operator()(const std::string& s) const {
     return s;
+  }
+};
+struct pure_functor_with_context {
+  std::string s_;
+  std::string operator()(const std::string& s) const {
+    return s_ + s;
   }
 };
 }
 VV_RUNTIME_STATIC(functor_t)
 VV_RUNTIME_STATIC(pure_functor_t)
+VV_RUNTIME_STATIC(pure_functor_with_context)
 
 TEST_CASE("std emulated function") {
   {
-    functor_t functor{"hallo"};
+    auto functor = std::make_shared<pure_functor_with_context>("hallo");
     function<std::string(const std::string)> f{functor};
-    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hallo");
-    REQUIRE(f(" world") == "hallo");
-    REQUIRE(functor.s_ == "hallo");
-    REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hallo world");
+    REQUIRE(f(" world") == "hallo world");
   }
   {
-    function<std::string(const std::string)> f{pure_functor_t{}};
+    function<std::string(const std::string)> f{std::make_shared<pure_functor_t>()};
     REQUIRE(f("hello world") == "hello world");
   }
   {
