@@ -101,7 +101,7 @@ class meta_data {
 
 template <typename CONCRETE>
 base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
-  runtime::get_meta_data<std::decay_t<CONCRETE>>().register_v_table(this);
+  runtime::get_meta_data<CONCRETE>().register_v_table(this);
 }
 
 template <typename CLASS>

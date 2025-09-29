@@ -19,12 +19,10 @@ struct erased_data_trait<data::shared_const> {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename CONSTRUCTED_WITH>
-  struct unerased_type_impl {
-    using type = CONSTRUCTED_WITH;
-  };
+  struct unerased_type_impl;
   template <typename CONSTRUCTED_WITH>
   struct unerased_type_impl<std::shared_ptr<CONSTRUCTED_WITH>> {
-    using type = CONSTRUCTED_WITH;
+    using type = std::remove_const_t<CONSTRUCTED_WITH>;
   };
   template <typename CONSTRUCTED_WITH>
   using unerased_type = unerased_type_impl<CONSTRUCTED_WITH>::type;
