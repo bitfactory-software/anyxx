@@ -37,16 +37,6 @@ ERASED_DATA erased(FROM&& from) {
   return trait<ERASED_DATA>::construct_from(std::forward<FROM>(from));
 }
 
-template <typename UNERASER>
-concept is_uneraser = requires(UNERASER u, mutable_void mv) {
-  { u(mv) } -> std::convertible_to<typename UNERASER::type*>;
-};
-template <typename T>
-struct static_cast_uneraser {
-  using type = T;
-  auto operator()(mutable_void from) { return static_cast<T*>(from); }
-  auto operator()(const_void from) { return static_cast<T const*>(from); }
-};
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
 struct unerased {
   using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
