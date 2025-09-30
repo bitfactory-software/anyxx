@@ -87,7 +87,7 @@ TEST_CASE("std emulated function") {
                   move_only_function<std::string(const std::string)>,
                   move_only_function<std::string(const std::string)>>);
     move_only_function<std::string(const std::string)> f2{std::move(f)};
-    REQUIRE(!has_data(get_virtual_void(f)));
+    REQUIRE(!has_data(get_erased_data(f)));
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(interface::unerase_cast<functor_t>(f2)->s_ ==
             "hello world, bye");

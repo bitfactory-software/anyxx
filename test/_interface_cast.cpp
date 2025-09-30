@@ -26,8 +26,8 @@ TEST_CASE("_interface_cast") {
         attach_interface<get_value_i<const_observer>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << " i1: " << i1.get_value() << "\n";
-    REQUIRE(get_data(get_virtual_void(i1)) ==
-            get_data(get_virtual_void(to_string_i_co)));
+    REQUIRE(get_data(get_erased_data(i1)) ==
+            get_data(get_erased_data(to_string_i_co)));
   }
   {
     to_string_i<shared_const> i0{
@@ -38,15 +38,15 @@ TEST_CASE("_interface_cast") {
     get_value_i<shared_const> i1 = attach_interface<get_value_i<shared_const>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
-    REQUIRE(get_data(get_virtual_void(i1)) == get_data(get_virtual_void(i0)));
+    REQUIRE(get_data(get_erased_data(i1)) == get_data(get_erased_data(i0)));
 
     get_value_i<unique> iu1 = attach_interface<get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
     std::cout << "shared_const/unique iu1: " << iu1.get_value() << "\n";
-    REQUIRE(get_data(get_virtual_void(iu1)) != get_data(get_virtual_void(i0)));
+    REQUIRE(get_data(get_erased_data(iu1)) != get_data(get_erased_data(i0)));
 
     set_value_i<unique> sv0 = attach_interface<set_value_i<unique>>(i0);
-    REQUIRE(get_data(get_virtual_void(sv0)) != get_data(get_virtual_void(i0)));
+    REQUIRE(get_data(get_erased_data(sv0)) != get_data(get_erased_data(i0)));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "shared_const/unique sv0: " << sv0.get_value() << "\n";
     sv0.set_value(sv0.get_value() * 2);
@@ -64,27 +64,27 @@ TEST_CASE("_interface_cast") {
 
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "unique i1: " << i1.get_value() << "\n";
-    REQUIRE(get_data(get_virtual_void(i1)) != get_data(get_virtual_void(i0)));
+    REQUIRE(get_data(get_erased_data(i1)) != get_data(get_erased_data(i0)));
 
     auto i1c = attach_interface<get_value_i<unique>>(i0);
 
     REQUIRE(i1c.get_value() == 3.14);
     std::cout << "unique i1c: " << i1c.get_value() << "\n";
-    REQUIRE(get_data(get_virtual_void(i1c)) != get_data(get_virtual_void(i0)));
+    REQUIRE(get_data(get_erased_data(i1c)) != get_data(get_erased_data(i0)));
 
     auto i1d = move_to_interface<to_string_i<unique>>(std::move(i1c));
-    REQUIRE(get_data(get_virtual_void(i1d)));
+    REQUIRE(get_data(get_erased_data(i1d)));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_virtual_void(i1c));  // moved!
+    REQUIRE(!get_erased_data(i1c));  // moved!
 #pragma warning(pop)
     REQUIRE(i1d.to_string() == "3.140000");
 
     auto i1e = move_to_interface<get_value_i<shared_const>>(std::move(i1d));
-    REQUIRE(get_data(get_virtual_void(i1e)));
+    REQUIRE(get_data(get_erased_data(i1e)));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_virtual_void(i1d));  // moved!
+    REQUIRE(!get_erased_data(i1d));  // moved!
 #pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
   }

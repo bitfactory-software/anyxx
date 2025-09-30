@@ -43,7 +43,7 @@ TO_INTERFACE attach_interface(VV_FROM const& vv_from,
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
 TO_INTERFACE attach_interface(const FROM_INTERFACE& from_interface) {
-  return attach_interface<TO_INTERFACE>(get_virtual_void(from_interface),
+  return attach_interface<TO_INTERFACE>(get_erased_data(from_interface),
                                         get_runtime(from_interface));
 }
 

@@ -43,7 +43,7 @@ TEST_CASE("interface lifetime cast") {
   // static_assert( std::same_as<std::decay_t<void const *>,
   // std::add_const_t<void*>);
 
-  auto o1 = get_virtual_void(sc);
+  auto o1 = get_erased_data(sc);
   auto x = unerase_cast<X>(sc);
   auto x1 = static_cast<X const *>(get_interface_data(sc));
   REQUIRE(x->s_ == "hallo");

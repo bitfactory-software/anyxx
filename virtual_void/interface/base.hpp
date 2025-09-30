@@ -23,7 +23,7 @@ concept is_interface_impl = requires(I i, I::erased_data_t ed) {
   typename I::erased_data_t;
   typename I::v_table_t;
   typename I::trait_t;
-  { get_virtual_void(i) };
+  { get_erased_data(i) };
 };
 
 template <typename I>
@@ -99,7 +99,7 @@ class base {
   friend class base;
 
   template <data::is_erased_data ERASED_DATA>
-  friend inline auto& get_virtual_void(base<ERASED_DATA> const& interface);
+  friend inline auto& get_erased_data(base<ERASED_DATA> const& interface);
   template <data::is_erased_data ERASED_DATA>
   friend inline auto move_virtual_void(base<ERASED_DATA>&& interface);
   template <data::is_erased_data ERASED_DATA>
@@ -114,7 +114,7 @@ class base {
   void operator()() const {}
   void* operator[](void*) const { return {}; }
   explicit operator bool() const {
-    return static_cast<bool>(get_virtual_void(*this));
+    return static_cast<bool>(get_erased_data(*this));
   }
 };
 
@@ -125,7 +125,7 @@ template <typename V_TABLE, data::is_erased_data ERASED_DATA>
 using interface_for = typename interface_t<V_TABLE, ERASED_DATA>::type;
 
 template <data::is_erased_data ERASED_DATA>
-auto& get_virtual_void(base<ERASED_DATA> const& interface) {
+auto& get_erased_data(base<ERASED_DATA> const& interface) {
   return interface.erased_data_;
 }
 template <data::is_erased_data ERASED_DATA>
@@ -134,7 +134,7 @@ auto move_virtual_void(base<ERASED_DATA>&& interface) {
 }
 template <data::is_erased_data ERASED_DATA>
 auto get_interface_data(base<ERASED_DATA> const& interface) {
-  return data::get_data(get_virtual_void(interface));
+  return data::get_data(get_erased_data(interface));
 }
 
 template <typename TO>
@@ -189,15 +189,15 @@ std::optional<TO> v_table_cast(const FROM& from)
 
 template <typename U, is_interface INTERFACE>
 auto unchecked_unerase_cast(INTERFACE const& o) {
-  return data::unchecked_unerase_cast<U>(get_virtual_void(o));
+  return data::unchecked_unerase_cast<U>(get_erased_data(o));
 }
 template <typename U, is_interface INTERFACE>
 auto unerase_cast(INTERFACE const& o) {
-  return data::unerase_cast<U>(get_virtual_void(o), get_runtime(o));
+  return data::unerase_cast<U>(get_erased_data(o), get_runtime(o));
 }
 template <typename U, is_interface INTERFACE>
 auto unerase_cast(INTERFACE const* o) {
-  data::unerase_cast<U>(get_virtual_void(*o), get_runtime(o));
+  data::unerase_cast<U>(get_erased_data(*o), get_runtime(o));
   return nullptr;
 }
 
