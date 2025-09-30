@@ -28,7 +28,7 @@ inline unique unique_nullptr() {
 }
 
 template <>
-struct erased_data_trait<data::unique> {
+struct trait<data::unique> {
   using void_t = void*;
   template <typename V>
   using typed_t = std::decay_t<V>;

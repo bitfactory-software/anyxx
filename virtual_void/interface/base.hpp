@@ -13,7 +13,7 @@
 
 namespace virtual_void::interface {
 
-using base_v_table = runtime::base_v_table; // for declare_macro.hpp
+using base_v_table = runtime::base_v_table;  // for declare_macro.hpp
 template <data::is_erased_data ERASED_DATA>
 class base;
 
@@ -39,7 +39,7 @@ concept is_virtual_typed = is_interface<E> && requires(E e) {
 template <typename CONSTRUCTED_WITH, typename ERASED_DATA>
 concept constructibile_for =
     data::erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
-                              base<ERASED_DATA>> &&
+                                    base<ERASED_DATA>> &&
     !is_interface<CONSTRUCTED_WITH> &&
     !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>>;
 
@@ -47,7 +47,7 @@ template <data::is_erased_data ERASED_DATA>
 class base {
  public:
   using erased_data_t = ERASED_DATA;
-  using trait_t = data::erased_data_trait<erased_data_t>;
+  using trait_t = data::trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
   using v_table_t = runtime::base_v_table;
 

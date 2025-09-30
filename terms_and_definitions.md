@@ -13,7 +13,7 @@ In these functions, the "self" parameter is cast back to a pointer to the uneras
 #### A concept describing an object that **erases** the **type** and the **lifetime** of **another** object.
 
 It must deliver a *void* pointer of that object and a pointer to a *meta* object.  
-Responsible for the description of such types is the specialized *erased_data_trait*.  
+Responsible for the description of such types is the specialized *trait*.  
 
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.

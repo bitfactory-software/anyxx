@@ -48,7 +48,7 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<ERASED_DATA> {
  public:
   using erased_data_t = ERASED_DATA;
-  using void_t = typename data::erased_data_trait<ERASED_DATA>::void_t;
+  using void_t = typename data::trait<ERASED_DATA>::void_t;
   using base_t = BASE<ERASED_DATA>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =

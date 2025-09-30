@@ -32,14 +32,14 @@ struct observer_trait : virtual_void_default_unerase {
 };
 
 template <>
-struct erased_data_trait<data::const_observer>
+struct trait<data::const_observer>
     : observer_trait<data::const_observer, data::const_observer> {};
 template <>
-struct erased_data_trait<data::mutable_observer>
+struct trait<data::mutable_observer>
     : observer_trait<data::mutable_observer, data::mutable_observer> {};
 
-static_assert(erased_data_trait<const_observer>::is_const);
-static_assert(!erased_data_trait<mutable_observer>::is_const);
+static_assert(trait<const_observer>::is_const);
+static_assert(!trait<mutable_observer>::is_const);
 static_assert(is_erased_data<const_observer>);
 static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<mutable_observer>);

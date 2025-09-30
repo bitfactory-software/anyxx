@@ -5,24 +5,20 @@
 namespace virtual_void::data {
 
 template <typename DATA>
-struct erased_data_trait;
+struct trait;
 
 template <class E>
 concept is_erased_data = requires(E e) {
-  typename erased_data_trait<E>::void_t;
-  {
-    erased_data_trait<E>::is_constructibile_from_const
-  } -> std::convertible_to<bool>;
-  {
-    erased_data_trait<E>::value(e)
-  } -> std::convertible_to<typename erased_data_trait<E>::void_t>;
-  { erased_data_trait<E>::has_value(e) } -> std::convertible_to<bool>;
+  typename trait<E>::void_t;
+  { trait<E>::is_constructibile_from_const } -> std::convertible_to<bool>;
+  { trait<E>::value(e) } -> std::convertible_to<typename trait<E>::void_t>;
+  { trait<E>::has_value(e) } -> std::convertible_to<bool>;
 };
 
 template <typename DATA>
-using data_void = erased_data_trait<DATA>::void_t;
+using data_void = trait<DATA>::void_t;
 template <typename DATA>
-using data_const_t = const_t<typename erased_data_trait<DATA>::void_t>;
+using data_const_t = const_t<typename trait<DATA>::void_t>;
 
 template <typename ERASED_DATA>
 concept is_const_data = is_const_void<data_void<ERASED_DATA>>;
@@ -38,8 +34,7 @@ concept const_correct_call_for_erased_data =
 
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
-  return erased_data_trait<ERASED_DATA>::construct_from(
-      std::forward<FROM>(from));
+  return trait<ERASED_DATA>::construct_from(std::forward<FROM>(from));
 }
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erase_to(FROM&& from) {
@@ -51,8 +46,8 @@ ERASED_DATA erase_to(FROM&& from) {
 }
 template <is_erased_data ERASED_DATA, typename V, typename... ARGS>
 ERASED_DATA erased_in_place(ARGS&&... args) {
-  return erased_data_trait<ERASED_DATA>::construct_in_place(
-      std::in_place_type<V>, std::forward<ARGS>(args)...);
+  return trait<ERASED_DATA>::construct_in_place(std::in_place_type<V>,
+                                                std::forward<ARGS>(args)...);
 }
 
 struct virtual_void_default_unerase {
@@ -73,7 +68,7 @@ struct static_cast_uneraser {
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
 struct unerased {
   using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
-  using trait_t = erased_data_trait<ERASED_DATA>;
+  using trait_t = trait<ERASED_DATA>;
   using type = trait_t::template unerased_type<constructed_with_t>;
 };
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
@@ -109,20 +104,19 @@ using uneraser = make_uneraser<ERASED_DATA, CONSTRUCTED_WITH, is_const>::type;
 
 template <is_erased_data ERASED_DATA>
 bool has_data(ERASED_DATA const& vv) {
-  return erased_data_trait<ERASED_DATA>::has_value(vv);
+  return trait<ERASED_DATA>::has_value(vv);
 }
 template <is_erased_data ERASED_DATA>
 void const* get_data(ERASED_DATA const& vv)
-  requires std::same_as<void const*,
-                        typename erased_data_trait<ERASED_DATA>::void_t>
+  requires std::same_as<void const*, typename trait<ERASED_DATA>::void_t>
 {
-  return erased_data_trait<ERASED_DATA>::value(vv);
+  return trait<ERASED_DATA>::value(vv);
 }
 template <is_erased_data ERASED_DATA>
 void* get_data(ERASED_DATA const& vv)
-  requires std::same_as<void*, typename erased_data_trait<ERASED_DATA>::void_t>
+  requires std::same_as<void*, typename trait<ERASED_DATA>::void_t>
 {
-  return erased_data_trait<ERASED_DATA>::value(vv);
+  return trait<ERASED_DATA>::value(vv);
 }
 
 template <typename U>
@@ -168,6 +162,6 @@ concept erased_constructibile_for =
     !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, BASE> &&
     !is_erased_data<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
-     erased_data_trait<ERASED_DATA>::is_constructibile_from_const);
+     trait<ERASED_DATA>::is_constructibile_from_const);
 
 }  // namespace virtual_void::data
