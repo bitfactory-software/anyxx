@@ -38,11 +38,6 @@ struct base_v_table {
   meta_data* meta_data = nullptr;
 
   bool (*_is_derived_from)(const std::type_info&);
-
-  base_v_table(auto unused)
-      : _is_derived_from([](const std::type_info& from) {
-          return static_is_derived_from(from);
-        }) {};
 };
 
 inline bool is_derived_from(const std::type_info& from,
@@ -67,7 +62,7 @@ base_v_table* base_v_table_imlpementation() {
 }
 
 struct cast_error {
-std::type_info const &to, &from;
+  std::type_info const &to, &from;
 };
 
 class meta_data {
@@ -106,7 +101,10 @@ class meta_data {
 };
 
 template <typename CONCRETE>
-base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
+base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete)
+    : _is_derived_from([](const std::type_info& from) {
+        return static_is_derived_from(from);
+      }) {
   runtime::get_meta_data<CONCRETE>().register_v_table(this);
 }
 

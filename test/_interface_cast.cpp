@@ -14,8 +14,13 @@ using namespace virtual_void::data;
 
 using namespace test::component_base;
 
-TEST_CASE("_interface_cast") {
+namespace test::component_base {
 
+VV_INTERFACE(unused_i, (VV_CONST_METHOD(int, fun)))
+
+}
+
+TEST_CASE("_interface_cast") {
   {
     to_string_i<const_observer> to_string_i_co{
         test::component_base::get_to_string_i_co()};
@@ -26,8 +31,13 @@ TEST_CASE("_interface_cast") {
         *dynamic_interface_cast<get_value_i<const_observer>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << " i1: " << i1.get_value() << "\n";
-    REQUIRE(get_void_data_ptr(i1) ==
-            get_void_data_ptr(to_string_i_co));
+    REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(to_string_i_co));
+
+    auto queried =
+        dynamic_interface_cast<unused_i<const_observer>>(to_string_i_co);
+    CHECK(!queried.has_value());
+    CHECK(std::string(queried.error().to.name()) ==
+          std::string(typeid(unused_i_v_table).name()));
   }
   {
     to_string_i<shared_const> i0{
@@ -35,7 +45,8 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "shared_const i0: " << i0.to_string() << "\n";
 
-    get_value_i<shared_const> i1 = *dynamic_interface_cast<get_value_i<shared_const>>(i0);
+    get_value_i<shared_const> i1 =
+        *dynamic_interface_cast<get_value_i<shared_const>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
@@ -46,7 +57,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(get_void_data_ptr(iu1) != get_void_data_ptr(i0));
 
     set_value_i<unique> sv0 = *dynamic_interface_cast<set_value_i<unique>>(i0);
-    REQUIRE(get_void_data_ptr(sv0)!= get_void_data_ptr(i0));
+    REQUIRE(get_void_data_ptr(sv0) != get_void_data_ptr(i0));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "shared_const/unique sv0: " << sv0.get_value() << "\n";
     sv0.set_value(sv0.get_value() * 2);
