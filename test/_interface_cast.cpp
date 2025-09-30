@@ -11,7 +11,6 @@
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data;
-using namespace virtual_void::data::has_no_meta;
 
 using namespace test::component_base;
 

@@ -180,7 +180,7 @@ TEST_CASE("dynamic v_table const_observer") {
   shape shape_circle{circle{33.3}};
   shapeX shape_circleX{circle{33.3}};
 
-  data::const_observer o1 = virtual_void::erased<data::const_observer>(c);
+  data::const_observer o1 = data::erased<data::const_observer>(c);
   data::const_observer o2 = o1;
 
   {
@@ -300,8 +300,8 @@ TEST_CASE("base") {
   using value_base = interface::base<value>;
 
   {
-    auto e = erased<value>(std::make_shared<x_t>("hallo"));
-    REQUIRE(unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
+    auto e = data::erased<value>(std::make_shared<x_t>("hallo"));
+    REQUIRE(data::unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
   }
   {
     value_base vb(std::make_shared<x_t>("hallo"));

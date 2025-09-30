@@ -76,7 +76,7 @@ class meta_data {
   template <typename CLASS>
   constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return erased<data::unique>(std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
+          return data::erased<data::unique>(std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
         }) {}
 
   constexpr operator const std::type_info&() const { return get_type_info(); }
@@ -106,7 +106,7 @@ base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete) {
 
 template <typename CLASS>
 struct class_ {
-  template <template <is_erased_data> typename INTERFACE>
+  template <template <data::is_erased_data> typename INTERFACE>
   struct implements {
     constexpr implements() {
       auto& type_info = get_meta_data<CLASS>();

@@ -4,15 +4,10 @@
 
 namespace virtual_void::data {
 
-template <typename VV_VOID>
-using observer = VV_VOID;
-
-using const_observer = observer<void const*>;
-using mutable_observer = observer<void*>;
-
-}
-
-namespace virtual_void {
+template <voidness VOIDNESS>
+using observer = VOIDNESS;
+using const_observer = observer<const_void>;
+using mutable_observer = observer<mutable_void>;
 
 template <typename ERASED_DATA, typename VV_VOID>
 struct observer_trait : virtual_void_default_unerase {
@@ -42,9 +37,6 @@ struct erased_data_trait<data::const_observer>
 template <>
 struct erased_data_trait<data::mutable_observer>
     : observer_trait<data::mutable_observer, data::mutable_observer> {};
-}  // namespace virtual_void
-
-namespace virtual_void::data::has_no_meta {
 
 static_assert(erased_data_trait<const_observer>::is_const);
 static_assert(!erased_data_trait<mutable_observer>::is_const);

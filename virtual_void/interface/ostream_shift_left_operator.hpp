@@ -25,7 +25,7 @@ struct ostreamable_v_table_map<OSTREAMABLE>
   void to_ostream(OSTREAMABLE const* x, std::ostream& o) { o << (*x); };
 };
 
-template <virtual_void::is_erased_data VV>
+template <data::is_erased_data VV>
 std::ostream& operator<<(std::ostream& o, ostreamable<VV> const& i) {  // 1
   i.to_ostream(o);
   return o;

@@ -13,7 +13,6 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
-using namespace virtual_void::data::has_no_meta;
 
 namespace {
 template <typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER>

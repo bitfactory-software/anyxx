@@ -55,8 +55,8 @@ to_string_i<virtual_void::data::unique> test::component_base::get_to_string_i_u(
 }
 
 virtual_void::data::shared_const test::component_base::sc_X(double v) {
-  return virtual_void::erased<shared_const>(std::make_shared<X>(v));
+  return virtual_void::data::erased<shared_const>(std::make_shared<X>(v));
 }
 virtual_void::data::unique test::component_base::u_X(double v) {
-  return virtual_void::erased<unique>(std::make_unique<X>(v));
+  return virtual_void::data::erased<unique>(std::make_unique<X>(v));
 }

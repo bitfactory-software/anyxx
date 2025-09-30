@@ -13,7 +13,6 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
-using namespace data::has_no_meta;
 
 struct X {
   std::string s_;

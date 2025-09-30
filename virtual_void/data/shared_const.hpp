@@ -5,11 +5,9 @@
 
 namespace virtual_void::data {
 using shared_const = std::shared_ptr<void const>;
-}  // namespace virtual_void::data
 
-namespace virtual_void {
 template <>
-struct erased_data_trait<data::shared_const> {
+struct erased_data_trait<shared_const> {
   using void_t = void const*;
   template <typename V>
   using typed_t = const std::decay_t<V>;
@@ -26,8 +24,6 @@ struct erased_data_trait<data::shared_const> {
     return static_pointer_cast<void const>(v);
   }
 };
-}  // namespace virtual_void
 
-namespace virtual_void::data {
 static_assert(is_erased_data<shared_const>);
-}
+}  // namespace virtual_void::data

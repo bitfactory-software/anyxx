@@ -45,7 +45,7 @@ TEST_CASE("interface lifetime cast") {
 
   auto o1 = get_virtual_void(sc);
   auto x = unerase_cast<X>(sc);
-  auto x1 = static_cast<X const *>(get_data(get_virtual_void(sc)));
+  auto x1 = static_cast<X const *>(get_interface_data(sc));
   REQUIRE(x->s_ == "hallo");
 
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);

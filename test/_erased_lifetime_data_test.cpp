@@ -27,7 +27,7 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr = data::make_unique<Data>();
-    REQUIRE(unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
+    REQUIRE(data::unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -35,7 +35,7 @@ TEST_CASE("erase lifetime test unique") {
   Data::destrucor_runs = 0;
   {
     auto unique_ptr = data::make_unique<Data>();
-    REQUIRE(unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
+    REQUIRE(data::unchecked_unerase_cast<Data>(unique_ptr)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -44,7 +44,7 @@ TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
     data::shared_const sp = std::make_shared<Data>();
-    REQUIRE(unchecked_unerase_cast<Data>(sp)->s_ == "hello world");
+    REQUIRE(data::unchecked_unerase_cast<Data>(sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);
@@ -52,7 +52,7 @@ TEST_CASE("erase lifetime test shared") {
   Data::destrucor_runs = 0;
   {
     data::shared_const sp = std::make_shared<Data>();
-    REQUIRE(unchecked_unerase_cast<Data>(sp)->s_ == "hello world");
+    REQUIRE(data::unchecked_unerase_cast<Data>(sp)->s_ == "hello world");
     REQUIRE(Data::destrucor_runs == 0);
   }
   REQUIRE(Data::destrucor_runs == 1);

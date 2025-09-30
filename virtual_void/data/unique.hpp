@@ -27,9 +27,6 @@ inline unique unique_nullptr() {
   return {nullptr, [](auto) {}};
 }
 
-};  // namespace virtual_void::data
-
-namespace virtual_void {
 template <>
 struct erased_data_trait<data::unique> {
   using void_t = void*;
@@ -48,17 +45,6 @@ struct erased_data_trait<data::unique> {
     return data::move_to_unique(std::move(v));
   }
 };
-}  // namespace virtual_void
 
-namespace virtual_void::data {
 static_assert(is_erased_data<unique>);
 }  // namespace virtual_void::data
-
-
-  //template <typename CONSTRUCTED_WITH>
-  //using unerased_type = typename CONSTRUCTED_WITH::value_type;
-
-  //template <typename V>
-  //static auto construct_from(std::unique_ptr<V>&& v) {
-  //  return data::move_to_unique(std::move(v));
-  //}

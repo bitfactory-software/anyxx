@@ -2,7 +2,7 @@
 
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void {
+namespace virtual_void::data {
 
 template <typename DATA>
 struct erased_data_trait;
@@ -170,4 +170,4 @@ concept erased_constructibile_for =
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
      erased_data_trait<ERASED_DATA>::is_constructibile_from_const);
 
-}  // namespace virtual_void
+}  // namespace virtual_void::data

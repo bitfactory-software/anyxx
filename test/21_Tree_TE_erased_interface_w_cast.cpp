@@ -17,7 +17,6 @@ using std::string;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data;
-using namespace virtual_void::data::has_no_meta;
 using namespace virtual_void::runtime;
 
 namespace _21_Tree_TE_erased_interface_w_cast {

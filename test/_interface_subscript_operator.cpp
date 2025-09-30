@@ -18,7 +18,6 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 using namespace virtual_void::data;
-using namespace virtual_void::data::has_no_meta;
 
 namespace {
 using map_t = std::map<int, std::string>;

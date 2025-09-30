@@ -21,7 +21,7 @@ struct operator_v_table : BASE_V_TABLE {
   template <typename UNERASED>
   operator_v_table(std::in_place_type_t<UNERASED> u) : BASE_V_TABLE(u) {
     op = [](virtual_void::void_t<CONSTNESS> _vp, ARGS&&... args) -> RET {
-      return TARGET{}(virtual_void::unchecked_unerase_cast<UNERASED>(_vp),
+      return TARGET{}(virtual_void::data::unchecked_unerase_cast<UNERASED>(_vp),
                       std::forward<ARGS>(args)...);
     };
     set_is_derived_from<v_table_t>(this);
@@ -37,18 +37,18 @@ implemented_operator_v_table() {
   return &v_table;
 }
 
-template <typename TARGET, is_erased_data ERASED_DATA,
+template <typename TARGET, data::is_erased_data ERASED_DATA,
           template <typename> typename BASE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_;
-template <typename TARGET, is_erased_data ERASED_DATA,
+template <typename TARGET, data::is_erased_data ERASED_DATA,
           template <typename> typename BASE, is_constness CONSTNESS,
           typename RET, typename... ARGS>
 struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     : BASE<ERASED_DATA> {
  public:
   using erased_data_t = ERASED_DATA;
-  using void_t = typename erased_data_trait<ERASED_DATA>::void_t;
+  using void_t = typename data::erased_data_trait<ERASED_DATA>::void_t;
   using base_t = BASE<ERASED_DATA>;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t =
@@ -67,8 +67,8 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     v_table_ = implemented_operator_v_table<
-        unerased_type<ERASED_DATA, CONSTRUCTED_WITH>, TARGET, v_table_base_t,
-        CONSTNESS, RET, ARGS...>();
+        data::unerased_type<ERASED_DATA, CONSTRUCTED_WITH>, TARGET,
+        v_table_base_t, CONSTNESS, RET, ARGS...>();
   }
   template <typename OTHER>
   operator_(const OTHER& other)
@@ -76,10 +76,10 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
       : base_t(other) {}
 
   RET invoke(ARGS&&... args) const
-    requires(const_correct_call_for_erased_data<CONSTNESS, erased_data_t>)
+    requires(data::const_correct_call_for_erased_data<CONSTNESS, erased_data_t>)
   {
-    return static_cast<v_table_t*>(v_table_)->op(get_data(base_t::erased_data_),
-                                                 std::forward<ARGS>(args)...);
+    return static_cast<v_table_t*>(v_table_)->op(
+        data::get_data(base_t::erased_data_), std::forward<ARGS>(args)...);
   }
   operator_(const operator_&) = default;
   operator_(operator_&) = default;
