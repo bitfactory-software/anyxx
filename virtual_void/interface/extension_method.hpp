@@ -67,7 +67,7 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
     if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
 
     auto erased_function = reinterpret_cast<erased_function_t>(target);
-    return (erased_function)(get_interface_data(m),
+    return (erased_function)(get_void_data_ptr(m),
                              std::forward<OTHER_ARGS>(args)...);
   }
   template <typename CLASS, typename... OTHER_ARGS>
