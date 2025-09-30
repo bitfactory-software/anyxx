@@ -41,7 +41,7 @@ struct trait<data::unique> {
   using unerased = typename CONSTRUCTED_WITH::element_type;
 
   template <typename V>
-  static auto construct_from(std::unique_ptr<V>&& v) {
+  static auto erase(std::unique_ptr<V>&& v) {
     return data::move_to_unique(std::move(v));
   }
 };

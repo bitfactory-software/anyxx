@@ -22,12 +22,12 @@ struct observer_trait {
   using unerased = CONSTRUCTED_WITH;
 
   template <typename V>
-  static auto construct_from(V& v) {
+  static auto erase(V& v) {
     static_assert(!std::is_const_v<std::remove_reference_t<V>>);
     return ERASED_DATA(static_cast<VOIDNESS>(&v));
   }
   template <typename V>
-  static auto construct_from(const V& v)
+  static auto erase(const V& v)
     requires(is_const)
   {
     return ERASED_DATA(static_cast<VOIDNESS>(&v));

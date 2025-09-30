@@ -33,7 +33,7 @@ concept const_correct_call_for_erased_data =
 
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
-  return trait<ERASED_DATA>::construct_from(std::forward<FROM>(from));
+  return trait<ERASED_DATA>::erase(std::forward<FROM>(from));
 }
 
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>

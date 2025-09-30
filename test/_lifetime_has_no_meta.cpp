@@ -87,7 +87,7 @@ TEST_CASE("lifetime/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    shared_const sp1 = trait<shared_const>::construct_from(ptr);
+    shared_const sp1 = trait<shared_const>::erase(ptr);
     auto u1 = erased<shared_const>(ptr);
     A const* a = unchecked_unerase_cast<A>(u1);
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
@@ -97,7 +97,7 @@ TEST_CASE("lifetime/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    unique up1 = trait<unique>::construct_from(std::move(ptr));
+    unique up1 = trait<unique>::erase(std::move(ptr));
     A* a = unchecked_unerase_cast<A>(up1);
     REQUIRE(a->s == "hallo");
   }

@@ -20,7 +20,7 @@ struct trait<shared_const> {
   using unerased = std::decay_t<typename CONSTRUCTED_WITH::element_type>;
 
   template <typename V>
-  static auto construct_from(std::shared_ptr<V> const& v) {
+  static auto erase(std::shared_ptr<V> const& v) {
     return static_pointer_cast<void const>(v);
   }
 };
