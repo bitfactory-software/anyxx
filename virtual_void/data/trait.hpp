@@ -15,13 +15,12 @@ concept is_erased_data = requires(E e) {
   { trait<E>::has_value(e) } -> std::convertible_to<bool>;
 };
 
-template <typename DATA>
+template <is_erased_data DATA>
 using data_void = trait<DATA>::void_t;
-template <typename DATA>
-using data_const_t = const_t<typename trait<DATA>::void_t>;
 
 template <typename ERASED_DATA>
-concept is_const_data = is_const_void<data_void<ERASED_DATA>>;
+concept is_const_data =
+    is_erased_data<ERASED_DATA> && is_const_void<data_void<ERASED_DATA>>;
 
 template <bool CALL_IS_CONST, bool ERASED_DATA_IS_CONST>
 concept const_correct_call =
@@ -38,7 +37,8 @@ ERASED_DATA erased(FROM&& from) {
 }
 
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
-using unerased = trait<ERASED_DATA>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
+using unerased =
+    trait<ERASED_DATA>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
 
 template <is_erased_data ERASED_DATA>
 bool has_data(ERASED_DATA const& vv) {
