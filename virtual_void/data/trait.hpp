@@ -36,10 +36,6 @@ template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
   return trait<ERASED_DATA>::construct_from(std::forward<FROM>(from));
 }
-struct virtual_void_default_unerase {
-  template <typename CONSTRUCTED_WITH>
-  using unerased_type = CONSTRUCTED_WITH;
-};
 
 template <typename UNERASER>
 concept is_uneraser = requires(UNERASER u, mutable_void mv) {
