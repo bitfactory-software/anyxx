@@ -1,10 +1,11 @@
 #pragma once
 
+#include <expected>
 #include <map>
 #include <ranges>
+#include <type_traits>
 #include <typeindex>
 #include <vector>
-#include <type_traits>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/virtual_void.hpp>
@@ -65,6 +66,10 @@ base_v_table* base_v_table_imlpementation() {
   return &v_table;
 }
 
+struct cast_error {
+std::type_info const &to, &from;
+};
+
 class meta_data {
   const std::type_info& type_info_;
   using copy_construct_t = auto(const_void) -> data::unique;
@@ -76,21 +81,22 @@ class meta_data {
   template <typename CLASS>
   constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return data::erased<data::unique>(std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
+          return data::erased<data::unique>(
+              std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
         }) {}
 
-  constexpr operator const std::type_info&() const { return get_type_info(); }
   constexpr const std::type_info& get_type_info() const { return type_info_; }
   auto copy_construct(const_void from) const { return copy_construct_(from); }
 
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  base_v_table* get_v_table(std::type_info const& typeid_) const {
+  std::expected<base_v_table*, cast_error> get_v_table(
+      std::type_info const& typeid_) const {
     auto& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
-    return nullptr;
+    return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
   void register_v_table(base_v_table* v_table) {
     v_table->meta_data = this;

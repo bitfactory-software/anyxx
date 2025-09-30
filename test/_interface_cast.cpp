@@ -23,7 +23,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(s == "3.140000");
 
     get_value_i<const_observer> i1 =
-        dynamic_interface_cast<get_value_i<const_observer>>(to_string_i_co);
+        *dynamic_interface_cast<get_value_i<const_observer>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << " i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) ==
@@ -35,17 +35,17 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "shared_const i0: " << i0.to_string() << "\n";
 
-    get_value_i<shared_const> i1 = dynamic_interface_cast<get_value_i<shared_const>>(i0);
+    get_value_i<shared_const> i1 = *dynamic_interface_cast<get_value_i<shared_const>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
 
-    get_value_i<unique> iu1 = dynamic_interface_cast<get_value_i<unique>>(i0);
+    get_value_i<unique> iu1 = *dynamic_interface_cast<get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
     std::cout << "shared_const/unique iu1: " << iu1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(iu1) != get_void_data_ptr(i0));
 
-    set_value_i<unique> sv0 = dynamic_interface_cast<set_value_i<unique>>(i0);
+    set_value_i<unique> sv0 = *dynamic_interface_cast<set_value_i<unique>>(i0);
     REQUIRE(get_void_data_ptr(sv0)!= get_void_data_ptr(i0));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "shared_const/unique sv0: " << sv0.get_value() << "\n";
@@ -58,7 +58,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "unique i0: " << i0.to_string() << "\n";
 
-    base<unique> i1b = dynamic_interface_cast<get_value_i<unique>>(i0);
+    base<unique> i1b = *dynamic_interface_cast<get_value_i<unique>>(i0);
     auto i1{
         std::move(unchecked_v_table_cast<get_value_i<unique>>(std::move(i1b)))};
 
@@ -68,15 +68,15 @@ TEST_CASE("_interface_cast") {
 
     auto i1c = dynamic_interface_cast<get_value_i<unique>>(i0);
 
-    REQUIRE(i1c.get_value() == 3.14);
-    std::cout << "unique i1c: " << i1c.get_value() << "\n";
-    REQUIRE(get_void_data_ptr(i1c) != get_void_data_ptr(i0));
+    REQUIRE(i1c->get_value() == 3.14);
+    std::cout << "unique i1c: " << i1c->get_value() << "\n";
+    REQUIRE(get_void_data_ptr(*i1c) != get_void_data_ptr(i0));
 
-    auto i1d = move_to_interface<to_string_i<unique>>(std::move(i1c));
+    auto i1d = move_to_interface<to_string_i<unique>>(std::move(*i1c));
     REQUIRE(get_void_data_ptr((i1d)));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_erased_data(i1c));  // moved!
+    REQUIRE(!get_erased_data(*i1c));  // moved!
 #pragma warning(pop)
     REQUIRE(i1d.to_string() == "3.140000");
 
