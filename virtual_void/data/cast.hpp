@@ -18,11 +18,11 @@ concept cast_convertable_from =
 template <is_erased_data FROM>
   requires(!is_const_data<FROM>)
 struct cast_converter<mutable_observer, FROM> {
-  auto operator()(const auto& from) { return mutable_observer{get_data(from)}; }
+  auto operator()(const auto& from) { return mutable_observer{get_void_data_ptr(from)}; }
 };
 template <is_erased_data FROM>
 struct cast_converter<const_observer, FROM> {
-  auto operator()(const auto& from) { return const_observer{get_data(from)}; }
+  auto operator()(const auto& from) { return const_observer{get_void_data_ptr(from)}; }
 };
 template <>
 struct cast_converter<shared_const, shared_const> {

@@ -55,16 +55,16 @@ bool has_data(virtual_typed<V, INTERFACE> const& vv) {
   return has_data(vv.erased_data_);
 }
 template <typename V, is_interface INTERFACE>
-void const* get_data(virtual_typed<V, INTERFACE> const& vv)
+void const* get_void_data_ptr(virtual_typed<V, INTERFACE> const& vv)
   requires is_const_void<typename INTERFACE::void_t>
 {
-  return get_data(vv.erased_data_);
+  return get_void_data_ptr(vv.erased_data_);
 }
 template <typename V, is_interface INTERFACE>
-void* get_data(virtual_typed<V, INTERFACE> const& vv)
+void* get_void_data_ptr(virtual_typed<V, INTERFACE> const& vv)
   requires(!is_const_void<typename INTERFACE::void_t>)
 {
-  return get_data(vv.erased_data_);
+  return get_void_data_ptr(vv.erased_data_);
 }
 template <typename V, is_interface INTERFACE>
 auto get_meta(virtual_typed<V, INTERFACE> const& vv) {

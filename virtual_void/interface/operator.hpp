@@ -79,7 +79,7 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     requires(data::const_correct_call_for_erased_data<CONSTNESS, erased_data_t>)
   {
     return static_cast<v_table_t*>(v_table_)->op(
-        data::get_data(base_t::erased_data_), std::forward<ARGS>(args)...);
+        data::get_void_data_ptr(base_t::erased_data_), std::forward<ARGS>(args)...);
   }
   operator_(const operator_&) = default;
   operator_(operator_&) = default;

@@ -45,13 +45,13 @@ bool has_data(ERASED_DATA const& vv) {
   return trait<ERASED_DATA>::has_value(vv);
 }
 template <is_erased_data ERASED_DATA>
-void const* get_data(ERASED_DATA const& vv)
+void const* get_void_data_ptr(ERASED_DATA const& vv)
   requires std::same_as<void const*, typename trait<ERASED_DATA>::void_t>
 {
   return trait<ERASED_DATA>::value(vv);
 }
 template <is_erased_data ERASED_DATA>
-void* get_data(ERASED_DATA const& vv)
+void* get_void_data_ptr(ERASED_DATA const& vv)
   requires std::same_as<void*, typename trait<ERASED_DATA>::void_t>
 {
   return trait<ERASED_DATA>::value(vv);
@@ -68,13 +68,13 @@ auto unchecked_unerase_cast(void* p) {
 
 template <typename U, is_erased_data ERASED_DATA>
 auto unchecked_unerase_cast(ERASED_DATA const& o) {
-  return unchecked_unerase_cast<U>(get_data(o));
+  return unchecked_unerase_cast<U>(get_void_data_ptr(o));
 }
 template <typename U, is_erased_data ERASED_DATA>
 auto unchecked_unerase_cast(ERASED_DATA const& o)
   requires(!is_const_data<ERASED_DATA>)
 {
-  return unchecked_unerase_cast<U>(get_data(o));
+  return unchecked_unerase_cast<U>(get_void_data_ptr(o));
 }
 
 template <typename U, is_erased_data ERASED_DATA>

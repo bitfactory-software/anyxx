@@ -13,13 +13,13 @@ template <is_erased_data FROM>
   requires(!is_const_data<FROM>)
 struct copy_converter<mutable_observer, FROM> {
   auto operator()(const auto& from, auto const& meta_data) {
-    return mutable_observer{get_data(from)};
+    return mutable_observer{get_void_data_ptr(from)};
   }
 };
 template <is_erased_data FROM>
 struct copy_converter<const_observer, FROM> {
   auto operator()(const auto& from, auto const& meta_data) {
-    return const_observer{get_data(from)};
+    return const_observer{get_void_data_ptr(from)};
   }
 };
 template <>
@@ -31,7 +31,7 @@ struct copy_converter<shared_const, shared_const> {
 template <is_erased_data FROM>
 struct copy_converter<unique, FROM> {
   auto operator()(const auto& from, auto const& meta_data) {
-    return meta_data.copy_construct(get_data(from));
+    return meta_data.copy_construct(get_void_data_ptr(from));
   }
 };
 

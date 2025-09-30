@@ -158,7 +158,7 @@
              void const_*, erased_data_t>)                               \
   {                                                                      \
     return static_cast<v_table_t*>(v_table_)->name(                      \
-        virtual_void::data::get_data(base_t::erased_data_)               \
+        virtual_void::data::get_void_data_ptr(base_t::erased_data_)               \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   }
 
