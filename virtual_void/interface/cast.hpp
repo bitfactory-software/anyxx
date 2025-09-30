@@ -28,7 +28,7 @@ auto find_v_table(runtime::base_v_table* from) -> TO_INTERFACE::v_table_t* {
 }
 
 template <typename TO_INTERFACE, data::is_erased_data VV_FROM>
-std::expected<TO_INTERFACE, virtual_void::runtime::cast_error> attach_interface(
+std::expected<TO_INTERFACE, virtual_void::runtime::cast_error> dynamic_interface_cast(
     VV_FROM const& vv_from, const runtime::meta_data& meta_data) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(data::is_erased_data<vv_to_t>);
@@ -38,14 +38,14 @@ std::expected<TO_INTERFACE, virtual_void::runtime::cast_error> attach_interface(
 }
 
 template <typename TO_INTERFACE, data::is_erased_data VV_FROM>
-auto attach_interface(VV_FROM const& vv_from,
+auto dynamic_interface_cast(VV_FROM const& vv_from,
                       runtime::base_v_table const* from) {
-  return attach_interface<TO_INTERFACE>(vv_from, *from->meta_data);
+  return dynamic_interface_cast<TO_INTERFACE>(vv_from, *from->meta_data);
 }
 
 template <typename TO_INTERFACE, typename FROM_INTERFACE>
 auto dynamic_interface_cast(const FROM_INTERFACE& from_interface) {
-  return attach_interface<TO_INTERFACE>(get_erased_data(from_interface),
+  return dynamic_interface_cast<TO_INTERFACE>(get_erased_data(from_interface),
                                         get_runtime(from_interface));
 }
 
