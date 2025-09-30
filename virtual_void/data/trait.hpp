@@ -40,17 +40,6 @@ ERASED_DATA erased(FROM&& from) {
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
 using unerased = trait<ERASED_DATA>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
 
-template <is_constness CONSTNESS, typename T>
-struct const_qualified_ {
-  using type = T;
-};
-template <typename T>
-struct const_qualified_<const_, T> {
-  using type = T const;
-};
-template <is_constness CONSTNESS, typename T>
-using const_qualified = typename const_qualified_<CONSTNESS, T>::type;
-
 template <is_erased_data ERASED_DATA>
 bool has_data(ERASED_DATA const& vv) {
   return trait<ERASED_DATA>::has_value(vv);
