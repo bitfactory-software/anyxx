@@ -241,9 +241,11 @@
     n(const OTHER& other)                                                      \
       requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)        \
         : base_t(other) {}                                                     \
-    template <typename OTHER>                                                  \
+    template <virtual_void::interface::is_interface OTHER>                     \
     n(const OTHER&& other)                                                     \
-      requires(std::derived_from<OTHER::v_table_t, v_table_t>)                 \
+      requires(std::derived_from<OTHER::v_table_t, v_table_t> &&               \
+               data::cast_convertable_from<typename base_t::erased_data,       \
+                                           typename OTHER::erased_data_t>)     \
         : base_t(std::move(other)) {}                                          \
                                                                                \
     _detail_foreach_macro(_detail_INTERFACE_METHOD_H, _detail_EXPAND_LIST l)   \

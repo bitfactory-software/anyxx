@@ -282,6 +282,8 @@ TEST_CASE("dynamic interface has_type_info::unique") {
   REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));
   auto unerased_circle = unerase_cast<circle const>(s1);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
+
+  static_assert(data::cast_convertable_from<data::const_observer, data::unique>);
   print_shape_i_co(s1);
 }
 

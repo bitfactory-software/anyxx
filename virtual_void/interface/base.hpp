@@ -67,9 +67,11 @@ class base {
     using t = data::unerased<ERASED_DATA, CONSTRUCTED_WITH>;
     v_table_ = runtime::base_v_table_imlpementation<t>();
   }
-  template <typename OTHER>
+  template <is_interface OTHER>
   base(const OTHER& other)
-    requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
+    requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
+             data::cast_convertable_from<erased_data_t,
+                                         typename OTHER::erased_data_t>)
       : erased_data_(data::cast_to<ERASED_DATA>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
