@@ -151,7 +151,7 @@ inline auto get_v_table(INTERFACE const& interface) {
 
 template <is_interface INTERFACE>
 inline const auto& get_runtime(INTERFACE const& interface) {
-  return *get_v_table(interface)->type_info;
+  return *get_v_table(interface)->meta_data;
 }
 
 template <data::is_erased_data VV>

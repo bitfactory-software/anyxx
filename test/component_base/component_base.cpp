@@ -36,7 +36,7 @@ to_string_i<virtual_void::data::const_observer>
 test::component_base::get_to_string_i_co() {
   auto p = &x;
   to_string_i<virtual_void::data::const_observer> i{x};
-  auto meta = get_v_table(i)->type_info;
+  auto meta = get_v_table(i)->meta_data;
   const std::type_info* type_info = &meta->get_type_info();
   static_assert(
       interface::is_interface<to_string_i<virtual_void::data::const_observer>>);

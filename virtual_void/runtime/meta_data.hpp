@@ -34,7 +34,7 @@ struct base_v_table {
     return typeid(base_v_table) == from;
   }
 
-  meta_data* type_info = nullptr;
+  meta_data* meta_data = nullptr;
 
   bool (*_is_derived_from)(const std::type_info&);
 
@@ -93,7 +93,7 @@ class meta_data {
     return nullptr;
   }
   void register_v_table(base_v_table* v_table) {
-    v_table->type_info = this;
+    v_table->meta_data = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
   }
