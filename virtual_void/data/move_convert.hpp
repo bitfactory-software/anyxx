@@ -1,6 +1,5 @@
 #pragma once
 
-#include <virtual_void/virtual_void.hpp>
 #include <virtual_void/data/observer.hpp>
 
 namespace virtual_void::data {

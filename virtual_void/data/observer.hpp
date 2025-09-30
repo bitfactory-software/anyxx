@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/virtual_void.hpp>
+#include <virtual_void/data/trait.hpp>
 
 namespace virtual_void::data {
 
