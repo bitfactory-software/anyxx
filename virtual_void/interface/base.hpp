@@ -101,7 +101,7 @@ class base {
   template <data::is_erased_data ERASED_DATA>
   friend inline auto& get_erased_data(base<ERASED_DATA> const& interface);
   template <data::is_erased_data ERASED_DATA>
-  friend inline auto move_virtual_void(base<ERASED_DATA>&& interface);
+  friend inline auto move_erased_data(base<ERASED_DATA>&& interface);
   template <data::is_erased_data ERASED_DATA>
   friend inline auto get_interface_data(base<ERASED_DATA> const& interface);
   template <is_interface I>
@@ -129,7 +129,7 @@ auto& get_erased_data(base<ERASED_DATA> const& interface) {
   return interface.erased_data_;
 }
 template <data::is_erased_data ERASED_DATA>
-auto move_virtual_void(base<ERASED_DATA>&& interface) {
+auto move_erased_data(base<ERASED_DATA>&& interface) {
   return std::move(interface.erased_data_);
 }
 template <data::is_erased_data ERASED_DATA>
