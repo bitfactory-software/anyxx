@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
-#include <virtual_void/data/copy_convert.hpp>
+#include <virtual_void/data/cast.hpp>
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/data/trait.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
@@ -70,8 +70,7 @@ class base {
   template <typename OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
-      : erased_data_(data::copy_convert_to<ERASED_DATA>(
-            other.erased_data_, *get_v_table(other)->type_info)),
+      : erased_data_(data::cast_to<ERASED_DATA>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base(OTHER&& other)

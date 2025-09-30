@@ -3,6 +3,7 @@
 #undef interface
 
 #include <ranges>
+#include <virtual_void/data/cast.hpp>
 #include <virtual_void/data/copy_convert.hpp>
 #include <virtual_void/data/move_convert.hpp>
 #include <virtual_void/interface/base.hpp>
