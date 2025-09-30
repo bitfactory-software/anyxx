@@ -36,20 +36,6 @@ template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {
   return trait<ERASED_DATA>::construct_from(std::forward<FROM>(from));
 }
-template <is_erased_data ERASED_DATA, typename FROM>
-ERASED_DATA erase_to(FROM&& from) {
-  if constexpr (is_erased_data<std::remove_reference_t<FROM>>) {
-    return from;
-  } else {
-    return erased<ERASED_DATA>(from);
-  }
-}
-template <is_erased_data ERASED_DATA, typename V, typename... ARGS>
-ERASED_DATA erased_in_place(ARGS&&... args) {
-  return trait<ERASED_DATA>::construct_in_place(std::in_place_type<V>,
-                                                std::forward<ARGS>(args)...);
-}
-
 struct virtual_void_default_unerase {
   template <typename CONSTRUCTED_WITH>
   using unerased_type = CONSTRUCTED_WITH;
