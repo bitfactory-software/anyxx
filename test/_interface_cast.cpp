@@ -4,7 +4,7 @@
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/conversion.hpp>
+#include <virtual_void/interface/cast.hpp>
 
 #include "./component_base/component_base.hpp"
 
