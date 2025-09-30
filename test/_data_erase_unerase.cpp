@@ -21,7 +21,7 @@ constexpr bool compiles1 =
       mo = as<std::string>(co);
     };
 
-TEST_CASE("lifetime/observer") {
+TEST_CASE("data_erase_unerase/observer") {
   {
     std::string s{"hallo"};
     auto mo = erased<mutable_observer>(s);
@@ -45,7 +45,7 @@ TEST_CASE("lifetime/observer") {
     REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "hallo");
   }
 }
-TEST_CASE("lifetime/unique") {
+TEST_CASE("data_erase_unerase/unique") {
   {
     auto u1 = erased<unique>(std::make_unique<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
@@ -59,7 +59,7 @@ TEST_CASE("lifetime/unique") {
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }
-TEST_CASE("lifetime/shared_const") {
+TEST_CASE("data_erase_unerase/shared_const") {
   {
     auto u1 = erased<shared_const>(std::make_shared<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
@@ -83,7 +83,7 @@ TEST_CASE("lifetime/shared_const") {
     REQUIRE(unchecked_unerase_cast<A>(sc)->s == "hallo");
   }
 }
-TEST_CASE("lifetime/shared_const_ptr") {
+TEST_CASE("data_erase_unerase/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
@@ -93,7 +93,7 @@ TEST_CASE("lifetime/shared_const_ptr") {
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }
-TEST_CASE("lifetime/unique_ptr") {
+TEST_CASE("data_erase_unerase/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
