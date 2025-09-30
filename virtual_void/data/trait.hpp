@@ -71,23 +71,6 @@ struct const_qualified_<const_, T> {
 template <is_constness CONSTNESS, typename T>
 using const_qualified = typename const_qualified_<CONSTNESS, T>::type;
 
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH, bool is_const>
-struct make_uneraser;
-
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
-struct make_uneraser<ERASED_DATA, CONSTRUCTED_WITH, true> {
-  using unerased = unerased_type<ERASED_DATA, CONSTRUCTED_WITH>;
-  using type = static_cast_uneraser<unerased const>;
-};
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
-struct make_uneraser<ERASED_DATA, CONSTRUCTED_WITH, false> {
-  using unerased = unerased_type<ERASED_DATA, CONSTRUCTED_WITH>;
-  using type = static_cast_uneraser<unerased>;
-};
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH,
-          bool is_const = is_const_data<ERASED_DATA>>
-using uneraser = make_uneraser<ERASED_DATA, CONSTRUCTED_WITH, is_const>::type;
-
 template <is_erased_data ERASED_DATA>
 bool has_data(ERASED_DATA const& vv) {
   return trait<ERASED_DATA>::has_value(vv);
