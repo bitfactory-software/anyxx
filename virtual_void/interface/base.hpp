@@ -64,7 +64,7 @@ class base {
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
       : erased_data_(data::erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    using t = data::unerased_type<ERASED_DATA, CONSTRUCTED_WITH>;
+    using t = data::unerased<ERASED_DATA, CONSTRUCTED_WITH>;
     v_table_ = runtime::base_v_table_imlpementation<t>();
   }
   template <typename OTHER>

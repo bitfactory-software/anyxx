@@ -38,7 +38,7 @@ struct trait<data::unique> {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename CONSTRUCTED_WITH>
-  using unerased_type = typename CONSTRUCTED_WITH::element_type;
+  using unerased = typename CONSTRUCTED_WITH::element_type;
 
   template <typename V>
   static auto construct_from(std::unique_ptr<V>&& v) {

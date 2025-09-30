@@ -235,7 +235,7 @@
                                                            ERASED_DATA>        \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = v_table_imlpementation<                                       \
-          virtual_void::data::unerased_type<ERASED_DATA, CONSTRUCTED_WITH>>(); \
+          virtual_void::data::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();      \
     }                                                                          \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \

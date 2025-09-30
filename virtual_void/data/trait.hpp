@@ -38,13 +38,7 @@ ERASED_DATA erased(FROM&& from) {
 }
 
 template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
-struct unerased {
-  using constructed_with_t = std::remove_cvref_t<CONSTRUCTED_WITH>;
-  using trait_t = trait<ERASED_DATA>;
-  using type = trait_t::template unerased_type<constructed_with_t>;
-};
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
-using unerased_type = unerased<ERASED_DATA, CONSTRUCTED_WITH>::type;
+using unerased = trait<ERASED_DATA>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
 
 template <is_constness CONSTNESS, typename T>
 struct const_qualified_ {

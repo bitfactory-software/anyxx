@@ -17,7 +17,7 @@ struct trait<shared_const> {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
   template <typename CONSTRUCTED_WITH>
-  using unerased_type = std::decay_t<typename CONSTRUCTED_WITH::element_type>;
+  using unerased = std::decay_t<typename CONSTRUCTED_WITH::element_type>;
 
   template <typename V>
   static auto construct_from(std::shared_ptr<V> const& v) {

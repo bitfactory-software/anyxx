@@ -67,7 +67,7 @@ struct operator_<TARGET, ERASED_DATA, BASE, CONSTNESS, RET(ARGS...)>
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
       : base_t(std::forward<CONSTRUCTED_WITH>(v)) {
     v_table_ = implemented_operator_v_table<
-        data::unerased_type<ERASED_DATA, CONSTRUCTED_WITH>, TARGET,
+        data::unerased<ERASED_DATA, CONSTRUCTED_WITH>, TARGET,
         v_table_base_t, CONSTNESS, RET, ARGS...>();
   }
   template <typename OTHER>

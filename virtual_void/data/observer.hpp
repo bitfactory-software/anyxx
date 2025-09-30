@@ -19,7 +19,7 @@ struct observer_trait {
   static VOIDNESS value(const auto& ptr) { return ptr; }
 
   template <typename CONSTRUCTED_WITH>
-  using unerased_type = CONSTRUCTED_WITH;
+  using unerased = CONSTRUCTED_WITH;
 
   template <typename V>
   static auto construct_from(V& v) {
