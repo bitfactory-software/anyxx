@@ -14,7 +14,7 @@ clone_to(VV_FROM const& vv_from,
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(data::is_erased_data<vv_to_t>);
   return query_v_table<TO_INTERFACE>(meta_data).transform([&](auto v_table) {
-    return TO_INTERFACE{copy_convert_to<vv_to_t>(vv_from, meta_data), v_table};
+    return TO_INTERFACE{data::clone_to<vv_to_t>(vv_from, meta_data), v_table};
   });
 }
 

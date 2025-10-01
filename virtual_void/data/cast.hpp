@@ -18,11 +18,15 @@ concept cast_convertable_from =
 template <is_erased_data FROM>
   requires(!is_const_data<FROM>)
 struct cast_converter<mutable_observer, FROM> {
-  auto operator()(const auto& from) { return mutable_observer{get_void_data_ptr(from)}; }
+  auto operator()(const auto& from) {
+    return mutable_observer{get_void_data_ptr(from)};
+  }
 };
 template <is_erased_data FROM>
 struct cast_converter<const_observer, FROM> {
-  auto operator()(const auto& from) { return const_observer{get_void_data_ptr(from)}; }
+  auto operator()(const auto& from) {
+    return const_observer{get_void_data_ptr(from)};
+  }
 };
 template <>
 struct cast_converter<shared_const, shared_const> {
@@ -34,5 +38,26 @@ template <typename TO, typename FROM>
 TO cast_to(FROM const& from) {
   return cast_converter<TO, FROM>{}(from);
 }
+
+static_assert(!cast_convertable_from<mutable_observer, const_observer>);
+static_assert(cast_convertable_from<mutable_observer, mutable_observer>);
+static_assert(cast_convertable_from<mutable_observer, unique>);
+static_assert(!cast_convertable_from<mutable_observer, shared_const>);
+
+static_assert(cast_convertable_from<const_observer, const_observer>);
+static_assert(cast_convertable_from<const_observer, mutable_observer>);
+static_assert(cast_convertable_from<const_observer, unique>);
+static_assert(cast_convertable_from<const_observer, shared_const>);
+
+static_assert(!cast_convertable_from<shared_const, const_observer>);
+static_assert(!cast_convertable_from<shared_const, mutable_observer>);
+static_assert(!cast_convertable_from<shared_const, unique>);
+static_assert(cast_convertable_from<shared_const, shared_const>);
+
+static_assert(!cast_convertable_from<unique, const_observer>);
+static_assert(!cast_convertable_from<unique, mutable_observer>);
+static_assert(!cast_convertable_from<unique, unique>);
+static_assert(!cast_convertable_from<unique, shared_const>);
+
 
 };  // namespace virtual_void::data
