@@ -6,7 +6,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/clone.hpp>
 #include <virtual_void/interface/query.hpp>
-#include <virtual_void/interface/cast.hpp>
+#include <virtual_void/interface/move.hpp>
 
 #include "./component_base/component_base.hpp"
 
@@ -89,7 +89,7 @@ TEST_CASE("_interface_cast") {
     std::cout << "unique i1c: " << i1c->get_value() << "\n";
     REQUIRE(get_void_data_ptr(*i1c) != get_void_data_ptr(i0));
 
-    auto i1d = move_to_interface<to_string_i<unique>>(std::move(*i1c));
+    auto i1d = move_to<to_string_i<unique>>(std::move(*i1c));
     REQUIRE(get_void_data_ptr((i1d)));
 #pragma warning(push)
 #pragma warning(disable : 26800)
@@ -97,7 +97,7 @@ TEST_CASE("_interface_cast") {
 #pragma warning(pop)
     REQUIRE(i1d.to_string() == "3.140000");
 
-    auto i1e = move_to_interface<get_value_i<shared_const>>(std::move(i1d));
+    auto i1e = move_to<get_value_i<shared_const>>(std::move(i1d));
     REQUIRE(get_void_data_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)
