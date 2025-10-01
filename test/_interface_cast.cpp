@@ -51,12 +51,12 @@ TEST_CASE("_interface_cast") {
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
 
-    get_value_i<unique> iu1 = *dynamic_interface_cast<get_value_i<unique>>(i0);
+    get_value_i<unique> iu1 = *dynamic_interface_clone_cast<get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
     std::cout << "shared_const/unique iu1: " << iu1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(iu1) != get_void_data_ptr(i0));
 
-    set_value_i<unique> sv0 = *dynamic_interface_cast<set_value_i<unique>>(i0);
+    set_value_i<unique> sv0 = *dynamic_interface_clone_cast<set_value_i<unique>>(iu1);
     REQUIRE(get_void_data_ptr(sv0) != get_void_data_ptr(i0));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "shared_const/unique sv0: " << sv0.get_value() << "\n";
@@ -69,7 +69,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "unique i0: " << i0.to_string() << "\n";
 
-    base<unique> i1b = *dynamic_interface_cast<get_value_i<unique>>(i0);
+    base<unique> i1b = *dynamic_interface_clone_cast<get_value_i<unique>>(i0);
     auto i1{
         std::move(unchecked_v_table_cast<get_value_i<unique>>(std::move(i1b)))};
 
@@ -77,7 +77,7 @@ TEST_CASE("_interface_cast") {
     std::cout << "unique i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) != get_void_data_ptr(i0));
 
-    auto i1c = dynamic_interface_cast<get_value_i<unique>>(i0);
+    auto i1c = dynamic_interface_clone_cast<get_value_i<unique>>(i0);
 
     REQUIRE(i1c->get_value() == 3.14);
     std::cout << "unique i1c: " << i1c->get_value() << "\n";
