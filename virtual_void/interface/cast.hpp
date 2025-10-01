@@ -1,7 +1,5 @@
 #pragma once
 
-#undef interface
-
 #include <ranges>
 #include <virtual_void/data/cast.hpp>
 #include <virtual_void/data/copy_convert.hpp>
@@ -12,30 +10,6 @@
 #include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::interface {
-
-template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
-  requires data::cast_convertable_from<typename TO_INTERFACE::erased_data_t,
-                                       VV_FROM>
-std::expected<TO_INTERFACE, virtual_void::runtime::cast_error>
-query_interface(VV_FROM const& vv_from,
-                       const runtime::meta_data& meta_data) {
-  using to = typename TO_INTERFACE::erased_data_t;
-  return query_v_table<TO_INTERFACE>(meta_data).transform([&](auto v_table) {
-    return TO_INTERFACE{data::cast_to<to>(vv_from, meta_data), v_table};
-  });
-}
-
-template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
-auto query_interface(VV_FROM const& vv_from,
-                            runtime::base_v_table const* from) {
-  return query_interface<TO_INTERFACE>(vv_from, *from->meta_data);
-}
-
-template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
-auto query_interface(const FROM_INTERFACE& from_interface) {
-  return dynamic_interface_clone_cast<TO_INTERFACE>(
-      get_erased_data(from_interface), get_runtime(from_interface));
-}
 
 template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 std::expected<TO_INTERFACE, virtual_void::runtime::cast_error>
