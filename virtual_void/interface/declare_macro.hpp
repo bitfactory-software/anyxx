@@ -246,7 +246,7 @@
     template <virtual_void::interface::is_interface OTHER>                     \
     n(OTHER&& other) noexcept                                                  \
       requires(std::derived_from<OTHER::v_table_t, v_table_t> &&               \
-               virtual_void::data::move_convertable_from<                      \
+               virtual_void::data::moveable_from<                              \
                    erased_data_t, typename OTHER::erased_data_t>)              \
         : base_t(std::move(other)) {}                                          \
                                                                                \

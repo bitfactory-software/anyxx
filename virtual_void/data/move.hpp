@@ -8,7 +8,7 @@ template <is_erased_data TO, is_erased_data FROM>
 struct move_converter;
 
 template <typename TO, typename FROM>
-concept move_convertable_from =
+concept moveable_from =
     is_erased_data<FROM> && is_erased_data<TO> && requires(FROM&& f) {
       { move_converter<TO, FROM>{}(std::move(f)) } -> std::same_as<TO>;
     };
@@ -31,7 +31,7 @@ struct move_converter<observer<TO>, FROM> {
 };
 
 template <typename TO, typename FROM>
-  requires move_convertable_from<TO, std::decay_t<FROM>>
+  requires moveable_from<TO, std::decay_t<FROM>>
 TO move_convert_to(FROM&& from) {
   return move_converter<TO, FROM>{}(std::move(from));
 }
