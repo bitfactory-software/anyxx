@@ -35,7 +35,7 @@ struct copy_converter<unique, FROM> {
   }
 };
 
-template <typename TO, typename FROM>
+template <is_erased_data TO, is_erased_data FROM>
 TO copy_convert_to(FROM const& from, auto const& meta_data) {
   return copy_converter<TO, FROM>{}(from, meta_data);
 }

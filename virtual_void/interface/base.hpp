@@ -166,7 +166,7 @@ auto unchecked_v_table_downcast_to(runtime::base_v_table* v_table) {
 }
 template <is_interface TO>
 auto unchecked_v_table_downcast_to(runtime::base_v_table* v_table) {
-  return v_table_downcast_to<typename TO::v_table_t>(v_table);
+  return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
 template <is_interface INTERFACE>
