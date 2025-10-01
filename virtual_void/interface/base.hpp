@@ -161,17 +161,17 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <typename TO>
-auto v_table_downcast_to(runtime::base_v_table* v_table) {
+auto unchecked_v_table_downcast_to(runtime::base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
 template <is_interface TO>
-auto v_table_downcast_to(runtime::base_v_table* v_table) {
+auto unchecked_v_table_downcast_to(runtime::base_v_table* v_table) {
   return v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
 template <is_interface INTERFACE>
 inline auto get_v_table(INTERFACE const& interface) {
-  return v_table_downcast_to<INTERFACE>(interface.v_table_);
+  return unchecked_v_table_downcast_to<INTERFACE>(interface.v_table_);
 }
 
 template <is_interface TO, is_interface FROM>
@@ -179,7 +179,7 @@ TO unchecked_downcast_to(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
   return TO{std::move(from.erased_data_),
-            v_table_downcast_to<TO>(from.v_table_)};
+            unchecked_v_table_downcast_to<TO>(from.v_table_)};
 }
 
 template <is_interface TO, is_interface FROM>
