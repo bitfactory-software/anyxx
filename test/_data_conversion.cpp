@@ -162,7 +162,7 @@ TEST_CASE("_data_conversion move") {
   std::string s1 = "hallo";
   {
     auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = data::move_convert_to<unique>(std::move(vv1));
+    auto vv2 = data::move_to<unique>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning( push )
 #pragma warning( disable : 26800)
@@ -172,7 +172,7 @@ TEST_CASE("_data_conversion move") {
   }
   {
     auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = data::move_convert_to<shared_const>(std::move(vv1));
+    auto vv2 = data::move_to<shared_const>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning( push )
 #pragma warning( disable : 26800)

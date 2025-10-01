@@ -19,20 +19,20 @@ struct move_converter {
 };
 
 template <voidness VOIDNESS, is_erased_data FROM>
-requires (!voidness<FROM>)
+  requires(!voidness<FROM>)
 struct move_converter<observer<VOIDNESS>, FROM> {
   auto operator()(auto&&) { static_assert(false, "no move to observer!"); }
 };
 
 template <voidness TO, voidness FROM>
-requires const_correct_call<is_const_void<TO>, is_const_void<FROM>>
+  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>>
 struct move_converter<observer<TO>, FROM> {
   TO operator()(auto&& from) { return from; }
 };
 
 template <typename TO, typename FROM>
   requires moveable_from<TO, std::decay_t<FROM>>
-TO move_convert_to(FROM&& from) {
+TO move_to(FROM&& from) {
   return move_converter<TO, FROM>{}(std::move(from));
 }
 
