@@ -12,7 +12,7 @@
 
 namespace virtual_void::interface {
 
-template <typename TO_INTERFACE>
+template <is_interface TO_INTERFACE>
 auto find_v_table(const runtime::meta_data& meta_data)
     -> std::expected<typename TO_INTERFACE::v_table_t*,
                      virtual_void::runtime::cast_error> {
@@ -39,13 +39,13 @@ dynamic_interface_cast(VV_FROM const& vv_from,
   });
 }
 
-template <typename TO_INTERFACE, data::is_erased_data VV_FROM>
+template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 auto dynamic_interface_cast(VV_FROM const& vv_from,
                             runtime::base_v_table const* from) {
   return dynamic_interface_cast<TO_INTERFACE>(vv_from, *from->meta_data);
 }
 
-template <typename TO_INTERFACE, typename FROM_INTERFACE>
+template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
 auto dynamic_interface_cast(const FROM_INTERFACE& from_interface) {
   return dynamic_interface_clone_cast<TO_INTERFACE>(
       get_erased_data(from_interface), get_runtime(from_interface));
@@ -62,19 +62,19 @@ dynamic_interface_clone_cast(VV_FROM const& vv_from,
   });
 }
 
-template <typename TO_INTERFACE, data::is_erased_data VV_FROM>
+template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 auto dynamic_interface_clone_cast(VV_FROM const& vv_from,
                                   runtime::base_v_table const* from) {
   return dynamic_interface_cast<TO_INTERFACE>(vv_from, *from->meta_data);
 }
 
-template <typename TO_INTERFACE, typename FROM_INTERFACE>
+template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
 auto dynamic_interface_clone_cast(const FROM_INTERFACE& from_interface) {
   return dynamic_interface_clone_cast<TO_INTERFACE>(
       get_erased_data(from_interface), get_runtime(from_interface));
 }
 
-template <typename TO_INTERFACE, data::is_erased_data VV_FROM>
+template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 TO_INTERFACE move_to_interface(VV_FROM&& vv_from,
                                const runtime::meta_data& get_meta_data) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
@@ -83,7 +83,7 @@ TO_INTERFACE move_to_interface(VV_FROM&& vv_from,
   return TO_INTERFACE{move_convert_to<vv_to_t>(std::move(vv_from)), *v_table};
 }
 
-template <typename TO_INTERFACE, typename FROM_INTERFACE>
+template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
 TO_INTERFACE move_to_interface(FROM_INTERFACE&& from_interface) {
   return move_to_interface<TO_INTERFACE>(
       move_erased_data(std::move(from_interface)), get_runtime(from_interface));
