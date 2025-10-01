@@ -10,7 +10,7 @@ template <is_erased_data TO, is_erased_data FROM>
 struct cast_converter;
 
 template <typename TO, typename FROM>
-concept cast_convertable_from =
+concept castable_from =
     is_erased_data<FROM> && is_erased_data<TO> && requires(FROM f) {
       { cast_converter<TO, FROM>{}(f) } -> std::same_as<TO>;
     };
@@ -34,30 +34,29 @@ struct cast_converter<shared_const, shared_const> {
 };
 
 template <typename TO, typename FROM>
-  requires cast_convertable_from<TO, FROM>
+  requires castable_from<TO, FROM>
 TO cast_to(FROM const& from) {
   return cast_converter<TO, FROM>{}(from);
 }
 
-static_assert(!cast_convertable_from<mutable_observer, const_observer>);
-static_assert(cast_convertable_from<mutable_observer, mutable_observer>);
-static_assert(cast_convertable_from<mutable_observer, unique>);
-static_assert(!cast_convertable_from<mutable_observer, shared_const>);
+static_assert(!castable_from<mutable_observer, const_observer>);
+static_assert(castable_from<mutable_observer, mutable_observer>);
+static_assert(castable_from<mutable_observer, unique>);
+static_assert(!castable_from<mutable_observer, shared_const>);
 
-static_assert(cast_convertable_from<const_observer, const_observer>);
-static_assert(cast_convertable_from<const_observer, mutable_observer>);
-static_assert(cast_convertable_from<const_observer, unique>);
-static_assert(cast_convertable_from<const_observer, shared_const>);
+static_assert(castable_from<const_observer, const_observer>);
+static_assert(castable_from<const_observer, mutable_observer>);
+static_assert(castable_from<const_observer, unique>);
+static_assert(castable_from<const_observer, shared_const>);
 
-static_assert(!cast_convertable_from<shared_const, const_observer>);
-static_assert(!cast_convertable_from<shared_const, mutable_observer>);
-static_assert(!cast_convertable_from<shared_const, unique>);
-static_assert(cast_convertable_from<shared_const, shared_const>);
+static_assert(!castable_from<shared_const, const_observer>);
+static_assert(!castable_from<shared_const, mutable_observer>);
+static_assert(!castable_from<shared_const, unique>);
+static_assert(castable_from<shared_const, shared_const>);
 
-static_assert(!cast_convertable_from<unique, const_observer>);
-static_assert(!cast_convertable_from<unique, mutable_observer>);
-static_assert(!cast_convertable_from<unique, unique>);
-static_assert(!cast_convertable_from<unique, shared_const>);
-
+static_assert(!castable_from<unique, const_observer>);
+static_assert(!castable_from<unique, mutable_observer>);
+static_assert(!castable_from<unique, unique>);
+static_assert(!castable_from<unique, shared_const>);
 
 };  // namespace virtual_void::data
