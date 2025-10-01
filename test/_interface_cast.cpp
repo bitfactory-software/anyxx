@@ -28,13 +28,13 @@ TEST_CASE("_interface_cast") {
     REQUIRE(s == "3.140000");
 
     get_value_i<const_observer> i1 =
-        *dynamic_interface_cast<get_value_i<const_observer>>(to_string_i_co);
+        *query_interface<get_value_i<const_observer>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << " i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(to_string_i_co));
 
     auto queried =
-        dynamic_interface_cast<unused_i<const_observer>>(to_string_i_co);
+        query_interface<unused_i<const_observer>>(to_string_i_co);
     CHECK(!queried.has_value());
     CHECK(std::string(queried.error().to.name()) ==
           std::string(typeid(unused_i_v_table).name()));
@@ -46,7 +46,7 @@ TEST_CASE("_interface_cast") {
     std::cout << "shared_const i0: " << i0.to_string() << "\n";
 
     get_value_i<shared_const> i1 =
-        *dynamic_interface_cast<get_value_i<shared_const>>(i0);
+        *query_interface<get_value_i<shared_const>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
