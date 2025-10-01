@@ -180,10 +180,10 @@ TO unchecked_v_table_cast(FROM from)
 }
 
 template <is_interface TO, is_interface FROM>
-std::optional<TO> v_table_cast(const FROM& from)
+std::optional<TO> v_table_cast(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
-  if (is_derived_from<TO>(from)) return {unchecked_v_table_cast<TO>(from)};
+  if (is_derived_from<TO>(from)) return {unchecked_v_table_cast<TO>(std::move(from))};
   return {};
 }
 
