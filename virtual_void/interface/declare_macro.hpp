@@ -158,7 +158,7 @@
              void const_*, erased_data_t>)                               \
   {                                                                      \
     return static_cast<v_table_t*>(v_table_)->name(                      \
-        virtual_void::data::get_void_data_ptr(base_t::erased_data_)               \
+        virtual_void::data::get_void_data_ptr(base_t::erased_data_)      \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   }
 
@@ -261,7 +261,8 @@
     n& operator=(n&&) = default;                                               \
     template <virtual_void::data::is_erased_data OTHER>                        \
     friend class virtual_void::interface::base;                                \
-    template <typename TO, typename FROM>                                      \
+    template <virtual_void::interface::is_interface TO,                        \
+              virtual_void::interface::is_interface FROM>                      \
     friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \
       requires(std::derived_from<TO, FROM>);                                   \
     template <virtual_void::data::is_erased_data OTHER>                        \

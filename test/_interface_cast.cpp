@@ -69,6 +69,21 @@ TEST_CASE("_interface_cast") {
     sv0.set_value(sv0.get_value() * 2);
     REQUIRE(sv0.get_value() == 6.28);
     std::cout << "shared_const/unique sv0 (*2): " << sv0.get_value() << "\n";
+    {
+        get_value_i<const_observer> get_value_i_const_observer{sv0};
+        REQUIRE(get_value_i_const_observer.get_value() == 6.28);
+        auto svc = v_table_cast<set_value_i<const_observer>>(get_value_i_const_observer);
+        CHECK(svc);
+        //svc->set_value(666); // does not compile!
+    }
+    {
+        //get_value_i<unique> get_value_i_unique{sv0};
+        //REQUIRE(get_value_i_unique.get_value() == 6.28);
+        //auto svu = v_table_cast<set_value_i<unique>>(get_value_i_unique));
+        //CHECK(svu);
+        //svu->set_value(1.44);
+        //CHECK(svu->get_value() == 1.44);
+    }
   }
   {
     to_string_i<unique> i0{test::component_base::get_to_string_i_u(3.14)};

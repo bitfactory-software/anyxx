@@ -107,7 +107,7 @@ class base {
   template <is_interface I>
   friend inline auto get_v_table(I const& interface);
 
-  template <typename TO, typename FROM>
+  template <is_interface TO, is_interface FROM>
   friend inline TO unchecked_v_table_cast(FROM from)
     requires(std::derived_from<TO, FROM>);
 
@@ -160,7 +160,7 @@ template <data::is_erased_data VV>
 bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
   return get_v_table(interface)->_is_derived_from(from);
 }
-template <typename FROM, data::is_erased_data VV>
+template <is_interface FROM, data::is_erased_data VV>
 bool is_derived_from(base<VV> const& interface) {
   return is_derived_from(typeid(FROM::v_table_t), interface);
 }
@@ -172,14 +172,14 @@ void set_is_derived_from(auto v_table) {
   };
 }
 
-template <typename TO, typename FROM>
+template <is_interface TO, is_interface FROM>
 TO unchecked_v_table_cast(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
   return TO{std::move(from.erased_data_), pure_v_table_cast<TO>(from.v_table_)};
 }
 
-template <typename TO, typename FROM>
+template <is_interface TO, is_interface FROM>
 std::optional<TO> v_table_cast(const FROM& from)
   requires(std::derived_from<TO, FROM>)
 {
