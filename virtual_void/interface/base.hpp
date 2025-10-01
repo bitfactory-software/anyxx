@@ -76,7 +76,9 @@ class base {
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   base(OTHER&& other)
-    requires(std::derived_from<typename OTHER::v_table_t, v_table_t>)
+    requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
+             data::move_convertable_from<erased_data_t,
+                                         typename OTHER::erased_data_t>)
       : erased_data_(
             data::move_convert_to<ERASED_DATA>(std::move(other.erased_data_))),
         v_table_(get_v_table(other)) {}

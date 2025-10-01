@@ -5,8 +5,8 @@
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/clone.hpp>
-#include <virtual_void/interface/query.hpp>
 #include <virtual_void/interface/move.hpp>
+#include <virtual_void/interface/query.hpp>
 
 #include "./component_base/component_base.hpp"
 
@@ -29,7 +29,8 @@ TEST_CASE("_interface_cast") {
     auto s = to_string_i_co.to_string();
     REQUIRE(s == "3.140000");
 
-    static_assert(data::cast_convertable_from < get_value_i<const_observer>::erased_data_t,
+    static_assert(data::cast_convertable_from<
+                  get_value_i<const_observer>::erased_data_t,
                   get_value_i<const_observer>::erased_data_t>);
 
     get_value_i<const_observer> i1 =
@@ -55,14 +56,12 @@ TEST_CASE("_interface_cast") {
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
 
-    get_value_i<unique> iu1 =
-        *clone_to<get_value_i<unique>>(i0);
+    get_value_i<unique> iu1 = *clone_to<get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
     std::cout << "shared_const/unique iu1: " << iu1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(iu1) != get_void_data_ptr(i0));
 
-    set_value_i<unique> sv0 =
-        *clone_to<set_value_i<unique>>(iu1);
+    set_value_i<unique> sv0 = *clone_to<set_value_i<unique>>(iu1);
     REQUIRE(get_void_data_ptr(sv0) != get_void_data_ptr(i0));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "shared_const/unique sv0: " << sv0.get_value() << "\n";
@@ -70,19 +69,33 @@ TEST_CASE("_interface_cast") {
     REQUIRE(sv0.get_value() == 6.28);
     std::cout << "shared_const/unique sv0 (*2): " << sv0.get_value() << "\n";
     {
-        get_value_i<const_observer> get_value_i_const_observer{sv0};
-        REQUIRE(get_value_i_const_observer.get_value() == 6.28);
-        auto svc = v_table_cast<set_value_i<const_observer>>(get_value_i_const_observer);
-        CHECK(svc);
-        //svc->set_value(666); // does not compile!
+      get_value_i<const_observer> get_value_i_const_observer{sv0};
+      REQUIRE(get_value_i_const_observer.get_value() == 6.28);
+      auto svc =
+          v_table_cast<set_value_i<const_observer>>(get_value_i_const_observer);
+      CHECK(svc);
+      // svc->set_value(666); // does not compile!
     }
     {
-        //get_value_i<unique> get_value_i_unique{sv0};
-        //REQUIRE(get_value_i_unique.get_value() == 6.28);
-        //auto svu = v_table_cast<set_value_i<unique>>(get_value_i_unique));
-        //CHECK(svu);
-        //svu->set_value(1.44);
-        //CHECK(svu->get_value() == 1.44);
+      get_value_i<mutable_observer> get_value_i_const_observer{sv0};
+      REQUIRE(get_value_i_const_observer.get_value() == 6.28);
+      auto svc = v_table_cast<set_value_i<mutable_observer>>(
+          get_value_i_const_observer);
+      CHECK(svc);
+      svc->set_value(666);
+      REQUIRE(svc->get_value() == 666);
+    }
+    {
+      static_assert(std::derived_from<get_value_i<unique>::v_table_t,
+                                      get_value_i<unique>::v_table_t>);
+
+      get_value_i<unique> get_value_i_unique{std::move(sv0)};
+      REQUIRE(get_value_i_unique.get_value() == 666);
+      auto svu =
+          v_table_cast<set_value_i<unique>>(std::move(get_value_i_unique));
+      CHECK(svu);
+      svu->set_value(1.44);
+      CHECK(svu->get_value() == 1.44);
     }
   }
   {
