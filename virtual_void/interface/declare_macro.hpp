@@ -265,7 +265,7 @@
     friend class virtual_void::interface::base;                                \
     template <virtual_void::interface::is_interface TO,                        \
               virtual_void::interface::is_interface FROM>                      \
-    friend TO virtual_void::interface::unchecked_v_table_cast(FROM from)       \
+    friend TO virtual_void::interface::unchecked_downcast_to(FROM from)        \
       requires(std::derived_from<TO, FROM>);                                   \
     template <virtual_void::data::is_erased_data OTHER>                        \
     using type_for =                                                           \

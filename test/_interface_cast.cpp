@@ -72,14 +72,14 @@ TEST_CASE("_interface_cast") {
       get_value_i<const_observer> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
       auto svc =
-          v_table_cast<set_value_i<const_observer>>(get_value_i_const_observer);
+          downcast_to<set_value_i<const_observer>>(get_value_i_const_observer);
       CHECK(svc);
       // svc->set_value(666); // does not compile!
     }
     {
       get_value_i<mutable_observer> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
-      auto svc = v_table_cast<set_value_i<mutable_observer>>(
+      auto svc = downcast_to<set_value_i<mutable_observer>>(
           get_value_i_const_observer);
       CHECK(svc);
       svc->set_value(666);
@@ -92,7 +92,7 @@ TEST_CASE("_interface_cast") {
       get_value_i<unique> get_value_i_unique{std::move(sv0)};
       REQUIRE(get_value_i_unique.get_value() == 666);
       auto svu =
-          v_table_cast<set_value_i<unique>>(std::move(get_value_i_unique));
+          downcast_to<set_value_i<unique>>(std::move(get_value_i_unique));
       CHECK(svu);
       svu->set_value(1.44);
       CHECK(svu->get_value() == 1.44);
@@ -105,7 +105,7 @@ TEST_CASE("_interface_cast") {
 
     base<unique> i1b = *clone_to<get_value_i<unique>>(i0);
     auto i1{
-        std::move(unchecked_v_table_cast<get_value_i<unique>>(std::move(i1b)))};
+        std::move(unchecked_downcast_to<get_value_i<unique>>(std::move(i1b)))};
 
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "unique i1: " << i1.get_value() << "\n";

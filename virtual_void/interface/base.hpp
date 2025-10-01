@@ -110,7 +110,7 @@ class base {
   friend inline auto get_v_table(I const& interface);
 
   template <is_interface TO, is_interface FROM>
-  friend inline TO unchecked_v_table_cast(FROM from)
+  friend inline TO unchecked_downcast_to(FROM from)
     requires(std::derived_from<TO, FROM>);
 
   void operator()() const {}
@@ -140,17 +140,17 @@ auto get_void_data_ptr(base<ERASED_DATA> const& interface) {
 }
 
 template <typename TO>
-auto pure_v_table_cast(runtime::base_v_table* v_table) {
+auto v_table_downcast_to(runtime::base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
 template <is_interface TO>
-auto pure_v_table_cast(runtime::base_v_table* v_table) {
-  return pure_v_table_cast<typename TO::v_table_t>(v_table);
+auto v_table_downcast_to(runtime::base_v_table* v_table) {
+  return v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
 template <is_interface INTERFACE>
 inline auto get_v_table(INTERFACE const& interface) {
-  return pure_v_table_cast<INTERFACE>(interface.v_table_);
+  return v_table_downcast_to<INTERFACE>(interface.v_table_);
 }
 
 template <is_interface INTERFACE>
@@ -175,17 +175,18 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <is_interface TO, is_interface FROM>
-TO unchecked_v_table_cast(FROM from)
+TO unchecked_downcast_to(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
-  return TO{std::move(from.erased_data_), pure_v_table_cast<TO>(from.v_table_)};
+  return TO{std::move(from.erased_data_), v_table_downcast_to<TO>(from.v_table_)};
 }
 
 template <is_interface TO, is_interface FROM>
-std::optional<TO> v_table_cast(FROM from)
+std::optional<TO> downcast_to(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
-  if (is_derived_from<TO>(from)) return {unchecked_v_table_cast<TO>(std::move(from))};
+  if (is_derived_from<TO>(from))
+    return {unchecked_downcast_to<TO>(std::move(from))};
   return {};
 }
 

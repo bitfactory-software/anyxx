@@ -202,7 +202,7 @@ TEST_CASE("dynamic v_table const_observer") {
   }
 
   //    base< void* > base_v = shape_circle; ->
-  //    v_table_cast may not compile!
+  //    downcast_to may not compile!
   virtual_void::interface::base<data::const_observer> base_shape = shape_circle;
   virtual_void::interface::base<data::const_observer> base_shapeX =
       shape_circleX;
@@ -213,24 +213,24 @@ TEST_CASE("dynamic v_table const_observer") {
   REQUIRE(is_derived_from<shapeX>(shape_circleX));
   static_assert(std::derived_from<shape, shape_base_v>);
   static_assert(std::derived_from<shapeX, shape_base_v>);
-  REQUIRE(virtual_void::interface::v_table_cast<shapeX>(base_shape));
-  REQUIRE(!virtual_void::interface::v_table_cast<shape>(shape_circleX));
+  REQUIRE(virtual_void::interface::downcast_to<shapeX>(base_shape));
+  REQUIRE(!virtual_void::interface::downcast_to<shape>(shape_circleX));
   {
     shape upcasted_shape =
-        virtual_void::interface::unchecked_v_table_cast<shape>(base_shape);
+        virtual_void::interface::unchecked_downcast_to<shape>(base_shape);
     print_shape(upcasted_shape);
   }
 
   shape_base_v shape_circle_base = shape_circle;
   {
     shape shape_is_circle =
-        virtual_void::interface::unchecked_v_table_cast<shape>(
+        virtual_void::interface::unchecked_downcast_to<shape>(
             shape_circle_base);
     print_shape(shape_is_circle);
   }
   {
     auto shape_is_circle =
-        virtual_void::interface::v_table_cast<shape>(shape_circle_base);
+        virtual_void::interface::downcast_to<shape>(shape_circle_base);
     REQUIRE(shape_is_circle);
     print_shape(*shape_is_circle);
   }
