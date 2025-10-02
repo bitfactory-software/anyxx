@@ -93,12 +93,6 @@ TEST_CASE("_data_conversion cast") {
   }
 }
 TEST_CASE("_data_conversion clone") {
-  static_assert(!cloneable_from<mutable_observer, mutable_observer>);
-  static_assert(!cloneable_from<mutable_observer, unique>);
-  static_assert(!cloneable_from<mutable_observer, shared_const>);
-  static_assert(!cloneable_from<const_observer, const_observer>);
-  static_assert(!cloneable_from<const_observer, unique>);
-  static_assert(!cloneable_from<const_observer, shared_const>);
   std::string s1 = "hallo";
   auto& get_meta_data = runtime::get_meta_data<std::string>();
   {

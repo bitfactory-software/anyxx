@@ -12,6 +12,7 @@ struct trait<shared_const> {
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
+  static constexpr bool is_owner = true;
 
   static void const* value(const auto& ptr) { return ptr.get(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }

@@ -11,6 +11,7 @@ template <class E>
 concept is_erased_data = requires(E e) {
   typename trait<E>::void_t;
   { trait<E>::is_constructibile_from_const } -> std::convertible_to<bool>;
+  { trait<E>::is_owner } -> std::convertible_to<bool>;
   { trait<E>::value(e) } -> std::convertible_to<typename trait<E>::void_t>;
   { trait<E>::has_value(e) } -> std::convertible_to<bool>;
 };

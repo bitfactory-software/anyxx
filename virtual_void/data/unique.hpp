@@ -33,6 +33,7 @@ struct trait<data::unique> {
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
+  static constexpr bool is_owner = true;
 
   static void* value(const auto& ptr) { return ptr.get(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
