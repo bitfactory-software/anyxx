@@ -7,7 +7,7 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/query.hpp>
+#include <virtual_void/interface/borrow.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
