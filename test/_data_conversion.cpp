@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/cast.hpp>
+#include <virtual_void/data/borrow.hpp>
 #include <virtual_void/data/clone.hpp>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
