@@ -1,9 +1,7 @@
 #pragma once
 
 #include <virtual_void/data/move.hpp>
-#include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/query.hpp>
-#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/interface/query_v_table.hpp>
 
 namespace virtual_void::interface {
 

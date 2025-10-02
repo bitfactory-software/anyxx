@@ -4,9 +4,9 @@
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/borrow.hpp>
 #include <virtual_void/interface/clone.hpp>
 #include <virtual_void/interface/move.hpp>
-#include <virtual_void/interface/query.hpp>
 
 #include "./component_base/component_base.hpp"
 
@@ -29,9 +29,9 @@ TEST_CASE("_interface_cast") {
     auto s = to_string_i_co.to_string();
     REQUIRE(s == "3.140000");
 
-    static_assert(data::borrowable_from<
-                  get_value_i<const_observer>::erased_data_t,
-                  get_value_i<const_observer>::erased_data_t>);
+    static_assert(
+        data::borrowable_from<get_value_i<const_observer>::erased_data_t,
+                              get_value_i<const_observer>::erased_data_t>);
 
     get_value_i<const_observer> i1 =
         *borrow_as<get_value_i<const_observer>>(to_string_i_co);
@@ -50,8 +50,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "shared_const i0: " << i0.to_string() << "\n";
 
-    get_value_i<shared_const> i1 =
-        *borrow_as<get_value_i<shared_const>>(i0);
+    get_value_i<shared_const> i1 = *borrow_as<get_value_i<shared_const>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "shared_const i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
