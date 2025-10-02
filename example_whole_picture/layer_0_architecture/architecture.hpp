@@ -26,13 +26,13 @@ using namespace virtual_void::interface;
 namespace whole_picture::architecture {
 
 struct point {
-  int x = 0, y = 0;
+  std::size_t x = 0, y = 0;
 };
 
 VV_INTERFACE(surface, (VV_METHOD(void, write, point, char), VV_CONST_METHOD(void, flush)))
 using mutable_observed_surface = surface<virtual_void::data::mutable_observer>;
 using unique_surface = surface<virtual_void::data::unique>;
-ARCHITECTURE_BASE_EXPORT unique_surface screen();
+ARCHITECTURE_BASE_EXPORT unique_surface screen(std::size_t size_x, std::size_t size_y);
 
 VV_INTERFACE(drawable, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
 
