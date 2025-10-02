@@ -34,10 +34,10 @@ VV_INTERFACE(value2_i, (VV_CONST_METHOD(int, value2)))
 namespace _21_Tree_TE_erased_interface_w_cast {
 
 auto as_lisp_(auto const& v) {
-  return query_interface<lisp_i<const_observer>>(v)->as_lisp();
+  return borrow_as<lisp_i<const_observer>>(v)->as_lisp();
 }
 auto value2_(auto const& v) {
-  return query_interface<value2_i<const_observer>>(v)->value2();
+  return borrow_as<value2_i<const_observer>>(v)->value2();
 }
 
 struct Plus {
