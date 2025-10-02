@@ -24,71 +24,71 @@ using namespace TestDomain;
 
 VV_RUNTIME_STATIC(std::string)
 
-TEST_CASE("_data_conversion cast") {
+TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";
   {
     auto vv1 = erased<const_observer>(s1);
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::cast_to<mutable_observer>(vv1);
+    auto vv2 = data::borrow_as<mutable_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<const_observer>(s1);
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::cast_to<mutable_observer>(vv1);
+    auto vv2 = data::borrow_as<mutable_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<const_observer>(s1);
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::cast_to<mutable_observer>(vv1);
+    auto vv2 = data::borrow_as<mutable_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = data::cast_to<const_observer>(vv1);
+    auto vv2 = data::borrow_as<const_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = data::cast_to<mutable_observer>(vv1);
+    auto vv2 = data::borrow_as<mutable_observer>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
   {
     auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = data::cast_to<shared_const>(vv1);
+    auto vv2 = data::borrow_as<shared_const>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
   }
 }

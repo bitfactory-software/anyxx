@@ -240,7 +240,7 @@
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
       requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&      \
-               virtual_void::data::castable_from<                              \
+               virtual_void::data::borrowable_from<                            \
                    erased_data_t, typename OTHER::erased_data_t>)              \
         : base_t(other) {}                                                     \
     template <virtual_void::interface::is_interface OTHER>                     \

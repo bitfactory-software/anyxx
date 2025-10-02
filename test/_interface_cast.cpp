@@ -29,7 +29,7 @@ TEST_CASE("_interface_cast") {
     auto s = to_string_i_co.to_string();
     REQUIRE(s == "3.140000");
 
-    static_assert(data::castable_from<
+    static_assert(data::borrowable_from<
                   get_value_i<const_observer>::erased_data_t,
                   get_value_i<const_observer>::erased_data_t>);
 
