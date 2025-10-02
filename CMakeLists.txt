@@ -38,6 +38,7 @@ target_compile_features(virtual_void PUBLIC cxx_std_23)
 
 enable_testing()
 
+add_subdirectory ("example_whole_picture")
 add_subdirectory ("test")
 
 include(CTest)
