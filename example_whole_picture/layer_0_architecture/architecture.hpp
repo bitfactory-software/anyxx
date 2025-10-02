@@ -1,3 +1,5 @@
+#pragma once 
+
 #include <string>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
@@ -23,6 +25,17 @@ using namespace virtual_void::interface;
 
 namespace whole_picture::architecture {
 
+struct point {
+  int x = 0, y = 0;
+};
+
+VV_INTERFACE(surface, (VV_METHOD(void, write, point, char), VV_CONST_METHOD(void, flush)))
+using mutable_observed_surface = surface<virtual_void::data::mutable_observer>;
+using unique_surface = surface<virtual_void::data::unique>;
+ARCHITECTURE_BASE_EXPORT unique_surface screen();
+
+VV_INTERFACE(drawable, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
+
 ARCHITECTURE_BASE_EXPORT std::string hello();
 
-}  // namespace whole_picture::core
+}  // namespace whole_picture::architecture
