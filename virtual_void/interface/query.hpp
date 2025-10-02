@@ -32,12 +32,6 @@ std::expected<TO_INTERFACE, virtual_void::runtime::cast_error> borrow_as(
   });
 }
 
-template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
-  requires data::borrowable_from<typename TO_INTERFACE::erased_data_t, VV_FROM>
-auto borrow_as(VV_FROM const& vv_from, runtime::base_v_table const* from) {
-  return borrow_as<TO_INTERFACE>(vv_from, *from->meta_data);
-}
-
 template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
   requires data::borrowable_from<typename TO_INTERFACE::erased_data_t,
                                  typename FROM_INTERFACE::erased_data_t>
