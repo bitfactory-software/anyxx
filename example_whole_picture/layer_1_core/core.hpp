@@ -17,6 +17,8 @@
 
 namespace whole_picture::core {
 
+
+
 CORE_EXPORT std::string hello();
 
 }  // namespace whole_picture::core

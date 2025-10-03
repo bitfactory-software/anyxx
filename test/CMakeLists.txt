@@ -29,6 +29,7 @@ target_link_libraries(test_all
     component_base
     Catch2::Catch2WithMain
 )
+set_target_properties(test_all PROPERTIES FOLDER "virtual_void")
 
 include(Catch)
 catch_discover_tests(test_all)
