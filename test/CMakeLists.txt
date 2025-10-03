@@ -19,6 +19,8 @@ if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
 endif()
 target_compile_features(component_base PUBLIC cxx_std_20)
+set_target_properties(component_base PROPERTIES FOLDER "_test_all")
+
 
 
 file(GLOB test_all_hpp_files "*.hpp")
@@ -29,7 +31,7 @@ target_link_libraries(test_all
     component_base
     Catch2::Catch2WithMain
 )
-set_target_properties(test_all PROPERTIES FOLDER "virtual_void")
+set_target_properties(test_all PROPERTIES FOLDER "_test_all")
 
 include(Catch)
 catch_discover_tests(test_all)

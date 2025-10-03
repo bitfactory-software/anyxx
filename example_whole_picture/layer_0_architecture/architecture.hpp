@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 
 #include <string>
 #include <virtual_void/data/observer.hpp>
@@ -26,15 +26,26 @@ using namespace virtual_void::interface;
 namespace whole_picture::architecture {
 
 struct point {
-  std::size_t x = 0, y = 0;
+  int x = 0, y = 0;
+};
+struct size {
+  int cx = 0, cy = 0;
+};
+inline point operator-(point p) { return {.x = -p.x, .y = -p.y}; }
+inline point operator+(point p, size s) {
+  return {.x = p.x + s.cx, .y = p.y + s.cy};
+};
+inline size operator-(size p) { return {.cx = -p.cx, .cy = -p.cy}; }
+inline size operator+(size l, size r) {
+  return {.cx = l.cx + r.cx, .cy = l.cy + r.cy};
 };
 
-VV_INTERFACE(surface, (VV_METHOD(void, write, point, char), VV_CONST_METHOD(void, flush)))
+VV_INTERFACE(surface, (VV_METHOD(void, write, point, char),
+                       VV_CONST_METHOD(void, flush)))
 using mutable_observed_surface = surface<virtual_void::data::mutable_observer>;
 using unique_surface = surface<virtual_void::data::unique>;
-ARCHITECTURE_BASE_EXPORT unique_surface screen(std::size_t size_x, std::size_t size_y);
 
-VV_INTERFACE(drawable, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
+VV_INTERFACE(shape, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
 
 ARCHITECTURE_BASE_EXPORT std::string hello();
 
