@@ -1,16 +1,18 @@
+#pragma once
+
 #include <cmath>
 #include <example_whole_picture/layer_0_architecture/architecture.hpp>
 #include <ranges>
 
 namespace whole_picture::architecture::draw{
 
-void line(auto const surface, point p1, point p2){
-  if (p1 == p2) return;
+void line(auto const surface, point p1_, point p2_){
+  if (p1_ == p2_) return;
 
   const auto ch = '*';
 
-  p1 = point{std::min(p1.x, p2.x), p1.y};
-  p2 = point{std::max(p1.x, p2.x), p2.y};
+  auto p1 = point{std::min(p1_.x, p2_.x), p1_.y};
+  auto p2 = point{std::max(p1_.x, p2_.x), p2_.y};
 #
   auto dx = p2.x - p1.x;
   if (!dx) {

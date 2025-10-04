@@ -1,3 +1,5 @@
+#pragma once
+
 #include <cmath>
 #include <example_whole_picture/layer_0_architecture/architecture.hpp>
 #include <ranges>

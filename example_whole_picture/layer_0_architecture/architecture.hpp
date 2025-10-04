@@ -11,14 +11,14 @@
 using namespace virtual_void;
 using namespace virtual_void::interface;
 
-#ifndef ARCHITECTURE_BASE_EXPORT
-#define ARCHITECTURE_BASE_EXPORT
+#ifndef ARCHITECTURE_EXPORT
+#define ARCHITECTURE_EXPORT
 #endif
 
 #ifdef ARCHITECTURE_SHARED
 #ifdef _MSVC_LANG
-#undef ARCHITECTURE_BASE_EXPORT
-#define ARCHITECTURE_BASE_EXPORT __declspec(dllexport)
+#undef ARCHITECTURE_EXPORT
+#define ARCHITECTURE_EXPORT __declspec(dllexport)
 #pragma message("architecturue -> dll")
 #endif
 #endif
@@ -42,13 +42,12 @@ inline size operator+(size l, size r) {
   return {.cx = l.cx + r.cx, .cy = l.cy + r.cy};
 };
 
-VV_INTERFACE(surface, (VV_METHOD(void, write, point, char),
-                       VV_CONST_METHOD(void, flush)))
+VV_INTERFACE(surface, (VV_METHOD(void, write, point, char)))
 using mutable_observed_surface = surface<virtual_void::data::mutable_observer>;
 using unique_surface = surface<virtual_void::data::unique>;
 
 VV_INTERFACE(shape, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
 
-ARCHITECTURE_BASE_EXPORT std::string hello();
+ARCHITECTURE_EXPORT std::string hello();
 
 }  // namespace whole_picture::architecture
