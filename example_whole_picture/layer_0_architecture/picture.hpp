@@ -3,18 +3,22 @@
 #include <assert.h>
 
 #include <example_whole_picture/layer_0_architecture/architecture.hpp>
+#include <initializer_list>
 #include <vector>
 
 namespace whole_picture::architecture {
 
 class ARCHITECTURE_EXPORT picture {
+ public:
   using line = std::vector<char>;
-  std::vector<line> lines_;
 
+ private:
+  std::vector<line> lines_;
   static auto make_line(std::size_t size_x) { return line(size_x, ' '); }
 
  public:
   picture(std::size_t size_x, std::size_t size_y);
+  picture(std::initializer_list<std::string_view> const& lines);
   size get_size() const;
   void write(point p, char ch);
   void draw(mutable_observed_surface const& surface, point p, char ch);

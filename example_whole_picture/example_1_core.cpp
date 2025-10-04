@@ -3,6 +3,7 @@
 #include <example_whole_picture/layer_0_architecture/picture.hpp>
 #include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
 #include <example_whole_picture/layer_1_core/shapes/line/factory.hpp>
+#include <example_whole_picture/layer_1_core/shapes/picture/factory.hpp>
 #include <iostream>
 #include <ranges>
 
@@ -23,7 +24,7 @@ TEST_CASE("example 1 core") {
 
 TEST_CASE("example 2 core circle") {
   for (auto r : std::views::iota(1, 7)) {
-    picture b{80, 25};
+    architecture::picture b{80, 25};
     auto c = make_circle({12, 12}, r);
     mutable_observed_surface s{b};
     c.draw(s);
@@ -33,28 +34,28 @@ TEST_CASE("example 2 core circle") {
 
 TEST_CASE("example 3 core line") {
   {
-    picture b{80, 25};
+    architecture::picture b{80, 25};
     auto l = make_line({0, 24}, {79, 0});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();
   }
   {
-    picture b{80, 25};
+    architecture::picture b{80, 25};
     auto l = make_line({0, 0}, {0, 24});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();
   }
   {
-    picture b{80, 25};
+    architecture::picture b{80, 25};
     auto l = make_line({0, 0}, {79, 0});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();
   }
   {
-    picture b{80, 25};
+    architecture::picture b{80, 25};
     auto l = make_line({0, 0}, {79, 24});
     mutable_observed_surface s{b};
     l.draw(s);
@@ -63,4 +64,12 @@ TEST_CASE("example 3 core line") {
 }
 
 TEST_CASE("example 3 architecture picture") {
+  {
+    architecture::picture duck{"  __", ">(o )___", " ( ._> /", "  `---'"};
+    architecture::picture b{80, 25};
+    auto pic = make_picture({5, 5}, duck);
+    mutable_observed_surface s{b};
+    pic.draw(s);
+    b.flush();
+  }
 }
