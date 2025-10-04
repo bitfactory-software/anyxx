@@ -47,15 +47,15 @@ struct buffer {
 VV_RUNTIME_STATIC(buffer)
 runtime::class_<buffer>::implements<surface> __;
 
-// TEST_CASE("example 2 core circle") {
-//   for (auto r : std::views::iota(1, 11)) {
-//     buffer b{80, 25};
-//     auto c = make_circle({12, 12}, r);
-//     mutable_observed_surface s{b};
-//     c.draw(s);
-//     b.flush();
-//   }
-// }
+TEST_CASE("example 2 core circle") {
+  for (auto r : std::views::iota(1, 7)) {
+    buffer b{80, 25};
+    auto c = make_circle({12, 12}, r);
+    mutable_observed_surface s{b};
+    c.draw(s);
+    b.flush();
+  }
+}
 
 TEST_CASE("example 3 core line") {
   {
