@@ -1,5 +1,5 @@
-#include "circle_factory.hpp"
-#include "circle.hpp"
+#include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
+#include <example_whole_picture/layer_1_core/shapes/circle/object.hpp>
 
 using namespace whole_picture;
 using namespace whole_picture::core;

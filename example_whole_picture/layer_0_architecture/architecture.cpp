@@ -1,4 +1,4 @@
-#include "architecture.hpp"
+#include <example_whole_picture/layer_0_architecture/architecture.hpp>
 
 
 using namespace virtual_void;

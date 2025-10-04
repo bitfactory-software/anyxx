@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core.hpp"
+#include <example_whole_picture/layer_1_core/core.hpp>
 
 namespace whole_picture::core {
 

@@ -2,8 +2,8 @@
 #include <iostream>
 #include <ranges>
 
-#include "layer_0_architecture/architecture.hpp"
-#include "layer_1_core/circle_factory.hpp"
+#include <example_whole_picture/layer_0_architecture/architecture.hpp>
+#include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
 
 using namespace Catch::Matchers;
 

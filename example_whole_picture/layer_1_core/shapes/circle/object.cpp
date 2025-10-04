@@ -1,5 +1,4 @@
-#include "circle.hpp"
-
+#include <example_whole_picture/layer_1_core/shapes/circle/object.hpp>
 #include <ranges>
 
 using namespace whole_picture;
