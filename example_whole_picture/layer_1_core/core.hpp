@@ -23,7 +23,7 @@ CORE_EXPORT shape make_line(architecture::point from,
                                architecture::point to);
 
 CORE_EXPORT shape make_circle(architecture::point center,
-                                 std::size_t radius);
+                                 int radius);
 
 CORE_EXPORT std::string hello();
 

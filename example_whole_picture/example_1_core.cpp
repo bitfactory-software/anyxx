@@ -48,10 +48,11 @@ VV_RUNTIME_STATIC(buffer)
 runtime::class_<buffer>::implements<surface> __;
 
 TEST_CASE("example 2 core circle") {
-  buffer b{80, 25};
-  auto c = make_circle({3, 3}, 1);
-  mutable_observed_surface s{b};
-  c.draw(s);
-  b.flush();
+  for (auto r : std::views::iota(1, 11)) {
+    buffer b{80, 25};
+    auto c = make_circle({12, 12}, r);
+    mutable_observed_surface s{b};
+    c.draw(s);
+    b.flush();
+  }
 }
-
