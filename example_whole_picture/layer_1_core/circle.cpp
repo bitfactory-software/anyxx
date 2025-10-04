@@ -14,16 +14,17 @@ VV_RUNTIME_IMPEMENTATION(circle)
 class_<circle>::implements<architecture::shape> __;
 
 void circle::draw(architecture::mutable_observed_surface const& surface) const {
+  const auto ch = '*';
   auto writeToAllQuadrants = [&](int x1, int x2, int y1, int y2) {
-    surface.write({x1 + center.x, -y1 + center.y}, '.');
-    surface.write({-x1 + center.x, -y1 + center.y}, '.');
-    surface.write({x2 + center.x, y2 + center.y}, '.');
-    surface.write({-x2 + center.x, y2 + center.y}, '.');
+    surface.write({x1 + center.x, -y1 + center.y}, ch);
+    surface.write({-x1 + center.x, -y1 + center.y}, ch);
+    surface.write({x2 + center.x, y2 + center.y}, ch);
+    surface.write({-x2 + center.x, y2 + center.y}, ch);
   };
 
   int x = radius, y = 0;
 
-  surface.write({x + center.x, y + center.y}, '.');
+  surface.write({x + center.x, y + center.y}, ch);
   if (radius > 0) writeToAllQuadrants(x, y, y, x);
 
   int P = 1 - radius;
@@ -41,7 +42,7 @@ void circle::draw(architecture::mutable_observed_surface const& surface) const {
     if (x != y) writeToAllQuadrants(y, y, x, x);
   }
 
-  surface.write({center.x, -radius + center.y}, '.');
+  surface.write({center.x, -radius + center.y}, ch);
 }
 
 shape core::make_circle(architecture::point center, int radius) {
