@@ -9,7 +9,6 @@ namespace whole_picture::core {
 struct line {
   line(architecture::point p1_, architecture::point p2_) : p1(p1_), p2(p2_) {}
   architecture::point p1 = {0, 0}, p2 = {0, 0};
-  CORE_EXPORT void draw(architecture::mutable_observed_surface const& to) const;
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING_DEFAULT(line);
 };
 

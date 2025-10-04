@@ -238,7 +238,7 @@ TEST_CASE("dynamic v_table const_observer") {
   print_shape_f(full_shape_observer{p});
 }
 
-TEST_CASE("dynamic interface m_table::shared_const") {
+TEST_CASE("dynamic interface shared_const") {
   auto c = std::make_shared<circle>(12.3);
   auto s = std::make_shared<square>(32);
   auto r = std::make_shared<rectangle>(12, 9);
@@ -273,7 +273,7 @@ namespace {
 void print_shape_i_co(shape_i<data::const_observer> s) { s.draw({1, 2}); }
 
 }  // namespace
-TEST_CASE("dynamic interface has_type_info::unique") {
+TEST_CASE("dynamic interface unique") {
   auto c = std::make_unique<circle>(12.3);
 
   using shape_unique = shape_i<data::unique>;

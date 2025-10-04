@@ -1,3 +1,4 @@
+#include <example_whole_picture/layer_0_architecture/draw/line.hpp>
 #include <example_whole_picture/layer_1_core/shapes/line/factory.hpp>
 #include <example_whole_picture/layer_1_core/shapes/line/object.hpp>
 
@@ -10,6 +11,15 @@ using namespace virtual_void::runtime;
 
 VV_RUNTIME_IMPEMENTATION(line)
 class_<line>::implements<architecture::shape> __;
+
+template <>
+struct architecture::shape_v_table_map<line>
+    : architecture::shape_default_v_table_map<line> {
+  void draw(line const* self,
+            architecture::mutable_observed_surface const& surface) const {
+    architecture::draw::line(surface, self->p1, self->p2);
+  }
+};
 
 shape core::make_line(architecture::point p1, architecture::point p2) {
   return std::make_shared<line>(p1, p2);
