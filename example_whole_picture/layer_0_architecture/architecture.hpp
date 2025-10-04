@@ -27,9 +27,11 @@ namespace whole_picture::architecture {
 
 struct point {
   int x = 0, y = 0;
+  auto operator<=>(point const&) const = default;
 };
 struct size {
   int cx = 0, cy = 0;
+  auto operator<=>(size const&) const = default;
 };
 inline point operator-(point p) { return {.x = -p.x, .y = -p.y}; }
 inline point operator+(point p, size s) {

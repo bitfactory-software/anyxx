@@ -1,10 +1,9 @@
 #include <catch.hpp>
-#include <iostream>
-#include <ranges>
-
 #include <example_whole_picture/layer_0_architecture/architecture.hpp>
 #include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
 #include <example_whole_picture/layer_1_core/shapes/line/factory.hpp>
+#include <iostream>
+#include <ranges>
 
 using namespace Catch::Matchers;
 
@@ -31,7 +30,7 @@ struct buffer {
   }
   void write(point p, char ch) {
     if (p.x >= 0 && p.x < buffer_[0].size())
-      if (p.y >= 0 && p.x < buffer_.size()) {
+      if (p.y >= 0 && p.y < buffer_.size()) {
         buffer_[p.y][p.x] = ch;
       }
   }
@@ -48,21 +47,50 @@ struct buffer {
 VV_RUNTIME_STATIC(buffer)
 runtime::class_<buffer>::implements<surface> __;
 
-TEST_CASE("example 2 core circle") {
-  for (auto r : std::views::iota(1, 11)) {
-    buffer b{80, 25};
-    auto c = make_circle({12, 12}, r);
-    mutable_observed_surface s{b};
-    c.draw(s);
-    b.flush();
-  }
-}
+// TEST_CASE("example 2 core circle") {
+//   for (auto r : std::views::iota(1, 11)) {
+//     buffer b{80, 25};
+//     auto c = make_circle({12, 12}, r);
+//     mutable_observed_surface s{b};
+//     c.draw(s);
+//     b.flush();
+//   }
+// }
 
 TEST_CASE("example 3 core line") {
-
-buffer b{80, 25};
-auto c = make_line({12, 12}, {13, 13});
-mutable_observed_surface s{b};
-c.draw(s);
-b.flush();
+  {
+    buffer b{80, 25};
+    auto l = make_line({0, 25}, {5, 20});
+    mutable_observed_surface s{b};
+    l.draw(s);
+    b.flush();
+  }
+  {
+    buffer b{80, 25};
+    auto l = make_line({0, 0}, {80, 25});
+    mutable_observed_surface s{b};
+    l.draw(s);
+    b.flush();
+  }
+  {
+    buffer b{80, 25};
+    auto l = make_line({0, 0}, {0, 25});
+    mutable_observed_surface s{b};
+    l.draw(s);
+    b.flush();
+  }
+  {
+    buffer b{80, 25};
+    auto l = make_line({0, 0}, {80, 0});
+    mutable_observed_surface s{b};
+    l.draw(s);
+    b.flush();
+  }
+  {
+    buffer b{80, 25};
+    auto l = make_line({0, 0}, {80, 25});
+    mutable_observed_surface s{b};
+    l.draw(s);
+    b.flush();
+  }
 }
