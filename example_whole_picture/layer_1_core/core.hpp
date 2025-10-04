@@ -20,8 +20,6 @@ namespace whole_picture::core {
 
 using shape = architecture::shape<virtual_void::data::shared_const>;
 
-CORE_EXPORT shape make_line(architecture::point from, architecture::point to);
-
 CORE_EXPORT std::string hello();
 
 }  // namespace whole_picture::core

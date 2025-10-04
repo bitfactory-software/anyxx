@@ -4,6 +4,7 @@
 
 #include <example_whole_picture/layer_0_architecture/architecture.hpp>
 #include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
+#include <example_whole_picture/layer_1_core/shapes/line/factory.hpp>
 
 using namespace Catch::Matchers;
 
@@ -55,4 +56,13 @@ TEST_CASE("example 2 core circle") {
     c.draw(s);
     b.flush();
   }
+}
+
+TEST_CASE("example 3 core line") {
+
+buffer b{80, 25};
+auto c = make_line({12, 12}, {13, 13});
+mutable_observed_surface s{b};
+c.draw(s);
+b.flush();
 }
