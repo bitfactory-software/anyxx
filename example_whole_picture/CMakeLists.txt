@@ -4,8 +4,8 @@ endif()
 
 set(CMAKE_CXX_STANDARD 23)
 
-file(GLOB_RECURSE layer_0_architecture_cpp_files "./layer_0_architecture/*.hpp")
-file(GLOB_RECURSE layer_0_architecture_hpp_files "./layer_0_architecture/*.cpp")
+file(GLOB_RECURSE layer_0_architecture_cpp_files "./layer_0_architecture/*.cpp")
+file(GLOB_RECURSE layer_0_architecture_hpp_files "./layer_0_architecture/*.hpp")
 add_library(layer_0_architecture ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
 set_target_properties(layer_0_architecture PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(layer_0_architecture 
@@ -20,8 +20,8 @@ target_include_directories(layer_0_architecture PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
 
-file(GLOB_RECURSE layer_1_core_cpp_files "./layer_1_core/*.hpp")
-file(GLOB_RECURSE layer_1_core_hpp_files "./layer_1_core/*.cpp")
+file(GLOB_RECURSE layer_1_core_cpp_files "./layer_1_core/*.cpp")
+file(GLOB_RECURSE layer_1_core_hpp_files "./layer_1_core/*.hpp")
 add_library(layer_1_core ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
 set_target_properties(layer_1_core PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(layer_1_core 

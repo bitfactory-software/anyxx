@@ -25,15 +25,15 @@ set(CMAKE_CXX_STANDARD 23)
 # +++ virtual_void library
 file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "./virtual_void/*.hpp")
 file(GLOB_RECURSE VIRTUAL_VOID_SOURCES "./virtual_void/*.cpp")
-add_library(virtual_void ${VIRTUAL_VOID_HEADERS} ${VIRTUAL_VOID_SOURCES})
-target_include_directories(virtual_void PUBLIC 
+add_library(virtual_void INTERFACE ${VIRTUAL_VOID_HEADERS} ${VIRTUAL_VOID_SOURCES})
+target_include_directories(virtual_void INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-if (BUILD_SHARED_LIBS AND MSVC)
-    target_compile_definitions(virtual_void PRIVATE VV_SHARED)
-endif()
-target_compile_features(virtual_void PUBLIC cxx_std_23)
+#if (BUILD_SHARED_LIBS AND MSVC)
+#    target_compile_definitions(virtual_void PRIVATE VV_SHARED)
+#endif()
+#target_compile_features(virtual_void PUBLIC cxx_std_23)
 set_target_properties(virtual_void PROPERTIES FOLDER "virtual_void")
 # --- virtual_void library
 
@@ -53,9 +53,9 @@ message("PROJECT_SOURCE_DIR: " "${PROJECT_SOURCE_DIR}")
 # Install the library and its headers
 install(TARGETS virtual_void
         EXPORT virtual_void_targets
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+##        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+##        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+##        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(DIRECTORY virtual_void/ # tailing slash is important here!
