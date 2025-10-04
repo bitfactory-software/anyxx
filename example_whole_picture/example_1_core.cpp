@@ -60,14 +60,7 @@ runtime::class_<buffer>::implements<surface> __;
 TEST_CASE("example 3 core line") {
   {
     buffer b{80, 25};
-    auto l = make_line({0, 25}, {5, 20});
-    mutable_observed_surface s{b};
-    l.draw(s);
-    b.flush();
-  }
-  {
-    buffer b{80, 25};
-    auto l = make_line({0, 0}, {80, 25});
+    auto l = make_line({0, 25}, {80, 0});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();

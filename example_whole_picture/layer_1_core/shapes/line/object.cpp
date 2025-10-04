@@ -41,7 +41,7 @@ void line::draw(architecture::mutable_observed_surface const& surface) const {
   auto s = sign(m);
   auto last_y = p1.y;
   for (int x = p1.x; x < p2.x; ++x) {
-    auto y = static_cast<int>(std::round(p1.x + x * m));
+    auto y = static_cast<int>(std::round(p1.x + x * m) + p1.y);
     while (last_y - 1 < y - 1) {
       surface.write({x, ++last_y}, ch);
     }
