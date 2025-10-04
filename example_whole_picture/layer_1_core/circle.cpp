@@ -10,9 +10,6 @@ using namespace virtual_void::interface;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 
-VV_RUNTIME_IMPEMENTATION(circle)
-class_<circle>::implements<architecture::shape> __;
-
 void circle::draw(architecture::mutable_observed_surface const& surface) const {
   const auto ch = '*';
   auto writeToAllQuadrants = [&](int x1, int x2, int y1, int y2) {
@@ -43,8 +40,4 @@ void circle::draw(architecture::mutable_observed_surface const& surface) const {
   }
 
   surface.write({center.x, -radius + center.y}, ch);
-}
-
-shape core::make_circle(architecture::point center, int radius) {
-  return std::make_shared<circle>(center, radius);
 }

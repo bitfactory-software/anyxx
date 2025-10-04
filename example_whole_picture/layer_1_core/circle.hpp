@@ -14,4 +14,4 @@ struct circle {
 
 }  // namespace whole_picture::core
 
-VV_RUNTIME(CORE_EXPORT, whole_picture::core::circle)
+

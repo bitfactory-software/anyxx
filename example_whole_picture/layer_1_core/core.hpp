@@ -1,6 +1,7 @@
 #pragma once
 
 #include <virtual_void/data/shared_const.hpp>
+
 #include "../layer_0_architecture/architecture.hpp"
 
 #ifndef CORE_EXPORT
@@ -19,11 +20,7 @@ namespace whole_picture::core {
 
 using shape = architecture::shape<virtual_void::data::shared_const>;
 
-CORE_EXPORT shape make_line(architecture::point from,
-                               architecture::point to);
-
-CORE_EXPORT shape make_circle(architecture::point center,
-                                 int radius);
+CORE_EXPORT shape make_line(architecture::point from, architecture::point to);
 
 CORE_EXPORT std::string hello();
 

@@ -3,7 +3,7 @@
 #include <ranges>
 
 #include "layer_0_architecture/architecture.hpp"
-#include "layer_1_core/core.hpp"
+#include "layer_1_core/circle_factory.hpp"
 
 using namespace Catch::Matchers;
 
