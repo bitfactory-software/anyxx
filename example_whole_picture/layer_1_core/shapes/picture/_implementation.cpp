@@ -4,32 +4,33 @@
 
 using namespace whole_picture;
 using namespace whole_picture::core;
+using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
-VV_RUNTIME_IMPEMENTATION(core::picture)
-class_<core::picture>::implements<architecture::shape> __;
-class_<core::picture>::implements<architecture::surface> __;
+VV_RUNTIME_IMPEMENTATION(shapes::picture)
+class_<shapes::picture>::implements<architecture::shape> __;
+class_<shapes::picture>::implements<architecture::surface> __;
 
 template <>
-struct architecture::shape_v_table_map<core::picture>
+struct architecture::shape_v_table_map<shapes::picture>
     : architecture::shape_default_v_table_map<picture> {
-  void draw(core::picture const* self,
+  void draw(shapes::picture const* self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::picture(surface, self->top_left, self->content);
   }
 };
 template <>
-struct architecture::surface_v_table_map<core::picture>
+struct architecture::surface_v_table_map<shapes::picture>
     : architecture::surface_default_v_table_map<picture> {
-  void write(core::picture* self, point p, char ch) {
+  void write(shapes::picture* self, point p, char ch) {
     self->content.write(p, ch);
   }
 };
 
-shape core::make_picture(architecture::point top_left,
+shape shapes::make_picture(architecture::point top_left,
                          architecture::picture& content) {
   return std::make_shared<picture>(top_left, content);
 }

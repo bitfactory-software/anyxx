@@ -4,7 +4,7 @@
 #include <virtual_void/runtime/meta_data.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 
-namespace whole_picture::core {
+namespace whole_picture::core::shapes {
 
 struct line {
   line(architecture::point p1_, architecture::point p2_) : p1(p1_), p2(p2_) {}
@@ -13,3 +13,5 @@ struct line {
 };
 
 }  // namespace whole_picture::core
+
+VV_RUNTIME(CORE_EXPORT, whole_picture::core::shapes::line)

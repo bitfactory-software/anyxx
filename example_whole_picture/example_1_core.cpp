@@ -12,6 +12,7 @@ using namespace Catch::Matchers;
 using namespace whole_picture;
 using namespace whole_picture::architecture;
 using namespace whole_picture::core;
+using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
 using namespace virtual_void::interface;

@@ -4,6 +4,7 @@
 
 using namespace whole_picture;
 using namespace whole_picture::core;
+using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
@@ -21,6 +22,6 @@ struct architecture::shape_v_table_map<circle>
   }
 };
 
-shape core::make_circle(architecture::point center, int radius) {
+shape shapes::make_circle(architecture::point center, int radius) {
   return std::make_shared<circle>(center, radius);
 }

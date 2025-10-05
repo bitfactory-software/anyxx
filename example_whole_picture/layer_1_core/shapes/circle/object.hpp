@@ -4,7 +4,7 @@
 
 #include <example_whole_picture/layer_1_core/core.hpp>
 
-namespace whole_picture::core {
+namespace whole_picture::core::shapes {
 
 struct circle {
   architecture::point center = {0, 0};
@@ -13,4 +13,5 @@ struct circle {
 
 }  // namespace whole_picture::core
 
+VV_RUNTIME(CORE_EXPORT, whole_picture::core::shapes::circle)
 

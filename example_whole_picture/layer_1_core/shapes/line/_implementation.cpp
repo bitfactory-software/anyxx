@@ -4,6 +4,7 @@
 
 using namespace whole_picture;
 using namespace whole_picture::core;
+using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
@@ -21,6 +22,6 @@ struct architecture::shape_v_table_map<line>
   }
 };
 
-shape core::make_line(architecture::point p1, architecture::point p2) {
+shape shapes::make_line(architecture::point p1, architecture::point p2) {
   return std::make_shared<line>(p1, p2);
 }
