@@ -201,6 +201,8 @@ VV_INTERFACE_(text_i_mutable, text_i_const,
 }  // namespace
 
 VV_RUNTIME_STATIC(text_object)
+VV_V_TABLE_INSTANCE(, text_object, text_i_const)
+VV_V_TABLE_INSTANCE(, text_object, text_i_mutable)
 
 using const_text_i = text_i_const<data::const_observer>;
 using const_text_i_mutable = text_i_const<data::mutable_observer>;

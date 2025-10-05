@@ -122,6 +122,12 @@
 #define _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) \
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER_H t
 
+#define _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE_H(...) \
+  __VA_OPT__(<_detail_INTERFACE_TEMPLATE_ARGS(__VA_ARGS__)>)
+
+#define _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t) \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE_H t
+
 #define _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
@@ -172,6 +178,13 @@
       : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(        \
             _add_head((T), t))> {};                                            \
                                                                                \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;             \
+                                                                               \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((CONCRETE), t))>  \
+  struct n##_v_table_instance {                                                \
+    static n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t) * get(); \
+  };                                                                           \
+                                                                               \
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
       : BASE##_v_table {                                                       \
     using v_table_base_t = BASE##_v_table;                                     \
@@ -204,8 +217,8 @@
                                                                                \
     template <typename CONCRETE>                                               \
     static auto imlpementation() {                                             \
-      static n##_v_table v_table{std::in_place_type<CONCRETE>};                \
-      return &v_table;                                                         \
+      return n##_v_table_instance<_detail_INTERFACE_TEMPLATE_ARGS(             \
+          _add_head((CONCRETE), t))>::get();                                   \
     }                                                                          \
   };                                                                           \
                                                                                \
@@ -288,3 +301,30 @@
 
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, const, __VA_ARGS__)
+
+#define VV_V_TABLE_INSTANCE(export_, class, interface_)               \
+  template <>                                                         \
+  struct export_ interface_##_v_table_instance<class> {               \
+    static interface_##_v_table* get() {                              \
+      static interface_##_v_table v_table{std::in_place_type<class>}; \
+      return &v_table;                                                \
+    };                                                                \
+  };                                                                  \
+  namespace {                                                         \
+  static auto __ = interface_##_v_table_instance<class>::get();       \
+  }
+
+#define VV_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...)        \
+  template <>                                                                \
+  struct export_ interface_##_v_table_instance<class, __VA_ARGS__> {         \
+    static interface_##_v_table<__VA_ARGS__>* get() {                        \
+      static interface_##_v_table<__VA_ARGS__> v_table{                      \
+          std::in_place_type<class>};                                        \
+      return &v_table;                                                       \
+    };                                                                       \
+  };                                                                         \
+  namespace {                                                                \
+  static auto __ = interface_##_v_table_instance<class, __VA_ARGS__>::get(); \
+  }
+
+#define VV_NAME(...) __VA_ARGS__

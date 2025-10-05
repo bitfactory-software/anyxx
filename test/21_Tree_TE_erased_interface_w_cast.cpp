@@ -91,17 +91,17 @@ VV_RUNTIME_STATIC(Plus)
 VV_RUNTIME_STATIC(Times)
 VV_RUNTIME_STATIC(Integer)
 
-class_<Plus>::implements<node_i> __;
-class_<Times>::implements<node_i> __;
-class_<Integer>::implements<node_i> __;
+VV_V_TABLE_INSTANCE(, Plus, node_i);
+VV_V_TABLE_INSTANCE(, Times, node_i);
+VV_V_TABLE_INSTANCE(, Integer, node_i);
 
-class_<Plus>::implements<lisp_i> __;
-class_<Times>::implements<lisp_i> __;
-class_<Integer>::implements<lisp_i> __;
+VV_V_TABLE_INSTANCE(, Plus, lisp_i);
+VV_V_TABLE_INSTANCE(, Times, lisp_i);
+VV_V_TABLE_INSTANCE(, Integer, lisp_i);
 
-class_<Plus>::implements<value2_i> __;
-class_<Times>::implements<value2_i> __;
-class_<Integer>::implements<value2_i> __;
+VV_V_TABLE_INSTANCE(, Plus, value2_i);
+VV_V_TABLE_INSTANCE(, Times, value2_i);
+VV_V_TABLE_INSTANCE(, Integer, value2_i);
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace virtual_void;

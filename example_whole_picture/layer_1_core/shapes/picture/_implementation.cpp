@@ -11,8 +11,8 @@ using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
 VV_RUNTIME_IMPEMENTATION(shapes::picture)
-class_<shapes::picture>::implements<architecture::shape> __;
-class_<shapes::picture>::implements<architecture::surface> __;
+VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::shape);
+VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::surface);
 
 template <>
 struct architecture::shape_v_table_map<shapes::picture>

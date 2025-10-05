@@ -57,14 +57,102 @@ struct to_string_i_v_table_map<double>
 template <>
 struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
 };
+// template <>
+// struct to_string_i_v_table_map<std::map<int, std::map<std::string,
+// std::map<int, double>>>> {
+//   auto to_string(std::map<int, std::map<std::string, std::map<int, double>>>
+//   const* x) -> std::string { return "????"; };
+// };
+template <>
+struct to_string_i_v_table_map<std::map<int, std::map<int, double>>> {
+  auto to_string(std::map<int, std::map<int, double>> const* x) -> std::string {
+    return "????";
+  };
+};
+template <>
+struct to_string_i_v_table_map<std::map<std::string, std::map<int, double>>> {
+  auto to_string(std::map<std::string, std::map<int, double>> const* x)
+      -> std::string {
+    return "????";
+  };
+};
 }  // namespace
+
 VV_RUNTIME_STATIC(int)
 VV_RUNTIME_STATIC(double)
-VV_RUNTIME_STATIC(std::map<int,double>)
-VV_RUNTIME_STATIC(std::map<std::string,int>)
+VV_RUNTIME_STATIC(std::map<int, double>)
+VV_RUNTIME_STATIC(std::map<int, std::map<std::string, std::map<int, double>>>)
+VV_RUNTIME_STATIC(std::map<std::string, int>)
 VV_RUNTIME_STATIC(std::map<std::string, double>)
 VV_RUNTIME_STATIC(std::map<std::string, std::map<int, double>>)
-VV_RUNTIME_STATIC(std::map<int, std::map<std::string, std::map<int, double>>>)
+VV_RUNTIME_STATIC(std::map<std::string, std::map<std::string, std::map<int, double>>>)
+
+VV_V_TABLE_INSTANCE(, int, to_string_i)
+VV_V_TABLE_INSTANCE(, double, to_string_i)
+VV_V_TABLE_INSTANCE(, VV_NAME(std::map<std::string, std::map<int, double>>),
+                    to_string_i)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
+    map_s_t_i, int)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, double>),
+                             map_s_t_i, std::string)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_t_i,
+                             int, double)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_s_t_i,
+                             std::string)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<std::string, std::map<int, double>>), map_mutable_tt_i,
+    std::string, VV_NAME(map_mutable_t_i<mutable_observer, int, double>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
+    map_mutable_tt_i, int,
+    VV_NAME(map_mutable_tt_i<mutable_observer, std::string,
+                             map_mutable_t_i<mutable_observer, int, double>>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_tt_i,
+                             int, double)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
+    map_mutable_tt_i, int,
+    VV_NAME(std::map<std::string, std::map<int, double>>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<std::string, std::map<int, double>>), map_mutable_tt_i,
+    std::string, VV_NAME(map_mutable_tt_i<mutable_observer, int, double>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>),
+                             map_mutable_tt_i, std::string, int)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_t_i,
+                             std::string, int)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
+    map_tt_i, int,
+    VV_NAME(map_tt_i<const_observer, std::string,
+                     map_t_i<const_observer, int, double>>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    ,
+    VV_NAME(
+        std::map<std::string, std::map<std::string, std::map<int, double>>>),
+    map_tt_i, std::string,
+    VV_NAME(map_tt_i<const_observer, std::string,
+                     map_t_i<const_observer, int, double>>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<std::string, std::map<int, double>>), map_tt_i,
+    std::string, VV_NAME(map_t_i<const_observer, int, double>))
+
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_t_i, int,
+                             double)
+
+// VV_V_TABLE_INSTANCE(, x, y)
 
 template <typename KEY, typename VALUE>
 void test_map_t_i_template(map_t_i<const_observer, KEY, VALUE> map_i) {

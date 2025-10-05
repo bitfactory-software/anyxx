@@ -3,7 +3,6 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/runtime/meta_data.hpp>
 
 using namespace test::component_base;
 
@@ -27,10 +26,26 @@ static X x{3.14};
 
 using namespace test::component_base;
 
+
+// template <>
+// struct COMPONENT_BASE_EXPORT get_value_i_v_table_instance<X> {
+//   static get_value_i_v_table* get() {
+//     static get_value_i_v_table v_table{std::in_place_type<X>};
+//     return &v_table;
+//   };
+// };
+// template <>
+// struct COMPONENT_BASE_EXPORT to_string_i_v_table_instance<X> {
+//   static to_string_i_v_table* get() {
+//     static to_string_i_v_table v_table{std::in_place_type<X>};
+//     return &v_table;
+//   };
+// };
+
 VV_RUNTIME_STATIC(X)
-class_<X>::implements<get_value_i> __;
-class_<X>::implements<set_value_i> __;
-class_<X>::implements<to_string_i> __;
+VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, get_value_i)
+VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, set_value_i)
+VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, to_string_i)
 
 to_string_i<virtual_void::data::const_observer>
 test::component_base::get_to_string_i_co() {

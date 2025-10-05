@@ -108,18 +108,6 @@ base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete)
   runtime::get_meta_data<CONCRETE>().register_v_table(this);
 }
 
-template <typename CLASS>
-struct class_ {
-  template <template <data::is_erased_data> typename INTERFACE>
-  struct implements {
-    constexpr implements() {
-      auto& type_info = get_meta_data<CLASS>();
-      auto v_table_ptr = INTERFACE<
-          data::const_observer>::template v_table_imlpementation<CLASS>();
-    };
-  };
-};
-
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
 extension_method_table_t* extension_method_table_instance() {
   static extension_method_table_t extension_method_table;

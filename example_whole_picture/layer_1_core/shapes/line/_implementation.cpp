@@ -11,7 +11,7 @@ using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
 VV_RUNTIME_IMPEMENTATION(line)
-class_<line>::implements<architecture::shape> __;
+VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::line, architecture::shape);
 
 template <>
 struct architecture::shape_v_table_map<line>

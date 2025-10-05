@@ -75,6 +75,10 @@ VV_RUNTIME_STATIC(Plus)
 VV_RUNTIME_STATIC(Times)
 VV_RUNTIME_STATIC(Integer)
 
+VV_V_TABLE_INSTANCE(, Plus, node_i);
+VV_V_TABLE_INSTANCE(, Times, node_i);
+VV_V_TABLE_INSTANCE(, Integer, node_i);
+
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace virtual_void;
 

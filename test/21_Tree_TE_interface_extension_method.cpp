@@ -90,6 +90,10 @@ using namespace virtual_void;
 VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Plus)
 VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Times)
 VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Integer)
+VV_V_TABLE_INSTANCE(, _21_Tree_TE_interface_extension_method::Plus, _21_Tree_TE_interface_extension_method::node::node_i)
+VV_V_TABLE_INSTANCE(, _21_Tree_TE_interface_extension_method::Times, _21_Tree_TE_interface_extension_method::node::node_i)
+VV_V_TABLE_INSTANCE(, _21_Tree_TE_interface_extension_method::Integer, _21_Tree_TE_interface_extension_method::node::node_i)
+
 
 namespace _21_Tree_TE_interface_extension_method {
 

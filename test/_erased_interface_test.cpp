@@ -49,7 +49,10 @@ struct circle {
 };
 
 VV_RUNTIME_STATIC(circle)
-virtual_void::runtime::class_<circle>::implements<shape_d_i> __;
+VV_V_TABLE_INSTANCE(, circle, shape_base1)
+VV_V_TABLE_INSTANCE(, circle, shape_base)
+VV_V_TABLE_INSTANCE(, circle, shape_d_i)
+VV_V_TABLE_INSTANCE(, circle, shape_i)
 
 TEST_CASE("class is_a interface") {
   using namespace virtual_void;
@@ -135,8 +138,20 @@ struct regular_polygon {
   }
 };
 VV_RUNTIME_STATIC(square)
+VV_V_TABLE_INSTANCE(, square, shape_base1)
+VV_V_TABLE_INSTANCE(, square, shape_base)
+VV_V_TABLE_INSTANCE(, square, shape_d_i)
+VV_V_TABLE_INSTANCE(, square, shape_i)
 VV_RUNTIME_STATIC(rectangle)
+VV_V_TABLE_INSTANCE(, rectangle, shape_base1)
+VV_V_TABLE_INSTANCE(, rectangle, shape_base)
+VV_V_TABLE_INSTANCE(, rectangle, shape_d_i)
+VV_V_TABLE_INSTANCE(, rectangle, shape_i)
 VV_RUNTIME_STATIC(regular_polygon)
+VV_V_TABLE_INSTANCE(, regular_polygon, shape_base1)
+VV_V_TABLE_INSTANCE(, regular_polygon, shape_base)
+VV_V_TABLE_INSTANCE(, regular_polygon, shape_d_i)
+VV_V_TABLE_INSTANCE(, regular_polygon, shape_i)
 
 void print_shape_(const auto s) {
   s.draw({4.0, 5.0});
