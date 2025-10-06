@@ -3,14 +3,13 @@
 #include <assert.h>
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/meta/i_table.hpp>
 
 using namespace test::component_base;
 
 using namespace virtual_void;
 using namespace virtual_void::interface;
-using namespace virtual_void::meta;
-using namespace virtual_void::data::has_i_table;
+using namespace virtual_void::runtime;
+using namespace virtual_void::data;
 
 namespace test::component_base {
 
@@ -27,51 +26,52 @@ static X x{3.14};
 
 using namespace test::component_base;
 
-namespace archetype
-{
-   struct A;
-}
 
-template<>
-virtual_void::meta::archetype_t& virtual_void::meta::archetype_instance<archetype::A>(){ return archetype_implementation<archetype::A>(); };
+// template <>
+// struct COMPONENT_BASE_EXPORT get_value_i_v_table_instance<X> {
+//   static get_value_i_v_table* get() {
+//     static get_value_i_v_table v_table{std::in_place_type<X>};
+//     return &v_table;
+//   };
+// };
+// template <>
+// struct COMPONENT_BASE_EXPORT to_string_i_v_table_instance<X> {
+//   static to_string_i_v_table* get() {
+//     static to_string_i_v_table v_table{std::in_place_type<X>};
+//     return &v_table;
+//   };
+// };
 
-template<>
-struct archetype_for_class<X> : std::type_identity<archetype::A>{};
+VV_RUNTIME_STATIC(X)
+VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, get_value_i)
+VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, set_value_i)
+VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, to_string_i)
 
-template <>
-struct i_table_of<X> : i_table_implementation_of<X> {};
-is_a<X, get_value_i_v_table> __;
-is_a<X, set_value_i_v_table> __;
-is_a<X, to_string_i_v_table> __;
-
-to_string_i<virtual_void::data::has_i_table::const_observer>
+to_string_i<virtual_void::data::const_observer>
 test::component_base::get_to_string_i_co() {
   auto p = &x;
-  to_string_i<virtual_void::data::has_i_table::const_observer> i{x};
-  auto meta = get_meta(get_virtual_void(i));
-  const std::type_info* type_info = meta->type_info();
+  to_string_i<virtual_void::data::const_observer> i{x};
+  auto meta = get_v_table(i)->meta_data;
+  const std::type_info* type_info = &meta->get_type_info();
+  static_assert(
+      interface::is_interface<to_string_i<virtual_void::data::const_observer>>);
   const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   auto s = i.to_string();
   return i;
 }
-to_string_i<virtual_void::data::has_i_table::shared_const>
+to_string_i<virtual_void::data::shared_const>
 test::component_base::get_to_string_i_sc(double v) {
-  return X{v};
+  return std::make_shared<X>(v);
 }
-to_string_i<virtual_void::data::has_i_table::unique>
-test::component_base::get_to_string_i_u(double v) {
-  return X{v};
-}
-
-virtual_void::data::has_i_table::shared_const test::component_base::sc_X(
+to_string_i<virtual_void::data::unique> test::component_base::get_to_string_i_u(
     double v) {
-  return virtual_void::erased<shared_const>(X{v});
-}
-virtual_void::data::has_i_table::unique test::component_base::u_X(double v) {
-  return virtual_void::erased<unique>(X{v});
+  return std::make_unique<X>(v);
 }
 
-VV_DEFINE_V_TABLE_INDEX(test::component_base::get_value_i)
-VV_DEFINE_V_TABLE_INDEX(test::component_base::set_value_i)
-VV_DEFINE_V_TABLE_INDEX(test::component_base::to_string_i)
+virtual_void::data::shared_const test::component_base::sc_X(double v) {
+  return virtual_void::data::erased<shared_const>(std::make_shared<X>(v));
+}
+virtual_void::data::unique test::component_base::u_X(double v) {
+  return virtual_void::data::erased<unique>(std::make_unique<X>(v));
+}

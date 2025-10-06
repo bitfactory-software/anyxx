@@ -1,4 +1,4 @@
-﻿// virtual_void variant of this yomm2 example via virtual_void m_tables
+﻿// virtual_void variant of this yomm2 example via any
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <any>

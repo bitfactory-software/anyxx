@@ -1,0 +1,27 @@
+#include <example_whole_picture/layer_0_architecture/draw/circle.hpp>
+#include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
+#include <example_whole_picture/layer_1_core/shapes/circle/object.hpp>
+
+using namespace whole_picture;
+using namespace whole_picture::core;
+using namespace whole_picture::core::shapes;
+
+using namespace virtual_void;
+using namespace virtual_void::data;
+using namespace virtual_void::runtime;
+
+VV_RUNTIME_IMPEMENTATION(circle)
+VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::circle, architecture::shape);
+
+template <>
+struct architecture::shape_v_table_map<circle>
+    : architecture::shape_default_v_table_map<circle> {
+  void draw(circle const* self,
+            architecture::mutable_observed_surface const& surface) const {
+    architecture::draw::circle(surface, self->center, self->radius);
+  }
+};
+
+shape shapes::make_circle(architecture::point center, int radius) {
+  return std::make_shared<circle>(center, radius);
+}

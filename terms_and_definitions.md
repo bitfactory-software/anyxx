@@ -13,7 +13,7 @@ In these functions, the "self" parameter is cast back to a pointer to the uneras
 #### A concept describing an object that **erases** the **type** and the **lifetime** of **another** object.
 
 It must deliver a *void* pointer of that object and a pointer to a *meta* object.  
-Responsible for the description of such types is the specialized *virtual_void_trait*.  
+Responsible for the description of such types is the specialized *trait*.  
 
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.
@@ -31,7 +31,7 @@ The library offers these *lifetime* holders:
 ### 'virtual_void' Versus 'typed_void'
 #### A *virtual_void* holds no compile-time information about the *held* object.
 
-Only if *virtual_void* has *runtime meta-data*, is there a dynamic and safe cast of the *void* pointer to a concrete pointer possible.  
+Only if *virtual_void* has *get_meta_data meta-data*, is there a dynamic and safe cast of the *void* pointer to a concrete pointer possible.  
 *virtual_void* has two kinds of such meta-data:
 - **typeid**
 - **m_table**
@@ -46,7 +46,7 @@ A *virtual_typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* 
   - Static casts are only a syntactic construct and leave no trace in the binary code.
 
 #### A *dynamic cast*:
-  - Is a runtime query to test if the casted object is of this type.
+  - Is a get_meta_data query to test if the casted object is of this type.
   - If such a query succeeds, it is determined by the program.
   - All dynamic casts are safe.
   - Dynamic casts need code to run.

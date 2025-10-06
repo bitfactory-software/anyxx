@@ -1,35 +1,27 @@
-﻿// virtual_void variant of this yomm2 example via c++RTTI
-// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
+﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <catch.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
-
-#include <catch.hpp>
-
-#include <virtual_void/data/has_no_meta/shared_const.hpp>
+#include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/data/has_no_meta/shared_const_ptr.hpp>
-#include <virtual_void/data/make_shared_const_decorated_data.hpp>
-
 #include <virtual_void/interface/declare_macro.hpp>
 
 using std::cout;
 using std::string;
 
 using namespace virtual_void;
-using namespace virtual_void::data::has_no_meta;
+using namespace virtual_void::data;
 
 namespace {
 
+VV_INTERFACE(node_i,
+             (VV_CONST_METHOD(int, value),
+              VV_CONST_METHOD(string, as_forth),
+              VV_CONST_METHOD(string, as_lisp)))
 
-ERASED_INTERFACE(node_i, (INTERFACE_CONST_METHOD(int, value),
-                          INTERFACE_CONST_METHOD(string, as_forth),
-                          INTERFACE_CONST_METHOD(string, as_lisp)))
-
-// alternative: using node = node_i<shared_const>; less code, but intrusive
-// lifetime management
-using node = node_i<shared_const_ptr>;
+using node = node_i<shared_const>;
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}
@@ -66,11 +58,11 @@ struct Integer {
   int int_;
 };
 
-//alternative for node = node_i<shared_const>:
-// template <typename NODE, typename... ARGS>
-// auto make_node(ARGS&&... args) {
-//  return node{NODE(std::forward<ARGS>(args)...)};
-//}
+// alternative :
+//  template <typename NODE, typename... ARGS>
+//  auto make_node(ARGS&&... args) {
+//   return node{NODE(std::forward<ARGS>(args)...)};
+// }
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
@@ -78,6 +70,14 @@ auto make_node(ARGS&&... args) {
 }
 
 }  // namespace
+
+VV_RUNTIME_STATIC(Plus)
+VV_RUNTIME_STATIC(Times)
+VV_RUNTIME_STATIC(Integer)
+
+VV_V_TABLE_INSTANCE(, Plus, node_i);
+VV_V_TABLE_INSTANCE(, Times, node_i);
+VV_V_TABLE_INSTANCE(, Integer, node_i);
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace virtual_void;
