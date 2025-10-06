@@ -55,12 +55,6 @@ struct to_string_i_v_table_map<double>
 template <>
 struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
 };
-template <>
-struct to_string_i_v_table_map<std::map<int, std::map<int, double>>> {
-  auto to_string(std::map<int, std::map<int, double>> const* x) -> std::string {
-    return "????";
-  };
-};
 }  // namespace
 
 VV_RUNTIME_STATIC(int)
