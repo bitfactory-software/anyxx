@@ -7,7 +7,6 @@
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
@@ -66,16 +65,19 @@ VV_RUNTIME_STATIC(functor)
 
 namespace {
 
-using const_function =
-    interface::call_operator<data::const_observer, std::string()>;
-using mutating_function = interface::call_operator<data::mutable_observer,
-                                                   void(std::string), mutable_>;
+VV_INTERFACE(const_function_i, (VV_METHOD_(std::string, op1, operator(), const)))
+VV_INTERFACE(mutating_function_i, (VV_METHOD_(void, op1, operator(), , std::string const&)))
+
+using const_function = const_function_i<data::const_observer>;
+using mutating_function = mutating_function_i<data::mutable_observer>;
+using shared_const_function = const_function_i<data::shared_const>;
+using shared_mutating_function = mutating_function_i<data::shared_const>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
-// static_assert(std::is_assignable_v<const_function,
-//                                       const_function>); should compile
-static_assert(!std::is_assignable_v<const_function,
-                                    functor const>);  // <- may not compile!
+ static_assert(std::is_assignable_v<const_function,
+                                       const_function>);
+static_assert(std::is_assignable_v<const_function,
+                                    functor const>); 
 static_assert(!std::is_constructible_v<mutating_function,
                                        functor const>);  // <- may not compile!
 static_assert(!std::is_assignable_v<mutating_function,
@@ -89,6 +91,9 @@ static_assert(!std::is_assignable_v<mutating_function const,
                                     functor const>);  // <- may not compile!
 
 }  // namespace
+
+VV_V_TABLE_INSTANCE(, functor, const_function_i)
+VV_V_TABLE_INSTANCE(, functor, mutating_function_i)
 
 TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
   using namespace virtual_void;
@@ -151,37 +156,33 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
 }
 
 TEST_CASE("_interface_const_correct virtual_void::shared_const") {
-  using const_function =
-      interface::call_operator<data::shared_const, std::string()>;
-  using mutating_function =
-      interface::call_operator<data::shared_const, void(std::string), mutable_>;
 
   {
-    const_function cf = std::make_shared<functor>();
+    shared_const_function cf = std::make_shared<functor>();
     static_assert(
-        !std::is_assignable_v<mutating_function,
-                              const_function>);  // <- may not compile!
+        !std::is_assignable_v<shared_mutating_function,
+                              shared_const_function>);  // <- may not compile!
     REQUIRE(cf() == "hallo");
   }
 
   {
-    const_function const cf = std::make_shared<functor>();
+    shared_const_function const cf = std::make_shared<functor>();
     static_assert(
-        !std::is_assignable_v<mutating_function,
+        !std::is_assignable_v<shared_mutating_function,
                               const_function const>);  // <- may not compile!
     REQUIRE(cf() == "hallo");
   }
 
   {
-    const_function cf = std::make_shared<functor const>();
-    static_assert(!std::is_assignable_v<mutating_function,
-                                        functor const>);  // <- may not compile!
+    shared_const_function cf = std::make_shared<functor const>();
+    static_assert(std::is_assignable_v<shared_mutating_function,
+                                        functor const>);
     REQUIRE(cf() == "hallo");
   }
 
   {
-    const_function const cf = std::make_shared<functor const>();
-    static_assert(!std::is_assignable_v<mutating_function const,
+    shared_const_function const cf = std::make_shared<functor const>();
+    static_assert(!std::is_assignable_v<shared_mutating_function const,
                                         functor const>);  // <- may not compile!
     REQUIRE(cf() == "hallo");
   }

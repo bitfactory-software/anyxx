@@ -1,16 +1,13 @@
+#include <catch.hpp>
 #include <cmath>
 #include <concepts>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include <catch.hpp>
-
-#include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/data/observer.hpp>
-#include <virtual_void/data/unique.hpp>
 #include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/interface/call_operator.hpp>
+#include <virtual_void/data/unique.hpp>
+#include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;
 
@@ -35,12 +32,15 @@ struct functor2_t {
 };
 }  // namespace
 
-VV_RUNTIME_STATIC(functor_t)
-VV_RUNTIME_STATIC(functor2_t)
 
-template <typename VV>
-using overloaded_function_object =
-    overloaded_call_operator<VV, std::string(const std::string), mutable_, std::string(), const_>;
+VV_INTERFACE(overloaded_function_object,
+             (VV_METHOD_(std::string, op1, operator(), , std::string const&),
+              VV_METHOD_(std::string, op2, operator(), const)))
+
+VV_RUNTIME_STATIC(functor_t)
+VV_V_TABLE_INSTANCE(, functor_t, overloaded_function_object)
+VV_RUNTIME_STATIC(functor2_t)
+VV_V_TABLE_INSTANCE(, functor2_t, overloaded_function_object)
 
 namespace {
 template <template <typename> typename F, typename OBSERVER>
@@ -66,8 +66,9 @@ TEST_CASE("call_operator overload with mutable_observer") {
   REQUIRE(f() == "hallo world");
 }
 
-// muy complicato... feature extravaganza... can be done, but is it worth the time?
-//TEST_CASE("call_operator overload with const_observer") {
+// muy complicato... feature extravaganza... can be done, but is it worth the
+// time?
+// TEST_CASE("call_operator overload with const_observer") {
 //  functor_t functor{"hallo"};
 //  overloaded_function_object<const_observer> f{functor};
 //  REQUIRE(f() == "hallo");
@@ -76,10 +77,6 @@ TEST_CASE("call_operator overload with mutable_observer") {
 TEST_CASE("make_overloaded_call_operator") {
   functor2_t functor{"hallo"};
 
-  auto f = overloaded_call_operator<
-      const_observer, std::string(const std::string& s), const_, std::string(), const_>{
-      functor};
-
+  auto f = overloaded_function_object<const_observer>{functor};
   REQUIRE(f() == "hallo");
-  REQUIRE(f(" world") == "hallo world");
 }

@@ -7,7 +7,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
@@ -76,9 +75,8 @@ using shape_vv = shape_i<data::shared_const>;
 
 using shape_base_v = shape_base<data::const_observer>;
 
-using shape =
-    interface::call_operator<data::const_observer, std::string(std::string),
-                             const_, shape_d_i>;
+VV_INTERFACE_(shape_fi, shape_d_i, (VV_METHOD_(std::string, op1, operator(), const, std::string const&)))
+using shape = shape_fi<data::const_observer>;
 using shapeX = shape_d_i<data::const_observer>;
 using shapeXX = shape_d_i<data::const_observer>;
 
@@ -137,21 +135,27 @@ struct regular_polygon {
     return x + "regular_polygon";
   }
 };
+VV_V_TABLE_INSTANCE(, circle, shape_fi)
+
 VV_RUNTIME_STATIC(square)
 VV_V_TABLE_INSTANCE(, square, shape_base1)
 VV_V_TABLE_INSTANCE(, square, shape_base)
 VV_V_TABLE_INSTANCE(, square, shape_d_i)
 VV_V_TABLE_INSTANCE(, square, shape_i)
+VV_V_TABLE_INSTANCE(, square, shape_fi)
 VV_RUNTIME_STATIC(rectangle)
 VV_V_TABLE_INSTANCE(, rectangle, shape_base1)
 VV_V_TABLE_INSTANCE(, rectangle, shape_base)
 VV_V_TABLE_INSTANCE(, rectangle, shape_d_i)
 VV_V_TABLE_INSTANCE(, rectangle, shape_i)
+VV_V_TABLE_INSTANCE(, rectangle, shape_fi)
 VV_RUNTIME_STATIC(regular_polygon)
 VV_V_TABLE_INSTANCE(, regular_polygon, shape_base1)
 VV_V_TABLE_INSTANCE(, regular_polygon, shape_base)
 VV_V_TABLE_INSTANCE(, regular_polygon, shape_d_i)
 VV_V_TABLE_INSTANCE(, regular_polygon, shape_i)
+VV_V_TABLE_INSTANCE(, regular_polygon, shape_fi)
+
 
 void print_shape_(const auto s) {
   s.draw({4.0, 5.0});

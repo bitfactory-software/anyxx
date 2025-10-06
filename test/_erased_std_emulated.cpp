@@ -7,7 +7,6 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/interface/call_operator.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;
@@ -24,14 +23,6 @@ VV_INTERFACE(string_to_string_mutable,
               VV_METHOD_(std::string, op_call_2, operator(), ,
                          std::string const&)))
 
-template <typename SIG, is_constness CONSTNESS = const_>
-using function = interface::call_operator<data::shared_const, SIG, CONSTNESS>;
-template <typename SIG, is_constness CONSTNESS = mutable_>
-using ref_function =
-    interface::call_operator<data::mutable_observer, SIG, CONSTNESS>;
-template <typename SIG, is_constness CONSTNESS = mutable_>
-using move_only_function =
-    interface::call_operator<data::unique, SIG, CONSTNESS>;
 }  // namespace virtual_void
 
 using namespace virtual_void;
