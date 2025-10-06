@@ -32,15 +32,15 @@ VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
                       (VV_METHOD(VALUE&, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_tt_i,
+VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
                       (VV_CONST_METHOD(VALUE, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_tt_i,
+VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
                       (VV_METHOD(VALUE, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY)), map_s_t_i,
+VV_INTERFACE_TEMPLATE(((KEY)), map_to_string_i,
                       (VV_CONST_METHOD(to_string_i<const_observer>, at, KEY)))
 
 template <>
@@ -71,57 +71,52 @@ VV_V_TABLE_INSTANCE(, int, to_string_i)
 VV_V_TABLE_INSTANCE(, double, to_string_i)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, double>),
-                             map_s_t_i, std::string)
+                             map_to_string_i, std::string)
 
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_s_t_i,
-                             std::string)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>),
+                             map_to_string_i, std::string)
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_t_i,
                              std::string, int)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_t_i,
                              int, double)
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_tt_i,
-                             int, double)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>),
+                             map_mutable_recursive_t_i, int, double)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_t_i, int,
+                             double)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(
-    , VV_NAME(std::map<std::string, std::map<int, double>>), map_mutable_tt_i,
-    std::string, VV_NAME(map_mutable_t_i<mutable_observer, int, double>))
+    , VV_NAME(std::map<std::string, std::map<int, double>>),
+    map_mutable_recursive_t_i, std::string,
+    VV_NAME(map_mutable_t_i<mutable_observer, int, double>))
+VV_V_TABLE_TEMPLATE_INSTANCE(
+    , VV_NAME(std::map<std::string, std::map<int, double>>),
+    map_const_recursive_t_i, std::string,
+    VV_NAME(map_t_i<const_observer, int, double>))
 
 VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
-    map_mutable_tt_i, int,
-    VV_NAME(map_mutable_tt_i<mutable_observer, std::string,
-                             map_mutable_t_i<mutable_observer, int, double>>))
+    map_mutable_recursive_t_i, int,
+    VV_NAME(map_mutable_recursive_t_i<
+            mutable_observer, std::string,
+            map_mutable_t_i<mutable_observer, int, double>>))
 VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
-    map_mutable_tt_i, int,
+    map_mutable_recursive_t_i, int,
     VV_NAME(std::map<std::string, std::map<int, double>>))
 VV_V_TABLE_TEMPLATE_INSTANCE(
-    , VV_NAME(std::map<std::string, std::map<int, double>>), map_mutable_tt_i,
-    std::string, VV_NAME(map_mutable_tt_i<mutable_observer, int, double>))
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>),
-                             map_mutable_tt_i, std::string, int)
-
-VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
-    map_tt_i, int,
-    VV_NAME(map_tt_i<const_observer, std::string,
-                     map_t_i<const_observer, int, double>>))
+    map_const_recursive_t_i, int,
+    VV_NAME(map_const_recursive_t_i<const_observer, std::string,
+                                    map_t_i<const_observer, int, double>>))
 
 VV_V_TABLE_TEMPLATE_INSTANCE(
     ,
     VV_NAME(
         std::map<std::string, std::map<std::string, std::map<int, double>>>),
-    map_tt_i, std::string,
-    VV_NAME(map_tt_i<const_observer, std::string,
-                     map_t_i<const_observer, int, double>>))
-
-VV_V_TABLE_TEMPLATE_INSTANCE(
-    , VV_NAME(std::map<std::string, std::map<int, double>>), map_tt_i,
-    std::string, VV_NAME(map_t_i<const_observer, int, double>))
-
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_t_i, int,
-                             double)
+    map_const_recursive_t_i, std::string,
+    VV_NAME(map_const_recursive_t_i<const_observer, std::string,
+                                    map_t_i<const_observer, int, double>>))
 
 // VV_V_TABLE_INSTANCE(, x, y)
 
@@ -145,23 +140,23 @@ TEST_CASE("interface template test") {
 
   test_map_t_i_template<std::string, int>(map_string_to_int);
 
-  auto test_map_s_t_i_lambda =
-      [](map_s_t_i<const_observer, std::string> map_i) {
+  auto test_map_to_string_i_lambda =
+      [](map_to_string_i<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
-  test_map_s_t_i_lambda(map_string_to_int);
+  test_map_to_string_i_lambda(map_string_to_int);
 }
 
 TEST_CASE("interface template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_map_s_t_i_lambda =
-      [](map_s_t_i<const_observer, std::string> map_i) {
+  auto test_map_to_string_i_lambda =
+      [](map_to_string_i<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
-  test_map_s_t_i_lambda(map_string_to_int);
+  test_map_to_string_i_lambda(map_string_to_int);
 }
 
 TEST_CASE("interface template test3") {
@@ -170,9 +165,10 @@ TEST_CASE("interface template test3") {
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
   auto test_map_lambda =
-      [](map_tt_i<const_observer, int,
-                  map_tt_i<const_observer, std::string,
-                           map_t_i<const_observer, int, double>>>
+      [](map_const_recursive_t_i<
+          const_observer, int,
+          map_const_recursive_t_i<const_observer, std::string,
+                                  map_t_i<const_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -184,10 +180,11 @@ TEST_CASE("interface template test3") {
   test_map_lambda(map);
 
   auto test_map_lambda_mutate =
-      [](map_mutable_tt_i<
+      [](map_mutable_recursive_t_i<
           mutable_observer, int,
-          map_mutable_tt_i<mutable_observer, std::string,
-                           map_mutable_t_i<mutable_observer, int, double>>>
+          map_mutable_recursive_t_i<
+              mutable_observer, std::string,
+              map_mutable_t_i<mutable_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
