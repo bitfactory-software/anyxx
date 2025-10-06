@@ -55,22 +55,9 @@ struct to_string_i_v_table_map<double>
 template <>
 struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
 };
-// template <>
-// struct to_string_i_v_table_map<std::map<int, std::map<std::string,
-// std::map<int, double>>>> {
-//   auto to_string(std::map<int, std::map<std::string, std::map<int, double>>>
-//   const* x) -> std::string { return "????"; };
-// };
 template <>
 struct to_string_i_v_table_map<std::map<int, std::map<int, double>>> {
   auto to_string(std::map<int, std::map<int, double>> const* x) -> std::string {
-    return "????";
-  };
-};
-template <>
-struct to_string_i_v_table_map<std::map<std::string, std::map<int, double>>> {
-  auto to_string(std::map<std::string, std::map<int, double>> const* x)
-      -> std::string {
     return "????";
   };
 };
@@ -87,12 +74,6 @@ VV_RUNTIME_STATIC(std::map<std::string, std::map<std::string, std::map<int, doub
 
 VV_V_TABLE_INSTANCE(, int, to_string_i)
 VV_V_TABLE_INSTANCE(, double, to_string_i)
-VV_V_TABLE_INSTANCE(, VV_NAME(std::map<std::string, std::map<int, double>>),
-                    to_string_i)
-
-VV_V_TABLE_TEMPLATE_INSTANCE(
-    , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
-    map_s_t_i, int)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, double>),
                              map_s_t_i, std::string)
