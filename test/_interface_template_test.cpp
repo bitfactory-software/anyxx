@@ -64,7 +64,8 @@ VV_RUNTIME_STATIC(std::map<int, std::map<std::string, std::map<int, double>>>)
 VV_RUNTIME_STATIC(std::map<std::string, int>)
 VV_RUNTIME_STATIC(std::map<std::string, double>)
 VV_RUNTIME_STATIC(std::map<std::string, std::map<int, double>>)
-VV_RUNTIME_STATIC(std::map<std::string, std::map<std::string, std::map<int, double>>>)
+VV_RUNTIME_STATIC(
+    std::map<std::string, std::map<std::string, std::map<int, double>>>)
 
 VV_V_TABLE_INSTANCE(, int, to_string_i)
 VV_V_TABLE_INSTANCE(, double, to_string_i)
@@ -72,10 +73,15 @@ VV_V_TABLE_INSTANCE(, double, to_string_i)
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, double>),
                              map_s_t_i, std::string)
 
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_t_i,
-                             int, double)
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_s_t_i,
                              std::string)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_t_i,
+                             std::string, int)
+
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_t_i,
+                             int, double)
+VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_tt_i,
+                             int, double)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<std::string, std::map<int, double>>), map_mutable_tt_i,
@@ -86,23 +92,15 @@ VV_V_TABLE_TEMPLATE_INSTANCE(
     map_mutable_tt_i, int,
     VV_NAME(map_mutable_tt_i<mutable_observer, std::string,
                              map_mutable_t_i<mutable_observer, int, double>>))
-
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<int, double>), map_mutable_tt_i,
-                             int, double)
-
 VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
     map_mutable_tt_i, int,
     VV_NAME(std::map<std::string, std::map<int, double>>))
-
 VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<std::string, std::map<int, double>>), map_mutable_tt_i,
     std::string, VV_NAME(map_mutable_tt_i<mutable_observer, int, double>))
-
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>),
                              map_mutable_tt_i, std::string, int)
-VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, int>), map_t_i,
-                             std::string, int)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(
     , VV_NAME(std::map<int, std::map<std::string, std::map<int, double>>>),
