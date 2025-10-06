@@ -140,10 +140,10 @@
 
 #define _detail_INTERFACE_MAP_LIMP_H(l) _detail_INTERFACE_MAP_IMPL l
 
-#define _detail_INTERFACE_MAP_IMPL(type, name, const_, ...)               \
-  auto name(T const_* x __VA_OPT__(                                       \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {             \
-    return x->name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_INTERFACE_MAP_IMPL(type, name, const_, ...)                 \
+  auto name(T const_* x __VA_OPT__(                                         \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {               \
+    return (*x).name(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 
 #define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, const_, ...) \
