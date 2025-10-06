@@ -140,32 +140,37 @@
 
 #define _detail_INTERFACE_MAP_LIMP_H(l) _detail_INTERFACE_MAP_IMPL l
 
-#define _detail_INTERFACE_MAP_IMPL(type, name, name_ext, exact_const, const_, ...)                 \
-  auto name(T const_* x __VA_OPT__(                                         \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {               \
-    return (*x).name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_INTERFACE_MAP_IMPL(type, name, name_ext, exact_const, const_, \
+                                   ...)                                       \
+  auto name(T const_* x __VA_OPT__(                                           \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                 \
+    return (*x).name_ext(                                                     \
+        __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                \
   };
 
-#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, const_, ...) \
+#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, \
+                                            const_, ...)                       \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext, exact_const, const_, ...) \
-  name = [](void const_* _vp __VA_OPT__(                                  \
-             , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {      \
-    return v_table_map{}.name(                                            \
-        virtual_void::data::unchecked_unerase_cast<CONCRETE>(_vp)         \
-            __VA_OPT__(, )                                                \
-                __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext,     \
+                                                 exact_const, const_, ...) \
+  name = [](void const_* _vp __VA_OPT__(                                   \
+             , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {       \
+    return v_table_map{}.name(                                             \
+        virtual_void::data::unchecked_unerase_cast<CONCRETE>(_vp)          \
+            __VA_OPT__(, )                                                 \
+                __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
 
-#define _detail_INTERFACE_METHOD(type, name, name_ext, exact_const, const_, ...)                \
+#define _detail_INTERFACE_METHOD(type, name, name_ext, exact_const, const_,  \
+                                 ...)                                        \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
-    requires(::virtual_void::data::const_correct_call_for_erased_data<   \
-             void const_*, erased_data_t>)                               \
-  {                                                                      \
-    return static_cast<v_table_t*>(v_table_)->name(                      \
-        virtual_void::data::get_void_data_ptr(base_t::erased_data_)      \
-            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
+    requires(::virtual_void::data::const_correct_call_for_erased_data<       \
+             void const_*, erased_data_t, exact_const>)                      \
+  {                                                                          \
+    return static_cast<v_table_t*>(v_table_)->name(                          \
+        virtual_void::data::get_void_data_ptr(base_t::erased_data_)          \
+            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
 #define VV_INTERFACE_TEMPLATE_(t, n, BASE, l)                                  \
@@ -269,6 +274,10 @@
         operator->() const {                                                   \
       return this;                                                             \
     }                                                                          \
+                                                                               \
+    using base_t::operator();                                                  \
+    using base_t::operator[];                                                  \
+                                                                               \
     n() = default;                                                             \
     n(n const&) = default;                                                     \
     n(n&&) = default;                                                          \
@@ -289,15 +298,15 @@
 
 #define VV_INTERFACE_(n, BASE, l) VV_INTERFACE_TEMPLATE_((), n, BASE, l)
 
-#define VV_INTERFACE(n, l) \
-  VV_INTERFACE_(n, ::virtual_void::interface::base, l)
+#define VV_INTERFACE(n, l) VV_INTERFACE_(n, ::virtual_void::interface::base, l)
 
 #define VV_INTERFACE_TEMPLATE(t, n, l) \
   VV_INTERFACE_TEMPLATE_(t, n, ::virtual_void::interface::base, l)
 
 #define VV_METHOD_(...) (__VA_ARGS__)
 
-#define VV_METHOD(ret, name, ...) VV_METHOD_(ret, name, name, false, , __VA_ARGS__)
+#define VV_METHOD(ret, name, ...) \
+  VV_METHOD_(ret, name, name, false, , __VA_ARGS__)
 
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, name, false, const, __VA_ARGS__)
@@ -305,8 +314,16 @@
 #define VV_OP(ret, x, op, ...) \
   VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, false, , __VA_ARGS__)
 
-#define VV_CONST_OP(ret, x, op, ...) \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, false, const, __VA_ARGS__)
+#define VV_OP_EXACT(ret, x, op, ...) \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, true, , __VA_ARGS__)
+
+#define VV_CONST_OP(ret, x, op, ...)                                    \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, false, const, \
+             __VA_ARGS__)
+
+#define VV_CONST_OP_EXACT(ret, x, op, ...)                             \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, true, const, \
+             __VA_ARGS__)
 
 #define VV_V_TABLE_INSTANCE(export_, class, interface_)               \
   template <>                                                         \
