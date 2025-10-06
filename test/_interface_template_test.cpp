@@ -48,8 +48,6 @@ struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
   auto to_string(int const* x) -> std::string { return std::to_string(*x); };
 };
 template <>
-struct to_string_i_v_table_map<int const> : to_string_i_v_table_map<int> {};
-template <>
 struct to_string_i_v_table_map<double>
     : to_string_i_default_v_table_map<double> {
   auto to_string(double const* x) -> std::string { return std::to_string(*x); };
