@@ -302,6 +302,12 @@
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, name, const, __VA_ARGS__)
 
+#define VV_OP(ret, x, op, ...) \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, , __VA_ARGS__)
+
+#define VV_CONST_OP(ret, x, op, ...) \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, const, __VA_ARGS__)
+
 #define VV_V_TABLE_INSTANCE(export_, class, interface_)               \
   template <>                                                         \
   struct export_ interface_##_v_table_instance<class> {               \

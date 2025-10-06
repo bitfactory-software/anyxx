@@ -32,10 +32,9 @@ struct functor2_t {
 };
 }  // namespace
 
-
 VV_INTERFACE(overloaded_function_object,
-             (VV_METHOD_(std::string, op1, operator(), , std::string const&),
-              VV_METHOD_(std::string, op2, operator(), const)))
+             (VV_OP(std::string, 1, (), std::string const&),
+              VV_CONST_OP(std::string, 2, ())))
 
 VV_RUNTIME_STATIC(functor_t)
 VV_V_TABLE_INSTANCE(, functor_t, overloaded_function_object)

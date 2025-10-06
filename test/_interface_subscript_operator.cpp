@@ -19,13 +19,11 @@ using map_t = std::map<int, std::string>;
 using vector_t = std::vector<std::string>;
 }  // namespace
 
-
 namespace {
-VV_INTERFACE(map_i_to_string_const,
-             (VV_METHOD_(std::string const&, op1, operator[], const, int)))
+VV_INTERFACE(map_i_to_string_const, (VV_CONST_OP(std::string const&, 1, [], int)))
 VV_INTERFACE(map_i_to_string_mutable,
-             (VV_METHOD_(std::string&, op1, operator[], , int)))/*,
-              VV_METHOD_(std::string const&, op1, operator[], const, int)*/
+             (VV_OP(std::string&, 1, [], int))) /*,
+               VV_CONST_OP(std::string const&, [], int)*/
 
 }  // namespace
 
@@ -63,9 +61,9 @@ TEST_CASE("mutable subscript_operator (vector) with mutable_observer") {
   REQUIRE(v[1] == "world");
   REQUIRE(vector[1] == "world");
 
-  //map_i_to_string_mutable<const_observer> v_const{vector};
-  //REQUIRE(v_const[0] == "hallo");
-  //v[1] = "world";
-  //REQUIRE(v[1] == "world");
-  //REQUIRE(vector[1] == "world");
+  // map_i_to_string_mutable<const_observer> v_const{vector};
+  // REQUIRE(v_const[0] == "hallo");
+  // v[1] = "world";
+  // REQUIRE(v[1] == "world");
+  // REQUIRE(vector[1] == "world");
 }

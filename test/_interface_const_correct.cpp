@@ -65,8 +65,8 @@ VV_RUNTIME_STATIC(functor)
 
 namespace {
 
-VV_INTERFACE(const_function_i, (VV_METHOD_(std::string, op1, operator(), const)))
-VV_INTERFACE(mutating_function_i, (VV_METHOD_(void, op1, operator(), , std::string const&)))
+VV_INTERFACE(const_function_i, (VV_CONST_OP(std::string, 1, ())))
+VV_INTERFACE(mutating_function_i, (VV_OP(void, 1, (), std::string const&)))
 
 using const_function = const_function_i<data::const_observer>;
 using mutating_function = mutating_function_i<data::mutable_observer>;

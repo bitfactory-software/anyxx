@@ -15,13 +15,12 @@ using namespace virtual_void;
 using namespace virtual_void::data;
 
 namespace virtual_void {
-VV_INTERFACE(string_to_string, (VV_METHOD_(std::string, op_call_1, operator(),
-                                           const, std::string const&)))
+VV_INTERFACE(string_to_string,
+             (VV_CONST_OP(std::string, 1, (), std::string const&)))
 
 VV_INTERFACE(string_to_string_mutable,
-             (VV_METHOD_(std::string, op_call_1, operator(), const),
-              VV_METHOD_(std::string, op_call_2, operator(), ,
-                         std::string const&)))
+             (VV_CONST_OP(std::string, 1, ()),
+              VV_OP(std::string, 2, (), std::string const&)))
 
 }  // namespace virtual_void
 
@@ -83,13 +82,11 @@ TEST_CASE("std emulated function") {
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    string_to_string_mutable<unique> f{
-        std::make_unique<functor_t>("hello")};
+    string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(interface::unerase_cast<functor_t>(f)->s_ == "hello world");
-    static_assert(!std::assignable_from<
-                  string_to_string_mutable<unique>,
-                  string_to_string_mutable<unique>>);
+    static_assert(!std::assignable_from<string_to_string_mutable<unique>,
+                                        string_to_string_mutable<unique>>);
     string_to_string_mutable<unique> f2{std::move(f)};
     REQUIRE(!has_data(get_erased_data(f)));
     REQUIRE(f2(", bye") == "hello world");

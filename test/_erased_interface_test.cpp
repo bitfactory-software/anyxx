@@ -75,7 +75,7 @@ using shape_vv = shape_i<data::shared_const>;
 
 using shape_base_v = shape_base<data::const_observer>;
 
-VV_INTERFACE_(shape_fi, shape_d_i, (VV_METHOD_(std::string, op1, operator(), const, std::string const&)))
+VV_INTERFACE_(shape_fi, shape_d_i, (VV_CONST_OP(std::string, 1, (), std::string const&)))
 using shape = shape_fi<data::const_observer>;
 using shapeX = shape_d_i<data::const_observer>;
 using shapeXX = shape_d_i<data::const_observer>;
