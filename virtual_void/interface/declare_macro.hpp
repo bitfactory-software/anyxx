@@ -186,14 +186,12 @@
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;             \
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((CONCRETE), t))>  \
-  struct n##_v_table_instance {                                                \
-    static n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t) *        \
-        get() {                                                                \
-      static n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t)        \
-          v_table{std::in_place_type<CONCRETE>};                               \
-      return &v_table;                                                         \
-    }                                                                          \
-  };                                                                           \
+  struct n##_v_table_instance                                                  \
+      : virtual_void::interface::v_table_instance_implementaion<               \
+            virtual_void::interface::v_table_on_the_fly<                       \
+                n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t)>,   \
+            CONCRETE,                                                          \
+            n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t)> {};    \
                                                                                \
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
       : BASE##_v_table {                                                       \
@@ -354,6 +352,18 @@
   namespace {                                                         \
   static auto __ = virtual_void::runtime::bind_v_table_to_meta_data<  \
       interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
+  }
+
+#define VV_V_TABLE_INSTANCE_ON_THE_FLY(interface_namespace, interface_name) \
+  namespace interface_namespace {                                           \
+  struct interface_name##_v_table;                                          \
+  }                                                                         \
+                                                                            \
+  namespace virtual_void::interface {                                       \
+  template <>                                                               \
+  constexpr bool                                                            \
+      v_table_on_the_fly<interface_namespace::interface_name##_v_table> =   \
+          true;                                                             \
   }
 
 #define VV_NAME(...) __VA_ARGS__

@@ -65,7 +65,8 @@ class base {
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     using t = data::unerased<ERASED_DATA, CONSTRUCTED_WITH>;
   }
-public:
+
+ public:
   template <is_interface OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
@@ -109,7 +110,7 @@ public:
   friend inline TO unchecked_downcast_to(FROM from)
     requires(std::derived_from<TO, FROM>);
 
-public:
+ public:
   void operator()() const {}
   void* operator[](void*) const { return {}; }
 };
@@ -198,5 +199,25 @@ auto unerase_cast(INTERFACE const* o) {
   data::unerase_cast<U>(get_erased_data(*o), get_runtime(o));
   return nullptr;
 }
+
+template <typename V_TABLE>
+constexpr bool v_table_on_the_fly = false;
+
+
+template <bool V_TABLE_ON_THE_FLY, typename CONCRETE, typename V_TABLE>
+struct v_table_instance_implementaion;
+
+template <typename CONCRETE, typename V_TABLE>
+struct v_table_instance_implementaion<true, CONCRETE, V_TABLE> {
+  static V_TABLE* get() {
+    static V_TABLE v_table{std::in_place_type<CONCRETE>};
+    return &v_table;
+  }
+};
+
+template <typename CONCRETE, typename V_TABLE>
+struct v_table_instance_implementaion<false, CONCRETE, V_TABLE> {
+  static V_TABLE* get();
+};
 
 }  // namespace virtual_void::interface
