@@ -187,7 +187,12 @@
                                                                                \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((CONCRETE), t))>  \
   struct n##_v_table_instance {                                                \
-    static n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t) * get(); \
+    static n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t) *        \
+        get() {                                                                \
+      static n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t)        \
+          v_table{std::in_place_type<CONCRETE>};                               \
+      return &v_table;                                                         \
+    }                                                                          \
   };                                                                           \
                                                                                \
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
