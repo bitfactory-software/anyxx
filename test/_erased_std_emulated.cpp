@@ -16,18 +16,6 @@ using namespace virtual_void::data;
 
 namespace {}
 
-#define VV_V_TABLE_INSTANCE_ON_THE_FLY(interface_namespace, interface_name) \
-  namespace interface_namespace {                                           \
-  struct interface_name##_v_table;                                          \
-  }                                                                         \
-                                                                            \
-  namespace virtual_void::interface {                                       \
-  template <>                                                               \
-  constexpr bool                                                            \
-      v_table_on_the_fly<interface_namespace::interface_name##_v_table> =   \
-          true;                                                             \
-  }
-
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, string_to_string)
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, string_to_string_mutable)
 

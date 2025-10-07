@@ -19,6 +19,10 @@ using map_t = std::map<int, std::string>;
 using vector_t = std::vector<std::string>;
 }  // namespace
 
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_i_to_string_mutable)
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_i_to_string_const_and_mutable)
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_i_to_string_const_derived_mutable)
+
 namespace {
 VV_INTERFACE(map_i_to_string_mutable, (VV_OP_EXACT(std::string&, 1, [], int)))
 
@@ -32,11 +36,7 @@ VV_INTERFACE_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
 }  // namespace
 
 VV_RUNTIME_STATIC(map_t)
-VV_V_TABLE_INSTANCE(, map_t, map_i_to_string_mutable)
 VV_RUNTIME_STATIC(vector_t)
-VV_V_TABLE_INSTANCE(, vector_t, map_i_to_string_const_and_mutable)
-VV_V_TABLE_INSTANCE(, vector_t, map_i_to_string_mutable)
-VV_V_TABLE_INSTANCE(, vector_t, map_i_to_string_const_derived_mutable)
 
 TEST_CASE("mutable subscript_operator with mutable_observer") {
   map_t map{{0, "hallo"}};

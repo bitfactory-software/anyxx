@@ -63,6 +63,9 @@ struct functor {
 
 VV_RUNTIME_STATIC(functor)
 
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, const_function_i)
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, mutating_function_i)
+
 namespace {
 
 VV_INTERFACE(const_function_i, (VV_CONST_OP(std::string, 1, ())))
@@ -92,8 +95,6 @@ static_assert(!std::is_assignable_v<mutating_function const,
 
 }  // namespace
 
-VV_V_TABLE_INSTANCE(, functor, const_function_i)
-VV_V_TABLE_INSTANCE(, functor, mutating_function_i)
 
 TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
   using namespace virtual_void;
@@ -188,6 +189,9 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
   }
 }
 
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, text_i_const)
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, text_i_mutable)
+
 namespace {
 struct text_object {
   std::string text = "hallo";
@@ -202,8 +206,6 @@ VV_INTERFACE_(text_i_mutable, text_i_const,
 }  // namespace
 
 VV_RUNTIME_STATIC(text_object)
-VV_V_TABLE_INSTANCE(, text_object, text_i_const)
-VV_V_TABLE_INSTANCE(, text_object, text_i_mutable)
 
 using const_text_i = text_i_const<data::const_observer>;
 using const_text_i_mutable = text_i_const<data::mutable_observer>;

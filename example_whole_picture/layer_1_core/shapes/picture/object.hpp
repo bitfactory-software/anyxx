@@ -14,3 +14,5 @@ struct picture {
 }  // namespace whole_picture::core
 
 VV_RUNTIME(CORE_EXPORT, whole_picture::core::shapes::picture)
+VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture, whole_picture::architecture::shape)
+VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture, whole_picture::architecture::surface)

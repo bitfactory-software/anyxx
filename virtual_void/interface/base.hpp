@@ -200,6 +200,7 @@ auto unerase_cast(INTERFACE const* o) {
   return nullptr;
 }
 
+//template <template< typename...> typename INTERFACE, typename... ARGS>
 template <typename V_TABLE>
 constexpr bool v_table_on_the_fly = false;
 

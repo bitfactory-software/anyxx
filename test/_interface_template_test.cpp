@@ -21,6 +21,8 @@ struct X {
 
 VV_RUNTIME_STATIC(X)
 
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, to_string_i)
+
 namespace {
 VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 
@@ -67,8 +69,6 @@ VV_RUNTIME_STATIC(std::map<std::string, std::map<int, double>>)
 VV_RUNTIME_STATIC(
     std::map<std::string, std::map<std::string, std::map<int, double>>>)
 
-VV_V_TABLE_INSTANCE(, int, to_string_i)
-VV_V_TABLE_INSTANCE(, double, to_string_i)
 
 VV_V_TABLE_TEMPLATE_INSTANCE(, VV_NAME(std::map<std::string, double>),
                              map_to_string_i, std::string)

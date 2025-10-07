@@ -32,14 +32,14 @@ struct functor2_t {
 };
 }  // namespace
 
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, overloaded_function_object)
+namespace {
 VV_INTERFACE(overloaded_function_object,
              (VV_OP(std::string, 1, (), std::string const&),
               VV_CONST_OP(std::string, 2, ())))
-
+}
 VV_RUNTIME_STATIC(functor_t)
-VV_V_TABLE_INSTANCE(, functor_t, overloaded_function_object)
 VV_RUNTIME_STATIC(functor2_t)
-VV_V_TABLE_INSTANCE(, functor2_t, overloaded_function_object)
 
 namespace {
 template <template <typename> typename F, typename OBSERVER>

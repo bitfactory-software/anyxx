@@ -22,7 +22,9 @@ namespace virtual_typed_test {
 struct x_t {
   std::string s_;
 };
+}
 
+namespace virtual_typed_test {
 VV_INTERFACE(test_i, (VV_CONST_METHOD(std::string, to_string),
                       VV_METHOD(void, from_string, std::string_view)))
 }  // namespace virtual_typed_test
@@ -32,7 +34,7 @@ using namespace virtual_typed_test;
 VV_RUNTIME(, int)
 VV_RUNTIME(, std::string)
 VV_RUNTIME_STATIC(x_t)
-VV_V_TABLE_INSTANCE(, x_t, test_i)
+VV_V_TABLE_INSTANCE_STATIC(x_t, test_i)
 
 TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};

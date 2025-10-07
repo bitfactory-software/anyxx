@@ -26,7 +26,6 @@ static X x{3.14};
 
 using namespace test::component_base;
 
-
 // template <>
 // struct COMPONENT_BASE_EXPORT get_value_i_v_table_instance<X> {
 //   static get_value_i_v_table* get() {
@@ -43,6 +42,9 @@ using namespace test::component_base;
 // };
 
 VV_RUNTIME_STATIC(X)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, X, get_value_i)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, X, set_value_i)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, X, to_string_i)
 VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, get_value_i)
 VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, set_value_i)
 VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, to_string_i)

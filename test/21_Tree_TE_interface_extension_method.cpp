@@ -20,12 +20,19 @@ using std::string;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 
+VV_V_TABLE_INSTANCE_ON_THE_FLY(_21_Tree_TE_interface_extension_method::node, node_i)
+
 namespace _21_Tree_TE_interface_extension_method {
 
 namespace node {
-
 VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value)))
+}
+}
 
+
+
+namespace _21_Tree_TE_interface_extension_method {
+namespace node {
 struct interface;
 using model = node_i<data::shared_const>;
 };  // namespace node
@@ -90,10 +97,6 @@ using namespace virtual_void;
 VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Plus)
 VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Times)
 VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Integer)
-VV_V_TABLE_INSTANCE(, _21_Tree_TE_interface_extension_method::Plus, _21_Tree_TE_interface_extension_method::node::node_i)
-VV_V_TABLE_INSTANCE(, _21_Tree_TE_interface_extension_method::Times, _21_Tree_TE_interface_extension_method::node::node_i)
-VV_V_TABLE_INSTANCE(, _21_Tree_TE_interface_extension_method::Integer, _21_Tree_TE_interface_extension_method::node::node_i)
-
 
 namespace _21_Tree_TE_interface_extension_method {
 
