@@ -101,7 +101,10 @@ base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete)
       }) {}
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
-extension_method_table_t* extension_method_table_instance() {
+extension_method_table_t* extension_method_table_instance();
+
+template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+extension_method_table_t* extension_method_table_instance_implementation() {
   static extension_method_table_t extension_method_table;
   return &extension_method_table;
 }

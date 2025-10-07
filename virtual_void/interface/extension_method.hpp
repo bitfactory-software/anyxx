@@ -15,7 +15,7 @@ template <is_interface I>
 using extended_v_table = typename I::v_table_t;
 
 template <typename EXTENDED_V_TABLE>
-std::size_t extension_method_count_of = 0;
+auto extension_method_count_of = std::false_type{};
 
 template <is_interface EXTENDED_INTERACE, typename R, typename... ARGS>
   requires has_extension_methods_enabled<EXTENDED_INTERACE>
@@ -86,3 +86,21 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
 };
 
 }  // namespace virtual_void::interface
+
+
+#define VV_EXTENSION_METHOD_COUNT(interface_) \
+template<> \
+auto interface::extension_method_count_of<interface_> = 0; \
+
+#define VV_EXTENSION_TABLE_INSTANCE(class_, interface_)               \
+  template <>                                                         \
+  virtual_void::runtime::extension_method_table_t*                    \
+  virtual_void::runtime::extension_method_table_instance<interface_,  \
+                                                         class_>() {  \
+    return extension_method_table_instance_implementation<interface_, \
+                                                          class_>();  \
+  }
+
+#define VV_V_TABLE_INSTANCE_STATIC(class, interface_) \
+  VV_V_TABLE_INSTANCE_FWD(, class, interface_)        \
+  VV_V_TABLE_INSTANCE(, class, interface_)

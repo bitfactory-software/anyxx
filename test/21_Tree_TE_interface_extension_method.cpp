@@ -20,17 +20,19 @@ using std::string;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(_21_Tree_TE_interface_extension_method::node, node_i)
-VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node, node_i)
+VV_V_TABLE_INSTANCE_ON_THE_FLY(_21_Tree_TE_interface_extension_method::node,
+                               node_i)
+VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
+                                 node_i)
 
 namespace _21_Tree_TE_interface_extension_method {
 
 namespace node {
 VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value)))
 }
-}
+}  // namespace _21_Tree_TE_interface_extension_method
 
-
+VV_EXTENSION_METHOD_COUNT(_21_Tree_TE_interface_extension_method::node::node_i_v_table)
 
 namespace _21_Tree_TE_interface_extension_method {
 namespace node {
@@ -53,6 +55,21 @@ struct Integer {
   int i;
   int value() const { return i; }
 };
+
+}  // namespace _21_Tree_TE_interface_extension_method
+
+
+VV_EXTENSION_TABLE_INSTANCE(
+    _21_Tree_TE_interface_extension_method::Plus,
+    _21_Tree_TE_interface_extension_method::node::node_i_v_table)
+VV_EXTENSION_TABLE_INSTANCE(
+    _21_Tree_TE_interface_extension_method::Times,
+    _21_Tree_TE_interface_extension_method::node::node_i_v_table)
+VV_EXTENSION_TABLE_INSTANCE(
+    _21_Tree_TE_interface_extension_method::Integer,
+    _21_Tree_TE_interface_extension_method::node::node_i_v_table)
+
+namespace _21_Tree_TE_interface_extension_method {
 
 // =============================================================================
 // add behavior to existing classes, without changing them

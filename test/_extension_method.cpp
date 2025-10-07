@@ -34,9 +34,15 @@ namespace {
 VV_INTERFACE(test_base_i, (VV_CONST_METHOD(std::string, to_string)))
 VV_INTERFACE_(test_derived_i, test_base_i,
               (VV_METHOD(void, from_string, std::string const&)))
+
 }  // namespace
 
+VV_EXTENSION_METHOD_COUNT(test_base_i_v_table)
+VV_EXTENSION_METHOD_COUNT(test_derived_i_v_table)
+
 VV_RUNTIME_STATIC(x_t)
+VV_EXTENSION_TABLE_INSTANCE(x_t, test_base_i_v_table)
+VV_EXTENSION_TABLE_INSTANCE(x_t, test_derived_i_v_table)
 
 using test_base_i_co = test_base_i<const_observer>;
 using test_derived_i_mo = test_derived_i<mutable_observer>;
@@ -74,8 +80,10 @@ TEST_CASE("virtual_typed/interface/extension_method") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 
-  CHECK( test_base_i_v_table::imlpementation<x_t>()->own_extension_method_holder_t::extension_method_table );
-  CHECK( test_derived_i_v_table::imlpementation<x_t>()->own_extension_method_holder_t::extension_method_table );
+  CHECK(test_base_i_v_table::imlpementation<x_t>()
+            ->own_extension_method_holder_t::extension_method_table);
+  CHECK(test_derived_i_v_table::imlpementation<x_t>()
+            ->own_extension_method_holder_t::extension_method_table);
 
   x_t x{"hallo"};
   test_derived_i_mo i{x};
