@@ -203,7 +203,6 @@ auto unerase_cast(INTERFACE const* o) {
 template <typename V_TABLE>
 constexpr bool v_table_on_the_fly = false;
 
-
 template <bool V_TABLE_ON_THE_FLY, typename CONCRETE, typename V_TABLE>
 struct v_table_instance_implementaion;
 
