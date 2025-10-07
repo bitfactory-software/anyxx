@@ -200,7 +200,7 @@ auto unerase_cast(INTERFACE const* o) {
   return nullptr;
 }
 
-template <template< typename...> typename INTERFACE, typename... ARGS>
+template <template <typename...> typename INTERFACE>
 constexpr bool v_table_on_the_fly = false;
 
 template <bool V_TABLE_ON_THE_FLY, typename CONCRETE, typename V_TABLE>
@@ -217,6 +217,22 @@ struct v_table_instance_implementaion<true, CONCRETE, V_TABLE> {
 template <typename CONCRETE, typename V_TABLE>
 struct v_table_instance_implementaion<false, CONCRETE, V_TABLE> {
   static V_TABLE* get();
+};
+
+template <template <typename...> typename INTERFACE>
+constexpr bool has_extension_methods = false;
+
+template <typename I>
+concept has_extension_methods_enabled = is_interface<I> && I::v_table_t::extension_methods_enabled;
+
+template <bool HAS_EXTENSION_METHODS, template <typename...> typename INTERFACE>
+struct extension_method_holder;
+template <template <typename...> typename INTERFACE>
+struct extension_method_holder<false, INTERFACE> {
+};
+template <template <typename...> typename INTERFACE>
+struct extension_method_holder<true, INTERFACE> {
+  runtime::extension_method_table_t* extension_method_table = nullptr;
 };
 
 }  // namespace virtual_void::interface

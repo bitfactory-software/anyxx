@@ -18,9 +18,11 @@ template <typename EXTENDED_V_TABLE>
 std::size_t extension_method_count_of = 0;
 
 template <is_interface EXTENDED_INTERACE, typename R, typename... ARGS>
+  requires has_extension_methods_enabled<EXTENDED_INTERACE>
 class extension_method;
 
 template <is_interface EXTENDED_INTERACE, typename R, typename... ARGS>
+  requires has_extension_methods_enabled<EXTENDED_INTERACE>
 class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
  public:
   using interface_t = EXTENDED_INTERACE;
@@ -28,8 +30,7 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
 
   using CONSTNESS = typename first_t<ARGS...>;
   using VOID = void_t<CONSTNESS>;
-  using observer_interface_t =
-      interface_t::template type_for<VOID>;
+  using observer_interface_t = interface_t::template type_for<VOID>;
   template <typename CLASS>
   using class_param_t = self_pointer<VOID>::template type<CLASS>;
   using erased_function_t =

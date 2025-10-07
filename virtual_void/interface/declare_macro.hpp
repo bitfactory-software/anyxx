@@ -194,9 +194,15 @@
             n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t)> {};    \
                                                                                \
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
-      : BASE##_v_table {                                                       \
+      : BASE##_v_table,                                                        \
+        virtual_void::interface::extension_method_holder<                      \
+            virtual_void::interface::has_extension_methods<n>, n> {            \
     using v_table_base_t = BASE##_v_table;                                     \
     using v_table_t = n##_v_table;                                             \
+    using own_extension_method_holder_t =                                      \
+        virtual_void::interface::extension_method_holder<                      \
+            virtual_void::interface::has_extension_methods<n>, n>;             \
+                                                                               \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
                  ? true                                                        \
@@ -205,7 +211,8 @@
                                                                                \
     _detail_foreach_macro(_detail_INTERFACE_FPD_H, _detail_EXPAND_LIST l);     \
                                                                                \
-    virtual_void::runtime::extension_method_table_t* extension_method_table;   \
+    static constexpr bool extension_methods_enabled =                          \
+        virtual_void::interface::has_extension_methods<n>;                     \
                                                                                \
     template <typename CONCRETE>                                               \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
@@ -215,9 +222,11 @@
       _detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H,                  \
                             _detail_EXPAND_LIST l);                            \
                                                                                \
-      extension_method_table =                                                 \
-          ::virtual_void::runtime::extension_method_table_instance<            \
-              n##_v_table, CONCRETE>();                                        \
+      if constexpr (extension_methods_enabled) {                               \
+        own_extension_method_holder_t::extension_method_table =                \
+            ::virtual_void::runtime::extension_method_table_instance<          \
+                n##_v_table, CONCRETE>();                                      \
+      }                                                                        \
                                                                                \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
     };                                                                         \
@@ -362,13 +371,16 @@
       interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
   }
 
+#define VV_INTERFACE_FORWARD(interface_namespace, interface_name, ...) \
+  namespace interface_namespace {                                      \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                    \
+      _add_head((ERASED_DATA), (__VA_ARGS__)))>                        \
+  struct interface_name;                                               \
+  }
+
 #define VV_V_TABLE_INSTANCE_ON_THE_FLY(interface_namespace, interface_name, \
                                        ...)                                 \
-  namespace interface_namespace {                                           \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                         \
-      _add_head((ERASED_DATA), (__VA_ARGS__)))>                             \
-  struct interface_name;                                                    \
-  }                                                                         \
+  VV_INTERFACE_FORWARD(interface_namespace, interface_name, __VA_ARGS__)    \
                                                                             \
   namespace virtual_void::interface {                                       \
   template <>                                                               \
@@ -376,16 +388,14 @@
       true;                                                                 \
   }
 
-//#define VV_V_TABLE_INSTANCE_ON_THE_FLY(interface_namespace, interface_name) \
-//  namespace interface_namespace {                                           \
-//  struct interface_name##_v_table;                                          \
-//  }                                                                         \
-//                                                                            \
-//  namespace virtual_void::interface {                                       \
-//  template <>                                                               \
-//  constexpr bool                                                            \
-//      v_table_on_the_fly<interface_namespace::interface_name##_v_table> =   \
-//          true;                                                             \
-//  }
+#define VV_V_TABLE_HAS_EXTENSION_METHODS(interface_namespace, interface_name, \
+                                         ...)                                 \
+  VV_INTERFACE_FORWARD(interface_namespace, interface_name, __VA_ARGS__)      \
+                                                                              \
+  namespace virtual_void::interface {                                         \
+  template <>                                                                 \
+  constexpr bool has_extension_methods<interface_namespace::interface_name> = \
+      true;                                                                   \
+  }
 
 #define VV_NAME(...) __VA_ARGS__

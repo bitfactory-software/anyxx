@@ -21,6 +21,7 @@ using namespace virtual_void;
 using namespace virtual_void::interface;
 
 VV_V_TABLE_INSTANCE_ON_THE_FLY(_21_Tree_TE_interface_extension_method::node, node_i)
+VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node, node_i)
 
 namespace _21_Tree_TE_interface_extension_method {
 
@@ -58,7 +59,6 @@ struct Integer {
 
 //-----------------------------------------------------------------------------
 // evaluate
-static_assert(interface::is_interface<node::model>);
 extension_method<node::model, int(virtual_void::const_)> value;
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });

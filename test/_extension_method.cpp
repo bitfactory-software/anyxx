@@ -23,9 +23,11 @@ namespace {
 struct x_t {
   std::string s_;
 };
-}
+}  // namespace
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, test_base_i)
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, test_derived_i)
+VV_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)
+VV_V_TABLE_HAS_EXTENSION_METHODS(, test_derived_i)
 
 namespace {
 
@@ -61,9 +63,20 @@ auto __ =
       expr->s_ = std::string{"otherwise "} + s;
     });
 
+auto base_table =
+    runtime::extension_method_table_instance<test_base_i_v_table, x_t>();
+auto derived_table =
+    runtime::extension_method_table_instance<test_derived_i_v_table, x_t>();
+
 namespace {
 
 TEST_CASE("virtual_typed/interface/extension_method") {
+  CHECK(base_table->size() == 1);
+  CHECK(derived_table->size() == 1);
+
+  CHECK( test_base_i_v_table::imlpementation<x_t>()->own_extension_method_holder_t::extension_method_table );
+  CHECK( test_derived_i_v_table::imlpementation<x_t>()->own_extension_method_holder_t::extension_method_table );
+
   x_t x{"hallo"};
   test_derived_i_mo i{x};
   CHECK(i.to_string() == "hallo");
