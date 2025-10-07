@@ -24,10 +24,12 @@ class hook<R(ARGS...)> {
    public:
     connection(connection&&) = default;
     connection& operator=(connection&&) = default;
-
-    ~connection() {
-      if (hook_) hook_->remove(std::move(*this));
+    void close() {
+      if (hook_) hook_->remove(id_);
+      hook_ = nullptr;
     }
+
+    ~connection() { close(); }
   };
 
   class super {
@@ -42,7 +44,7 @@ class hook<R(ARGS...)> {
     R operator()(ARGS&&... args) const {
       assert(index_ >= 0);
       return hook_.callees_[index_].second(super{index_ - 1, hook_},
-                             std::forward<ARGS>(args)...);
+                                           std::forward<ARGS>(args)...);
     }
   };
 
@@ -60,14 +62,13 @@ class hook<R(ARGS...)> {
     return connection{next_id_++, this};
   }
 
-  void remove(connection&& c) {
+ private:
+  void remove(int id) {
     std::erase_if(callees_, [&](auto const id_callee_pair) {
-      return id_callee_pair.first == c.id_;
+      return id_callee_pair.first == id;
     });
-    c.hook_ = nullptr;
   }
 
- private:
   int next_id_ = 0;
   using entry = std::pair<int, callee>;
   std::vector<entry> callees_;

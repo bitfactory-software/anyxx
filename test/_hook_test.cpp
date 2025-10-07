@@ -19,9 +19,13 @@ TEST_CASE("hook 1") {
 
   auto connection2 =
       the_hook.insert([](auto super, std::string const& in) -> std::string {
-        CHECK(super);
-        return super(in + "-1-");
+        auto intermediate = in + "-1-";
+        if (super) return super(intermediate);
+        return intermediate;
       });
 
   CHECK(the_hook("hallo") == "hallo-1--0-");
+
+  connection1.close();
+  CHECK(the_hook("hallo") == "hallo-1-");
 }
