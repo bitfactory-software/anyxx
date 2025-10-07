@@ -38,8 +38,6 @@ VV_INTERFACE(overloaded_function_object,
              (VV_OP(std::string, 1, (), std::string const&),
               VV_CONST_OP(std::string, 2, ())))
 }
-VV_RUNTIME_STATIC(functor_t)
-VV_RUNTIME_STATIC(functor2_t)
 
 namespace {
 template <template <typename> typename F, typename OBSERVER>

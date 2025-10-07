@@ -35,9 +35,6 @@ VV_INTERFACE_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
 
 }  // namespace
 
-VV_RUNTIME_STATIC(map_t)
-VV_RUNTIME_STATIC(vector_t)
-
 TEST_CASE("mutable subscript_operator with mutable_observer") {
   map_t map{{0, "hallo"}};
   map_i_to_string_mutable<mutable_observer> m{map};

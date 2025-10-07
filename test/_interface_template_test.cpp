@@ -19,8 +19,6 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-VV_RUNTIME_STATIC(X)
-
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, to_string_i)
 
 namespace {
@@ -59,8 +57,6 @@ struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
 };
 }  // namespace
 
-VV_RUNTIME_STATIC(int)
-VV_RUNTIME_STATIC(double)
 VV_RUNTIME_STATIC(std::map<int, double>)
 VV_RUNTIME_STATIC(std::map<int, std::map<std::string, std::map<int, double>>>)
 VV_RUNTIME_STATIC(std::map<std::string, int>)

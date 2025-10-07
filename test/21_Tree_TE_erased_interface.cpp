@@ -62,22 +62,12 @@ struct Integer {
   int int_;
 };
 
-// alternative :
-//  template <typename NODE, typename... ARGS>
-//  auto make_node(ARGS&&... args) {
-//   return node{NODE(std::forward<ARGS>(args)...)};
-// }
-
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
   return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
 }
 
 }  // namespace
-
-VV_RUNTIME_STATIC(Plus)
-VV_RUNTIME_STATIC(Times)
-VV_RUNTIME_STATIC(Integer)
 
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
