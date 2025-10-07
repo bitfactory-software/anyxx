@@ -55,12 +55,6 @@ void insert_function(extension_method_table_t* v_table, std::size_t index,
       reinterpret_cast<runtime::extension_method_table_function_t>(fp);
 }
 
-template <typename CONCRETE>
-base_v_table* base_v_table_imlpementation() {
-  static base_v_table v_table{std::in_place_type<CONCRETE>};
-  return &v_table;
-}
-
 struct cast_error {
   std::type_info const &to, &from;
 };
@@ -104,14 +98,19 @@ template <typename CONCRETE>
 base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete)
     : _is_derived_from([](const std::type_info& from) {
         return static_is_derived_from(from);
-      }) {
-  runtime::get_meta_data<CONCRETE>().register_v_table(this);
-}
+      }) {}
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
 extension_method_table_t* extension_method_table_instance() {
   static extension_method_table_t extension_method_table;
   return &extension_method_table;
+}
+
+template <typename INTERFACE_V_TABLE_INSTANCE, typename CONCRETE>
+auto bind_v_table_to_meta_data() {
+  auto v_table = INTERFACE_V_TABLE_INSTANCE::get();
+  runtime::get_meta_data<CONCRETE>().register_v_table(v_table);
+  return v_table;
 }
 
 }  // namespace virtual_void::runtime

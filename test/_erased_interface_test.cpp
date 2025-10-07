@@ -309,24 +309,28 @@ TEST_CASE("dynamic interface unique") {
 namespace {
 struct x_t {
   std::string s_;
+  std::string get() const { return s_; }
 };
+VV_INTERFACE(has_meta_data, (VV_CONST_METHOD(std::string, get)))
 }  // namespace
 VV_RUNTIME_STATIC(x_t)
+VV_V_TABLE_INSTANCE(,x_t, has_meta_data)
+
 
 TEST_CASE("base") {
   using namespace virtual_void;
   using namespace virtual_void;
   using value = data::shared_const;
 
-  using value_base = interface::base<value>;
+  using value_with_meta_data = has_meta_data<value>;
 
   {
     auto e = data::erased<value>(std::make_shared<x_t>("hallo"));
     REQUIRE(data::unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
   }
   {
-    value_base vb(std::make_shared<x_t>("hallo"));
-    REQUIRE(unerase_cast<x_t>(vb)->s_ == "hallo");
-    CHECK_THROWS_AS(unerase_cast<std::string>(vb), type_mismatch_error);
+    value_with_meta_data v(std::make_shared<x_t>("hallo"));
+    REQUIRE(unerase_cast<x_t>(v)->s_ == "hallo");
+    CHECK_THROWS_AS(unerase_cast<std::string>(v), type_mismatch_error);
   }
 }

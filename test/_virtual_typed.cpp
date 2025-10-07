@@ -37,8 +37,8 @@ VV_V_TABLE_INSTANCE(, x_t, test_i)
 TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};
 
-  interface::base<const_observer> co{s};
-  static_assert(is_interface<interface::base<const_observer>>);
+  test_i<const_observer> co{s};
+  static_assert(is_interface<test_i<const_observer>>);
   CHECK(interface::unerase_cast<x_t>(co)->s_ == "hallo");
   CHECK_THROWS_AS(interface::unerase_cast<std::string>(co),
                   type_mismatch_error);
@@ -48,7 +48,7 @@ TEST_CASE("virtual_typed/observer/base") {
   CHECK((*co_typed).s_ == "hallo");
   CHECK_THROWS_AS(interface::as<std::string>(co), type_mismatch_error);
 
-  interface::base<mutable_observer> mo{s};
+  test_i<mutable_observer> mo{s};
   CHECK(interface::unerase_cast<x_t>(mo)->s_ == "hallo");
   CHECK_THROWS_AS(interface::unerase_cast<std::string>(mo),
                   type_mismatch_error);

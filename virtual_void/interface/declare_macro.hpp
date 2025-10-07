@@ -217,7 +217,6 @@
               n##_v_table, CONCRETE>();                                        \
                                                                                \
       ::virtual_void::interface::set_is_derived_from<v_table_t>(this);         \
-      virtual_void::runtime::get_meta_data<CONCRETE>().register_v_table(this); \
     };                                                                         \
                                                                                \
     template <typename CONCRETE>                                               \
@@ -334,20 +333,22 @@
     };                                                                \
   };                                                                  \
   namespace {                                                         \
-  static auto __ = interface_##_v_table_instance<class>::get();       \
+  static auto __ = virtual_void::runtime::bind_v_table_to_meta_data<  \
+      interface_##_v_table_instance<class>, class>();                 \
   }
 
-#define VV_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...)        \
-  template <>                                                                \
-  struct export_ interface_##_v_table_instance<class, __VA_ARGS__> {         \
-    static interface_##_v_table<__VA_ARGS__>* get() {                        \
-      static interface_##_v_table<__VA_ARGS__> v_table{                      \
-          std::in_place_type<class>};                                        \
-      return &v_table;                                                       \
-    };                                                                       \
-  };                                                                         \
-  namespace {                                                                \
-  static auto __ = interface_##_v_table_instance<class, __VA_ARGS__>::get(); \
+#define VV_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \
+  template <>                                                         \
+  struct export_ interface_##_v_table_instance<class, __VA_ARGS__> {  \
+    static interface_##_v_table<__VA_ARGS__>* get() {                 \
+      static interface_##_v_table<__VA_ARGS__> v_table{               \
+          std::in_place_type<class>};                                 \
+      return &v_table;                                                \
+    };                                                                \
+  };                                                                  \
+  namespace {                                                         \
+  static auto __ = virtual_void::runtime::bind_v_table_to_meta_data<  \
+      interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
   }
 
 #define VV_NAME(...) __VA_ARGS__

@@ -55,7 +55,6 @@ class base {
   erased_data_t erased_data_ = {};
   v_table_t* v_table_ = nullptr;
 
- public:
   base() = default;
   base(erased_data_t virtual_void, v_table_t* v_table)
       : erased_data_(std::move(virtual_void)), v_table_(v_table) {}
@@ -65,8 +64,8 @@ class base {
       : erased_data_(data::erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
     using t = data::unerased<ERASED_DATA, CONSTRUCTED_WITH>;
-    v_table_ = runtime::base_v_table_imlpementation<t>();
   }
+public:
   template <is_interface OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
@@ -110,11 +109,9 @@ class base {
   friend inline TO unchecked_downcast_to(FROM from)
     requires(std::derived_from<TO, FROM>);
 
+public:
   void operator()() const {}
   void* operator[](void*) const { return {}; }
-  explicit operator bool() const {
-    return static_cast<bool>(get_erased_data(*this));
-  }
 };
 
 template <typename V_TABLE, data::is_erased_data ERASED_DATA>

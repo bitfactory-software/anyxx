@@ -102,7 +102,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "unique i0: " << i0.to_string() << "\n";
 
-    base<unique> i1b = *clone_to<get_value_i<unique>>(i0);
+    auto i1b = *clone_to<get_value_i<unique>>(i0);
     auto i1{
         std::move(unchecked_downcast_to<get_value_i<unique>>(std::move(i1b)))};
 
