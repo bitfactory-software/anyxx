@@ -2,6 +2,7 @@
 
 #include <expected>
 #include <map>
+#include <optional>
 #include <ranges>
 #include <type_traits>
 #include <typeindex>
@@ -54,6 +55,13 @@ void insert_function(extension_method_table_t* v_table, std::size_t index,
   v_table->at(index) =
       reinterpret_cast<runtime::extension_method_table_function_t>(fp);
 }
+inline std::optional<std::size_t> has_multi_method_index_at(
+    extension_method_table_t* v_table, std::size_t index) {
+  return {};
+}
+inline void set_multi_method_index_at(
+    extension_method_table_t* v_table, std::size_t index_multi_method,
+    std::size_t dispatch_index_of_class_in_dispatch_matrix) {}
 
 struct cast_error {
   std::type_info const &to, &from;
