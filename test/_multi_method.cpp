@@ -44,9 +44,9 @@ auto __ =
 auto __ =
     collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
 auto __ =
-    collide.define<Spaceship, Spaceship>([](auto a, auto s) { return "a->a"; });
+    collide.define<Spaceship, Spaceship>([](auto a, auto s) { return "s->s"; });
 auto __ =
-    collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "a->a"; });
+    collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a"; });
 
 TEST_CASE("virtual_typed/interface/multi_method") {
   CHECK(Thing_v_table::imlpementation<Asteroid>()
@@ -68,3 +68,17 @@ TEST_CASE("virtual_typed/interface/multi_method") {
 }
 
 }  // namespace
+
+template <typename R, typename... ARGS>
+struct method;
+template <typename R, typename... ARGS>
+struct method<R(ARGS...)>;
+
+template <is_interface INTERFACE>
+struct virtual_ {
+  using type = INTERFACE;
+};
+
+using example = method<std::string(virtual_<Thing<const_observer>>,
+                                   virtual_<Thing<mutable_observer>>, double,
+                                   int, Thing<shared_const>)>;
