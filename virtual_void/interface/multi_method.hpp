@@ -62,19 +62,27 @@ class multi_method<FIRST, SECOND, R(ARGS...)> {
   // multi_method(default_function::type f = default_function::noop)
   //     : default_(f) {}
   multi_method() = default;
-  //  template <typename... OTHER_ARGS>
-  //  auto operator()(observer_interface_t const& m, OTHER_ARGS&&... args) const
-  //  {
-  //    auto v_table = get_v_table(m)->extension_method_table;
-  //    if (v_table->size() <= index_)
-  //      return default_(m, std::forward<OTHER_ARGS>(args)...);
-  //    auto target = v_table->at(index_);
-  //    if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
-  //
-  //    auto erased_function = reinterpret_cast<erased_function_t>(target);
-  //    return (erased_function)(get_void_data_ptr(m),
-  //                             std::forward<OTHER_ARGS>(args)...);
-  //  }
+
+  template <typename... OTHER_ARGS>
+  auto operator()(observer_interface1_t const& model1,
+                  observer_interface2_t const& model2,
+                  OTHER_ARGS&&... args) const {
+    auto v_table1 = get_v_table(model1)->extension_method_table;
+    auto dispatch_dim1 = runtime::get_multi_method_index_at(v_table1, index1_);
+
+    auto v_table2 = get_v_table(model2)->extension_method_table;
+    auto dispatch_dim2 = runtime::get_multi_method_index_at(v_table2, index2_);
+
+    assert(dispatch_dim1 && dispatch_dim2);
+
+    auto target = dispatch_matrix_[*dispatch_dim1][*dispatch_dim2];
+    assert(target);
+
+    auto erased_function = reinterpret_cast<erased_function_t>(target);
+    return (erased_function)(get_void_data_ptr(model1),
+                             get_void_data_ptr(model2),
+                             std::forward<OTHER_ARGS>(args)...);
+  }
   //  template <typename CLASS, typename... OTHER_ARGS>
   //  auto operator()(CLASS const* p, OTHER_ARGS&&... args) const {
   //    return (*this)(observer_interface_t{*p},
@@ -87,21 +95,23 @@ class multi_method<FIRST, SECOND, R(ARGS...)> {
 
     auto v_table1 =
         runtime::extension_method_table_instance<v_table1_t, CLASS1>();
-    auto dispatch_dim1 = *runtime::get_multi_method_index_at(v_table1, index1_)
-                              .or_else([&] -> std::optional<std::size_t> {
-                                runtime::set_multi_method_index_at(
-                                    v_table1, index1_, dispatch_dimension_size_1_);
-                                return dispatch_dimension_size_1_++;
-                              });
+    auto dispatch_dim1 =
+        *runtime::get_multi_method_index_at(v_table1, index1_)
+             .or_else([&] -> std::optional<std::size_t> {
+               runtime::set_multi_method_index_at(v_table1, index1_,
+                                                  dispatch_dimension_size_1_);
+               return dispatch_dimension_size_1_++;
+             });
 
     auto v_table2 =
         runtime::extension_method_table_instance<v_table2_t, CLASS2>();
-    auto dispatch_dim2 = *runtime::get_multi_method_index_at(v_table2, index2_)
-                              .or_else([&] -> std::optional<std::size_t> {
-                                runtime::set_multi_method_index_at(
-                                    v_table2, index2_, dispatch_dimension_size_2_);
-                                return dispatch_dimension_size_2_++;
-                              });
+    auto dispatch_dim2 =
+        *runtime::get_multi_method_index_at(v_table2, index2_)
+             .or_else([&] -> std::optional<std::size_t> {
+               runtime::set_multi_method_index_at(v_table2, index2_,
+                                                  dispatch_dimension_size_2_);
+               return dispatch_dimension_size_2_++;
+             });
 
     if (dispatch_matrix_.size() <= dispatch_dim1)
       dispatch_matrix_.resize(dispatch_dim1 + 1);
