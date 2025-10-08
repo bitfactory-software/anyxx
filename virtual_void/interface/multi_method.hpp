@@ -51,7 +51,7 @@ class multi_method<FIRST, SECOND, R(ARGS...)> {
  private:
   std::size_t index1_ = extension_method_count_of<v_table1_t> ++;
   std::size_t index2_ = extension_method_count_of<v_table2_t> ++;
-  std::vector<std::vector<void(*)()>> dispatch_matrix_;
+  std::vector<std::vector<erased_function_t>> dispatch_matrix_;
   std::size_t dispatch_dimension_size_1_ = 0;
   std::size_t dispatch_dimension_size_2_ = 0;
 
@@ -84,12 +84,33 @@ class multi_method<FIRST, SECOND, R(ARGS...)> {
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr2<CLASS1, class1_param_t, CLASS2,
                                    class2_param_t, R, ARGS...>(f);
+
     auto v_table1 =
         runtime::extension_method_table_instance<v_table1_t, CLASS1>();
+    auto dispatch_dim1 = *runtime::get_multi_method_index_at(v_table1, index1_)
+                              .or_else([&] -> std::optional<std::size_t> {
+                                runtime::set_multi_method_index_at(
+                                    v_table1, index1_, dispatch_dimension_size_1_);
+                                return dispatch_dimension_size_1_++;
+                              });
+
     auto v_table2 =
         runtime::extension_method_table_instance<v_table2_t, CLASS2>();
+    auto dispatch_dim2 = *runtime::get_multi_method_index_at(v_table2, index2_)
+                              .or_else([&] -> std::optional<std::size_t> {
+                                runtime::set_multi_method_index_at(
+                                    v_table2, index2_, dispatch_dimension_size_2_);
+                                return dispatch_dimension_size_2_++;
+                              });
 
-    // runtime::insert_function(v_table, index_, fp);
+    if (dispatch_matrix_.size() <= dispatch_dim1)
+      dispatch_matrix_.resize(dispatch_dim1 + 1);
+    if (dispatch_matrix_[dispatch_dim1].size() <= dispatch_dim2)
+      dispatch_matrix_[dispatch_dim1].resize(dispatch_dim2 + 1);
+
+    dispatch_matrix_[dispatch_dim1][dispatch_dim2] =
+        reinterpret_cast<erased_function_t>(fp);
+
     return fp;
   }
 };

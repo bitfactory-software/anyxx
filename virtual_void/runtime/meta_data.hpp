@@ -48,10 +48,10 @@ inline bool is_derived_from(const std::type_info& from,
 }
 
 using extension_method_table_function_t = void (*)();
-using extension_method_table_dispatch_index_t = std::optional<std::size_t>;
+using extension_method_table_dispatch_index_t = std::size_t;
 using extension_method_table_entry_t =
-    std::variant<extension_method_table_function_t,
-                 extension_method_table_dispatch_index_t>;
+    std::variant<std::monostate, extension_method_table_dispatch_index_t,
+                 extension_method_table_function_t>;
 using extension_method_table_t = std::vector<extension_method_table_entry_t>;
 
 void insert_function(extension_method_table_t* v_table, std::size_t index,
@@ -60,18 +60,32 @@ void insert_function(extension_method_table_t* v_table, std::size_t index,
   v_table->at(index) =
       reinterpret_cast<runtime::extension_method_table_function_t>(fp);
 }
-inline auto get_function(extension_method_table_t* v_table, std::size_t index) {
-  return std::get<extension_method_table_function_t>(v_table->at(index));
+inline extension_method_table_function_t get_function(
+    extension_method_table_t* v_table, std::size_t index) {
+  if (auto f =
+          std::get_if<extension_method_table_function_t>(&v_table->at(index)))
+    return *f;
+  else
+    return {};
 }
 
-inline std::optional<std::size_t> has_multi_method_index_at(
+inline std::optional<std::size_t> get_multi_method_index_at(
     extension_method_table_t* v_table, std::size_t index) {
   if (v_table->size() <= index) return {};
-  return std::get<extension_method_table_dispatch_index_t>( v_table->at(index));
+  if (auto extension_method_table_dispatch_index =
+          std::get_if<extension_method_table_dispatch_index_t>(
+              &v_table->at(index)))
+    return *extension_method_table_dispatch_index;
+  return {};
 }
 inline void set_multi_method_index_at(
     extension_method_table_t* v_table, std::size_t index_multi_method,
-    std::size_t dispatch_index_of_class_in_dispatch_matrix) {}
+    extension_method_table_dispatch_index_t
+        dispatch_index_of_class_in_dispatch_matrix) {
+  if (v_table->size() <= index_multi_method)
+    v_table->resize(index_multi_method + 1);
+  v_table->at(index_multi_method) = dispatch_index_of_class_in_dispatch_matrix;
+}
 
 struct cast_error {
   std::type_info const &to, &from;
