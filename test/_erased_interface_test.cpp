@@ -311,7 +311,7 @@ struct x_t {
   std::string s_;
   std::string get() const { return s_; }
 };
-VV_INTERFACE(has_meta_data, (VV_CONST_METHOD(std::string, get)))
+VV_INTERFACE(has_meta_data,)
 }  // namespace
 VV_RUNTIME_STATIC(x_t)
 VV_V_TABLE_INSTANCE_STATIC(x_t, has_meta_data)
