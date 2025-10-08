@@ -37,12 +37,12 @@ VV_INTERFACE_(test_derived_i, test_base_i,
 
 }  // namespace
 
-VV_EXTENSION_METHOD_COUNT(test_base_i_v_table)
-VV_EXTENSION_METHOD_COUNT(test_derived_i_v_table)
+VV_EXTENSION_METHOD_COUNT(test_base_i)
+VV_EXTENSION_METHOD_COUNT(test_derived_i)
 
 VV_RUNTIME_STATIC(x_t)
-VV_EXTENSION_TABLE_INSTANCE(x_t, test_base_i_v_table)
-VV_EXTENSION_TABLE_INSTANCE(x_t, test_derived_i_v_table)
+VV_EXTENSION_TABLE_INSTANCE(x_t, test_base_i)
+VV_EXTENSION_TABLE_INSTANCE(x_t, test_derived_i)
 
 using test_base_i_co = test_base_i<const_observer>;
 using test_derived_i_mo = test_derived_i<mutable_observer>;

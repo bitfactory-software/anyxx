@@ -25,10 +25,10 @@ class Spaceship {};
 
 };  // namespace
 
-VV_EXTENSION_METHOD_COUNT(Thing_v_table)
+VV_EXTENSION_METHOD_COUNT(Thing)
 
-VV_EXTENSION_TABLE_INSTANCE(Asteroid, Thing_v_table)
-VV_EXTENSION_TABLE_INSTANCE(Spaceship, Thing_v_table)
+VV_EXTENSION_TABLE_INSTANCE(Asteroid, Thing)
+VV_EXTENSION_TABLE_INSTANCE(Spaceship, Thing)
 
 namespace {
 

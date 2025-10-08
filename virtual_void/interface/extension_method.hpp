@@ -90,14 +90,14 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
 
 #define VV_EXTENSION_METHOD_COUNT(interface_) \
 template<> \
-auto interface::extension_method_count_of<interface_> = 0; \
+auto interface::extension_method_count_of<interface_##_v_table> = 0; \
 
 #define VV_EXTENSION_TABLE_INSTANCE(class_, interface_)               \
   template <>                                                         \
   virtual_void::runtime::extension_method_table_t*                    \
-  virtual_void::runtime::extension_method_table_instance<interface_,  \
+  virtual_void::runtime::extension_method_table_instance<interface_##_v_table,  \
                                                          class_>() {  \
-    return extension_method_table_instance_implementation<interface_, \
+    return extension_method_table_instance_implementation<interface_##_v_table, \
                                                           class_>();  \
   }
 
