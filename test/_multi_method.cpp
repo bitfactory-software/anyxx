@@ -69,16 +69,80 @@ TEST_CASE("virtual_typed/interface/multi_method") {
 
 }  // namespace
 
-template <typename R, typename... ARGS>
-struct method;
-template <typename R, typename... ARGS>
-struct method<R(ARGS...)>;
-
+namespace {
 template <is_interface INTERFACE>
 struct virtual_ {
   using type = INTERFACE;
 };
 
+template <typename ARG>
+struct translate_erased_function_param {
+  using type = ARG;
+};
+template <is_interface INTERFACE>
+struct translate_erased_function_param<virtual_<INTERFACE>> {
+  using type = typename INTERFACE::void_t;
+};
+
+template <typename RET, typename... ARGS>
+struct translate_erased_function {
+  using type = RET (*)(typename translate_erased_function_param<ARGS>::type...);
+};
+
+template <typename R, typename... ARGS>
+struct method;
+template <typename R, typename... ARGS>
+struct method<R(ARGS...)> {
+  using erased_function_t =
+      typename translate_erased_function<R, ARGS...>::type;
+};
+
 using example = method<std::string(virtual_<Thing<const_observer>>,
                                    virtual_<Thing<mutable_observer>>, double,
-                                   int, Thing<shared_const>)>;
+                                   int, Thing<shared_const> const&)>;
+
+static_assert(std::same_as<example::erased_function_t,
+                           std::string (*)(void const*, void*, double, int,
+                                           Thing<shared_const> const&)>);
+
+template <typename R, typename... CLASSES>
+struct ensure_function_ptr_from_functor_t {
+  template <typename FUNCTOR, typename... ARGS>
+  struct striped_virtuals {
+    static R function(CLASSES*... classes, ARGS... args) {
+      return FUNCTOR{}(classes..., args...);
+    };
+  };
+
+  template <typename FUNCTOR, is_interface INTERFACE, typename... ARGS>
+  struct striped_virtuals<FUNCTOR, virtual_<INTERFACE>, ARGS...>
+      : striped_virtuals<FUNCTOR, ARGS...> {};
+
+  template <typename... ARGS>
+  static auto instance(
+      auto functor)  // if functor is a templated operator() from a
+                     // stateless function object, instantiate it now!;
+  {
+    using functor_t = decltype(functor);
+    if constexpr (std::is_pointer_v<functor_t>) {
+      return functor;
+    } else {
+      return striped_virtuals<functor_t, ARGS...>::function;
+    }
+  }
+};
+
+auto a_functor = [](auto, auto, double, int, Thing<shared_const> const&) {
+  return std::string{};
+};
+
+auto a_function = ensure_function_ptr_from_functor_t<std::string, Asteroid,
+                                                     Spaceship>::
+    instance<virtual_<Thing<const_observer>>, virtual_<Thing<mutable_observer>>,
+             double, int, Thing<shared_const> const&>(a_functor);
+
+static_assert(std::same_as<decltype(a_function),
+                           std::string (*)(Asteroid*, Spaceship*, double, int,
+                                           Thing<shared_const> const&)>);
+
+}  // namespace
