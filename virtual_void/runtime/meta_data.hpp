@@ -48,7 +48,10 @@ inline bool is_derived_from(const std::type_info& from,
 }
 
 using extension_method_table_function_t = void (*)();
-using extension_method_table_entry_t = std::variant<extension_method_table_function_t, std::size_t>;
+using extension_method_table_dispatch_index_t = std::optional<std::size_t>;
+using extension_method_table_entry_t =
+    std::variant<extension_method_table_function_t,
+                 extension_method_table_dispatch_index_t>;
 using extension_method_table_t = std::vector<extension_method_table_entry_t>;
 
 void insert_function(extension_method_table_t* v_table, std::size_t index,
@@ -63,7 +66,8 @@ inline auto get_function(extension_method_table_t* v_table, std::size_t index) {
 
 inline std::optional<std::size_t> has_multi_method_index_at(
     extension_method_table_t* v_table, std::size_t index) {
-  return {};
+  if (v_table->size() <= index) return {};
+  return std::get<extension_method_table_dispatch_index_t>( v_table->at(index));
 }
 inline void set_multi_method_index_at(
     extension_method_table_t* v_table, std::size_t index_multi_method,
