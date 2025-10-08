@@ -4,12 +4,19 @@
 
 namespace virtual_void {
 
-template <typename RET, typename... ARGS>
-struct translate_erased_function;
+template <typename ARG>
+struct translate_erased_function_param {
+  using type = ARG;
+};
+template <is_constness CONSTNESS>
+struct translate_erased_function_param<CONSTNESS>
+{
+  using type = void_t<CONSTNESS>;
+};
 
-template <typename RET, is_constness CONSTNESS, typename... OTHER_ARGS>
-struct translate_erased_function<RET, CONSTNESS, OTHER_ARGS...> {
-  using type = RET (*)(void_t<CONSTNESS>, OTHER_ARGS...);
+template <typename RET, typename... ARGS>
+struct translate_erased_function {
+  using type = RET (*)(typename translate_erased_function_param<ARGS>::type...);
 };
 
 }  // namespace virtual_void
