@@ -144,5 +144,34 @@ auto a_function = ensure_function_ptr_from_functor_t<std::string, Asteroid,
 static_assert(std::same_as<decltype(a_function),
                            std::string (*)(Asteroid*, Spaceship*, double, int,
                                            Thing<shared_const> const&)>);
+}
+
+VV_V_TABLE_INSTANCE_ON_THE_FLY(, Dummy)
+// NOT! VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
+
+namespace {
+
+VV_INTERFACE(Dummy, )
+
+template <typename... ARGS>
+struct have_extension_methods_enabled {
+  static constexpr bool value = true;
+};
+template <is_interface INTERFACE, typename... ARGS>
+  requires has_extension_methods_enabled<INTERFACE>
+struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...>
+    : have_extension_methods_enabled<ARGS...> {};
+template <is_interface INTERFACE, typename... ARGS>
+  requires (!has_extension_methods_enabled<INTERFACE>)
+           struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...> {
+  static constexpr bool value = false;
+};
+static_assert(!has_extension_methods_enabled<Dummy<const_observer>>);
+static_assert(has_extension_methods_enabled<Thing<const_observer>>);
+  
+static_assert(!have_extension_methods_enabled<virtual_<Dummy<const_observer>>,virtual_<Dummy<const_observer>>>::value);
+static_assert(!have_extension_methods_enabled<virtual_<Dummy<const_observer>>,virtual_<Thing<const_observer>>>::value);
+static_assert(!have_extension_methods_enabled<virtual_<Thing<const_observer>>,virtual_<Dummy<const_observer>>>::value);
+static_assert(have_extension_methods_enabled<virtual_<Thing<const_observer>>,virtual_<Thing<const_observer>>>::value);
 
 }  // namespace
