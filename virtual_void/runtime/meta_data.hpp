@@ -6,6 +6,7 @@
 #include <ranges>
 #include <type_traits>
 #include <typeindex>
+#include <variant>
 #include <vector>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/unique.hpp>
@@ -47,7 +48,8 @@ inline bool is_derived_from(const std::type_info& from,
 }
 
 using extension_method_table_function_t = void (*)();
-using extension_method_table_t = std::vector<extension_method_table_function_t>;
+using extension_method_table_entry_t = std::variant<extension_method_table_function_t, std::size_t>;
+using extension_method_table_t = std::vector<extension_method_table_entry_t>;
 
 void insert_function(extension_method_table_t* v_table, std::size_t index,
                      auto fp) {
@@ -55,6 +57,10 @@ void insert_function(extension_method_table_t* v_table, std::size_t index,
   v_table->at(index) =
       reinterpret_cast<runtime::extension_method_table_function_t>(fp);
 }
+inline auto get_function(extension_method_table_t* v_table, std::size_t index) {
+  return std::get<extension_method_table_function_t>(v_table->at(index));
+}
+
 inline std::optional<std::size_t> has_multi_method_index_at(
     extension_method_table_t* v_table, std::size_t index) {
   return {};

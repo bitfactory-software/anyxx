@@ -64,7 +64,7 @@ class extension_method<EXTENDED_INTERACE, R(ARGS...)> {
     auto v_table = get_v_table(m)->extension_method_table;
     if (v_table->size() <= index_)
       return default_(m, std::forward<OTHER_ARGS>(args)...);
-    auto target = v_table->at(index_);
+    auto target = runtime::get_function(v_table, index_);
     if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
 
     auto erased_function = reinterpret_cast<erased_function_t>(target);
