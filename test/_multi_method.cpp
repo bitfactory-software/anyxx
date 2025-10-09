@@ -89,12 +89,20 @@ struct translate_erased_function {
   using type = RET (*)(typename translate_erased_function_param<ARGS>::type...);
 };
 
-template <int COUNT, typename... ARGS>
+template <std::size_t COUNT, typename... ARGS>
 constexpr std::size_t multi_method_dimension_count = COUNT;
-template <int COUNT, is_interface INTERFACE, typename... ARGS>
+template <std::size_t COUNT, is_interface INTERFACE, typename... ARGS>
 constexpr std::size_t
     multi_method_dimension_count<COUNT, virtual_<INTERFACE>, ARGS...> =
         multi_method_dimension_count<COUNT + 1, ARGS...>;
+
+template <typename DISPATCH, typename... ARGS>
+struct dispatch_matrix {
+  using type = DISPATCH;
+};
+template <typename DISPATCH, is_interface INTERFACE, typename... ARGS>
+struct dispatch_matrix<DISPATCH, virtual_<INTERFACE>, ARGS...>
+    : dispatch_matrix<std::vector<DISPATCH>, ARGS...> {};
 
 template <typename R, typename... ARGS>
 struct method;
@@ -102,8 +110,27 @@ template <typename R, typename... ARGS>
 struct method<R(ARGS...)> {
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
+
   static constexpr std::size_t dimension_count =
       multi_method_dimension_count<0, ARGS...>;
+
+  using dispatch_matrix_t = dispatch_matrix<erased_function_t, ARGS...>::type;
+  dispatch_matrix_t dispatch_matrix_;
+
+  template <std::size_t DIM, typename... ARGS>
+  struct dispatch_access;
+
+  template <std::size_t DIM, is_interface INTERFACE, typename... ARGS>
+  struct dispatch_access<DIM, virtual_<INTERFACE>, ARGS...> {
+    using interface_t = INTERFACE;
+    using v_table_t = extended_v_table<INTERFACE>;
+
+    std::size_t index_ = extension_method_count_of<v_table_t> ++;
+    std::size_t dispatch_dimension_size_ = 0;
+
+    template <typename FUNCTION, typename... CLASSES>
+    auto define(FUNCTION f, auto& matrix) {}
+  };
 };
 
 using example = method<std::string(virtual_<Thing<const_observer>>,
@@ -114,7 +141,12 @@ static_assert(std::same_as<example::erased_function_t,
                            std::string (*)(void const*, void*, double, int,
                                            Thing<shared_const> const&)>);
 
+static_assert(std::same_as<example::dispatch_matrix_t,
+                           std::vector<std::vector<example::erased_function_t>>>);
+
 static_assert(example::dimension_count == 2);
+
+
 
 template <typename R, typename... CLASSES>
 struct ensure_function_ptr_from_functor_t {
