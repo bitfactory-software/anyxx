@@ -123,6 +123,25 @@ struct ensure_function_ptr_from_functor_t {
   }
 };
 
+template <typename... METHOD_ARGS>
+struct args_to_tuple {
+  template <typename T, typename... ACTUAL_ARGS>
+  auto operator()(T&& dispatch_args, ACTUAL_ARGS&&... args) {
+    return std::tuple_cat(dispatch_args,
+                          std::make_tuple(std::forward<ACTUAL_ARGS>(args)...));
+  }
+};
+template <is_interface INTERFACE, typename... METHOD_ARGS>
+struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
+  template <typename T>
+  auto operator()(T&& dispatch_args, INTERFACE const& dispatch_arg,
+                  METHOD_ARGS&&... args) {
+    return args_to_tuple<METHOD_ARGS...>{}(std::tuple_cat(
+        dispatch_args, std::make_tuple(get_void_data_ptr(dispatch_arg)),
+        std::forward<METHOD_ARGS>(args)...));
+  }
+};
+
 template <typename DISPATCH, typename... ARGS>
 struct dispatch_matrix {
   using type = DISPATCH;
@@ -152,6 +171,11 @@ struct method<R(ARGS...)> {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
     }
+
+    template <typename ARGS_TUPLE>
+    auto invoke(erased_function_t f, ARGS_TUPLE&& args) {
+      return std::apply(f, std::forward<ARGS_TUPLE>(args));
+    }
   };
 
   template <std::size_t DIM, is_interface INTERFACE, typename... ARGS>
@@ -167,7 +191,7 @@ struct method<R(ARGS...)> {
     template <typename CLASS, typename... CLASSES>
     auto define(auto fp, auto& matrix) {
       auto extension_method_table =
-          runtime::extension_method_table_instance<v_table_t, CLASS>();
+           runtime::extension_method_table_instance<v_table_t, CLASS>();
       auto dispatch_index =
           *runtime::get_multi_method_index_at(extension_method_table, index_)
                .or_else([&] -> std::optional<std::size_t> {
@@ -178,6 +202,8 @@ struct method<R(ARGS...)> {
       if (matrix.size() <= dispatch_index) matrix.resize(dispatch_index + 1);
       return next_t::template define<CLASSES...>(fp, matrix[dispatch_index]);
     }
+
+    // auto invoke()
   };
 
   dispatch_access<0, ARGS...> dispatch_access_;
