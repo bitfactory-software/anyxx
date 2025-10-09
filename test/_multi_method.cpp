@@ -96,58 +96,6 @@ constexpr std::size_t
     multi_method_dimension_count<COUNT, virtual_<INTERFACE>, ARGS...> =
         multi_method_dimension_count<COUNT + 1, ARGS...>;
 
-template <typename DISPATCH, typename... ARGS>
-struct dispatch_matrix {
-  using type = DISPATCH;
-};
-template <typename DISPATCH, is_interface INTERFACE, typename... ARGS>
-struct dispatch_matrix<DISPATCH, virtual_<INTERFACE>, ARGS...>
-    : dispatch_matrix<std::vector<DISPATCH>, ARGS...> {};
-
-template <typename R, typename... ARGS>
-struct method;
-template <typename R, typename... ARGS>
-struct method<R(ARGS...)> {
-  using erased_function_t =
-      typename translate_erased_function<R, ARGS...>::type;
-
-  static constexpr std::size_t dimension_count =
-      multi_method_dimension_count<0, ARGS...>;
-
-  using dispatch_matrix_t = dispatch_matrix<erased_function_t, ARGS...>::type;
-  dispatch_matrix_t dispatch_matrix_;
-
-  template <std::size_t DIM, typename... ARGS>
-  struct dispatch_access;
-
-  template <std::size_t DIM, is_interface INTERFACE, typename... ARGS>
-  struct dispatch_access<DIM, virtual_<INTERFACE>, ARGS...> {
-    using interface_t = INTERFACE;
-    using v_table_t = extended_v_table<INTERFACE>;
-
-    std::size_t index_ = extension_method_count_of<v_table_t> ++;
-    std::size_t dispatch_dimension_size_ = 0;
-
-    template <typename FUNCTION, typename... CLASSES>
-    auto define(FUNCTION f, auto& matrix) {}
-  };
-};
-
-using example = method<std::string(virtual_<Thing<const_observer>>,
-                                   virtual_<Thing<mutable_observer>>, double,
-                                   int, Thing<shared_const> const&)>;
-
-static_assert(std::same_as<example::erased_function_t,
-                           std::string (*)(void const*, void*, double, int,
-                                           Thing<shared_const> const&)>);
-
-static_assert(std::same_as<example::dispatch_matrix_t,
-                           std::vector<std::vector<example::erased_function_t>>>);
-
-static_assert(example::dimension_count == 2);
-
-
-
 template <typename R, typename... CLASSES>
 struct ensure_function_ptr_from_functor_t {
   template <typename FUNCTOR, typename... ARGS>
@@ -175,6 +123,86 @@ struct ensure_function_ptr_from_functor_t {
   }
 };
 
+template <typename DISPATCH, typename... ARGS>
+struct dispatch_matrix {
+  using type = DISPATCH;
+};
+template <typename DISPATCH, is_interface INTERFACE, typename... ARGS>
+struct dispatch_matrix<DISPATCH, virtual_<INTERFACE>, ARGS...>
+    : dispatch_matrix<std::vector<DISPATCH>, ARGS...> {};
+
+template <typename R, typename... ARGS>
+struct method;
+template <typename R, typename... ARGS>
+struct method<R(ARGS...)> {
+  using erased_function_t =
+      typename translate_erased_function<R, ARGS...>::type;
+
+  static constexpr std::size_t dimension_count =
+      multi_method_dimension_count<0, ARGS...>;
+
+  using dispatch_matrix_t = dispatch_matrix<erased_function_t, ARGS...>::type;
+  dispatch_matrix_t dispatch_matrix_;
+
+  using dispatch_indices = std::array<std::size_t, dimension_count>;
+
+  template <std::size_t DIM, typename... ARGS>
+  struct dispatch_access {
+    auto define(auto fp, auto& matrix) {
+      matrix = reinterpret_cast<erased_function_t>(fp);
+      return fp;
+    }
+  };
+
+  template <std::size_t DIM, is_interface INTERFACE, typename... ARGS>
+  struct dispatch_access<DIM, virtual_<INTERFACE>, ARGS...>
+      : dispatch_access<DIM + 1, ARGS...> {
+    using interface_t = INTERFACE;
+    using v_table_t = typename interface_t::v_table_t;
+    using next_t = dispatch_access<DIM + 1, ARGS...>;
+
+    std::size_t index_ = extension_method_count_of<v_table_t> ++;
+    std::size_t dispatch_dimension_size_ = 0;
+
+    template <typename CLASS, typename... CLASSES>
+    auto define(auto fp, auto& matrix) {
+      auto extension_method_table =
+          runtime::extension_method_table_instance<v_table_t, CLASS>();
+      auto dispatch_index =
+          *runtime::get_multi_method_index_at(extension_method_table, index_)
+               .or_else([&] -> std::optional<std::size_t> {
+                 runtime::set_multi_method_index_at(
+                     extension_method_table, index_, dispatch_dimension_size_);
+                 return dispatch_dimension_size_++;
+               });
+      if (matrix.size() <= dispatch_index) matrix.resize(dispatch_index + 1);
+      return next_t::template define<CLASSES...>(fp, matrix[dispatch_index]);
+    }
+  };
+
+  dispatch_access<0, ARGS...> dispatch_access_;
+
+  template <typename FUNCTION, typename... CLASSES>
+  auto define(FUNCTION f) {
+    auto fp = ensure_function_ptr_from_functor_t<CLASSES..., ARGS...>(f);
+    return dispatch_access_.template define<CLASSES>(f);
+  };
+};
+
+using example = method<std::string(virtual_<Thing<const_observer>>,
+                                   virtual_<Thing<mutable_observer>>, double,
+                                   int, Thing<shared_const> const&)>;
+
+static_assert(std::same_as<example::erased_function_t,
+                           std::string (*)(void const*, void*, double, int,
+                                           Thing<shared_const> const&)>);
+
+static_assert(
+    std::same_as<example::dispatch_matrix_t,
+                 std::vector<std::vector<example::erased_function_t>>>);
+
+static_assert(example::dimension_count == 2);
+
 auto a_functor = [](auto, auto, double, int, Thing<shared_const> const&) {
   return std::string{};
 };
@@ -193,7 +221,6 @@ VV_V_TABLE_INSTANCE_ON_THE_FLY(, Dummy)
 // NOT! VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 
 namespace {
-
 VV_INTERFACE(Dummy, )
 
 template <typename... ARGS>
