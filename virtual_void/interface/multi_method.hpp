@@ -107,10 +107,10 @@ struct multi_method<R(ARGS...)> {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
     }
-    template <typename DISPATCH_MATRIX, typename ARGS_TUPLE>
-    auto invoke(DISPATCH_MATRIX const& target, ARGS_TUPLE&& args,
+    template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE>
+    auto invoke(DISPATCH_MATRIX const& target, DISPATCH_ARGS_TUPLE&& args,
                 auto&&...) const {
-      return std::apply(target, std::forward<ARGS_TUPLE>(args));
+      return std::apply(target, std::forward<DISPATCH_ARGS_TUPLE>(args));
     }
   };
 
@@ -139,9 +139,9 @@ struct multi_method<R(ARGS...)> {
       return next_t::template define<CLASSES...>(fp, matrix[dispatch_index]);
     }
 
-    template <typename DISPATCH_MATRIX, typename ARGS_TUPLE,
+    template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
               typename... ACTUAL_ARGS>
-    auto invoke(DISPATCH_MATRIX const& target, ARGS_TUPLE&& args_tuple,
+    auto invoke(DISPATCH_MATRIX const& target, DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                 INTERFACE const& interface,
                 ACTUAL_ARGS&&... actual_args) const {
       auto extension_method_table =
@@ -150,7 +150,7 @@ struct multi_method<R(ARGS...)> {
           runtime::get_multi_method_index_at(extension_method_table, index_);
       assert(dispatch_dim);
       return next_t::invoke(target[*dispatch_dim],
-                            std::forward<ARGS_TUPLE>(args_tuple),
+                            std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple),
                             std::forward<ACTUAL_ARGS>(actual_args)...);
     }
   };
@@ -166,9 +166,9 @@ struct multi_method<R(ARGS...)> {
 
   template <typename... ACTUAL_ARGS>
   auto operator()(ACTUAL_ARGS&&... args) {
-    auto args_tuple = args_to_tuple<ARGS...>{}(
+    auto dispatch_args_tuple = args_to_tuple<ARGS...>{}(
         std::tuple<>{}, std::forward<ACTUAL_ARGS>(args)...);
-    return dispatch_access_.invoke(dispatch_matrix_, args_tuple,
+    return dispatch_access_.invoke(dispatch_matrix_, dispatch_args_tuple,
                                    std::forward<ACTUAL_ARGS>(args)...);
   }
 };
