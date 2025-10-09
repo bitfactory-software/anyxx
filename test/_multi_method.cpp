@@ -33,6 +33,8 @@ VV_EXTENSION_METHOD_COUNT(Thing)
 VV_EXTENSION_TABLE_INSTANCE(Asteroid, Thing)
 VV_EXTENSION_TABLE_INSTANCE(Spaceship, Thing)
 
+//multi_method<Thing<const_observer>, Thing<const_observer>,
+//             std::string(virtual_void::const_, virtual_void::const_)>
 multi_method<
              std::string(virtual_<Thing<const_observer>>, virtual_<Thing<const_observer>>)>
     collide;
@@ -133,12 +135,12 @@ struct args_to_tuple {
 };
 template <is_interface INTERFACE, typename... METHOD_ARGS>
 struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
-  template <typename T>
-  auto operator()(T const& dispatch_args, INTERFACE const& dispatch_arg,
-                  METHOD_ARGS&&... args) {
+  template <typename T, typename... ACTUAL_ARGS>
+  auto operator()(T const& dispatch_args, auto && dispatch_arg,
+                  ACTUAL_ARGS&&... args) {
     return args_to_tuple<METHOD_ARGS...>{}(std::tuple_cat(
         dispatch_args, std::make_tuple(get_void_data_ptr(dispatch_arg)),
-        std::forward<METHOD_ARGS>(args)...));
+        std::forward<ACTUAL_ARGS>(args)...));
   }
 };
 
