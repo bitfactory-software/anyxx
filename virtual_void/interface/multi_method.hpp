@@ -198,6 +198,7 @@ struct multi_method<R(ARGS...)> {
 
   dispatch_access<0, ARGS...> dispatch_access_;
 
+public:
   template <typename... CLASSES>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
