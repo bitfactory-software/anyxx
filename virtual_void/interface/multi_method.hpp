@@ -102,9 +102,9 @@ struct multi_method_default {
     using type = inner<INTERFACES...>::template type<ARGS...>;
   };
   template <is_interface INTERFACE, typename... ARGS>
-  struct outer<INTERFACE, ARGS...> {
+  struct outer<virtual_<INTERFACE>, ARGS...> {
     template <is_interface... INTERFACES>
-    using type = outer<ARGS...>::template type<INTERFACES..., INTERFACE>;
+    using type = outer<ARGS...>::template type<INTERFACE, INTERFACES...>;
   };
 
   using type = outer<ARGS...>::template type<>;
@@ -146,8 +146,10 @@ struct multi_method<R(ARGS...)> {
       return fp;
     }
     template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE>
-    auto invoke(DISPATCH_MATRIX const& target,
-                DISPATCH_ARGS_TUPLE&& dispatch_duple_args, auto&&...) const {
+    std::optional<R> invoke(DISPATCH_MATRIX const& target,
+                            DISPATCH_ARGS_TUPLE&& dispatch_duple_args,
+                            auto&&...) const {
+      if (!target) return {};
       return std::apply(target,
                         std::forward<DISPATCH_ARGS_TUPLE>(dispatch_duple_args));
     }
@@ -180,15 +182,16 @@ struct multi_method<R(ARGS...)> {
 
     template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
               typename... ACTUAL_ARGS>
-    auto invoke(DISPATCH_MATRIX const& target,
-                DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
-                INTERFACE const& interface,
-                ACTUAL_ARGS&&... actual_args) const {
+    std::optional<R> invoke(DISPATCH_MATRIX const& target,
+                            DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
+                            INTERFACE const& interface,
+                            ACTUAL_ARGS&&... actual_args) const {
       auto extension_method_table =
           get_v_table(interface)->extension_method_table;
       auto dispatch_dim =
           runtime::get_multi_method_index_at(extension_method_table, index_);
-      assert(dispatch_dim);
+      if (!dispatch_dim) return {};
+      if (target.size() < *dispatch_dim + 1) return {};
       return next_t::invoke(
           target[*dispatch_dim],
           std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple),
@@ -209,8 +212,13 @@ struct multi_method<R(ARGS...)> {
   auto operator()(ACTUAL_ARGS&&... actual_args) {
     auto dispatch_args_tuple = args_to_tuple<ARGS...>{}(
         std::tuple<>{}, std::forward<ACTUAL_ARGS>(actual_args)...);
-    return dispatch_access_.invoke(dispatch_matrix_, dispatch_args_tuple,
-                                   std::forward<ACTUAL_ARGS>(actual_args)...);
+    return *dispatch_access_
+                .invoke(dispatch_matrix_, dispatch_args_tuple,
+                        std::forward<ACTUAL_ARGS>(actual_args)...)
+                .or_else([&]() -> std::optional<R> {
+                  return std::invoke(multi_method_default_,
+                                     std::forward<ACTUAL_ARGS>(actual_args)...);
+                });
   }
 };
 
