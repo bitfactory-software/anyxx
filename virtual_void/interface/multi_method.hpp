@@ -198,14 +198,13 @@ struct multi_method<R(ARGS...)> {
 
   dispatch_access<0, ARGS...> dispatch_access_;
 
-public:
+ public:
   template <typename... CLASSES>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
         R, CLASSES...>::template instance<ARGS...>(f);
     return dispatch_access_.template define<CLASSES...>(fp, dispatch_matrix_);
   };
-
   template <typename... ACTUAL_ARGS>
   auto operator()(ACTUAL_ARGS&&... actual_args) {
     auto dispatch_args_tuple = args_to_tuple<ARGS...>{}(
