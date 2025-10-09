@@ -33,8 +33,6 @@ VV_EXTENSION_METHOD_COUNT(Thing)
 VV_EXTENSION_TABLE_INSTANCE(Asteroid, Thing)
 VV_EXTENSION_TABLE_INSTANCE(Spaceship, Thing)
 
-//multi_method<Thing<const_observer>, Thing<const_observer>,
-//             std::string(virtual_void::const_, virtual_void::const_)>
 multi_method<
              std::string(virtual_<Thing<const_observer>>, virtual_<Thing<const_observer>>)>
     collide;
