@@ -78,6 +78,38 @@ struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
   }
 };
 
+template <typename R, typename... ARGS>
+struct multi_method_default {
+  template <is_interface... INTERFACES>
+  struct inner {
+    template <typename... ARGS>
+    struct implemenation {
+      struct type {
+        using function_t = R (*)(INTERFACES const&..., ARGS...);
+        static R function(INTERFACES const&..., ARGS... args) { return R{}; };
+      };
+    };
+    template <is_interface INTERFACE, typename... ARGS>
+    struct implemenation<virtual_<INTERFACE>, ARGS...>
+        : implemenation<ARGS...> {};
+    template <typename... ARGS>
+    using type = typename implemenation<ARGS...>::type;
+  };
+
+  template <typename... ARGS>
+  struct outer {
+    template <is_interface... INTERFACES>
+    using type = inner<INTERFACES...>::template type<ARGS...>;
+  };
+  template <is_interface INTERFACE, typename... ARGS>
+  struct outer<INTERFACE, ARGS...> {
+    template <is_interface... INTERFACES>
+    using type = outer<ARGS...>::template type<INTERFACES..., INTERFACE>;
+  };
+
+  using type = outer<ARGS...>::template type<>;
+};
+
 template <typename DISPATCH, typename... ARGS>
 struct dispatch_matrix {
   using type = DISPATCH;
@@ -101,6 +133,11 @@ struct multi_method<R(ARGS...)> {
   dispatch_matrix_t dispatch_matrix_;
 
   using dispatch_indices = std::array<std::size_t, dimension_count>;
+
+  using multi_method_default_t =
+      typename multi_method_default<R, ARGS...>::type;
+  multi_method_default_t::function_t multi_method_default_ =
+      multi_method_default_t::function;
 
   template <std::size_t DIM, typename... ARGS>
   struct dispatch_access {
