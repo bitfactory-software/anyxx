@@ -60,20 +60,21 @@ struct ensure_function_ptr_from_functor_t {
 template <typename... METHOD_ARGS>
 struct args_to_tuple {
   template <typename T, typename... ACTUAL_ARGS>
-  auto operator()(T&& dispatch_args, ACTUAL_ARGS&&... args) {
-    return std::tuple_cat(std::forward<T>(dispatch_args),
-                          std::make_tuple(std::forward<ACTUAL_ARGS>(args)...));
+  auto operator()(T&& dispatch_args, ACTUAL_ARGS&&... actual_args) {
+    return std::tuple_cat(
+        std::forward<T>(dispatch_args),
+        std::make_tuple(std::forward<ACTUAL_ARGS>(actual_args)...));
   }
 };
 template <is_interface INTERFACE, typename... METHOD_ARGS>
 struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
   template <typename T, typename ACTUAL_ARG, typename... ACTUAL_ARGS>
   auto operator()(T&& dispatch_args, ACTUAL_ARG&& dispatch_arg,
-                  ACTUAL_ARGS&&... args) {
+                  ACTUAL_ARGS&&... actual_args) {
     return args_to_tuple<METHOD_ARGS...>{}(
         std::tuple_cat(std::forward<T>(dispatch_args),
                        std::make_tuple(get_void_data_ptr(dispatch_arg))),
-        std::forward<ACTUAL_ARGS>(args)...);
+        std::forward<ACTUAL_ARGS>(actual_args)...);
   }
 };
 
@@ -108,9 +109,10 @@ struct multi_method<R(ARGS...)> {
       return fp;
     }
     template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE>
-    auto invoke(DISPATCH_MATRIX const& target, DISPATCH_ARGS_TUPLE&& args,
-                auto&&...) const {
-      return std::apply(target, std::forward<DISPATCH_ARGS_TUPLE>(args));
+    auto invoke(DISPATCH_MATRIX const& target,
+                DISPATCH_ARGS_TUPLE&& dispatch_duple_args, auto&&...) const {
+      return std::apply(target,
+                        std::forward<DISPATCH_ARGS_TUPLE>(dispatch_duple_args));
     }
   };
 
@@ -141,7 +143,8 @@ struct multi_method<R(ARGS...)> {
 
     template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
               typename... ACTUAL_ARGS>
-    auto invoke(DISPATCH_MATRIX const& target, DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
+    auto invoke(DISPATCH_MATRIX const& target,
+                DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                 INTERFACE const& interface,
                 ACTUAL_ARGS&&... actual_args) const {
       auto extension_method_table =
@@ -149,9 +152,10 @@ struct multi_method<R(ARGS...)> {
       auto dispatch_dim =
           runtime::get_multi_method_index_at(extension_method_table, index_);
       assert(dispatch_dim);
-      return next_t::invoke(target[*dispatch_dim],
-                            std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple),
-                            std::forward<ACTUAL_ARGS>(actual_args)...);
+      return next_t::invoke(
+          target[*dispatch_dim],
+          std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple),
+          std::forward<ACTUAL_ARGS>(actual_args)...);
     }
   };
 
@@ -165,11 +169,11 @@ struct multi_method<R(ARGS...)> {
   };
 
   template <typename... ACTUAL_ARGS>
-  auto operator()(ACTUAL_ARGS&&... args) {
+  auto operator()(ACTUAL_ARGS&&... actual_args) {
     auto dispatch_args_tuple = args_to_tuple<ARGS...>{}(
-        std::tuple<>{}, std::forward<ACTUAL_ARGS>(args)...);
+        std::tuple<>{}, std::forward<ACTUAL_ARGS>(actual_args)...);
     return dispatch_access_.invoke(dispatch_matrix_, dispatch_args_tuple,
-                                   std::forward<ACTUAL_ARGS>(args)...);
+                                   std::forward<ACTUAL_ARGS>(actual_args)...);
   }
 };
 
