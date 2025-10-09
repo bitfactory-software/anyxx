@@ -134,7 +134,7 @@ struct args_to_tuple {
 template <is_interface INTERFACE, typename... METHOD_ARGS>
 struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
   template <typename T>
-  auto operator()(T&& dispatch_args, INTERFACE const& dispatch_arg,
+  auto operator()(T const& dispatch_args, INTERFACE const& dispatch_arg,
                   METHOD_ARGS&&... args) {
     return args_to_tuple<METHOD_ARGS...>{}(std::tuple_cat(
         dispatch_args, std::make_tuple(get_void_data_ptr(dispatch_arg)),
@@ -172,9 +172,9 @@ struct method<R(ARGS...)> {
       return fp;
     }
 
-    template <typename ARGS_TUPLE>
-    auto invoke(erased_function_t f, ARGS_TUPLE&& args) {
-      return std::apply(f, std::forward<ARGS_TUPLE>(args));
+    template <typename ARGS_TUPLE, typename... UNUSED>
+    auto invoke(auto const& target, ARGS_TUPLE&& args) {
+      return std::apply(target, std::forward<ARGS_TUPLE>(args));
     }
   };
 
@@ -191,7 +191,7 @@ struct method<R(ARGS...)> {
     template <typename CLASS, typename... CLASSES>
     auto define(auto fp, auto& matrix) {
       auto extension_method_table =
-           runtime::extension_method_table_instance<v_table_t, CLASS>();
+          runtime::extension_method_table_instance<v_table_t, CLASS>();
       auto dispatch_index =
           *runtime::get_multi_method_index_at(extension_method_table, index_)
                .or_else([&] -> std::optional<std::size_t> {
@@ -203,15 +203,26 @@ struct method<R(ARGS...)> {
       return next_t::template define<CLASSES...>(fp, matrix[dispatch_index]);
     }
 
-    // auto invoke()
+    template <typename ARGS_TUPLE, is_interface INTERFACE,
+              typename... ACTUAL_ARGS>
+    auto invoke(auto const& target, ARGS_TUPLE&& args_tuple, INTERFACE&& interface,
+                ACTUAL_ARGS&&... actual_args) const {}
   };
 
   dispatch_access<0, ARGS...> dispatch_access_;
 
+  template <typename... ACTUAL_ARGS>
+  auto invoke(ACTUAL_ARGS&&... args) {
+    auto args_tuple = args_to_tuple<ARGS>{}(std::tuple<>{},
+                                            std::forward<ACTUAL_ARGS>(args)...);
+    return dispatch_access_.invoke(dispatch_matrix_, args_tuple,
+                                   std::forward<ACTUAL_ARGS>(args)...);
+  }
+
   template <typename FUNCTION, typename... CLASSES>
   auto define(FUNCTION f) {
     auto fp = ensure_function_ptr_from_functor_t<CLASSES..., ARGS...>(f);
-    return dispatch_access_.template define<CLASSES>(f);
+    return dispatch_access_.template define<CLASSES>(f, dispatch_matrix_);
   };
 };
 
