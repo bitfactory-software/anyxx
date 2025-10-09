@@ -171,9 +171,8 @@ struct method<R(ARGS...)> {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
     }
-
-    template <typename ARGS_TUPLE, typename... UNUSED>
-    auto invoke(auto const& target, ARGS_TUPLE&& args) {
+    template <typename ARGS_TUPLE>
+    auto invoke(auto const& target, ARGS_TUPLE&& args, auto&&...) {
       return std::apply(target, std::forward<ARGS_TUPLE>(args));
     }
   };
@@ -203,10 +202,17 @@ struct method<R(ARGS...)> {
       return next_t::template define<CLASSES...>(fp, matrix[dispatch_index]);
     }
 
-    template <typename ARGS_TUPLE, is_interface INTERFACE,
-              typename... ACTUAL_ARGS>
-    auto invoke(auto const& target, ARGS_TUPLE&& args_tuple, INTERFACE&& interface,
-                ACTUAL_ARGS&&... actual_args) const {}
+    template <typename ARGS_TUPLE, typename... ACTUAL_ARGS>
+    auto invoke(auto const& target, ARGS_TUPLE&& args_tuple,
+                INTERFACE&& interface, ACTUAL_ARGS&&... actual_args) const {
+      auto extension_method_table =
+          get_v_table(interface)->extension_method_table;
+      auto dispatch_dim =
+          runtime::get_multi_method_index_at(extension_method_table, index_);
+      return next_t::invoke(target[dispatch_dim],
+                            std::forward<ARGS_TUPLE>(args_tuple),
+                            std::forward<ACTUAL_ARGS>(actual_args)...);
+    }
   };
 
   dispatch_access<0, ARGS...> dispatch_access_;
@@ -224,7 +230,6 @@ struct method<R(ARGS...)> {
     return dispatch_access_.invoke(dispatch_matrix_, args_tuple,
                                    std::forward<ACTUAL_ARGS>(args)...);
   }
-
 };
 
 using example = method<std::string(virtual_<Thing<const_observer>>,
