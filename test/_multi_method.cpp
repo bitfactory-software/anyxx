@@ -71,8 +71,8 @@ TEST_CASE("virtual_typed/interface/multi_method") {
 
 }  // namespace
 
+// some compile time self tests
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, Dummy)
-// NOT! VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 
 namespace {
 VV_INTERFACE(Dummy, )
