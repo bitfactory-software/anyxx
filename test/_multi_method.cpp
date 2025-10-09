@@ -89,12 +89,21 @@ struct translate_erased_function {
   using type = RET (*)(typename translate_erased_function_param<ARGS>::type...);
 };
 
+template <int COUNT, typename... ARGS>
+constexpr std::size_t multi_method_dimension_count = COUNT;
+template <int COUNT, is_interface INTERFACE, typename... ARGS>
+constexpr std::size_t
+    multi_method_dimension_count<COUNT, virtual_<INTERFACE>, ARGS...> =
+        multi_method_dimension_count<COUNT + 1, ARGS...>;
+
 template <typename R, typename... ARGS>
 struct method;
 template <typename R, typename... ARGS>
 struct method<R(ARGS...)> {
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
+  static constexpr std::size_t dimension_count =
+      multi_method_dimension_count<0, ARGS...>;
 };
 
 using example = method<std::string(virtual_<Thing<const_observer>>,
@@ -104,6 +113,8 @@ using example = method<std::string(virtual_<Thing<const_observer>>,
 static_assert(std::same_as<example::erased_function_t,
                            std::string (*)(void const*, void*, double, int,
                                            Thing<shared_const> const&)>);
+
+static_assert(example::dimension_count == 2);
 
 template <typename R, typename... CLASSES>
 struct ensure_function_ptr_from_functor_t {
@@ -144,7 +155,7 @@ auto a_function = ensure_function_ptr_from_functor_t<std::string, Asteroid,
 static_assert(std::same_as<decltype(a_function),
                            std::string (*)(Asteroid*, Spaceship*, double, int,
                                            Thing<shared_const> const&)>);
-}
+}  // namespace
 
 VV_V_TABLE_INSTANCE_ON_THE_FLY(, Dummy)
 // NOT! VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
@@ -162,16 +173,24 @@ template <is_interface INTERFACE, typename... ARGS>
 struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...>
     : have_extension_methods_enabled<ARGS...> {};
 template <is_interface INTERFACE, typename... ARGS>
-  requires (!has_extension_methods_enabled<INTERFACE>)
-           struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...> {
+  requires(!has_extension_methods_enabled<INTERFACE>)
+struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...> {
   static constexpr bool value = false;
 };
 static_assert(!has_extension_methods_enabled<Dummy<const_observer>>);
 static_assert(has_extension_methods_enabled<Thing<const_observer>>);
-  
-static_assert(!have_extension_methods_enabled<virtual_<Dummy<const_observer>>,virtual_<Dummy<const_observer>>>::value);
-static_assert(!have_extension_methods_enabled<virtual_<Dummy<const_observer>>,virtual_<Thing<const_observer>>>::value);
-static_assert(!have_extension_methods_enabled<virtual_<Thing<const_observer>>,virtual_<Dummy<const_observer>>>::value);
-static_assert(have_extension_methods_enabled<virtual_<Thing<const_observer>>,virtual_<Thing<const_observer>>>::value);
+
+static_assert(
+    !have_extension_methods_enabled<virtual_<Dummy<const_observer>>,
+                                    virtual_<Dummy<const_observer>>>::value);
+static_assert(
+    !have_extension_methods_enabled<virtual_<Dummy<const_observer>>,
+                                    virtual_<Thing<const_observer>>>::value);
+static_assert(
+    !have_extension_methods_enabled<virtual_<Thing<const_observer>>,
+                                    virtual_<Dummy<const_observer>>>::value);
+static_assert(
+    have_extension_methods_enabled<virtual_<Thing<const_observer>>,
+                                   virtual_<Thing<const_observer>>>::value);
 
 }  // namespace
