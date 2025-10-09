@@ -211,6 +211,12 @@ struct method<R(ARGS...)> {
 
   dispatch_access<0, ARGS...> dispatch_access_;
 
+  template <typename FUNCTION, typename... CLASSES>
+  auto define(FUNCTION f) {
+    auto fp = ensure_function_ptr_from_functor_t<CLASSES..., ARGS...>(f);
+    return dispatch_access_.template define<CLASSES>(f, dispatch_matrix_);
+  };
+
   template <typename... ACTUAL_ARGS>
   auto invoke(ACTUAL_ARGS&&... args) {
     auto args_tuple = args_to_tuple<ARGS>{}(std::tuple<>{},
@@ -219,11 +225,6 @@ struct method<R(ARGS...)> {
                                    std::forward<ACTUAL_ARGS>(args)...);
   }
 
-  template <typename FUNCTION, typename... CLASSES>
-  auto define(FUNCTION f) {
-    auto fp = ensure_function_ptr_from_functor_t<CLASSES..., ARGS...>(f);
-    return dispatch_access_.template define<CLASSES>(f, dispatch_matrix_);
-  };
 };
 
 using example = method<std::string(virtual_<Thing<const_observer>>,
