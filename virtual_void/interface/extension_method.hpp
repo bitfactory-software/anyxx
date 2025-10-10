@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <virtual_void/interface/base.hpp>
+#include <virtual_void/interface/hook.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
 namespace virtual_void::interface {
@@ -90,8 +91,12 @@ struct extension_method_default {
     template <typename... ARGS>
     struct implemenation {
       struct type {
-        using function_t = R (*)(INTERFACES const&..., ARGS...);
-        static R function(INTERFACES const&..., ARGS... args) { return R{}; };
+        using function_t = hook<R(INTERFACES const&..., ARGS...)>;
+        static auto function() {
+          return [](auto super, INTERFACES const&..., ARGS... args) -> R {
+            return R{};
+          };
+        }
       };
     };
     template <is_interface INTERFACE, typename... ARGS>
@@ -141,8 +146,10 @@ struct extension_method<R(ARGS...)> {
 
   using extension_method_default_t =
       typename extension_method_default<R, ARGS...>::type;
-  extension_method_default_t::function_t extension_method_default_ =
-      extension_method_default_t::function;
+  extension_method_default_t::function_t extension_method_default_hook_;
+  extension_method_default_t::function_t::connection default_connection_ =
+      extension_method_default_hook_.insert(
+          extension_method_default_t::function());
 
   template <bool MULTIDIM, std::size_t DIM, typename... ARGS>
   struct dispatch_access;
@@ -245,17 +252,20 @@ struct extension_method<R(ARGS...)> {
     return dispatch_access_.template define<CLASSES...>(fp, dispatch_matrix_);
   };
   template <typename... ACTUAL_ARGS>
-  auto operator()(ACTUAL_ARGS&&... actual_args) {
+  auto operator()(ACTUAL_ARGS&&... actual_args) const {
     auto dispatch_args_tuple = args_to_tuple<ARGS...>{}(
         std::tuple<>{}, std::forward<ACTUAL_ARGS>(actual_args)...);
     return *dispatch_access_
                 .invoke(dispatch_matrix_, dispatch_args_tuple,
                         std::forward<ACTUAL_ARGS>(actual_args)...)
                 .or_else([&]() -> std::optional<R> {
-                  return std::invoke(extension_method_default_,
+                  return std::invoke(extension_method_default_hook_,
                                      std::forward<ACTUAL_ARGS>(actual_args)...);
                 });
   }
+  auto& get_extension_method_default_hook() {
+    return extension_method_default_hook_;
+  };
 };
 
 }  // namespace virtual_void::interface
