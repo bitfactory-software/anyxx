@@ -150,11 +150,11 @@ struct multi_method<R(ARGS...)> {
     }
     template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE>
     std::optional<R> invoke(DISPATCH_MATRIX const& target,
-                            DISPATCH_ARGS_TUPLE&& dispatch_duple_args,
+                            DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                             auto&&...) const {
       if (!target) return {};
       return std::apply(target,
-                        std::forward<DISPATCH_ARGS_TUPLE>(dispatch_duple_args));
+                        std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple));
     }
   };
 
@@ -199,6 +199,33 @@ struct multi_method<R(ARGS...)> {
           target[*dispatch_dim],
           std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple),
           std::forward<ACTUAL_ARGS>(actual_args)...);
+    }
+  };
+
+  template <is_interface INTERFACE, typename... ARGS>
+  struct dispatch_access<false, 0, virtual_<INTERFACE>, ARGS...> {
+    using interface_t = INTERFACE;
+    using v_table_t = typename interface_t::v_table_t;
+    std::size_t index_ = extension_method_count_of<v_table_t> ++;
+
+    template <typename CLASS>
+    auto define(auto fp, auto&) {
+      auto v_table =
+          runtime::extension_method_table_instance<v_table_t, CLASS>();
+      runtime::insert_function(v_table, index_, fp);
+      return fp;
+    }
+    template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
+              typename... ACTUAL_ARGS>
+    std::optional<R> invoke(DISPATCH_MATRIX const&,
+                            DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
+                            INTERFACE const& interface,
+                            ACTUAL_ARGS&&... actual_args) const {
+      auto v_table = get_v_table(interface)->extension_method_table;
+      auto target = runtime::get_function(v_table, index_);
+      if (!target) return {};
+      return std::apply(target,
+                        std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple));
     }
   };
 

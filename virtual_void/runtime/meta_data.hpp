@@ -62,6 +62,7 @@ void insert_function(extension_method_table_t* v_table, std::size_t index,
 }
 inline extension_method_table_function_t get_function(
     extension_method_table_t* v_table, std::size_t index) {
+  if (v_table->size() <= index) return {};
   if (auto f =
           std::get_if<extension_method_table_function_t>(&v_table->at(index)))
     return *f;
