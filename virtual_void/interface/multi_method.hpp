@@ -139,8 +139,11 @@ struct multi_method<R(ARGS...)> {
   multi_method_default_t::function_t multi_method_default_ =
       multi_method_default_t::function;
 
+  template <bool MULTIDIM, std::size_t DIM, typename... ARGS>
+  struct dispatch_access;
+
   template <std::size_t DIM, typename... ARGS>
-  struct dispatch_access {
+  struct dispatch_access<true, DIM, ARGS...> {
     auto define(auto fp, auto& matrix) {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
@@ -156,11 +159,11 @@ struct multi_method<R(ARGS...)> {
   };
 
   template <std::size_t DIM, is_interface INTERFACE, typename... ARGS>
-  struct dispatch_access<DIM, virtual_<INTERFACE>, ARGS...>
-      : dispatch_access<DIM + 1, ARGS...> {
+  struct dispatch_access<true, DIM, virtual_<INTERFACE>, ARGS...>
+      : dispatch_access<true, DIM + 1, ARGS...> {
     using interface_t = INTERFACE;
     using v_table_t = typename interface_t::v_table_t;
-    using next_t = dispatch_access<DIM + 1, ARGS...>;
+    using next_t = dispatch_access<true, DIM + 1, ARGS...>;
 
     std::size_t index_ = extension_method_count_of<v_table_t> ++;
     std::size_t dispatch_dimension_size_ = 0;
@@ -199,7 +202,33 @@ struct multi_method<R(ARGS...)> {
     }
   };
 
-  dispatch_access<0, ARGS...> dispatch_access_;
+  dispatch_access<(dimension_count > 1), 0, ARGS...> dispatch_access_;
+
+  //  template <typename... OTHER_ARGS>
+  // auto dispatch1(observer_interface_t const& m, OTHER_ARGS&&... args) const {
+  //  auto v_table = get_v_table(m)->extension_method_table;
+  //  if (v_table->size() <= index_)
+  //    return default_(m, std::forward<OTHER_ARGS>(args)...);
+  //  auto target = runtime::get_function(v_table, index_);
+  //  if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
+
+  //  auto erased_function = reinterpret_cast<erased_function_t>(target);
+  //  return (erased_function)(get_void_data_ptr(m),
+  //                           std::forward<OTHER_ARGS>(args)...);
+  //}
+  // template <typename CLASS, typename... OTHER_ARGS>
+  // auto operator()(CLASS const* p, OTHER_ARGS&&... args) const {
+  //  return (*this)(observer_interface_t{*p},
+  //  std::forward<OTHER_ARGS>(args)...);
+  //}
+  // template <typename CLASS, typename FUNCTION>
+  // auto define1(FUNCTION f) {
+  //  auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
+  //  auto v_table =
+  //      runtime::extension_method_table_instance<extended_v_table_t, CLASS>();
+  //  runtime::insert_function(v_table, index_, fp);
+  //  return fp;
+  //}
 
  public:
   template <typename... CLASSES>
