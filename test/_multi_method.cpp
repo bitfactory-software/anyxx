@@ -2,7 +2,7 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/interface/multi_method.hpp>
+#include <virtual_void/interface/extension_method.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
 #
 
