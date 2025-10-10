@@ -56,13 +56,13 @@ struct test_derived_i_v_table_map<x_t> {
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 
-extension_method<test_base_i_co, std::string(virtual_void::const_)>
+extension_method<std::string(virtual_<test_base_i_co>)>
     to_string_otherwise;
 auto __ = to_string_otherwise.define<x_t>(
     [](auto expr) { return expr->s_ + " otherwise"; });
 
-extension_method<test_derived_i_mo,
-                 void(virtual_void::mutable_, std::string const&)>
+extension_method<
+                 void(virtual_<test_derived_i_mo>, std::string const&)>
     from_string_otherwise;
 auto __ =
     from_string_otherwise.define<x_t>([](auto expr, std::string const& s) {

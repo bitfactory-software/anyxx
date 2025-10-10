@@ -1,8 +1,17 @@
 #pragma once
 
-#include <virtual_void/interface/extension_method.hpp>
+#include <vector>
+#include <virtual_void/interface/base.hpp>
+#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/utillities/ensure_function_ptr.hpp>
+#include <virtual_void/utillities/translate_erased_function.hpp>
+#include <virtual_void/utillities/type_list.hpp>
+#include <virtual_void/virtual_void.hpp>
 
 namespace virtual_void::interface {
+
+template <typename EXTENDED_V_TABLE>
+auto extension_method_count_of = std::false_type{};
 
 template <is_interface INTERFACE>
 struct virtual_ {
@@ -24,11 +33,11 @@ struct translate_erased_function {
 };
 
 template <std::size_t COUNT, typename... ARGS>
-constexpr std::size_t multi_method_dimension_count = COUNT;
+constexpr std::size_t extension_method_dimension_count = COUNT;
 template <std::size_t COUNT, is_interface INTERFACE, typename... ARGS>
 constexpr std::size_t
-    multi_method_dimension_count<COUNT, virtual_<INTERFACE>, ARGS...> =
-        multi_method_dimension_count<COUNT + 1, ARGS...>;
+    extension_method_dimension_count<COUNT, virtual_<INTERFACE>, ARGS...> =
+        extension_method_dimension_count<COUNT + 1, ARGS...>;
 
 template <typename R, typename... CLASSES>
 struct ensure_function_ptr_from_functor_t {
@@ -79,7 +88,7 @@ struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
 };
 
 template <typename R, typename... ARGS>
-struct multi_method_default {
+struct extension_method_default {
   template <is_interface... INTERFACES>
   struct inner {
     template <typename... ARGS>
@@ -120,24 +129,24 @@ struct dispatch_matrix<DISPATCH, virtual_<INTERFACE>, ARGS...> {
 };
 
 template <typename R, typename... ARGS>
-struct multi_method;
+struct extension_method;
 template <typename R, typename... ARGS>
-struct multi_method<R(ARGS...)> {
+struct extension_method<R(ARGS...)> {
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
 
   static constexpr std::size_t dimension_count =
-      multi_method_dimension_count<0, ARGS...>;
+      extension_method_dimension_count<0, ARGS...>;
 
   using dispatch_matrix_t = dispatch_matrix<erased_function_t, ARGS...>::type;
   dispatch_matrix_t dispatch_matrix_;
 
   using dispatch_indices = std::array<std::size_t, dimension_count>;
 
-  using multi_method_default_t =
-      typename multi_method_default<R, ARGS...>::type;
-  multi_method_default_t::function_t multi_method_default_ =
-      multi_method_default_t::function;
+  using extension_method_default_t =
+      typename extension_method_default<R, ARGS...>::type;
+  extension_method_default_t::function_t extension_method_default_ =
+      extension_method_default_t::function;
 
   template <bool MULTIDIM, std::size_t DIM, typename... ARGS>
   struct dispatch_access;
@@ -224,38 +233,13 @@ struct multi_method<R(ARGS...)> {
       auto v_table = get_v_table(interface)->extension_method_table;
       auto target = runtime::get_function(v_table, index_);
       if (!target) return {};
-      return std::apply(target,
+      auto erased_function = reinterpret_cast<erased_function_t>(target);
+      return std::apply(erased_function,
                         std::forward<DISPATCH_ARGS_TUPLE>(dispatch_args_tuple));
     }
   };
 
   dispatch_access<(dimension_count > 1), 0, ARGS...> dispatch_access_;
-
-  //  template <typename... OTHER_ARGS>
-  // auto dispatch1(observer_interface_t const& m, OTHER_ARGS&&... args) const {
-  //  auto v_table = get_v_table(m)->extension_method_table;
-  //  if (v_table->size() <= index_)
-  //    return default_(m, std::forward<OTHER_ARGS>(args)...);
-  //  auto target = runtime::get_function(v_table, index_);
-  //  if (!target) return default_(m, std::forward<OTHER_ARGS>(args)...);
-
-  //  auto erased_function = reinterpret_cast<erased_function_t>(target);
-  //  return (erased_function)(get_void_data_ptr(m),
-  //                           std::forward<OTHER_ARGS>(args)...);
-  //}
-  // template <typename CLASS, typename... OTHER_ARGS>
-  // auto operator()(CLASS const* p, OTHER_ARGS&&... args) const {
-  //  return (*this)(observer_interface_t{*p},
-  //  std::forward<OTHER_ARGS>(args)...);
-  //}
-  // template <typename CLASS, typename FUNCTION>
-  // auto define1(FUNCTION f) {
-  //  auto fp = ensure_function_ptr<CLASS, class_param_t, R, ARGS...>(f);
-  //  auto v_table =
-  //      runtime::extension_method_table_instance<extended_v_table_t, CLASS>();
-  //  runtime::insert_function(v_table, index_, fp);
-  //  return fp;
-  //}
 
  public:
   template <typename... CLASSES>
@@ -272,10 +256,27 @@ struct multi_method<R(ARGS...)> {
                 .invoke(dispatch_matrix_, dispatch_args_tuple,
                         std::forward<ACTUAL_ARGS>(actual_args)...)
                 .or_else([&]() -> std::optional<R> {
-                  return std::invoke(multi_method_default_,
+                  return std::invoke(extension_method_default_,
                                      std::forward<ACTUAL_ARGS>(actual_args)...);
                 });
   }
 };
 
 }  // namespace virtual_void::interface
+
+#define VV_EXTENSION_METHOD_COUNT(interface_) \
+  template <>                                 \
+  auto interface::extension_method_count_of<interface_##_v_table> = 0;
+
+#define VV_EXTENSION_TABLE_INSTANCE(class_, interface_)                        \
+  template <>                                                                  \
+  virtual_void::runtime::extension_method_table_t*                             \
+  virtual_void::runtime::extension_method_table_instance<interface_##_v_table, \
+                                                         class_>() {           \
+    return extension_method_table_instance_implementation<                     \
+        interface_##_v_table, class_>();                                       \
+  }
+
+#define VV_V_TABLE_INSTANCE_STATIC(class, interface_) \
+  VV_V_TABLE_INSTANCE_FWD(, class, interface_)        \
+  VV_V_TABLE_INSTANCE(, class, interface_)
