@@ -19,7 +19,6 @@ target_compile_definitions(component_base PRIVATE VV_DLL_MODE) # VV_DLL_MODE wor
 if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
 endif()
-target_compile_features(component_base PUBLIC cxx_std_23)
 set_target_properties(component_base PROPERTIES FOLDER "_tests/dll_mode")
 
 file(GLOB tests_dll_mode_hpp_files "./tests_dll_mode/*.hpp")

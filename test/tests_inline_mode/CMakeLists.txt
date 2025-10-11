@@ -18,7 +18,6 @@ target_include_directories(component_base PUBLIC
 if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
 endif()
-target_compile_features(component_base PUBLIC cxx_std_20)
 set_target_properties(component_base PROPERTIES FOLDER "_test_all")
 
 

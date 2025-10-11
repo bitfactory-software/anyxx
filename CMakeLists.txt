@@ -30,10 +30,6 @@ target_include_directories(virtual_void INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-#if (BUILD_SHARED_LIBS AND MSVC)
-#    target_compile_definitions(virtual_void PRIVATE VV_SHARED)
-#endif()
-#target_compile_features(virtual_void PUBLIC cxx_std_23)
 set_target_properties(virtual_void PROPERTIES FOLDER "virtual_void")
 # --- virtual_void library
 
