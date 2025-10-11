@@ -47,7 +47,6 @@ struct circle {
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
 
-VV_RUNTIME_STATIC(circle)
 VV_REGISTER_V_TABLE_INSTANCE(circle, shape_base1)
 VV_REGISTER_V_TABLE_INSTANCE(circle, shape_base)
 VV_REGISTER_V_TABLE_INSTANCE(circle, shape_d_i)
@@ -313,7 +312,6 @@ struct x_t {
 };
 VV_INTERFACE(has_meta_data,)
 }  // namespace
-VV_RUNTIME_STATIC(x_t)
 VV_REGISTER_V_TABLE_INSTANCE(x_t, has_meta_data)
 
 

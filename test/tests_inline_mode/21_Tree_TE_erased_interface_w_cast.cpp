@@ -87,10 +87,6 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_RUNTIME_STATIC(Plus)
-VV_RUNTIME_STATIC(Times)
-VV_RUNTIME_STATIC(Integer)
-
 VV_REGISTER_V_TABLE_INSTANCE(Plus, node_i);
 VV_REGISTER_V_TABLE_INSTANCE(Times, node_i);
 VV_REGISTER_V_TABLE_INSTANCE(Integer, node_i);

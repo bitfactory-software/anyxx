@@ -107,10 +107,6 @@ auto __ =
 
 using namespace virtual_void;
 
-VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Plus)
-VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Times)
-VV_RUNTIME_STATIC(_21_Tree_TE_interface_extension_method::Integer)
-
 namespace _21_Tree_TE_interface_extension_method {
 
 TEST_CASE("21_Tree_TE_interface_extension_method") {

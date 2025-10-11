@@ -14,20 +14,30 @@
 
 namespace virtual_void::runtime {
 
-template <typename T>
-const std::type_info& typeid_of();
-
 class meta_data;
 struct base_v_table;
-
-template <typename TYPE>
-meta_data& get_meta_data();
 
 template <typename TYPE>
 auto& runtime_implementation() {
   static meta_data meta_data{std::in_place_type<TYPE>};
   return meta_data;
 }
+
+#ifdef VV_DLL_MODE
+template <typename T>
+const std::type_info& typeid_of();
+template <typename T>
+meta_data& get_meta_data();
+#else
+template <typename T>
+const std::type_info& typeid_of() {
+  return typeid(T);
+}
+template <typename T>
+meta_data& get_meta_data() {
+  return runtime_implementation<std::decay_t<T>>();
+}
+#endif
 
 struct base_v_table {
   template <typename CONCRETE>
@@ -158,6 +168,8 @@ bool type_match(runtime::meta_data const& meta_data) {
 }
 }  // namespace virtual_void
 
+#ifdef VV_DLL_MODE
+
 #define VV_RUNTIME_FWD(export_, ...)               \
   template <>                                      \
   export_ const std::type_info&                    \
@@ -176,6 +188,13 @@ bool type_match(runtime::meta_data const& meta_data) {
   virtual_void::runtime::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
     return runtime_implementation<__VA_ARGS__>();                         \
   }
+
+#else
+
+#define VV_RUNTIME_FWD(export_, ...)
+#define VV_RUNTIME_INSTANCE(...)
+
+#endif
 
 #define VV_RUNTIME_STATIC(...)  \
   VV_RUNTIME_FWD(, __VA_ARGS__) \
