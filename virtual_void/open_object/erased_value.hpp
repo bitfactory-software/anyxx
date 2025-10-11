@@ -33,7 +33,7 @@ class erased_value {
   erased_value(DATA* ptr)
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
   erased_value(erased_value const& rhs)
-      : ptr_(rhs.v_table_->copy(rhs.ptr_)),
+      : ptr_(rhs.ptr_ ? rhs.v_table_->copy(rhs.ptr_) : nullptr),
         v_table_(rhs.v_table_) {}
   erased_value& operator=(const erased_value& rhs) {
     erased_value clone{rhs};

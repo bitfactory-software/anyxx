@@ -12,12 +12,20 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::open_object;
 
+struct test_object;
+
+template <>
+std::size_t& open_object::members_count<test_object>() {
+  static std::size_t count = 0;
+  return count;
+}
+
 struct test_object : members<test_object> {};  // name your open_object
 
 inline const member<test_object, std::string> test_member;  // define your member
 
 TEST_CASE("open object 1") {
-  REQUIRE(open_object::type_member_count_of<test_object> == 1);
+  REQUIRE(open_object::members_count<test_object>() == 1);
   test_object a_test_object;
   auto value = a_test_object.get(test_member);
   REQUIRE(!value);

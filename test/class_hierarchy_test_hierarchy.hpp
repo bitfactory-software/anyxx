@@ -55,13 +55,13 @@ struct D : C, C3 {
 };
 }  // namespace TestDomain
 
-VV_RUNTIME(, TestDomain::A1)
-VV_RUNTIME(, TestDomain::A2)
-VV_RUNTIME(, TestDomain::B1)
-VV_RUNTIME(, TestDomain::B2)
-VV_RUNTIME(, TestDomain::B3)
-VV_RUNTIME(, TestDomain::C1)
-VV_RUNTIME(, TestDomain::C2)
-VV_RUNTIME(, TestDomain::C3)
-VV_RUNTIME(, TestDomain::C)
-VV_RUNTIME(, TestDomain::D)
+VV_RUNTIME_FWD(, TestDomain::A1)
+VV_RUNTIME_FWD(, TestDomain::A2)
+VV_RUNTIME_FWD(, TestDomain::B1)
+VV_RUNTIME_FWD(, TestDomain::B2)
+VV_RUNTIME_FWD(, TestDomain::B3)
+VV_RUNTIME_FWD(, TestDomain::C1)
+VV_RUNTIME_FWD(, TestDomain::C2)
+VV_RUNTIME_FWD(, TestDomain::C3)
+VV_RUNTIME_FWD(, TestDomain::C)
+VV_RUNTIME_FWD(, TestDomain::D)

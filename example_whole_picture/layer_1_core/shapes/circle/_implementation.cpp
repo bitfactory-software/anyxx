@@ -10,7 +10,7 @@ using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
-VV_RUNTIME_IMPEMENTATION(circle)
+VV_RUNTIME_INSTANCE(circle)
 VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::circle, architecture::shape);
 
 template <>

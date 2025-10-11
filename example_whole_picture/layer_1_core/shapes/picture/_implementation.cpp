@@ -10,9 +10,15 @@ using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
-VV_RUNTIME_IMPEMENTATION(shapes::picture)
+VV_RUNTIME_INSTANCE(shapes::picture)
 VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::shape);
 VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::surface);
+
+template <>
+std::size_t& open_object::members_count<whole_picture::core::shapes::picture>() {
+  static std::size_t count = 0;
+  return count;
+}
 
 template <>
 struct architecture::shape_v_table_map<shapes::picture>
@@ -31,6 +37,6 @@ struct architecture::surface_v_table_map<shapes::picture>
 };
 
 shape shapes::make_picture(architecture::point top_left,
-                         architecture::picture& content) {
+                           architecture::picture& content) {
   return std::make_shared<picture>(top_left, content);
 }

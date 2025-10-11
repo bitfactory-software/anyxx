@@ -10,7 +10,7 @@ using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
-VV_RUNTIME_IMPEMENTATION(line)
+VV_RUNTIME_INSTANCE(line)
 VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::line, architecture::shape);
 
 template <>

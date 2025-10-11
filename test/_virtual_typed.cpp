@@ -31,8 +31,8 @@ VV_INTERFACE(test_i, (VV_CONST_METHOD(std::string, to_string),
 
 using namespace virtual_typed_test;
 
-VV_RUNTIME(, int)
-VV_RUNTIME(, std::string)
+VV_RUNTIME_FWD(, int)
+VV_RUNTIME_FWD(, std::string)
 VV_RUNTIME_STATIC(x_t)
 VV_V_TABLE_INSTANCE_STATIC(x_t, test_i)
 

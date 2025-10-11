@@ -14,5 +14,5 @@ struct line {
 
 }  // namespace whole_picture::core
 
-VV_RUNTIME(CORE_EXPORT, whole_picture::core::shapes::line)
+VV_RUNTIME_FWD(CORE_EXPORT, whole_picture::core::shapes::line)
 VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture::shape)

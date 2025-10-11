@@ -158,7 +158,7 @@ bool type_match(runtime::meta_data const& meta_data) {
 }
 }  // namespace virtual_void
 
-#define VV_RUNTIME(export_, ...)                   \
+#define VV_RUNTIME_FWD(export_, ...)                   \
   template <>                                      \
   export_ const std::type_info&                    \
   virtual_void::runtime::typeid_of<__VA_ARGS__>(); \
@@ -166,7 +166,7 @@ bool type_match(runtime::meta_data const& meta_data) {
   export_ virtual_void::runtime::meta_data&        \
   virtual_void::runtime::get_meta_data<__VA_ARGS__>();
 
-#define VV_RUNTIME_IMPEMENTATION(...)                                     \
+#define VV_RUNTIME_INSTANCE(...)                                     \
   template <>                                                             \
   const std::type_info& virtual_void::runtime::typeid_of<__VA_ARGS__>() { \
     return typeid(__VA_ARGS__);                                           \
@@ -178,5 +178,5 @@ bool type_match(runtime::meta_data const& meta_data) {
   }
 
 #define VV_RUNTIME_STATIC(...) \
-  VV_RUNTIME(, __VA_ARGS__)    \
-  VV_RUNTIME_IMPEMENTATION(__VA_ARGS__)\
+  VV_RUNTIME_FWD(, __VA_ARGS__)    \
+  VV_RUNTIME_INSTANCE(__VA_ARGS__)\

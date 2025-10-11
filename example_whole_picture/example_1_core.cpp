@@ -4,6 +4,7 @@
 #include <example_whole_picture/layer_1_core/shapes/circle/factory.hpp>
 #include <example_whole_picture/layer_1_core/shapes/line/factory.hpp>
 #include <example_whole_picture/layer_1_core/shapes/picture/factory.hpp>
+#include <example_whole_picture/layer_1_core/shapes/picture/object.hpp>
 #include <iostream>
 #include <ranges>
 
@@ -19,8 +20,14 @@ using namespace virtual_void::interface;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 
+extern const virtual_void::open_object::member<shapes::picture, std::string>
+    picture_author;  // define your member
+
 TEST_CASE("example 1 core") {
   std::cout << whole_picture::core::hello() << "\n";
+  std::cout << runtime::get_meta_data<architecture::picture>().get_type_info().name() << "\n";
+  std::cout << runtime::get_meta_data<whole_picture::core::shapes::picture>().get_type_info().name() << "\n";
+  std::cout << open_object::members_count<whole_picture::core::shapes::picture>() << "\n";
 }
 
 TEST_CASE("example 2 core circle") {
@@ -72,6 +79,15 @@ TEST_CASE("example 3 architecture picture") {
     mutable_observed_surface s{b};
     pic.draw(s);
     b.flush();
+
+    REQUIRE(open_object::members_count<shapes::picture>() == 1);
+    auto any_shape = shapes::make_picture({0, 0}, duck);
+    core::shapes::picture const* duck_shape =
+        virtual_void::interface::unerase_cast<shapes::picture>(any_shape);
+    CHECK(!duck_shape->get(picture_author));
+    auto duck_shape_clone = *duck_shape;
+    duck_shape_clone[picture_author] = "Max";
+    CHECK(duck_shape_clone[picture_author] == "Max");
   }
   {
     architecture::picture love_cpp{
@@ -95,3 +111,6 @@ TEST_CASE("example 3 architecture picture") {
     b.flush();
   }
 }
+
+const virtual_void::open_object::member<shapes::picture, std::string>
+    picture_author;  // define your member

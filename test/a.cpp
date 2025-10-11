@@ -1,3 +1,3 @@
 #include "a.hpp"
 
-VV_RUNTIME_IMPEMENTATION(::A)
+VV_RUNTIME_INSTANCE(::A)

@@ -6,7 +6,7 @@
 using namespace whole_picture;
 using namespace whole_picture::architecture;
 
-VV_RUNTIME_STATIC(picture)
+VV_RUNTIME_INSTANCE(picture)
 VV_V_TABLE_INSTANCE(ARCHITECTURE_EXPORT, picture, surface);
 
 picture::picture(std::size_t size_x, std::size_t size_y)

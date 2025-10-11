@@ -7,4 +7,4 @@ struct A {
   std::string s;
   VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~A() = default;
 };
-VV_RUNTIME(, ::A)
+VV_RUNTIME_FWD(, ::A)
