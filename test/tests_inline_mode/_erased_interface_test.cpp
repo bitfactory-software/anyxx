@@ -48,10 +48,10 @@ struct circle {
 };
 
 VV_RUNTIME_STATIC(circle)
-VV_V_TABLE_INSTANCE_STATIC(circle, shape_base1)
-VV_V_TABLE_INSTANCE_STATIC(circle, shape_base)
-VV_V_TABLE_INSTANCE_STATIC(circle, shape_d_i)
-VV_V_TABLE_INSTANCE_STATIC(circle, shape_i)
+VV_REGISTER_V_TABLE_INSTANCE(circle, shape_base1)
+VV_REGISTER_V_TABLE_INSTANCE(circle, shape_base)
+VV_REGISTER_V_TABLE_INSTANCE(circle, shape_d_i)
+VV_REGISTER_V_TABLE_INSTANCE(circle, shape_i)
 
 TEST_CASE("class is_a interface") {
   using namespace virtual_void;
@@ -135,26 +135,26 @@ struct regular_polygon {
     return x + "regular_polygon";
   }
 };
-VV_V_TABLE_INSTANCE_STATIC(circle, shape_fi)
+VV_REGISTER_V_TABLE_INSTANCE(circle, shape_fi)
 
 VV_RUNTIME_STATIC(square)
-VV_V_TABLE_INSTANCE_STATIC(square, shape_base1)
-VV_V_TABLE_INSTANCE_STATIC(square, shape_base)
-VV_V_TABLE_INSTANCE_STATIC(square, shape_d_i)
-VV_V_TABLE_INSTANCE_STATIC(square, shape_i)
-VV_V_TABLE_INSTANCE_STATIC(square, shape_fi)
+VV_REGISTER_V_TABLE_INSTANCE(square, shape_base1)
+VV_REGISTER_V_TABLE_INSTANCE(square, shape_base)
+VV_REGISTER_V_TABLE_INSTANCE(square, shape_d_i)
+VV_REGISTER_V_TABLE_INSTANCE(square, shape_i)
+VV_REGISTER_V_TABLE_INSTANCE(square, shape_fi)
 VV_RUNTIME_STATIC(rectangle)
-VV_V_TABLE_INSTANCE_STATIC(rectangle, shape_base1)
-VV_V_TABLE_INSTANCE_STATIC(rectangle, shape_base)
-VV_V_TABLE_INSTANCE_STATIC(rectangle, shape_d_i)
-VV_V_TABLE_INSTANCE_STATIC(rectangle, shape_i)
-VV_V_TABLE_INSTANCE_STATIC(rectangle, shape_fi)
+VV_REGISTER_V_TABLE_INSTANCE(rectangle, shape_base1)
+VV_REGISTER_V_TABLE_INSTANCE(rectangle, shape_base)
+VV_REGISTER_V_TABLE_INSTANCE(rectangle, shape_d_i)
+VV_REGISTER_V_TABLE_INSTANCE(rectangle, shape_i)
+VV_REGISTER_V_TABLE_INSTANCE(rectangle, shape_fi)
 VV_RUNTIME_STATIC(regular_polygon)
-VV_V_TABLE_INSTANCE_STATIC(regular_polygon, shape_base1)
-VV_V_TABLE_INSTANCE_STATIC(regular_polygon, shape_base)
-VV_V_TABLE_INSTANCE_STATIC(regular_polygon, shape_d_i)
-VV_V_TABLE_INSTANCE_STATIC(regular_polygon, shape_i)
-VV_V_TABLE_INSTANCE_STATIC(regular_polygon, shape_fi)
+VV_REGISTER_V_TABLE_INSTANCE(regular_polygon, shape_base1)
+VV_REGISTER_V_TABLE_INSTANCE(regular_polygon, shape_base)
+VV_REGISTER_V_TABLE_INSTANCE(regular_polygon, shape_d_i)
+VV_REGISTER_V_TABLE_INSTANCE(regular_polygon, shape_i)
+VV_REGISTER_V_TABLE_INSTANCE(regular_polygon, shape_fi)
 
 
 void print_shape_(const auto s) {
@@ -314,7 +314,7 @@ struct x_t {
 VV_INTERFACE(has_meta_data,)
 }  // namespace
 VV_RUNTIME_STATIC(x_t)
-VV_V_TABLE_INSTANCE_STATIC(x_t, has_meta_data)
+VV_REGISTER_V_TABLE_INSTANCE(x_t, has_meta_data)
 
 
 TEST_CASE("base") {

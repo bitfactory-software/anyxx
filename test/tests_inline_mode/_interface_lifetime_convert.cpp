@@ -29,7 +29,7 @@ using to_string_mo = to_string_i<data::mutable_observer>;
 }  // namespace
 
 VV_RUNTIME_STATIC(X)
-VV_V_TABLE_INSTANCE_STATIC(X, to_string_i)
+VV_REGISTER_V_TABLE_INSTANCE(X, to_string_i)
 
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{std::make_shared<X>("hallo")};

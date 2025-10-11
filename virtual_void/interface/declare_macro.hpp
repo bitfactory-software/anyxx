@@ -353,6 +353,13 @@
   struct interface_name##_v_table;                                     \
   }
 
+#define VV_REGISTER_V_TABLE_INSTANCE(class, interface_)                      \
+  namespace {                                                                \
+  static auto __ =                                                           \
+      virtual_void::runtime::bind_v_table_to_meta_data<interface_##_v_table, \
+                                                       class>();             \
+  }
+
 #ifdef VV_DLL_MODE
 
 #define VV_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
@@ -374,22 +381,12 @@
         std::in_place_type<class_>};                                  \
     return &v_table;                                                  \
   }                                                                   \
-  namespace {                                                         \
-  static auto __ = virtual_void::runtime::bind_v_table_to_meta_data<  \
-      interface_namespace_::interface_##_v_table, class_>();          \
-  }
+ VV_REGISTER_V_TABLE_INSTANCE(class_, interface_namespace_::interface_)
 
 #define VV_V_TABLE_INSTANCE_STATIC(class_, interface_, interface_namespace_) \
   VV_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
   VV_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
 
-#else
-#define VV_V_TABLE_INSTANCE_STATIC(class, interface_)                        \
-  namespace {                                                                \
-  static auto __ =                                                           \
-      virtual_void::runtime::bind_v_table_to_meta_data<interface_##_v_table, \
-                                                       class>();             \
-  }
 #endif
 
 #define VV_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \

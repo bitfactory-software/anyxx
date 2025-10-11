@@ -34,7 +34,7 @@ using namespace virtual_typed_test;
 VV_RUNTIME_FWD(, int)
 VV_RUNTIME_FWD(, std::string)
 VV_RUNTIME_STATIC(x_t)
-VV_V_TABLE_INSTANCE_STATIC(x_t, test_i)
+VV_REGISTER_V_TABLE_INSTANCE(x_t, test_i)
 
 TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};
