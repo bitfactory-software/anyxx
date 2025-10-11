@@ -12,13 +12,8 @@ using namespace virtual_void::runtime;
 
 VV_RUNTIME_INSTANCE(shapes::picture)
 VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::shape);
-VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::surface);
+VV_MEMBERS_COUNT_IMPL(CORE_EXPORT, whole_picture::core::shapes, picture)
 
-template <>
-std::size_t& open_object::members_count<whole_picture::core::shapes::picture>() {
-  static std::size_t count = 0;
-  return count;
-}
 
 template <>
 struct architecture::shape_v_table_map<shapes::picture>

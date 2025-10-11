@@ -9,7 +9,15 @@
 namespace virtual_void::open_object {
 
 template <typename OBJECT_TYPE>
-std::size_t& members_count();
+std::size_t& members_count()
+#ifdef VV_DLL_MODE
+    ;
+#else
+{
+  static std::size_t count = 0;
+  return count;
+}
+#endif
 
 template <typename OBJECT_TYPE>
 struct members {
@@ -52,3 +60,23 @@ struct member {
 };
 
 }  // namespace virtual_void::open_object
+
+#ifdef VV_DLL_MODE
+#define VV_MEMBERS_COUNT_FWD(export_, ns_, c_)   \
+  namespace ns_ {                                \
+  struct c_;                                     \
+  }                                              \
+  namespace virtual_void::open_object {          \
+  template <>                                    \
+  export_ std::size_t& members_count<ns_::c_>(); \
+  }
+
+#define VV_MEMBERS_COUNT_IMPL(export_, ns_, c_)                        \
+  template <>                                                          \
+  std::size_t&                                                         \
+  open_object::members_count<whole_picture::core::shapes::picture>() { \
+    static std::size_t count = 0;                                      \
+    return count;                                                      \
+  }
+
+#endif

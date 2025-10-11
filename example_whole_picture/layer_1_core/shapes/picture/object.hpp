@@ -4,14 +4,8 @@
 #include <example_whole_picture/layer_1_core/core.hpp>
 #include <virtual_void/open_object/members.hpp>
 
-namespace whole_picture::core::shapes {
-struct picture;
-}
-namespace virtual_void::open_object{
-template<> CORE_EXPORT std::size_t& members_count<whole_picture::core::shapes::picture>();/*{
-    static std::size_t& get();
-};*/
-}
+VV_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
+
 namespace whole_picture::core::shapes {
 
 struct picture : virtual_void::open_object::members<picture> {
