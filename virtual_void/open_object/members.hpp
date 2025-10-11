@@ -8,12 +8,12 @@
 
 namespace virtual_void::open_object {
 
-template <typename OBJECT_TYPE>
-std::size_t& members_count()
 #ifdef VV_DLL_MODE
-    ;
+template <typename OBJECT_TYPE>
+std::size_t& members_count();
 #else
-{
+template <typename OBJECT_TYPE>
+std::size_t& members_count() {
   static std::size_t count = 0;
   return count;
 }
@@ -62,6 +62,7 @@ struct member {
 }  // namespace virtual_void::open_object
 
 #ifdef VV_DLL_MODE
+
 #define VV_MEMBERS_COUNT_FWD(export_, ns_, c_)   \
   namespace ns_ {                                \
   struct c_;                                     \
@@ -71,11 +72,11 @@ struct member {
   export_ std::size_t& members_count<ns_::c_>(); \
   }
 
-#define VV_MEMBERS_COUNT_IMPL(ns_, c_)                 \
-  template <>                                          \
+#define VV_MEMBERS_COUNT_IMPL(ns_, c_)                               \
+  template <>                                                        \
   std::size_t& virtual_void::open_object::members_count<ns_::c_>() { \
-    static std::size_t count = 0;                      \
-    return count;                                      \
+    static std::size_t count = 0;                                    \
+    return count;                                                    \
   }
 
 #define VV_MEMBER_FWD(export_, object_, member_, type_)                     \
@@ -90,5 +91,12 @@ struct member {
     static virtual_void::open_object::member<object_, type_> instance; \
     return instance;                                                   \
   }
+
+#else
+
+#define VV_MEMBERS_COUNT_FWD(...)
+#define VV_MEMBERS_COUNT_IMPL(...)
+#define VV_MEMBER_FWD(...)
+#define VV_MEMBER_IMPL(...)
 
 #endif
