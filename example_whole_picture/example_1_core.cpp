@@ -20,8 +20,7 @@ using namespace virtual_void::interface;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 
-extern const virtual_void::open_object::member<shapes::picture, std::string>
-    picture_author;  // define your member
+VV_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 
 TEST_CASE("example 1 core") {
   std::cout << whole_picture::core::hello() << "\n";
@@ -112,5 +111,4 @@ TEST_CASE("example 3 architecture picture") {
   }
 }
 
-const virtual_void::open_object::member<shapes::picture, std::string>
-    picture_author;  // define your member
+VV_MEMBER_IMPL(, shapes::picture, picture_author, std::string)

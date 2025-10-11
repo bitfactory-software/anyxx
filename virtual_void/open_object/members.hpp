@@ -79,4 +79,17 @@ struct member {
     return count;                                                      \
   }
 
+#define VV_MEMBER_FWD(export_, object_, member_, type_)                     \
+  export_ virtual_void::open_object::member<object_, type_>&                \
+      _inintialize_##member_();                                             \
+  inline const virtual_void::open_object::member<object_, type_>& member_ = \
+      _inintialize_##member_();
+
+#define VV_MEMBER_IMPL(ns_, object_, member_, type_)                   \
+  virtual_void::open_object::member<object_, type_>&                   \
+      ns_::_inintialize_##member_() {                                  \
+    static virtual_void::open_object::member<object_, type_> instance; \
+    return instance;                                                   \
+  }
+
 #endif
