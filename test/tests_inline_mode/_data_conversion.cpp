@@ -22,8 +22,6 @@ using namespace virtual_void::interface;
 using namespace virtual_void::runtime;
 using namespace TestDomain;
 
-VV_RUNTIME_STATIC(std::string)
-
 TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";
   {
