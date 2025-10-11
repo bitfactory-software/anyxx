@@ -71,12 +71,11 @@ struct member {
   export_ std::size_t& members_count<ns_::c_>(); \
   }
 
-#define VV_MEMBERS_COUNT_IMPL(export_, ns_, c_)                        \
-  template <>                                                          \
-  std::size_t&                                                         \
-  open_object::members_count<whole_picture::core::shapes::picture>() { \
-    static std::size_t count = 0;                                      \
-    return count;                                                      \
+#define VV_MEMBERS_COUNT_IMPL(ns_, c_)                 \
+  template <>                                          \
+  std::size_t& virtual_void::open_object::members_count<ns_::c_>() { \
+    static std::size_t count = 0;                      \
+    return count;                                      \
   }
 
 #define VV_MEMBER_FWD(export_, object_, member_, type_)                     \

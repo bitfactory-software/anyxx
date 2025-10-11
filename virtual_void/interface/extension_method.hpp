@@ -283,6 +283,3 @@ struct extension_method<R(ARGS...)> {
         interface_##_v_table, class_>();                                       \
   }
 
-#define VV_V_TABLE_INSTANCE_STATIC(class, interface_) \
-  VV_V_TABLE_INSTANCE_FWD(, class, interface_)        \
-  VV_V_TABLE_INSTANCE(, class, interface_)

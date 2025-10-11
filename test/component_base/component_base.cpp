@@ -41,13 +41,17 @@ using namespace test::component_base;
 //   };
 // };
 
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+                        get_value_i)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+                        set_value_i)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+                        to_string_i)
+
 VV_RUNTIME_STATIC(X)
-VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, X, get_value_i)
-VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, X, set_value_i)
-VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, X, to_string_i)
-VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, get_value_i)
-VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, set_value_i)
-VV_V_TABLE_INSTANCE(COMPONENT_BASE_EXPORT, X, to_string_i)
+VV_V_TABLE_INSTANCE(X, test::component_base, get_value_i)
+VV_V_TABLE_INSTANCE(X, test::component_base, set_value_i)
+VV_V_TABLE_INSTANCE(X, test::component_base, to_string_i)
 
 to_string_i<virtual_void::data::const_observer>
 test::component_base::get_to_string_i_co() {

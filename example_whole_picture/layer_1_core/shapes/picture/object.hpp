@@ -20,6 +20,6 @@ struct picture : virtual_void::open_object::members<picture> {
 
 VV_RUNTIME_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
-                        whole_picture::architecture::shape)
+                        whole_picture::architecture, shape)
 VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
-                        whole_picture::architecture::surface)
+                        whole_picture::architecture, surface)

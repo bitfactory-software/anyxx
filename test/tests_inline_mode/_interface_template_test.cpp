@@ -19,13 +19,6 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, to_string_i)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_t_i, (KEY), (VALUE))
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_mutable_t_i, (KEY), (VALUE))
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_const_recursive_t_i, (KEY), (VALUE))
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_mutable_recursive_t_i, (KEY), (VALUE))
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_to_string_i, (KEY))
-
 namespace {
 VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 

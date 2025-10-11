@@ -9,6 +9,10 @@
 using namespace virtual_void;
 using namespace virtual_void::interface;
 
+#ifndef VV_DLL_MODE
+#pragma message("ERROR! usage of component_base needs #define VV_DLL_MODE")
+#endif
+
 #ifndef COMPONENT_BASE_EXPORT
 #define COMPONENT_BASE_EXPORT
 #endif
@@ -19,7 +23,19 @@ using namespace virtual_void::interface;
 #define COMPONENT_BASE_EXPORT __declspec(dllexport)
 #pragma message("component_base -> dll")
 #endif
+#pragma message("component_base -> import")
 #endif
+
+namespace test::component_base {
+struct X;
+}
+
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+                        get_value_i)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+                        set_value_i)
+VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+                        to_string_i)
 
 namespace test::component_base {
 
@@ -28,14 +44,12 @@ VV_INTERFACE(get_value_i, (VV_CONST_METHOD(double, get_value)))
 VV_INTERFACE_(set_value_i, get_value_i, (VV_METHOD(void, set_value, double)))
 
 COMPONENT_BASE_EXPORT
-to_string_i<virtual_void::data::const_observer>
-get_to_string_i_co();
+to_string_i<virtual_void::data::const_observer> get_to_string_i_co();
 COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::shared_const>
 get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::unique>
-get_to_string_i_u(double v);
-COMPONENT_BASE_EXPORT virtual_void::data::shared_const sc_X(
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::unique> get_to_string_i_u(
     double v);
+COMPONENT_BASE_EXPORT virtual_void::data::shared_const sc_X(double v);
 COMPONENT_BASE_EXPORT virtual_void::data::unique u_X(double v);
 
 }  // namespace test::component_base

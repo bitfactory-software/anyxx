@@ -200,36 +200,28 @@ auto unerase_cast(INTERFACE const* o) {
   return nullptr;
 }
 
-template <template <typename...> typename INTERFACE>
-constexpr bool v_table_on_the_fly = false;
-
-template <bool V_TABLE_ON_THE_FLY, typename CONCRETE, typename V_TABLE>
-struct v_table_instance_implementaion;
-
-template <typename CONCRETE, typename V_TABLE>
-struct v_table_instance_implementaion<true, CONCRETE, V_TABLE> {
-  static V_TABLE* get() {
-    static V_TABLE v_table{std::in_place_type<CONCRETE>};
-    return &v_table;
-  }
-};
-
-template <typename CONCRETE, typename V_TABLE>
-struct v_table_instance_implementaion<false, CONCRETE, V_TABLE> {
-  static V_TABLE* get();
-};
+#ifdef VV_DLL_MODE
+template <typename V_TABLE, typename CONCRETE>
+V_TABLE* v_table_instance_implementaion();
+#else
+template <typename V_TABLE, typename CONCRETE>
+V_TABLE* v_table_instance_implementaion() {
+  static V_TABLE v_table{std::in_place_type<CONCRETE>};
+  return &v_table;
+}
+#endif  // DEBUG
 
 template <template <typename...> typename INTERFACE>
 constexpr bool has_extension_methods = false;
 
 template <typename I>
-concept has_extension_methods_enabled = is_interface<I> && I::v_table_t::extension_methods_enabled;
+concept has_extension_methods_enabled =
+    is_interface<I> && I::v_table_t::extension_methods_enabled;
 
 template <bool HAS_EXTENSION_METHODS, template <typename...> typename INTERFACE>
 struct extension_method_holder;
 template <template <typename...> typename INTERFACE>
-struct extension_method_holder<false, INTERFACE> {
-};
+struct extension_method_holder<false, INTERFACE> {};
 template <template <typename...> typename INTERFACE>
 struct extension_method_holder<true, INTERFACE> {
   runtime::extension_method_table_t* extension_method_table = nullptr;

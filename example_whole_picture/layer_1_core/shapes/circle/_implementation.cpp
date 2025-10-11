@@ -11,7 +11,7 @@ using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
 VV_RUNTIME_INSTANCE(circle)
-VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::circle, architecture::shape);
+VV_V_TABLE_INSTANCE(shapes::circle, whole_picture::architecture, shape);
 
 template <>
 struct architecture::shape_v_table_map<circle>

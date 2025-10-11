@@ -19,8 +19,6 @@ using std::string;
 using namespace virtual_void;
 using namespace virtual_void::interface;
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(_21_Tree_TE_interface_extension_method::node,
-                               node_i)
 VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
                                  node_i)
 

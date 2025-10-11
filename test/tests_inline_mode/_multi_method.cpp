@@ -15,7 +15,6 @@ using namespace virtual_void::interface;
 
 namespace {}
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, Thing)
 VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 
 namespace {
@@ -70,7 +69,6 @@ TEST_CASE("virtual_typed/interface/multi_method") {
 }  // namespace
 
 // some compile time self tests
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, Dummy)
 
 namespace {
 VV_INTERFACE(Dummy, )

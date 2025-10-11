@@ -14,11 +14,6 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::data;
 
-namespace {}
-
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, string_to_string)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, string_to_string_mutable)
-
 namespace {
 VV_INTERFACE(string_to_string,
              (VV_CONST_OP(std::string, 1, (), std::string const&)))

@@ -19,10 +19,6 @@ using map_t = std::map<int, std::string>;
 using vector_t = std::vector<std::string>;
 }  // namespace
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_i_to_string_mutable)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_i_to_string_const_and_mutable)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, map_i_to_string_const_derived_mutable)
-
 namespace {
 VV_INTERFACE(map_i_to_string_mutable, (VV_OP_EXACT(std::string&, 1, [], int)))
 

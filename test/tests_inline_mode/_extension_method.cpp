@@ -24,8 +24,6 @@ struct x_t {
   std::string s_;
 };
 }  // namespace
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, test_base_i)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, test_derived_i)
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_derived_i)
 

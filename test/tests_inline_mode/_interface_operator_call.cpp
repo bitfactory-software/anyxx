@@ -32,7 +32,6 @@ struct functor2_t {
 };
 }  // namespace
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, overloaded_function_object)
 namespace {
 VV_INTERFACE(overloaded_function_object,
              (VV_OP(std::string, 1, (), std::string const&),

@@ -11,8 +11,8 @@ using namespace virtual_void::data;
 using namespace virtual_void::runtime;
 
 VV_RUNTIME_INSTANCE(shapes::picture)
-VV_V_TABLE_INSTANCE(CORE_EXPORT, shapes::picture, architecture::shape);
-VV_MEMBERS_COUNT_IMPL(CORE_EXPORT, whole_picture::core::shapes, picture)
+VV_V_TABLE_INSTANCE(shapes::picture, whole_picture::architecture, shape);
+VV_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
 
 
 template <>

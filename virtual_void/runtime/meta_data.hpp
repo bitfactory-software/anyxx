@@ -142,9 +142,9 @@ extension_method_table_t* extension_method_table_instance_implementation() {
   return &extension_method_table;
 }
 
-template <typename INTERFACE_V_TABLE_INSTANCE, typename CONCRETE>
+template <typename V_TABLE, typename CONCRETE>
 auto bind_v_table_to_meta_data() {
-  auto v_table = INTERFACE_V_TABLE_INSTANCE::get();
+  auto v_table = V_TABLE::template imlpementation<CONCRETE>();
   runtime::get_meta_data<CONCRETE>().register_v_table(v_table);
   return v_table;
 }
@@ -158,7 +158,7 @@ bool type_match(runtime::meta_data const& meta_data) {
 }
 }  // namespace virtual_void
 
-#define VV_RUNTIME_FWD(export_, ...)                   \
+#define VV_RUNTIME_FWD(export_, ...)               \
   template <>                                      \
   export_ const std::type_info&                    \
   virtual_void::runtime::typeid_of<__VA_ARGS__>(); \
@@ -166,7 +166,7 @@ bool type_match(runtime::meta_data const& meta_data) {
   export_ virtual_void::runtime::meta_data&        \
   virtual_void::runtime::get_meta_data<__VA_ARGS__>();
 
-#define VV_RUNTIME_INSTANCE(...)                                     \
+#define VV_RUNTIME_INSTANCE(...)                                          \
   template <>                                                             \
   const std::type_info& virtual_void::runtime::typeid_of<__VA_ARGS__>() { \
     return typeid(__VA_ARGS__);                                           \
@@ -177,6 +177,6 @@ bool type_match(runtime::meta_data const& meta_data) {
     return runtime_implementation<__VA_ARGS__>();                         \
   }
 
-#define VV_RUNTIME_STATIC(...) \
-  VV_RUNTIME_FWD(, __VA_ARGS__)    \
+#define VV_RUNTIME_STATIC(...)  \
+  VV_RUNTIME_FWD(, __VA_ARGS__) \
   VV_RUNTIME_INSTANCE(__VA_ARGS__)\

@@ -15,7 +15,7 @@ target_include_directories(component_base PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-target_compile_definitions(component_base PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
+target_compile_definitions(component_base PUBLIC VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
 if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
 endif()

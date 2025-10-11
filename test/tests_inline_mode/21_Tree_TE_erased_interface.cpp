@@ -14,10 +14,6 @@ using std::string;
 using namespace virtual_void;
 using namespace virtual_void::data;
 
-namespace {}
-
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, node_i)
-
 namespace {
 
 VV_INTERFACE(node_i,

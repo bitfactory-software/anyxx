@@ -63,9 +63,6 @@ struct functor {
 
 VV_RUNTIME_STATIC(functor)
 
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, const_function_i)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, mutating_function_i)
-
 namespace {
 
 VV_INTERFACE(const_function_i, (VV_CONST_OP(std::string, 1, ())))
@@ -188,9 +185,6 @@ TEST_CASE("_interface_const_correct virtual_void::shared_const") {
     REQUIRE(cf() == "hallo");
   }
 }
-
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, text_i_const)
-VV_V_TABLE_INSTANCE_ON_THE_FLY(, text_i_mutable)
 
 namespace {
 struct text_object {
