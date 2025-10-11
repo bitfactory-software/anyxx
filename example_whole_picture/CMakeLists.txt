@@ -11,6 +11,7 @@ set_target_properties(layer_0_architecture PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(layer_0_architecture 
     virtual_void
 )
+target_compile_definitions(layer_0_architecture PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
 if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(layer_0_architecture PRIVATE ARCHITECTURE_SHARED)
 endif()
@@ -28,6 +29,7 @@ target_link_libraries(layer_1_core
     virtual_void
     layer_0_architecture
 )
+target_compile_definitions(layer_1_core PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
 if (BUILD_SHARED_LIBS AND MSVC)
     target_compile_definitions(layer_1_core PRIVATE CORE_SHARED)
 endif()
@@ -44,6 +46,7 @@ target_link_libraries(example_1_core
     layer_1_core
     Catch2::Catch2WithMain
 )
+target_compile_definitions(example_1_core PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
 set_target_properties(example_1_core PROPERTIES FOLDER "_example_whole_picture")
 
 include(Catch)
