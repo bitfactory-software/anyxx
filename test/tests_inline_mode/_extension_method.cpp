@@ -10,8 +10,6 @@
 #include <virtual_void/interface/extension_method.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
 
-#include "a.hpp"
-
 using namespace Catch::Matchers;
 
 using namespace virtual_void;

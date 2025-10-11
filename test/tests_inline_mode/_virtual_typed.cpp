@@ -9,14 +9,10 @@
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
 
-#include "a.hpp"
-#include "class_hierarchy_test_hierarchy.hpp"
-
 using namespace virtual_void;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 using namespace virtual_void::interface;
-using namespace TestDomain;
 
 namespace virtual_typed_test {
 struct x_t {
@@ -31,8 +27,6 @@ VV_INTERFACE(test_i, (VV_CONST_METHOD(std::string, to_string),
 
 using namespace virtual_typed_test;
 
-VV_RUNTIME_FWD(, int)
-VV_RUNTIME_FWD(, std::string)
 VV_REGISTER_V_TABLE_INSTANCE(x_t, test_i)
 
 TEST_CASE("virtual_typed/observer/base") {

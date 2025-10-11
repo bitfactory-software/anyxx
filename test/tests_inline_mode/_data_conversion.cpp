@@ -11,16 +11,12 @@
 #include <virtual_void/data/move.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
-#include "a.hpp"
-#include "class_hierarchy_test_hierarchy.hpp"
-
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void::interface;
 using namespace virtual_void::runtime;
-using namespace TestDomain;
 
 TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";

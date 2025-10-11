@@ -189,13 +189,9 @@ bool type_match(runtime::meta_data const& meta_data) {
     return runtime_implementation<__VA_ARGS__>();                         \
   }
 
-#else
-
-#define VV_RUNTIME_FWD(export_, ...)
-#define VV_RUNTIME_INSTANCE(...)
-
-#endif
-
 #define VV_RUNTIME_STATIC(...)  \
   VV_RUNTIME_FWD(, __VA_ARGS__) \
   VV_RUNTIME_INSTANCE(__VA_ARGS__)\
+
+#endif
+

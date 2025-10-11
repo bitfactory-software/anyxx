@@ -6,8 +6,13 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
+#include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 
-#include "a.hpp"
+struct A {
+  A(const std::string sp) : s(sp) {}
+  std::string s;
+  VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~A() = default;
+};
 
 using namespace Catch::Matchers;
 
