@@ -383,16 +383,16 @@
   }                                                                   \
   VV_REGISTER_V_TABLE_INSTANCE(class_, interface_namespace_::interface_)
 
-#define VV_V_TABLE_INSTANCE_STATIC(class_, interface_, interface_namespace_) \
-  VV_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
-  VV_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
-
 #else
 
 #define VV_V_TABLE_INSTANCE_FWD(...)
 #define VV_V_TABLE_INSTANCE(...)
 
 #endif
+
+#define VV_V_TABLE_INSTANCE_STATIC(class_, interface_, interface_namespace_) \
+  VV_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
+  VV_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
 
 #define VV_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \
   template <>                                                         \

@@ -87,10 +87,6 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_REGISTER_V_TABLE_INSTANCE(Plus, node_i);
-VV_REGISTER_V_TABLE_INSTANCE(Times, node_i);
-VV_REGISTER_V_TABLE_INSTANCE(Integer, node_i);
-
 VV_REGISTER_V_TABLE_INSTANCE(Plus, lisp_i);
 VV_REGISTER_V_TABLE_INSTANCE(Times, lisp_i);
 VV_REGISTER_V_TABLE_INSTANCE(Integer, lisp_i);
@@ -104,7 +100,7 @@ TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
   auto& type_info = virtual_void::runtime::get_meta_data<Times>();
-  REQUIRE(type_info.get_i_table().size() == 3u);
+  REQUIRE(type_info.get_i_table().size() == 2u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));

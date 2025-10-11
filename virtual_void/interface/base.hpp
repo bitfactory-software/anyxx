@@ -207,8 +207,9 @@ V_TABLE* v_table_instance_implementaion();
 template <typename V_TABLE, typename CONCRETE>
 V_TABLE* v_table_instance_implementaion() {
   static V_TABLE v_table{std::in_place_type<CONCRETE>};
-  //static auto __ =
-  //    virtual_void::runtime::bind_v_table_to_meta_data<V_TABLE, CONCRETE>();
+  static auto __ =
+      virtual_void::runtime::get_meta_data<CONCRETE>().register_v_table(
+          &v_table);
   return &v_table;
 }
 #endif  // DEBUG

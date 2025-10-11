@@ -28,8 +28,6 @@ using to_string_u = to_string_i<data::unique>;
 using to_string_mo = to_string_i<data::mutable_observer>;
 }  // namespace
 
-VV_REGISTER_V_TABLE_INSTANCE(X, to_string_i)
-
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{std::make_shared<X>("hallo")};
   REQUIRE(sc.to_string() == "hallo");

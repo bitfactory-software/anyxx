@@ -27,8 +27,6 @@ VV_INTERFACE(test_i, (VV_CONST_METHOD(std::string, to_string),
 
 using namespace virtual_typed_test;
 
-VV_REGISTER_V_TABLE_INSTANCE(x_t, test_i)
-
 TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};
 

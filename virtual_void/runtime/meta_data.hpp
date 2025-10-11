@@ -130,10 +130,11 @@ class meta_data {
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
-  void register_v_table(base_v_table* v_table) {
+  auto register_v_table(base_v_table* v_table) {
     v_table->meta_data = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
+    return v_table;
   }
 };
 
