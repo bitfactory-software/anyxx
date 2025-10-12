@@ -2,7 +2,7 @@
 
 using namespace Catch::Matchers;
 
-#include <virtual_void/interface/hook.hpp>
+#include <virtual_void/hook.hpp>
 
 using namespace virtual_void;
 

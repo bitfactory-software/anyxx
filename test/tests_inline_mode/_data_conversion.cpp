@@ -9,7 +9,7 @@
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
 #include <virtual_void/move_erased_data.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/declare_macro.hpp>
 
 using namespace Catch::Matchers;
 

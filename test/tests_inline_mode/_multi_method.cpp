@@ -1,8 +1,8 @@
 #include <catch.hpp>
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/interface/extension_method.hpp>
+#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/extension_method.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
 #
 
@@ -40,7 +40,7 @@ auto __ =
 auto __ =
     collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a"; });
 
-TEST_CASE("virtual_typed/interface/multi_method") {
+TEST_CASE("virtual_typed/multi_method") {
   CHECK(Thing_v_table::imlpementation<Asteroid>()
             ->own_extension_method_holder_t::extension_method_table->size() ==
         2);

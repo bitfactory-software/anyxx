@@ -3,10 +3,10 @@
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
-#include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/borrow.hpp>
-#include <virtual_void/interface/clone.hpp>
-#include <virtual_void/interface/move.hpp>
+#include <virtual_void/base.hpp>
+#include <virtual_void/borrow.hpp>
+#include <virtual_void/clone.hpp>
+#include <virtual_void/move.hpp>
 
 #include "./component_base/component_base.hpp"
 

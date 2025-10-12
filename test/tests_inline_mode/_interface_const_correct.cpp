@@ -6,8 +6,8 @@
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
-#include <virtual_void/interface/base.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/base.hpp>
+#include <virtual_void/declare_macro.hpp>
 #include <virtual_void/meta_data.hpp>
 
 using namespace Catch::Matchers;

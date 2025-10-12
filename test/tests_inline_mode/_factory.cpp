@@ -1,8 +1,8 @@
 #include <catch.hpp>
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/interface/factory.hpp>
+#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/factory.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
 #
 
@@ -31,6 +31,6 @@ factory<Thing, std::type_index, std::string> thing_factory;
 
 namespace {
 
-TEST_CASE("virtual_typed/interface/factory") {}
+TEST_CASE("virtual_typed/factory") {}
 
 }  // namespace

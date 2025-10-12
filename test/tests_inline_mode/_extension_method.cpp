@@ -6,9 +6,9 @@
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
-#include <virtual_void/interface/extension_method.hpp>
-#include <virtual_void/interface/virtual_typed.hpp>
+#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/extension_method.hpp>
+#include <virtual_void/virtual_typed.hpp>
 
 using namespace Catch::Matchers;
 
@@ -65,7 +65,7 @@ auto derived_table =
 
 namespace {
 
-TEST_CASE("virtual_typed/interface/extension_method") {
+TEST_CASE("virtual_typed/extension_method") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 

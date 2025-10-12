@@ -2,7 +2,7 @@
 
 #undef interface
 
-#include <virtual_void/interface/base.hpp>
+#include <virtual_void/base.hpp>
 #include <virtual_void/meta_data.hpp>
 
 namespace virtual_void {

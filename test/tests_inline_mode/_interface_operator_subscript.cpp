@@ -6,7 +6,7 @@
 #include <vector>
 #include <virtual_void/observer.hpp>
 #include <virtual_void/unique.hpp>
-#include <virtual_void/interface/declare_macro.hpp>
+#include <virtual_void/declare_macro.hpp>
 
 using namespace Catch::Matchers;
 
