@@ -2,7 +2,7 @@
 
 #undef interface
 
-#include <virtual_void/data/borrow.hpp>
+#include <virtual_void/data/borrow_erased_data.hpp>
 #include <virtual_void/interface/query_v_table.hpp>
 
 namespace virtual_void {

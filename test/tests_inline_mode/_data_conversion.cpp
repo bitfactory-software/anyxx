@@ -3,12 +3,12 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/borrow.hpp>
-#include <virtual_void/data/clone.hpp>
+#include <virtual_void/data/borrow_erased_data.hpp>
+#include <virtual_void/data/clone_erased_data.hpp>
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/data/move.hpp>
+#include <virtual_void/data/move_erased_data.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;

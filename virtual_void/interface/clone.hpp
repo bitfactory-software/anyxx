@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/data/clone.hpp>
+#include <virtual_void/data/clone_erased_data.hpp>
 #include <virtual_void/interface/query_v_table.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 

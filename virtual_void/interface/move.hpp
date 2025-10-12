@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/data/move.hpp>
+#include <virtual_void/data/move_erased_data.hpp>
 #include <virtual_void/interface/query_v_table.hpp>
 
 namespace virtual_void {

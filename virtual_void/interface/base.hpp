@@ -4,8 +4,8 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
-#include <virtual_void/data/borrow.hpp>
-#include <virtual_void/data/move.hpp>
+#include <virtual_void/data/borrow_erased_data.hpp>
+#include <virtual_void/data/move_erased_data.hpp>
 #include <virtual_void/data/trait.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
