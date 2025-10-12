@@ -2,8 +2,9 @@
 
 ### v_table
 An object whose members are function pointers, and every function has as **its first parameter *self***. This is a pointer to (eventually *const*) *void*.
+The *v_table* points to a "meta_data* object and optional to a *m_table*.
 
-### v_table object
+### v_table instance
 #### An object derived from v_table, with no additional members, and where all members point to valid functions.
 
 These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
@@ -17,19 +18,14 @@ The description of these types is implemented via a specialication of *trait*.
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.
 - **shared_const**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*.
+- **weak**: Ownership as `std::weak_ptr`. No delivered adress. Use `lock` to gain a shared_const, if the object still exists.
 - **unique**: Ownership as `std::unique_ptr`. The delivered address is a pointer to a *mutable* object.
 - **value**: Every value object holds its own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
 
+### 'any' Versus 'typed_any'
+#### An *any* combines a **v_table** with an **erased_data**.
 
-### 'virtual_void' Versus 'typed_void'
-#### A *virtual_void* holds no compile-time information about the *held* object.
-
-Only if *virtual_void* has *get_meta_data meta-data*, is there a dynamic and safe cast of the *void* pointer to a concrete pointer possible.  
-*virtual_void* has two kinds of such meta-data:
-- **typeid**
-- **m_table**
-
-A *typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* holds in its meta an *type_info*, the cast to *virtual_void* is a safe cast.
+#### A *typed_any* is a convenience wrapper of an **any** for the **eunerased** type. 
 
 ### Static Cast vs Dynamic Cast
 #### A *static cast*:
@@ -39,10 +35,10 @@ A *typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* holds in
   - Static casts are only a syntactic construct and leave no trace in the binary code.
 
 #### A *dynamic cast*:
-  - Is a get_meta_data query to test if the casted object is of this type.
-  - If such a query succeeds, it is determined by the program.
+  - Uses meta data to find the queried type.
+  - If such a query succeeds, is determined by the program.
   - All dynamic casts are safe.
-  - Dynamic casts need code to run.
+  - Dynamic casts have a runtime cost.
 
 ### 'Upcast' vs 'Downcast'
 #### An *upcast* is a *conversion* from a more detailed type to a general one.
@@ -50,29 +46,28 @@ A *typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* holds in
 #### A *downcast* is a conversion from a more general type to a more detailed one.
 
 For upcasts and downcasts, the types must be related within the language rules.  
-Static downcasts are guesses and as such are unsafe. Dynamic downcasts are by definition safe and a kind of *type query*.
+Static downcasts are guesses and as such unsafe. Dynamic downcasts are by definition safe and a kind of *type query*.
 
 ### Lifetime Cast
-#### A *virtual_void* can be cast to another *virtual_void*, in the sense of an *upcast*.
-
-- A **smart** *virtual_void* (**shared**, **unique**, **value**) can be cast to an **observer**.
-- A **mutable** *virtual_void* can be cast to a *read-only observer*.
-
-But not in the other direction.
+#### An **erased_data** can recieve the content of an other **erased_data** with different **liftime** within certain rules.
+#### Three ways, three rules:
+- *borrow*: assignemnt does not change ownership and constness.
+- *move*: left hand can hold ownership, right hand has ownership, left hand const or right hand mutable .
+- *clone*: left hand can hold ownership.
 
 ### Crosscast
 #### While *up-* and *downcasts* are within related types, *crosscasts* are between unrelated types.
 
-Such types are typically virtual any_base types (an interface).  
-A *crosscast* usually tests if one interface can be reached from another, and if so, provides access to it.
+A *crosscast* usually tests if one any can be reached from another any, and if so, provides access to it.
+To enable a **crosscast** to an certain any for a object, the object must register its **v_table instance**
 
-### Open Method
-#### An **open method** is a freestanding callable, which acts like a virtual member function.
+### Extension Method 
+#### An **extension method** is a freestanding callable, whitch acts v_table_function on the first paramater. (must be an **any**).
+#### A **extension multi method** is a generalistaion of the **extension method**, to solve the [multiple dispatch](https://en.wikipedia.org/wiki/Multiple_dispatch) .
+**Extension methods** are a recipe to solve the [expression problem]. 
 
-Open member functions are a recipe to solve the [expression problem]. An open method is the simplest but very useful case of [open multi-methods]. With an open method, you can add a function whose behavior is determined by the type of its (first) argument, but you do not need to change the definition of that type. [Tutorial](/tutorials/tutorial___1.md/#t2)
-
-### Open Type
-#### An **open type** behaves like a *struct*, where you can add data members without changing the definition of that *struct*.
+### Extension Members
+#### An **extension members** behaves like a *struct*, where you can add data members without changing the definition of that *struct*.
 
 This could be trivially implemented by a map from some kind of tag to an `any`.  
 This library offers an efficient implementation with two indirections and type-safe access.
@@ -84,7 +79,7 @@ An input parameter of a function can consume any object, as long as it conforms 
 
 This technique solves many problems but stops working as soon as the information passed to the **type eraser** participates in *inversion of control*.
 
-This **virtual_void** library is designed to solve this problem with **type tunneling**. Recovering the *erased* information and casting to different *interfaces* of that information is the key.
+This library is designed to solve this problem with **type tunneling**. Recovering the *erased* information and the abilty to cast to different *any*s is the key.
 
 [expression problem]: https://en.wikipedia.org/wiki/Expression_problem  
 [open multi-methods]: https://en.wikipedia.org/wiki/Multiple_dispatch
