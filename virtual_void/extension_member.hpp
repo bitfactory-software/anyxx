@@ -27,7 +27,7 @@ struct members {
   void set(OBJECT_MEMBER member, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
     table_[member.index] =
-        make_erased_value<value_t>(std::forward<ARG>(arg));
+        make_value<value_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER member) const {

@@ -65,19 +65,19 @@ class erased_value {
 };
 
 template <typename T, typename... ARGS>
-auto make_erased_value(ARGS&&... args)
+auto make_value(ARGS&&... args)
 {
   return erased_value(new T(std::forward<ARGS>(args)...));
 }
 
 template <typename T, typename... ARGS>
 auto make_void_value(ARGS&&... args) {
-  return make_erased_value<T>(std::forward<ARGS>(args)...);
+  return make_value<T>(std::forward<ARGS>(args)...);
 }
 
 template <typename T>
 auto make_void_value(T&& v) {
-  return make_erased_value<T>(std::forward<T>(v));
+  return make_value<T>(std::forward<T>(v));
 }
 
 template <typename U>
