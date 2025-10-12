@@ -16,19 +16,14 @@ using namespace virtual_void::interface;
 namespace {}
 
 VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
+namespace {
+VV_INTERFACE(Thing, )
+}  // namespace
 
 namespace {
-
-VV_INTERFACE(Thing, )
-
 class Asteroid {};
-
 class Spaceship {};
-
-};  // namespace
-
-VV_EXTENSION_METHOD_COUNT(Thing)
-
+}  // namespace
 VV_EXTENSION_TABLE_INSTANCE(Asteroid, Thing)
 VV_EXTENSION_TABLE_INSTANCE(Spaceship, Thing)
 

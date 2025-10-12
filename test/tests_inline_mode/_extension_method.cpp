@@ -17,25 +17,21 @@ using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 using namespace virtual_void::interface;
 
-namespace {
-struct x_t {
-  std::string s_;
-};
-}  // namespace
+
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_derived_i)
-
 namespace {
-
 VV_INTERFACE(test_base_i, (VV_CONST_METHOD(std::string, to_string)))
 VV_INTERFACE_(test_derived_i, test_base_i,
               (VV_METHOD(void, from_string, std::string const&)))
 
 }  // namespace
 
-VV_EXTENSION_METHOD_COUNT(test_base_i)
-VV_EXTENSION_METHOD_COUNT(test_derived_i)
-
+namespace {
+struct x_t {
+  std::string s_;
+};
+}  // namespace
 VV_EXTENSION_TABLE_INSTANCE(x_t, test_base_i)
 VV_EXTENSION_TABLE_INSTANCE(x_t, test_derived_i)
 

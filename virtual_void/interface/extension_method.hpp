@@ -7,8 +7,16 @@
 
 namespace virtual_void::interface {
 
+#ifdef VV_DLL_MODE
 template <typename EXTENDED_V_TABLE>
-auto extension_method_count_of = std::false_type{};
+std::size_t& extension_method_count_of();
+#else
+template <typename EXTENDED_V_TABLE>
+std::size_t& extension_method_count_of() {
+  static std::size_t count = 0;
+  return count;
+}
+#endif
 
 template <is_interface INTERFACE>
 struct virtual_ {
@@ -177,7 +185,7 @@ struct extension_method<R(ARGS...)> {
     using v_table_t = typename interface_t::v_table_t;
     using next_t = dispatch_access<true, DIM + 1, ARGS...>;
 
-    std::size_t index_ = extension_method_count_of<v_table_t> ++;
+    std::size_t index_ = extension_method_count_of<v_table_t>()++;
     std::size_t dispatch_dimension_size_ = 0;
 
     template <typename CLASS, typename... CLASSES>
@@ -218,7 +226,7 @@ struct extension_method<R(ARGS...)> {
   struct dispatch_access<false, 0, virtual_<INTERFACE>, ARGS...> {
     using interface_t = INTERFACE;
     using v_table_t = typename interface_t::v_table_t;
-    std::size_t index_ = extension_method_count_of<v_table_t> ++;
+    std::size_t index_ = extension_method_count_of<v_table_t>()++;
 
     template <typename CLASS>
     auto define(auto fp, auto&) {
@@ -270,9 +278,30 @@ struct extension_method<R(ARGS...)> {
 
 }  // namespace virtual_void::interface
 
-#define VV_EXTENSION_METHOD_COUNT(interface_) \
-  template <>                                 \
-  auto interface::extension_method_count_of<interface_##_v_table> = 0;
+#ifdef VV_DLL_MODE
+
+#define VV_EXTENSION_METHOD_COUNT_FWD(export_, ns_, c_)      \
+  namespace ns_ {                                            \
+  struct c_;                                                 \
+  }                                                          \
+  namespace virtual_void::interface {                        \
+  template <>                                                \
+  export_ std::size_t& extension_method_count_of<ns_::c_>(); \
+  }
+
+#define VV_EXTENSION_METHOD_COUNT_IMPL(ns_, c_)                                \
+  template <>                                                                  \
+  std::size_t& virtual_void::interface::extension_method_count_of<ns_::c_>() { \
+    static std::size_t count = 0;                                              \
+    return count;                                                              \
+  }
+
+#else
+
+#define VV_EXTENSION_METHOD_COUNT_FWD(...)
+#define VV_EXTENSION_METHOD_COUNT_IMPL(...)
+
+#endif
 
 #define VV_EXTENSION_TABLE_INSTANCE(class_, interface_)                        \
   template <>                                                                  \
@@ -282,4 +311,3 @@ struct extension_method<R(ARGS...)> {
     return extension_method_table_instance_implementation<                     \
         interface_##_v_table, class_>();                                       \
   }
-
