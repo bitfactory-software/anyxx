@@ -9,7 +9,7 @@ using namespace test::component_base;
 using namespace virtual_void;
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 
 namespace test::component_base {
 
@@ -53,31 +53,31 @@ VV_V_TABLE_INSTANCE(X, test::component_base, get_value_i)
 VV_V_TABLE_INSTANCE(X, test::component_base, set_value_i)
 VV_V_TABLE_INSTANCE(X, test::component_base, to_string_i)
 
-to_string_i<virtual_void::data::const_observer>
+to_string_i<virtual_void::const_observer>
 test::component_base::get_to_string_i_co() {
   auto p = &x;
-  to_string_i<virtual_void::data::const_observer> i{x};
+  to_string_i<virtual_void::const_observer> i{x};
   auto meta = get_v_table(i)->meta_data;
   const std::type_info* type_info = &meta->get_type_info();
   static_assert(
-      is_interface<to_string_i<virtual_void::data::const_observer>>);
+      is_interface<to_string_i<virtual_void::const_observer>>);
   const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   auto s = i.to_string();
   return i;
 }
-to_string_i<virtual_void::data::shared_const>
+to_string_i<virtual_void::shared_const>
 test::component_base::get_to_string_i_sc(double v) {
   return std::make_shared<X>(v);
 }
-to_string_i<virtual_void::data::unique> test::component_base::get_to_string_i_u(
+to_string_i<virtual_void::unique> test::component_base::get_to_string_i_u(
     double v) {
   return std::make_unique<X>(v);
 }
 
-virtual_void::data::shared_const test::component_base::sc_X(double v) {
-  return virtual_void::data::erased<shared_const>(std::make_shared<X>(v));
+virtual_void::shared_const test::component_base::sc_X(double v) {
+  return virtual_void::erased<shared_const>(std::make_shared<X>(v));
 }
-virtual_void::data::unique test::component_base::u_X(double v) {
-  return virtual_void::data::erased<unique>(std::make_unique<X>(v));
+virtual_void::unique test::component_base::u_X(double v) {
+  return virtual_void::erased<unique>(std::make_unique<X>(v));
 }

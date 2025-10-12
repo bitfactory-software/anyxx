@@ -14,7 +14,7 @@
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 
 const double M_PI = 3.14;
 

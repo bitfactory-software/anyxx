@@ -22,12 +22,12 @@ std::size_t& members_count() {
 template <typename OBJECT_TYPE>
 struct members {
   members() : table_(members_count<OBJECT_TYPE>()) {}
-  std::vector<data::erased_value> table_;
+  std::vector<erased_value> table_;
   template <typename OBJECT_MEMBER, typename ARG>
   void set(OBJECT_MEMBER member, ARG&& arg) {
     using value_t = typename OBJECT_MEMBER::value_t;
     table_[member.index] =
-        data::make_erased_value<value_t>(std::forward<ARG>(arg));
+        make_erased_value<value_t>(std::forward<ARG>(arg));
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER member) const {

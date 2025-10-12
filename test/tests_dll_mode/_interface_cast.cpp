@@ -12,7 +12,7 @@
 
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 
 using namespace test::component_base;
 
@@ -30,7 +30,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(s == "3.140000");
 
     static_assert(
-        data::borrowable_from<get_value_i<const_observer>::erased_data_t,
+        borrowable_from<get_value_i<const_observer>::erased_data_t,
                               get_value_i<const_observer>::erased_data_t>);
 
     get_value_i<const_observer> i1 =

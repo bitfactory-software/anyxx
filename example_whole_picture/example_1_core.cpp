@@ -18,7 +18,7 @@ using namespace whole_picture::core::shapes;
 using namespace virtual_void;
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 
 VV_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 

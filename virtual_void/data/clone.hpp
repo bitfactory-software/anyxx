@@ -5,7 +5,7 @@
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
-namespace virtual_void::data {
+namespace virtual_void {
 
 template <is_erased_data TOFROM>
 struct can_copy_to;
@@ -40,4 +40,4 @@ static_assert(cloneable_to<unique>);
 static_assert(cloneable_to<unique>);
 static_assert(cloneable_to<unique>);
 
-};  // namespace virtual_void::data
+};  // namespace virtual_void

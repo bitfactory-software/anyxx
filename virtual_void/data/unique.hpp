@@ -3,7 +3,7 @@
 #include <memory>
 #include <virtual_void/data/trait.hpp>
 
-namespace virtual_void::data {
+namespace virtual_void {
 
 template <typename T>
 auto erased_delete() {
@@ -28,7 +28,7 @@ inline unique unique_nullptr() {
 }
 
 template <>
-struct trait<data::unique> {
+struct trait<unique> {
   using void_t = void*;
   template <typename V>
   using typed_t = std::decay_t<V>;
@@ -43,9 +43,9 @@ struct trait<data::unique> {
 
   template <typename V>
   static auto erase(std::unique_ptr<V>&& v) {
-    return data::move_to_unique(std::move(v));
+    return move_to_unique(std::move(v));
   }
 };
 
 static_assert(is_erased_data<unique>);
-}  // namespace virtual_void::data
+}  // namespace virtual_void

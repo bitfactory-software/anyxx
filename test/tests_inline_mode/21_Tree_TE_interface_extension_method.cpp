@@ -32,7 +32,7 @@ VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value)))
 namespace _21_Tree_TE_interface_extension_method {
 namespace node {
 struct interface;
-using model = node_i<data::shared_const>;
+using model = node_i<shared_const>;
 };  // namespace node
 
 struct Plus {

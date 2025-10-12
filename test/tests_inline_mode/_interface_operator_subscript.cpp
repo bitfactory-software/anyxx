@@ -12,7 +12,7 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 
 namespace {
 using map_t = std::map<int, std::string>;

@@ -22,28 +22,28 @@ struct virtual_typed : public INTERFACE {
   }
 
   value_t const& operator*() const {
-    return *data::unchecked_unerase_cast<value_t const>(this->erased_data_);
+    return *unchecked_unerase_cast<value_t const>(this->erased_data_);
   }
   value_t const* operator->() const {
-    return data::unchecked_unerase_cast<value_t const>(this->erased_data_);
+    return unchecked_unerase_cast<value_t const>(this->erased_data_);
   }
   value_t const* get() const {
-    return data::unchecked_unerase_cast<value_t const>(this->erased_data_);
+    return unchecked_unerase_cast<value_t const>(this->erased_data_);
   }
   value_t& operator*() const
     requires !is_const
   {
-    return *data::unchecked_unerase_cast<value_t>(this->erased_data_);
+    return *unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   value_t* operator->() const
     requires !is_const
   {
-    return data::unchecked_unerase_cast<value_t>(this->erased_data_);
+    return unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   value_t* get() const
     requires !is_const
   {
-    return data::unchecked_unerase_cast<value_t>(this->erased_data_);
+    return unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   explicit operator bool() const {
     return static_cast<bool>(this->erased_data_);

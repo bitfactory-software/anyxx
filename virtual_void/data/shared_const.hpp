@@ -3,7 +3,7 @@
 #include <memory>
 #include <virtual_void/data/trait.hpp>
 
-namespace virtual_void::data {
+namespace virtual_void {
 using shared_const = std::shared_ptr<void const>;
 
 template <>
@@ -27,4 +27,4 @@ struct trait<shared_const> {
 };
 
 static_assert(is_erased_data<shared_const>);
-}  // namespace virtual_void::data
+}  // namespace virtual_void

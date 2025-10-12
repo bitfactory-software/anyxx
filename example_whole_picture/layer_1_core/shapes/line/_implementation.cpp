@@ -7,7 +7,7 @@ using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 using namespace virtual_void;
 
 VV_RUNTIME_INSTANCE(line)

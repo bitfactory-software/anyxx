@@ -21,18 +21,18 @@ struct X {
 
 VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 
-using to_string_sc = to_string_i<data::shared_const>;
-using to_string_co = to_string_i<data::const_observer>;
+using to_string_sc = to_string_i<shared_const>;
+using to_string_co = to_string_i<const_observer>;
 
-using to_string_u = to_string_i<data::unique>;
-using to_string_mo = to_string_i<data::mutable_observer>;
+using to_string_u = to_string_i<unique>;
+using to_string_mo = to_string_i<mutable_observer>;
 }  // namespace
 
 TEST_CASE("interface lifetime cast") {
   to_string_sc sc{std::make_shared<X>("hallo")};
   REQUIRE(sc.to_string() == "hallo");
   REQUIRE(
-      is_derived_from<base<data::shared_const>>(sc));
+      is_derived_from<base<shared_const>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const *>>, void>);
@@ -53,7 +53,7 @@ TEST_CASE("interface lifetime cast") {
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
   REQUIRE(
-      is_derived_from<base<data::const_observer>>(co));
+      is_derived_from<base<const_observer>>(co));
 
   to_string_u u{ std::make_unique<X>("hallo") };
   REQUIRE(u.to_string() == "hallo");

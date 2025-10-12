@@ -4,7 +4,7 @@
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
 
-namespace virtual_void::data {
+namespace virtual_void {
 
 template <is_erased_data TO, is_erased_data FROM>
 struct borrow_trait;
@@ -59,4 +59,4 @@ static_assert(!borrowable_from<unique, mutable_observer>);
 static_assert(!borrowable_from<unique, unique>);
 static_assert(!borrowable_from<unique, shared_const>);
 
-};  // namespace virtual_void::data
+};  // namespace virtual_void

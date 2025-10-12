@@ -4,7 +4,7 @@
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
 
-namespace virtual_void::data {
+namespace virtual_void {
 
 template <is_erased_data TO, is_erased_data FROM>
 bool constexpr can_move_to_from = false;
@@ -49,4 +49,4 @@ static_assert(!moveable_from<unique, mutable_observer>);
 static_assert(moveable_from<unique, unique>);
 static_assert(!moveable_from<unique, shared_const>);
 
-};  // namespace virtual_void::data
+};  // namespace virtual_void

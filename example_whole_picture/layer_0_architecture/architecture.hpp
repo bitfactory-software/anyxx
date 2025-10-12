@@ -43,8 +43,8 @@ inline size operator+(size l, size r) {
 };
 
 VV_INTERFACE(surface, (VV_METHOD(void, write, point, char)))
-using mutable_observed_surface = surface<virtual_void::data::mutable_observer>;
-using unique_surface = surface<virtual_void::data::unique>;
+using mutable_observed_surface = surface<virtual_void::mutable_observer>;
+using unique_surface = surface<virtual_void::unique>;
 
 VV_INTERFACE(shape, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
 

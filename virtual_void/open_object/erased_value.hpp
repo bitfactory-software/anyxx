@@ -2,7 +2,7 @@
 
 #include <utility>
 
-namespace virtual_void::data {
+namespace virtual_void {
 
 struct value_v_table {
   using destroy_fn = void(void*) noexcept;
@@ -90,4 +90,4 @@ U const& unsave_unerase_cast(erased_value const& v) {
 }
 
 
-}  // namespace virtual_void::data
+}  // namespace virtual_void

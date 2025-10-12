@@ -104,7 +104,7 @@ struct cast_error {
 
 class meta_data {
   const std::type_info& type_info_;
-  using copy_construct_t = auto(const_void) -> data::unique;
+  using copy_construct_t = auto(const_void) -> unique;
   copy_construct_t* copy_construct_;
 
   std::vector<base_v_table*> i_table_;
@@ -113,7 +113,7 @@ class meta_data {
   template <typename CLASS>
   constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return data::erased<data::unique>(
+          return erased<unique>(
               std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
         }) {}
 

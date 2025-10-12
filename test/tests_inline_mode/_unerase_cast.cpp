@@ -17,13 +17,13 @@ VV_INTERFACE(has_meta_data,)
 TEST_CASE("unerase_cast") {
   using namespace virtual_void;
   using namespace virtual_void;
-  using value = data::shared_const;
+  using value = shared_const;
 
   using value_with_meta_data = has_meta_data<value>;
 
   {
-    auto e = data::erased<value>(std::make_shared<x_t>("hallo"));
-    REQUIRE(data::unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
+    auto e = erased<value>(std::make_shared<x_t>("hallo"));
+    REQUIRE(unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
   }
   {
     value_with_meta_data v(std::make_shared<x_t>("hallo"));

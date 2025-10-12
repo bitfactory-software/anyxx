@@ -44,12 +44,12 @@ VV_INTERFACE(get_value_i, (VV_CONST_METHOD(double, get_value)))
 VV_INTERFACE_(set_value_i, get_value_i, (VV_METHOD(void, set_value, double)))
 
 COMPONENT_BASE_EXPORT
-to_string_i<virtual_void::data::const_observer> get_to_string_i_co();
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::shared_const>
+to_string_i<virtual_void::const_observer> get_to_string_i_co();
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::shared_const>
 get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::data::unique> get_to_string_i_u(
+COMPONENT_BASE_EXPORT to_string_i<virtual_void::unique> get_to_string_i_u(
     double v);
-COMPONENT_BASE_EXPORT virtual_void::data::shared_const sc_X(double v);
-COMPONENT_BASE_EXPORT virtual_void::data::unique u_X(double v);
+COMPONENT_BASE_EXPORT virtual_void::shared_const sc_X(double v);
+COMPONENT_BASE_EXPORT virtual_void::unique u_X(double v);
 
 }  // namespace test::component_base

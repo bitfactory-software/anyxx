@@ -11,7 +11,7 @@
 
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::data;
+using namespace virtual_void;
 using namespace virtual_void;
 
 namespace virtual_typed_test {

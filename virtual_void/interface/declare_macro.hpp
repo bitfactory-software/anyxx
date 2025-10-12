@@ -153,7 +153,7 @@
   name = [](void const_* _vp __VA_OPT__(                                   \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {       \
     return v_table_map{}.name(                                             \
-        virtual_void::data::unchecked_unerase_cast<CONCRETE>(_vp)          \
+        virtual_void::unchecked_unerase_cast<CONCRETE>(_vp)          \
             __VA_OPT__(, )                                                 \
                 __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
@@ -161,11 +161,11 @@
 #define _detail_INTERFACE_METHOD(type, name, name_ext, exact_const, const_,  \
                                  ...)                                        \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
-    requires(::virtual_void::data::const_correct_call_for_erased_data<       \
+    requires(::virtual_void::const_correct_call_for_erased_data<       \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
-        virtual_void::data::get_void_data_ptr(base_t::erased_data_)          \
+        virtual_void::get_void_data_ptr(base_t::erased_data_)          \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
@@ -273,18 +273,18 @@
                                                            ERASED_DATA>      \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                        \
       v_table_ = v_table_t::template imlpementation<                         \
-          virtual_void::data::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();    \
+          virtual_void::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();    \
     }                                                                        \
     template <typename OTHER>                                                \
     n(const OTHER& other)                                                    \
       requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&    \
-               virtual_void::data::borrowable_from<                          \
+               virtual_void::borrowable_from<                          \
                    erased_data_t, typename OTHER::erased_data_t>)            \
         : base_t(other) {}                                                   \
     template <virtual_void::is_interface OTHER>                   \
     n(OTHER&& other) noexcept                                                \
       requires(std::derived_from<OTHER::v_table_t, v_table_t> &&             \
-               virtual_void::data::moveable_from<                            \
+               virtual_void::moveable_from<                            \
                    erased_data_t, typename OTHER::erased_data_t>)            \
         : base_t(std::move(other)) {}                                        \
                                                                              \
@@ -303,13 +303,13 @@
     n(n&&) = default;                                                        \
     n& operator=(n const&) = default;                                        \
     n& operator=(n&&) = default;                                             \
-    template <virtual_void::data::is_erased_data OTHER>                      \
+    template <virtual_void::is_erased_data OTHER>                      \
     friend class virtual_void::base;                              \
     template <virtual_void::is_interface TO,                      \
               virtual_void::is_interface FROM>                    \
     friend TO virtual_void::unchecked_downcast_to(FROM from)      \
       requires(std::derived_from<TO, FROM>);                                 \
-    template <virtual_void::data::is_erased_data OTHER>                      \
+    template <virtual_void::is_erased_data OTHER>                      \
     using type_for =                                                         \
         n<_detail_INTERFACE_TEMPLATE_ARGS(_add_head((OTHER), t))>;           \
   };
