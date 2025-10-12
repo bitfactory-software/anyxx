@@ -14,8 +14,6 @@ using namespace virtual_void;
 
 namespace {
 
-const double M_PI = 3.14;
-
 struct widget_a {
   std::string get() const { return "widget_a"; }
 };
