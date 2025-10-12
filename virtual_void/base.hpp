@@ -17,7 +17,7 @@ template <is_erased_data ERASED_DATA>
 class base;
 
 template <typename I>
-concept is_interface_impl = requires(I i, I::erased_data_t ed) {
+concept is_any_impl = requires(I i, I::erased_data_t ed) {
   typename I::void_t;
   typename I::erased_data_t;
   typename I::v_table_t;
@@ -26,10 +26,10 @@ concept is_interface_impl = requires(I i, I::erased_data_t ed) {
 };
 
 template <typename I>
-concept is_interface = is_interface_impl<std::decay_t<I>>;
+concept is_any = is_any_impl<std::decay_t<I>>;
 
 template <class E>
-concept is_virtual_typed = is_interface<E> && requires(E e) {
+concept is_virtual_typed = is_any<E> && requires(E e) {
   typename E::trait_t;
   typename E::value_t;
   { E::is_const } -> std::convertible_to<bool>;
@@ -39,7 +39,7 @@ template <typename CONSTRUCTED_WITH, typename ERASED_DATA>
 concept constructibile_for =
     erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
                                     base<ERASED_DATA>> &&
-    !is_interface<CONSTRUCTED_WITH> &&
+    !is_any<CONSTRUCTED_WITH> &&
     !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>>;
 
 template <is_erased_data ERASED_DATA>
@@ -66,7 +66,7 @@ class base {
   }
 
  public:
-  template <is_interface OTHER>
+  template <is_any OTHER>
   base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
              borrowable_from<erased_data_t,
@@ -102,10 +102,10 @@ class base {
   friend inline auto move_erased_data(base<ERASED_DATA>&& interface);
   template <is_erased_data ERASED_DATA>
   friend inline auto get_void_data_ptr(base<ERASED_DATA> const& interface);
-  template <is_interface I>
+  template <is_any I>
   friend inline auto get_v_table(I const& interface);
 
-  template <is_interface TO, is_interface FROM>
+  template <is_any TO, is_any FROM>
   friend inline TO unchecked_downcast_to(FROM from)
     requires(std::derived_from<TO, FROM>);
 
@@ -133,7 +133,7 @@ auto get_void_data_ptr(base<ERASED_DATA> const& interface) {
   return get_void_data_ptr(get_erased_data(interface));
 }
 
-template <is_interface INTERFACE>
+template <is_any INTERFACE>
 inline const auto& get_runtime(INTERFACE const& interface) {
   return *get_v_table(interface)->meta_data;
 }
@@ -142,7 +142,7 @@ template <is_erased_data VV>
 bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
   return get_v_table(interface)->_is_derived_from(from);
 }
-template <is_interface FROM, is_erased_data VV>
+template <is_any FROM, is_erased_data VV>
 bool is_derived_from(base<VV> const& interface) {
   return is_derived_from(typeid(FROM::v_table_t), interface);
 }
@@ -158,17 +158,17 @@ template <typename TO>
 auto unchecked_v_table_downcast_to(base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
-template <is_interface TO>
+template <is_any TO>
 auto unchecked_v_table_downcast_to(base_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
-template <is_interface INTERFACE>
+template <is_any INTERFACE>
 inline auto get_v_table(INTERFACE const& interface) {
   return unchecked_v_table_downcast_to<INTERFACE>(interface.v_table_);
 }
 
-template <is_interface TO, is_interface FROM>
+template <is_any TO, is_any FROM>
 TO unchecked_downcast_to(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
@@ -176,7 +176,7 @@ TO unchecked_downcast_to(FROM from)
             unchecked_v_table_downcast_to<TO>(from.v_table_)};
 }
 
-template <is_interface TO, is_interface FROM>
+template <is_any TO, is_any FROM>
 std::optional<TO> downcast_to(FROM from)
   requires(std::derived_from<TO, FROM>)
 {
@@ -185,15 +185,15 @@ std::optional<TO> downcast_to(FROM from)
   return {};
 }
 
-template <typename U, is_interface INTERFACE>
+template <typename U, is_any INTERFACE>
 auto unchecked_unerase_cast(INTERFACE const& o) {
   return unchecked_unerase_cast<U>(get_erased_data(o));
 }
-template <typename U, is_interface INTERFACE>
+template <typename U, is_any INTERFACE>
 auto unerase_cast(INTERFACE const& o) {
   return unerase_cast<U>(get_erased_data(o), get_runtime(o));
 }
-template <typename U, is_interface INTERFACE>
+template <typename U, is_any INTERFACE>
 auto unerase_cast(INTERFACE const* o) {
   unerase_cast<U>(get_erased_data(*o), get_runtime(o));
   return nullptr;
@@ -218,7 +218,7 @@ constexpr bool has_extension_methods = false;
 
 template <typename I>
 concept has_extension_methods_enabled =
-    is_interface<I> && I::v_table_t::extension_methods_enabled;
+    is_any<I> && I::v_table_t::extension_methods_enabled;
 
 template <bool HAS_EXTENSION_METHODS, template <typename...> typename INTERFACE>
 struct extension_method_holder;

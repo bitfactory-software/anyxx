@@ -5,7 +5,7 @@
 
 namespace virtual_void {
 
-template <typename V, is_interface INTERFACE>
+template <typename V, is_any INTERFACE>
 struct virtual_typed : public INTERFACE {
   using erased_data_t = INTERFACE::erased_data_t;
   using trait_t = INTERFACE::trait_t;
@@ -50,33 +50,33 @@ struct virtual_typed : public INTERFACE {
   }
 };
 
-template <typename V, is_interface INTERFACE>
+template <typename V, is_any INTERFACE>
 bool has_data(virtual_typed<V, INTERFACE> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, is_interface INTERFACE>
+template <typename V, is_any INTERFACE>
 void const* get_void_data_ptr(virtual_typed<V, INTERFACE> const& vv)
   requires is_const_void<typename INTERFACE::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_interface INTERFACE>
+template <typename V, is_any INTERFACE>
 void* get_void_data_ptr(virtual_typed<V, INTERFACE> const& vv)
   requires(!is_const_void<typename INTERFACE::void_t>)
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_interface INTERFACE>
+template <typename V, is_any INTERFACE>
 auto get_meta(virtual_typed<V, INTERFACE> const& vv) {
   return INTERFACE::trait_t::meta(vv.erased_data_);
 }
 
-template <typename V, is_interface INTERFACE>
+template <typename V, is_any INTERFACE>
 auto as(INTERFACE source) {
   return virtual_typed<V, INTERFACE>{std::move(source)};
 }
 
-template <typename TO, typename FROM, is_interface INTERFACE>
+template <typename TO, typename FROM, is_any INTERFACE>
 auto as(virtual_typed<FROM, INTERFACE> source)
   requires std::convertible_to<FROM*, TO*>
 {

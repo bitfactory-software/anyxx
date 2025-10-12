@@ -5,7 +5,7 @@
 
 namespace virtual_void {
 
-template <is_interface TO_INTERFACE, is_erased_data VV_FROM>
+template <is_any TO_INTERFACE, is_erased_data VV_FROM>
 TO_INTERFACE move_to(VV_FROM&& vv_from,
                      const meta_data& get_meta_data) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
@@ -14,7 +14,7 @@ TO_INTERFACE move_to(VV_FROM&& vv_from,
   return TO_INTERFACE{move_to<vv_to_t>(std::move(vv_from)), *v_table};
 }
 
-template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
+template <is_any TO_INTERFACE, is_any FROM_INTERFACE>
 TO_INTERFACE move_to(FROM_INTERFACE&& from_interface) {
   return move_to<TO_INTERFACE>(move_erased_data(std::move(from_interface)),
                                get_runtime(from_interface));

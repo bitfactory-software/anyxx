@@ -31,7 +31,7 @@ TEST_CASE("virtual_typed/observer/base") {
   x_t s{"hallo"};
 
   test_i<const_observer> co{s};
-  static_assert(is_interface<test_i<const_observer>>);
+  static_assert(is_any<test_i<const_observer>>);
   CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(co),
                   type_mismatch_error);
@@ -77,7 +77,7 @@ TEST_CASE("virtual_typed/observer/test_i") {
   x_t s{"hallo"};
 
   test_i<const_observer> co{s};
-  static_assert(is_interface<test_i<const_observer>>);
+  static_assert(is_any<test_i<const_observer>>);
   CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(co),
                   type_mismatch_error);

@@ -7,7 +7,7 @@
 
 namespace virtual_void {
 
-template <is_interface TO_INTERFACE>
+template <is_any TO_INTERFACE>
 auto query_v_table(const meta_data& meta_data)
     -> std::expected<typename TO_INTERFACE::v_table_t*,
                      virtual_void::cast_error> {

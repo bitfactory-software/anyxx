@@ -60,7 +60,7 @@ test::component_base::get_to_string_i_co() {
   auto meta = get_v_table(i)->meta_data;
   const std::type_info* type_info = &meta->get_type_info();
   static_assert(
-      is_interface<to_string_i<virtual_void::const_observer>>);
+      is_any<to_string_i<virtual_void::const_observer>>);
   const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   auto s = i.to_string();

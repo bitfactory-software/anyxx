@@ -70,11 +70,11 @@ template <typename... ARGS>
 struct have_extension_methods_enabled {
   static constexpr bool value = true;
 };
-template <is_interface INTERFACE, typename... ARGS>
+template <is_any INTERFACE, typename... ARGS>
   requires has_extension_methods_enabled<INTERFACE>
 struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...>
     : have_extension_methods_enabled<ARGS...> {};
-template <is_interface INTERFACE, typename... ARGS>
+template <is_any INTERFACE, typename... ARGS>
   requires(!has_extension_methods_enabled<INTERFACE>)
 struct have_extension_methods_enabled<virtual_<INTERFACE>, ARGS...> {
   static constexpr bool value = false;

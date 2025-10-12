@@ -258,7 +258,7 @@
                                                                              \
     template <typename CONCRETE>                                             \
     static auto v_table_imlpementation() {                                   \
-      static_assert(!virtual_void::is_interface<CONCRETE>);       \
+      static_assert(!virtual_void::is_any<CONCRETE>);       \
       return v_table_t::template imlpementation<CONCRETE>();                 \
     }                                                                        \
                                                                              \
@@ -281,7 +281,7 @@
                virtual_void::borrowable_from<                          \
                    erased_data_t, typename OTHER::erased_data_t>)            \
         : base_t(other) {}                                                   \
-    template <virtual_void::is_interface OTHER>                   \
+    template <virtual_void::is_any OTHER>                   \
     n(OTHER&& other) noexcept                                                \
       requires(std::derived_from<OTHER::v_table_t, v_table_t> &&             \
                virtual_void::moveable_from<                            \
@@ -305,8 +305,8 @@
     n& operator=(n&&) = default;                                             \
     template <virtual_void::is_erased_data OTHER>                      \
     friend class virtual_void::base;                              \
-    template <virtual_void::is_interface TO,                      \
-              virtual_void::is_interface FROM>                    \
+    template <virtual_void::is_any TO,                      \
+              virtual_void::is_any FROM>                    \
     friend TO virtual_void::unchecked_downcast_to(FROM from)      \
       requires(std::derived_from<TO, FROM>);                                 \
     template <virtual_void::is_erased_data OTHER>                      \

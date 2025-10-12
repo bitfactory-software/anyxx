@@ -7,7 +7,7 @@
 
 namespace virtual_void {
 
-template <is_interface TO_INTERFACE, is_erased_data VV_FROM>
+template <is_any TO_INTERFACE, is_erased_data VV_FROM>
   requires borrowable_from<typename TO_INTERFACE::erased_data_t, VV_FROM>
 std::expected<TO_INTERFACE, virtual_void::cast_error> borrow_as(
     VV_FROM const& vv_from, const meta_data& meta_data) {
@@ -17,7 +17,7 @@ std::expected<TO_INTERFACE, virtual_void::cast_error> borrow_as(
   });
 }
 
-template <is_interface TO_INTERFACE, is_interface FROM_INTERFACE>
+template <is_any TO_INTERFACE, is_any FROM_INTERFACE>
   requires borrowable_from<typename TO_INTERFACE::erased_data_t,
                                  typename FROM_INTERFACE::erased_data_t>
 auto borrow_as(FROM_INTERFACE const& from_interface) {
