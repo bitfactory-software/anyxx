@@ -35,6 +35,7 @@ set_target_properties(virtual_void PROPERTIES FOLDER "virtual_void")
 
 enable_testing()
 
+add_subdirectory ("examples")
 add_subdirectory ("example_whole_picture")
 add_subdirectory ("test")
 

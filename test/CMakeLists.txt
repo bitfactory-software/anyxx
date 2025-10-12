@@ -29,7 +29,7 @@ target_link_libraries(tests_dll_mode
     component_base
     Catch2::Catch2WithMain
 )
-target_compile_definitions(component_base PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
+#target_compile_definitions(tests_dll_mode PRIVATE VV_DLL_MODE) injected from: component_base PUBLIC VV_DLL_MODE
 set_target_properties(tests_dll_mode PROPERTIES FOLDER "_tests/dll_mode")
 
 file(GLOB tests_inline_mode_hpp_files "./tests_inline_mode/*.hpp")
