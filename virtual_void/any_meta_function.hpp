@@ -153,19 +153,18 @@
   name = [](void const_* _vp __VA_OPT__(                                   \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {       \
     return v_table_map{}.name(                                             \
-        virtual_void::unchecked_unerase_cast<CONCRETE>(_vp)          \
-            __VA_OPT__(, )                                                 \
-                __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
+        virtual_void::unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, ) \
+            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   };
 
 #define _detail_INTERFACE_METHOD(type, name, name_ext, exact_const, const_,  \
                                  ...)                                        \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
-    requires(::virtual_void::const_correct_call_for_erased_data<       \
+    requires(::virtual_void::const_correct_call_for_erased_data<             \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
-        virtual_void::get_void_data_ptr(base_t::erased_data_)          \
+        virtual_void::get_void_data_ptr(base_t::erased_data_)                \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
@@ -185,133 +184,131 @@
   __VA_OPT__(_detail_foreach_macro(_detail_INTERFACE_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define VV_ANY_TEMPLATE_(t, n, BASE, l)                                \
-                                                                             \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                          \
-      _add_head((ERASED_DATA), t))>                                          \
-  struct n;                                                                  \
-                                                                             \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>       \
-  struct n##_default_v_table_map {                                           \
-    _detail_INTERFACE_MAP_FUNCTIONS(l)                                       \
-  };                                                                         \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>       \
-  struct n##_v_table_map                                                     \
-      : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(      \
-            _add_head((T), t))> {};                                          \
-                                                                             \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;           \
-                                                                             \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table            \
-      : BASE##_v_table,                                                      \
-        virtual_void::extension_method_holder<                    \
-            virtual_void::has_extension_methods<n>, n> {          \
-    using v_table_base_t = BASE##_v_table;                                   \
-    using v_table_t = n##_v_table;                                           \
-    using own_extension_method_holder_t =                                    \
-        virtual_void::extension_method_holder<                    \
-            virtual_void::has_extension_methods<n>, n>;           \
-                                                                             \
-    static bool static_is_derived_from(const std::type_info& from) {         \
-      return typeid(v_table_t) == from                                       \
-                 ? true                                                      \
-                 : v_table_base_t::static_is_derived_from(from);             \
-    }                                                                        \
-                                                                             \
-    _detail_INTERFACE_V_TABLE_FUNCTION_PTRS(l);                              \
-                                                                             \
-    static constexpr bool extension_methods_enabled =                        \
-        virtual_void::has_extension_methods<n>;                   \
-                                                                             \
-    template <typename CONCRETE>                                             \
-    n##_v_table(std::in_place_type_t<CONCRETE> concrete)                     \
-        : v_table_base_t(concrete) {                                         \
-      using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(   \
-          _add_head((CONCRETE), t))>;                                        \
-                                                                             \
-      _detail_INTERFACE_V_TABLE_LAMBDAS(l);                                  \
-                                                                             \
-      if constexpr (extension_methods_enabled) {                             \
-        own_extension_method_holder_t::extension_method_table =              \
-            ::virtual_void::extension_method_table_instance<        \
-                n##_v_table, CONCRETE>();                                    \
-      }                                                                      \
-                                                                             \
-      ::virtual_void::set_is_derived_from<v_table_t>(this);       \
-    };                                                                       \
-                                                                             \
-    template <typename CONCRETE>                                             \
-    static auto imlpementation() {                                           \
-      return virtual_void::v_table_instance_implementaion<        \
-          v_table_t, CONCRETE>();                                            \
-    }                                                                        \
-  };                                                                         \
-                                                                             \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                          \
-      _add_head((ERASED_DATA), t))>                                          \
-  struct n : BASE<ERASED_DATA> {                                             \
-    using erased_data_t = ERASED_DATA;                                       \
-    using base_t = BASE<ERASED_DATA>;                                        \
-    using v_table_base_t = base_t::v_table_t;                                \
-    using v_table_t =                                                        \
-        n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);       \
-                                                                             \
-    template <typename CONCRETE>                                             \
-    static auto v_table_imlpementation() {                                   \
-      static_assert(!virtual_void::is_any<CONCRETE>);       \
-      return v_table_t::template imlpementation<CONCRETE>();                 \
-    }                                                                        \
-                                                                             \
-    using base_t::erased_data_;                                              \
-    using base_t::v_table_;                                                  \
-                                                                             \
-    n(erased_data_t virtual_void, v_table_t* v_table)                        \
-        : base_t(std::move(virtual_void), v_table) {}                        \
-    template <typename CONSTRUCTED_WITH>                                     \
-    n(CONSTRUCTED_WITH&& v)                                                  \
-      requires virtual_void::constructibile_for<CONSTRUCTED_WITH, \
-                                                           ERASED_DATA>      \
-        : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                        \
-      v_table_ = v_table_t::template imlpementation<                         \
-          virtual_void::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();    \
-    }                                                                        \
-    template <typename OTHER>                                                \
-    n(const OTHER& other)                                                    \
-      requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&    \
-               virtual_void::borrowable_from<                          \
-                   erased_data_t, typename OTHER::erased_data_t>)            \
-        : base_t(other) {}                                                   \
-    template <virtual_void::is_any OTHER>                   \
-    n(OTHER&& other) noexcept                                                \
-      requires(std::derived_from<OTHER::v_table_t, v_table_t> &&             \
-               virtual_void::moveable_from<                            \
-                   erased_data_t, typename OTHER::erased_data_t>)            \
-        : base_t(std::move(other)) {}                                        \
-                                                                             \
-    _detail_INTERFACE_METHODS(l)                                             \
-                                                                             \
-        auto const*                                                          \
-        operator->() const {                                                 \
-      return this;                                                           \
-    }                                                                        \
-                                                                             \
-    using base_t::operator();                                                \
-    using base_t::operator[];                                                \
-                                                                             \
-    n() = default;                                                           \
-    n(n const&) = default;                                                   \
-    n(n&&) = default;                                                        \
-    n& operator=(n const&) = default;                                        \
-    n& operator=(n&&) = default;                                             \
-    template <virtual_void::is_erased_data OTHER>                      \
-    friend class virtual_void::any_base;                              \
-    template <virtual_void::is_any TO,                      \
-              virtual_void::is_any FROM>                    \
-    friend TO virtual_void::unchecked_downcast_to(FROM from)      \
-      requires(std::derived_from<TO, FROM>);                                 \
-    template <virtual_void::is_erased_data OTHER>                      \
-    using type_for =                                                         \
-        n<_detail_INTERFACE_TEMPLATE_ARGS(_add_head((OTHER), t))>;           \
+#define VV_ANY_TEMPLATE_(t, n, BASE, l)                                        \
+                                                                               \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+      _add_head((ERASED_DATA), t))>                                            \
+  struct n;                                                                    \
+                                                                               \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
+  struct n##_default_v_table_map {                                             \
+    _detail_INTERFACE_MAP_FUNCTIONS(l)                                         \
+  };                                                                           \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
+  struct n##_v_table_map                                                       \
+      : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(        \
+            _add_head((T), t))> {};                                            \
+                                                                               \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;             \
+                                                                               \
+  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
+      : BASE##_v_table,                                                        \
+        virtual_void::extension_method_holder<                                 \
+            virtual_void::has_extension_methods<n>, n> {                       \
+    using v_table_base_t = BASE##_v_table;                                     \
+    using v_table_t = n##_v_table;                                             \
+    using own_extension_method_holder_t =                                      \
+        virtual_void::extension_method_holder<                                 \
+            virtual_void::has_extension_methods<n>, n>;                        \
+                                                                               \
+    static bool static_is_derived_from(const std::type_info& from) {           \
+      return typeid(v_table_t) == from                                         \
+                 ? true                                                        \
+                 : v_table_base_t::static_is_derived_from(from);               \
+    }                                                                          \
+                                                                               \
+    _detail_INTERFACE_V_TABLE_FUNCTION_PTRS(l);                                \
+                                                                               \
+    static constexpr bool extension_methods_enabled =                          \
+        virtual_void::has_extension_methods<n>;                                \
+                                                                               \
+    template <typename CONCRETE>                                               \
+    n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
+        : v_table_base_t(concrete) {                                           \
+      using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
+          _add_head((CONCRETE), t))>;                                          \
+                                                                               \
+      _detail_INTERFACE_V_TABLE_LAMBDAS(l);                                    \
+                                                                               \
+      if constexpr (extension_methods_enabled) {                               \
+        own_extension_method_holder_t::extension_method_table =                \
+            ::virtual_void::extension_method_table_instance<n##_v_table,       \
+                                                            CONCRETE>();       \
+      }                                                                        \
+                                                                               \
+      ::virtual_void::set_is_derived_from<v_table_t>(this);                    \
+    };                                                                         \
+                                                                               \
+    template <typename CONCRETE>                                               \
+    static auto imlpementation() {                                             \
+      return virtual_void::v_table_instance_implementaion<v_table_t,           \
+                                                          CONCRETE>();         \
+    }                                                                          \
+  };                                                                           \
+                                                                               \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+      _add_head((ERASED_DATA), t))>                                            \
+  struct n : BASE<ERASED_DATA> {                                               \
+    using erased_data_t = ERASED_DATA;                                         \
+    using base_t = BASE<ERASED_DATA>;                                          \
+    using v_table_base_t = base_t::v_table_t;                                  \
+    using v_table_t =                                                          \
+        n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
+                                                                               \
+    template <typename CONCRETE>                                               \
+    static auto v_table_imlpementation() {                                     \
+      static_assert(!virtual_void::is_any<CONCRETE>);                          \
+      return v_table_t::template imlpementation<CONCRETE>();                   \
+    }                                                                          \
+                                                                               \
+    using base_t::erased_data_;                                                \
+    using base_t::v_table_;                                                    \
+                                                                               \
+    n(erased_data_t virtual_void, v_table_t* v_table)                          \
+        : base_t(std::move(virtual_void), v_table) {}                          \
+    template <typename CONSTRUCTED_WITH>                                       \
+    n(CONSTRUCTED_WITH&& v)                                                    \
+      requires virtual_void::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA> \
+        : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
+      v_table_ = v_table_t::template imlpementation<                           \
+          virtual_void::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();            \
+    }                                                                          \
+    template <typename OTHER>                                                  \
+    n(const OTHER& other)                                                      \
+      requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&      \
+               virtual_void::borrowable_from<erased_data_t,                    \
+                                             typename OTHER::erased_data_t>)   \
+        : base_t(other) {}                                                     \
+    template <virtual_void::is_any OTHER>                                      \
+    n(OTHER&& other) noexcept                                                  \
+      requires(std::derived_from<OTHER::v_table_t, v_table_t> &&               \
+               virtual_void::moveable_from<erased_data_t,                      \
+                                           typename OTHER::erased_data_t>)     \
+        : base_t(std::move(other)) {}                                          \
+                                                                               \
+    _detail_INTERFACE_METHODS(l)                                               \
+                                                                               \
+        auto const*                                                            \
+        operator->() const {                                                   \
+      return this;                                                             \
+    }                                                                          \
+                                                                               \
+    using base_t::operator();                                                  \
+    using base_t::operator[];                                                  \
+                                                                               \
+    n() = default;                                                             \
+    n(n const&) = default;                                                     \
+    n(n&&) = default;                                                          \
+    n& operator=(n const&) = default;                                          \
+    n& operator=(n&&) = default;                                               \
+    template <virtual_void::is_erased_data OTHER>                              \
+    friend class virtual_void::any_base;                                       \
+    template <virtual_void::is_any TO, virtual_void::is_any FROM>              \
+    friend TO virtual_void::unchecked_downcast_to(FROM from)                   \
+      requires(std::derived_from<TO, FROM>);                                   \
+    template <virtual_void::is_erased_data OTHER>                              \
+    using type_for =                                                           \
+        n<_detail_INTERFACE_TEMPLATE_ARGS(_add_head((OTHER), t))>;             \
   };
 
 //    n(n&) = default;                                                           \
@@ -331,41 +328,42 @@
 #define VV_CONST_METHOD(ret, name, ...) \
   VV_METHOD_(ret, name, name, false, const, __VA_ARGS__)
 
-#define VV_OP(ret, x, op, ...) \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, false, , __VA_ARGS__)
-
-#define VV_OP_EXACT(ret, x, op, ...) \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, true, , __VA_ARGS__)
-
-#define VV_CONST_OP(ret, x, op, ...)                                    \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, false, const, \
+#define VV_OP(ret, op, ...)                                                  \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, , \
              __VA_ARGS__)
 
-#define VV_CONST_OP_EXACT(ret, x, op, ...)                             \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, true, const, \
+#define VV_OP_EXACT(ret, op, ...)                                           \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, , \
              __VA_ARGS__)
+
+#define VV_CONST_OP(ret, op, ...)                                          \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
+             const, __VA_ARGS__)
+
+#define VV_CONST_OP_EXACT(ret, op, ...)                                   \
+  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
+             const, __VA_ARGS__)
 
 #define VV_ANY_FORWARD(interface_namespace, interface_name, ...) \
-  namespace interface_namespace {                                      \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                    \
-      _add_head((ERASED_DATA), (__VA_ARGS__)))>                        \
-  struct interface_name;                                               \
-  struct interface_name##_v_table;                                     \
+  namespace interface_namespace {                                \
+  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(              \
+      _add_head((ERASED_DATA), (__VA_ARGS__)))>                  \
+  struct interface_name;                                         \
+  struct interface_name##_v_table;                               \
   }
 
-#define VV_REGISTER_V_TABLE_INSTANCE(class_, interface_)                     \
-  namespace {                                                                \
-  static auto __ =                                                           \
-      virtual_void::bind_v_table_to_meta_data<interface_##_v_table, \
-                                                       class_>();            \
+#define VV_REGISTER_V_TABLE_INSTANCE(class_, interface_)                       \
+  namespace {                                                                  \
+  static auto __ =                                                             \
+      virtual_void::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
   }
 
 #ifdef VV_DLL_MODE
 
 #define VV_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
                                 interface_)                                  \
-  VV_ANY_FORWARD(interface_namespace_, interface_)                     \
-  namespace virtual_void {                                        \
+  VV_ANY_FORWARD(interface_namespace_, interface_)                           \
+  namespace virtual_void {                                                   \
   template <>                                                                \
   export_ interface_namespace_::interface_##_v_table*                        \
   v_table_instance_implementaion<interface_namespace_::interface_##_v_table, \
@@ -375,7 +373,7 @@
 #define VV_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                         \
   interface_namespace_::interface_##_v_table*                         \
-  virtual_void::v_table_instance_implementaion<            \
+  virtual_void::v_table_instance_implementaion<                       \
       interface_namespace_::interface_##_v_table, class_>() {         \
     static interface_namespace_::interface_##_v_table v_table{        \
         std::in_place_type<class_>};                                  \
@@ -404,15 +402,15 @@
     };                                                                \
   };                                                                  \
   namespace {                                                         \
-  static auto __ = virtual_void::bind_v_table_to_meta_data<  \
+  static auto __ = virtual_void::bind_v_table_to_meta_data<           \
       interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
   }
 
 #define VV_V_TABLE_HAS_EXTENSION_METHODS(interface_namespace, interface_name, \
                                          ...)                                 \
-  VV_ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)      \
+  VV_ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)            \
                                                                               \
-  namespace virtual_void {                                         \
+  namespace virtual_void {                                                    \
   template <>                                                                 \
   constexpr bool has_extension_methods<interface_namespace::interface_name> = \
       true;                                                                   \

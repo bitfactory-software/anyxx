@@ -1,6 +1,7 @@
 #pragma once
 
 #include <utility>
+#include <virtual_void/trait.hpp>
 
 namespace virtual_void {
 

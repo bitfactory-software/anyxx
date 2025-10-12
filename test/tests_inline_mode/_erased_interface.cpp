@@ -30,7 +30,7 @@ VV_ANY_(any_shape, any_drawable,
                VV_CONST_METHOD(double, perimeter)))
 
 VV_ANY_(any_callable_shape, any_shape,
-              (VV_CONST_OP(std::string, 1, (), std::string const&)))
+              (VV_CONST_OP(std::string, (), std::string const&)))
 }  // namespace
 
 struct circle {

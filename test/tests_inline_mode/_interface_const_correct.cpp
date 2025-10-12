@@ -63,8 +63,8 @@ struct functor {
 
 namespace {
 
-VV_ANY(const_function_i, (VV_CONST_OP(std::string, 1, ())))
-VV_ANY(mutating_function_i, (VV_OP(void, 1, (), std::string const&)))
+VV_ANY(const_function_i, (VV_CONST_OP(std::string, ())))
+VV_ANY(mutating_function_i, (VV_OP(void, (), std::string const&)))
 
 using const_function = const_function_i<const_observer>;
 using mutating_function = mutating_function_i<mutable_observer>;
