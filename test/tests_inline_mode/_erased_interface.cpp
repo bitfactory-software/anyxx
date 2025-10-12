@@ -22,15 +22,15 @@ struct position {
 };
 
 namespace {
-VV_INTERFACE(shape_base1, (VV_CONST_METHOD(void, draw, position)))
+VV_INTERFACE(any_drawable, (VV_CONST_METHOD(void, draw, position)))
 
-VV_INTERFACE_(shape_base, shape_base1, (VV_CONST_METHOD(int, count_sides)))
+VV_INTERFACE_(shape_base, any_drawable, (VV_CONST_METHOD(int, count_sides)))
 
 VV_INTERFACE_(shape_d_i, shape_base,
               (VV_CONST_METHOD(double, area),
                VV_CONST_METHOD(double, perimeter)))
 
-VV_INTERFACE_(shape_i, shape_base1,
+VV_INTERFACE_(shape_i, any_drawable,
               (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
                VV_CONST_METHOD(double, perimeter)))
 }  // namespace
@@ -79,9 +79,9 @@ using shapeXX = shape_d_i<data::const_observer>;
 using full_shape_observer = shape_i<data::mutable_observer>;
 
 template <>
-struct shape_base1_v_table_map<circle> {
+struct any_drawable_v_table_map<circle> {
   auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_shape_base1_v_table_map At "
+    std::cout << " A Circle Is Recorded VIA circle_any_drawable_v_table_map At "
               << p.x << " " << p.y << std::endl;
   }
 };
@@ -178,21 +178,21 @@ TEST_CASE("dynamic v_table const_observer") {
   data::const_observer o2 = o1;
 
   {
-    using shape_base1_const_observer = shape_base1<data::const_observer>;
-    shape_base1_const_observer sb1;
-    shape_base1_const_observer sb2{c};
+    using any_drawable_const_observer = any_drawable<data::const_observer>;
+    any_drawable_const_observer sb1;
+    any_drawable_const_observer sb2{c};
     sb1 = sb2;
   }
   {
-    using shape_base1_mutable_observer = shape_base1<data::mutable_observer>;
-    shape_base1_mutable_observer sb1;
-    shape_base1_mutable_observer sb2{c};
+    using any_drawable_mutable_observer = any_drawable<data::mutable_observer>;
+    any_drawable_mutable_observer sb1;
+    any_drawable_mutable_observer sb2{c};
     sb1 = sb2;
   }
   {
-    using shape_base1_mutable_observer = shape_base1<data::mutable_observer>;
-    shape_base1_mutable_observer sb1{c};
-    shape_base1_mutable_observer sb2{std::move(sb1)};
+    using any_drawable_mutable_observer = any_drawable<data::mutable_observer>;
+    any_drawable_mutable_observer sb1{c};
+    any_drawable_mutable_observer sb2{std::move(sb1)};
   }
 
   //    base< void* > base_v = shape_circle; ->
@@ -281,29 +281,3 @@ TEST_CASE("dynamic interface unique") {
   print_shape_i_co(s1);
 }
 
-namespace {
-struct x_t {
-  std::string s_;
-  std::string get() const { return s_; }
-};
-VV_INTERFACE(has_meta_data,)
-}  // namespace
-
-
-TEST_CASE("base") {
-  using namespace virtual_void;
-  using namespace virtual_void;
-  using value = data::shared_const;
-
-  using value_with_meta_data = has_meta_data<value>;
-
-  {
-    auto e = data::erased<value>(std::make_shared<x_t>("hallo"));
-    REQUIRE(data::unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
-  }
-  {
-    value_with_meta_data v(std::make_shared<x_t>("hallo"));
-    REQUIRE(unerase_cast<x_t>(v)->s_ == "hallo");
-    CHECK_THROWS_AS(unerase_cast<std::string>(v), type_mismatch_error);
-  }
-}
