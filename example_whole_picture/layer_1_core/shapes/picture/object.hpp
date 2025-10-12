@@ -2,7 +2,7 @@
 
 #include <example_whole_picture/layer_0_architecture/picture.hpp>
 #include <example_whole_picture/layer_1_core/core.hpp>
-#include <virtual_void/open_object/extension_member.hpp>
+#include <virtual_void/extension_member.hpp>
 
 VV_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 
