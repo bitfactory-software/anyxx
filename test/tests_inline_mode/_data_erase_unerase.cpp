@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/observer.hpp>
-#include <virtual_void/data/shared_const.hpp>
-#include <virtual_void/data/unique.hpp>
+#include <virtual_void/observer.hpp>
+#include <virtual_void/shared_const.hpp>
+#include <virtual_void/unique.hpp>
 #include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 
 struct A {

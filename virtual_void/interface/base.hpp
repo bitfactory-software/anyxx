@@ -4,9 +4,9 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
-#include <virtual_void/data/borrow_erased_data.hpp>
-#include <virtual_void/data/move_erased_data.hpp>
-#include <virtual_void/data/trait.hpp>
+#include <virtual_void/borrow_erased_data.hpp>
+#include <virtual_void/move_erased_data.hpp>
+#include <virtual_void/trait.hpp>
 #include <virtual_void/meta_data.hpp>
 
 #undef interface

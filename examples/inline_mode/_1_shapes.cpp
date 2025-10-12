@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/shared_const.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;

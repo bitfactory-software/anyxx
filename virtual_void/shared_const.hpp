@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <virtual_void/data/trait.hpp>
+#include <virtual_void/trait.hpp>
 
 namespace virtual_void {
 using shared_const = std::shared_ptr<void const>;

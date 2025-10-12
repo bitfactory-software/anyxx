@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/data/observer.hpp>
-#include <virtual_void/data/unique.hpp>
+#include <virtual_void/observer.hpp>
+#include <virtual_void/unique.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
 using namespace Catch::Matchers;

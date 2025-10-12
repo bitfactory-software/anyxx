@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <virtual_void/data/shared_const.hpp>
+#include <virtual_void/shared_const.hpp>
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 
