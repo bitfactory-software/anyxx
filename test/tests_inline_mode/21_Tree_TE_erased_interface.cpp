@@ -5,8 +5,8 @@
 #include <memory>
 #include <string>
 #include <virtual_void/shared_const.hpp>
-#include <virtual_void/base.hpp>
-#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/any_base.hpp>
+#include <virtual_void/any_meta_function.hpp>
 
 using std::cout;
 using std::string;

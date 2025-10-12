@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <virtual_void/shared_const.hpp>
-#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/any_meta_function.hpp>
 
 using namespace Catch::Matchers;
 

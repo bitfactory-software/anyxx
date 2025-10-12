@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-#include <virtual_void/base.hpp>
+#include <virtual_void/any_base.hpp>
 
 using namespace test::component_base;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <virtual_void/base.hpp>
+#include <virtual_void/any_base.hpp>
 #include <virtual_void/hook.hpp>
 #include <virtual_void/meta_data.hpp>
 

@@ -6,9 +6,9 @@
 #include <string>
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
-#include <virtual_void/base.hpp>
+#include <virtual_void/any_base.hpp>
 #include <virtual_void/borrow.hpp>
-#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/any_meta_function.hpp>
 #include <virtual_void/meta_data.hpp>
 
 using std::cout;

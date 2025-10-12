@@ -1,6 +1,6 @@
 #include <catch.hpp>
 #include <virtual_void/shared_const.hpp>
-#include <virtual_void/declare_macro.hpp>
+#include <virtual_void/any_meta_function.hpp>
 #include <virtual_void/meta_data.hpp>
 
 using namespace Catch::Matchers;

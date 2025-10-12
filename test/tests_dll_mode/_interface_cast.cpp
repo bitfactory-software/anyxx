@@ -3,7 +3,7 @@
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
-#include <virtual_void/base.hpp>
+#include <virtual_void/any_base.hpp>
 #include <virtual_void/borrow.hpp>
 #include <virtual_void/clone.hpp>
 #include <virtual_void/move.hpp>
