@@ -44,30 +44,6 @@ struct circle {
   double perimeter() const { return circumference(); }
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
-
-using shape_vv = any_shape<shared_const>;
-
-using any_shape_v = any_shape<const_observer>;
-
-using full_shape_observer = any_shape<mutable_observer>;
-
-template <>
-struct any_drawable_v_table_map<circle> {
-  auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_any_drawable_v_table_map At "
-              << p.x << " " << p.y << std::endl;
-  }
-};
-
-template <>
-struct any_shape_v_table_map<circle>
-    : any_shape_default_v_table_map<circle const> {
-  auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_any_shape_v_table_map At "
-              << p.x << " " << p.y << std::endl;
-  }
-};
-
 struct square {
   int w;
   void draw(position p) const {
@@ -106,18 +82,24 @@ struct regular_polygon {
   }
 };
 
-void print_shape_(const auto s) {
+template <>
+struct any_drawable_v_table_map<circle> {
+  auto draw(circle const* x, position p) const {
+    std::cout << " A Circle Is Recorded VIA circle_any_drawable_v_table_map At "
+              << p.x << " " << p.y << std::endl;
+  }
+};
+
+void print_any_shape_const_observer(const any_shape<const_observer> s) {
   s.draw({4.0, 5.0});
   std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
   std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
   std::cout << "Shape Area: " << s.area() << std::endl;
 }
-void print_shape_vv(const shape_vv s) { print_shape_(s); }
-void print_shape(const any_callabel_shape<const_observer> s) {
-  print_shape_(s);
+void print_any_callable_shape_const_observer(const any_callabel_shape<const_observer> s) {
+  print_any_shape_const_observer(s);
   std::cout << s("Shape type = ") << std::endl;
 }
-void print_shape_f(const full_shape_observer s) { print_shape_(s); }
 
 // using shape_double_base_error = any_shape<
 // const_observer, bases<
@@ -135,18 +117,18 @@ TEST_CASE("dynamic v_table const_observer") {
 
   std::cout << "print_shape *******************************" << std::endl;
 
-  print_shape(c);
-  print_shape(s);
-  print_shape(r);
-  print_shape(p);
+  print_any_callable_shape_const_observer(c);
+  print_any_callable_shape_const_observer(s);
+  print_any_callable_shape_const_observer(r);
+  print_any_callable_shape_const_observer(p);
 
   using erased_const_observer = const_observer;
   static_assert(std::is_base_of_v<interface::base<erased_const_observer>,
                                   any_callabel_shape<const_observer>>);
   static_assert(
-      std::is_base_of_v<any_shape_v, any_callabel_shape<const_observer>>);
+      std::is_base_of_v<any_shape<const_observer>, any_callabel_shape<const_observer>>);
   static_assert(
-      std::derived_from<any_callabel_shape<const_observer>, any_shape_v>);
+      std::derived_from<any_callabel_shape<const_observer>, any_shape<const_observer>>);
   any_callabel_shape<const_observer> any_callabel_shape_onst_observer_circle1{
       circle{33.3}};
   any_callabel_shape<const_observer> any_callabel_shape_onst_observer_circle2{
@@ -187,9 +169,9 @@ TEST_CASE("dynamic v_table const_observer") {
   REQUIRE(is_derived_from<any_callabel_shape<const_observer>>(
       any_callabel_shape_onst_observer_circle2));
   static_assert(
-      std::derived_from<any_callabel_shape<const_observer>, any_shape_v>);
+      std::derived_from<any_callabel_shape<const_observer>, any_shape<const_observer>>);
   static_assert(
-      std::derived_from<any_callabel_shape<const_observer>, any_shape_v>);
+      std::derived_from<any_callabel_shape<const_observer>, any_shape<const_observer>>);
   REQUIRE(
       virtual_void::interface::downcast_to<any_callabel_shape<const_observer>>(
           base_shape));
@@ -200,24 +182,24 @@ TEST_CASE("dynamic v_table const_observer") {
     any_callabel_shape<const_observer> upcasted_shape =
         virtual_void::interface::unchecked_downcast_to<
             any_callabel_shape<const_observer>>(base_shape);
-    print_shape(upcasted_shape);
+    print_any_callable_shape_const_observer(upcasted_shape);
   }
 
-  any_shape_v shape_circle_base = any_callabel_shape_onst_observer_circle1;
+  any_shape<const_observer> shape_circle_base = any_callabel_shape_onst_observer_circle1;
   {
     any_callabel_shape<const_observer> any_shape_is_circle =
         virtual_void::interface::unchecked_downcast_to<
             any_callabel_shape<const_observer>>(shape_circle_base);
-    print_shape(any_shape_is_circle);
+    print_any_callable_shape_const_observer(any_shape_is_circle);
   }
   {
     auto any_shape_is_circle = virtual_void::interface::downcast_to<
         any_callabel_shape<const_observer>>(shape_circle_base);
     REQUIRE(any_shape_is_circle);
-    print_shape(*any_shape_is_circle);
+    print_any_callable_shape_const_observer(*any_shape_is_circle);
   }
 
-  print_shape_f(full_shape_observer{p});
+  print_any_shape_const_observer(any_shape<mutable_observer>{p});
 }
 
 TEST_CASE("dynamic interface shared_const") {
@@ -227,15 +209,15 @@ TEST_CASE("dynamic interface shared_const") {
   auto p = std::make_shared<regular_polygon>(4, 32);
   std::cout << "print_shape_vv ********************************" << std::endl;
 
-  using typed_circle_shape_sc_no_meta =
+  using typed_circle_shape_shared_const =
       interface::virtual_typed<circle, any_shape<shared_const>>;
-  typed_circle_shape_sc_no_meta sc_typed{c};
+  typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   static_assert(
-      std::same_as<typed_circle_shape_sc_no_meta::erased_data_t, shared_const>);
+      std::same_as<typed_circle_shape_shared_const::erased_data_t, shared_const>);
   static_assert(interface::is_virtual_typed<decltype(sc_typed)>);
-  shape_vv circle_shape_vv{sc_typed};
+  any_shape<shared_const> circle_shape_vv{sc_typed};
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
@@ -243,12 +225,12 @@ TEST_CASE("dynamic interface shared_const") {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, WithinAbs(77.2, 77.3));
   }
-  print_shape_vv(sc_typed);
-  print_shape_vv(circle_shape_vv);
-  print_shape_vv(c);
-  print_shape_vv(s);
-  print_shape_vv(r);
-  print_shape_vv(p);
+  print_any_shape_const_observer(sc_typed);
+  print_any_shape_const_observer(circle_shape_vv);
+  print_any_callable_shape_const_observer(*c);
+  print_any_callable_shape_const_observer(*s);
+  print_any_callable_shape_const_observer(*r);
+  print_any_callable_shape_const_observer(*p);
 }
 
 namespace {
