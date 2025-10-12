@@ -145,13 +145,25 @@ base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete)
       }) {}
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
-extension_method_table_t* extension_method_table_instance();
-
-template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
 extension_method_table_t* extension_method_table_instance_implementation() {
   static extension_method_table_t extension_method_table;
   return &extension_method_table;
 }
+
+#ifdef VV_DLL_MODE
+
+template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+extension_method_table_t* extension_method_table_instance();
+
+#else
+
+template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+extension_method_table_t* extension_method_table_instance() {
+  return extension_method_table_instance_implementation<EXTENDED_V_TABLE,
+                                                        CLASS_NAME>();
+}
+
+#endif  //
 
 template <typename V_TABLE, typename CONCRETE>
 auto bind_v_table_to_meta_data() {
@@ -189,7 +201,6 @@ bool type_match(runtime::meta_data const& meta_data) {
   virtual_void::runtime::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
     return runtime_implementation<__VA_ARGS__>();                         \
   }
-
 
 #else
 

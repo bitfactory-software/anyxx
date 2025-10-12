@@ -24,8 +24,6 @@ namespace {
 class Asteroid {};
 class Spaceship {};
 }  // namespace
-VV_EXTENSION_TABLE_INSTANCE(Asteroid, Thing)
-VV_EXTENSION_TABLE_INSTANCE(Spaceship, Thing)
 
 extension_method<
              std::string(virtual_<Thing<const_observer>>, virtual_<Thing<const_observer>>)>

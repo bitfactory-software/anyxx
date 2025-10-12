@@ -296,14 +296,15 @@ struct extension_method<R(ARGS...)> {
     return count;                                                              \
   }
 
-#else
+#define VV_EXTENSION_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_) \
+  namespace virtual_void::interface {                                          \
+  template <>                                                                  \
+  export_ virtual_void::runtime::extension_method_table_t*                     \
+  virtual_void::runtime::extension_method_table_instance<interface_##_v_table, \
+                                                         class_>(); \
+  }
 
-#define VV_EXTENSION_METHOD_COUNT_FWD(...)
-#define VV_EXTENSION_METHOD_COUNT_IMPL(...)
-
-#endif
-
-#define VV_EXTENSION_TABLE_INSTANCE(class_, interface_)                        \
+#define VV_EXTENSION_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                                  \
   virtual_void::runtime::extension_method_table_t*                             \
   virtual_void::runtime::extension_method_table_instance<interface_##_v_table, \
@@ -311,3 +312,12 @@ struct extension_method<R(ARGS...)> {
     return extension_method_table_instance_implementation<                     \
         interface_##_v_table, class_>();                                       \
   }
+
+#else
+
+#define VV_EXTENSION_METHOD_COUNT_FWD(...)
+#define VV_EXTENSION_METHOD_COUNT_IMPL(...)
+#define VV_EXTENSION_TABLE_INSTANCE_FWD(...)
+#define VV_EXTENSION_TABLE_INSTANCE(...)
+
+#endif

@@ -51,20 +51,6 @@ struct Integer {
   int value() const { return i; }
 };
 
-}  // namespace _21_Tree_TE_interface_extension_method
-
-VV_EXTENSION_TABLE_INSTANCE(
-    _21_Tree_TE_interface_extension_method::Plus,
-    _21_Tree_TE_interface_extension_method::node::node_i)
-VV_EXTENSION_TABLE_INSTANCE(
-    _21_Tree_TE_interface_extension_method::Times,
-    _21_Tree_TE_interface_extension_method::node::node_i)
-VV_EXTENSION_TABLE_INSTANCE(
-    _21_Tree_TE_interface_extension_method::Integer,
-    _21_Tree_TE_interface_extension_method::node::node_i)
-
-namespace _21_Tree_TE_interface_extension_method {
-
 // =============================================================================
 // add behavior to existing classes, without changing them
 
