@@ -178,11 +178,11 @@ void function_b(pro::proxy<HasValueAndScope> i) { std::cout << i->Value() << ", 
 
 int main()
 {
-  Base base{ "base" };
+  Base any_base{ "any_base" };
   Derived derived{ "derived", 4711 };
   DereivedLigthweight dereivedLigthweight{ 'x' };
 
-  function_a(&base);
+  function_a(&any_base);
   function_a(&derived);
   function_a(&dereivedLigthweight);
 
@@ -202,7 +202,7 @@ But but our functions behave not look like the one in the last example.
 They are more like this:
 
 ```c++
-base f1(pro::proxy<HasValue> a, pro::proxy<HasValue> b, std::function< bool(pro::proxy<HasValue>) > ) {
+any_base f1(pro::proxy<HasValue> a, pro::proxy<HasValue> b, std::function< bool(pro::proxy<HasValue>) > ) {
    // do somethin clever and then select the return type
    return {};
 }
@@ -244,13 +244,13 @@ This pattern can be reduced to this code lines.
 
 ```c++
 // pseudo code!!!
-maketype_erased< base > for { int func1() const; }; }
-maketype_erased< derived : base > { int func2() const; };
+maketype_erased< any_base > for { int func1() const; }; }
+maketype_erased< derived : any_base > { int func2() const; };
 struct S {
   int func1() const { return 1; };
   int func2() const { return 2; };
 };
-base f1( base b ) { return b; }
+any_base f1( any_base b ) { return b; }
 derived f2( derived d ) { return typerased_downcast< derived >(f1(d)); }
 int main() {
   cout << f2( S{} ).func2() << "\n";

@@ -14,7 +14,7 @@
 namespace virtual_void {
 
 template <is_erased_data ERASED_DATA>
-class base;
+class any_base;
 
 template <typename I>
 concept is_any_impl = requires(I i, I::erased_data_t ed) {
@@ -38,27 +38,27 @@ concept is_virtual_typed = is_any<E> && requires(E e) {
 template <typename CONSTRUCTED_WITH, typename ERASED_DATA>
 concept constructibile_for =
     erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
-                                    base<ERASED_DATA>> &&
+                                    any_base<ERASED_DATA>> &&
     !is_any<CONSTRUCTED_WITH> &&
     !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>>;
 
 template <is_erased_data ERASED_DATA>
-class base {
+class any_base {
  public:
   using erased_data_t = ERASED_DATA;
   using trait_t = trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_t = base_v_table;
+  using v_table_t = any_base_v_table;
 
  protected:
   erased_data_t erased_data_ = {};
   v_table_t* v_table_ = nullptr;
 
-  base() = default;
-  base(erased_data_t virtual_void, v_table_t* v_table)
+  any_base() = default;
+  any_base(erased_data_t virtual_void, v_table_t* v_table)
       : erased_data_(std::move(virtual_void)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
-  base(CONSTRUCTED_WITH&& constructed_with)
+  any_base(CONSTRUCTED_WITH&& constructed_with)
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
       : erased_data_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
@@ -67,41 +67,41 @@ class base {
 
  public:
   template <is_any OTHER>
-  base(const OTHER& other)
+  any_base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
              borrowable_from<erased_data_t,
                                    typename OTHER::erased_data_t>)
       : erased_data_(borrow_as<ERASED_DATA>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
-  base(OTHER&& other)
+  any_base(OTHER&& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
              moveable_from<erased_data_t, typename OTHER::erased_data_t>)
       : erased_data_(move_to<ERASED_DATA>(std::move(other.erased_data_))),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
-  base& operator=(OTHER&& other)
+  any_base& operator=(OTHER&& other)
     requires(std::derived_from<OTHER::v_table_t, v_table_t>)
   {
     erased_data_ = move_to<ERASED_DATA>(std::move(other.erased_data_));
     v_table_ = get_v_table(other);
     return *this;
   }
-  base(const base&) = default;
-  // base(base&) requires(std::is_copy_constructible_v<base>) = default;
-  base(base&& rhs) noexcept
+  any_base(const any_base&) = default;
+  // any_base(any_base&) requires(std::is_copy_constructible_v<any_base>) = default;
+  any_base(any_base&& rhs) noexcept
       : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
-  base& operator=(base const& other) = default;
+  any_base& operator=(any_base const& other) = default;
 
   template <is_erased_data OTHER>
-  friend class base;
+  friend class any_base;
 
   template <is_erased_data ERASED_DATA>
-  friend inline auto& get_erased_data(base<ERASED_DATA> const& interface);
+  friend inline auto& get_erased_data(any_base<ERASED_DATA> const& interface);
   template <is_erased_data ERASED_DATA>
-  friend inline auto move_erased_data(base<ERASED_DATA>&& interface);
+  friend inline auto move_erased_data(any_base<ERASED_DATA>&& interface);
   template <is_erased_data ERASED_DATA>
-  friend inline auto get_void_data_ptr(base<ERASED_DATA> const& interface);
+  friend inline auto get_void_data_ptr(any_base<ERASED_DATA> const& interface);
   template <is_any I>
   friend inline auto get_v_table(I const& interface);
 
@@ -121,15 +121,15 @@ template <typename V_TABLE, is_erased_data ERASED_DATA>
 using interface_for = typename interface_t<V_TABLE, ERASED_DATA>::type;
 
 template <is_erased_data ERASED_DATA>
-auto& get_erased_data(base<ERASED_DATA> const& interface) {
+auto& get_erased_data(any_base<ERASED_DATA> const& interface) {
   return interface.erased_data_;
 }
 template <is_erased_data ERASED_DATA>
-auto move_erased_data(base<ERASED_DATA>&& interface) {
+auto move_erased_data(any_base<ERASED_DATA>&& interface) {
   return std::move(interface.erased_data_);
 }
 template <is_erased_data ERASED_DATA>
-auto get_void_data_ptr(base<ERASED_DATA> const& interface) {
+auto get_void_data_ptr(any_base<ERASED_DATA> const& interface) {
   return get_void_data_ptr(get_erased_data(interface));
 }
 
@@ -139,11 +139,11 @@ inline const auto& get_runtime(ANY const& interface) {
 }
 
 template <is_erased_data VV>
-bool is_derived_from(const std::type_info& from, base<VV> const& interface) {
+bool is_derived_from(const std::type_info& from, any_base<VV> const& interface) {
   return get_v_table(interface)->_is_derived_from(from);
 }
 template <is_any FROM, is_erased_data VV>
-bool is_derived_from(base<VV> const& interface) {
+bool is_derived_from(any_base<VV> const& interface) {
   return is_derived_from(typeid(FROM::v_table_t), interface);
 }
 
@@ -155,11 +155,11 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <typename TO>
-auto unchecked_v_table_downcast_to(base_v_table* v_table) {
+auto unchecked_v_table_downcast_to(any_base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
 template <is_any TO>
-auto unchecked_v_table_downcast_to(base_v_table* v_table) {
+auto unchecked_v_table_downcast_to(any_base_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 

@@ -27,7 +27,7 @@ VV_ANY(test_i, (VV_CONST_METHOD(std::string, to_string),
 
 using namespace virtual_typed_test;
 
-TEST_CASE("virtual_typed/observer/base") {
+TEST_CASE("virtual_typed/observer/any_base") {
   x_t s{"hallo"};
 
   test_i<const_observer> co{s};

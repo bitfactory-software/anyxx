@@ -70,7 +70,7 @@ But not in the other direction.
 ### Crosscast
 #### While *up-* and *downcasts* are within related types, *crosscasts* are between unrelated types.
 
-Such types are typically virtual base types (an interface).  
+Such types are typically virtual any_base types (an interface).  
 A *crosscast* usually tests if one interface can be reached from another, and if so, provides access to it.
 
 ### Open Method

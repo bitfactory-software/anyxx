@@ -15,7 +15,7 @@
 namespace virtual_void {
 
 class meta_data;
-struct base_v_table;
+struct any_base_v_table;
 
 template <typename TYPE>
 auto& runtime_implementation() {
@@ -39,12 +39,12 @@ meta_data& get_meta_data() {
 }
 #endif
 
-struct base_v_table {
+struct any_base_v_table {
   template <typename CONCRETE>
-  base_v_table(std::in_place_type_t<CONCRETE> concrete);
+  any_base_v_table(std::in_place_type_t<CONCRETE> concrete);
 
   static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(base_v_table) == from;
+    return typeid(any_base_v_table) == from;
   }
 
   meta_data* meta_data = nullptr;
@@ -53,8 +53,8 @@ struct base_v_table {
 };
 
 inline bool is_derived_from(const std::type_info& from,
-                            base_v_table const* base_v_table) {
-  return base_v_table->_is_derived_from(from);
+                            any_base_v_table const* any_base_v_table) {
+  return any_base_v_table->_is_derived_from(from);
 }
 
 using extension_method_table_function_t = void (*)();
@@ -107,7 +107,7 @@ class meta_data {
   using copy_construct_t = auto(const_void) -> unique;
   copy_construct_t* copy_construct_;
 
-  std::vector<base_v_table*> i_table_;
+  std::vector<any_base_v_table*> i_table_;
 
  public:
   template <typename CLASS>
@@ -123,14 +123,14 @@ class meta_data {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  std::expected<base_v_table*, cast_error> get_v_table(
+  std::expected<any_base_v_table*, cast_error> get_v_table(
       std::type_info const& typeid_) const {
     auto& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
-  auto register_v_table(base_v_table* v_table) {
+  auto register_v_table(any_base_v_table* v_table) {
     v_table->meta_data = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
@@ -139,7 +139,7 @@ class meta_data {
 };
 
 template <typename CONCRETE>
-base_v_table::base_v_table(std::in_place_type_t<CONCRETE> concrete)
+any_base_v_table::any_base_v_table(std::in_place_type_t<CONCRETE> concrete)
     : _is_derived_from([](const std::type_info& from) {
         return static_is_derived_from(from);
       }) {}

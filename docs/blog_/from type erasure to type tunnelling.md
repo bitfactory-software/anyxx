@@ -24,7 +24,7 @@ https://github.com/andreaspfaffenbichler/virtual_void/blob/master/test/03_Sink_I
 
 If we compare the two distict strategies, we see, the have the downcast pattern in common. 
 Form our type tunneling perspective, we can say the inherritance, the v-table and the "dynamic_cast" work together to form a "type tunnel".
-If we look from the aspect of coupling, we see a difference. All the application classes are coupled to the IAny base. But after the "upcast" to "Data", the v-table run time dispatch decouples the types in the application layer-
+If we look from the aspect of coupling, we see a difference. All the application classes are coupled to the IAny any_base. But after the "upcast" to "Data", the v-table run time dispatch decouples the types in the application layer-
 ````
 void ReportSink(const DB::IAny* any) {
   if (auto data = dynamic_cast<const Data*>(any))

@@ -304,7 +304,7 @@
     n& operator=(n const&) = default;                                        \
     n& operator=(n&&) = default;                                             \
     template <virtual_void::is_erased_data OTHER>                      \
-    friend class virtual_void::base;                              \
+    friend class virtual_void::any_base;                              \
     template <virtual_void::is_any TO,                      \
               virtual_void::is_any FROM>                    \
     friend TO virtual_void::unchecked_downcast_to(FROM from)      \
@@ -318,10 +318,10 @@
 
 #define VV_ANY_(n, BASE, l) VV_ANY_TEMPLATE_((), n, BASE, l)
 
-#define VV_ANY(n, l) VV_ANY_(n, ::virtual_void::base, l)
+#define VV_ANY(n, l) VV_ANY_(n, ::virtual_void::any_base, l)
 
 #define VV_ANY_TEMPLATE(t, n, l) \
-  VV_ANY_TEMPLATE_(t, n, ::virtual_void::base, l)
+  VV_ANY_TEMPLATE_(t, n, ::virtual_void::any_base, l)
 
 #define VV_METHOD_(...) (__VA_ARGS__)
 

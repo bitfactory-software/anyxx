@@ -18,7 +18,7 @@ auto query_v_table(const meta_data& meta_data)
 }
 
 template <typename TO_INTERFACE>
-auto query_v_table(base_v_table* from) {
+auto query_v_table(any_base_v_table* from) {
   return find_v_table<TO_INTERFACE>(*from->meta_data);
 }
 
