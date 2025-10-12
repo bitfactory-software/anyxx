@@ -1,32 +1,25 @@
 # Terms and Definitions in Context of This Library
 
-### Erased Interface
+### v_table
 An object whose members are function pointers, and every function has as **its first parameter *self***. This is a pointer to (eventually *const*) *void*.
 
-### Implemented Erased Interface
-#### An object derived from an interface, with no additional members, and where all members point to valid functions.
+### v_table object
+#### An object derived from v_table, with no additional members, and where all members point to valid functions.
 
 These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
-In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature as the specified interface function. This behavior can be customized in a **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
+In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
 
-### virtual_void
-#### A concept describing an object that **erases** the **type** and the **lifetime** of **another** object.
+### erased_data
+#### A concept describing an object that **erases** the **type** of **another** object for a given *lifetime* kind.
 
-It must deliver a *void* pointer of that object and a pointer to a *meta* object.  
-Responsible for the description of such types is the specialized *trait*.  
+The description of these types is implemented via a specialication of *trait*.  
 
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.
-- **shared_const**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*. The *meta* is allocated along with the concrete data.
-- **shared_ptr**: Pairs a `std::shared_ptr<void>` with the *meta*. Use instead of shared_const if you cannot control the construction of the object that you want to *erase*.
+- **shared_const**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*.
 - **unique**: Ownership as `std::unique_ptr`. The delivered address is a pointer to a *mutable* object.
-- **unique_ptr**: Pairs a `std::unique_ptr<void>` with the *meta*. Use instead of unique if you cannot control the construction of the object that you want to *erase*.
 - **value**: Every value object holds its own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
 
-#### There are three kinds of meta objects in the library:
-- *has_no_meta*
-- *has_type_info*
-- *has_m_table*: Has *type_info* and a pointer to an *m_table* for fast dispatch in an *open method*.
 
 ### 'virtual_void' Versus 'typed_void'
 #### A *virtual_void* holds no compile-time information about the *held* object.
