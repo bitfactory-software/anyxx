@@ -5,7 +5,7 @@
 #include <virtual_void/data/borrow.hpp>
 #include <virtual_void/interface/query_v_table.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
   requires data::borrowable_from<typename TO_INTERFACE::erased_data_t, VV_FROM>
@@ -25,4 +25,4 @@ auto borrow_as(FROM_INTERFACE const& from_interface) {
                                  get_runtime(from_interface));
 }
 
-};  // namespace virtual_void::interface
+};  // namespace virtual_void

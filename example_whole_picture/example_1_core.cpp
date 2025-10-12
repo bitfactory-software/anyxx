@@ -16,7 +16,7 @@ using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 
@@ -82,7 +82,7 @@ TEST_CASE("example 3 architecture picture") {
     REQUIRE(open_object::members_count<shapes::picture>() == 1);
     auto any_shape = shapes::make_picture({0, 0}, duck);
     core::shapes::picture const* duck_shape =
-        virtual_void::interface::unerase_cast<shapes::picture>(any_shape);
+        virtual_void::unerase_cast<shapes::picture>(any_shape);
     CHECK(!duck_shape->get(picture_author));
     auto duck_shape_clone = *duck_shape;
     duck_shape_clone[picture_author] = "Max";

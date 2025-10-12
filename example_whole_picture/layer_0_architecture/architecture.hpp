@@ -9,7 +9,7 @@
 #include <virtual_void/virtual_void.hpp>
 
 using namespace virtual_void;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 
 #ifndef ARCHITECTURE_EXPORT
 #define ARCHITECTURE_EXPORT

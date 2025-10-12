@@ -3,7 +3,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 template <typename V, is_interface INTERFACE>
 struct virtual_typed : public INTERFACE {
@@ -87,4 +87,4 @@ auto as(virtual_typed<FROM, INTERFACE> source)
   }
 }
 
-}  // namespace virtual_void::interface
+}  // namespace virtual_void

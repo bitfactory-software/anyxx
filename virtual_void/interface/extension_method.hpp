@@ -5,7 +5,7 @@
 #include <virtual_void/interface/hook.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 #ifdef VV_DLL_MODE
 template <typename EXTENDED_V_TABLE>
@@ -276,7 +276,7 @@ struct extension_method<R(ARGS...)> {
   };
 };
 
-}  // namespace virtual_void::interface
+}  // namespace virtual_void
 
 #ifdef VV_DLL_MODE
 
@@ -284,20 +284,20 @@ struct extension_method<R(ARGS...)> {
   namespace ns_ {                                            \
   struct c_;                                                 \
   }                                                          \
-  namespace virtual_void::interface {                        \
+  namespace virtual_void {                        \
   template <>                                                \
   export_ std::size_t& extension_method_count_of<ns_::c_>(); \
   }
 
 #define VV_EXTENSION_METHOD_COUNT_IMPL(ns_, c_)                                \
   template <>                                                                  \
-  std::size_t& virtual_void::interface::extension_method_count_of<ns_::c_>() { \
+  std::size_t& virtual_void::extension_method_count_of<ns_::c_>() { \
     static std::size_t count = 0;                                              \
     return count;                                                              \
   }
 
 #define VV_EXTENSION_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_) \
-  namespace virtual_void::interface {                                          \
+  namespace virtual_void {                                          \
   template <>                                                                  \
   export_ virtual_void::runtime::extension_method_table_t*                     \
   virtual_void::runtime::extension_method_table_instance<interface_##_v_table, \

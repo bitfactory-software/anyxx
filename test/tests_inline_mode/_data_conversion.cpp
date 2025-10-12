@@ -15,7 +15,7 @@ using namespace Catch::Matchers;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 using namespace virtual_void::runtime;
 
 TEST_CASE("_data_conversion borrow") {

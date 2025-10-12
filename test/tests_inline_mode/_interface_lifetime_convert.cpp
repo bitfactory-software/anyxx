@@ -32,7 +32,7 @@ TEST_CASE("interface lifetime cast") {
   to_string_sc sc{std::make_shared<X>("hallo")};
   REQUIRE(sc.to_string() == "hallo");
   REQUIRE(
-      is_derived_from<interface::base<data::shared_const>>(sc));
+      is_derived_from<base<data::shared_const>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const *>>, void>);
@@ -53,13 +53,13 @@ TEST_CASE("interface lifetime cast") {
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
   REQUIRE(
-      is_derived_from<interface::base<data::const_observer>>(co));
+      is_derived_from<base<data::const_observer>>(co));
 
   to_string_u u{ std::make_unique<X>("hallo") };
   REQUIRE(u.to_string() == "hallo");
-  static_assert(!interface::is_virtual_typed<to_string_u>);
-  static_assert(interface::is_interface<to_string_u>);
-  static_assert(!interface::constructibile_for<to_string_u, to_string_mo::erased_data_t>);
+  static_assert(!is_virtual_typed<to_string_u>);
+  static_assert(is_interface<to_string_u>);
+  static_assert(!constructibile_for<to_string_u, to_string_mo::erased_data_t>);
   static_assert(std::derived_from<to_string_mo::v_table_t, to_string_u::v_table_t>);
   to_string_mo mo{u};
   REQUIRE(mo.to_string() == "hallo");

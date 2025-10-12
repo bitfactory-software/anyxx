@@ -12,7 +12,7 @@
 using namespace virtual_void;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 
 namespace virtual_typed_test {
 struct x_t {
@@ -32,21 +32,21 @@ TEST_CASE("virtual_typed/observer/base") {
 
   test_i<const_observer> co{s};
   static_assert(is_interface<test_i<const_observer>>);
-  CHECK(interface::unerase_cast<x_t>(co)->s_ == "hallo");
-  CHECK_THROWS_AS(interface::unerase_cast<std::string>(co),
+  CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
+  CHECK_THROWS_AS(unerase_cast<std::string>(co),
                   type_mismatch_error);
 
-  auto co_typed = interface::as<x_t>(co);
+  auto co_typed = as<x_t>(co);
   CHECK(co_typed->s_ == "hallo");
   CHECK((*co_typed).s_ == "hallo");
-  CHECK_THROWS_AS(interface::as<std::string>(co), type_mismatch_error);
+  CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
   test_i<mutable_observer> mo{s};
-  CHECK(interface::unerase_cast<x_t>(mo)->s_ == "hallo");
-  CHECK_THROWS_AS(interface::unerase_cast<std::string>(mo),
+  CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
+  CHECK_THROWS_AS(unerase_cast<std::string>(mo),
                   type_mismatch_error);
 
-  auto mo_typed = interface::as<x_t>(mo);
+  auto mo_typed = as<x_t>(mo);
   CHECK(mo_typed->s_ == "hallo");
   CHECK((*mo_typed).s_ == "hallo");
   (*mo_typed) = x_t{"world"};
@@ -78,26 +78,26 @@ TEST_CASE("virtual_typed/observer/test_i") {
 
   test_i<const_observer> co{s};
   static_assert(is_interface<test_i<const_observer>>);
-  CHECK(interface::unerase_cast<x_t>(co)->s_ == "hallo");
-  CHECK_THROWS_AS(interface::unerase_cast<std::string>(co),
+  CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
+  CHECK_THROWS_AS(unerase_cast<std::string>(co),
                   type_mismatch_error);
 
   CHECK(co.to_string() == "hallo");
 
-  auto co_typed = interface::as<x_t>(co);
+  auto co_typed = as<x_t>(co);
   CHECK(co_typed->s_ == "hallo");
   CHECK((*co_typed).s_ == "hallo");
   CHECK(co_typed.to_string() == "hallo");
-  CHECK_THROWS_AS(interface::as<std::string>(co), type_mismatch_error);
+  CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
   test_i<mutable_observer> mo{s};
-  CHECK(interface::unerase_cast<x_t>(mo)->s_ == "hallo");
-  CHECK_THROWS_AS(interface::unerase_cast<std::string>(mo),
+  CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
+  CHECK_THROWS_AS(unerase_cast<std::string>(mo),
                   type_mismatch_error);
 
   CHECK(mo.to_string() == "hallo");
 
-  auto mo_typed = interface::as<x_t>(mo);
+  auto mo_typed = as<x_t>(mo);
   CHECK(mo_typed->s_ == "hallo");
   CHECK((*mo_typed).s_ == "hallo");
   (*mo_typed) = x_t{"world"};

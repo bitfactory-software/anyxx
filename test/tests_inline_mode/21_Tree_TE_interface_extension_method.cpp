@@ -17,7 +17,7 @@ using std::cout;
 using std::string;
 
 using namespace virtual_void;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 
 VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
                                  node_i)
@@ -101,11 +101,11 @@ TEST_CASE("21_Tree_TE_interface_extension_method") {
       std::make_shared<Plus>(std::make_shared<Integer>(3),
                              std::make_shared<Integer>(4)))};
 
-  // REQUIRE(&v_table_instance<node::interface, Times>() == &get_v_table(expr));
-  // REQUIRE(v_table_instance<node::interface, Times>().size() >= 3u);
-  // REQUIRE(v_table_instance<node::interface, Times>()[0]);
-  // REQUIRE(v_table_instance<node::interface, Times>()[1]);
-  // REQUIRE(v_table_instance<node::interface, Times>()[2]);
+  // REQUIRE(&v_table_instance<node, Times>() == &get_v_table(expr));
+  // REQUIRE(v_table_instance<node, Times>().size() >= 3u);
+  // REQUIRE(v_table_instance<node, Times>()[0]);
+  // REQUIRE(v_table_instance<node, Times>()[1]);
+  // REQUIRE(v_table_instance<node, Times>()[2]);
 
   auto v = value(expr);
   REQUIRE(v == 14);

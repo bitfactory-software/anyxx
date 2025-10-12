@@ -11,7 +11,7 @@
 
 #undef interface
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 using base_v_table = runtime::base_v_table;  // for declare_macro.hpp
 template <data::is_erased_data ERASED_DATA>
@@ -230,4 +230,4 @@ struct extension_method_holder<true, INTERFACE> {
   runtime::extension_method_table_t* extension_method_table = nullptr;
 };
 
-}  // namespace virtual_void::interface
+}  // namespace virtual_void

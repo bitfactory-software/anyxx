@@ -123,7 +123,7 @@ TEST_CASE("dynamic v_table const_observer") {
   print_any_callable_shape_const_observer(p);
 
   using erased_const_observer = const_observer;
-  static_assert(std::is_base_of_v<interface::base<erased_const_observer>,
+  static_assert(std::is_base_of_v<base<erased_const_observer>,
                                   any_callable_shape<const_observer>>);
   static_assert(
       std::is_base_of_v<any_shape<const_observer>, any_callable_shape<const_observer>>);
@@ -157,9 +157,9 @@ TEST_CASE("dynamic v_table const_observer") {
 
   //    base< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  virtual_void::interface::base<const_observer> base_shape =
+  virtual_void::base<const_observer> base_shape =
       any_callable_shape_onst_observer_circle1;
-  virtual_void::interface::base<const_observer> base_shapeX =
+  virtual_void::base<const_observer> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));
@@ -173,14 +173,14 @@ TEST_CASE("dynamic v_table const_observer") {
   static_assert(
       std::derived_from<any_callable_shape<const_observer>, any_shape<const_observer>>);
   REQUIRE(
-      virtual_void::interface::downcast_to<any_callable_shape<const_observer>>(
+      virtual_void::downcast_to<any_callable_shape<const_observer>>(
           base_shape));
   REQUIRE(
-      virtual_void::interface::downcast_to<any_callable_shape<const_observer>>(
+      virtual_void::downcast_to<any_callable_shape<const_observer>>(
           any_callable_shape_onst_observer_circle2));
   {
     any_callable_shape<const_observer> upcasted_shape =
-        virtual_void::interface::unchecked_downcast_to<
+        virtual_void::unchecked_downcast_to<
             any_callable_shape<const_observer>>(base_shape);
     print_any_callable_shape_const_observer(upcasted_shape);
   }
@@ -188,12 +188,12 @@ TEST_CASE("dynamic v_table const_observer") {
   any_shape<const_observer> shape_circle_base = any_callable_shape_onst_observer_circle1;
   {
     any_callable_shape<const_observer> any_shape_is_circle =
-        virtual_void::interface::unchecked_downcast_to<
+        virtual_void::unchecked_downcast_to<
             any_callable_shape<const_observer>>(shape_circle_base);
     print_any_callable_shape_const_observer(any_shape_is_circle);
   }
   {
-    auto any_shape_is_circle = virtual_void::interface::downcast_to<
+    auto any_shape_is_circle = virtual_void::downcast_to<
         any_callable_shape<const_observer>>(shape_circle_base);
     REQUIRE(any_shape_is_circle);
     print_any_callable_shape_const_observer(*any_shape_is_circle);
@@ -210,13 +210,13 @@ TEST_CASE("dynamic interface shared_const") {
   std::cout << "print_shape_vv ********************************" << std::endl;
 
   using typed_circle_shape_shared_const =
-      interface::virtual_typed<circle, any_shape<shared_const>>;
+      virtual_typed<circle, any_shape<shared_const>>;
   typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   static_assert(
       std::same_as<typed_circle_shape_shared_const::erased_data_t, shared_const>);
-  static_assert(interface::is_virtual_typed<decltype(sc_typed)>);
+  static_assert(is_virtual_typed<decltype(sc_typed)>);
   any_shape<shared_const> circle_shape_vv{sc_typed};
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));

@@ -59,11 +59,11 @@ TEST_CASE("std emulated function") {
   {
     functor_t functor{"hallo"};
     string_to_string_mutable<data::mutable_observer> f{functor};
-    REQUIRE(interface::unchecked_unerase_cast<functor_t>(f)->s_ == "hallo");
+    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
     REQUIRE(f() == "hallo world");
-    REQUIRE(interface::unchecked_unerase_cast<functor_t>(f)->s_ ==
+    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ ==
             "hallo world");
 
     string_to_string_mutable<data::const_observer> fc{f};
@@ -91,14 +91,14 @@ TEST_CASE("std emulated function") {
   {
     string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
-    REQUIRE(interface::unchecked_unerase_cast<functor_t>(f)->s_ ==
+    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ ==
             "hello world");
     static_assert(!std::assignable_from<string_to_string_mutable<unique>,
                                         string_to_string_mutable<unique>>);
     string_to_string_mutable<unique> f2{std::move(f)};
     REQUIRE(!has_data(get_erased_data(f)));
     REQUIRE(f2(", bye") == "hello world");
-    REQUIRE(interface::unchecked_unerase_cast<functor_t>(f2)->s_ ==
+    REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ ==
             "hello world, bye");
   }
 

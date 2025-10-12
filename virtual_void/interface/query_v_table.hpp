@@ -5,7 +5,7 @@
 #include <virtual_void/interface/base.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 template <is_interface TO_INTERFACE>
 auto query_v_table(const runtime::meta_data& meta_data)
@@ -22,4 +22,4 @@ auto query_v_table(runtime::base_v_table* from) {
   return find_v_table<TO_INTERFACE>(*from->meta_data);
 }
 
-};  // namespace virtual_void::interface
+};  // namespace virtual_void

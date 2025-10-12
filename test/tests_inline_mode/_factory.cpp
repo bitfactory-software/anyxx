@@ -11,7 +11,7 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 
 namespace {}
 

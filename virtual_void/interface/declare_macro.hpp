@@ -204,13 +204,13 @@
                                                                              \
   _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table            \
       : BASE##_v_table,                                                      \
-        virtual_void::interface::extension_method_holder<                    \
-            virtual_void::interface::has_extension_methods<n>, n> {          \
+        virtual_void::extension_method_holder<                    \
+            virtual_void::has_extension_methods<n>, n> {          \
     using v_table_base_t = BASE##_v_table;                                   \
     using v_table_t = n##_v_table;                                           \
     using own_extension_method_holder_t =                                    \
-        virtual_void::interface::extension_method_holder<                    \
-            virtual_void::interface::has_extension_methods<n>, n>;           \
+        virtual_void::extension_method_holder<                    \
+            virtual_void::has_extension_methods<n>, n>;           \
                                                                              \
     static bool static_is_derived_from(const std::type_info& from) {         \
       return typeid(v_table_t) == from                                       \
@@ -221,7 +221,7 @@
     _detail_INTERFACE_V_TABLE_FUNCTION_PTRS(l);                              \
                                                                              \
     static constexpr bool extension_methods_enabled =                        \
-        virtual_void::interface::has_extension_methods<n>;                   \
+        virtual_void::has_extension_methods<n>;                   \
                                                                              \
     template <typename CONCRETE>                                             \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                     \
@@ -237,12 +237,12 @@
                 n##_v_table, CONCRETE>();                                    \
       }                                                                      \
                                                                              \
-      ::virtual_void::interface::set_is_derived_from<v_table_t>(this);       \
+      ::virtual_void::set_is_derived_from<v_table_t>(this);       \
     };                                                                       \
                                                                              \
     template <typename CONCRETE>                                             \
     static auto imlpementation() {                                           \
-      return virtual_void::interface::v_table_instance_implementaion<        \
+      return virtual_void::v_table_instance_implementaion<        \
           v_table_t, CONCRETE>();                                            \
     }                                                                        \
   };                                                                         \
@@ -258,7 +258,7 @@
                                                                              \
     template <typename CONCRETE>                                             \
     static auto v_table_imlpementation() {                                   \
-      static_assert(!virtual_void::interface::is_interface<CONCRETE>);       \
+      static_assert(!virtual_void::is_interface<CONCRETE>);       \
       return v_table_t::template imlpementation<CONCRETE>();                 \
     }                                                                        \
                                                                              \
@@ -269,7 +269,7 @@
         : base_t(std::move(virtual_void), v_table) {}                        \
     template <typename CONSTRUCTED_WITH>                                     \
     n(CONSTRUCTED_WITH&& v)                                                  \
-      requires virtual_void::interface::constructibile_for<CONSTRUCTED_WITH, \
+      requires virtual_void::constructibile_for<CONSTRUCTED_WITH, \
                                                            ERASED_DATA>      \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                        \
       v_table_ = v_table_t::template imlpementation<                         \
@@ -281,7 +281,7 @@
                virtual_void::data::borrowable_from<                          \
                    erased_data_t, typename OTHER::erased_data_t>)            \
         : base_t(other) {}                                                   \
-    template <virtual_void::interface::is_interface OTHER>                   \
+    template <virtual_void::is_interface OTHER>                   \
     n(OTHER&& other) noexcept                                                \
       requires(std::derived_from<OTHER::v_table_t, v_table_t> &&             \
                virtual_void::data::moveable_from<                            \
@@ -304,10 +304,10 @@
     n& operator=(n const&) = default;                                        \
     n& operator=(n&&) = default;                                             \
     template <virtual_void::data::is_erased_data OTHER>                      \
-    friend class virtual_void::interface::base;                              \
-    template <virtual_void::interface::is_interface TO,                      \
-              virtual_void::interface::is_interface FROM>                    \
-    friend TO virtual_void::interface::unchecked_downcast_to(FROM from)      \
+    friend class virtual_void::base;                              \
+    template <virtual_void::is_interface TO,                      \
+              virtual_void::is_interface FROM>                    \
+    friend TO virtual_void::unchecked_downcast_to(FROM from)      \
       requires(std::derived_from<TO, FROM>);                                 \
     template <virtual_void::data::is_erased_data OTHER>                      \
     using type_for =                                                         \
@@ -318,10 +318,10 @@
 
 #define VV_INTERFACE_(n, BASE, l) VV_INTERFACE_TEMPLATE_((), n, BASE, l)
 
-#define VV_INTERFACE(n, l) VV_INTERFACE_(n, ::virtual_void::interface::base, l)
+#define VV_INTERFACE(n, l) VV_INTERFACE_(n, ::virtual_void::base, l)
 
 #define VV_INTERFACE_TEMPLATE(t, n, l) \
-  VV_INTERFACE_TEMPLATE_(t, n, ::virtual_void::interface::base, l)
+  VV_INTERFACE_TEMPLATE_(t, n, ::virtual_void::base, l)
 
 #define VV_METHOD_(...) (__VA_ARGS__)
 
@@ -365,7 +365,7 @@
 #define VV_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
                                 interface_)                                  \
   VV_INTERFACE_FORWARD(interface_namespace_, interface_)                     \
-  namespace virtual_void::interface {                                        \
+  namespace virtual_void {                                        \
   template <>                                                                \
   export_ interface_namespace_::interface_##_v_table*                        \
   v_table_instance_implementaion<interface_namespace_::interface_##_v_table, \
@@ -375,7 +375,7 @@
 #define VV_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                         \
   interface_namespace_::interface_##_v_table*                         \
-  virtual_void::interface::v_table_instance_implementaion<            \
+  virtual_void::v_table_instance_implementaion<            \
       interface_namespace_::interface_##_v_table, class_>() {         \
     static interface_namespace_::interface_##_v_table v_table{        \
         std::in_place_type<class_>};                                  \
@@ -412,7 +412,7 @@
                                          ...)                                 \
   VV_INTERFACE_FORWARD(interface_namespace, interface_name, __VA_ARGS__)      \
                                                                               \
-  namespace virtual_void::interface {                                         \
+  namespace virtual_void {                                         \
   template <>                                                                 \
   constexpr bool has_extension_methods<interface_namespace::interface_name> = \
       true;                                                                   \

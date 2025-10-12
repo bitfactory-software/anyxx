@@ -3,7 +3,7 @@
 #include <virtual_void/data/move.hpp>
 #include <virtual_void/interface/query_v_table.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 TO_INTERFACE move_to(VV_FROM&& vv_from,
@@ -20,4 +20,4 @@ TO_INTERFACE move_to(FROM_INTERFACE&& from_interface) {
                                get_runtime(from_interface));
 }
 
-};  // namespace virtual_void::interface
+};  // namespace virtual_void

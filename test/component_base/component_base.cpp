@@ -7,7 +7,7 @@
 using namespace test::component_base;
 
 using namespace virtual_void;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 using namespace virtual_void::runtime;
 using namespace virtual_void::data;
 
@@ -60,7 +60,7 @@ test::component_base::get_to_string_i_co() {
   auto meta = get_v_table(i)->meta_data;
   const std::type_info* type_info = &meta->get_type_info();
   static_assert(
-      interface::is_interface<to_string_i<virtual_void::data::const_observer>>);
+      is_interface<to_string_i<virtual_void::data::const_observer>>);
   const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   auto s = i.to_string();

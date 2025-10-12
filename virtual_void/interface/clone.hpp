@@ -4,7 +4,7 @@
 #include <virtual_void/interface/query_v_table.hpp>
 #include <virtual_void/runtime/meta_data.hpp>
 
-namespace virtual_void::interface {
+namespace virtual_void {
 
 template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 std::expected<TO_INTERFACE, virtual_void::runtime::cast_error> clone_to(
@@ -22,4 +22,4 @@ auto clone_to(const FROM_INTERFACE& from_interface) {
                                 get_runtime(from_interface));
 }
 
-};  // namespace virtual_void::interface
+};  // namespace virtual_void

@@ -7,7 +7,7 @@
 #include <virtual_void/virtual_void.hpp>
 
 using namespace virtual_void;
-using namespace virtual_void::interface;
+using namespace virtual_void;
 
 #ifndef VV_DLL_MODE
 #pragma message("ERROR! usage of component_base needs #define VV_DLL_MODE")
