@@ -32,6 +32,10 @@ template <>
 struct borrow_trait<shared_const, shared_const> {
   auto operator()(const auto& from) { return from; }
 };
+template <>
+struct borrow_trait<weak, shared_const> {
+  auto operator()(const auto& from) { return weak{from}; }
+};
 
 template <typename TO, typename FROM>
   requires borrowable_from<TO, FROM>

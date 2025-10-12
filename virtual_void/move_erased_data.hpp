@@ -19,8 +19,11 @@ bool constexpr can_move_to_from<X, X> = true;
 template <>
 bool constexpr can_move_to_from<shared_const, unique> = true;
 
+template <>
+bool constexpr can_move_to_from<weak, shared_const> = true;
+
 template <voidness TO, voidness FROM>
-  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>>
+  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>, is_weak_data<FROM>>
 bool constexpr can_move_to_from<TO, FROM> = true;
 
 template <typename TO, typename FROM>

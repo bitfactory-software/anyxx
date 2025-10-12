@@ -14,6 +14,7 @@ concept is_erased_data = requires(E e) {
   { trait<E>::is_owner } -> std::convertible_to<bool>;
   { trait<E>::value(e) } -> std::convertible_to<typename trait<E>::void_t>;
   { trait<E>::has_value(e) } -> std::convertible_to<bool>;
+  { trait<E>::is_weak } -> std::convertible_to<bool>;
 };
 
 template <is_erased_data DATA>
@@ -23,15 +24,24 @@ template <typename ERASED_DATA>
 concept is_const_data =
     is_erased_data<ERASED_DATA> && is_const_void<data_void<ERASED_DATA>>;
 
-template <bool CALL_IS_CONST, bool ERASED_DATA_IS_CONST>
+template <typename ERASED_DATA>
+concept is_weak_data =
+    is_erased_data<ERASED_DATA> && trait<ERASED_DATA>::is_weak;
+
+template <bool CALL_IS_CONST, bool ERASED_DATA_IS_CONST,
+          bool ERASED_DATA_IS_WEAK>
 concept const_correct_call =
+    !ERASED_DATA_IS_WEAK &&
     ((CALL_IS_CONST == ERASED_DATA_IS_CONST) || !ERASED_DATA_IS_CONST);
 
 template <typename CALL, typename ERASED_DATA, bool EXACT>
 concept const_correct_call_for_erased_data =
-    is_ereasurness<CALL> && is_erased_data<ERASED_DATA> &&
-    ((EXACT && (is_const_void<CALL> == is_const_data<ERASED_DATA>))
-    ||(!EXACT && const_correct_call<is_const_void<CALL>, is_const_data<ERASED_DATA>>));
+    !is_weak_data<ERASED_DATA> && is_ereasurness<CALL> &&
+    is_erased_data<ERASED_DATA> &&
+    ((EXACT && (is_const_void<CALL> == is_const_data<ERASED_DATA>)) ||
+     (!EXACT &&
+      const_correct_call<is_const_void<CALL>, is_const_data<ERASED_DATA>,
+                         is_weak_data<ERASED_DATA>>));
 
 template <is_erased_data ERASED_DATA, typename FROM>
 ERASED_DATA erased(FROM&& from) {

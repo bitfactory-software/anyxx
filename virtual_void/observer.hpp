@@ -15,6 +15,7 @@ struct observer_trait {
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
   static constexpr bool is_owner = false;
+  static constexpr bool is_weak = false;
 
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
   static VOIDNESS value(const auto& ptr) { return ptr; }
