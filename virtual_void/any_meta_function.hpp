@@ -318,7 +318,7 @@
 
 #define VV_ANY_(n, BASE, l) VV_ANY_TEMPLATE_((), n, BASE, l)
 
-#define VV_ANY(n, l) VV_ANY_(n, ::virtual_void::any_base, l)
+#define VV_ANY(n, ...) VV_ANY_(n, ::virtual_void::any_base, __VA_ARGS__)
 
 #define VV_ANY_TEMPLATE(t, n, l) \
   VV_ANY_TEMPLATE_(t, n, ::virtual_void::any_base, l)

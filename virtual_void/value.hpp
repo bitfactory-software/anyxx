@@ -65,8 +65,7 @@ class value {
 };
 
 template <typename T, typename... ARGS>
-auto make_value(ARGS&&... args)
-{
+auto make_value(ARGS&&... args) {
   return value(new T(std::forward<ARGS>(args)...));
 }
 
@@ -89,5 +88,28 @@ U const* unchecked_unerase_cast(value const& v) {
   return static_cast<U const*>(v.get());
 }
 
+template <>
+struct trait<value> {
+  using void_t = void*;
+  template <typename V>
+  using typed_t = std::decay_t<V>;
+  static constexpr bool is_constructibile_from_const = true;
+  static constexpr bool is_owner = true;
+  static constexpr bool is_weak = false;
+
+  static void* value(const auto& v) { return v.get(); }
+  static bool has_value(const auto& v) { return v; }
+
+  template <typename CONSTRUCTED_WITH>
+  using unerased = CONSTRUCTED_WITH;
+
+  template <typename CONSTRUCTED_WITH>
+  static auto erase(CONSTRUCTED_WITH&& v) {
+    return virtual_void::make_value<std::decay_t<CONSTRUCTED_WITH>>(
+        std::forward<CONSTRUCTED_WITH>(v));
+  }
+};
+
+static_assert(is_erased_data<value>);
 
 }  // namespace virtual_void
