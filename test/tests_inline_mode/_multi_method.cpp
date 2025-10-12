@@ -40,7 +40,7 @@ auto __ =
 auto __ =
     collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a"; });
 
-TEST_CASE("virtual_typed/multi_method") {
+TEST_CASE("multi_method") {
   CHECK(Thing_v_table::imlpementation<Asteroid>()
             ->own_extension_method_holder_t::extension_method_table->size() ==
         2);

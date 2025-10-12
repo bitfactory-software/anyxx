@@ -8,7 +8,7 @@
 #include <virtual_void/unique.hpp>
 #include <virtual_void/any_meta_function.hpp>
 #include <virtual_void/extension_method.hpp>
-#include <virtual_void/virtual_typed.hpp>
+#include <virtual_void/typed_any.hpp>
 
 using namespace Catch::Matchers;
 
@@ -65,7 +65,7 @@ auto derived_table =
 
 namespace {
 
-TEST_CASE("virtual_typed/extension_method") {
+TEST_CASE("extension_method") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 

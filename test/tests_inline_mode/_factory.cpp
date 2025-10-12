@@ -31,6 +31,6 @@ factory<Thing, std::type_index, std::string> thing_factory;
 
 namespace {
 
-TEST_CASE("virtual_typed/factory") {}
+TEST_CASE("factory") {}
 
 }  // namespace

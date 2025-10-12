@@ -36,7 +36,7 @@ Only if *virtual_void* has *get_meta_data meta-data*, is there a dynamic and saf
 - **typeid**
 - **m_table**
 
-A *virtual_typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* holds in its meta an *type_info*, the cast to *virtual_void* is a safe cast.
+A *typed* is a typed wrapper atop *virtual_void*. If the *virtual_void* holds in its meta an *type_info*, the cast to *virtual_void* is a safe cast.
 
 ### Static Cast vs Dynamic Cast
 #### A *static cast*:

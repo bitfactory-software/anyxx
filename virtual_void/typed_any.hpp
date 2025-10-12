@@ -6,7 +6,7 @@
 namespace virtual_void {
 
 template <typename V, is_any ANY>
-struct virtual_typed : public ANY {
+struct typed_any : public ANY {
   using erased_data_t = ANY::erased_data_t;
   using trait_t = ANY::trait_t;
   using void_t = trait_t::void_t;
@@ -15,9 +15,9 @@ struct virtual_typed : public ANY {
 
   using ANY::ANY;
 
-  virtual_typed(V const& v) : ANY(v) {}
-  virtual_typed(V&& v) : ANY(std::move(v)) {}
-  virtual_typed(ANY i) : ANY(i) {
+  typed_any(V const& v) : ANY(v) {}
+  typed_any(V&& v) : ANY(std::move(v)) {}
+  typed_any(ANY i) : ANY(i) {
     check_type_match<V>(get_runtime(*this));
   }
 
@@ -51,39 +51,39 @@ struct virtual_typed : public ANY {
 };
 
 template <typename V, is_any ANY>
-bool has_data(virtual_typed<V, ANY> const& vv) {
+bool has_data(typed_any<V, ANY> const& vv) {
   return has_data(vv.erased_data_);
 }
 template <typename V, is_any ANY>
-void const* get_void_data_ptr(virtual_typed<V, ANY> const& vv)
+void const* get_void_data_ptr(typed_any<V, ANY> const& vv)
   requires is_const_void<typename ANY::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
 template <typename V, is_any ANY>
-void* get_void_data_ptr(virtual_typed<V, ANY> const& vv)
+void* get_void_data_ptr(typed_any<V, ANY> const& vv)
   requires(!is_const_void<typename ANY::void_t>)
 {
   return get_void_data_ptr(vv.erased_data_);
 }
 template <typename V, is_any ANY>
-auto get_meta(virtual_typed<V, ANY> const& vv) {
+auto get_meta(typed_any<V, ANY> const& vv) {
   return ANY::trait_t::meta(vv.erased_data_);
 }
 
 template <typename V, is_any ANY>
 auto as(ANY source) {
-  return virtual_typed<V, ANY>{std::move(source)};
+  return typed_any<V, ANY>{std::move(source)};
 }
 
 template <typename TO, typename FROM, is_any ANY>
-auto as(virtual_typed<FROM, ANY> source)
+auto as(typed_any<FROM, ANY> source)
   requires std::convertible_to<FROM*, TO*>
 {
-  if constexpr (virtual_typed<FROM, ANY>::is_const) {
-    return virtual_typed<TO const, ANY>{std::move(source.erased_data_)};
+  if constexpr (typed_any<FROM, ANY>::is_const) {
+    return typed_any<TO const, ANY>{std::move(source.erased_data_)};
   } else {
-    return virtual_typed<TO, ANY>{std::move(source.erased_data_)};
+    return typed_any<TO, ANY>{std::move(source.erased_data_)};
   }
 }
 

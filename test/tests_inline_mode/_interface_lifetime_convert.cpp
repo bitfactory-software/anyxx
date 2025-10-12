@@ -57,7 +57,7 @@ TEST_CASE("interface lifetime cast") {
 
   to_string_u u{ std::make_unique<X>("hallo") };
   REQUIRE(u.to_string() == "hallo");
-  static_assert(!is_virtual_typed<to_string_u>);
+  static_assert(!is_typed_any<to_string_u>);
   static_assert(is_any<to_string_u>);
   static_assert(!constructibile_for<to_string_u, to_string_mo::erased_data_t>);
   static_assert(std::derived_from<to_string_mo::v_table_t, to_string_u::v_table_t>);

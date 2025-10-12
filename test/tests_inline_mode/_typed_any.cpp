@@ -7,27 +7,27 @@
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
 #include <virtual_void/any_meta_function.hpp>
-#include <virtual_void/virtual_typed.hpp>
+#include <virtual_void/typed_any.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void;
 using namespace virtual_void;
 using namespace virtual_void;
 
-namespace virtual_typed_test {
+namespace typed_any_test {
 struct x_t {
   std::string s_;
 };
 }
 
-namespace virtual_typed_test {
+namespace typed_any_test {
 VV_ANY(test_i, (VV_CONST_METHOD(std::string, to_string),
                       VV_METHOD(void, from_string, std::string_view)))
-}  // namespace virtual_typed_test
+}  // namespace typed_any_test
 
-using namespace virtual_typed_test;
+using namespace typed_any_test;
 
-TEST_CASE("virtual_typed/observer/any_base") {
+TEST_CASE("typed_any/observer") {
   x_t s{"hallo"};
 
   test_i<const_observer> co{s};
@@ -55,7 +55,7 @@ TEST_CASE("virtual_typed/observer/any_base") {
   CHECK(s.s_ == "world");
 }
 
-namespace virtual_typed_test {
+namespace typed_any_test {
 
 template <>
 struct test_i_v_table_map<x_t> {
@@ -63,7 +63,7 @@ struct test_i_v_table_map<x_t> {
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 
-}  // namespace virtual_typed_test
+}  // namespace typed_any_test
 
 namespace {
 
@@ -73,7 +73,7 @@ concept can_call_from_string = requires(X x, std::string_view s) {
 };
 }  // namespace
 
-TEST_CASE("virtual_typed/observer/test_i") {
+TEST_CASE("typed_any/observer/test_i") {
   x_t s{"hallo"};
 
   test_i<const_observer> co{s};

@@ -8,7 +8,7 @@
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
 #include <virtual_void/any_meta_function.hpp>
-#include <virtual_void/virtual_typed.hpp>
+#include <virtual_void/typed_any.hpp>
 #include <virtual_void/meta_data.hpp>
 
 using namespace Catch::Matchers;
@@ -210,13 +210,13 @@ TEST_CASE("dynamic interface shared_const") {
   std::cout << "print_shape_vv ********************************" << std::endl;
 
   using typed_circle_shape_shared_const =
-      virtual_typed<circle, any_shape<shared_const>>;
+      typed_any<circle, any_shape<shared_const>>;
   typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
   static_assert(
       std::same_as<typed_circle_shape_shared_const::erased_data_t, shared_const>);
-  static_assert(is_virtual_typed<decltype(sc_typed)>);
+  static_assert(is_typed_any<decltype(sc_typed)>);
   any_shape<shared_const> circle_shape_vv{sc_typed};
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));

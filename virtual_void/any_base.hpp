@@ -29,7 +29,7 @@ template <typename I>
 concept is_any = is_any_impl<std::decay_t<I>>;
 
 template <class E>
-concept is_virtual_typed = is_any<E> && requires(E e) {
+concept is_typed_any = is_any<E> && requires(E e) {
   typename E::trait_t;
   typename E::value_t;
   { E::is_const } -> std::convertible_to<bool>;
@@ -40,7 +40,7 @@ concept constructibile_for =
     erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
                                     any_base<ERASED_DATA>> &&
     !is_any<CONSTRUCTED_WITH> &&
-    !is_virtual_typed<std::remove_cvref_t<CONSTRUCTED_WITH>>;
+    !is_typed_any<std::remove_cvref_t<CONSTRUCTED_WITH>>;
 
 template <is_erased_data ERASED_DATA>
 class any_base {
