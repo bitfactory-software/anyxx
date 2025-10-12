@@ -7,6 +7,7 @@
 #include <virtual_void/observer.hpp>
 #include <virtual_void/shared_const.hpp>
 #include <virtual_void/unique.hpp>
+#include <virtual_void/value.hpp>
 #include <virtual_void/any_meta_function.hpp>
 
 using namespace Catch::Matchers;
@@ -53,7 +54,15 @@ TEST_CASE("std emulated function") {
     REQUIRE(f(" world") == "hallo world");
   }
   {
+    string_to_string<value> f{pure_functor_with_context("hallo")};
+    REQUIRE(f(" world") == "hallo world");
+  }
+  {
     string_to_string<shared_const> f{std::make_shared<pure_functor_t>()};
+    REQUIRE(f("hello world") == "hello world");
+  }
+  {
+    string_to_string<value> f{pure_functor_t{}};
     REQUIRE(f("hello world") == "hello world");
   }
   {
@@ -77,6 +86,10 @@ TEST_CASE("std emulated function") {
     // string_to_string_mutable
     // string_to_string_mutable<const_observer> fc2{functor_t{"hallo
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
+  }
+  {
+    string_to_string_mutable<value> fc2{functor_t{"hallo world"}}; 
+    CHECK(fc2() == "hallo world");
   }
   {
     pure_functor_t pf{};
