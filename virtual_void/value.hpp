@@ -26,34 +26,34 @@ template <class DATA>
 constexpr value_v_table value_v_table_of =
     value_v_table(std::in_place_type<DATA>);
 
-class erased_value {
+class value {
  public:
-  erased_value() = default;
+  value() = default;
   template <typename DATA>
-  erased_value(DATA* ptr)
+  value(DATA* ptr)
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
-  erased_value(erased_value const& rhs)
+  value(value const& rhs)
       : ptr_(rhs.ptr_ ? rhs.v_table_->copy(rhs.ptr_) : nullptr),
         v_table_(rhs.v_table_) {}
-  erased_value& operator=(const erased_value& rhs) {
-    erased_value clone{rhs};
+  value& operator=(const value& rhs) {
+    value clone{rhs};
     swap(*this, clone);
     return *this;
   }
-  erased_value(erased_value&& rhs) noexcept { swap(*this, rhs); }
-  erased_value& operator=(erased_value&& rhs) noexcept {
-    erased_value destroy_this{};
+  value(value&& rhs) noexcept { swap(*this, rhs); }
+  value& operator=(value&& rhs) noexcept {
+    value destroy_this{};
     swap(*this, destroy_this);
     swap(*this, rhs);
     return *this;
   }
-  ~erased_value() {
+  ~value() {
     if (v_table_) v_table_->destroy(ptr_);
   }
   void* get() const { return ptr_; }
   explicit operator bool() const { return ptr_ != nullptr; }
 
-  friend void swap(erased_value& lhs, erased_value& rhs) noexcept {
+  friend void swap(value& lhs, value& rhs) noexcept {
     using namespace std;
     swap(lhs.ptr_, rhs.ptr_);
     swap(lhs.v_table_, rhs.v_table_);
@@ -67,7 +67,7 @@ class erased_value {
 template <typename T, typename... ARGS>
 auto make_value(ARGS&&... args)
 {
-  return erased_value(new T(std::forward<ARGS>(args)...));
+  return value(new T(std::forward<ARGS>(args)...));
 }
 
 template <typename T, typename... ARGS>
@@ -81,11 +81,11 @@ auto make_void_value(T&& v) {
 }
 
 template <typename U>
-U& unsave_unerase_cast(erased_value& v) {
+U& unsave_unerase_cast(value& v) {
   return *static_cast<U*>(v.get());
 }
 template <typename U>
-U const& unsave_unerase_cast(erased_value const& v) {
+U const& unsave_unerase_cast(value const& v) {
   return *static_cast<U const*>(v.get());
 }
 
