@@ -133,8 +133,8 @@ auto get_void_data_ptr(base<ERASED_DATA> const& interface) {
   return get_void_data_ptr(get_erased_data(interface));
 }
 
-template <is_any INTERFACE>
-inline const auto& get_runtime(INTERFACE const& interface) {
+template <is_any ANY>
+inline const auto& get_runtime(ANY const& interface) {
   return *get_v_table(interface)->meta_data;
 }
 
@@ -163,9 +163,9 @@ auto unchecked_v_table_downcast_to(base_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
-template <is_any INTERFACE>
-inline auto get_v_table(INTERFACE const& interface) {
-  return unchecked_v_table_downcast_to<INTERFACE>(interface.v_table_);
+template <is_any ANY>
+inline auto get_v_table(ANY const& interface) {
+  return unchecked_v_table_downcast_to<ANY>(interface.v_table_);
 }
 
 template <is_any TO, is_any FROM>
@@ -185,16 +185,16 @@ std::optional<TO> downcast_to(FROM from)
   return {};
 }
 
-template <typename U, is_any INTERFACE>
-auto unchecked_unerase_cast(INTERFACE const& o) {
+template <typename U, is_any ANY>
+auto unchecked_unerase_cast(ANY const& o) {
   return unchecked_unerase_cast<U>(get_erased_data(o));
 }
-template <typename U, is_any INTERFACE>
-auto unerase_cast(INTERFACE const& o) {
+template <typename U, is_any ANY>
+auto unerase_cast(ANY const& o) {
   return unerase_cast<U>(get_erased_data(o), get_runtime(o));
 }
-template <typename U, is_any INTERFACE>
-auto unerase_cast(INTERFACE const* o) {
+template <typename U, is_any ANY>
+auto unerase_cast(ANY const* o) {
   unerase_cast<U>(get_erased_data(*o), get_runtime(o));
   return nullptr;
 }
@@ -213,19 +213,19 @@ V_TABLE* v_table_instance_implementaion() {
 }
 #endif  // DEBUG
 
-template <template <typename...> typename INTERFACE>
+template <template <typename...> typename ANY>
 constexpr bool has_extension_methods = false;
 
 template <typename I>
 concept has_extension_methods_enabled =
     is_any<I> && I::v_table_t::extension_methods_enabled;
 
-template <bool HAS_EXTENSION_METHODS, template <typename...> typename INTERFACE>
+template <bool HAS_EXTENSION_METHODS, template <typename...> typename ANY>
 struct extension_method_holder;
-template <template <typename...> typename INTERFACE>
-struct extension_method_holder<false, INTERFACE> {};
-template <template <typename...> typename INTERFACE>
-struct extension_method_holder<true, INTERFACE> {
+template <template <typename...> typename ANY>
+struct extension_method_holder<false, ANY> {};
+template <template <typename...> typename ANY>
+struct extension_method_holder<true, ANY> {
   extension_method_table_t* extension_method_table = nullptr;
 };
 

@@ -5,19 +5,19 @@
 
 namespace virtual_void {
 
-template <typename V, is_any INTERFACE>
-struct virtual_typed : public INTERFACE {
-  using erased_data_t = INTERFACE::erased_data_t;
-  using trait_t = INTERFACE::trait_t;
+template <typename V, is_any ANY>
+struct virtual_typed : public ANY {
+  using erased_data_t = ANY::erased_data_t;
+  using trait_t = ANY::trait_t;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
 
-  using INTERFACE::INTERFACE;
+  using ANY::ANY;
 
-  virtual_typed(V const& v) : INTERFACE(v) {}
-  virtual_typed(V&& v) : INTERFACE(std::move(v)) {}
-  virtual_typed(INTERFACE i) : INTERFACE(i) {
+  virtual_typed(V const& v) : ANY(v) {}
+  virtual_typed(V&& v) : ANY(std::move(v)) {}
+  virtual_typed(ANY i) : ANY(i) {
     check_type_match<V>(get_runtime(*this));
   }
 
@@ -50,40 +50,40 @@ struct virtual_typed : public INTERFACE {
   }
 };
 
-template <typename V, is_any INTERFACE>
-bool has_data(virtual_typed<V, INTERFACE> const& vv) {
+template <typename V, is_any ANY>
+bool has_data(virtual_typed<V, ANY> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, is_any INTERFACE>
-void const* get_void_data_ptr(virtual_typed<V, INTERFACE> const& vv)
-  requires is_const_void<typename INTERFACE::void_t>
+template <typename V, is_any ANY>
+void const* get_void_data_ptr(virtual_typed<V, ANY> const& vv)
+  requires is_const_void<typename ANY::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_any INTERFACE>
-void* get_void_data_ptr(virtual_typed<V, INTERFACE> const& vv)
-  requires(!is_const_void<typename INTERFACE::void_t>)
+template <typename V, is_any ANY>
+void* get_void_data_ptr(virtual_typed<V, ANY> const& vv)
+  requires(!is_const_void<typename ANY::void_t>)
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_any INTERFACE>
-auto get_meta(virtual_typed<V, INTERFACE> const& vv) {
-  return INTERFACE::trait_t::meta(vv.erased_data_);
+template <typename V, is_any ANY>
+auto get_meta(virtual_typed<V, ANY> const& vv) {
+  return ANY::trait_t::meta(vv.erased_data_);
 }
 
-template <typename V, is_any INTERFACE>
-auto as(INTERFACE source) {
-  return virtual_typed<V, INTERFACE>{std::move(source)};
+template <typename V, is_any ANY>
+auto as(ANY source) {
+  return virtual_typed<V, ANY>{std::move(source)};
 }
 
-template <typename TO, typename FROM, is_any INTERFACE>
-auto as(virtual_typed<FROM, INTERFACE> source)
+template <typename TO, typename FROM, is_any ANY>
+auto as(virtual_typed<FROM, ANY> source)
   requires std::convertible_to<FROM*, TO*>
 {
-  if constexpr (virtual_typed<FROM, INTERFACE>::is_const) {
-    return virtual_typed<TO const, INTERFACE>{std::move(source.erased_data_)};
+  if constexpr (virtual_typed<FROM, ANY>::is_const) {
+    return virtual_typed<TO const, ANY>{std::move(source.erased_data_)};
   } else {
-    return virtual_typed<TO, INTERFACE>{std::move(source.erased_data_)};
+    return virtual_typed<TO, ANY>{std::move(source.erased_data_)};
   }
 }
 

@@ -18,18 +18,18 @@ std::size_t& extension_method_count_of() {
 }
 #endif
 
-template <is_any INTERFACE>
+template <is_any ANY>
 struct virtual_ {
-  using type = INTERFACE;
+  using type = ANY;
 };
 
 template <typename ARG>
 struct translate_erased_function_param {
   using type = ARG;
 };
-template <is_any INTERFACE>
-struct translate_erased_function_param<virtual_<INTERFACE>> {
-  using type = typename INTERFACE::void_t;
+template <is_any ANY>
+struct translate_erased_function_param<virtual_<ANY>> {
+  using type = typename ANY::void_t;
 };
 
 template <typename RET, typename... ARGS>
@@ -39,9 +39,9 @@ struct translate_erased_function {
 
 template <std::size_t COUNT, typename... ARGS>
 constexpr std::size_t extension_method_dimension_count = COUNT;
-template <std::size_t COUNT, is_any INTERFACE, typename... ARGS>
+template <std::size_t COUNT, is_any ANY, typename... ARGS>
 constexpr std::size_t
-    extension_method_dimension_count<COUNT, virtual_<INTERFACE>, ARGS...> =
+    extension_method_dimension_count<COUNT, virtual_<ANY>, ARGS...> =
         extension_method_dimension_count<COUNT + 1, ARGS...>;
 
 template <typename R, typename... CLASSES>
@@ -53,8 +53,8 @@ struct ensure_function_ptr_from_functor_t {
     };
   };
 
-  template <typename FUNCTOR, is_any INTERFACE, typename... ARGS>
-  struct striped_virtuals<FUNCTOR, virtual_<INTERFACE>, ARGS...>
+  template <typename FUNCTOR, is_any ANY, typename... ARGS>
+  struct striped_virtuals<FUNCTOR, virtual_<ANY>, ARGS...>
       : striped_virtuals<FUNCTOR, ARGS...> {};
 
   template <typename... ARGS>
@@ -80,8 +80,8 @@ struct args_to_tuple {
         std::make_tuple(std::forward<ACTUAL_ARGS>(actual_args)...));
   }
 };
-template <is_any INTERFACE, typename... METHOD_ARGS>
-struct args_to_tuple<virtual_<INTERFACE>, METHOD_ARGS...> {
+template <is_any ANY, typename... METHOD_ARGS>
+struct args_to_tuple<virtual_<ANY>, METHOD_ARGS...> {
   template <typename T, typename ACTUAL_ARG, typename... ACTUAL_ARGS>
   auto operator()(T&& dispatch_args, ACTUAL_ARG&& dispatch_arg,
                   ACTUAL_ARGS&&... actual_args) {
@@ -107,8 +107,8 @@ struct extension_method_default {
         }
       };
     };
-    template <is_any INTERFACE, typename... ARGS>
-    struct implemenation<virtual_<INTERFACE>, ARGS...>
+    template <is_any ANY, typename... ARGS>
+    struct implemenation<virtual_<ANY>, ARGS...>
         : implemenation<ARGS...> {};
     template <typename... ARGS>
     using type = typename implemenation<ARGS...>::type;
@@ -119,10 +119,10 @@ struct extension_method_default {
     template <is_any... INTERFACES>
     using type = inner<INTERFACES...>::template type<ARGS...>;
   };
-  template <is_any INTERFACE, typename... ARGS>
-  struct outer<virtual_<INTERFACE>, ARGS...> {
+  template <is_any ANY, typename... ARGS>
+  struct outer<virtual_<ANY>, ARGS...> {
     template <is_any... INTERFACES>
-    using type = outer<ARGS...>::template type<INTERFACE, INTERFACES...>;
+    using type = outer<ARGS...>::template type<ANY, INTERFACES...>;
   };
 
   using type = outer<ARGS...>::template type<>;
@@ -132,8 +132,8 @@ template <typename DISPATCH, typename... ARGS>
 struct dispatch_matrix {
   using type = DISPATCH;
 };
-template <typename DISPATCH, is_any INTERFACE, typename... ARGS>
-struct dispatch_matrix<DISPATCH, virtual_<INTERFACE>, ARGS...> {
+template <typename DISPATCH, is_any ANY, typename... ARGS>
+struct dispatch_matrix<DISPATCH, virtual_<ANY>, ARGS...> {
   using type = typename dispatch_matrix<std::vector<DISPATCH>, ARGS...>::type;
 };
 
@@ -178,10 +178,10 @@ struct extension_method<R(ARGS...)> {
     }
   };
 
-  template <std::size_t DIM, is_any INTERFACE, typename... ARGS>
-  struct dispatch_access<true, DIM, virtual_<INTERFACE>, ARGS...>
+  template <std::size_t DIM, is_any ANY, typename... ARGS>
+  struct dispatch_access<true, DIM, virtual_<ANY>, ARGS...>
       : dispatch_access<true, DIM + 1, ARGS...> {
-    using interface_t = INTERFACE;
+    using interface_t = ANY;
     using v_table_t = typename interface_t::v_table_t;
     using next_t = dispatch_access<true, DIM + 1, ARGS...>;
 
@@ -207,7 +207,7 @@ struct extension_method<R(ARGS...)> {
               typename... ACTUAL_ARGS>
     std::optional<R> invoke(DISPATCH_MATRIX const& target,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
-                            INTERFACE const& interface,
+                            ANY const& interface,
                             ACTUAL_ARGS&&... actual_args) const {
       auto extension_method_table =
           get_v_table(interface)->extension_method_table;
@@ -222,9 +222,9 @@ struct extension_method<R(ARGS...)> {
     }
   };
 
-  template <is_any INTERFACE, typename... ARGS>
-  struct dispatch_access<false, 0, virtual_<INTERFACE>, ARGS...> {
-    using interface_t = INTERFACE;
+  template <is_any ANY, typename... ARGS>
+  struct dispatch_access<false, 0, virtual_<ANY>, ARGS...> {
+    using interface_t = ANY;
     using v_table_t = typename interface_t::v_table_t;
     std::size_t index_ = extension_method_count_of<v_table_t>()++;
 
@@ -239,7 +239,7 @@ struct extension_method<R(ARGS...)> {
               typename... ACTUAL_ARGS>
     std::optional<R> invoke(DISPATCH_MATRIX const&,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
-                            INTERFACE const& interface,
+                            ANY const& interface,
                             ACTUAL_ARGS&&... actual_args) const {
       auto v_table = get_v_table(interface)->extension_method_table;
       auto target = get_function(v_table, index_);
