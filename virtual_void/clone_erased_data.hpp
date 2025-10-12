@@ -21,23 +21,8 @@ TO clone_to(FROM const& from, auto const& meta_data) {
 }
 
 static_assert(!cloneable_to<mutable_observer>);
-static_assert(!cloneable_to<mutable_observer>);
-static_assert(!cloneable_to<mutable_observer>);
-static_assert(!cloneable_to<mutable_observer>);
-
 static_assert(!cloneable_to<const_observer>);
-static_assert(!cloneable_to<const_observer>);
-static_assert(!cloneable_to<const_observer>);
-static_assert(!cloneable_to<const_observer>);
-
 static_assert(cloneable_to<shared_const>);
-static_assert(cloneable_to<shared_const>);
-static_assert(cloneable_to<shared_const>);
-static_assert(cloneable_to<shared_const>);
-
-static_assert(cloneable_to<unique>);
-static_assert(cloneable_to<unique>);
-static_assert(cloneable_to<unique>);
 static_assert(cloneable_to<unique>);
 
 };  // namespace virtual_void
