@@ -58,11 +58,12 @@ static std::map<int, any_widget<weak>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any_widget<shared_const> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
-  if (auto found = cache.find(id); found != cache.end())
-    if (auto s = lock(found->second)) return *s;
-  auto s = load_widget(id);
-  cache[id] = s;
-  return s;
+  return *lock(cache[id]).or_else(
+      [&] -> std::optional<any_widget<shared_const>> {
+        auto s = load_widget(id);
+        cache[id] = s;
+        return s;
+      });
 }
 }  // namespace
 
