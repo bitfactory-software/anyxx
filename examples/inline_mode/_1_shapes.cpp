@@ -65,10 +65,10 @@ struct regular_polygon {
   double area() const { return (perimeter() * apothem()) / 2; }
 };
 
-VV_INTERFACE(any_drawable,
+VV_ANY(any_drawable,
              (VV_CONST_METHOD(void, draw, std::ostream&, position)))
 
-VV_INTERFACE_(any_shape, any_drawable,
+VV_ANY_(any_shape, any_drawable,
               (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
                VV_CONST_METHOD(double, perimeter)))
 

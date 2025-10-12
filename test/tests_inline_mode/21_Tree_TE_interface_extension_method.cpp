@@ -25,7 +25,7 @@ VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
 namespace _21_Tree_TE_interface_extension_method {
 
 namespace node {
-VV_INTERFACE(node_i, (VV_CONST_METHOD(int, value)))
+VV_ANY(node_i, (VV_CONST_METHOD(int, value)))
 }
 }  // namespace _21_Tree_TE_interface_extension_method
 

@@ -42,11 +42,11 @@ inline size operator+(size l, size r) {
   return {.cx = l.cx + r.cx, .cy = l.cy + r.cy};
 };
 
-VV_INTERFACE(surface, (VV_METHOD(void, write, point, char)))
+VV_ANY(surface, (VV_METHOD(void, write, point, char)))
 using mutable_observed_surface = surface<virtual_void::mutable_observer>;
 using unique_surface = surface<virtual_void::unique>;
 
-VV_INTERFACE(shape, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
+VV_ANY(shape, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
 
 ARCHITECTURE_EXPORT std::string hello();
 

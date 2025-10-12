@@ -63,8 +63,8 @@ struct functor {
 
 namespace {
 
-VV_INTERFACE(const_function_i, (VV_CONST_OP(std::string, 1, ())))
-VV_INTERFACE(mutating_function_i, (VV_OP(void, 1, (), std::string const&)))
+VV_ANY(const_function_i, (VV_CONST_OP(std::string, 1, ())))
+VV_ANY(mutating_function_i, (VV_OP(void, 1, (), std::string const&)))
 
 using const_function = const_function_i<const_observer>;
 using mutating_function = mutating_function_i<mutable_observer>;
@@ -191,9 +191,9 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-VV_INTERFACE(text_i_const, (VV_CONST_METHOD(std::string, get_text)))
+VV_ANY(text_i_const, (VV_CONST_METHOD(std::string, get_text)))
 
-VV_INTERFACE_(text_i_mutable, text_i_const,
+VV_ANY_(text_i_mutable, text_i_const,
               (VV_METHOD(void, set_text, std::string const&)))
 }  // namespace
 

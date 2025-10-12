@@ -20,25 +20,25 @@ struct X {
 };
 
 namespace {
-VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
+VV_ANY(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
 
-VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_t_i,
+VV_ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
                       (VV_CONST_METHOD(VALUE const&, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
+VV_ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
                       (VV_METHOD(VALUE&, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
+VV_ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
                       (VV_CONST_METHOD(VALUE, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
+VV_ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
                       (VV_METHOD(VALUE, at, KEY),
                        VV_CONST_METHOD(std::size_t, size)))
 
-VV_INTERFACE_TEMPLATE(((KEY)), map_to_string_i,
+VV_ANY_TEMPLATE(((KEY)), map_to_string_i,
                       (VV_CONST_METHOD(to_string_i<const_observer>, at, KEY)))
 
 template <>

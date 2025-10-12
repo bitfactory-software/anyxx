@@ -15,10 +15,10 @@ using namespace virtual_void;
 using namespace virtual_void;
 
 namespace {
-VV_INTERFACE(string_to_string,
+VV_ANY(string_to_string,
              (VV_CONST_OP(std::string, 1, (), std::string const&)))
 
-VV_INTERFACE(string_to_string_mutable,
+VV_ANY(string_to_string_mutable,
              (VV_CONST_OP(std::string, 1, ()),
               VV_OP(std::string, 2, (), std::string const&)))
 

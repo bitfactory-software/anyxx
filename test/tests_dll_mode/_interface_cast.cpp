@@ -18,7 +18,7 @@ using namespace test::component_base;
 
 namespace test::component_base {
 
-VV_INTERFACE(unused_i, (VV_CONST_METHOD(int, fun)))
+VV_ANY(unused_i, (VV_CONST_METHOD(int, fun)))
 
 }
 

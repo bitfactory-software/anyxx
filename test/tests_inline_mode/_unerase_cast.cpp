@@ -10,7 +10,7 @@ struct x_t {
   std::string s_;
   std::string get() const { return s_; }
 };
-VV_INTERFACE(has_meta_data,)
+VV_ANY(has_meta_data,)
 }  // namespace
 
 

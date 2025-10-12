@@ -39,9 +39,9 @@ VV_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::co
 
 namespace test::component_base {
 
-VV_INTERFACE(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
-VV_INTERFACE(get_value_i, (VV_CONST_METHOD(double, get_value)))
-VV_INTERFACE_(set_value_i, get_value_i, (VV_METHOD(void, set_value, double)))
+VV_ANY(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
+VV_ANY(get_value_i, (VV_CONST_METHOD(double, get_value)))
+VV_ANY_(set_value_i, get_value_i, (VV_METHOD(void, set_value, double)))
 
 COMPONENT_BASE_EXPORT
 to_string_i<virtual_void::const_observer> get_to_string_i_co();

@@ -21,8 +21,8 @@ using namespace virtual_void;
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_derived_i)
 namespace {
-VV_INTERFACE(test_base_i, (VV_CONST_METHOD(std::string, to_string)))
-VV_INTERFACE_(test_derived_i, test_base_i,
+VV_ANY(test_base_i, (VV_CONST_METHOD(std::string, to_string)))
+VV_ANY_(test_derived_i, test_base_i,
               (VV_METHOD(void, from_string, std::string const&)))
 
 }  // namespace

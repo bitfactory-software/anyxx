@@ -17,7 +17,7 @@ namespace {}
 
 VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 namespace {
-VV_INTERFACE(Thing, )
+VV_ANY(Thing, )
 }  // namespace
 
 namespace {
@@ -64,7 +64,7 @@ TEST_CASE("virtual_typed/multi_method") {
 // some compile time self tests
 
 namespace {
-VV_INTERFACE(Dummy, )
+VV_ANY(Dummy, )
 
 template <typename... ARGS>
 struct have_extension_methods_enabled {

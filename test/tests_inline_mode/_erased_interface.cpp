@@ -23,13 +23,13 @@ struct position {
 };
 
 namespace {
-VV_INTERFACE(any_drawable, (VV_CONST_METHOD(void, draw, position)))
+VV_ANY(any_drawable, (VV_CONST_METHOD(void, draw, position)))
 
-VV_INTERFACE_(any_shape, any_drawable,
+VV_ANY_(any_shape, any_drawable,
               (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
                VV_CONST_METHOD(double, perimeter)))
 
-VV_INTERFACE_(any_callable_shape, any_shape,
+VV_ANY_(any_callable_shape, any_shape,
               (VV_CONST_OP(std::string, 1, (), std::string const&)))
 }  // namespace
 

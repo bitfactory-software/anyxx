@@ -19,7 +19,7 @@ VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 
 namespace {
 
-VV_INTERFACE(Thing, )
+VV_ANY(Thing, )
 
 class Asteroid {};
 

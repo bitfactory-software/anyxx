@@ -16,7 +16,7 @@ using namespace virtual_void;
 
 namespace {
 
-VV_INTERFACE(node_i,
+VV_ANY(node_i,
              (VV_CONST_METHOD(int, value),
               VV_CONST_METHOD(string, as_forth),
               VV_CONST_METHOD(string, as_lisp)))

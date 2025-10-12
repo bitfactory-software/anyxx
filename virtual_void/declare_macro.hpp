@@ -185,7 +185,7 @@
   __VA_OPT__(_detail_foreach_macro(_detail_INTERFACE_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define VV_INTERFACE_TEMPLATE_(t, n, BASE, l)                                \
+#define VV_ANY_TEMPLATE_(t, n, BASE, l)                                \
                                                                              \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                          \
       _add_head((ERASED_DATA), t))>                                          \
@@ -316,12 +316,12 @@
 
 //    n(n&) = default;                                                           \
 
-#define VV_INTERFACE_(n, BASE, l) VV_INTERFACE_TEMPLATE_((), n, BASE, l)
+#define VV_ANY_(n, BASE, l) VV_ANY_TEMPLATE_((), n, BASE, l)
 
-#define VV_INTERFACE(n, l) VV_INTERFACE_(n, ::virtual_void::base, l)
+#define VV_ANY(n, l) VV_ANY_(n, ::virtual_void::base, l)
 
-#define VV_INTERFACE_TEMPLATE(t, n, l) \
-  VV_INTERFACE_TEMPLATE_(t, n, ::virtual_void::base, l)
+#define VV_ANY_TEMPLATE(t, n, l) \
+  VV_ANY_TEMPLATE_(t, n, ::virtual_void::base, l)
 
 #define VV_METHOD_(...) (__VA_ARGS__)
 
@@ -345,7 +345,7 @@
   VV_METHOD_(ret, _detail_CONCAT(__op__, x), operator op, true, const, \
              __VA_ARGS__)
 
-#define VV_INTERFACE_FORWARD(interface_namespace, interface_name, ...) \
+#define VV_ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                                      \
   template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                    \
       _add_head((ERASED_DATA), (__VA_ARGS__)))>                        \
@@ -364,7 +364,7 @@
 
 #define VV_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
                                 interface_)                                  \
-  VV_INTERFACE_FORWARD(interface_namespace_, interface_)                     \
+  VV_ANY_FORWARD(interface_namespace_, interface_)                     \
   namespace virtual_void {                                        \
   template <>                                                                \
   export_ interface_namespace_::interface_##_v_table*                        \
@@ -410,7 +410,7 @@
 
 #define VV_V_TABLE_HAS_EXTENSION_METHODS(interface_namespace, interface_name, \
                                          ...)                                 \
-  VV_INTERFACE_FORWARD(interface_namespace, interface_name, __VA_ARGS__)      \
+  VV_ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)      \
                                                                               \
   namespace virtual_void {                                         \
   template <>                                                                 \

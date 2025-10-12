@@ -21,14 +21,14 @@ using namespace virtual_void;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
-VV_INTERFACE(node_i,
+VV_ANY(node_i,
              (VV_CONST_METHOD(int, value), VV_CONST_METHOD(string, as_forth)))
 using node = node_i<shared_const>;
 }  // namespace _21_Tree_TE_erased_interface_w_cast
 
 namespace _21_Tree_TE_erased_interface_w_cast {
-VV_INTERFACE(lisp_i, (VV_CONST_METHOD(string, as_lisp)))
-VV_INTERFACE(value2_i, (VV_CONST_METHOD(int, value2)))
+VV_ANY(lisp_i, (VV_CONST_METHOD(string, as_lisp)))
+VV_ANY(value2_i, (VV_CONST_METHOD(int, value2)))
 }  // namespace _21_Tree_TE_erased_interface_w_cast
 
 namespace _21_Tree_TE_erased_interface_w_cast {

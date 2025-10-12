@@ -20,13 +20,13 @@ using vector_t = std::vector<std::string>;
 }  // namespace
 
 namespace {
-VV_INTERFACE(map_i_to_string_mutable, (VV_OP_EXACT(std::string&, 1, [], int)))
+VV_ANY(map_i_to_string_mutable, (VV_OP_EXACT(std::string&, 1, [], int)))
 
-VV_INTERFACE(map_i_to_string_const_and_mutable,
+VV_ANY(map_i_to_string_const_and_mutable,
              (VV_OP_EXACT(std::string&, 1, [], int),
               VV_CONST_OP_EXACT(std::string const&, 2, [], int)))
 
-VV_INTERFACE_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
+VV_ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
               (VV_CONST_OP_EXACT(std::string const&, 2, [], int)))
 
 }  // namespace
