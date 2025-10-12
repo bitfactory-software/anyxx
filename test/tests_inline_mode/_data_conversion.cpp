@@ -16,7 +16,7 @@ using namespace Catch::Matchers;
 using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void;
-using namespace virtual_void::runtime;
+using namespace virtual_void;
 
 TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";
@@ -88,59 +88,59 @@ TEST_CASE("_data_conversion borrow") {
 }
 TEST_CASE("_data_conversion clone") {
   std::string s1 = "hallo";
-  auto& get_meta_data = runtime::get_meta_data<std::string>();
+  auto& meta_data = get_meta_data<std::string>();
   {
     auto vv1 = erased<const_observer>(s1);
-    auto vv2 = data::clone_to<shared_const>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<shared_const>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<const_observer>(s1);
-    auto vv2 = data::clone_to<unique>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<unique>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::clone_to<shared_const>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<shared_const>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = data::clone_to<unique>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<unique>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = data::clone_to<shared_const>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<shared_const>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = data::clone_to<unique>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<unique>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = data::clone_to<shared_const>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<shared_const>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
   {
     auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = data::clone_to<unique>(vv1, get_meta_data);
+    auto vv2 = data::clone_to<unique>(vv1, meta_data);
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);

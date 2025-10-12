@@ -8,7 +8,7 @@ using namespace test::component_base;
 
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::runtime;
+using namespace virtual_void;
 using namespace virtual_void::data;
 
 namespace test::component_base {

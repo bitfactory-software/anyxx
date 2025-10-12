@@ -10,7 +10,7 @@
 #include <virtual_void/interface/virtual_typed.hpp>
 
 using namespace virtual_void;
-using namespace virtual_void::runtime;
+using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void;
 

@@ -12,7 +12,7 @@
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/virtual_void.hpp>
 
-namespace virtual_void::runtime {
+namespace virtual_void {
 
 class meta_data;
 struct base_v_table;
@@ -53,7 +53,7 @@ struct base_v_table {
 };
 
 inline bool is_derived_from(const std::type_info& from,
-                            runtime::base_v_table const* base_v_table) {
+                            base_v_table const* base_v_table) {
   return base_v_table->_is_derived_from(from);
 }
 
@@ -68,7 +68,7 @@ void insert_function(extension_method_table_t* v_table, std::size_t index,
                      auto fp) {
   if (v_table->size() <= index) v_table->resize(index + 1);
   v_table->at(index) =
-      reinterpret_cast<runtime::extension_method_table_function_t>(fp);
+      reinterpret_cast<extension_method_table_function_t>(fp);
 }
 inline extension_method_table_function_t get_function(
     extension_method_table_t* v_table, std::size_t index) {
@@ -168,16 +168,16 @@ extension_method_table_t* extension_method_table_instance() {
 template <typename V_TABLE, typename CONCRETE>
 auto bind_v_table_to_meta_data() {
   auto v_table = V_TABLE::template imlpementation<CONCRETE>();
-  runtime::get_meta_data<CONCRETE>().register_v_table(v_table);
+  get_meta_data<CONCRETE>().register_v_table(v_table);
   return v_table;
 }
 
-}  // namespace virtual_void::runtime
+}  // namespace virtual_void
 
 namespace virtual_void {
 template <typename U>
-bool type_match(runtime::meta_data const& meta_data) {
-  return &meta_data.get_type_info() == &runtime::typeid_of<std::decay_t<U>>();
+bool type_match(meta_data const& meta_data) {
+  return &meta_data.get_type_info() == &typeid_of<std::decay_t<U>>();
 }
 }  // namespace virtual_void
 
@@ -186,19 +186,19 @@ bool type_match(runtime::meta_data const& meta_data) {
 #define VV_RUNTIME_FWD(export_, ...)               \
   template <>                                      \
   export_ const std::type_info&                    \
-  virtual_void::runtime::typeid_of<__VA_ARGS__>(); \
+  virtual_void::typeid_of<__VA_ARGS__>(); \
   template <>                                      \
-  export_ virtual_void::runtime::meta_data&        \
-  virtual_void::runtime::get_meta_data<__VA_ARGS__>();
+  export_ virtual_void::meta_data&        \
+  virtual_void::get_meta_data<__VA_ARGS__>();
 
 #define VV_RUNTIME_INSTANCE(...)                                          \
   template <>                                                             \
-  const std::type_info& virtual_void::runtime::typeid_of<__VA_ARGS__>() { \
+  const std::type_info& virtual_void::typeid_of<__VA_ARGS__>() { \
     return typeid(__VA_ARGS__);                                           \
   }                                                                       \
   template <>                                                             \
-  virtual_void::runtime::meta_data&                                       \
-  virtual_void::runtime::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
+  virtual_void::meta_data&                                       \
+  virtual_void::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
     return runtime_implementation<__VA_ARGS__>();                         \
   }
 

@@ -233,7 +233,7 @@
                                                                              \
       if constexpr (extension_methods_enabled) {                             \
         own_extension_method_holder_t::extension_method_table =              \
-            ::virtual_void::runtime::extension_method_table_instance<        \
+            ::virtual_void::extension_method_table_instance<        \
                 n##_v_table, CONCRETE>();                                    \
       }                                                                      \
                                                                              \
@@ -356,7 +356,7 @@
 #define VV_REGISTER_V_TABLE_INSTANCE(class_, interface_)                     \
   namespace {                                                                \
   static auto __ =                                                           \
-      virtual_void::runtime::bind_v_table_to_meta_data<interface_##_v_table, \
+      virtual_void::bind_v_table_to_meta_data<interface_##_v_table, \
                                                        class_>();            \
   }
 
@@ -404,7 +404,7 @@
     };                                                                \
   };                                                                  \
   namespace {                                                         \
-  static auto __ = virtual_void::runtime::bind_v_table_to_meta_data<  \
+  static auto __ = virtual_void::bind_v_table_to_meta_data<  \
       interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
   }
 

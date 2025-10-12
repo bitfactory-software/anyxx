@@ -7,7 +7,7 @@ namespace virtual_void {
 
 template <is_interface TO_INTERFACE, data::is_erased_data VV_FROM>
 TO_INTERFACE move_to(VV_FROM&& vv_from,
-                     const runtime::meta_data& get_meta_data) {
+                     const meta_data& get_meta_data) {
   using vv_to_t = typename TO_INTERFACE::erased_data_t;
   static_assert(data::is_erased_data<vv_to_t>);
   auto v_table = query_v_table<TO_INTERFACE>(get_meta_data);

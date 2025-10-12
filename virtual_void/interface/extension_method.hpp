@@ -191,11 +191,11 @@ struct extension_method<R(ARGS...)> {
     template <typename CLASS, typename... CLASSES>
     auto define(auto fp, auto& matrix) {
       auto extension_method_table =
-          runtime::extension_method_table_instance<v_table_t, CLASS>();
+          extension_method_table_instance<v_table_t, CLASS>();
       auto dispatch_index =
-          *runtime::get_multi_method_index_at(extension_method_table, index_)
+          *get_multi_method_index_at(extension_method_table, index_)
                .or_else([&] -> std::optional<std::size_t> {
-                 runtime::set_multi_method_index_at(
+                 set_multi_method_index_at(
                      extension_method_table, index_, dispatch_dimension_size_);
                  return dispatch_dimension_size_++;
                });
@@ -212,7 +212,7 @@ struct extension_method<R(ARGS...)> {
       auto extension_method_table =
           get_v_table(interface)->extension_method_table;
       auto dispatch_dim =
-          runtime::get_multi_method_index_at(extension_method_table, index_);
+          get_multi_method_index_at(extension_method_table, index_);
       if (!dispatch_dim) return {};
       if (target.size() < *dispatch_dim + 1) return {};
       return next_t::invoke(
@@ -231,8 +231,8 @@ struct extension_method<R(ARGS...)> {
     template <typename CLASS>
     auto define(auto fp, auto&) {
       auto v_table =
-          runtime::extension_method_table_instance<v_table_t, CLASS>();
-      runtime::insert_function(v_table, index_, fp);
+          extension_method_table_instance<v_table_t, CLASS>();
+      insert_function(v_table, index_, fp);
       return fp;
     }
     template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
@@ -242,7 +242,7 @@ struct extension_method<R(ARGS...)> {
                             INTERFACE const& interface,
                             ACTUAL_ARGS&&... actual_args) const {
       auto v_table = get_v_table(interface)->extension_method_table;
-      auto target = runtime::get_function(v_table, index_);
+      auto target = get_function(v_table, index_);
       if (!target) return {};
       auto erased_function = reinterpret_cast<erased_function_t>(target);
       return std::apply(erased_function,
@@ -299,15 +299,15 @@ struct extension_method<R(ARGS...)> {
 #define VV_EXTENSION_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_) \
   namespace virtual_void {                                          \
   template <>                                                                  \
-  export_ virtual_void::runtime::extension_method_table_t*                     \
-  virtual_void::runtime::extension_method_table_instance<interface_##_v_table, \
+  export_ virtual_void::extension_method_table_t*                     \
+  virtual_void::extension_method_table_instance<interface_##_v_table, \
                                                          class_>(); \
   }
 
 #define VV_EXTENSION_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                                  \
-  virtual_void::runtime::extension_method_table_t*                             \
-  virtual_void::runtime::extension_method_table_instance<interface_##_v_table, \
+  virtual_void::extension_method_table_t*                             \
+  virtual_void::extension_method_table_instance<interface_##_v_table, \
                                                          class_>() {           \
     return extension_method_table_instance_implementation<                     \
         interface_##_v_table, class_>();                                       \

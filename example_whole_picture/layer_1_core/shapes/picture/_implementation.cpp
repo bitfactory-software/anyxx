@@ -8,7 +8,7 @@ using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
 using namespace virtual_void::data;
-using namespace virtual_void::runtime;
+using namespace virtual_void;
 
 VV_RUNTIME_INSTANCE(shapes::picture)
 VV_V_TABLE_INSTANCE(shapes::picture, whole_picture::architecture, shape);

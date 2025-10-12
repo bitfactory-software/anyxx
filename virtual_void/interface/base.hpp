@@ -13,7 +13,6 @@
 
 namespace virtual_void {
 
-using base_v_table = runtime::base_v_table;  // for declare_macro.hpp
 template <data::is_erased_data ERASED_DATA>
 class base;
 
@@ -49,7 +48,7 @@ class base {
   using erased_data_t = ERASED_DATA;
   using trait_t = data::trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_t = runtime::base_v_table;
+  using v_table_t = base_v_table;
 
  protected:
   erased_data_t erased_data_ = {};
@@ -156,11 +155,11 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <typename TO>
-auto unchecked_v_table_downcast_to(runtime::base_v_table* v_table) {
+auto unchecked_v_table_downcast_to(base_v_table* v_table) {
   return static_cast<TO*>(v_table);
 }
 template <is_interface TO>
-auto unchecked_v_table_downcast_to(runtime::base_v_table* v_table) {
+auto unchecked_v_table_downcast_to(base_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
@@ -208,7 +207,7 @@ template <typename V_TABLE, typename CONCRETE>
 V_TABLE* v_table_instance_implementaion() {
   static V_TABLE v_table{std::in_place_type<CONCRETE>};
   static auto __ =
-      virtual_void::runtime::get_meta_data<CONCRETE>().register_v_table(
+      virtual_void::get_meta_data<CONCRETE>().register_v_table(
           &v_table);
   return &v_table;
 }
@@ -227,7 +226,7 @@ template <template <typename...> typename INTERFACE>
 struct extension_method_holder<false, INTERFACE> {};
 template <template <typename...> typename INTERFACE>
 struct extension_method_holder<true, INTERFACE> {
-  runtime::extension_method_table_t* extension_method_table = nullptr;
+  extension_method_table_t* extension_method_table = nullptr;
 };
 
 }  // namespace virtual_void

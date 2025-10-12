@@ -17,15 +17,15 @@ using namespace whole_picture::core::shapes;
 
 using namespace virtual_void;
 using namespace virtual_void;
-using namespace virtual_void::runtime;
+using namespace virtual_void;
 using namespace virtual_void::data;
 
 VV_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 
 TEST_CASE("example 1 core") {
   std::cout << whole_picture::core::hello() << "\n";
-  std::cout << runtime::get_meta_data<architecture::picture>().get_type_info().name() << "\n";
-  std::cout << runtime::get_meta_data<whole_picture::core::shapes::picture>().get_type_info().name() << "\n";
+  std::cout << get_meta_data<architecture::picture>().get_type_info().name() << "\n";
+  std::cout << get_meta_data<whole_picture::core::shapes::picture>().get_type_info().name() << "\n";
   std::cout << open_object::members_count<whole_picture::core::shapes::picture>() << "\n";
 }
 

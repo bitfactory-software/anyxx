@@ -13,7 +13,7 @@
 using namespace Catch::Matchers;
 
 using namespace virtual_void;
-using namespace virtual_void::runtime;
+using namespace virtual_void;
 using namespace virtual_void::data;
 using namespace virtual_void;
 
@@ -59,9 +59,9 @@ auto __ =
     });
 
 auto base_table =
-    runtime::extension_method_table_instance<test_base_i_v_table, x_t>();
+    extension_method_table_instance<test_base_i_v_table, x_t>();
 auto derived_table =
-    runtime::extension_method_table_instance<test_derived_i_v_table, x_t>();
+    extension_method_table_instance<test_derived_i_v_table, x_t>();
 
 namespace {
 

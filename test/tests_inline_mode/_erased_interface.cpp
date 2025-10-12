@@ -108,7 +108,7 @@ void print_any_callable_shape_const_observer(const any_callable_shape<const_obse
 
 TEST_CASE("dynamic v_table const_observer") {
   using namespace virtual_void;
-  using namespace virtual_void::runtime;
+  using namespace virtual_void;
 
   circle c{12.3};
   square s{32};

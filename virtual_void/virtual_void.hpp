@@ -99,19 +99,17 @@ template <typename ERASURENESS>
 concept is_const_void = is_const_void_<ERASURENESS>::value;
 
 
-namespace runtime {
 class meta_data;
-}
 
 template <typename U>
-bool type_match(runtime::meta_data const& meta);
+bool type_match(meta_data const& meta);
 
 class type_mismatch_error : error {
   using error::error;
 };
 
 template <typename U>
-void check_type_match(runtime::meta_data const& meta) {
+void check_type_match(meta_data const& meta) {
   if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
 }
 
