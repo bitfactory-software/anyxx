@@ -81,12 +81,12 @@ auto make_void_value(T&& v) {
 }
 
 template <typename U>
-U& unsave_unerase_cast(value& v) {
-  return *static_cast<U*>(v.get());
+U* unchecked_unerase_cast(value& v) {
+  return static_cast<U*>(v.get());
 }
 template <typename U>
-U const& unsave_unerase_cast(value const& v) {
-  return *static_cast<U const*>(v.get());
+U const* unchecked_unerase_cast(value const& v) {
+  return static_cast<U const*>(v.get());
 }
 
 

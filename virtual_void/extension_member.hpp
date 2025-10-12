@@ -33,13 +33,13 @@ struct members {
   typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER member) const {
     const auto& value = table_[member.index];
     if (!value) return {};
-    return static_cast<typename OBJECT_MEMBER::value_t const*>(value.get());
+    return unchecked_unerase_cast<typename OBJECT_MEMBER::value_t>(value);
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t* get(OBJECT_MEMBER member) {
     auto& value = table_[member.index];
     if (!value) return {};
-    return static_cast<typename OBJECT_MEMBER::value_t*>(value.get());
+    return unchecked_unerase_cast<typename OBJECT_MEMBER::value_t>(value);
   }
   template <typename OBJECT_MEMBER>
   typename OBJECT_MEMBER::value_t& operator[](OBJECT_MEMBER member) {
