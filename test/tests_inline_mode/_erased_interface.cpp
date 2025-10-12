@@ -9,7 +9,7 @@
 #include <virtual_void/data/unique.hpp>
 #include <virtual_void/interface/declare_macro.hpp>
 #include <virtual_void/interface/virtual_typed.hpp>
-#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/meta_data.hpp>
 
 using namespace Catch::Matchers;
 

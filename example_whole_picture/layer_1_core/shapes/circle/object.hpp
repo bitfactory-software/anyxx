@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/meta_data.hpp>
 
 #include <example_whole_picture/layer_1_core/core.hpp>
 

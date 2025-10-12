@@ -3,7 +3,7 @@
 #include <virtual_void/data/observer.hpp>
 #include <virtual_void/data/shared_const.hpp>
 #include <virtual_void/data/unique.hpp>
-#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/meta_data.hpp>
 
 namespace virtual_void {
 

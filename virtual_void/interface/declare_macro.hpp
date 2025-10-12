@@ -1,7 +1,7 @@
 #pragma once
 
 #include <virtual_void/interface/base.hpp>
-#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/meta_data.hpp>
 #include <virtual_void/utillities/unnamed__.hpp>
 
 #undef interface

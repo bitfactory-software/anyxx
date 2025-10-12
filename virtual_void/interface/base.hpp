@@ -7,7 +7,7 @@
 #include <virtual_void/data/borrow_erased_data.hpp>
 #include <virtual_void/data/move_erased_data.hpp>
 #include <virtual_void/data/trait.hpp>
-#include <virtual_void/runtime/meta_data.hpp>
+#include <virtual_void/meta_data.hpp>
 
 #undef interface
 
