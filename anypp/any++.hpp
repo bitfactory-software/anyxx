@@ -583,7 +583,6 @@ bool type_match(meta_data const& meta_data) {
 
 // --------------------------------------------------------------------------------
 
-//./anypp/anypp/utillities\VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp
 //./anypp/anypp/clone_erased_data.hpp
 //./anypp/anypp/utillities\unnamed__.hpp
 //./anypp/anypp/utillities\type_list.hpp
