@@ -1117,6 +1117,7 @@ template <is_any TO_ANYPP, is_any FROM_ANYPP>
 auto clone_to(const FROM_ANYPP& from_interface) {
   return clone_to<TO_ANYPP>(get_erased_data(from_interface),
                                 get_runtime(from_interface));
+}
 
 template <is_any FROM_ANYPP>
   requires std::same_as<typename FROM_ANYPP::erased_data_t, weak>
