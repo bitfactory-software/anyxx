@@ -26,7 +26,7 @@ TEST_CASE("example 1 core") {
   std::cout << whole_picture::core::hello() << "\n";
   std::cout << get_meta_data<architecture::picture>().get_type_info().name() << "\n";
   std::cout << get_meta_data<whole_picture::core::shapes::picture>().get_type_info().name() << "\n";
-  std::cout << open_object::members_count<whole_picture::core::shapes::picture>() << "\n";
+  std::cout << members_count<whole_picture::core::shapes::picture>() << "\n";
 }
 
 TEST_CASE("example 2 core circle") {
@@ -79,7 +79,7 @@ TEST_CASE("example 3 architecture picture") {
     pic.draw(s);
     b.flush();
 
-    REQUIRE(open_object::members_count<shapes::picture>() == 1);
+    REQUIRE(members_count<shapes::picture>() == 1);
     auto any_shape = shapes::make_picture({0, 0}, duck);
     core::shapes::picture const* duck_shape =
         anypp::unerase_cast<shapes::picture>(any_shape);

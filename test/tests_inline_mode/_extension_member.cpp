@@ -10,7 +10,6 @@ using namespace Catch::Matchers;
 #include <anypp/extension_member.hpp>
 
 using namespace anypp;
-using namespace anypp::open_object;
 
 struct test_object;
 
@@ -19,7 +18,7 @@ struct test_object : members<test_object> {};  // name your open_object
 inline const member<test_object, std::string> test_member;  // define your member
 
 TEST_CASE("open object 1") {
-  REQUIRE(open_object::members_count<test_object>() == 1);
+  REQUIRE(members_count<test_object>() == 1);
   test_object a_test_object;
   auto value = a_test_object.get(test_member);
   REQUIRE(!value);
