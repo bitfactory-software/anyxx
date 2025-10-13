@@ -53,8 +53,8 @@ class any_base {
   v_table_t* v_table_ = nullptr;
 
   any_base() = default;
-  any_base(erased_data_t virtual_void, v_table_t* v_table)
-      : erased_data_(std::move(virtual_void)), v_table_(v_table) {}
+  any_base(erased_data_t erased_data, v_table_t* v_table)
+      : erased_data_(std::move(erased_data)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   any_base(CONSTRUCTED_WITH&& constructed_with)
     requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>

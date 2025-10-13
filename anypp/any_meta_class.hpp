@@ -262,8 +262,8 @@
     using base_t::erased_data_;                                                \
     using base_t::v_table_;                                                    \
                                                                                \
-    n(erased_data_t virtual_void, v_table_t* v_table)                          \
-        : base_t(std::move(virtual_void), v_table) {}                          \
+    n(erased_data_t erased_data, v_table_t* v_table)                          \
+        : base_t(std::move(erased_data), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
       requires anypp::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA> \
