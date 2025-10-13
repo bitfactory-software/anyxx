@@ -1,8 +1,8 @@
 #pragma once
 
-#include <virtual_void/observer.hpp>
-#include <virtual_void/shared_const.hpp>
-#include <virtual_void/unique.hpp>
+#include <anypp/observer.hpp>
+#include <anypp/shared_const.hpp>
+#include <anypp/unique.hpp>
 
 namespace virtual_void {
 

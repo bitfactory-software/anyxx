@@ -3,11 +3,11 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/observer.hpp>
-#include <virtual_void/shared_const.hpp>
-#include <virtual_void/unique.hpp>
-#include <virtual_void/any_meta_function.hpp>
-#include <virtual_void/typed_any.hpp>
+#include <anypp/observer.hpp>
+#include <anypp/shared_const.hpp>
+#include <anypp/unique.hpp>
+#include <anypp/any_meta_function.hpp>
+#include <anypp/typed_any.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void;

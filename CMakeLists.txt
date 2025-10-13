@@ -11,7 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
 message( "CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
 
-project(virtual_void CXX)
+project(anypp CXX)
 
 include(GNUInstallDirs)
 
@@ -22,16 +22,16 @@ if (MSVC)
 endif()
 set(CMAKE_CXX_STANDARD 23)
 
-# +++ virtual_void library
-file(GLOB_RECURSE VIRTUAL_VOID_HEADERS "./virtual_void/*.hpp")
-file(GLOB_RECURSE VIRTUAL_VOID_SOURCES "./virtual_void/*.cpp")
-add_library(virtual_void INTERFACE ${VIRTUAL_VOID_HEADERS} ${VIRTUAL_VOID_SOURCES})
-target_include_directories(virtual_void INTERFACE
+# +++ anypp library
+file(GLOB_RECURSE anypp_HEADERS "./anypp/*.hpp")
+file(GLOB_RECURSE anypp_SOURCES "./anypp/*.cpp")
+add_library(anypp INTERFACE ${anypp_HEADERS} ${anypp_SOURCES})
+target_include_directories(anypp INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-set_target_properties(virtual_void PROPERTIES FOLDER "virtual_void")
-# --- virtual_void library
+set_target_properties(anypp PROPERTIES FOLDER "anypp")
+# --- anypp library
 
 enable_testing()
 
@@ -48,34 +48,34 @@ message("CMAKE_CURRENT_BINARY_DIR: " "${CMAKE_CURRENT_BINARY_DIR}")
 message("PROJECT_SOURCE_DIR: " "${PROJECT_SOURCE_DIR}")
 
 # Install the library and its headers
-install(TARGETS virtual_void
-        EXPORT virtual_void_targets
+install(TARGETS anypp
+        EXPORT anypp_targets
 ##        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 ##        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 ##        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-install(DIRECTORY virtual_void/ # tailing slash is important here!
-    DESTINATION include/virtual_void
+install(DIRECTORY anypp/ # tailing slash is important here!
+    DESTINATION include/anypp
 )
 
 # Generate and install *-targets.cmake
-install(EXPORT virtual_void_targets
-        FILE virtual_void-targets.cmake
-        NAMESPACE virtual_void::
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/virtual_void)
+install(EXPORT anypp_targets
+        FILE anypp-targets.cmake
+        NAMESPACE anypp::
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/anypp)
 
 
 # Generate the config file in the current binary dir (this ensures it's not placed directly in source)
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/virtual_void-config.cmake"
-"message(\"virtual_void-config.cmake\")\n"
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/anypp-config.cmake"
+"message(\"anypp-config.cmake\")\n"
 "include(CMakeFindDependencyMacro)\n"
 "find_dependency(Catch2 CONFIG REQUIRED)\n"
-"include(\"\${CMAKE_CURRENT_LIST_DIR}/virtual_void-targets.cmake\")\n"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/anypp-targets.cmake\")\n"
 )
 
 # Install the generated config file
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/virtual_void-config.cmake"
-        DESTINATION share/virtual_void)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/anypp-config.cmake"
+        DESTINATION share/anypp)
 
 

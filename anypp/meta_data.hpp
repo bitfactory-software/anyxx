@@ -8,9 +8,9 @@
 #include <typeindex>
 #include <variant>
 #include <vector>
-#include <virtual_void/observer.hpp>
-#include <virtual_void/unique.hpp>
-#include <virtual_void/virtual_void.hpp>
+#include <anypp/observer.hpp>
+#include <anypp/unique.hpp>
+#include <anypp/virtual_void.hpp>
 
 namespace virtual_void {
 

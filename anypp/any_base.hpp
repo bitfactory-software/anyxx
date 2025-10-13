@@ -4,10 +4,10 @@
 #include <type_traits>
 #include <typeinfo>
 #include <utility>
-#include <virtual_void/borrow_erased_data.hpp>
-#include <virtual_void/move_erased_data.hpp>
-#include <virtual_void/trait.hpp>
-#include <virtual_void/meta_data.hpp>
+#include <anypp/borrow_erased_data.hpp>
+#include <anypp/move_erased_data.hpp>
+#include <anypp/trait.hpp>
+#include <anypp/meta_data.hpp>
 
 #undef interface
 

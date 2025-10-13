@@ -2,8 +2,8 @@
 
 #undef interface
 
-#include <virtual_void/any_base.hpp>
-#include <virtual_void/meta_data.hpp>
+#include <anypp/any_base.hpp>
+#include <anypp/meta_data.hpp>
 
 namespace virtual_void {
 

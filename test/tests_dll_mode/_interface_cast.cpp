@@ -1,12 +1,12 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <virtual_void/observer.hpp>
-#include <virtual_void/shared_const.hpp>
-#include <virtual_void/unique.hpp>
-#include <virtual_void/any_base.hpp>
-#include <virtual_void/borrow.hpp>
-#include <virtual_void/clone.hpp>
-#include <virtual_void/move.hpp>
+#include <anypp/observer.hpp>
+#include <anypp/shared_const.hpp>
+#include <anypp/unique.hpp>
+#include <anypp/any_base.hpp>
+#include <anypp/borrow.hpp>
+#include <anypp/clone.hpp>
+#include <anypp/move.hpp>
 
 #include "./component_base/component_base.hpp"
 

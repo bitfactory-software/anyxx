@@ -9,7 +9,7 @@ file(GLOB component_base_cpp_files "./component_base/*.cpp")
 add_library(component_base ${component_base_hpp_files} ${component_base_cpp_files})
 set_target_properties(component_base PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(component_base 
-    virtual_void
+    anypp
 )
 target_include_directories(component_base PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
@@ -26,7 +26,7 @@ file(GLOB test_all_hpp_files "*.hpp")
 file(GLOB test_all_cpp_files "*.cpp")
 add_executable (test_all ${test_all_cpp_files} ${test_all_hpp_files})
 target_link_libraries(test_all 
-    virtual_void
+    anypp
     component_base
     Catch2::Catch2WithMain
 )

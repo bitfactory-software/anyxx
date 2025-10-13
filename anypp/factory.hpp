@@ -5,7 +5,7 @@
 #include <map>
 #include <ranges>
 #include <vector>
-#include <virtual_void/virtual_void.hpp>
+#include <anypp/virtual_void.hpp>
 
 namespace virtual_void {
 

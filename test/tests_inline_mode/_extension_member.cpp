@@ -7,7 +7,7 @@
 
 using namespace Catch::Matchers;
 
-#include <virtual_void/extension_member.hpp>
+#include <anypp/extension_member.hpp>
 
 using namespace virtual_void;
 using namespace virtual_void::open_object;

@@ -9,7 +9,7 @@ file(GLOB cpp_files "*.cpp")
 add_library(example_1_architecture ${hpp_files} ${cpp_files})
 set_target_properties(example_1_architecture PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(example_1_architecture 
-    virtual_void
+    anypp
 )
 target_include_directories(component_base PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building

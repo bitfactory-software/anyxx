@@ -1,8 +1,8 @@
 #pragma once
 
-#include <virtual_void/clone_erased_data.hpp>
-#include <virtual_void/query_v_table.hpp>
-#include <virtual_void/meta_data.hpp>
+#include <anypp/clone_erased_data.hpp>
+#include <anypp/query_v_table.hpp>
+#include <anypp/meta_data.hpp>
 
 namespace virtual_void {
 

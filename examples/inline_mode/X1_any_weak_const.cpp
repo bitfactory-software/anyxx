@@ -4,9 +4,9 @@
 #include <mutex>
 #include <string>
 #include <vector>
-#include <virtual_void/any_meta_function.hpp>
-#include <virtual_void/lock.hpp>
-#include <virtual_void/shared_const.hpp>
+#include <anypp/any_meta_function.hpp>
+#include <anypp/lock.hpp>
+#include <anypp/shared_const.hpp>
 
 using namespace Catch::Matchers;
 

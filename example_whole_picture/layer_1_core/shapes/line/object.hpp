@@ -1,8 +1,8 @@
 #pragma once
 
 #include <example_whole_picture/layer_1_core/core.hpp>
-#include <virtual_void/meta_data.hpp>
-#include <virtual_void/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
+#include <anypp/meta_data.hpp>
+#include <anypp/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
 
 namespace whole_picture::core::shapes {
 

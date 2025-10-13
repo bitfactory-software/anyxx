@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/shared_const.hpp>
+#include <anypp/shared_const.hpp>
 
 #include "../layer_0_architecture/architecture.hpp"
 

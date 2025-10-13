@@ -24,7 +24,7 @@ We see the main attraction in the solving of the [expression problem](https://en
 By studiing the details of yomm2, we found deep inside a perl: A superfast perfect hash function for int64 keys. 
 
 We used the permissive licence to steal this algorithim and to spent him a convinient interface.
-You can find the source [here](https://github.com/andreaspfaffenbichler/virtual_void/blob/master/include/virtual_void/perfect_typeid_hash/index_table.h)
+You can find the source [here](https://github.com/andreaspfaffenbichler/anypp/blob/master/include/anypp/perfect_typeid_hash/index_table.h)
 
 Let's look at the usage of the algorithm:
 ```
@@ -33,7 +33,7 @@ Let's look at the usage of the algorithm:
 
 #include <catch.hpp>
 
-#include <virtual_void/perfect_typeid_hash/index_table.hpp>
+#include <anypp/perfect_typeid_hash/index_table.hpp>
 
 
 TEST_CASE( "build perfect typeid hash index" ) {
@@ -66,11 +66,11 @@ For the interessted on the inner workings, we will do an extra short blog, to go
 
 But now let us prepare for our next round in the get_meta_data dispatch battle.
 
-We install the perfect_typeid_hash::index_table into the [any_dispatch method](https://github.com/andreaspfaffenbichler/virtual_void/blob/master/include/virtual_void/any_dispatch/method_typeid_hash.h).
+We install the perfect_typeid_hash::index_table into the [any_dispatch method](https://github.com/andreaspfaffenbichler/anypp/blob/master/include/anypp/any_dispatch/method_typeid_hash.h).
 
 New is also the "ri·en ne va plus" member function "seal". It constructs the index_table and drops the map used to collect the elements.
 
-Now we are back in the [expression tree arena with the ramped up any dispatch](https://github.com/andreaspfaffenbichler/virtual_void/blob/master/test/21_Tree_TE_dispatch_via_any_and_type_index.cpp):
+Now we are back in the [expression tree arena with the ramped up any dispatch](https://github.com/andreaspfaffenbichler/anypp/blob/master/test/21_Tree_TE_dispatch_via_any_and_type_index.cpp):
 We need only to change to the "any_dispatch::method_typeid_hash" and "seal" the three functions for "value", "to_forth" and "to_lisp".
 
 And we are at the results:
@@ -78,7 +78,7 @@ And we are at the results:
 -------------------------------------------------------------------------------
 20_Tree_OO
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void/test\20_Tree_OO.cpp(63)
+D:\BitFactory\Blog\anypp/test\20_Tree_OO.cpp(63)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time
@@ -98,7 +98,7 @@ benchmark name                       samples       iterations    est run time
 -------------------------------------------------------------------------------
 21_Tree_TE_dispach_via_any_dispatch
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void/test\21_Tree_TE_dispatch_via_any.cpp(88)
+D:\BitFactory\Blog\anypp/test\21_Tree_TE_dispatch_via_any.cpp(88)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time
@@ -120,7 +120,7 @@ as_lisp                                        100           111     1.4208 ms
 -------------------------------------------------------------------------------
 21_Tree_TE_dispatch_via_any_and_type_index
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\virtual_void/test\21_Tree_TE_dispatch_via_any_and_type_index.cpp(88)
+D:\BitFactory\Blog\anypp/test\21_Tree_TE_dispatch_via_any_and_type_index.cpp(88)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time

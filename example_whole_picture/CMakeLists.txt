@@ -9,7 +9,7 @@ file(GLOB_RECURSE layer_0_architecture_hpp_files "./layer_0_architecture/*.hpp")
 add_library(layer_0_architecture ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
 set_target_properties(layer_0_architecture PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(layer_0_architecture 
-    virtual_void
+    anypp
 )
 target_compile_definitions(layer_0_architecture PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
 if (BUILD_SHARED_LIBS AND MSVC)
@@ -26,7 +26,7 @@ file(GLOB_RECURSE layer_1_core_hpp_files "./layer_1_core/*.hpp")
 add_library(layer_1_core ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
 set_target_properties(layer_1_core PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(layer_1_core 
-    virtual_void
+    anypp
     layer_0_architecture
 )
 target_compile_definitions(layer_1_core PRIVATE VV_DLL_MODE) # VV_DLL_MODE works also for  static builds!
@@ -41,7 +41,7 @@ target_include_directories(layer_1_core PUBLIC
 
 add_executable (example_1_core example_1_core.cpp)
 target_link_libraries(example_1_core 
-    virtual_void
+    anypp
     layer_0_architecture
     layer_1_core
     Catch2::Catch2WithMain

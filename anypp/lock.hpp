@@ -1,6 +1,6 @@
 #pragma once
 
-#include <virtual_void/shared_const.hpp>
+#include <anypp/shared_const.hpp>
 
 namespace virtual_void {
 

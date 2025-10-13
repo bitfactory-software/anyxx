@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <virtual_void/observer.hpp>
-#include <virtual_void/unique.hpp>
-#include <virtual_void/any_meta_function.hpp>
+#include <anypp/observer.hpp>
+#include <anypp/unique.hpp>
+#include <anypp/any_meta_function.hpp>
 
 using namespace Catch::Matchers;
 
