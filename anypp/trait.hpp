@@ -1,8 +1,42 @@
 #pragma once
 
-#include <anypp/anypp.hpp>
+#include <concepts>
+#include <stdexcept>
+#include <type_traits>
+#include <typeinfo>
 
 namespace anypp {
+
+class error : public std::runtime_error {
+  using std::runtime_error::runtime_error;
+};
+class type_mismatch_error : error {
+  using error::error;
+};
+
+using const_void = void const*;
+using mutable_void = void*;
+template <typename V>
+concept voidness =
+    (std::same_as<V, const_void> || std::same_as<V, mutable_void>);
+template <voidness Voidness>
+struct is_const_void_;
+template <>
+struct is_const_void_<void*> : std::false_type {};
+template <>
+struct is_const_void_<void const*> : std::true_type {};
+template <typename Voidness>
+concept is_const_void = is_const_void_<Voidness>::value;
+
+class meta_data;
+
+template <typename U>
+bool type_match(meta_data const& meta);
+
+template <typename U>
+void check_type_match(meta_data const& meta) {
+  if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
+}
 
 template <typename DATA>
 struct trait;
@@ -36,7 +70,7 @@ concept const_correct_call =
 
 template <typename CALL, typename ERASED_DATA, bool EXACT>
 concept const_correct_call_for_erased_data =
-    !is_weak_data<ERASED_DATA> && is_ereasurness<CALL> &&
+    !is_weak_data<ERASED_DATA> && voidness<CALL> &&
     is_erased_data<ERASED_DATA> &&
     ((EXACT && (is_const_void<CALL> == is_const_data<ERASED_DATA>)) ||
      (!EXACT &&

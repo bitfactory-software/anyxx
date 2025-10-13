@@ -10,7 +10,6 @@
 #include <vector>
 #include <anypp/observer.hpp>
 #include <anypp/unique.hpp>
-#include <anypp/anypp.hpp>
 
 namespace anypp {
 

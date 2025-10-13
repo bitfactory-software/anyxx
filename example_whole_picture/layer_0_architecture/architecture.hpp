@@ -6,7 +6,6 @@
 #include <anypp/unique.hpp>
 #include <anypp/any_base.hpp>
 #include <anypp/any_meta_class.hpp>
-#include <anypp/anypp.hpp>
 
 using namespace anypp;
 

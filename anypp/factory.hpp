@@ -5,7 +5,7 @@
 #include <map>
 #include <ranges>
 #include <vector>
-#include <anypp/anypp.hpp>
+#include <anypp/trait.hpp>
 
 namespace anypp {
 

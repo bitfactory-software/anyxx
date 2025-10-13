@@ -1,7 +1,6 @@
 #pragma once
 
 #include <anypp/any_base.hpp>
-#include <anypp/anypp.hpp>
 
 namespace anypp {
 
