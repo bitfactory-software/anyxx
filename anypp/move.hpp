@@ -3,7 +3,7 @@
 #include <anypp/move_erased_data.hpp>
 #include <anypp/query_v_table.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <is_any TO_ANYPP, is_erased_data VV_FROM>
 TO_ANYPP move_to(VV_FROM&& vv_from,
@@ -20,4 +20,4 @@ TO_ANYPP move_to(FROM_ANYPP&& from_interface) {
                                get_runtime(from_interface));
 }
 
-};  // namespace virtual_void
+};  // namespace anypp

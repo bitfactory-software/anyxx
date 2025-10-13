@@ -8,8 +8,8 @@
 #include <anypp/any_meta_class.hpp>
 #include <anypp/virtual_void.hpp>
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 #ifndef ARCHITECTURE_EXPORT
 #define ARCHITECTURE_EXPORT
@@ -43,8 +43,8 @@ inline size operator+(size l, size r) {
 };
 
 VV_ANY(surface, (VV_METHOD(void, write, point, char)))
-using mutable_observed_surface = surface<virtual_void::mutable_observer>;
-using unique_surface = surface<virtual_void::unique>;
+using mutable_observed_surface = surface<anypp::mutable_observer>;
+using unique_surface = surface<anypp::unique>;
 
 VV_ANY(shape, (VV_CONST_METHOD(void, draw, mutable_observed_surface)))
 

@@ -15,8 +15,8 @@ VV_ANY(has_meta_data,)
 
 
 TEST_CASE("unerase_cast") {
-  using namespace virtual_void;
-  using namespace virtual_void;
+  using namespace anypp;
+  using namespace anypp;
   using value = shared_const;
 
   using value_with_meta_data = has_meta_data<value>;

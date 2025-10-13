@@ -9,10 +9,10 @@
 #include <anypp/any_meta_class.hpp>
 #include <anypp/typed_any.hpp>
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
 
 namespace typed_any_test {
 struct x_t {

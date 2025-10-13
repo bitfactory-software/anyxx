@@ -3,7 +3,7 @@
 #include <anypp/any_base.hpp>
 #include <anypp/virtual_void.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <typename V, is_any ANY>
 struct typed_any : public ANY {
@@ -87,4 +87,4 @@ auto as(typed_any<FROM, ANY> source)
   }
 }
 
-}  // namespace virtual_void
+}  // namespace anypp

@@ -11,8 +11,8 @@
 using std::cout;
 using std::string;
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 namespace {
 
@@ -67,7 +67,7 @@ auto make_node(ARGS&&... args) {
 
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
-  using namespace virtual_void;
+  using namespace anypp;
 
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

@@ -13,10 +13,10 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
 
 TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";

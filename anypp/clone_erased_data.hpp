@@ -5,7 +5,7 @@
 #include <anypp/unique.hpp>
 #include <anypp/meta_data.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <is_erased_data TOFROM>
 struct can_copy_to;
@@ -25,4 +25,4 @@ static_assert(!cloneable_to<const_observer>);
 static_assert(cloneable_to<shared_const>);
 static_assert(cloneable_to<unique>);
 
-};  // namespace virtual_void
+};  // namespace anypp

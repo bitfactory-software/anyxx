@@ -13,8 +13,8 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 const double M_PI = 3.14;
 
@@ -107,8 +107,8 @@ void print_any_callable_shape_const_observer(const any_callable_shape<const_obse
 // should_not_compile(shape_double_base_error s) {}//should not compile!
 
 TEST_CASE("dynamic v_table const_observer") {
-  using namespace virtual_void;
-  using namespace virtual_void;
+  using namespace anypp;
+  using namespace anypp;
 
   circle c{12.3};
   square s{32};
@@ -157,9 +157,9 @@ TEST_CASE("dynamic v_table const_observer") {
 
   //    any_base< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  virtual_void::any_base<const_observer> base_shape =
+  anypp::any_base<const_observer> base_shape =
       any_callable_shape_onst_observer_circle1;
-  virtual_void::any_base<const_observer> base_shapeX =
+  anypp::any_base<const_observer> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));
@@ -173,14 +173,14 @@ TEST_CASE("dynamic v_table const_observer") {
   static_assert(
       std::derived_from<any_callable_shape<const_observer>, any_shape<const_observer>>);
   REQUIRE(
-      virtual_void::downcast_to<any_callable_shape<const_observer>>(
+      anypp::downcast_to<any_callable_shape<const_observer>>(
           base_shape));
   REQUIRE(
-      virtual_void::downcast_to<any_callable_shape<const_observer>>(
+      anypp::downcast_to<any_callable_shape<const_observer>>(
           any_callable_shape_onst_observer_circle2));
   {
     any_callable_shape<const_observer> upcasted_shape =
-        virtual_void::unchecked_downcast_to<
+        anypp::unchecked_downcast_to<
             any_callable_shape<const_observer>>(base_shape);
     print_any_callable_shape_const_observer(upcasted_shape);
   }
@@ -188,12 +188,12 @@ TEST_CASE("dynamic v_table const_observer") {
   any_shape<const_observer> shape_circle_base = any_callable_shape_onst_observer_circle1;
   {
     any_callable_shape<const_observer> any_shape_is_circle =
-        virtual_void::unchecked_downcast_to<
+        anypp::unchecked_downcast_to<
             any_callable_shape<const_observer>>(shape_circle_base);
     print_any_callable_shape_const_observer(any_shape_is_circle);
   }
   {
-    auto any_shape_is_circle = virtual_void::downcast_to<
+    auto any_shape_is_circle = anypp::downcast_to<
         any_callable_shape<const_observer>>(shape_circle_base);
     REQUIRE(any_shape_is_circle);
     print_any_callable_shape_const_observer(*any_shape_is_circle);

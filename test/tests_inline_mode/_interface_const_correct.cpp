@@ -12,7 +12,7 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
+using namespace anypp;
 
 namespace {
 template <typename T>
@@ -37,7 +37,7 @@ struct test_interface {
 };
 }  // namespace
 TEST_CASE("_interface_const_correct prototyping") {
-  using namespace virtual_void;
+  using namespace anypp;
   static_assert(!test_trait<void*>::is_const);
   static_assert(trait<const_observer>::is_const);
   test_interface<void const*> i1;
@@ -92,7 +92,7 @@ static_assert(!std::is_assignable_v<mutating_function const,
 
 
 TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
-  using namespace virtual_void;
+  using namespace anypp;
 
   {
     functor function_object;
@@ -151,7 +151,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
   }
 }
 
-TEST_CASE("_interface_const_correct virtual_void::shared_const") {
+TEST_CASE("_interface_const_correct anypp::shared_const") {
 
   {
     shared_const_function cf = std::make_shared<functor>();
@@ -223,9 +223,9 @@ static_assert(std::same_as<mutable_text_i_mutable::erased_data_t,
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);
-using void_const = trait<virtual_void::const_observer>::void_t;
+using void_const = trait<anypp::const_observer>::void_t;
 static_assert(is_const_void<void_const>);
-using void_mutable = trait<virtual_void::mutable_observer>::void_t;
+using void_mutable = trait<anypp::mutable_observer>::void_t;
 static_assert(!is_const_void<void_mutable>);
 static_assert(
     !(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
@@ -244,7 +244,7 @@ static_assert(can_call_set_text<mutable_text_i_mutable>);
 static_assert(can_call_set_text<mutable_text_i_mutable const>);
 
 TEST_CASE("_interface_const_correct const/mutable member function") {
-  using namespace virtual_void;
+  using namespace anypp;
 
   text_object a_text;
   const text_object a_text_const;

@@ -16,8 +16,8 @@
 using std::cout;
 using std::string;
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
                                  node_i)
@@ -89,12 +89,12 @@ auto __ =
 //-----------------------------------------------------------------------------
 }  // namespace _21_Tree_TE_interface_extension_method
 
-using namespace virtual_void;
+using namespace anypp;
 
 namespace _21_Tree_TE_interface_extension_method {
 
 TEST_CASE("21_Tree_TE_interface_extension_method") {
-  using namespace virtual_void;
+  using namespace anypp;
 
   auto expr = node::model{std::make_shared<Times>(
       std::make_shared<Integer>(2),

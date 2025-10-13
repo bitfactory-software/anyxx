@@ -10,9 +10,9 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
 
 namespace {
 using map_t = std::map<int, std::string>;

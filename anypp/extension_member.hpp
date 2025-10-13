@@ -6,7 +6,7 @@
 #include <vector>
 #include <anypp/value.hpp>
 
-namespace virtual_void::open_object {
+namespace anypp::open_object {
 
 #ifdef VV_DLL_MODE
 template <typename OBJECT_TYPE>
@@ -59,7 +59,7 @@ struct member {
   std::size_t index = members_count<OBJECT_TYPE>()++;
 };
 
-}  // namespace virtual_void::open_object
+}  // namespace anypp::open_object
 
 #ifdef VV_DLL_MODE
 
@@ -67,28 +67,28 @@ struct member {
   namespace ns_ {                                \
   struct c_;                                     \
   }                                              \
-  namespace virtual_void::open_object {          \
+  namespace anypp::open_object {          \
   template <>                                    \
   export_ std::size_t& members_count<ns_::c_>(); \
   }
 
 #define VV_MEMBERS_COUNT_IMPL(ns_, c_)                               \
   template <>                                                        \
-  std::size_t& virtual_void::open_object::members_count<ns_::c_>() { \
+  std::size_t& anypp::open_object::members_count<ns_::c_>() { \
     static std::size_t count = 0;                                    \
     return count;                                                    \
   }
 
 #define VV_MEMBER_FWD(export_, object_, member_, type_)                     \
-  export_ virtual_void::open_object::member<object_, type_>&                \
+  export_ anypp::open_object::member<object_, type_>&                \
       _inintialize_##member_();                                             \
-  inline const virtual_void::open_object::member<object_, type_>& member_ = \
+  inline const anypp::open_object::member<object_, type_>& member_ = \
       _inintialize_##member_();
 
 #define VV_MEMBER_IMPL(ns_, object_, member_, type_)                   \
-  virtual_void::open_object::member<object_, type_>&                   \
+  anypp::open_object::member<object_, type_>&                   \
       ns_::_inintialize_##member_() {                                  \
-    static virtual_void::open_object::member<object_, type_> instance; \
+    static anypp::open_object::member<object_, type_> instance; \
     return instance;                                                   \
   }
 

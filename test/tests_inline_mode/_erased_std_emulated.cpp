@@ -12,8 +12,8 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 namespace {
 VV_ANY(string_to_string,
@@ -25,7 +25,7 @@ VV_ANY(string_to_string_mutable,
 
 }  // namespace test_ns
 
-using namespace virtual_void;
+using namespace anypp;
 
 namespace {
 struct functor_t {

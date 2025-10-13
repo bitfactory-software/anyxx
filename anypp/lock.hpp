@@ -2,7 +2,7 @@
 
 #include <anypp/shared_const.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <is_any FROM_ANYPP>
   requires std::same_as<typename FROM_ANYPP::erased_data_t, weak>
@@ -15,4 +15,4 @@ auto lock(FROM_ANYPP const& from_interface) {
   return return_t{};
 }
 
-};  // namespace virtual_void
+};  // namespace anypp

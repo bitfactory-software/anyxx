@@ -4,7 +4,7 @@ using namespace Catch::Matchers;
 
 #include <anypp/hook.hpp>
 
-using namespace virtual_void;
+using namespace anypp;
 
 TEST_CASE("hook 1") {
   hook<std::string(std::string const&)> the_hook;

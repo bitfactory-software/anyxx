@@ -11,8 +11,8 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 struct X {
   std::string s_;

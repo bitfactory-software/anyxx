@@ -14,10 +14,10 @@
 using std::cout;
 using std::string;
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
@@ -96,10 +96,10 @@ VV_REGISTER_V_TABLE_INSTANCE(Times, value2_i);
 VV_REGISTER_V_TABLE_INSTANCE(Integer, value2_i);
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
-  using namespace virtual_void;
+  using namespace anypp;
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
-  auto& type_info = virtual_void::get_meta_data<Times>();
+  auto& type_info = anypp::get_meta_data<Times>();
   REQUIRE(type_info.get_i_table().size() == 2u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

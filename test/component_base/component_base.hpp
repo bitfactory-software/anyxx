@@ -6,8 +6,8 @@
 #include <anypp/any_meta_class.hpp>
 #include <anypp/virtual_void.hpp>
 
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
 
 #ifndef VV_DLL_MODE
 #pragma message("ERROR! usage of component_base needs #define VV_DLL_MODE")
@@ -44,12 +44,12 @@ VV_ANY(get_value_i, (VV_CONST_METHOD(double, get_value)))
 VV_ANY_(set_value_i, get_value_i, (VV_METHOD(void, set_value, double)))
 
 COMPONENT_BASE_EXPORT
-to_string_i<virtual_void::const_observer> get_to_string_i_co();
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::shared_const>
+to_string_i<anypp::const_observer> get_to_string_i_co();
+COMPONENT_BASE_EXPORT to_string_i<anypp::shared_const>
 get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<virtual_void::unique> get_to_string_i_u(
+COMPONENT_BASE_EXPORT to_string_i<anypp::unique> get_to_string_i_u(
     double v);
-COMPONENT_BASE_EXPORT virtual_void::shared_const sc_X(double v);
-COMPONENT_BASE_EXPORT virtual_void::unique u_X(double v);
+COMPONENT_BASE_EXPORT anypp::shared_const sc_X(double v);
+COMPONENT_BASE_EXPORT anypp::unique u_X(double v);
 
 }  // namespace test::component_base

@@ -12,7 +12,7 @@
 #include <anypp/unique.hpp>
 #include <anypp/virtual_void.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 class meta_data;
 struct any_base_v_table;
@@ -172,33 +172,33 @@ auto bind_v_table_to_meta_data() {
   return v_table;
 }
 
-}  // namespace virtual_void
+}  // namespace anypp
 
-namespace virtual_void {
+namespace anypp {
 template <typename U>
 bool type_match(meta_data const& meta_data) {
   return &meta_data.get_type_info() == &typeid_of<std::decay_t<U>>();
 }
-}  // namespace virtual_void
+}  // namespace anypp
 
 #ifdef VV_DLL_MODE
 
 #define VV_RUNTIME_FWD(export_, ...)               \
   template <>                                      \
   export_ const std::type_info&                    \
-  virtual_void::typeid_of<__VA_ARGS__>(); \
+  anypp::typeid_of<__VA_ARGS__>(); \
   template <>                                      \
-  export_ virtual_void::meta_data&        \
-  virtual_void::get_meta_data<__VA_ARGS__>();
+  export_ anypp::meta_data&        \
+  anypp::get_meta_data<__VA_ARGS__>();
 
 #define VV_RUNTIME_INSTANCE(...)                                          \
   template <>                                                             \
-  const std::type_info& virtual_void::typeid_of<__VA_ARGS__>() { \
+  const std::type_info& anypp::typeid_of<__VA_ARGS__>() { \
     return typeid(__VA_ARGS__);                                           \
   }                                                                       \
   template <>                                                             \
-  virtual_void::meta_data&                                       \
-  virtual_void::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
+  anypp::meta_data&                                       \
+  anypp::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
     return runtime_implementation<__VA_ARGS__>();                         \
   }
 

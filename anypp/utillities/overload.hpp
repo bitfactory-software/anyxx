@@ -1,10 +1,10 @@
 #pragma once
 
-namespace virtual_void {
+namespace anypp {
 template <typename... Ts>
 struct overload : Ts... {
   using Ts::operator()...;
 };
 template <class... Ts>
 overload(Ts...) -> overload<Ts...>;
-}  // namespace virtual_void
+}  // namespace anypp

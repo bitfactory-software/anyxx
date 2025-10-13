@@ -5,7 +5,7 @@
 #include <ranges>
 #include <vector>
 
-namespace virtual_void {
+namespace anypp {
 
 template <typename R, typename... ARGS>
 class hook;
@@ -74,4 +74,4 @@ class hook<R(ARGS...)> {
   std::vector<entry> callees_;
 };
 
-}  // namespace virtual_void
+}  // namespace anypp

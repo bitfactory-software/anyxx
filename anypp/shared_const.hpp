@@ -3,7 +3,7 @@
 #include <memory>
 #include <anypp/trait.hpp>
 
-namespace virtual_void {
+namespace anypp {
 using shared_const = std::shared_ptr<void const>;
 using weak = std::weak_ptr<void const>;
 
@@ -50,4 +50,4 @@ struct trait<weak> {
 };
 
 static_assert(is_erased_data<shared_const>);
-}  // namespace virtual_void
+}  // namespace anypp

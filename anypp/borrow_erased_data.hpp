@@ -4,7 +4,7 @@
 #include <anypp/shared_const.hpp>
 #include <anypp/unique.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <is_erased_data TO, is_erased_data FROM>
 struct borrow_trait;
@@ -63,4 +63,4 @@ static_assert(!borrowable_from<unique, mutable_observer>);
 static_assert(!borrowable_from<unique, unique>);
 static_assert(!borrowable_from<unique, shared_const>);
 
-};  // namespace virtual_void
+};  // namespace anypp

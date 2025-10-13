@@ -9,7 +9,7 @@
 #include <anypp/trait.hpp>
 #include <anypp/meta_data.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <is_erased_data ERASED_DATA>
 class any_base;
@@ -205,7 +205,7 @@ template <typename V_TABLE, typename CONCRETE>
 V_TABLE* v_table_instance_implementaion() {
   static V_TABLE v_table{std::in_place_type<CONCRETE>};
   static auto __ =
-      virtual_void::get_meta_data<CONCRETE>().register_v_table(
+      anypp::get_meta_data<CONCRETE>().register_v_table(
           &v_table);
   return &v_table;
 }
@@ -227,4 +227,4 @@ struct extension_method_holder<true, ANY> {
   extension_method_table_t* extension_method_table = nullptr;
 };
 
-}  // namespace virtual_void
+}  // namespace anypp

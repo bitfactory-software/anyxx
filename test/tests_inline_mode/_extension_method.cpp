@@ -12,10 +12,10 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
 
 
 VV_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)

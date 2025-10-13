@@ -3,7 +3,7 @@
 #include <utility>
 #include <anypp/trait.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 struct value_v_table {
   using destroy_fn = void(void*) noexcept;
@@ -106,11 +106,11 @@ struct trait<value> {
 
   template <typename CONSTRUCTED_WITH>
   static auto erase(CONSTRUCTED_WITH&& v) {
-    return virtual_void::make_value<std::decay_t<CONSTRUCTED_WITH>>(
+    return anypp::make_value<std::decay_t<CONSTRUCTED_WITH>>(
         std::forward<CONSTRUCTED_WITH>(v));
   }
 };
 
 static_assert(is_erased_data<value>);
 
-}  // namespace virtual_void
+}  // namespace anypp

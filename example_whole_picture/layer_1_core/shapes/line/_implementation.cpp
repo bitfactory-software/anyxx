@@ -6,9 +6,7 @@ using namespace whole_picture;
 using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
 
 VV_RUNTIME_INSTANCE(line)
 VV_V_TABLE_INSTANCE(shapes::line, whole_picture::architecture, shape);

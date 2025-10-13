@@ -11,7 +11,7 @@
 
 using namespace Catch::Matchers;
 
-using namespace virtual_void;
+using namespace anypp;
 
 namespace {
 struct X {

@@ -4,10 +4,10 @@
 #include <anypp/query_v_table.hpp>
 #include <anypp/meta_data.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <is_any TO_ANYPP, is_erased_data VV_FROM>
-std::expected<TO_ANYPP, virtual_void::cast_error> clone_to(
+std::expected<TO_ANYPP, anypp::cast_error> clone_to(
     VV_FROM const& vv_from, const meta_data& meta_data) {
   using vv_to_t = typename TO_ANYPP::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
@@ -22,4 +22,4 @@ auto clone_to(const FROM_ANYPP& from_interface) {
                                 get_runtime(from_interface));
 }
 
-};  // namespace virtual_void
+};  // namespace anypp

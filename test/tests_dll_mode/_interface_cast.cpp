@@ -10,9 +10,9 @@
 
 #include "./component_base/component_base.hpp"
 
-using namespace virtual_void;
-using namespace virtual_void;
-using namespace virtual_void;
+using namespace anypp;
+using namespace anypp;
+using namespace anypp;
 
 using namespace test::component_base;
 

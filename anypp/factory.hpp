@@ -7,7 +7,7 @@
 #include <vector>
 #include <anypp/virtual_void.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 class unkonwn_factory_key_error : error {
   using error::error;
@@ -30,4 +30,4 @@ class factory {
   };
 };
 
-}  // namespace virtual_void
+}  // namespace anypp

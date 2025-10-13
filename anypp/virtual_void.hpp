@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <typeinfo>
 
-namespace virtual_void {
+namespace anypp {
 
 template <typename>
 struct self_pointer;
@@ -111,4 +111,4 @@ void check_type_match(meta_data const& meta) {
   if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
 }
 
-}  // namespace virtual_void
+}  // namespace anypp

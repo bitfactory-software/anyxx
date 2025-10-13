@@ -8,7 +8,7 @@ VV_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 
 namespace whole_picture::core::shapes {
 
-struct picture : virtual_void::open_object::members<picture> {
+struct picture : anypp::open_object::members<picture> {
   picture(architecture::point top_left_, architecture::picture content_)
       : top_left(top_left_), content(content_) {}
   architecture::point top_left;

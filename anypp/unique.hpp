@@ -3,7 +3,7 @@
 #include <memory>
 #include <anypp/trait.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <typename T>
 auto erased_delete() {
@@ -49,4 +49,4 @@ struct trait<unique> {
 };
 
 static_assert(is_erased_data<unique>);
-}  // namespace virtual_void
+}  // namespace anypp

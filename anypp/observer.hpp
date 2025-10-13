@@ -2,7 +2,7 @@
 
 #include <anypp/trait.hpp>
 
-namespace virtual_void {
+namespace anypp {
 
 template <voidness VOIDNESS>
 using observer = VOIDNESS;
@@ -50,4 +50,4 @@ static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<const_observer>);
 
-}  // namespace virtual_void
+}  // namespace anypp

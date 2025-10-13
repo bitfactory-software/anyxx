@@ -9,8 +9,8 @@ using namespace Catch::Matchers;
 
 #include <anypp/extension_member.hpp>
 
-using namespace virtual_void;
-using namespace virtual_void::open_object;
+using namespace anypp;
+using namespace anypp::open_object;
 
 struct test_object;
 

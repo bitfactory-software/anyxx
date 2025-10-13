@@ -151,18 +151,18 @@
   name = [](void const_* _vp __VA_OPT__(                                   \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {       \
     return v_table_map{}.name(                                             \
-        virtual_void::unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, ) \
+        anypp::unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, ) \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   };
 
 #define _detail_ANYPP_METHOD(type, name, name_ext, exact_const, const_,  \
                                  ...)                                        \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
-    requires(::virtual_void::const_correct_call_for_erased_data<             \
+    requires(::anypp::const_correct_call_for_erased_data<             \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
-        virtual_void::get_void_data_ptr(base_t::erased_data_)                \
+        anypp::get_void_data_ptr(base_t::erased_data_)                \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
@@ -201,13 +201,13 @@
                                                                                \
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
       : BASE##_v_table,                                                        \
-        virtual_void::extension_method_holder<                                 \
-            virtual_void::has_extension_methods<n>, n> {                       \
+        anypp::extension_method_holder<                                 \
+            anypp::has_extension_methods<n>, n> {                       \
     using v_table_base_t = BASE##_v_table;                                     \
     using v_table_t = n##_v_table;                                             \
     using own_extension_method_holder_t =                                      \
-        virtual_void::extension_method_holder<                                 \
-            virtual_void::has_extension_methods<n>, n>;                        \
+        anypp::extension_method_holder<                                 \
+            anypp::has_extension_methods<n>, n>;                        \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -218,7 +218,7 @@
     _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                \
                                                                                \
     static constexpr bool extension_methods_enabled =                          \
-        virtual_void::has_extension_methods<n>;                                \
+        anypp::has_extension_methods<n>;                                \
                                                                                \
     template <typename CONCRETE>                                               \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
@@ -230,16 +230,16 @@
                                                                                \
       if constexpr (extension_methods_enabled) {                               \
         own_extension_method_holder_t::extension_method_table =                \
-            ::virtual_void::extension_method_table_instance<n##_v_table,       \
+            ::anypp::extension_method_table_instance<n##_v_table,       \
                                                             CONCRETE>();       \
       }                                                                        \
                                                                                \
-      ::virtual_void::set_is_derived_from<v_table_t>(this);                    \
+      ::anypp::set_is_derived_from<v_table_t>(this);                    \
     };                                                                         \
                                                                                \
     template <typename CONCRETE>                                               \
     static auto imlpementation() {                                             \
-      return virtual_void::v_table_instance_implementaion<v_table_t,           \
+      return anypp::v_table_instance_implementaion<v_table_t,           \
                                                           CONCRETE>();         \
     }                                                                          \
   };                                                                           \
@@ -255,7 +255,7 @@
                                                                                \
     template <typename CONCRETE>                                               \
     static auto v_table_imlpementation() {                                     \
-      static_assert(!virtual_void::is_any<CONCRETE>);                          \
+      static_assert(!anypp::is_any<CONCRETE>);                          \
       return v_table_t::template imlpementation<CONCRETE>();                   \
     }                                                                          \
                                                                                \
@@ -266,21 +266,21 @@
         : base_t(std::move(virtual_void), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
-      requires virtual_void::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA> \
+      requires anypp::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA> \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = v_table_t::template imlpementation<                           \
-          virtual_void::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();            \
+          anypp::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();            \
     }                                                                          \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
       requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&      \
-               virtual_void::borrowable_from<erased_data_t,                    \
+               anypp::borrowable_from<erased_data_t,                    \
                                              typename OTHER::erased_data_t>)   \
         : base_t(other) {}                                                     \
-    template <virtual_void::is_any OTHER>                                      \
+    template <anypp::is_any OTHER>                                      \
     n(OTHER&& other) noexcept                                                  \
       requires(std::derived_from<OTHER::v_table_t, v_table_t> &&               \
-               virtual_void::moveable_from<erased_data_t,                      \
+               anypp::moveable_from<erased_data_t,                      \
                                            typename OTHER::erased_data_t>)     \
         : base_t(std::move(other)) {}                                          \
                                                                                \
@@ -299,12 +299,12 @@
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <virtual_void::is_erased_data OTHER>                              \
-    friend class virtual_void::any_base;                                       \
-    template <virtual_void::is_any TO, virtual_void::is_any FROM>              \
-    friend TO virtual_void::unchecked_downcast_to(FROM from)                   \
+    template <anypp::is_erased_data OTHER>                              \
+    friend class anypp::any_base;                                       \
+    template <anypp::is_any TO, anypp::is_any FROM>              \
+    friend TO anypp::unchecked_downcast_to(FROM from)                   \
       requires(std::derived_from<TO, FROM>);                                   \
-    template <virtual_void::is_erased_data OTHER>                              \
+    template <anypp::is_erased_data OTHER>                              \
     using type_for =                                                           \
         n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;             \
   };
@@ -313,10 +313,10 @@
 
 #define VV_ANY_(n, BASE, l) VV_ANY_TEMPLATE_((), n, BASE, l)
 
-#define VV_ANY(n, ...) VV_ANY_(n, ::virtual_void::any_base, __VA_ARGS__)
+#define VV_ANY(n, ...) VV_ANY_(n, ::anypp::any_base, __VA_ARGS__)
 
 #define VV_ANY_TEMPLATE(t, n, l) \
-  VV_ANY_TEMPLATE_(t, n, ::virtual_void::any_base, l)
+  VV_ANY_TEMPLATE_(t, n, ::anypp::any_base, l)
 
 #define VV_METHOD_(...) (__VA_ARGS__)
 
@@ -353,7 +353,7 @@
 #define VV_REGISTER_V_TABLE_INSTANCE(class_, interface_)                       \
   namespace {                                                                  \
   static auto __ =                                                             \
-      virtual_void::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
+      anypp::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
   }
 
 #ifdef VV_DLL_MODE
@@ -361,7 +361,7 @@
 #define VV_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
                                 interface_)                                  \
   VV_ANY_FORWARD(interface_namespace_, interface_)                           \
-  namespace virtual_void {                                                   \
+  namespace anypp {                                                   \
   template <>                                                                \
   export_ interface_namespace_::interface_##_v_table*                        \
   v_table_instance_implementaion<interface_namespace_::interface_##_v_table, \
@@ -371,7 +371,7 @@
 #define VV_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                         \
   interface_namespace_::interface_##_v_table*                         \
-  virtual_void::v_table_instance_implementaion<                       \
+  anypp::v_table_instance_implementaion<                       \
       interface_namespace_::interface_##_v_table, class_>() {         \
     static interface_namespace_::interface_##_v_table v_table{        \
         std::in_place_type<class_>};                                  \
@@ -400,7 +400,7 @@
     };                                                                \
   };                                                                  \
   namespace {                                                         \
-  static auto __ = virtual_void::bind_v_table_to_meta_data<           \
+  static auto __ = anypp::bind_v_table_to_meta_data<           \
       interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
   }
 
@@ -408,7 +408,7 @@
                                          ...)                                 \
   VV_ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)            \
                                                                               \
-  namespace virtual_void {                                                    \
+  namespace anypp {                                                    \
   template <>                                                                 \
   constexpr bool has_extension_methods<interface_namespace::interface_name> = \
       true;                                                                   \

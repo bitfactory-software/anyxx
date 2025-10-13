@@ -1,6 +1,6 @@
 #pragma once
 
-namespace virtual_void {
+namespace anypp {
 template <typename... ARGS>
 struct type_list {
   // see
@@ -13,4 +13,4 @@ using nth_t = typename std::tuple_element<N, std::tuple<Ts...>>::type;
 
 template <typename... Ts>
 using first_t = nth_t<0, Ts...>;
-}  // namespace virtual_void
+}  // namespace anypp

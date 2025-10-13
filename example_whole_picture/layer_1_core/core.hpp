@@ -18,7 +18,7 @@
 
 namespace whole_picture::core {
 
-using shape = architecture::shape<virtual_void::shared_const>;
+using shape = architecture::shape<anypp::shared_const>;
 
 CORE_EXPORT std::string hello();
 
