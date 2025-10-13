@@ -1,7 +1,5 @@
 #pragma once
 
-#undef interface
-
 #include <anypp/any_base.hpp>
 #include <anypp/meta_data.hpp>
 

@@ -4,8 +4,6 @@
 #include <anypp/meta_data.hpp>
 #include <anypp/utillities/unnamed__.hpp>
 
-#undef interface
-
 //
 // for Microsoft C++, you must enable the C-Preprocessor with this flag:
 // /Zc:preprocessor (see CMakeLists.txt for example)

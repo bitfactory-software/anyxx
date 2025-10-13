@@ -5,8 +5,6 @@
 #include <type_traits>
 #include <typeinfo>
 
-#undef interface
-
 namespace virtual_void {
 
 template <typename>

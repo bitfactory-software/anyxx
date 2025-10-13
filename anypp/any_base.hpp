@@ -9,8 +9,6 @@
 #include <anypp/trait.hpp>
 #include <anypp/meta_data.hpp>
 
-#undef interface
-
 namespace virtual_void {
 
 template <is_erased_data ERASED_DATA>

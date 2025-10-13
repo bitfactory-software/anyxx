@@ -1,7 +1,5 @@
 #pragma once
 
-#undef interface
-
 #include <anypp/borrow_erased_data.hpp>
 #include <anypp/query_v_table.hpp>
 
