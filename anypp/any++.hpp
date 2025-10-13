@@ -582,25 +582,209 @@ bool type_match(meta_data const& meta_data) {
 }
 
 // --------------------------------------------------------------------------------
+// borrow erased data
 
-//./anypp/anypp/clone_erased_data.hpp
-//./anypp/anypp/utillities\unnamed__.hpp
-//./anypp/anypp/utillities\type_list.hpp
-//./anypp/anypp/borrow_erased_data.hpp
-//./anypp/anypp/utillities\overload.hpp
-//./anypp/anypp/move_erased_data.hpp
+template <is_erased_data TO, is_erased_data FROM>
+struct borrow_trait;
+
+template <typename TO, typename FROM>
+concept borrowable_from =
+    is_erased_data<FROM> && is_erased_data<TO> && requires(FROM f) {
+      { borrow_trait<TO, FROM>{}(f) } -> std::same_as<TO>;
+    };
+
+template <is_erased_data FROM>
+  requires(!is_const_data<FROM> && !is_weak_data<FROM>)
+struct borrow_trait<mutable_observer, FROM> {
+  auto operator()(const auto& from) {
+    return mutable_observer{get_void_data_ptr(from)};
+  }
+};
+template <is_erased_data FROM>
+  requires(!is_weak_data<FROM>)
+struct borrow_trait<const_observer, FROM> {
+  auto operator()(const auto& from) {
+    return const_observer{get_void_data_ptr(from)};
+  }
+};
+template <>
+struct borrow_trait<shared_const, shared_const> {
+  auto operator()(const auto& from) { return from; }
+};
+template <>
+struct borrow_trait<weak, weak> {
+  auto operator()(const auto& from) { return from; }
+};
+template <>
+struct borrow_trait<weak, shared_const> {
+  auto operator()(const auto& from) { return weak{from}; }
+};
+
+template <typename TO, typename FROM>
+  requires borrowable_from<TO, FROM>
+TO borrow_as(FROM const& from) {
+  return borrow_trait<TO, FROM>{}(from);
+}
+
+static_assert(!borrowable_from<mutable_observer, const_observer>);
+static_assert(borrowable_from<mutable_observer, mutable_observer>);
+static_assert(borrowable_from<mutable_observer, unique>);
+static_assert(!borrowable_from<mutable_observer, shared_const>);
+static_assert(!borrowable_from<mutable_observer, weak>);
+static_assert(borrowable_from<mutable_observer, value>);
+
+static_assert(borrowable_from<const_observer, const_observer>);
+static_assert(borrowable_from<const_observer, mutable_observer>);
+static_assert(borrowable_from<const_observer, unique>);
+static_assert(borrowable_from<const_observer, shared_const>);
+static_assert(!borrowable_from<const_observer, weak>);
+static_assert(borrowable_from<const_observer, value>);
+
+static_assert(!borrowable_from<shared_const, const_observer>);
+static_assert(!borrowable_from<shared_const, mutable_observer>);
+static_assert(!borrowable_from<shared_const, unique>);
+static_assert(borrowable_from<shared_const, shared_const>);
+static_assert(!borrowable_from<shared_const, weak>);
+static_assert(!borrowable_from<shared_const, value>);
+
+static_assert(!borrowable_from<weak, const_observer>);
+static_assert(!borrowable_from<weak, mutable_observer>);
+static_assert(!borrowable_from<weak, unique>);
+static_assert(borrowable_from<weak, shared_const>);
+static_assert(borrowable_from<weak, weak>);
+static_assert(!borrowable_from<weak, value>);
+
+static_assert(!borrowable_from<unique, const_observer>);
+static_assert(!borrowable_from<unique, mutable_observer>);
+static_assert(!borrowable_from<unique, unique>);
+static_assert(!borrowable_from<unique, shared_const>);
+static_assert(!borrowable_from<unique, weak>);
+static_assert(!borrowable_from<unique, value>);
+
+static_assert(!borrowable_from<value, const_observer>);
+static_assert(!borrowable_from<value, mutable_observer>);
+static_assert(!borrowable_from<value, unique>);
+static_assert(!borrowable_from<value, shared_const>);
+static_assert(!borrowable_from<value, weak>);
+static_assert(!borrowable_from<value, value>);
+
+// --------------------------------------------------------------------------------
+// clone erased data
+
+template <is_erased_data TOFROM>
+struct can_copy_to;
+
+template <typename TO>
+concept cloneable_to =
+    is_erased_data<TO> && trait<TO>::is_owner;
+
+template <is_erased_data TO, is_erased_data FROM>
+  requires cloneable_to<TO>
+TO clone_to(FROM const& from, auto const& meta_data) {
+    return meta_data.copy_construct(get_void_data_ptr(from));
+}
+
+static_assert(!cloneable_to<mutable_observer>);
+static_assert(!cloneable_to<const_observer>);
+static_assert(cloneable_to<shared_const>);
+static_assert(!cloneable_to<weak>);
+static_assert(cloneable_to<unique>);
+static_assert(cloneable_to<value>);
+
+// --------------------------------------------------------------------------------
+// move erased data
+
+template <is_erased_data TO, is_erased_data FROM>
+bool constexpr can_move_to_from = false;
+
+template <typename TO, typename FROM>
+concept moveable_from =
+    is_erased_data<FROM> && is_erased_data<TO> && can_move_to_from<TO, FROM>;
+
+template <is_erased_data X>
+bool constexpr can_move_to_from<X, X> = true;
+
+template <>
+bool constexpr can_move_to_from<shared_const, unique> = true;
+
+template <>
+bool constexpr can_move_to_from<weak, shared_const> = true;
+
+template <voidness TO, voidness FROM>
+  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>, is_weak_data<FROM>>
+bool constexpr can_move_to_from<TO, FROM> = true;
+
+template <typename TO, typename FROM>
+  requires moveable_from<TO, std::decay_t<FROM>>
+TO move_to(FROM&& from) {
+  return std::move(from);
+}
+
+static_assert(!moveable_from<mutable_observer, const_observer>);
+static_assert(moveable_from<mutable_observer, mutable_observer>);
+static_assert(!moveable_from<mutable_observer, unique>);
+static_assert(!moveable_from<mutable_observer, shared_const>);
+static_assert(!moveable_from<mutable_observer, weak>);
+static_assert(!moveable_from<mutable_observer, value>);
+
+static_assert(moveable_from<const_observer, const_observer>);
+static_assert(moveable_from<const_observer, mutable_observer>);
+static_assert(!moveable_from<const_observer, unique>);
+static_assert(!moveable_from<const_observer, shared_const>);
+static_assert(!moveable_from<const_observer, weak>);
+static_assert(!moveable_from<const_observer, value>);
+
+static_assert(!moveable_from<shared_const, const_observer>);
+static_assert(!moveable_from<shared_const, mutable_observer>);
+static_assert(moveable_from<shared_const, unique>);
+static_assert(moveable_from<shared_const, shared_const>);
+static_assert(!moveable_from<shared_const, weak>);
+static_assert(!moveable_from<shared_const, value>);
+
+static_assert(!moveable_from<weak, const_observer>);
+static_assert(!moveable_from<weak, mutable_observer>);
+static_assert(!moveable_from<weak, unique>);
+static_assert(moveable_from<weak, shared_const>);
+static_assert(moveable_from<weak, weak>);
+static_assert(!moveable_from<weak, value>);
+
+static_assert(!moveable_from<unique, const_observer>);
+static_assert(!moveable_from<unique, mutable_observer>);
+static_assert(moveable_from<unique, unique>);
+static_assert(!moveable_from<unique, shared_const>);
+static_assert(!moveable_from<unique, weak>);
+static_assert(!moveable_from<unique, value>);
+
+static_assert(!moveable_from<value, const_observer>);
+static_assert(!moveable_from<value, mutable_observer>);
+static_assert(!moveable_from<value, unique>);
+static_assert(!moveable_from<value, shared_const>);
+static_assert(!moveable_from<value, weak>);
+static_assert(moveable_from<value, value>);
+
+// --------------------------------------------------------------------------------
+// any base
+
+
+// --------------------------------------------------------------------------------
+// 
+
 //./anypp/anypp/any_base.hpp
+//./anypp/anypp/typed_any.hpp
 //./anypp/anypp/query_v_table.hpp
+
 //./anypp/anypp/borrow.hpp
 //./anypp/anypp/clone.hpp
-//./anypp/anypp/typed_any.hpp
-//./anypp/anypp/any_meta_class.hpp
-//./anypp/anypp/extension_member.hpp
-//./anypp/anypp/hook.hpp
-//./anypp/anypp/extension_method.hpp
-//./anypp/anypp/factory.hpp
 //./anypp/anypp/lock.hpp
 //./anypp/anypp/move.hpp
+
+//./anypp/anypp/hook.hpp
+//./anypp/anypp/factory.hpp
+//./anypp/anypp/extension_member.hpp
+//./anypp/anypp/extension_method.hpp
+
+//./anypp/anypp/utillities\unnamed__.hpp
+//./anypp/anypp/any_meta_class.hpp
 
 }
 
