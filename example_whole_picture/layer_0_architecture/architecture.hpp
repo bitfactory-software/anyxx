@@ -6,9 +6,8 @@
 #include <anypp/unique.hpp>
 #include <anypp/any_base.hpp>
 #include <anypp/any_meta_class.hpp>
-#include <anypp/virtual_void.hpp>
+#include <anypp/anypp.hpp>
 
-using namespace anypp;
 using namespace anypp;
 
 #ifndef ARCHITECTURE_EXPORT

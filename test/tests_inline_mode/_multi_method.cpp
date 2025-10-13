@@ -9,9 +9,6 @@
 using namespace Catch::Matchers;
 
 using namespace anypp;
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
 
 namespace {}
 

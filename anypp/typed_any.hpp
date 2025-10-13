@@ -1,7 +1,7 @@
 #pragma once
 
 #include <anypp/any_base.hpp>
-#include <anypp/virtual_void.hpp>
+#include <anypp/anypp.hpp>
 
 namespace anypp {
 

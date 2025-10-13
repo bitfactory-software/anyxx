@@ -1,6 +1,6 @@
 #pragma once
 
-#include <anypp/virtual_void.hpp>
+#include <anypp/anypp.hpp>
 
 namespace anypp {
 
