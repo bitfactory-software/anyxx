@@ -1,23 +1,23 @@
 #pragma once
 
+#include <cassert>
 #include <concepts>
-#include <stdexcept>
-#include <type_traits>
-#include <typeinfo>
-#include <memory>
 #include <expected>
+#include <functional>
 #include <map>
+#include <memory>
 #include <optional>
 #include <ranges>
+#include <stdexcept>
+#include <string>
+#include <type_traits>
 #include <typeindex>
+#include <typeinfo>
+#include <utility>
 #include <variant>
 #include <vector>
-#include <utility>
-#include <cassert>
-#include <functional>
 
-namespace anypp 
-{
+namespace anypp {
 
 class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
@@ -196,8 +196,8 @@ struct observer_trait {
 };
 
 template <>
-struct trait<const_observer>
-    : observer_trait<const_observer, const_observer> {};
+struct trait<const_observer> : observer_trait<const_observer, const_observer> {
+};
 template <>
 struct trait<mutable_observer>
     : observer_trait<mutable_observer, mutable_observer> {};
@@ -474,8 +474,7 @@ using extension_method_table_t = std::vector<extension_method_table_entry_t>;
 void insert_function(extension_method_table_t* v_table, std::size_t index,
                      auto fp) {
   if (v_table->size() <= index) v_table->resize(index + 1);
-  v_table->at(index) =
-      reinterpret_cast<extension_method_table_function_t>(fp);
+  v_table->at(index) = reinterpret_cast<extension_method_table_function_t>(fp);
 }
 inline extension_method_table_function_t get_function(
     extension_method_table_t* v_table, std::size_t index) {
@@ -678,13 +677,12 @@ template <is_erased_data TOFROM>
 struct can_copy_to;
 
 template <typename TO>
-concept cloneable_to =
-    is_erased_data<TO> && trait<TO>::is_owner;
+concept cloneable_to = is_erased_data<TO> && trait<TO>::is_owner;
 
 template <is_erased_data TO, is_erased_data FROM>
   requires cloneable_to<TO>
 TO clone_to(FROM const& from, auto const& meta_data) {
-    return meta_data.copy_construct(get_void_data_ptr(from));
+  return meta_data.copy_construct(get_void_data_ptr(from));
 }
 
 static_assert(!cloneable_to<mutable_observer>);
@@ -714,7 +712,8 @@ template <>
 bool constexpr can_move_to_from<weak, shared_const> = true;
 
 template <voidness TO, voidness FROM>
-  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>, is_weak_data<FROM>>
+  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>,
+                              is_weak_data<FROM>>
 bool constexpr can_move_to_from<TO, FROM> = true;
 
 template <typename TO, typename FROM>
@@ -793,7 +792,7 @@ concept is_typed_any = is_any<E> && requires(E e) {
 template <typename CONSTRUCTED_WITH, typename ERASED_DATA>
 concept constructibile_for =
     erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
-                                    any_base<ERASED_DATA>> &&
+                              any_base<ERASED_DATA>> &&
     !is_any<CONSTRUCTED_WITH> &&
     !is_typed_any<std::remove_cvref_t<CONSTRUCTED_WITH>>;
 
@@ -824,8 +823,7 @@ class any_base {
   template <is_any OTHER>
   any_base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
-             borrowable_from<erased_data_t,
-                                   typename OTHER::erased_data_t>)
+             borrowable_from<erased_data_t, typename OTHER::erased_data_t>)
       : erased_data_(borrow_as<ERASED_DATA>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
@@ -843,7 +841,8 @@ class any_base {
     return *this;
   }
   any_base(const any_base&) = default;
-  // any_base(any_base&) requires(std::is_copy_constructible_v<any_base>) = default;
+  // any_base(any_base&) requires(std::is_copy_constructible_v<any_base>) =
+  // default;
   any_base(any_base&& rhs) noexcept
       : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
   any_base& operator=(any_base const& other) = default;
@@ -961,9 +960,7 @@ V_TABLE* v_table_instance_implementaion();
 template <typename V_TABLE, typename CONCRETE>
 V_TABLE* v_table_instance_implementaion() {
   static V_TABLE v_table{std::in_place_type<CONCRETE>};
-  static auto __ =
-      anypp::get_meta_data<CONCRETE>().register_v_table(
-          &v_table);
+  static auto __ = anypp::get_meta_data<CONCRETE>().register_v_table(&v_table);
   return &v_table;
 }
 #endif  // DEBUG
@@ -986,8 +983,7 @@ struct extension_method_holder<true, Any> {
 
 template <is_any TO_ANYPP>
 auto query_v_table(const meta_data& meta_data)
-    -> std::expected<typename TO_ANYPP::v_table_t*,
-                     anypp::cast_error> {
+    -> std::expected<typename TO_ANYPP::v_table_t*, anypp::cast_error> {
   using v_table_t = typename TO_ANYPP::v_table_t;
   return meta_data.get_v_table(typeid(v_table_t)).transform([](auto v_table) {
     return static_cast<v_table_t*>(v_table);
@@ -1014,9 +1010,7 @@ struct typed_any : public Any {
 
   typed_any(V const& v) : Any(v) {}
   typed_any(V&& v) : Any(std::move(v)) {}
-  typed_any(Any i) : Any(i) {
-    check_type_match<V>(get_runtime(*this));
-  }
+  typed_any(Any i) : Any(i) { check_type_match<V>(get_runtime(*this)); }
 
   value_t const& operator*() const {
     return *unchecked_unerase_cast<value_t const>(this->erased_data_);
@@ -1089,25 +1083,24 @@ auto as(typed_any<FROM, Any> source)
 
 template <is_any TO_ANYPP, is_erased_data ANY_FROM>
   requires borrowable_from<typename TO_ANYPP::erased_data_t, ANY_FROM>
-std::expected<TO_ANYPP, cast_error> borrow_as(
-    ANY_FROM const& vv_from, const meta_data& meta_data) {
+std::expected<TO_ANYPP, cast_error> borrow_as(ANY_FROM const& vv_from,
+                                              const meta_data& meta_data) {
   using to = typename TO_ANYPP::erased_data_t;
-  return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {
-    return TO_ANYPP{borrow_as<to>(vv_from), v_table};
-  });
+  return query_v_table<TO_ANYPP>(meta_data).transform(
+      [&](auto v_table) { return TO_ANYPP{borrow_as<to>(vv_from), v_table}; });
 }
 
 template <is_any TO_ANYPP, is_any FROM_ANYPP>
   requires borrowable_from<typename TO_ANYPP::erased_data_t,
-                                 typename FROM_ANYPP::erased_data_t>
+                           typename FROM_ANYPP::erased_data_t>
 auto borrow_as(FROM_ANYPP const& from_interface) {
   return borrow_as<TO_ANYPP>(get_erased_data(from_interface),
-                                 get_runtime(from_interface));
+                             get_runtime(from_interface));
 }
 
 template <is_any TO_ANYPP, is_erased_data ANY_FROM>
-std::expected<TO_ANYPP, cast_error> clone_to(
-    ANY_FROM const& vv_from, const meta_data& meta_data) {
+std::expected<TO_ANYPP, cast_error> clone_to(ANY_FROM const& vv_from,
+                                             const meta_data& meta_data) {
   using vv_to_t = typename TO_ANYPP::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {
@@ -1118,7 +1111,7 @@ std::expected<TO_ANYPP, cast_error> clone_to(
 template <is_any TO_ANYPP, is_any FROM_ANYPP>
 auto clone_to(const FROM_ANYPP& from_interface) {
   return clone_to<TO_ANYPP>(get_erased_data(from_interface),
-                                get_runtime(from_interface));
+                            get_runtime(from_interface));
 }
 
 template <is_any FROM_ANYPP>
@@ -1133,8 +1126,7 @@ auto lock(FROM_ANYPP const& from_interface) {
 }
 
 template <is_any TO_ANYPP, is_erased_data ANY_FROM>
-TO_ANYPP move_to(ANY_FROM&& vv_from,
-                     const meta_data& get_meta_data) {
+TO_ANYPP move_to(ANY_FROM&& vv_from, const meta_data& get_meta_data) {
   using vv_to_t = typename TO_ANYPP::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   auto v_table = query_v_table<TO_ANYPP>(get_meta_data);
@@ -1144,7 +1136,7 @@ TO_ANYPP move_to(ANY_FROM&& vv_from,
 template <is_any TO_ANYPP, is_any FROM_ANYPP>
 TO_ANYPP move_to(FROM_ANYPP&& from_interface) {
   return move_to<TO_ANYPP>(move_erased_data(std::move(from_interface)),
-                               get_runtime(from_interface));
+                           get_runtime(from_interface));
 }
 
 // --------------------------------------------------------------------------------
@@ -1220,43 +1212,56 @@ class hook<R(ARGS...)> {
 // --------------------------------------------------------------------------------
 // factory
 
+class unkonwn_factory_key_error : error {
+  using error::error;
+};
+
+template <template <typename> typename Any, typename KEY, typename... ARGS>
+class factory {
+  using constructor_t = std::function<Any<unique>(ARGS...)>;
+  std::map<KEY, constructor_t> function_map_;
+
+ public:
+  void register_(auto const& key, auto const& construct) {
+    function_map_[key] = construct;
+  }
+  Any<unique> construct(auto key, ARGS&&... args) {
+    if (auto found = function_map_.find(key); found != function_map_.end())
+      return construct(std::forward<ARGS>(args)...);
+    throw unkonwn_factory_key_error{std::to_string(key)};
+  };
+};
 
 // --------------------------------------------------------------------------------
 // extension member
 
-
 // --------------------------------------------------------------------------------
 // extension method
 
-
 // --------------------------------------------------------------------------------
 // extension method
-
 
 //./anypp/anypp/utillities\unnamed__.hpp
 //./anypp/anypp/any_meta_class.hpp
 
-}
+}  // namespace anypp
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_RUNTIME_FWD(export_, ...)               \
-  template <>                                      \
-  export_ const std::type_info&                    \
-  anypp::typeid_of<__VA_ARGS__>(); \
-  template <>                                      \
-  export_ anypp::meta_data&        \
-  anypp::get_meta_data<__VA_ARGS__>();
+#define ANY_RUNTIME_FWD(export_, ...)                            \
+  template <>                                                    \
+  export_ const std::type_info& anypp::typeid_of<__VA_ARGS__>(); \
+  template <>                                                    \
+  export_ anypp::meta_data& anypp::get_meta_data<__VA_ARGS__>();
 
-#define ANY_RUNTIME_INSTANCE(...)                                          \
-  template <>                                                             \
-  const std::type_info& anypp::typeid_of<__VA_ARGS__>() { \
-    return typeid(__VA_ARGS__);                                           \
-  }                                                                       \
-  template <>                                                             \
-  anypp::meta_data&                                       \
-  anypp::get_meta_data<std::decay_t<__VA_ARGS__>>() {     \
-    return runtime_implementation<__VA_ARGS__>();                         \
+#define ANY_RUNTIME_INSTANCE(...)                                       \
+  template <>                                                           \
+  const std::type_info& anypp::typeid_of<__VA_ARGS__>() {               \
+    return typeid(__VA_ARGS__);                                         \
+  }                                                                     \
+  template <>                                                           \
+  anypp::meta_data& anypp::get_meta_data<std::decay_t<__VA_ARGS__>>() { \
+    return runtime_implementation<__VA_ARGS__>();                       \
   }
 
 #else
