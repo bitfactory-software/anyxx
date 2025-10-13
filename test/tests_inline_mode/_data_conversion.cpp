@@ -9,7 +9,7 @@
 #include <anypp/shared_const.hpp>
 #include <anypp/unique.hpp>
 #include <anypp/move_erased_data.hpp>
-#include <anypp/any_meta_function.hpp>
+#include <anypp/any_meta_class.hpp>
 
 using namespace Catch::Matchers;
 

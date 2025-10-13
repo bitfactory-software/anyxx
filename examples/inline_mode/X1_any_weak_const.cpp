@@ -4,7 +4,7 @@
 #include <mutex>
 #include <string>
 #include <vector>
-#include <anypp/any_meta_function.hpp>
+#include <anypp/any_meta_class.hpp>
 #include <anypp/lock.hpp>
 #include <anypp/shared_const.hpp>
 

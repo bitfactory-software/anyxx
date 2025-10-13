@@ -7,7 +7,7 @@
 #include <anypp/observer.hpp>
 #include <anypp/shared_const.hpp>
 #include <anypp/unique.hpp>
-#include <anypp/any_meta_function.hpp>
+#include <anypp/any_meta_class.hpp>
 #include <anypp/typed_any.hpp>
 #include <anypp/meta_data.hpp>
 

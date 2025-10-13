@@ -6,7 +6,7 @@
 #include <vector>
 #include <anypp/observer.hpp>
 #include <anypp/unique.hpp>
-#include <anypp/any_meta_function.hpp>
+#include <anypp/any_meta_class.hpp>
 
 using namespace Catch::Matchers;
 

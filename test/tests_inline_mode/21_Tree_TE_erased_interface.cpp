@@ -6,7 +6,7 @@
 #include <string>
 #include <anypp/shared_const.hpp>
 #include <anypp/any_base.hpp>
-#include <anypp/any_meta_function.hpp>
+#include <anypp/any_meta_class.hpp>
 
 using std::cout;
 using std::string;
