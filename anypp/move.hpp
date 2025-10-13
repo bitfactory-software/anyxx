@@ -5,18 +5,18 @@
 
 namespace virtual_void {
 
-template <is_any TO_INTERFACE, is_erased_data VV_FROM>
-TO_INTERFACE move_to(VV_FROM&& vv_from,
+template <is_any TO_ANYPP, is_erased_data VV_FROM>
+TO_ANYPP move_to(VV_FROM&& vv_from,
                      const meta_data& get_meta_data) {
-  using vv_to_t = typename TO_INTERFACE::erased_data_t;
+  using vv_to_t = typename TO_ANYPP::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
-  auto v_table = query_v_table<TO_INTERFACE>(get_meta_data);
-  return TO_INTERFACE{move_to<vv_to_t>(std::move(vv_from)), *v_table};
+  auto v_table = query_v_table<TO_ANYPP>(get_meta_data);
+  return TO_ANYPP{move_to<vv_to_t>(std::move(vv_from)), *v_table};
 }
 
-template <is_any TO_INTERFACE, is_any FROM_INTERFACE>
-TO_INTERFACE move_to(FROM_INTERFACE&& from_interface) {
-  return move_to<TO_INTERFACE>(move_erased_data(std::move(from_interface)),
+template <is_any TO_ANYPP, is_any FROM_ANYPP>
+TO_ANYPP move_to(FROM_ANYPP&& from_interface) {
+  return move_to<TO_ANYPP>(move_erased_data(std::move(from_interface)),
                                get_runtime(from_interface));
 }
 

@@ -94,14 +94,14 @@ struct args_to_tuple<virtual_<ANY>, METHOD_ARGS...> {
 
 template <typename R, typename... ARGS>
 struct extension_method_default {
-  template <is_any... INTERFACES>
+  template <is_any... ANYPPS>
   struct inner {
     template <typename... ARGS>
     struct implemenation {
       struct type {
-        using function_t = hook<R(INTERFACES const&..., ARGS...)>;
+        using function_t = hook<R(ANYPPS const&..., ARGS...)>;
         static auto function() {
-          return [](auto super, INTERFACES const&..., ARGS... args) -> R {
+          return [](auto super, ANYPPS const&..., ARGS... args) -> R {
             return R{};
           };
         }
@@ -116,13 +116,13 @@ struct extension_method_default {
 
   template <typename... ARGS>
   struct outer {
-    template <is_any... INTERFACES>
-    using type = inner<INTERFACES...>::template type<ARGS...>;
+    template <is_any... ANYPPS>
+    using type = inner<ANYPPS...>::template type<ARGS...>;
   };
   template <is_any ANY, typename... ARGS>
   struct outer<virtual_<ANY>, ARGS...> {
-    template <is_any... INTERFACES>
-    using type = outer<ARGS...>::template type<ANY, INTERFACES...>;
+    template <is_any... ANYPPS>
+    using type = outer<ARGS...>::template type<ANY, ANYPPS...>;
   };
 
   using type = outer<ARGS...>::template type<>;

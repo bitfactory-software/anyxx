@@ -71,11 +71,11 @@
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
-#define _detail_INTERFACE_FPD_H(l) _detail_INTERFACE_FUNCTION_PTR_DECL l
-#define _detail_INTERFACE_MEMEBER_LIMP_H(l) \
-  _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL l
-#define _detail_INTERFACE_FREE_LIMP_H(l) _detail_INTERFACE_LAMBDA_TO_FREE_IMPL l
-#define _detail_INTERFACE_METHOD_H(l) _detail_INTERFACE_METHOD l
+#define _detail_ANYPP_FPD_H(l) _detail_ANYPP_FUNCTION_PTR_DECL l
+#define _detail_ANYPP_MEMEBER_LIMP_H(l) \
+  _detail_ANYPP_LAMBDA_TO_MEMEBER_IMPL l
+#define _detail_ANYPP_FREE_LIMP_H(l) _detail_ANYPP_LAMBDA_TO_FREE_IMPL l
+#define _detail_ANYPP_METHOD_H(l) _detail_ANYPP_METHOD l
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
@@ -87,56 +87,56 @@
 #define _typename _typename1
 #define _typename1(t) t
 
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARG_H(l) \
-  _detail_INTERFACE_TEMPLATE_FORMAL_ARG l
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARG(_typename) , typename _typename
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS(...) \
-  __VA_OPT__(_detail_INTERFACE_TEMPLATE_FORMAL_ARGS1(__VA_ARGS__))
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS1(h, ...) \
+#define _detail_ANYPP_TEMPLATE_FORMAL_ARG_H(l) \
+  _detail_ANYPP_TEMPLATE_FORMAL_ARG l
+#define _detail_ANYPP_TEMPLATE_FORMAL_ARG(_typename) , typename _typename
+#define _detail_ANYPP_TEMPLATE_FORMAL_ARGS(...) \
+  __VA_OPT__(_detail_ANYPP_TEMPLATE_FORMAL_ARGS1(__VA_ARGS__))
+#define _detail_ANYPP_TEMPLATE_FORMAL_ARGS1(h, ...) \
   typename _typename h __VA_OPT__(                      \
-      _detail_INTERFACE_TEMPLATE_FORMAL_ARGS2((__VA_ARGS__)))
-#define _detail_INTERFACE_TEMPLATE_FORMAL_ARGS2(l)               \
-  _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_FORMAL_ARG_H, \
+      _detail_ANYPP_TEMPLATE_FORMAL_ARGS2((__VA_ARGS__)))
+#define _detail_ANYPP_TEMPLATE_FORMAL_ARGS2(l)               \
+  _detail_foreach_macro(_detail_ANYPP_TEMPLATE_FORMAL_ARG_H, \
                         _detail_EXPAND_LIST l)
 
-#define _detail_INTERFACE_TEMPLATE_ARG_H(l) _detail_INTERFACE_TEMPLATE_ARG l
+#define _detail_ANYPP_TEMPLATE_ARG_H(l) _detail_ANYPP_TEMPLATE_ARG l
 
-#define _detail_INTERFACE_TEMPLATE_ARG(_typename) , _typename
+#define _detail_ANYPP_TEMPLATE_ARG(_typename) , _typename
 
-#define _detail_INTERFACE_TEMPLATE_ARGS(...) \
-  __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS1(__VA_ARGS__))
+#define _detail_ANYPP_TEMPLATE_ARGS(...) \
+  __VA_OPT__(_detail_ANYPP_TEMPLATE_ARGS1(__VA_ARGS__))
 
-#define _detail_INTERFACE_TEMPLATE_ARGS1(h, ...) \
-  _typename h __VA_OPT__(_detail_INTERFACE_TEMPLATE_ARGS2((__VA_ARGS__)))
+#define _detail_ANYPP_TEMPLATE_ARGS1(h, ...) \
+  _typename h __VA_OPT__(_detail_ANYPP_TEMPLATE_ARGS2((__VA_ARGS__)))
 
-#define _detail_INTERFACE_TEMPLATE_ARGS2(l) \
-  _detail_foreach_macro(_detail_INTERFACE_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
+#define _detail_ANYPP_TEMPLATE_ARGS2(l) \
+  _detail_foreach_macro(_detail_ANYPP_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
 
-#define _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER_H(...) \
-  __VA_OPT__(template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
+#define _detail_ANYPP_V_TABLE_TEMPLATE_HEADER_H(...) \
+  __VA_OPT__(template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
-#define _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER_H t
+#define _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) \
+  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER_H t
 
-#define _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE_H(...) \
-  __VA_OPT__(<_detail_INTERFACE_TEMPLATE_ARGS(__VA_ARGS__)>)
+#define _detail_ANYPP_V_TABLE_TEMPLATE_INSTANCE_H(...) \
+  __VA_OPT__(<_detail_ANYPP_TEMPLATE_ARGS(__VA_ARGS__)>)
 
-#define _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE(t) \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_INSTANCE_H t
+#define _detail_ANYPP_V_TABLE_TEMPLATE_INSTANCE(t) \
+  _detail_ANYPP_V_TABLE_TEMPLATE_INSTANCE_H t
 
-#define _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
-  __VA_OPT__(<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
+#define _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
+  __VA_OPT__(<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
-#define _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
+#define _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
+  _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
 #define _detail_TA_H(l) _detail_TA l
 
 #define _detail_TA(type) , type
 
-#define _detail_INTERFACE_MAP_LIMP_H(l) _detail_INTERFACE_MAP_IMPL l
+#define _detail_ANYPP_MAP_LIMP_H(l) _detail_ANYPP_MAP_IMPL l
 
-#define _detail_INTERFACE_MAP_IMPL(type, name, name_ext, exact_const, const_, \
+#define _detail_ANYPP_MAP_IMPL(type, name, name_ext, exact_const, const_, \
                                    ...)                                       \
   auto name(T const_* x __VA_OPT__(                                           \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                 \
@@ -144,11 +144,11 @@
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                \
   };
 
-#define _detail_INTERFACE_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, \
+#define _detail_ANYPP_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, \
                                             const_, ...)                       \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_INTERFACE_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext,     \
+#define _detail_ANYPP_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext,     \
                                                  exact_const, const_, ...) \
   name = [](void const_* _vp __VA_OPT__(                                   \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {       \
@@ -157,7 +157,7 @@
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   };
 
-#define _detail_INTERFACE_METHOD(type, name, name_ext, exact_const, const_,  \
+#define _detail_ANYPP_METHOD(type, name, name_ext, exact_const, const_,  \
                                  ...)                                        \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
     requires(::virtual_void::const_correct_call_for_erased_data<             \
@@ -168,40 +168,40 @@
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
-#define _detail_INTERFACE_MAP_FUNCTIONS(...)                     \
-  __VA_OPT__(_detail_foreach_macro(_detail_INTERFACE_MAP_LIMP_H, \
+#define _detail_ANYPP_MAP_FUNCTIONS(...)                     \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_MAP_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define _detail_INTERFACE_V_TABLE_FUNCTION_PTRS(...)        \
-  __VA_OPT__(_detail_foreach_macro(_detail_INTERFACE_FPD_H, \
+#define _detail_ANYPP_V_TABLE_FUNCTION_PTRS(...)        \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_FPD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
 
-#define _detail_INTERFACE_V_TABLE_LAMBDAS(...)                       \
-  __VA_OPT__(_detail_foreach_macro(_detail_INTERFACE_MEMEBER_LIMP_H, \
+#define _detail_ANYPP_V_TABLE_LAMBDAS(...)                       \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_MEMEBER_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
 
-#define _detail_INTERFACE_METHODS(...)                         \
-  __VA_OPT__(_detail_foreach_macro(_detail_INTERFACE_METHOD_H, \
+#define _detail_ANYPP_METHODS(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define VV_ANY_TEMPLATE_(t, n, BASE, l)                                        \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((ERASED_DATA), t))>                                            \
   struct n;                                                                    \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
   struct n##_default_v_table_map {                                             \
-    _detail_INTERFACE_MAP_FUNCTIONS(l)                                         \
+    _detail_ANYPP_MAP_FUNCTIONS(l)                                         \
   };                                                                           \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>         \
   struct n##_v_table_map                                                       \
-      : n##_default_v_table_map<_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(        \
+      : n##_default_v_table_map<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(        \
             _add_head((T), t))> {};                                            \
                                                                                \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;             \
+  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;             \
                                                                                \
-  _detail_INTERFACE_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
+  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table              \
       : BASE##_v_table,                                                        \
         virtual_void::extension_method_holder<                                 \
             virtual_void::has_extension_methods<n>, n> {                       \
@@ -217,7 +217,7 @@
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
                                                                                \
-    _detail_INTERFACE_V_TABLE_FUNCTION_PTRS(l);                                \
+    _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                \
                                                                                \
     static constexpr bool extension_methods_enabled =                          \
         virtual_void::has_extension_methods<n>;                                \
@@ -225,10 +225,10 @@
     template <typename CONCRETE>                                               \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
         : v_table_base_t(concrete) {                                           \
-      using v_table_map = n##_v_table_map<_detail_INTERFACE_TEMPLATE_ARGS(     \
+      using v_table_map = n##_v_table_map<_detail_ANYPP_TEMPLATE_ARGS(     \
           _add_head((CONCRETE), t))>;                                          \
                                                                                \
-      _detail_INTERFACE_V_TABLE_LAMBDAS(l);                                    \
+      _detail_ANYPP_V_TABLE_LAMBDAS(l);                                    \
                                                                                \
       if constexpr (extension_methods_enabled) {                               \
         own_extension_method_holder_t::extension_method_table =                \
@@ -246,14 +246,14 @@
     }                                                                          \
   };                                                                           \
                                                                                \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(                            \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((ERASED_DATA), t))>                                            \
   struct n : BASE<ERASED_DATA> {                                               \
     using erased_data_t = ERASED_DATA;                                         \
     using base_t = BASE<ERASED_DATA>;                                          \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
-        n##_v_table _detail_INTERFACE_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
+        n##_v_table _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t);         \
                                                                                \
     template <typename CONCRETE>                                               \
     static auto v_table_imlpementation() {                                     \
@@ -286,7 +286,7 @@
                                            typename OTHER::erased_data_t>)     \
         : base_t(std::move(other)) {}                                          \
                                                                                \
-    _detail_INTERFACE_METHODS(l)                                               \
+    _detail_ANYPP_METHODS(l)                                               \
                                                                                \
         auto const*                                                            \
         operator->() const {                                                   \
@@ -308,7 +308,7 @@
       requires(std::derived_from<TO, FROM>);                                   \
     template <virtual_void::is_erased_data OTHER>                              \
     using type_for =                                                           \
-        n<_detail_INTERFACE_TEMPLATE_ARGS(_add_head((OTHER), t))>;             \
+        n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;             \
   };
 
 //    n(n&) = default;                                                           \
@@ -346,7 +346,7 @@
 
 #define VV_ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                                \
-  template <_detail_INTERFACE_TEMPLATE_FORMAL_ARGS(              \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(              \
       _add_head((ERASED_DATA), (__VA_ARGS__)))>                  \
   struct interface_name;                                         \
   struct interface_name##_v_table;                               \
