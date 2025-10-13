@@ -95,13 +95,13 @@ class any_base {
   friend class any_base;
 
   template <is_erased_data ERASED_DATA>
-  friend inline auto& get_erased_data(any_base<ERASED_DATA> const& interface);
+  friend inline auto& get_erased_data(any_base<ERASED_DATA> const& any);
   template <is_erased_data ERASED_DATA>
-  friend inline auto move_erased_data(any_base<ERASED_DATA>&& interface);
+  friend inline auto move_erased_data(any_base<ERASED_DATA>&& any);
   template <is_erased_data ERASED_DATA>
-  friend inline auto get_void_data_ptr(any_base<ERASED_DATA> const& interface);
+  friend inline auto get_void_data_ptr(any_base<ERASED_DATA> const& any);
   template <is_any I>
-  friend inline auto get_v_table(I const& interface);
+  friend inline auto get_v_table(I const& any);
 
   template <is_any TO, is_any FROM>
   friend inline TO unchecked_downcast_to(FROM from)
@@ -119,30 +119,30 @@ template <typename V_TABLE, is_erased_data ERASED_DATA>
 using interface_for = typename interface_t<V_TABLE, ERASED_DATA>::type;
 
 template <is_erased_data ERASED_DATA>
-auto& get_erased_data(any_base<ERASED_DATA> const& interface) {
-  return interface.erased_data_;
+auto& get_erased_data(any_base<ERASED_DATA> const& any) {
+  return any.erased_data_;
 }
 template <is_erased_data ERASED_DATA>
-auto move_erased_data(any_base<ERASED_DATA>&& interface) {
-  return std::move(interface.erased_data_);
+auto move_erased_data(any_base<ERASED_DATA>&& any) {
+  return std::move(any.erased_data_);
 }
 template <is_erased_data ERASED_DATA>
-auto get_void_data_ptr(any_base<ERASED_DATA> const& interface) {
-  return get_void_data_ptr(get_erased_data(interface));
+auto get_void_data_ptr(any_base<ERASED_DATA> const& any) {
+  return get_void_data_ptr(get_erased_data(any));
 }
 
 template <is_any ANY>
-inline const auto& get_runtime(ANY const& interface) {
-  return *get_v_table(interface)->meta_data;
+inline const auto& get_runtime(ANY const& any) {
+  return *get_v_table(any)->meta_data;
 }
 
 template <is_erased_data VV>
-bool is_derived_from(const std::type_info& from, any_base<VV> const& interface) {
-  return get_v_table(interface)->_is_derived_from(from);
+bool is_derived_from(const std::type_info& from, any_base<VV> const& any) {
+  return get_v_table(any)->_is_derived_from(from);
 }
 template <is_any FROM, is_erased_data VV>
-bool is_derived_from(any_base<VV> const& interface) {
-  return is_derived_from(typeid(FROM::v_table_t), interface);
+bool is_derived_from(any_base<VV> const& any) {
+  return is_derived_from(typeid(FROM::v_table_t), any);
 }
 
 template <typename V_TABLE>
@@ -162,8 +162,8 @@ auto unchecked_v_table_downcast_to(any_base_v_table* v_table) {
 }
 
 template <is_any ANY>
-inline auto get_v_table(ANY const& interface) {
-  return unchecked_v_table_downcast_to<ANY>(interface.v_table_);
+inline auto get_v_table(ANY const& any) {
+  return unchecked_v_table_downcast_to<ANY>(any.v_table_);
 }
 
 template <is_any TO, is_any FROM>

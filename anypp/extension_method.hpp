@@ -207,10 +207,10 @@ struct extension_method<R(ARGS...)> {
               typename... ACTUAL_ARGS>
     std::optional<R> invoke(DISPATCH_MATRIX const& target,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
-                            ANY const& interface,
+                            ANY const& any,
                             ACTUAL_ARGS&&... actual_args) const {
       auto extension_method_table =
-          get_v_table(interface)->extension_method_table;
+          get_v_table(any)->extension_method_table;
       auto dispatch_dim =
           get_multi_method_index_at(extension_method_table, index_);
       if (!dispatch_dim) return {};
@@ -239,9 +239,9 @@ struct extension_method<R(ARGS...)> {
               typename... ACTUAL_ARGS>
     std::optional<R> invoke(DISPATCH_MATRIX const&,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
-                            ANY const& interface,
+                            ANY const& any,
                             ACTUAL_ARGS&&... actual_args) const {
-      auto v_table = get_v_table(interface)->extension_method_table;
+      auto v_table = get_v_table(any)->extension_method_table;
       auto target = get_function(v_table, index_);
       if (!target) return {};
       auto erased_function = reinterpret_cast<erased_function_t>(target);

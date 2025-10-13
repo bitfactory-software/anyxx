@@ -1,13 +1,13 @@
 # Comparison of *erased functionality* in `virtual_void`
 
-| Kind                    | REFERENCE:</br>`C++ virtual`      | `virtual_void`::</br>`interface`   | `virtual_void`::</br>`open_method::via_type_info`                    | `virtual_void`::</br>`open_method::via_m_table`                                        |
+| Kind                    | REFERENCE:</br>`C++ virtual`      | `virtual_void`::</br>`any`   | `virtual_void`::</br>`open_method::via_type_info`                    | `virtual_void`::</br>`open_method::via_m_table`                                        |
 |:-                                  |:- |:-               |:-                                                |:-                                                                  |
 | meta data requirement              | Derived from any_base class | none            | `with_type_info` </br>`with_m_table`            | `with_m_table`                                                    |
 | Runtime penalty |  1 |  1              | 2.5                                              | 1.3                                                                 |
 | Memory Footprint</br>per function(f) and implementing type(t) [byte] | O(1) | O(1)           | O(1 + x) </br> Ø(x) ~ 0.3                         | O(1), but... [^1]      |
 | static meta data                   | yes (v-table) | yes (v-table)   | no                                               | yes (m-table)                                                      |
 | intrusive?             | Yes: All implementing classes must derive from a common any_base | no |  no| no | 
-| coupling in comparison             | </br>- Type of interface</br>- All implementing classes must derive from a common any_base | </br>- Type of interface</br>- Type of lifetime holder | minimal(+) </br>- pointer to erased data</br>- typeinfo | minimal(+) </br>- pointer to erased data</br>- pointer to m-table  | 
+| coupling in comparison             | </br>- Type of any</br>- All implementing classes must derive from a common any_base | </br>- Type of any</br>- Type of lifetime holder | minimal(+) </br>- pointer to erased data</br>- typeinfo | minimal(+) </br>- pointer to erased data</br>- pointer to m-table  | 
 | general boilerplate?          | no | no              | `seal_for_runtime()` must be called before usage.</br>Typically from `main` after all *.dll/so* are loaded. | no                                    |
 | enforced implementation?          | yes | yes              | no, see [^2] | no, see [^2] |
 | dynamic library **load** handling boilerplate?  | no | no              | `seal_for_runtime()` must be called after all *.dll/so* are loaded.  | no                                                                 |

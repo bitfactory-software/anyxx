@@ -23,7 +23,7 @@ We see the main attraction in the solving of the [expression problem](https://en
 
 By studiing the details of yomm2, we found deep inside a perl: A superfast perfect hash function for int64 keys. 
 
-We used the permissive licence to steal this algorithim and to spent him a convinient interface.
+We used the permissive licence to steal this algorithim and to spent him a convinient any.
 You can find the source [here](https://github.com/andreaspfaffenbichler/anypp/blob/master/include/anypp/perfect_typeid_hash/index_table.h)
 
 Let's look at the usage of the algorithm:

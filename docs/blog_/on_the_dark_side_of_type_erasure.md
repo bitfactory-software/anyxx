@@ -80,11 +80,11 @@ The magic happens then inside of the algorithm.
 The "type erasure run time dispatch", provided by proxy, takes care, that the corresponding function of the concrete object is executed.
 
 Wes see, that 
-- the implementation of the interface ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
+- the implementation of the any ("drawable") used by the algorithm is not tied to the implementation of the conrete type ("circle", "spare", .. ), 
 
 and
 
-- the implementation of the interface itself can be very generic by use of clever template tricks.
+- the implementation of the any itself can be very generic by use of clever template tricks.
 
 These features are intruding.
 
@@ -225,7 +225,7 @@ and
 But because we have **erased** away ALL **type** informatiom, we have no longer access to the data we need, to 
 - answer the questions asked to the predicate functions via callbcks
 and
-- to continue with our processing, because we need the full interface we passed into the functions.
+- to continue with our processing, because we need the full any we passed into the functions.
 
 We found no solution to this pattern in ["proxy"](https://github.com/microsoft/proxy) and the other libraries we searched
 - [Boost Type Erasure](https://www.boost.org/doc/libs/1_78_0/doc/html/boost_typeerasure/any.html#boost_typeerasure.any.conversions)
@@ -261,7 +261,7 @@ int main() {
 What we need, is a make_type_erased "thing" that supports "downcast".
 So the quitessence, as we took it, is, that "type erasue" is not the end. We need kind of "type tunnel".
 So the object can pass thru lower abstraction levels, with a fitting facade for them.
-But when we get them back, we need to recover its ritcher interface or even its real type.
+But when we get them back, we need to recover its ritcher any or even its real type.
 
 Before we came to an (partial) solution for this problem, we needed to take some other angles on it.
 One of this perspectives came from std::any. 

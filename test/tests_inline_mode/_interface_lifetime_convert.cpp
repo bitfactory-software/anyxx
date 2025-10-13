@@ -28,7 +28,7 @@ using to_string_u = to_string_i<unique>;
 using to_string_mo = to_string_i<mutable_observer>;
 }  // namespace
 
-TEST_CASE("interface lifetime cast") {
+TEST_CASE("any lifetime cast") {
   to_string_sc sc{std::make_shared<X>("hallo")};
   REQUIRE(sc.to_string() == "hallo");
   REQUIRE(

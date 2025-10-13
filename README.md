@@ -76,15 +76,15 @@ The interception of this cascading coupling is the aim of this library.
 ### From *OO* to *type erasure* to *type tunneling*
 
 C++'s virtual functions have shown their versatility and usefulness for decades.
-But, as the understanding of decomposing software grows, we see the "OO style" integration of the interface directly into the object as a problem.
+But, as the understanding of decomposing software grows, we see the "OO style" integration of the any directly into the object as a problem.
 
-It is now consensus that separation of the interface from the underlying object is the way to go. The type gets "erased" from the interface.
+It is now consensus that separation of the any from the underlying object is the way to go. The type gets "erased" from the any.
 On the contrary, by doing so, we lose this connection, which had shown its usefulness in countless huge and successful software projects.
 
-A v-table interface of an object can be used:
+A v-table any of an object can be used:
 - To cast back to that object itself
-- To "downcast" the interface to a more specific one, and
-- To "crosscast" to another interface.
+- To "downcast" the any to a more specific one, and
+- To "crosscast" to another any.
 
 A vocabulary for programming on a large scale must support those casts.
 Because we found no library that fulfilled these demands, we came up with this one.

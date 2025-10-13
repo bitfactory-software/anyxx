@@ -62,7 +62,7 @@ void test_map_t_i_template(map_t_i<const_observer, KEY, VALUE> map_i) {
   REQUIRE(map_i.at("two") == 2);
 }
 
-TEST_CASE("interface template test") {
+TEST_CASE("any template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_map_t_i_lambda =
@@ -83,7 +83,7 @@ TEST_CASE("interface template test") {
   test_map_to_string_i_lambda(map_string_to_int);
 }
 
-TEST_CASE("interface template test2") {
+TEST_CASE("any template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_map_to_string_i_lambda =
@@ -94,7 +94,7 @@ TEST_CASE("interface template test2") {
   test_map_to_string_i_lambda(map_string_to_int);
 }
 
-TEST_CASE("interface template test3") {
+TEST_CASE("any template test3") {
   std::map<int, std::map<std::string, std::map<int, double>>> map = {
       {1, {{"one", {{1, 3.14}, {2, 6.28}}}, {"two", {{3, 3.333}}}}},
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
