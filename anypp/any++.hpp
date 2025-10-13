@@ -5,6 +5,7 @@
 // /Zc:preprocessor (see CMakeLists.txt for example)
 //
 
+
 #include <cassert>
 #include <concepts>
 #include <expected>
@@ -1678,7 +1679,7 @@ struct extension_method<R(ARGS...)> {
 #endif
 
 // --------------------------------------------------------------------------------
-// any meta class
+// any meta class, derived from this gem: https://github.com/AlexCodesApps/dynamic_interface
 
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
