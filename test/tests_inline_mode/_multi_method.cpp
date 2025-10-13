@@ -21,15 +21,19 @@ ANY(Thing, )
 }  // namespace
 
 namespace {
-class Asteroid {};
-class Spaceship {};
-}  // namespace
-
 extension_method<
              std::string(virtual_<Thing<const_observer>>, virtual_<Thing<const_observer>>)>
     collide;
+}  // namespace
 
 namespace {
+
+namespace {
+class Asteroid {};
+}  // namespace
+namespace {
+class Spaceship {};
+}  // namespace
 
 //auto __ =
 //    collide.define<Asteroid, Spaceship>([](auto a, auto s) { return "a->s"; });
