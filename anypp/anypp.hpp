@@ -11,8 +11,6 @@ class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
 };
 
-template <class BASE, class DERIVED>
-concept base_of = std::derived_from<DERIVED, BASE>;
 
 struct mutable_ {};
 struct const_ {};
