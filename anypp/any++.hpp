@@ -1083,19 +1083,86 @@ auto as(typed_any<FROM, Any> source)
 }
 
 // --------------------------------------------------------------------------------
-// query v_table
+// any borrow, clone, lock, move
+
+template <is_any TO_ANYPP, is_erased_data ANY_FROM>
+  requires borrowable_from<typename TO_ANYPP::erased_data_t, ANY_FROM>
+std::expected<TO_ANYPP, cast_error> borrow_as(
+    ANY_FROM const& vv_from, const meta_data& meta_data) {
+  using to = typename TO_ANYPP::erased_data_t;
+  return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {
+    return TO_ANYPP{borrow_as<to>(vv_from), v_table};
+  });
+}
+
+template <is_any TO_ANYPP, is_any FROM_ANYPP>
+  requires borrowable_from<typename TO_ANYPP::erased_data_t,
+                                 typename FROM_ANYPP::erased_data_t>
+auto borrow_as(FROM_ANYPP const& from_interface) {
+  return borrow_as<TO_ANYPP>(get_erased_data(from_interface),
+                                 get_runtime(from_interface));
+}
+
+template <is_any TO_ANYPP, is_erased_data ANY_FROM>
+std::expected<TO_ANYPP, cast_error> clone_to(
+    ANY_FROM const& vv_from, const meta_data& meta_data) {
+  using vv_to_t = typename TO_ANYPP::erased_data_t;
+  static_assert(is_erased_data<vv_to_t>);
+  return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {
+    return TO_ANYPP{clone_to<vv_to_t>(vv_from, meta_data), v_table};
+  });
+}
+
+template <is_any TO_ANYPP, is_any FROM_ANYPP>
+auto clone_to(const FROM_ANYPP& from_interface) {
+  return clone_to<TO_ANYPP>(get_erased_data(from_interface),
+                                get_runtime(from_interface));
+
+template <is_any FROM_ANYPP>
+  requires std::same_as<typename FROM_ANYPP::erased_data_t, weak>
+auto lock(FROM_ANYPP const& from_interface) {
+  using to_interface_t = FROM_ANYPP::template type_for<shared_const>;
+  static_assert(is_any<to_interface_t>);
+  using return_t = std::optional<to_interface_t>;
+  if (auto shared_const = get_erased_data(from_interface).lock())
+    return return_t{{shared_const, get_v_table(from_interface)}};
+  return return_t{};
+}
+
+template <is_any TO_ANYPP, is_erased_data ANY_FROM>
+TO_ANYPP move_to(ANY_FROM&& vv_from,
+                     const meta_data& get_meta_data) {
+  using vv_to_t = typename TO_ANYPP::erased_data_t;
+  static_assert(is_erased_data<vv_to_t>);
+  auto v_table = query_v_table<TO_ANYPP>(get_meta_data);
+  return TO_ANYPP{move_to<vv_to_t>(std::move(vv_from)), *v_table};
+}
+
+template <is_any TO_ANYPP, is_any FROM_ANYPP>
+TO_ANYPP move_to(FROM_ANYPP&& from_interface) {
+  return move_to<TO_ANYPP>(move_erased_data(std::move(from_interface)),
+                               get_runtime(from_interface));
+}
+
+// --------------------------------------------------------------------------------
+// hook
 
 
+// --------------------------------------------------------------------------------
+// factory
 
-//./anypp/anypp/borrow.hpp
-//./anypp/anypp/clone.hpp
-//./anypp/anypp/lock.hpp
-//./anypp/anypp/move.hpp
 
-//./anypp/anypp/hook.hpp
-//./anypp/anypp/factory.hpp
-//./anypp/anypp/extension_member.hpp
-//./anypp/anypp/extension_method.hpp
+// --------------------------------------------------------------------------------
+// extension member
+
+
+// --------------------------------------------------------------------------------
+// extension method
+
+
+// --------------------------------------------------------------------------------
+// extension method
+
 
 //./anypp/anypp/utillities\unnamed__.hpp
 //./anypp/anypp/any_meta_class.hpp
