@@ -3,6 +3,7 @@
 #include <anypp/observer.hpp>
 #include <anypp/shared_const.hpp>
 #include <anypp/unique.hpp>
+#include <anypp/value.hpp>
 
 namespace anypp {
 
@@ -16,13 +17,14 @@ concept borrowable_from =
     };
 
 template <is_erased_data FROM>
-  requires(!is_const_data<FROM>)
+  requires(!is_const_data<FROM> && !is_weak_data<FROM>)
 struct borrow_trait<mutable_observer, FROM> {
   auto operator()(const auto& from) {
     return mutable_observer{get_void_data_ptr(from)};
   }
 };
 template <is_erased_data FROM>
+  requires(!is_weak_data<FROM>)
 struct borrow_trait<const_observer, FROM> {
   auto operator()(const auto& from) {
     return const_observer{get_void_data_ptr(from)};
@@ -30,6 +32,10 @@ struct borrow_trait<const_observer, FROM> {
 };
 template <>
 struct borrow_trait<shared_const, shared_const> {
+  auto operator()(const auto& from) { return from; }
+};
+template <>
+struct borrow_trait<weak, weak> {
   auto operator()(const auto& from) { return from; }
 };
 template <>
@@ -47,20 +53,42 @@ static_assert(!borrowable_from<mutable_observer, const_observer>);
 static_assert(borrowable_from<mutable_observer, mutable_observer>);
 static_assert(borrowable_from<mutable_observer, unique>);
 static_assert(!borrowable_from<mutable_observer, shared_const>);
+static_assert(!borrowable_from<mutable_observer, weak>);
+static_assert(borrowable_from<mutable_observer, value>);
 
 static_assert(borrowable_from<const_observer, const_observer>);
 static_assert(borrowable_from<const_observer, mutable_observer>);
 static_assert(borrowable_from<const_observer, unique>);
 static_assert(borrowable_from<const_observer, shared_const>);
+static_assert(!borrowable_from<const_observer, weak>);
+static_assert(borrowable_from<const_observer, value>);
 
 static_assert(!borrowable_from<shared_const, const_observer>);
 static_assert(!borrowable_from<shared_const, mutable_observer>);
 static_assert(!borrowable_from<shared_const, unique>);
 static_assert(borrowable_from<shared_const, shared_const>);
+static_assert(!borrowable_from<shared_const, weak>);
+static_assert(!borrowable_from<shared_const, value>);
+
+static_assert(!borrowable_from<weak, const_observer>);
+static_assert(!borrowable_from<weak, mutable_observer>);
+static_assert(!borrowable_from<weak, unique>);
+static_assert(borrowable_from<weak, shared_const>);
+static_assert(borrowable_from<weak, weak>);
+static_assert(!borrowable_from<weak, value>);
 
 static_assert(!borrowable_from<unique, const_observer>);
 static_assert(!borrowable_from<unique, mutable_observer>);
 static_assert(!borrowable_from<unique, unique>);
 static_assert(!borrowable_from<unique, shared_const>);
+static_assert(!borrowable_from<unique, weak>);
+static_assert(!borrowable_from<unique, value>);
+
+static_assert(!borrowable_from<value, const_observer>);
+static_assert(!borrowable_from<value, mutable_observer>);
+static_assert(!borrowable_from<value, unique>);
+static_assert(!borrowable_from<value, shared_const>);
+static_assert(!borrowable_from<value, weak>);
+static_assert(!borrowable_from<value, value>);
 
 };  // namespace anypp

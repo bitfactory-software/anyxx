@@ -36,20 +36,42 @@ static_assert(!moveable_from<mutable_observer, const_observer>);
 static_assert(moveable_from<mutable_observer, mutable_observer>);
 static_assert(!moveable_from<mutable_observer, unique>);
 static_assert(!moveable_from<mutable_observer, shared_const>);
+static_assert(!moveable_from<mutable_observer, weak>);
+static_assert(!moveable_from<mutable_observer, value>);
 
 static_assert(moveable_from<const_observer, const_observer>);
 static_assert(moveable_from<const_observer, mutable_observer>);
 static_assert(!moveable_from<const_observer, unique>);
 static_assert(!moveable_from<const_observer, shared_const>);
+static_assert(!moveable_from<const_observer, weak>);
+static_assert(!moveable_from<const_observer, value>);
 
 static_assert(!moveable_from<shared_const, const_observer>);
 static_assert(!moveable_from<shared_const, mutable_observer>);
 static_assert(moveable_from<shared_const, unique>);
 static_assert(moveable_from<shared_const, shared_const>);
+static_assert(!moveable_from<shared_const, weak>);
+static_assert(!moveable_from<shared_const, value>);
+
+static_assert(!moveable_from<weak, const_observer>);
+static_assert(!moveable_from<weak, mutable_observer>);
+static_assert(!moveable_from<weak, unique>);
+static_assert(moveable_from<weak, shared_const>);
+static_assert(moveable_from<weak, weak>);
+static_assert(!moveable_from<weak, value>);
 
 static_assert(!moveable_from<unique, const_observer>);
 static_assert(!moveable_from<unique, mutable_observer>);
 static_assert(moveable_from<unique, unique>);
 static_assert(!moveable_from<unique, shared_const>);
+static_assert(!moveable_from<unique, weak>);
+static_assert(!moveable_from<unique, value>);
+
+static_assert(!moveable_from<value, const_observer>);
+static_assert(!moveable_from<value, mutable_observer>);
+static_assert(!moveable_from<value, unique>);
+static_assert(!moveable_from<value, shared_const>);
+static_assert(!moveable_from<value, weak>);
+static_assert(moveable_from<value, value>);
 
 };  // namespace anypp
