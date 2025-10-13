@@ -13,5 +13,5 @@ struct circle {
 
 }  // namespace whole_picture::core
 
-VV_RUNTIME_FWD(CORE_EXPORT, whole_picture::core::shapes::circle)
-VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::circle, whole_picture::architecture, shape)
+ANY_RUNTIME_FWD(CORE_EXPORT, whole_picture::core::shapes::circle)
+ANY_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::circle, whole_picture::architecture, shape)

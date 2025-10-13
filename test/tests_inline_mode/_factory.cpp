@@ -15,11 +15,11 @@ using namespace anypp;
 
 namespace {}
 
-VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
+ANY_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 
 namespace {
 
-VV_ANY(Thing, )
+ANY(Thing, )
 
 class Asteroid {};
 

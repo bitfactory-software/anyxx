@@ -4,7 +4,7 @@
 #include <example_whole_picture/layer_1_core/core.hpp>
 #include <anypp/extension_member.hpp>
 
-VV_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
+ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 
 namespace whole_picture::core::shapes {
 
@@ -18,8 +18,8 @@ struct picture : anypp::open_object::members<picture> {
 
 }  // namespace whole_picture::core::shapes
 
-VV_RUNTIME_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
-VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
+ANY_RUNTIME_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
+ANY_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
                         whole_picture::architecture, shape)
-VV_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
+ANY_V_TABLE_INSTANCE_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
                         whole_picture::architecture, surface)

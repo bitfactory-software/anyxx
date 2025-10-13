@@ -25,11 +25,11 @@ template <>
 struct test_trait<void*> {
   static const bool is_const = false;
 };
-template <typename VV_VOID>
+template <typename ANY_VOID>
 struct test_interface {
-  VV_VOID member = nullptr;
+  ANY_VOID member = nullptr;
   std::string f(int)
-    requires(!test_trait<VV_VOID>::is_const)
+    requires(!test_trait<ANY_VOID>::is_const)
   {
     return "mutable";
   }
@@ -63,8 +63,8 @@ struct functor {
 
 namespace {
 
-VV_ANY(const_function_i, (VV_CONST_OP(std::string, ())))
-VV_ANY(mutating_function_i, (VV_OP(void, (), std::string const&)))
+ANY(const_function_i, (ANY_CONST_OP(std::string, ())))
+ANY(mutating_function_i, (ANY_OP(void, (), std::string const&)))
 
 using const_function = const_function_i<const_observer>;
 using mutating_function = mutating_function_i<mutable_observer>;
@@ -191,10 +191,10 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-VV_ANY(text_i_const, (VV_CONST_METHOD(std::string, get_text)))
+ANY(text_i_const, (ANY_CONST_METHOD(std::string, get_text)))
 
-VV_ANY_(text_i_mutable, text_i_const,
-              (VV_METHOD(void, set_text, std::string const&)))
+ANY_(text_i_mutable, text_i_const,
+              (ANY_METHOD(void, set_text, std::string const&)))
 }  // namespace
 
 using const_text_i = text_i_const<const_observer>;

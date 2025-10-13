@@ -8,7 +8,7 @@
 
 namespace anypp::open_object {
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 template <typename OBJECT_TYPE>
 std::size_t& members_count();
 #else
@@ -61,9 +61,9 @@ struct member {
 
 }  // namespace anypp::open_object
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 
-#define VV_MEMBERS_COUNT_FWD(export_, ns_, c_)   \
+#define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)   \
   namespace ns_ {                                \
   struct c_;                                     \
   }                                              \
@@ -72,20 +72,20 @@ struct member {
   export_ std::size_t& members_count<ns_::c_>(); \
   }
 
-#define VV_MEMBERS_COUNT_IMPL(ns_, c_)                               \
+#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)                               \
   template <>                                                        \
   std::size_t& anypp::open_object::members_count<ns_::c_>() { \
     static std::size_t count = 0;                                    \
     return count;                                                    \
   }
 
-#define VV_MEMBER_FWD(export_, object_, member_, type_)                     \
+#define ANY_MEMBER_FWD(export_, object_, member_, type_)                     \
   export_ anypp::open_object::member<object_, type_>&                \
       _inintialize_##member_();                                             \
   inline const anypp::open_object::member<object_, type_>& member_ = \
       _inintialize_##member_();
 
-#define VV_MEMBER_IMPL(ns_, object_, member_, type_)                   \
+#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)                   \
   anypp::open_object::member<object_, type_>&                   \
       ns_::_inintialize_##member_() {                                  \
     static anypp::open_object::member<object_, type_> instance; \
@@ -94,9 +94,9 @@ struct member {
 
 #else
 
-#define VV_MEMBERS_COUNT_FWD(...)
-#define VV_MEMBERS_COUNT_IMPL(...)
-#define VV_MEMBER_FWD(...)
-#define VV_MEMBER_IMPL(...)
+#define ANY_MEMBERS_COUNT_FWD(...)
+#define ANY_MEMBERS_COUNT_IMPL(...)
+#define ANY_MEMBER_FWD(...)
+#define ANY_MEMBER_IMPL(...)
 
 #endif

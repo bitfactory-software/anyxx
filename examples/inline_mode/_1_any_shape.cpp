@@ -65,12 +65,12 @@ struct regular_polygon {
   double area() const { return (perimeter() * apothem()) / 2; }
 };
 
-VV_ANY(any_drawable,
-             (VV_CONST_METHOD(void, draw, std::ostream&, position)))
+ANY(any_drawable,
+             (ANY_CONST_METHOD(void, draw, std::ostream&, position)))
 
-VV_ANY_(any_shape, any_drawable,
-              (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
-               VV_CONST_METHOD(double, perimeter)))
+ANY_(any_shape, any_drawable,
+              (ANY_CONST_METHOD(int, count_sides), ANY_CONST_METHOD(double, area),
+               ANY_CONST_METHOD(double, perimeter)))
 
 template <>
 struct any_drawable_v_table_map<std::string> {

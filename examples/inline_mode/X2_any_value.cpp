@@ -9,7 +9,7 @@ using namespace anypp;
 
 namespace {
 
-VV_ANY(any)
+ANY(any)
 
 }  // namespace
 

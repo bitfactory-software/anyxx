@@ -10,8 +10,8 @@ using namespace anypp;
 using namespace anypp;
 using namespace anypp;
 
-VV_RUNTIME_INSTANCE(circle)
-VV_V_TABLE_INSTANCE(shapes::circle, whole_picture::architecture, shape);
+ANY_RUNTIME_INSTANCE(circle)
+ANY_V_TABLE_INSTANCE(shapes::circle, whole_picture::architecture, shape);
 
 template <>
 struct architecture::shape_v_table_map<circle>

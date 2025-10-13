@@ -20,7 +20,7 @@ using namespace anypp;
 using namespace anypp;
 using namespace anypp;
 
-VV_MEMBER_FWD(, shapes::picture, picture_author, std::string)
+ANY_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 
 TEST_CASE("example 1 core") {
   std::cout << whole_picture::core::hello() << "\n";
@@ -111,4 +111,4 @@ TEST_CASE("example 3 architecture picture") {
   }
 }
 
-VV_MEMBER_IMPL(, shapes::picture, picture_author, std::string)
+ANY_MEMBER_IMPL(, shapes::picture, picture_author, std::string)

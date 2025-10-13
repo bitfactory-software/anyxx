@@ -6,9 +6,9 @@
 
 namespace anypp {
 
-template <is_any TO_ANYPP, is_erased_data VV_FROM>
+template <is_any TO_ANYPP, is_erased_data ANY_FROM>
 std::expected<TO_ANYPP, anypp::cast_error> clone_to(
-    VV_FROM const& vv_from, const meta_data& meta_data) {
+    ANY_FROM const& vv_from, const meta_data& meta_data) {
   using vv_to_t = typename TO_ANYPP::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {

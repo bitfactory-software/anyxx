@@ -16,10 +16,10 @@ using namespace anypp;
 
 namespace {
 
-VV_ANY(node_i,
-             (VV_CONST_METHOD(int, value),
-              VV_CONST_METHOD(string, as_forth),
-              VV_CONST_METHOD(string, as_lisp)))
+ANY(node_i,
+             (ANY_CONST_METHOD(int, value),
+              ANY_CONST_METHOD(string, as_forth),
+              ANY_CONST_METHOD(string, as_lisp)))
 
 using node = node_i<shared_const>;
 

@@ -33,9 +33,9 @@ struct functor2_t {
 }  // namespace
 
 namespace {
-VV_ANY(overloaded_function_object,
-             (VV_OP(std::string, (), std::string const&),
-              VV_CONST_OP(std::string, ())))
+ANY(overloaded_function_object,
+             (ANY_OP(std::string, (), std::string const&),
+              ANY_CONST_OP(std::string, ())))
 }
 
 namespace {

@@ -15,9 +15,9 @@ using namespace anypp;
 
 namespace {}
 
-VV_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
+ANY_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
 namespace {
-VV_ANY(Thing, )
+ANY(Thing, )
 }  // namespace
 
 namespace {
@@ -64,7 +64,7 @@ TEST_CASE("multi_method") {
 // some compile time self tests
 
 namespace {
-VV_ANY(Dummy, )
+ANY(Dummy, )
 
 template <typename... ARGS>
 struct have_extension_methods_enabled {

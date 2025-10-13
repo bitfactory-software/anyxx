@@ -21,14 +21,14 @@ using namespace anypp;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
-VV_ANY(node_i,
-             (VV_CONST_METHOD(int, value), VV_CONST_METHOD(string, as_forth)))
+ANY(node_i,
+             (ANY_CONST_METHOD(int, value), ANY_CONST_METHOD(string, as_forth)))
 using node = node_i<shared_const>;
 }  // namespace _21_Tree_TE_erased_interface_w_cast
 
 namespace _21_Tree_TE_erased_interface_w_cast {
-VV_ANY(lisp_i, (VV_CONST_METHOD(string, as_lisp)))
-VV_ANY(value2_i, (VV_CONST_METHOD(int, value2)))
+ANY(lisp_i, (ANY_CONST_METHOD(string, as_lisp)))
+ANY(value2_i, (ANY_CONST_METHOD(int, value2)))
 }  // namespace _21_Tree_TE_erased_interface_w_cast
 
 namespace _21_Tree_TE_erased_interface_w_cast {
@@ -87,13 +87,13 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-VV_REGISTER_V_TABLE_INSTANCE(Plus, lisp_i);
-VV_REGISTER_V_TABLE_INSTANCE(Times, lisp_i);
-VV_REGISTER_V_TABLE_INSTANCE(Integer, lisp_i);
+ANY_REGISTER_V_TABLE_INSTANCE(Plus, lisp_i);
+ANY_REGISTER_V_TABLE_INSTANCE(Times, lisp_i);
+ANY_REGISTER_V_TABLE_INSTANCE(Integer, lisp_i);
 
-VV_REGISTER_V_TABLE_INSTANCE(Plus, value2_i);
-VV_REGISTER_V_TABLE_INSTANCE(Times, value2_i);
-VV_REGISTER_V_TABLE_INSTANCE(Integer, value2_i);
+ANY_REGISTER_V_TABLE_INSTANCE(Plus, value2_i);
+ANY_REGISTER_V_TABLE_INSTANCE(Times, value2_i);
+ANY_REGISTER_V_TABLE_INSTANCE(Integer, value2_i);
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace anypp;

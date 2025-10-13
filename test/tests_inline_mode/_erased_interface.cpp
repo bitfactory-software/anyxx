@@ -23,14 +23,14 @@ struct position {
 };
 
 namespace {
-VV_ANY(any_drawable, (VV_CONST_METHOD(void, draw, position)))
+ANY(any_drawable, (ANY_CONST_METHOD(void, draw, position)))
 
-VV_ANY_(any_shape, any_drawable,
-              (VV_CONST_METHOD(int, count_sides), VV_CONST_METHOD(double, area),
-               VV_CONST_METHOD(double, perimeter)))
+ANY_(any_shape, any_drawable,
+              (ANY_CONST_METHOD(int, count_sides), ANY_CONST_METHOD(double, area),
+               ANY_CONST_METHOD(double, perimeter)))
 
-VV_ANY_(any_callable_shape, any_shape,
-              (VV_CONST_OP(std::string, (), std::string const&)))
+ANY_(any_callable_shape, any_shape,
+              (ANY_CONST_OP(std::string, (), std::string const&)))
 }  // namespace
 
 struct circle {

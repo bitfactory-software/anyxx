@@ -7,7 +7,7 @@
 
 namespace anypp {
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 template <typename EXTENDED_V_TABLE>
 std::size_t& extension_method_count_of();
 #else
@@ -278,9 +278,9 @@ struct extension_method<R(ARGS...)> {
 
 }  // namespace anypp
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 
-#define VV_EXTENSION_METHOD_COUNT_FWD(export_, ns_, c_)      \
+#define ANY_EXTENSION_METHOD_COUNT_FWD(export_, ns_, c_)      \
   namespace ns_ {                                            \
   struct c_;                                                 \
   }                                                          \
@@ -289,14 +289,14 @@ struct extension_method<R(ARGS...)> {
   export_ std::size_t& extension_method_count_of<ns_::c_>(); \
   }
 
-#define VV_EXTENSION_METHOD_COUNT_IMPL(ns_, c_)                                \
+#define ANY_EXTENSION_METHOD_COUNT_IMPL(ns_, c_)                                \
   template <>                                                                  \
   std::size_t& anypp::extension_method_count_of<ns_::c_>() { \
     static std::size_t count = 0;                                              \
     return count;                                                              \
   }
 
-#define VV_EXTENSION_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_) \
+#define ANY_EXTENSION_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_) \
   namespace anypp {                                          \
   template <>                                                                  \
   export_ anypp::extension_method_table_t*                     \
@@ -304,7 +304,7 @@ struct extension_method<R(ARGS...)> {
                                                          class_>(); \
   }
 
-#define VV_EXTENSION_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
+#define ANY_EXTENSION_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                                  \
   anypp::extension_method_table_t*                             \
   anypp::extension_method_table_instance<interface_##_v_table, \
@@ -315,9 +315,9 @@ struct extension_method<R(ARGS...)> {
 
 #else
 
-#define VV_EXTENSION_METHOD_COUNT_FWD(...)
-#define VV_EXTENSION_METHOD_COUNT_IMPL(...)
-#define VV_EXTENSION_TABLE_INSTANCE_FWD(...)
-#define VV_EXTENSION_TABLE_INSTANCE(...)
+#define ANY_EXTENSION_METHOD_COUNT_FWD(...)
+#define ANY_EXTENSION_METHOD_COUNT_IMPL(...)
+#define ANY_EXTENSION_TABLE_INSTANCE_FWD(...)
+#define ANY_EXTENSION_TABLE_INSTANCE(...)
 
 #endif

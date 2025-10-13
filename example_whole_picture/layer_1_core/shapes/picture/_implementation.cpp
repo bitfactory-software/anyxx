@@ -10,9 +10,9 @@ using namespace anypp;
 using namespace anypp;
 using namespace anypp;
 
-VV_RUNTIME_INSTANCE(shapes::picture)
-VV_V_TABLE_INSTANCE(shapes::picture, whole_picture::architecture, shape);
-VV_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
+ANY_RUNTIME_INSTANCE(shapes::picture)
+ANY_V_TABLE_INSTANCE(shapes::picture, whole_picture::architecture, shape);
+ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
 
 
 template <>

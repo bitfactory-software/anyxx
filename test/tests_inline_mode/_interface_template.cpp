@@ -20,26 +20,26 @@ struct X {
 };
 
 namespace {
-VV_ANY(to_string_i, (VV_CONST_METHOD(std::string, to_string)))
+ANY(to_string_i, (ANY_CONST_METHOD(std::string, to_string)))
 
-VV_ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
-                      (VV_CONST_METHOD(VALUE const&, at, KEY),
-                       VV_CONST_METHOD(std::size_t, size)))
+ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
+                      (ANY_CONST_METHOD(VALUE const&, at, KEY),
+                       ANY_CONST_METHOD(std::size_t, size)))
 
-VV_ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
-                      (VV_METHOD(VALUE&, at, KEY),
-                       VV_CONST_METHOD(std::size_t, size)))
+ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
+                      (ANY_METHOD(VALUE&, at, KEY),
+                       ANY_CONST_METHOD(std::size_t, size)))
 
-VV_ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
-                      (VV_CONST_METHOD(VALUE, at, KEY),
-                       VV_CONST_METHOD(std::size_t, size)))
+ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
+                      (ANY_CONST_METHOD(VALUE, at, KEY),
+                       ANY_CONST_METHOD(std::size_t, size)))
 
-VV_ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
-                      (VV_METHOD(VALUE, at, KEY),
-                       VV_CONST_METHOD(std::size_t, size)))
+ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
+                      (ANY_METHOD(VALUE, at, KEY),
+                       ANY_CONST_METHOD(std::size_t, size)))
 
-VV_ANY_TEMPLATE(((KEY)), map_to_string_i,
-                      (VV_CONST_METHOD(to_string_i<const_observer>, at, KEY)))
+ANY_TEMPLATE(((KEY)), map_to_string_i,
+                      (ANY_CONST_METHOD(to_string_i<const_observer>, at, KEY)))
 
 template <>
 struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {

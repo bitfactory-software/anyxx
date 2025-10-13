@@ -16,12 +16,12 @@ using namespace anypp;
 using namespace anypp;
 
 namespace {
-VV_ANY(string_to_string,
-             (VV_CONST_OP(std::string, (), std::string const&)))
+ANY(string_to_string,
+             (ANY_CONST_OP(std::string, (), std::string const&)))
 
-VV_ANY(string_to_string_mutable,
-             (VV_CONST_OP(std::string, ()),
-              VV_OP(std::string, (), std::string const&)))
+ANY(string_to_string_mutable,
+             (ANY_CONST_OP(std::string, ()),
+              ANY_OP(std::string, (), std::string const&)))
 
 }  // namespace test_ns
 

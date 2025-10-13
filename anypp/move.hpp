@@ -5,8 +5,8 @@
 
 namespace anypp {
 
-template <is_any TO_ANYPP, is_erased_data VV_FROM>
-TO_ANYPP move_to(VV_FROM&& vv_from,
+template <is_any TO_ANYPP, is_erased_data ANY_FROM>
+TO_ANYPP move_to(ANY_FROM&& vv_from,
                      const meta_data& get_meta_data) {
   using vv_to_t = typename TO_ANYPP::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);

@@ -8,8 +8,8 @@ using namespace whole_picture::core::shapes;
 
 using namespace anypp;
 
-VV_RUNTIME_INSTANCE(line)
-VV_V_TABLE_INSTANCE(shapes::line, whole_picture::architecture, shape);
+ANY_RUNTIME_INSTANCE(line)
+ANY_V_TABLE_INSTANCE(shapes::line, whole_picture::architecture, shape);
 
 template <>
 struct architecture::shape_v_table_map<line>

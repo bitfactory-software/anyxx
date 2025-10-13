@@ -197,7 +197,7 @@ auto unerase_cast(Any const* o) {
   return nullptr;
 }
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 template <typename V_TABLE, typename CONCRETE>
 V_TABLE* v_table_instance_implementaion();
 #else

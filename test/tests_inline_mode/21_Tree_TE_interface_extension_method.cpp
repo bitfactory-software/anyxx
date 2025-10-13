@@ -19,13 +19,13 @@ using std::string;
 using namespace anypp;
 using namespace anypp;
 
-VV_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
+ANY_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
                                  node_i)
 
 namespace _21_Tree_TE_interface_extension_method {
 
 namespace node {
-VV_ANY(node_i, (VV_CONST_METHOD(int, value)))
+ANY(node_i, (ANY_CONST_METHOD(int, value)))
 }
 }  // namespace _21_Tree_TE_interface_extension_method
 

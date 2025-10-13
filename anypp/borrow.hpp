@@ -5,10 +5,10 @@
 
 namespace anypp {
 
-template <is_any TO_ANYPP, is_erased_data VV_FROM>
-  requires borrowable_from<typename TO_ANYPP::erased_data_t, VV_FROM>
+template <is_any TO_ANYPP, is_erased_data ANY_FROM>
+  requires borrowable_from<typename TO_ANYPP::erased_data_t, ANY_FROM>
 std::expected<TO_ANYPP, anypp::cast_error> borrow_as(
-    VV_FROM const& vv_from, const meta_data& meta_data) {
+    ANY_FROM const& vv_from, const meta_data& meta_data) {
   using to = typename TO_ANYPP::erased_data_t;
   return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {
     return TO_ANYPP{borrow_as<to>(vv_from), v_table};

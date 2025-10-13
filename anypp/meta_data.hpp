@@ -23,7 +23,7 @@ auto& runtime_implementation() {
   return meta_data;
 }
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 template <typename T>
 const std::type_info& typeid_of();
 template <typename T>
@@ -150,7 +150,7 @@ extension_method_table_t* extension_method_table_instance_implementation() {
   return &extension_method_table;
 }
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
 extension_method_table_t* extension_method_table_instance();
@@ -181,9 +181,9 @@ bool type_match(meta_data const& meta_data) {
 }
 }  // namespace anypp
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 
-#define VV_RUNTIME_FWD(export_, ...)               \
+#define ANY_RUNTIME_FWD(export_, ...)               \
   template <>                                      \
   export_ const std::type_info&                    \
   anypp::typeid_of<__VA_ARGS__>(); \
@@ -191,7 +191,7 @@ bool type_match(meta_data const& meta_data) {
   export_ anypp::meta_data&        \
   anypp::get_meta_data<__VA_ARGS__>();
 
-#define VV_RUNTIME_INSTANCE(...)                                          \
+#define ANY_RUNTIME_INSTANCE(...)                                          \
   template <>                                                             \
   const std::type_info& anypp::typeid_of<__VA_ARGS__>() { \
     return typeid(__VA_ARGS__);                                           \
@@ -204,11 +204,11 @@ bool type_match(meta_data const& meta_data) {
 
 #else
 
-#define VV_RUNTIME_FWD(...)
-#define VV_RUNTIME_INSTANCE(...)
+#define ANY_RUNTIME_FWD(...)
+#define ANY_RUNTIME_INSTANCE(...)
 
 #endif
 
-#define VV_RUNTIME_STATIC(...)  \
-  VV_RUNTIME_FWD(, __VA_ARGS__) \
-  VV_RUNTIME_INSTANCE(__VA_ARGS__)\
+#define ANY_RUNTIME_STATIC(...)  \
+  ANY_RUNTIME_FWD(, __VA_ARGS__) \
+  ANY_RUNTIME_INSTANCE(__VA_ARGS__)\

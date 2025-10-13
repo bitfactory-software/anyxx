@@ -182,7 +182,7 @@
   __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define VV_ANY_TEMPLATE_(t, n, BASE, l)                                        \
+#define ANY_TEMPLATE_(t, n, BASE, l)                                        \
                                                                                \
   template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(                            \
       _add_head((ERASED_DATA), t))>                                            \
@@ -311,38 +311,38 @@
 
 //    n(n&) = default;                                                           \
 
-#define VV_ANY_(n, BASE, l) VV_ANY_TEMPLATE_((), n, BASE, l)
+#define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, l)
 
-#define VV_ANY(n, ...) VV_ANY_(n, ::anypp::any_base, __VA_ARGS__)
+#define ANY(n, ...) ANY_(n, ::anypp::any_base, __VA_ARGS__)
 
-#define VV_ANY_TEMPLATE(t, n, l) \
-  VV_ANY_TEMPLATE_(t, n, ::anypp::any_base, l)
+#define ANY_TEMPLATE(t, n, l) \
+  ANY_TEMPLATE_(t, n, ::anypp::any_base, l)
 
-#define VV_METHOD_(...) (__VA_ARGS__)
+#define ANY_METHOD_(...) (__VA_ARGS__)
 
-#define VV_METHOD(ret, name, ...) \
-  VV_METHOD_(ret, name, name, false, , __VA_ARGS__)
+#define ANY_METHOD(ret, name, ...) \
+  ANY_METHOD_(ret, name, name, false, , __VA_ARGS__)
 
-#define VV_CONST_METHOD(ret, name, ...) \
-  VV_METHOD_(ret, name, name, false, const, __VA_ARGS__)
+#define ANY_CONST_METHOD(ret, name, ...) \
+  ANY_METHOD_(ret, name, name, false, const, __VA_ARGS__)
 
-#define VV_OP(ret, op, ...)                                                  \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, , \
+#define ANY_OP(ret, op, ...)                                                  \
+  ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, , \
              __VA_ARGS__)
 
-#define VV_OP_EXACT(ret, op, ...)                                           \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, , \
+#define ANY_OP_EXACT(ret, op, ...)                                           \
+  ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, , \
              __VA_ARGS__)
 
-#define VV_CONST_OP(ret, op, ...)                                          \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
+#define ANY_CONST_OP(ret, op, ...)                                          \
+  ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
              const, __VA_ARGS__)
 
-#define VV_CONST_OP_EXACT(ret, op, ...)                                   \
-  VV_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
+#define ANY_CONST_OP_EXACT(ret, op, ...)                                   \
+  ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
              const, __VA_ARGS__)
 
-#define VV_ANY_FORWARD(interface_namespace, interface_name, ...) \
+#define ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                                \
   template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(              \
       _add_head((ERASED_DATA), (__VA_ARGS__)))>                  \
@@ -350,17 +350,17 @@
   struct interface_name##_v_table;                               \
   }
 
-#define VV_REGISTER_V_TABLE_INSTANCE(class_, interface_)                       \
+#define ANY_REGISTER_V_TABLE_INSTANCE(class_, interface_)                       \
   namespace {                                                                  \
   static auto __ =                                                             \
       anypp::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
   }
 
-#ifdef VV_DLL_MODE
+#ifdef ANY_DLL_MODE
 
-#define VV_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
+#define ANY_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,       \
                                 interface_)                                  \
-  VV_ANY_FORWARD(interface_namespace_, interface_)                           \
+  ANY_FORWARD(interface_namespace_, interface_)                           \
   namespace anypp {                                                   \
   template <>                                                                \
   export_ interface_namespace_::interface_##_v_table*                        \
@@ -368,7 +368,7 @@
                                  class_>();                                  \
   }
 
-#define VV_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
+#define ANY_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                         \
   interface_namespace_::interface_##_v_table*                         \
   anypp::v_table_instance_implementaion<                       \
@@ -377,20 +377,20 @@
         std::in_place_type<class_>};                                  \
     return &v_table;                                                  \
   }                                                                   \
-  VV_REGISTER_V_TABLE_INSTANCE(class_, interface_namespace_::interface_)
+  ANY_REGISTER_V_TABLE_INSTANCE(class_, interface_namespace_::interface_)
 
 #else
 
-#define VV_V_TABLE_INSTANCE_FWD(...)
-#define VV_V_TABLE_INSTANCE(...)
+#define ANY_V_TABLE_INSTANCE_FWD(...)
+#define ANY_V_TABLE_INSTANCE(...)
 
 #endif
 
-#define VV_V_TABLE_INSTANCE_STATIC(class_, interface_, interface_namespace_) \
-  VV_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
-  VV_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
+#define ANY_V_TABLE_INSTANCE_STATIC(class_, interface_, interface_namespace_) \
+  ANY_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
+  ANY_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
 
-#define VV_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \
+#define ANY_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \
   template <>                                                         \
   struct export_ interface_##_v_table_instance<class, __VA_ARGS__> {  \
     static interface_##_v_table<__VA_ARGS__>* get() {                 \
@@ -404,9 +404,9 @@
       interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
   }
 
-#define VV_V_TABLE_HAS_EXTENSION_METHODS(interface_namespace, interface_name, \
+#define ANY_V_TABLE_HAS_EXTENSION_METHODS(interface_namespace, interface_name, \
                                          ...)                                 \
-  VV_ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)            \
+  ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)            \
                                                                               \
   namespace anypp {                                                    \
   template <>                                                                 \
@@ -414,4 +414,4 @@
       true;                                                                   \
   }
 
-#define VV_NAME(...) __VA_ARGS__
+#define ANY_NAME(...) __VA_ARGS__

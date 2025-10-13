@@ -20,14 +20,14 @@ using vector_t = std::vector<std::string>;
 }  // namespace
 
 namespace {
-VV_ANY(map_i_to_string_mutable, (VV_OP_EXACT(std::string&, [], int)))
+ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], int)))
 
-VV_ANY(map_i_to_string_const_and_mutable,
-             (VV_OP_EXACT(std::string&, [], int),
-              VV_CONST_OP_EXACT(std::string const&, [], int)))
+ANY(map_i_to_string_const_and_mutable,
+             (ANY_OP_EXACT(std::string&, [], int),
+              ANY_CONST_OP_EXACT(std::string const&, [], int)))
 
-VV_ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-              (VV_CONST_OP_EXACT(std::string const&, [], int)))
+ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
+              (ANY_CONST_OP_EXACT(std::string const&, [], int)))
 
 }  // namespace
 
