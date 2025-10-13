@@ -5,19 +5,19 @@
 
 namespace anypp {
 
-template <typename V, is_any ANY>
-struct typed_any : public ANY {
-  using erased_data_t = ANY::erased_data_t;
-  using trait_t = ANY::trait_t;
+template <typename V, is_any Any>
+struct typed_any : public Any {
+  using erased_data_t = Any::erased_data_t;
+  using trait_t = Any::trait_t;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
 
-  using ANY::ANY;
+  using Any::Any;
 
-  typed_any(V const& v) : ANY(v) {}
-  typed_any(V&& v) : ANY(std::move(v)) {}
-  typed_any(ANY i) : ANY(i) {
+  typed_any(V const& v) : Any(v) {}
+  typed_any(V&& v) : Any(std::move(v)) {}
+  typed_any(Any i) : Any(i) {
     check_type_match<V>(get_runtime(*this));
   }
 
@@ -50,40 +50,40 @@ struct typed_any : public ANY {
   }
 };
 
-template <typename V, is_any ANY>
-bool has_data(typed_any<V, ANY> const& vv) {
+template <typename V, is_any Any>
+bool has_data(typed_any<V, Any> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, is_any ANY>
-void const* get_void_data_ptr(typed_any<V, ANY> const& vv)
-  requires is_const_void<typename ANY::void_t>
+template <typename V, is_any Any>
+void const* get_void_data_ptr(typed_any<V, Any> const& vv)
+  requires is_const_void<typename Any::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_any ANY>
-void* get_void_data_ptr(typed_any<V, ANY> const& vv)
-  requires(!is_const_void<typename ANY::void_t>)
+template <typename V, is_any Any>
+void* get_void_data_ptr(typed_any<V, Any> const& vv)
+  requires(!is_const_void<typename Any::void_t>)
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_any ANY>
-auto get_meta(typed_any<V, ANY> const& vv) {
-  return ANY::trait_t::meta(vv.erased_data_);
+template <typename V, is_any Any>
+auto get_meta(typed_any<V, Any> const& vv) {
+  return Any::trait_t::meta(vv.erased_data_);
 }
 
-template <typename V, is_any ANY>
-auto as(ANY source) {
-  return typed_any<V, ANY>{std::move(source)};
+template <typename V, is_any Any>
+auto as(Any source) {
+  return typed_any<V, Any>{std::move(source)};
 }
 
-template <typename TO, typename FROM, is_any ANY>
-auto as(typed_any<FROM, ANY> source)
+template <typename TO, typename FROM, is_any Any>
+auto as(typed_any<FROM, Any> source)
   requires std::convertible_to<FROM*, TO*>
 {
-  if constexpr (typed_any<FROM, ANY>::is_const) {
-    return typed_any<TO const, ANY>{std::move(source.erased_data_)};
+  if constexpr (typed_any<FROM, Any>::is_const) {
+    return typed_any<TO const, Any>{std::move(source.erased_data_)};
   } else {
-    return typed_any<TO, ANY>{std::move(source.erased_data_)};
+    return typed_any<TO, Any>{std::move(source.erased_data_)};
   }
 }
 

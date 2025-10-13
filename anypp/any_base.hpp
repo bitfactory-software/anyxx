@@ -131,8 +131,8 @@ auto get_void_data_ptr(any_base<ERASED_DATA> const& any) {
   return get_void_data_ptr(get_erased_data(any));
 }
 
-template <is_any ANY>
-inline const auto& get_runtime(ANY const& any) {
+template <is_any Any>
+inline const auto& get_runtime(Any const& any) {
   return *get_v_table(any)->meta_data;
 }
 
@@ -161,9 +161,9 @@ auto unchecked_v_table_downcast_to(any_base_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
 }
 
-template <is_any ANY>
-inline auto get_v_table(ANY const& any) {
-  return unchecked_v_table_downcast_to<ANY>(any.v_table_);
+template <is_any Any>
+inline auto get_v_table(Any const& any) {
+  return unchecked_v_table_downcast_to<Any>(any.v_table_);
 }
 
 template <is_any TO, is_any FROM>
@@ -183,16 +183,16 @@ std::optional<TO> downcast_to(FROM from)
   return {};
 }
 
-template <typename U, is_any ANY>
-auto unchecked_unerase_cast(ANY const& o) {
+template <typename U, is_any Any>
+auto unchecked_unerase_cast(Any const& o) {
   return unchecked_unerase_cast<U>(get_erased_data(o));
 }
-template <typename U, is_any ANY>
-auto unerase_cast(ANY const& o) {
+template <typename U, is_any Any>
+auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_erased_data(o), get_runtime(o));
 }
-template <typename U, is_any ANY>
-auto unerase_cast(ANY const* o) {
+template <typename U, is_any Any>
+auto unerase_cast(Any const* o) {
   unerase_cast<U>(get_erased_data(*o), get_runtime(o));
   return nullptr;
 }
@@ -211,19 +211,19 @@ V_TABLE* v_table_instance_implementaion() {
 }
 #endif  // DEBUG
 
-template <template <typename...> typename ANY>
+template <template <typename...> typename Any>
 constexpr bool has_extension_methods = false;
 
 template <typename I>
 concept has_extension_methods_enabled =
     is_any<I> && I::v_table_t::extension_methods_enabled;
 
-template <bool HAS_EXTENSION_METHODS, template <typename...> typename ANY>
+template <bool HAS_EXTENSION_METHODS, template <typename...> typename Any>
 struct extension_method_holder;
-template <template <typename...> typename ANY>
-struct extension_method_holder<false, ANY> {};
-template <template <typename...> typename ANY>
-struct extension_method_holder<true, ANY> {
+template <template <typename...> typename Any>
+struct extension_method_holder<false, Any> {};
+template <template <typename...> typename Any>
+struct extension_method_holder<true, Any> {
   extension_method_table_t* extension_method_table = nullptr;
 };
 
