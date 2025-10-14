@@ -33,11 +33,11 @@ struct test_derived_i_v_table_map<x_t> {
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 
-method<std::string(virtual_<test_base_i_co>)> to_string_otherwise;
+dispatch<std::string(virtual_<test_base_i_co>)> to_string_otherwise;
 auto __ = to_string_otherwise.define<x_t>(
     [](auto expr) { return expr->s_ + " otherwise"; });
 
-method<void(virtual_<test_derived_i_mo>, std::string const&)>
+dispatch<void(virtual_<test_derived_i_mo>, std::string const&)>
     from_string_otherwise;
 auto __ =
     from_string_otherwise.define<x_t>([](auto expr, std::string const& s) {
@@ -49,7 +49,7 @@ auto derived_table = dispatch_table_instance<test_derived_i_v_table, x_t>();
 
 namespace {
 
-TEST_CASE("method") {
+TEST_CASE("dispatch") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 

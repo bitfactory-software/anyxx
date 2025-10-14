@@ -280,9 +280,9 @@ auto move_to_unique(std::unique_ptr<T> p) {
   return unique(p.release(), erased_delete<T>());
 }
 
-template <typename T, typename... ARGS>
-auto make_unique(ARGS&&... args) {
-  return move_to_unique(std::make_unique<T>(std::forward<ARGS>(args)...));
+template <typename T, typename... Args>
+auto make_unique(Args&&... args) {
+  return move_to_unique(std::make_unique<T>(std::forward<Args>(args)...));
 }
 
 inline unique unique_nullptr() {
@@ -375,14 +375,14 @@ class value {
   const value_v_table* v_table_ = nullptr;
 };
 
-template <typename T, typename... ARGS>
-auto make_value(ARGS&&... args) {
-  return value(new T(std::forward<ARGS>(args)...));
+template <typename T, typename... Args>
+auto make_value(Args&&... args) {
+  return value(new T(std::forward<Args>(args)...));
 }
 
-template <typename T, typename... ARGS>
-auto make_void_value(ARGS&&... args) {
-  return make_value<T>(std::forward<ARGS>(args)...);
+template <typename T, typename... Args>
+auto make_void_value(Args&&... args) {
+  return make_value<T>(std::forward<Args>(args)...);
 }
 
 template <typename T>
@@ -489,7 +489,7 @@ inline dispatch_table_function_t get_function(dispatch_table_t* v_table,
     return {};
 }
 
-inline std::optional<std::size_t> get_multi_method_index_at(
+inline std::optional<std::size_t> get_multi_dispatch_index_at(
     dispatch_table_t* v_table, std::size_t index) {
   if (v_table->size() <= index) return {};
   if (auto dispatch_table_dispatch_index =
@@ -497,13 +497,13 @@ inline std::optional<std::size_t> get_multi_method_index_at(
     return *dispatch_table_dispatch_index;
   return {};
 }
-inline void set_multi_method_index_at(
-    dispatch_table_t* v_table, std::size_t index_multi_method,
+inline void set_multi_dispatch_index_at(
+    dispatch_table_t* v_table, std::size_t index_multi_dispatch,
     dispatch_table_dispatch_index_t
         dispatch_index_of_class_in_dispatch_matrix) {
-  if (v_table->size() <= index_multi_method)
-    v_table->resize(index_multi_method + 1);
-  v_table->at(index_multi_method) = dispatch_index_of_class_in_dispatch_matrix;
+  if (v_table->size() <= index_multi_dispatch)
+    v_table->resize(index_multi_dispatch + 1);
+  v_table->at(index_multi_dispatch) = dispatch_index_of_class_in_dispatch_matrix;
 }
 
 struct cast_error {
@@ -967,12 +967,12 @@ V_TABLE* v_table_instance_implementaion() {
 #endif  // DEBUG
 
 template <template <typename...> typename Any>
-constexpr bool has_methods = false;
+constexpr bool has_dispatchs = false;
 
 template <typename I>
-concept has_methods_enabled = is_any<I> && I::v_table_t::methods_enabled;
+concept has_dispatchs_enabled = is_any<I> && I::v_table_t::dispatchs_enabled;
 
-template <bool HAS_EXTENSION_METHODS, template <typename...> typename Any>
+template <bool HasDispatch, template <typename...> typename Any>
 struct dispatch_holder;
 template <template <typename...> typename Any>
 struct dispatch_holder<false, Any> {};
@@ -1142,10 +1142,10 @@ TO_ANYPP move_to(FROM_ANYPP&& from_interface) {
 // --------------------------------------------------------------------------------
 // hook
 
-template <typename R, typename... ARGS>
+template <typename R, typename... Args>
 class hook;
-template <typename R, typename... ARGS>
-class hook<R(ARGS...)> {
+template <typename R, typename... Args>
+class hook<R(Args...)> {
  public:
   class connection {
     int id_;
@@ -1176,19 +1176,19 @@ class hook<R(ARGS...)> {
 
    public:
     explicit operator bool() const { return index_ >= 0; }
-    R operator()(ARGS&&... args) const {
+    R operator()(Args&&... args) const {
       assert(index_ >= 0);
       return hook_.callees_[index_].second(super{index_ - 1, hook_},
-                                           std::forward<ARGS>(args)...);
+                                           std::forward<Args>(args)...);
     }
   };
 
-  using callee = std::function<R(typename super const&, ARGS...)>;
+  using callee = std::function<R(typename super const&, Args...)>;
 
-  R operator()(ARGS&&... args) const {
+  R operator()(Args&&... args) const {
     assert(!callees_.empty());
     return callees_.back().second(super{((int)callees_.size()) - 2, *this},
-                                  std::forward<ARGS>(args)...);
+                                  std::forward<Args>(args)...);
   }
 
   [[nodiscard]]
@@ -1216,18 +1216,18 @@ class unkonwn_factory_key_error : error {
   using error::error;
 };
 
-template <template <typename> typename Any, typename KEY, typename... ARGS>
+template <template <typename> typename Any, typename KEY, typename... Args>
 class factory {
-  using constructor_t = std::function<Any<unique>(ARGS...)>;
+  using constructor_t = std::function<Any<unique>(Args...)>;
   std::map<KEY, constructor_t> function_map_;
 
  public:
   void register_(auto const& key, auto const& construct) {
     function_map_[key] = construct;
   }
-  Any<unique> construct(auto key, ARGS&&... args) {
+  Any<unique> construct(auto key, Args&&... args) {
     if (auto found = function_map_.find(key); found != function_map_.end())
-      return construct(std::forward<ARGS>(args)...);
+      return construct(std::forward<Args>(args)...);
     throw unkonwn_factory_key_error{std::to_string(key)};
   };
 };
@@ -1286,14 +1286,14 @@ struct member {
 };
 
 // --------------------------------------------------------------------------------
-// extension method
+// dispatch
 
 #ifdef ANY_DLL_MODE
 template <typename EXTENDED_V_TABLE>
-std::size_t& methods_count();
+std::size_t& dispatchs_count();
 #else
 template <typename EXTENDED_V_TABLE>
-std::size_t& methods_count() {
+std::size_t& dispatchs_count() {
   static std::size_t count = 0;
   return count;
 }
@@ -1313,31 +1313,31 @@ struct translate_erased_function_param<virtual_<Any>> {
   using type = typename Any::void_t;
 };
 
-template <typename RET, typename... ARGS>
+template <typename RET, typename... Args>
 struct translate_erased_function {
-  using type = RET (*)(typename translate_erased_function_param<ARGS>::type...);
+  using type = RET (*)(typename translate_erased_function_param<Args>::type...);
 };
 
-template <std::size_t COUNT, typename... ARGS>
+template <std::size_t COUNT, typename... Args>
 constexpr std::size_t dispatch_dimension_count = COUNT;
-template <std::size_t COUNT, is_any Any, typename... ARGS>
-constexpr std::size_t dispatch_dimension_count<COUNT, virtual_<Any>, ARGS...> =
-    dispatch_dimension_count<COUNT + 1, ARGS...>;
+template <std::size_t COUNT, is_any Any, typename... Args>
+constexpr std::size_t dispatch_dimension_count<COUNT, virtual_<Any>, Args...> =
+    dispatch_dimension_count<COUNT + 1, Args...>;
 
-template <typename R, typename... CLASSES>
+template <typename R, typename... Classes>
 struct ensure_function_ptr_from_functor_t {
-  template <typename FUNCTOR, typename... ARGS>
+  template <typename FUNCTOR, typename... Args>
   struct striped_virtuals {
-    static R function(CLASSES*... classes, ARGS... args) {
+    static R function(Classes*... classes, Args... args) {
       return FUNCTOR{}(classes..., args...);
     };
   };
 
-  template <typename FUNCTOR, is_any Any, typename... ARGS>
-  struct striped_virtuals<FUNCTOR, virtual_<Any>, ARGS...>
-      : striped_virtuals<FUNCTOR, ARGS...> {};
+  template <typename FUNCTOR, is_any Any, typename... Args>
+  struct striped_virtuals<FUNCTOR, virtual_<Any>, Args...>
+      : striped_virtuals<FUNCTOR, Args...> {};
 
-  template <typename... ARGS>
+  template <typename... Args>
   static auto instance(
       auto functor)  // if functor is a templated operator() from a
                      // stateless function object, instantiate it now!;
@@ -1346,12 +1346,12 @@ struct ensure_function_ptr_from_functor_t {
     if constexpr (std::is_pointer_v<functor_t>) {
       return functor;
     } else {
-      return striped_virtuals<functor_t, ARGS...>::function;
+      return striped_virtuals<functor_t, Args...>::function;
     }
   }
 };
 
-template <typename... METHOD_ARGS>
+template <typename... DISPATCH_ARGS>
 struct args_to_tuple {
   template <typename T, typename... ACTUAL_ARGS>
   auto operator()(T&& dispatch_args, ACTUAL_ARGS&&... actual_args) {
@@ -1360,93 +1360,93 @@ struct args_to_tuple {
         std::make_tuple(std::forward<ACTUAL_ARGS>(actual_args)...));
   }
 };
-template <is_any Any, typename... METHOD_ARGS>
-struct args_to_tuple<virtual_<Any>, METHOD_ARGS...> {
+template <is_any Any, typename... DISPATCH_ARGS>
+struct args_to_tuple<virtual_<Any>, DISPATCH_ARGS...> {
   template <typename T, typename ACTUAL_ARG, typename... ACTUAL_ARGS>
   auto operator()(T&& dispatch_args, ACTUAL_ARG&& dispatch_arg,
                   ACTUAL_ARGS&&... actual_args) {
-    return args_to_tuple<METHOD_ARGS...>{}(
+    return args_to_tuple<DISPATCH_ARGS...>{}(
         std::tuple_cat(std::forward<T>(dispatch_args),
                        std::make_tuple(get_void_data_ptr(dispatch_arg))),
         std::forward<ACTUAL_ARGS>(actual_args)...);
   }
 };
 
-template <typename R, typename... ARGS>
+template <typename R, typename... Args>
 struct dispatch_default {
-  template <is_any... ANYPPS>
+  template <is_any... Anys>
   struct inner {
-    template <typename... ARGS>
+    template <typename... Args>
     struct implemenation {
       struct type {
-        using function_t = hook<R(ANYPPS const&..., ARGS...)>;
+        using function_t = hook<R(Anys const&..., Args...)>;
         static auto function() {
-          return [](auto super, ANYPPS const&..., ARGS... args) -> R {
+          return [](auto super, Anys const&..., Args... args) -> R {
             return R{};
           };
         }
       };
     };
-    template <is_any Any, typename... ARGS>
-    struct implemenation<virtual_<Any>, ARGS...> : implemenation<ARGS...> {};
-    template <typename... ARGS>
-    using type = typename implemenation<ARGS...>::type;
+    template <is_any Any, typename... Args>
+    struct implemenation<virtual_<Any>, Args...> : implemenation<Args...> {};
+    template <typename... Args>
+    using type = typename implemenation<Args...>::type;
   };
 
-  template <typename... ARGS>
+  template <typename... Args>
   struct outer {
-    template <is_any... ANYPPS>
-    using type = inner<ANYPPS...>::template type<ARGS...>;
+    template <is_any... Anys>
+    using type = inner<Anys...>::template type<Args...>;
   };
-  template <is_any Any, typename... ARGS>
-  struct outer<virtual_<Any>, ARGS...> {
-    template <is_any... ANYPPS>
-    using type = outer<ARGS...>::template type<Any, ANYPPS...>;
+  template <is_any Any, typename... Args>
+  struct outer<virtual_<Any>, Args...> {
+    template <is_any... Anys>
+    using type = outer<Args...>::template type<Any, Anys...>;
   };
 
-  using type = outer<ARGS...>::template type<>;
+  using type = outer<Args...>::template type<>;
 };
 
-template <typename DISPATCH, typename... ARGS>
+template <typename F, typename... Args>
 struct dispatch_matrix {
-  using type = DISPATCH;
+  using type = F;
 };
-template <typename DISPATCH, is_any Any, typename... ARGS>
-struct dispatch_matrix<DISPATCH, virtual_<Any>, ARGS...> {
-  using type = typename dispatch_matrix<std::vector<DISPATCH>, ARGS...>::type;
+template <typename DispatchMatrix, is_any Any, typename... Args>
+struct dispatch_matrix<DispatchMatrix, virtual_<Any>, Args...> {
+  using type = typename dispatch_matrix<std::vector<DispatchMatrix>, Args...>::type;
 };
 
-template <typename R, typename... ARGS>
-struct method;
-template <typename R, typename... ARGS>
-struct method<R(ARGS...)> {
+template <typename R, typename... Args>
+struct dispatch;
+template <typename R, typename... Args>
+struct dispatch<R(Args...)> {
   using erased_function_t =
-      typename translate_erased_function<R, ARGS...>::type;
+      typename translate_erased_function<R, Args...>::type;
 
   static constexpr std::size_t dimension_count =
-      dispatch_dimension_count<0, ARGS...>;
+      dispatch_dimension_count<0, Args...>;
 
-  using dispatch_matrix_t = dispatch_matrix<erased_function_t, ARGS...>::type;
+  using dispatch_matrix_t = dispatch_matrix<erased_function_t, Args...>::type;
   dispatch_matrix_t dispatch_matrix_;
 
   using dispatch_indices = std::array<std::size_t, dimension_count>;
 
-  using dispatch_default_t = typename dispatch_default<R, ARGS...>::type;
+  using dispatch_default_t = typename dispatch_default<R, Args...>::type;
   dispatch_default_t::function_t dispatch_default_hook_;
   dispatch_default_t::function_t::connection default_connection_ =
       dispatch_default_hook_.insert(dispatch_default_t::function());
 
-  template <bool MULTIDIM, std::size_t DIM, typename... ARGS>
+  template <bool MULTIDIM, std::size_t DIM, typename... Args>
   struct dispatch_access;
 
-  template <std::size_t DIM, typename... ARGS>
-  struct dispatch_access<true, DIM, ARGS...> {
+  template <std::size_t DIM, typename... Args>
+  struct dispatch_access<true, DIM, Args...> {
     auto define(auto fp, auto& matrix) {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
     }
-    template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE>
-    std::optional<R> invoke(DISPATCH_MATRIX const& target,
+    template <typename DispatchMatrix, typename DISPATCH_ARGS_TUPLE>
+    std::optional<R> invoke(DispatchMatrix const& target,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                             auto&&...) const {
       if (!target) return {};
@@ -1455,38 +1455,38 @@ struct method<R(ARGS...)> {
     }
   };
 
-  template <std::size_t DIM, is_any Any, typename... ARGS>
-  struct dispatch_access<true, DIM, virtual_<Any>, ARGS...>
-      : dispatch_access<true, DIM + 1, ARGS...> {
+  template <std::size_t DIM, is_any Any, typename... Args>
+  struct dispatch_access<true, DIM, virtual_<Any>, Args...>
+      : dispatch_access<true, DIM + 1, Args...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
-    using next_t = dispatch_access<true, DIM + 1, ARGS...>;
+    using next_t = dispatch_access<true, DIM + 1, Args...>;
 
-    std::size_t index_ = methods_count<v_table_t>()++;
+    std::size_t index_ = dispatchs_count<v_table_t>()++;
     std::size_t dispatch_dimension_size_ = 0;
 
-    template <typename CLASS, typename... CLASSES>
+    template <typename CLASS, typename... Classes>
     auto define(auto fp, auto& matrix) {
       auto dispatch_table = dispatch_table_instance<v_table_t, CLASS>();
       auto dispatch_index =
-          *get_multi_method_index_at(dispatch_table, index_)
+          *get_multi_dispatch_index_at(dispatch_table, index_)
                .or_else([&] -> std::optional<std::size_t> {
-                 set_multi_method_index_at(dispatch_table, index_,
+                 set_multi_dispatch_index_at(dispatch_table, index_,
                                            dispatch_dimension_size_);
                  return dispatch_dimension_size_++;
                });
       if (matrix.size() <= dispatch_index) matrix.resize(dispatch_index + 1);
-      return next_t::template define<CLASSES...>(fp, matrix[dispatch_index]);
+      return next_t::template define<Classes...>(fp, matrix[dispatch_index]);
     }
 
-    template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
+    template <typename DispatchMatrix, typename DISPATCH_ARGS_TUPLE,
               typename... ACTUAL_ARGS>
-    std::optional<R> invoke(DISPATCH_MATRIX const& target,
+    std::optional<R> invoke(DispatchMatrix const& target,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                             Any const& any,
                             ACTUAL_ARGS&&... actual_args) const {
       auto dispatch_table = get_v_table(any)->dispatch_table;
-      auto dispatch_dim = get_multi_method_index_at(dispatch_table, index_);
+      auto dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);
       if (!dispatch_dim) return {};
       if (target.size() < *dispatch_dim + 1) return {};
       return next_t::invoke(
@@ -1496,11 +1496,11 @@ struct method<R(ARGS...)> {
     }
   };
 
-  template <is_any Any, typename... ARGS>
-  struct dispatch_access<false, 0, virtual_<Any>, ARGS...> {
+  template <is_any Any, typename... Args>
+  struct dispatch_access<false, 0, virtual_<Any>, Args...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
-    std::size_t index_ = methods_count<v_table_t>()++;
+    std::size_t index_ = dispatchs_count<v_table_t>()++;
 
     template <typename CLASS>
     auto define(auto fp, auto&) {
@@ -1508,9 +1508,9 @@ struct method<R(ARGS...)> {
       insert_function(v_table, index_, fp);
       return fp;
     }
-    template <typename DISPATCH_MATRIX, typename DISPATCH_ARGS_TUPLE,
+    template <typename DispatchMatrix, typename DISPATCH_ARGS_TUPLE,
               typename... ACTUAL_ARGS>
-    std::optional<R> invoke(DISPATCH_MATRIX const&,
+    std::optional<R> invoke(DispatchMatrix const&,
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                             Any const& any,
                             ACTUAL_ARGS&&... actual_args) const {
@@ -1523,18 +1523,18 @@ struct method<R(ARGS...)> {
     }
   };
 
-  dispatch_access<(dimension_count > 1), 0, ARGS...> dispatch_access_;
+  dispatch_access<(dimension_count > 1), 0, Args...> dispatch_access_;
 
  public:
-  template <typename... CLASSES>
+  template <typename... Classes>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
-        R, CLASSES...>::template instance<ARGS...>(f);
-    return dispatch_access_.template define<CLASSES...>(fp, dispatch_matrix_);
+        R, Classes...>::template instance<Args...>(f);
+    return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
   };
   template <typename... ACTUAL_ARGS>
   auto operator()(ACTUAL_ARGS&&... actual_args) const {
-    auto dispatch_args_tuple = args_to_tuple<ARGS...>{}(
+    auto dispatch_args_tuple = args_to_tuple<Args...>{}(
         std::tuple<>{}, std::forward<ACTUAL_ARGS>(actual_args)...);
     return *dispatch_access_
                 .invoke(dispatch_matrix_, dispatch_args_tuple,
@@ -1630,12 +1630,12 @@ struct method<R(ARGS...)> {
   }                                              \
   namespace anyxx {                              \
   template <>                                    \
-  export_ std::size_t& methods_count<ns_::c_>(); \
+  export_ std::size_t& dispatchs_count<ns_::c_>(); \
   }
 
 #define ANY_DISPATCH_COUNT(ns_, c_)              \
   template <>                                    \
-  std::size_t& anyxx::methods_count<ns_::c_>() { \
+  std::size_t& anyxx::dispatchs_count<ns_::c_>() { \
     static std::size_t count = 0;                \
     return count;                                \
   }
@@ -1856,11 +1856,11 @@ struct method<R(ARGS...)> {
                                                                               \
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                 \
       : BASE##_v_table,                                                       \
-        anyxx::dispatch_holder<anyxx::has_methods<n>, n> {                    \
+        anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                    \
     using v_table_base_t = BASE##_v_table;                                    \
     using v_table_t = n##_v_table;                                            \
     using own_dispatch_holder_t =                                             \
-        anyxx::dispatch_holder<anyxx::has_methods<n>, n>;                     \
+        anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n>;                     \
                                                                               \
     static bool static_is_derived_from(const std::type_info& from) {          \
       return typeid(v_table_t) == from                                        \
@@ -1870,7 +1870,7 @@ struct method<R(ARGS...)> {
                                                                               \
     _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                   \
                                                                               \
-    static constexpr bool methods_enabled = anyxx::has_methods<n>;            \
+    static constexpr bool dispatchs_enabled = anyxx::has_dispatchs<n>;            \
                                                                               \
     template <typename CONCRETE>                                              \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                      \
@@ -1880,7 +1880,7 @@ struct method<R(ARGS...)> {
                                                                               \
       _detail_ANYPP_V_TABLE_LAMBDAS(l);                                       \
                                                                               \
-      if constexpr (methods_enabled) {                                        \
+      if constexpr (dispatchs_enabled) {                                        \
         own_dispatch_holder_t::dispatch_table =                               \
             ::anyxx::dispatch_table_instance<n##_v_table, CONCRETE>();        \
       }                                                                       \
@@ -2057,7 +2057,7 @@ struct method<R(ARGS...)> {
                                                                           \
   namespace anyxx {                                                       \
   template <>                                                             \
-  constexpr bool has_methods<interface_namespace::interface_name> = true; \
+  constexpr bool has_dispatchs<interface_namespace::interface_name> = true; \
   }
 
 #define ANY_NAME(...) __VA_ARGS__

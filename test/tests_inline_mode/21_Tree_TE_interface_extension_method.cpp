@@ -47,7 +47,7 @@ struct Integer {
 
 //-----------------------------------------------------------------------------
 // evaluate
-method<int(virtual_<node::model>)> value;
+dispatch<int(virtual_<node::model>)> value;
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
 auto __ = value.define<Times>(
@@ -56,7 +56,7 @@ auto __ = value.define<Integer>([](auto expr) { return expr->i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
-method<std::string(virtual_<node::model>)> as_forth;
+dispatch<std::string(virtual_<node::model>)> as_forth;
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
 });
@@ -68,7 +68,7 @@ auto __ =
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
-method<std::string(virtual_<node::model>)> as_lisp;
+dispatch<std::string(virtual_<node::model>)> as_lisp;
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });

@@ -13,7 +13,7 @@ ANY(Thing, )
 }  // namespace
 
 namespace {
-method<std::string(virtual_<Thing<const_observer>>,
+dispatch<std::string(virtual_<Thing<const_observer>>,
                    virtual_<Thing<const_observer>>)>
     collide;
 }  // namespace
@@ -37,7 +37,7 @@ auto __ =
 auto __ =
     collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a"; });
 
-TEST_CASE("multi_method") {
+TEST_CASE("multi_dispatch") {
   CHECK(Thing_v_table::imlpementation<Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 2);
   CHECK(Thing_v_table::imlpementation<Spaceship>()
@@ -62,28 +62,28 @@ namespace {
 ANY(Dummy, )
 
 template <typename... ARGS>
-struct have_methods_enabled {
+struct have_dispatchs_enabled {
   static constexpr bool value = true;
 };
 template <is_any ANY, typename... ARGS>
-  requires has_methods_enabled<ANY>
-struct have_methods_enabled<virtual_<ANY>, ARGS...>
-    : have_methods_enabled<ARGS...> {};
+  requires has_dispatchs_enabled<ANY>
+struct have_dispatchs_enabled<virtual_<ANY>, ARGS...>
+    : have_dispatchs_enabled<ARGS...> {};
 template <is_any ANY, typename... ARGS>
-  requires(!has_methods_enabled<ANY>)
-struct have_methods_enabled<virtual_<ANY>, ARGS...> {
+  requires(!has_dispatchs_enabled<ANY>)
+struct have_dispatchs_enabled<virtual_<ANY>, ARGS...> {
   static constexpr bool value = false;
 };
-static_assert(!has_methods_enabled<Dummy<const_observer>>);
-static_assert(has_methods_enabled<Thing<const_observer>>);
+static_assert(!has_dispatchs_enabled<Dummy<const_observer>>);
+static_assert(has_dispatchs_enabled<Thing<const_observer>>);
 
-static_assert(!have_methods_enabled<virtual_<Dummy<const_observer>>,
+static_assert(!have_dispatchs_enabled<virtual_<Dummy<const_observer>>,
                                     virtual_<Dummy<const_observer>>>::value);
-static_assert(!have_methods_enabled<virtual_<Dummy<const_observer>>,
+static_assert(!have_dispatchs_enabled<virtual_<Dummy<const_observer>>,
                                     virtual_<Thing<const_observer>>>::value);
-static_assert(!have_methods_enabled<virtual_<Thing<const_observer>>,
+static_assert(!have_dispatchs_enabled<virtual_<Thing<const_observer>>,
                                     virtual_<Dummy<const_observer>>>::value);
-static_assert(have_methods_enabled<virtual_<Thing<const_observer>>,
+static_assert(have_dispatchs_enabled<virtual_<Thing<const_observer>>,
                                    virtual_<Thing<const_observer>>>::value);
 
 }  // namespace
