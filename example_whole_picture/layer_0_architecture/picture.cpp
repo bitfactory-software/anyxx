@@ -7,7 +7,7 @@ using namespace whole_picture;
 using namespace whole_picture::architecture;
 
 ANY_META_CLASS(picture)
-ANY_V_TABLE_INSTANCE(picture, whole_picture::architecture, surface);
+ANY_MODEL(picture, whole_picture::architecture, surface);
 
 picture::picture(std::size_t size_x, std::size_t size_y)
     : lines_(size_y, make_line(size_x)) {}

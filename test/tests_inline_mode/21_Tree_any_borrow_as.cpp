@@ -81,13 +81,13 @@ auto make_node(ARGS&&... args) {
 
 using namespace _21_Tree_TE_erased_interface_w_cast;
 
-ANY_REGISTER_V_TABLE_INSTANCE(Plus, lisp_i);
-ANY_REGISTER_V_TABLE_INSTANCE(Times, lisp_i);
-ANY_REGISTER_V_TABLE_INSTANCE(Integer, lisp_i);
+ANY_REGISTER_MODEL(Plus, lisp_i);
+ANY_REGISTER_MODEL(Times, lisp_i);
+ANY_REGISTER_MODEL(Integer, lisp_i);
 
-ANY_REGISTER_V_TABLE_INSTANCE(Plus, value2_i);
-ANY_REGISTER_V_TABLE_INSTANCE(Times, value2_i);
-ANY_REGISTER_V_TABLE_INSTANCE(Integer, value2_i);
+ANY_REGISTER_MODEL(Plus, value2_i);
+ANY_REGISTER_MODEL(Times, value2_i);
+ANY_REGISTER_MODEL(Integer, value2_i);
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
   using namespace anyxx;

@@ -11,7 +11,7 @@ using namespace anyxx;
 using namespace anyxx;
 
 ANY_META_CLASS(shapes::picture)
-ANY_V_TABLE_INSTANCE(shapes::picture, whole_picture::architecture, shape);
+ANY_MODEL(shapes::picture, whole_picture::architecture, shape);
 ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
 
 

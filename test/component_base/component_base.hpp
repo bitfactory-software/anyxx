@@ -23,11 +23,11 @@ namespace test::component_base {
 struct X;
 }
 
-ANY_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
                         get_value_i)
-ANY_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
                         set_value_i)
-ANY_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
                         to_string_i)
 
 namespace test::component_base {

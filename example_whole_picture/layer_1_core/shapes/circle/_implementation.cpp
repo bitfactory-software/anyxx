@@ -11,7 +11,7 @@ using namespace anyxx;
 using namespace anyxx;
 
 ANY_META_CLASS(circle)
-ANY_V_TABLE_INSTANCE(shapes::circle, whole_picture::architecture, shape);
+ANY_MODEL(shapes::circle, whole_picture::architecture, shape);
 
 template <>
 struct architecture::shape_v_table_map<circle>

@@ -1990,7 +1990,7 @@ struct dispatch<R(Args...)> {
   struct interface_name##_v_table;                            \
   }
 
-#define ANY_REGISTER_V_TABLE_INSTANCE(class_, interface_)               \
+#define ANY_REGISTER_MODEL(class_, interface_)                          \
   namespace {                                                           \
   static auto __ =                                                      \
       anyxx::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
@@ -1998,8 +1998,7 @@ struct dispatch<R(Args...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,      \
-                                 interface_)                                 \
+#define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_)     \
   ANY_FORWARD(interface_namespace_, interface_)                              \
   namespace anyxx {                                                          \
   template <>                                                                \
@@ -2008,16 +2007,16 @@ struct dispatch<R(Args...)> {
                                  class_>();                                  \
   }
 
-#define ANY_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
-  template <>                                                          \
-  interface_namespace_::interface_##_v_table*                          \
-  anyxx::v_table_instance_implementaion<                               \
-      interface_namespace_::interface_##_v_table, class_>() {          \
-    static interface_namespace_::interface_##_v_table v_table{         \
-        std::in_place_type<class_>};                                   \
-    return &v_table;                                                   \
-  }                                                                    \
-  ANY_REGISTER_V_TABLE_INSTANCE(class_, interface_namespace_::interface_)
+#define ANY_MODEL(class_, interface_namespace_, interface_)    \
+  template <>                                                  \
+  interface_namespace_::interface_##_v_table*                  \
+  anyxx::v_table_instance_implementaion<                       \
+      interface_namespace_::interface_##_v_table, class_>() {  \
+    static interface_namespace_::interface_##_v_table v_table{ \
+        std::in_place_type<class_>};                           \
+    return &v_table;                                           \
+  }                                                            \
+  ANY_REGISTER_MODEL(class_, interface_namespace_::interface_)
 
 // TODO
 // #define ANY_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \
@@ -2036,14 +2035,14 @@ struct dispatch<R(Args...)> {
 
 #else
 
-#define ANY_V_TABLE_INSTANCE_FWD(...)
-#define ANY_V_TABLE_INSTANCE(...)
+#define ANY_MODEL_FWD(...)
+#define ANY_MODEL(...)
 
 #endif
 
-#define ANY_V_TABLE_INSTANCE_STATIC(class_, interface_, interface_namespace_) \
-  ANY_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
-  ANY_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
+#define ANY_MODEL_STATIC(class_, interface_, interface_namespace_) \
+  ANY_MODEL_FWD(, class_, interface_, interface_namespace_)        \
+  ANY_MODEL(, class_, interface_, interface_namespace_)
 
 #define ANY_HAS_DISPATCH(interface_namespace, interface_name, ...)          \
   ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)             \

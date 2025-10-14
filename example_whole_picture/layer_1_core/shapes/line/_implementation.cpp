@@ -9,7 +9,7 @@ using namespace whole_picture::core::shapes;
 using namespace anyxx;
 
 ANY_META_CLASS(line)
-ANY_V_TABLE_INSTANCE(shapes::line, whole_picture::architecture, shape);
+ANY_MODEL(shapes::line, whole_picture::architecture, shape);
 
 template <>
 struct architecture::shape_v_table_map<line>
