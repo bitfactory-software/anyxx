@@ -1248,10 +1248,10 @@ template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
   std::vector<value> table_;
-  template <typename Member, typename ARG>
-  void set(Member member, ARG&& arg) {
+  template <typename Member, typename Arg>
+  void set(Member member, Arg&& arg) {
     using value_t = typename Member::value_t;
-    table_[member.index] = make_value<value_t>(std::forward<ARG>(arg));
+    table_[member.index] = make_value<value_t>(std::forward<Arg>(arg));
   }
   template <typename Member>
   typename Member::value_t const* get(Member member) const {
@@ -1302,9 +1302,9 @@ struct virtual_ {
   using type = Any;
 };
 
-template <typename ARG>
+template <typename Arg>
 struct translate_erased_function_param {
-  using type = ARG;
+  using type = Arg;
 };
 template <is_any Any>
 struct translate_erased_function_param<virtual_<Any>> {
