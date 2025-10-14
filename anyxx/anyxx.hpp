@@ -1082,7 +1082,7 @@ auto as(typed_any<From, Any> source)
 template <is_any ToAny, is_erased_data FromAny>
   requires borrowable_from<typename ToAny::erased_data_t, FromAny>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& vv_from,
-                                              const meta_data& meta_data) {
+                                           const meta_data& meta_data) {
   using to = typename ToAny::erased_data_t;
   return query_v_table<ToAny>(meta_data).transform(
       [&](auto v_table) { return ToAny{borrow_as<to>(vv_from), v_table}; });
@@ -1093,12 +1093,12 @@ template <is_any ToAny, is_any FromAny>
                            typename FromAny::erased_data_t>
 auto borrow_as(FromAny const& from_interface) {
   return borrow_as<ToAny>(get_erased_data(from_interface),
-                             get_runtime(from_interface));
+                          get_runtime(from_interface));
 }
 
 template <is_any ToAny, is_erased_data FromAny>
 std::expected<ToAny, cast_error> clone_to(FromAny const& vv_from,
-                                             const meta_data& meta_data) {
+                                          const meta_data& meta_data) {
   using vv_to_t = typename ToAny::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   return query_v_table<ToAny>(meta_data).transform([&](auto v_table) {
@@ -1109,7 +1109,7 @@ std::expected<ToAny, cast_error> clone_to(FromAny const& vv_from,
 template <is_any ToAny, is_any FromAny>
 auto clone_to(const FromAny& from_interface) {
   return clone_to<ToAny>(get_erased_data(from_interface),
-                            get_runtime(from_interface));
+                         get_runtime(from_interface));
 }
 
 template <is_any FromAny>
@@ -1134,7 +1134,7 @@ ToAny move_to(FromAny&& vv_from, const meta_data& get_meta_data) {
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from_interface) {
   return move_to<ToAny>(move_erased_data(std::move(from_interface)),
-                           get_runtime(from_interface));
+                        get_runtime(from_interface));
 }
 
 // --------------------------------------------------------------------------------
@@ -1550,13 +1550,13 @@ struct dispatch<R(Args...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_RUNTIME_FWD(export_, ...)                            \
+#define ANY_META_CLASS_FWD(export_, ...)                         \
   template <>                                                    \
   export_ const std::type_info& anyxx::typeid_of<__VA_ARGS__>(); \
   template <>                                                    \
   export_ anyxx::meta_data& anyxx::get_meta_data<__VA_ARGS__>();
 
-#define ANY_RUNTIME_INSTANCE(...)                                       \
+#define ANY_META_CLASS(...)                                             \
   template <>                                                           \
   const std::type_info& anyxx::typeid_of<__VA_ARGS__>() {               \
     return typeid(__VA_ARGS__);                                         \
@@ -1568,14 +1568,14 @@ struct dispatch<R(Args...)> {
 
 #else
 
-#define ANY_RUNTIME_FWD(...)
-#define ANY_RUNTIME_INSTANCE(...)
+#define ANY_META_CLASS_FWD(...)
+#define ANY_META_CLASS(...)
 
 #endif
 
-#define ANY_RUNTIME_STATIC(...)  \
-  ANY_RUNTIME_FWD(, __VA_ARGS__) \
-  ANY_RUNTIME_INSTANCE(__VA_ARGS__)
+#define ANY_META_CLASS_STATIC(...)  \
+  ANY_META_CLASS_FWD(, __VA_ARGS__) \
+  ANY_META_CLASS(__VA_ARGS__)
 
 #ifdef ANY_DLL_MODE
 

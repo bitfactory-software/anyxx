@@ -8,7 +8,7 @@ using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
 
-ANY_RUNTIME_INSTANCE(line)
+ANY_META_CLASS(line)
 ANY_V_TABLE_INSTANCE(shapes::line, whole_picture::architecture, shape);
 
 template <>

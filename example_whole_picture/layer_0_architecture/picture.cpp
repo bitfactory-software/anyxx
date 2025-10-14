@@ -6,7 +6,7 @@
 using namespace whole_picture;
 using namespace whole_picture::architecture;
 
-ANY_RUNTIME_INSTANCE(picture)
+ANY_META_CLASS(picture)
 ANY_V_TABLE_INSTANCE(picture, whole_picture::architecture, surface);
 
 picture::picture(std::size_t size_x, std::size_t size_y)

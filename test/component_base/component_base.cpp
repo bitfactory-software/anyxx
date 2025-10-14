@@ -27,7 +27,7 @@ ANY_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::c
 ANY_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
                         to_string_i)
 
-ANY_RUNTIME_STATIC(X)
+ANY_META_CLASS_STATIC(X)
 ANY_V_TABLE_INSTANCE(X, test::component_base, get_value_i)
 ANY_V_TABLE_INSTANCE(X, test::component_base, set_value_i)
 ANY_V_TABLE_INSTANCE(X, test::component_base, to_string_i)

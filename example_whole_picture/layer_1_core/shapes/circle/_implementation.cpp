@@ -10,7 +10,7 @@ using namespace anyxx;
 using namespace anyxx;
 using namespace anyxx;
 
-ANY_RUNTIME_INSTANCE(circle)
+ANY_META_CLASS(circle)
 ANY_V_TABLE_INSTANCE(shapes::circle, whole_picture::architecture, shape);
 
 template <>

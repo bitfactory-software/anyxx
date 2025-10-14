@@ -33,5 +33,5 @@ class ARCHITECTURE_EXPORT picture {
 
 }  // namespace whole_picture::architecture
 
-ANY_RUNTIME_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture::picture)
+ANY_META_CLASS_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture::picture)
 ANY_V_TABLE_INSTANCE_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture::picture, whole_picture::architecture, surface)
