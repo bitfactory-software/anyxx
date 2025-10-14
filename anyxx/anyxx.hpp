@@ -450,8 +450,8 @@ meta_data& get_meta_data() {
 #endif
 
 struct any_base_v_table {
-  template <typename CONCRETE>
-  any_base_v_table(std::in_place_type_t<CONCRETE> concrete);
+  template <typename Concrete>
+  any_base_v_table(std::in_place_type_t<Concrete> concrete);
 
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(any_base_v_table) == from;
@@ -545,8 +545,8 @@ class meta_data {
   }
 };
 
-template <typename CONCRETE>
-any_base_v_table::any_base_v_table(std::in_place_type_t<CONCRETE> concrete)
+template <typename Concrete>
+any_base_v_table::any_base_v_table(std::in_place_type_t<Concrete> concrete)
     : _is_derived_from([](const std::type_info& from) {
         return static_is_derived_from(from);
       }) {}
@@ -571,10 +571,10 @@ dispatch_table_t* dispatch_table_instance() {
 
 #endif  //
 
-template <typename V_TABLE, typename CONCRETE>
+template <typename V_TABLE, typename Concrete>
 auto bind_v_table_to_meta_data() {
-  auto v_table = V_TABLE::template imlpementation<CONCRETE>();
-  get_meta_data<CONCRETE>().register_v_table(v_table);
+  auto v_table = V_TABLE::template imlpementation<Concrete>();
+  get_meta_data<Concrete>().register_v_table(v_table);
   return v_table;
 }
 
@@ -954,13 +954,13 @@ auto unerase_cast(Any const* o) {
 }
 
 #ifdef ANY_DLL_MODE
-template <typename V_TABLE, typename CONCRETE>
+template <typename V_TABLE, typename Concrete>
 V_TABLE* v_table_instance_implementaion();
 #else
-template <typename V_TABLE, typename CONCRETE>
+template <typename V_TABLE, typename Concrete>
 V_TABLE* v_table_instance_implementaion() {
-  static V_TABLE v_table{std::in_place_type<CONCRETE>};
-  static auto __ = anyxx::get_meta_data<CONCRETE>().register_v_table(&v_table);
+  static V_TABLE v_table{std::in_place_type<Concrete>};
+  static auto __ = anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
   return &v_table;
 }
 #endif  // DEBUG
@@ -1802,7 +1802,7 @@ struct dispatch<R(Args...)> {
   name = [](void const_* _vp __VA_OPT__(                               \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {   \
     return v_table_map{}.name(                                         \
-        anyxx::unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, )    \
+        anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )    \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
 
@@ -1866,25 +1866,25 @@ struct dispatch<R(Args...)> {
                                                                               \
     static constexpr bool dispatchs_enabled = anyxx::has_dispatchs<n>;        \
                                                                               \
-    template <typename CONCRETE>                                              \
-    n##_v_table(std::in_place_type_t<CONCRETE> concrete)                      \
+    template <typename Concrete>                                              \
+    n##_v_table(std::in_place_type_t<Concrete> concrete)                      \
         : v_table_base_t(concrete) {                                          \
       using v_table_map = n##_v_table_map<_detail_ANYPP_TEMPLATE_ARGS(        \
-          _add_head((CONCRETE), t))>;                                         \
+          _add_head((Concrete), t))>;                                         \
                                                                               \
       _detail_ANYPP_V_TABLE_LAMBDAS(l);                                       \
                                                                               \
       if constexpr (dispatchs_enabled) {                                      \
         own_dispatch_holder_t::dispatch_table =                               \
-            ::anyxx::dispatch_table_instance<n##_v_table, CONCRETE>();        \
+            ::anyxx::dispatch_table_instance<n##_v_table, Concrete>();        \
       }                                                                       \
                                                                               \
       ::anyxx::set_is_derived_from<v_table_t>(this);                          \
     };                                                                        \
                                                                               \
-    template <typename CONCRETE>                                              \
+    template <typename Concrete>                                              \
     static auto imlpementation() {                                            \
-      return anyxx::v_table_instance_implementaion<v_table_t, CONCRETE>();    \
+      return anyxx::v_table_instance_implementaion<v_table_t, Concrete>();    \
     }                                                                         \
   };                                                                          \
                                                                               \
@@ -1896,10 +1896,10 @@ struct dispatch<R(Args...)> {
     using v_table_t =                                                         \
         n##_v_table _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t);            \
                                                                               \
-    template <typename CONCRETE>                                              \
+    template <typename Concrete>                                              \
     static auto v_table_imlpementation() {                                    \
-      static_assert(!anyxx::is_any<CONCRETE>);                                \
-      return v_table_t::template imlpementation<CONCRETE>();                  \
+      static_assert(!anyxx::is_any<Concrete>);                                \
+      return v_table_t::template imlpementation<Concrete>();                  \
     }                                                                         \
                                                                               \
     using base_t::erased_data_;                                               \
