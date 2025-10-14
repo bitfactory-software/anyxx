@@ -9,33 +9,29 @@ using std::cout;
 using std::string;
 
 using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
 
-namespace _21_Tree_TE_erased_interface_w_cast {
+namespace _21_Tree_any_borrow_as {
 
-ANY(node_i,
+ANY(any_node,
              (ANY_CONST_METHOD(int, value), ANY_CONST_METHOD(string, as_forth)))
-using node = node_i<shared_const>;
-}  // namespace _21_Tree_TE_erased_interface_w_cast
+}  // namespace 21_Tree_any_borrow_as
 
-namespace _21_Tree_TE_erased_interface_w_cast {
-ANY(lisp_i, (ANY_CONST_METHOD(string, as_lisp)))
-ANY(value2_i, (ANY_CONST_METHOD(int, value2)))
-}  // namespace _21_Tree_TE_erased_interface_w_cast
+namespace _21_Tree_any_borrow_as {
+ANY(any_as_lisp, (ANY_CONST_METHOD(string, as_lisp)))
+ANY(any_value2, (ANY_CONST_METHOD(int, value2)))
+}  // namespace _21_Tree_any_borrow_as
 
-namespace _21_Tree_TE_erased_interface_w_cast {
+namespace _21_Tree_any_borrow_as {
 
 auto as_lisp_(auto const& v) {
-  return borrow_as<lisp_i<const_observer>>(v)->as_lisp();
+  return borrow_as<any_as_lisp<const_observer>>(v)->as_lisp();
 }
 auto value2_(auto const& v) {
-  return borrow_as<value2_i<const_observer>>(v)->value2();
+  return borrow_as<any_value2<const_observer>>(v)->value2();
 }
 
 struct Plus {
-  Plus(node left, node right) : left(left), right(right) {}
+  Plus(any_node<shared_const> const& left, any_node<shared_const> const& right) : left(left), right(right) {}
   int value() const { return left.value() + right.value(); }
   string as_forth() const {
     return left.as_forth() + " " + right.as_forth() + " +";
@@ -45,11 +41,11 @@ struct Plus {
   }
   int value2() const { return value2_(left) + value2_(right); }
 
-  node left, right;
+  any_node<shared_const> left, right;
 };
 
 struct Times {
-  Times(node left, node right) : left(left), right(right) {}
+  Times(any_node<shared_const> const& left, any_node<shared_const> const& right) : left(left), right(right) {}
   int value() const { return left.value() * right.value(); }
   string as_forth() const {
     return left.as_forth() + " " + right.as_forth() + " *";
@@ -59,7 +55,7 @@ struct Times {
   }
   int value2() const { return value2_(left) * value2_(right); }
 
-  node left, right;
+  any_node<shared_const> left, right;
 };
 
 struct Integer {
@@ -77,37 +73,37 @@ auto make_node(ARGS&&... args) {
   return std::make_shared<NODE>(std::forward<ARGS>(args)...);
 }
 
-}  // namespace _21_Tree_TE_erased_interface_w_cast
+}  // namespace _21_Tree_any_borrow_as
 
-using namespace _21_Tree_TE_erased_interface_w_cast;
+using namespace _21_Tree_any_borrow_as;
 
-ANY_REGISTER_MODEL(Plus, lisp_i);
-ANY_REGISTER_MODEL(Times, lisp_i);
-ANY_REGISTER_MODEL(Integer, lisp_i);
+ANY_REGISTER_MODEL(Plus, any_as_lisp);
+ANY_REGISTER_MODEL(Times, any_as_lisp);
+ANY_REGISTER_MODEL(Integer, any_as_lisp);
 
-ANY_REGISTER_MODEL(Plus, value2_i);
-ANY_REGISTER_MODEL(Times, value2_i);
-ANY_REGISTER_MODEL(Integer, value2_i);
+ANY_REGISTER_MODEL(Plus, any_value2);
+ANY_REGISTER_MODEL(Times, any_value2);
+ANY_REGISTER_MODEL(Integer, any_value2);
 
-TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
+TEST_CASE("_21_Tree_any_borrow_as") {
   using namespace anyxx;
-  using namespace _21_Tree_TE_erased_interface_w_cast;
+  using namespace _21_Tree_any_borrow_as;
 
   auto& type_info = anyxx::get_meta_data<Times>();
   REQUIRE(type_info.get_i_table().size() == 2u);
-  auto expr = node(make_node<Times>(
+  auto expr = any_node<shared_const>(make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));
 
   auto v = expr.value();
   REQUIRE(v == 14);
   std::stringstream out;
-  out << expr.as_forth() << " = " << as_lisp_(expr) << " = " << expr.value();
+  out << expr.as_forth() << " = " << as_lisp_(expr) << " = " << value2_(expr);
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
   std::cout << out.str() << "\n";
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_dynamic_interface value") { return expr.value(); };
-  BENCHMARK("21_Tree_TE_dynamic_interface value2") { return value2_(expr); };
-  BENCHMARK("21_Tree_TE_dynamic_interface as_lisp") { return as_lisp_(expr); };
+  BENCHMARK("_21_Tree_any_borrow_as value") { return expr.value(); };
+  BENCHMARK("_21_Tree_any_borrow_as value2") { return value2_(expr); };
+  BENCHMARK("_21_Tree_any_borrow_as as_lisp") { return as_lisp_(expr); };
 #endif  // !_DEBUG
 }
