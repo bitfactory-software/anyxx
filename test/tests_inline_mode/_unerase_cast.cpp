@@ -1,7 +1,5 @@
 #include <catch.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/any_meta_class.hpp>
-#include <anypp/meta_data.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
 

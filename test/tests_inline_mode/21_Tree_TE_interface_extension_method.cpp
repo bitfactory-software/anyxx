@@ -1,17 +1,9 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
-#include <cassert>
 #include <catch.hpp>
-#include <functional>
 #include <iostream>
-#include <memory>
-#include <stack>
 #include <string>
-#include <anypp/observer.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/any_meta_class.hpp>
-#include <anypp/extension_method.hpp>
-#include <anypp/utillities/unnamed__.hpp>
+#include <anypp/any++.hpp>
 
 using std::cout;
 using std::string;

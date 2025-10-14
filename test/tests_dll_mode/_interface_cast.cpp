@@ -1,12 +1,6 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <anypp/observer.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/unique.hpp>
-#include <anypp/any_base.hpp>
-#include <anypp/borrow.hpp>
-#include <anypp/clone.hpp>
-#include <anypp/move.hpp>
+#include <anypp/any++.hpp>
 
 #include "./component_base/component_base.hpp"
 

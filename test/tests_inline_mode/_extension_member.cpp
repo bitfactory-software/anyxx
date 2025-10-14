@@ -1,13 +1,10 @@
 #include <cmath>
 #include <iostream>
 #include <string>
-#include <vector>
-
 #include <catch.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
-
-#include <anypp/extension_member.hpp>
 
 using namespace anypp;
 

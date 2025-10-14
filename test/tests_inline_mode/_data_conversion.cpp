@@ -1,15 +1,6 @@
 #include <catch.hpp>
-#include <cmath>
-#include <iostream>
 #include <string>
-#include <vector>
-#include <anypp/borrow_erased_data.hpp>
-#include <anypp/clone_erased_data.hpp>
-#include <anypp/observer.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/unique.hpp>
-#include <anypp/move_erased_data.hpp>
-#include <anypp/any_meta_class.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
 

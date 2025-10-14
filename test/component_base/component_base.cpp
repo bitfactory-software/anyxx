@@ -1,14 +1,8 @@
 #include "component_base.hpp"
-
-#include <assert.h>
-
-#include <anypp/any_base.hpp>
+#include <anypp/any++.hpp>
 
 using namespace test::component_base;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
 using namespace anypp;
 
 namespace test::component_base {
@@ -25,21 +19,6 @@ static X x{3.14};
 }  // namespace test::component_base
 
 using namespace test::component_base;
-
-// template <>
-// struct COMPONENT_BASE_EXPORT get_value_i_v_table_instance<X> {
-//   static get_value_i_v_table* get() {
-//     static get_value_i_v_table v_table{std::in_place_type<X>};
-//     return &v_table;
-//   };
-// };
-// template <>
-// struct COMPONENT_BASE_EXPORT to_string_i_v_table_instance<X> {
-//   static to_string_i_v_table* get() {
-//     static to_string_i_v_table v_table{std::in_place_type<X>};
-//     return &v_table;
-//   };
-// };
 
 ANY_V_TABLE_INSTANCE_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
                         get_value_i)

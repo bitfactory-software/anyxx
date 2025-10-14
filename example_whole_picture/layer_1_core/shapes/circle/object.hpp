@@ -1,7 +1,6 @@
 #pragma once
 
-#include <anypp/meta_data.hpp>
-
+#include <anypp/any++.hpp>
 #include <example_whole_picture/layer_1_core/core.hpp>
 
 namespace whole_picture::core::shapes {

@@ -2,14 +2,8 @@
 
 #include <catch.hpp>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <anypp/observer.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/any_base.hpp>
-#include <anypp/borrow.hpp>
-#include <anypp/any_meta_class.hpp>
-#include <anypp/meta_data.hpp>
+#include <anypp/any++.hpp>
 
 using std::cout;
 using std::string;

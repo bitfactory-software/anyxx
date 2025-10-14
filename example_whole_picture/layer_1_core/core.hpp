@@ -1,7 +1,6 @@
 #pragma once
 
-#include <anypp/shared_const.hpp>
-
+#include <anypp/any++.hpp>
 #include "../layer_0_architecture/architecture.hpp"
 
 #ifndef CORE_EXPORT

@@ -3,8 +3,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <anypp/shared_const.hpp>
-#include <anypp/any_meta_class.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
 

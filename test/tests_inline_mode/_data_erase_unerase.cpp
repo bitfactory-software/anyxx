@@ -1,17 +1,10 @@
 #include <catch.hpp>
-#include <cmath>
-#include <iostream>
 #include <string>
-#include <vector>
-#include <anypp/observer.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/unique.hpp>
-#include <anypp/utillities/VIRTUAL_DESTRUCTOR_FOR_DEBUGGING.hpp>
+#include <anypp/any++.hpp>
 
 struct A {
   A(const std::string sp) : s(sp) {}
   std::string s;
-  VIRTUAL_DESTRUCTOR_FOR_DEBUGGING ~A() = default;
 };
 
 using namespace Catch::Matchers;

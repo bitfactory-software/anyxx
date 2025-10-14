@@ -1,9 +1,7 @@
 #include <catch.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
-
-#include <anypp/hook.hpp>
-
 using namespace anypp;
 
 TEST_CASE("hook 1") {

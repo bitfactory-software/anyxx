@@ -1,7 +1,6 @@
 #include <catch.hpp>
 #include <string>
-#include <anypp/any_meta_class.hpp>
-#include <anypp/value.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
 

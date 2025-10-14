@@ -1,13 +1,7 @@
 #include <catch.hpp>
-#include <cmath>
-#include <iostream>
 #include <map>
 #include <string>
-#include <anypp/observer.hpp>
-#include <anypp/shared_const.hpp>
-#include <anypp/unique.hpp>
-#include <anypp/any_base.hpp>
-#include <anypp/any_meta_class.hpp>
+#include <anypp/any++.hpp>
 
 using namespace Catch::Matchers;
 
