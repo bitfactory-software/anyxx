@@ -1,18 +1,17 @@
+#include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <string>
-#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
 using namespace anyxx;
-
 
 ANY_HAS_DISPATCH(, test_base_i)
 ANY_HAS_DISPATCH(, test_derived_i)
 namespace {
 ANY(test_base_i, (ANY_CONST_METHOD(std::string, to_string)))
 ANY_(test_derived_i, test_base_i,
-              (ANY_METHOD(void, from_string, std::string const&)))
+     (ANY_METHOD(void, from_string, std::string const&)))
 
 }  // namespace
 
@@ -34,23 +33,19 @@ struct test_derived_i_v_table_map<x_t> {
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 
-method<std::string(virtual_<test_base_i_co>)>
-    to_string_otherwise;
+method<std::string(virtual_<test_base_i_co>)> to_string_otherwise;
 auto __ = to_string_otherwise.define<x_t>(
     [](auto expr) { return expr->s_ + " otherwise"; });
 
-method<
-                 void(virtual_<test_derived_i_mo>, std::string const&)>
+method<void(virtual_<test_derived_i_mo>, std::string const&)>
     from_string_otherwise;
 auto __ =
     from_string_otherwise.define<x_t>([](auto expr, std::string const& s) {
       expr->s_ = std::string{"otherwise "} + s;
     });
 
-auto base_table =
-    extension_method_table_instance<test_base_i_v_table, x_t>();
-auto derived_table =
-    extension_method_table_instance<test_derived_i_v_table, x_t>();
+auto base_table = dispatch_table_instance<test_base_i_v_table, x_t>();
+auto derived_table = dispatch_table_instance<test_derived_i_v_table, x_t>();
 
 namespace {
 
@@ -59,9 +54,9 @@ TEST_CASE("method") {
   CHECK(derived_table->size() == 1);
 
   CHECK(test_base_i_v_table::imlpementation<x_t>()
-            ->own_extension_method_holder_t::extension_method_table);
+            ->own_dispatch_holder_t::dispatch_table);
   CHECK(test_derived_i_v_table::imlpementation<x_t>()
-            ->own_extension_method_holder_t::extension_method_table);
+            ->own_dispatch_holder_t::dispatch_table);
 
   x_t x{"hallo"};
   test_derived_i_mo i{x};

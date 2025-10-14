@@ -11,16 +11,16 @@ using std::string;
 using namespace anyxx;
 using namespace anyxx;
 
-ANY_HAS_DISPATCH(_21_Tree_TE_interface_extension_method::node, node_i)
+ANY_HAS_DISPATCH(_21_Tree_TE_interface_dispatch::node, node_i)
 
-namespace _21_Tree_TE_interface_extension_method {
+namespace _21_Tree_TE_interface_dispatch {
 
 namespace node {
 ANY(node_i, (ANY_CONST_METHOD(int, value)))
 }
-}  // namespace _21_Tree_TE_interface_extension_method
+}  // namespace _21_Tree_TE_interface_dispatch
 
-namespace _21_Tree_TE_interface_extension_method {
+namespace _21_Tree_TE_interface_dispatch {
 namespace node {
 struct any;
 using model = node_i<shared_const>;
@@ -78,13 +78,13 @@ auto __ = as_lisp.define<Times>([](auto expr) {
 auto __ =
     as_lisp.define<Integer>([](auto expr) { return std::to_string(expr->i); });
 //-----------------------------------------------------------------------------
-}  // namespace _21_Tree_TE_interface_extension_method
+}  // namespace _21_Tree_TE_interface_dispatch
 
 using namespace anyxx;
 
-namespace _21_Tree_TE_interface_extension_method {
+namespace _21_Tree_TE_interface_dispatch {
 
-TEST_CASE("21_Tree_TE_interface_extension_method") {
+TEST_CASE("21_Tree_TE_interface_dispatch") {
   using namespace anyxx;
 
   auto expr = node::model{std::make_shared<Times>(
@@ -106,13 +106,9 @@ TEST_CASE("21_Tree_TE_interface_extension_method") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_interface_extension_method value") {
-    return value(expr);
-  };
-  BENCHMARK("21_Tree_TE_interface_extension_method as_lisp") {
-    return as_lisp(expr);
-  };
+  BENCHMARK("21_Tree_TE_interface_dispatch value") { return value(expr); };
+  BENCHMARK("21_Tree_TE_interface_dispatch as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG
 }
 
-}  // namespace _21_Tree_TE_interface_extension_method
+}  // namespace _21_Tree_TE_interface_dispatch

@@ -39,11 +39,9 @@ auto __ =
 
 TEST_CASE("multi_method") {
   CHECK(Thing_v_table::imlpementation<Asteroid>()
-            ->own_extension_method_holder_t::extension_method_table->size() ==
-        2);
+            ->own_dispatch_holder_t::dispatch_table->size() == 2);
   CHECK(Thing_v_table::imlpementation<Spaceship>()
-            ->own_extension_method_holder_t::extension_method_table->size() ==
-        2);
+            ->own_dispatch_holder_t::dispatch_table->size() == 2);
 
   Asteroid asteroid;
   Spaceship spaceship;

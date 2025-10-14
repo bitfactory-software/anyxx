@@ -469,40 +469,37 @@ inline bool is_derived_from(const std::type_info& from,
   return any_base_v_table->_is_derived_from(from);
 }
 
-using extension_method_table_function_t = void (*)();
-using extension_method_table_dispatch_index_t = std::size_t;
-using extension_method_table_entry_t =
-    std::variant<std::monostate, extension_method_table_dispatch_index_t,
-                 extension_method_table_function_t>;
-using extension_method_table_t = std::vector<extension_method_table_entry_t>;
+using dispatch_table_function_t = void (*)();
+using dispatch_table_dispatch_index_t = std::size_t;
+using dispatch_table_entry_t =
+    std::variant<std::monostate, dispatch_table_dispatch_index_t,
+                 dispatch_table_function_t>;
+using dispatch_table_t = std::vector<dispatch_table_entry_t>;
 
-void insert_function(extension_method_table_t* v_table, std::size_t index,
-                     auto fp) {
+void insert_function(dispatch_table_t* v_table, std::size_t index, auto fp) {
   if (v_table->size() <= index) v_table->resize(index + 1);
-  v_table->at(index) = reinterpret_cast<extension_method_table_function_t>(fp);
+  v_table->at(index) = reinterpret_cast<dispatch_table_function_t>(fp);
 }
-inline extension_method_table_function_t get_function(
-    extension_method_table_t* v_table, std::size_t index) {
+inline dispatch_table_function_t get_function(dispatch_table_t* v_table,
+                                              std::size_t index) {
   if (v_table->size() <= index) return {};
-  if (auto f =
-          std::get_if<extension_method_table_function_t>(&v_table->at(index)))
+  if (auto f = std::get_if<dispatch_table_function_t>(&v_table->at(index)))
     return *f;
   else
     return {};
 }
 
 inline std::optional<std::size_t> get_multi_method_index_at(
-    extension_method_table_t* v_table, std::size_t index) {
+    dispatch_table_t* v_table, std::size_t index) {
   if (v_table->size() <= index) return {};
-  if (auto extension_method_table_dispatch_index =
-          std::get_if<extension_method_table_dispatch_index_t>(
-              &v_table->at(index)))
-    return *extension_method_table_dispatch_index;
+  if (auto dispatch_table_dispatch_index =
+          std::get_if<dispatch_table_dispatch_index_t>(&v_table->at(index)))
+    return *dispatch_table_dispatch_index;
   return {};
 }
 inline void set_multi_method_index_at(
-    extension_method_table_t* v_table, std::size_t index_multi_method,
-    extension_method_table_dispatch_index_t
+    dispatch_table_t* v_table, std::size_t index_multi_method,
+    dispatch_table_dispatch_index_t
         dispatch_index_of_class_in_dispatch_matrix) {
   if (v_table->size() <= index_multi_method)
     v_table->resize(index_multi_method + 1);
@@ -556,22 +553,21 @@ any_base_v_table::any_base_v_table(std::in_place_type_t<CONCRETE> concrete)
       }) {}
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
-extension_method_table_t* extension_method_table_instance_implementation() {
-  static extension_method_table_t extension_method_table;
-  return &extension_method_table;
+dispatch_table_t* dispatch_table_instance_implementation() {
+  static dispatch_table_t dispatch_table;
+  return &dispatch_table;
 }
 
 #ifdef ANY_DLL_MODE
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
-extension_method_table_t* extension_method_table_instance();
+dispatch_table_t* dispatch_table_instance();
 
 #else
 
 template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
-extension_method_table_t* extension_method_table_instance() {
-  return extension_method_table_instance_implementation<EXTENDED_V_TABLE,
-                                                        CLASS_NAME>();
+dispatch_table_t* dispatch_table_instance() {
+  return dispatch_table_instance_implementation<EXTENDED_V_TABLE, CLASS_NAME>();
 }
 
 #endif  //
@@ -977,12 +973,12 @@ template <typename I>
 concept has_methods_enabled = is_any<I> && I::v_table_t::methods_enabled;
 
 template <bool HAS_EXTENSION_METHODS, template <typename...> typename Any>
-struct extension_method_holder;
+struct dispatch_holder;
 template <template <typename...> typename Any>
-struct extension_method_holder<false, Any> {};
+struct dispatch_holder<false, Any> {};
 template <template <typename...> typename Any>
-struct extension_method_holder<true, Any> {
-  extension_method_table_t* extension_method_table = nullptr;
+struct dispatch_holder<true, Any> {
+  dispatch_table_t* dispatch_table = nullptr;
 };
 
 template <is_any TO_ANYPP>
@@ -1323,11 +1319,10 @@ struct translate_erased_function {
 };
 
 template <std::size_t COUNT, typename... ARGS>
-constexpr std::size_t extension_method_dimension_count = COUNT;
+constexpr std::size_t dispatch_dimension_count = COUNT;
 template <std::size_t COUNT, is_any Any, typename... ARGS>
-constexpr std::size_t
-    extension_method_dimension_count<COUNT, virtual_<Any>, ARGS...> =
-        extension_method_dimension_count<COUNT + 1, ARGS...>;
+constexpr std::size_t dispatch_dimension_count<COUNT, virtual_<Any>, ARGS...> =
+    dispatch_dimension_count<COUNT + 1, ARGS...>;
 
 template <typename R, typename... CLASSES>
 struct ensure_function_ptr_from_functor_t {
@@ -1378,7 +1373,7 @@ struct args_to_tuple<virtual_<Any>, METHOD_ARGS...> {
 };
 
 template <typename R, typename... ARGS>
-struct extension_method_default {
+struct dispatch_default {
   template <is_any... ANYPPS>
   struct inner {
     template <typename... ARGS>
@@ -1429,19 +1424,17 @@ struct method<R(ARGS...)> {
       typename translate_erased_function<R, ARGS...>::type;
 
   static constexpr std::size_t dimension_count =
-      extension_method_dimension_count<0, ARGS...>;
+      dispatch_dimension_count<0, ARGS...>;
 
   using dispatch_matrix_t = dispatch_matrix<erased_function_t, ARGS...>::type;
   dispatch_matrix_t dispatch_matrix_;
 
   using dispatch_indices = std::array<std::size_t, dimension_count>;
 
-  using extension_method_default_t =
-      typename extension_method_default<R, ARGS...>::type;
-  extension_method_default_t::function_t extension_method_default_hook_;
-  extension_method_default_t::function_t::connection default_connection_ =
-      extension_method_default_hook_.insert(
-          extension_method_default_t::function());
+  using dispatch_default_t = typename dispatch_default<R, ARGS...>::type;
+  dispatch_default_t::function_t dispatch_default_hook_;
+  dispatch_default_t::function_t::connection default_connection_ =
+      dispatch_default_hook_.insert(dispatch_default_t::function());
 
   template <bool MULTIDIM, std::size_t DIM, typename... ARGS>
   struct dispatch_access;
@@ -1474,12 +1467,11 @@ struct method<R(ARGS...)> {
 
     template <typename CLASS, typename... CLASSES>
     auto define(auto fp, auto& matrix) {
-      auto extension_method_table =
-          extension_method_table_instance<v_table_t, CLASS>();
+      auto dispatch_table = dispatch_table_instance<v_table_t, CLASS>();
       auto dispatch_index =
-          *get_multi_method_index_at(extension_method_table, index_)
+          *get_multi_method_index_at(dispatch_table, index_)
                .or_else([&] -> std::optional<std::size_t> {
-                 set_multi_method_index_at(extension_method_table, index_,
+                 set_multi_method_index_at(dispatch_table, index_,
                                            dispatch_dimension_size_);
                  return dispatch_dimension_size_++;
                });
@@ -1493,9 +1485,8 @@ struct method<R(ARGS...)> {
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                             Any const& any,
                             ACTUAL_ARGS&&... actual_args) const {
-      auto extension_method_table = get_v_table(any)->extension_method_table;
-      auto dispatch_dim =
-          get_multi_method_index_at(extension_method_table, index_);
+      auto dispatch_table = get_v_table(any)->dispatch_table;
+      auto dispatch_dim = get_multi_method_index_at(dispatch_table, index_);
       if (!dispatch_dim) return {};
       if (target.size() < *dispatch_dim + 1) return {};
       return next_t::invoke(
@@ -1513,7 +1504,7 @@ struct method<R(ARGS...)> {
 
     template <typename CLASS>
     auto define(auto fp, auto&) {
-      auto v_table = extension_method_table_instance<v_table_t, CLASS>();
+      auto v_table = dispatch_table_instance<v_table_t, CLASS>();
       insert_function(v_table, index_, fp);
       return fp;
     }
@@ -1523,7 +1514,7 @@ struct method<R(ARGS...)> {
                             DISPATCH_ARGS_TUPLE&& dispatch_args_tuple,
                             Any const& any,
                             ACTUAL_ARGS&&... actual_args) const {
-      auto v_table = get_v_table(any)->extension_method_table;
+      auto v_table = get_v_table(any)->dispatch_table;
       auto target = get_function(v_table, index_);
       if (!target) return {};
       auto erased_function = reinterpret_cast<erased_function_t>(target);
@@ -1549,13 +1540,11 @@ struct method<R(ARGS...)> {
                 .invoke(dispatch_matrix_, dispatch_args_tuple,
                         std::forward<ACTUAL_ARGS>(actual_args)...)
                 .or_else([&]() -> std::optional<R> {
-                  return std::invoke(extension_method_default_hook_,
+                  return std::invoke(dispatch_default_hook_,
                                      std::forward<ACTUAL_ARGS>(actual_args)...);
                 });
   }
-  auto& get_extension_method_default_hook() {
-    return extension_method_default_hook_;
-  };
+  auto& get_dispatch_default_hook() { return dispatch_default_hook_; };
 };
 
 }  // namespace anyxx
@@ -1635,7 +1624,7 @@ struct method<R(ARGS...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_DISPATCH_COUNT_FWD(export_, ns_, c_)   \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, c_) \
   namespace ns_ {                                \
   struct c_;                                     \
   }                                              \
@@ -1644,26 +1633,26 @@ struct method<R(ARGS...)> {
   export_ std::size_t& methods_count<ns_::c_>(); \
   }
 
-#define ANY_DISPATCH_COUNT(ns_, c_)           \
+#define ANY_DISPATCH_COUNT(ns_, c_)              \
   template <>                                    \
   std::size_t& anyxx::methods_count<ns_::c_>() { \
     static std::size_t count = 0;                \
     return count;                                \
   }
 
-#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_)       \
-  namespace anyxx {                                                       \
-  template <>                                                             \
-  export_ anyxx::extension_method_table_t*                                \
-  anyxx::extension_method_table_instance<interface_##_v_table, class_>(); \
+#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_) \
+  namespace anyxx {                                                 \
+  template <>                                                       \
+  export_ anyxx::dispatch_table_t*                                  \
+  anyxx::dispatch_table_instance<interface_##_v_table, class_>();   \
   }
 
-#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)         \
-  template <>                                                              \
-  anyxx::extension_method_table_t*                                         \
-  anyxx::extension_method_table_instance<interface_##_v_table, class_>() { \
-    return extension_method_table_instance_implementation<                 \
-        interface_##_v_table, class_>();                                   \
+#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)      \
+  template <>                                                           \
+  anyxx::dispatch_table_t*                                              \
+  anyxx::dispatch_table_instance<interface_##_v_table, class_>() {      \
+    return dispatch_table_instance_implementation<interface_##_v_table, \
+                                                  class_>();            \
   }
 
 #else
@@ -1849,123 +1838,123 @@ struct method<R(ARGS...)> {
   __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define ANY_TEMPLATE_(t, n, BASE, l)                                           \
-                                                                               \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ERASED_DATA), t))>   \
-  struct n;                                                                    \
-                                                                               \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
-  struct n##_default_v_table_map {                                             \
-    _detail_ANYPP_MAP_FUNCTIONS(l)                                             \
-  };                                                                           \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
-  struct n##_v_table_map                                                       \
-      : n##_default_v_table_map<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(            \
-            _add_head((T), t))> {};                                            \
-                                                                               \
-  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
-                                                                               \
-  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
-      : BASE##_v_table,                                                        \
-        anyxx::extension_method_holder<anyxx::has_methods<n>, n> {             \
-    using v_table_base_t = BASE##_v_table;                                     \
-    using v_table_t = n##_v_table;                                             \
-    using own_extension_method_holder_t =                                      \
-        anyxx::extension_method_holder<anyxx::has_methods<n>, n>;              \
-                                                                               \
-    static bool static_is_derived_from(const std::type_info& from) {           \
-      return typeid(v_table_t) == from                                         \
-                 ? true                                                        \
-                 : v_table_base_t::static_is_derived_from(from);               \
-    }                                                                          \
-                                                                               \
-    _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                    \
-                                                                               \
-    static constexpr bool methods_enabled = anyxx::has_methods<n>;             \
-                                                                               \
-    template <typename CONCRETE>                                               \
-    n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
-        : v_table_base_t(concrete) {                                           \
-      using v_table_map = n##_v_table_map<_detail_ANYPP_TEMPLATE_ARGS(         \
-          _add_head((CONCRETE), t))>;                                          \
-                                                                               \
-      _detail_ANYPP_V_TABLE_LAMBDAS(l);                                        \
-                                                                               \
-      if constexpr (methods_enabled) {                                         \
-        own_extension_method_holder_t::extension_method_table =                \
-            ::anyxx::extension_method_table_instance<n##_v_table, CONCRETE>(); \
-      }                                                                        \
-                                                                               \
-      ::anyxx::set_is_derived_from<v_table_t>(this);                           \
-    };                                                                         \
-                                                                               \
-    template <typename CONCRETE>                                               \
-    static auto imlpementation() {                                             \
-      return anyxx::v_table_instance_implementaion<v_table_t, CONCRETE>();     \
-    }                                                                          \
-  };                                                                           \
-                                                                               \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ERASED_DATA), t))>   \
-  struct n : BASE<ERASED_DATA> {                                               \
-    using erased_data_t = ERASED_DATA;                                         \
-    using base_t = BASE<ERASED_DATA>;                                          \
-    using v_table_base_t = base_t::v_table_t;                                  \
-    using v_table_t =                                                          \
-        n##_v_table _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t);             \
-                                                                               \
-    template <typename CONCRETE>                                               \
-    static auto v_table_imlpementation() {                                     \
-      static_assert(!anyxx::is_any<CONCRETE>);                                 \
-      return v_table_t::template imlpementation<CONCRETE>();                   \
-    }                                                                          \
-                                                                               \
-    using base_t::erased_data_;                                                \
-    using base_t::v_table_;                                                    \
-                                                                               \
-    n(erased_data_t erased_data, v_table_t* v_table)                           \
-        : base_t(std::move(erased_data), v_table) {}                           \
-    template <typename CONSTRUCTED_WITH>                                       \
-    n(CONSTRUCTED_WITH&& v)                                                    \
-      requires anyxx::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>        \
-        : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();                   \
-    }                                                                          \
-    template <typename OTHER>                                                  \
-    n(const OTHER& other)                                                      \
-      requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&      \
-               anyxx::borrowable_from<erased_data_t,                           \
-                                      typename OTHER::erased_data_t>)          \
-        : base_t(other) {}                                                     \
-    template <anyxx::is_any OTHER>                                             \
-    n(OTHER&& other) noexcept                                                  \
-      requires(                                                                \
-          std::derived_from<OTHER::v_table_t, v_table_t> &&                    \
-          anyxx::moveable_from<erased_data_t, typename OTHER::erased_data_t>)  \
-        : base_t(std::move(other)) {}                                          \
-                                                                               \
-    _detail_ANYPP_METHODS(l)                                                   \
-                                                                               \
-        auto const*                                                            \
-        operator->() const {                                                   \
-      return this;                                                             \
-    }                                                                          \
-                                                                               \
-    using base_t::operator();                                                  \
-    using base_t::operator[];                                                  \
-                                                                               \
-    n() = default;                                                             \
-    n(n const&) = default;                                                     \
-    n(n&&) = default;                                                          \
-    n& operator=(n const&) = default;                                          \
-    n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data OTHER>                                     \
-    friend class anyxx::any_base;                                              \
-    template <anyxx::is_any TO, anyxx::is_any FROM>                            \
-    friend TO anyxx::unchecked_downcast_to(FROM from)                          \
-      requires(std::derived_from<TO, FROM>);                                   \
-    template <anyxx::is_erased_data OTHER>                                     \
-    using type_for = n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;    \
+#define ANY_TEMPLATE_(t, n, BASE, l)                                          \
+                                                                              \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ERASED_DATA), t))>  \
+  struct n;                                                                   \
+                                                                              \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>            \
+  struct n##_default_v_table_map {                                            \
+    _detail_ANYPP_MAP_FUNCTIONS(l)                                            \
+  };                                                                          \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>            \
+  struct n##_v_table_map                                                      \
+      : n##_default_v_table_map<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(           \
+            _add_head((T), t))> {};                                           \
+                                                                              \
+  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                \
+                                                                              \
+  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                 \
+      : BASE##_v_table,                                                       \
+        anyxx::dispatch_holder<anyxx::has_methods<n>, n> {                    \
+    using v_table_base_t = BASE##_v_table;                                    \
+    using v_table_t = n##_v_table;                                            \
+    using own_dispatch_holder_t =                                             \
+        anyxx::dispatch_holder<anyxx::has_methods<n>, n>;                     \
+                                                                              \
+    static bool static_is_derived_from(const std::type_info& from) {          \
+      return typeid(v_table_t) == from                                        \
+                 ? true                                                       \
+                 : v_table_base_t::static_is_derived_from(from);              \
+    }                                                                         \
+                                                                              \
+    _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                   \
+                                                                              \
+    static constexpr bool methods_enabled = anyxx::has_methods<n>;            \
+                                                                              \
+    template <typename CONCRETE>                                              \
+    n##_v_table(std::in_place_type_t<CONCRETE> concrete)                      \
+        : v_table_base_t(concrete) {                                          \
+      using v_table_map = n##_v_table_map<_detail_ANYPP_TEMPLATE_ARGS(        \
+          _add_head((CONCRETE), t))>;                                         \
+                                                                              \
+      _detail_ANYPP_V_TABLE_LAMBDAS(l);                                       \
+                                                                              \
+      if constexpr (methods_enabled) {                                        \
+        own_dispatch_holder_t::dispatch_table =                               \
+            ::anyxx::dispatch_table_instance<n##_v_table, CONCRETE>();        \
+      }                                                                       \
+                                                                              \
+      ::anyxx::set_is_derived_from<v_table_t>(this);                          \
+    };                                                                        \
+                                                                              \
+    template <typename CONCRETE>                                              \
+    static auto imlpementation() {                                            \
+      return anyxx::v_table_instance_implementaion<v_table_t, CONCRETE>();    \
+    }                                                                         \
+  };                                                                          \
+                                                                              \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ERASED_DATA), t))>  \
+  struct n : BASE<ERASED_DATA> {                                              \
+    using erased_data_t = ERASED_DATA;                                        \
+    using base_t = BASE<ERASED_DATA>;                                         \
+    using v_table_base_t = base_t::v_table_t;                                 \
+    using v_table_t =                                                         \
+        n##_v_table _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t);            \
+                                                                              \
+    template <typename CONCRETE>                                              \
+    static auto v_table_imlpementation() {                                    \
+      static_assert(!anyxx::is_any<CONCRETE>);                                \
+      return v_table_t::template imlpementation<CONCRETE>();                  \
+    }                                                                         \
+                                                                              \
+    using base_t::erased_data_;                                               \
+    using base_t::v_table_;                                                   \
+                                                                              \
+    n(erased_data_t erased_data, v_table_t* v_table)                          \
+        : base_t(std::move(erased_data), v_table) {}                          \
+    template <typename CONSTRUCTED_WITH>                                      \
+    n(CONSTRUCTED_WITH&& v)                                                   \
+      requires anyxx::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>       \
+        : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                         \
+      v_table_ = v_table_t::template imlpementation<                          \
+          anyxx::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();                  \
+    }                                                                         \
+    template <typename OTHER>                                                 \
+    n(const OTHER& other)                                                     \
+      requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&     \
+               anyxx::borrowable_from<erased_data_t,                          \
+                                      typename OTHER::erased_data_t>)         \
+        : base_t(other) {}                                                    \
+    template <anyxx::is_any OTHER>                                            \
+    n(OTHER&& other) noexcept                                                 \
+      requires(                                                               \
+          std::derived_from<OTHER::v_table_t, v_table_t> &&                   \
+          anyxx::moveable_from<erased_data_t, typename OTHER::erased_data_t>) \
+        : base_t(std::move(other)) {}                                         \
+                                                                              \
+    _detail_ANYPP_METHODS(l)                                                  \
+                                                                              \
+        auto const*                                                           \
+        operator->() const {                                                  \
+      return this;                                                            \
+    }                                                                         \
+                                                                              \
+    using base_t::operator();                                                 \
+    using base_t::operator[];                                                 \
+                                                                              \
+    n() = default;                                                            \
+    n(n const&) = default;                                                    \
+    n(n&&) = default;                                                         \
+    n& operator=(n const&) = default;                                         \
+    n& operator=(n&&) = default;                                              \
+    template <anyxx::is_erased_data OTHER>                                    \
+    friend class anyxx::any_base;                                             \
+    template <anyxx::is_any TO, anyxx::is_any FROM>                           \
+    friend TO anyxx::unchecked_downcast_to(FROM from)                         \
+      requires(std::derived_from<TO, FROM>);                                  \
+    template <anyxx::is_erased_data OTHER>                                    \
+    using type_for = n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;   \
   };
 
 //    n(n&) = default;                                                           \
@@ -2063,7 +2052,7 @@ struct method<R(ARGS...)> {
   ANY_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
   ANY_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
 
-#define ANY_HAS_DISPATCH(interface_namespace, interface_name, ...)         \
+#define ANY_HAS_DISPATCH(interface_namespace, interface_name, ...)        \
   ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)           \
                                                                           \
   namespace anyxx {                                                       \
