@@ -55,7 +55,7 @@ void check_type_match(meta_data const& meta) {
   if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
 }
 
-template <typename DATA>
+template <typename Data>
 struct trait;
 
 template <class E>
@@ -68,8 +68,8 @@ concept is_erased_data = requires(E e) {
   { trait<E>::is_weak } -> std::convertible_to<bool>;
 };
 
-template <is_erased_data DATA>
-using data_void = trait<DATA>::void_t;
+template <is_erased_data Data>
+using data_void = trait<Data>::void_t;
 
 template <typename ErasedData>
 concept is_const_data =
@@ -78,28 +78,27 @@ concept is_const_data =
 template <typename ErasedData>
 concept is_weak_data = is_erased_data<ErasedData> && trait<ErasedData>::is_weak;
 
-template <bool CALL_IS_CONST, bool ERASED_DATA_IS_CONST,
-          bool ERASED_DATA_IS_WEAK>
+template <bool CallIsConst, bool ErasedDataIsConst, bool ErasedDataIsWeak>
 concept const_correct_call =
-    !ERASED_DATA_IS_WEAK &&
-    ((CALL_IS_CONST == ERASED_DATA_IS_CONST) || !ERASED_DATA_IS_CONST);
+    !ErasedDataIsWeak &&
+    ((CallIsConst == ErasedDataIsConst) || !ErasedDataIsConst);
 
-template <typename CALL, typename ErasedData, bool EXACT>
+template <typename CALL, typename ErasedData, bool Exact>
 concept const_correct_call_for_erased_data =
     !is_weak_data<ErasedData> && voidness<CALL> && is_erased_data<ErasedData> &&
-    ((EXACT && (is_const_void<CALL> == is_const_data<ErasedData>)) ||
-     (!EXACT &&
+    ((Exact && (is_const_void<CALL> == is_const_data<ErasedData>)) ||
+     (!Exact &&
       const_correct_call<is_const_void<CALL>, is_const_data<ErasedData>,
                          is_weak_data<ErasedData>>));
 
-template <is_erased_data ErasedData, typename FROM>
-ErasedData erased(FROM&& from) {
-  return trait<ErasedData>::erase(std::forward<FROM>(from));
+template <is_erased_data ErasedData, typename From>
+ErasedData erased(From&& from) {
+  return trait<ErasedData>::erase(std::forward<From>(from));
 }
 
-template <is_erased_data ErasedData, typename CONSTRUCTED_WITH>
+template <is_erased_data ErasedData, typename ConstructedWith>
 using unerased =
-    trait<ErasedData>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
+    trait<ErasedData>::template unerased<std::decay_t<ConstructedWith>>;
 
 template <is_erased_data ErasedData>
 bool has_data(ErasedData const& vv) {
@@ -156,11 +155,11 @@ U* unerase_cast(ErasedData const* o, meta_data const& meta)
   return nullptr;
 }
 
-template <typename CONSTRUCTED_WITH, typename ErasedData, typename BASE>
+template <typename ConstructedWith, typename ErasedData, typename BASE>
 concept erased_constructibile_for =
-    !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, BASE> &&
-    !is_erased_data<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
-    (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
+    !std::derived_from<std::remove_cvref_t<ConstructedWith>, BASE> &&
+    !is_erased_data<std::remove_cvref_t<ConstructedWith>> &&
+    (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
      trait<ErasedData>::is_constructibile_from_const);
 
 // --------------------------------------------------------------------------------
@@ -182,8 +181,8 @@ struct observer_trait {
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
   static VOIDNESS value(const auto& ptr) { return ptr; }
 
-  template <typename CONSTRUCTED_WITH>
-  using unerased = CONSTRUCTED_WITH;
+  template <typename ConstructedWith>
+  using unerased = ConstructedWith;
 
   template <typename V>
   static auto erase(V& v) {
@@ -230,8 +229,8 @@ struct trait<shared_const> {
   static void const* value(const auto& ptr) { return ptr.get(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
-  template <typename CONSTRUCTED_WITH>
-  using unerased = std::decay_t<typename CONSTRUCTED_WITH::element_type>;
+  template <typename ConstructedWith>
+  using unerased = std::decay_t<typename ConstructedWith::element_type>;
 
   template <typename V>
   static auto erase(std::shared_ptr<V> const& v) {
@@ -251,8 +250,8 @@ struct trait<weak> {
   static void const* value(const auto& ptr) { return nullptr; }
   static bool has_value(const auto& ptr) { return !ptr.expired(); }
 
-  template <typename CONSTRUCTED_WITH>
-  using unerased = std::decay_t<typename CONSTRUCTED_WITH::element_type>;
+  template <typename ConstructedWith>
+  using unerased = std::decay_t<typename ConstructedWith::element_type>;
 
   template <typename V>
   static auto erase(std::weak_ptr<V> const& v) {
@@ -299,8 +298,8 @@ struct trait<unique> {
   static void* value(const auto& ptr) { return ptr.get(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
 
-  template <typename CONSTRUCTED_WITH>
-  using unerased = typename CONSTRUCTED_WITH::element_type;
+  template <typename ConstructedWith>
+  using unerased = typename ConstructedWith::element_type;
 
   template <typename V>
   static auto erase(std::unique_ptr<V>&& v) {
@@ -316,31 +315,31 @@ static_assert(is_erased_data<unique>);
 struct value_v_table {
   using destroy_fn = void(void*) noexcept;
   using copy_fn = void*(const void*);
-  template <class DATA>
-  constexpr value_v_table(std::in_place_type_t<DATA>)
-      : destroy(&destroy_impl<DATA>), copy(&copy_impl<DATA>) {}
-  template <class DATA>
+  template <class Data>
+  constexpr value_v_table(std::in_place_type_t<Data>)
+      : destroy(&destroy_impl<Data>), copy(&copy_impl<Data>) {}
+  template <class Data>
   static void destroy_impl(void* target) noexcept {
-    ::delete static_cast<DATA*>(target);
+    ::delete static_cast<Data*>(target);
   }
-  template <class DATA>
+  template <class Data>
   static void* copy_impl(void const* source) {
-    return ::new DATA(*static_cast<DATA const*>(source));
+    return ::new Data(*static_cast<Data const*>(source));
   }
   destroy_fn* destroy;
   copy_fn* copy;
 };
 
-template <class DATA>
+template <class Data>
 constexpr value_v_table value_v_table_of =
-    value_v_table(std::in_place_type<DATA>);
+    value_v_table(std::in_place_type<Data>);
 
 class value {
  public:
   value() = default;
-  template <typename DATA>
-  value(DATA* ptr)
-      : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<DATA>>) {}
+  template <typename Data>
+  value(Data* ptr)
+      : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<Data>>) {}
   value(value const& rhs)
       : ptr_(rhs.ptr_ ? rhs.v_table_->copy(rhs.ptr_) : nullptr),
         v_table_(rhs.v_table_) {}
@@ -409,13 +408,13 @@ struct trait<value> {
   static void* value(const auto& v) { return v.get(); }
   static bool has_value(const auto& v) { return v; }
 
-  template <typename CONSTRUCTED_WITH>
-  using unerased = CONSTRUCTED_WITH;
+  template <typename ConstructedWith>
+  using unerased = ConstructedWith;
 
-  template <typename CONSTRUCTED_WITH>
-  static auto erase(CONSTRUCTED_WITH&& v) {
-    return anyxx::make_value<std::decay_t<CONSTRUCTED_WITH>>(
-        std::forward<CONSTRUCTED_WITH>(v));
+  template <typename ConstructedWith>
+  static auto erase(ConstructedWith&& v) {
+    return anyxx::make_value<std::decay_t<ConstructedWith>>(
+        std::forward<ConstructedWith>(v));
   }
 };
 
@@ -586,25 +585,25 @@ bool type_match(meta_data const& meta_data) {
 // --------------------------------------------------------------------------------
 // borrow erased data
 
-template <is_erased_data TO, is_erased_data FROM>
+template <is_erased_data TO, is_erased_data From>
 struct borrow_trait;
 
-template <typename TO, typename FROM>
+template <typename TO, typename From>
 concept borrowable_from =
-    is_erased_data<FROM> && is_erased_data<TO> && requires(FROM f) {
-      { borrow_trait<TO, FROM>{}(f) } -> std::same_as<TO>;
+    is_erased_data<From> && is_erased_data<TO> && requires(From f) {
+      { borrow_trait<TO, From>{}(f) } -> std::same_as<TO>;
     };
 
-template <is_erased_data FROM>
-  requires(!is_const_data<FROM> && !is_weak_data<FROM>)
-struct borrow_trait<mutable_observer, FROM> {
+template <is_erased_data From>
+  requires(!is_const_data<From> && !is_weak_data<From>)
+struct borrow_trait<mutable_observer, From> {
   auto operator()(const auto& from) {
     return mutable_observer{get_void_data_ptr(from)};
   }
 };
-template <is_erased_data FROM>
-  requires(!is_weak_data<FROM>)
-struct borrow_trait<const_observer, FROM> {
+template <is_erased_data From>
+  requires(!is_weak_data<From>)
+struct borrow_trait<const_observer, From> {
   auto operator()(const auto& from) {
     return const_observer{get_void_data_ptr(from)};
   }
@@ -622,10 +621,10 @@ struct borrow_trait<weak, shared_const> {
   auto operator()(const auto& from) { return weak{from}; }
 };
 
-template <typename TO, typename FROM>
-  requires borrowable_from<TO, FROM>
-TO borrow_as(FROM const& from) {
-  return borrow_trait<TO, FROM>{}(from);
+template <typename TO, typename From>
+  requires borrowable_from<TO, From>
+TO borrow_as(From const& from) {
+  return borrow_trait<TO, From>{}(from);
 }
 
 static_assert(!borrowable_from<mutable_observer, const_observer>);
@@ -679,9 +678,9 @@ struct can_copy_to;
 template <typename TO>
 concept cloneable_to = is_erased_data<TO> && trait<TO>::is_owner;
 
-template <is_erased_data TO, is_erased_data FROM>
+template <is_erased_data TO, is_erased_data From>
   requires cloneable_to<TO>
-TO clone_to(FROM const& from, auto const& meta_data) {
+TO clone_to(From const& from, auto const& meta_data) {
   return meta_data.copy_construct(get_void_data_ptr(from));
 }
 
@@ -695,12 +694,12 @@ static_assert(cloneable_to<value>);
 // --------------------------------------------------------------------------------
 // move erased data
 
-template <is_erased_data TO, is_erased_data FROM>
+template <is_erased_data TO, is_erased_data From>
 bool constexpr can_move_to_from = false;
 
-template <typename TO, typename FROM>
+template <typename TO, typename From>
 concept moveable_from =
-    is_erased_data<FROM> && is_erased_data<TO> && can_move_to_from<TO, FROM>;
+    is_erased_data<From> && is_erased_data<TO> && can_move_to_from<TO, From>;
 
 template <is_erased_data X>
 bool constexpr can_move_to_from<X, X> = true;
@@ -711,14 +710,14 @@ bool constexpr can_move_to_from<shared_const, unique> = true;
 template <>
 bool constexpr can_move_to_from<weak, shared_const> = true;
 
-template <voidness TO, voidness FROM>
-  requires const_correct_call<is_const_void<TO>, is_const_void<FROM>,
-                              is_weak_data<FROM>>
-bool constexpr can_move_to_from<TO, FROM> = true;
+template <voidness TO, voidness From>
+  requires const_correct_call<is_const_void<TO>, is_const_void<From>,
+                              is_weak_data<From>>
+bool constexpr can_move_to_from<TO, From> = true;
 
-template <typename TO, typename FROM>
-  requires moveable_from<TO, std::decay_t<FROM>>
-TO move_to(FROM&& from) {
+template <typename TO, typename From>
+  requires moveable_from<TO, std::decay_t<From>>
+TO move_to(From&& from) {
   return std::move(from);
 }
 
@@ -789,12 +788,12 @@ concept is_typed_any = is_any<E> && requires(E e) {
   { E::is_const } -> std::convertible_to<bool>;
 };
 
-template <typename CONSTRUCTED_WITH, typename ErasedData>
+template <typename ConstructedWith, typename ErasedData>
 concept constructibile_for =
-    erased_constructibile_for<CONSTRUCTED_WITH, ErasedData,
+    erased_constructibile_for<ConstructedWith, ErasedData,
                               any_base<ErasedData>> &&
-    !is_any<CONSTRUCTED_WITH> &&
-    !is_typed_any<std::remove_cvref_t<CONSTRUCTED_WITH>>;
+    !is_any<ConstructedWith> &&
+    !is_typed_any<std::remove_cvref_t<ConstructedWith>>;
 
 template <is_erased_data ErasedData>
 class any_base {
@@ -811,12 +810,12 @@ class any_base {
   any_base() = default;
   any_base(erased_data_t erased_data, v_table_t* v_table)
       : erased_data_(std::move(erased_data)), v_table_(v_table) {}
-  template <typename CONSTRUCTED_WITH>
-  any_base(CONSTRUCTED_WITH&& constructed_with)
-    requires constructibile_for<CONSTRUCTED_WITH, ErasedData>
+  template <typename ConstructedWith>
+  any_base(ConstructedWith&& constructed_with)
+    requires constructibile_for<ConstructedWith, ErasedData>
       : erased_data_(erased<erased_data_t>(
-            std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    using t = unerased<ErasedData, CONSTRUCTED_WITH>;
+            std::forward<ConstructedWith>(constructed_with))) {
+    using t = unerased<ErasedData, ConstructedWith>;
   }
 
  public:
@@ -859,9 +858,9 @@ class any_base {
   template <is_any I>
   friend inline auto get_v_table(I const& any);
 
-  template <is_any TO, is_any FROM>
-  friend inline TO unchecked_downcast_to(FROM from)
-    requires(std::derived_from<TO, FROM>);
+  template <is_any TO, is_any From>
+  friend inline TO unchecked_downcast_to(From from)
+    requires(std::derived_from<TO, From>);
 
  public:
   void operator()() const {}
@@ -896,9 +895,9 @@ template <is_erased_data VV>
 bool is_derived_from(const std::type_info& from, any_base<VV> const& any) {
   return get_v_table(any)->_is_derived_from(from);
 }
-template <is_any FROM, is_erased_data VV>
+template <is_any From, is_erased_data VV>
 bool is_derived_from(any_base<VV> const& any) {
-  return is_derived_from(typeid(FROM::v_table_t), any);
+  return is_derived_from(typeid(From::v_table_t), any);
 }
 
 template <typename V_TABLE>
@@ -922,17 +921,17 @@ inline auto get_v_table(Any const& any) {
   return unchecked_v_table_downcast_to<Any>(any.v_table_);
 }
 
-template <is_any TO, is_any FROM>
-TO unchecked_downcast_to(FROM from)
-  requires(std::derived_from<TO, FROM>)
+template <is_any TO, is_any From>
+TO unchecked_downcast_to(From from)
+  requires(std::derived_from<TO, From>)
 {
   return TO{std::move(from.erased_data_),
             unchecked_v_table_downcast_to<TO>(from.v_table_)};
 }
 
-template <is_any TO, is_any FROM>
-std::optional<TO> downcast_to(FROM from)
-  requires(std::derived_from<TO, FROM>)
+template <is_any TO, is_any From>
+std::optional<TO> downcast_to(From from)
+  requires(std::derived_from<TO, From>)
 {
   if (is_derived_from<TO>(from))
     return {unchecked_downcast_to<TO>(std::move(from))};
@@ -1066,11 +1065,11 @@ auto as(Any source) {
   return typed_any<V, Any>{std::move(source)};
 }
 
-template <typename TO, typename FROM, is_any Any>
-auto as(typed_any<FROM, Any> source)
-  requires std::convertible_to<FROM*, TO*>
+template <typename TO, typename From, is_any Any>
+auto as(typed_any<From, Any> source)
+  requires std::convertible_to<From*, TO*>
 {
-  if constexpr (typed_any<FROM, Any>::is_const) {
+  if constexpr (typed_any<From, Any>::is_const) {
     return typed_any<TO const, Any>{std::move(source.erased_data_)};
   } else {
     return typed_any<TO, Any>{std::move(source.erased_data_)};
@@ -1907,12 +1906,12 @@ struct dispatch<R(Args...)> {
                                                                               \
     n(erased_data_t erased_data, v_table_t* v_table)                          \
         : base_t(std::move(erased_data), v_table) {}                          \
-    template <typename CONSTRUCTED_WITH>                                      \
-    n(CONSTRUCTED_WITH&& v)                                                   \
-      requires anyxx::constructibile_for<CONSTRUCTED_WITH, ErasedData>        \
-        : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                         \
+    template <typename ConstructedWith>                                      \
+    n(ConstructedWith&& v)                                                   \
+      requires anyxx::constructibile_for<ConstructedWith, ErasedData>        \
+        : base_t(std::forward<ConstructedWith>(v)) {                         \
       v_table_ = v_table_t::template imlpementation<                          \
-          anyxx::unerased<ErasedData, CONSTRUCTED_WITH>>();                   \
+          anyxx::unerased<ErasedData, ConstructedWith>>();                   \
     }                                                                         \
     template <typename OTHER>                                                 \
     n(const OTHER& other)                                                     \
@@ -1944,9 +1943,9 @@ struct dispatch<R(Args...)> {
     n& operator=(n&&) = default;                                              \
     template <anyxx::is_erased_data OTHER>                                    \
     friend class anyxx::any_base;                                             \
-    template <anyxx::is_any TO, anyxx::is_any FROM>                           \
-    friend TO anyxx::unchecked_downcast_to(FROM from)                         \
-      requires(std::derived_from<TO, FROM>);                                  \
+    template <anyxx::is_any TO, anyxx::is_any From>                           \
+    friend TO anyxx::unchecked_downcast_to(From from)                         \
+      requires(std::derived_from<TO, From>);                                  \
     template <anyxx::is_erased_data OTHER>                                    \
     using type_for = n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;   \
   };
