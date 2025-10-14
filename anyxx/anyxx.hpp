@@ -71,13 +71,12 @@ concept is_erased_data = requires(E e) {
 template <is_erased_data DATA>
 using data_void = trait<DATA>::void_t;
 
-template <typename ERASED_DATA>
+template <typename ErasedData>
 concept is_const_data =
-    is_erased_data<ERASED_DATA> && is_const_void<data_void<ERASED_DATA>>;
+    is_erased_data<ErasedData> && is_const_void<data_void<ErasedData>>;
 
-template <typename ERASED_DATA>
-concept is_weak_data =
-    is_erased_data<ERASED_DATA> && trait<ERASED_DATA>::is_weak;
+template <typename ErasedData>
+concept is_weak_data = is_erased_data<ErasedData> && trait<ErasedData>::is_weak;
 
 template <bool CALL_IS_CONST, bool ERASED_DATA_IS_CONST,
           bool ERASED_DATA_IS_WEAK>
@@ -85,39 +84,38 @@ concept const_correct_call =
     !ERASED_DATA_IS_WEAK &&
     ((CALL_IS_CONST == ERASED_DATA_IS_CONST) || !ERASED_DATA_IS_CONST);
 
-template <typename CALL, typename ERASED_DATA, bool EXACT>
+template <typename CALL, typename ErasedData, bool EXACT>
 concept const_correct_call_for_erased_data =
-    !is_weak_data<ERASED_DATA> && voidness<CALL> &&
-    is_erased_data<ERASED_DATA> &&
-    ((EXACT && (is_const_void<CALL> == is_const_data<ERASED_DATA>)) ||
+    !is_weak_data<ErasedData> && voidness<CALL> && is_erased_data<ErasedData> &&
+    ((EXACT && (is_const_void<CALL> == is_const_data<ErasedData>)) ||
      (!EXACT &&
-      const_correct_call<is_const_void<CALL>, is_const_data<ERASED_DATA>,
-                         is_weak_data<ERASED_DATA>>));
+      const_correct_call<is_const_void<CALL>, is_const_data<ErasedData>,
+                         is_weak_data<ErasedData>>));
 
-template <is_erased_data ERASED_DATA, typename FROM>
-ERASED_DATA erased(FROM&& from) {
-  return trait<ERASED_DATA>::erase(std::forward<FROM>(from));
+template <is_erased_data ErasedData, typename FROM>
+ErasedData erased(FROM&& from) {
+  return trait<ErasedData>::erase(std::forward<FROM>(from));
 }
 
-template <is_erased_data ERASED_DATA, typename CONSTRUCTED_WITH>
+template <is_erased_data ErasedData, typename CONSTRUCTED_WITH>
 using unerased =
-    trait<ERASED_DATA>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
+    trait<ErasedData>::template unerased<std::decay_t<CONSTRUCTED_WITH>>;
 
-template <is_erased_data ERASED_DATA>
-bool has_data(ERASED_DATA const& vv) {
-  return trait<ERASED_DATA>::has_value(vv);
+template <is_erased_data ErasedData>
+bool has_data(ErasedData const& vv) {
+  return trait<ErasedData>::has_value(vv);
 }
-template <is_erased_data ERASED_DATA>
-void const* get_void_data_ptr(ERASED_DATA const& vv)
-  requires std::same_as<void const*, typename trait<ERASED_DATA>::void_t>
+template <is_erased_data ErasedData>
+void const* get_void_data_ptr(ErasedData const& vv)
+  requires std::same_as<void const*, typename trait<ErasedData>::void_t>
 {
-  return trait<ERASED_DATA>::value(vv);
+  return trait<ErasedData>::value(vv);
 }
-template <is_erased_data ERASED_DATA>
-void* get_void_data_ptr(ERASED_DATA const& vv)
-  requires std::same_as<void*, typename trait<ERASED_DATA>::void_t>
+template <is_erased_data ErasedData>
+void* get_void_data_ptr(ErasedData const& vv)
+  requires std::same_as<void*, typename trait<ErasedData>::void_t>
 {
-  return trait<ERASED_DATA>::value(vv);
+  return trait<ErasedData>::value(vv);
 }
 
 template <typename U>
@@ -129,41 +127,41 @@ auto unchecked_unerase_cast(void* p) {
   return static_cast<U*>(p);
 }
 
-template <typename U, is_erased_data ERASED_DATA>
-auto unchecked_unerase_cast(ERASED_DATA const& o) {
+template <typename U, is_erased_data ErasedData>
+auto unchecked_unerase_cast(ErasedData const& o) {
   return unchecked_unerase_cast<U>(get_void_data_ptr(o));
 }
-template <typename U, is_erased_data ERASED_DATA>
-auto unchecked_unerase_cast(ERASED_DATA const& o)
-  requires(!is_const_data<ERASED_DATA>)
+template <typename U, is_erased_data ErasedData>
+auto unchecked_unerase_cast(ErasedData const& o)
+  requires(!is_const_data<ErasedData>)
 {
   return unchecked_unerase_cast<U>(get_void_data_ptr(o));
 }
 
-template <typename U, is_erased_data ERASED_DATA>
-auto unerase_cast(ERASED_DATA const& o, meta_data const& meta) {
+template <typename U, is_erased_data ErasedData>
+auto unerase_cast(ErasedData const& o, meta_data const& meta) {
   check_type_match<U>(meta);
   return unchecked_unerase_cast<U>(o);
 }
-template <typename U, is_erased_data ERASED_DATA>
-U const* unerase_cast(ERASED_DATA const* o, meta_data const& meta) {
+template <typename U, is_erased_data ErasedData>
+U const* unerase_cast(ErasedData const* o, meta_data const& meta) {
   if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
   return nullptr;
 }
-template <typename U, is_erased_data ERASED_DATA>
-U* unerase_cast(ERASED_DATA const* o, meta_data const& meta)
-  requires(!is_const_data<ERASED_DATA>)
+template <typename U, is_erased_data ErasedData>
+U* unerase_cast(ErasedData const* o, meta_data const& meta)
+  requires(!is_const_data<ErasedData>)
 {
   if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
   return nullptr;
 }
 
-template <typename CONSTRUCTED_WITH, typename ERASED_DATA, typename BASE>
+template <typename CONSTRUCTED_WITH, typename ErasedData, typename BASE>
 concept erased_constructibile_for =
     !std::derived_from<std::remove_cvref_t<CONSTRUCTED_WITH>, BASE> &&
     !is_erased_data<std::remove_cvref_t<CONSTRUCTED_WITH>> &&
     (!std::is_const_v<std::remove_reference_t<CONSTRUCTED_WITH>> ||
-     trait<ERASED_DATA>::is_constructibile_from_const);
+     trait<ErasedData>::is_constructibile_from_const);
 
 // --------------------------------------------------------------------------------
 // erased data observer
@@ -173,7 +171,7 @@ using observer = VOIDNESS;
 using const_observer = observer<const_void>;
 using mutable_observer = observer<mutable_void>;
 
-template <typename ERASED_DATA, voidness VOIDNESS>
+template <typename ErasedData, voidness VOIDNESS>
 struct observer_trait {
   using void_t = VOIDNESS;
   static constexpr bool is_const = is_const_void<void_t>;
@@ -190,13 +188,13 @@ struct observer_trait {
   template <typename V>
   static auto erase(V& v) {
     static_assert(!std::is_const_v<std::remove_reference_t<V>>);
-    return ERASED_DATA(static_cast<VOIDNESS>(&v));
+    return ErasedData(static_cast<VOIDNESS>(&v));
   }
   template <typename V>
   static auto erase(const V& v)
     requires(is_const)
   {
-    return ERASED_DATA(static_cast<VOIDNESS>(&v));
+    return ErasedData(static_cast<VOIDNESS>(&v));
   }
 };
 
@@ -769,7 +767,7 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ERASED_DATA>
+template <is_erased_data ErasedData>
 class any_base;
 
 template <typename I>
@@ -791,17 +789,17 @@ concept is_typed_any = is_any<E> && requires(E e) {
   { E::is_const } -> std::convertible_to<bool>;
 };
 
-template <typename CONSTRUCTED_WITH, typename ERASED_DATA>
+template <typename CONSTRUCTED_WITH, typename ErasedData>
 concept constructibile_for =
-    erased_constructibile_for<CONSTRUCTED_WITH, ERASED_DATA,
-                              any_base<ERASED_DATA>> &&
+    erased_constructibile_for<CONSTRUCTED_WITH, ErasedData,
+                              any_base<ErasedData>> &&
     !is_any<CONSTRUCTED_WITH> &&
     !is_typed_any<std::remove_cvref_t<CONSTRUCTED_WITH>>;
 
-template <is_erased_data ERASED_DATA>
+template <is_erased_data ErasedData>
 class any_base {
  public:
-  using erased_data_t = ERASED_DATA;
+  using erased_data_t = ErasedData;
   using trait_t = trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
   using v_table_t = any_base_v_table;
@@ -815,10 +813,10 @@ class any_base {
       : erased_data_(std::move(erased_data)), v_table_(v_table) {}
   template <typename CONSTRUCTED_WITH>
   any_base(CONSTRUCTED_WITH&& constructed_with)
-    requires constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>
+    requires constructibile_for<CONSTRUCTED_WITH, ErasedData>
       : erased_data_(erased<erased_data_t>(
             std::forward<CONSTRUCTED_WITH>(constructed_with))) {
-    using t = unerased<ERASED_DATA, CONSTRUCTED_WITH>;
+    using t = unerased<ErasedData, CONSTRUCTED_WITH>;
   }
 
  public:
@@ -826,19 +824,19 @@ class any_base {
   any_base(const OTHER& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
              borrowable_from<erased_data_t, typename OTHER::erased_data_t>)
-      : erased_data_(borrow_as<ERASED_DATA>(other.erased_data_)),
+      : erased_data_(borrow_as<ErasedData>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   any_base(OTHER&& other)
     requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&
              moveable_from<erased_data_t, typename OTHER::erased_data_t>)
-      : erased_data_(move_to<ERASED_DATA>(std::move(other.erased_data_))),
+      : erased_data_(move_to<ErasedData>(std::move(other.erased_data_))),
         v_table_(get_v_table(other)) {}
   template <typename OTHER>
   any_base& operator=(OTHER&& other)
     requires(std::derived_from<OTHER::v_table_t, v_table_t>)
   {
-    erased_data_ = move_to<ERASED_DATA>(std::move(other.erased_data_));
+    erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
     v_table_ = get_v_table(other);
     return *this;
   }
@@ -852,12 +850,12 @@ class any_base {
   template <is_erased_data OTHER>
   friend class any_base;
 
-  template <is_erased_data ERASED_DATA>
-  friend inline auto& get_erased_data(any_base<ERASED_DATA> const& any);
-  template <is_erased_data ERASED_DATA>
-  friend inline auto move_erased_data(any_base<ERASED_DATA>&& any);
-  template <is_erased_data ERASED_DATA>
-  friend inline auto get_void_data_ptr(any_base<ERASED_DATA> const& any);
+  template <is_erased_data ErasedData>
+  friend inline auto& get_erased_data(any_base<ErasedData> const& any);
+  template <is_erased_data ErasedData>
+  friend inline auto move_erased_data(any_base<ErasedData>&& any);
+  template <is_erased_data ErasedData>
+  friend inline auto get_void_data_ptr(any_base<ErasedData> const& any);
   template <is_any I>
   friend inline auto get_v_table(I const& any);
 
@@ -870,22 +868,22 @@ class any_base {
   void* operator[](void*) const { return {}; }
 };
 
-template <typename V_TABLE, is_erased_data ERASED_DATA>
+template <typename V_TABLE, is_erased_data ErasedData>
 struct interface_t;
 
-template <typename V_TABLE, is_erased_data ERASED_DATA>
-using interface_for = typename interface_t<V_TABLE, ERASED_DATA>::type;
+template <typename V_TABLE, is_erased_data ErasedData>
+using interface_for = typename interface_t<V_TABLE, ErasedData>::type;
 
-template <is_erased_data ERASED_DATA>
-auto& get_erased_data(any_base<ERASED_DATA> const& any) {
+template <is_erased_data ErasedData>
+auto& get_erased_data(any_base<ErasedData> const& any) {
   return any.erased_data_;
 }
-template <is_erased_data ERASED_DATA>
-auto move_erased_data(any_base<ERASED_DATA>&& any) {
+template <is_erased_data ErasedData>
+auto move_erased_data(any_base<ErasedData>&& any) {
   return std::move(any.erased_data_);
 }
-template <is_erased_data ERASED_DATA>
-auto get_void_data_ptr(any_base<ERASED_DATA> const& any) {
+template <is_erased_data ErasedData>
+auto get_void_data_ptr(any_base<ErasedData> const& any) {
   return get_void_data_ptr(get_erased_data(any));
 }
 
@@ -1448,11 +1446,9 @@ struct dispatch<R(Args...)> {
     }
     template <typename DispatchMatrix, typename ArgsTuple>
     std::optional<R> invoke(DispatchMatrix const& target,
-                            ArgsTuple&& dispatch_args_tuple,
-                            auto&&...) const {
+                            ArgsTuple&& dispatch_args_tuple, auto&&...) const {
       if (!target) return {};
-      return std::apply(target,
-                        std::forward<ArgsTuple>(dispatch_args_tuple));
+      return std::apply(target, std::forward<ArgsTuple>(dispatch_args_tuple));
     }
   };
 
@@ -1483,17 +1479,15 @@ struct dispatch<R(Args...)> {
     template <typename DispatchMatrix, typename ArgsTuple,
               typename... ActualArgs>
     std::optional<R> invoke(DispatchMatrix const& target,
-                            ArgsTuple&& dispatch_args_tuple,
-                            Any const& any,
+                            ArgsTuple&& dispatch_args_tuple, Any const& any,
                             ActualArgs&&... actual_args) const {
       auto dispatch_table = get_v_table(any)->dispatch_table;
       auto dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);
       if (!dispatch_dim) return {};
       if (target.size() < *dispatch_dim + 1) return {};
-      return next_t::invoke(
-          target[*dispatch_dim],
-          std::forward<ArgsTuple>(dispatch_args_tuple),
-          std::forward<ActualArgs>(actual_args)...);
+      return next_t::invoke(target[*dispatch_dim],
+                            std::forward<ArgsTuple>(dispatch_args_tuple),
+                            std::forward<ActualArgs>(actual_args)...);
     }
   };
 
@@ -1512,8 +1506,7 @@ struct dispatch<R(Args...)> {
     template <typename DispatchMatrix, typename ArgsTuple,
               typename... ActualArgs>
     std::optional<R> invoke(DispatchMatrix const&,
-                            ArgsTuple&& dispatch_args_tuple,
-                            Any const& any,
+                            ArgsTuple&& dispatch_args_tuple, Any const& any,
                             ActualArgs&&... actual_args) const {
       auto v_table = get_v_table(any)->dispatch_table;
       auto target = get_function(v_table, index_);
@@ -1841,7 +1834,7 @@ struct dispatch<R(Args...)> {
 
 #define ANY_TEMPLATE_(t, n, BASE, l)                                          \
                                                                               \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ERASED_DATA), t))>  \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>   \
   struct n;                                                                   \
                                                                               \
   template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>            \
@@ -1895,10 +1888,10 @@ struct dispatch<R(Args...)> {
     }                                                                         \
   };                                                                          \
                                                                               \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ERASED_DATA), t))>  \
-  struct n : BASE<ERASED_DATA> {                                              \
-    using erased_data_t = ERASED_DATA;                                        \
-    using base_t = BASE<ERASED_DATA>;                                         \
+  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>   \
+  struct n : BASE<ErasedData> {                                               \
+    using erased_data_t = ErasedData;                                         \
+    using base_t = BASE<ErasedData>;                                          \
     using v_table_base_t = base_t::v_table_t;                                 \
     using v_table_t =                                                         \
         n##_v_table _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t);            \
@@ -1916,10 +1909,10 @@ struct dispatch<R(Args...)> {
         : base_t(std::move(erased_data), v_table) {}                          \
     template <typename CONSTRUCTED_WITH>                                      \
     n(CONSTRUCTED_WITH&& v)                                                   \
-      requires anyxx::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>       \
+      requires anyxx::constructibile_for<CONSTRUCTED_WITH, ErasedData>        \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                         \
       v_table_ = v_table_t::template imlpementation<                          \
-          anyxx::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();                  \
+          anyxx::unerased<ErasedData, CONSTRUCTED_WITH>>();                   \
     }                                                                         \
     template <typename OTHER>                                                 \
     n(const OTHER& other)                                                     \
@@ -1993,7 +1986,7 @@ struct dispatch<R(Args...)> {
 #define ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                             \
   template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(               \
-      _add_head((ERASED_DATA), (__VA_ARGS__)))>               \
+      _add_head((ErasedData), (__VA_ARGS__)))>                \
   struct interface_name;                                      \
   struct interface_name##_v_table;                            \
   }
