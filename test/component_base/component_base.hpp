@@ -1,6 +1,6 @@
 #include <string>
-#include <anypp/any++.hpp>
-using namespace anypp;
+#include <anyxx/anyxx.hpp>
+using namespace anyxx;
 
 #ifndef ANY_DLL_MODE
 #pragma message("ERROR! usage of component_base needs #define ANY_DLL_MODE")
@@ -37,12 +37,12 @@ ANY(get_value_i, (ANY_CONST_METHOD(double, get_value)))
 ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, double)))
 
 COMPONENT_BASE_EXPORT
-to_string_i<anypp::const_observer> get_to_string_i_co();
-COMPONENT_BASE_EXPORT to_string_i<anypp::shared_const>
+to_string_i<anyxx::const_observer> get_to_string_i_co();
+COMPONENT_BASE_EXPORT to_string_i<anyxx::shared_const>
 get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<anypp::unique> get_to_string_i_u(
+COMPONENT_BASE_EXPORT to_string_i<anyxx::unique> get_to_string_i_u(
     double v);
-COMPONENT_BASE_EXPORT anypp::shared_const sc_X(double v);
-COMPONENT_BASE_EXPORT anypp::unique u_X(double v);
+COMPONENT_BASE_EXPORT anyxx::shared_const sc_X(double v);
+COMPONENT_BASE_EXPORT anyxx::unique u_X(double v);
 
 }  // namespace test::component_base

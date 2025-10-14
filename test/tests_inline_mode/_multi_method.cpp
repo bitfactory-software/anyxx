@@ -1,9 +1,9 @@
 #include <catch.hpp>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
+using namespace anyxx;
 
 namespace {}
 

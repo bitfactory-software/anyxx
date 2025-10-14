@@ -6,9 +6,9 @@ using namespace whole_picture;
 using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
 
 ANY_RUNTIME_INSTANCE(shapes::picture)
 ANY_V_TABLE_INSTANCE(shapes::picture, whole_picture::architecture, shape);

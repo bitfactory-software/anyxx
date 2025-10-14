@@ -23,7 +23,7 @@
 #include <variant>
 #include <vector>
 
-namespace anypp {
+namespace anyxx {
 
 class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
@@ -417,7 +417,7 @@ struct trait<value> {
 
   template <typename CONSTRUCTED_WITH>
   static auto erase(CONSTRUCTED_WITH&& v) {
-    return anypp::make_value<std::decay_t<CONSTRUCTED_WITH>>(
+    return anyxx::make_value<std::decay_t<CONSTRUCTED_WITH>>(
         std::forward<CONSTRUCTED_WITH>(v));
   }
 };
@@ -966,7 +966,7 @@ V_TABLE* v_table_instance_implementaion();
 template <typename V_TABLE, typename CONCRETE>
 V_TABLE* v_table_instance_implementaion() {
   static V_TABLE v_table{std::in_place_type<CONCRETE>};
-  static auto __ = anypp::get_meta_data<CONCRETE>().register_v_table(&v_table);
+  static auto __ = anyxx::get_meta_data<CONCRETE>().register_v_table(&v_table);
   return &v_table;
 }
 #endif  // DEBUG
@@ -989,7 +989,7 @@ struct extension_method_holder<true, Any> {
 
 template <is_any TO_ANYPP>
 auto query_v_table(const meta_data& meta_data)
-    -> std::expected<typename TO_ANYPP::v_table_t*, anypp::cast_error> {
+    -> std::expected<typename TO_ANYPP::v_table_t*, anyxx::cast_error> {
   using v_table_t = typename TO_ANYPP::v_table_t;
   return meta_data.get_v_table(typeid(v_table_t)).transform([](auto v_table) {
     return static_cast<v_table_t*>(v_table);
@@ -1560,7 +1560,7 @@ struct extension_method<R(ARGS...)> {
   };
 };
 
-}  // namespace anypp
+}  // namespace anyxx
 
 #define ANY_MERGE_(a, b) a##b
 #define ANY_LABEL_(a) ANY_MERGE_(unique_name_, a)
@@ -1572,17 +1572,17 @@ struct extension_method<R(ARGS...)> {
 
 #define ANY_RUNTIME_FWD(export_, ...)                            \
   template <>                                                    \
-  export_ const std::type_info& anypp::typeid_of<__VA_ARGS__>(); \
+  export_ const std::type_info& anyxx::typeid_of<__VA_ARGS__>(); \
   template <>                                                    \
-  export_ anypp::meta_data& anypp::get_meta_data<__VA_ARGS__>();
+  export_ anyxx::meta_data& anyxx::get_meta_data<__VA_ARGS__>();
 
 #define ANY_RUNTIME_INSTANCE(...)                                       \
   template <>                                                           \
-  const std::type_info& anypp::typeid_of<__VA_ARGS__>() {               \
+  const std::type_info& anyxx::typeid_of<__VA_ARGS__>() {               \
     return typeid(__VA_ARGS__);                                         \
   }                                                                     \
   template <>                                                           \
-  anypp::meta_data& anypp::get_meta_data<std::decay_t<__VA_ARGS__>>() { \
+  anyxx::meta_data& anyxx::get_meta_data<std::decay_t<__VA_ARGS__>>() { \
     return runtime_implementation<__VA_ARGS__>();                       \
   }
 
@@ -1603,26 +1603,26 @@ struct extension_method<R(ARGS...)> {
   namespace ns_ {                                \
   struct c_;                                     \
   }                                              \
-  namespace anypp {                              \
+  namespace anyxx {                              \
   template <>                                    \
   export_ std::size_t& members_count<ns_::c_>(); \
   }
 
 #define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \
   template <>                                    \
-  std::size_t& anypp::members_count<ns_::c_>() { \
+  std::size_t& anyxx::members_count<ns_::c_>() { \
     static std::size_t count = 0;                \
     return count;                                \
   }
 
 #define ANY_MEMBER_FWD(export_, object_, member_, type_)           \
-  export_ anypp::member<object_, type_>& _inintialize_##member_(); \
-  inline const anypp::member<object_, type_>& member_ =            \
+  export_ anyxx::member<object_, type_>& _inintialize_##member_(); \
+  inline const anyxx::member<object_, type_>& member_ =            \
       _inintialize_##member_();
 
 #define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \
-  anypp::member<object_, type_>& ns_::_inintialize_##member_() { \
-    static anypp::member<object_, type_> instance;               \
+  anyxx::member<object_, type_>& ns_::_inintialize_##member_() { \
+    static anyxx::member<object_, type_> instance;               \
     return instance;                                             \
   }
 
@@ -1641,30 +1641,30 @@ struct extension_method<R(ARGS...)> {
   namespace ns_ {                                            \
   struct c_;                                                 \
   }                                                          \
-  namespace anypp {                                          \
+  namespace anyxx {                                          \
   template <>                                                \
   export_ std::size_t& extension_method_count_of<ns_::c_>(); \
   }
 
 #define ANY_EXTENSION_METHOD_COUNT_IMPL(ns_, c_)             \
   template <>                                                \
-  std::size_t& anypp::extension_method_count_of<ns_::c_>() { \
+  std::size_t& anyxx::extension_method_count_of<ns_::c_>() { \
     static std::size_t count = 0;                            \
     return count;                                            \
   }
 
 #define ANY_EXTENSION_TABLE_INSTANCE_FWD(export_, class_,                 \
                                          interface_namespace_)            \
-  namespace anypp {                                                       \
+  namespace anyxx {                                                       \
   template <>                                                             \
-  export_ anypp::extension_method_table_t*                                \
-  anypp::extension_method_table_instance<interface_##_v_table, class_>(); \
+  export_ anyxx::extension_method_table_t*                                \
+  anyxx::extension_method_table_instance<interface_##_v_table, class_>(); \
   }
 
 #define ANY_EXTENSION_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                                  \
-  anypp::extension_method_table_t*                                             \
-  anypp::extension_method_table_instance<interface_##_v_table, class_>() {     \
+  anyxx::extension_method_table_t*                                             \
+  anyxx::extension_method_table_instance<interface_##_v_table, class_>() {     \
     return extension_method_table_instance_implementation<                     \
         interface_##_v_table, class_>();                                       \
   }
@@ -1821,17 +1821,17 @@ struct extension_method<R(ARGS...)> {
   name = [](void const_* _vp __VA_OPT__(                               \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {   \
     return v_table_map{}.name(                                         \
-        anypp::unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, )    \
+        anyxx::unchecked_unerase_cast<CONCRETE>(_vp) __VA_OPT__(, )    \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
 
 #define _detail_ANYPP_METHOD(type, name, name_ext, exact_const, const_, ...) \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
-    requires(::anypp::const_correct_call_for_erased_data<                    \
+    requires(::anyxx::const_correct_call_for_erased_data<                    \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
     return static_cast<v_table_t*>(v_table_)->name(                          \
-        anypp::get_void_data_ptr(base_t::erased_data_)                       \
+        anyxx::get_void_data_ptr(base_t::erased_data_)                       \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
   }
 
@@ -1869,11 +1869,11 @@ struct extension_method<R(ARGS...)> {
                                                                                \
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
       : BASE##_v_table,                                                        \
-        anypp::extension_method_holder<anypp::has_extension_methods<n>, n> {   \
+        anyxx::extension_method_holder<anyxx::has_extension_methods<n>, n> {   \
     using v_table_base_t = BASE##_v_table;                                     \
     using v_table_t = n##_v_table;                                             \
     using own_extension_method_holder_t =                                      \
-        anypp::extension_method_holder<anypp::has_extension_methods<n>, n>;    \
+        anyxx::extension_method_holder<anyxx::has_extension_methods<n>, n>;    \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -1884,7 +1884,7 @@ struct extension_method<R(ARGS...)> {
     _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
     static constexpr bool extension_methods_enabled =                          \
-        anypp::has_extension_methods<n>;                                       \
+        anyxx::has_extension_methods<n>;                                       \
                                                                                \
     template <typename CONCRETE>                                               \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
@@ -1896,15 +1896,15 @@ struct extension_method<R(ARGS...)> {
                                                                                \
       if constexpr (extension_methods_enabled) {                               \
         own_extension_method_holder_t::extension_method_table =                \
-            ::anypp::extension_method_table_instance<n##_v_table, CONCRETE>(); \
+            ::anyxx::extension_method_table_instance<n##_v_table, CONCRETE>(); \
       }                                                                        \
                                                                                \
-      ::anypp::set_is_derived_from<v_table_t>(this);                           \
+      ::anyxx::set_is_derived_from<v_table_t>(this);                           \
     };                                                                         \
                                                                                \
     template <typename CONCRETE>                                               \
     static auto imlpementation() {                                             \
-      return anypp::v_table_instance_implementaion<v_table_t, CONCRETE>();     \
+      return anyxx::v_table_instance_implementaion<v_table_t, CONCRETE>();     \
     }                                                                          \
   };                                                                           \
                                                                                \
@@ -1918,7 +1918,7 @@ struct extension_method<R(ARGS...)> {
                                                                                \
     template <typename CONCRETE>                                               \
     static auto v_table_imlpementation() {                                     \
-      static_assert(!anypp::is_any<CONCRETE>);                                 \
+      static_assert(!anyxx::is_any<CONCRETE>);                                 \
       return v_table_t::template imlpementation<CONCRETE>();                   \
     }                                                                          \
                                                                                \
@@ -1929,22 +1929,22 @@ struct extension_method<R(ARGS...)> {
         : base_t(std::move(erased_data), v_table) {}                           \
     template <typename CONSTRUCTED_WITH>                                       \
     n(CONSTRUCTED_WITH&& v)                                                    \
-      requires anypp::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>        \
+      requires anyxx::constructibile_for<CONSTRUCTED_WITH, ERASED_DATA>        \
         : base_t(std::forward<CONSTRUCTED_WITH>(v)) {                          \
       v_table_ = v_table_t::template imlpementation<                           \
-          anypp::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();                   \
+          anyxx::unerased<ERASED_DATA, CONSTRUCTED_WITH>>();                   \
     }                                                                          \
     template <typename OTHER>                                                  \
     n(const OTHER& other)                                                      \
       requires(std::derived_from<typename OTHER::v_table_t, v_table_t> &&      \
-               anypp::borrowable_from<erased_data_t,                           \
+               anyxx::borrowable_from<erased_data_t,                           \
                                       typename OTHER::erased_data_t>)          \
         : base_t(other) {}                                                     \
-    template <anypp::is_any OTHER>                                             \
+    template <anyxx::is_any OTHER>                                             \
     n(OTHER&& other) noexcept                                                  \
       requires(                                                                \
           std::derived_from<OTHER::v_table_t, v_table_t> &&                    \
-          anypp::moveable_from<erased_data_t, typename OTHER::erased_data_t>)  \
+          anyxx::moveable_from<erased_data_t, typename OTHER::erased_data_t>)  \
         : base_t(std::move(other)) {}                                          \
                                                                                \
     _detail_ANYPP_METHODS(l)                                                   \
@@ -1962,12 +1962,12 @@ struct extension_method<R(ARGS...)> {
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <anypp::is_erased_data OTHER>                                     \
-    friend class anypp::any_base;                                              \
-    template <anypp::is_any TO, anypp::is_any FROM>                            \
-    friend TO anypp::unchecked_downcast_to(FROM from)                          \
+    template <anyxx::is_erased_data OTHER>                                     \
+    friend class anyxx::any_base;                                              \
+    template <anyxx::is_any TO, anyxx::is_any FROM>                            \
+    friend TO anyxx::unchecked_downcast_to(FROM from)                          \
       requires(std::derived_from<TO, FROM>);                                   \
-    template <anypp::is_erased_data OTHER>                                     \
+    template <anyxx::is_erased_data OTHER>                                     \
     using type_for = n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;    \
   };
 
@@ -1975,9 +1975,9 @@ struct extension_method<R(ARGS...)> {
 
 #define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, l)
 
-#define ANY(n, ...) ANY_(n, ::anypp::any_base, __VA_ARGS__)
+#define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anypp::any_base, l)
+#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
@@ -2014,7 +2014,7 @@ struct extension_method<R(ARGS...)> {
 #define ANY_REGISTER_V_TABLE_INSTANCE(class_, interface_)               \
   namespace {                                                           \
   static auto __ =                                                      \
-      anypp::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
+      anyxx::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
   }
 
 #ifdef ANY_DLL_MODE
@@ -2022,7 +2022,7 @@ struct extension_method<R(ARGS...)> {
 #define ANY_V_TABLE_INSTANCE_FWD(export_, class_, interface_namespace_,      \
                                  interface_)                                 \
   ANY_FORWARD(interface_namespace_, interface_)                              \
-  namespace anypp {                                                          \
+  namespace anyxx {                                                          \
   template <>                                                                \
   export_ interface_namespace_::interface_##_v_table*                        \
   v_table_instance_implementaion<interface_namespace_::interface_##_v_table, \
@@ -2032,7 +2032,7 @@ struct extension_method<R(ARGS...)> {
 #define ANY_V_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
   template <>                                                          \
   interface_namespace_::interface_##_v_table*                          \
-  anypp::v_table_instance_implementaion<                               \
+  anyxx::v_table_instance_implementaion<                               \
       interface_namespace_::interface_##_v_table, class_>() {          \
     static interface_namespace_::interface_##_v_table v_table{         \
         std::in_place_type<class_>};                                   \
@@ -2051,7 +2051,7 @@ struct extension_method<R(ARGS...)> {
 //    };                                                                \
 //  };                                                                  \
 //  namespace {                                                         \
-//  static auto __ = anypp::bind_v_table_to_meta_data<           \
+//  static auto __ = anyxx::bind_v_table_to_meta_data<           \
 //      interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
 //  }
 
@@ -2070,7 +2070,7 @@ struct extension_method<R(ARGS...)> {
                                           ...)                                 \
   ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)                \
                                                                                \
-  namespace anypp {                                                            \
+  namespace anyxx {                                                            \
   template <>                                                                  \
   constexpr bool has_extension_methods<interface_namespace::interface_name> =  \
       true;                                                                    \

@@ -3,13 +3,13 @@
 #include <catch.hpp>
 #include <iostream>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using std::cout;
 using std::string;
 
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
 
 ANY_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
                                  node_i)
@@ -81,12 +81,12 @@ auto __ =
 //-----------------------------------------------------------------------------
 }  // namespace _21_Tree_TE_interface_extension_method
 
-using namespace anypp;
+using namespace anyxx;
 
 namespace _21_Tree_TE_interface_extension_method {
 
 TEST_CASE("21_Tree_TE_interface_extension_method") {
-  using namespace anypp;
+  using namespace anyxx;
 
   auto expr = node::model{std::make_shared<Times>(
       std::make_shared<Integer>(2),

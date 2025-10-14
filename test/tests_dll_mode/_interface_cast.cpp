@@ -1,12 +1,12 @@
 ﻿#include <catch.hpp>
 #include <iostream>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 #include "./component_base/component_base.hpp"
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
 
 using namespace test::component_base;
 

@@ -1,13 +1,10 @@
 #include <catch.hpp>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
 
 TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";

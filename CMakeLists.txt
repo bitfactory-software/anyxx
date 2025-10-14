@@ -11,7 +11,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
 message( "CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
 
-project(anypp CXX)
+project(anyxx CXX)
 
 include(GNUInstallDirs)
 
@@ -22,16 +22,16 @@ if (MSVC)
 endif()
 set(CMAKE_CXX_STANDARD 23)
 
-# +++ anypp library
-file(GLOB_RECURSE anypp_HEADERS "./anypp/*.hpp")
-file(GLOB_RECURSE anypp_SOURCES "./anypp/*.cpp")
-add_library(anypp INTERFACE ${anypp_HEADERS} ${anypp_SOURCES})
-target_include_directories(anypp INTERFACE
+# +++ anyxx library
+file(GLOB_RECURSE anyxx_HEADERS "./anyxx/*.hpp")
+file(GLOB_RECURSE anyxx_SOURCES "./anyxx/*.cpp")
+add_library(anyxx INTERFACE ${anyxx_HEADERS} ${anyxx_SOURCES})
+target_include_directories(anyxx INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-set_target_properties(anypp PROPERTIES FOLDER "anypp")
-# --- anypp library
+set_target_properties(anyxx PROPERTIES FOLDER "anyxx")
+# --- anyxx library
 
 enable_testing()
 
@@ -48,34 +48,34 @@ message("CMAKE_CURRENT_BINARY_DIR: " "${CMAKE_CURRENT_BINARY_DIR}")
 message("PROJECT_SOURCE_DIR: " "${PROJECT_SOURCE_DIR}")
 
 # Install the library and its headers
-install(TARGETS anypp
-        EXPORT anypp_targets
+install(TARGETS anyxx
+        EXPORT anyxx_targets
 ##        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 ##        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 ##        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
-install(DIRECTORY anypp/ # tailing slash is important here!
-    DESTINATION include/anypp
+install(DIRECTORY anyxx/ # tailing slash is important here!
+    DESTINATION include/anyxx
 )
 
 # Generate and install *-targets.cmake
-install(EXPORT anypp_targets
-        FILE anypp-targets.cmake
-        NAMESPACE anypp::
-        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/anypp)
+install(EXPORT anyxx_targets
+        FILE anyxx-targets.cmake
+        NAMESPACE anyxx::
+        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/anyxx)
 
 
 # Generate the config file in the current binary dir (this ensures it's not placed directly in source)
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/anypp-config.cmake"
-"message(\"anypp-config.cmake\")\n"
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/anyxx-config.cmake"
+"message(\"anyxx-config.cmake\")\n"
 "include(CMakeFindDependencyMacro)\n"
 "find_dependency(Catch2 CONFIG REQUIRED)\n"
-"include(\"\${CMAKE_CURRENT_LIST_DIR}/anypp-targets.cmake\")\n"
+"include(\"\${CMAKE_CURRENT_LIST_DIR}/anyxx-targets.cmake\")\n"
 )
 
 # Install the generated config file
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/anypp-config.cmake"
-        DESTINATION share/anypp)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/anyxx-config.cmake"
+        DESTINATION share/anyxx)
 
 

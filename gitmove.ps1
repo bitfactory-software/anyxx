@@ -7,7 +7,7 @@ $sourceDir = "virtual_void"
 $filePattern = "*.hpp"
 
 # Zielordner (alle passenden Dateien werden dorthin verschoben)
-$destinationRoot = "anypp"
+$destinationRoot = "anyxx"
 
 # === DEBUG / Logging ===
 

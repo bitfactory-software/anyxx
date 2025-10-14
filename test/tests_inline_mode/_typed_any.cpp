@@ -1,11 +1,11 @@
 #include <catch.hpp>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
 
 namespace typed_any_test {
 struct x_t {

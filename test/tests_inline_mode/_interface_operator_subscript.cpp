@@ -1,13 +1,13 @@
 #include <catch.hpp>
 #include <string>
 #include <vector>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
 
 namespace {
 using map_t = std::map<int, std::string>;

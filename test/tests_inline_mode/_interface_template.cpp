@@ -1,12 +1,12 @@
 #include <catch.hpp>
 #include <map>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
 
 struct X {
   std::string s_;

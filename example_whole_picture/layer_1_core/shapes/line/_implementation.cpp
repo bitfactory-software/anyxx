@@ -6,7 +6,7 @@ using namespace whole_picture;
 using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
-using namespace anypp;
+using namespace anyxx;
 
 ANY_RUNTIME_INSTANCE(line)
 ANY_V_TABLE_INSTANCE(shapes::line, whole_picture::architecture, shape);

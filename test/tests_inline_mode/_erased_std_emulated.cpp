@@ -1,12 +1,12 @@
 #include <catch.hpp>
 #include <concepts>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
 
 namespace {
 ANY(string_to_string,
@@ -18,7 +18,7 @@ ANY(string_to_string_mutable,
 
 }  // namespace test_ns
 
-using namespace anypp;
+using namespace anyxx;
 
 namespace {
 struct functor_t {

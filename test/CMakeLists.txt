@@ -9,7 +9,7 @@ file(GLOB component_base_cpp_files "./component_base/*.cpp")
 add_library(component_base ${component_base_hpp_files} ${component_base_cpp_files})
 set_target_properties(component_base PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(component_base 
-    anypp
+    anyxx
 )
 target_include_directories(component_base PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
@@ -25,7 +25,7 @@ file(GLOB tests_dll_mode_hpp_files "./tests_dll_mode/*.hpp")
 file(GLOB tests_dll_mode_cpp_files "./tests_dll_mode/*.cpp")
 add_executable (tests_dll_mode ${tests_dll_mode_cpp_files} ${tests_dll_mode_hpp_files})
 target_link_libraries(tests_dll_mode 
-    anypp
+    anyxx
     component_base
     Catch2::Catch2WithMain
 )
@@ -36,7 +36,7 @@ file(GLOB tests_inline_mode_hpp_files "./tests_inline_mode/*.hpp")
 file(GLOB tests_inline_mode_cpp_files "./tests_inline_mode/*.cpp")
 add_executable (tests_inline_mode ${tests_inline_mode_cpp_files} ${tests_inline_mode_hpp_files})
 target_link_libraries(tests_inline_mode 
-    anypp
+    anyxx
     Catch2::Catch2WithMain
 )
 set_target_properties(tests_inline_mode PROPERTIES FOLDER "_tests/inline_mode")

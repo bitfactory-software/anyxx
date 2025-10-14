@@ -1,13 +1,10 @@
 #include <catch.hpp>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
 
 
 ANY_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)

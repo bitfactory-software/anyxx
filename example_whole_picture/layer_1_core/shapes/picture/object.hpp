@@ -2,13 +2,13 @@
 
 #include <example_whole_picture/layer_0_architecture/picture.hpp>
 #include <example_whole_picture/layer_1_core/core.hpp>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 
 namespace whole_picture::core::shapes {
 
-struct picture : anypp::members<picture> {
+struct picture : anyxx::members<picture> {
   picture(architecture::point top_left_, architecture::picture content_)
       : top_left(top_left_), content(content_) {}
   architecture::point top_left;

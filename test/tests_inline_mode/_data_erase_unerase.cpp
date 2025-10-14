@@ -1,6 +1,6 @@
 #include <catch.hpp>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 struct A {
   A(const std::string sp) : s(sp) {}
@@ -9,8 +9,8 @@ struct A {
 
 using namespace Catch::Matchers;
 
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
 
 namespace {
 template <typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER>

@@ -1,8 +1,8 @@
 #include <catch.hpp>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
-using namespace anypp;
+using namespace anyxx;
 
 TEST_CASE("hook 1") {
   hook<std::string(std::string const&)> the_hook;

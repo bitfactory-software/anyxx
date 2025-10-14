@@ -4,13 +4,13 @@
 #include <iostream>
 #include <memory>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using std::cout;
 using std::string;
 
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
 
 namespace {
 
@@ -65,7 +65,7 @@ auto make_node(ARGS&&... args) {
 
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
-  using namespace anypp;
+  using namespace anyxx;
 
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

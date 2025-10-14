@@ -1,9 +1,9 @@
 #pragma once
 
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
-using namespace anypp;
+using namespace anyxx;
 
 #ifndef ARCHITECTURE_EXPORT
 #define ARCHITECTURE_EXPORT
@@ -37,8 +37,8 @@ inline size operator+(size l, size r) {
 };
 
 ANY(surface, (ANY_METHOD(void, write, point, char)))
-using mutable_observed_surface = surface<anypp::mutable_observer>;
-using unique_surface = surface<anypp::unique>;
+using mutable_observed_surface = surface<anyxx::mutable_observer>;
+using unique_surface = surface<anyxx::unique>;
 
 ANY(shape, (ANY_CONST_METHOD(void, draw, mutable_observed_surface)))
 

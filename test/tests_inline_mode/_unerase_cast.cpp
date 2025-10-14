@@ -1,5 +1,5 @@
 #include <catch.hpp>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
@@ -13,8 +13,8 @@ ANY(has_meta_data,)
 
 
 TEST_CASE("unerase_cast") {
-  using namespace anypp;
-  using namespace anypp;
+  using namespace anyxx;
+  using namespace anyxx;
   using value = shared_const;
 
   using value_with_meta_data = has_meta_data<value>;

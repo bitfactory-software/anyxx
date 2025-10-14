@@ -3,15 +3,15 @@
 #include <catch.hpp>
 #include <iostream>
 #include <string>
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 
 using std::cout;
 using std::string;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
 
 namespace _21_Tree_TE_erased_interface_w_cast {
 
@@ -90,10 +90,10 @@ ANY_REGISTER_V_TABLE_INSTANCE(Times, value2_i);
 ANY_REGISTER_V_TABLE_INSTANCE(Integer, value2_i);
 
 TEST_CASE("21_Tree_TE_erased_interface_w_cast") {
-  using namespace anypp;
+  using namespace anyxx;
   using namespace _21_Tree_TE_erased_interface_w_cast;
 
-  auto& type_info = anypp::get_meta_data<Times>();
+  auto& type_info = anyxx::get_meta_data<Times>();
   REQUIRE(type_info.get_i_table().size() == 2u);
   auto expr = node(make_node<Times>(
       make_node<Integer>(2),

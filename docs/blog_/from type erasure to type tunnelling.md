@@ -12,7 +12,7 @@ That is also all you can do with it. But with some love, that can be a lot.
 To show you a litte example, lets immagine a simple "DB-System". An application can register factories for "types".
 The Types are identified through a str::string. The factory gets a second string paramter, containig serialized date for that type.
 
-https://github.com/andreaspfaffenbichler/anypp/blob/master/test/05_Sink_TypeErased_w_any_cast.cpp
+https://github.com/andreaspfaffenbichler/anyxx/blob/master/test/05_Sink_TypeErased_w_any_cast.cpp
 
 An application can attach a "file" to that DB-System. That is a list of pairs of strings. first cantains the type and second the data of a serialized object.
 When the Application queries the known objects of the file, the db calls for each pair the fitting factory and passes afterward the constructed object to the application.
@@ -20,7 +20,7 @@ In this first implementation, we will use std::any to hold the deserialized obje
 To access the real object, we must use any cast, to test if we know the tunneled type, and if so we get the object for further processing.
 
 Just for illustration purposes we take also a short look on an OO-Style implementation of this scenario.
-https://github.com/andreaspfaffenbichler/anypp/blob/master/test/03_Sink_Inheritance_modern.cpp
+https://github.com/andreaspfaffenbichler/anyxx/blob/master/test/03_Sink_Inheritance_modern.cpp
 
 If we compare the two distict strategies, we see, the have the downcast pattern in common. 
 Form our type tunneling perspective, we can say the inherritance, the v-table and the "dynamic_cast" work together to form a "type tunnel".
@@ -40,25 +40,25 @@ Interestingly, for the any case, there is a solution, that jummps in your eye:
 Do the dispatch via typeid!
 
 The first naiive aproach will look like this:
-[test/05_Sink_TypeErased_w_any_dispach_simple.cpp](https://github.com/andreaspfaffenbichler/anypp/blob/master/test/05_Sink_TypeErased_w_any_dispach_simple.cpp)
+[test/05_Sink_TypeErased_w_any_dispach_simple.cpp](https://github.com/andreaspfaffenbichler/anyxx/blob/master/test/05_Sink_TypeErased_w_any_dispach_simple.cpp)
 
 From the standpoint of decoupling is this the best you can get. But this comes with a large get_meta_data penalty...
 Nevertheless, this aproach looks to appealing.
 So will in the next step investigate, how big is the overhead we generate with map, function and any in comparison to plain v-tables.
 For this we will use another example: An expression tree!
 In OO-style ths goes like this:
-https://github.com/andreaspfaffenbichler/anypp/blob/master/test/20_Tree_OO.cpp
+https://github.com/andreaspfaffenbichler/anyxx/blob/master/test/20_Tree_OO.cpp
 We will use the expression tree to compute its value and to show a representation in forth and in lisp.
 With a "catch" benchamrk we watch the get_meta_data performance.
 
-Now to the sample with our [naiive any dispatch] (https://github.com/andreaspfaffenbichler/anypp/blob/master/test/21_Tree_TE_dispatch_via_any.cpp)
+Now to the sample with our [naiive any dispatch] (https://github.com/andreaspfaffenbichler/anyxx/blob/master/test/21_Tree_TE_dispatch_via_any.cpp)
 
 On my laptop, i got this number with standard releas mode and MSVC 17
 ```
 -------------------------------------------------------------------------------
 20_Tree_OO
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\anypp/test\20_Tree_OO.cpp(63)
+D:\BitFactory\Blog\anyxx/test\20_Tree_OO.cpp(63)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time
@@ -76,7 +76,7 @@ benchmark name                       samples       iterations    est run time
 -------------------------------------------------------------------------------
 21_Tree_TE_dispach_via_any_dispatch
 -------------------------------------------------------------------------------
-D:\BitFactory\Blog\anypp/test\21_Tree_TE_dispatch_via_any.cpp(88)
+D:\BitFactory\Blog\anyxx/test\21_Tree_TE_dispatch_via_any.cpp(88)
 ...............................................................................
 
 benchmark name                       samples       iterations    est run time

@@ -15,10 +15,10 @@ using namespace whole_picture::architecture;
 using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
-using namespace anypp;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
+using namespace anyxx;
 
 ANY_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 
@@ -82,7 +82,7 @@ TEST_CASE("example 3 architecture picture") {
     REQUIRE(members_count<shapes::picture>() == 1);
     auto any_shape = shapes::make_picture({0, 0}, duck);
     core::shapes::picture const* duck_shape =
-        anypp::unerase_cast<shapes::picture>(any_shape);
+        anyxx::unerase_cast<shapes::picture>(any_shape);
     CHECK(!duck_shape->get(picture_author));
     auto duck_shape_clone = *duck_shape;
     duck_shape_clone[picture_author] = "Max";

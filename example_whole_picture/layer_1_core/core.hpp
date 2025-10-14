@@ -1,6 +1,6 @@
 #pragma once
 
-#include <anypp/any++.hpp>
+#include <anyxx/anyxx.hpp>
 #include "../layer_0_architecture/architecture.hpp"
 
 #ifndef CORE_EXPORT
@@ -17,7 +17,7 @@
 
 namespace whole_picture::core {
 
-using shape = architecture::shape<anypp::shared_const>;
+using shape = architecture::shape<anyxx::shared_const>;
 
 CORE_EXPORT std::string hello();
 
