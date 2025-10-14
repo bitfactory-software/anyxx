@@ -550,7 +550,7 @@ any_base_v_table::any_base_v_table(std::in_place_type_t<Concrete> concrete)
         return static_is_derived_from(from);
       }) {}
 
-template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+template <typename AnyVTable, typename Class>
 dispatch_table_t* dispatch_table_instance_implementation() {
   static dispatch_table_t dispatch_table;
   return &dispatch_table;
@@ -558,14 +558,14 @@ dispatch_table_t* dispatch_table_instance_implementation() {
 
 #ifdef ANY_DLL_MODE
 
-template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+template <typename AnyVTable, typename Class>
 dispatch_table_t* dispatch_table_instance();
 
 #else
 
-template <typename EXTENDED_V_TABLE, typename CLASS_NAME>
+template <typename AnyVTable, typename Class>
 dispatch_table_t* dispatch_table_instance() {
-  return dispatch_table_instance_implementation<EXTENDED_V_TABLE, CLASS_NAME>();
+  return dispatch_table_instance_implementation<AnyVTable, Class>();
 }
 
 #endif  //
@@ -1287,10 +1287,10 @@ struct member {
 // dispatch
 
 #ifdef ANY_DLL_MODE
-template <typename EXTENDED_V_TABLE>
+template <typename AnyVTable>
 std::size_t& dispatchs_count();
 #else
-template <typename EXTENDED_V_TABLE>
+template <typename AnyVTable>
 std::size_t& dispatchs_count() {
   static std::size_t count = 0;
   return count;
