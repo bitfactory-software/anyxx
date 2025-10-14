@@ -979,18 +979,18 @@ struct dispatch_holder<true, Any> {
   dispatch_table_t* dispatch_table = nullptr;
 };
 
-template <is_any TO_ANYPP>
+template <is_any ToAny>
 auto query_v_table(const meta_data& meta_data)
-    -> std::expected<typename TO_ANYPP::v_table_t*, anyxx::cast_error> {
-  using v_table_t = typename TO_ANYPP::v_table_t;
+    -> std::expected<typename ToAny::v_table_t*, anyxx::cast_error> {
+  using v_table_t = typename ToAny::v_table_t;
   return meta_data.get_v_table(typeid(v_table_t)).transform([](auto v_table) {
     return static_cast<v_table_t*>(v_table);
   });
 }
 
-template <typename TO_ANYPP>
+template <typename ToAny>
 auto query_v_table(any_base_v_table* from) {
-  return find_v_table<TO_ANYPP>(*from->meta_data);
+  return find_v_table<ToAny>(*from->meta_data);
 }
 
 // --------------------------------------------------------------------------------
@@ -1079,43 +1079,43 @@ auto as(typed_any<From, Any> source)
 // --------------------------------------------------------------------------------
 // any borrow, clone, lock, move
 
-template <is_any TO_ANYPP, is_erased_data ANY_FROM>
-  requires borrowable_from<typename TO_ANYPP::erased_data_t, ANY_FROM>
-std::expected<TO_ANYPP, cast_error> borrow_as(ANY_FROM const& vv_from,
+template <is_any ToAny, is_erased_data FromAny>
+  requires borrowable_from<typename ToAny::erased_data_t, FromAny>
+std::expected<ToAny, cast_error> borrow_as(FromAny const& vv_from,
                                               const meta_data& meta_data) {
-  using to = typename TO_ANYPP::erased_data_t;
-  return query_v_table<TO_ANYPP>(meta_data).transform(
-      [&](auto v_table) { return TO_ANYPP{borrow_as<to>(vv_from), v_table}; });
+  using to = typename ToAny::erased_data_t;
+  return query_v_table<ToAny>(meta_data).transform(
+      [&](auto v_table) { return ToAny{borrow_as<to>(vv_from), v_table}; });
 }
 
-template <is_any TO_ANYPP, is_any FROM_ANYPP>
-  requires borrowable_from<typename TO_ANYPP::erased_data_t,
-                           typename FROM_ANYPP::erased_data_t>
-auto borrow_as(FROM_ANYPP const& from_interface) {
-  return borrow_as<TO_ANYPP>(get_erased_data(from_interface),
+template <is_any ToAny, is_any FromAny>
+  requires borrowable_from<typename ToAny::erased_data_t,
+                           typename FromAny::erased_data_t>
+auto borrow_as(FromAny const& from_interface) {
+  return borrow_as<ToAny>(get_erased_data(from_interface),
                              get_runtime(from_interface));
 }
 
-template <is_any TO_ANYPP, is_erased_data ANY_FROM>
-std::expected<TO_ANYPP, cast_error> clone_to(ANY_FROM const& vv_from,
+template <is_any ToAny, is_erased_data FromAny>
+std::expected<ToAny, cast_error> clone_to(FromAny const& vv_from,
                                              const meta_data& meta_data) {
-  using vv_to_t = typename TO_ANYPP::erased_data_t;
+  using vv_to_t = typename ToAny::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
-  return query_v_table<TO_ANYPP>(meta_data).transform([&](auto v_table) {
-    return TO_ANYPP{clone_to<vv_to_t>(vv_from, meta_data), v_table};
+  return query_v_table<ToAny>(meta_data).transform([&](auto v_table) {
+    return ToAny{clone_to<vv_to_t>(vv_from, meta_data), v_table};
   });
 }
 
-template <is_any TO_ANYPP, is_any FROM_ANYPP>
-auto clone_to(const FROM_ANYPP& from_interface) {
-  return clone_to<TO_ANYPP>(get_erased_data(from_interface),
+template <is_any ToAny, is_any FromAny>
+auto clone_to(const FromAny& from_interface) {
+  return clone_to<ToAny>(get_erased_data(from_interface),
                             get_runtime(from_interface));
 }
 
-template <is_any FROM_ANYPP>
-  requires std::same_as<typename FROM_ANYPP::erased_data_t, weak>
-auto lock(FROM_ANYPP const& from_interface) {
-  using to_interface_t = FROM_ANYPP::template type_for<shared_const>;
+template <is_any FromAny>
+  requires std::same_as<typename FromAny::erased_data_t, weak>
+auto lock(FromAny const& from_interface) {
+  using to_interface_t = FromAny::template type_for<shared_const>;
   static_assert(is_any<to_interface_t>);
   using return_t = std::optional<to_interface_t>;
   if (auto shared_const = get_erased_data(from_interface).lock())
@@ -1123,17 +1123,17 @@ auto lock(FROM_ANYPP const& from_interface) {
   return return_t{};
 }
 
-template <is_any TO_ANYPP, is_erased_data ANY_FROM>
-TO_ANYPP move_to(ANY_FROM&& vv_from, const meta_data& get_meta_data) {
-  using vv_to_t = typename TO_ANYPP::erased_data_t;
+template <is_any ToAny, is_erased_data FromAny>
+ToAny move_to(FromAny&& vv_from, const meta_data& get_meta_data) {
+  using vv_to_t = typename ToAny::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
-  auto v_table = query_v_table<TO_ANYPP>(get_meta_data);
-  return TO_ANYPP{move_to<vv_to_t>(std::move(vv_from)), *v_table};
+  auto v_table = query_v_table<ToAny>(get_meta_data);
+  return ToAny{move_to<vv_to_t>(std::move(vv_from)), *v_table};
 }
 
-template <is_any TO_ANYPP, is_any FROM_ANYPP>
-TO_ANYPP move_to(FROM_ANYPP&& from_interface) {
-  return move_to<TO_ANYPP>(move_erased_data(std::move(from_interface)),
+template <is_any ToAny, is_any FromAny>
+ToAny move_to(FromAny&& from_interface) {
+  return move_to<ToAny>(move_erased_data(std::move(from_interface)),
                            get_runtime(from_interface));
 }
 
@@ -1234,53 +1234,53 @@ class factory {
 // extension member
 
 #ifdef ANY_DLL_MODE
-template <typename OBJECT_TYPE>
+template <typename InObject>
 std::size_t& members_count();
 #else
-template <typename OBJECT_TYPE>
+template <typename InObject>
 std::size_t& members_count() {
   static std::size_t count = 0;
   return count;
 }
 #endif
 
-template <typename OBJECT_TYPE>
+template <typename InObject>
 struct members {
-  members() : table_(members_count<OBJECT_TYPE>()) {}
+  members() : table_(members_count<InObject>()) {}
   std::vector<value> table_;
-  template <typename OBJECT_MEMBER, typename ARG>
-  void set(OBJECT_MEMBER member, ARG&& arg) {
-    using value_t = typename OBJECT_MEMBER::value_t;
+  template <typename Member, typename ARG>
+  void set(Member member, ARG&& arg) {
+    using value_t = typename Member::value_t;
     table_[member.index] = make_value<value_t>(std::forward<ARG>(arg));
   }
-  template <typename OBJECT_MEMBER>
-  typename OBJECT_MEMBER::value_t const* get(OBJECT_MEMBER member) const {
+  template <typename Member>
+  typename Member::value_t const* get(Member member) const {
     const auto& value = table_[member.index];
     if (!value) return {};
-    return unchecked_unerase_cast<typename OBJECT_MEMBER::value_t>(value);
+    return unchecked_unerase_cast<typename Member::value_t>(value);
   }
-  template <typename OBJECT_MEMBER>
-  typename OBJECT_MEMBER::value_t* get(OBJECT_MEMBER member) {
+  template <typename Member>
+  typename Member::value_t* get(Member member) {
     auto& value = table_[member.index];
     if (!value) return {};
-    return unchecked_unerase_cast<typename OBJECT_MEMBER::value_t>(value);
+    return unchecked_unerase_cast<typename Member::value_t>(value);
   }
-  template <typename OBJECT_MEMBER>
-  typename OBJECT_MEMBER::value_t& operator[](OBJECT_MEMBER member) {
+  template <typename Member>
+  typename Member::value_t& operator[](Member member) {
     if (auto value = get(member)) {
       return *value;
     }
-    using value_t = typename OBJECT_MEMBER::value_t;
+    using value_t = typename Member::value_t;
     set(member, value_t());
     return *get(member);
   }
 };
 
-template <typename OBJECT_TYPE, typename VALUE_TYPE>
+template <typename InObject, typename ValueType>
 struct member {
-  using object_t = OBJECT_TYPE;
-  using value_t = VALUE_TYPE;
-  std::size_t index = members_count<OBJECT_TYPE>()++;
+  using object_t = InObject;
+  using value_t = ValueType;
+  std::size_t index = members_count<InObject>()++;
 };
 
 // --------------------------------------------------------------------------------
