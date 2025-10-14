@@ -1,9 +1,9 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <iostream>
 #include <string>
-#include <anyxx/anyxx.hpp>
 
 using std::cout;
 using std::string;
@@ -11,8 +11,7 @@ using std::string;
 using namespace anyxx;
 using namespace anyxx;
 
-ANY_V_TABLE_HAS_EXTENSION_METHODS(_21_Tree_TE_interface_extension_method::node,
-                                 node_i)
+ANY_HAS_METHODS(_21_Tree_TE_interface_extension_method::node, node_i)
 
 namespace _21_Tree_TE_interface_extension_method {
 
@@ -48,7 +47,7 @@ struct Integer {
 
 //-----------------------------------------------------------------------------
 // evaluate
-extension_method<int(virtual_<node::model>)> value;
+method<int(virtual_<node::model>)> value;
 auto __ = value.define<Plus>(
     [](auto expr) { return value(expr->left) + value(expr->right); });
 auto __ = value.define<Times>(
@@ -57,7 +56,7 @@ auto __ = value.define<Integer>([](auto expr) { return expr->i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
-extension_method<std::string(virtual_<node::model>)> as_forth;
+method<std::string(virtual_<node::model>)> as_forth;
 auto __ = as_forth.define<Plus>([](auto expr) {
   return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
 });
@@ -69,7 +68,7 @@ auto __ =
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
-extension_method<std::string(virtual_<node::model>)> as_lisp;
+method<std::string(virtual_<node::model>)> as_lisp;
 auto __ = as_lisp.define<Plus>([](auto expr) {
   return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
 });

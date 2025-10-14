@@ -5,7 +5,6 @@
 // /Zc:preprocessor (see CMakeLists.txt for example)
 //
 
-
 #include <cassert>
 #include <concepts>
 #include <expected>
@@ -972,11 +971,10 @@ V_TABLE* v_table_instance_implementaion() {
 #endif  // DEBUG
 
 template <template <typename...> typename Any>
-constexpr bool has_extension_methods = false;
+constexpr bool has_methods = false;
 
 template <typename I>
-concept has_extension_methods_enabled =
-    is_any<I> && I::v_table_t::extension_methods_enabled;
+concept has_methods_enabled = is_any<I> && I::v_table_t::methods_enabled;
 
 template <bool HAS_EXTENSION_METHODS, template <typename...> typename Any>
 struct extension_method_holder;
@@ -1296,10 +1294,10 @@ struct member {
 
 #ifdef ANY_DLL_MODE
 template <typename EXTENDED_V_TABLE>
-std::size_t& extension_method_count_of();
+std::size_t& methods_count();
 #else
 template <typename EXTENDED_V_TABLE>
-std::size_t& extension_method_count_of() {
+std::size_t& methods_count() {
   static std::size_t count = 0;
   return count;
 }
@@ -1424,9 +1422,9 @@ struct dispatch_matrix<DISPATCH, virtual_<Any>, ARGS...> {
 };
 
 template <typename R, typename... ARGS>
-struct extension_method;
+struct method;
 template <typename R, typename... ARGS>
-struct extension_method<R(ARGS...)> {
+struct method<R(ARGS...)> {
   using erased_function_t =
       typename translate_erased_function<R, ARGS...>::type;
 
@@ -1471,7 +1469,7 @@ struct extension_method<R(ARGS...)> {
     using v_table_t = typename interface_t::v_table_t;
     using next_t = dispatch_access<true, DIM + 1, ARGS...>;
 
-    std::size_t index_ = extension_method_count_of<v_table_t>()++;
+    std::size_t index_ = methods_count<v_table_t>()++;
     std::size_t dispatch_dimension_size_ = 0;
 
     template <typename CLASS, typename... CLASSES>
@@ -1511,7 +1509,7 @@ struct extension_method<R(ARGS...)> {
   struct dispatch_access<false, 0, virtual_<Any>, ARGS...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
-    std::size_t index_ = extension_method_count_of<v_table_t>()++;
+    std::size_t index_ = methods_count<v_table_t>()++;
 
     template <typename CLASS>
     auto define(auto fp, auto&) {
@@ -1637,49 +1635,49 @@ struct extension_method<R(ARGS...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_EXTENSION_METHOD_COUNT_FWD(export_, ns_, c_)     \
-  namespace ns_ {                                            \
-  struct c_;                                                 \
-  }                                                          \
-  namespace anyxx {                                          \
-  template <>                                                \
-  export_ std::size_t& extension_method_count_of<ns_::c_>(); \
+#define ANY_METHOD_COUNT_FWD(export_, ns_, c_)   \
+  namespace ns_ {                                \
+  struct c_;                                     \
+  }                                              \
+  namespace anyxx {                              \
+  template <>                                    \
+  export_ std::size_t& methods_count<ns_::c_>(); \
   }
 
-#define ANY_EXTENSION_METHOD_COUNT_IMPL(ns_, c_)             \
-  template <>                                                \
-  std::size_t& anyxx::extension_method_count_of<ns_::c_>() { \
-    static std::size_t count = 0;                            \
-    return count;                                            \
+#define ANY_METHOD_COUNT_IMPL(ns_, c_)           \
+  template <>                                    \
+  std::size_t& anyxx::methods_count<ns_::c_>() { \
+    static std::size_t count = 0;                \
+    return count;                                \
   }
 
-#define ANY_EXTENSION_TABLE_INSTANCE_FWD(export_, class_,                 \
-                                         interface_namespace_)            \
+#define ANY_METHOD_TABLE_FWD(export_, class_, interface_namespace_)       \
   namespace anyxx {                                                       \
   template <>                                                             \
   export_ anyxx::extension_method_table_t*                                \
   anyxx::extension_method_table_instance<interface_##_v_table, class_>(); \
   }
 
-#define ANY_EXTENSION_TABLE_INSTANCE(class_, interface_namespace_, interface_) \
-  template <>                                                                  \
-  anyxx::extension_method_table_t*                                             \
-  anyxx::extension_method_table_instance<interface_##_v_table, class_>() {     \
-    return extension_method_table_instance_implementation<                     \
-        interface_##_v_table, class_>();                                       \
+#define ANY_METHOD_TABLE(class_, interface_namespace_, interface_)         \
+  template <>                                                              \
+  anyxx::extension_method_table_t*                                         \
+  anyxx::extension_method_table_instance<interface_##_v_table, class_>() { \
+    return extension_method_table_instance_implementation<                 \
+        interface_##_v_table, class_>();                                   \
   }
 
 #else
 
-#define ANY_EXTENSION_METHOD_COUNT_FWD(...)
-#define ANY_EXTENSION_METHOD_COUNT_IMPL(...)
-#define ANY_EXTENSION_TABLE_INSTANCE_FWD(...)
-#define ANY_EXTENSION_TABLE_INSTANCE(...)
+#define ANY_METHOD_COUNT_FWD(...)
+#define ANY_METHOD_COUNT_IMPL(...)
+#define ANY_METHOD_TABLE_FWD(...)
+#define ANY_METHOD_TABLE(...)
 
 #endif
 
 // --------------------------------------------------------------------------------
-// any meta class, derived from this gem: https://github.com/AlexCodesApps/dynamic_interface
+// any meta class, derived from this gem:
+// https://github.com/AlexCodesApps/dynamic_interface
 
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
@@ -1869,11 +1867,11 @@ struct extension_method<R(ARGS...)> {
                                                                                \
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
       : BASE##_v_table,                                                        \
-        anyxx::extension_method_holder<anyxx::has_extension_methods<n>, n> {   \
+        anyxx::extension_method_holder<anyxx::has_methods<n>, n> {             \
     using v_table_base_t = BASE##_v_table;                                     \
     using v_table_t = n##_v_table;                                             \
     using own_extension_method_holder_t =                                      \
-        anyxx::extension_method_holder<anyxx::has_extension_methods<n>, n>;    \
+        anyxx::extension_method_holder<anyxx::has_methods<n>, n>;              \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -1883,8 +1881,7 @@ struct extension_method<R(ARGS...)> {
                                                                                \
     _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
-    static constexpr bool extension_methods_enabled =                          \
-        anyxx::has_extension_methods<n>;                                       \
+    static constexpr bool methods_enabled = anyxx::has_methods<n>;             \
                                                                                \
     template <typename CONCRETE>                                               \
     n##_v_table(std::in_place_type_t<CONCRETE> concrete)                       \
@@ -1894,7 +1891,7 @@ struct extension_method<R(ARGS...)> {
                                                                                \
       _detail_ANYPP_V_TABLE_LAMBDAS(l);                                        \
                                                                                \
-      if constexpr (extension_methods_enabled) {                               \
+      if constexpr (methods_enabled) {                                         \
         own_extension_method_holder_t::extension_method_table =                \
             ::anyxx::extension_method_table_instance<n##_v_table, CONCRETE>(); \
       }                                                                        \
@@ -2066,14 +2063,12 @@ struct extension_method<R(ARGS...)> {
   ANY_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
   ANY_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
 
-#define ANY_V_TABLE_HAS_EXTENSION_METHODS(interface_namespace, interface_name, \
-                                          ...)                                 \
-  ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)                \
-                                                                               \
-  namespace anyxx {                                                            \
-  template <>                                                                  \
-  constexpr bool has_extension_methods<interface_namespace::interface_name> =  \
-      true;                                                                    \
+#define ANY_HAS_METHODS(interface_namespace, interface_name, ...)         \
+  ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)           \
+                                                                          \
+  namespace anyxx {                                                       \
+  template <>                                                             \
+  constexpr bool has_methods<interface_namespace::interface_name> = true; \
   }
 
 #define ANY_NAME(...) __VA_ARGS__

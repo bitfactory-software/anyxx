@@ -7,8 +7,8 @@ using namespace Catch::Matchers;
 using namespace anyxx;
 
 
-ANY_V_TABLE_HAS_EXTENSION_METHODS(, test_base_i)
-ANY_V_TABLE_HAS_EXTENSION_METHODS(, test_derived_i)
+ANY_HAS_METHODS(, test_base_i)
+ANY_HAS_METHODS(, test_derived_i)
 namespace {
 ANY(test_base_i, (ANY_CONST_METHOD(std::string, to_string)))
 ANY_(test_derived_i, test_base_i,
@@ -34,12 +34,12 @@ struct test_derived_i_v_table_map<x_t> {
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 
-extension_method<std::string(virtual_<test_base_i_co>)>
+method<std::string(virtual_<test_base_i_co>)>
     to_string_otherwise;
 auto __ = to_string_otherwise.define<x_t>(
     [](auto expr) { return expr->s_ + " otherwise"; });
 
-extension_method<
+method<
                  void(virtual_<test_derived_i_mo>, std::string const&)>
     from_string_otherwise;
 auto __ =
@@ -54,7 +54,7 @@ auto derived_table =
 
 namespace {
 
-TEST_CASE("extension_method") {
+TEST_CASE("method") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 

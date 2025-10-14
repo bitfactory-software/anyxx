@@ -11,7 +11,7 @@ using namespace anyxx;
 
 namespace {}
 
-ANY_V_TABLE_HAS_EXTENSION_METHODS(, Thing)
+ANY_HAS_METHODS(, Thing)
 
 namespace {
 
