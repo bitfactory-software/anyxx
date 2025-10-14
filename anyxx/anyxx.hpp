@@ -165,21 +165,21 @@ concept erased_constructibile_for =
 // --------------------------------------------------------------------------------
 // erased data observer
 
-template <voidness VOIDNESS>
-using observer = VOIDNESS;
+template <voidness Voidness>
+using observer = Voidness;
 using const_observer = observer<const_void>;
 using mutable_observer = observer<mutable_void>;
 
-template <typename ErasedData, voidness VOIDNESS>
+template <typename ErasedData, voidness Voidness>
 struct observer_trait {
-  using void_t = VOIDNESS;
+  using void_t = Voidness;
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = false;
 
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
-  static VOIDNESS value(const auto& ptr) { return ptr; }
+  static Voidness value(const auto& ptr) { return ptr; }
 
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
@@ -187,13 +187,13 @@ struct observer_trait {
   template <typename V>
   static auto erase(V& v) {
     static_assert(!std::is_const_v<std::remove_reference_t<V>>);
-    return ErasedData(static_cast<VOIDNESS>(&v));
+    return ErasedData(static_cast<Voidness>(&v));
   }
   template <typename V>
   static auto erase(const V& v)
     requires(is_const)
   {
-    return ErasedData(static_cast<VOIDNESS>(&v));
+    return ErasedData(static_cast<Voidness>(&v));
   }
 };
 
