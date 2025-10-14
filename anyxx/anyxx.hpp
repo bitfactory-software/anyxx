@@ -1635,7 +1635,7 @@ struct method<R(ARGS...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_METHOD_COUNT_FWD(export_, ns_, c_)   \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, c_)   \
   namespace ns_ {                                \
   struct c_;                                     \
   }                                              \
@@ -1644,21 +1644,21 @@ struct method<R(ARGS...)> {
   export_ std::size_t& methods_count<ns_::c_>(); \
   }
 
-#define ANY_METHOD_COUNT_IMPL(ns_, c_)           \
+#define ANY_DISPATCH_COUNT(ns_, c_)           \
   template <>                                    \
   std::size_t& anyxx::methods_count<ns_::c_>() { \
     static std::size_t count = 0;                \
     return count;                                \
   }
 
-#define ANY_METHOD_TABLE_FWD(export_, class_, interface_namespace_)       \
+#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_)       \
   namespace anyxx {                                                       \
   template <>                                                             \
   export_ anyxx::extension_method_table_t*                                \
   anyxx::extension_method_table_instance<interface_##_v_table, class_>(); \
   }
 
-#define ANY_METHOD_TABLE(class_, interface_namespace_, interface_)         \
+#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)         \
   template <>                                                              \
   anyxx::extension_method_table_t*                                         \
   anyxx::extension_method_table_instance<interface_##_v_table, class_>() { \
@@ -1668,10 +1668,10 @@ struct method<R(ARGS...)> {
 
 #else
 
-#define ANY_METHOD_COUNT_FWD(...)
-#define ANY_METHOD_COUNT_IMPL(...)
-#define ANY_METHOD_TABLE_FWD(...)
-#define ANY_METHOD_TABLE(...)
+#define ANY_DISPATCH_COUNT_FWD(...)
+#define ANY_DISPATCH_COUNT(...)
+#define ANY_DISPATCH_FOR_FWD(...)
+#define ANY_DISPATCH_FOR(...)
 
 #endif
 
@@ -2063,7 +2063,7 @@ struct method<R(ARGS...)> {
   ANY_V_TABLE_INSTANCE_FWD(, class_, interface_, interface_namespace_)        \
   ANY_V_TABLE_INSTANCE(, class_, interface_, interface_namespace_)
 
-#define ANY_HAS_METHODS(interface_namespace, interface_name, ...)         \
+#define ANY_HAS_DISPATCH(interface_namespace, interface_name, ...)         \
   ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)           \
                                                                           \
   namespace anyxx {                                                       \

@@ -11,7 +11,7 @@ using std::string;
 using namespace anyxx;
 using namespace anyxx;
 
-ANY_HAS_METHODS(_21_Tree_TE_interface_extension_method::node, node_i)
+ANY_HAS_DISPATCH(_21_Tree_TE_interface_extension_method::node, node_i)
 
 namespace _21_Tree_TE_interface_extension_method {
 

@@ -11,8 +11,6 @@ using namespace anyxx;
 
 namespace {}
 
-ANY_HAS_METHODS(, Thing)
-
 namespace {
 
 ANY(Thing, )

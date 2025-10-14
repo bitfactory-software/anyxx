@@ -7,7 +7,7 @@ using namespace anyxx;
 
 namespace {}
 
-ANY_HAS_METHODS(, Thing)
+ANY_HAS_DISPATCH(, Thing)
 namespace {
 ANY(Thing, )
 }  // namespace
