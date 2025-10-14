@@ -585,13 +585,13 @@ bool type_match(meta_data const& meta_data) {
 // --------------------------------------------------------------------------------
 // borrow erased data
 
-template <is_erased_data TO, is_erased_data From>
+template <is_erased_data To, is_erased_data From>
 struct borrow_trait;
 
-template <typename TO, typename From>
+template <typename To, typename From>
 concept borrowable_from =
-    is_erased_data<From> && is_erased_data<TO> && requires(From f) {
-      { borrow_trait<TO, From>{}(f) } -> std::same_as<TO>;
+    is_erased_data<From> && is_erased_data<To> && requires(From f) {
+      { borrow_trait<To, From>{}(f) } -> std::same_as<To>;
     };
 
 template <is_erased_data From>
@@ -621,10 +621,10 @@ struct borrow_trait<weak, shared_const> {
   auto operator()(const auto& from) { return weak{from}; }
 };
 
-template <typename TO, typename From>
-  requires borrowable_from<TO, From>
-TO borrow_as(From const& from) {
-  return borrow_trait<TO, From>{}(from);
+template <typename To, typename From>
+  requires borrowable_from<To, From>
+To borrow_as(From const& from) {
+  return borrow_trait<To, From>{}(from);
 }
 
 static_assert(!borrowable_from<mutable_observer, const_observer>);
@@ -675,12 +675,12 @@ static_assert(!borrowable_from<value, value>);
 template <is_erased_data TOFROM>
 struct can_copy_to;
 
-template <typename TO>
-concept cloneable_to = is_erased_data<TO> && trait<TO>::is_owner;
+template <typename To>
+concept cloneable_to = is_erased_data<To> && trait<To>::is_owner;
 
-template <is_erased_data TO, is_erased_data From>
-  requires cloneable_to<TO>
-TO clone_to(From const& from, auto const& meta_data) {
+template <is_erased_data To, is_erased_data From>
+  requires cloneable_to<To>
+To clone_to(From const& from, auto const& meta_data) {
   return meta_data.copy_construct(get_void_data_ptr(from));
 }
 
@@ -694,12 +694,12 @@ static_assert(cloneable_to<value>);
 // --------------------------------------------------------------------------------
 // move erased data
 
-template <is_erased_data TO, is_erased_data From>
+template <is_erased_data To, is_erased_data From>
 bool constexpr can_move_to_from = false;
 
-template <typename TO, typename From>
+template <typename To, typename From>
 concept moveable_from =
-    is_erased_data<From> && is_erased_data<TO> && can_move_to_from<TO, From>;
+    is_erased_data<From> && is_erased_data<To> && can_move_to_from<To, From>;
 
 template <is_erased_data X>
 bool constexpr can_move_to_from<X, X> = true;
@@ -710,14 +710,14 @@ bool constexpr can_move_to_from<shared_const, unique> = true;
 template <>
 bool constexpr can_move_to_from<weak, shared_const> = true;
 
-template <voidness TO, voidness From>
-  requires const_correct_call<is_const_void<TO>, is_const_void<From>,
+template <voidness To, voidness From>
+  requires const_correct_call<is_const_void<To>, is_const_void<From>,
                               is_weak_data<From>>
-bool constexpr can_move_to_from<TO, From> = true;
+bool constexpr can_move_to_from<To, From> = true;
 
-template <typename TO, typename From>
-  requires moveable_from<TO, std::decay_t<From>>
-TO move_to(From&& from) {
+template <typename To, typename From>
+  requires moveable_from<To, std::decay_t<From>>
+To move_to(From&& from) {
   return std::move(from);
 }
 
@@ -858,9 +858,9 @@ class any_base {
   template <is_any I>
   friend inline auto get_v_table(I const& any);
 
-  template <is_any TO, is_any From>
-  friend inline TO unchecked_downcast_to(From from)
-    requires(std::derived_from<TO, From>);
+  template <is_any To, is_any From>
+  friend inline To unchecked_downcast_to(From from)
+    requires(std::derived_from<To, From>);
 
  public:
   void operator()() const {}
@@ -907,13 +907,13 @@ void set_is_derived_from(auto v_table) {
   };
 }
 
-template <typename TO>
+template <typename To>
 auto unchecked_v_table_downcast_to(any_base_v_table* v_table) {
-  return static_cast<TO*>(v_table);
+  return static_cast<To*>(v_table);
 }
-template <is_any TO>
+template <is_any To>
 auto unchecked_v_table_downcast_to(any_base_v_table* v_table) {
-  return unchecked_v_table_downcast_to<typename TO::v_table_t>(v_table);
+  return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
 }
 
 template <is_any Any>
@@ -921,20 +921,20 @@ inline auto get_v_table(Any const& any) {
   return unchecked_v_table_downcast_to<Any>(any.v_table_);
 }
 
-template <is_any TO, is_any From>
-TO unchecked_downcast_to(From from)
-  requires(std::derived_from<TO, From>)
+template <is_any To, is_any From>
+To unchecked_downcast_to(From from)
+  requires(std::derived_from<To, From>)
 {
-  return TO{std::move(from.erased_data_),
-            unchecked_v_table_downcast_to<TO>(from.v_table_)};
+  return To{std::move(from.erased_data_),
+            unchecked_v_table_downcast_to<To>(from.v_table_)};
 }
 
-template <is_any TO, is_any From>
-std::optional<TO> downcast_to(From from)
-  requires(std::derived_from<TO, From>)
+template <is_any To, is_any From>
+std::optional<To> downcast_to(From from)
+  requires(std::derived_from<To, From>)
 {
-  if (is_derived_from<TO>(from))
-    return {unchecked_downcast_to<TO>(std::move(from))};
+  if (is_derived_from<To>(from))
+    return {unchecked_downcast_to<To>(std::move(from))};
   return {};
 }
 
@@ -1065,14 +1065,14 @@ auto as(Any source) {
   return typed_any<V, Any>{std::move(source)};
 }
 
-template <typename TO, typename From, is_any Any>
+template <typename To, typename From, is_any Any>
 auto as(typed_any<From, Any> source)
-  requires std::convertible_to<From*, TO*>
+  requires std::convertible_to<From*, To*>
 {
   if constexpr (typed_any<From, Any>::is_const) {
-    return typed_any<TO const, Any>{std::move(source.erased_data_)};
+    return typed_any<To const, Any>{std::move(source.erased_data_)};
   } else {
-    return typed_any<TO, Any>{std::move(source.erased_data_)};
+    return typed_any<To, Any>{std::move(source.erased_data_)};
   }
 }
 
@@ -1943,9 +1943,9 @@ struct dispatch<R(Args...)> {
     n& operator=(n&&) = default;                                              \
     template <anyxx::is_erased_data OTHER>                                    \
     friend class anyxx::any_base;                                             \
-    template <anyxx::is_any TO, anyxx::is_any From>                           \
-    friend TO anyxx::unchecked_downcast_to(From from)                         \
-      requires(std::derived_from<TO, From>);                                  \
+    template <anyxx::is_any To, anyxx::is_any From>                           \
+    friend To anyxx::unchecked_downcast_to(From from)                         \
+      requires(std::derived_from<To, From>);                                  \
     template <anyxx::is_erased_data OTHER>                                    \
     using type_for = n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((OTHER), t))>;   \
   };
