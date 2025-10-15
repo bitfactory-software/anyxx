@@ -1,6 +1,5 @@
 {
   "dependencies": [
-    "catch2",
-    "scn"
+    "catch2"
   ]
 }

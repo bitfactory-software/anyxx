@@ -7,14 +7,14 @@ using namespace anyxx;
 
 namespace {}
 
-ANY_HAS_DISPATCH(, Thing)
+ANY_HAS_DISPATCH(, any_thing)
 namespace {
-ANY(Thing, )
+ANY(any_thing, )
 }  // namespace
 
 namespace {
-dispatch<std::string(virtual_<Thing<const_observer>>,
-                   virtual_<Thing<const_observer>>)>
+dispatch<std::string(virtual_<any_thing<const_observer>>,
+                     virtual_<any_thing<const_observer>>)>
     collide;
 }  // namespace
 
@@ -37,21 +37,32 @@ auto __ =
 auto __ =
     collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a"; });
 
+// great time to use the spaceship operator...
+std::string operator<=>(any_thing<const_observer>& const l,
+                        any_thing<const_observer> const r) {
+  return collide(l, r);
+}
+
 TEST_CASE("multi_dispatch") {
-  CHECK(Thing_v_table::imlpementation<Asteroid>()
+  CHECK(any_thing_v_table::imlpementation<Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 2);
-  CHECK(Thing_v_table::imlpementation<Spaceship>()
+  CHECK(any_thing_v_table::imlpementation<Spaceship>()
             ->own_dispatch_holder_t::dispatch_table->size() == 2);
 
   Asteroid asteroid;
   Spaceship spaceship;
 
-  Thing<const_observer> thing_asteroid{asteroid}, thing_spaceship{spaceship};
+  any_thing<const_observer> thing_asteroid{asteroid}, thing_spaceship{spaceship};
 
   CHECK(collide(thing_asteroid, thing_spaceship) == "");  // a->s");
   CHECK(collide(thing_asteroid, thing_asteroid) == "a->a");
   CHECK(collide(thing_spaceship, thing_spaceship) == "s->s");
   CHECK(collide(thing_spaceship, thing_asteroid) == "s->a");
+
+  CHECK((thing_asteroid <=> thing_spaceship) == "");  // a->s");
+  CHECK((thing_asteroid <=> thing_asteroid) == "a->a");
+  CHECK((thing_spaceship <=> thing_spaceship) == "s->s");
+  CHECK((thing_spaceship <=> thing_asteroid) == "s->a");
 }
 
 }  // namespace
@@ -75,15 +86,15 @@ struct have_dispatchs_enabled<virtual_<ANY>, ARGS...> {
   static constexpr bool value = false;
 };
 static_assert(!has_dispatchs_enabled<Dummy<const_observer>>);
-static_assert(has_dispatchs_enabled<Thing<const_observer>>);
+static_assert(has_dispatchs_enabled<any_thing<const_observer>>);
 
 static_assert(!have_dispatchs_enabled<virtual_<Dummy<const_observer>>,
-                                    virtual_<Dummy<const_observer>>>::value);
+                                      virtual_<Dummy<const_observer>>>::value);
 static_assert(!have_dispatchs_enabled<virtual_<Dummy<const_observer>>,
-                                    virtual_<Thing<const_observer>>>::value);
-static_assert(!have_dispatchs_enabled<virtual_<Thing<const_observer>>,
-                                    virtual_<Dummy<const_observer>>>::value);
-static_assert(have_dispatchs_enabled<virtual_<Thing<const_observer>>,
-                                   virtual_<Thing<const_observer>>>::value);
+                                      virtual_<any_thing<const_observer>>>::value);
+static_assert(!have_dispatchs_enabled<virtual_<any_thing<const_observer>>,
+                                      virtual_<Dummy<const_observer>>>::value);
+static_assert(have_dispatchs_enabled<virtual_<any_thing<const_observer>>,
+                                     virtual_<any_thing<const_observer>>>::value);
 
 }  // namespace

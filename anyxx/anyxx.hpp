@@ -849,6 +849,7 @@ class any_base {
   any_base(any_base&& rhs) noexcept
       : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
   any_base& operator=(any_base const& other) = default;
+  any_base& operator=(any_base&& other) = default;
 
   template <is_erased_data Otther>
   friend class any_base;
@@ -1224,11 +1225,11 @@ class factory {
   std::map<Key, constructor_t> function_map_;
 
  public:
-  auto register_(auto const& key, auto const& construct) {
+  auto register_(Key const& key, auto const& construct) {
     function_map_[key] = construct;
     return nullptr;
   }
-  Any<unique> construct(Key const& key, Args&&... args) {
+  Any<unique> construct(auto key, Args&&... args) {
     if (auto found = function_map_.find(key); found != function_map_.end())
       return found->second(std::forward<Args>(args)...);
     if constexpr (std::same_as<Key, std::string>) {
