@@ -10,11 +10,14 @@ message("CMAKE_BINARY_DIR: " ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
 message( "CMAKE_SYSTEM_NAME: " ${CMAKE_SYSTEM_NAME})
+message( "CMAKE_PREFIX_PATH:" ${CMAKE_PREFIX_PATH})
 
 project(anyxx CXX)
 
 include(GNUInstallDirs)
 
+message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
+find_package(scn CONFIG REQUIRED)
 find_package(Catch2 3 REQUIRED)
 
 if (MSVC)
