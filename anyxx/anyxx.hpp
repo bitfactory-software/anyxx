@@ -887,7 +887,7 @@ auto get_void_data_ptr(any_base<ErasedData> const& any) {
 }
 
 template <is_any Any>
-inline const auto& get_runtime(Any const& any) {
+inline const auto& get_meta_data(Any const& any) {
   return *get_v_table(any)->meta_data;
 }
 
@@ -944,11 +944,11 @@ auto unchecked_unerase_cast(Any const& o) {
 }
 template <typename U, is_any Any>
 auto unerase_cast(Any const& o) {
-  return unerase_cast<U>(get_erased_data(o), get_runtime(o));
+  return unerase_cast<U>(get_erased_data(o), get_meta_data(o));
 }
 template <typename U, is_any Any>
 auto unerase_cast(Any const* o) {
-  unerase_cast<U>(get_erased_data(*o), get_runtime(o));
+  unerase_cast<U>(get_erased_data(*o), get_meta_data(o));
   return nullptr;
 }
 
@@ -1008,7 +1008,7 @@ struct typed_any : public Any {
 
   typed_any(V const& v) : Any(v) {}
   typed_any(V&& v) : Any(std::move(v)) {}
-  typed_any(Any i) : Any(i) { check_type_match<V>(get_runtime(*this)); }
+  typed_any(Any i) : Any(i) { check_type_match<V>(get_meta_data(*this)); }
 
   value_t const& operator*() const {
     return *unchecked_unerase_cast<value_t const>(this->erased_data_);
@@ -1093,7 +1093,7 @@ template <is_any ToAny, is_any FromAny>
                            typename FromAny::erased_data_t>
 auto borrow_as(FromAny const& from_interface) {
   return borrow_as<ToAny>(get_erased_data(from_interface),
-                          get_runtime(from_interface));
+                          get_meta_data(from_interface));
 }
 
 template <is_any ToAny, is_erased_data FromAny>
@@ -1109,7 +1109,7 @@ std::expected<ToAny, cast_error> clone_to(FromAny const& vv_from,
 template <is_any ToAny, is_any FromAny>
 auto clone_to(const FromAny& from_interface) {
   return clone_to<ToAny>(get_erased_data(from_interface),
-                         get_runtime(from_interface));
+                         get_meta_data(from_interface));
 }
 
 template <is_any FromAny>
@@ -1134,7 +1134,7 @@ ToAny move_to(FromAny&& vv_from, const meta_data& get_meta_data) {
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from_interface) {
   return move_to<ToAny>(move_erased_data(std::move(from_interface)),
-                        get_runtime(from_interface));
+                        get_meta_data(from_interface));
 }
 
 // --------------------------------------------------------------------------------
@@ -1214,19 +1214,24 @@ class unkonwn_factory_key_error : error {
   using error::error;
 };
 
-template <template <typename> typename Any, typename KEY, typename... Args>
+template <template <typename> typename Any, typename Key, typename... Args>
 class factory {
   using constructor_t = std::function<Any<unique>(Args...)>;
-  std::map<KEY, constructor_t> function_map_;
+  std::map<Key, constructor_t> function_map_;
 
  public:
-  void register_(auto const& key, auto const& construct) {
+  auto register_(auto const& key, auto const& construct) {
     function_map_[key] = construct;
+    return nullptr;
   }
   Any<unique> construct(auto key, Args&&... args) {
     if (auto found = function_map_.find(key); found != function_map_.end())
-      return construct(std::forward<Args>(args)...);
-    throw unkonwn_factory_key_error{std::to_string(key)};
+      return found->second(std::forward<Args>(args)...);
+    if constexpr (std::same_as<Key, std::string>) {
+      throw unkonwn_factory_key_error{key};
+    } else {
+      throw unkonwn_factory_key_error{std::to_string(key)};
+    }
   };
 };
 
