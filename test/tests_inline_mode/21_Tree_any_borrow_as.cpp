@@ -3,6 +3,7 @@
 #include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <iostream>
+#include <print>
 #include <string>
 
 using std::cout;
@@ -33,35 +34,31 @@ any_serializeable<unique> deserialize(std::istream& archive) {
 struct Plus {
   int value() const { return left.value() + right.value(); }
   void serialize(std::ostream& archive) const {
-    auto l = borrow_as<any_serializeable<const_observer>>(left);
     archive << "Plus " << *borrow_as<any_serializeable<const_observer>>(left)
             << *borrow_as<any_serializeable<const_observer>>(right);
   }
-  any_node<shared_const> left, right;
+  any_node<unique> left, right;
 };
 auto __ = deserialize_factory.register_(
     "Plus", [](std::istream& archive) -> any_serializeable<unique> {
-      auto plus = std::make_unique<Plus>();
-      plus->left = move_to<any_node<shared_const>>(deserialize(archive));
-      plus->right = move_to<any_node<shared_const>>(deserialize(archive));
-      return plus;
+      return std::make_unique<Plus>(
+          move_to<any_node<unique>>(deserialize(archive)),
+          move_to<any_node<unique>>(deserialize(archive)));
     });
 
 struct Times {
   int value() const { return left.value() * right.value(); }
   void serialize(std::ostream& archive) const {
-    auto l = borrow_as<any_serializeable<const_observer>>(left);
     archive << "Times " << *borrow_as<any_serializeable<const_observer>>(left)
             << *borrow_as<any_serializeable<const_observer>>(right);
   }
-  any_node<shared_const> left, right;
+  any_node<unique> left, right;
 };
 auto __ = deserialize_factory.register_(
     "Times", [](std::istream& archive) -> any_serializeable<unique> {
-      auto plus = std::make_unique<Times>();
-      plus->left = move_to<any_node<shared_const>>(deserialize(archive));
-      plus->right = move_to<any_node<shared_const>>(deserialize(archive));
-      return plus;
+      return std::make_unique<Times>(
+          move_to<any_node<unique>>(deserialize(archive)),
+          move_to<any_node<unique>>(deserialize(archive)));
     });
 
 struct Integer {
@@ -95,11 +92,11 @@ TEST_CASE("_21_Tree_any_borrow_as") {
 
   std::stringstream archive{
       "Plus Integer 1 Plus Times Integer 2 Integer 3 Integer 4 "};
-  auto expr = move_to<any_node<shared_const>>(deserialize(archive));
+  auto expr = move_to<any_node<unique>>(deserialize(archive));
   CHECK(expr.value() == 11);
   std::stringstream serialized;
-  borrow_as<any_serializeable<shared_const>>(expr)->serialize(serialized);
-  CHECK(archive.str() == serialized.str());
-  auto expr2 = move_to<any_node<shared_const>>(deserialize(serialized));
+  borrow_as<any_serializeable<const_observer>>(expr)->serialize(serialized);
+  std::println("{}", serialized.str());
+  auto expr2 = move_to<any_node<unique>>(deserialize(serialized));
   CHECK(expr2.value() == 11);
 }

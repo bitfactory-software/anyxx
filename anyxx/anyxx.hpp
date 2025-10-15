@@ -519,8 +519,12 @@ class meta_data {
   template <typename CLASS>
   constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
-          return erased<unique>(
-              std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
+          if constexpr (std::is_copy_constructible_v<CLASS>) {
+            return erased<unique>(
+                std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
+          } else {
+            return unique_nullptr();
+          }
         }) {}
 
   constexpr const std::type_info& get_type_info() const { return type_info_; }
