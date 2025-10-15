@@ -1224,7 +1224,7 @@ class factory {
     function_map_[key] = construct;
     return nullptr;
   }
-  Any<unique> construct(auto key, Args&&... args) {
+  Any<unique> construct(Key const& key, Args&&... args) {
     if (auto found = function_map_.find(key); found != function_map_.end())
       return found->second(std::forward<Args>(args)...);
     if constexpr (std::same_as<Key, std::string>) {

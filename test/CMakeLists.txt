@@ -38,7 +38,6 @@ add_executable (tests_inline_mode ${tests_inline_mode_cpp_files} ${tests_inline_
 target_link_libraries(tests_inline_mode 
     anyxx
     Catch2::Catch2WithMain
-    scn::scn
 )
 set_target_properties(tests_inline_mode PROPERTIES FOLDER "_tests/inline_mode")
 

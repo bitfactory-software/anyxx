@@ -17,7 +17,6 @@ project(anyxx CXX)
 include(GNUInstallDirs)
 
 message("VCPKG_ROOT: " $ENV{VCPKG_ROOT}/)
-find_package(scn CONFIG REQUIRED)
 find_package(Catch2 3 REQUIRED)
 
 if (MSVC)
