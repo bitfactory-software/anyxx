@@ -25,10 +25,10 @@ class lockable {
   friend class updateable;
   friend class running_object_table;
 
-public:
+ public:
   lockable(any_object<shared_const> o) : object(std::move(o)) {};
 
-private:
+ private:
   lockable(lockable const&) = delete;
   lockable& operator=(lockable const&) = delete;
   lockable(lockable&&) = default;
@@ -109,8 +109,15 @@ class running_object_table {
         return std::optional<updateable>{std::in_place, found->first,
                                          std::move(lock),
                                          found->second->object};
+      else
+        return {};
 
     throw std::runtime_error(std::format("id {} not found", id));
+  }
+
+  void checkin(updateable updated) {
+    table_[updated.id]->object =
+        move_to<any_object<shared_const>>(std::move(updated.object));
   }
 };
 
@@ -182,4 +189,9 @@ TEST_CASE("example XX/ running object table") {
     }
     CHECK(found_one);
   }
+
+  auto update = rot.checkout(0);
+  CHECK(update);
+  CHECK(!rot.checkout(0));
+
 }
