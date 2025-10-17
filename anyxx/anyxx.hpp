@@ -1157,6 +1157,10 @@ template <is_any ToAny, is_any FromAny>
   requires borrowable_from<typename ToAny::erased_data_t,
                            typename FromAny::erased_data_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
+  if constexpr (std::derived_from<typename ToAny::v_table_t,
+                                  typename FromAny::v_table_t>) {
+    if (auto to = downcast_to<ToAny>(from)) return *to;
+  }
   return borrow_as<ToAny>(get_erased_data(from), get_meta_data(from));
 }
 
@@ -1166,8 +1170,7 @@ std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
   auto& meta_data = get_meta_data(from);
   static_assert(is_erased_data<vv_to_t>);
   return query_v_table<ToAny>(meta_data).transform([&](auto v_table) {
-    vv_to_t t = clone_to<vv_to_t>(get_erased_data(from), meta_data);
-    return ToAny{move(t), v_table};
+    return ToAny{clone_to<vv_to_t>(get_erased_data(from), meta_data), v_table};
   });
 }
 
