@@ -1156,25 +1156,19 @@ std::expected<ToAny, cast_error> borrow_as(FromAny const& vv_from,
 template <is_any ToAny, is_any FromAny>
   requires borrowable_from<typename ToAny::erased_data_t,
                            typename FromAny::erased_data_t>
-auto borrow_as(FromAny const& from_interface) {
-  return borrow_as<ToAny>(get_erased_data(from_interface),
-                          get_meta_data(from_interface));
-}
-
-template <is_any ToAny, is_erased_data FromAny>
-std::expected<ToAny, cast_error> clone_to(FromAny const& vv_from,
-                                          const meta_data& meta_data) {
-  using vv_to_t = typename ToAny::erased_data_t;
-  static_assert(is_erased_data<vv_to_t>);
-  return query_v_table<ToAny>(meta_data).transform([&](auto v_table) {
-    return ToAny{clone_to<vv_to_t>(vv_from, meta_data), v_table};
-  });
+std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
+  return borrow_as<ToAny>(get_erased_data(from), get_meta_data(from));
 }
 
 template <is_any ToAny, is_any FromAny>
-auto clone_to(const FromAny& from_interface) {
-  return clone_to<ToAny>(get_erased_data(from_interface),
-                         get_meta_data(from_interface));
+std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
+  using vv_to_t = typename ToAny::erased_data_t;
+  auto& meta_data = get_meta_data(from);
+  static_assert(is_erased_data<vv_to_t>);
+  return query_v_table<ToAny>(meta_data).transform([&](auto v_table) {
+    vv_to_t t = clone_to<vv_to_t>(get_erased_data(from), meta_data);
+    return ToAny{move(t), v_table};
+  });
 }
 
 template <is_any FromAny>
