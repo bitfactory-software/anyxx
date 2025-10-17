@@ -44,6 +44,7 @@ class running_object_table {
 };
 
 struct named {
+  named(std::string s) : name(std::move(s)) {}
   std::string name;
 };
 struct person : named {
@@ -57,10 +58,12 @@ struct role : named {
 }  // namespace example
 
 TEST_CASE("example XX/ riunning object table") {
-    using namespace example;
+  using namespace example;
 
-    running_object_table rot;
+  running_object_table rot;
 
-    auto id_person1 = rot.insert(any_object<shared_const>(std::in_place_type<person>, "Miller"));
-    //auto id_person1 = rot.insert({std::in_place_type<person>, "Johnson"});
+  auto id_person1 = rot.insert(
+      any_object<shared_const>(std::in_place_type<person>, "Miller"));
+  CHECK(id_person1 == 0);
+  // auto id_person1 = rot.insert({std::in_place_type<person>, "Johnson"});
 }
