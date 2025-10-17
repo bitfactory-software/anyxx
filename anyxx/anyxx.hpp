@@ -185,6 +185,16 @@ struct observer_trait {
   using unerased = ConstructedWith;
 
   template <typename V>
+  auto construct_in_place(V&&) {
+    static_assert(false);
+    return nullptr;
+  }
+  template <typename T, typename... Args>
+  auto construct_type_in_place(std::in_place_type_t<T>, Args&&... args) {
+    static_assert(false);
+    return nullptr;
+  }
+  template <typename V>
   static auto erase(V& v) {
     static_assert(!std::is_const_v<std::remove_reference_t<V>>);
     return ErasedData(static_cast<Voidness>(&v));
@@ -233,6 +243,14 @@ struct trait<shared_const> {
   using unerased = std::decay_t<typename ConstructedWith::element_type>;
 
   template <typename V>
+  auto construct_in_place(V&& v) {
+    return std::make_shared<V>(std::forward<V>(v));
+  }
+  template <typename T, typename... Args>
+  auto construct_type_in_place(std::in_place_type_t<T>, Args&&... args) {
+    return std::make_shared<T>(std::forward<Args>(args)...);
+  }
+  template <typename V>
   static auto erase(std::shared_ptr<V> const& v) {
     return static_pointer_cast<void const>(v);
   }
@@ -253,6 +271,16 @@ struct trait<weak> {
   template <typename ConstructedWith>
   using unerased = std::decay_t<typename ConstructedWith::element_type>;
 
+  template <typename V>
+  auto construct_in_place(V&&) {
+    static_assert(false);
+    return nullptr;
+  }
+  template <typename T, typename... Args>
+  auto construct_type_in_place(std::in_place_type_t<T>, Args&&... args) {
+    static_assert(false);
+    return nullptr;
+  }
   template <typename V>
   static auto erase(std::weak_ptr<V> const& v) {
     return static_pointer_cast<void const>(v);
@@ -301,6 +329,14 @@ struct trait<unique> {
   template <typename ConstructedWith>
   using unerased = typename ConstructedWith::element_type;
 
+  template <typename V>
+  auto construct_in_place(V&& v) {
+    return make_unique<V>(std::forward<V>(v));
+  }
+  template <typename T, typename... Args>
+  auto construct_type_in_place(std::in_place_type_t<T>, Args&&... args) {
+    return make_unique<T>(std::forward<Args>(args)...);
+  }
   template <typename V>
   static auto erase(std::unique_ptr<V>&& v) {
     return move_to_unique(std::move(v));
@@ -377,16 +413,6 @@ auto make_value(Args&&... args) {
   return value(new T(std::forward<Args>(args)...));
 }
 
-template <typename T, typename... Args>
-auto make_void_value(Args&&... args) {
-  return make_value<T>(std::forward<Args>(args)...);
-}
-
-template <typename T>
-auto make_void_value(T&& v) {
-  return make_value<T>(std::forward<T>(v));
-}
-
 template <typename U>
 U* unchecked_unerase_cast(value& v) {
   return static_cast<U*>(v.get());
@@ -411,9 +437,21 @@ struct trait<value> {
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
 
+  template <typename V>
+  auto construct_in_place(V&& v) {
+    return make_value<V>(std::forward<V>(v));
+  }
+  template <typename T, typename... Args>
+  auto construct_type_in_place(std::in_place_type_t<T>, Args&&... args) {
+    return make_value<T>(std::forward<Args>(args)...);
+  }
+  template <typename V>
+  static auto erase(std::unique_ptr<V>&& v) {
+    return make_value<std::decay_t<V>>(std::move(v));
+  }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
-    return anyxx::make_value<std::decay_t<ConstructedWith>>(
+    return make_value<std::decay_t<ConstructedWith>>(
         std::forward<ConstructedWith>(v));
   }
 };
@@ -818,9 +856,15 @@ class any_base {
   any_base(ConstructedWith&& constructed_with)
     requires constructibile_for<ConstructedWith, ErasedData>
       : erased_data_(erased<erased_data_t>(
-            std::forward<ConstructedWith>(constructed_with))) {
-    using t = unerased<ErasedData, ConstructedWith>;
-  }
+            std::forward<ConstructedWith>(constructed_with))) {}
+  template <typename V>
+  any_base(std::in_place_t, V&& v)
+      : erased_data_(
+            trait<ErasedData>::construct_in_place(std::forward<V>(v))) {}
+  template <typename T, typename... Args>
+  any_base(std::in_place_type_t<T>, Args&&... args)
+      : erased_data_(trait<ErasedData>::template construct_type_in_place<T>(
+            std::forward<Args>(args)...)) {}
 
  public:
   template <is_any Otther>
@@ -1922,6 +1966,17 @@ struct dispatch<R(Args...)> {
         : base_t(std::forward<ConstructedWith>(v)) {                           \
       v_table_ = v_table_t::template imlpementation<                           \
           anyxx::unerased<ErasedData, ConstructedWith>>();                     \
+    }                                                                          \
+    template <typename V>                                                      \
+    n(std::in_place_t, V&& v) : base_t(std::in_place, std::forward<V>(v)) {    \
+      v_table_ = v_table_t::template imlpementation<                           \
+          anyxx::unerased<ErasedData, V>>();                                   \
+    }                                                                          \
+    template <typename T, typename... Args>                                    \
+    n(std::in_place_type_t<T>, Args&&... args)                                 \
+        : base_t(std::in_place_type<T>(std::forward<Args>(args)...)) {         \
+      v_table_ = v_table_t::template imlpementation<                           \
+          anyxx::unerased<ErasedData, T>>();                                   \
     }                                                                          \
     template <typename Otther>                                                 \
     n(const Otther& other)                                                     \
