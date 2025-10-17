@@ -62,8 +62,18 @@ TEST_CASE("example XX/ riunning object table") {
 
   running_object_table rot;
 
-  auto id_person1 = rot.insert(
-      any_object<shared_const>(std::in_place_type<person>, "Miller"));
-  CHECK(id_person1 == 0);
-  // auto id_person1 = rot.insert({std::in_place_type<person>, "Johnson"});
+  auto id_miller = rot.insert({std::in_place_type<person>, "Miller"});
+  CHECK(id_miller == 0);
+  auto id_johnson = rot.insert({std::in_place_type<person>, "Johnson"});
+  CHECK(id_johnson == 1);
+
+  auto id_programmer = rot.insert({std::in_place_type<role>, "Programmer"});
+  CHECK(id_programmer == 2);
+  auto id_manager = rot.insert({std::in_place_type<role>, "Manager"});
+  CHECK(id_manager == 3);
+
+  CHECK(unerase_cast<person>(*rot.dereference(id_miller))->name == "Miller");
+  CHECK(unerase_cast<person>(*rot.dereference(id_johnson))->name == "Johnson");
+  CHECK(unerase_cast<role>(*rot.dereference(id_programmer))->name == "Programmer");
+  CHECK(unerase_cast<role>(*rot.dereference(id_manager))->name == "Manager");
 }
