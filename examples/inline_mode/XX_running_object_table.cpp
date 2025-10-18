@@ -330,7 +330,7 @@ TEST_CASE("example XX/ running object table") {
     }
   }
 
-  auto salary_loterie = [&](double inc, auto frequence) {
+  auto salary_lottery = [&](double inc, auto frequence) {
     std::random_device r;
     std::default_random_engine e1(r());
     std::uniform_int_distribution<int> uniform_dist(0, 1);
@@ -347,10 +347,10 @@ TEST_CASE("example XX/ running object table") {
   };
   using namespace std::chrono_literals;
   std::vector<std::thread> v;
-  v.emplace_back(salary_loterie, 500, 20ms);
-  v.emplace_back(salary_loterie, -200, 20ms);
-  v.emplace_back(salary_loterie, 50, 10ms);
-  v.emplace_back(salary_loterie, -20, 10ms);
+  v.emplace_back(salary_lottery, 500, 20ms);
+  v.emplace_back(salary_lottery, -200, 19ms);
+  v.emplace_back(salary_lottery, 50, 10ms);
+  v.emplace_back(salary_lottery, -20, 5ms);
   for (auto& tr : v) tr.join();
   for (auto found : rot.find<any_named>(match_all)) {
     if (auto p = unerase_cast<person>(&found.second)) {
