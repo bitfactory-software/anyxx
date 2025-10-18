@@ -35,23 +35,36 @@ class lockable {
   lockable& operator=(lockable&&) = default;
 
   any_object<shared_const> object;
-  std::atomic_int lock_count;
+  std::atomic_int lock_count = 0;
 };
 
 class lock_count {
  public:
   lock_count(lockable& lockable) : locked(&lockable) { locked->lock_count++; }
-  ~lock_count() { locked--; }
+  ~lock_count() {
+    if (locked) locked->lock_count--;
+  }
   lock_count(lock_count const& lock_count) : locked(lock_count.locked) {
     locked->lock_count++;
   }
   lock_count& operator=(lock_count& r) {
-    locked = r.locked;
-    locked++;
+    locked->lock_count++;
     return *this;
   }
-  lock_count(lock_count&&) = default;
-  lock_count& operator=(lock_count&&) = default;
+  lock_count(lock_count&& r) {
+    locked = r.locked;
+    r.locked = nullptr;
+  }
+  lock_count& operator=(lock_count&& r) {
+    locked = r.locked;
+    r.locked = nullptr;
+    return *this;
+  }
+
+  friend void swap(lock_count& l, lock_count& r) {
+    using std::swap;
+    swap(l.locked, r.locked);
+  }
 
  private:
   lockable* locked = nullptr;
@@ -190,8 +203,22 @@ TEST_CASE("example XX/ running object table") {
     CHECK(found_one);
   }
 
-  auto update = rot.checkout(0);
+  auto update = rot.checkout(id_johnson);
   CHECK(update);
-  CHECK(!rot.checkout(0));
-
+  CHECK(!rot.checkout(id_johnson));
+  rot.checkin(std::move(*update));
+  {
+    auto update = rot.checkout(id_johnson);
+    CHECK(update);
+  }
+  {
+    auto update = rot.checkout(id_johnson);
+    CHECK(update);
+  }
+  rot.checkout(id_johnson).transform([&](updateable&& update) {
+    unerase_cast<person>(update.object)->name = "Miller";
+    rot.checkin(std::move(update));
+    return true;
+  });
+  CHECK(unerase_cast<person>(*rot.dereference(id_johnson))->name == "Miller");
 }
