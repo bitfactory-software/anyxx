@@ -1,10 +1,14 @@
 #include <anyxx/anyxx.hpp>
 #include <catch.hpp>
+#include <chrono>
 #include <cmath>
 #include <generator>
 #include <iostream>
 #include <mutex>
+#include <print>
+#include <random>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <vector>
 
@@ -19,7 +23,9 @@ namespace example_db {
 using id_t = uint64_t;
 ANY(any_object, )
 
-using identified = std::pair<id_t, any_object<shared_const>>;
+template <template <is_erased_data> typename Any>
+using identified = std::pair<id_t, Any<shared_const>>;
+
 class lockable {
   friend class locked_count;
   friend class updateable;
@@ -123,8 +129,8 @@ class running_object_table {
 
   template <template <is_erased_data> typename AnyObject, typename Query,
             typename... Args>
-  std::generator<identified const&> find(Query const& match,
-                                         Args&&... args) const {
+  std::generator<identified<AnyObject> const&> find(Query const& match,
+                                                    Args&&... args) const {
     for (auto const& [id, holder] : table_)
       if (auto o = borrow_as<AnyObject<shared_const>>(holder->get_object()))
         if (match(o, std::forward<Args>(args)...)) co_yield {id, *o};
@@ -185,7 +191,7 @@ class pointer {
     if (id_ == no_id) return {};
     if (resolved_) return *load();
     auto dereferenced = GetRunningObjectTable().dereference(id_);
-    resolved_.exchange(dereferenced );
+    resolved_.exchange(dereferenced);
     return *load();
   }
 
@@ -196,6 +202,8 @@ class pointer {
   id_t id_ = no_id;
   mutable std::atomic<lockable*> resolved_ = nullptr;
 };
+
+auto match_all = [](auto const& o) { return true; };
 
 }  // namespace example_db
 
@@ -211,7 +219,7 @@ using pointer = example_db::pointer<ToAny, GetRunningObjectTable>;
 ANY_(any_named, example_db::any_object,
      (ANY_CONST_METHOD(std::string, get_name)))
 
-auto name_match = [](auto const& o, std::string_view query) {
+auto match_name = [](auto const& o, std::string_view query) {
   return o->get_name() == query;
 };
 
@@ -229,8 +237,9 @@ ANY_REGISTER_MODEL(role, any_named);
 struct person : named {
   using named::named;
   pointer<any_named> role;
+  double salary = 1000;
 };
-// ANY_REGISTER_MODEL(person, any_named);
+ANY_REGISTER_MODEL(person, any_named);
 
 }  // namespace example_app
 
@@ -257,9 +266,13 @@ TEST_CASE("example XX/ running object table") {
   CHECK(unerase_cast<role>(*rot.dereference_as<any_named>(id_manager))->name ==
         "Manager");
 
+  for (auto found : rot.find<any_named>(match_all)) {
+    std::println("{}: {}", found.first, found.second->get_name());
+  }
+
   {
     bool found_one = false;
-    for (auto found : rot.find<any_named>(name_match, "Johnson")) {
+    for (auto found : rot.find<any_named>(match_name, "Johnson")) {
       CHECK(found.first == id_johnson);
       CHECK(unerase_cast<person>(found.second)->name == "Johnson");
       found_one = true;
@@ -268,7 +281,7 @@ TEST_CASE("example XX/ running object table") {
   }
   {
     bool found_one = false;
-    for (auto found : rot.find<any_named>(name_match, "Programmer")) {
+    for (auto found : rot.find<any_named>(match_name, "Programmer")) {
       CHECK(found.first == id_programmer);
       CHECK(unerase_cast<role>(found.second)->name == "Programmer");
       found_one = true;
@@ -291,22 +304,55 @@ TEST_CASE("example XX/ running object table") {
 
   {
     example_app::pointer<any_named> role_pointer{id_programmer};
-    auto programmer_any  = role_pointer.dereference();
+    auto programmer_any = role_pointer.dereference();
     auto programmer = unerase_cast<role>(programmer_any);
     CHECK(programmer->name == "Programmer");
   }
 
   rot.checkout(id_johnson).transform([&](updateable&& update) {
-    unerase_cast<person>(update.object)->name = "Miller";
+    CHECK(update.id == id_johnson);
+    unerase_cast<person>(update.object)->name = "Smith";
     unerase_cast<person>(update.object)->role = id_programmer;
     rot.checkin(std::move(update));
     return true;
   });
   {
     auto miller = rot.dereference_as<any_named>(id_johnson);
-    CHECK(miller->get_name() == "Miller");
+    CHECK(miller->get_name() == "Smith");
     auto unerased = unerase_cast<person>(*miller);
     auto role = unerased->role;
     CHECK(role->get_name() == "Programmer");
+  }
+
+  for (auto found : rot.find<any_named>(match_all)) {
+    if (auto p = unerase_cast<person>(&found.second)) {
+      std::println("({}){}: {}", found.first, p->name, p->salary);
+    }
+  }
+
+  auto salary_loterie = [&](double inc, auto frequence) {
+    std::random_device r;
+    std::default_random_engine e1(r());
+    std::uniform_int_distribution<int> uniform_dist(0, 1);
+
+    for (auto i : std::views::iota(0, 59)) {
+      auto person_id = uniform_dist(e1);
+      rot.checkout(person_id).transform([&](updateable&& update) {
+        unerase_cast<person>(update.object)->salary += inc;
+        rot.checkin(std::move(update));
+        return true;
+      });
+      std::this_thread::sleep_for(frequence);
+    }
+  };
+  using namespace std::chrono_literals;
+  std::vector<std::thread> v;
+  v.emplace_back(salary_loterie, 500, 20ms);
+  v.emplace_back(salary_loterie, -200, 20ms);
+  for (auto& tr : v) tr.join();
+  for (auto found : rot.find<any_named>(match_all)) {
+    if (auto p = unerase_cast<person>(&found.second)) {
+      std::println("({}){}: {}", found.first, p->name, p->salary);
+    }
   }
 }

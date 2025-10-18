@@ -1013,8 +1013,7 @@ auto unerase_cast(Any const& o) {
 }
 template <typename U, is_any Any>
 auto unerase_cast(Any const* o) {
-  unerase_cast<U>(get_erased_data(*o), get_meta_data(o));
-  return nullptr;
+  return unerase_cast<U>(&get_erased_data(*o), get_meta_data(*o));
 }
 
 #ifdef ANY_DLL_MODE
