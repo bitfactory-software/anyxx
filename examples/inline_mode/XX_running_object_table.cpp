@@ -21,7 +21,7 @@ ANY(any_object, )
 
 using identified = std::pair<id_t, any_object<shared_const>>;
 class lockable {
-  friend class lock_count;
+  friend class locked_count;
   friend class updateable;
   friend class running_object_table;
 
@@ -38,30 +38,29 @@ class lockable {
   std::atomic_int lock_count = 0;
 };
 
-class lock_count {
+class locked_count {
  public:
-  lock_count(lockable& lockable) : locked(&lockable) { locked->lock_count++; }
-  ~lock_count() {
+  locked_count(lockable& lockable) : locked(&lockable) { locked->lock_count++; }
+  ~locked_count() {
     if (locked) locked->lock_count--;
   }
-  lock_count(lock_count const& lock_count) : locked(lock_count.locked) {
-    locked->lock_count++;
+  locked_count(locked_count const& r){
+      (*this) = r;
   }
-  lock_count& operator=(lock_count& r) {
+  locked_count& operator=(locked_count const& r) {
+    locked = r.locked;
     locked->lock_count++;
     return *this;
   }
-  lock_count(lock_count&& r) {
-    locked = r.locked;
-    r.locked = nullptr;
+  locked_count(locked_count&& r) {
+    (*this) = std::move(r);
   }
-  lock_count& operator=(lock_count&& r) {
+  locked_count& operator=(locked_count&& r) {
     locked = r.locked;
     r.locked = nullptr;
     return *this;
   }
-
-  friend void swap(lock_count& l, lock_count& r) {
+  friend void swap(locked_count& l, locked_count& r) {
     using std::swap;
     swap(l.locked, r.locked);
   }
@@ -72,16 +71,16 @@ class lock_count {
 
 class updateable {
  public:
-  updateable(id_t id_, lock_count&& lock_count,
+  updateable(id_t id_, locked_count&& locked_count,
              any_object<shared_const> const& o)
-      : lock_count_(std::move(lock_count)),
+      : locked_count_(std::move(locked_count)),
         id(id_),
         object(*clone_to<any_object<unique>>(o)) {}
   const id_t id;
   any_object<unique> object;
 
  private:
-  lock_count lock_count_;
+  locked_count locked_count_;
 };
 
 class running_object_table {
@@ -118,9 +117,9 @@ class running_object_table {
 
   std::optional<updateable> checkout(id_t id) {
     if (auto found = table_.find(id); found != table_.end())
-      if (lock_count lock{*found->second}; found->second->lock_count == 1)
+      if (locked_count locked{*found->second}; found->second->lock_count == 1)
         return std::optional<updateable>{std::in_place, found->first,
-                                         std::move(lock),
+                                         std::move(locked),
                                          found->second->object};
       else
         return {};
