@@ -85,9 +85,21 @@ class updateable {
   locked_count locked_count_;
 };
 
+static inline constexpr const int no_id = -1;
+
 class running_object_table {
   std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
   id_t next_id = 0;
+
+  lockable* dereference(id_t id) const {
+    if (auto found = table_.find(id); found != table_.end())
+      return found->second.get();
+    return {};
+  }
+
+  template <template <is_erased_data> typename ToAny,
+            auto GetRunningObjectTable>
+  friend class pointer;
 
  public:
   template <template <is_any> typename AnyObject, typename T, typename... Args>
@@ -101,9 +113,11 @@ class running_object_table {
     return id;
   }
 
-  std::optional<any_object<shared_const>> dereference(id_t id) const {
-    if (auto found = table_.find(id); found != table_.end())
-      return found->second->get_object();
+  template <template <is_erased_data> typename AnyObject>
+  std::optional<AnyObject<shared_const>> dereference_as(id_t id) const {
+    if (auto found = dereference(id))
+      if (auto o = borrow_as<AnyObject<shared_const>>(found->get_object()))
+        return *o;
     return {};
   }
 
@@ -134,9 +148,65 @@ class running_object_table {
   }
 };
 
+template <template <is_erased_data> typename ToAny, auto GetRunningObjectTable>
+class pointer {
+ public:
+  pointer() = default;
+
+  pointer(id_t id) { (*this) = id; }
+  pointer& operator=(id_t id) {
+    this->id_ = id;
+    return *this;
+  }
+
+  pointer(pointer const& r) : id_(r.id_), resolved_(r.resolved_.load()) {}
+  pointer& operator=(pointer& r) {
+    swap(*this, r);
+    return *this;
+  }
+
+  // pointer(pointer&& r) : pointer(r) {}
+  // pointer& operator=(pointer&& r) {
+  //   *this = r;
+  //   return *this;
+  // }
+
+  friend void swap(pointer& l, pointer& r) {
+    using std::swap;
+    swap(l.id, r.id);
+    auto l_resolved = l.resolved_.load();
+    auto r_resolved = r.resolved_.exchange(l_resolved);
+    l.resolved_.exchange(r_resolved);
+  }
+
+  ToAny<shared_const> operator->() const { return dereference(); }
+  ToAny<shared_const> operator*() const { return dereference(); }
+  ToAny<shared_const> dereference() const {
+    if (id_ == no_id) return {};
+    if (resolved_) return *load();
+    auto dereferenced = GetRunningObjectTable().dereference(id_);
+    resolved_.exchange(dereferenced );
+    return *load();
+  }
+
+ private:
+  auto load() const {
+    return borrow_as<ToAny<shared_const>>(resolved_.load()->get_object());
+  }
+  id_t id_ = no_id;
+  mutable std::atomic<lockable*> resolved_ = nullptr;
+};
+
 }  // namespace example_db
 
 namespace example_app {
+
+example_db::running_object_table rot;
+
+example_db::running_object_table& GetRunningObjectTable() { return rot; }
+
+template <template <is_erased_data> typename ToAny>
+using pointer = example_db::pointer<ToAny, GetRunningObjectTable>;
 
 ANY_(any_named, example_db::any_object,
      (ANY_CONST_METHOD(std::string, get_name)))
@@ -151,22 +221,22 @@ struct named {
   std::string get_name() const { return name; };
 };
 
-struct person : named {
-  using named::named;
-};
-// ANY_REGISTER_MODEL(person, any_named);
 struct role : named {
   using named::named;
 };
 ANY_REGISTER_MODEL(role, any_named);
+
+struct person : named {
+  using named::named;
+  pointer<any_named> role;
+};
+// ANY_REGISTER_MODEL(person, any_named);
 
 }  // namespace example_app
 
 TEST_CASE("example XX/ running object table") {
   using namespace example_db;
   using namespace example_app;
-
-  running_object_table rot;
 
   auto id_miller = rot.insert<any_named, person>("Miller");
   CHECK(id_miller == 0);
@@ -178,11 +248,14 @@ TEST_CASE("example XX/ running object table") {
   auto id_manager = rot.insert<any_named, role>("Manager");
   CHECK(id_manager == 3);
 
-  CHECK(unerase_cast<person>(*rot.dereference(id_miller))->name == "Miller");
-  CHECK(unerase_cast<person>(*rot.dereference(id_johnson))->name == "Johnson");
-  CHECK(unerase_cast<role>(*rot.dereference(id_programmer))->name ==
-        "Programmer");
-  CHECK(unerase_cast<role>(*rot.dereference(id_manager))->name == "Manager");
+  CHECK(unerase_cast<person>(*rot.dereference_as<any_named>(id_miller))->name ==
+        "Miller");
+  CHECK(rot.dereference_as<any_named>(id_johnson)->get_name() == "Johnson");
+  CHECK(
+      unerase_cast<role>(*rot.dereference_as<any_named>(id_programmer))->name ==
+      "Programmer");
+  CHECK(unerase_cast<role>(*rot.dereference_as<any_named>(id_manager))->name ==
+        "Manager");
 
   {
     bool found_one = false;
@@ -215,10 +288,25 @@ TEST_CASE("example XX/ running object table") {
     auto update = rot.checkout(id_johnson);
     CHECK(update);
   }
+
+  {
+    example_app::pointer<any_named> role_pointer{id_programmer};
+    auto programmer_any  = role_pointer.dereference();
+    auto programmer = unerase_cast<role>(programmer_any);
+    CHECK(programmer->name == "Programmer");
+  }
+
   rot.checkout(id_johnson).transform([&](updateable&& update) {
     unerase_cast<person>(update.object)->name = "Miller";
+    unerase_cast<person>(update.object)->role = id_programmer;
     rot.checkin(std::move(update));
     return true;
   });
-  CHECK(unerase_cast<person>(*rot.dereference(id_johnson))->name == "Miller");
+  {
+    auto miller = rot.dereference_as<any_named>(id_johnson);
+    CHECK(miller->get_name() == "Miller");
+    auto unerased = unerase_cast<person>(*miller);
+    auto role = unerased->role;
+    CHECK(role->get_name() == "Programmer");
+  }
 }
