@@ -26,7 +26,13 @@ class lockable {
   friend class running_object_table;
 
  public:
-  lockable(any_object<shared_const> o) : object(std::move(o)) {};
+  lockable(any_object<shared_const> o) { set_object(std::move(o)); };
+  ~lockable() { delete object_.load(); }
+
+  any_object<shared_const> get_object() const { return *object_.load(); }
+  void set_object(any_object<shared_const> o) {
+    delete object_.exchange(new any_object<shared_const>(std::move(o)));
+  }
 
  private:
   lockable(lockable const&) = delete;
@@ -34,7 +40,7 @@ class lockable {
   lockable(lockable&&) = default;
   lockable& operator=(lockable&&) = default;
 
-  any_object<shared_const> object;
+  std::atomic<any_object<shared_const>*> object_ = nullptr;
   std::atomic_int lock_count = 0;
 };
 
@@ -44,17 +50,13 @@ class locked_count {
   ~locked_count() {
     if (locked) locked->lock_count--;
   }
-  locked_count(locked_count const& r){
-      (*this) = r;
-  }
+  locked_count(locked_count const& r) { (*this) = r; }
   locked_count& operator=(locked_count const& r) {
     locked = r.locked;
     locked->lock_count++;
     return *this;
   }
-  locked_count(locked_count&& r) {
-    (*this) = std::move(r);
-  }
+  locked_count(locked_count&& r) { (*this) = std::move(r); }
   locked_count& operator=(locked_count&& r) {
     locked = r.locked;
     r.locked = nullptr;
@@ -101,7 +103,7 @@ class running_object_table {
 
   std::optional<any_object<shared_const>> dereference(id_t id) const {
     if (auto found = table_.find(id); found != table_.end())
-      return found->second->object;
+      return found->second->get_object();
     return {};
   }
 
@@ -110,9 +112,8 @@ class running_object_table {
   std::generator<identified const&> find(Query const& match,
                                          Args&&... args) const {
     for (auto const& [id, holder] : table_)
-      if (auto o = borrow_as<AnyObject<shared_const>>(holder->object))
-        if (match(o, std::forward<Args>(args)...))
-          co_yield {id, holder->object};
+      if (auto o = borrow_as<AnyObject<shared_const>>(holder->get_object()))
+        if (match(o, std::forward<Args>(args)...)) co_yield {id, *o};
   }
 
   std::optional<updateable> checkout(id_t id) {
@@ -120,7 +121,7 @@ class running_object_table {
       if (locked_count locked{*found->second}; found->second->lock_count == 1)
         return std::optional<updateable>{std::in_place, found->first,
                                          std::move(locked),
-                                         found->second->object};
+                                         found->second->get_object()};
       else
         return {};
 
@@ -128,8 +129,8 @@ class running_object_table {
   }
 
   void checkin(updateable updated) {
-    table_[updated.id]->object =
-        move_to<any_object<shared_const>>(std::move(updated.object));
+    table_[updated.id]->set_object(
+        move_to<any_object<shared_const>>(std::move(updated.object)));
   }
 };
 
