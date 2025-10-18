@@ -1143,21 +1143,24 @@ auto as(typed_any<From, Any> source)
 // --------------------------------------------------------------------------------
 // any borrow, clone, lock, move
 
-template <is_any ToAny, is_erased_data FromAny>
-  requires borrowable_from<typename ToAny::erased_data_t, FromAny>
-std::expected<ToAny, cast_error> borrow_as(FromAny const& vv_from,
+template <is_any ToAny, is_erased_data FromErasedData>
+  requires borrowable_from<typename ToAny::erased_data_t, FromErasedData>
+std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
                                            const meta_data& meta_data) {
   using to = typename ToAny::erased_data_t;
   return query_v_table<ToAny>(meta_data).transform(
-      [&](auto v_table) { return ToAny{borrow_as<to>(vv_from), v_table}; });
+      [&](auto v_table) { return ToAny{borrow_as<to>(from), v_table}; });
 }
 
 template <is_any ToAny, is_any FromAny>
   requires borrowable_from<typename ToAny::erased_data_t,
                            typename FromAny::erased_data_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
-  if constexpr (std::derived_from<typename ToAny::v_table_t,
-                                  typename FromAny::v_table_t>) {
+  if constexpr (std::same_as<typename ToAny::v_table_t,
+                             typename FromAny::v_table_t>) {
+    return from;
+  } else if constexpr (std::derived_from<typename ToAny::v_table_t,
+                                         typename FromAny::v_table_t>) {
     if (auto to = downcast_to<ToAny>(from)) return *to;
   }
   return borrow_as<ToAny>(get_erased_data(from), get_meta_data(from));
