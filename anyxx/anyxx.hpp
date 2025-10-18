@@ -932,12 +932,6 @@ class any_base {
   void* operator[](void*) const { return {}; }
 };
 
-template <typename V_TABLE, is_erased_data ErasedData>
-struct interface_t;
-
-template <typename V_TABLE, is_erased_data ErasedData>
-using interface_for = typename interface_t<V_TABLE, ErasedData>::type;
-
 template <is_erased_data ErasedData>
 auto& get_erased_data(any_base<ErasedData> const& any) {
   return any.erased_data_;
@@ -1060,19 +1054,21 @@ auto query_v_table(any_base_v_table* from) {
 // --------------------------------------------------------------------------------
 // typed any
 
-template <typename V, is_any Any>
-struct typed_any : public Any {
-  using erased_data_t = Any::erased_data_t;
-  using trait_t = Any::trait_t;
+template <typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+struct typed_any : public Any<ErasedData> {
+  using erased_data_t = ErasedData;
+  using any_t = Any<ErasedData>;
+  using trait_t = any_t::trait_t;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
 
-  using Any::Any;
+  using any_t::any_t;
 
-  typed_any(V const& v) : Any(v) {}
-  typed_any(V&& v) : Any(std::move(v)) {}
-  typed_any(Any i) : Any(i) { check_type_match<V>(get_meta_data(*this)); }
+  typed_any(V const& v) : any_t(v) {}
+  typed_any(V&& v) : any_t(std::move(v)) {}
+  typed_any(any_t i) : any_t(i) { check_type_match<V>(get_meta_data(*this)); }
 
   value_t const& operator*() const {
     return *unchecked_unerase_cast<value_t const>(this->erased_data_);
@@ -1103,40 +1099,54 @@ struct typed_any : public Any {
   }
 };
 
-template <typename V, is_any Any>
-bool has_data(typed_any<V, Any> const& vv) {
+template <typename V, template <is_erased_data> typename Any>
+struct bound_typed_any_impl {
+  template <is_erased_data ErasedData>
+  using type = typed_any<V, Any, ErasedData>;
+};
+template <typename V, template <is_erased_data> typename Any>
+using bound_typed_any = bound_typed_any_impl<V, Any>;
+
+template <typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+bool has_data(typed_any<V, Any, ErasedData> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, is_any Any>
-void const* get_void_data_ptr(typed_any<V, Any> const& vv)
-  requires is_const_void<typename Any::void_t>
+template <typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+void const* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
+  requires is_const_void<typename Any<ErasedData>::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_any Any>
-void* get_void_data_ptr(typed_any<V, Any> const& vv)
-  requires(!is_const_void<typename Any::void_t>)
+template <typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+void* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
+  requires(!is_const_void<typename Any<ErasedData>::void_t>)
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, is_any Any>
-auto get_meta(typed_any<V, Any> const& vv) {
+template <typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+auto get_meta(typed_any<V, Any, ErasedData> const& vv) {
   return Any::trait_t::meta(vv.erased_data_);
 }
 
-template <typename V, is_any Any>
-auto as(Any source) {
-  return typed_any<V, Any>{std::move(source)};
+template <typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+auto as(Any<ErasedData> source) {
+  return typed_any<V, Any, ErasedData>{std::move(source)};
 }
 
-template <typename To, typename From, is_any Any>
-auto as(typed_any<From, Any> source)
-  requires std::convertible_to<From*, To*>
+template <typename To, typename V, template <is_erased_data> typename Any,
+          is_erased_data ErasedData>
+auto as(typed_any<V, Any, ErasedData> source)
+  requires std::convertible_to<V*, To*>
 {
-  if constexpr (typed_any<From, Any>::is_const) {
-    return typed_any<To const, Any>{std::move(source.erased_data_)};
+  if constexpr (typed_any<V, Any, ErasedData>::is_const) {
+    return typed_any<To const, Any, ErasedData>{std::move(source.erased_data_)};
   } else {
-    return typed_any<To, Any>{std::move(source.erased_data_)};
+    return typed_any<To, Any, ErasedData>{std::move(source.erased_data_)};
   }
 }
 

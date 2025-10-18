@@ -204,7 +204,7 @@ TEST_CASE("dynamic any shared_const") {
   std::cout << "print_shape_vv ********************************" << std::endl;
 
   using typed_circle_shape_shared_const =
-      typed_any<circle, any_shape<shared_const>>;
+      typed_any<circle, any_shape, shared_const>;
   typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));

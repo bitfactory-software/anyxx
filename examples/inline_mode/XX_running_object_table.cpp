@@ -136,6 +136,16 @@ class running_object_table {
         if (match(o, std::forward<Args>(args)...)) co_yield {id, *o};
   }
 
+  template <typename V, template <is_erased_data> typename AnyObject,
+            typename Query, typename... Args>
+  std::generator<
+      identified<typename bound_typed_any<V, AnyObject>::type> const&>
+  find(Query const& match, Args&&... args) const {
+    for (auto const& [id, o] :
+         find<AnyObject>(match, std::forward<Args>(args)...))
+      if (auto typed = unerase_cast<V>(&o)) co_yield {id, as<V>(o)};
+  }
+
   std::optional<updateable> checkout(id_t id) {
     if (auto found = table_.find(id); found != table_.end())
       if (locked_count locked{*found->second}; found->second->lock_count == 1)
@@ -171,12 +181,6 @@ class pointer {
     return *this;
   }
 
-  // pointer(pointer&& r) : pointer(r) {}
-  // pointer& operator=(pointer&& r) {
-  //   *this = r;
-  //   return *this;
-  // }
-
   friend void swap(pointer& l, pointer& r) {
     using std::swap;
     swap(l.id, r.id);
@@ -203,12 +207,22 @@ class pointer {
   mutable std::atomic<lockable*> resolved_ = nullptr;
 };
 
+// template <typename To, auto GetRunningObjectTable>
+// class typed_pointer : public pointer<any_object, GetRunningObjectTable> {
+//  public:
+//   using pointer::pointer;
+//   To const* operator->() const { return dereference(); }
+//   To const& operator*() const { return dereference(); }
+//   To const* dereference() const {
+//       return
+//  }
+// };
+
 auto match_all = [](auto const& o) { return true; };
 
 }  // namespace example_db
 
 namespace example_app {
-
 example_db::running_object_table rot;
 
 example_db::running_object_table& GetRunningObjectTable() { return rot; }
@@ -236,7 +250,7 @@ ANY_REGISTER_MODEL(role, any_named);
 
 struct person : named {
   using named::named;
-  pointer<any_named> role;
+  pointer<bound_typed_any<example_app::role, any_named>::type> role;
   double salary = 1000;
 };
 ANY_REGISTER_MODEL(person, any_named);
@@ -303,10 +317,11 @@ TEST_CASE("example XX/ running object table") {
   }
 
   {
-    example_app::pointer<any_named> role_pointer{id_programmer};
+    example_app::pointer<bound_typed_any<role, any_named>::type> role_pointer{
+        id_programmer};
     auto programmer_any = role_pointer.dereference();
-    auto programmer = unerase_cast<role>(programmer_any);
-    CHECK(programmer->name == "Programmer");
+    //    auto programmer = unerase_cast<role>(programmer_any);
+    CHECK(programmer_any->name == "Programmer");
   }
 
   rot.checkout(id_johnson).transform([&](updateable&& update) {
@@ -361,11 +376,11 @@ TEST_CASE("example XX/ running object table") {
   v.emplace_back(salary_lottery, 50, 10ms);
   v.emplace_back(salary_lottery, -20, 5ms);
   for (auto& tr : v) tr.join();
-  std::println("update with {} misses and {} hits.", misses.load(), hits.load());
+  std::println("update with {} misses and {} hits.", misses.load(),
+               hits.load());
   CHECK(misses.load() + hits.load() == 200);
-  for (auto found : rot.find<any_named>(match_all)) {
-    if (auto p = unerase_cast<person>(&found.second)) {
-      std::println("({}){}: {}", found.first, p->name, p->salary);
-    }
+  for (auto found : rot.find<person, any_named>(match_all)) {
+    std::println("({}){}: {}", found.first, found.second->name,
+                 found.second->salary);
   }
 }
