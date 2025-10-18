@@ -349,6 +349,8 @@ TEST_CASE("example XX/ running object table") {
   std::vector<std::thread> v;
   v.emplace_back(salary_loterie, 500, 20ms);
   v.emplace_back(salary_loterie, -200, 20ms);
+  v.emplace_back(salary_loterie, 50, 10ms);
+  v.emplace_back(salary_loterie, -20, 10ms);
   for (auto& tr : v) tr.join();
   for (auto found : rot.find<any_named>(match_all)) {
     if (auto p = unerase_cast<person>(&found.second)) {
