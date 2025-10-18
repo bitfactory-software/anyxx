@@ -330,21 +330,30 @@ TEST_CASE("example XX/ running object table") {
     }
   }
 
+  std::atomic<int> hits = 0;
+  std::atomic<int> misses = 0;
   auto salary_lottery = [&](double inc, auto frequence) {
     std::random_device r;
     std::default_random_engine e1(r());
     std::uniform_int_distribution<int> uniform_dist(0, 1);
 
-    for (auto i : std::views::iota(0, 59)) {
+    for (auto i : std::views::iota(0, 50)) {
       auto person_id = uniform_dist(e1);
-      rot.checkout(person_id).transform([&](updateable&& update) {
-        unerase_cast<person>(update.object)->salary += inc;
-        rot.checkin(std::move(update));
-        return true;
-      });
+      rot.checkout(person_id)
+          .or_else([&] -> std ::optional<updateable> {
+            misses++;
+            return {};
+          })
+          .transform([&](updateable&& update) {
+            unerase_cast<person>(update.object)->salary += inc;
+            rot.checkin(std::move(update));
+            hits++;
+            return true;
+          });
       std::this_thread::sleep_for(frequence);
     }
   };
+
   using namespace std::chrono_literals;
   std::vector<std::thread> v;
   v.emplace_back(salary_lottery, 500, 20ms);
@@ -352,6 +361,8 @@ TEST_CASE("example XX/ running object table") {
   v.emplace_back(salary_lottery, 50, 10ms);
   v.emplace_back(salary_lottery, -20, 5ms);
   for (auto& tr : v) tr.join();
+  std::println("update with {} misses and {} hits.", misses.load(), hits.load());
+  CHECK(misses.load() + hits.load() == 200);
   for (auto found : rot.find<any_named>(match_all)) {
     if (auto p = unerase_cast<person>(&found.second)) {
       std::println("({}){}: {}", found.first, p->name, p->salary);
