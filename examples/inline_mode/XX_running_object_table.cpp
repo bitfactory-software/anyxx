@@ -235,7 +235,6 @@ class arena {
 namespace example_app {
 struct example_tag;
 using arena = example_db::arena<example_tag>;
-arena rot;
 }  // namespace example_app
 
 namespace example_db {
@@ -274,35 +273,37 @@ ANY_REGISTER_MODEL(person, any_named);
 
 }  // namespace example_app
 
-TEST_CASE("example XX/ running object table") {
+TEST_CASE("example XX/ arena 1") {
   using namespace example_app;
 
-  auto id_miller = rot.insert<any_named, person>("Miller");
+  arena db;
+
+  auto id_miller = db.insert<any_named, person>("Miller");
   CHECK(id_miller == 0);
-  auto id_johnson = rot.insert<any_named, person>("Johnson");
+  auto id_johnson = db.insert<any_named, person>("Johnson");
   CHECK(id_johnson == 1);
 
-  auto id_programmer = rot.insert<arena::any_object, role>("Programmer");
+  auto id_programmer = db.insert<arena::any_object, role>("Programmer");
   CHECK(id_programmer == 2);
-  auto id_manager = rot.insert<any_named, role>("Manager");
+  auto id_manager = db.insert<any_named, role>("Manager");
   CHECK(id_manager == 3);
 
-  CHECK(unerase_cast<person>(*rot.dereference_as<any_named>(id_miller))->name ==
+  CHECK(unerase_cast<person>(*db.dereference_as<any_named>(id_miller))->name ==
         "Miller");
-  CHECK(rot.dereference_as<any_named>(id_johnson)->get_name() == "Johnson");
+  CHECK(db.dereference_as<any_named>(id_johnson)->get_name() == "Johnson");
   CHECK(
-      unerase_cast<role>(*rot.dereference_as<any_named>(id_programmer))->name ==
+      unerase_cast<role>(*db.dereference_as<any_named>(id_programmer))->name ==
       "Programmer");
-  CHECK(unerase_cast<role>(*rot.dereference_as<any_named>(id_manager))->name ==
+  CHECK(unerase_cast<role>(*db.dereference_as<any_named>(id_manager))->name ==
         "Manager");
 
-  for (auto found : rot.find<any_named>(arena::match_all)) {
+  for (auto found : db.find<any_named>(arena::match_all)) {
     std::println("{}: {}", found.id(), found->get_name());
   }
 
   {
     bool found_one = false;
-    for (auto found : rot.find<any_named>(match_name, "Johnson")) {
+    for (auto found : db.find<any_named>(match_name, "Johnson")) {
       CHECK(found.id() == id_johnson);
       CHECK(unerase_cast<person>(*found)->name == "Johnson");
       found_one = true;
@@ -311,7 +312,7 @@ TEST_CASE("example XX/ running object table") {
   }
   {
     bool found_one = false;
-    for (auto found : rot.find<any_named>(match_name, "Programmer")) {
+    for (auto found : db.find<any_named>(match_name, "Programmer")) {
       CHECK(found.id() == id_programmer);
       CHECK(unerase_cast<role>(*found)->name == "Programmer");
       found_one = true;
@@ -319,45 +320,45 @@ TEST_CASE("example XX/ running object table") {
     CHECK(found_one);
   }
 
-  auto update = rot.checkout(id_johnson);
+  auto update = db.checkout(id_johnson);
   CHECK(update);
-  CHECK(!rot.checkout(id_johnson));
-  rot.checkin(std::move(*update));
+  CHECK(!db.checkout(id_johnson));
+  db.checkin(std::move(*update));
   {
-    auto update = rot.checkout(id_johnson);
+    auto update = db.checkout(id_johnson);
     CHECK(update);
   }
   {
-    auto update = rot.checkout(id_johnson);
+    auto update = db.checkout(id_johnson);
     CHECK(update);
   }
 
   {
     example_app::pointer<bound_typed_any<role, any_named>::type> role_pointer{
-        *rot.find_front<bound_typed_any<role, any_named>::type>(match_name,
+        *db.find_front<bound_typed_any<role, any_named>::type>(match_name,
                                                                 "Programmer")};
     auto programmer_any = role_pointer.dereference();
     CHECK(programmer_any->name == "Programmer");
   }
 
-  rot.checkout(id_johnson).transform([&](arena::updateable&& update) {
+  db.checkout(id_johnson).transform([&](arena::updateable&& update) {
     CHECK(update.id == id_johnson);
     unerase_cast<person>(update.object)->name = "Smith";
     unerase_cast<person>(update.object)->role =
-        *rot.find_front<bound_typed_any<role, any_named>::type>(match_name,
+        *db.find_front<bound_typed_any<role, any_named>::type>(match_name,
                                                                 "Programmer");
-    rot.checkin(std::move(update));
+    db.checkin(std::move(update));
     return true;
   });
   {
-    auto miller = rot.dereference_as<any_named>(id_johnson);
+    auto miller = db.dereference_as<any_named>(id_johnson);
     CHECK(miller->get_name() == "Smith");
     auto unerased = unerase_cast<person>(*miller);
     auto role = unerased->role;
     CHECK(role->get_name() == "Programmer");
   }
 
-  for (auto found : rot.find<any_named>(arena::match_all)) {
+  for (auto found : db.find<any_named>(arena::match_all)) {
     if (auto p = unerase_cast_if<person>(*found)) {
       std::println("({}){}: {}", found.id(), p->name, p->salary);
     }
@@ -372,14 +373,14 @@ TEST_CASE("example XX/ running object table") {
 
     for (auto i : std::views::iota(0, 50)) {
       auto person_id = uniform_dist(e1);
-      rot.checkout(person_id)
+      db.checkout(person_id)
           .or_else([&] -> std ::optional<arena::updateable> {
             misses++;
             return {};
           })
           .transform([&](arena::updateable&& update) {
             unerase_cast<person>(update.object)->salary += inc;
-            rot.checkin(std::move(update));
+            db.checkin(std::move(update));
             hits++;
             return true;
           });
@@ -397,7 +398,7 @@ TEST_CASE("example XX/ running object table") {
   std::println("update with {} misses and {} hits.", misses.load(),
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
-  for (auto found : rot.find<person, any_named>(arena::match_all)) {
+  for (auto found : db.find<person, any_named>(arena::match_all)) {
     std::println("({}){}: {}", found.id(), found->name, found->salary);
   }
 }
