@@ -273,7 +273,7 @@ ANY_REGISTER_MODEL(person, any_named);
 
 }  // namespace example_app
 
-TEST_CASE("example XX/ arena 1") {
+TEST_CASE("example XX/ arena copy on write") {
   using namespace example_app;
 
   arena db;
