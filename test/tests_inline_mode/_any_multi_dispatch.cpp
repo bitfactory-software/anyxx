@@ -45,9 +45,9 @@ std::string operator<=>(any_thing<const_observer> const& l,
 
 TEST_CASE("multi_dispatch") {
   CHECK(any_thing_v_table::imlpementation<Asteroid>()
-            ->own_dispatch_holder_t::dispatch_table->size() == 2);
+            ->own_dispatch_holder_t::dispatch_table->size() == 3);
   CHECK(any_thing_v_table::imlpementation<Spaceship>()
-            ->own_dispatch_holder_t::dispatch_table->size() == 2);
+            ->own_dispatch_holder_t::dispatch_table->size() == 3);
 
   Asteroid asteroid;
   Spaceship spaceship;

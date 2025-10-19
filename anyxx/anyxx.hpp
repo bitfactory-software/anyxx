@@ -1409,7 +1409,6 @@ struct ensure_function_ptr_from_functor_t {
       return FUNCTOR{}(classes..., args...);
     };
   };
-
   template <typename FUNCTOR, is_any Any, typename... Args>
   struct striped_virtuals<FUNCTOR, virtual_<Any>, Args...>
       : striped_virtuals<FUNCTOR, Args...> {};
@@ -1536,8 +1535,9 @@ struct dispatch<R(Args...)> {
     using v_table_t = typename interface_t::v_table_t;
     using next_t = dispatch_access<kind::multiple, Dimension + 1, Args...>;
 
-    std::size_t index_ = dispatchs_count<v_table_t>()++;
-    std::size_t dispatch_dimension_size_ = 0;
+    // index 0 is for the 'wildcard' functions
+    std::size_t index_ = 1 + dispatchs_count<v_table_t>()++;
+    std::size_t dispatch_dimension_size_ = 1;
 
     template <typename CLASS, typename... Classes>
     auto define(auto fp, auto& matrix) {
