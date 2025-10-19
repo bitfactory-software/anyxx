@@ -21,10 +21,17 @@ ANY_HAS_DISPATCH(example_db, any_object)
 namespace example_db {
 
 using id_t = uint64_t;
+static inline constexpr const int no_id = -1;
 ANY(any_object, )
 
+class lockable;
+
 template <template <is_erased_data> typename Any>
-using identified = std::pair<id_t, Any<shared_const>>;
+struct identified {
+  id_t id = no_id;
+  Any<shared_const> any;
+  lockable* lockable = nullptr;
+};
 
 class lockable {
   friend class locked_count;
@@ -91,8 +98,6 @@ class updateable {
   locked_count locked_count_;
 };
 
-static inline constexpr const int no_id = -1;
-
 class running_object_table {
   std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
   id_t next_id = 0;
@@ -133,7 +138,18 @@ class running_object_table {
                                                     Args&&... args) const {
     for (auto const& [id, holder] : table_)
       if (auto o = borrow_as<AnyObject<shared_const>>(holder->get_object()))
-        if (match(o, std::forward<Args>(args)...)) co_yield {id, *o};
+        if (match(o, std::forward<Args>(args)...))
+          co_yield {id, *o, holder.get()};
+  }
+
+  template <template <is_erased_data> typename AnyObject, typename Query,
+            typename... Args>
+  std::optional<identified<AnyObject>> find_front(Query const& match,
+                                                  Args&&... args) const {
+    for (auto const& identified :
+         find<AnyObject>(match, std::forward<Args>(args)...))
+      return identified;
+    return {};
   }
 
   template <typename V, template <is_erased_data> typename AnyObject,
@@ -141,9 +157,9 @@ class running_object_table {
   std::generator<
       identified<typename bound_typed_any<V, AnyObject>::type> const&>
   find(Query const& match, Args&&... args) const {
-    for (auto const& [id, o] :
+    for (auto const& [id, o, lockable] :
          find<AnyObject>(match, std::forward<Args>(args)...))
-      if (auto typed = unerase_cast<V>(&o)) co_yield {id, as<V>(o)};
+      if (auto typed = unerase_cast<V>(&o)) co_yield {id, as<V>(o), lockable};
   }
 
   std::optional<updateable> checkout(id_t id) {
@@ -166,24 +182,34 @@ class running_object_table {
 
 template <template <is_erased_data> typename ToAny, auto GetRunningObjectTable>
 class pointer {
- public:
-  pointer() = default;
-
-  pointer(id_t id) { (*this) = id; }
+  friend class running_object_table;
+  pointer(id_t id) noexcept { (*this) = id; }
   pointer& operator=(id_t id) {
     this->id_ = id;
     return *this;
   }
 
-  pointer(pointer const& r) : id_(r.id_), resolved_(r.resolved_.load()) {}
-  pointer& operator=(pointer& r) {
+ public:
+  pointer() = default;
+
+  pointer(identified<ToAny> const& r) noexcept
+      : id_(r.id), resolved_(r.lockable) {}
+  pointer& operator=(identified<ToAny> const& r) noexcept {
+    pointer p{r};
+    swap(*this, p);
+    return *this;
+  }
+
+  pointer(pointer const& r) noexcept
+      : id_(r.id_), resolved_(r.resolved_.load()) {}
+  pointer& operator=(pointer& r) noexcept {
     swap(*this, r);
     return *this;
   }
 
-  friend void swap(pointer& l, pointer& r) {
+  friend void swap(pointer& l, pointer& r) noexcept {
     using std::swap;
-    swap(l.id, r.id);
+    swap(l.id_, r.id_);
     auto l_resolved = l.resolved_.load();
     auto r_resolved = r.resolved_.exchange(l_resolved);
     l.resolved_.exchange(r_resolved);
@@ -206,17 +232,6 @@ class pointer {
   id_t id_ = no_id;
   mutable std::atomic<lockable*> resolved_ = nullptr;
 };
-
-// template <typename To, auto GetRunningObjectTable>
-// class typed_pointer : public pointer<any_object, GetRunningObjectTable> {
-//  public:
-//   using pointer::pointer;
-//   To const* operator->() const { return dereference(); }
-//   To const& operator*() const { return dereference(); }
-//   To const* dereference() const {
-//       return
-//  }
-// };
 
 auto match_all = [](auto const& o) { return true; };
 
@@ -281,14 +296,14 @@ TEST_CASE("example XX/ running object table") {
         "Manager");
 
   for (auto found : rot.find<any_named>(match_all)) {
-    std::println("{}: {}", found.first, found.second->get_name());
+    std::println("{}: {}", found.id, found.any->get_name());
   }
 
   {
     bool found_one = false;
     for (auto found : rot.find<any_named>(match_name, "Johnson")) {
-      CHECK(found.first == id_johnson);
-      CHECK(unerase_cast<person>(found.second)->name == "Johnson");
+      CHECK(found.id == id_johnson);
+      CHECK(unerase_cast<person>(found.any)->name == "Johnson");
       found_one = true;
     }
     CHECK(found_one);
@@ -296,8 +311,8 @@ TEST_CASE("example XX/ running object table") {
   {
     bool found_one = false;
     for (auto found : rot.find<any_named>(match_name, "Programmer")) {
-      CHECK(found.first == id_programmer);
-      CHECK(unerase_cast<role>(found.second)->name == "Programmer");
+      CHECK(found.id == id_programmer);
+      CHECK(unerase_cast<role>(found.any)->name == "Programmer");
       found_one = true;
     }
     CHECK(found_one);
@@ -318,16 +333,18 @@ TEST_CASE("example XX/ running object table") {
 
   {
     example_app::pointer<bound_typed_any<role, any_named>::type> role_pointer{
-        id_programmer};
+        *rot.find_front<bound_typed_any<role, any_named>::type>(match_name,
+                                                                "Programmer")};
     auto programmer_any = role_pointer.dereference();
-    //    auto programmer = unerase_cast<role>(programmer_any);
     CHECK(programmer_any->name == "Programmer");
   }
 
   rot.checkout(id_johnson).transform([&](updateable&& update) {
     CHECK(update.id == id_johnson);
     unerase_cast<person>(update.object)->name = "Smith";
-    unerase_cast<person>(update.object)->role = id_programmer;
+    unerase_cast<person>(update.object)->role =
+        *rot.find_front<bound_typed_any<role, any_named>::type>(match_name,
+                                                                "Programmer");
     rot.checkin(std::move(update));
     return true;
   });
@@ -340,8 +357,8 @@ TEST_CASE("example XX/ running object table") {
   }
 
   for (auto found : rot.find<any_named>(match_all)) {
-    if (auto p = unerase_cast<person>(&found.second)) {
-      std::println("({}){}: {}", found.first, p->name, p->salary);
+    if (auto p = unerase_cast<person>(&found.any)) {
+      std::println("({}){}: {}", found.id, p->name, p->salary);
     }
   }
 
@@ -380,7 +397,6 @@ TEST_CASE("example XX/ running object table") {
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
   for (auto found : rot.find<person, any_named>(match_all)) {
-    std::println("({}){}: {}", found.first, found.second->name,
-                 found.second->salary);
+    std::println("({}){}: {}", found.id, found.any->name, found.any->salary);
   }
 }
