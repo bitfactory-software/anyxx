@@ -20,99 +20,151 @@ ANY_HAS_DISPATCH(example_db, any_object)
 
 namespace example_db {
 
-using id_t = uint64_t;
-static inline constexpr const int no_id = -1;
 ANY(any_object, )
 
-class lockable;
-
-template <template <is_erased_data> typename Any>
-struct identified {
-  id_t id = no_id;
-  Any<shared_const> any;
-  lockable* lockable = nullptr;
-};
-
-class lockable {
-  friend class locked_count;
-  friend class updateable;
-  friend class arena;
-
- public:
-  lockable(any_object<shared_const> o) { set_object(std::move(o)); };
-  ~lockable() { delete object_.load(); }
-
-  any_object<shared_const> get_object() const { return *object_.load(); }
-  void set_object(any_object<shared_const> o) {
-    delete object_.exchange(new any_object<shared_const>(std::move(o)));
-  }
-
- private:
-  lockable(lockable const&) = delete;
-  lockable& operator=(lockable const&) = delete;
-  lockable(lockable&&) = default;
-  lockable& operator=(lockable&&) = default;
-
-  std::atomic<any_object<shared_const>*> object_ = nullptr;
-  std::atomic_int lock_count = 0;
-};
-
-class locked_count {
- public:
-  locked_count(lockable& lockable) : locked(&lockable) { locked->lock_count++; }
-  ~locked_count() {
-    if (locked) locked->lock_count--;
-  }
-  locked_count(locked_count const& r) { (*this) = r; }
-  locked_count& operator=(locked_count const& r) {
-    locked = r.locked;
-    locked->lock_count++;
-    return *this;
-  }
-  locked_count(locked_count&& r) { (*this) = std::move(r); }
-  locked_count& operator=(locked_count&& r) {
-    locked = r.locked;
-    r.locked = nullptr;
-    return *this;
-  }
-  friend void swap(locked_count& l, locked_count& r) {
-    using std::swap;
-    swap(l.locked, r.locked);
-  }
-
- private:
-  lockable* locked = nullptr;
-};
-
-class updateable {
- public:
-  updateable(id_t id_, locked_count&& locked_count,
-             any_object<shared_const> const& o)
-      : locked_count_(std::move(locked_count)),
-        id(id_),
-        object(*clone_to<any_object<unique>>(o)) {}
-  const id_t id;
-  any_object<unique> object;
-
- private:
-  locked_count locked_count_;
-};
-
+template <typename Tag>
 class arena {
-  std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
-  id_t next_id = 0;
-
-  lockable* dereference(id_t id) const {
-    if (auto found = table_.find(id); found != table_.end())
-      return found->second.get();
-    return {};
-  }
-
-  template <template <is_erased_data> typename ToAny,
-            auto GetRunningObjectTable>
-  friend class pointer;
-
  public:
+  using id_t = uint64_t;
+  static inline constexpr const int no_id = -1;
+  template< is_erased_data ErasedData>
+  using any_object = example_db::any_object<ErasedData>;
+  class lockable;
+
+  arena(arena const&) = delete;
+  arena& operator=(arena const&) = delete;
+
+  arena() { instance_ = this; }
+  ~arena() { instance_ = nullptr; }
+  static arena& instance() { return *instance_; }
+
+  template <template <is_erased_data> typename Any>
+  struct identified {
+    id_t id = no_id;
+    Any<shared_const> any;
+    lockable* lockable = nullptr;
+  };
+
+  class lockable {
+    friend class locked_count;
+    friend class updateable;
+    friend class arena;
+
+   public:
+    lockable(any_object<shared_const> o) { set_object(std::move(o)); };
+    ~lockable() { delete object_.load(); }
+
+    any_object<shared_const> get_object() const { return *object_.load(); }
+    void set_object(any_object<shared_const> o) {
+      delete object_.exchange(new any_object<shared_const>(std::move(o)));
+    }
+
+   private:
+    lockable(lockable const&) = delete;
+    lockable& operator=(lockable const&) = delete;
+    lockable(lockable&&) = default;
+    lockable& operator=(lockable&&) = default;
+
+    std::atomic<any_object<shared_const>*> object_ = nullptr;
+    std::atomic_int lock_count = 0;
+  };
+
+  class locked_count {
+   public:
+    locked_count(lockable& lockable) : locked(&lockable) {
+      locked->lock_count++;
+    }
+    ~locked_count() {
+      if (locked) locked->lock_count--;
+    }
+    locked_count(locked_count const& r) { (*this) = r; }
+    locked_count& operator=(locked_count const& r) {
+      locked = r.locked;
+      locked->lock_count++;
+      return *this;
+    }
+    locked_count(locked_count&& r) { (*this) = std::move(r); }
+    locked_count& operator=(locked_count&& r) {
+      locked = r.locked;
+      r.locked = nullptr;
+      return *this;
+    }
+    friend void swap(locked_count& l, locked_count& r) {
+      using std::swap;
+      swap(l.locked, r.locked);
+    }
+
+   private:
+    lockable* locked = nullptr;
+  };
+
+  class updateable {
+   public:
+    updateable(id_t id_, locked_count&& locked_count,
+               any_object<shared_const> const& o)
+        : locked_count_(std::move(locked_count)),
+          id(id_),
+          object(*clone_to<any_object<unique>>(o)) {}
+    const id_t id;
+    any_object<unique> object;
+
+   private:
+    locked_count locked_count_;
+  };
+
+  template <template <is_erased_data> typename ToAny>
+  class pointer {
+    friend class arena;
+    pointer(id_t id) noexcept { (*this) = id; }
+    pointer& operator=(id_t id) {
+      this->id_ = id;
+      return *this;
+    }
+
+   public:
+    pointer() = default;
+
+    pointer(identified<ToAny> const& r) noexcept
+        : id_(r.id), resolved_(r.lockable) {}
+    pointer& operator=(identified<ToAny> const& r) noexcept {
+      pointer p{r};
+      swap(*this, p);
+      return *this;
+    }
+
+    pointer(pointer const& r) noexcept
+        : id_(r.id_), resolved_(r.resolved_.load()) {}
+    pointer& operator=(pointer& r) noexcept {
+      swap(*this, r);
+      return *this;
+    }
+
+    friend void swap(pointer& l, pointer& r) noexcept {
+      using std::swap;
+      swap(l.id_, r.id_);
+      auto l_resolved = l.resolved_.load();
+      auto r_resolved = r.resolved_.exchange(l_resolved);
+      l.resolved_.exchange(r_resolved);
+    }
+
+    ToAny<shared_const> operator->() const { return dereference(); }
+    ToAny<shared_const> operator*() const { return dereference(); }
+    ToAny<shared_const> dereference() const {
+      if (id_ == no_id) return {};
+      if (resolved_) return *load();
+      auto dereferenced = arena::instance().dereference(id_);
+      resolved_.exchange(dereferenced);
+      return *load();
+    }
+
+   private:
+    auto load() const {
+      return borrow_as<ToAny<shared_const>>(resolved_.load()->get_object());
+    }
+    id_t id_ = no_id;
+    mutable std::atomic<lockable*> resolved_ = nullptr;
+  };
+
   template <template <is_any> typename AnyObject, typename T, typename... Args>
   id_t insert(Args&&... args) {
     return insert(AnyObject<shared_const>{std::in_place_type<T>,
@@ -131,6 +183,8 @@ class arena {
         return *o;
     return {};
   }
+
+  inline static auto match_all = [](auto const& o) { return true; };
 
   template <template <is_erased_data> typename AnyObject, typename Query,
             typename... Args>
@@ -178,72 +232,36 @@ class arena {
     table_[updated.id]->set_object(
         move_to<any_object<shared_const>>(std::move(updated.object)));
   }
-};
-
-template <template <is_erased_data> typename ToAny, auto GetRunningObjectTable>
-class pointer {
-  friend class arena;
-  pointer(id_t id) noexcept { (*this) = id; }
-  pointer& operator=(id_t id) {
-    this->id_ = id;
-    return *this;
-  }
-
- public:
-  pointer() = default;
-
-  pointer(identified<ToAny> const& r) noexcept
-      : id_(r.id), resolved_(r.lockable) {}
-  pointer& operator=(identified<ToAny> const& r) noexcept {
-    pointer p{r};
-    swap(*this, p);
-    return *this;
-  }
-
-  pointer(pointer const& r) noexcept
-      : id_(r.id_), resolved_(r.resolved_.load()) {}
-  pointer& operator=(pointer& r) noexcept {
-    swap(*this, r);
-    return *this;
-  }
-
-  friend void swap(pointer& l, pointer& r) noexcept {
-    using std::swap;
-    swap(l.id_, r.id_);
-    auto l_resolved = l.resolved_.load();
-    auto r_resolved = r.resolved_.exchange(l_resolved);
-    l.resolved_.exchange(r_resolved);
-  }
-
-  ToAny<shared_const> operator->() const { return dereference(); }
-  ToAny<shared_const> operator*() const { return dereference(); }
-  ToAny<shared_const> dereference() const {
-    if (id_ == no_id) return {};
-    if (resolved_) return *load();
-    auto dereferenced = GetRunningObjectTable().dereference(id_);
-    resolved_.exchange(dereferenced);
-    return *load();
-  }
 
  private:
-  auto load() const {
-    return borrow_as<ToAny<shared_const>>(resolved_.load()->get_object());
-  }
-  id_t id_ = no_id;
-  mutable std::atomic<lockable*> resolved_ = nullptr;
-};
+  std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
+  id_t next_id = 0;
 
-auto match_all = [](auto const& o) { return true; };
+  lockable* dereference(id_t id) const {
+    if (auto found = table_.find(id); found != table_.end())
+      return found->second.get();
+    return {};
+  }
+
+  static arena* instance_;
+};
 
 }  // namespace example_db
 
 namespace example_app {
-example_db::arena rot;
+struct example_tag;
+using arena = example_db::arena<example_tag>;
+arena rot;
+}  // namespace example_app
 
-example_db::arena& GetRunningObjectTable() { return rot; }
+namespace example_db {
+arena<example_app::example_tag>* arena<example_app::example_tag>::instance_ =
+    nullptr;
+}
 
+namespace example_app {
 template <template <is_erased_data> typename ToAny>
-using pointer = example_db::pointer<ToAny, GetRunningObjectTable>;
+using pointer = arena::pointer<ToAny>;
 
 ANY_(any_named, example_db::any_object,
      (ANY_CONST_METHOD(std::string, get_name)))
@@ -273,7 +291,6 @@ ANY_REGISTER_MODEL(person, any_named);
 }  // namespace example_app
 
 TEST_CASE("example XX/ running object table") {
-  using namespace example_db;
   using namespace example_app;
 
   auto id_miller = rot.insert<any_named, person>("Miller");
@@ -281,7 +298,7 @@ TEST_CASE("example XX/ running object table") {
   auto id_johnson = rot.insert<any_named, person>("Johnson");
   CHECK(id_johnson == 1);
 
-  auto id_programmer = rot.insert<any_object, role>("Programmer");
+  auto id_programmer = rot.insert<arena::any_object, role>("Programmer");
   CHECK(id_programmer == 2);
   auto id_manager = rot.insert<any_named, role>("Manager");
   CHECK(id_manager == 3);
@@ -295,7 +312,7 @@ TEST_CASE("example XX/ running object table") {
   CHECK(unerase_cast<role>(*rot.dereference_as<any_named>(id_manager))->name ==
         "Manager");
 
-  for (auto found : rot.find<any_named>(match_all)) {
+  for (auto found : rot.find<any_named>(arena::match_all)) {
     std::println("{}: {}", found.id, found.any->get_name());
   }
 
@@ -339,7 +356,7 @@ TEST_CASE("example XX/ running object table") {
     CHECK(programmer_any->name == "Programmer");
   }
 
-  rot.checkout(id_johnson).transform([&](updateable&& update) {
+  rot.checkout(id_johnson).transform([&](arena::updateable&& update) {
     CHECK(update.id == id_johnson);
     unerase_cast<person>(update.object)->name = "Smith";
     unerase_cast<person>(update.object)->role =
@@ -356,7 +373,7 @@ TEST_CASE("example XX/ running object table") {
     CHECK(role->get_name() == "Programmer");
   }
 
-  for (auto found : rot.find<any_named>(match_all)) {
+  for (auto found : rot.find<any_named>(arena::match_all)) {
     if (auto p = unerase_cast<person>(&found.any)) {
       std::println("({}){}: {}", found.id, p->name, p->salary);
     }
@@ -372,11 +389,11 @@ TEST_CASE("example XX/ running object table") {
     for (auto i : std::views::iota(0, 50)) {
       auto person_id = uniform_dist(e1);
       rot.checkout(person_id)
-          .or_else([&] -> std ::optional<updateable> {
+          .or_else([&] -> std ::optional<arena::updateable> {
             misses++;
             return {};
           })
-          .transform([&](updateable&& update) {
+          .transform([&](arena::updateable&& update) {
             unerase_cast<person>(update.object)->salary += inc;
             rot.checkin(std::move(update));
             hits++;
@@ -396,7 +413,7 @@ TEST_CASE("example XX/ running object table") {
   std::println("update with {} misses and {} hits.", misses.load(),
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
-  for (auto found : rot.find<person, any_named>(match_all)) {
+  for (auto found : rot.find<person, any_named>(arena::match_all)) {
     std::println("({}){}: {}", found.id, found.any->name, found.any->salary);
   }
 }
