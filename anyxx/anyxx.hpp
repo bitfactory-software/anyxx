@@ -1508,8 +1508,6 @@ struct dispatch<R(Args...)> {
   using dispatch_matrix_t = dispatch_matrix<erased_function_t, Args...>::type;
   dispatch_matrix_t dispatch_matrix_;
 
-  using dispatch_indices = std::array<std::size_t, dimension_count>;
-
   using dispatch_default_t = typename dispatch_default<R, Args...>::type;
   dispatch_default_t::function_t dispatch_default_hook_;
   dispatch_default_t::function_t::connection default_connection_ =
