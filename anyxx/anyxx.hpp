@@ -1448,6 +1448,26 @@ struct args_to_tuple<virtual_<Any>, DispatchArgs...> {
   }
 };
 
+template <std::size_t FirstN, typename... Ts>
+auto get_tuple_head(std::tuple<Ts...> from) {
+  return [&]<std::size_t... I>(std::index_sequence<I...>) {
+    return std::make_tuple(std::get<I>(from)...);
+  }(std::make_index_sequence<FirstN>{});
+}
+template <std::size_t FromN, typename... Ts>
+auto get_tuple_tail(std::tuple<Ts...> from) {
+  return [&]<std::size_t... I>(std::index_sequence<I...>) {
+    return std::make_tuple(std::get<I>(from)...);
+  }(std::make_index_sequence<std::tuple_size_v<std::tuple<Ts...>> - FromN>{});
+}
+
+template <typename R, typename... Args>
+struct dispatch_function;
+template <typename R, typename... Args>
+struct dispatch_function<R, std::tuple<Args...>> {
+  using type = R (*)(Args...);
+};
+
 template <typename R, typename... Args>
 struct dispatch_default {
   template <is_any... Anys>
@@ -1520,11 +1540,14 @@ struct dispatch<R(Args...)> {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
     }
-    template <typename DispatchMatrix, typename ArgsTuple>
-    std::optional<R> invoke(DispatchMatrix const& target,
-                            ArgsTuple&& dispatch_args_tuple, auto&&...) const {
+    template <typename F, typename ArgsTuple>
+    std::optional<R> invoke(F const& target, ArgsTuple&& dispatch_args_tuple,
+                            auto&&...) const {
       if (!target) return {};
-      return std::apply(target, std::forward<ArgsTuple>(dispatch_args_tuple));
+      auto typed_target = reinterpret_cast<
+          typename dispatch_function<R, std::decay_t<ArgsTuple>>::type>(target);
+      return std::apply(typed_target,
+                        std::forward<ArgsTuple>(dispatch_args_tuple));
     }
   };
 
@@ -1539,16 +1562,24 @@ struct dispatch<R(Args...)> {
     std::size_t index_ = 1 + dispatchs_count<v_table_t>()++;
     std::size_t dispatch_dimension_size_ = 1;
 
-    template <typename CLASS, typename... Classes>
+    template <typename Class>
+    auto get_dispatch_index() {
+      if constexpr (std::same_as<Any, Class>) {
+        return 0;
+      } else {
+        auto dispatch_table = dispatch_table_instance<v_table_t, Class>();
+        return *get_multi_dispatch_index_at(dispatch_table, index_)
+                    .or_else([&] -> std::optional<std::size_t> {
+                      set_multi_dispatch_index_at(dispatch_table, index_,
+                                                  dispatch_dimension_size_);
+                      return dispatch_dimension_size_++;
+                    });
+      }
+    }
+
+    template <typename Class, typename... Classes>
     auto define(auto fp, auto& matrix) {
-      auto dispatch_table = dispatch_table_instance<v_table_t, CLASS>();
-      auto dispatch_index =
-          *get_multi_dispatch_index_at(dispatch_table, index_)
-               .or_else([&] -> std::optional<std::size_t> {
-                 set_multi_dispatch_index_at(dispatch_table, index_,
-                                             dispatch_dimension_size_);
-                 return dispatch_dimension_size_++;
-               });
+      auto dispatch_index = get_dispatch_index<Class>();
       if (matrix.size() <= dispatch_index) matrix.resize(dispatch_index + 1);
       return next_t::template define<Classes...>(fp, matrix[dispatch_index]);
     }
@@ -1560,11 +1591,19 @@ struct dispatch<R(Args...)> {
                             ActualArgs&&... actual_args) const {
       auto dispatch_table = get_v_table(any)->dispatch_table;
       auto dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);
-      if (!dispatch_dim) return {};
-      if (target.size() < *dispatch_dim + 1) return {};
-      return next_t::invoke(target[*dispatch_dim],
-                            std::forward<ArgsTuple>(dispatch_args_tuple),
-                            std::forward<ActualArgs>(actual_args)...);
+      if (dispatch_dim && target.size() > *dispatch_dim)
+        if (auto found =
+                next_t::invoke(target[*dispatch_dim],
+                               std::forward<ArgsTuple>(dispatch_args_tuple),
+                               std::forward<ActualArgs>(actual_args)...))
+          return found;
+
+      return next_t::invoke(
+          target[0],
+          std::tuple_cat(get_tuple_head<Dimension>(dispatch_args_tuple),
+                         std::make_tuple(&any),
+                         get_tuple_tail<Dimension + 1>(dispatch_args_tuple)),
+          std::forward<ActualArgs>(actual_args)...);
     }
   };
 
