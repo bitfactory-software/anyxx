@@ -38,8 +38,8 @@ auto __ =
     collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a"; });
 
 // great time to use the spaceship operator...
-std::string operator<=>(any_thing<const_observer>& const l,
-                        any_thing<const_observer> const r) {
+std::string operator<=>(any_thing<const_observer> const& l,
+                        any_thing<const_observer> const& r) {
   return collide(l, r);
 }
 

@@ -1381,6 +1381,8 @@ struct virtual_ {
   using type = Any;
 };
 
+struct wildcard {};
+
 template <typename Arg>
 struct translate_erased_function_param {
   using type = Arg;
@@ -1513,11 +1515,12 @@ struct dispatch<R(Args...)> {
   dispatch_default_t::function_t::connection default_connection_ =
       dispatch_default_hook_.insert(dispatch_default_t::function());
 
-  template <bool IsMultiDimensional, std::size_t Dimension, typename... Args>
+  enum class kind { single, multiple };
+  template <kind Kind, std::size_t Dimension, typename... Args>
   struct dispatch_access;
 
   template <std::size_t Dimension, typename... Args>
-  struct dispatch_access<true, Dimension, Args...> {
+  struct dispatch_access<kind::multiple, Dimension, Args...> {
     auto define(auto fp, auto& matrix) {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
@@ -1531,11 +1534,11 @@ struct dispatch<R(Args...)> {
   };
 
   template <std::size_t Dimension, is_any Any, typename... Args>
-  struct dispatch_access<true, Dimension, virtual_<Any>, Args...>
-      : dispatch_access<true, Dimension + 1, Args...> {
+  struct dispatch_access<kind::multiple, Dimension, virtual_<Any>, Args...>
+      : dispatch_access<kind::multiple, Dimension + 1, Args...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
-    using next_t = dispatch_access<true, Dimension + 1, Args...>;
+    using next_t = dispatch_access<kind::multiple, Dimension + 1, Args...>;
 
     std::size_t index_ = dispatchs_count<v_table_t>()++;
     std::size_t dispatch_dimension_size_ = 0;
@@ -1570,7 +1573,7 @@ struct dispatch<R(Args...)> {
   };
 
   template <is_any Any, typename... Args>
-  struct dispatch_access<false, 0, virtual_<Any>, Args...> {
+  struct dispatch_access<kind::single, 0, virtual_<Any>, Args...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
     std::size_t index_ = dispatchs_count<v_table_t>()++;
@@ -1595,7 +1598,7 @@ struct dispatch<R(Args...)> {
     }
   };
 
-  dispatch_access<(dimension_count > 1), 0, Args...> dispatch_access_;
+  dispatch_access<(dimension_count > 1) ? kind::multiple : kind::single, 0, Args...> dispatch_access_;
 
  public:
   template <typename... Classes>
