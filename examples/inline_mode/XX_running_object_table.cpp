@@ -27,7 +27,7 @@ class arena {
  public:
   using id_t = uint64_t;
   static inline constexpr const int no_id = -1;
-  template< is_erased_data ErasedData>
+  template <is_erased_data ErasedData>
   using any_object = example_db::any_object<ErasedData>;
   class lockable;
 
@@ -37,13 +37,6 @@ class arena {
   arena() { instance_ = this; }
   ~arena() { instance_ = nullptr; }
   static arena& instance() { return *instance_; }
-
-  template <template <is_erased_data> typename Any>
-  struct identified {
-    id_t id = no_id;
-    Any<shared_const> any;
-    lockable* lockable = nullptr;
-  };
 
   class lockable {
     friend class locked_count;
@@ -115,26 +108,16 @@ class arena {
   template <template <is_erased_data> typename ToAny>
   class pointer {
     friend class arena;
-    pointer(id_t id) noexcept { (*this) = id; }
-    pointer& operator=(id_t id) {
+    pointer(id_t id, lockable* lockable) noexcept {
       this->id_ = id;
-      return *this;
+      resolved_ = lockable;
     }
 
    public:
     pointer() = default;
-
-    pointer(identified<ToAny> const& r) noexcept
-        : id_(r.id), resolved_(r.lockable) {}
-    pointer& operator=(identified<ToAny> const& r) noexcept {
-      pointer p{r};
-      swap(*this, p);
-      return *this;
-    }
-
     pointer(pointer const& r) noexcept
         : id_(r.id_), resolved_(r.resolved_.load()) {}
-    pointer& operator=(pointer& r) noexcept {
+    pointer& operator=(pointer r) noexcept {
       swap(*this, r);
       return *this;
     }
@@ -147,6 +130,8 @@ class arena {
       l.resolved_.exchange(r_resolved);
     }
 
+    id_t id() const { return id_; }
+    explicit operator bool() const { return dereference(); }
     ToAny<shared_const> operator->() const { return dereference(); }
     ToAny<shared_const> operator*() const { return dereference(); }
     ToAny<shared_const> dereference() const {
@@ -188,32 +173,31 @@ class arena {
 
   template <template <is_erased_data> typename AnyObject, typename Query,
             typename... Args>
-  std::generator<identified<AnyObject> const&> find(Query const& match,
-                                                    Args&&... args) const {
+  std::generator<pointer<AnyObject> const&> find(Query const& match,
+                                                 Args&&... args) const {
     for (auto const& [id, holder] : table_)
       if (auto o = borrow_as<AnyObject<shared_const>>(holder->get_object()))
-        if (match(o, std::forward<Args>(args)...))
-          co_yield {id, *o, holder.get()};
+        if (match(o, std::forward<Args>(args)...)) co_yield {id, holder.get()};
   }
 
   template <template <is_erased_data> typename AnyObject, typename Query,
             typename... Args>
-  std::optional<identified<AnyObject>> find_front(Query const& match,
-                                                  Args&&... args) const {
-    for (auto const& identified :
+  std::optional<pointer<AnyObject>> find_front(Query const& match,
+                                               Args&&... args) const {
+    for (auto const& pointer :
          find<AnyObject>(match, std::forward<Args>(args)...))
-      return identified;
+      return pointer;
     return {};
   }
 
   template <typename V, template <is_erased_data> typename AnyObject,
             typename Query, typename... Args>
-  std::generator<
-      identified<typename bound_typed_any<V, AnyObject>::type> const&>
+  std::generator<pointer<typename bound_typed_any<V, AnyObject>::type> const&>
   find(Query const& match, Args&&... args) const {
-    for (auto const& [id, o, lockable] :
+    for (auto const& pointer :
          find<AnyObject>(match, std::forward<Args>(args)...))
-      if (auto typed = unerase_cast<V>(&o)) co_yield {id, as<V>(o), lockable};
+      if (auto typed = unerase_cast_if<V>(*pointer))
+        co_yield {pointer.id_, pointer.resolved_.load()};
   }
 
   std::optional<updateable> checkout(id_t id) {
@@ -313,14 +297,14 @@ TEST_CASE("example XX/ running object table") {
         "Manager");
 
   for (auto found : rot.find<any_named>(arena::match_all)) {
-    std::println("{}: {}", found.id, found.any->get_name());
+    std::println("{}: {}", found.id(), found->get_name());
   }
 
   {
     bool found_one = false;
     for (auto found : rot.find<any_named>(match_name, "Johnson")) {
-      CHECK(found.id == id_johnson);
-      CHECK(unerase_cast<person>(found.any)->name == "Johnson");
+      CHECK(found.id() == id_johnson);
+      CHECK(unerase_cast<person>(*found)->name == "Johnson");
       found_one = true;
     }
     CHECK(found_one);
@@ -328,8 +312,8 @@ TEST_CASE("example XX/ running object table") {
   {
     bool found_one = false;
     for (auto found : rot.find<any_named>(match_name, "Programmer")) {
-      CHECK(found.id == id_programmer);
-      CHECK(unerase_cast<role>(found.any)->name == "Programmer");
+      CHECK(found.id() == id_programmer);
+      CHECK(unerase_cast<role>(*found)->name == "Programmer");
       found_one = true;
     }
     CHECK(found_one);
@@ -374,8 +358,8 @@ TEST_CASE("example XX/ running object table") {
   }
 
   for (auto found : rot.find<any_named>(arena::match_all)) {
-    if (auto p = unerase_cast<person>(&found.any)) {
-      std::println("({}){}: {}", found.id, p->name, p->salary);
+    if (auto p = unerase_cast_if<person>(*found)) {
+      std::println("({}){}: {}", found.id(), p->name, p->salary);
     }
   }
 
@@ -414,6 +398,6 @@ TEST_CASE("example XX/ running object table") {
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
   for (auto found : rot.find<person, any_named>(arena::match_all)) {
-    std::println("({}){}: {}", found.id, found.any->name, found.any->salary);
+    std::println("({}){}: {}", found.id(), found->name, found->salary);
   }
 }

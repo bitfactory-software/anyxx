@@ -143,15 +143,15 @@ auto unerase_cast(ErasedData const& o, meta_data const& meta) {
   return unchecked_unerase_cast<U>(o);
 }
 template <typename U, is_erased_data ErasedData>
-U const* unerase_cast(ErasedData const* o, meta_data const& meta) {
-  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
+U const* unerase_cast_if(ErasedData const& o, meta_data const& meta) {
+  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o);
   return nullptr;
 }
 template <typename U, is_erased_data ErasedData>
-U* unerase_cast(ErasedData const* o, meta_data const& meta)
+U* unerase_cast_if(ErasedData const& o, meta_data const& meta)
   requires(!is_const_data<ErasedData>)
 {
-  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(*o);
+  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o);
   return nullptr;
 }
 
@@ -1006,8 +1006,8 @@ auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_erased_data(o), get_meta_data(o));
 }
 template <typename U, is_any Any>
-auto unerase_cast(Any const* o) {
-  return unerase_cast<U>(&get_erased_data(*o), get_meta_data(*o));
+auto unerase_cast_if(Any const& o) {
+  return unerase_cast_if<U>(get_erased_data(o), get_meta_data(o));
 }
 
 #ifdef ANY_DLL_MODE
