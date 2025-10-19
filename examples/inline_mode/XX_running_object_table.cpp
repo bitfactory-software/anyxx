@@ -36,7 +36,7 @@ struct identified {
 class lockable {
   friend class locked_count;
   friend class updateable;
-  friend class running_object_table;
+  friend class arena;
 
  public:
   lockable(any_object<shared_const> o) { set_object(std::move(o)); };
@@ -98,7 +98,7 @@ class updateable {
   locked_count locked_count_;
 };
 
-class running_object_table {
+class arena {
   std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
   id_t next_id = 0;
 
@@ -182,7 +182,7 @@ class running_object_table {
 
 template <template <is_erased_data> typename ToAny, auto GetRunningObjectTable>
 class pointer {
-  friend class running_object_table;
+  friend class arena;
   pointer(id_t id) noexcept { (*this) = id; }
   pointer& operator=(id_t id) {
     this->id_ = id;
@@ -238,9 +238,9 @@ auto match_all = [](auto const& o) { return true; };
 }  // namespace example_db
 
 namespace example_app {
-example_db::running_object_table rot;
+example_db::arena rot;
 
-example_db::running_object_table& GetRunningObjectTable() { return rot; }
+example_db::arena& GetRunningObjectTable() { return rot; }
 
 template <template <is_erased_data> typename ToAny>
 using pointer = example_db::pointer<ToAny, GetRunningObjectTable>;
