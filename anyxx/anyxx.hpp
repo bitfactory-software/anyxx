@@ -1594,7 +1594,9 @@ struct dispatch<R(Args...)> {
     }
   };
 
-  dispatch_access<(dimension_count > 1) ? kind::multiple : kind::single, 0, Args...> dispatch_access_;
+  static const constexpr kind dispatch_kind =
+      (dimension_count > 1) ? kind::multiple : kind::single;
+  dispatch_access<dispatch_kind, 0, Args...> dispatch_access_;
 
  public:
   template <typename... Classes>
