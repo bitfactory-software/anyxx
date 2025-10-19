@@ -1381,8 +1381,6 @@ struct virtual_ {
   using type = Any;
 };
 
-struct wildcard {};
-
 template <typename Arg>
 struct translate_erased_function_param {
   using type = Arg;
