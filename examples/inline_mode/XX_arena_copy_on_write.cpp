@@ -105,6 +105,22 @@ class arena {
     locked_count locked_count_;
   };
 
+  class transaction {
+    friend class arena;
+    std::vector<updateable> updates_;
+
+   public:
+    void checkin(updateable update) {
+      updates_.emplace_back(std::move(update));
+    };
+  };
+
+  class commited_transaction {
+    friend class arena;
+    std::unordered_map<id_t, any_object<unique>> updates_;
+    std::shared_ptr<commited_transaction> next_;
+  };
+
   template <template <is_erased_data> typename ToAny>
   class pointer {
     friend class arena;
@@ -212,12 +228,14 @@ class arena {
     throw std::runtime_error(std::format("id {} not found", id));
   }
 
-  void checkin(updateable updated) {
-    table_[updated.id]->set_object(
-        move_to<any_object<shared_const>>(std::move(updated.object)));
+  void update(auto body) {
+    transaction t;
+    if (!body(t)) return;
+    for (auto&& u : t.updates_) checkin(std::move(u));
   }
 
  private:
+  static arena* instance_;
   std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
   id_t next_id = 0;
 
@@ -227,7 +245,10 @@ class arena {
     return {};
   }
 
-  static arena* instance_;
+  void checkin(updateable updated) {
+    table_[updated.id]->set_object(
+        move_to<any_object<shared_const>>(std::move(updated.object)));
+  }
 };
 
 }  // namespace example_db
@@ -320,35 +341,55 @@ TEST_CASE("example XX/ arena copy on write") {
     CHECK(found_one);
   }
 
-  auto update = db.checkout(id_johnson);
-  CHECK(update);
-  CHECK(!db.checkout(id_johnson));
-  db.checkin(std::move(*update));
   {
-    auto update = db.checkout(id_johnson);
-    CHECK(update);
-  }
-  {
-    auto update = db.checkout(id_johnson);
-    CHECK(update);
+    db.update([&](auto& transaction) {
+      auto update = db.checkout(id_johnson);
+      CHECK(update);
+      CHECK(!db.checkout(id_johnson));
+      transaction.checkin(std::move(*update));
+      return true;
+    });
+    {
+      db.update([&](auto& transaction) {
+        auto update = db.checkout(id_johnson);
+        CHECK(update);
+        return false;
+      });
+    }
+    {
+      db.update([&](auto& transaction) {
+        auto update = db.checkout(id_johnson);
+        CHECK(update);
+        return true;
+      });
+    }
+    {
+      db.update([&](auto& transaction) {
+        auto update = db.checkout(id_johnson);
+        CHECK(update);
+        return false;
+      });
+    }
   }
 
   {
     example_app::pointer<bound_typed_any<role, any_named>::type> role_pointer{
         *db.find_front<bound_typed_any<role, any_named>::type>(match_name,
-                                                                "Programmer")};
+                                                               "Programmer")};
     auto programmer_any = role_pointer.dereference();
     CHECK(programmer_any->name == "Programmer");
   }
 
-  db.checkout(id_johnson).transform([&](arena::updateable&& update) {
-    CHECK(update.id == id_johnson);
-    unerase_cast<person>(update.object)->name = "Smith";
-    unerase_cast<person>(update.object)->role =
-        *db.find_front<bound_typed_any<role, any_named>::type>(match_name,
-                                                                "Programmer");
-    db.checkin(std::move(update));
-    return true;
+  db.update([&](auto& transaction) {
+    return db.checkout(id_johnson).transform([&](arena::updateable&& update) {
+      CHECK(update.id == id_johnson);
+      unerase_cast<person>(update.object)->name = "Smith";
+      unerase_cast<person>(update.object)->role =
+          *db.find_front<bound_typed_any<role, any_named>::type>(match_name,
+                                                                 "Programmer");
+      transaction.checkin(std::move(update));
+      return true;
+    });
   });
   {
     auto miller = db.dereference_as<any_named>(id_johnson);
@@ -373,17 +414,19 @@ TEST_CASE("example XX/ arena copy on write") {
 
     for (auto i : std::views::iota(0, 50)) {
       auto person_id = uniform_dist(e1);
-      db.checkout(person_id)
-          .or_else([&] -> std ::optional<arena::updateable> {
-            misses++;
-            return {};
-          })
-          .transform([&](arena::updateable&& update) {
-            unerase_cast<person>(update.object)->salary += inc;
-            db.checkin(std::move(update));
-            hits++;
-            return true;
-          });
+      db.update([&](auto& transaction) {
+        return db.checkout(person_id)
+            .or_else([&] -> std ::optional<arena::updateable> {
+              misses++;
+              return {};
+            })
+            .transform([&](arena::updateable&& update) {
+              unerase_cast<person>(update.object)->salary += inc;
+              transaction.checkin(std::move(update));
+              hits++;
+              return true;
+            });
+      });
       std::this_thread::sleep_for(frequence);
     }
   };
