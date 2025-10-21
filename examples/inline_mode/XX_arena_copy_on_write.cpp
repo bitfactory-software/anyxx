@@ -15,8 +15,6 @@
 
 using namespace Catch::Matchers;
 
-using namespace anyxx;
-
 namespace example_app {
 struct example_tag;
 using arena = ::arena::arena<example_tag>;
@@ -28,7 +26,7 @@ namespace arena {
 }
 
 namespace example_app {
-template <template <is_erased_data> typename ToAny>
+template <template <anyxx::is_erased_data> typename ToAny>
 using pointer = arena::pointer<ToAny>;
 
 ANY_(any_named, ::arena::any_object, (ANY_CONST_METHOD(std::string, get_name)))
@@ -50,7 +48,7 @@ ANY_REGISTER_MODEL(role, any_named);
 
 struct person : named {
   using named::named;
-  pointer<bound_typed_any<example_app::role, any_named>::type> role;
+  pointer<anyxx::bound_typed_any<example_app::role, any_named>::type> role;
   double salary = 1000;
 };
 ANY_REGISTER_MODEL(person, any_named);
@@ -136,8 +134,8 @@ TEST_CASE("example XX/ arena copy on write") {
   }
 
   {
-    example_app::pointer<bound_typed_any<role, any_named>::type> role_pointer{
-        *db.find_front<bound_typed_any<role, any_named>::type>(match_name,
+    example_app::pointer<anyxx::bound_typed_any<role, any_named>::type> role_pointer{
+        *db.find_front<anyxx::bound_typed_any<role, any_named>::type>(match_name,
                                                                "Programmer")};
     auto programmer_any = role_pointer.dereference();
     CHECK(programmer_any->name == "Programmer");
@@ -149,7 +147,7 @@ TEST_CASE("example XX/ arena copy on write") {
           CHECK(update.id == id_johnson);
           unerase_cast<person>(update.object)->name = "Smith";
           unerase_cast<person>(update.object)->role =
-              *db.find_front<bound_typed_any<role, any_named>::type>(
+              *db.find_front<anyxx::bound_typed_any<role, any_named>::type>(
                   match_name, "Programmer");
           transaction.checkin(std::move(update));
           return true;
