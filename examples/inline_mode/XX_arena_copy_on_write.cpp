@@ -17,19 +17,19 @@ using namespace Catch::Matchers;
 
 namespace example_app {
 struct example_tag;
-using arena = ::arena::arena<example_tag>;
+using example_arena = arena::arena<example_tag>;
 }  // namespace example_app
 
 namespace arena {
-::arena::arena<example_app::example_tag>* ::arena::arena<
-    example_app::example_tag>::instance_ = nullptr;
-}
+using namespace example_app;
+example_arena* example_arena::instance_ = nullptr;
+}  // namespace arena
 
 namespace example_app {
 template <template <anyxx::is_erased_data> typename ToAny>
-using pointer = arena::pointer<ToAny>;
+using pointer = example_arena::pointer<ToAny>;
 
-ANY_(any_named, ::arena::any_object, (ANY_CONST_METHOD(std::string, get_name)))
+ANY_(any_named, arena::any_object, (ANY_CONST_METHOD(std::string, get_name)))
 
 auto match_name = [](auto const& o, std::string_view query) {
   return o->get_name() == query;
@@ -58,14 +58,14 @@ ANY_REGISTER_MODEL(person, any_named);
 TEST_CASE("example XX/ arena copy on write") {
   using namespace example_app;
 
-  example_app::arena db;
+  example_arena db;
 
   auto id_miller = db.insert<any_named, person>("Miller");
   CHECK(id_miller == 0);
   auto id_johnson = db.insert<any_named, person>("Johnson");
   CHECK(id_johnson == 1);
 
-  auto id_programmer = db.insert<::arena::any_object, role>("Programmer");
+  auto id_programmer = db.insert<arena::any_object, role>("Programmer");
   CHECK(id_programmer == 2);
   auto id_manager = db.insert<any_named, role>("Manager");
   CHECK(id_manager == 3);
@@ -79,7 +79,7 @@ TEST_CASE("example XX/ arena copy on write") {
   CHECK(unerase_cast<role>(*db.dereference_as<any_named>(id_manager))->name ==
         "Manager");
 
-  for (auto found : db.find<any_named>(example_app::arena::match_all)) {
+  for (auto found : db.find<any_named>(example_arena::match_all)) {
     std::println("{}: {}", found.id(), found->get_name());
   }
 
@@ -134,16 +134,17 @@ TEST_CASE("example XX/ arena copy on write") {
   }
 
   {
-    example_app::pointer<anyxx::bound_typed_any<role, any_named>::type> role_pointer{
-        *db.find_front<anyxx::bound_typed_any<role, any_named>::type>(match_name,
-                                                               "Programmer")};
+    example_app::pointer<anyxx::bound_typed_any<role, any_named>::type>
+        role_pointer{
+            *db.find_front<anyxx::bound_typed_any<role, any_named>::type>(
+                match_name, "Programmer")};
     auto programmer_any = role_pointer.dereference();
     CHECK(programmer_any->name == "Programmer");
   }
 
   db.update([&](auto& transaction) {
     return db.checkout(id_johnson)
-        .transform([&](example_app::arena::updateable&& update) {
+        .transform([&](example_arena::updateable&& update) {
           CHECK(update.id == id_johnson);
           unerase_cast<person>(update.object)->name = "Smith";
           unerase_cast<person>(update.object)->role =
@@ -161,7 +162,7 @@ TEST_CASE("example XX/ arena copy on write") {
     CHECK(role->get_name() == "Programmer");
   }
 
-  for (auto found : db.find<any_named>(example_app::arena::match_all)) {
+  for (auto found : db.find<any_named>(example_arena::match_all)) {
     if (auto p = unerase_cast_if<person>(*found)) {
       std::println("({}){}: {}", found.id(), p->name, p->salary);
     }
@@ -178,11 +179,11 @@ TEST_CASE("example XX/ arena copy on write") {
       auto person_id = uniform_dist(e1);
       db.update([&](auto& transaction) {
         return db.checkout(person_id)
-            .or_else([&] -> std ::optional<example_app::arena::updateable> {
+            .or_else([&] -> std ::optional<example_arena::updateable> {
               misses++;
               return {};
             })
-            .transform([&](example_app::arena::updateable&& update) {
+            .transform([&](example_arena::updateable&& update) {
               unerase_cast<person>(update.object)->salary += inc;
               transaction.checkin(std::move(update));
               hits++;
@@ -203,7 +204,7 @@ TEST_CASE("example XX/ arena copy on write") {
   std::println("update with {} misses and {} hits.", misses.load(),
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
-  for (auto found : db.find<person, any_named>(example_app::arena::match_all)) {
+  for (auto found : db.find<person, any_named>(example_arena::match_all)) {
     std::println("({}){}: {}", found.id(), found->name, found->salary);
   }
 }
