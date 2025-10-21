@@ -5,13 +5,12 @@
 using namespace Catch::Matchers;
 
 namespace co_callback {
-
 template <typename R>
-R RethrowException(std::exception_ptr exception) {
+[[noreturn]]
+R rethrow_exception(std::exception_ptr exception) {
   std::rethrow_exception(exception);
   return R{};
 }
-
 template <typename R = nullptr_t>
 struct [[nodiscard]] callback {
   struct promise_type {
@@ -57,19 +56,17 @@ struct [[nodiscard]] callback {
   void await_suspend(auto callingCoroutine) noexcept {
     callingCoroutine.resume();
   }
-
   auto handle_resume(auto handle_exception) {
     if (!coroutine_) return R{};
     if (auto exception = coroutine_.promise().exception_)
       return handle_exception(exception);
     return coroutine_.promise().result_;
   }
-
-  auto await_resume() { return handle_resume(&RethrowException<R>); }
-
-  auto GetSyncResult(auto handle_exception) {
+  auto await_resume() { return handle_resume(rethrow_exception<R>); }
+  auto get_result(auto handle_exception) {
     return handle_resume(handle_exception);
   }
+  auto get_result() { return get_result(rethrow_exception<R>); }
 
   std::coroutine_handle<promise_type> coroutine_;
 };
@@ -115,13 +112,14 @@ TEST_CASE("example XX/ callback1") {
     CHECK(step++ == 3);
   };
 
-  auto test1 = [&] -> callback<> {
+  auto test1 = [&] -> callback<int> {
     auto _42 = co_await co_callback::co_callback<int>(do_with_42);
     std::println("recieving 42");
     CHECK(step++ == 2);
     CHECK(42 == _42);
-    co_return {};
-  }();
+    co_return _42;
+  };
+  CHECK(test1().get_result() == 42);
 
   CHECK(step == 4);
 }
