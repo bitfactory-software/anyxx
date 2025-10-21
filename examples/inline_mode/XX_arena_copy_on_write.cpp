@@ -16,8 +16,6 @@ using namespace Catch::Matchers;
 
 using namespace anyxx;
 
-ANY_HAS_DISPATCH(example_db, any_object)
-
 namespace example_db {
 
 ANY(any_object, )
