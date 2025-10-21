@@ -2,25 +2,27 @@
 #include <exception>
 
 namespace coro_callback {
+
 template <typename R>
 [[noreturn]]
 R rethrow_exception(std::exception_ptr exception) {
   std::rethrow_exception(exception);
   return R{};
 }
+
 template <typename R>
 struct recieve {
-  template <typename Promise, typename HandleReturn>
+  template <typename HandleReturn>
   struct basic_promise_type : HandleReturn {
     recieve<R> get_return_object(this auto& self) {
-      return recieve<R>{std::coroutine_handle<Promise>::from_promise(self)};
+      return recieve<R>{std::coroutine_handle<basic_promise_type>::from_promise(self)};
     }
 
     struct resume_recieve {
       resume_recieve() noexcept {}
       bool await_ready() const noexcept { return false; }
       void await_suspend(
-          std::coroutine_handle<Promise> thisCoroutine) noexcept {
+          std::coroutine_handle<basic_promise_type> thisCoroutine) noexcept {
         auto& promise = thisCoroutine.promise();
         if (promise.callingCoroutine_) promise.callingCoroutine_.resume();
       }
@@ -43,7 +45,7 @@ struct recieve {
   struct handle_return<void> {
     void return_void() {};
   };
-  struct promise_type : basic_promise_type<promise_type, handle_return<R>> {};
+  using promise_type = basic_promise_type<handle_return<R>>;
 
   recieve(const recieve&) = delete;
   recieve& operator=(const recieve&) = delete;
@@ -117,4 +119,3 @@ auto wrap(api<R> api) {
 }
 
 }  // namespace coro_callback
-
