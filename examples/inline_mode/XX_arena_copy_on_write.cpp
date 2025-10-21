@@ -196,12 +196,12 @@ TEST_CASE("example XX/ arena copy on write") {
   };
 
   using namespace std::chrono_literals;
-  std::vector<std::thread> v;
-  v.emplace_back(salary_lottery, 500, 20ms);
-  v.emplace_back(salary_lottery, -200, 19ms);
-  v.emplace_back(salary_lottery, 50, 10ms);
-  v.emplace_back(salary_lottery, -20, 5ms);
-  for (auto& tr : v) tr.join();
+  std::vector<std::thread> threads;
+  threads.emplace_back(salary_lottery, 500, 20ms);
+  threads.emplace_back(salary_lottery, -200, 19ms);
+  threads.emplace_back(salary_lottery, 50, 10ms);
+  threads.emplace_back(salary_lottery, -20, 5ms);
+  for (auto& thread : threads) thread.join();
   std::println("update with {} misses and {} hits.", misses.load(),
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
