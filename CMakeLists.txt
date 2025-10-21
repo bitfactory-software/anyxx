@@ -35,6 +35,18 @@ target_include_directories(anyxx INTERFACE
 set_target_properties(anyxx PROPERTIES FOLDER "anyxx")
 # --- anyxx library
 
+# +++ coro_callback library
+file(GLOB_RECURSE coro_callback_HEADERS "./coro_callback/*.hpp")
+file(GLOB_RECURSE coro_callback_SOURCES "./coro_callback/*.cpp")
+add_library(coro_callback INTERFACE ${coro_callback_HEADERS} ${coro_callback_SOURCES})
+target_include_directories(coro_callback INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
+)
+set_target_properties(coro_callback PROPERTIES FOLDER "coro_callback")
+# --- coro_callback library
+
+
 enable_testing()
 
 add_subdirectory ("examples")
@@ -49,12 +61,9 @@ message("CMAKE_INSTALL_DATAROOTDIR: " "${CMAKE_INSTALL_DATAROOTDIR}")
 message("CMAKE_CURRENT_BINARY_DIR: " "${CMAKE_CURRENT_BINARY_DIR}")
 message("PROJECT_SOURCE_DIR: " "${PROJECT_SOURCE_DIR}")
 
-# Install the library and its headers
+# Install the anyxx library and its headers
 install(TARGETS anyxx
         EXPORT anyxx_targets
-##        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-##        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-##        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
 
 install(DIRECTORY anyxx/ # tailing slash is important here!
@@ -79,5 +88,6 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/anyxx-config.cmake"
 # Install the generated config file
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/anyxx-config.cmake"
         DESTINATION share/anyxx)
+
 
 
