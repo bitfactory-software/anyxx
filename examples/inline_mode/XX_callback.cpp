@@ -12,7 +12,7 @@ R rethrow_exception(std::exception_ptr exception) {
   return R{};
 }
 template <typename R>
-struct [[nodiscard]] callback {
+struct callback {
   template <typename Promise, typename HandleReturn>
   struct basic_promise_type : HandleReturn {
     callback<R> get_return_object(this auto& self) {
@@ -115,34 +115,36 @@ struct callback_awaiter<void> {
   const api<void> api_;
 };
 template <typename R>
-auto co_callback(api<R> api) {
+auto as_coro(api<R> api) {
   return callback_awaiter<R>{api};
 }
 
-}  // namespace co_callback
+}  // namespace coro_callback
 
 TEST_CASE("example XX/ callback1") {
   using namespace coro_callback;
 
   int step = 1;
 
-  auto do_with_42 = [&](std::function<void(int)> cb) {
-    std::println("before callback");
-    CHECK(step++ == 1);
-    cb(42);
-    std::println("after callback");
-    CHECK(step++ == 3);
+  auto int_callback_api = [&]() {
+    return as_coro<int>([&](std::function<void(int)> callback) {
+      std::println("before callback");
+      CHECK(step++ == 1);
+      callback(42);
+      std::println("after callback");
+      CHECK(step++ == 3);
+    });
   };
 
   auto test1 = [&] -> callback<int> {
-    auto _42 = co_await co_callback<int>(do_with_42);
+    auto _42 = co_await int_callback_api();
     std::println("recieving 42");
     CHECK(step++ == 2);
     CHECK(42 == _42);
     co_return _42;
   };
+  CHECK(step == 1);
   CHECK(test1().get_result() == 42);
-
   CHECK(step == 4);
 }
 
@@ -151,20 +153,22 @@ TEST_CASE("example XX/ callback2") {
 
   int step = 1;
 
-  auto do_something = [&](std::function<void(void)> cb) {
-    std::println("before callback");
-    CHECK(step++ == 1);
-    cb();
-    std::println("after callback");
-    CHECK(step++ == 3);
+  auto void_callback_api = [&]() {
+    return as_coro<void>([&](std::function<void(void)> callback) {
+      std::println("before callback");
+      CHECK(step++ == 1);
+      callback();
+      std::println("after callback");
+      CHECK(step++ == 3);
+    });
   };
 
   auto test2 = [&] -> callback<void> {
-    co_await co_callback<void>(do_something);
+    co_await void_callback_api();
     std::println("recieving");
     CHECK(step++ == 2);
   };
+  CHECK(step == 1);
   test2();
-
   CHECK(step == 4);
 }
