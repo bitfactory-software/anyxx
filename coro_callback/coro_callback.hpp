@@ -78,11 +78,11 @@ struct recieve {
   std::coroutine_handle<promise_type> coroutine_;
 };
 
-template <typename R>
-using api_recieve = std::function<void(R)>;
-template <typename R>
-using api = std::function<void(api_recieve<R>)>;
-template <typename R>
+//template <typename R>
+//using api_recieve = std::function<void(R)>;
+//template <typename R>
+//using api = std::function<void(api_recieve<R>)>;
+template <typename R, typename Api>
 struct recieve_awaiter {
   bool await_ready() { return false; }
   void await_suspend(auto callingContinuation) {
@@ -95,12 +95,11 @@ struct recieve_awaiter {
     });
   }
   R await_resume() { return result_; }
-
-  const api<R> api_;
+  const Api api_;
   R result_ = {};
 };
-template <>
-struct recieve_awaiter<void> {
+template <typename Api>
+struct recieve_awaiter<void, Api> {
   bool await_ready() { return false; }
   void await_suspend(auto callingContinuation) {
     bool called = false;
@@ -111,11 +110,11 @@ struct recieve_awaiter<void> {
     });
   }
   void await_resume() {}
-  const api<void> api_;
+  const Api api_;
 };
-template <typename R>
-auto wrap(api<R> api) {
-  return recieve_awaiter<R>{api};
+template <typename R, typename Api>
+auto wrap(Api&& api) {
+  return recieve_awaiter<R, std::decay_t<Api>>{std::move(api)};
 }
 
 }  // namespace coro_callback
