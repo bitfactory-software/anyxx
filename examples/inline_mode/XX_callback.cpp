@@ -4,26 +4,26 @@
 
 using namespace Catch::Matchers;
 
-namespace co_callback {
+namespace coro_callback {
 template <typename R>
 [[noreturn]]
 R rethrow_exception(std::exception_ptr exception) {
   std::rethrow_exception(exception);
   return R{};
 }
-template <typename R = nullptr_t>
+template <typename R>
 struct [[nodiscard]] callback {
-  struct promise_type {
-    callback<R> get_return_object() {
-      return callback<R>{
-          std::coroutine_handle<promise_type>::from_promise(*this)};
+  template <typename Promise, typename HandleReturn>
+  struct basic_promise_type : HandleReturn {
+    callback<R> get_return_object(this auto& self) {
+      return callback<R>{std::coroutine_handle<Promise>::from_promise(self)};
     }
 
     struct resume_callback {
       resume_callback() noexcept {}
       bool await_ready() const noexcept { return false; }
       void await_suspend(
-          std::coroutine_handle<promise_type> thisCoroutine) noexcept {
+          std::coroutine_handle<Promise> thisCoroutine) noexcept {
         auto& promise = thisCoroutine.promise();
         if (promise.callingCoroutine_) promise.callingCoroutine_.resume();
       }
@@ -31,14 +31,22 @@ struct [[nodiscard]] callback {
     };
     auto initial_suspend() noexcept { return std::suspend_never{}; }
     auto final_suspend() noexcept { return resume_callback{}; }
-    void return_value(R result) { result_ = result; }
     void unhandled_exception() noexcept {
       exception_ = std::current_exception();
     }
-    R result_ = {};
     std::coroutine_handle<> callingCoroutine_ = {};
     std::exception_ptr exception_ = {};
   };
+  template <typename R>
+  struct handle_return {
+    void return_value(R result) { result_ = result; }
+    R result_ = {};
+  };
+  template <>
+  struct handle_return<void> {
+    void return_void() {};
+  };
+  struct promise_type : basic_promise_type<promise_type, handle_return<R>> {};
 
   callback(const callback&) = delete;
   callback& operator=(const callback&) = delete;
@@ -92,6 +100,20 @@ struct callback_awaiter {
   const api<R> api_;
   R result_ = {};
 };
+template <>
+struct callback_awaiter<void> {
+  bool await_ready() { return false; }
+  void await_suspend(auto callingContinuation) {
+    bool called = false;
+    api_([this, callingContinuation, called]() mutable {
+      if (called) return;
+      called = true;
+      callingContinuation.resume();
+    });
+  }
+  void await_resume() {}
+  const api<void> api_;
+};
 template <typename R>
 auto co_callback(api<R> api) {
   return callback_awaiter<R>{api};
@@ -100,7 +122,7 @@ auto co_callback(api<R> api) {
 }  // namespace co_callback
 
 TEST_CASE("example XX/ callback1") {
-  using namespace co_callback;
+  using namespace coro_callback;
 
   int step = 1;
 
@@ -113,13 +135,36 @@ TEST_CASE("example XX/ callback1") {
   };
 
   auto test1 = [&] -> callback<int> {
-    auto _42 = co_await co_callback::co_callback<int>(do_with_42);
+    auto _42 = co_await co_callback<int>(do_with_42);
     std::println("recieving 42");
     CHECK(step++ == 2);
     CHECK(42 == _42);
     co_return _42;
   };
   CHECK(test1().get_result() == 42);
+
+  CHECK(step == 4);
+}
+
+TEST_CASE("example XX/ callback2") {
+  using namespace coro_callback;
+
+  int step = 1;
+
+  auto do_something = [&](std::function<void(void)> cb) {
+    std::println("before callback");
+    CHECK(step++ == 1);
+    cb();
+    std::println("after callback");
+    CHECK(step++ == 3);
+  };
+
+  auto test2 = [&] -> callback<void> {
+    co_await co_callback<void>(do_something);
+    std::println("recieving");
+    CHECK(step++ == 2);
+  };
+  test2();
 
   CHECK(step == 4);
 }
