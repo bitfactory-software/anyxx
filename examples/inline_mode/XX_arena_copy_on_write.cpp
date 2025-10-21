@@ -1,5 +1,5 @@
 #include <anyxx/anyxx.hpp>
-#include <arena/arena.hpp>
+#include <enclosure/enclosure.hpp>
 #include <catch.hpp>
 #include <chrono>
 #include <cmath>

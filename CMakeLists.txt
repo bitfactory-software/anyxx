@@ -46,20 +46,20 @@ target_include_directories(coro_callback INTERFACE
 set_target_properties(coro_callback PROPERTIES FOLDER "libraries")
 # --- coro_callback library
 
-# +++ arena library
-file(GLOB_RECURSE arena_HEADERS "./arena/*.hpp")
-file(GLOB_RECURSE arena_SOURCES "./arena/*.cpp")
-add_library(arena INTERFACE ${arena_HEADERS} ${arena_SOURCES})
-target_include_directories(arena INTERFACE
+# +++ enclosure library
+file(GLOB_RECURSE enclosure_HEADERS "./enclosure/*.hpp")
+file(GLOB_RECURSE enclosure_SOURCES "./enclosure/*.cpp")
+add_library(enclosure INTERFACE ${enclosure_HEADERS} ${enclosure_SOURCES})
+target_include_directories(enclosure INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-set_target_properties(arena PROPERTIES FOLDER "libraries")
-target_link_libraries(arena INTERFACE
+set_target_properties(enclosure PROPERTIES FOLDER "libraries")
+target_link_libraries(enclosure INTERFACE
     anyxx 
     coro_callback 
 )
-# --- coro_callback library
+# --- enclosure library
 
 
 enable_testing()
