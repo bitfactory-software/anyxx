@@ -1,8 +1,8 @@
 #include <anyxx/anyxx.hpp>
-#include <enclosure/enclosure.hpp>
 #include <catch.hpp>
 #include <chrono>
 #include <cmath>
+#include <enclosure/enclosure.hpp>
 #include <generator>
 #include <iostream>
 #include <mutex>
@@ -17,19 +17,20 @@ using namespace Catch::Matchers;
 
 namespace example_app {
 struct example_tag;
-using example_arena = arena::arena<example_tag>;
+using example_enclosure = enclosure::enclosure<example_tag>;
 }  // namespace example_app
 
-namespace arena {
+namespace enclosure {
 using namespace example_app;
-example_arena* example_arena::instance_ = nullptr;
-}  // namespace arena
+example_enclosure* example_enclosure::instance_ = nullptr;
+}  // namespace enclosure
 
 namespace example_app {
 template <template <anyxx::is_erased_data> typename ToAny>
-using pointer = example_arena::pointer<ToAny>;
+using pointer = example_enclosure::pointer<ToAny>;
 
-ANY_(any_named, arena::any_object, (ANY_CONST_METHOD(std::string, get_name)))
+ANY_(any_named, enclosure::any_object,
+     (ANY_CONST_METHOD(std::string, get_name)))
 
 auto match_name = [](auto const& o, std::string_view query) {
   return o->get_name() == query;
@@ -55,17 +56,17 @@ ANY_REGISTER_MODEL(person, any_named);
 
 }  // namespace example_app
 
-TEST_CASE("example XX/ arena copy on write") {
+TEST_CASE("example XX/ enclosure copy on write") {
   using namespace example_app;
 
-  example_arena db;
+  example_enclosure db;
 
   auto id_miller = db.insert<any_named, person>("Miller");
   CHECK(id_miller == 0);
   auto id_johnson = db.insert<any_named, person>("Johnson");
   CHECK(id_johnson == 1);
 
-  auto id_programmer = db.insert<arena::any_object, role>("Programmer");
+  auto id_programmer = db.insert<enclosure::any_object, role>("Programmer");
   CHECK(id_programmer == 2);
   auto id_manager = db.insert<any_named, role>("Manager");
   CHECK(id_manager == 3);
@@ -79,7 +80,7 @@ TEST_CASE("example XX/ arena copy on write") {
   CHECK(unerase_cast<role>(*db.dereference_as<any_named>(id_manager))->name ==
         "Manager");
 
-  for (auto found : db.find<any_named>(example_arena::match_all)) {
+  for (auto found : db.find<any_named>(example_enclosure::match_all)) {
     std::println("{}: {}", found.id(), found->get_name());
   }
 
@@ -144,7 +145,7 @@ TEST_CASE("example XX/ arena copy on write") {
 
   db.update([&](auto& transaction) {
     return db.checkout(id_johnson)
-        .transform([&](example_arena::updateable&& update) {
+        .transform([&](example_enclosure::updateable&& update) {
           CHECK(update.id == id_johnson);
           unerase_cast<person>(update.object)->name = "Smith";
           unerase_cast<person>(update.object)->role =
@@ -162,7 +163,7 @@ TEST_CASE("example XX/ arena copy on write") {
     CHECK(role->get_name() == "Programmer");
   }
 
-  for (auto found : db.find<any_named>(example_arena::match_all)) {
+  for (auto found : db.find<any_named>(example_enclosure::match_all)) {
     if (auto p = unerase_cast_if<person>(*found)) {
       std::println("({}){}: {}", found.id(), p->name, p->salary);
     }
@@ -179,11 +180,11 @@ TEST_CASE("example XX/ arena copy on write") {
       auto person_id = uniform_dist(e1);
       db.update([&](auto& transaction) {
         return db.checkout(person_id)
-            .or_else([&] -> std ::optional<example_arena::updateable> {
+            .or_else([&] -> std ::optional<example_enclosure::updateable> {
               misses++;
               return {};
             })
-            .transform([&](example_arena::updateable&& update) {
+            .transform([&](example_enclosure::updateable&& update) {
               unerase_cast<person>(update.object)->salary += inc;
               transaction.checkin(std::move(update));
               hits++;
@@ -204,7 +205,7 @@ TEST_CASE("example XX/ arena copy on write") {
   std::println("update with {} misses and {} hits.", misses.load(),
                hits.load());
   CHECK(misses.load() + hits.load() == 200);
-  for (auto found : db.find<person, any_named>(example_arena::match_all)) {
+  for (auto found : db.find<person, any_named>(example_enclosure::match_all)) {
     std::println("({}){}: {}", found.id(), found->name, found->salary);
   }
 }

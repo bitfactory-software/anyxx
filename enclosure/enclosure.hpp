@@ -1,40 +1,43 @@
 #include <anyxx/anyxx.hpp>
 #include <coro_callback/coro_callback.hpp>
+#include <format>
 #include <generator>
 #include <unordered_map>
 #include <vector>
-#include <format>
 
-namespace arena {
+namespace enclosure {
 
 ANY(any_object, )
 
 template <typename Tag>
-class arena {
+class enclosure {
  public:
   using id_t = uint64_t;
   static inline constexpr const int no_id = -1;
   class lockable;
 
-  arena(arena const&) = delete;
-  arena& operator=(arena const&) = delete;
+  enclosure(enclosure const&) = delete;
+  enclosure& operator=(enclosure const&) = delete;
 
-  arena() { instance_ = this; }
-  ~arena() { instance_ = nullptr; }
-  static arena& instance() { return *instance_; }
+  enclosure() { instance_ = this; }
+  ~enclosure() { instance_ = nullptr; }
+  static enclosure& instance() { return *instance_; }
 
   class lockable {
     friend class locked_count;
     friend class updateable;
-    friend class arena;
+    friend class enclosure;
 
    public:
     lockable(any_object<anyxx::shared_const> o) { set_object(std::move(o)); };
     ~lockable() { delete object_.load(); }
 
-    any_object<anyxx::shared_const> get_object() const { return *object_.load(); }
+    any_object<anyxx::shared_const> get_object() const {
+      return *object_.load();
+    }
     void set_object(any_object<anyxx::shared_const> o) {
-      delete object_.exchange(new any_object<anyxx::shared_const>(std::move(o)));
+      delete object_.exchange(
+          new any_object<anyxx::shared_const>(std::move(o)));
     }
 
    private:
@@ -91,7 +94,7 @@ class arena {
   };
 
   class transaction {
-    friend class arena;
+    friend class enclosure;
     std::vector<updateable> updates_;
 
    public:
@@ -101,14 +104,14 @@ class arena {
   };
 
   class commited_transaction {
-    friend class arena;
+    friend class enclosure;
     std::unordered_map<id_t, any_object<anyxx::unique>> updates_;
     std::shared_ptr<commited_transaction> next_;
   };
 
   template <template <anyxx::is_erased_data> typename ToAny>
   class pointer {
-    friend class arena;
+    friend class enclosure;
     pointer(id_t id, lockable* lockable) noexcept {
       this->id_ = id;
       resolved_ = lockable;
@@ -138,23 +141,25 @@ class arena {
     ToAny<anyxx::shared_const> dereference() const {
       if (id_ == no_id) return {};
       if (resolved_) return *load();
-      auto dereferenced = arena::instance().dereference(id_);
+      auto dereferenced = enclosure::instance().dereference(id_);
       resolved_.exchange(dereferenced);
       return *load();
     }
 
    private:
     auto load() const {
-      return borrow_as<ToAny<anyxx::shared_const>>(resolved_.load()->get_object());
+      return borrow_as<ToAny<anyxx::shared_const>>(
+          resolved_.load()->get_object());
     }
     id_t id_ = no_id;
     mutable std::atomic<lockable*> resolved_ = nullptr;
   };
 
-  template <template <anyxx::is_any> typename AnyObject, typename T, typename... Args>
+  template <template <anyxx::is_any> typename AnyObject, typename T,
+            typename... Args>
   id_t insert(Args&&... args) {
     return insert(AnyObject<anyxx::shared_const>{std::in_place_type<T>,
-                                          std::forward<Args>(args)...});
+                                                 std::forward<Args>(args)...});
   }
   id_t insert(any_object<anyxx::shared_const> o) {
     auto id = next_id++;
@@ -165,7 +170,8 @@ class arena {
   template <template <anyxx::is_erased_data> typename AnyObject>
   std::optional<AnyObject<anyxx::shared_const>> dereference_as(id_t id) const {
     if (auto found = dereference(id))
-      if (auto o = borrow_as<AnyObject<anyxx::shared_const>>(found->get_object()))
+      if (auto o =
+              borrow_as<AnyObject<anyxx::shared_const>>(found->get_object()))
         return *o;
     return {};
   }
@@ -177,7 +183,8 @@ class arena {
   std::generator<pointer<AnyObject> const&> find(Query const& match,
                                                  Args&&... args) const {
     for (auto const& [id, holder] : table_)
-      if (auto o = borrow_as<AnyObject<anyxx::shared_const>>(holder->get_object()))
+      if (auto o =
+              borrow_as<AnyObject<anyxx::shared_const>>(holder->get_object()))
         if (match(o, std::forward<Args>(args)...)) co_yield {id, holder.get()};
   }
 
@@ -193,7 +200,8 @@ class arena {
 
   template <typename V, template <anyxx::is_erased_data> typename AnyObject,
             typename Query, typename... Args>
-  std::generator<pointer<typename anyxx::bound_typed_any<V, AnyObject>::type> const&>
+  std::generator<
+      pointer<typename anyxx::bound_typed_any<V, AnyObject>::type> const&>
   find(Query const& match, Args&&... args) const {
     for (auto const& pointer :
          find<AnyObject>(match, std::forward<Args>(args)...))
@@ -220,7 +228,7 @@ class arena {
   }
 
  private:
-  static arena* instance_;
+  static enclosure* instance_;
   std::unordered_map<id_t, std::unique_ptr<lockable>> table_;
   id_t next_id = 0;
 
@@ -236,4 +244,4 @@ class arena {
   }
 };
 
-}  // namespace arena
+}  // namespace enclosure
