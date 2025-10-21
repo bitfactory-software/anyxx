@@ -14,8 +14,6 @@ class arena {
  public:
   using id_t = uint64_t;
   static inline constexpr const int no_id = -1;
-  template <anyxx::is_erased_data ErasedData>
-  using any_object = ::arena::any_object<ErasedData>;
   class lockable;
 
   arena(arena const&) = delete;
