@@ -32,7 +32,7 @@ target_include_directories(anyxx INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-set_target_properties(anyxx PROPERTIES FOLDER "anyxx")
+set_target_properties(anyxx PROPERTIES FOLDER "libraries")
 # --- anyxx library
 
 # +++ coro_callback library
@@ -43,7 +43,22 @@ target_include_directories(coro_callback INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-set_target_properties(coro_callback PROPERTIES FOLDER "coro_callback")
+set_target_properties(coro_callback PROPERTIES FOLDER "libraries")
+# --- coro_callback library
+
+# +++ arena library
+file(GLOB_RECURSE arena_HEADERS "./arena/*.hpp")
+file(GLOB_RECURSE arena_SOURCES "./arena/*.cpp")
+add_library(arena INTERFACE ${arena_HEADERS} ${arena_SOURCES})
+target_include_directories(arena INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
+)
+set_target_properties(arena PROPERTIES FOLDER "libraries")
+target_link_libraries(arena INTERFACE
+    anyxx 
+    coro_callback 
+)
 # --- coro_callback library
 
 
