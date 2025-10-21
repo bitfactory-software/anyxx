@@ -12,15 +12,15 @@ R rethrow_exception(std::exception_ptr exception) {
   return R{};
 }
 template <typename R>
-struct callback {
+struct recieve {
   template <typename Promise, typename HandleReturn>
   struct basic_promise_type : HandleReturn {
-    callback<R> get_return_object(this auto& self) {
-      return callback<R>{std::coroutine_handle<Promise>::from_promise(self)};
+    recieve<R> get_return_object(this auto& self) {
+      return recieve<R>{std::coroutine_handle<Promise>::from_promise(self)};
     }
 
-    struct resume_callback {
-      resume_callback() noexcept {}
+    struct resume_recieve {
+      resume_recieve() noexcept {}
       bool await_ready() const noexcept { return false; }
       void await_suspend(
           std::coroutine_handle<Promise> thisCoroutine) noexcept {
@@ -30,7 +30,7 @@ struct callback {
       void await_resume() noexcept {}
     };
     auto initial_suspend() noexcept { return std::suspend_never{}; }
-    auto final_suspend() noexcept { return resume_callback{}; }
+    auto final_suspend() noexcept { return resume_recieve{}; }
     void unhandled_exception() noexcept {
       exception_ = std::current_exception();
     }
@@ -48,15 +48,15 @@ struct callback {
   };
   struct promise_type : basic_promise_type<promise_type, handle_return<R>> {};
 
-  callback(const callback&) = delete;
-  callback& operator=(const callback&) = delete;
-  callback& operator=(callback&& r) noexcept = delete;
+  recieve(const recieve&) = delete;
+  recieve& operator=(const recieve&) = delete;
+  recieve& operator=(recieve&& r) noexcept = delete;
 
-  callback() noexcept = default;
-  callback(callback&& t) noexcept { std::swap(coroutine_, t.coroutine_); }
-  explicit callback(std::coroutine_handle<promise_type> coroutine)
+  recieve() noexcept = default;
+  recieve(recieve&& t) noexcept { std::swap(coroutine_, t.coroutine_); }
+  explicit recieve(std::coroutine_handle<promise_type> coroutine)
       : coroutine_(coroutine) {}
-  ~callback() noexcept {
+  ~recieve() noexcept {
     if (coroutine_) coroutine_.destroy();
   }
 
@@ -80,11 +80,11 @@ struct callback {
 };
 
 template <typename R>
-using api_callback = std::function<void(R)>;
+using api_recieve = std::function<void(R)>;
 template <typename R>
-using api = std::function<void(api_callback<R>)>;
+using api = std::function<void(api_recieve<R>)>;
 template <typename R>
-struct callback_awaiter {
+struct recieve_awaiter {
   bool await_ready() { return false; }
   void await_suspend(auto callingContinuation) {
     bool called = false;
@@ -101,7 +101,7 @@ struct callback_awaiter {
   R result_ = {};
 };
 template <>
-struct callback_awaiter<void> {
+struct recieve_awaiter<void> {
   bool await_ready() { return false; }
   void await_suspend(auto callingContinuation) {
     bool called = false;
@@ -115,29 +115,27 @@ struct callback_awaiter<void> {
   const api<void> api_;
 };
 template <typename R>
-auto as_coro(api<R> api) {
-  return callback_awaiter<R>{api};
+auto wrap(api<R> api) {
+  return recieve_awaiter<R>{api};
 }
 
 }  // namespace coro_callback
 
-TEST_CASE("example XX/ callback1") {
-  using namespace coro_callback;
-
+TEST_CASE("example XX/ recieve1") {
   int step = 1;
 
-  auto int_callback_api = [&]() {
-    return as_coro<int>([&](std::function<void(int)> callback) {
-      std::println("before callback");
+  auto int_recieve_api = [&]() {
+    return coro_callback::wrap<int>([&](std::function<void(int)> recieve) {
+      std::println("before recieve");
       CHECK(step++ == 1);
-      callback(42);
-      std::println("after callback");
+      recieve(42);
+      std::println("after recieve");
       CHECK(step++ == 3);
     });
   };
 
-  auto test1 = [&] -> callback<int> {
-    auto _42 = co_await int_callback_api();
+  auto test1 = [&] -> coro_callback::recieve<int> {
+    auto _42 = co_await int_recieve_api();
     std::println("recieving 42");
     CHECK(step++ == 2);
     CHECK(42 == _42);
@@ -148,23 +146,21 @@ TEST_CASE("example XX/ callback1") {
   CHECK(step == 4);
 }
 
-TEST_CASE("example XX/ callback2") {
-  using namespace coro_callback;
-
+TEST_CASE("example XX/ recieve2") {
   int step = 1;
 
-  auto void_callback_api = [&]() {
-    return as_coro<void>([&](std::function<void(void)> callback) {
-      std::println("before callback");
+  auto void_recieve_api = [&]() {
+    return coro_callback::wrap<void>([&](std::function<void(void)> recieve) {
+      std::println("before recieve");
       CHECK(step++ == 1);
-      callback();
-      std::println("after callback");
+      recieve();
+      std::println("after recieve");
       CHECK(step++ == 3);
     });
   };
 
-  auto test2 = [&] -> callback<void> {
-    co_await void_callback_api();
+  auto test2 = [&] -> coro_callback::recieve<void> {
+    co_await void_recieve_api();
     std::println("recieving");
     CHECK(step++ == 2);
   };
