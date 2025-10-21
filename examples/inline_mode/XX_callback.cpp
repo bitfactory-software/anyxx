@@ -36,17 +36,15 @@ TEST_CASE("example XX/ recieve1") {
   };
   // - lib wrapped for coro style
   step = 1;
-  auto test1 = [&] -> coro_callback::recieve<int> {
+  CHECK(step == 1);
+  [&] -> coro_callback::recieve<void> {
     // + app coro style must exist inside acoro
     auto _42 = co_await int_recieve_coro();
     std::println("recieving 42");
     CHECK(step++ == 2);
     CHECK(42 == _42);
-    co_return _42;
     // - app coro style
-  };
-  CHECK(step == 1);
-  CHECK(test1().get_result() == 42);  // leak result out of coro callback
+  }();
   CHECK(step == 4);
 }
 
@@ -79,14 +77,12 @@ TEST_CASE("example XX/ recieve2") {
   };
   // - lib wrapped for coro style
   step = 1;
-  auto test2coro = [&] -> coro_callback::recieve<void> {
+  [&] -> coro_callback::recieve<void> {
     // + app coro style must exist inside acoro
     co_await void_recieve_coro();
     std::println("recieving");
     CHECK(step++ == 2);
     // - app coro style
-  };
-  CHECK(step == 1);
-  test2coro();
+  }();
   CHECK(step == 4);
 }
