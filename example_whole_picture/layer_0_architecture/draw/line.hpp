@@ -6,7 +6,7 @@
 
 namespace whole_picture::architecture::draw{
 
-void line(auto const surface, point p1_, point p2_){
+void line(auto surface, point p1_, point p2_){
   if (p1_ == p2_) return;
 
   const auto ch = '*';
