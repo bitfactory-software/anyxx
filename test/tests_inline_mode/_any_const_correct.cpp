@@ -82,7 +82,6 @@ static_assert(!std::is_assignable_v<mutating_function const,
 
 }  // namespace
 
-
 TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
   using namespace anyxx;
 
@@ -100,8 +99,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
     const_function const cf = function_object;
     mutating_function const mf = function_object;
     REQUIRE(cf() == "hallo");
-    mf("world");
-    REQUIRE(cf() == "world");
+    static_assert(!std::invocable<mutating_function const, char const*>);
   }
 
   {
@@ -233,7 +231,7 @@ static_assert(
 static_assert(can_call_get_text<mutable_text_i_mutable>);
 static_assert(can_call_get_text<mutable_text_i_mutable const>);
 static_assert(can_call_set_text<mutable_text_i_mutable>);
-static_assert(can_call_set_text<mutable_text_i_mutable const>);
+static_assert(!can_call_set_text<mutable_text_i_mutable const>);
 
 TEST_CASE("_interface_const_correct const/mutable member function") {
   using namespace anyxx;
@@ -261,6 +259,4 @@ TEST_CASE("_interface_const_correct const/mutable member function") {
   //  compile!
   mutable_text_i_mutable(a_text).set_text("world");
   REQUIRE(mutable_text_i_mutable(a_text).get_text() == "world");
-  const_mutable_i2.set_text("again");
-  REQUIRE(const_mutable_i2.get_text() == "again");
 }

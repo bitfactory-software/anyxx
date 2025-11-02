@@ -1924,14 +1924,14 @@ struct dispatch<R(Args...)> {
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
 
-#define _detail_ANYPP_METHOD(type, name, name_ext, exact_const, const_, ...) \
-  type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const \
-    requires(::anyxx::const_correct_call_for_erased_data<                    \
-             void const_*, erased_data_t, exact_const>)                      \
-  {                                                                          \
-    return static_cast<v_table_t*>(v_table_)->name(                          \
-        anyxx::get_void_data_ptr(base_t::erased_data_)                       \
-            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
+#define _detail_ANYPP_METHOD(type, name, name_ext, exact_const, const_, ...)  \
+  type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
+    requires(::anyxx::const_correct_call_for_erased_data<                     \
+             void const_*, erased_data_t, exact_const>)                       \
+  {                                                                           \
+    return static_cast<v_table_t*>(v_table_)->name(                           \
+        anyxx::get_void_data_ptr(base_t::erased_data_)                        \
+            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
   }
 
 #define _detail_ANYPP_MAP_FUNCTIONS(...)                     \

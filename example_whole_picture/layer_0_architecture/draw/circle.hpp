@@ -6,7 +6,7 @@
 
 namespace whole_picture::architecture::draw{
 
-void circle(auto const surface, point center, int radius){
+void circle(auto surface, point center, int radius){
   const auto ch = '*';
   auto writeToAllQuadrants = [&](int x1, int x2, int y1, int y2) {
     surface.write({x1 + center.x, -y1 + center.y}, ch);
