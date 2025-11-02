@@ -35,17 +35,6 @@ target_include_directories(anyxx INTERFACE
 set_target_properties(anyxx PROPERTIES FOLDER "libraries")
 # --- anyxx library
 
-# +++ coro_callback library
-file(GLOB_RECURSE coro_callback_HEADERS "./coro_callback/*.hpp")
-file(GLOB_RECURSE coro_callback_SOURCES "./coro_callback/*.cpp")
-add_library(coro_callback INTERFACE ${coro_callback_HEADERS} ${coro_callback_SOURCES})
-target_include_directories(coro_callback INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
-)
-set_target_properties(coro_callback PROPERTIES FOLDER "libraries")
-# --- coro_callback library
-
 # +++ enclosure library
 file(GLOB_RECURSE enclosure_HEADERS "./enclosure/*.hpp")
 file(GLOB_RECURSE enclosure_SOURCES "./enclosure/*.cpp")
@@ -57,7 +46,6 @@ target_include_directories(enclosure INTERFACE
 set_target_properties(enclosure PROPERTIES FOLDER "libraries")
 target_link_libraries(enclosure INTERFACE
     anyxx 
-    coro_callback 
 )
 # --- enclosure library
 
