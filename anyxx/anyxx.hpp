@@ -2092,7 +2092,7 @@ struct dispatch<R(Args...)> {
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
-#define ANY_METHOD_BRACED1(ret, name, params) \
+#define ANY_METHOD_BRACED1(ret, name, params)
 
 #define ANY_METHOD(ret, name, params) \
   ANY_METHOD_(ret, name, name, false, , _detail_REMOVE_PARENS params)
@@ -2100,9 +2100,9 @@ struct dispatch<R(Args...)> {
 #define ANY_CONST_METHOD(ret, name, params) \
   ANY_METHOD_(ret, name, name, false, const, _detail_REMOVE_PARENS params)
 
-#define ANY_OP(ret, op, ...)                                                  \
+#define ANY_OP(ret, op, params)                                               \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, , \
-              __VA_ARGS__)
+              _detail_REMOVE_PARENS params)
 
 #define ANY_OP_EXACT(ret, op, ...)                                           \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, , \

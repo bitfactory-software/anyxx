@@ -14,7 +14,7 @@ ANY(string_to_string,
 
 ANY(string_to_string_mutable,
              (ANY_CONST_OP(std::string, ()),
-              ANY_OP(std::string, (), std::string const&)))
+              ANY_OP(std::string, (), (std::string const&))))
 
 }  // namespace test_ns
 

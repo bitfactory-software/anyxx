@@ -27,7 +27,7 @@ struct functor2_t {
 
 namespace {
 ANY(overloaded_function_object,
-             (ANY_OP(std::string, (), std::string const&),
+             (ANY_OP(std::string, (), (std::string const&)),
               ANY_CONST_OP(std::string, ())))
 }
 
