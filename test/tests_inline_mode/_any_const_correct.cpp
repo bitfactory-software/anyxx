@@ -181,10 +181,10 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-ANY(text_i_const, (ANY_CONST_METHOD(std::string, get_text)))
+ANY(text_i_const, (ANY_CONST_METHOD(std::string, get_text, ())))
 
 ANY_(text_i_mutable, text_i_const,
-              (ANY_METHOD(void, set_text, std::string const&)))
+              (ANY_METHOD(void, set_text, (std::string const&))))
 }  // namespace
 
 using const_text_i = text_i_const<const_observer>;

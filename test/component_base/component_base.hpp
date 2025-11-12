@@ -32,9 +32,9 @@ ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_ba
 
 namespace test::component_base {
 
-ANY(to_string_i, (ANY_CONST_METHOD(std::string, to_string)))
-ANY(get_value_i, (ANY_CONST_METHOD(double, get_value)))
-ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, double)))
+ANY(to_string_i, (ANY_CONST_METHOD(std::string, to_string, ())))
+ANY(get_value_i, (ANY_CONST_METHOD(double, get_value, ())))
+ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double))))
 
 COMPONENT_BASE_EXPORT
 to_string_i<anyxx::const_observer> get_to_string_i_co();

@@ -17,11 +17,11 @@ struct position {
 };
 
 namespace {
-ANY(any_drawable, (ANY_CONST_METHOD(void, draw, position)))
+ANY(any_drawable, (ANY_CONST_METHOD(void, draw, (position))))
 
 ANY_(any_shape, any_drawable,
-              (ANY_CONST_METHOD(int, count_sides), ANY_CONST_METHOD(double, area),
-               ANY_CONST_METHOD(double, perimeter)))
+              (ANY_CONST_METHOD(int, count_sides, ()), ANY_CONST_METHOD(double, area, ()),
+               ANY_CONST_METHOD(double, perimeter, ())))
 
 ANY_(any_callable_shape, any_shape,
               (ANY_CONST_OP(std::string, (), std::string const&)))

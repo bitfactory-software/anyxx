@@ -65,11 +65,11 @@ struct regular_polygon {
 };
 
 ANY(any_drawable,
-             (ANY_CONST_METHOD(void, draw, std::ostream&, position)))
+             (ANY_CONST_METHOD(void, draw, (std::ostream&, position))))
 
 ANY_(any_shape, any_drawable,
-              (ANY_CONST_METHOD(int, count_sides), ANY_CONST_METHOD(double, area),
-               ANY_CONST_METHOD(double, perimeter)))
+              (ANY_CONST_METHOD(int, count_sides, ()), ANY_CONST_METHOD(double, area, ()),
+               ANY_CONST_METHOD(double, perimeter, ())))
 
 template <>
 struct any_drawable_v_table_map<std::string> {

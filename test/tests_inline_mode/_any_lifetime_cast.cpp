@@ -12,7 +12,7 @@ struct X {
   std::string to_string() const { return s_; }
 };
 
-ANY(to_string_i, (ANY_CONST_METHOD(std::string, to_string)))
+ANY(to_string_i, (ANY_CONST_METHOD(std::string, to_string, ())))
 
 using to_string_sc = to_string_i<shared_const>;
 using to_string_co = to_string_i<const_observer>;

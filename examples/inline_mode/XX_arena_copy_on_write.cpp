@@ -30,7 +30,7 @@ template <template <anyxx::is_erased_data> typename ToAny>
 using pointer = example_enclosure::pointer<ToAny>;
 
 ANY_(any_named, enclosure::any_object,
-     (ANY_CONST_METHOD(std::string, get_name)))
+     (ANY_CONST_METHOD(std::string, get_name, ())))
 
 auto match_name = [](auto const& o, std::string_view query) {
   return o->get_name() == query;

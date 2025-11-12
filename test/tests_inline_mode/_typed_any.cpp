@@ -14,8 +14,8 @@ struct x_t {
 }
 
 namespace typed_any_test {
-ANY(test_i, (ANY_CONST_METHOD(std::string, to_string),
-                      ANY_METHOD(void, from_string, std::string_view)))
+ANY(test_i, (ANY_CONST_METHOD(std::string, to_string, ()),
+                      ANY_METHOD(void, from_string, (std::string_view))))
 }  // namespace typed_any_test
 
 using namespace typed_any_test;

@@ -13,9 +13,9 @@ using namespace anyxx;
 
 namespace _21_Tree_any_borrow_as {
 
-ANY(any_value, (ANY_CONST_METHOD(int, value)))
+ANY(any_value, (ANY_CONST_METHOD(int, value, ())))
 
-ANY(any_serializeable, (ANY_CONST_METHOD(void, serialize, std::ostream&)))
+ANY(any_serializeable, (ANY_CONST_METHOD(void, serialize, (std::ostream&))))
 template <is_erased_data ErasedData>
 std::ostream& operator<<(std::ostream& s,
                          any_serializeable<ErasedData> const& any) {

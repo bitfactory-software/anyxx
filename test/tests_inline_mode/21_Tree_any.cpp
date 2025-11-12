@@ -15,9 +15,9 @@ using namespace anyxx;
 namespace {
 
 ANY(node_i,
-             (ANY_CONST_METHOD(int, value),
-              ANY_CONST_METHOD(string, as_forth),
-              ANY_CONST_METHOD(string, as_lisp)))
+             (ANY_CONST_METHOD(int, value, ()),
+              ANY_CONST_METHOD(string, as_forth, ()),
+              ANY_CONST_METHOD(string, as_lisp, ())))
 
 using node = node_i<shared_const>;
 

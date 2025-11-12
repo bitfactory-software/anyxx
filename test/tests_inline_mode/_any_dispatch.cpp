@@ -9,9 +9,9 @@ using namespace anyxx;
 ANY_HAS_DISPATCH(, test_base_i)
 ANY_HAS_DISPATCH(, test_derived_i)
 namespace {
-ANY(test_base_i, (ANY_CONST_METHOD(std::string, to_string)))
+ANY(test_base_i, (ANY_CONST_METHOD(std::string, to_string, ())))
 ANY_(test_derived_i, test_base_i,
-     (ANY_METHOD(void, from_string, std::string const&)))
+     (ANY_METHOD(void, from_string, (std::string const&))))
 
 }  // namespace
 

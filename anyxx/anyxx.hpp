@@ -1811,6 +1811,8 @@ struct dispatch<R(Args...)> {
   typename std::remove_const<typename std::remove_volatile< \
       typename std::remove_reference<x>::type>::type>::type
 #define _detail_PARENS ()
+#define _detail_REMOVE_PARENS(...) __VA_ARGS__
+#define _detail_APPLY(macro, args) macro args
 #define _detail_foreach_macro_h(macro, a, ...) \
   macro(a)                                     \
       __VA_OPT__(_detail_foreach_macro_a _detail_PARENS(macro, __VA_ARGS__))
@@ -2090,11 +2092,13 @@ struct dispatch<R(Args...)> {
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
-#define ANY_METHOD(ret, name, ...) \
-  ANY_METHOD_(ret, name, name, false, , __VA_ARGS__)
+#define ANY_METHOD_BRACED1(ret, name, params) \
 
-#define ANY_CONST_METHOD(ret, name, ...) \
-  ANY_METHOD_(ret, name, name, false, const, __VA_ARGS__)
+#define ANY_METHOD(ret, name, params) \
+  ANY_METHOD_(ret, name, name, false, , _detail_REMOVE_PARENS params)
+
+#define ANY_CONST_METHOD(ret, name, params) \
+  ANY_METHOD_(ret, name, name, false, const, _detail_REMOVE_PARENS params)
 
 #define ANY_OP(ret, op, ...)                                                  \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, , \
