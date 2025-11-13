@@ -55,7 +55,7 @@ struct functor {
 
 namespace {
 
-ANY(const_function_i, (ANY_CONST_OP(std::string, ())))
+ANY(const_function_i, (ANY_CONST_OP(std::string, (), ())))
 ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&))))
 
 using const_function = const_function_i<const_observer>;

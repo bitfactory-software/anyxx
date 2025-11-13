@@ -2099,17 +2099,17 @@ struct dispatch<R(Args...)> {
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, , \
               _detail_EXPAND_1 params)
 
-#define ANY_OP_EXACT(ret, op, ...)                                           \
+#define ANY_OP_EXACT(ret, op, params)                                        \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, , \
-              __VA_ARGS__)
+              _detail_EXPAND_1 params)
 
-#define ANY_CONST_OP(ret, op, ...)                                          \
+#define ANY_CONST_OP(ret, op, params)                                       \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
-              const, __VA_ARGS__)
+              const, _detail_EXPAND_1 params)
 
-#define ANY_CONST_OP_EXACT(ret, op, ...)                                   \
+#define ANY_CONST_OP_EXACT(ret, op, params)                                \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
-              const, __VA_ARGS__)
+              const, _detail_EXPAND_1 params)
 
 #define ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                             \
