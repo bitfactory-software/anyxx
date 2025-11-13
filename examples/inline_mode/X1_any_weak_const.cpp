@@ -16,7 +16,7 @@ struct widget_a {
   std::string get() const { return "widget_a"; }
 };
 
-ANY(any_widget, (ANY_CONST_METHOD(std::string, get, ())))
+ANY(any_widget, (ANY_METHOD(std::string, get, (), const)))
 
 any_widget<weak> any_widget_weak;
 

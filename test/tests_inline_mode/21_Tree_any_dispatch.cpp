@@ -16,7 +16,7 @@ ANY_HAS_DISPATCH(_21_Tree_TE_interface_dispatch::node, node_i)
 namespace _21_Tree_TE_interface_dispatch {
 
 namespace node {
-ANY(node_i, (ANY_CONST_METHOD(int, value, ())))
+ANY(node_i, (ANY_METHOD(int, value, (), const)))
 }
 }  // namespace _21_Tree_TE_interface_dispatch
 

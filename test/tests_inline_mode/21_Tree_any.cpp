@@ -1,10 +1,10 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
-#include <anyxx/anyxx.hpp>
 
 using std::cout;
 using std::string;
@@ -15,9 +15,8 @@ using namespace anyxx;
 namespace {
 
 ANY(node_i,
-             (ANY_CONST_METHOD(int, value, ()),
-              ANY_CONST_METHOD(string, as_forth, ()),
-              ANY_CONST_METHOD(string, as_lisp, ())))
+    (ANY_METHOD(int, value, (), const), ANY_METHOD(string, as_forth, (), const),
+     ANY_METHOD(string, as_lisp, (), const)))
 
 using node = node_i<shared_const>;
 
@@ -62,7 +61,6 @@ auto make_node(ARGS&&... args) {
 }
 
 }  // namespace
-
 
 TEST_CASE("21_Tree_TE_dynamic_interface") {
   using namespace anyxx;

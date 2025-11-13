@@ -40,7 +40,7 @@ ANY(surface, (ANY_METHOD(void, write, (point, char))))
 using mutable_observed_surface = surface<anyxx::mutable_observer>;
 using unique_surface = surface<anyxx::unique>;
 
-ANY(shape, (ANY_CONST_METHOD(void, draw, (mutable_observed_surface))))
+ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const)))
 
 ARCHITECTURE_EXPORT std::string hello();
 
