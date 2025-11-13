@@ -19,10 +19,10 @@ ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (int))))
 
 ANY(map_i_to_string_const_and_mutable,
              (ANY_OP_EXACT(std::string&, [], (int)),
-              ANY_CONST_OP_EXACT(std::string const&, [], (int))))
+              ANY_OP_EXACT(std::string const&, [], (int), const)))
 
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-              (ANY_CONST_OP_EXACT(std::string const&, [], (int))))
+              (ANY_OP_EXACT(std::string const&, [], (int), const)))
 
 }  // namespace
 

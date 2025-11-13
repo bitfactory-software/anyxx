@@ -25,7 +25,7 @@ ANY_(any_shape, any_drawable,
       ANY_METHOD(double, perimeter, (), const)))
 
 ANY_(any_callable_shape, any_shape,
-     (ANY_CONST_OP(std::string, (), (std::string const&))))
+     (ANY_OP(std::string, (), (std::string const&), const)))
 }  // namespace
 
 struct circle {
