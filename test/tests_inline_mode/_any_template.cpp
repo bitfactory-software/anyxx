@@ -20,7 +20,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
                       (ANY_METHOD(VALUE const&, at, (KEY), const),
                        ANY_METHOD(std::size_t, size, (), const)))
 
-ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_t_i,
+ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_t_i, map_t_i, (KEY, VALUE),
                       (ANY_METHOD(VALUE&, at, (KEY)),
                        ANY_METHOD(std::size_t, size, (), const)))
 

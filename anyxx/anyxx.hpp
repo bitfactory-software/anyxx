@@ -1889,7 +1889,7 @@ struct dispatch<R(Args...)> {
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER_H t
 
 #define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H(...) \
-  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
+  __VA_OPT__(<__VA_ARGS__>)
 
 #define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(t) \
   _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H t
