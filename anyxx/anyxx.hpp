@@ -628,9 +628,9 @@ dispatch_table_t* dispatch_table_instance() {
 
 #endif  //
 
-template <typename V_TABLE, typename Concrete>
+template <typename VTable, typename Concrete>
 auto bind_v_table_to_meta_data() {
-  auto v_table = V_TABLE::template imlpementation<Concrete>();
+  auto v_table = VTable::template imlpementation<Concrete>();
   get_meta_data<Concrete>().register_v_table(v_table);
   return v_table;
 }
@@ -959,10 +959,10 @@ bool is_derived_from(any_base<VV> const& any) {
   return is_derived_from(typeid(From::v_table_t), any);
 }
 
-template <typename V_TABLE>
+template <typename VTable>
 void set_is_derived_from(auto v_table) {
   v_table->_is_derived_from = +[](const std::type_info& from) {
-    return V_TABLE::static_is_derived_from(from);
+    return VTable::static_is_derived_from(from);
   };
 }
 
@@ -1011,12 +1011,12 @@ auto unerase_cast_if(Any const& o) {
 }
 
 #ifdef ANY_DLL_MODE
-template <typename V_TABLE, typename Concrete>
-V_TABLE* v_table_instance_implementaion();
+template <typename VTable, typename Concrete>
+VTable* v_table_instance_implementaion();
 #else
-template <typename V_TABLE, typename Concrete>
-V_TABLE* v_table_instance_implementaion() {
-  static V_TABLE v_table{std::in_place_type<Concrete>};
+template <typename VTable, typename Concrete>
+VTable* v_table_instance_implementaion() {
+  static VTable v_table{std::in_place_type<Concrete>};
   static auto __ = anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
   return &v_table;
 }
