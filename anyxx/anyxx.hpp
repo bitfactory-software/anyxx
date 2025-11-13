@@ -1952,7 +1952,7 @@ struct dispatch<R(Args...)> {
   __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define ANY_TEMPLATE_(t, n, BASE, l)                                           \
+#define ANY_META_FUNCTION(t, n, BASE, l)                                       \
                                                                                \
   template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
   struct n;                                                                    \
@@ -2084,11 +2084,11 @@ struct dispatch<R(Args...)> {
 
 //    n(n&) = default;                                                           \
 
-#define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, l)
+#define ANY_(n, BASE, l) ANY_META_FUNCTION((), n, BASE, l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, l)
+#define ANY_TEMPLATE(t, n, l) ANY_META_FUNCTION(t, n, ::anyxx::any_base, l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
@@ -2102,7 +2102,6 @@ struct dispatch<R(Args...)> {
 #define ANY_OP_EXACT(ret, op, params, ...)                                 \
   ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
               __VA_ARGS__, _detail_EXPAND params)
-
 
 #define ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                             \
