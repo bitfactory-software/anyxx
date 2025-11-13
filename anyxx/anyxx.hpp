@@ -1842,10 +1842,10 @@ struct dispatch<R(Args...)> {
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
-#define _detail_ANYPP_FPD_H(l) _detail_ANYPP_FUNCTION_PTR_DECL l
-#define _detail_ANYPP_MEMEBER_LIMP_H(l) _detail_ANYPP_LAMBDA_TO_MEMEBER_IMPL l
-#define _detail_ANYPP_FREE_LIMP_H(l) _detail_ANYPP_LAMBDA_TO_FREE_IMPL l
-#define _detail_ANYPP_METHOD_H(l) _detail_ANYPP_METHOD l
+#define _detail_ANYXX_FPD_H(l) _detail_ANYXX_FUNCTION_PTR_DECL l
+#define _detail_ANYXX_MEMEBER_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL l
+#define _detail_ANYXX_FREE_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_FREE_IMPL l
+#define _detail_ANYXX_METHOD_H(l) _detail_ANYXX_METHOD l
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
@@ -1857,67 +1857,67 @@ struct dispatch<R(Args...)> {
 #define _typename _typename1
 #define _typename1(t) t
 
-#define _detail_ANYPP_TEMPLATE_FORMAL_ARG_H(l) \
-  _detail_ANYPP_TEMPLATE_FORMAL_ARG l
-#define _detail_ANYPP_TEMPLATE_FORMAL_ARG(_typename) , typename _typename
-#define _detail_ANYPP_TEMPLATE_FORMAL_ARGS(...) \
-  __VA_OPT__(_detail_ANYPP_TEMPLATE_FORMAL_ARGS1(__VA_ARGS__))
-#define _detail_ANYPP_TEMPLATE_FORMAL_ARGS1(h, ...) \
+#define _detail_ANYXX_TEMPLATE_FORMAL_ARG_H(l) \
+  _detail_ANYXX_TEMPLATE_FORMAL_ARG l
+#define _detail_ANYXX_TEMPLATE_FORMAL_ARG(_typename) , typename _typename
+#define _detail_ANYXX_TEMPLATE_FORMAL_ARGS(...) \
+  __VA_OPT__(_detail_ANYXX_TEMPLATE_FORMAL_ARGS1(__VA_ARGS__))
+#define _detail_ANYXX_TEMPLATE_FORMAL_ARGS1(h, ...) \
   typename _typename h __VA_OPT__(                  \
-      _detail_ANYPP_TEMPLATE_FORMAL_ARGS2((__VA_ARGS__)))
-#define _detail_ANYPP_TEMPLATE_FORMAL_ARGS2(l)               \
-  _detail_foreach_macro(_detail_ANYPP_TEMPLATE_FORMAL_ARG_H, \
+      _detail_ANYXX_TEMPLATE_FORMAL_ARGS2((__VA_ARGS__)))
+#define _detail_ANYXX_TEMPLATE_FORMAL_ARGS2(l)               \
+  _detail_foreach_macro(_detail_ANYXX_TEMPLATE_FORMAL_ARG_H, \
                         _detail_EXPAND_LIST l)
 
-#define _detail_ANYPP_TEMPLATE_ARG_H(l) _detail_ANYPP_TEMPLATE_ARG l
+#define _detail_ANYXX_TEMPLATE_ARG_H(l) _detail_ANYXX_TEMPLATE_ARG l
 
-#define _detail_ANYPP_TEMPLATE_ARG(_typename) , _typename
+#define _detail_ANYXX_TEMPLATE_ARG(_typename) , _typename
 
-#define _detail_ANYPP_TEMPLATE_ARGS(...) \
-  __VA_OPT__(_detail_ANYPP_TEMPLATE_ARGS1(__VA_ARGS__))
+#define _detail_ANYXX_TEMPLATE_ARGS(...) \
+  __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS1(__VA_ARGS__))
 
-#define _detail_ANYPP_TEMPLATE_ARGS1(h, ...) \
-  _typename h __VA_OPT__(_detail_ANYPP_TEMPLATE_ARGS2((__VA_ARGS__)))
+#define _detail_ANYXX_TEMPLATE_ARGS1(h, ...) \
+  _typename h __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS2((__VA_ARGS__)))
 
-#define _detail_ANYPP_TEMPLATE_ARGS2(l) \
-  _detail_foreach_macro(_detail_ANYPP_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
+#define _detail_ANYXX_TEMPLATE_ARGS2(l) \
+  _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
 
-#define _detail_ANYPP_V_TABLE_TEMPLATE_HEADER_H(...) \
-  __VA_OPT__(template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
+#define _detail_ANYXX_V_TABLE_TEMPLATE_HEADER_H(...) \
+  __VA_OPT__(template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
-#define _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) \
-  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER_H t
+#define _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER_H t
 
-#define _detail_ANYPP_INVOKE_TEMPLATE_PARAMS_H(...) \
-  __VA_OPT__(<_detail_ANYPP_TEMPLATE_ARGS(__VA_ARGS__)>)
+#define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H(...) \
+  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
 
-#define _detail_ANYPP_INVOKE_TEMPLATE_PARAMS(t) \
-  _detail_ANYPP_INVOKE_TEMPLATE_PARAMS_H t
+#define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(t) \
+  _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H t
 
-#define _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
-  __VA_OPT__(<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
+#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
+  __VA_OPT__(<_detail_ANYXX_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
-#define _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
-  _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
+#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
+  _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
 #define _detail_TA_H(l) _detail_TA l
 
 #define _detail_TA(type) , type
 
-#define _detail_ANYPP_MAP_LIMP_H(l) _detail_ANYPP_MAP_IMPL l
+#define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 
-#define _detail_ANYPP_MAP_IMPL(type, name, name_ext, exact_const, const_, ...) \
+#define _detail_ANYXX_MAP_IMPL(type, name, name_ext, exact_const, const_, ...) \
   auto name(T const_* x __VA_OPT__(                                            \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
     return (*x).name_ext(                                                      \
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                 \
   };
 
-#define _detail_ANYPP_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, \
+#define _detail_ANYXX_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, \
                                         const_, ...)                       \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_ANYPP_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext,     \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext,     \
                                              exact_const, const_, ...) \
   name = [](void const_* _vp __VA_OPT__(                               \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {   \
@@ -1926,7 +1926,7 @@ struct dispatch<R(Args...)> {
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
 
-#define _detail_ANYPP_METHOD(type, name, name_ext, exact_const, const_, ...)  \
+#define _detail_ANYXX_METHOD(type, name, name_ext, exact_const, const_, ...)  \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
     requires(::anyxx::const_correct_call_for_erased_data<                     \
              void const_*, erased_data_t, exact_const>)                       \
@@ -1936,43 +1936,43 @@ struct dispatch<R(Args...)> {
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
   }
 
-#define _detail_ANYPP_MAP_FUNCTIONS(...)                     \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_MAP_LIMP_H, \
+#define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define _detail_ANYPP_V_TABLE_FUNCTION_PTRS(...)        \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_FPD_H, \
+#define _detail_ANYXX_V_TABLE_FUNCTION_PTRS(...)        \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_FPD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
 
-#define _detail_ANYPP_V_TABLE_LAMBDAS(...)                       \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_MEMEBER_LIMP_H, \
+#define _detail_ANYXX_V_TABLE_LAMBDAS(...)                       \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MEMEBER_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
 
-#define _detail_ANYPP_METHODS(...)                         \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_METHOD_H, \
+#define _detail_ANYXX_METHODS(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define ANY_META_FUNCTION(t, n, BASE, btpl, l)                                 \
                                                                                \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
+  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
   struct n;                                                                    \
                                                                                \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
+  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
   struct n##_default_v_table_map {                                             \
-    _detail_ANYPP_MAP_FUNCTIONS(l)                                             \
+    _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
+  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
   struct n##_v_table_map                                                       \
-      : n##_default_v_table_map<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(            \
+      : n##_default_v_table_map<_detail_ANYXX_TEMPLATE_FORMAL_ARGS(            \
             _add_head((T), t))> {};                                            \
                                                                                \
-  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
                                                                                \
-  _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
-      : BASE##_v_table _detail_ANYPP_INVOKE_TEMPLATE_PARAMS(btpl),             \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
+      : BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),             \
         anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                   \
     using v_table_base_t =                                                     \
-        BASE##_v_table _detail_ANYPP_INVOKE_TEMPLATE_PARAMS(btpl);             \
+        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);             \
     using v_table_t = n##_v_table;                                             \
     using own_dispatch_holder_t =                                              \
         anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n>;                    \
@@ -1983,17 +1983,17 @@ struct dispatch<R(Args...)> {
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
                                                                                \
-    _detail_ANYPP_V_TABLE_FUNCTION_PTRS(l);                                    \
+    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
     static constexpr bool dispatchs_enabled = anyxx::has_dispatchs<n>;         \
                                                                                \
     template <typename Concrete>                                               \
     n##_v_table(std::in_place_type_t<Concrete> concrete)                       \
         : v_table_base_t(concrete) {                                           \
-      using v_table_map = n##_v_table_map<_detail_ANYPP_TEMPLATE_ARGS(         \
+      using v_table_map = n##_v_table_map<_detail_ANYXX_TEMPLATE_ARGS(         \
           _add_head((Concrete), t))>;                                          \
                                                                                \
-      _detail_ANYPP_V_TABLE_LAMBDAS(l);                                        \
+      _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \
                                                                                \
       if constexpr (dispatchs_enabled) {                                       \
         own_dispatch_holder_t::dispatch_table =                                \
@@ -2009,13 +2009,13 @@ struct dispatch<R(Args...)> {
     }                                                                          \
   };                                                                           \
                                                                                \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
+  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
   struct n : BASE<ErasedData> {                                                \
     using erased_data_t = ErasedData;                                          \
     using base_t = BASE<ErasedData>;                                           \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
-        n##_v_table _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS(t);             \
+        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t);             \
                                                                                \
     template <typename Concrete>                                               \
     static auto v_table_imlpementation() {                                     \
@@ -2059,7 +2059,7 @@ struct dispatch<R(Args...)> {
           anyxx::moveable_from<erased_data_t, typename Otther::erased_data_t>) \
         : base_t(std::move(other)) {}                                          \
                                                                                \
-    _detail_ANYPP_METHODS(l)                                                   \
+    _detail_ANYXX_METHODS(l)                                                   \
                                                                                \
         auto const*                                                            \
         operator->() const {                                                   \
@@ -2080,7 +2080,7 @@ struct dispatch<R(Args...)> {
     friend To anyxx::unchecked_downcast_to(From from)                          \
       requires(std::derived_from<To, From>);                                   \
     template <anyxx::is_erased_data Otther>                                    \
-    using type_for = n<_detail_ANYPP_TEMPLATE_ARGS(_add_head((Otther), t))>;   \
+    using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(_add_head((Otther), t))>;   \
   };
 
 //    n(n&) = default;                                                           \
@@ -2106,7 +2106,7 @@ struct dispatch<R(Args...)> {
 
 #define ANY_FORWARD(interface_namespace, interface_name, ...) \
   namespace interface_namespace {                             \
-  template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(               \
+  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(               \
       _add_head((ErasedData), (__VA_ARGS__)))>                \
   struct interface_name;                                      \
   struct interface_name##_v_table;                            \
