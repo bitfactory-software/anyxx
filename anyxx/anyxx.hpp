@@ -2092,8 +2092,6 @@ struct dispatch<R(Args...)> {
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
-#define ANY_METHOD_BRACED1(ret, name, params)
-
 #define ANY_METHOD(ret, name, params) \
   ANY_METHOD_(ret, name, name, false, , _detail_REMOVE_PARENS params)
 
