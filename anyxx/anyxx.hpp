@@ -1807,12 +1807,9 @@ struct dispatch<R(Args...)> {
   _detail_EXPAND_1(           \
       _detail_EXPAND_1(_detail_EXPAND_1(_detail_EXPAND_1(__VA_ARGS__))))
 #define _detail_EXPAND_1(...) __VA_ARGS__
-#define _detail_RMCVREF(x)                                  \
-  typename std::remove_const<typename std::remove_volatile< \
-      typename std::remove_reference<x>::type>::type>::type
 #define _detail_PARENS ()
-#define _detail_REMOVE_PARENS(...) __VA_ARGS__
 #define _detail_APPLY(macro, args) macro args
+#define _detail_REMOVE_PARENS(l) _detail_APPLY(_detail_EXPAND_1, l)
 #define _detail_foreach_macro_h(macro, a, ...) \
   macro(a)                                     \
       __VA_OPT__(_detail_foreach_macro_a _detail_PARENS(macro, __VA_ARGS__))
@@ -1888,8 +1885,7 @@ struct dispatch<R(Args...)> {
 #define _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER_H t
 
-#define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H(...) \
-  __VA_OPT__(<__VA_ARGS__>)
+#define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H(...) __VA_OPT__(<__VA_ARGS__>)
 
 #define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(t) \
   _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H t
@@ -1898,7 +1894,7 @@ struct dispatch<R(Args...)> {
 
 #define _detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(t)    \
   ErasedData _detail_ANYXX_EXPAND_WITH_LEADING_COMMA( \
-      _detail_APPLY(_detail_REMOVE_PARENS, t))
+      _detail_REMOVE_PARENS(t))
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_ANYXX_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
@@ -2135,6 +2131,7 @@ struct dispatch<R(Args...)> {
   v_table_instance_implementaion<interface_namespace_::interface_##_v_table, \
                                  class_>();                                  \
   }
+
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)    \
   template <>                                                  \
