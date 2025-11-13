@@ -1888,11 +1888,11 @@ struct dispatch<R(Args...)> {
 #define _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) \
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER_H t
 
-#define _detail_ANYPP_V_TABLE_TEMPLATE_INSTANCE_H(...) \
+#define _detail_ANYPP_INVOKE_TEMPLATE_PARAMS_H(...) \
   __VA_OPT__(<_detail_ANYPP_TEMPLATE_ARGS(__VA_ARGS__)>)
 
-#define _detail_ANYPP_V_TABLE_TEMPLATE_INSTANCE(t) \
-  _detail_ANYPP_V_TABLE_TEMPLATE_INSTANCE_H t
+#define _detail_ANYPP_INVOKE_TEMPLATE_PARAMS(t) \
+  _detail_ANYPP_INVOKE_TEMPLATE_PARAMS_H t
 
 #define _detail_ANYPP_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_ANYPP_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
@@ -1952,7 +1952,7 @@ struct dispatch<R(Args...)> {
   __VA_OPT__(_detail_foreach_macro(_detail_ANYPP_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define ANY_META_FUNCTION(t, n, BASE, l)                                       \
+#define ANY_META_FUNCTION(t, n, BASE, btpl, l)                                 \
                                                                                \
   template <_detail_ANYPP_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
   struct n;                                                                    \
@@ -1969,9 +1969,10 @@ struct dispatch<R(Args...)> {
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
                                                                                \
   _detail_ANYPP_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
-      : BASE##_v_table,                                                        \
+      : BASE##_v_table _detail_ANYPP_INVOKE_TEMPLATE_PARAMS(btpl),             \
         anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                   \
-    using v_table_base_t = BASE##_v_table;                                     \
+    using v_table_base_t =                                                     \
+        BASE##_v_table _detail_ANYPP_INVOKE_TEMPLATE_PARAMS(btpl);             \
     using v_table_t = n##_v_table;                                             \
     using own_dispatch_holder_t =                                              \
         anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n>;                    \
@@ -2084,11 +2085,11 @@ struct dispatch<R(Args...)> {
 
 //    n(n&) = default;                                                           \
 
-#define ANY_(n, BASE, l) ANY_META_FUNCTION((), n, BASE, l)
+#define ANY_(n, BASE, l) ANY_META_FUNCTION((), n, BASE, (), l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE(t, n, l) ANY_META_FUNCTION(t, n, ::anyxx::any_base, l)
+#define ANY_TEMPLATE(t, n, l) ANY_META_FUNCTION(t, n, ::anyxx::any_base, (), l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
