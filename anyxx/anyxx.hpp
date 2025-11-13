@@ -1894,6 +1894,12 @@ struct dispatch<R(Args...)> {
 #define _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(t) \
   _detail_ANYXX_INVOKE_TEMPLATE_PARAMS_H t
 
+#define _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(...) __VA_OPT__(, ) __VA_ARGS__
+
+#define _detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(t)    \
+  ErasedData _detail_ANYXX_EXPAND_WITH_LEADING_COMMA( \
+      _detail_APPLY(_detail_REMOVE_PARENS, t))
+
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_ANYXX_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
@@ -1969,7 +1975,8 @@ struct dispatch<R(Args...)> {
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
                                                                                \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
-      : BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),             \
+      : BASE##_v_table                                                         \
+        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                            \
         anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                   \
     using v_table_base_t =                                                     \
         BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);             \
@@ -2010,9 +2017,9 @@ struct dispatch<R(Args...)> {
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
-  struct n : BASE<ErasedData> {                                                \
+  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
     using erased_data_t = ErasedData;                                          \
-    using base_t = BASE<ErasedData>;                                           \
+    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t);             \
