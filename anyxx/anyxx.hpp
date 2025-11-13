@@ -1958,7 +1958,7 @@ struct dispatch<R(Args...)> {
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define ANY_META_FUNCTION(t, n, BASE, btpl, l)                                 \
+#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                     \
                                                                                \
   template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
   struct n;                                                                    \
@@ -2092,11 +2092,11 @@ struct dispatch<R(Args...)> {
 
 //    n(n&) = default;                                                           \
 
-#define ANY_(n, BASE, l) ANY_META_FUNCTION((), n, BASE, (), l)
+#define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, (), l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE(t, n, l) ANY_META_FUNCTION(t, n, ::anyxx::any_base, (), l)
+#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
