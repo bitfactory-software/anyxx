@@ -1908,18 +1908,18 @@ struct dispatch<R(Args...)> {
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 
-#define _detail_ANYXX_MAP_IMPL(type, name, name_ext, exact_const, const_, ...) \
+#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, const_, ...) \
   auto name(T const_* x __VA_OPT__(                                            \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
     return (*x).name_ext(                                                      \
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                 \
   };
 
-#define _detail_ANYXX_FUNCTION_PTR_DECL(type, name, name_ext, exact_const, \
+#define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext, exact_const, \
                                         const_, ...)                       \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(type, name, name_ext,     \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(overload, type, name, name_ext,     \
                                              exact_const, const_, ...) \
   name = [](void const_* _vp __VA_OPT__(                               \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {   \
@@ -1928,7 +1928,7 @@ struct dispatch<R(Args...)> {
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
   };
 
-#define _detail_ANYXX_METHOD(type, name, name_ext, exact_const, const_, ...)  \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const, const_, ...)  \
   type name_ext(__VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ \
     requires(::anyxx::const_correct_call_for_erased_data<                     \
              void const_*, erased_data_t, exact_const>)                       \
@@ -2097,14 +2097,14 @@ struct dispatch<R(Args...)> {
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
 #define ANY_METHOD(ret, name, params, ...) \
-  ANY_METHOD_(ret, name, name, false, __VA_ARGS__, _detail_EXPAND params)
+  ANY_METHOD_(, ret, name, name, false, __VA_ARGS__, _detail_EXPAND params)
 
 #define ANY_OP(ret, op, params, ...)                                        \
-  ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
+  ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
               __VA_ARGS__, _detail_EXPAND params)
 
 #define ANY_OP_EXACT(ret, op, params, ...)                                 \
-  ANY_METHOD_(ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
+  ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
               __VA_ARGS__, _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name, ...) \
