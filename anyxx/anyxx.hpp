@@ -1901,10 +1901,6 @@ struct dispatch<R(Args...)> {
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
   _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
-#define _detail_TA_H(l) _detail_TA l
-
-#define _detail_TA(type) , type
-
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, \
