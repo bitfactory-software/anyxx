@@ -35,7 +35,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
 //           any_recursive_map, (KEY, VALUE),
 //           (ANY_METHOD(VALUE, at, (KEY))))
 
-ANY_TEMPLATE(((KEY)), map_any_to_tstring,
+ANY_TEMPLATE(((KEY)), any_map_to_tstring,
              (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY), const)))
 
 template <>
@@ -73,23 +73,23 @@ TEST_CASE("any template test") {
 
   test_any_map_template<std::string, int>(map_string_to_int);
 
-  auto test_map_any_to_tstring_lambda =
-      [](map_any_to_tstring<const_observer, std::string> map_i) {
+  auto test_any_map_to_tstring_lambda =
+      [](any_map_to_tstring<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
-  test_map_any_to_tstring_lambda(map_string_to_int);
+  test_any_map_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_map_any_to_tstring_lambda =
-      [](map_any_to_tstring<const_observer, std::string> map_i) {
+  auto test_any_map_to_tstring_lambda =
+      [](any_map_to_tstring<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
-  test_map_any_to_tstring_lambda(map_string_to_int);
+  test_any_map_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test3") {
