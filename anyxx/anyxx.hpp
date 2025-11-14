@@ -2118,12 +2118,11 @@ struct dispatch<R(Args...)> {
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
               __VA_ARGS__, _detail_EXPAND params)
 
-#define ANY_FORWARD(interface_namespace, interface_name, ...) \
-  namespace interface_namespace {                             \
-  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(               \
-      _add_head((ErasedData), (__VA_ARGS__)))>                \
-  struct interface_name;                                      \
-  struct interface_name##_v_table;                            \
+#define ANY_FORWARD(interface_namespace, interface_name) \
+  namespace interface_namespace {                        \
+  template <typename ErasedData>                         \
+  struct interface_name;                                 \
+  struct interface_name##_v_table;                       \
   }
 
 #define ANY_REGISTER_MODEL(class_, interface_)                          \
@@ -2180,8 +2179,8 @@ struct dispatch<R(Args...)> {
   ANY_MODEL_FWD(, class_, interface_, interface_namespace_)        \
   ANY_MODEL(, class_, interface_, interface_namespace_)
 
-#define ANY_HAS_DISPATCH(interface_namespace, interface_name, ...)          \
-  ANY_FORWARD(interface_namespace, interface_name, __VA_ARGS__)             \
+#define ANY_HAS_DISPATCH(interface_namespace, interface_name)               \
+  ANY_FORWARD(interface_namespace, interface_name)                          \
                                                                             \
   namespace anyxx {                                                         \
   template <>                                                               \
