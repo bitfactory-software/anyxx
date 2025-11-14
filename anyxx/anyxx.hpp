@@ -1405,7 +1405,7 @@ template <typename R, typename... Classes>
 struct ensure_function_ptr_from_functor_t {
   template <typename FUNCTOR, typename... Args>
   struct striped_virtuals {
-    static R function(Classes*... classes, Args... args) {
+    static R function(Classes&... classes, Args... args) {
       return FUNCTOR{}(classes..., args...);
     };
   };

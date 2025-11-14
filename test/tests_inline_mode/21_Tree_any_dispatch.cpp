@@ -49,34 +49,34 @@ struct Integer {
 // evaluate
 dispatch<int(virtual_<node::model>)> value;
 auto __ = value.define<Plus>(
-    [](auto expr) { return value(expr->left) + value(expr->right); });
+    [](auto const& expr) { return value(expr.left) + value(expr.right); });
 auto __ = value.define<Times>(
-    [](auto expr) { return value(expr->left) * value(expr->right); });
-auto __ = value.define<Integer>([](auto expr) { return expr->i; });
+    [](auto const& expr) { return value(expr.left) * value(expr.right); });
+auto __ = value.define<Integer>([](auto const& expr) { return expr.i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
 dispatch<std::string(virtual_<node::model>)> as_forth;
-auto __ = as_forth.define<Plus>([](auto expr) {
-  return as_forth(expr->left) + " " + as_forth(expr->right) + " +";
+auto __ = as_forth.define<Plus>([](auto const& expr) {
+  return as_forth(expr.left) + " " + as_forth(expr.right) + " +";
 });
-auto __ = as_forth.define<Times>([](auto expr) {
-  return as_forth(expr->left) + " " + as_forth(expr->right) + " *";
+auto __ = as_forth.define<Times>([](auto const& expr) {
+  return as_forth(expr.left) + " " + as_forth(expr.right) + " *";
 });
 auto __ =
-    as_forth.define<Integer>([](auto expr) { return std::to_string(expr->i); });
+    as_forth.define<Integer>([](auto const& expr) { return std::to_string(expr.i); });
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
 dispatch<std::string(virtual_<node::model>)> as_lisp;
-auto __ = as_lisp.define<Plus>([](auto expr) {
-  return "(plus " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+auto __ = as_lisp.define<Plus>([](auto const& expr) {
+  return "(plus " + as_lisp(expr.left) + " " + as_lisp(expr.right) + ")";
 });
-auto __ = as_lisp.define<Times>([](auto expr) {
-  return "(times " + as_lisp(expr->left) + " " + as_lisp(expr->right) + ")";
+auto __ = as_lisp.define<Times>([](auto const& expr) {
+  return "(times " + as_lisp(expr.left) + " " + as_lisp(expr.right) + ")";
 });
 auto __ =
-    as_lisp.define<Integer>([](auto expr) { return std::to_string(expr->i); });
+    as_lisp.define<Integer>([](auto const& expr) { return std::to_string(expr.i); });
 //-----------------------------------------------------------------------------
 }  // namespace _21_Tree_TE_interface_dispatch
 

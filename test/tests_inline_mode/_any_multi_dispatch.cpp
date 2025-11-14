@@ -140,11 +140,11 @@ TEST_CASE("multi_dispatch 4") {
   auto __ =
       collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
   auto __ = collide.define<any_thing<const_observer>, Spaceship>(
-      [](auto any, auto s) {
-        return get_meta_data(*any).get_type_info().name() + "->s"s;
+      [](auto const& any, auto const& s) {
+        return get_meta_data(any).get_type_info().name() + "->s"s;
       });
   auto __ = collide.define<any_thing<const_observer>, Asteroid>(
-      [](auto any, auto s) { return "any->a"; });
+      [](auto const& any, auto const& a) { return "any->a"; });
 
   Asteroid asteroid;
   Spaceship spaceship;

@@ -35,13 +35,13 @@ struct test_derived_i_concept_map<x_t> {
 
 dispatch<std::string(virtual_<test_base_i_co>)> to_string_otherwise;
 auto __ = to_string_otherwise.define<x_t>(
-    [](auto expr) { return expr->s_ + " otherwise"; });
+    [](auto& expr) { return expr.s_ + " otherwise"; });
 
 dispatch<void(virtual_<test_derived_i_mo>, std::string const&)>
     from_string_otherwise;
 auto __ =
-    from_string_otherwise.define<x_t>([](auto expr, std::string const& s) {
-      expr->s_ = std::string{"otherwise "} + s;
+    from_string_otherwise.define<x_t>([](auto& expr, std::string const& s) {
+      expr.s_ = std::string{"otherwise "} + s;
     });
 
 auto base_table = dispatch_table_instance<test_base_i_v_table, x_t>();
