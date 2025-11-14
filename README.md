@@ -1,11 +1,38 @@
 [Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorials_toc.md) / [Tests and Examples](/test/)
 
-# any++: The *type tunnel* vocabulary for *programming on a large scale*
+# any++: *type erasure* vocabulary for *programming on a large scale*
 
 > ℹ️
 > Please refer to [Terms and Definitions](/terms_and_definitions.md) to clarify the meaning of used catchphrases in the context of this library.
 
 ## Building block vocabulary for *programming on a large scale*
+
+### External Polymorphism for Nonintrusive Runtime Polymorphism
+#### Basic building block ANY, ANY_ 
+```cpp
+#include <anyxx/anyxx.hpp>
+#include <iostream>
+
+struct circle {
+  void draw(std::ostream& os) const { os << "Circle\n"; }
+};
+struct square {
+  void draw(std::ostream& os) const { os << "Square\n"; }
+};
+
+ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&), const)))
+
+void draw(std::ostream& os,
+          std::vector<any_drawable<anyxx::shared_const>> const& any_drawables) {
+  for (auto const& any_drawable : any_drawables) any_drawable.draw(os, {x++, y++});
+}
+
+int main(){
+  draw({std::make_shared<circle>(12.3), std::make_shared<square>(32)});
+  return 0;
+}
+```
+https://godbolt.org/z/ccjrojMve
 
 - To hide the representation with lifetime handles: [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - To hide the functionality with: [Overview](docs/erased_functionality.md)
