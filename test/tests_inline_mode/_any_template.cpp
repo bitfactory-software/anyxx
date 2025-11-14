@@ -27,11 +27,11 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
-ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
+ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY)),
               ANY_METHOD(std::size_t, size, (), const)))
 
-// ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_recursive_t_i,
+// ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_recursive_map,
 //           any_recursive_map, (KEY, VALUE),
 //           (ANY_METHOD(VALUE, at, (KEY))))
 
@@ -113,9 +113,9 @@ TEST_CASE("any template test3") {
   test_map_lambda(map);
 
   auto test_map_lambda_mutate =
-      [](map_mutable_recursive_t_i<
+      [](any_mutable_recursive_map<
           mutable_observer, int,
-          map_mutable_recursive_t_i<
+          any_mutable_recursive_map<
               mutable_observer, std::string,
               any_mutable_map<mutable_observer, int, double>>>
              map_i) {
