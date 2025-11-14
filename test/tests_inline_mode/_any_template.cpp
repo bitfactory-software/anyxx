@@ -20,7 +20,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_map,
              (ANY_METHOD(VALUE const&, at, (KEY), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
-ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_t_i, any_map, (KEY, VALUE),
+ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, (KEY, VALUE),
               (ANY_METHOD(VALUE&, at, (KEY))))
 
 ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
@@ -117,7 +117,7 @@ TEST_CASE("any template test3") {
           mutable_observer, int,
           map_mutable_recursive_t_i<
               mutable_observer, std::string,
-              map_mutable_t_i<mutable_observer, int, double>>>
+              any_mutable_map<mutable_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
