@@ -1961,17 +1961,17 @@ struct dispatch<R(Args...)> {
 
 #define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                     \
                                                                                \
-  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
+  template <typename ErasedData _detail_ANYXX_TYPENAME_PARAM_LIST(t)>          \
   struct n;                                                                    \
                                                                                \
   template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
   struct n##_default_v_table_map {                                             \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
-  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
+  template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
   struct n##_v_table_map                                                       \
-      : n##_default_v_table_map<_detail_ANYXX_TEMPLATE_FORMAL_ARGS(            \
-            _add_head((T), t))> {};                                            \
+      : n##_default_v_table_map<typename T _detail_ANYXX_TYPENAME_PARAM_LIST(  \
+            t)> {};                                                            \
                                                                                \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
                                                                                \
@@ -2017,7 +2017,7 @@ struct dispatch<R(Args...)> {
     }                                                                          \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
+  template <typename ErasedData _detail_ANYXX_TYPENAME_PARAM_LIST(t)>          \
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
     using erased_data_t = ErasedData;                                          \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
