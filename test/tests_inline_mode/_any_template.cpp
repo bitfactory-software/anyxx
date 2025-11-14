@@ -32,10 +32,6 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY)),
               ANY_METHOD(std::size_t, size, (), const)))
 
-// ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_recursive_map,
-//           any_recursive_map, (KEY, VALUE),
-//           (ANY_METHOD(VALUE, at, (KEY))))
-
 ANY_TEMPLATE(((KEY)), any_map_to_tstring,
              (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY), const)))
 

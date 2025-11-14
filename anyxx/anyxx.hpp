@@ -1838,6 +1838,13 @@ struct dispatch<R(Args...)> {
   _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
+#define _detail_ANYXX_TYPENAME_PARAM_H(...) \
+  __VA_OPT__(_detail_ANYXX_TYPENAME_PARAM __VA_ARGS__)
+#define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
+#define _detail_ANYXX_TYPENAME_PARAM_LIST(...)                     \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
 #define _detail_ANYXX_FPD_H(l) _detail_ANYXX_FUNCTION_PTR_DECL l
 #define _detail_ANYXX_MEMEBER_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL l
@@ -1957,7 +1964,7 @@ struct dispatch<R(Args...)> {
   template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((ErasedData), t))>    \
   struct n;                                                                    \
                                                                                \
-  template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(_add_head((T), t))>             \
+  template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
   struct n##_default_v_table_map {                                             \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
