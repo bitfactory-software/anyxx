@@ -101,7 +101,7 @@ TEST_CASE("any template test3") {
       [](any_recursive_map<
           const_observer, int,
           any_recursive_map<const_observer, std::string,
-                                  any_map<const_observer, int, double>>>
+                            any_map<const_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -130,3 +130,21 @@ TEST_CASE("any template test3") {
   test_map_lambda_mutate(map);
   REQUIRE(map[2]["one"][4] == 8.28);
 }
+
+//namespace {
+//
+//template <>
+//struct any_map_v_table_map<std::map<int, double>, int, double>
+//    : any_map_default_v_table_map<std::map<int, double>, int, double> {
+//  double const& at(std::map<int, double> const* x, int i) {
+//    return (*x).at(i);
+//  };
+//};
+//}  // namespace
+//
+//TEST_CASE("any template test4") {
+//  std::map<int, double> map = {{3, 3.333}, {6, 4.333}};
+//
+//  any_map<const_observer, int, double> any_mutable_map{map};
+//  REQUIRE(const_map.at(3) == 3.333);
+//}
