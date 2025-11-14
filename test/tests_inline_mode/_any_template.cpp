@@ -16,11 +16,11 @@ struct X {
 namespace {
 ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
 
-ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
+ANY_TEMPLATE(((KEY), (VALUE)), any_map,
              (ANY_METHOD(VALUE const&, at, (KEY), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
-ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_t_i, map_t_i, (KEY, VALUE),
+ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_t_i, any_map, (KEY, VALUE),
               (ANY_METHOD(VALUE&, at, (KEY))))
 
 ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
@@ -54,7 +54,7 @@ struct any_to_tstring_v_table_map<const double>
 }  // namespace
 
 template <typename KEY, typename VALUE>
-void test_map_t_i_template(map_t_i<const_observer, KEY, VALUE> map_i) {
+void test_any_map_template(any_map<const_observer, KEY, VALUE> map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -63,15 +63,15 @@ void test_map_t_i_template(map_t_i<const_observer, KEY, VALUE> map_i) {
 TEST_CASE("any template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_map_t_i_lambda =
-      [](map_t_i<const_observer, std::string, int> map_i) {
+  auto test_any_map_lambda =
+      [](any_map<const_observer, std::string, int> map_i) {
         REQUIRE(map_i.size() == 2);
         REQUIRE(map_i.at("one") == 1);
         REQUIRE(map_i.at("two") == 2);
       };
-  test_map_t_i_lambda(map_string_to_int);
+  test_any_map_lambda(map_string_to_int);
 
-  test_map_t_i_template<std::string, int>(map_string_to_int);
+  test_any_map_template<std::string, int>(map_string_to_int);
 
   auto test_map_any_to_tstring_lambda =
       [](map_any_to_tstring<const_observer, std::string> map_i) {
@@ -101,7 +101,7 @@ TEST_CASE("any template test3") {
       [](map_const_recursive_t_i<
           const_observer, int,
           map_const_recursive_t_i<const_observer, std::string,
-                                  map_t_i<const_observer, int, double>>>
+                                  any_map<const_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
