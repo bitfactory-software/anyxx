@@ -1,7 +1,7 @@
+#include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <map>
 #include <string>
-#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
@@ -17,23 +17,26 @@ namespace {
 ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
-                      (ANY_METHOD(VALUE const&, at, (KEY), const),
-                       ANY_METHOD(std::size_t, size, (), const)))
+             (ANY_METHOD(VALUE const&, at, (KEY), const),
+              ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_t_i, map_t_i, (KEY, VALUE),
-                      (ANY_METHOD(VALUE&, at, (KEY)),
-                       ANY_METHOD(std::size_t, size, (), const)))
+              (ANY_METHOD(VALUE&, at, (KEY))))
 
 ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
-                      (ANY_METHOD(VALUE, at, (KEY), const),
-                       ANY_METHOD(std::size_t, size, (), const)))
+             (ANY_METHOD(VALUE, at, (KEY), const),
+              ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
-                      (ANY_METHOD(VALUE, at, (KEY)),
-                       ANY_METHOD(std::size_t, size, (), const)))
+             (ANY_METHOD(VALUE, at, (KEY)),
+              ANY_METHOD(std::size_t, size, (), const)))
+
+//ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_recursive_t_i,
+//          map_const_recursive_t_i, (KEY, VALUE),
+//          (ANY_METHOD(VALUE, at, (KEY))))
 
 ANY_TEMPLATE(((KEY)), map_to_string_i,
-                      (ANY_METHOD(to_string_i<const_observer>, at, (KEY), const)))
+             (ANY_METHOD(to_string_i<const_observer>, at, (KEY), const)))
 
 template <>
 struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
