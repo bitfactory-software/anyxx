@@ -23,7 +23,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_map,
 ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, (KEY, VALUE),
               (ANY_METHOD(VALUE&, at, (KEY))))
 
-ANY_TEMPLATE(((KEY), (VALUE)), map_const_recursive_t_i,
+ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
@@ -32,7 +32,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
               ANY_METHOD(std::size_t, size, (), const)))
 
 // ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_recursive_t_i,
-//           map_const_recursive_t_i, (KEY, VALUE),
+//           any_recursive_map, (KEY, VALUE),
 //           (ANY_METHOD(VALUE, at, (KEY))))
 
 ANY_TEMPLATE(((KEY)), map_any_to_tstring,
@@ -98,9 +98,9 @@ TEST_CASE("any template test3") {
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
   auto test_map_lambda =
-      [](map_const_recursive_t_i<
+      [](any_recursive_map<
           const_observer, int,
-          map_const_recursive_t_i<const_observer, std::string,
+          any_recursive_map<const_observer, std::string,
                                   any_map<const_observer, int, double>>>
              map_i) {
         auto x = map_i.at(1);
