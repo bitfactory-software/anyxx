@@ -14,7 +14,7 @@ struct X {
 };
 
 namespace {
-ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)))
+ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), map_t_i,
              (ANY_METHOD(VALUE const&, at, (KEY), const),
@@ -31,25 +31,26 @@ ANY_TEMPLATE(((KEY), (VALUE)), map_mutable_recursive_t_i,
              (ANY_METHOD(VALUE, at, (KEY)),
               ANY_METHOD(std::size_t, size, (), const)))
 
-//ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_recursive_t_i,
-//          map_const_recursive_t_i, (KEY, VALUE),
-//          (ANY_METHOD(VALUE, at, (KEY))))
+// ANY_TEMPLATE_(((KEY), (VALUE)), map_mutable_recursive_t_i,
+//           map_const_recursive_t_i, (KEY, VALUE),
+//           (ANY_METHOD(VALUE, at, (KEY))))
 
-ANY_TEMPLATE(((KEY)), map_to_string_i,
-             (ANY_METHOD(to_string_i<const_observer>, at, (KEY), const)))
+ANY_TEMPLATE(((KEY)), map_any_to_tstring,
+             (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY), const)))
 
 template <>
-struct to_string_i_v_table_map<int> : to_string_i_default_v_table_map<int> {
+struct any_to_tstring_v_table_map<int>
+    : any_to_tstring_default_v_table_map<int> {
   auto to_string(int const* x) -> std::string { return std::to_string(*x); };
 };
 template <>
-struct to_string_i_v_table_map<double>
-    : to_string_i_default_v_table_map<double> {
+struct any_to_tstring_v_table_map<double>
+    : any_to_tstring_default_v_table_map<double> {
   auto to_string(double const* x) -> std::string { return std::to_string(*x); };
 };
 template <>
-struct to_string_i_v_table_map<const double> : to_string_i_v_table_map<double> {
-};
+struct any_to_tstring_v_table_map<const double>
+    : any_to_tstring_v_table_map<double> {};
 }  // namespace
 
 template <typename KEY, typename VALUE>
@@ -72,23 +73,23 @@ TEST_CASE("any template test") {
 
   test_map_t_i_template<std::string, int>(map_string_to_int);
 
-  auto test_map_to_string_i_lambda =
-      [](map_to_string_i<const_observer, std::string> map_i) {
+  auto test_map_any_to_tstring_lambda =
+      [](map_any_to_tstring<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
-  test_map_to_string_i_lambda(map_string_to_int);
+  test_map_any_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_map_to_string_i_lambda =
-      [](map_to_string_i<const_observer, std::string> map_i) {
+  auto test_map_any_to_tstring_lambda =
+      [](map_any_to_tstring<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
-  test_map_to_string_i_lambda(map_string_to_int);
+  test_map_any_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test3") {
