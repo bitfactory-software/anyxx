@@ -131,8 +131,8 @@ TEST_CASE("any template test3") {
  namespace {
 
  template <>
- struct any_map_v_table_map<std::map<int, double>, int, double>
-     : any_map_default_v_table_map<std::map<int, double>, int, double> {
+ struct any_map_v_table_map<std::map, int, double>
+     : any_map_default_v_table_map<std::map, int, double> {
    double const& at(std::map<int, double> const* x, int i) {
      return (*x).at(i);
    };

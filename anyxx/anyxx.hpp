@@ -1959,16 +1959,16 @@ struct dispatch<R(Args...)> {
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                     \
+#define ANY_META_FUNCTION(tt, t, n, BASE, btpl, l)                             \
                                                                                \
   template <typename ErasedData _detail_ANYXX_TYPENAME_PARAM_LIST(t)>          \
   struct n;                                                                    \
                                                                                \
-  template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
+  template <tt T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                         \
   struct n##_default_v_table_map {                                             \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
-  template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
+  template <tt T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                         \
   struct n##_v_table_map                                                       \
       : n##_default_v_table_map<typename T _detail_ANYXX_TYPENAME_PARAM_LIST(  \
             t)> {};                                                            \
@@ -2093,11 +2093,15 @@ struct dispatch<R(Args...)> {
 
 //    n(n&) = default;                                                           \
 
-#define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, (), l)
+#define ANY_(n, BASE, l) ANY_META_FUNCTION(typename, (), n, BASE, (), l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
+#define ANY_TEMPLATE_(t, n, BASE, btpl, l) \
+  ANY_META_FUNCTION(template <typename...> typename, t, n, BASE, btpl, l)
+
+#define ANY_TEMPLATE(t, n, l) \
+  ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
