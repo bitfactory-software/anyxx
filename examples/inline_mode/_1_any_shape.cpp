@@ -73,8 +73,8 @@ ANY_(any_shape, any_drawable,
 
 template <>
 struct any_drawable_concept_map<std::string> {
-  auto draw(std::string const* x, std::ostream& os, position p) const {
-    os << *x << " at: " << p << "\n";
+  auto draw(std::string const& x, std::ostream& os, position p) const {
+    os << x << " at: " << p << "\n";
   }
 };
 

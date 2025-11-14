@@ -50,8 +50,8 @@ namespace typed_any_test {
 
 template <>
 struct test_i_concept_map<x_t> {
-  static auto to_string(x_t const* x) { return x->s_; }
-  static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
+  static auto to_string(x_t const& x) { return x.s_; }
+  static void from_string(x_t& x, std::string_view s) { x.s_ = s; }
 };
 
 }  // namespace typed_any_test

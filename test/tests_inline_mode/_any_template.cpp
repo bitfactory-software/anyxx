@@ -38,12 +38,12 @@ ANY_TEMPLATE(((KEY)), any_map_to_tstring,
 template <>
 struct any_to_tstring_concept_map<int>
     : any_to_tstring_default_concept_map<int> {
-  auto to_string(int const* x) -> std::string { return std::to_string(*x); };
+  auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
 template <>
 struct any_to_tstring_concept_map<double>
     : any_to_tstring_default_concept_map<double> {
-  auto to_string(double const* x) -> std::string { return std::to_string(*x); };
+  auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 template <>
 struct any_to_tstring_concept_map<const double>
@@ -133,8 +133,8 @@ namespace {
 template <>
 struct any_map_concept_map<std::map<int, double>, int, double>
     : any_map_default_concept_map<std::map<int, double>, int, double> {
-  double const& at(std::map<int, double> const* x, int i) {
-    return (*x).at(i);
+  double const& at(std::map<int, double> const& x, int i) {
+    return x.at(i);
   };
 };
 }  // namespace

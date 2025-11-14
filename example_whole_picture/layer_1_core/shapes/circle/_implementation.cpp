@@ -16,9 +16,9 @@ ANY_MODEL(shapes::circle, whole_picture::architecture, shape);
 template <>
 struct architecture::shape_concept_map<circle>
     : architecture::shape_default_concept_map<circle> {
-  void draw(circle const* self,
+  void draw(circle const& self,
             architecture::mutable_observed_surface const& surface) const {
-    architecture::draw::circle(surface, self->center, self->radius);
+    architecture::draw::circle(surface, self.center, self.radius);
   }
 };
 

@@ -17,16 +17,16 @@ ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
 template <>
 struct architecture::shape_concept_map<shapes::picture>
     : architecture::shape_default_concept_map<picture> {
-  void draw(shapes::picture const* self,
+  void draw(shapes::picture const& self,
             architecture::mutable_observed_surface const& surface) const {
-    architecture::draw::picture(surface, self->top_left, self->content);
+    architecture::draw::picture(surface, self.top_left, self.content);
   }
 };
 template <>
 struct architecture::surface_concept_map<shapes::picture>
     : architecture::surface_default_concept_map<picture> {
-  void write(shapes::picture* self, point p, char ch) {
-    self->content.write(p, ch);
+  void write(shapes::picture& self, point p, char ch) {
+    self.content.write(p, ch);
   }
 };
 

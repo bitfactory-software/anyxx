@@ -79,7 +79,7 @@ struct regular_polygon {
 
 template <>
 struct any_drawable_concept_map<circle> {
-  auto draw(circle const* x, position p) const {
+  auto draw(circle const& x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_any_drawable_concept_map At "
               << p.x << " " << p.y << std::endl;
   }

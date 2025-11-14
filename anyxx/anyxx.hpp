@@ -1910,12 +1910,11 @@ struct dispatch<R(Args...)> {
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 
-#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, \
-                               const_, ...)                                 \
-  auto name(T const_* x __VA_OPT__(                                         \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {               \
-    return (*x).name_ext(                                                   \
-        __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));              \
+#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
+                               const_, ...)                                  \
+  auto name(T const_& x __VA_OPT__(                                          \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
+    return x.name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext, \
@@ -1927,7 +1926,7 @@ struct dispatch<R(Args...)> {
   name = [](void const_* _vp __VA_OPT__(                                     \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {         \
     return concept_map{}.name(                                               \
-        anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )          \
+        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )         \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));           \
   };
 
