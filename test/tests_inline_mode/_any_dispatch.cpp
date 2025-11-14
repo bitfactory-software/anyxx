@@ -25,11 +25,11 @@ using test_base_i_co = test_base_i<const_observer>;
 using test_derived_i_mo = test_derived_i<mutable_observer>;
 
 template <>
-struct test_base_i_v_table_map<x_t> {
+struct test_base_i_concept_map<x_t> {
   static auto to_string(x_t const* x) { return x->s_; }
 };
 template <>
-struct test_derived_i_v_table_map<x_t> {
+struct test_derived_i_concept_map<x_t> {
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
 

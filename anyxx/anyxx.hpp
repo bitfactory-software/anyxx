@@ -1926,7 +1926,7 @@ struct dispatch<R(Args...)> {
                                              exact_const, const_, ...)       \
   name = [](void const_* _vp __VA_OPT__(                                     \
              , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {         \
-    return v_table_map{}.name(                                               \
+    return concept_map{}.name(                                               \
         anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )          \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));           \
   };
@@ -1965,12 +1965,12 @@ struct dispatch<R(Args...)> {
   struct n;                                                                    \
                                                                                \
   template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
-  struct n##_default_v_table_map {                                             \
+  struct n##_default_concept_map {                                             \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
   template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
-  struct n##_v_table_map                                                       \
-      : n##_default_v_table_map<typename T _detail_ANYXX_TYPENAME_PARAM_LIST(  \
+  struct n##_concept_map                                                       \
+      : n##_default_concept_map<typename T _detail_ANYXX_TYPENAME_PARAM_LIST(  \
             t)> {};                                                            \
                                                                                \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
@@ -1998,7 +1998,7 @@ struct dispatch<R(Args...)> {
     template <typename Concrete>                                               \
     n##_v_table(std::in_place_type_t<Concrete> concrete)                       \
         : v_table_base_t(concrete) {                                           \
-      using v_table_map = n##_v_table_map<_detail_ANYXX_TEMPLATE_ARGS(         \
+      using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(         \
           _add_head((Concrete), t))>;                                          \
                                                                                \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \

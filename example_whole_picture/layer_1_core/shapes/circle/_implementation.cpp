@@ -14,8 +14,8 @@ ANY_META_CLASS(circle)
 ANY_MODEL(shapes::circle, whole_picture::architecture, shape);
 
 template <>
-struct architecture::shape_v_table_map<circle>
-    : architecture::shape_default_v_table_map<circle> {
+struct architecture::shape_concept_map<circle>
+    : architecture::shape_default_concept_map<circle> {
   void draw(circle const* self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::circle(surface, self->center, self->radius);

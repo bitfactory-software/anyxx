@@ -1,9 +1,9 @@
+#include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <anyxx/anyxx.hpp>
 
 using namespace Catch::Matchers;
 
@@ -64,15 +64,15 @@ struct regular_polygon {
   double area() const { return (perimeter() * apothem()) / 2; }
 };
 
-ANY(any_drawable,
-             (ANY_METHOD(void, draw, (std::ostream&, position), const)))
+ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&, position), const)))
 
 ANY_(any_shape, any_drawable,
-              (ANY_METHOD(int, count_sides, (), const), ANY_METHOD(double, area, (), const),
-               ANY_METHOD(double, perimeter, (), const)))
+     (ANY_METHOD(int, count_sides, (), const),
+      ANY_METHOD(double, area, (), const),
+      ANY_METHOD(double, perimeter, (), const)))
 
 template <>
-struct any_drawable_v_table_map<std::string> {
+struct any_drawable_concept_map<std::string> {
   auto draw(std::string const* x, std::ostream& os, position p) const {
     os << *x << " at: " << p << "\n";
   }

@@ -78,9 +78,9 @@ struct regular_polygon {
 };
 
 template <>
-struct any_drawable_v_table_map<circle> {
+struct any_drawable_concept_map<circle> {
   auto draw(circle const* x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_any_drawable_v_table_map At "
+    std::cout << " A Circle Is Recorded VIA circle_any_drawable_concept_map At "
               << p.x << " " << p.y << std::endl;
   }
 };

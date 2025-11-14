@@ -8,7 +8,7 @@ The *v_table* points to a "meta_data* object and optional to a *m_table*.
 #### An object derived from v_table, with no additional members, and where all members point to valid functions.
 
 These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
-In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a **v_table_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
+In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a **concept_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
 
 ### erased_data
 #### A concept describing an object that **erases** the **type** of **another** object for a given *lifetime* kind.

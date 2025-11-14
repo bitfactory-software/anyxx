@@ -36,18 +36,18 @@ ANY_TEMPLATE(((KEY)), any_map_to_tstring,
              (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY), const)))
 
 template <>
-struct any_to_tstring_v_table_map<int>
-    : any_to_tstring_default_v_table_map<int> {
+struct any_to_tstring_concept_map<int>
+    : any_to_tstring_default_concept_map<int> {
   auto to_string(int const* x) -> std::string { return std::to_string(*x); };
 };
 template <>
-struct any_to_tstring_v_table_map<double>
-    : any_to_tstring_default_v_table_map<double> {
+struct any_to_tstring_concept_map<double>
+    : any_to_tstring_default_concept_map<double> {
   auto to_string(double const* x) -> std::string { return std::to_string(*x); };
 };
 template <>
-struct any_to_tstring_v_table_map<const double>
-    : any_to_tstring_v_table_map<double> {};
+struct any_to_tstring_concept_map<const double>
+    : any_to_tstring_concept_map<double> {};
 }  // namespace
 
 template <typename KEY, typename VALUE>
@@ -128,20 +128,20 @@ TEST_CASE("any template test3") {
   REQUIRE(map[2]["one"][4] == 8.28);
 }
 
- namespace {
+namespace {
 
- template <>
- struct any_map_v_table_map<std::map<int, double>, int, double>
-     : any_map_default_v_table_map<std::map<int, double>, int, double> {
-   double const& at(std::map<int, double> const* x, int i) {
-     return (*x).at(i);
-   };
- };
- }  // namespace
+template <>
+struct any_map_concept_map<std::map<int, double>, int, double>
+    : any_map_default_concept_map<std::map<int, double>, int, double> {
+  double const& at(std::map<int, double> const* x, int i) {
+    return (*x).at(i);
+  };
+};
+}  // namespace
 
- TEST_CASE("any template test4") {
-   std::map<int, double> map = {{3, 3.333}, {6, 4.333}};
+TEST_CASE("any template test4") {
+  std::map<int, double> map = {{3, 3.333}, {6, 4.333}};
 
-   any_map<const_observer, int, double> any_mutable_map{map};
-   REQUIRE(any_mutable_map.at(3) == 3.333);
- }
+  any_map<const_observer, int, double> any_mutable_map{map};
+  REQUIRE(any_mutable_map.at(3) == 3.333);
+}

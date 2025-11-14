@@ -12,8 +12,8 @@ ANY_META_CLASS(line)
 ANY_MODEL(shapes::line, whole_picture::architecture, shape);
 
 template <>
-struct architecture::shape_v_table_map<line>
-    : architecture::shape_default_v_table_map<line> {
+struct architecture::shape_concept_map<line>
+    : architecture::shape_default_concept_map<line> {
   void draw(line const* self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::line(surface, self->p1, self->p2);

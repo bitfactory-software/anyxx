@@ -1,6 +1,6 @@
+#include <anyxx/anyxx.hpp>
 #include <catch.hpp>
 #include <string>
-#include <anyxx/anyxx.hpp>
 
 using namespace anyxx;
 using namespace anyxx;
@@ -11,11 +11,11 @@ namespace typed_any_test {
 struct x_t {
   std::string s_;
 };
-}
+}  // namespace typed_any_test
 
 namespace typed_any_test {
 ANY(test_i, (ANY_METHOD(std::string, to_string, (), const),
-                      ANY_METHOD(void, from_string, (std::string_view))))
+             ANY_METHOD(void, from_string, (std::string_view))))
 }  // namespace typed_any_test
 
 using namespace typed_any_test;
@@ -26,8 +26,7 @@ TEST_CASE("typed_any/observer") {
   test_i<const_observer> co{s};
   static_assert(is_any<test_i<const_observer>>);
   CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(co),
-                  type_mismatch_error);
+  CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 
   auto co_typed = as<x_t>(co);
   CHECK(co_typed->s_ == "hallo");
@@ -36,8 +35,7 @@ TEST_CASE("typed_any/observer") {
 
   test_i<mutable_observer> mo{s};
   CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(mo),
-                  type_mismatch_error);
+  CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
 
   auto mo_typed = as<x_t>(mo);
   CHECK(mo_typed->s_ == "hallo");
@@ -51,7 +49,7 @@ TEST_CASE("typed_any/observer") {
 namespace typed_any_test {
 
 template <>
-struct test_i_v_table_map<x_t> {
+struct test_i_concept_map<x_t> {
   static auto to_string(x_t const* x) { return x->s_; }
   static void from_string(x_t* x, std::string_view s) { x->s_ = s; }
 };
@@ -60,7 +58,7 @@ struct test_i_v_table_map<x_t> {
 
 namespace {
 
- template <typename X>
+template <typename X>
 concept can_call_from_string = requires(X x, std::string_view s) {
   { x.from_string(s) };
 };
@@ -72,8 +70,7 @@ TEST_CASE("typed_any/observer/test_i") {
   test_i<const_observer> co{s};
   static_assert(is_any<test_i<const_observer>>);
   CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(co),
-                  type_mismatch_error);
+  CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 
   CHECK(co.to_string() == "hallo");
 
@@ -85,8 +82,7 @@ TEST_CASE("typed_any/observer/test_i") {
 
   test_i<mutable_observer> mo{s};
   CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
-  CHECK_THROWS_AS(unerase_cast<std::string>(mo),
-                  type_mismatch_error);
+  CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
 
   CHECK(mo.to_string() == "hallo");
 
