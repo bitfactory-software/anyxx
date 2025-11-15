@@ -2090,8 +2090,6 @@ struct dispatch<R(Args...)> {
     using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(_add_head((Otther), t))>;   \
   };
 
-//    n(n&) = default;                                                           \
-
 #define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, (), l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
