@@ -901,7 +901,7 @@ class any_base {
         v_table_(get_v_table(other)) {}
   template <typename Otther>
   any_base& operator=(Otther&& other)
-    requires(std::derived_from<Otther::v_table_t, v_table_t>)
+    requires(std::derived_from<typename Otther::v_table_t, v_table_t>)
   {
     erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
     v_table_ = get_v_table(other);
@@ -918,12 +918,12 @@ class any_base {
   template <is_erased_data Otther>
   friend class any_base;
 
-  template <is_erased_data ErasedData>
-  friend inline auto& get_erased_data(any_base<ErasedData> const& any);
-  template <is_erased_data ErasedData>
-  friend inline auto move_erased_data(any_base<ErasedData>&& any);
-  template <is_erased_data ErasedData>
-  friend inline auto get_void_data_ptr(any_base<ErasedData> const& any);
+  template <is_erased_data FriendsErasedData>
+  friend inline auto& get_erased_data(any_base<FriendsErasedData> const& any);
+  template <is_erased_data FriendsErasedData>
+  friend inline auto move_erased_data(any_base<FriendsErasedData>&& any);
+  template <is_erased_data FriendsErasedData>
+  friend inline auto get_void_data_ptr(any_base<FriendsErasedData> const& any);
   template <is_any I>
   friend inline auto get_v_table(I const& any);
 
@@ -1084,17 +1084,17 @@ struct typed_any : public Any<ErasedData> {
     return unchecked_unerase_cast<value_t const>(this->erased_data_);
   }
   value_t& operator*() const
-    requires !is_const
+    requires (!is_const)
   {
     return *unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   value_t* operator->() const
-    requires !is_const
+    requires (!is_const)
   {
     return unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   value_t* get() const
-    requires !is_const
+    requires (!is_const)
   {
     return unchecked_unerase_cast<value_t>(this->erased_data_);
   }
@@ -1260,7 +1260,7 @@ class hook<R(Args...)> {
     }
   };
 
-  using callee = std::function<R(typename super const&, Args...)>;
+  using callee = std::function<R(super const&, Args...)>;
 
   R operator()(Args&&... args) const {
     assert(!callees_.empty());
