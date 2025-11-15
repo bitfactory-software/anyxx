@@ -504,7 +504,7 @@ meta_data& get_meta_data() {
 
 struct any_base_v_table {
   template <typename Concrete>
-  any_base_v_table(std::in_place_type_t<Concrete> concrete);
+  any_base_v_table([[maybe_unused]]std::in_place_type_t<Concrete> concrete);
 
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(any_base_v_table) == from;
@@ -603,7 +603,7 @@ class meta_data {
 };
 
 template <typename Concrete>
-any_base_v_table::any_base_v_table(std::in_place_type_t<Concrete> concrete)
+any_base_v_table::any_base_v_table([[maybe_unused]]std::in_place_type_t<Concrete> concrete)
     : _is_derived_from([](const std::type_info& from) {
         return static_is_derived_from(from);
       }) {}
