@@ -32,7 +32,7 @@ int main(){
   return 0;
 }
 ```
-https://godbolt.org/z/ccjrojMve
+https://godbolt.org/z/fMf8rs3cb
 
 - To hide the representation with lifetime handles: [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - To hide the functionality with: [Overview](docs/erased_functionality.md)
