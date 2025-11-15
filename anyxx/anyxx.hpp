@@ -504,7 +504,7 @@ meta_data& get_meta_data() {
 
 struct any_base_v_table {
   template <typename Concrete>
-  any_base_v_table([[maybe_unused]]std::in_place_type_t<Concrete> concrete);
+  any_base_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete);
 
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(any_base_v_table) == from;
@@ -603,7 +603,8 @@ class meta_data {
 };
 
 template <typename Concrete>
-any_base_v_table::any_base_v_table([[maybe_unused]]std::in_place_type_t<Concrete> concrete)
+any_base_v_table::any_base_v_table(
+    [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
     : _is_derived_from([](const std::type_info& from) {
         return static_is_derived_from(from);
       }) {}
@@ -1129,7 +1130,8 @@ void* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
 template <typename V, template <is_erased_data> typename Any,
           is_erased_data ErasedData>
 auto get_meta(typed_any<V, Any, ErasedData> const& vv) {
-  return Any::trait_t::meta(vv.erased_data_);
+  using trait_t = typename Any<ErasedData>::trait_t;
+  return trait_t::meta(vv.erased_data_);
 }
 
 template <typename V, template <is_erased_data> typename Any,
