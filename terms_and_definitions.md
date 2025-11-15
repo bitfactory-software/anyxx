@@ -10,6 +10,10 @@ The *v_table* points to a "meta_data* object and optional to a *m_table*.
 These functions are implemented via a templated constructor. The template parameter is called the **unerased** type.  
 In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a **concept_map** for the unerased type. [Tutorial](/tutorials/tutorial__30.md)
 
+### dispatch_table, dispatch_table instance, multi dispatch matrix 
+Similar to v_table, but if an entry is in ivolved in a **multi dispatch**, it describes the dispatch index in the **multi dispatch matrix**. 
+The target function for the *multi diapatch* resides in the **multi dispatch matrix**.
+
 ### erased_data
 #### A concept describing an object that **erases** the **type** of **another** object for a given *lifetime* kind.
 
@@ -58,19 +62,20 @@ Static downcasts are guesses and as such unsafe. Dynamic downcasts are by defini
 ### Crosscast
 #### While *up-* and *downcasts* are within related types, *crosscasts* are between unrelated types.
 
-A *crosscast* usually tests if one any can be reached from another any, and if so, provides access to it.
-To enable a **crosscast** to an certain any for a object, the object must register its **v_table instance**
+A **crosscast** usually tests if one **any** can be reached from another **any**, and if so, provides access to it.
+To enable a **crosscast** to a certain **any** for an object, the target *any*s **v_table instance** must be registered for objects class. 
+This is done With the *ANY_MODEL...* macros.
 
 ### Extension Method 
-#### An **extension method** is a freestanding callable, whitch acts v_table_function on the first paramater. (must be an **any**).
+#### An **extension method** is a freestanding callable, witch acts a dispatch_table_function on the first paramater. (must be an **any**).
 #### A **extension multi method** is a generalistaion of the **extension method**, to solve the [multiple dispatch](https://en.wikipedia.org/wiki/Multiple_dispatch) .
 **Extension methods** are a recipe to solve the [expression problem]. 
 
 ### Extension Members
 #### An **extension members** behaves like a *struct*, where you can add data members without changing the definition of that *struct*.
 
-This could be trivially implemented by a map from some kind of tag to an `any`.  
-This library offers an efficient implementation with two indirections and type-safe access.
+This could be trivially implemented by a map from some kind of tag to an `std::any`.  
+This library offers an efficient implementation with index based indirections and type-safe access.
 
 ### *Ad hoc* Type Erasure Versus Architectural *Type Tunnel*
 **Type erasure**, as we see it today, and how it is supported by well-known libraries, often shares this pattern:
