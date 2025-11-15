@@ -2150,21 +2150,6 @@ struct dispatch<R(Args...)> {
   }                                                            \
   ANY_REGISTER_MODEL(class_, interface_namespace_::interface_)
 
-// TODO
-// #define ANY_V_TABLE_TEMPLATE_INSTANCE(export_, class, interface_, ...) \
-//  template <>                                                         \
-//  struct export_ interface_##_v_table_instance<class, __VA_ARGS__> {  \
-//    static interface_##_v_table<__VA_ARGS__>* get() {                 \
-//      static interface_##_v_table<__VA_ARGS__> v_table{               \
-//          std::in_place_type<class>};                                 \
-//      return &v_table;                                                \
-//    };                                                                \
-//  };                                                                  \
-//  namespace {                                                         \
-//  static auto __ = anyxx::bind_v_table_to_meta_data<           \
-//      interface_##_v_table_instance<class, __VA_ARGS__>, class>();    \
-//  }
-
 #else
 
 #define ANY_MODEL_FWD(...)
