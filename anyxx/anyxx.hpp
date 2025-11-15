@@ -314,7 +314,7 @@ auto move_to_unique(std::unique_ptr<T> p) {
 }
 
 template <typename T, typename... Args>
-auto make_unique(Args&&... args) {
+auto make_unique([[maybe_unused]]Args&&... args) {
   return move_to_unique(std::make_unique<T>(std::forward<Args>(args)...));
 }
 
