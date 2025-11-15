@@ -24,7 +24,6 @@ if (MSVC)
 endif()
 set(CMAKE_CXX_STANDARD 23)
 
-# +++ anyxx library
 file(GLOB_RECURSE anyxx_HEADERS "./anyxx/*.hpp")
 file(GLOB_RECURSE anyxx_SOURCES "./anyxx/*.cpp")
 add_library(anyxx INTERFACE ${anyxx_HEADERS} ${anyxx_SOURCES})
@@ -32,23 +31,6 @@ target_include_directories(anyxx INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
-set_target_properties(anyxx PROPERTIES FOLDER "libraries")
-# --- anyxx library
-
-# +++ enclosure library
-file(GLOB_RECURSE enclosure_HEADERS "./enclosure/*.hpp")
-file(GLOB_RECURSE enclosure_SOURCES "./enclosure/*.cpp")
-add_library(enclosure INTERFACE ${enclosure_HEADERS} ${enclosure_SOURCES})
-target_include_directories(enclosure INTERFACE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
-)
-set_target_properties(enclosure PROPERTIES FOLDER "libraries")
-target_link_libraries(enclosure INTERFACE
-    anyxx 
-)
-# --- enclosure library
-
 
 enable_testing()
 
