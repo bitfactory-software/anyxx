@@ -190,7 +190,7 @@ struct observer_trait {
     return nullptr;
   }
   template <typename T, typename... Args>
-  static auto construct_type_in_place([[maybe_unused]]Args&&... args) {
+  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
     static_assert(false);
     return nullptr;
   }
@@ -273,7 +273,7 @@ struct trait<weak> {
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = true;
 
-  static void const* value([[maybe_unused]]const auto& ptr) { return nullptr; }
+  static void const* value([[maybe_unused]] const auto& ptr) { return nullptr; }
   static bool has_value(const auto& ptr) { return !ptr.expired(); }
 
   template <typename ConstructedWith>
@@ -285,7 +285,7 @@ struct trait<weak> {
     return nullptr;
   }
   template <typename T, typename... Args>
-  static auto construct_type_in_place([[maybe_unused]]Args&&... args) {
+  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
     static_assert(false);
     return nullptr;
   }
@@ -314,7 +314,7 @@ auto move_to_unique(std::unique_ptr<T> p) {
 }
 
 template <typename T, typename... Args>
-auto make_unique([[maybe_unused]]Args&&... args) {
+auto make_unique([[maybe_unused]] Args&&... args) {
   return move_to_unique(std::make_unique<T>(std::forward<Args>(args)...));
 }
 
@@ -1084,17 +1084,17 @@ struct typed_any : public Any<ErasedData> {
     return unchecked_unerase_cast<value_t const>(this->erased_data_);
   }
   value_t& operator*() const
-    requires (!is_const)
+    requires(!is_const)
   {
     return *unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   value_t* operator->() const
-    requires (!is_const)
+    requires(!is_const)
   {
     return unchecked_unerase_cast<value_t>(this->erased_data_);
   }
   value_t* get() const
-    requires (!is_const)
+    requires(!is_const)
   {
     return unchecked_unerase_cast<value_t>(this->erased_data_);
   }
@@ -1482,8 +1482,9 @@ struct dispatch_default {
       struct type {
         using function_t = hook<R(Anys const&..., Args...)>;
         static auto function() {
-          return
-              []([[maybe_unused]]auto super, Anys const&..., Args... args) -> R { return R{}; };
+          return []([[maybe_unused]] auto super,
+                    [[maybe_unused]] Anys const&... anys,
+                    [[maybe_unused]] Args... args) -> R { return R{}; };
         }
       };
     };
@@ -1536,11 +1537,11 @@ struct dispatch<R(Args...)> {
       dispatch_default_hook_.insert(dispatch_default_t::function());
 
   enum class kind { single, multiple };
-  template <kind Kind, std::size_t Dimension, typename... Args>
+  template <kind Kind, std::size_t Dimension, typename... DispatchArgs>
   struct dispatch_access;
 
-  template <std::size_t Dimension, typename... Args>
-  struct dispatch_access<kind::multiple, Dimension, Args...> {
+  template <std::size_t Dimension, typename... DispatchArgs>
+  struct dispatch_access<kind::multiple, Dimension, DispatchArgs...> {
     auto define(auto fp, auto& matrix) {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
@@ -1556,12 +1557,12 @@ struct dispatch<R(Args...)> {
     }
   };
 
-  template <std::size_t Dimension, is_any Any, typename... Args>
-  struct dispatch_access<kind::multiple, Dimension, virtual_<Any>, Args...>
-      : dispatch_access<kind::multiple, Dimension + 1, Args...> {
+  template <std::size_t Dimension, is_any Any, typename... DispatchArgs>
+  struct dispatch_access<kind::multiple, Dimension, virtual_<Any>, DispatchArgs...>
+      : dispatch_access<kind::multiple, Dimension + 1, DispatchArgs...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
-    using next_t = dispatch_access<kind::multiple, Dimension + 1, Args...>;
+    using next_t = dispatch_access<kind::multiple, Dimension + 1, DispatchArgs...>;
 
     // index 0 is for the 'wildcard' functions
     std::size_t index_ = 1 + dispatchs_count<v_table_t>()++;
