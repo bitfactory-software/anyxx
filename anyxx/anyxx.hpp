@@ -190,7 +190,7 @@ struct observer_trait {
     return nullptr;
   }
   template <typename T, typename... Args>
-  static auto construct_type_in_place(Args&&... args) {
+  static auto construct_type_in_place([[maybe_unused]]Args&&... args) {
     static_assert(false);
     return nullptr;
   }
@@ -273,7 +273,7 @@ struct trait<weak> {
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = true;
 
-  static void const* value(const auto& ptr) { return nullptr; }
+  static void const* value([[maybe_unused]]const auto& ptr) { return nullptr; }
   static bool has_value(const auto& ptr) { return !ptr.expired(); }
 
   template <typename ConstructedWith>
@@ -285,7 +285,7 @@ struct trait<weak> {
     return nullptr;
   }
   template <typename T, typename... Args>
-  static auto construct_type_in_place(Args&&... args) {
+  static auto construct_type_in_place([[maybe_unused]]Args&&... args) {
     static_assert(false);
     return nullptr;
   }
@@ -481,10 +481,7 @@ class meta_data;
 struct any_base_v_table;
 
 template <typename TYPE>
-auto& runtime_implementation() {
-  static meta_data meta_data{std::in_place_type<TYPE>};
-  return meta_data;
-}
+auto& runtime_implementation();
 
 #ifdef ANY_DLL_MODE
 template <typename T>
@@ -601,6 +598,12 @@ class meta_data {
     return v_table;
   }
 };
+
+template <typename TYPE>
+auto& runtime_implementation() {
+  static meta_data meta_data_{std::in_place_type<TYPE>};
+  return meta_data_;
+}
 
 template <typename Concrete>
 any_base_v_table::any_base_v_table(
@@ -1463,14 +1466,14 @@ auto get_tuple_tail(std::tuple<Ts...> from) {
   }(std::make_index_sequence<std::tuple_size_v<std::tuple<Ts...>> - FromN>{});
 }
 
-template <typename R, typename... Args>
+template <typename R, typename... FArgs>
 struct dispatch_function;
-template <typename R, typename... Args>
-struct dispatch_function<R, std::tuple<Args...>> {
-  using type = R (*)(Args...);
+template <typename R, typename... FArgs>
+struct dispatch_function<R, std::tuple<FArgs...>> {
+  using type = R (*)(FArgs...);
 };
 
-template <typename R, typename... Args>
+template <typename R, typename... OuterArgs>
 struct dispatch_default {
   template <is_any... Anys>
   struct inner {
@@ -1480,7 +1483,7 @@ struct dispatch_default {
         using function_t = hook<R(Anys const&..., Args...)>;
         static auto function() {
           return
-              [](auto super, Anys const&..., Args... args) -> R { return R{}; };
+              []([[maybe_unused]]auto super, Anys const&..., Args... args) -> R { return R{}; };
         }
       };
     };
@@ -1501,7 +1504,7 @@ struct dispatch_default {
     using type = outer<Args...>::template type<Any, Anys...>;
   };
 
-  using type = outer<Args...>::template type<>;
+  using type = outer<OuterArgs...>::template type<>;
 };
 
 template <typename F, typename... Args>
