@@ -521,7 +521,7 @@ struct any_base_v_table {
     return typeid(any_base_v_table) == from;
   }
 
-  meta_data* meta_data = nullptr;
+  meta_data* meta_data_ = nullptr;
 
   bool (*_is_derived_from)(const std::type_info&);
 };
@@ -607,7 +607,7 @@ class meta_data {
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
   auto register_v_table(any_base_v_table* v_table) {
-    v_table->meta_data = this;
+    v_table->meta_data_ = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
     return v_table;
@@ -962,7 +962,7 @@ inline auto get_void_data_ptr(any_base<ErasedData> const& any) {
 
 template <is_any Any>
 inline const auto& get_meta_data(Any const& any) {
-  return *get_v_table(any)->meta_data;
+  return *get_v_table(any)->meta_data_;
 }
 
 template <is_erased_data VV>
@@ -1067,7 +1067,7 @@ auto query_v_table(const meta_data& meta_data)
 
 template <typename ToAny>
 auto query_v_table(any_base_v_table* from) {
-  return find_v_table<ToAny>(*from->meta_data);
+  return find_v_table<ToAny>(*from->meta_data_);
 }
 
 // --------------------------------------------------------------------------------
@@ -1975,9 +1975,6 @@ struct dispatch<R(Args...)> {
 #define _detail_ANYXX_METHODS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
-
-//#define ANY_META_FUNCTION(tpl1, tpl2, tpl, n, BASE, btpl, l)                  \
-//| tpl1 | tpl2 | tpl | n | BASE | btpl | l
 
 #define ANY_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl, l)      \
                                                                               \

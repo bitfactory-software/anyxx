@@ -35,7 +35,7 @@ ANY_MODEL(X, test::component_base, to_string_i)
 
 to_string_i<anyxx::const_observer> test::component_base::get_to_string_i_co() {
   to_string_i<anyxx::const_observer> i{a_x};
-  auto meta = get_v_table(i)->meta_data;
+  auto meta = get_v_table(i)->meta_data_;
   [[maybe_unused]] const std::type_info* type_info = &meta->get_type_info();
   static_assert(is_any<to_string_i<anyxx::const_observer>>);
   [[maybe_unused]] const std::type_info* type_info_1 = &typeid(X);
