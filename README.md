@@ -35,7 +35,7 @@
 
 # Samples
 ## External Polymorphism for Nonintrusive Runtime Polymorphism
-### Basic building block ANY, ANY_ 
+### Example1: Basic building block *ANY*, *ANY_* 
 ```cpp
 #include <anyxx/anyxx.hpp>
 #include <iostream>
