@@ -27,6 +27,7 @@
 #pragma GCC diagnostic ignored "-Wcast-function-type-mismatch"
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
 #pragma GCC diagnostic ignored "-Wunused-local-typedef"
+#pragma GCC diagnostic ignored "-Wextra-semi"
 #endif
 
 namespace anyxx {
