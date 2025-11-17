@@ -10,6 +10,7 @@
     - Downcast
     - Crosscast
    - Interface can be template
+     - 'recursive' to erase container
    - open dispatch
      - single (visitor)
      - multiple (collision resolver, type erased binary operators)  
