@@ -2,13 +2,40 @@
 
 # any++: *type erasure* vocabulary for *programming on a large scale*
 
-> ℹ️
-> Please refer to [Terms and Definitions](/terms_and_definitions.md) to clarify the meaning of used catchphrases in the context of this library.
+- External Polymorphism via "ANY..." metafunctions
+  - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
+    - Derive
+    - Operators
+    - Upcast
+    - Downcast
+    - Crosscast
+   - Interface can be template
+   - open dispatch
+     - single (visitor)
+     - multiple (collision resolver, type erased binary operators)  
+     - performance on par with vanilla virtual functions
+  - type erased clone, if erased type is copy constructable
+  - abstract factory
+- Transparent storeage management
+  - out of the box:
+    - const/mutable_observers, aka "pointer"
+    - shared_const, weak via std::shared_ptr, std::week_ptr
+    - unique, via std::unique_ptr and type erased deleter
+    - value
+  - customizable via anyxx::trait
+  - interchangeable
+    - (automatc) borrow_as: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
+    - move_to: value -> unique -> shared_const, unique -> value
+    - clone_to: ..._observer -> shared_const -> unique -> value
+- extension member
+  - add members at load time
+  - access performance on par with vanilla virtual function getter
+- hook
+  - overrideable customization points       
 
-## Building block vocabulary for *programming on a large scale*
-
-### External Polymorphism for Nonintrusive Runtime Polymorphism
-#### Basic building block ANY, ANY_ 
+# Samples
+## External Polymorphism for Nonintrusive Runtime Polymorphism
+### Basic building block ANY, ANY_ 
 ```cpp
 #include <anyxx/anyxx.hpp>
 #include <iostream>
@@ -33,6 +60,8 @@ int main(){
 }
 ```
 Example1: [Compiler Explorer](https://godbolt.org/z/b6oazcov4)
+
+
 
 - To hide the representation with lifetime handles: [Quick start](/tutorials/tutorial___1.md/#t1) [Overview](docs/erased_data_overview.md)
 - To hide the functionality with: [Overview](docs/erased_functionality.md)
