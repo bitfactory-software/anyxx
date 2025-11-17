@@ -1,12 +1,8 @@
-#include <catch.hpp>
-#include <cmath>
-#include <iostream>
+#include <anyxx/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <map>
 #include <mutex>
 #include <string>
-#include <vector>
-#include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
 
 using namespace anyxx;
 
@@ -48,7 +44,7 @@ TEST_CASE("example X1/ weak cppreference") {
 }
 
 namespace {
-any_widget<shared_const> load_widget(int id) {
+any_widget<shared_const> load_widget([[maybe_unused]] int id) {
   return std::make_shared<widget_a>();
 }
 

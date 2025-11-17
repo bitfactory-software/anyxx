@@ -1,8 +1,6 @@
-#include <catch.hpp>
-#include <string>
 #include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
+#include <catch2/catch_test_macros.hpp>
+#include <string>
 
 using namespace anyxx;
 
@@ -11,7 +9,7 @@ template <typename T>
 struct test_trait;
 template <>
 struct test_trait<const void*> {
-  static const bool is_const = true;
+  [[maybe_unused]] static const bool is_const = true;
 };
 template <>
 struct test_trait<void*> {
@@ -20,19 +18,19 @@ struct test_trait<void*> {
 template <typename ANY_VOID>
 struct test_interface {
   ANY_VOID member = nullptr;
-  std::string f(int)
+  std::string f([[maybe_unused]] int unused)
     requires(!test_trait<ANY_VOID>::is_const)
   {
     return "mutable";
   }
-  std::string f(int) const { return "const"; }
+  [[nodiscard]] std::string f([[maybe_unused]] int x) const { return "const"; }
 };
 }  // namespace
 TEST_CASE("_interface_const_correct prototyping") {
   using namespace anyxx;
   static_assert(!test_trait<void*>::is_const);
   static_assert(trait<const_observer>::is_const);
-  test_interface<void const*> i1;
+  const test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
   test_interface<void const*> const i2;
@@ -56,7 +54,7 @@ struct functor {
 namespace {
 
 ANY(const_function_i, (ANY_OP(std::string, (), (), const)))
-ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&))))
+ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )))
 
 using const_function = const_function_i<const_observer>;
 using mutating_function = mutating_function_i<mutable_observer>;
@@ -64,10 +62,8 @@ using shared_const_function = const_function_i<shared_const>;
 using shared_mutating_function = mutating_function_i<shared_const>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
- static_assert(std::is_assignable_v<const_function,
-                                       const_function>);
-static_assert(std::is_assignable_v<const_function,
-                                    functor const>); 
+static_assert(std::is_assignable_v<const_function, const_function>);
+static_assert(std::is_assignable_v<const_function, functor const>);
 static_assert(!std::is_constructible_v<mutating_function,
                                        functor const>);  // <- may not compile!
 static_assert(!std::is_assignable_v<mutating_function,
@@ -106,7 +102,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
     functor const const_function_object;
     const_function cf = const_function_object;
     REQUIRE(cf() == "hallo");
-    const_function cf2{cf};
+    [[maybe_unused]] const_function cf2{cf};
     // cf2 = cf; //should compile
   }
 
@@ -142,7 +138,6 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
 }
 
 TEST_CASE("_interface_const_correct anyxx::shared_const") {
-
   {
     shared_const_function cf = std::make_shared<functor>();
     static_assert(
@@ -161,8 +156,8 @@ TEST_CASE("_interface_const_correct anyxx::shared_const") {
 
   {
     shared_const_function cf = std::make_shared<functor const>();
-    static_assert(std::is_assignable_v<shared_mutating_function,
-                                        functor const>);
+    static_assert(
+        std::is_assignable_v<shared_mutating_function, functor const>);
     REQUIRE(cf() == "hallo");
   }
 
@@ -184,7 +179,7 @@ struct text_object {
 ANY(text_i_const, (ANY_METHOD(std::string, get_text, (), const)))
 
 ANY_(text_i_mutable, text_i_const,
-              (ANY_METHOD(void, set_text, (std::string const&))))
+     (ANY_METHOD(void, set_text, (std::string const&), )))
 }  // namespace
 
 using const_text_i = text_i_const<const_observer>;
@@ -208,8 +203,8 @@ static_assert(!can_call_set_text<const_text_i const>);
 
 using mutable_text_i_const = text_i_mutable<const_observer>;
 using mutable_text_i_mutable = text_i_mutable<mutable_observer>;
-static_assert(std::same_as<mutable_text_i_mutable::erased_data_t,
-                           mutable_observer>);
+static_assert(
+    std::same_as<mutable_text_i_mutable::erased_data_t, mutable_observer>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);

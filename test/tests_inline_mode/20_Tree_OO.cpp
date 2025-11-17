@@ -1,34 +1,42 @@
 ﻿// virtual_void variant of this yomm2 example via c++RTTI
 // https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
 #include <iostream>
 #include <memory>
+#include <sstream>
 #include <string>
 
-#include <catch.hpp>
-
-using std::cout;
 using std::string;
 
 namespace {
 
 struct Node {
   virtual ~Node() = default;  // generates c++ vtable + type_info
-  virtual int value() const = 0;
-  virtual string as_forth() const = 0;
-  virtual string as_lisp() const = 0;
+  Node() = default;
+  Node(Node const&) = default;
+  Node& operator=(Node const&) = default;
+  Node(Node&&) = default;
+  Node& operator=(Node&&) = default;
+  [[nodiscard]] virtual int value() const = 0;
+  [[nodiscard]] virtual std::string as_forth() const = 0;
+  [[nodiscard]] virtual std::string as_lisp() const = 0;
 };
 
 using shared_const_node = std::shared_ptr<const Node>;
 
 struct Plus : Node {
-  Plus(shared_const_node left, shared_const_node right)
-      : left(left), right(right) {}
-  int value() const override { return left->value() + right->value(); }
-  string as_forth() const override {
+  // NOLINTNEXTLINE
+  Plus(shared_const_node const& left, shared_const_node const& right)
+      : left(left), right(right) {}  // NOLINT
+  [[nodiscard]] int value() const override {
+    return left->value() + right->value();
+  }
+  [[nodiscard]] std::string as_forth() const override {
     return left->as_forth() + " " + right->as_forth() + " +";
   }
-  string as_lisp() const override {
+  [[nodiscard]] std::string as_lisp() const override {
     return "(plus " + left->as_lisp() + " " + right->as_lisp() + ")";
   }
 
@@ -36,13 +44,16 @@ struct Plus : Node {
 };
 
 struct Times : Node {
-  Times(shared_const_node left, shared_const_node right)
-      : left(left), right(right) {}
-  int value() const override { return left->value() * right->value(); }
-  string as_forth() const override {
+  // NOLINTNEXTLINE
+  Times(shared_const_node const& left, shared_const_node const& right)
+      : left(left), right(right) {}  // NOLINT
+  [[nodiscard]] int value() const override {
+    return left->value() * right->value();
+  }
+  [[nodiscard]] std::string as_forth() const override {
     return left->as_forth() + " " + right->as_forth() + " *";
   }
-  string as_lisp() const override {
+  [[nodiscard]] std::string as_lisp() const override {
     return "(times " + left->as_lisp() + " " + right->as_lisp() + ")";
   }
 
@@ -51,9 +62,13 @@ struct Times : Node {
 
 struct Integer : Node {
   explicit Integer(int value) : int_(value) {}
-  int value() const override { return int_; }
-  string as_forth() const override { return std::to_string(int_); }
-  string as_lisp() const override { return std::to_string(int_); }
+  [[nodiscard]] int value() const override { return int_; }
+  [[nodiscard]] std::string as_forth() const override {
+    return std::to_string(int_);
+  }
+  [[nodiscard]] std::string as_lisp() const override {
+    return std::to_string(int_);
+  }
 
   int int_;
 };

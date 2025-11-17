@@ -1,16 +1,15 @@
 #include <anyxx/anyxx.hpp>
-#include <catch.hpp>
-#include <map>
+#include <catch2/catch_test_macros.hpp>
+#include <cstddef>
+#include <map>  // NOLINT
 #include <string>
-
-using namespace Catch::Matchers;
 
 using namespace anyxx;
 using namespace anyxx;
 
 struct X {
   std::string s_;
-  std::string to_string() const { return s_; }
+  [[nodiscard]] std::string to_string() const { return s_; }
 };
 
 namespace {
@@ -21,15 +20,15 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_map,
               ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, (KEY, VALUE),
-              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY)),
-               ANY_OP(VALUE&, [], (KEY))))
+              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY), ),
+               ANY_OP(VALUE&, [], (KEY), )))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY)),
+             (ANY_METHOD(VALUE, at, (KEY), ),
               ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE(((KEY)), any_map_to_tstring,
@@ -133,9 +132,7 @@ namespace {
 template <>
 struct any_map_concept_map<std::map<int, double>, int, double>
     : any_map_default_concept_map<std::map<int, double>, int, double> {
-  double const& at(std::map<int, double> const& x, int i) {
-    return x.at(i);
-  };
+  double const& at(std::map<int, double> const& x, int i) { return x.at(i); };
 };
 }  // namespace
 

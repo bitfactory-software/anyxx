@@ -1,7 +1,11 @@
 #include <anyxx/anyxx.hpp>
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
-using namespace Catch::Matchers;
+#ifdef _MSC_VER
+#pragma warning( \
+    disable : 4189)  // local variable is initialized but not referenced
+#endif
+
 using namespace anyxx;
 using namespace std::literals;
 
@@ -49,14 +53,14 @@ TEST_CASE("multi_dispatch 1") {
                        virtual_<any_thing<const_observer>>)>
       collide;
 
-  auto __ = collide.define<Asteroid, Spaceship>(
-      [](auto a, auto s) { return "a->s"; });
-  auto __ =
-      collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
-  auto __ = collide.define<Spaceship, Spaceship>(
-      [](auto a, auto s) { return "s->s"; });
-  auto __ = collide.define<Spaceship, Asteroid>(
-      [](auto a, auto s) { return "s->a"; });
+  collide.define<Asteroid, Spaceship>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->s"; });
+  collide.define<Asteroid, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+  collide.define<Spaceship, Spaceship>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->s"; });
+  collide.define<Spaceship, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->a"; });
 
   CHECK(any_thing_v_table::imlpementation<Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
@@ -85,14 +89,16 @@ TEST_CASE("multi_dispatch 2") {
                        virtual_<any_thing<const_observer>>)>
       collide;
 
-  auto __ = collide.define<Asteroid, any_thing<const_observer>>(
-      [](auto a, auto s) { return "default"; });
-  auto __ =
-      collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
-  auto __ = collide.define<Spaceship, Spaceship>(
-      [](auto a, auto s) { return "s->s"; });
-  auto __ = collide.define<Spaceship, Asteroid>(
-      [](auto a, auto s) { return "s->a"; });
+  collide.define<Asteroid, any_thing<const_observer>>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) {
+        return "default";
+      });
+  collide.define<Asteroid, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+  collide.define<Spaceship, Spaceship>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->s"; });
+  collide.define<Spaceship, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->a"; });
 
   Asteroid asteroid;
   Spaceship spaceship;
@@ -111,14 +117,16 @@ TEST_CASE("multi_dispatch 3") {
                        virtual_<any_thing<const_observer>>)>
       collide;
 
-  auto __ = collide.define<Asteroid, any_thing<const_observer>>(
-      [](auto a, auto s) { return "default"; });
-  auto __ =
-      collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
-  auto __ = collide.define<any_thing<const_observer>, Spaceship>(
-      [](auto a, auto s) { return "s->s"; });
-  auto __ = collide.define<any_thing<const_observer>, Asteroid>(
-      [](auto a, auto s) { return "s->a"; });
+  collide.define<Asteroid, any_thing<const_observer>>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) {
+        return "default";
+      });
+  collide.define<Asteroid, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+  collide.define<any_thing<const_observer>, Spaceship>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->s"; });
+  collide.define<any_thing<const_observer>, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->a"; });
 
   Asteroid asteroid;
   Spaceship spaceship;
@@ -137,14 +145,16 @@ TEST_CASE("multi_dispatch 4") {
                        virtual_<any_thing<const_observer>>)>
       collide;
 
-  auto __ =
-      collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
-  auto __ = collide.define<any_thing<const_observer>, Spaceship>(
-      [](auto const& any, auto const& s) {
+  collide.define<Asteroid, Asteroid>(
+      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+  collide.define<any_thing<const_observer>, Spaceship>(
+      [](auto const& any, [[maybe_unused]] auto const& s) {
         return get_meta_data(any).get_type_info().name() + "->s"s;
       });
-  auto __ = collide.define<any_thing<const_observer>, Asteroid>(
-      [](auto const& any, auto const& a) { return "any->a"; });
+  collide.define<any_thing<const_observer>, Asteroid>(
+      []([[maybe_unused]] auto const& any, [[maybe_unused]] auto const& a) {
+        return "any->a";
+      });
 
   Asteroid asteroid;
   Spaceship spaceship;

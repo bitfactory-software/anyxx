@@ -1,8 +1,8 @@
-﻿#include <catch.hpp>
+﻿#include <anyxx/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
-#include <anyxx/anyxx.hpp>
 
-#include "./component_base/component_base.hpp"
+#include "test/component_base/component_base.hpp"
 
 using namespace anyxx;
 using namespace anyxx;
@@ -23,9 +23,8 @@ TEST_CASE("_interface_cast") {
     auto s = to_string_i_co.to_string();
     REQUIRE(s == "3.140000");
 
-    static_assert(
-        borrowable_from<get_value_i<const_observer>::erased_data_t,
-                              get_value_i<const_observer>::erased_data_t>);
+    static_assert(borrowable_from<get_value_i<const_observer>::erased_data_t,
+                                  get_value_i<const_observer>::erased_data_t>);
 
     get_value_i<const_observer> i1 =
         *borrow_as<get_value_i<const_observer>>(to_string_i_co);
@@ -97,8 +96,7 @@ TEST_CASE("_interface_cast") {
     std::cout << "unique i0: " << i0.to_string() << "\n";
 
     auto i1b = *clone_to<get_value_i<unique>>(i0);
-    auto i1{
-        std::move(unchecked_downcast_to<get_value_i<unique>>(std::move(i1b)))};
+    auto i1{unchecked_downcast_to<get_value_i<unique>>(std::move(i1b))};
 
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "unique i1: " << i1.get_value() << "\n";

@@ -1,7 +1,7 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <anyxx/anyxx.hpp>
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <print>
 #include <string>

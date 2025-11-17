@@ -1,1 +1,0 @@
-setx VCPKG_ROOT ../vcpkg

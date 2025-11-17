@@ -1,9 +1,8 @@
-#include <catch.hpp>
+#include <anyxx/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <map>
 #include <string>
 #include <vector>
-#include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
 
 using namespace anyxx;
 using namespace anyxx;
@@ -15,14 +14,14 @@ using vector_t = std::vector<std::string>;
 }  // namespace
 
 namespace {
-ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (int))))
+ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (int), )))
 
 ANY(map_i_to_string_const_and_mutable,
-             (ANY_OP_EXACT(std::string&, [], (int)),
-              ANY_OP_EXACT(std::string const&, [], (int), const)))
+    (ANY_OP_EXACT(std::string&, [], (int), ),
+     ANY_OP_EXACT(std::string const&, [], (int), const)))
 
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-              (ANY_OP_EXACT(std::string const&, [], (int), const)))
+     (ANY_OP_EXACT_OVERLOAD(std::string const&, [], (int), const)))
 
 }  // namespace
 

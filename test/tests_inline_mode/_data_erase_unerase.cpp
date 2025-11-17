@@ -1,13 +1,11 @@
-#include <catch.hpp>
-#include <string>
 #include <anyxx/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <string>
 
 struct A {
-  A(const std::string sp) : s(sp) {}
+  A(const std::string& sp) : s(sp) {}
   std::string s;
 };
-
-using namespace Catch::Matchers;
 
 using namespace anyxx;
 using namespace anyxx;
@@ -29,7 +27,7 @@ TEST_CASE("data_erase_unerase/observer") {
     REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "world");
     REQUIRE(*unchecked_unerase_cast<std::string>(mo) == "world");
     {
-      const std::string cs;
+      [[maybe_unused]] const std::string cs;
       // mutable_observer xx(cs);  // shall not compile!
     }
     // tmo = as< std::string >( co ); // shall not compile!
@@ -46,15 +44,15 @@ TEST_CASE("data_erase_unerase/observer") {
 TEST_CASE("data_erase_unerase/unique") {
   {
     auto u1 = erased<unique>(std::make_unique<int>(1));
-    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1); // NOLINT
   }
   {
-    const auto u1 = erased<unique>(std::make_unique<int>(1));
+    const auto u1 = erased<unique>(std::make_unique<int>(1)); // NOLINT
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
     auto u1 = erased<unique>(std::make_unique<A>("hallo"));
-    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo"); // NOLINT
   }
 }
 TEST_CASE("data_erase_unerase/shared_const") {
@@ -87,7 +85,7 @@ TEST_CASE("data_erase_unerase/shared_const_ptr") {
     REQUIRE(ptr->s == "hallo");
     shared_const sp1 = trait<shared_const>::erase(ptr);
     auto u1 = erased<shared_const>(ptr);
-    A const* a = unchecked_unerase_cast<A>(u1);
+    [[maybe_unused]] A const* a = unchecked_unerase_cast<A>(u1);
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
   }
 }

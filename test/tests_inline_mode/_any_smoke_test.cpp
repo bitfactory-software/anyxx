@@ -1,13 +1,10 @@
 #include <anyxx/anyxx.hpp>
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_floating_point.hpp>
 #include <cmath>
 #include <iostream>
 #include <string>
-#include <vector>
 
-using namespace Catch::Matchers;
-
-using namespace anyxx;
 using namespace anyxx;
 
 const double M_PI = 3.14;
@@ -79,7 +76,7 @@ struct regular_polygon {
 
 template <>
 struct any_drawable_concept_map<circle> {
-  auto draw(circle const& x, position p) const {
+  auto draw([[maybe_unused]] circle const& x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_any_drawable_concept_map At "
               << p.x << " " << p.y << std::endl;
   }
@@ -125,13 +122,14 @@ TEST_CASE("dynamic v_table const_observer") {
                                   any_callable_shape<const_observer>>);
   static_assert(std::derived_from<any_callable_shape<const_observer>,
                                   any_shape<const_observer>>);
+  auto a_circle = circle{33.3};
   any_callable_shape<const_observer> any_callable_shape_onst_observer_circle1{
-      circle{33.3}};
+      a_circle};
   any_callable_shape<const_observer> any_callable_shape_onst_observer_circle2{
-      circle{33.3}};
+      a_circle};
 
   const_observer o1 = erased<const_observer>(c);
-  const_observer o2 = o1;
+  [[maybe_unused]] const_observer o2 = o1;
 
   {
     using any_drawable_const_observer = any_drawable<const_observer>;
@@ -171,11 +169,12 @@ TEST_CASE("dynamic v_table const_observer") {
   REQUIRE(anyxx::downcast_to<any_callable_shape<const_observer>>(base_shape));
   REQUIRE(anyxx::downcast_to<any_callable_shape<const_observer>>(
       any_callable_shape_onst_observer_circle2));
-  {
-    any_callable_shape<const_observer> upcasted_shape =
-        anyxx::unchecked_downcast_to<any_callable_shape<const_observer>>(
-            base_shape);
-    print_any_callable_shape_const_observer(upcasted_shape);
+
+  if (auto downcasted_shape =
+          anyxx::downcast_to<any_callable_shape<const_observer>>(base_shape)) {
+    print_any_callable_shape_const_observer(*downcasted_shape);
+  } else {
+    FAIL("downcast_to failed");
   }
 
   any_shape<const_observer> shape_circle_base =
@@ -208,17 +207,18 @@ TEST_CASE("dynamic any shared_const") {
       typed_any<circle, any_shape, shared_const>;
   typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
-  REQUIRE_THAT(c1->perimeter(), WithinAbs(77.2, 77.3));
+  REQUIRE_THAT(c1->perimeter(), Catch::Matchers::WithinAbs(77.2, 77.3));
   static_assert(std::same_as<typed_circle_shape_shared_const::erased_data_t,
                              shared_const>);
   static_assert(is_typed_any<decltype(sc_typed)>);
   any_shape<shared_const> circle_shape_vv{sc_typed};
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
-  REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
+  REQUIRE_THAT(unerased_circle->perimeter(),
+               Catch::Matchers::WithinAbs(77.2, 77.3));
   auto x = circle_shape_vv;
   {
     auto perimeter = circle_shape_vv.perimeter();
-    REQUIRE_THAT(perimeter, WithinAbs(77.2, 77.3));
+    REQUIRE_THAT(perimeter, Catch::Matchers::WithinAbs(77.2, 77.3));
   }
   print_any_shape_const_observer(sc_typed);
   print_any_shape_const_observer(circle_shape_vv);
@@ -238,9 +238,10 @@ TEST_CASE("dynamic any unique") {
   using shape_unique = any_shape<unique>;
   shape_unique s1{std::move(c)};
 
-  REQUIRE_THAT(s1.perimeter(), WithinAbs(77.2, 77.3));
+  REQUIRE_THAT(s1.perimeter(), Catch::Matchers::WithinAbs(77.2, 77.3));
   auto unerased_circle = unerase_cast<circle const>(s1);
-  REQUIRE_THAT(unerased_circle->perimeter(), WithinAbs(77.2, 77.3));
+  REQUIRE_THAT(unerased_circle->perimeter(),
+               Catch::Matchers::WithinAbs(77.2, 77.3));
 
   static_assert(borrowable_from<const_observer, unique>);
   print_any_shape_co(s1);

@@ -1,0 +1,47 @@
+---
+Checks: "*,
+        -abseil-*,
+        -altera-*,
+        -android-*,
+        -fuchsia-*,
+        -google-*,
+        -llvm*,
+        -modernize-use-trailing-return-type,
+        -zircon-*,
+        -readability-else-after-return,
+        -readability-static-accessed-through-instance,
+        -readability-avoid-const-params-in-decls,
+        -cppcoreguidelines-non-private-member-variables-in-classes,
+        -misc-non-private-member-variables-in-classes,
+        -misc-no-recursion,
+        -misc-use-anonymous-namespace,
+        -misc-use-internal-linkage,
+        -functionStatic,
+        -misc-function-static,
+        -unused-command-line-argument,
+        -readability-identifier-length,
+        -cppcoreguidelines-prefer-member-initializer,
+        -readability-function-cognitive-complexity,
+        -misc-include-cleaner,
+        -cppcoreguidelines-avoid-non-const-global-variables,
+        -cert-err58-cpp,
+        -readability-convert-member-functions-to-static,
+        -misc-const-correctness,
+        -readability-qualified-auto,
+        -cppcoreguidelines-avoid-non-const-global-variables,
+        -cppcoreguidelines-avoid-magic-numbers
+"
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle:     none
+
+CheckOptions:
+  - key: readability-identifier-length.IgnoredVariableNames
+    value: 'x|y|z'
+  - key: readability-identifier-length.IgnoredParameterNames
+    value: 'x|y|z'
+
+
+
+
+

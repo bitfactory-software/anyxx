@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <concepts>
+#include <cstddef>
 #include <expected>
 #include <functional>
 #include <map>
@@ -22,12 +23,18 @@
 #include <variant>
 #include <vector>
 
+#ifdef __clang__
+#pragma GCC diagnostic ignored "-Wcast-function-type-mismatch"
+#pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
+#pragma GCC diagnostic ignored "-Wunused-local-typedef"
+#endif
+
 namespace anyxx {
 
 class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
 };
-class type_mismatch_error : error {
+class type_mismatch_error : public error {
   using error::error;
 };
 
@@ -66,6 +73,7 @@ concept is_erased_data = requires(E e) {
   { trait<E>::value(e) } -> std::convertible_to<typename trait<E>::void_t>;
   { trait<E>::has_value(e) } -> std::convertible_to<bool>;
   { trait<E>::is_weak } -> std::convertible_to<bool>;
+  { trait<E>::default_construct() };
 };
 
 template <is_erased_data Data>
@@ -177,6 +185,7 @@ struct observer_trait {
   static constexpr bool is_constructibile_from_const = is_const;
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = false;
+  static auto default_construct() { return void_t{}; }
 
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
   static Voidness value(const auto& ptr) { return ptr; }
@@ -235,6 +244,7 @@ struct trait<shared_const> {
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
+  static auto default_construct() { return shared_const{}; }
 
   static void const* value(const auto& ptr) { return ptr.get(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
@@ -272,6 +282,7 @@ struct trait<weak> {
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = true;
+  static auto default_construct() { return weak{}; }
 
   static void const* value([[maybe_unused]] const auto& ptr) { return nullptr; }
   static bool has_value(const auto& ptr) { return !ptr.expired(); }
@@ -330,6 +341,7 @@ struct trait<unique> {
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
+  static auto default_construct() { return unique_nullptr(); }
 
   static void* value(const auto& ptr) { return ptr.get(); }
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
@@ -446,6 +458,7 @@ struct trait<value> {
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
+  static auto default_construct() { return anyxx::value{}; }
 
   static void* value(const auto& v) { return v.get(); }
   static bool has_value(const auto& v) { return v; }
@@ -569,7 +582,8 @@ class meta_data {
  public:
   template <typename CLASS>
   constexpr meta_data(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()), copy_construct_(+[](const_void from) {
+      : type_info_(typeid_of<CLASS>()),
+        copy_construct_(+[]([[maybe_unused]] const_void from) {
           if constexpr (std::is_copy_constructible_v<CLASS>) {
             return erased<unique>(
                 std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
@@ -756,26 +770,26 @@ static_assert(cloneable_to<value>);
 // --------------------------------------------------------------------------------
 // move erased data
 
-template <is_erased_data To, is_erased_data From>
-bool constexpr can_move_to_from = false;
+template <typename To, typename From>
+inline static bool constexpr can_move_to_from = false;
 
 template <typename To, typename From>
 concept moveable_from =
     is_erased_data<From> && is_erased_data<To> && can_move_to_from<To, From>;
 
 template <is_erased_data X>
-bool constexpr can_move_to_from<X, X> = true;
+inline static bool constexpr can_move_to_from<X, X> = true;
 
 template <>
-bool constexpr can_move_to_from<shared_const, unique> = true;
+inline bool constexpr can_move_to_from<shared_const, unique> = true;
 
 template <>
-bool constexpr can_move_to_from<weak, shared_const> = true;
+inline bool constexpr can_move_to_from<weak, shared_const> = true;
 
 template <voidness To, voidness From>
   requires const_correct_call<is_const_void<To>, is_const_void<From>,
                               is_weak_data<From>>
-bool constexpr can_move_to_from<To, From> = true;
+inline static bool constexpr can_move_to_from<To, From> = true;
 
 template <typename To, typename From>
   requires moveable_from<To, std::decay_t<From>>
@@ -866,7 +880,7 @@ class any_base {
   using v_table_t = any_base_v_table;
 
  protected:
-  erased_data_t erased_data_ = {};
+  erased_data_t erased_data_ = trait_t::default_construct();
   v_table_t* v_table_ = nullptr;
 
   any_base() = default;
@@ -887,21 +901,21 @@ class any_base {
             std::forward<Args>(args)...)) {}
 
  public:
-  template <is_any Otther>
-  any_base(const Otther& other)
-    requires(std::derived_from<typename Otther::v_table_t, v_table_t> &&
-             borrowable_from<erased_data_t, typename Otther::erased_data_t>)
+  template <is_any Other>
+  any_base(const Other& other)
+    requires(std::derived_from<typename Other::v_table_t, v_table_t> &&
+             borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : erased_data_(borrow_as<ErasedData>(other.erased_data_)),
         v_table_(get_v_table(other)) {}
-  template <typename Otther>
-  any_base(Otther&& other)
-    requires(std::derived_from<typename Otther::v_table_t, v_table_t> &&
-             moveable_from<erased_data_t, typename Otther::erased_data_t>)
+  template <typename Other>
+  any_base(Other&& other)
+    requires(std::derived_from<typename Other::v_table_t, v_table_t> &&
+             moveable_from<erased_data_t, typename Other::erased_data_t>)
       : erased_data_(move_to<ErasedData>(std::move(other.erased_data_))),
         v_table_(get_v_table(other)) {}
-  template <typename Otther>
-  any_base& operator=(Otther&& other)
-    requires(std::derived_from<typename Otther::v_table_t, v_table_t>)
+  template <typename Other>
+  any_base& operator=(Other&& other)
+    requires(std::derived_from<typename Other::v_table_t, v_table_t>)
   {
     erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
     v_table_ = get_v_table(other);
@@ -915,7 +929,7 @@ class any_base {
   any_base& operator=(any_base const& other) = default;
   any_base& operator=(any_base&& other) = default;
 
-  template <is_erased_data Otther>
+  template <is_erased_data Other>
   friend class any_base;
 
   template <is_erased_data FriendsErasedData>
@@ -930,22 +944,18 @@ class any_base {
   template <is_any To, is_any From>
   friend inline To unchecked_downcast_to(From from)
     requires(std::derived_from<To, From>);
-
- public:
-  void operator()() const {}
-  void* operator[](void*) const { return {}; }
 };
 
 template <is_erased_data ErasedData>
-auto& get_erased_data(any_base<ErasedData> const& any) {
+inline auto& get_erased_data(any_base<ErasedData> const& any) {
   return any.erased_data_;
 }
 template <is_erased_data ErasedData>
-auto move_erased_data(any_base<ErasedData>&& any) {
+inline auto move_erased_data(any_base<ErasedData>&& any) {
   return std::move(any.erased_data_);
 }
 template <is_erased_data ErasedData>
-auto get_void_data_ptr(any_base<ErasedData> const& any) {
+inline auto get_void_data_ptr(any_base<ErasedData> const& any) {
   return get_void_data_ptr(get_erased_data(any));
 }
 
@@ -960,7 +970,7 @@ bool is_derived_from(const std::type_info& from, any_base<VV> const& any) {
 }
 template <is_any From, is_erased_data VV>
 bool is_derived_from(any_base<VV> const& any) {
-  return is_derived_from(typeid(From::v_table_t), any);
+  return is_derived_from(typeid(typename From::v_table_t), any);
 }
 
 template <typename VTable>
@@ -985,7 +995,7 @@ inline auto get_v_table(Any const& any) {
 }
 
 template <is_any To, is_any From>
-To unchecked_downcast_to(From from)
+inline To unchecked_downcast_to(From from)
   requires(std::derived_from<To, From>)
 {
   return To{std::move(from.erased_data_),
@@ -993,7 +1003,7 @@ To unchecked_downcast_to(From from)
 }
 
 template <is_any To, is_any From>
-std::optional<To> downcast_to(From from)
+inline std::optional<To> downcast_to(From from)
   requires(std::derived_from<To, From>)
 {
   if (is_derived_from<To>(from))
@@ -1002,15 +1012,15 @@ std::optional<To> downcast_to(From from)
 }
 
 template <typename U, is_any Any>
-auto unchecked_unerase_cast(Any const& o) {
+inline auto unchecked_unerase_cast(Any const& o) {
   return unchecked_unerase_cast<U>(get_erased_data(o));
 }
 template <typename U, is_any Any>
-auto unerase_cast(Any const& o) {
+inline auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_erased_data(o), get_meta_data(o));
 }
 template <typename U, is_any Any>
-auto unerase_cast_if(Any const& o) {
+inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_erased_data(o), get_meta_data(o));
 }
 
@@ -1021,7 +1031,8 @@ VTable* v_table_instance_implementaion();
 template <typename VTable, typename Concrete>
 VTable* v_table_instance_implementaion() {
   static VTable v_table{std::in_place_type<Concrete>};
-  static auto __ = anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
+  [[maybe_unused]] static auto __ =
+      anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
   return &v_table;
 }
 #endif  // DEBUG
@@ -1035,9 +1046,12 @@ concept has_dispatchs_enabled = is_any<I> && I::v_table_t::dispatchs_enabled;
 template <bool HasDispatch, template <typename...> typename Any>
 struct dispatch_holder;
 template <template <typename...> typename Any>
-struct dispatch_holder<false, Any> {};
+struct dispatch_holder<false, Any> {
+  static void set_dispatch_table([[maybe_unused]] dispatch_table_t* t) {}
+};
 template <template <typename...> typename Any>
 struct dispatch_holder<true, Any> {
+  void set_dispatch_table(dispatch_table_t* t) { dispatch_table = t; }
   dispatch_table_t* dispatch_table = nullptr;
 };
 
@@ -1289,7 +1303,7 @@ class hook<R(Args...)> {
 // --------------------------------------------------------------------------------
 // factory
 
-class unkonwn_factory_key_error : error {
+class unkonwn_factory_key_error : public error {
   using error::error;
 };
 
@@ -1484,7 +1498,13 @@ struct dispatch_default {
         static auto function() {
           return []([[maybe_unused]] auto super,
                     [[maybe_unused]] Anys const&... anys,
-                    [[maybe_unused]] Args... args) -> R { return R{}; };
+                    [[maybe_unused]] Args... args) -> R {
+            if constexpr (std::same_as<R, void>) {
+              return;
+            } else {
+              return R{};
+            }
+          };
         }
       };
     };
@@ -1558,18 +1578,20 @@ struct dispatch<R(Args...)> {
   };
 
   template <std::size_t Dimension, is_any Any, typename... DispatchArgs>
-  struct dispatch_access<kind::multiple, Dimension, virtual_<Any>, DispatchArgs...>
+  struct dispatch_access<kind::multiple, Dimension, virtual_<Any>,
+                         DispatchArgs...>
       : dispatch_access<kind::multiple, Dimension + 1, DispatchArgs...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
-    using next_t = dispatch_access<kind::multiple, Dimension + 1, DispatchArgs...>;
+    using next_t =
+        dispatch_access<kind::multiple, Dimension + 1, DispatchArgs...>;
 
     // index 0 is for the 'wildcard' functions
     std::size_t index_ = 1 + dispatchs_count<v_table_t>()++;
     std::size_t dispatch_dimension_size_ = 1;
 
     template <typename Class>
-    auto get_dispatch_index() {
+    std::size_t get_dispatch_index() {
       if constexpr (std::same_as<Any, Class>) {
         return 0;
       } else {
@@ -1613,8 +1635,8 @@ struct dispatch<R(Args...)> {
     }
   };
 
-  template <is_any Any, typename... Args>
-  struct dispatch_access<kind::single, 0, virtual_<Any>, Args...> {
+  template <is_any Any, typename... AccessArgs>
+  struct dispatch_access<kind::single, 0, virtual_<Any>, AccessArgs...> {
     using interface_t = Any;
     using v_table_t = typename interface_t::v_table_t;
     std::size_t index_ = dispatchs_count<v_table_t>()++;
@@ -1627,9 +1649,9 @@ struct dispatch<R(Args...)> {
     }
     template <typename DispatchMatrix, typename ArgsTuple,
               typename... ActualArgs>
-    std::optional<R> invoke(DispatchMatrix const&,
-                            ArgsTuple&& dispatch_args_tuple, Any const& any,
-                            ActualArgs&&... actual_args) const {
+    std::optional<R> invoke(
+        DispatchMatrix const&, ArgsTuple&& dispatch_args_tuple, Any const& any,
+        [[maybe_unused]] ActualArgs&&... actual_args) const {
       auto v_table = get_v_table(any)->dispatch_table;
       auto target = get_function(v_table, index_);
       if (!target) return {};
@@ -1844,17 +1866,26 @@ struct dispatch<R(Args...)> {
   _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_TYPENAME_PARAM_H(...) \
-  __VA_OPT__(_detail_ANYXX_TYPENAME_PARAM __VA_ARGS__)
+#define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
 #define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
-#define _detail_ANYXX_TYPENAME_PARAM_LIST(...)                     \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, \
-                                   _detail_EXPAND_LIST __VA_ARGS__))
+#define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
+  typename _strip_braces head __VA_OPT__(            \
+      _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
+
+#define _detail_ANYXX_TEMPLATE_ARG_H(t) _detail_ANYXX_TEMPLATE_ARG t
+#define _detail_ANYXX_TEMPLATE_ARG(t) , t
+#define _detail_ANYXX_TEMPLATE_ARGS(head, ...) \
+  _strip_braces head __VA_OPT__(               \
+      _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, __VA_ARGS__))
+
+#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
+  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
+#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
+  _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
 #define _detail_ANYXX_FPD_H(l) _detail_ANYXX_FUNCTION_PTR_DECL l
 #define _detail_ANYXX_MEMEBER_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL l
-#define _detail_ANYXX_FREE_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_FREE_IMPL l
 #define _detail_ANYXX_METHOD_H(l) _detail_ANYXX_METHOD l
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
@@ -1879,19 +1910,6 @@ struct dispatch<R(Args...)> {
   _detail_foreach_macro(_detail_ANYXX_TEMPLATE_FORMAL_ARG_H, \
                         _detail_EXPAND_LIST l)
 
-#define _detail_ANYXX_TEMPLATE_ARG_H(l) _detail_ANYXX_TEMPLATE_ARG l
-
-#define _detail_ANYXX_TEMPLATE_ARG(_typename) , _typename
-
-#define _detail_ANYXX_TEMPLATE_ARGS(...) \
-  __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS1(__VA_ARGS__))
-
-#define _detail_ANYXX_TEMPLATE_ARGS1(h, ...) \
-  _typename h __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS2((__VA_ARGS__)))
-
-#define _detail_ANYXX_TEMPLATE_ARGS2(l) \
-  _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, _detail_EXPAND_LIST l)
-
 #define _detail_ANYXX_V_TABLE_TEMPLATE_HEADER_H(...) \
   __VA_OPT__(template <_detail_ANYXX_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
 
@@ -1908,14 +1926,7 @@ struct dispatch<R(Args...)> {
 #define _detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(t) \
   ErasedData _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(_detail_REMOVE_PARENS(t))
 
-#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
-  __VA_OPT__(<_detail_ANYXX_TEMPLATE_FORMAL_ARGS(__VA_ARGS__)>)
-
-#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
-  _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
-
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
-
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
                                const_, ...)                                  \
   auto name(T const_& x __VA_OPT__(                                          \
@@ -1964,162 +1975,173 @@ struct dispatch<R(Args...)> {
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                     \
-                                                                               \
-  template <typename ErasedData _detail_ANYXX_TYPENAME_PARAM_LIST(t)>          \
-  struct n;                                                                    \
-                                                                               \
-  template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
-  struct n##_default_concept_map {                                             \
-    _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
-  };                                                                           \
-  template <typename T _detail_ANYXX_TYPENAME_PARAM_LIST(t)>                   \
-  struct n##_concept_map                                                       \
-      : n##_default_concept_map<typename T _detail_ANYXX_TYPENAME_PARAM_LIST(  \
-            t)> {};                                                            \
-                                                                               \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table;                 \
-                                                                               \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(t) struct n##_v_table                  \
-      : BASE##_v_table                                                         \
-        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                            \
-        anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                   \
-    using v_table_base_t =                                                     \
-        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);             \
-    using v_table_t = n##_v_table;                                             \
-    using own_dispatch_holder_t =                                              \
-        anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n>;                    \
-                                                                               \
-    static bool static_is_derived_from(const std::type_info& from) {           \
-      return typeid(v_table_t) == from                                         \
-                 ? true                                                        \
-                 : v_table_base_t::static_is_derived_from(from);               \
-    }                                                                          \
-                                                                               \
-    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
-                                                                               \
-    static constexpr bool dispatchs_enabled = anyxx::has_dispatchs<n>;         \
-                                                                               \
-    template <typename Concrete>                                               \
-    n##_v_table(std::in_place_type_t<Concrete> concrete)                       \
-        : v_table_base_t(concrete) {                                           \
-      using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(         \
-          _add_head((Concrete), t))>;                                          \
-                                                                               \
-      _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \
-                                                                               \
-      if constexpr (dispatchs_enabled) {                                       \
-        own_dispatch_holder_t::dispatch_table =                                \
-            ::anyxx::dispatch_table_instance<n##_v_table, Concrete>();         \
-      }                                                                        \
-                                                                               \
-      ::anyxx::set_is_derived_from<v_table_t>(this);                           \
-    };                                                                         \
-                                                                               \
-    template <typename Concrete>                                               \
-    static auto imlpementation() {                                             \
-      return anyxx::v_table_instance_implementaion<v_table_t, Concrete>();     \
-    }                                                                          \
-  };                                                                           \
-                                                                               \
-  template <typename ErasedData _detail_ANYXX_TYPENAME_PARAM_LIST(t)>          \
-  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
-    using erased_data_t = ErasedData;                                          \
-    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
-    using v_table_base_t = base_t::v_table_t;                                  \
-    using v_table_t =                                                          \
-        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t);             \
-                                                                               \
-    template <typename Concrete>                                               \
-    static auto v_table_imlpementation() {                                     \
-      static_assert(!anyxx::is_any<Concrete>);                                 \
-      return v_table_t::template imlpementation<Concrete>();                   \
-    }                                                                          \
-                                                                               \
-    using base_t::erased_data_;                                                \
-    using base_t::v_table_;                                                    \
-                                                                               \
-    n(erased_data_t erased_data, v_table_t* v_table)                           \
-        : base_t(std::move(erased_data), v_table) {}                           \
-    template <typename ConstructedWith>                                        \
-    n(ConstructedWith&& v)                                                     \
-      requires anyxx::constructibile_for<ConstructedWith, ErasedData>          \
-        : base_t(std::forward<ConstructedWith>(v)) {                           \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ErasedData, ConstructedWith>>();                     \
-    }                                                                          \
-    template <typename V>                                                      \
-    n(std::in_place_t, V&& v) : base_t(std::in_place, std::forward<V>(v)) {    \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ErasedData, V>>();                                   \
-    }                                                                          \
-    template <typename T, typename... Args>                                    \
-    n(std::in_place_type_t<T>, Args&&... args)                                 \
-        : base_t(std::in_place_type<T>, std::forward<Args>(args)...) {         \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ErasedData, T>>();                                   \
-    }                                                                          \
-    template <typename Otther>                                                 \
-    n(const Otther& other)                                                     \
-      requires(std::derived_from<typename Otther::v_table_t, v_table_t> &&     \
-               anyxx::borrowable_from<erased_data_t,                           \
-                                      typename Otther::erased_data_t>)         \
-        : base_t(other) {}                                                     \
-    template <anyxx::is_any Otther>                                            \
-    n(Otther&& other) noexcept                                                 \
-      requires(                                                                \
-          std::derived_from<Otther::v_table_t, v_table_t> &&                   \
-          anyxx::moveable_from<erased_data_t, typename Otther::erased_data_t>) \
-        : base_t(std::move(other)) {}                                          \
-                                                                               \
-    _detail_ANYXX_METHODS(l)                                                   \
-                                                                               \
-        auto const*                                                            \
-        operator->() const {                                                   \
-      return this;                                                             \
-    }                                                                          \
-                                                                               \
-    using base_t::operator();                                                  \
-    using base_t::operator[];                                                  \
-                                                                               \
-    n() = default;                                                             \
-    n(n const&) = default;                                                     \
-    n(n&&) = default;                                                          \
-    n& operator=(n const&) = default;                                          \
-    n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data Otther>                                    \
-    friend class anyxx::any_base;                                              \
-    template <anyxx::is_any To, anyxx::is_any From>                            \
-    friend To anyxx::unchecked_downcast_to(From from)                          \
-      requires(std::derived_from<To, From>);                                   \
-    template <anyxx::is_erased_data Otther>                                    \
-    using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(_add_head((Otther), t))>;   \
+//#define ANY_META_FUNCTION(tpl1, tpl2, tpl, n, BASE, btpl, l)                  \
+//| tpl1 | tpl2 | tpl | n | BASE | btpl | l
+
+#define ANY_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl, l)      \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                          \
+  struct n;                                                                   \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                          \
+  struct n##_default_concept_map {                                            \
+    _detail_ANYXX_MAP_FUNCTIONS(l)                                            \
+  };                                                                          \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                          \
+  struct n##_concept_map                                                      \
+      : n##_default_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};        \
+                                                                              \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;              \
+                                                                              \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table               \
+      : BASE##_v_table                                                        \
+        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                           \
+        anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                  \
+    using v_table_base_t =                                                    \
+        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);            \
+    using v_table_t = n##_v_table;                                            \
+    using own_dispatch_holder_t =                                             \
+        typename anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n>;          \
+                                                                              \
+    static bool static_is_derived_from(const std::type_info& from) {          \
+      return typeid(v_table_t) == from                                        \
+                 ? true                                                       \
+                 : v_table_base_t::static_is_derived_from(from);              \
+    }                                                                         \
+                                                                              \
+    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                   \
+                                                                              \
+    static constexpr bool dispatchs_enabled = anyxx::has_dispatchs<n>;        \
+                                                                              \
+    template <typename Concrete>                                              \
+    explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete)      \
+        : v_table_base_t(concrete) {                                          \
+      using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>; \
+                                                                              \
+      _detail_ANYXX_V_TABLE_LAMBDAS(l);                                       \
+                                                                              \
+      if constexpr (dispatchs_enabled) {                                      \
+        own_dispatch_holder_t::set_dispatch_table(                            \
+            ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());       \
+      }                                                                       \
+                                                                              \
+      ::anyxx::set_is_derived_from<v_table_t>(this);                          \
+    };                                                                        \
+                                                                              \
+    template <typename Concrete>                                              \
+    static auto imlpementation() {                                            \
+      return anyxx::v_table_instance_implementaion<v_table_t, Concrete>();    \
+    }                                                                         \
+  };                                                                          \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                          \
+  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {            \
+    using erased_data_t = ErasedData;                                         \
+    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;       \
+    using v_table_base_t = base_t::v_table_t;                                 \
+    using v_table_t =                                                         \
+                                                                              \
+        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);          \
+                                                                              \
+    template <typename Concrete>                                              \
+    static auto v_table_imlpementation() {                                    \
+      static_assert(!anyxx::is_any<Concrete>);                                \
+      return v_table_t::template imlpementation<Concrete>();                  \
+    }                                                                         \
+                                                                              \
+    using base_t::erased_data_;                                               \
+    using base_t::v_table_;                                                   \
+                                                                              \
+    n(erased_data_t erased_data, v_table_t* v_table)                          \
+        : base_t(std::move(erased_data), v_table) {}                          \
+    template <typename ConstructedWith>                                       \
+    explicit(false) n(ConstructedWith&& v)                                    \
+      requires anyxx::constructibile_for<ConstructedWith, ErasedData>         \
+        : base_t(std::forward<ConstructedWith>(v)) {                          \
+      v_table_ = v_table_t::template imlpementation<                          \
+          anyxx::unerased<ErasedData, ConstructedWith>>();                    \
+    }                                                                         \
+    template <typename V>                                                     \
+    n(std::in_place_t, V&& v) : base_t(std::in_place, std::forward<V>(v)) {   \
+      v_table_ = v_table_t::template imlpementation<                          \
+          anyxx::unerased<ErasedData, V>>();                                  \
+    }                                                                         \
+    template <typename T, typename... Args>                                   \
+    explicit(false) n(std::in_place_type_t<T>, Args&&... args)                \
+        : base_t(std::in_place_type<T>, std::forward<Args>(args)...) {        \
+      v_table_ = v_table_t::template imlpementation<                          \
+          anyxx::unerased<ErasedData, T>>();                                  \
+    }                                                                         \
+    template <typename Other>                                                 \
+    explicit(false) n(const Other& other)                                     \
+      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&     \
+               anyxx::borrowable_from<erased_data_t,                          \
+                                      typename Other::erased_data_t>)         \
+        : base_t(other) {}                                                    \
+    template <anyxx::is_any Other>                                            \
+    explicit(false) n(Other&& other) noexcept                                 \
+      requires(                                                               \
+          std::derived_from<typename Other::v_table_t, v_table_t> &&          \
+          anyxx::moveable_from<erased_data_t, typename Other::erased_data_t>) \
+        : base_t(std::forward<Other>(other)) {}                               \
+                                                                              \
+    _detail_ANYXX_METHODS(l)                                                  \
+                                                                              \
+        auto const*                                                           \
+        operator->() const {                                                  \
+      return this;                                                            \
+    }                                                                         \
+                                                                              \
+    ~n() = default;                                                           \
+    n() = default;                                                            \
+    n(n const&) = default;                                                    \
+    n(n&&) = default;                                                         \
+    n& operator=(n const&) = default;                                         \
+    n& operator=(n&&) = default;                                              \
+    template <anyxx::is_erased_data Other>                                    \
+    friend class anyxx::any_base;                                             \
+    template <anyxx::is_any To, anyxx::is_any From>                           \
+    friend To anyxx::unchecked_downcast_to(From from)                         \
+      requires(std::derived_from<To, From>);                                  \
+    template <anyxx::is_erased_data Other>                                    \
+    using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                    \
   };
 
-#define ANY_(n, BASE, l) ANY_TEMPLATE_((), n, BASE, (), l)
+#define ANY_(n, BASE, l) \
+  ANY_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, BASE, (), l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
+
+#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                 \
+  ANY_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),         \
+                    _add_head((Concrete), t), _add_head((Other), t), t, n, \
+                    BASE, btpl, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
-#define ANY_METHOD(ret, name, params, ...) \
-  ANY_METHOD_(, ret, name, name, false, __VA_ARGS__, _detail_EXPAND params)
+#define ANY_METHOD(ret, name, params, const_) \
+  ANY_METHOD_(, ret, name, name, false, const_, _detail_EXPAND params)
 
 #define ANY_OVERLOAD(name) using base_t::name;
 
-#define ANY_METHOD_OVERLOAD(ret, name, params, ...)                    \
-  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, __VA_ARGS__, \
+#define ANY_METHOD_OVERLOAD(ret, name, params, const_)            \
+  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, \
               _detail_EXPAND params)
 
-#define ANY_OP(ret, op, params, ...)                                          \
+#define ANY_OP(ret, op, params, const_)                                       \
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
-              __VA_ARGS__, _detail_EXPAND params)
+              const_, _detail_EXPAND params)
 
-#define ANY_OP_EXACT(ret, op, params, ...)                                   \
+#define ANY_OP_EXACT(ret, op, params, const_)                                \
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
-              __VA_ARGS__, _detail_EXPAND params)
+              const_, _detail_EXPAND params)
+
+#define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_)                        \
+  ANY_METHOD_(ANY_OVERLOAD(operator op), ret,                                 \
+              _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, \
+              _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
@@ -2174,5 +2196,3 @@ struct dispatch<R(Args...)> {
   template <>                                                               \
   constexpr bool has_dispatchs<interface_namespace::interface_name> = true; \
   }
-
-#define ANY_NAME(...) __VA_ARGS__

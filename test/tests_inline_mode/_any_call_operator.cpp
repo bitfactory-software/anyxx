@@ -1,8 +1,6 @@
-#include <catch.hpp>
-#include <string>
 #include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
+#include <catch2/catch_test_macros.hpp>
+#include <string>
 
 using namespace anyxx;
 using namespace anyxx;
@@ -27,8 +25,8 @@ struct functor2_t {
 
 namespace {
 ANY(overloaded_function_object,
-             (ANY_OP(std::string, (), (std::string const&)),
-              ANY_OP(std::string, (), (), const)))
+    (ANY_OP(std::string, (), (std::string const&), ),
+     ANY_OP(std::string, (), (), const)))
 }
 
 namespace {

@@ -1,36 +1,45 @@
-﻿if (MSVC)
-    add_compile_options(/Zc:preprocessor)
+cmake_minimum_required(VERSION 3.15...3.23)
+
+project(CmakeConfigPackageTests LANGUAGES CXX)
+include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
+
+file(GLOB_RECURSE hpp_files "*.hpp")
+file(GLOB_RECURSE cpp_files "*.cpp")
+add_executable(tests_inline_mode ${hpp_files} ${cpp_files})
+#add_executable(tests_inline_mode _any_template.cpp)
+target_link_libraries(
+  tests_inline_mode
+  PRIVATE anyxx::anyxx_warnings
+          anyxx::anyxx_options
+          anyxx::anyxx
+          Catch2::Catch2WithMain)
+
+# use /Ob2 for benchmarks with Clang-Cl & Cl)
+#if (MSVC)
+#  target_compile_options(tests_inline_mode PRIVATE /Ob2)
+#endif()
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+  add_custom_command(
+    TARGET tests_inline_mode
+    PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:tests_inline_mode> $<TARGET_FILE_DIR:tests_inline_mode>
+    COMMAND_EXPAND_LISTS)
 endif()
 
-set(CMAKE_CXX_STANDARD 23)
+# automatically discover tests that are defined in catch based test files you can modify the unittests. Set TEST_PREFIX
+# to whatever you want, or use different for different binaries
+#catch_discover_tests(
+#  tests_inline_mode
+#  TEST_PREFIX
+#  "tests_inline_mode"
+#  REPORTER
+#  XML
+#  OUTPUT_DIR
+#  .
+#  OUTPUT_PREFIX
+#  "tests_inline_mode"
+#  OUTPUT_SUFFIX
+#  .xml)
 
-file(GLOB component_base_hpp_files "./component_base/*.hpp")
-file(GLOB component_base_cpp_files "./component_base/*.cpp")
-add_library(component_base ${component_base_hpp_files} ${component_base_cpp_files})
-set_target_properties(component_base PROPERTIES LINKER_LANGUAGE CXX)
-target_link_libraries(component_base 
-    anyxx
-)
-target_include_directories(component_base PUBLIC 
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
-)
-if (BUILD_SHARED_LIBS AND MSVC)
-    target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
-endif()
-set_target_properties(component_base PROPERTIES FOLDER "_test_all")
-
-
-
-file(GLOB test_all_hpp_files "*.hpp")
-file(GLOB test_all_cpp_files "*.cpp")
-add_executable (test_all ${test_all_cpp_files} ${test_all_hpp_files})
-target_link_libraries(test_all 
-    anyxx
-    component_base
-    Catch2::Catch2WithMain
-)
-set_target_properties(test_all PROPERTIES FOLDER "_test_all")
-
-include(Catch)
-catch_discover_tests(test_all)
+catch_discover_tests(tests_inline_mode)

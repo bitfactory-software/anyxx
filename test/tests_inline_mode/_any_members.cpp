@@ -1,10 +1,8 @@
 #include <cmath>
 #include <iostream>
 #include <string>
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
 
 using namespace anyxx;
 
@@ -28,11 +26,11 @@ TEST_CASE("open object 1") {
   REQUIRE((*a_test_object.get(test_member)) == "hello world");
   {
     test_object const& const_test_object = a_test_object;
-    auto r = const_test_object.get(test_member);
+    auto r1 = const_test_object.get(test_member);
     REQUIRE(r);
     std::cout << typeid(*r).name() << "\n";
-    REQUIRE(*r == "hello world");
-    static_assert(std::same_as<decltype(r), std::string const*>);
+    REQUIRE(*r1 == "hello world");
+    static_assert(std::same_as<decltype(r1), std::string const*>);
     REQUIRE((*const_test_object.get(test_member)) == "hello world");
   }
   *a_test_object.get(test_member) = "hello programm";

@@ -1,5 +1,5 @@
-#include <string>
 #include <anyxx/anyxx.hpp>
+#include <string>
 using namespace anyxx;
 
 #ifndef ANY_DLL_MODE
@@ -23,25 +23,24 @@ namespace test::component_base {
 struct X;
 }
 
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
-                        get_value_i)
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
-                        set_value_i)
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X, test::component_base,
-                        to_string_i)
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+              test::component_base, get_value_i)
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+              test::component_base, set_value_i)
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+              test::component_base, to_string_i)
 
 namespace test::component_base {
 
 ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)))
 ANY(get_value_i, (ANY_METHOD(double, get_value, (), const)))
-ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double))))
+ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double), )))
 
 COMPONENT_BASE_EXPORT
 to_string_i<anyxx::const_observer> get_to_string_i_co();
-COMPONENT_BASE_EXPORT to_string_i<anyxx::shared_const>
-get_to_string_i_sc(double v);
-COMPONENT_BASE_EXPORT to_string_i<anyxx::unique> get_to_string_i_u(
+COMPONENT_BASE_EXPORT to_string_i<anyxx::shared_const> get_to_string_i_sc(
     double v);
+COMPONENT_BASE_EXPORT to_string_i<anyxx::unique> get_to_string_i_u(double v);
 COMPONENT_BASE_EXPORT anyxx::shared_const sc_X(double v);
 COMPONENT_BASE_EXPORT anyxx::unique u_X(double v);
 

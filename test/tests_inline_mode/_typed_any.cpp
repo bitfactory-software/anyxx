@@ -1,10 +1,7 @@
 #include <anyxx/anyxx.hpp>
-#include <catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <string>
 
-using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
 using namespace anyxx;
 
 namespace typed_any_test {
@@ -15,7 +12,7 @@ struct x_t {
 
 namespace typed_any_test {
 ANY(test_i, (ANY_METHOD(std::string, to_string, (), const),
-             ANY_METHOD(void, from_string, (std::string_view))))
+             ANY_METHOD(void, from_string, (std::string_view), )))
 }  // namespace typed_any_test
 
 using namespace typed_any_test;
@@ -25,7 +22,7 @@ TEST_CASE("typed_any/observer") {
 
   test_i<const_observer> co{s};
   static_assert(is_any<test_i<const_observer>>);
-  CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
+  CHECK_NOTHROW([&] { CHECK(unerase_cast<x_t>(co)->s_ == "hallo"); }());
   CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 
   auto co_typed = as<x_t>(co);

@@ -1,16 +1,13 @@
-#include <catch.hpp>
 #include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
+#include <catch2/catch_test_macros.hpp>
 
 namespace {
 struct x_t {
   std::string s_;
-  std::string get() const { return s_; }
+  [[maybe_unused]] std::string get() const { return s_; }
 };
-ANY(has_meta_data,)
+ANY(has_meta_data, )
 }  // namespace
-
 
 TEST_CASE("unerase_cast") {
   using namespace anyxx;
@@ -25,7 +22,12 @@ TEST_CASE("unerase_cast") {
   }
   {
     value_with_meta_data v(std::make_shared<x_t>("hallo"));
-    REQUIRE(unerase_cast<x_t>(v)->s_ == "hallo");
+    try {
+      auto x = unerase_cast<x_t>(v)->s_;
+      CHECK(x == "hallo");
+    } catch (anyxx::type_mismatch_error&) {
+      CHECK(false);
+    }
     CHECK_THROWS_AS(unerase_cast<std::string>(v), type_mismatch_error);
   }
 }

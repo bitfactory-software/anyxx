@@ -1,22 +1,18 @@
-#include <catch.hpp>
+#include <anyxx/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <concepts>
 #include <string>
-#include <anyxx/anyxx.hpp>
-
-using namespace Catch::Matchers;
 
 using namespace anyxx;
 using namespace anyxx;
 
 namespace {
-ANY(string_to_string,
-             (ANY_OP(std::string, (), (std::string const&), const)))
+ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)))
 
-ANY(string_to_string_mutable,
-             (ANY_OP(std::string, (), (), const),
-              ANY_OP(std::string, (), (std::string const&))))
+ANY(string_to_string_mutable, (ANY_OP(std::string, (), (), const),
+                               ANY_OP(std::string, (), (std::string const&), )))
 
-}  // namespace test_ns
+}  // namespace
 
 using namespace anyxx;
 
@@ -65,8 +61,7 @@ TEST_CASE("std emulated function") {
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
     REQUIRE(f() == "hallo world");
-    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ ==
-            "hallo world");
+    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo world");
 
     string_to_string_mutable<const_observer> fc{f};
     REQUIRE(fc() == "hallo world");
@@ -81,7 +76,7 @@ TEST_CASE("std emulated function") {
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
-    string_to_string_mutable<value> fc2{functor_t{"hallo world"}}; 
+    string_to_string_mutable<value> fc2{functor_t{"hallo world"}};
     CHECK(fc2() == "hallo world");
   }
   {
@@ -97,15 +92,13 @@ TEST_CASE("std emulated function") {
   {
     string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
-    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ ==
-            "hello world");
+    REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
     static_assert(!std::assignable_from<string_to_string_mutable<unique>,
                                         string_to_string_mutable<unique>>);
     string_to_string_mutable<unique> f2{std::move(f)};
     REQUIRE(!has_data(get_erased_data(f)));
     REQUIRE(f2(", bye") == "hello world");
-    REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ ==
-            "hello world, bye");
+    REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
   }
 
   {
