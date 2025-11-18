@@ -2,41 +2,38 @@
 
 # any++: *type erasure* vocabulary for *programming on a large scale*
 
-- External Polymorphism via "ANY..." metafunctions
+- External Polymorphism via *ANY...* metaclass
   - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
-    - Derive
+    - Deriveable
     - Operators
-    - Upcast
-    - Downcast
-    - Crosscast
+    - Choose implementation for specific type va *Concept Map*
+    - Upcast, Downcast, Crosscast via *borrow_as*, *clone_to*, *move_to*
    - Interface can be template
      - 'recursive' to erase container
    - open dispatch
      - single (visitor)
      - multiple (collision resolver, type erased binary operators)  
      - performance on par with vanilla virtual functions
-  - type erased clone, if erased type is copy constructable
-  - abstract factory
+  - Type erased clone, if concrete type is *copy constructable*
+- Abstract factory for ANY 
 - Transparent storeage management
-  - out of the box:
+  - Out of the box:
     - const/mutable_observers, aka "pointer"
     - shared_const, weak via std::shared_ptr, std::week_ptr
     - unique, via std::unique_ptr and type erased deleter
     - value
-  - customizable via anyxx::trait
-  - interchangeable
-    - (automatc) borrow_as: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
+  - Customizable via anyxx::trait
+  - Interchangeable
+    - (implicit) borrow_as: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
     - move_to: value -> unique -> shared_const, unique -> value
     - clone_to: ..._observer -> shared_const -> unique -> value
-- extension member
-  - add members at load time
-  - access performance on par with vanilla virtual function getter
-- hook
-  - overrideable customization points       
+- Extension member
+  - To add members at load time
+  - Has access performance on par with *virtual* function getter
+- Hook
+  - A overrideable customization points       
 
-# Samples
-## External Polymorphism for Nonintrusive Runtime Polymorphism
-### Example1: Basic building block *ANY*, *ANY_* 
+# Example1: Basic building block *ANY*, *ANY_* 
 ```cpp
 #include <anyxx/anyxx.hpp>
 #include <iostream>
@@ -61,6 +58,9 @@ int main(){
 }
 ```
 Example1: [Compiler Explorer](https://godbolt.org/z/b6oazcov4)
+
+
+# Example1: Basic building block *ANY*, *ANY_* 
 
 
 
