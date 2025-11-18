@@ -33,7 +33,7 @@
 - Hook
   - A overrideable customization points       
 
-# Example1: Basic building block *ANY*, *ANY_* 
+# Showcase 1: Basic building block *ANY*, *ANY_* 
 ```cpp
 #include <anyxx/anyxx.hpp>
 #include <iostream>
@@ -57,10 +57,11 @@ int main(){
   return 0;
 }
 ```
-Example1: [Compiler Explorer](https://godbolt.org/z/b6oazcov4)
+Example1: [Compiler Explorer](https://godbolt.org/z/E6rzn591K)
 
 
-# Example1: Basic building block *ANY*, *ANY_* 
+# Showcase 2: Type erased "spaceship operator" 
+
 
 
 
