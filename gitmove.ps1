@@ -1,7 +1,7 @@
 # === KONFIGURATION ===
 
 # Quelle: Ordner, in dem gesucht wird
-$sourceDir = "virtual_void"
+$sourceDir = "anyxx"
 
 # Dateimuster: z. B. *.cs, *.txt, *.md
 $filePattern = "*.hpp"

@@ -1,4 +1,4 @@
-title: virtual void  
+title: Any++  
 description: void some vocabulary for programming in the large
 theme: just-the-docs
 
@@ -14,4 +14,4 @@ defaults:
       layout: "default"
 
 aux_links:
-  Repository: https://https://github.com/andreaspfaffenbichler/virtual_void
+  Repository: https://github.com/bitfactory-software/anyxx
