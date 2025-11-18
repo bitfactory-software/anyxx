@@ -74,7 +74,7 @@ int main(){
 Example1: [Compiler Explorer](https://godbolt.org/z/E6rzn591K)
 
 
-# Showcase 2: Type erased "spaceship operator" 
+# Showcase 2: Type erased *spaceship operator*
 
 
 
