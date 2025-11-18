@@ -36,7 +36,7 @@
 - Single header only library
 - static and DLL/SO mode for v-tables, dispatch tables and other static meta data.
   - Default for *static build*: the compiler manages the details.
-  - ``#define ANYXX_DLL_MODE`, works for *static* and *dynamic builds*`: You control the visibilit and location of the static meta data.
+  - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibilit and location of the static meta data.
 - Useage in CMakeLists.txt:
 ```
 FetchContent_Declare(
@@ -53,25 +53,25 @@ FetchContent_MakeAvailable(anyxx)
 #include <iostream>
 
 struct circle {
-  void draw(std::ostream& os) const { os << "Circle\n"; }
+    void draw(std::ostream& os) const { os << "Circle\n"; }
 };
 struct square {
-  void draw(std::ostream& os) const { os << "Square\n"; }
+    void draw(std::ostream& os) const { os << "Square\n"; }
 };
 
 ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&), const)))
 
 void draw(std::ostream& os,
-          std::vector<any_drawable<anyxx::shared_const>> const& any_drawables) {
-  for (auto const& any_drawable : any_drawables) any_drawable.draw(os);
+          std::vector<any_drawable<anyxx::shared_const>> const& drawables) {
+    for (auto const& drawable : drawables) drawable.draw(os);
 }
 
-int main(){
-  draw(std::cout, {std::make_shared<circle>(), std::make_shared<square>()});
-  return 0;
+int main() {
+    draw(std::cout, {std::make_shared<circle>(), std::make_shared<square>()});
+    return 0;
 }
 ```
-Example1: [Compiler Explorer](https://godbolt.org/z/E6rzn591K)
+Example1: [Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
 
 
 # Showcase 2: Type erased *spaceship operator*
