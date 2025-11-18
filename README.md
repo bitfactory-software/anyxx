@@ -47,7 +47,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(anyxx)
 ```
 
-# Showcase 1: Basic building block *ANY*, *ANY_* 
+# Showcase 1: Basic *ANY* usage
 ```cpp
 #include <anyxx/anyxx.hpp>
 #include <iostream>
@@ -71,7 +71,7 @@ int main() {
     return 0;
 }
 ```
-Example1: [Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
+[Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
 
 
 # Showcase 2: Type erased *spaceship operator*
