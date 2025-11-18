@@ -33,6 +33,20 @@
 - Hook
   - A overrideable customization points       
 
+- Single header only library
+- static and DLL/SO mode for v-tables, dispatch tables and other static meta data.
+  - Default for *static build*: the compiler manages the details.
+  - ``#define ANYXX_DLL_MODE`, works for *static* and *dynamic builds*`: You control the visibilit and location of the static meta data.
+- Useage in CMakeLists.txt:
+```
+FetchContent_Declare(
+    cogoproject
+    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(anyxx)
+```
+
 # Showcase 1: Basic building block *ANY*, *ANY_* 
 ```cpp
 #include <anyxx/anyxx.hpp>
