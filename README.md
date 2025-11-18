@@ -1,6 +1,6 @@
 [Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorials_toc.md) / [Tests and Examples](/test/)
 
-# any++: *type erasure* vocabulary for *programming on a large scale*
+# any++: *type erasure* vocabulary  for *programming on a large scale*
 
 - External Polymorphism via *ANY...* metaclass
   - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
