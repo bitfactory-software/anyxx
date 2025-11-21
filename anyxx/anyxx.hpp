@@ -533,40 +533,41 @@ inline bool is_derived_from(const std::type_info& from,
 
 using dispatch_table_function_t = void (*)();
 using dispatch_table_dispatch_index_t = std::size_t;
-using dispatch_table_entry_t =
-    std::variant<std::monostate, dispatch_table_dispatch_index_t,
-                 dispatch_table_function_t>;
+struct dispatch_table_entry_t {
+  std::uintptr_t data = 0;
+  bool initialized = false;
+};
 using dispatch_table_t = std::vector<dispatch_table_entry_t>;
 
-void insert_function(dispatch_table_t* v_table, std::size_t index, auto fp) {
-  if (v_table->size() <= index) v_table->resize(index + 1);
-  v_table->at(index) = reinterpret_cast<dispatch_table_function_t>(fp);
+void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
+  if (table->size() <= index) table->resize(index + 1);
+  auto& entry = table->at(index);
+  entry.initialized = true;
+  entry.data = reinterpret_cast<std::uintptr_t>(fp);
 }
-inline dispatch_table_function_t get_function(dispatch_table_t* v_table,
+inline dispatch_table_function_t get_function(dispatch_table_t* table,
                                               std::size_t index) {
-  if (v_table->size() <= index) return {};
-  if (auto f = std::get_if<dispatch_table_function_t>(&v_table->at(index)))
-    return *f;
+  if (table->size() <= index) return {};
+  return reinterpret_cast<dispatch_table_function_t>(table->at(index).data);
+}
+
+inline std::optional<dispatch_table_dispatch_index_t>
+get_multi_dispatch_index_at(dispatch_table_t* table, std::size_t index) {
+  if (table->size() <= index) return {};
+  if (auto const entry = table->at(index); entry.initialized)
+    return static_cast<dispatch_table_dispatch_index_t>(entry.data);
   else
     return {};
 }
-
-inline std::optional<std::size_t> get_multi_dispatch_index_at(
-    dispatch_table_t* v_table, std::size_t index) {
-  if (v_table->size() <= index) return {};
-  if (auto dispatch_table_dispatch_index =
-          std::get_if<dispatch_table_dispatch_index_t>(&v_table->at(index)))
-    return *dispatch_table_dispatch_index;
-  return {};
-}
 inline void set_multi_dispatch_index_at(
-    dispatch_table_t* v_table, std::size_t index_multi_dispatch,
+    dispatch_table_t* table, std::size_t index_multi_dispatch,
     dispatch_table_dispatch_index_t
         dispatch_index_of_class_in_dispatch_matrix) {
-  if (v_table->size() <= index_multi_dispatch)
-    v_table->resize(index_multi_dispatch + 1);
-  v_table->at(index_multi_dispatch) =
-      dispatch_index_of_class_in_dispatch_matrix;
+  if (table->size() <= index_multi_dispatch)
+    table->resize(index_multi_dispatch + 1);
+  auto& entry = table->at(index_multi_dispatch);
+  entry.initialized = true;
+  entry.data = dispatch_index_of_class_in_dispatch_matrix;
 }
 
 struct cast_error {
