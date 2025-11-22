@@ -17,7 +17,6 @@ target_link_libraries(
 # use /Ob2 for benchmarks with Clang-Cl & Cl)
 #if (MSVC)
 #  target_compile_options(tests_inline_mode PRIVATE /Ob2)
-#  target_link_options(tests_inline_mode PRIVATE /Ob2)
 #endif()
 
 if(WIN32 AND BUILD_SHARED_LIBS)

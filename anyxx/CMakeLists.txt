@@ -10,8 +10,8 @@ if (MSVC)
     endif()
 endif()
 
-target_link_libraries(anyxx 
-    INTERFACE anyxx_options anyxx_warnings)
+# target_link_libraries(anyxx 
+#    INTERFACE anyxx_options anyxx_warnings)
 target_include_directories(anyxx ${WARNING_GUARD} 
     INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
               $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>)

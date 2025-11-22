@@ -1416,6 +1416,15 @@ struct translate_erased_function {
   using type = RET (*)(typename translate_erased_function_param<Args>::type...);
 };
 
+template <std::size_t I, typename First, typename... Args>
+auto arg_n(First first, Args... args) {
+  if constexpr (I == 0) {
+    return first;
+  } else {
+    return arg_n<I - 1>(std::forward<Args>(args)...);
+  }
+}
+
 template <std::size_t COUNT, typename... Args>
 constexpr std::size_t dispatch_dimension_count = COUNT;
 template <std::size_t COUNT, is_any Any, typename... Args>
@@ -1649,17 +1658,17 @@ struct dispatch<R(Args...)> {
       insert_function(v_table, index_, fp);
       return fp;
     }
-    template <typename DispatchMatrix, typename ArgsTuple,
-              typename... ActualArgs>
-    std::optional<R> invoke(
-        DispatchMatrix const&, ArgsTuple&& dispatch_args_tuple, Any const& any,
-        [[maybe_unused]] ActualArgs&&... actual_args) const {
+
+    template <typename... Other>
+    R invoke(dispatch_default_t::function_t const& default_, Any const& any,
+             Other&&... other) const {
       auto v_table = get_v_table(any)->dispatch_table;
       auto target = get_function(v_table, index_);
-      if (!target) return {};
+      if (!target)
+        return std::invoke(default_, any, std::forward<Other>(other)...);
       auto erased_function = reinterpret_cast<erased_function_t>(target);
-      return std::apply(erased_function,
-                        std::forward<ArgsTuple>(dispatch_args_tuple));
+      return std::invoke(erased_function, get_void_data_ptr(any),
+                         std::forward<Other>(other)...);
     }
   };
 
@@ -1676,15 +1685,21 @@ struct dispatch<R(Args...)> {
   };
   template <typename... ActualArgs>
   auto operator()(ActualArgs&&... actual_args) const {
-    auto dispatch_args_tuple = args_to_tuple<Args...>{}(
-        std::tuple<>{}, std::forward<ActualArgs>(actual_args)...);
-    return *dispatch_access_
-                .invoke(dispatch_matrix_, dispatch_args_tuple,
-                        std::forward<ActualArgs>(actual_args)...)
-                .or_else([&]() -> std::optional<R> {
-                  return std::invoke(dispatch_default_hook_,
+    if constexpr (dispatch_kind == kind::multiple) {
+      auto dispatch_args_tuple = args_to_tuple<Args...>{}(
+          std::tuple<>{}, std::forward<ActualArgs>(actual_args)...);
+      return *dispatch_access_
+                  .invoke(dispatch_matrix_, dispatch_args_tuple,
+                          std::forward<ActualArgs>(actual_args)...)
+                  .or_else([&]() -> std::optional<R> {
+                    return std::invoke(
+                        dispatch_default_hook_,
+                        std::forward<ActualArgs>(actual_args)...);
+                  });
+    } else {
+      return dispatch_access_.invoke(dispatch_default_hook_,
                                      std::forward<ActualArgs>(actual_args)...);
-                });
+    }
   }
   auto& get_dispatch_default_hook() { return dispatch_default_hook_; };
 };
