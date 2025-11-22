@@ -46,16 +46,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(anyxx)
 ```
-# Benchmarks 
-## Single dispatch
-| Single dispatch                     | msvc /O2 /Od2 | clang o3    | |
+
+| **Benchmarks**                     | msvc /O2 /Od2 | clang o3    | |
 |:----------------------------|--------------:|------------:|------------:|
+| **Single dispatch** |   | | |
 | virtual function |  4.19030 ns | | |
 | any++ interface |  4.06907 ns | |  |
 | any++ open method | 4.63727 ns | | |
-
-| double dispatch                     | msvc /O2 /Od2 | clang o3    | |
-|:----------------------------|--------------:|------------:|------------:|
+| **double dispatch** |   | | |
 | std::variant + std::visit |   | | |
 | hand rolled w. virtual function  |   | |  |
 | any++ open method |  | | |
