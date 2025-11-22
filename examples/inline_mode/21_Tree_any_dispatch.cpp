@@ -85,7 +85,7 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-TEST_CASE("21_Tree_TE_interface_dispatch") {
+TEST_CASE("21_Tree any++ open method") {
   using namespace anyxx;
 
   auto expr = node::model{std::make_shared<Times>(
@@ -107,8 +107,8 @@ TEST_CASE("21_Tree_TE_interface_dispatch") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_interface_dispatch value") { return value(expr); };
-  BENCHMARK("21_Tree_TE_interface_dispatch as_lisp") { return as_lisp(expr); };
+  BENCHMARK("21_Tree any++ open method value") { return value(expr); };
+  BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG
 }
 

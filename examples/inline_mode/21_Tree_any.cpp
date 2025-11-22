@@ -63,7 +63,7 @@ auto make_node(ARGS&&... args) {
 
 }  // namespace
 
-TEST_CASE("21_Tree_TE_dynamic_interface") {
+TEST_CASE("21_Tree_any") {
   using namespace anyxx;
 
   auto expr = node(make_node<Times>(
@@ -76,7 +76,7 @@ TEST_CASE("21_Tree_TE_dynamic_interface") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
   std::cout << out.str() << "\n";
 #ifndef _DEBUG
-  BENCHMARK("21_Tree_TE_dynamic_interface value") { return expr.value(); };
-  BENCHMARK("21_Tree_TE_dynamic_interface as_lisp") { return expr.as_lisp(); };
+  BENCHMARK("21_Tree any++ value") { return expr.value(); };
+  BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
 #endif  // !_DEBUG
 }
