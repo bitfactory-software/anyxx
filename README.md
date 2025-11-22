@@ -46,6 +46,20 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(anyxx)
 ```
+# Benchmarks 
+## Single dispatch
+| Single dispatch                     | msvc /O2 /Od2 | clang o3    | |
+|:----------------------------|--------------:|------------:|------------:|
+| virtual function |  4.19030 ns | | |
+| any++ interface |  4.06907 ns | |  |
+| any++ open method | 4.63727 ns | | |
+
+| double dispatch                     | msvc /O2 /Od2 | clang o3    | |
+|:----------------------------|--------------:|------------:|------------:|
+| std::variant + std::visit |   | | |
+| hand rolled w. virtual function  |   | |  |
+| any++ open method |  | | |
+
 
 # Showcase 1: Basic *ANY* usage
 ```cpp
