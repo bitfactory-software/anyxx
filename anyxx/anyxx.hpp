@@ -534,7 +534,7 @@ inline bool is_derived_from(const std::type_info& from,
 using dispatch_table_function_t = void (*)();
 using dispatch_table_dispatch_index_t = std::size_t;
 struct dispatch_table_entry_t {
-  std::uintptr_t data = 0;
+  unsigned long long data = 0;
   bool initialized = false;
 };
 using dispatch_table_t = std::vector<dispatch_table_entry_t>;
@@ -543,7 +543,7 @@ void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
   if (table->size() <= index) table->resize(index + 1);
   auto& entry = table->at(index);
   entry.initialized = true;
-  entry.data = reinterpret_cast<std::uintptr_t>(fp);
+  entry.data = reinterpret_cast<unsigned long long>(fp);
 }
 inline dispatch_table_function_t get_function(dispatch_table_t* table,
                                               std::size_t index) {
