@@ -47,16 +47,19 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(anyxx)
 ```
 
-| **Benchmarks**                     | msvc /O2 /Od2 | clang o3    | |
-|:----------------------------|--------------:|------------:|------------:|
-| **Single dispatch** |   | | |
-| virtual function |  4.19030 ns | | |
-| any++ interface |  4.06907 ns | |  |
-| any++ open method | 4.63727 ns | | |
-| **double dispatch** |   | | |
-| std::variant + std::visit |   | | |
-| hand rolled w. virtual function  |   | |  |
-| any++ open method |  | | |
+| **Performace compared**     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 2th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
+|:----------------------------|--------------:|-------:|-------:|
+| **Single dispatch** |   | |
+| virtual function (referene*) |  100% | 100% | 100% |
+| any++ interface |  100% | 100% | 100% |
+| any++ open method | 115% | 200% | 130% 
+| **Double dispatch** |   | |  |
+| std::variant + std::visit (referene*) | 100% | 100%| 100% |
+| hand rolled w. virtual function  | 330% | 350%| 700% |
+| any++ open method | 120% | 160% | 300% |
+
+*1) 100% in colums do not compare, 100% **Single dispatch** does not compare to **Double dispatch**
+
 
 
 # Showcase 1: Basic *ANY* usage
