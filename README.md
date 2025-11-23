@@ -34,7 +34,7 @@
 - Single header only library
 - static and DLL/SO mode for v-tables, dispatch tables and other static meta data.
   - Default for *static build*: the compiler manages the details.
-  - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibilit and location of the static meta data.
+  - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibility and location of the static meta data.
 - Useage in CMakeLists.txt:
 ```
 FetchContent_Declare(
