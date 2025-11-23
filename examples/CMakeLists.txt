@@ -16,7 +16,7 @@ set_target_properties(examples_inline_mode PROPERTIES FOLDER "_examples")
 
 # use /Ob2 for benchmarks with Clang-Cl & Cl)
 if (MSVC)
-  target_compile_options(examples_inline_mode PRIVATE /Ob2)
+  #target_compile_options(examples_inline_mode PRIVATE /Ob2)
 endif()
 
 catch_discover_tests(examples_inline_mode)

@@ -16,13 +16,13 @@ ANY(any_creature, (ANY_METHOD(std::string, name, (), const)))
 namespace {
 
 struct cat {
-  static std::string name() { return "Cat"; }
+  static std::string name() { return "cat"; }
 };
 struct dog {
-  static std::string name() { return "Dog"; }
+  static std::string name() { return "dog"; }
 };
 struct man {
-  static std::string name() { return "Man"; }
+  static std::string name() { return "man"; }
 };
 
 auto encounter = anyxx::dispatch<std::string(
@@ -62,9 +62,21 @@ auto apply_encounters(creatures_t const& creatures) {
 }
 }  // namespace
 
-TEST_CASE("30a_Animals any dispatch") {
+TEST_CASE("31_Animals any dispatch") {
   creatures_t creatures{dog{}, cat{}, man{}};
+  std::cout << "+++31_Animals any dispatch\n";
   std::cout << apply_encounters(creatures);
+  std::cout << "---31_Animals any dispatch\n";
+
+  CHECK(encounter(creatures[0], creatures[0]) == "dog snoops at dog");
+  CHECK(encounter(creatures[0], creatures[1]) == "dog chases cat");
+  CHECK(encounter(creatures[0], creatures[2]) == "dog nestle to man");
+  CHECK(encounter(creatures[1], creatures[0]) == "cat hisses at dog");
+  CHECK(encounter(creatures[1], creatures[1]) == "cat strolls with cat");
+  CHECK(encounter(creatures[1], creatures[2]) == "cat nestle to man");
+  CHECK(encounter(creatures[2], creatures[0]) == "man strokes dog");
+  CHECK(encounter(creatures[2], creatures[1]) == "man strokes cat");
+  CHECK(encounter(creatures[2], creatures[2]) == "man shakes hands with man");
 
 #ifndef _DEBUG
   BENCHMARK("30a_Animals any dispatch") { return apply_encounters(creatures); };
