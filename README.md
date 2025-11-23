@@ -1,7 +1,6 @@
 [Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorials_toc.md) / [Tests and Examples](/test/)
 
 # any++: *type erasure* vocabulary  for *programming on a large scale*
-
 - External Polymorphism via *ANY...* metaclass
   - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
     - Deriveable
@@ -32,7 +31,6 @@
   - Has access performance on par with *virtual* function getter
 - Hook
   - A overrideable customization points       
-
 - Single header only library
 - static and DLL/SO mode for v-tables, dispatch tables and other static meta data.
   - Default for *static build*: the compiler manages the details.
@@ -50,16 +48,17 @@ FetchContent_MakeAvailable(anyxx)
 | **Performace compared**     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 2th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
 |:----------------------------|--------------:|-------:|-------:|
 | **Single dispatch** |   | |
-| virtual function (referene*) |  100% | 100% | 100% |
+| virtual function (reference*) |  100% | 100% | 100% |
 | any++ interface |  100% | 100% | 100% |
 | any++ open method | 115% | 200% | 130% 
 | **Double dispatch** |   | |  |
-| std::variant + std::visit (referene*) | 100% | 100%| 100% |
+| std::variant + std::visit (reference*) | 100% | 100%| 100% |
 | hand rolled w. virtual function  | 330% | 350%| 700% |
 | any++ open method | 120% | 160% | 300% |
 
-*1) 100% in colums do not compare, 100% **Single dispatch** does not compare to **Double dispatch**
-
+- reference*:
+  - 100% in different colums do not compare<br>
+  - 100% **Single dispatch** does not compare to 100% **Double dispatch**
 
 
 # Showcase 1: Basic *ANY* usage
