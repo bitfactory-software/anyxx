@@ -1,5 +1,6 @@
 #include <anyxx/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <string>
 
 #ifdef _MSC_VER
 #pragma warning( \
@@ -13,7 +14,7 @@ namespace {}
 
 ANY_HAS_DISPATCH(, any_thing)
 namespace {
-ANY(any_thing, )
+ANY(any_thing, (ANY_METHOD(std::string, name, (), const)))
 }  // namespace
 
 namespace {}  // namespace
@@ -21,10 +22,15 @@ namespace {}  // namespace
 namespace {
 
 namespace {
-class Asteroid {};
+struct Asteroid {
+  static std::string name() { return "Asteroid"; }
+};
 }  // namespace
 namespace {
-class Spaceship {};
+struct Spaceship {
+  static std::string name() { return "Spaceship"; }
+};
+
 }  // namespace
 
 // auto __ = collide.define<any_thing<const_observer>,
@@ -54,13 +60,21 @@ TEST_CASE("multi_dispatch 1") {
       collide;
 
   collide.define<Asteroid, Spaceship>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->s"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
   collide.define<Asteroid, Asteroid>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
   collide.define<Spaceship, Spaceship>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->s"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
   collide.define<Spaceship, Asteroid>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->a"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
 
   CHECK(any_thing_v_table::imlpementation<Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
@@ -73,10 +87,10 @@ TEST_CASE("multi_dispatch 1") {
   any_thing<const_observer> thing_asteroid{asteroid},
       thing_spaceship{spaceship};
 
-  CHECK(collide(thing_asteroid, thing_spaceship) == "a->s");  // a->s");
-  CHECK(collide(thing_asteroid, thing_asteroid) == "a->a");
-  CHECK(collide(thing_spaceship, thing_spaceship) == "s->s");
-  CHECK(collide(thing_spaceship, thing_asteroid) == "s->a");
+  CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid->Spaceship");
+  CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
+  CHECK(collide(thing_spaceship, thing_spaceship) == "Spaceship->Spaceship");
+  CHECK(collide(thing_spaceship, thing_asteroid) == "Spaceship->Asteroid");
 
   // CHECK((thing_asteroid <=> thing_spaceship) == "(*, *) default");  //
   // a->s"); CHECK((thing_asteroid <=> thing_asteroid) == "a->a");
@@ -90,15 +104,21 @@ TEST_CASE("multi_dispatch 2") {
       collide;
 
   collide.define<Asteroid, any_thing<const_observer>>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) {
-        return "default";
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + ":A->*" + r.name();
       });
   collide.define<Asteroid, Asteroid>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
   collide.define<Spaceship, Spaceship>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->s"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
   collide.define<Spaceship, Asteroid>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->a"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
 
   Asteroid asteroid;
   Spaceship spaceship;
@@ -106,10 +126,10 @@ TEST_CASE("multi_dispatch 2") {
   any_thing<const_observer> thing_asteroid{asteroid},
       thing_spaceship{spaceship};
 
-  CHECK(collide(thing_asteroid, thing_spaceship) == "default");
-  CHECK(collide(thing_asteroid, thing_asteroid) == "a->a");
-  CHECK(collide(thing_spaceship, thing_spaceship) == "s->s");
-  CHECK(collide(thing_spaceship, thing_asteroid) == "s->a");
+  CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid:A->*Spaceship");
+  CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
+  CHECK(collide(thing_spaceship, thing_spaceship) == "Spaceship->Spaceship");
+  CHECK(collide(thing_spaceship, thing_asteroid) == "Spaceship->Asteroid");
 }
 
 TEST_CASE("multi_dispatch 3") {
@@ -118,15 +138,21 @@ TEST_CASE("multi_dispatch 3") {
       collide;
 
   collide.define<Asteroid, any_thing<const_observer>>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) {
-        return "default";
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + ":A->*" + r.name();
       });
   collide.define<Asteroid, Asteroid>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "->" + r.name();
+      });
   collide.define<any_thing<const_observer>, Spaceship>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->s"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "*->S:" + r.name();
+      });
   collide.define<any_thing<const_observer>, Asteroid>(
-      []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "s->a"; });
+      []([[maybe_unused]] auto l, [[maybe_unused]] auto r) {
+        return l.name() + "*->A:" + r.name();
+      });
 
   Asteroid asteroid;
   Spaceship spaceship;
@@ -134,10 +160,10 @@ TEST_CASE("multi_dispatch 3") {
   any_thing<const_observer> thing_asteroid{asteroid},
       thing_spaceship{spaceship};
 
-  CHECK(collide(thing_asteroid, thing_spaceship) == "default");
-  CHECK(collide(thing_asteroid, thing_asteroid) == "a->a");
-  CHECK(collide(thing_spaceship, thing_spaceship) == "s->s");
-  CHECK(collide(thing_spaceship, thing_asteroid) == "s->a");
+  CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid:A->*Spaceship");
+  CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
+  CHECK(collide(thing_spaceship, thing_spaceship) == "Spaceship*->S:Spaceship");
+  CHECK(collide(thing_spaceship, thing_asteroid) == "Spaceship*->A:Asteroid");
 }
 
 TEST_CASE("multi_dispatch 4") {
