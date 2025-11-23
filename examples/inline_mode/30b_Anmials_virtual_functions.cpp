@@ -18,6 +18,7 @@ struct man;
 struct creature;
 
 struct creature_visitor {
+  virtual ~creature_visitor() = default;
   virtual encounter_result visit_cat(creature const* l,
                                      creature const* r) const = 0;
   virtual encounter_result visit_dog(creature const* l,
