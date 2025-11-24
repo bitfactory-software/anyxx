@@ -93,7 +93,7 @@ FetchContent_MakeAvailable(anyxx)
   - 100% in different colums do not compare<br>
   - 100% **Single dispatch** does not compare to 100% **Double dispatch**
 - any++ open method vs std::variant + std::visit with clang:
-  - the any++ multidispatch with clang is (absolut) a little faster as with MS Visual C++, but the std::varaint/std::visit multidispatch on clang is 60% faster than MS Visual C++
+  - the meassured time with std::varaint/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.
 
 
 # Showcase 2: Type erased *spaceship operator*
