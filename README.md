@@ -30,6 +30,11 @@ int main() {
     return 0;
 }
 ```
+Output:
+```
+Circle
+Square
+```
 [Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
 
 # Feature overview
