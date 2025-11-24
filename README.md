@@ -4,7 +4,7 @@
 
 This library is targeted to solve coupling problems and allow maximal seperation with reasonable runtime performance.
 
-**Reasonable** means **on par with ivrtual functions**.
+**Reasonable** means **on par with virtual functions**.
 
 # Showcase 1: Basic *ANY* usage
 ```cpp
@@ -29,6 +29,11 @@ int main() {
     draw(std::cout, {std::make_shared<circle>(), std::make_shared<square>()});
     return 0;
 }
+```
+Output:
+```
+Circle
+Square
 ```
 [Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
 
@@ -86,14 +91,14 @@ FetchContent_MakeAvailable(anyxx)
 | any++ open method | **115%** | **200%** | **130%** | 
 | **Double dispatch** |   | |  |
 | std::variant + std::visit (reference*) | 100% | 100% | 100% |
-| hand rolled w. virtual function  | 330% | 150%| 700% |
+| hand rolled w. virtual function  | 150% | 150%| 400% |
 | any++ open method | **120%** | **150%** | **300%**(*) |
 
 - reference*:
   - 100% in different colums do not compare<br>
   - 100% **Single dispatch** does not compare to 100% **Double dispatch**
 - any++ open method vs std::variant + std::visit with clang:
-  - the any++ multidispatch with clang is (absolut) a little faster as with MS Visual C++, but the std::varaint/std::visit multidispatch on clang is 60% faster than MS Visual C++
+  - the meassured time with std::varaint/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.
 
 
 # Showcase 2: Type erased *spaceship operator*
