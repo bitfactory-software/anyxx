@@ -1,4 +1,4 @@
-name: ci-ex
+name: CI-ex
 on:
   pull_request:
   release:
@@ -16,7 +16,7 @@ env:
 
 jobs:
   Test:
-    name: ${{matrix.os}} ${{matrix.compiler}} ${{matrix.build_type}} ${{matrix.packaging_maintainer_mode == 'ON' && '(maintainer mode)' || ''}}
+    name: ${{matrix.os}} ${{matrix.compiler}} ${{matrix.build_type}}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -33,8 +33,6 @@ jobs:
           - "Ninja Multi-Config"
         build_type:
           - Release
-        packaging_maintainer_mode:
-          - OFF
         build_shared:
           - OFF
 
