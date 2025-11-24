@@ -652,7 +652,7 @@ auto bind_v_table_to_meta_data() {
 
 template <typename U>
 bool type_match(meta_data const& meta) {
-  return &meta_data.get_type_info() == &typeid_of<std::decay_t<U>>();
+  return &meta.get_type_info() == &typeid_of<std::decay_t<U>>();
 }
 
 // --------------------------------------------------------------------------------
