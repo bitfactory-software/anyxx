@@ -1,4 +1,4 @@
-name: ci-ex
+name: ci-ex.
 on:
   pull_request:
   release:
