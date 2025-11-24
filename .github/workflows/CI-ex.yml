@@ -1,4 +1,4 @@
-name: ci-ex.
+name: ci-ex
 on:
   pull_request:
   release:
@@ -6,7 +6,7 @@ on:
   push:
     tags:
     branches:
-      - main
+      - master
       - develop
 
 env:
