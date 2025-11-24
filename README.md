@@ -4,7 +4,7 @@
 
 This library is targeted to solve coupling problems and allow maximal seperation with reasonable runtime performance.
 
-**Reasonable** means **on par with ivrtual functions**.
+**Reasonable** means **on par with virtual functions**.
 
 # Showcase 1: Basic *ANY* usage
 ```cpp
