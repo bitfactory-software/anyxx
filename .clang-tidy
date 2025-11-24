@@ -25,7 +25,8 @@ Checks: "*,
         -readability-*,
         -hicpp-*,
         -*old-style-cast,
-        -clang-diagnostic-sign-conversion
+        -clang-diagnostic-sign-conversion,
+        -bugprone-unused-local-non-trivial-variable
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''

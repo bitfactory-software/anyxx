@@ -11,13 +11,9 @@ ANY(test_base_i, (ANY_METHOD(std::string, to_string, (), const)))
 ANY_(test_derived_i, test_base_i,
      (ANY_METHOD(void, from_string, (std::string const&), )))
 
-}  // namespace
-
-namespace {
 struct x_t {
   std::string s_;
 };
-}  // namespace
 
 using test_base_i_co = test_base_i<const_observer>;
 using test_derived_i_mo = test_derived_i<mutable_observer>;
@@ -44,8 +40,6 @@ auto __ =
 
 auto base_table = dispatch_table_instance<test_base_i_v_table, x_t>();
 auto derived_table = dispatch_table_instance<test_derived_i_v_table, x_t>();
-
-namespace {
 
 TEST_CASE("dispatch") {
   CHECK(base_table->size() == 1);
