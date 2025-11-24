@@ -2,65 +2,9 @@
 
 # any++: *type erasure* vocabulary  for *programming on a large scale*
 
-- External Polymorphism via *ANY...* metaclass
-  - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
-    - Deriveable
-    - Operators
-    - Choose implementation for specific type va *Concept Map*
-    - Upcast, Downcast, Crosscast via *borrow_as*, *clone_to*, *move_to*
-   - Interface can be template
-     - 'recursive' to erase container
-   - open dispatch
-     - single (visitor)
-     - multiple (collision resolver, type erased binary operators)  
-     - performance on par with vanilla virtual functions
-  - Type erased clone, if concrete type is *copy constructable*
-- Abstract factory for ANY 
-- Transparent storeage management
-  - Out of the box:
-    - const/mutable_observers, aka "pointer"
-    - shared_const, weak via std::shared_ptr, std::week_ptr
-    - unique, via std::unique_ptr and type erased deleter
-    - value
-  - Customizable via anyxx::trait
-  - Interchangeable
-    - (implicit) borrow_as: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
-    - move_to: value -> unique -> shared_const, unique -> value
-    - clone_to: ..._observer -> shared_const -> unique -> value
-- Extension member
-  - To add members at load time
-  - Has access performance on par with *virtual* function getter
-- Hook
-  - A overrideable customization points       
+This library is targeted to solve coupling problems and allow maximal seperation with reasonable runtime performance.
 
-- Single header only library
-- static and DLL/SO mode for v-tables, dispatch tables and other static meta data.
-  - Default for *static build*: the compiler manages the details.
-  - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibilit and location of the static meta data.
-- Useage in CMakeLists.txt:
-```
-FetchContent_Declare(
-    cogoproject
-    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx.git
-    GIT_TAG main
-)
-FetchContent_MakeAvailable(anyxx)
-```
-
-| **Performace compared**     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 2th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
-|:----------------------------|--------------:|-------:|-------:|
-| **Single dispatch** |   | |
-| virtual function (referene*) |  100% | 100% | 100% |
-| any++ interface |  100% | 100% | 100% |
-| any++ open method | 115% | 200% | 130% 
-| **Double dispatch** |   | |  |
-| std::variant + std::visit (referene*) | 100% | 100%| 100% |
-| hand rolled w. virtual function  | 330% | 350%| 700% |
-| any++ open method | 120% | 160% | 300% |
-
-*1) 100% in colums do not compare, 100% **Single dispatch** does not compare to **Double dispatch**
-
-
+**Reasonable** means **on par with ivrtual functions**.
 
 # Showcase 1: Basic *ANY* usage
 ```cpp
@@ -87,6 +31,69 @@ int main() {
 }
 ```
 [Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
+
+# Feature overview
+- **External Polymorphis**m via *ANY...* metaclass
+  - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
+    - Deriveable
+    - Operators
+    - Choose implementation for specific type va *Concept Map*
+    - Upcast, **Downcast**, **Crosscast*** via *borrow_as*, *clone_to*, *move_to*
+   - **Interface** can be **template**
+     - 'recursive' to erase container
+   - **open dispatch** with **O(1) runtime complexity**
+     - **single** (visitor)
+     - **multiple** (collision resolver, type erased binary operators)  
+     - performance on par with vanilla virtual functions
+  - **Type erased clone**, if concrete type is *copy constructable*
+- **Abstract factory** for *ANY*s 
+- **Transparent storeage/lifetime management***
+  - Out of the box:
+    - const/mutable_observers, aka "pointer"
+    - shared_const, weak via std::shared_ptr, std::week_ptr
+    - unique, via std::unique_ptr and type erased deleter
+    - value
+  - Customizable via anyxx::trait
+  - **Safe** interchange of **lifetime**  
+    - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
+    - **move_to**: value -> unique -> shared_const, unique -> value
+    - **clone_to**: ..._observer -> shared_const -> unique -> value
+- **Extension member*
+  - To **add members at load time**
+  - Has access performance on par with *virtual* function getter
+- **Hook**
+  - A overrideable **customization point  **     
+- Single **header only library**
+- **static-** or **DLL/SO mode** for v-tables, dispatch tables and other static meta data.
+  - Default for *static build*: the compiler manages the details.
+  - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibility and location of the static meta data.
+
+# Useage in CMakeLists.txt:
+```
+FetchContent_Declare(
+    cogoproject
+    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(anyxx)
+```
+# Performace compared
+| Benchmark     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 2th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
+|:----------------------------|--------------:|-------:|-------:|
+| **Single dispatch** |   | |
+| virtual function (reference*) |  100% | 100% | 100% |
+| any++ interface |  **100%** | **100%** | **100%** |
+| any++ open method | **115%** | **200%** | **130%** | 
+| **Double dispatch** |   | |  |
+| std::variant + std::visit (reference*) | 100% | 100% | 100% |
+| hand rolled w. virtual function  | 330% | 350%| 700% |
+| any++ open method | **120%** | **160%** | **300%**(*) |
+
+- reference*:
+  - 100% in different colums do not compare<br>
+  - 100% **Single dispatch** does not compare to 100% **Double dispatch**
+- any++ open method vs std::variant + std::visit with clang:
+  - the any++ multidispatch with clang is (absolut) a little faster as with MS Visual C++, but the std::varaint/std::visit multidispatch on clang is 60% faster than MS Visual C++
 
 
 # Showcase 2: Type erased *spaceship operator*
