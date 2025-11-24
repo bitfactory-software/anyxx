@@ -24,7 +24,7 @@ Checks: "*,
         -cppcoreguidelines-avoid-magic-numbers,
         -readability-*,
         -hicpp-*,
-        -clang-diagnostic-old-style-cast,
+        -*old-style-cast,
         -clang-diagnostic-sign-conversion
 "
 WarningsAsErrors: ''

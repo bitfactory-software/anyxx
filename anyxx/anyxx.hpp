@@ -597,7 +597,7 @@ class meta_data {
 
   std::expected<any_base_v_table*, cast_error> get_v_table(
       std::type_info const& typeid_) const {
-    auto& i_table = get_i_table();
+    auto const& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
@@ -651,7 +651,7 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(meta_data const& meta_data) {
+bool type_match(meta_data const& meta) {
   return &meta_data.get_type_info() == &typeid_of<std::decay_t<U>>();
 }
 
@@ -670,28 +670,28 @@ concept borrowable_from =
 template <is_erased_data From>
   requires(!is_const_data<From> && !is_weak_data<From>)
 struct borrow_trait<mutable_observer, From> {
-  auto operator()(const auto& from) {
+  auto operator()(const auto& from) const {
     return mutable_observer{get_void_data_ptr(from)};
   }
 };
 template <is_erased_data From>
   requires(!is_weak_data<From>)
 struct borrow_trait<const_observer, From> {
-  auto operator()(const auto& from) {
+  auto operator()(const auto& from) const {
     return const_observer{get_void_data_ptr(from)};
   }
 };
 template <>
 struct borrow_trait<shared_const, shared_const> {
-  auto operator()(const auto& from) { return from; }
+  auto operator()(const auto& from) const { return from; }
 };
 template <>
 struct borrow_trait<weak, weak> {
-  auto operator()(const auto& from) { return from; }
+  auto operator()(const auto& from) const { return from; }
 };
 template <>
 struct borrow_trait<weak, shared_const> {
-  auto operator()(const auto& from) { return weak{from}; }
+  auto operator()(const auto& from) const { return weak{from}; }
 };
 
 template <typename To, typename From>
@@ -1208,8 +1208,8 @@ auto lock(FromAny const& from_interface) {
   using to_interface_t = FromAny::template type_for<shared_const>;
   static_assert(is_any<to_interface_t>);
   using return_t = std::optional<to_interface_t>;
-  if (auto shared_const = get_erased_data(from_interface).lock())
-    return return_t{{shared_const, get_v_table(from_interface)}};
+  if (auto locked = get_erased_data(from_interface).lock())
+    return return_t{{locked, get_v_table(from_interface)}};
   return return_t{};
 }
 
