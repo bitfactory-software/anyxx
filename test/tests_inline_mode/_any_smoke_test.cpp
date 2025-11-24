@@ -7,8 +7,6 @@
 
 using namespace anyxx;
 
-const double M_PI = 3.14;
-
 struct position {
   float x, y;
 };
@@ -31,8 +29,8 @@ struct circle {
     std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << std::endl;
   }
   int count_sides() const { return 1; }
-  double area() const { return radius * radius * M_PI; }
-  double circumference() const { return radius * 2.0f * M_PI; }
+  double area() const { return radius * radius * 3.14; }
+  double circumference() const { return radius * 2.0f * 3.14; }
   double perimeter() const { return circumference(); }
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
@@ -65,8 +63,8 @@ struct regular_polygon {
               << std::endl;
   }
   int count_sides() const { return sides; }
-  double apothem() const { return (side_length / 2) / std::tan(M_PI / sides); }
-  double radius() const { return (side_length / 2) / std::sin(M_PI / sides); }
+  double apothem() const { return (side_length / 2) / std::tan(3.14 / sides); }
+  double radius() const { return (side_length / 2) / std::sin(3.14 / sides); }
   double perimeter() const { return sides * side_length; }
   double area() const { return (perimeter() * apothem()) / 2; }
   std::string operator()(const std::string& x) const {

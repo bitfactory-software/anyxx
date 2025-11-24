@@ -11,8 +11,6 @@ using namespace anyxx;
 
 namespace {
 
-const double M_PI = 3.14;
-
 struct position {
   float x = 0.0, y = 0.0;
 };
@@ -27,8 +25,8 @@ struct circle {
     os << "Circle at: " << p << "\n";
   }
   int count_sides() const { return 1; }
-  double area() const { return radius * radius * M_PI; }
-  double circumference() const { return radius * 2.0f * M_PI; }
+  double area() const { return radius * radius * 3.14; }
+  double circumference() const { return radius * 2.0f * 3.14; }
   double perimeter() const { return circumference(); }
 };
 struct square {
@@ -56,8 +54,8 @@ struct regular_polygon {
     os << "Polygon at: " << p << "\n";
   }
   int count_sides() const { return sides; }
-  double apothem() const { return (side_length / 2) / std::tan(M_PI / sides); }
-  double radius() const { return (side_length / 2) / std::sin(M_PI / sides); }
+  double apothem() const { return (side_length / 2) / std::tan(3.14 / sides); }
+  double radius() const { return (side_length / 2) / std::sin(3.14 / sides); }
   double perimeter() const { return sides * side_length; }
   double area() const { return (perimeter() * apothem()) / 2; }
 };
