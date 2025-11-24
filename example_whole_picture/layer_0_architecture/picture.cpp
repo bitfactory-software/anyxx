@@ -13,8 +13,8 @@ picture::picture(std::size_t size_x, std::size_t size_y)
     : lines_(size_y, make_line(size_x)) {}
 
 picture::picture(std::initializer_list<std::string_view> const& lines) {
-  for (auto l : lines) lines_.emplace_back(line{l.begin(), l.end()});
-  auto witdth = std::ranges::fold_left(lines, 0u,
+  for (auto l : lines) lines_.emplace_back(l.begin(), l.end());
+  auto witdth = std::ranges::fold_left(lines, 0U,
                                        [](std::size_t width, auto const& line) {
                                          return std::max(width, line.size());
                                        });
