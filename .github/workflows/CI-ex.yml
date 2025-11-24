@@ -1,4 +1,4 @@
-name: ci-ex
+name: CI-ex
 on:
   pull_request:
   release:
@@ -10,14 +10,14 @@ on:
       - develop
 
 env:
-  CLANG_TIDY_VERSION: "20.1.6"
+  CLANG_TIDY_VERSION: "21"
   VERBOSE: 1
-
 
 jobs:
   Test:
-    name: ${{matrix.os}} ${{matrix.compiler}} ${{matrix.build_type}} ${{matrix.packaging_maintainer_mode == 'ON' && '(maintainer mode)' || ''}}
+    name: ${{matrix.os}} ${{matrix.compiler}} ${{matrix.build_type}}
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -33,8 +33,6 @@ jobs:
           - "Ninja Multi-Config"
         build_type:
           - Release
-        packaging_maintainer_mode:
-          - OFF
         build_shared:
           - OFF
 
