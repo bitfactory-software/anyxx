@@ -59,3 +59,4 @@ inline void show(std::string_view label, std::vector<encounter_result> const& re
 }
 
 }  // namespace
+
