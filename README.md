@@ -86,7 +86,7 @@ FetchContent_MakeAvailable(anyxx)
 | any++ open method | **115%** | **200%** | **130%** | 
 | **Double dispatch** |   | |  |
 | std::variant + std::visit (reference*) | 100% | 100% | 100% |
-| hand rolled w. virtual function  | 330% | 150%| 400% |
+| hand rolled w. virtual function  | 150% | 150%| 400% |
 | any++ open method | **120%** | **150%** | **300%**(*) |
 
 - reference*:
