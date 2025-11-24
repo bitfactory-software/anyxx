@@ -1,4 +1,4 @@
-name: ci-simple
+name: ci-ex
 on:
   pull_request:
   release:
