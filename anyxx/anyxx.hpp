@@ -547,7 +547,7 @@ inline dispatch_table_function_t get_function(dispatch_table_t* table,
   return reinterpret_cast<dispatch_table_function_t>(table->at(index));
 }
 
-inline std::optional<dispatch_table_dispatch_index_t>
+inline dispatch_table_dispatch_index_t
 get_multi_dispatch_index_at(dispatch_table_t* table, std::size_t index) {
   if (table->size() <= index) return {};
   if (auto const entry = table->at(index))
@@ -1602,12 +1602,12 @@ struct dispatch<R(Args...)> {
         return 0;
       } else {
         auto dispatch_table = dispatch_table_instance<v_table_t, Class>();
-        return *get_multi_dispatch_index_at(dispatch_table, index_)
-                    .or_else([&] -> std::optional<std::size_t> {
-                      set_multi_dispatch_index_at(dispatch_table, index_,
-                                                  dispatch_dimension_size_);
-                      return dispatch_dimension_size_++;
-                    });
+        if (auto index = get_multi_dispatch_index_at(dispatch_table, index_))
+          return index;
+        else
+          set_multi_dispatch_index_at(dispatch_table, index_,
+                                      dispatch_dimension_size_);
+        return dispatch_dimension_size_++;
       }
     }
 
@@ -1625,9 +1625,9 @@ struct dispatch<R(Args...)> {
                             ActualArgs&&... actual_args) const {
       auto dispatch_table = get_v_table(any)->dispatch_table;
       auto dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);
-      if (dispatch_dim && target.size() > *dispatch_dim)
+      if (dispatch_dim && target.size() > dispatch_dim)
         if (auto found =
-                next_t::invoke(target[*dispatch_dim],
+                next_t::invoke(target[dispatch_dim],
                                std::forward<ArgsTuple>(dispatch_args_tuple),
                                std::forward<ActualArgs>(actual_args)...))
           return found;
