@@ -1,4 +1,4 @@
-[Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorials_toc.md) / [Tests and Examples](/test/)
+[![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 
 # any++: *type erasure* vocabulary  for *programming on a large scale*
 
@@ -100,6 +100,12 @@ FetchContent_MakeAvailable(anyxx)
 - any++ open method vs std::variant + std::visit with clang:
   - the meassured time with std::varaint/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.
 
+# CI Matrix
+| OS \ Compiler | MSVC | Clang | GCC |
+|:-----------------:|:------:|:-------:|:-----:|
+| Windows(latest)           | 19   | 21   | - | 
+| Ubuntu(latest)           | - | 21   | 14 | 
+| MacOS(latest)           | - | 21   | 14 | 
 
 # Showcase 2: Type erased *spaceship operator*
 
