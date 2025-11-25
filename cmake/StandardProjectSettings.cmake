@@ -20,7 +20,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Enhance error reporting and compiler messages
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
   if(WIN32)
-    add_compile_options(-Xclang -fexceptions)
+    add_compile_options(-Xclang -fcxx-exceptions)
     # On Windows cuda nvcc uses cl and not clang
     add_compile_options($<$<COMPILE_LANGUAGE:C>:-fcolor-diagnostics> $<$<COMPILE_LANGUAGE:CXX>:-fcolor-diagnostics>)
   else()
