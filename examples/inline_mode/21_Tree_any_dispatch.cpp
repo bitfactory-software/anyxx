@@ -107,6 +107,7 @@ TEST_CASE("21_Tree any++ open method") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
+  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE /Ob2)' is used!\n";
   BENCHMARK("21_Tree any++ open method value") { return value(expr); };
   BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG

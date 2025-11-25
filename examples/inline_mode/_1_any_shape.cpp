@@ -9,7 +9,7 @@ using namespace anyxx;
 using namespace anyxx;
 using namespace anyxx;
 
-namespace {
+namespace shapes_1 {
 
 struct position {
   float x = 0.0, y = 0.0;
@@ -89,7 +89,9 @@ void process(
   for (auto const& any_drawable : any_drawables) command(os, any_drawable);
 }
 
-}  // namespace
+}  // namespace shapes
+
+using namespace shapes_1;
 
 TEST_CASE("example 1/1") {
   std::stringstream os;

@@ -102,6 +102,7 @@ TEST_CASE("31_Animals any dispatch") {
                          &typeid(man)});
 
 #ifndef _DEBUG
+  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE /Ob2)' is used!\n";
   BENCHMARK("30a_Animals any dispatch") { return apply_encounters(creatures); };
 #endif  // !_DEBUG
 }
