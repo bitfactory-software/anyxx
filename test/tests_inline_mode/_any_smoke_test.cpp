@@ -7,11 +7,11 @@
 
 using namespace anyxx;
 
+namespace smoke_test {
 struct position {
   float x, y;
 };
 
-namespace {
 ANY(any_drawable, (ANY_METHOD(void, draw, (position), const)))
 
 ANY_(any_shape, any_drawable,
@@ -21,7 +21,6 @@ ANY_(any_shape, any_drawable,
 
 ANY_(any_callable_shape, any_shape,
      (ANY_OP(std::string, (), (std::string const&), const)))
-}  // namespace
 
 struct circle {
   double radius = 10;
@@ -30,7 +29,7 @@ struct circle {
   }
   int count_sides() const { return 1; }
   double area() const { return radius * radius * 3.14; }
-  double circumference() const { return radius * 2.0f * 3.14; }
+  double circumference() const { return radius * 2.0 * 3.14; }
   double perimeter() const { return circumference(); }
   std::string operator()(const std::string& x) const { return x + "circle"; }
 };
@@ -97,10 +96,11 @@ void print_any_callable_shape_const_observer(
 // any_shape, any_shape > >; //should not compile! void
 // should_not_compile(shape_double_base_error s) {}//should not compile!
 
-TEST_CASE("dynamic v_table const_observer") {
-  using namespace anyxx;
-  using namespace anyxx;
+}  // namespace smoke_test
 
+using namespace smoke_test;
+
+TEST_CASE("dynamic v_table const_observer") {
   circle c{12.3};
   square s{32};
   rectangle r{12, 9};

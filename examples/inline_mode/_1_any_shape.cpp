@@ -26,7 +26,7 @@ struct circle {
   }
   int count_sides() const { return 1; }
   double area() const { return radius * radius * 3.14; }
-  double circumference() const { return radius * 2.0f * 3.14; }
+  double circumference() const { return radius * 2.0 * 3.14; }
   double perimeter() const { return circumference(); }
 };
 struct square {
@@ -89,7 +89,7 @@ void process(
   for (auto const& any_drawable : any_drawables) command(os, any_drawable);
 }
 
-}  // namespace shapes
+}  // namespace shapes_1
 
 using namespace shapes_1;
 
@@ -115,7 +115,8 @@ TEST_CASE("example 1/2 upcast, downcast") {
       std::make_shared<regular_polygon>(4, 32),
   };
   std::vector<any_drawable<shared_const>> any_drawables;
-  any_drawables.append_range(any_shapes);
+  any_drawables.insert(any_drawables.begin(), any_shapes.begin(),
+                       any_shapes.end());
   any_drawables.push_back(std::make_shared<std::string>("hello world"));
 
   std::stringstream os1;
