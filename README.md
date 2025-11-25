@@ -1,4 +1,4 @@
-[Terms and Definitions](/terms_and_definitions.md) / [Tutorials](/tutorials/tutorials_toc.md) / [Tests and Examples](/test/)
+[![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 
 # any++: *type erasure* vocabulary  for *programming on a large scale*
 
