@@ -1,6 +1,6 @@
 #include "component_base.hpp"
 
-#include <anyxx/anyxx.hpp>
+#include <bit_factory/anyxx.hpp>
 
 using namespace test::component_base;
 

@@ -2,7 +2,7 @@
 
 #include <test/test_whole_picture/layer_0_architecture/picture.hpp>
 #include <test/test_whole_picture/layer_1_core/core.hpp>
-#include <anyxx/anyxx.hpp>
+#include <bit_factory/anyxx.hpp>
 
 ANY_MEMBERS_COUNT_FWD(CORE_EXPORT, whole_picture::core::shapes, picture)
 

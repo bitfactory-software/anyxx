@@ -1,7 +1,7 @@
 #pragma once
 
 #include <example_whole_picture/layer_1_core/core.hpp>
-#include <anyxx/anyxx.hpp>
+#include <bit_factory/anyxx.hpp>
 
 namespace whole_picture::core::shapes {
 

@@ -8,7 +8,7 @@ This library is targeted to solve coupling problems and allow maximal seperation
 
 # Showcase 1: Basic *ANY* usage
 ```cpp
-#include <anyxx/anyxx.hpp>
+#include <bit_factory/anyxx.hpp>
 #include <iostream>
 
 struct circle {

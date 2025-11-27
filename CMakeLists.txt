@@ -65,7 +65,7 @@ add_library(anyxx::anyxx_warnings ALIAS anyxx_warnings)
 add_subdirectory(configured_files)
 
 # Adding the anyxx:
-add_subdirectory(anyxx)
+add_subdirectory(bit_factory)
 
 # Don't even look at tests if we're not top level
 if(NOT anyxx_is_top)
