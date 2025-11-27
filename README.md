@@ -35,7 +35,7 @@ Output:
 Circle
 Square
 ```
-[Compiler Explorer](https://godbolt.org/z/eY84qdEK5)
+[Compiler Explorer](https://godbolt.org/z/4P6M8WrzP)
 
 # Feature overview
 - **External Polymorphis**m via *ANY...* metaclass
