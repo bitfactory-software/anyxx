@@ -1566,8 +1566,8 @@ struct dispatch<R(Args...)> {
   template <kind Kind, std::size_t Dimension, typename... DispatchArgs>
   struct dispatch_access;
 
-  template <std::size_t Dimension, typename... DispatchArgs>
-  struct dispatch_access<kind::multiple, Dimension, DispatchArgs...> {
+  template <typename... DispatchArgs>
+  struct dispatch_access<kind::multiple, dimension_count, DispatchArgs...> {
     auto define(auto fp, auto& matrix) {
       matrix = reinterpret_cast<erased_function_t>(fp);
       return fp;
