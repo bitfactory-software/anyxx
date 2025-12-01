@@ -20,8 +20,8 @@ struct trait_base {
     using namespace std;                                                       \
     return name_ext(x __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
-#define _detail_ANYXX_TRAIT_FUNCTIONS(...)                     \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_LIMP_H, \
+#define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define _detail_ANYXX_TRAIT_METHOD_H(l) _detail_ANYXX_TRAIT_METHOD l
@@ -56,20 +56,18 @@ struct trait_base {
     using trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;         \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>; \
     using base_t::value_;                                               \
-    explicit(false) n(Value v) \
-        : base_t(std::move(v) {}                          \
-    Value& operator=(Value v)                          \
-        {   \
-base_t::value_ = std::move(v);\
-return *this; \
-        }                          \
-    ~n() = default;                                                           \
-    n() = default;                                                            \
-    n(n const&) = default;                                                    \
-    n(n&&) = default;                                                         \
-    n& operator=(n const&) = default;                                         \
-    n& operator=(n&&) = default;                                              \
-                                                                              \
+    explicit(false) n(Value v) : base_t(std::move(v)) {}                \
+    Value& operator=(Value v) {                                         \
+      base_t::value_ = std::move(v);                                    \
+      return *this;                                                     \
+    }                                                                   \
+    ~n() = default;                                                     \
+    n() = default;                                                      \
+    n(n const&) = default;                                              \
+    n(n&&) = default;                                                   \
+    n& operator=(n const&) = default;                                   \
+    n& operator=(n&&) = default;                                        \
+                                                                        \
     _detail_ANYXX_TRAIT_METHODS(l)                                      \
   };
 
@@ -79,7 +77,7 @@ return *this; \
 #define TRAIT(n, ...) TRAIT_(n, ::anyxx::trait_base, __VA_ARGS__)
 
 #define TRAIT_TEMPLATE_(t, n, BASE, btpl, l)                                 \
-  TRAIT_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),         \
+  TRAIT_META_FUNCTION(_add_head((Value), t), _add_head((T), t),         \
                       _add_head((Concrete), t), _add_head((Other), t), t, n, \
                       BASE, btpl, l)
 
