@@ -1,8 +1,6 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <cmath>
 #include <format>
-#include <iostream>
 #include <string>
 
 namespace anyxx {
