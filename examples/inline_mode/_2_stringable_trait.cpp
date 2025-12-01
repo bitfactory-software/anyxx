@@ -99,24 +99,24 @@ struct stringable_trait<bool> {
 template <>
 struct stringable_trait<double> {
   static std::string to_string(const double& value) {
-    return std::format("{:6.2}", value);
+    return std::format("{:6.3}", value);
   }
 };
 
 template <typename V>
-void print_impl(stringable<V> const& s) {
-  std::cout << s.to_string() << "\n";
+std::string print_(stringable<V> const& s) {
+  return s.to_string() + "\n";
 }
 template <typename V>
-void print(V const& s) {
-  return print_impl(stringable<V>{s});
+auto print(V const& s) {
+  return print_(stringable<V>{s});
 }
 
 }  // namespace example_2
 
 TEST_CASE("example 2 ") {
   using namespace example_2;
-  print(true);
-  print(3.14);
+  CHECK(print(true) == "wahr\n");
+  CHECK(print(3.14) == "  3.14\n");
   // print(42); remove comment to see the compilation error!
 }
