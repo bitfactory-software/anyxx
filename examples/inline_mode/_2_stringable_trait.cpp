@@ -13,12 +13,12 @@ struct trait_base {
 }  // namespace anyxx
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
-#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,          \
-                                     exact_const, const_, ...)                \
-  auto name(T const_& x __VA_OPT__(                                           \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                 \
-    using namespace std;                                                      \
-    return name_ext(x, __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,           \
+                                     exact_const, const_, ...)                 \
+  auto name(T const_& x __VA_OPT__(                                            \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
+    using namespace std;                                                       \
+    return name_ext(x __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 #define _detail_ANYXX_TRAIT_FUNCTIONS(...)                     \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_LIMP_H, \
