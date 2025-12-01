@@ -110,7 +110,7 @@ struct any_inline_base {
   };
 
 #define ANY_INLINE_(n, BASE, l) \
-  ANY_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, BASE, (), l)
+  ANY_INLINE_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, BASE, (), l)
 
 #define ANY_INLINE(n, ...) ANY_INLINE_(n, ::anyxx::any_inline_base, __VA_ARGS__)
 
