@@ -45,66 +45,65 @@ struct any_inline_base {
       using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>; \
                                                                               \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                       \
-    } \
-};                                                                        \
+    }                                                                         \
+  };                                                                          \
                                                                               \
-    template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                        \
-    struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {          \
-      using erased_data_t = ErasedData;                                       \
-      using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;     \
-      using v_table_t =                                                       \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                          \
+  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {            \
+    using erased_data_t = ErasedData;                                         \
+    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;       \
+    using v_table_t =                                                         \
+        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);          \
                                                                               \
-          n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);        \
+    using base_t::erased_data_;                                               \
+    v_table_t v_table_;                                                       \
                                                                               \
-      using base_t::erased_data_;                                             \
-      v_table_t v_table;                                                      \
-                                                                              \
-      template <typename ConstructedWith>                                     \
-      explicit(false) n(ConstructedWith&& v)                                  \
-        requires anyxx::constructibile_for<ConstructedWith, ErasedData>       \
-          : base_t(std::forward<ConstructedWith>(v)),                         \
-            v_table_(std::in_place_type<                                      \
-                     anyxx::unerased<ErasedData, ConstructedWith>>) {}        \
-      template <typename V>                                                   \
-      n(std::in_place_t, V&& v)                                               \
-          : base_t(std::in_place, std::forward<V>(v)),                        \
-            v_table_(std::in_place_type < anyxx::unerased<ErasedData, V>) {}  \
-      template <typename T, typename... Args>                                 \
-      explicit(false) n(std::in_place_type_t<T>, Args&&... args)              \
-          : base_t(std::in_place_type<T>, std::forward<Args>(args)...),       \
-            v_table_(std::in_place_type < anyxx::unerased<ErasedData, T>) {}  \
-      template <typename Other>                                               \
-      explicit(false) n(const Other& other)                                   \
-        requires(std::derived_from<typename Other::v_table_t, v_table_t> &&   \
-                 anyxx::borrowable_from<erased_data_t,                        \
-                                        typename Other::erased_data_t>)       \
-          : base_t(other),                                                    \
-            v_table_(static_cast<v_table_t const&>(other.v_table_)) {}        \
-      template <anyxx::is_any Other>                                          \
-      explicit(false) n(Other&& other) noexcept                               \
-        requires(std::derived_from<typename Other::v_table_t, v_table_t> &&   \
-                 anyxx::moveable_from<erased_data_t,                          \
+    template <typename ConstructedWith>                                       \
+    explicit(false) n(ConstructedWith&& v)                                    \
+      requires anyxx::constructibile_for<ConstructedWith, ErasedData>         \
+        : base_t(std::forward<ConstructedWith>(v)),                           \
+          v_table_(std::in_place_type<                                        \
+                   anyxx::unerased<ErasedData, ConstructedWith>>) {}          \
+    template <typename V>                                                     \
+    n(std::in_place_t, V&& v)                                                 \
+        : base_t(std::in_place, std::forward<V>(v)),                          \
+          v_table_(std::in_place_type < anyxx::unerased<ErasedData, V>) {}    \
+    template <typename T, typename... Args>                                   \
+    explicit(false) n(std::in_place_type_t<T>, Args&&... args)                \
+        : base_t(std::in_place_type<T>, std::forward<Args>(args)...),         \
+          v_table_(std::in_place_type < anyxx::unerased<ErasedData, T>) {}    \
+    template <typename Other>                                                 \
+    explicit(false) n(const Other& other)                                     \
+      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&     \
+               anyxx::borrowable_from<erased_data_t,                          \
                                       typename Other::erased_data_t>)         \
-          : base_t(std::forward<Other>(other)),                               \
-            v_table_(static_cast<v_table_t const&>(other.v_table_)) {}        \
+        : base_t(other),                                                      \
+          v_table_(static_cast<v_table_t const&>(other.v_table_)) {}          \
+    template <anyxx::is_any Other>                                            \
+    explicit(false) n(Other&& other) noexcept                                 \
+      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&     \
+               anyxx::moveable_from<erased_data_t,                            \
+                                    typename Other::erased_data_t>)           \
+        : base_t(std::forward<Other>(other)),                                 \
+          v_table_(static_cast<v_table_t const&>(other.v_table_)) {}          \
                                                                               \
-      auto get_v_table_ptr(this auto& self) { &self.v_table_; }               \
-      _detail_ANYXX_METHODS(l)                                                \
+    auto get_v_table_ptr(this auto& self) { &self.v_table_; }                 \
+    _detail_ANYXX_METHODS(l)                                                  \
                                                                               \
-          ~n() = default;                                                     \
-      n() = default;                                                          \
-      n(n const&) = default;                                                  \
-      n(n&&) = default;                                                       \
-      n& operator=(n const&) = default;                                       \
-      n& operator=(n&&) = default;                                            \
-      template <anyxx::is_erased_data Other>                                  \
-      friend class anyxx::any_base;                                           \
-      template <anyxx::is_any To, anyxx::is_any From>                         \
-      friend To anyxx::unchecked_downcast_to(From from)                       \
-        requires(std::derived_from<To, From>);                                \
-      template <anyxx::is_erased_data Other>                                  \
-      using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                  \
-    };
+        ~n() = default;                                                       \
+    n() = default;                                                            \
+    n(n const&) = default;                                                    \
+    n(n&&) = default;                                                         \
+    n& operator=(n const&) = default;                                         \
+    n& operator=(n&&) = default;                                              \
+    template <anyxx::is_erased_data Other>                                    \
+    friend class anyxx::any_base;                                             \
+    template <anyxx::is_any To, anyxx::is_any From>                           \
+    friend To anyxx::unchecked_downcast_to(From from)                         \
+      requires(std::derived_from<To, From>);                                  \
+    template <anyxx::is_erased_data Other>                                    \
+    using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                    \
+  };
 
 #define ANY_INLINE_(n, BASE, l)                                           \
   ANY_INLINE_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, \
@@ -126,47 +125,47 @@ ANY_INLINE(node_i, (ANY_METHOD(int, value, (), const),
                     ANY_METHOD(string, as_forth, (), const),
                     ANY_METHOD(string, as_lisp, (), const)))
 
-  using node = node_i<shared_const>;
+using node = node_i<shared_const>;
 
-  struct Plus {
-    Plus(node left, node right) : left(left), right(right) {}
-    int value() const { return left.value() + right.value(); }
-    string as_forth() const {
-      return left.as_forth() + " " + right.as_forth() + " +";
-    }
-    string as_lisp() const {
-      return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
-    }
-
-    node left, right;
-  };
-
-  struct Times {
-    Times(node left, node right) : left(left), right(right) {}
-    int value() const { return left.value() * right.value(); }
-    string as_forth() const {
-      return left.as_forth() + " " + right.as_forth() + " *";
-    }
-    string as_lisp() const {
-      return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
-    }
-
-    node left, right;
-  };
-
-  struct Integer {
-    explicit Integer(int value) : int_(value) {}
-    int value() const { return int_; }
-    string as_forth() const { return std::to_string(int_); }
-    string as_lisp() const { return std::to_string(int_); }
-
-    int int_;
-  };
-
-  template <typename NODE, typename... ARGS>
-  auto make_node(ARGS&&... args) {
-    return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
+struct Plus {
+  Plus(node left, node right) : left(left), right(right) {}
+  int value() const { return left.value() + right.value(); }
+  string as_forth() const {
+    return left.as_forth() + " " + right.as_forth() + " +";
   }
+  string as_lisp() const {
+    return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
+  }
+
+  node left, right;
+};
+
+struct Times {
+  Times(node left, node right) : left(left), right(right) {}
+  int value() const { return left.value() * right.value(); }
+  string as_forth() const {
+    return left.as_forth() + " " + right.as_forth() + " *";
+  }
+  string as_lisp() const {
+    return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
+  }
+
+  node left, right;
+};
+
+struct Integer {
+  explicit Integer(int value) : int_(value) {}
+  int value() const { return int_; }
+  string as_forth() const { return std::to_string(int_); }
+  string as_lisp() const { return std::to_string(int_); }
+
+  int int_;
+};
+
+template <typename NODE, typename... ARGS>
+auto make_node(ARGS&&... args) {
+  return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
+}
 
 }  // namespace
 
