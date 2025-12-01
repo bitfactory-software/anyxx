@@ -6,8 +6,6 @@
 #include <vector>
 
 using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
 
 namespace shapes_1 {
 
