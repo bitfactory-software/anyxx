@@ -103,9 +103,14 @@ struct stringable_trait<double> {
 };
 
 template <typename V>
-void print(stringable<V> const& s) {
+void print_impl(stringable<V> const& s) {
   std::cout << s.to_string() << "\n";
 }
+template <typename V>
+void print(V const& s) {
+    return print_impl(stringable<V>{s});
+}
+
 
 }  // namespace example_2
 
