@@ -1,6 +1,5 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
-#ifdef 0
 #include <bit_factory/anyxx.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -12,7 +11,14 @@ using std::cout;
 using std::string;
 
 using namespace anyxx;
-using namespace anyxx;
+
+namespace anyxx {
+template <typename Value>
+struct any_inline_base {
+  Value value_;
+  operator Value&() { return value_; }
+};
+}  // namespace anyxx
 
 #define ANY_INLINE_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl,              \
                                  l)                                                       \
@@ -103,6 +109,19 @@ using namespace anyxx;
     using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                                \
   };
 
+#define ANY_INLINE_(n, BASE, l) \
+  ANY_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, BASE, (), l)
+
+#define ANY_INLINE(n, ...) ANY_INLINE_(n, ::anyxx::any_inline_base, __VA_ARGS__)
+
+#define ANY_INLINE_TEMPLATE_(t, n, BASE, btpl, l)                              \
+  ANY_INLINE_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),      \
+                           _add_head((Concrete), t), _add_head((Other), t), t, \
+                           n, BASE, btpl, l)
+
+#define ANY_INLINE_TEMPLATE(t, n, l) \
+  ANY_INLINE_TEMPLATE_(t, n, ::anyxx::any_inline_base, (), l)
+
 namespace {
 
 ANY_INLINE(node_i, (ANY_METHOD(int, value, (), const),
@@ -153,7 +172,7 @@ auto make_node(ARGS&&... args) {
 
 }  // namespace
 
-TEST_CASE("21_Tree_any") {
+TEST_CASE("21_Tree_any_inline") {
   using namespace anyxx;
 
   auto expr = node(make_node<Times>(
@@ -172,5 +191,3 @@ TEST_CASE("21_Tree_any") {
   BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
 #endif  // !_DEBUG
 }
-
-#endif
