@@ -18,8 +18,9 @@ struct trait_base {
                                      exact_const, const_, ...)                 \
   auto name(T const_& x __VA_OPT__(                                            \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
-    using namespace std;                                                       \
-    return name_ext(x __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    static_assert(false,                                                       \
+                  "'" #name                                                    \
+                  "' must be specified in the specialization of this trait!"); \
   };
 #define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
@@ -83,10 +84,9 @@ struct trait_base {
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
 
-using namespace anyxx;
-
 namespace example_2 {
 
+using namespace std;
 TRAIT(stringable, (ANY_METHOD(std::string, to_string, (), const)))
 
 template <>
@@ -118,5 +118,5 @@ TEST_CASE("example 2 ") {
   using namespace example_2;
   print(true);
   print(3.14);
-  print(42);
+  // print(42); remove comment to see the compilation error!
 }
