@@ -52,12 +52,12 @@ struct trait_base {
                                                                         \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                    \
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {      \
-    using value_t = Value;                                              \
+    using value_t = ErasedData;                                         \
     using trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;         \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>; \
     using base_t::value_;                                               \
-    explicit(false) n(Value v) : base_t(std::move(v)) {}                \
-    Value& operator=(Value v) {                                         \
+    explicit(false) n(ErasedData v) : base_t(std::move(v)) {}           \
+    ErasedData& operator=(ErasedData v) {                               \
       base_t::value_ = std::move(v);                                    \
       return *this;                                                     \
     }                                                                   \
@@ -72,12 +72,12 @@ struct trait_base {
   };
 
 #define TRAIT_(n, BASE, l) \
-  TRAIT_META_FUNCTION((Value), (T), (Model), n, BASE, (), l)
+  TRAIT_META_FUNCTION((ErasedData), (T), (Model), n, BASE, (), l)
 
 #define TRAIT(n, ...) TRAIT_(n, ::anyxx::trait_base, __VA_ARGS__)
 
 #define TRAIT_TEMPLATE_(t, n, BASE, btpl, l)                                 \
-  TRAIT_META_FUNCTION(_add_head((Value), t), _add_head((T), t),         \
+  TRAIT_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),         \
                       _add_head((Concrete), t), _add_head((Other), t), t, n, \
                       BASE, btpl, l)
 
