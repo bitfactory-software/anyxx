@@ -9,6 +9,7 @@ namespace anyxx {
 template <typename Value>
 struct trait_base {
   Value value_;
+  operator Value&() { return value_; }
 };
 }  // namespace anyxx
 
@@ -108,9 +109,8 @@ void print_impl(stringable<V> const& s) {
 }
 template <typename V>
 void print(V const& s) {
-    return print_impl(stringable<V>{s});
+  return print_impl(stringable<V>{s});
 }
-
 
 }  // namespace example_2
 
