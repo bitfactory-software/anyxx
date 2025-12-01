@@ -67,11 +67,11 @@ struct any_inline_base {
     template <typename V>                                                     \
     n(std::in_place_t, V&& v)                                                 \
         : base_t(std::in_place, std::forward<V>(v)),                          \
-          v_table_(std::in_place_type < anyxx::unerased<ErasedData, V>) {}    \
+          v_table_(std::in_place_type<anyxx::unerased<ErasedData, V>>) {}     \
     template <typename T, typename... Args>                                   \
     explicit(false) n(std::in_place_type_t<T>, Args&&... args)                \
         : base_t(std::in_place_type<T>, std::forward<Args>(args)...),         \
-          v_table_(std::in_place_type < anyxx::unerased<ErasedData, T>) {}    \
+          v_table_(std::in_place_type<anyxx::unerased<ErasedData, T>>) {}     \
     template <typename Other>                                                 \
     explicit(false) n(const Other& other)                                     \
       requires(std::derived_from<typename Other::v_table_t, v_table_t> &&     \
@@ -87,7 +87,7 @@ struct any_inline_base {
         : base_t(std::forward<Other>(other)),                                 \
           v_table_(static_cast<v_table_t const&>(other.v_table_)) {}          \
                                                                               \
-    auto get_v_table_ptr(this auto& self) { &self.v_table_; }                 \
+    auto get_v_table_ptr(this auto& self) { return &self.v_table_; }          \
     _detail_ANYXX_METHODS(l)                                                  \
                                                                               \
         ~n() = default;                                                       \
@@ -124,7 +124,6 @@ namespace {
 ANY_INLINE(node_i, (ANY_METHOD(int, value, (), const),
                     ANY_METHOD(string, as_forth, (), const),
                     ANY_METHOD(string, as_lisp, (), const)))
-
 using node = node_i<shared_const>;
 
 struct Plus {
