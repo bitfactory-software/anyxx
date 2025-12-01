@@ -547,8 +547,8 @@ inline dispatch_table_function_t get_function(dispatch_table_t* table,
   return reinterpret_cast<dispatch_table_function_t>(table->at(index));
 }
 
-inline dispatch_table_dispatch_index_t
-get_multi_dispatch_index_at(dispatch_table_t* table, std::size_t index) {
+inline dispatch_table_dispatch_index_t get_multi_dispatch_index_at(
+    dispatch_table_t* table, std::size_t index) {
   if (table->size() <= index) return {};
   if (auto const entry = table->at(index))
     return static_cast<dispatch_table_dispatch_index_t>(entry);
@@ -1966,7 +1966,7 @@ struct dispatch<R(Args...)> {
     requires(::anyxx::const_correct_call_for_erased_data<                 \
              void const_*, erased_data_t, exact_const>)                   \
   {                                                                       \
-    return static_cast<v_table_t*>(v_table_)->name(                       \
+    return get_v_table_ptr()->name(                                       \
         anyxx::get_void_data_ptr(base_t::erased_data_)                    \
             __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
   }
@@ -2094,6 +2094,9 @@ struct dispatch<R(Args...)> {
           anyxx::moveable_from<erased_data_t, typename Other::erased_data_t>) \
         : base_t(std::forward<Other>(other)) {}                               \
                                                                               \
+    auto get_v_table_ptr(this auto& self) {                                   \
+      return static_cast<v_table_t*>(self.v_table_);                          \
+    }                                                                         \
     _detail_ANYXX_METHODS(l)                                                  \
                                                                               \
         auto const*                                                           \
