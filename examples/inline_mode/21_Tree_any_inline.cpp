@@ -45,7 +45,8 @@ struct any_inline_base {
       using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>; \
                                                                               \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                       \
-    };                                                                        \
+    } \
+};                                                                        \
                                                                               \
     template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                        \
     struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {          \
@@ -125,47 +126,47 @@ ANY_INLINE(node_i, (ANY_METHOD(int, value, (), const),
                     ANY_METHOD(string, as_forth, (), const),
                     ANY_METHOD(string, as_lisp, (), const)))
 
-using node = node_i<shared_const>;
+  using node = node_i<shared_const>;
 
-struct Plus {
-  Plus(node left, node right) : left(left), right(right) {}
-  int value() const { return left.value() + right.value(); }
-  string as_forth() const {
-    return left.as_forth() + " " + right.as_forth() + " +";
+  struct Plus {
+    Plus(node left, node right) : left(left), right(right) {}
+    int value() const { return left.value() + right.value(); }
+    string as_forth() const {
+      return left.as_forth() + " " + right.as_forth() + " +";
+    }
+    string as_lisp() const {
+      return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
+    }
+
+    node left, right;
+  };
+
+  struct Times {
+    Times(node left, node right) : left(left), right(right) {}
+    int value() const { return left.value() * right.value(); }
+    string as_forth() const {
+      return left.as_forth() + " " + right.as_forth() + " *";
+    }
+    string as_lisp() const {
+      return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
+    }
+
+    node left, right;
+  };
+
+  struct Integer {
+    explicit Integer(int value) : int_(value) {}
+    int value() const { return int_; }
+    string as_forth() const { return std::to_string(int_); }
+    string as_lisp() const { return std::to_string(int_); }
+
+    int int_;
+  };
+
+  template <typename NODE, typename... ARGS>
+  auto make_node(ARGS&&... args) {
+    return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
   }
-  string as_lisp() const {
-    return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
-  }
-
-  node left, right;
-};
-
-struct Times {
-  Times(node left, node right) : left(left), right(right) {}
-  int value() const { return left.value() * right.value(); }
-  string as_forth() const {
-    return left.as_forth() + " " + right.as_forth() + " *";
-  }
-  string as_lisp() const {
-    return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
-  }
-
-  node left, right;
-};
-
-struct Integer {
-  explicit Integer(int value) : int_(value) {}
-  int value() const { return int_; }
-  string as_forth() const { return std::to_string(int_); }
-  string as_lisp() const { return std::to_string(int_); }
-
-  int int_;
-};
-
-template <typename NODE, typename... ARGS>
-auto make_node(ARGS&&... args) {
-  return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
-}
 
 }  // namespace
 
