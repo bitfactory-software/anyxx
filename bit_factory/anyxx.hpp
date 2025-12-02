@@ -843,14 +843,19 @@ template <is_erased_data ErasedData>
 class any_base;
 
 template <typename I>
-concept is_any_impl = requires(I i, I::erased_data_t ed) {
+concept is_erased_data_holder_impl = requires(I i) {
   typename I::void_t;
   typename I::erased_data_t;
-  typename I::v_table_t;
   typename I::trait_t;
   { get_erased_data(i) };
 };
+template <typename I>
+concept is_erased_data_holder = is_erased_data_holder_impl<std::decay_t<I>>;
 
+template <typename I>
+concept is_any_impl =
+    is_erased_data_holder_impl<I> &&
+    requires(I i, I::erased_data_t ed) { typename I::v_table_t; };
 template <typename I>
 concept is_any = is_any_impl<std::decay_t<I>>;
 
@@ -865,56 +870,112 @@ template <typename ConstructedWith, typename ErasedData>
 concept constructibile_for =
     erased_constructibile_for<ConstructedWith, ErasedData,
                               any_base<ErasedData>> &&
-    !is_any<ConstructedWith> &&
+    !is_erased_data_holder<ConstructedWith> &&
     !is_typed_any<std::remove_cvref_t<ConstructedWith>>;
 
 template <is_erased_data ErasedData>
-class any_base {
+class erased_data_holder {
  public:
   using erased_data_t = ErasedData;
   using trait_t = trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_t = any_base_v_table;
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
-  v_table_t* v_table_ = nullptr;
 
-  any_base() = default;
-  any_base(erased_data_t erased_data, v_table_t* v_table)
-      : erased_data_(std::move(erased_data)), v_table_(v_table) {}
+  erased_data_holder() = default;
+  erased_data_holder(erased_data_t erased_data)
+      : erased_data_(std::move(erased_data)) {}
   template <typename ConstructedWith>
-  any_base(ConstructedWith&& constructed_with)
+  erased_data_holder(ConstructedWith&& constructed_with)
     requires constructibile_for<ConstructedWith, ErasedData>
       : erased_data_(erased<erased_data_t>(
             std::forward<ConstructedWith>(constructed_with))) {}
   template <typename V>
-  any_base(std::in_place_t, V&& v)
+  erased_data_holder(std::in_place_t, V&& v)
       : erased_data_(
             trait<ErasedData>::construct_in_place(std::forward<V>(v))) {}
   template <typename T, typename... Args>
-  any_base(std::in_place_type_t<T>, Args&&... args)
+  erased_data_holder(std::in_place_type_t<T>, Args&&... args)
       : erased_data_(trait<ErasedData>::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {}
+
+ public:
+  template <is_erased_data_holder Other>
+  erased_data_holder(const Other& other)
+    requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
+      : erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
+  template <typename Other>
+  erased_data_holder(Other&& other)
+    requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
+      : erased_data_(move_to<ErasedData>(std::move(other.erased_data_))) {}
+  template <typename Other>
+  erased_data_holder& operator=(Other&& other) {
+    erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
+    return *this;
+  }
+  erased_data_holder(const erased_data_holder&) = default;
+  // any_base(any_base&) requires(std::is_copy_constructible_v<any_base>) =
+  // default;
+  erased_data_holder(erased_data_holder&& rhs) noexcept
+      : erased_data_(std::move(rhs.erased_data_)) {}
+  erased_data_holder& operator=(erased_data_holder const& other) = default;
+  erased_data_holder& operator=(erased_data_holder&& other) = default;
+
+  template <is_erased_data FriendsErasedData>
+  friend inline auto& get_erased_data(
+      erased_data_holder<FriendsErasedData> const& any);
+  template <is_erased_data FriendsErasedData>
+  friend inline auto move_erased_data(
+      erased_data_holder<FriendsErasedData>&& any);
+  template <is_erased_data FriendsErasedData>
+  friend inline auto get_void_data_ptr(
+      erased_data_holder<FriendsErasedData> const& any);
+};
+
+template <is_erased_data ErasedData>
+class any_base : public erased_data_holder<ErasedData> {
+ public:
+  using erased_data_holder_t = erased_data_holder<ErasedData>;
+  using erased_data_t = typename erased_data_holder_t::erased_data_t;
+  using trait_t = typename erased_data_holder_t::trait_t;
+  using void_t = typename erased_data_holder_t::void_t;
+  using v_table_t = any_base_v_table;
+
+ protected:
+  v_table_t* v_table_ = nullptr;
+
+  any_base() = default;
+  any_base(erased_data_t erased_data, v_table_t* v_table)
+      : erased_data_holder_t(std::move(erased_data)), v_table_(v_table) {}
+  template <typename ConstructedWith>
+  any_base(ConstructedWith&& constructed_with)
+    requires constructibile_for<ConstructedWith, ErasedData>
+      : erased_data_holder_t(std::forward<ConstructedWith>(constructed_with)) {}
+  template <typename V>
+  any_base(std::in_place_t in_place, V&& v)
+      : erased_data_holder_t(in_place, std::forward<V>(v)) {}
+  template <typename T, typename... Args>
+  any_base(std::in_place_type_t<T> in_place_type, Args&&... args)
+      : erased_data_holder_t(in_place_type, std::forward<Args>(args)...) {}
 
  public:
   template <is_any Other>
   any_base(const Other& other)
     requires(std::derived_from<typename Other::v_table_t, v_table_t> &&
              borrowable_from<erased_data_t, typename Other::erased_data_t>)
-      : erased_data_(borrow_as<ErasedData>(other.erased_data_)),
-        v_table_(get_v_table(other)) {}
+      : erased_data_holder_t(other), v_table_(get_v_table(other)) {}
   template <typename Other>
   any_base(Other&& other)
     requires(std::derived_from<typename Other::v_table_t, v_table_t> &&
              moveable_from<erased_data_t, typename Other::erased_data_t>)
-      : erased_data_(move_to<ErasedData>(std::move(other.erased_data_))),
+      : erased_data_holder_t(std::move(other.erased_data_)),
         v_table_(get_v_table(other)) {}
   template <typename Other>
   any_base& operator=(Other&& other)
     requires(std::derived_from<typename Other::v_table_t, v_table_t>)
   {
-    erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
+    static_cast<erased_data_holder_t&>(*this) = std::move(other.erased_data_);
     v_table_ = get_v_table(other);
     return *this;
   }
@@ -922,19 +983,14 @@ class any_base {
   // any_base(any_base&) requires(std::is_copy_constructible_v<any_base>) =
   // default;
   any_base(any_base&& rhs) noexcept
-      : erased_data_(std::move(rhs.erased_data_)), v_table_(rhs.v_table_) {}
+      : erased_data_holder_t(std::move(rhs.erased_data_)),
+        v_table_(rhs.v_table_) {}
   any_base& operator=(any_base const& other) = default;
   any_base& operator=(any_base&& other) = default;
 
   template <is_erased_data Other>
   friend class any_base;
 
-  template <is_erased_data FriendsErasedData>
-  friend inline auto& get_erased_data(any_base<FriendsErasedData> const& any);
-  template <is_erased_data FriendsErasedData>
-  friend inline auto move_erased_data(any_base<FriendsErasedData>&& any);
-  template <is_erased_data FriendsErasedData>
-  friend inline auto get_void_data_ptr(any_base<FriendsErasedData> const& any);
   template <is_any I>
   friend inline auto get_v_table(I const& any);
 
@@ -944,15 +1000,15 @@ class any_base {
 };
 
 template <is_erased_data ErasedData>
-inline auto& get_erased_data(any_base<ErasedData> const& any) {
+inline auto& get_erased_data(erased_data_holder<ErasedData> const& any) {
   return any.erased_data_;
 }
 template <is_erased_data ErasedData>
-inline auto move_erased_data(any_base<ErasedData>&& any) {
+inline auto move_erased_data(erased_data_holder<ErasedData>&& any) {
   return std::move(any.erased_data_);
 }
 template <is_erased_data ErasedData>
-inline auto get_void_data_ptr(any_base<ErasedData> const& any) {
+inline auto get_void_data_ptr(erased_data_holder<ErasedData> const& any) {
   return get_void_data_ptr(get_erased_data(any));
 }
 

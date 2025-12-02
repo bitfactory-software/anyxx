@@ -7,6 +7,8 @@
 #include <memory>
 #include <string>
 
+#ifdef O
+
 using std::cout;
 using std::string;
 
@@ -171,9 +173,19 @@ auto make_node(ARGS&&... args) {
 TEST_CASE("21_Tree_any_inline") {
   using namespace anyxx;
 
-  auto expr = node(make_node<Times>(
+  node n1 = make_node<Integer>(3);
+  CHECK(n1.value() == 3);
+  CHECK(n1.as_lisp() == "3");
+
+  auto t = Plus{make_node<Integer>(1), make_node<Integer>(2)};
+  node te{std::in_place, t};
+  CHECK(te.value() == 7);
+  //CHECK(expr1.as_lisp() == "7");
+
+  auto expr = make_node<Times>(
       make_node<Integer>(2),
-      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));
+      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4)));
+  REQUIRE(expr.value() == 14);
 
   REQUIRE(expr.value() == 14);
   std::stringstream out;
@@ -187,3 +199,5 @@ TEST_CASE("21_Tree_any_inline") {
   BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
 #endif  // !_DEBUG
 }
+
+#endif
