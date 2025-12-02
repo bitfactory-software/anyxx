@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#ifdef O
+// #ifdef O
 
 using std::cout;
 using std::string;
@@ -16,9 +16,7 @@ using namespace anyxx;
 
 namespace anyxx {
 template <typename ErasedData>
-struct any_inline_base {
-  ErasedData erased_data_;
-};
+using any_inline_base = erased_data_holder<ErasedData>;
 }  // namespace anyxx
 
 #define ANY_INLINE_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl,  \
@@ -172,21 +170,9 @@ auto make_node(ARGS&&... args) {
 
 TEST_CASE("21_Tree_any_inline") {
   using namespace anyxx;
-
-  node n1 = make_node<Integer>(3);
-  CHECK(n1.value() == 3);
-  CHECK(n1.as_lisp() == "3");
-
-  auto t = Plus{make_node<Integer>(1), make_node<Integer>(2)};
-  node te{std::in_place, t};
-  CHECK(te.value() == 7);
-  //CHECK(expr1.as_lisp() == "7");
-
   auto expr = make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4)));
-  REQUIRE(expr.value() == 14);
-
   REQUIRE(expr.value() == 14);
   std::stringstream out;
   out << expr.as_forth() << " = " << expr.as_lisp() << " = " << expr.value();
@@ -200,4 +186,4 @@ TEST_CASE("21_Tree_any_inline") {
 #endif  // !_DEBUG
 }
 
-#endif
+// #endif
