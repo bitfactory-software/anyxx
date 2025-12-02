@@ -1926,9 +1926,9 @@ struct dispatch<R(Args...)> {
 #define _detail_PARAM_LIST_A() _detail_PARAM_LIST_H
 #define _detail_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_PARAM_LIST_H(__VA_ARGS__))
-#define _detail_PARAM_LIST_2H(b, c, f, ...)              \
-  f c __VA_OPT__(, _detail_PARAM_LIST_2A _detail_PARENS( \
-                       b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_PARAM_LIST_2H(b, c, f, ...)                               \
+  [[maybe_unused]] f c __VA_OPT__(, _detail_PARAM_LIST_2A _detail_PARENS( \
+                                        b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_PARAM_LIST_2A() _detail_PARAM_LIST_2H
 #define _detail_PARAM_LIST2(...) \
   _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))

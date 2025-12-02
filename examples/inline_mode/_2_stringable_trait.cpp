@@ -14,7 +14,7 @@ struct trait_base {
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
 #define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,           \
                                      exact_const, const_, ...)                 \
-  auto name(T const_& x __VA_OPT__(                                            \
+  auto name([[maybe_unused]]T const_& x __VA_OPT__(                                            \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
     static_assert(false,                                                       \
                   "'" #name                                                    \
