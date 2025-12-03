@@ -313,11 +313,6 @@
     }                                                                         \
     _detail_ANYXX_METHODS(l)                                                  \
                                                                               \
-        auto const*                                                           \
-        operator->() const {                                                  \
-      return this;                                                            \
-    }                                                                         \
-                                                                              \
     ~n() = default;                                                           \
     n() = default;                                                            \
     n(n const&) = default;                                                    \
