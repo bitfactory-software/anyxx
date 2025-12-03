@@ -154,27 +154,27 @@
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
-                               const_, map_body,...)                                  \
+                               const_, map_body, ...)                        \
   auto name(T const_& x __VA_OPT__(                                          \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
     return x.name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 
-#define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext, \
-                                        exact_const, const_, map_body,...)       \
+#define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
+                                        exact_const, const_, map_body, ...) \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(overload, type, name, name_ext, \
-                                             exact_const, const_,map_body, ...)       \
-  name = [](void const_* _vp __VA_OPT__(                                     \
-             , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {         \
-    return concept_map{}.name(                                               \
-        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )         \
-            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));           \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
+    overload, type, name, name_ext, exact_const, const_, map_body, ...) \
+  name = [](void const_* _vp __VA_OPT__(                                \
+             , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {    \
+    return concept_map{}.name(                                          \
+        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )    \
+            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
   };
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const, \
-                             const_,map_body, ...)                                 \
+                             const_, map_body, ...)                       \
   overload type name_ext(                                                 \
       __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_       \
     requires(::anyxx::const_correct_call_for_erased_data<                 \
@@ -348,26 +348,26 @@
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
 #define ANY_METHOD(ret, name, params, const_) \
-  ANY_METHOD_(, ret, name, name, false, const_, (),_detail_EXPAND params)
+  ANY_METHOD_(, ret, name, name, false, const_, (), _detail_EXPAND params)
 
 #define ANY_OVERLOAD(name) using base_t::name;
 
-#define ANY_METHOD_OVERLOAD(ret, name, params, const_)            \
-  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, (),\
+#define ANY_METHOD_OVERLOAD(ret, name, params, const_)                \
+  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, (), \
               _detail_EXPAND params)
 
 #define ANY_OP(ret, op, params, const_)                                       \
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
-              const_, (),_detail_EXPAND params)
+              const_, (), _detail_EXPAND params)
 
 #define ANY_OP_EXACT(ret, op, params, const_)                                \
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
-              const_, (),_detail_EXPAND params)
+              const_, (), _detail_EXPAND params)
 
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_)                        \
   ANY_METHOD_(ANY_OVERLOAD(operator op), ret,                                 \
-              _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, (),\
-              _detail_EXPAND params)
+              _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, \
+              (), _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
@@ -375,7 +375,6 @@
   struct interface_name;                                 \
   struct interface_name##_v_table;                       \
   }
-
 
 namespace anyxx {
 

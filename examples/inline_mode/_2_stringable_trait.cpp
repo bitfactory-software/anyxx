@@ -17,25 +17,25 @@ struct missing_trait_error {
 }  // namespace anyxx
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
-#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,    \
-                                     exact_const, const_, trait_body, ...)          \
-  auto name([[maybe_unused]] T const_& x __VA_OPT__(                    \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {           \
-    static_assert(anyxx::missing_trait_error<T>::not_specialized,       \
-                  "'" #name                                             \
-                  "' is missing in the specialization of this trait!"); \
+#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
+                                     exact_const, const_, trait_body, ...) \
+  auto name([[maybe_unused]] T const_& x __VA_OPT__(                       \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
+    static_assert(anyxx::missing_trait_error<T>::not_specialized,          \
+                  "'" #name                                                \
+                  "' is missing in the specialization of this trait!");    \
   };
 #define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define _detail_ANYXX_TRAIT_METHOD_H(l) _detail_ANYXX_TRAIT_METHOD l
-#define _detail_ANYXX_TRAIT_METHOD(overload, type, name, name_ext,    \
-                                   exact_const, const_, trait_body, ...)          \
-  overload type name_ext(                                             \
-      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ { \
-    return trait{}.name(base_t::value_ __VA_OPT__(, ) __VA_OPT__(     \
-        _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                   \
+#define _detail_ANYXX_TRAIT_METHOD(overload, type, name, name_ext,       \
+                                   exact_const, const_, trait_body, ...) \
+  overload type name_ext(                                                \
+      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ {    \
+    return trait{}.name(base_t::value_ __VA_OPT__(, ) __VA_OPT__(        \
+        _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                      \
   }
 #define _detail_ANYXX_TRAIT_METHODS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_METHOD_H, \
@@ -134,23 +134,24 @@ TEST_CASE("example 2 ") {
   // print(42); // remove comment to see the compilation error!
 }
 
-//namespace monoid_example {
-//TRAIT(monoid,
-//      (ANY_METHOD(V, op, (V const&), const), ANY_METHOD(V, concat, (std::ranges::range<), const),
-//       ANY_METHOD(V, identity, (), const)))
+// namespace monoid_example {
+// TRAIT(monoid,
+//       (ANY_METHOD(V, op, (V const&), const), ANY_METHOD(V, concat,
+//       (std::ranges::range<), const),
+//        ANY_METHOD(V, identity, (), const)))
 //
-//struct string_monoid {
-//  std::string value;
-//  auto op(auto s) {
-//    std::puts("string_monoid::op()");
-//    return s1 + s2;
-//  }
-//  template <typename Range>
-//  auto concat(this auto&& self, Range r) {
-//    std::puts("string_monoid::concat()");
-//    return std::ranges::fold_right(
-//        r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
-//  }
-//};
+// struct string_monoid {
+//   std::string value;
+//   auto op(auto s) {
+//     std::puts("string_monoid::op()");
+//     return s1 + s2;
+//   }
+//   template <typename Range>
+//   auto concat(this auto&& self, Range r) {
+//     std::puts("string_monoid::concat()");
+//     return std::ranges::fold_right(
+//         r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
+//   }
+// };
 //
-//}  // namespace monoid_example
+// }  // namespace monoid_example
