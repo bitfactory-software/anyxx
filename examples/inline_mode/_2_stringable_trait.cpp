@@ -18,7 +18,7 @@ struct missing_trait_error {
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
 #define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,    \
-                                     exact_const, const_, ...)          \
+                                     exact_const, const_, trait_body, ...)          \
   auto name([[maybe_unused]] T const_& x __VA_OPT__(                    \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {           \
     static_assert(anyxx::missing_trait_error<T>::not_specialized,       \
@@ -31,7 +31,7 @@ struct missing_trait_error {
 
 #define _detail_ANYXX_TRAIT_METHOD_H(l) _detail_ANYXX_TRAIT_METHOD l
 #define _detail_ANYXX_TRAIT_METHOD(overload, type, name, name_ext,    \
-                                   exact_const, const_, ...)          \
+                                   exact_const, const_, trait_body, ...)          \
   overload type name_ext(                                             \
       __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ { \
     return trait{}.name(base_t::value_ __VA_OPT__(, ) __VA_OPT__(     \
