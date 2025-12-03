@@ -16,14 +16,17 @@ struct missing_trait_error {
 };
 }  // namespace anyxx
 
+#define TRAIT_ERROR_MESSAGE(name)                               \
+  static_assert(anyxx::missing_trait_error<T>::not_specialized, \
+                "'" #name                                       \
+                "' is missing in the specialization of this trait!");
+
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
 #define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
                                      exact_const, const_, trait_body, ...) \
   auto name([[maybe_unused]] T const_& x __VA_OPT__(                       \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
-    static_assert(anyxx::missing_trait_error<T>::not_specialized,          \
-                  "'" #name                                                \
-                  "' is missing in the specialization of this trait!");    \
+    TRAIT_ERROR_MESSAGE(name)                                              \
   };
 #define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
@@ -88,6 +91,10 @@ struct missing_trait_error {
 
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
+
+#define TRAIT_METHOD(ret, name, params, const_, ...)           \
+  ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
+              _detail_EXPAND params)
 
 namespace example_2 {
 
