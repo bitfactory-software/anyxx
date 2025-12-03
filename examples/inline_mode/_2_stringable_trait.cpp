@@ -21,7 +21,12 @@ struct missing_trait_error {
                 "'" #name                                       \
                 "' is missing in the specialization of this trait!");
 
-#define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, trait_body_lamda)
+#define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda, ...) \
+  return trait_body_lamda(                                              \
+      x __VA_OPT__(, ) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));
+#define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, trait_body_lamda) \
+  _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda,             \
+                                           _detail_EXPAND params)
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
 #define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
@@ -150,6 +155,7 @@ TEST_CASE("example 2 ") {
   using namespace example_2;
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
+  CHECK(print(42) == "42\n");
   //  static_assert(!is_print_callable<int>);
   // print(42);  // remove comment to see the compilation error!
 }
