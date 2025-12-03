@@ -26,7 +26,7 @@ struct missing_trait_error {
                                      exact_const, const_, trait_body, ...) \
   auto name([[maybe_unused]] T const_& x __VA_OPT__(                       \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
-    TRAIT_ERROR_MESSAGE(name)                                              \
+    _detail_REMOVE_PARENS(trait_body)                                      \
   };
 #define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
@@ -96,10 +96,14 @@ struct missing_trait_error {
   ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
+#define TRAIT_METHOD_PURE(ret, name, params, const_)                         \
+  ANY_METHOD_(, ret, name, name, false, const_, (TRAIT_ERROR_MESSAGE(name)), \
+              _detail_EXPAND params)
+
 namespace example_2 {
 
 using namespace std;
-TRAIT(stringable, (ANY_METHOD(std::string, to_string, (), const)))
+TRAIT(stringable, (TRAIT_METHOD_PURE(std::string, to_string, (), const)))
 
 template <>
 struct stringable_trait<bool> {
@@ -138,7 +142,7 @@ TEST_CASE("example 2 ") {
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   //  static_assert(!is_print_callable<int>);
-  // print(42); // remove comment to see the compilation error!
+  print(42);  // remove comment to see the compilation error!
 }
 
 // namespace monoid_example {
