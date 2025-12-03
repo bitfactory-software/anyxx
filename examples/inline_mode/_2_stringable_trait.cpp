@@ -16,10 +16,12 @@ struct missing_trait_error {
 };
 }  // namespace anyxx
 
-#define TRAIT_ERROR_MESSAGE(name)                               \
+#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)                               \
   static_assert(anyxx::missing_trait_error<T>::not_specialized, \
                 "'" #name                                       \
                 "' is missing in the specialization of this trait!");
+
+#define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, trait_body_lamda)
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
 #define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
@@ -92,12 +94,12 @@ struct missing_trait_error {
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
 
-#define TRAIT_METHOD(ret, name, params, const_, ...)           \
-  ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
+#define TRAIT_METHOD_PURE(ret, name, params, const_)                         \
+  ANY_METHOD_(, ret, name, name, false, const_, (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name)), \
               _detail_EXPAND params)
 
-#define TRAIT_METHOD_PURE(ret, name, params, const_)                         \
-  ANY_METHOD_(, ret, name, name, false, const_, (TRAIT_ERROR_MESSAGE(name)), \
+#define TRAIT_METHOD(ret, name, params, const_, ...)                         \
+  ANY_METHOD_(, ret, name, name, false, const_, (_detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, (__VA_ARGS__))), \
               _detail_EXPAND params)
 
 namespace example_2 {
@@ -142,7 +144,7 @@ TEST_CASE("example 2 ") {
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   //  static_assert(!is_print_callable<int>);
-  print(42);  // remove comment to see the compilation error!
+  //print(42);  // remove comment to see the compilation error!
 }
 
 // namespace monoid_example {
