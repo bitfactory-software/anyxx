@@ -175,25 +175,25 @@ inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
 template <>
 struct monoid_trait<int> {
   static monoid<int> op(int self, monoid<int> r) { return self + r; };
-  static monoid<int> id(int self) { return self; };
-  static monoid<int> concat(int self, auto const& r) {
-    return std::ranges::fold_right(r, self,
+  static monoid<int> id([[maybe_unused]] int self) { return {}; };
+  static monoid<int> concat([[maybe_unused]] int self, auto const& r) {
+    return std::ranges::fold_right(r, 0,
                                    [&](auto m1, auto m2) { return m1.op(m2); });
   };
 };
 
 template <>
 struct monoid_trait<std::string> {
-  static monoid<std::string> op(std::string const& self,
-                                       monoid<string> r) {
+  static monoid<std::string> op(std::string const& self, monoid<string> r) {
     return self + static_cast<std::string>(r);
   };
-  static monoid<std::string> id(std::string const& self) {
-    return self;
+  static monoid<std::string> id([[maybe_unused]] std::string const& self) {
+    return {};
   };
-  static monoid<std::string> concat(std::string const& self,
-                                           auto const& r) {
-    return std::ranges::fold_right(r, self,
+  static monoid<std::string> concat([[maybe_unused]] std::string const& self,
+                                    auto const& r) {
+    using namespace std::string_literals;
+    return std::ranges::fold_right(r, ""s,
                                    [&](auto m1, auto m2) { return m1.op(m2); });
   };
 };
@@ -217,10 +217,11 @@ void test_monoid(monoid<M> m, R r)
            std::same_as<typename R::value_type, monoid<M>>
 {
   CHECK(m.op(monoid<M>{}).op(m) == m.op(m).op(monoid<M>{}));
-  CHECK(m.id() == m);
-  CHECK(m.concat(r) == std::ranges::fold_right(
-                           r, m, [&](auto m1, auto m2) { return m1.op(m2); }));
-    }
+  CHECK(m.id() == monoid<M>{});
+  CHECK(m.concat(r) ==
+        std::ranges::fold_right(r, monoid<M>{},
+                                [&](auto m1, auto m2) { return m1.op(m2); }));
+}
 
 }  // namespace example_2
 
