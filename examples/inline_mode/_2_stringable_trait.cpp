@@ -8,7 +8,7 @@ namespace anyxx {
 template <typename Value>
 struct trait_base {
   Value value_ = {};
-  operator Value&() { return value_; }
+  operator Value() const { return value_; }
 };
 
 template <typename T>
@@ -182,6 +182,22 @@ struct monoid_trait<int> {
   };
 };
 
+template <>
+struct monoid_trait<std::string> {
+  static monoid<std::string> op(std::string const& self,
+                                       monoid<string> r) {
+    return self + static_cast<std::string>(r);
+  };
+  static monoid<std::string> id(std::string const& self) {
+    return self;
+  };
+  static monoid<std::string> concat(std::string const& self,
+                                           auto const& r) {
+    return std::ranges::fold_right(r, self,
+                                   [&](auto m1, auto m2) { return m1.op(m2); });
+  };
+};
+
 // struct string_monoid {
 //   std::string value;
 //   auto op(auto s) {
@@ -204,11 +220,13 @@ void test_monoid(monoid<M> m, R r)
   CHECK(m.id() == m);
   CHECK(m.concat(r) == std::ranges::fold_right(
                            r, m, [&](auto m1, auto m2) { return m1.op(m2); }));
-}
+    }
 
 }  // namespace example_2
 
 TEST_CASE("example 2b monoid ") {
   using namespace example_2;
+  using namespace std::string_literals;
   test_monoid(monoid{1}, std::vector{monoid{2}, monoid{3}});
+  test_monoid(monoid{"1"s}, std::vector{monoid{"2"s}, monoid{"3"s}});
 }
