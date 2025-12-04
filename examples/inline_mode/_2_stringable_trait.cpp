@@ -114,7 +114,6 @@ struct missing_trait_error {
 namespace example_2 {
 
 using namespace std;
-// TRAIT(stringable, (TRAIT_METHOD_PURE(std::string, to_string, (), const)))
 
 TRAIT(stringable,
       (TRAIT_METHOD(std::string, to_string, (), const, [](const auto& value) {
