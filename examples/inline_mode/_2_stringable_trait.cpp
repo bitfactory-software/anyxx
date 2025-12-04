@@ -160,24 +160,23 @@ TEST_CASE("example 2 ") {
   // print(42);  // remove comment to see the compilation error!
 }
 
-// namespace monoid_example {
-// TRAIT(monoid,
-//       (ANY_METHOD(V, op, (V const&), const), ANY_METHOD(V, concat,
-//       (std::ranges::range<), const),
-//        ANY_METHOD(V, identity, (), const)))
-//
-// struct string_monoid {
-//   std::string value;
-//   auto op(auto s) {
-//     std::puts("string_monoid::op()");
-//     return s1 + s2;
-//   }
-//   template <typename Range>
-//   auto concat(this auto&& self, Range r) {
-//     std::puts("string_monoid::concat()");
-//     return std::ranges::fold_right(
-//         r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
-//   }
-// };
-//
-// }  // namespace monoid_example
+namespace monoid_example {
+TRAIT(monoid, (TRAIT_METHOD_PURE(monoid<V>, op, (monoid<V> const&), const),
+               TRAIT_METHOD_PURE(monoid<V>, concat, (const auto&), const),
+               TRAIT_METHOD_PURE(monoid<V>, identity, (), const)))
+
+struct string_monoid {
+  std::string value;
+  auto op(auto s) {
+    std::puts("string_monoid::op()");
+    return s1 + s2;
+  }
+  template <typename Range>
+  auto concat(this auto&& self, Range r) {
+    std::puts("string_monoid::concat()");
+    return std::ranges::fold_right(
+        r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
+  }
+};
+
+}  // namespace monoid_example
