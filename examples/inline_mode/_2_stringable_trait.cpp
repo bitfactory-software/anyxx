@@ -163,9 +163,18 @@ TEST_CASE("example 2a stringable") {
 }
 
 namespace example_2 {
-TRAIT(monoid, (TRAIT_METHOD_PURE(monoid<T>, op, (monoid<T> const&), const),
-               TRAIT_METHOD_PURE(monoid<T>, concat, (const auto&), const),
-               TRAIT_METHOD_PURE(monoid<T>, id, (), const)))
+TRAIT(monoid,
+      (TRAIT_METHOD(monoid<T>, op, (monoid<T> const&), const,
+                    [](const auto& value, monoid<T> const r) {
+                      return monoid<T>{}.concat(std::vector{monoid{value}, r});
+                    }),
+       TRAIT_METHOD(monoid<T>, concat, (const auto&), const,
+                    [](const auto& value, const auto& r) {
+                      return std::ranges::fold_right(
+                          r, monoid<T>{},
+                          [&](auto m1, auto m2) { return m1.op(m2); });
+                    }),
+       TRAIT_METHOD(monoid<T>, id, (), const, []() { return monoid<T>{}; })))
 
 template <typename T>
 inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
@@ -174,7 +183,7 @@ inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
 
 template <>
 struct monoid_trait<int> {
-  static monoid<int> op(int self, monoid<int> r) { return self + r; };
+//  static monoid<int> op(int self, monoid<int> r) { return self + r; };
   static monoid<int> id([[maybe_unused]] int self) { return {}; };
   static monoid<int> concat([[maybe_unused]] int self, auto const& r) {
     return std::ranges::fold_right(r, 0,
@@ -190,27 +199,14 @@ struct monoid_trait<std::string> {
   static monoid<std::string> id([[maybe_unused]] std::string const& self) {
     return {};
   };
-  static monoid<std::string> concat([[maybe_unused]] std::string const& self,
-                                    auto const& r) {
-    using namespace std::string_literals;
-    return std::ranges::fold_right(r, ""s,
-                                   [&](auto m1, auto m2) { return m1.op(m2); });
-  };
+  //static monoid<std::string> concat([[maybe_unused]] std::string const& self,
+  //                                  auto const& r) {
+  //  using namespace std::string_literals;
+  //  return std::ranges::fold_right(r, ""s,
+  //                                 [&](auto m1, auto m2) { return m1.op(m2); });
+  //};
 };
 
-// struct string_monoid {
-//   std::string value;
-//   auto op(auto s) {
-//     std::puts("string_monoid::op()");
-//     return s1 + s2;
-//   }
-//   template <typename Range>
-//   auto concat(this auto&& self, Range r) {
-//     std::puts("string_monoid::concat()");
-//     return std::ranges::fold_right(
-//         r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
-//   }
-// };
 template <typename M, typename R>
 void test_monoid(monoid<M> m, R r)
   requires std::ranges::range<R> &&
