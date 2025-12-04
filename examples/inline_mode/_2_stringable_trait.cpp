@@ -165,11 +165,11 @@ TEST_CASE("example 2a stringable") {
 namespace example_2 {
 TRAIT(monoid,
       (TRAIT_METHOD(monoid<T>, op, (monoid<T> const&), const,
-                    [](const auto& value, monoid<T> const r) {
+                    []([[maybe_unused]]const auto& value, monoid<T> const r) {
                       return monoid<T>{}.concat(std::vector{monoid{value}, r});
                     }),
        TRAIT_METHOD(monoid<T>, concat, (const auto&), const,
-                    [](const auto& value, const auto& r) {
+                    []([[maybe_unused]]const auto& value, const auto& r) {
                       return std::ranges::fold_right(
                           r, monoid<T>{},
                           [&](auto m1, auto m2) { return m1.op(m2); });
@@ -182,23 +182,23 @@ inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
 };
 
 template <>
-struct monoid_trait<int> {
+struct monoid_trait<int> : monoid_trait_default<int> {
 //  static monoid<int> op(int self, monoid<int> r) { return self + r; };
-  static monoid<int> id([[maybe_unused]] int self) { return {}; };
+  //static monoid<int> id([[maybe_unused]] int self) { return {}; };
   static monoid<int> concat([[maybe_unused]] int self, auto const& r) {
     return std::ranges::fold_right(r, 0,
-                                   [&](auto m1, auto m2) { return m1.op(m2); });
+                                   [&](auto m1, auto m2) { return m1 + m2; });
   };
 };
 
 template <>
-struct monoid_trait<std::string> {
+struct monoid_trait<std::string> : monoid_trait_default<std::string>{
   static monoid<std::string> op(std::string const& self, monoid<string> r) {
     return self + static_cast<std::string>(r);
   };
-  static monoid<std::string> id([[maybe_unused]] std::string const& self) {
-    return {};
-  };
+  //static monoid<std::string> id([[maybe_unused]] std::string const& self) {
+  //  return {};
+  //};
   //static monoid<std::string> concat([[maybe_unused]] std::string const& self,
   //                                  auto const& r) {
   //  using namespace std::string_literals;
