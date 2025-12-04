@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
@@ -6,7 +7,7 @@
 namespace anyxx {
 template <typename Value>
 struct trait_base {
-  Value value_;
+  Value value_ = {};
   operator Value&() { return value_; }
 };
 
@@ -69,6 +70,7 @@ struct missing_trait_error {
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                        \
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {          \
     using value_t = ErasedData;                                             \
+    using T = ErasedData;                                                   \
     using trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;             \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;     \
     using base_t::value_;                                                   \
@@ -151,7 +153,7 @@ concept is_print_callable = requires(V v) {
   { print(v) } -> std::same_as<std::string>;
 };
 
-TEST_CASE("example 2 ") {
+TEST_CASE("example 2a stringable") {
   using namespace example_2;
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
@@ -160,23 +162,53 @@ TEST_CASE("example 2 ") {
   // print(42);  // remove comment to see the compilation error!
 }
 
-namespace monoid_example {
-TRAIT(monoid, (TRAIT_METHOD_PURE(monoid<V>, op, (monoid<V> const&), const),
-               TRAIT_METHOD_PURE(monoid<V>, concat, (const auto&), const),
-               TRAIT_METHOD_PURE(monoid<V>, identity, (), const)))
+namespace example_2 {
+TRAIT(monoid, (TRAIT_METHOD_PURE(monoid<T>, op, (monoid<T> const&), const),
+               TRAIT_METHOD_PURE(monoid<T>, concat, (const auto&), const),
+               TRAIT_METHOD_PURE(monoid<T>, id, (), const)))
 
-struct string_monoid {
-  std::string value;
-  auto op(auto s) {
-    std::puts("string_monoid::op()");
-    return s1 + s2;
-  }
-  template <typename Range>
-  auto concat(this auto&& self, Range r) {
-    std::puts("string_monoid::concat()");
-    return std::ranges::fold_right(
-        r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
-  }
+template <typename T>
+inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
+  return lhs.value_ == rhs.value_;
 };
 
-}  // namespace monoid_example
+template <>
+struct monoid_trait<int> {
+  static monoid<int> op(int self, monoid<int> r) { return self + r; };
+  static monoid<int> id(int self) { return self; };
+  static monoid<int> concat(int self, auto const& r) {
+    return std::ranges::fold_right(r, self,
+                                   [&](auto m1, auto m2) { return m1.op(m2); });
+  };
+};
+
+// struct string_monoid {
+//   std::string value;
+//   auto op(auto s) {
+//     std::puts("string_monoid::op()");
+//     return s1 + s2;
+//   }
+//   template <typename Range>
+//   auto concat(this auto&& self, Range r) {
+//     std::puts("string_monoid::concat()");
+//     return std::ranges::fold_right(
+//         r, std::string{}, [&](auto m1, auto m2) { return self.op(m1, m2); });
+//   }
+// };
+template <typename M, typename R>
+void test_monoid(monoid<M> m, R r)
+  requires std::ranges::range<R> &&
+           std::same_as<typename R::value_type, monoid<M>>
+{
+  CHECK(m.op(monoid<M>{}).op(m) == m.op(m).op(monoid<M>{}));
+  CHECK(m.id() == m);
+  CHECK(m.concat(r) == std::ranges::fold_right(
+                           r, m, [&](auto m1, auto m2) { return m1.op(m2); }));
+}
+
+}  // namespace example_2
+
+TEST_CASE("example 2b monoid ") {
+  using namespace example_2;
+  test_monoid(monoid{1}, std::vector{monoid{2}, monoid{3}});
+}
