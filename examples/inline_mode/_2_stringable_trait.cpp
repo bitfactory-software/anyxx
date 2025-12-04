@@ -111,24 +111,15 @@ struct missing_trait_error {
               (_detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, (__VA_ARGS__))), \
               _detail_EXPAND params)
 
-#define TRAIT_OP(ret, op, params, const_, ...)                                 \
-  ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false,  \
-              const_, (),                                                      \
-              (_detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, (__VA_ARGS__))), \
-              _detail_EXPAND params)
-
 namespace example_2 {
 
 using namespace std;
 // TRAIT(stringable, (TRAIT_METHOD_PURE(std::string, to_string, (), const)))
 
 TRAIT(stringable,
-      (TRAIT_METHOD(std::string, to_string, (), const,
-                    [](const auto& value) { return std::format("{}", value); }),
-       TRAIT_OP(auto, <=>, (stringable<T> const&), const,
-                [](const auto& value, stringable<T> const& r) {
-                  return value <=> static_cast<T>(r);
-                })))
+      (TRAIT_METHOD(std::string, to_string, (), const, [](const auto& value) {
+        return std::format("{}", value);
+      })))
 
 template <>
 struct stringable_trait<bool> {
@@ -141,7 +132,7 @@ template <>
 struct stringable_trait<double> {
   static std::string to_string(const double& value) {
     return std::format("{:6.3}", value);
-  }  // namespace example_2
+  }
 };
 
 template <typename V>
