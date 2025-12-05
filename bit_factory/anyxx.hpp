@@ -215,18 +215,21 @@
       : n##_default_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};        \
                                                                               \
   struct n##_v_table_is_inline;                                               \
+  struct n##_has_dispatch;                                                    \
                                                                               \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;              \
                                                                               \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table               \
       : BASE##_v_table                                                        \
         _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                           \
-        anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n> {                  \
+        anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> {\
     using v_table_base_t =                                                    \
         BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);            \
     using v_table_t = n##_v_table;                                            \
+    static constexpr bool dispatchs_enabled =                                 \
+        anyxx::is_type_complete<n##_has_dispatch>;                            \
     using own_dispatch_holder_t =                                             \
-        typename anyxx::dispatch_holder<anyxx::has_dispatchs<n>, n>;          \
+        typename anyxx::dispatch_holder<dispatchs_enabled, n>;          \
                                                                               \
     static bool static_is_derived_from(const std::type_info& from) {          \
       return typeid(v_table_t) == from                                        \
@@ -236,7 +239,6 @@
                                                                               \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                   \
                                                                               \
-    static constexpr bool dispatchs_enabled = anyxx::has_dispatchs<n>;        \
                                                                               \
     template <typename Concrete>                                              \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete)      \
@@ -1556,9 +1558,6 @@ VTable* v_table_instance_inline() {
 template <typename VTable, typename Concrete>
 VTable* v_table_instance_implementaion();
 
-template <template <typename...> typename Any>
-constexpr bool has_dispatchs = false;
-
 template <typename I>
 concept has_dispatchs_enabled = is_any<I> && I::v_table_t::dispatchs_enabled;
 
@@ -2377,10 +2376,3 @@ struct dispatch<R(Args...)> {
   ANY_MODEL_FWD(, class_, interface_, interface_namespace_)        \
   ANY_MODEL(, class_, interface_, interface_namespace_)
 
-#define ANY_HAS_DISPATCH(interface_namespace, interface_name)               \
-  ANY_FORWARD(interface_namespace, interface_name)                          \
-                                                                            \
-  namespace anyxx {                                                         \
-  template <>                                                               \
-  constexpr bool has_dispatchs<interface_namespace::interface_name> = true; \
-  }

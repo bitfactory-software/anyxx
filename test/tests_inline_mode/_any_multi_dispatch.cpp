@@ -10,10 +10,8 @@
 using namespace anyxx;
 using namespace std::literals;
 
-namespace {}
-
-ANY_HAS_DISPATCH(, any_thing)
 namespace {
+struct any_thing_has_dispatch {};
 ANY(any_thing, (ANY_METHOD(std::string, name, (), const)))
 }  // namespace
 

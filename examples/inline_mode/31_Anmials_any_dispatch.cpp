@@ -9,10 +9,9 @@
 
 #include "double_dispatch_result.hpp"
 
-namespace {}
 
-ANY_HAS_DISPATCH(, any_creature)
 namespace {
+struct any_creature_has_dispatch{};
 ANY(any_creature, (ANY_METHOD(std::type_info const*, name, (), const)))
 }  // namespace
 

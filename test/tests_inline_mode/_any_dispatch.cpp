@@ -4,9 +4,11 @@
 
 using namespace anyxx;
 
-ANY_HAS_DISPATCH(, test_base_i)
-ANY_HAS_DISPATCH(, test_derived_i)
 namespace {
+
+struct test_base_i_has_dispatch {};
+struct test_derived_i_has_dispatch {};
+
 ANY(test_base_i, (ANY_METHOD(std::string, to_string, (), const)))
 ANY_(test_derived_i, test_base_i,
      (ANY_METHOD(void, from_string, (std::string const&), )))

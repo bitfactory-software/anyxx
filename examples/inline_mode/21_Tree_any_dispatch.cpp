@@ -1,8 +1,8 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <bit_factory/anyxx.hpp>
-#include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <string>
 
@@ -12,13 +12,12 @@ using std::string;
 using namespace anyxx;
 using namespace anyxx;
 
-ANY_HAS_DISPATCH(_21_Tree_TE_interface_dispatch::node, node_i)
-
 namespace _21_Tree_TE_interface_dispatch {
 
 namespace node {
+struct node_i_has_dispatch {};
 ANY(node_i, (ANY_METHOD(int, value, (), const)))
-}
+}  // namespace node
 }  // namespace _21_Tree_TE_interface_dispatch
 
 namespace _21_Tree_TE_interface_dispatch {
@@ -64,8 +63,8 @@ auto __ = as_forth.define<Plus>([](auto const& expr) {
 auto __ = as_forth.define<Times>([](auto const& expr) {
   return as_forth(expr.left) + " " + as_forth(expr.right) + " *";
 });
-auto __ =
-    as_forth.define<Integer>([](auto const& expr) { return std::to_string(expr.i); });
+auto __ = as_forth.define<Integer>(
+    [](auto const& expr) { return std::to_string(expr.i); });
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
@@ -76,8 +75,8 @@ auto __ = as_lisp.define<Plus>([](auto const& expr) {
 auto __ = as_lisp.define<Times>([](auto const& expr) {
   return "(times " + as_lisp(expr.left) + " " + as_lisp(expr.right) + ")";
 });
-auto __ =
-    as_lisp.define<Integer>([](auto const& expr) { return std::to_string(expr.i); });
+auto __ = as_lisp.define<Integer>(
+    [](auto const& expr) { return std::to_string(expr.i); });
 //-----------------------------------------------------------------------------
 }  // namespace _21_Tree_TE_interface_dispatch
 
@@ -107,7 +106,8 @@ TEST_CASE("21_Tree any++ open method") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
-  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE /Ob2)' is used!\n";
+  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
+               "/Ob2)' is used!\n";
   BENCHMARK("21_Tree any++ open method value") { return value(expr); };
   BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG
