@@ -255,7 +255,8 @@
                                                                               \
     template <typename Concrete>                                              \
     static auto imlpementation() {                                            \
-      if constexpr (anyxx::is_type_complete<n##_v_table_is_inline>) {         \
+      if constexpr (anyxx::is_type_complete<n##_v_table_is_inline> ||         \
+                    !anyxx::is_in_dll_mode) {                                 \
         return anyxx::v_table_instance_inline<v_table_t, Concrete>();         \
       } else {                                                                \
         return anyxx::v_table_instance_implementaion<v_table_t, Concrete>();  \
@@ -482,6 +483,12 @@ struct is_type_complete_impl<
     : std::true_type {};
 template <typename T>
 constexpr static inline bool is_type_complete = is_type_complete_impl<T>::value;
+
+#ifdef ANY_DLL_MODE
+constexpr static inline bool is_in_dll_mode = true;
+#else
+constexpr static inline bool is_in_dll_mode = false;
+#endif
 
 class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
