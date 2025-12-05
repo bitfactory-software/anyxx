@@ -4,6 +4,8 @@
 
 using namespace anyxx;
 
+static_assert(anyxx::is_in_dll_mode == false);
+
 namespace {
 struct X {
   std::string s_;

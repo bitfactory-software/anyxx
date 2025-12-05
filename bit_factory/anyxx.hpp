@@ -485,9 +485,9 @@ template <typename T>
 constexpr static inline bool is_type_complete = is_type_complete_impl<T>::value;
 
 #ifdef ANY_DLL_MODE
-constexpr static inline bool is_in_dll_mode = true;
+constexpr bool is_in_dll_mode = true;
 #else
-constexpr static inline bool is_in_dll_mode = false;
+constexpr bool is_in_dll_mode = false;
 #endif
 
 class error : public std::runtime_error {
@@ -1553,15 +1553,8 @@ VTable* v_table_instance_inline() {
   return &v_table;
 }
 
-#ifdef ANY_DLL_MODE
 template <typename VTable, typename Concrete>
 VTable* v_table_instance_implementaion();
-#else
-template <typename VTable, typename Concrete>
-VTable* v_table_instance_implementaion() {
-  return v_table_instance_inline<VTable, Concrete>();
-}
-#endif  // DEBUG
 
 template <template <typename...> typename Any>
 constexpr bool has_dispatchs = false;

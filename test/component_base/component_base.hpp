@@ -18,6 +18,7 @@ using namespace anyxx;
 #endif
 #pragma message("component_base -> import")
 #endif
+static_assert(anyxx::is_in_dll_mode);
 
 namespace test::component_base {
 struct X;
