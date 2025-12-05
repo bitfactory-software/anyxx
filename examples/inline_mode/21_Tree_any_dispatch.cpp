@@ -17,12 +17,6 @@ namespace _21_Tree_TE_interface_dispatch {
 namespace node {
 struct node_i_has_dispatch {};
 ANY(node_i, (ANY_METHOD(int, value, (), const)))
-}  // namespace node
-}  // namespace _21_Tree_TE_interface_dispatch
-
-namespace _21_Tree_TE_interface_dispatch {
-namespace node {
-struct any;
 using model = node_i<shared_const>;
 };  // namespace node
 
