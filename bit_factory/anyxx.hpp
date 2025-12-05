@@ -214,6 +214,8 @@
   struct n##_concept_map                                                      \
       : n##_default_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};        \
                                                                               \
+  struct n##_v_table_is_inline;                                               \
+                                                                              \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;              \
                                                                               \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table               \
@@ -253,7 +255,11 @@
                                                                               \
     template <typename Concrete>                                              \
     static auto imlpementation() {                                            \
-      return anyxx::v_table_instance_implementaion<v_table_t, Concrete>();    \
+      if constexpr (anyxx::is_type_complete<n##_v_table_is_inline>) {         \
+        return anyxx::v_table_instance_inline<v_table_t, Concrete>();         \
+      } else {                                                                \
+        return anyxx::v_table_instance_implementaion<v_table_t, Concrete>();  \
+      }                                                                       \
     }                                                                         \
   };                                                                          \
                                                                               \
@@ -313,7 +319,7 @@
     }                                                                         \
     _detail_ANYXX_METHODS(l)                                                  \
                                                                               \
-    ~n() = default;                                                           \
+        ~n() = default;                                                       \
     n() = default;                                                            \
     n(n const&) = default;                                                    \
     n(n&&) = default;                                                         \
@@ -466,6 +472,16 @@
               _detail_EXPAND params)
 
 namespace anyxx {
+
+template <typename, typename = void>
+struct is_type_complete_impl : std::false_type {};
+template <typename T>
+struct is_type_complete_impl<
+    T, std::enable_if_t<std::is_object<T>::value &&
+                        !std::is_pointer<T>::value && (sizeof(T) > 0)>>
+    : std::true_type {};
+template <typename T>
+constexpr static inline bool is_type_complete = is_type_complete_impl<T>::value;
 
 class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
@@ -1522,16 +1538,21 @@ inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_erased_data(o), get_meta_data(o));
 }
 
+template <typename VTable, typename Concrete>
+VTable* v_table_instance_inline() {
+  static VTable v_table{std::in_place_type<Concrete>};
+  [[maybe_unused]] static auto __ =
+      anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
+  return &v_table;
+}
+
 #ifdef ANY_DLL_MODE
 template <typename VTable, typename Concrete>
 VTable* v_table_instance_implementaion();
 #else
 template <typename VTable, typename Concrete>
 VTable* v_table_instance_implementaion() {
-  static VTable v_table{std::in_place_type<Concrete>};
-  [[maybe_unused]] static auto __ =
-      anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
-  return &v_table;
+  return v_table_instance_inline<VTable, Concrete>();
 }
 #endif  // DEBUG
 
