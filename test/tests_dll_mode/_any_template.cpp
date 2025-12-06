@@ -54,50 +54,7 @@ struct any_to_tstring_concept_map<const double>
 using namespace test::component_base;
 using namespace anyxx;
 
-// template <typename Concrete, typename KEY, typename VALUE>
-// any_mutable_recursive_map_v_table<KEY, VALUE>*
-// make_any_mutable_recursive_map_v_table();
 }  // namespace
-
-// namespace test::component_base {
-// template <>
-// any_mutable_recursive_map_v_table<int, std::string>*
-// test::component_base::make_any_mutable_recursive_map_v_table<
-//     std::map<int, std::string>, int, std::string>() {
-//   static any_mutable_recursive_map_v_table<int, std::string> v_table{
-//       std::in_place_type<
-//           std::map<int, std::map<std::string, std::map<int, double>>>>};
-//   return &v_table;
-// }
-//
-// using concrete = std::map<int, std::map<std::string, std::map<int, double>>>;
-// using key = int;
-// using value =
-//     any_mutable_recursive_map<mutable_observer, std::string,
-//                               any_mutable_map<mutable_observer, int,
-//                               double>>;
-
-// namespace test::component_base {
-// template <>
-// any_mutable_recursive_map_v_table<key, value>*
-// test::component_base::make_any_mutable_recursive_map_v_table<concrete, key,
-//                                                              value>() {
-//   static any_mutable_recursive_map_v_table<
-//       int,
-//       any_mutable_recursive_map<mutable_observer, std::string,
-//                                 any_mutable_map<mutable_observer, int,
-//                                 double>>>
-//       v_table{std::in_place_type<
-//           std::map<int, std::map<std::string, std::map<int, double>>>>};
-//   return &v_table;
-// }
-// static auto __ = anyxx::bind_v_table_to_meta_data<
-//     any_mutable_recursive_map_v_table<
-//         int, any_mutable_recursive_map<
-//                  mutable_observer, std::string,
-//                  any_mutable_map<mutable_observer, int, double>>>,
-//     std::map<int, std::map<std::string, std::map<int, double>>>>();
-// }  // namespace test::component_base
 
 ANY_META_CLASS_STATIC(std::map<int, double>)
 ANY_META_CLASS_STATIC(std::map<std::string, int>)
@@ -148,6 +105,40 @@ static auto __ = anyxx::bind_v_table_to_meta_data<any_map_v_table<int, double>,
                                                   std::map<int, double>>();
 
 template <>
+any_mutable_map_v_table<int, double>*
+test::component_base::make_any_mutable_map_v_table<std::map<int, double>, int,
+                                                   double>() {
+  static any_mutable_map_v_table<int, double> v_table{
+      std::in_place_type<std::map<int, double>>};
+  return &v_table;
+}
+static auto __ =
+    anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<int, double>,
+                                     std::map<int, double>>();
+
+template <>
+test::component_base::any_recursive_map_v_table<
+    int, test::component_base::any_recursive_map<
+             anyxx::const_observer, std::string,
+             test::component_base::any_mutable_map<anyxx::const_observer, int,
+                                                   double>>>*
+test::component_base::make_any_recursive_map_v_table<
+    std::map<int, std::map<std::string, std::map<int, double>>>, int,
+    test::component_base::any_recursive_map<
+        anyxx::const_observer, std::string,
+        test::component_base::any_mutable_map<anyxx::const_observer, int,
+                                              double>>>() {
+  static test::component_base::any_recursive_map_v_table<
+      int, test::component_base::any_recursive_map<
+               anyxx::const_observer, std::string,
+               test::component_base::any_mutable_map<anyxx::const_observer, int,
+                                                     double>>>
+      v_table{std::in_place_type<
+          std::map<int, std::map<std::string, std::map<int, double>>>>};
+  return &v_table;
+}
+
+template <>
 test::component_base::any_mutable_recursive_map_v_table<
     int, test::component_base::any_mutable_recursive_map<
              anyxx::mutable_observer, std::string,
@@ -173,21 +164,20 @@ test::component_base::make_any_mutable_recursive_map_v_table<
 // double>,
 //                                                   std::map<int, double>>();
 
-//template <>
-//test::component_base::any_recursive_map_v_table<
-//    std::string, test::component_base::any_mutable_map<anyxx::mutable_observer,
-//                                                       int, double>>*
-//test::component_base::make_any_recursive_map_v_table<
-//    std::map<std::string, std::map<int, double>>, std::string,
-//    test::component_base::any_mutable_map<anyxx::mutable_observer, int,
-//                                          double>>() {
-//  static test::component_base::any_recursive_map_v_table<
-//      std::string, test::component_base::any_mutable_map<anyxx::mutable_observer,
-//                                                       int, double>>
-//      v_table{std::in_place_type<
-//          std::map<std::string, std::map<int, double>>>};
-//  return &v_table;
-//}
+template <>
+test::component_base::any_recursive_map_v_table<
+    std::string,
+    test::component_base::any_mutable_map<anyxx::const_observer, int, double>>*
+test::component_base::make_any_recursive_map_v_table<
+    std::map<std::string, std::map<int, double>>, std::string,
+    test::component_base::any_mutable_map<anyxx::const_observer, int,
+                                          double>>() {
+  static test::component_base::any_recursive_map_v_table<
+      std::string,
+      test::component_base::any_mutable_map<anyxx::const_observer, int, double>>
+      v_table{std::in_place_type<std::map<std::string, std::map<int, double>>>};
+  return &v_table;
+}
 
 template <>
 test::component_base::any_mutable_recursive_map_v_table<
@@ -198,10 +188,9 @@ test::component_base::make_any_mutable_recursive_map_v_table<
     test::component_base::any_mutable_map<anyxx::mutable_observer, int,
                                           double>>() {
   static test::component_base::any_mutable_recursive_map_v_table<
-      std::string, test::component_base::any_mutable_map<anyxx::mutable_observer,
-                                                       int, double>>
-      v_table{std::in_place_type<
-          std::map<std::string, std::map<int, double>>>};
+      std::string, test::component_base::any_mutable_map<
+                       anyxx::mutable_observer, int, double>>
+      v_table{std::in_place_type<std::map<std::string, std::map<int, double>>>};
   return &v_table;
 }
 
@@ -210,7 +199,6 @@ test::component_base::make_any_mutable_recursive_map_v_table<
 //    any_mutable_recursive_map<
 //        mutable_observer, std::string,
 //        any_mutable_map<mutable_observer, int, double>>>
-
 
 TEST_CASE("any template test") {
   using namespace template_test;
@@ -305,3 +293,5 @@ TEST_CASE("any template test4") {
   any_map<const_observer, int, double> any_mutable_map{map};
   REQUIRE(any_mutable_map.at(3) == 3.333);
 }
+
+//"struct test::component_base::any_recursive_map_v_table<int,struct test::component_base::any_recursive_map<void const *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct test::component_base::any_map<void const *,int,double> > > * __cdecl test::component_base::make_any_recursive_map_v_table<class std::map<int,class std::map<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::map<int,double,struct std::less<int>,class std::allocator<struct std::pair<int const ,double> > >,struct std::less<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >,class std::allocator<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,class std::map<int,double,struct std::less<int>,class std::allocator<struct std::pair<int const ,double> > > > > >,struct std::less<int>,class std::allocator<struct std::pair<int const ,class std::map<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::map<int,double,struct std::less<int>,class std::allocator<struct std::pair<int const ,double> > >,struct std::less<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >,class std::allocator<struct std::pair<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const ,class std::map<int,double,struct std::less<int>,class std::allocator<struct std::pair<int const ,double> > > > > > > > >,int,struct test::component_base::any_recursive_map<void const *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,struct test::component_base::any_map<void const *,int,double> > >(void)" (??$make_any_recursive_map_v_table@V?$map@HV?$map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$map@HNU?$less@H@std@@V?$allocator@U?$pair@$$CBHN@std@@@2@@2@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$map@HNU?$less@H@std@@V?$allocator@U?$pair@$$CBHN@std@@@2@@2@@std@@@2@@std@@U?$less@H@2@V?$allocator@U?$pair@$$CBHV?$map@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$map@HNU?$less@H@std@@V?$allocator@U?$pair@$$CBHN@std@@@2@@2@U?$less@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@V?$allocator@U?$pair@$$CBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$map@HNU?$less@H@std@@V?$allocator@U?$pair@$$CBHN@std@@@2@@2@@std@@@2@@std@@@std@@@2@@std@@HU?$any_recursive_map@PEBXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@U?$any_map@PEBXHN@component_base@test@@@component_base@test@@@component_base@test@@YAPEAU?$any_recursive_map_v_table@HU?$any_recursive_map@PEBXV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@U?$any_map@PEBXHN@component_base@test@@@component_base@test@@@01@XZ)
