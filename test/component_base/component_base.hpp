@@ -24,13 +24,6 @@ namespace test::component_base {
 struct X;
 }
 
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-              test::component_base, get_value_i)
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-              test::component_base, set_value_i)
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-              test::component_base, to_string_i)
-
 namespace test::component_base {
 
 ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)))
@@ -47,3 +40,10 @@ COMPONENT_BASE_EXPORT anyxx::shared_const sc_X(double v);
 COMPONENT_BASE_EXPORT anyxx::unique u_X(double v);
 
 }  // namespace test::component_base
+
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+              test::component_base, get_value_i)
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+              test::component_base, set_value_i)
+ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+              test::component_base, to_string_i)

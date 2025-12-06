@@ -1,6 +1,5 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <cstddef>
 #include <map>  // NOLINT
 #include <string>
 
