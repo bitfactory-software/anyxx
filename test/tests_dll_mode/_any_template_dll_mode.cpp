@@ -76,6 +76,16 @@ struct test::component_base::any_map_concept_map<std::map<std::string, int>,
   };
 };
 
+#define __ANY_REGISTER_TEMPLATE_MODEL(class_, t, all, interface_)         \
+  namespace {                                                             \
+  static auto __ = anyxx::bind_v_table_to_meta_data<                      \
+      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t), \
+      _detail_REMOVE_PARENS(class_)>();                                   \
+  }
+
+#define ANY_REGISTER_TEMPLATE_MODEL(class_, interface_, t) \
+  __ANY_REGISTER_TEMPLATE_MODEL(class_, t, _add_head(class_, t), interface_)
+
 #define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_) \
   template <>                                                                  \
       interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *     \
@@ -86,8 +96,9 @@ struct test::component_base::any_map_concept_map<std::map<std::string, int>,
     return &v_table;                                                           \
   }
 
-#define ANY_TEMPLATE_MODEL(class_, t, ins, i) \
-  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i)
+#define ANY_TEMPLATE_MODEL(class_, t, ins, i)                   \
+  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i) \
+  ANY_REGISTER_TEMPLATE_MODEL(class_, ins::i, t)
 
 ANY_TEMPLATE_MODEL((std::map<std::string, int>), ((std::string), (int)),
                    test::component_base, any_map)
@@ -138,16 +149,6 @@ ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
                    ((std::string), (KEY6)), test::component_base,
                    any_mutable_recursive_map)
 
-static auto __ =
-    anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<std::string, int>,
-                                     std::map<std::string, int>>();
-
-static auto __ = anyxx::bind_v_table_to_meta_data<any_map_v_table<int, double>,
-                                                  std::map<int, double>>();
-static auto __ =
-    anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<int, double>,
-                                     std::map<int, double>>();
-
 
 TEST_CASE("any template test") {
   using namespace template_test;
@@ -166,12 +167,12 @@ TEST_CASE("any template test") {
 
   test_any_map_template<std::string, int>(map_string_to_int);
 
-   auto test_any_map_to_tstring_lambda =
-       [](any_map_to_tstring<const_observer, std::string> map_i) {
-         REQUIRE(map_i.at("one").to_string() == "1");
-         REQUIRE(map_i.at("two").to_string() == "2");
-       };
-   test_any_map_to_tstring_lambda(map_string_to_int);
+  auto test_any_map_to_tstring_lambda =
+      [](any_map_to_tstring<const_observer, std::string> map_i) {
+        REQUIRE(map_i.at("one").to_string() == "1");
+        REQUIRE(map_i.at("two").to_string() == "2");
+      };
+  test_any_map_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test2") {
@@ -181,12 +182,12 @@ TEST_CASE("any template test2") {
 
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-   auto test_any_map_to_tstring_lambda =
-       [](any_map_to_tstring<const_observer, std::string> map_i) {
-         REQUIRE(map_i.at("one").to_string() == "1.000000");
-         REQUIRE(map_i.at("two").to_string() == "2.000000");
-       };
-   test_any_map_to_tstring_lambda(map_string_to_int);
+  auto test_any_map_to_tstring_lambda =
+      [](any_map_to_tstring<const_observer, std::string> map_i) {
+        REQUIRE(map_i.at("one").to_string() == "1.000000");
+        REQUIRE(map_i.at("two").to_string() == "2.000000");
+      };
+  test_any_map_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test3") {
