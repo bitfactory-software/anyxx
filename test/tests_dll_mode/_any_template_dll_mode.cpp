@@ -71,16 +71,33 @@ struct test::component_base::any_map_concept_map<std::map<std::string, int>,
     return x.at(i);
   };
 };
-template <>
-any_map_v_table<std::string, int>* test::component_base::make_any_map_v_table<
-    std::map<std::string, int>, std::string, int>() {
-  static any_map_v_table<std::string, int> v_table{
-      std::in_place_type<std::map<std::string, int>>};
-  return &v_table;
-}
-static auto __ =
-    anyxx::bind_v_table_to_meta_data<any_map_v_table<std::string, int>,
-                                     std::map<std::string, int>>();
+
+#define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_)                                 \
+  template <> \
+interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *       \
+interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(  \
+              interface_) <_detail_ANYXX_TEMPLATE_ARGS(all)> (){ \
+  static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) v_table{ \
+      std::in_place_type< _detail_REMOVE_PARENS(class_)> }; \
+  return &v_table; \
+} \
+
+#define ANY_TEMPLATE_MODEL(class_, t, ins, i)                                 \
+  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i)       \
+
+ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::component_base, any_map)
+
+
+//template <>
+//any_map_v_table<std::string, int>* test::component_base::make_any_map_v_table<
+//    std::map<std::string, int>, std::string, int>() {
+//  static any_map_v_table<std::string, int> v_table{
+//      std::in_place_type<std::map<std::string, int>>};
+//  return &v_table;
+//}
+//static auto __ =
+//    anyxx::bind_v_table_to_meta_data<any_map_v_table<std::string, int>,
+//                                     std::map<std::string, int>>();
 
 template <>
 any_mutable_map_v_table<std::string, int>*
