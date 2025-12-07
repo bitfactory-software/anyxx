@@ -58,8 +58,10 @@ using namespace anyxx;
 }  // namespace
 
 ANY_META_CLASS_STATIC(int)
+ANY_META_CLASS_STATIC(double)
 ANY_META_CLASS_STATIC(std::map<int, double>)
 ANY_META_CLASS_STATIC(std::map<std::string, int>)
+ANY_META_CLASS_STATIC(std::map<std::string, double>)
 ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
@@ -179,12 +181,12 @@ TEST_CASE("any template test2") {
 
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  // auto test_any_map_to_tstring_lambda =
-  //     [](any_map_to_tstring<const_observer, std::string> map_i) {
-  //       REQUIRE(map_i.at("one").to_string() == "1.000000");
-  //       REQUIRE(map_i.at("two").to_string() == "2.000000");
-  //     };
-  // test_any_map_to_tstring_lambda(map_string_to_int);
+   auto test_any_map_to_tstring_lambda =
+       [](any_map_to_tstring<const_observer, std::string> map_i) {
+         REQUIRE(map_i.at("one").to_string() == "1.000000");
+         REQUIRE(map_i.at("two").to_string() == "2.000000");
+       };
+   test_any_map_to_tstring_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test3") {
