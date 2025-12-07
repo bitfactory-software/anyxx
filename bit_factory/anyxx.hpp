@@ -2502,5 +2502,5 @@ struct dispatch<R(Args...)> {
 #endif
 
 #define ANY_MODEL_STATIC(class_, interface_, interface_namespace_) \
-  ANY_MODEL_FWD(, class_, interface_, interface_namespace_)        \
+/  ANY_MODEL_FWD(, class_, interface_, interface_namespace_)        \
   ANY_MODEL(, class_, interface_, interface_namespace_)

@@ -126,11 +126,31 @@ TEST_CASE("any template test3") {
   REQUIRE(map[2]["one"][4] == 8.28);
 }
 
+#define __ANY_TEMPLATE_MODEL__(class_, t, all, interface_namespace_, interface_) \
+  template <>                                                                  \
+      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *     \
+      interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(          \
+          interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>() {                    \
+    static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t)  \
+        v_table{std::in_place_type<_detail_REMOVE_PARENS(class_)>};            \
+    return &v_table;                                                           \
+  }
+
+#define __ANY_MODEL_MAP(class_, interface_, t)                   \
+template <> \
+struct interface_##_concept_map< _detail_ANYXX_TEMPLATE_ARGS(t) > : \
+interface_##_default_concept_map< _detail_ANYXX_TEMPLATE_ARGS(t) >
+
+#define ANY_MODEL_MAP(class_, interface_, t)                   \
+  __ANY_MODEL_MAP(class_, interface_, _add_head(class_, t))                   \
+
+
 namespace {
 
-template <>
-struct any_map_concept_map<std::map<int, double>, int, double>
-    : any_map_default_concept_map<std::map<int, double>, int, double> {
+//template <>
+//struct any_map_concept_map<std::map<int, double>, int, double>
+//    : any_map_default_concept_map<std::map<int, double>, int, double> {
+ANY_MODEL_MAP((std::map<int, double>), any_map, ((int), (double))) {
   double const& at(std::map<int, double> const& x, int i) { return x.at(i); };
 };
 }  // namespace
