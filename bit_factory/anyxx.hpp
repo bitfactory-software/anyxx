@@ -217,7 +217,7 @@
   struct n##_concept_map                                                       \
       : n##_default_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};         \
                                                                                \
-  struct n##_v_table_is_inline;                                                \
+  struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
                                                                                \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;               \
@@ -262,7 +262,7 @@
                                                                                \
     template <typename Concrete>                                               \
     static auto imlpementation() {                                             \
-      if constexpr (anyxx::is_type_complete<n##_v_table_is_inline> ||          \
+      if constexpr (anyxx::is_type_complete<n##_v_table_as_static_inline> ||   \
                     !anyxx::is_in_dll_mode) {                                  \
         return anyxx::v_table_instance_inline<v_table_t, Concrete>();          \
       } else {                                                                 \
@@ -476,7 +476,8 @@
   ANY_INLINE_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, \
                            BASE, (), l)
 
-#define ANY_INLINE(n, ...) ANY_INLINE_(n, ::anyxx::erased_data_holder, __VA_ARGS__)
+#define ANY_INLINE(n, ...) \
+  ANY_INLINE_(n, ::anyxx::erased_data_holder, __VA_ARGS__)
 
 #define ANY_INLINE_TEMPLATE_(t, n, BASE, btpl, l)                              \
   ANY_INLINE_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),      \
@@ -485,7 +486,6 @@
 
 #define ANY_INLINE_TEMPLATE(t, n, l) \
   ANY_INLINE_TEMPLATE_(t, n, ::anyxx::erased_data_holder, (), l)
-
 
 #define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)                 \
   static_assert(anyxx::missing_trait_error<T>::not_specialized, \

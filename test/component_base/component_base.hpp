@@ -28,7 +28,6 @@ namespace test::component_base {
 
 ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)))
 ANY(get_value_i, (ANY_METHOD(double, get_value, (), const)))
-//struct set_value_i_v_table_is_inline {};
 ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double), )))
 
 COMPONENT_BASE_EXPORT
