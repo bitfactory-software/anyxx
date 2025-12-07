@@ -17,6 +17,8 @@ ANY_MODEL_MAP((circle), architecture::shape) {
     architecture::draw::circle(surface, self.center, self.radius);
   };
 };
+//ANY_DISPATCH_FOR_FWD(, circle, whole_picture::architecture, shape)
+ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 
 shape shapes::make_circle(architecture::point center, int radius) {
   return std::make_shared<circle>(center, radius);

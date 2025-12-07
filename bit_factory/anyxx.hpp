@@ -2415,35 +2415,34 @@ struct dispatch<R(Args...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_DISPATCH_COUNT_FWD(export_, ns_, c_)   \
-  namespace ns_ {                                  \
-  struct c_;                                       \
-  }                                                \
-  namespace anyxx {                                \
-  template <>                                      \
-  export_ std::size_t& dispatchs_count<ns_::c_>(); \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \
+  namespace ns_ {}                                             \
+  namespace anyxx {                                            \
+  template <>                                                  \
+  export_ std::size_t& dispatchs_count<ns_::any_##_v_table>(); \
   }
 
-#define ANY_DISPATCH_COUNT(ns_, c_)                \
-  template <>                                      \
-  std::size_t& anyxx::dispatchs_count<ns_::c_>() { \
-    static std::size_t count = 0;                  \
-    return count;                                  \
+#define ANY_DISPATCH_COUNT(ns_, any_)                          \
+  template <>                                                  \
+  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table>() { \
+    static std::size_t count = 0;                              \
+    return count;                                              \
   }
 
-#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, interface_) \
+#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \
+                             interface_)                            \
   namespace anyxx {                                                 \
   template <>                                                       \
-  export_ anyxx::dispatch_table_t*                                  \
-  anyxx::dispatch_table_instance<interface_##_v_table, class_>();   \
+  export_ anyxx::dispatch_table_t* anyxx::dispatch_table_instance<  \
+      interface_namespace_::interface_##_v_table, class_>();        \
   }
 
-#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)      \
-  template <>                                                           \
-  anyxx::dispatch_table_t*                                              \
-  anyxx::dispatch_table_instance<interface_##_v_table, class_>() {      \
-    return dispatch_table_instance_implementation<interface_##_v_table, \
-                                                  class_>();            \
+#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \
+  template <>                                                      \
+  anyxx::dispatch_table_t* anyxx::dispatch_table_instance<         \
+      interface_namespace_::interface_##_v_table, class_>() {      \
+    return dispatch_table_instance_implementation<                 \
+        interface_namespace_::interface_##_v_table, class_>();     \
   }
 
 #else
@@ -2479,7 +2478,6 @@ struct dispatch<R(Args...)> {
   export_ interface_##_v_table* _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME( \
       interface_)<class_>();                                              \
   }
-
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)       \
   template <>                                                     \

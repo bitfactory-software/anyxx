@@ -11,7 +11,6 @@
 #ifdef _MSVC_LANG
 #undef CORE_EXPORT
 #define CORE_EXPORT __declspec(dllexport)
-#pragma message("core -> dll")
 #endif
 #endif
 

@@ -25,6 +25,7 @@ ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::surface) {
     self.content.write(p, ch);
   };
 };
+ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, shape)
 
 shape shapes::make_picture(architecture::point top_left,
                            core::surface& content) {

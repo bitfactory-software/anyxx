@@ -16,6 +16,7 @@ ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
     architecture::draw::line(surface, self.p1, self.p2);
   };
 };
+ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
 
 shape shapes::make_line(architecture::point p1, architecture::point p2) {
   return std::make_shared<line>(p1, p2);

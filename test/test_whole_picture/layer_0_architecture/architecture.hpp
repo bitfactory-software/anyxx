@@ -2,6 +2,17 @@
 
 #include <bit_factory/anyxx.hpp>
 
+#ifndef ARCHITECTURE_EXPORT
+#define ARCHITECTURE_EXPORT
+#endif
+
+#ifdef ARCHITECTURE_SHARED
+#ifdef _MSVC_LANG
+#undef ARCHITECTURE_EXPORT
+#define ARCHITECTURE_EXPORT __declspec(dllexport)
+#endif
+#endif
+
 namespace whole_picture::architecture {
 
 struct point {
@@ -25,6 +36,9 @@ ANY(surface, (ANY_METHOD(void, write, (point, char), )))
 using mutable_observed_surface = surface<anyxx::mutable_observer>;
 using unique_surface = surface<anyxx::unique>;
 
+struct shape_has_dispatch {};
 ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const)))
 
 }  // namespace whole_picture::architecture
+
+ANY_DISPATCH_COUNT_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture, shape)
