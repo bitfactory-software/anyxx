@@ -210,12 +210,12 @@
   struct n;                                                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
-  struct n##_default_model_map {                                             \
+  struct n##_default_model_map {                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
-  struct n##_model_map                                                       \
-      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};         \
+  struct n##_model_map                                                         \
+      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};           \
                                                                                \
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
@@ -248,7 +248,7 @@
     template <typename Concrete>                                               \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete)       \
         : v_table_base_t(concrete) {                                           \
-      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;  \
+      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;    \
                                                                                \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \
                                                                                \
@@ -386,90 +386,90 @@
   struct interface_name##_v_table;                       \
   }
 
-#define ANY_INLINE_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl,  \
-                                 l)                                           \
-                                                                              \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                          \
-  struct n;                                                                   \
-                                                                              \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                          \
-  struct n##_default_model_map {                                            \
-    _detail_ANYXX_MAP_FUNCTIONS(l)                                            \
-  };                                                                          \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                          \
-  struct n##_model_map                                                      \
-      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};        \
-                                                                              \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;              \
-                                                                              \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table {             \
-    using v_table_t = n##_v_table;                                            \
-                                                                              \
-    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                   \
-                                                                              \
-    template <typename Concrete>                                              \
-    explicit(false) n##_v_table(std::in_place_type_t<Concrete>) {             \
-      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>; \
-                                                                              \
-      _detail_ANYXX_V_TABLE_LAMBDAS(l);                                       \
-    }                                                                         \
-  };                                                                          \
-                                                                              \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                          \
-  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {            \
-    using erased_data_t = ErasedData;                                         \
-    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;       \
-    using v_table_t =                                                         \
-        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);          \
-                                                                              \
-    using base_t::erased_data_;                                               \
-    v_table_t v_table_;                                                       \
-                                                                              \
-    template <typename ConstructedWith>                                       \
-    explicit(false) n(ConstructedWith&& v)                                    \
-      requires anyxx::constructibile_for<ConstructedWith, ErasedData>         \
-        : base_t(std::forward<ConstructedWith>(v)),                           \
-          v_table_(std::in_place_type<                                        \
-                   anyxx::unerased<ErasedData, ConstructedWith>>) {}          \
-    template <typename V>                                                     \
-    n(std::in_place_t, V&& v)                                                 \
-        : base_t(std::in_place, std::forward<V>(v)),                          \
-          v_table_(std::in_place_type<anyxx::unerased<ErasedData, V>>) {}     \
-    template <typename T, typename... Args>                                   \
-    explicit(false) n(std::in_place_type_t<T>, Args&&... args)                \
-        : base_t(std::in_place_type<T>, std::forward<Args>(args)...),         \
-          v_table_(std::in_place_type<anyxx::unerased<ErasedData, T>>) {}     \
-    template <typename Other>                                                 \
-    explicit(false) n(const Other& other)                                     \
-      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&     \
-               anyxx::borrowable_from<erased_data_t,                          \
-                                      typename Other::erased_data_t>)         \
-        : base_t(other),                                                      \
-          v_table_(static_cast<v_table_t const&>(other.v_table_)) {}          \
-    template <anyxx::is_any Other>                                            \
-    explicit(false) n(Other&& other) noexcept                                 \
-      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&     \
-               anyxx::moveable_from<erased_data_t,                            \
-                                    typename Other::erased_data_t>)           \
-        : base_t(std::forward<Other>(other)),                                 \
-          v_table_(static_cast<v_table_t const&>(other.v_table_)) {}          \
-                                                                              \
-    auto get_v_table_ptr(this auto& self) { return &self.v_table_; }          \
-    _detail_ANYXX_METHODS(l)                                                  \
-                                                                              \
-        ~n() = default;                                                       \
-    n() = default;                                                            \
-    n(n const&) = default;                                                    \
-    n(n&&) = default;                                                         \
-    n& operator=(n const&) = default;                                         \
-    n& operator=(n&&) = default;                                              \
-    template <anyxx::is_erased_data Other>                                    \
-    friend class anyxx::any_base;                                             \
-    template <anyxx::is_any To, anyxx::is_any From>                           \
-    friend To anyxx::unchecked_downcast_to(From from)                         \
-      requires(std::derived_from<To, From>);                                  \
-    template <anyxx::is_erased_data Other>                                    \
-    using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                    \
+#define ANY_INLINE_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl, \
+                                 l)                                          \
+                                                                             \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                         \
+  struct n;                                                                  \
+                                                                             \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                         \
+  struct n##_default_model_map {                                             \
+    _detail_ANYXX_MAP_FUNCTIONS(l)                                           \
+  };                                                                         \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                         \
+  struct n##_model_map                                                       \
+      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};         \
+                                                                             \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;             \
+                                                                             \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table {            \
+    using v_table_t = n##_v_table;                                           \
+                                                                             \
+    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                  \
+                                                                             \
+    template <typename Concrete>                                             \
+    explicit(false) n##_v_table(std::in_place_type_t<Concrete>) {            \
+      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;  \
+                                                                             \
+      _detail_ANYXX_V_TABLE_LAMBDAS(l);                                      \
+    }                                                                        \
+  };                                                                         \
+                                                                             \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                         \
+  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {           \
+    using erased_data_t = ErasedData;                                        \
+    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;      \
+    using v_table_t =                                                        \
+        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);         \
+                                                                             \
+    using base_t::erased_data_;                                              \
+    v_table_t v_table_;                                                      \
+                                                                             \
+    template <typename ConstructedWith>                                      \
+    explicit(false) n(ConstructedWith&& v)                                   \
+      requires anyxx::constructibile_for<ConstructedWith, ErasedData>        \
+        : base_t(std::forward<ConstructedWith>(v)),                          \
+          v_table_(std::in_place_type<                                       \
+                   anyxx::unerased<ErasedData, ConstructedWith>>) {}         \
+    template <typename V>                                                    \
+    n(std::in_place_t, V&& v)                                                \
+        : base_t(std::in_place, std::forward<V>(v)),                         \
+          v_table_(std::in_place_type<anyxx::unerased<ErasedData, V>>) {}    \
+    template <typename T, typename... Args>                                  \
+    explicit(false) n(std::in_place_type_t<T>, Args&&... args)               \
+        : base_t(std::in_place_type<T>, std::forward<Args>(args)...),        \
+          v_table_(std::in_place_type<anyxx::unerased<ErasedData, T>>) {}    \
+    template <typename Other>                                                \
+    explicit(false) n(const Other& other)                                    \
+      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&    \
+               anyxx::borrowable_from<erased_data_t,                         \
+                                      typename Other::erased_data_t>)        \
+        : base_t(other),                                                     \
+          v_table_(static_cast<v_table_t const&>(other.v_table_)) {}         \
+    template <anyxx::is_any Other>                                           \
+    explicit(false) n(Other&& other) noexcept                                \
+      requires(std::derived_from<typename Other::v_table_t, v_table_t> &&    \
+               anyxx::moveable_from<erased_data_t,                           \
+                                    typename Other::erased_data_t>)          \
+        : base_t(std::forward<Other>(other)),                                \
+          v_table_(static_cast<v_table_t const&>(other.v_table_)) {}         \
+                                                                             \
+    auto get_v_table_ptr(this auto& self) { return &self.v_table_; }         \
+    _detail_ANYXX_METHODS(l)                                                 \
+                                                                             \
+        ~n() = default;                                                      \
+    n() = default;                                                           \
+    n(n const&) = default;                                                   \
+    n(n&&) = default;                                                        \
+    n& operator=(n const&) = default;                                        \
+    n& operator=(n&&) = default;                                             \
+    template <anyxx::is_erased_data Other>                                   \
+    friend class anyxx::any_base;                                            \
+    template <anyxx::is_any To, anyxx::is_any From>                          \
+    friend To anyxx::unchecked_downcast_to(From from)                        \
+      requires(std::derived_from<To, From>);                                 \
+    template <anyxx::is_erased_data Other>                                   \
+    using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                   \
   };
 
 #define ANY_INLINE_(n, BASE, l)                                           \
@@ -487,16 +487,16 @@
 #define ANY_INLINE_TEMPLATE(t, n, l) \
   ANY_INLINE_TEMPLATE_(t, n, ::anyxx::erased_data_holder, (), l)
 
-#define __ANY_MODEL_MAP(class_, interface_, t)                   \
-template <> \
-struct interface_##_model_map< _detail_ANYXX_TEMPLATE_ARGS(t) > : \
-interface_##_default_model_map< _detail_ANYXX_TEMPLATE_ARGS(t) >
+#define __ANY_MODEL_MAP(class_, interface_, t)                  \
+  template <>                                                   \
+  struct interface_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
+      : interface_##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
 
-#define ANY_TEMPLATE_MODEL_MAP(class_, interface_, t)                   \
-  __ANY_MODEL_MAP(class_, interface_, _add_head(class_, t))                   \
+#define ANY_TEMPLATE_MODEL_MAP(class_, interface_, t) \
+  __ANY_MODEL_MAP(class_, interface_, _add_head(class_, t))
 
-#define ANY_MODEL_MAP(class_, interface_)                   \
-  __ANY_MODEL_MAP(class_, interface_, class_)                   \
+#define ANY_MODEL_MAP(class_, interface_) \
+  __ANY_MODEL_MAP(class_, interface_, class_)
 
 #define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)                 \
   static_assert(anyxx::missing_trait_error<T>::not_specialized, \
@@ -2493,7 +2493,8 @@ struct dispatch<R(Args...)> {
 
 #define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_) \
   template <>                                                                  \
-      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *     \
+      interface_namespace_::interface_##_v_table                               \
+      _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *                          \
       interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(          \
           interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>() {                    \
     static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t)  \
@@ -2513,5 +2514,5 @@ struct dispatch<R(Args...)> {
 #endif
 
 #define ANY_MODEL_STATIC(class_, interface_, interface_namespace_) \
-/  ANY_MODEL_FWD(, class_, interface_, interface_namespace_)        \
-  ANY_MODEL(, class_, interface_, interface_namespace_)
+  / ANY_MODEL_FWD(, class_, interface_, interface_namespace_)      \
+          ANY_MODEL(, class_, interface_, interface_namespace_)

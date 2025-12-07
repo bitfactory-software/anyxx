@@ -3,6 +3,7 @@
 #include <map>  // NOLINT
 #include <string>
 
+
 #include "test/component_base/templated_anys.hpp"
 
 #ifdef _MSC_VER
@@ -25,6 +26,9 @@ struct X {
   std::string s_;
   [[nodiscard]] std::string to_string() const { return s_; }
 };
+}
+
+namespace {
 
 namespace template_test {
 
@@ -49,6 +53,7 @@ using namespace test::component_base;
 using namespace anyxx;
 
 }  // namespace
+
 
 ANY_META_CLASS_STATIC(int)
 ANY_META_CLASS_STATIC(double)

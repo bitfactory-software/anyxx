@@ -1,3 +1,5 @@
+#pragma once
+
 #include <bit_factory/anyxx.hpp>
 
 namespace test::component_base {
