@@ -108,6 +108,9 @@ using KEY4 = test::component_base::any_map<anyxx::const_observer, int, double>;
 ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),((std::string),(KEY4)), test::component_base, any_recursive_map)
 using KEY5 = test::component_base::any_mutable_map<anyxx::const_observer, int, double>;
 ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),((std::string),(KEY5)), test::component_base, any_recursive_map)
+using KEY6 = test::component_base::any_mutable_map<anyxx::mutable_observer,
+                                                       int, double>;
+ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),((std::string),(KEY6)), test::component_base, any_mutable_recursive_map)
 
 static auto __ =
     anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<std::string, int>,
@@ -118,21 +121,6 @@ static auto __ = anyxx::bind_v_table_to_meta_data<any_map_v_table<int, double>,
 static auto __ =
     anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<int, double>,
                                      std::map<int, double>>();
-
-template <>
-test::component_base::any_mutable_recursive_map_v_table<
-    std::string, test::component_base::any_mutable_map<anyxx::mutable_observer,
-                                                       int, double>>*
-test::component_base::make_any_mutable_recursive_map_v_table<
-    std::map<std::string, std::map<int, double>>, std::string,
-    test::component_base::any_mutable_map<anyxx::mutable_observer, int,
-                                          double>>() {
-  static test::component_base::any_mutable_recursive_map_v_table<
-      std::string, test::component_base::any_mutable_map<
-                       anyxx::mutable_observer, int, double>>
-      v_table{std::in_place_type<std::map<std::string, std::map<int, double>>>};
-  return &v_table;
-}
 
 //[](any_mutable_recursive_map<
 //    mutable_observer, int,
