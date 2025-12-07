@@ -76,30 +76,6 @@ struct test::component_base::any_map_concept_map<std::map<std::string, int>,
   };
 };
 
-#define __ANY_REGISTER_TEMPLATE_MODEL(class_, t, all, interface_)         \
-  namespace {                                                             \
-  static auto __ = anyxx::bind_v_table_to_meta_data<                      \
-      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t), \
-      _detail_REMOVE_PARENS(class_)>();                                   \
-  }
-
-#define ANY_REGISTER_TEMPLATE_MODEL(class_, interface_, t) \
-  __ANY_REGISTER_TEMPLATE_MODEL(class_, t, _add_head(class_, t), interface_)
-
-#define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_) \
-  template <>                                                                  \
-      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *     \
-      interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(          \
-          interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>() {                    \
-    static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t)  \
-        v_table{std::in_place_type<_detail_REMOVE_PARENS(class_)>};            \
-    return &v_table;                                                           \
-  }
-
-#define ANY_TEMPLATE_MODEL(class_, ins, i, t)                   \
-  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i) \
-  ANY_REGISTER_TEMPLATE_MODEL(class_, ins::i, t)
-
 ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base, any_map,
                    ((std::string), (int)))
 ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base,
