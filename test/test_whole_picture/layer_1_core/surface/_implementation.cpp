@@ -1,18 +1,19 @@
 #include <algorithm>
-#include <test/test_whole_picture/layer_0_architecture/draw/picture.hpp>
-#include <test/test_whole_picture/layer_0_architecture/picture.hpp>
 #include <iostream>
+#include <test/test_whole_picture/layer_0_architecture/draw/picture.hpp>
+#include <test/test_whole_picture/layer_1_core/surface/object.hpp>
 
 using namespace whole_picture;
+using namespace whole_picture::core;
 using namespace whole_picture::architecture;
 
-ANY_META_CLASS(picture)
-ANY_MODEL(picture, whole_picture::architecture, surface);
+ANY_META_CLASS(core::surface)
+ANY_MODEL(core::surface, whole_picture::architecture, surface);
 
-picture::picture(std::size_t size_x, std::size_t size_y)
+core::surface::surface(std::size_t size_x, std::size_t size_y)
     : lines_(size_y, make_line(size_x)) {}
 
-picture::picture(std::initializer_list<std::string_view> const& lines) {
+core::surface::surface(std::initializer_list<std::string_view> const& lines) {
   for (auto l : lines) lines_.emplace_back(l.begin(), l.end());
   auto witdth = std::ranges::fold_left(lines, 0U,
                                        [](std::size_t width, auto const& line) {
@@ -21,11 +22,11 @@ picture::picture(std::initializer_list<std::string_view> const& lines) {
   for (auto& line : lines_) line.resize(witdth);
 }
 
-size picture::get_size() const {
+size core::surface::get_size() const {
   return size{.cx = (int)lines_.at(0).size(), .cy = (int)lines_.size()};
 }
-void picture::write(point p, char ch) { at(p) = ch; }
-void picture::flush() const {
+void core::surface::write(point p, char ch) { at(p) = ch; }
+void core::surface::flush() const {
   for (const auto& line : lines_) {
     for (const auto& ch : line) std::cout << ch;
     std::cout << "\n";

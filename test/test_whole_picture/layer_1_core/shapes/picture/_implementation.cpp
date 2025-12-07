@@ -27,6 +27,6 @@ ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::surface) {
 };
 
 shape shapes::make_picture(architecture::point top_left,
-                           architecture::picture& content) {
+                           core::surface& content) {
   return std::make_shared<picture>(top_left, content);
 }
