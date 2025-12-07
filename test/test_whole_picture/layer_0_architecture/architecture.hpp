@@ -1,23 +1,6 @@
 #pragma once
 
 #include <bit_factory/anyxx.hpp>
-#include <string>
-
-#ifdef __clang__
-#pragma GCC diagnostic ignored "-W#pragma-messages"
-#endif
-
-#ifndef ARCHITECTURE_EXPORT
-#define ARCHITECTURE_EXPORT
-#endif
-
-#ifdef ARCHITECTURE_SHARED
-#ifdef _MSVC_LANG
-#undef ARCHITECTURE_EXPORT
-#define ARCHITECTURE_EXPORT __declspec(dllexport)
-#pragma message("architecturue -> dll")
-#endif
-#endif
 
 namespace whole_picture::architecture {
 
