@@ -8,10 +8,13 @@ using namespace anyxx;
 
 #ifndef COMPONENT_BASE_EXPORT
 #define COMPONENT_BASE_EXPORT
+#else
+#pragma message("COMPONENT_BASE_EXPORT not defined.")
 #endif
 
+
 #ifdef COMPONENT_BASE_SHARED
-#ifdef _MSVC_LANG
+#ifdef _MSC_VER
 #undef COMPONENT_BASE_EXPORT
 #define COMPONENT_BASE_EXPORT __declspec(dllexport)
 #pragma message("component_base -> dll")

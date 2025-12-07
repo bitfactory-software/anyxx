@@ -21,6 +21,8 @@ static X a_x{3.14};
 
 using namespace test::component_base;
 
+
+
 ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
               test::component_base, get_value_i)
 //ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,

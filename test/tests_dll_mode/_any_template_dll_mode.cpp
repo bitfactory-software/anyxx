@@ -57,9 +57,6 @@ using namespace anyxx;
 
 ANY_META_CLASS_STATIC(int)
 ANY_META_CLASS_STATIC(double)
-ANY_META_CLASS_STATIC(std::map<int, double>)
-ANY_META_CLASS_STATIC(std::map<std::string, int>)
-ANY_META_CLASS_STATIC(std::map<std::string, double>)
 ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
@@ -72,13 +69,6 @@ ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
     return x.at(i);
   };
 };
-
-ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base,
-                   any_mutable_map, ((std::string), (int)))
-ANY_TEMPLATE_MODEL((std::map<int, double>), test::component_base, any_map,
-                   ((int), (double)))
-ANY_TEMPLATE_MODEL((std::map<int, double>), test::component_base,
-                   any_mutable_map, ((int), (double)))
 
 using KEY1 = test::component_base::any_recursive_map<
     anyxx::const_observer, std::string,

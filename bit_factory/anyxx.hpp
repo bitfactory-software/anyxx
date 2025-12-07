@@ -2480,6 +2480,7 @@ struct dispatch<R(Args...)> {
       interface_)<class_>();                                              \
   }
 
+
 #define ANY_MODEL(class_, interface_namespace_, interface_)       \
   template <>                                                     \
   interface_namespace_::interface_##_v_table*                     \
