@@ -2431,7 +2431,7 @@ struct dispatch<R(Args...)> {
     return count;                                  \
   }
 
-#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_) \
+#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, interface_) \
   namespace anyxx {                                                 \
   template <>                                                       \
   export_ anyxx::dispatch_table_t*                                  \

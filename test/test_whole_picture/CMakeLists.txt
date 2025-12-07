@@ -9,10 +9,8 @@ target_link_libraries(layer_0_architecture
             anyxx::anyxx_options
             anyxx::anyxx
 )
-target_compile_definitions(layer_0_architecture PRIVATE ANY_DLL_MODE) # ANY_DLL_MODE works also for  static builds!
-if (BUILD_SHARED_LIBS AND MSVC)
-    target_compile_definitions(layer_0_architecture PRIVATE ARCHITECTURE_SHARED)
-endif()
+target_compile_definitions(layer_0_architecture PUBLIC ANY_DLL_MODE) # ANY_DLL_MODE works also for  static builds!
+target_compile_definitions(layer_0_architecture PRIVATE ARCHITECTURE_SHARED)
 set_target_properties(layer_0_architecture PROPERTIES FOLDER "_example_whole_picture")
 target_include_directories(layer_0_architecture PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
@@ -29,10 +27,7 @@ target_link_libraries(layer_1_core
             anyxx::anyxx
             layer_0_architecture
 )
-target_compile_definitions(layer_1_core PRIVATE ANY_DLL_MODE) # ANY_DLL_MODE works also for  static builds!
-if (BUILD_SHARED_LIBS AND MSVC)
-    target_compile_definitions(layer_1_core PRIVATE CORE_SHARED)
-endif()
+target_compile_definitions(layer_1_core PRIVATE CORE_SHARED)
 set_target_properties(layer_1_core PROPERTIES FOLDER "_example_whole_picture")
 target_include_directories(layer_1_core PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
@@ -48,7 +43,6 @@ target_link_libraries(test_whole_picture
             layer_1_core
             Catch2::Catch2WithMain
 )
-target_compile_definitions(test_whole_picture PRIVATE ANY_DLL_MODE) # ANY_DLL_MODE works also for  static builds!
 set_target_properties(test_whole_picture PROPERTIES FOLDER "_example_whole_picture")
 
 catch_discover_tests(test_whole_picture)

@@ -7,6 +7,11 @@
 #include <vector>
 #include <string_view>
 
+#ifdef  _MSC_VER
+#pragma warning(disable : 4251)
+#endif  //  _MSC_VER
+
+
 namespace whole_picture::architecture {
 
 class ARCHITECTURE_EXPORT picture {
