@@ -3,7 +3,9 @@
 #include <bit_factory/anyxx.hpp>
 #include <string>
 
-using namespace anyxx;
+#ifdef __clang__
+#pragma GCC diagnostic ignored "-W#pragma-messages"
+#endif
 
 #ifndef ARCHITECTURE_EXPORT
 #define ARCHITECTURE_EXPORT

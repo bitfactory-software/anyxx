@@ -1,6 +1,9 @@
 #include <bit_factory/anyxx.hpp>
 #include <string>
-using namespace anyxx;
+
+#ifdef __clang__
+#pragma GCC diagnostic ignored "-W#pragma-messages"
+#endif
 
 #ifndef ANY_DLL_MODE
 #pragma message("ERROR! usage of component_base needs #define ANY_DLL_MODE")
@@ -8,10 +11,7 @@ using namespace anyxx;
 
 #ifndef COMPONENT_BASE_EXPORT
 #define COMPONENT_BASE_EXPORT
-#else
-#pragma message("COMPONENT_BASE_EXPORT not defined.")
 #endif
-
 
 #ifdef COMPONENT_BASE_SHARED
 #ifdef _MSC_VER

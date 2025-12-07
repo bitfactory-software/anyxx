@@ -16,10 +16,10 @@ target_link_libraries(
           Catch2::Catch2WithMain)
 
 add_custom_command(
-    TARGET tests_dll_mode
-    PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:tests_dll_mode> $<TARGET_FILE_DIR:tests_dll_mode>
-    COMMAND_EXPAND_LISTS)
+   TARGET tests_dll_mode
+   PRE_BUILD
+   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:tests_dll_mode> $<TARGET_FILE_DIR:tests_dll_mode>
+   COMMAND_EXPAND_LISTS)
 
 # automatically discover tests that are defined in catch based test files you can modify the unittests. Set TEST_PREFIX
 # to whatever you want, or use different for different binaries
