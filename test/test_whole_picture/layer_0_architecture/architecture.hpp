@@ -44,6 +44,4 @@ using unique_surface = surface<anyxx::unique>;
 
 ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const)))
 
-ARCHITECTURE_EXPORT std::string hello();
-
 }  // namespace whole_picture::architecture

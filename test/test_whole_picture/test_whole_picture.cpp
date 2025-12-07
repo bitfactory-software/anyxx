@@ -25,7 +25,6 @@ ANY_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 }  // namespace
 
 TEST_CASE("example 1 core") {
-  std::cout << whole_picture::core::hello() << "\n";
   std::cout << get_meta_data<architecture::picture>().get_type_info().name()
             << "\n";
   std::cout << get_meta_data<whole_picture::core::shapes::picture>()
