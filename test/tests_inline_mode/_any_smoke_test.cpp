@@ -71,12 +71,11 @@ struct regular_polygon {
   }
 };
 
-template <>
-struct any_drawable_concept_map<circle> {
+ANY_MODEL_MAP((circle), any_drawable) {
   auto draw([[maybe_unused]] circle const& x, position p) const {
-    std::cout << " A Circle Is Recorded VIA circle_any_drawable_concept_map At "
+    std::cout << " A Circle Is Recorded VIA circle_any_drawable_model_map At "
               << p.x << " " << p.y << std::endl;
-  }
+  };  // namespace smoke_test
 };
 
 void print_any_shape_const_observer(const any_shape<const_observer> s) {

@@ -11,23 +11,19 @@ using namespace anyxx;
 using namespace anyxx;
 
 ANY_META_CLASS(shapes::picture)
-ANY_MODEL(shapes::picture, whole_picture::architecture, shape);
 ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
-
-template <>
-struct architecture::shape_concept_map<shapes::picture>
-    : architecture::shape_default_concept_map<picture> {
+ANY_MODEL(shapes::picture, whole_picture::architecture, shape);
+ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::shape) {
   void draw(shapes::picture const& self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::picture(surface, self.top_left, self.content);
-  }
+  };
 };
-template <>
-struct architecture::surface_concept_map<shapes::picture>
-    : architecture::surface_default_concept_map<picture> {
-  void write(shapes::picture& self, point p, char ch) {
+ANY_MODEL(shapes::picture, whole_picture::architecture, surface);
+ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::surface) {
+  void write(shapes::picture & self, point p, char ch) {
     self.content.write(p, ch);
-  }
+  };
 };
 
 shape shapes::make_picture(architecture::point top_left,

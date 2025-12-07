@@ -10,14 +10,11 @@ using namespace anyxx;
 
 ANY_META_CLASS(line)
 ANY_MODEL(shapes::line, whole_picture::architecture, shape);
-
-template <>
-struct architecture::shape_concept_map<line>
-    : architecture::shape_default_concept_map<line> {
+ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
   void draw(line const& self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::line(surface, self.p1, self.p2);
-  }
+  };
 };
 
 shape shapes::make_line(architecture::point p1, architecture::point p2) {

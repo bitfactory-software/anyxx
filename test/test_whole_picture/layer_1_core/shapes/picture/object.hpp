@@ -15,7 +15,6 @@ struct picture : anyxx::members<picture> {
   architecture::picture content;
 };
 
-
 }  // namespace whole_picture::core::shapes
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)

@@ -210,12 +210,12 @@
   struct n;                                                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
-  struct n##_default_concept_map {                                             \
+  struct n##_default_model_map {                                             \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
-  struct n##_concept_map                                                       \
-      : n##_default_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};         \
+  struct n##_model_map                                                       \
+      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};         \
                                                                                \
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
@@ -248,7 +248,7 @@
     template <typename Concrete>                                               \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete)       \
         : v_table_base_t(concrete) {                                           \
-      using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;  \
+      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;  \
                                                                                \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \
                                                                                \
@@ -393,12 +393,12 @@
   struct n;                                                                   \
                                                                               \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                          \
-  struct n##_default_concept_map {                                            \
+  struct n##_default_model_map {                                            \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                            \
   };                                                                          \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                          \
-  struct n##_concept_map                                                      \
-      : n##_default_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};        \
+  struct n##_model_map                                                      \
+      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};        \
                                                                               \
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;              \
                                                                               \
@@ -409,7 +409,7 @@
                                                                               \
     template <typename Concrete>                                              \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete>) {             \
-      using concept_map = n##_concept_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>; \
+      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>; \
                                                                               \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                       \
     }                                                                         \
@@ -486,6 +486,17 @@
 
 #define ANY_INLINE_TEMPLATE(t, n, l) \
   ANY_INLINE_TEMPLATE_(t, n, ::anyxx::erased_data_holder, (), l)
+
+#define __ANY_MODEL_MAP(class_, interface_, t)                   \
+template <> \
+struct interface_##_model_map< _detail_ANYXX_TEMPLATE_ARGS(t) > : \
+interface_##_default_model_map< _detail_ANYXX_TEMPLATE_ARGS(t) >
+
+#define ANY_TEMPLATE_MODEL_MAP(class_, interface_, t)                   \
+  __ANY_MODEL_MAP(class_, interface_, _add_head(class_, t))                   \
+
+#define ANY_MODEL_MAP(class_, interface_)                   \
+  __ANY_MODEL_MAP(class_, interface_, class_)                   \
 
 #define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)                 \
   static_assert(anyxx::missing_trait_error<T>::not_specialized, \

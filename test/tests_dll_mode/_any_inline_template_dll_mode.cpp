@@ -6,30 +6,29 @@
 namespace {
 
 ANY_INLINE_TEMPLATE(((KEY), (VALUE)), any_map,
-             (ANY_METHOD(VALUE const&, at, (KEY), const),
-              ANY_METHOD(std::size_t, size, (), const)))
+                    (ANY_METHOD(VALUE const&, at, (KEY), const),
+                     ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_INLINE_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, (KEY, VALUE),
-              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY), ),
-               ANY_OP(VALUE&, [], (KEY), )))
+                     (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY), ),
+                      ANY_OP(VALUE&, [], (KEY), )))
 
 ANY_INLINE_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY), const),
-              ANY_METHOD(std::size_t, size, (), const)))
+                    (ANY_METHOD(VALUE, at, (KEY), const),
+                     ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_INLINE_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY), ),
-              ANY_METHOD(std::size_t, size, (), const)))
+                    (ANY_METHOD(VALUE, at, (KEY), ),
+                     ANY_METHOD(std::size_t, size, (), const)))
 
-}
+}  // namespace
 
 static_assert(anyxx::is_in_dll_mode);
 
 namespace {
 
 template <typename KEY, typename VALUE>
-void test_any_map_template(
-    any_map<anyxx::const_observer, KEY, VALUE> map_i) {
+void test_any_map_template(any_map<anyxx::const_observer, KEY, VALUE> map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -50,19 +49,12 @@ ANY_TEMPLATE(((KEY)), any_map_to_tstring,
              (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY),
                          const)))
 
-template <>
-struct any_to_tstring_concept_map<int>
-    : any_to_tstring_default_concept_map<int> {
+ANY_MODEL_MAP((int), any_to_tstring) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-template <>
-struct any_to_tstring_concept_map<double>
-    : any_to_tstring_default_concept_map<double> {
+ANY_MODEL_MAP((double), any_to_tstring) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
-template <>
-struct any_to_tstring_concept_map<const double>
-    : any_to_tstring_concept_map<double> {};
 
 }  // namespace template_test
 
@@ -70,11 +62,8 @@ using namespace anyxx;
 
 }  // namespace
 
-template <>
-struct any_map_concept_map<std::map<std::string, int>,
-                                                 std::string, int>
-    : any_map_default_concept_map<
-          std::map<std::string, int>, std::string, int> {
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
+                       ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string i) {
     return x.at(i);
   };

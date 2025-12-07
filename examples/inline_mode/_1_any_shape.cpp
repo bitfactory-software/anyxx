@@ -65,11 +65,10 @@ ANY_(any_shape, any_drawable,
       ANY_METHOD(double, area, (), const),
       ANY_METHOD(double, perimeter, (), const)))
 
-template <>
-struct any_drawable_concept_map<std::string> {
+ANY_MODEL_MAP((std::string), any_drawable) {
   auto draw(std::string const& x, std::ostream& os, position p) const {
     os << x << " at: " << p << "\n";
-  }
+  };  // namespace shapes_1
 };
 
 void draw(std::ostream& os,

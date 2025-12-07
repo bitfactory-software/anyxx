@@ -36,19 +36,12 @@ ANY_TEMPLATE(((KEY)), any_map_to_tstring,
              (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY),
                          const)))
 
-template <>
-struct any_to_tstring_concept_map<int>
-    : any_to_tstring_default_concept_map<int> {
+ANY_MODEL_MAP((int), any_to_tstring) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-template <>
-struct any_to_tstring_concept_map<double>
-    : any_to_tstring_default_concept_map<double> {
+ANY_MODEL_MAP((double), any_to_tstring) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
-template <>
-struct any_to_tstring_concept_map<const double>
-    : any_to_tstring_concept_map<double> {};
 
 }  // namespace template_test
 
@@ -66,18 +59,15 @@ ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
-template <>
-struct test::component_base::any_map_concept_map<std::map<std::string, int>,
-                                                 std::string, int>
-    : test::component_base::any_map_default_concept_map<
-          std::map<std::string, int>, std::string, int> {
+ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base, any_map,
+                   ((std::string), (int)))
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
+                       ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string i) {
     return x.at(i);
   };
 };
 
-ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base, any_map,
-                   ((std::string), (int)))
 ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base,
                    any_mutable_map, ((std::string), (int)))
 ANY_TEMPLATE_MODEL((std::map<int, double>), test::component_base, any_map,
