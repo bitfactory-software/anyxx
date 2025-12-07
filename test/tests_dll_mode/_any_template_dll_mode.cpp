@@ -72,45 +72,67 @@ struct test::component_base::any_map_concept_map<std::map<std::string, int>,
   };
 };
 
-#define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_)                                 \
-  template <> \
-interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *       \
-interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(  \
-              interface_) <_detail_ANYXX_TEMPLATE_ARGS(all)> (){ \
-  static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) v_table{ \
-      std::in_place_type< _detail_REMOVE_PARENS(class_)> }; \
-  return &v_table; \
-} \
+#define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_) \
+  template <>                                                                  \
+      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *     \
+      interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(          \
+          interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>() {                    \
+    static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t)  \
+        v_table{std::in_place_type<_detail_REMOVE_PARENS(class_)>};            \
+    return &v_table;                                                           \
+  }
 
-#define ANY_TEMPLATE_MODEL(class_, t, ins, i)                                 \
-  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i)       \
+#define ANY_TEMPLATE_MODEL(class_, t, ins, i) \
+  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i)
 
-ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::component_base, any_map)
-ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::component_base, any_mutable_map)
-ANY_TEMPLATE_MODEL((std::map<int, double>),((int),(double)), test::component_base, any_map)
-ANY_TEMPLATE_MODEL((std::map<int, double>),((int),(double)), test::component_base, any_mutable_map)
+ANY_TEMPLATE_MODEL((std::map<std::string, int>), ((std::string), (int)),
+                   test::component_base, any_map)
+ANY_TEMPLATE_MODEL((std::map<std::string, int>), ((std::string), (int)),
+                   test::component_base, any_mutable_map)
+ANY_TEMPLATE_MODEL((std::map<int, double>), ((int), (double)),
+                   test::component_base, any_map)
+ANY_TEMPLATE_MODEL((std::map<int, double>), ((int), (double)),
+                   test::component_base, any_mutable_map)
+
 using KEY1 = test::component_base::any_recursive_map<
-             anyxx::const_observer, std::string,
-             test::component_base::any_mutable_map<anyxx::const_observer, int,
-                                                   double>>;
-ANY_TEMPLATE_MODEL((std::map<int, std::map<std::string, std::map<int, double>>>),((int),(KEY1)), test::component_base, any_recursive_map)
+    anyxx::const_observer, std::string,
+    test::component_base::any_mutable_map<anyxx::const_observer, int, double>>;
+ANY_TEMPLATE_MODEL(
+    (std::map<int, std::map<std::string, std::map<int, double>>>),
+    ((int), (KEY1)), test::component_base, any_recursive_map)
+
 using KEY2 = test::component_base::any_recursive_map<
-        anyxx::const_observer, std::string,
-        test::component_base::any_map<anyxx::const_observer, int,
-                                              double>>;
-ANY_TEMPLATE_MODEL((std::map<int, std::map<std::string, std::map<int, double>>>),((int),(KEY2)), test::component_base, any_recursive_map)
+    anyxx::const_observer, std::string,
+    test::component_base::any_map<anyxx::const_observer, int, double>>;
+ANY_TEMPLATE_MODEL(
+    (std::map<int, std::map<std::string, std::map<int, double>>>),
+    ((int), (KEY2)), test::component_base, any_recursive_map)
+
 using KEY3 = test::component_base::any_mutable_recursive_map<
-             anyxx::mutable_observer, std::string,
-             test::component_base::any_mutable_map<anyxx::mutable_observer, int,
-                                                   double>>;
-ANY_TEMPLATE_MODEL((std::map<int, std::map<std::string, std::map<int, double>>>),((int),(KEY3)), test::component_base, any_mutable_recursive_map)
+    anyxx::mutable_observer, std::string,
+    test::component_base::any_mutable_map<anyxx::mutable_observer, int,
+                                          double>>;
+
+ANY_TEMPLATE_MODEL(
+    (std::map<int, std::map<std::string, std::map<int, double>>>),
+    ((int), (KEY3)), test::component_base, any_mutable_recursive_map)
+
 using KEY4 = test::component_base::any_map<anyxx::const_observer, int, double>;
-ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),((std::string),(KEY4)), test::component_base, any_recursive_map)
-using KEY5 = test::component_base::any_mutable_map<anyxx::const_observer, int, double>;
-ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),((std::string),(KEY5)), test::component_base, any_recursive_map)
-using KEY6 = test::component_base::any_mutable_map<anyxx::mutable_observer,
-                                                       int, double>;
-ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),((std::string),(KEY6)), test::component_base, any_mutable_recursive_map)
+ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
+                   ((std::string), (KEY4)), test::component_base,
+                   any_recursive_map)
+
+using KEY5 =
+    test::component_base::any_mutable_map<anyxx::const_observer, int, double>;
+ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
+                   ((std::string), (KEY5)), test::component_base,
+                   any_recursive_map)
+
+using KEY6 =
+    test::component_base::any_mutable_map<anyxx::mutable_observer, int, double>;
+ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
+                   ((std::string), (KEY6)), test::component_base,
+                   any_mutable_recursive_map)
 
 static auto __ =
     anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<std::string, int>,
@@ -122,11 +144,6 @@ static auto __ =
     anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<int, double>,
                                      std::map<int, double>>();
 
-//[](any_mutable_recursive_map<
-//    mutable_observer, int,
-//    any_mutable_recursive_map<
-//        mutable_observer, std::string,
-//        any_mutable_map<mutable_observer, int, double>>>
 
 TEST_CASE("any template test") {
   using namespace template_test;
@@ -221,4 +238,3 @@ TEST_CASE("any template test4") {
   any_map<const_observer, int, double> any_mutable_map{map};
   REQUIRE(any_mutable_map.at(3) == 3.333);
 }
-
