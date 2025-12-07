@@ -89,6 +89,11 @@ ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::com
 ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::component_base, any_mutable_map)
 ANY_TEMPLATE_MODEL((std::map<int, double>),((int),(double)), test::component_base, any_map)
 ANY_TEMPLATE_MODEL((std::map<int, double>),((int),(double)), test::component_base, any_mutable_map)
+using KEY1 = test::component_base::any_recursive_map<
+             anyxx::const_observer, std::string,
+             test::component_base::any_mutable_map<anyxx::const_observer, int,
+                                                   double>>;
+ANY_TEMPLATE_MODEL((std::map<int, std::map<std::string, std::map<int, double>>>),((int),(KEY1)), test::component_base, any_recursive_map)
 
 
 static auto __ =
@@ -101,27 +106,27 @@ static auto __ =
     anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<int, double>,
                                      std::map<int, double>>();
 
-template <>
-test::component_base::any_recursive_map_v_table<
-    int, test::component_base::any_recursive_map<
-             anyxx::const_observer, std::string,
-             test::component_base::any_mutable_map<anyxx::const_observer, int,
-                                                   double>>>*
-test::component_base::make_any_recursive_map_v_table<
-    std::map<int, std::map<std::string, std::map<int, double>>>, int,
-    test::component_base::any_recursive_map<
-        anyxx::const_observer, std::string,
-        test::component_base::any_mutable_map<anyxx::const_observer, int,
-                                              double>>>() {
-  static test::component_base::any_recursive_map_v_table<
-      int, test::component_base::any_recursive_map<
-               anyxx::const_observer, std::string,
-               test::component_base::any_mutable_map<anyxx::const_observer, int,
-                                                     double>>>
-      v_table{std::in_place_type<
-          std::map<int, std::map<std::string, std::map<int, double>>>>};
-  return &v_table;
-}
+//template <>
+//test::component_base::any_recursive_map_v_table<
+//    int, test::component_base::any_recursive_map<
+//             anyxx::const_observer, std::string,
+//             test::component_base::any_mutable_map<anyxx::const_observer, int,
+//                                                   double>>>*
+//test::component_base::make_any_recursive_map_v_table<
+//    std::map<int, std::map<std::string, std::map<int, double>>>, int,
+//    test::component_base::any_recursive_map<
+//        anyxx::const_observer, std::string,
+//        test::component_base::any_mutable_map<anyxx::const_observer, int,
+//                                              double>>>() {
+//  static test::component_base::any_recursive_map_v_table<
+//      int, test::component_base::any_recursive_map<
+//               anyxx::const_observer, std::string,
+//               test::component_base::any_mutable_map<anyxx::const_observer, int,
+//                                                     double>>>
+//      v_table{std::in_place_type<
+//          std::map<int, std::map<std::string, std::map<int, double>>>>};
+//  return &v_table;
+//}
 
 template <>
 test::component_base::any_recursive_map_v_table<
