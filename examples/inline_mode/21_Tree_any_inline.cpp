@@ -7,17 +7,8 @@
 #include <memory>
 #include <string>
 
-// #ifdef O
-
 using std::cout;
 using std::string;
-
-using namespace anyxx;
-
-namespace anyxx {
-template <typename ErasedData>
-using any_inline_base = erased_data_holder<ErasedData>;
-}  // namespace anyxx
 
 #define ANY_INLINE_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl,  \
                                  l)                                           \
@@ -109,7 +100,7 @@ using any_inline_base = erased_data_holder<ErasedData>;
   ANY_INLINE_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, \
                            BASE, (), l)
 
-#define ANY_INLINE(n, ...) ANY_INLINE_(n, ::anyxx::any_inline_base, __VA_ARGS__)
+#define ANY_INLINE(n, ...) ANY_INLINE_(n, ::anyxx::erased_data_holder, __VA_ARGS__)
 
 #define ANY_INLINE_TEMPLATE_(t, n, BASE, btpl, l)                              \
   ANY_INLINE_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),      \
@@ -117,7 +108,9 @@ using any_inline_base = erased_data_holder<ErasedData>;
                            n, BASE, btpl, l)
 
 #define ANY_INLINE_TEMPLATE(t, n, l) \
-  ANY_INLINE_TEMPLATE_(t, n, ::anyxx::any_inline_base, (), l)
+  ANY_INLINE_TEMPLATE_(t, n, ::anyxx::erased_data_holder, (), l)
+
+using namespace anyxx;
 
 namespace {
 
@@ -186,4 +179,3 @@ TEST_CASE("21_Tree_any_inline") {
 #endif  // !_DEBUG
 }
 
-// #endif
