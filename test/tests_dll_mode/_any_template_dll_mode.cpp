@@ -86,16 +86,9 @@ interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(  \
   __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i)       \
 
 ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::component_base, any_map)
+ANY_TEMPLATE_MODEL((std::map<std::string, int>),((std::string),(int)), test::component_base, any_mutable_map)
 
 
-template <>
-any_mutable_map_v_table<std::string, int>*
-test::component_base::make_any_mutable_map_v_table<std::map<std::string, int>,
-                                                   std::string, int>() {
-  static any_mutable_map_v_table<std::string, int> v_table{
-      std::in_place_type<std::map<std::string, int>>};
-  return &v_table;
-}
 static auto __ =
     anyxx::bind_v_table_to_meta_data<any_mutable_map_v_table<std::string, int>,
                                      std::map<std::string, int>>();
