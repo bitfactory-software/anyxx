@@ -9,11 +9,8 @@
 
 #ifdef _MSVC_LANG
 #ifdef CORE_SHARED
-#pragma message("CORE_SHARED -> export")
 #undef CORE_EXPORT
 #define CORE_EXPORT __declspec(dllexport)
-#else
-#pragma message ("CORE_SHARED -> import")
 #endif
 #endif
 

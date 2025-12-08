@@ -1,12 +1,12 @@
-#include <test/test_whole_picture/layer_2_collisions/core_collisions.hpp>
+#include <test/test_whole_picture/layer_2_collision/core_collisions.hpp>
 #include <bit_factory/anyxx.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/circle/object.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/line/object.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/picture/object.hpp>
-#include <test/test_whole_picture/layer_2_collisions/collision.hpp>
-#include <test/test_whole_picture/layer_2_collisions/algorithm/fallback_intersect.hpp>
-#include <test/test_whole_picture/layer_2_collisions/algorithm/picture_intersect.hpp>
-#include <test/test_whole_picture/layer_2_collisions/algorithm/line_intersect.hpp>
+#include <test/test_whole_picture/layer_2_collision/collision.hpp>
+#include <test/test_whole_picture/layer_2_collision/algorithm/fallback_intersect.hpp>
+#include <test/test_whole_picture/layer_2_collision/algorithm/picture_intersect.hpp>
+#include <test/test_whole_picture/layer_2_collision/algorithm/line_intersect.hpp>
 
 using namespace whole_picture;
 using line = whole_picture::core::shapes::line;

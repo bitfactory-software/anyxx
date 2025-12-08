@@ -33,19 +33,19 @@ target_include_directories(layer_1_core PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
 
-file(GLOB_RECURSE layer_2_collisions_cpp_files "./layer_2_collisions/*.cpp")
-file(GLOB_RECURSE layer_2_collisions_hpp_files "./layer_2_collisions/*.hpp")
-add_library(layer_2_collisions SHARED ${layer_2_collisions_cpp_files} ${layer_2_collisions_hpp_files})
-set_target_properties(layer_2_collisions PROPERTIES LINKER_LANGUAGE CXX)
-target_compile_definitions(layer_2_collisions PUBLIC ANY_DLL_MODE)
-target_link_libraries(layer_2_collisions 
+file(GLOB_RECURSE layer_2_collision_cpp_files "./layer_2_collision/*.cpp")
+file(GLOB_RECURSE layer_2_collision_hpp_files "./layer_2_collision/*.hpp")
+add_library(layer_2_collision SHARED ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
+set_target_properties(layer_2_collision PROPERTIES LINKER_LANGUAGE CXX)
+target_compile_definitions(layer_2_collision PUBLIC ANY_DLL_MODE)
+target_link_libraries(layer_2_collision 
   PRIVATE   anyxx::anyxx_warnings
             anyxx::anyxx_options
   PUBLIC    layer_1_core
 )
-target_compile_definitions(layer_2_collisions PRIVATE COLLISIONS_SHARED)
-set_target_properties(layer_2_collisions PROPERTIES FOLDER "_example_whole_picture")
-target_include_directories(layer_2_collisions PUBLIC 
+target_compile_definitions(layer_2_collision PRIVATE COLLISION_SHARED)
+set_target_properties(layer_2_collision PROPERTIES FOLDER "_example_whole_picture")
+target_include_directories(layer_2_collision PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
@@ -56,7 +56,7 @@ target_link_libraries(test_whole_picture
             anyxx::anyxx_options
             layer_0_architecture
             layer_1_core
-            layer_2_collisions
+            layer_2_collision
             Catch2::Catch2WithMain
 )
 set_target_properties(test_whole_picture PROPERTIES FOLDER "_example_whole_picture")

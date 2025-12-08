@@ -7,7 +7,7 @@
 #define CORE_EXPORT
 #endif
 
-#ifdef COLLISIONS_SHARED
+#ifdef COLLISION_SHARED
 #ifdef _MSVC_LANG
 #undef COLLISIONS_EXPORT
 #define COLLISIONS_EXPORT __declspec(dllexport)

@@ -1,4 +1,4 @@
-#include <test/test_whole_picture/layer_2_collisions/algorithm/picture_intersect.hpp>
+#include <test/test_whole_picture/layer_2_collision/algorithm/picture_intersect.hpp>
 
 using namespace whole_picture;
 

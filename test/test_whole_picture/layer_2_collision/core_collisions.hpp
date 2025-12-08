@@ -4,7 +4,7 @@
 #include <test/test_whole_picture/layer_1_core/shapes/circle/object.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/line/object.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/picture/object.hpp>
-#include <test/test_whole_picture/layer_2_collisions/collision.hpp>
+#include <test/test_whole_picture/layer_2_collision/collision.hpp>
 
 namespace whole_picture::collision {
 

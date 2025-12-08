@@ -1,5 +1,5 @@
 #include <bit_factory/anyxx.hpp>
-#include <test/test_whole_picture/layer_2_collisions/collision.hpp>
+#include <test/test_whole_picture/layer_2_collision/collision.hpp>
 
 using namespace whole_picture::collision;
 
