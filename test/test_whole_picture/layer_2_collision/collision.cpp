@@ -4,8 +4,6 @@
 using namespace whole_picture::collision;
 
 happened_dispatch_t& whole_picture::collision::happened() {
-    static happened_dispatch_t dispatch;
+  static happened_dispatch_t dispatch;
   return dispatch;
 }
-
-
