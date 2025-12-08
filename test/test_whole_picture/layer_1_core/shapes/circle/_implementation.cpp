@@ -23,7 +23,6 @@ ANY_MODEL_MAP((circle), architecture::shape) {
     return self.center - architecture::size{ self.radius, self.radius};
   };
 };
-// ANY_DISPATCH_FOR_FWD(, circle, whole_picture::architecture, shape)
 ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 
 shape shapes::make_circle(architecture::point center, int radius) {

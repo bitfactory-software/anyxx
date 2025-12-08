@@ -25,12 +25,7 @@ ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::shape) {
     return self.top_left;
   };
 };
-ANY_MODEL(shapes::picture, whole_picture::architecture, surface);
-ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::surface) {
-  void write(shapes::picture & self, point p, char ch) {
-    self.content.write(p, ch);
-  };
-};
+//ANY_MODEL(shapes::picture, whole_picture::architecture, surface);
 ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, shape)
 
 shape shapes::make_picture(architecture::point top_left,

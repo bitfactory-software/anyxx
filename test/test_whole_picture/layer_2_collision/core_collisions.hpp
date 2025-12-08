@@ -8,19 +8,19 @@
 
 namespace whole_picture::collision {
 
-namespace core_shapes = whole_picture::core::shapes;
-
-COLLISIONS_EXPORT bool happens(core_shapes::circle const& lhs,
-                               core_shapes::circle const& rhs);
-COLLISIONS_EXPORT bool happens(core_shapes::circle const& lhs,
-                               core_shapes::line const& rhs);
-COLLISIONS_EXPORT bool happens(core_shapes::circle const& lhs,
-                               core_shapes::picture const& rhs);
-COLLISIONS_EXPORT bool happens(core_shapes::line const& lhs,
-                               core_shapes::line const& rhs);
-COLLISIONS_EXPORT bool happens(core_shapes::line const& lhs,
-                               core_shapes::picture const& rhs);
-COLLISIONS_EXPORT bool happens(core_shapes::picture const& lhs,
-                               core_shapes::picture const& rhs);
+//namespace core_shapes = whole_picture::core::shapes;
+//
+//COLLISION_EXPORT bool happens(core_shapes::circle const& lhs,
+//                               core_shapes::circle const& rhs);
+//COLLISION_EXPORT bool happens(core_shapes::circle const& lhs,
+//                               core_shapes::line const& rhs);
+//COLLISION_EXPORT bool happens(core_shapes::circle const& lhs,
+//                               core_shapes::picture const& rhs);
+//COLLISION_EXPORT bool happens(core_shapes::line const& lhs,
+//                               core_shapes::line const& rhs);
+//COLLISION_EXPORT bool happens(core_shapes::line const& lhs,
+//                               core_shapes::picture const& rhs);
+//COLLISION_EXPORT bool happens(core_shapes::picture const& lhs,
+//                               core_shapes::picture const& rhs);
 
 }  // namespace whole_picture::collision

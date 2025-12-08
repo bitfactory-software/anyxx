@@ -10,12 +10,12 @@ struct hitpad_picture_t {
 }  // namespace
 
 ANY_META_CLASS(hitpad_picture_t)
-ANY_MODEL(hitpad_picture_t, architecture, surface);
+//ANY_MODEL(hitpad_picture_t, architecture, surface);
 ANY_MODEL_MAP((hitpad_picture_t), architecture::surface) {
   void write(hitpad_picture_t & self, architecture::point p,
              [[maybe_unused]] char ch) {
     if (collision::pictures::intersect_point(
-            self.picture, architecture::as_point(p + self.picture.top_left),
+            self.picture, architecture::as_point(p - self.picture.top_left),
             ch))
       self.hit = true;
   };

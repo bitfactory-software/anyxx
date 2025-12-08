@@ -7,8 +7,8 @@ using namespace whole_picture;
 using namespace whole_picture::core;
 using namespace whole_picture::architecture;
 
-ANY_META_CLASS(core::surface)
-ANY_MODEL(core::surface, whole_picture::architecture, surface);
+//ANY_META_CLASS(core::surface)
+//ANY_MODEL(core::surface, whole_picture::architecture, surface);
 
 core::surface::surface(architecture::size size)
     : lines_(size.cy, make_line(size.cx)) {}
@@ -25,7 +25,13 @@ core::surface::surface(std::initializer_list<std::string_view> const& lines) {
 size core::surface::get_size() const {
   return size{.cx = (int)lines_.at(0).size(), .cy = (int)lines_.size()};
 }
-void core::surface::write(point p, char ch) { at(p) = ch; }
+bool core::surface::contains(whole_picture::architecture::point p) const {
+  return (p.x >= 0 && p.x < static_cast<int>(lines_[0].size())) &&
+         (p.y >= 0 && p.y < static_cast<int>(lines_.size()));
+}
+void core::surface::write(point p, char ch) {
+  if (contains(p)) at(p) = ch;
+}
 void core::surface::flush() const {
   for (const auto& line : lines_) {
     for (const auto& ch : line) std::cout << ch;

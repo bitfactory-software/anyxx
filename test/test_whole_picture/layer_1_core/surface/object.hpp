@@ -31,10 +31,7 @@ class CORE_EXPORT surface {
   void draw(
       whole_picture::architecture::mutable_observed_surface const& surface,
       whole_picture::architecture::point p, char ch);
-  bool contains(whole_picture::architecture::point p) const {
-    return (p.x >= 0 && p.x < static_cast<int>(lines_[0].size())) &&
-           (p.y >= 0 && p.y < static_cast<int>(lines_.size()));
-  }
+  bool contains(whole_picture::architecture::point p) const;
   auto& at(this auto& self, whole_picture::architecture::point p) {
     assert(self.contains(p));
     return self.lines_[p.y][p.x];
@@ -45,6 +42,6 @@ class CORE_EXPORT surface {
 
 }  // namespace whole_picture::core
 
-ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::surface)
-ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::surface,
-              whole_picture::architecture, surface)
+//ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::surface)
+//ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::surface,
+//              whole_picture::architecture, surface)

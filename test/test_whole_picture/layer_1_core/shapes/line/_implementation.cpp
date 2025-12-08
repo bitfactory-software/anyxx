@@ -16,7 +16,7 @@ ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
     architecture::draw::line(surface, self.p1, self.p2);
   };
   auto size(shapes::line const& self) const {
-    return architecture::abs(self.p1 - self.p2);
+    return architecture::abs(self.p1 - self.p2) + architecture::size{1,1};
   };
   architecture::point top_left(shapes::line const& self) const {
     return architecture::min(self.p1, self.p2);
