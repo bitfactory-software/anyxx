@@ -2,11 +2,11 @@
 #include <iostream>
 #include <ranges>
 #include <test/test_whole_picture/layer_0_architecture/architecture.hpp>
-#include <test/test_whole_picture/layer_1_core/surface/object.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/circle/factory.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/line/factory.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/picture/factory.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/picture/object.hpp>
+#include <test/test_whole_picture/layer_1_core/surface/object.hpp>
 
 using namespace whole_picture;
 using namespace whole_picture::architecture;
@@ -22,11 +22,12 @@ namespace {
 namespace internal {
 ANY_MEMBER_FWD(, shapes::picture, picture_author, std::string)
 }
+const architecture::size full_screen{80, 25};
+
 }  // namespace
 
 TEST_CASE("example 1 core") {
-  std::cout << get_meta_data<core::surface>().get_type_info().name()
-            << "\n";
+  std::cout << get_meta_data<core::surface>().get_type_info().name() << "\n";
   std::cout << get_meta_data<whole_picture::core::shapes::picture>()
                    .get_type_info()
                    .name()
@@ -36,7 +37,7 @@ TEST_CASE("example 1 core") {
 
 TEST_CASE("example 2 core circle") {
   for (auto r : std::views::iota(1, 7)) {
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto c = make_circle({12, 12}, r);
     mutable_observed_surface s{b};
     c.draw(s);
@@ -46,28 +47,28 @@ TEST_CASE("example 2 core circle") {
 
 TEST_CASE("example 3 core line") {
   {
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto l = make_line({0, 24}, {79, 0});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();
   }
   {
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto l = make_line({0, 0}, {0, 24});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();
   }
   {
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto l = make_line({0, 0}, {79, 0});
     mutable_observed_surface s{b};
     l.draw(s);
     b.flush();
   }
   {
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto l = make_line({0, 0}, {79, 24});
     mutable_observed_surface s{b};
     l.draw(s);
@@ -78,7 +79,7 @@ TEST_CASE("example 3 core line") {
 TEST_CASE("example 3 architecture picture") {
   {
     core::surface duck{"  __", ">(o )___", " ( ._> /", "  `---'"};
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto pic = make_picture({5, 5}, duck);
     mutable_observed_surface s{b};
     pic.draw(s);
@@ -108,7 +109,7 @@ TEST_CASE("example 3 architecture picture") {
         "____________$$$",
         "_____________$",
     };
-    core::surface b{80, 25};
+    core::surface b{full_screen};
     auto pic = make_picture({5, 5}, love_cpp);
     mutable_observed_surface s{b};
     pic.draw(s);

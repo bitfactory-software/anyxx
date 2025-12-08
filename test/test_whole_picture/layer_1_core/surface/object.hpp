@@ -24,16 +24,19 @@ class CORE_EXPORT surface {
   static auto make_line(std::size_t size_x) { return line(size_x, ' '); }
 
  public:
-  surface(std::size_t size_x, std::size_t size_y);
+  surface(architecture::size size);
   surface(std::initializer_list<std::string_view> const& lines);
-  whole_picture::architecture::size get_size() const;
+  architecture::size get_size() const;
   void write(whole_picture::architecture::point p, char ch);
   void draw(
       whole_picture::architecture::mutable_observed_surface const& surface,
       whole_picture::architecture::point p, char ch);
+  bool contains(whole_picture::architecture::point p) const {
+    return (p.x >= 0 && p.x < static_cast<int>(lines_[0].size())) &&
+           (p.y >= 0 && p.y < static_cast<int>(lines_.size()));
+  }
   auto& at(this auto& self, whole_picture::architecture::point p) {
-    assert(p.x >= 0 && p.x < static_cast<int>(self.lines_[0].size()));
-    assert(p.y >= 0 && p.y < static_cast<int>(self.lines_.size()));
+    assert(self.contains(p));
     return self.lines_[p.y][p.x];
   }
 

@@ -10,8 +10,8 @@ using namespace whole_picture::architecture;
 ANY_META_CLASS(core::surface)
 ANY_MODEL(core::surface, whole_picture::architecture, surface);
 
-core::surface::surface(std::size_t size_x, std::size_t size_y)
-    : lines_(size_y, make_line(size_x)) {}
+core::surface::surface(architecture::size size)
+    : lines_(size.cy, make_line(size.cx)) {}
 
 core::surface::surface(std::initializer_list<std::string_view> const& lines) {
   for (auto l : lines) lines_.emplace_back(l.begin(), l.end());

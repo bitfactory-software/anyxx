@@ -16,8 +16,14 @@ ANY_MODEL_MAP((circle), architecture::shape) {
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::circle(surface, self.center, self.radius);
   };
+  architecture::size size(shapes::circle const& self) const {
+    return {.cx = self.radius * 2, .cy = self.radius * 2};
+  };
+  architecture::point top_left(shapes::circle const& self) const {
+    return self.center - architecture::size{ self.radius, self.radius};
+  };
 };
-//ANY_DISPATCH_FOR_FWD(, circle, whole_picture::architecture, shape)
+// ANY_DISPATCH_FOR_FWD(, circle, whole_picture::architecture, shape)
 ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 
 shape shapes::make_circle(architecture::point center, int radius) {

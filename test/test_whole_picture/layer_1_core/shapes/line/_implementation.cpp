@@ -15,6 +15,12 @@ ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::line(surface, self.p1, self.p2);
   };
+  auto size(shapes::line const& self) const {
+    return architecture::abs(self.p1 - self.p2);
+  };
+  architecture::point top_left(shapes::line const& self) const {
+    return architecture::min(self.p1, self.p2);
+  };
 };
 ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
 
