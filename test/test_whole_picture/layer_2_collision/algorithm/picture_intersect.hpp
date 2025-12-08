@@ -7,12 +7,23 @@ namespace whole_picture::collision::pictures {
 
 using point = architecture::point;
 
+inline bool intersect_point(core::shapes::picture const& lhs,
+                            architecture::point p_in_content, char rhs_ch) {
+  if (rhs_ch == ' ') return false;
+  if (!lhs.content.contains(p_in_content)) return false;
+  if (lhs.content.at(p_in_content) == ' ') return false;
+  return true;
+}
+
 inline bool intersect(core::shapes::picture const& lhs,
                       core::shapes::picture const& rhs) {
-  for (auto ly = 0; ly < lhs.content.get_size().cy; ly++)
-    for (auto lx = 0; lx < lhs.content.get_size().cy; lx++)
-      if (rhs.content.contains(lhs.top_left - as_size(rhs.top_left) +
-                               architecture::size{lx, ly}))
+  for (auto ry = 0; ry < rhs.content.get_size().cy; ry++)
+    for (auto rx = 0; rx < rhs.content.get_size().cy; rx++)
+      if (auto rhs_ch = rhs.content.at({rx, ry}); intersect_point(
+              lhs,
+              architecture::as_point(architecture::size{.cx = rx, .cy = ry} +
+                                     (rhs.top_left - lhs.top_left)),
+              rhs_ch))
         return true;
   return false;
 }

@@ -50,7 +50,8 @@ target_include_directories(layer_2_collision PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>  # for client in install mode
 )
 
-add_executable (test_whole_picture "test_whole_picture.cpp")
+file(GLOB_RECURSE test_cpp_files "./*test*.cpp")
+add_executable (test_whole_picture ${test_cpp_files})
 target_link_libraries(test_whole_picture 
   PRIVATE   anyxx::anyxx_warnings
             anyxx::anyxx_options

@@ -14,9 +14,6 @@ using namespace whole_picture::core;
 using namespace whole_picture::core::shapes;
 
 using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
 
 namespace {
 namespace internal {
