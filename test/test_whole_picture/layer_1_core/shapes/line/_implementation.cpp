@@ -19,7 +19,12 @@ ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
     return architecture::abs(self.p1 - self.p2) + architecture::size{1,1};
   };
   architecture::point top_left(shapes::line const& self) const {
-    return architecture::min(self.p1, self.p2);
+    auto min = architecture::min(self.p1, self.p2);
+    if(self.p1.x > self.p2.x)
+        min.x++;
+    if(self.p1.y > self.p2.y)
+        min.y++;
+    return min;
   };
 };
 ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)

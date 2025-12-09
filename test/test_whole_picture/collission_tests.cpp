@@ -8,6 +8,8 @@
 #include <test/test_whole_picture/layer_2_collision/algorithm/line_intersect.hpp>
 #include <test/test_whole_picture/layer_2_collision/algorithm/picture_intersect.hpp>
 
+#include <iostream>
+
 using namespace whole_picture;
 using namespace anyxx;
 
@@ -18,6 +20,15 @@ const core::surface cross{
     "XXX",
     " X",
 };
+
+void draw_scene(std::vector<architecture::shape<const_observer>> shapes) {
+  core::surface b{screen};
+  architecture::surface<mutable_observer> s{b};
+  for (auto const& shape : shapes) shape.draw(s);
+  std::cout << "0123456789\n";
+  b.flush();
+}
+
 }  // namespace
 
 TEST_CASE("test collision line intersect") {
@@ -86,15 +97,6 @@ TEST_CASE("test collision picture intersect") {
   }
 }
 
-namespace {
-void draw_scene(std::vector<architecture::shape<const_observer>> shapes) {
-  core::surface b{screen};
-  architecture::surface<mutable_observer> s{b};
-  for (auto const& shape : shapes) shape.draw(s);
-  b.flush();
-}
-}  // namespace
-
 TEST_CASE("test collision line cross with fallback1") {
   core::shapes::line l{architecture::point{0, 0}, architecture::point{2, 2}};
   {
@@ -133,9 +135,9 @@ TEST_CASE("test collision line cross with fallback2") {
   }
   {
     core::shapes::line l{architecture::point{0, 2}, architecture::point{2, 4}};
-    draw_scene({l, p});
-    CHECK(collision::fallback::intersect(l, p));
-    CHECK(collision::fallback::intersect(p, l));
+    draw_scene({p, l});
+    CHECK(!collision::fallback::intersect(l, p));
+    CHECK(!collision::fallback::intersect(p, l));
   }
 }
 
@@ -151,32 +153,32 @@ TEST_CASE("test collision line circle") {
     {
       core::shapes::circle c{.center = architecture::point{0, 1}, .radius = 4};
       draw_scene({l, c});
-      CHECK(collision::fallback::intersect(l, c));
-      CHECK(collision::fallback::intersect(c, l));
+      CHECK(!collision::fallback::intersect(l, c));
+      CHECK(!collision::fallback::intersect(c, l));
     }
     {
       core::shapes::circle c{.center = architecture::point{0, 2}, .radius = 4};
       draw_scene({l, c});
-      CHECK(collision::fallback::intersect(l, c));
-      CHECK(collision::fallback::intersect(c, l));
+      CHECK(!collision::fallback::intersect(l, c));
+      CHECK(!collision::fallback::intersect(c, l));
     }
     {
       core::shapes::circle c{.center = architecture::point{0, 3}, .radius = 4};
       draw_scene({l, c});
+      CHECK(!collision::fallback::intersect(l, c));
+      CHECK(!collision::fallback::intersect(c, l));
+    }
+    {
+      core::shapes::circle c{.center = architecture::point{0, 4}, .radius = 4};
+      draw_scene({l, c});
       CHECK(collision::fallback::intersect(l, c));
       CHECK(collision::fallback::intersect(c, l));
     }
     {
-      core::shapes::circle c{.center = architecture::point{0, 4}, .radius = 3};
+      core::shapes::circle c{.center = architecture::point{0, 5}, .radius = 4};
       draw_scene({l, c});
-      CHECK(!collision::fallback::intersect(l, c));
-      CHECK(!collision::fallback::intersect(c, l));
-    }
-    {
-      core::shapes::circle c{.center = architecture::point{0, 5}, .radius = 3};
-      draw_scene({l, c});
-      CHECK(!collision::fallback::intersect(l, c));
-      CHECK(!collision::fallback::intersect(c, l));
+      CHECK(collision::fallback::intersect(l, c));
+      CHECK(collision::fallback::intersect(c, l));
     }
   }
 }
