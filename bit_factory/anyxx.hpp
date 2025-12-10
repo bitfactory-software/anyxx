@@ -125,6 +125,11 @@
 // __detail_ANYXX_ADD_HEAD_LIST(((H1),(H2)), (A), (B), (C), (D))
 //  -> (H1), (H2), (A), (B), (C), (D)
 
+#define __detail_ANYXX_ADD_TAIL(t, ...)  __VA_ARGS__ __VA_OPT__(, ) t
+// Examples:
+// __detail_ANYXX_ADD_TAIL(T, A, B, C, D) -> (A), (B), (C), (D), (T)
+// __detail_ANYXX_ADD_TAIL(T, A, B, C, D) -> (A), (B), (C), (D), (T)
+
 #define _typename _typename1
 #define _typename1(t) t
 
