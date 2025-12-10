@@ -95,13 +95,13 @@
 #define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
 #define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
 #define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
-  typename _strip_braces head __VA_OPT__(            \
+  typename _detail_REMOVE_PARENS(head) __VA_OPT__(   \
       _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
 
 #define _detail_ANYXX_TEMPLATE_ARG_H(t) _detail_ANYXX_TEMPLATE_ARG t
 #define _detail_ANYXX_TEMPLATE_ARG(t) , t
 #define _detail_ANYXX_TEMPLATE_ARGS(head, ...) \
-  _strip_braces head __VA_OPT__(               \
+  _detail_REMOVE_PARENS(head) __VA_OPT__(      \
       _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, __VA_ARGS__))
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
@@ -116,10 +116,14 @@
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
-#define _add_head_1(a, ...) a, __VA_ARGS__
-#define _add_head(a, x) _add_head_1(a, _strip_braces x)
-#define _strip_braces _strip_braces_1
-#define _strip_braces_1(...) __VA_ARGS__
+#define __detail_ANYXX_ADD_HEAD(h, ...) h __VA_OPT__(, ) __VA_ARGS__
+#define __detail_ANYXX_ADD_HEAD_LIST(l, ...) \
+  __detail_ANYXX_ADD_HEAD(_detail_REMOVE_PARENS(l), __VA_ARGS__)
+// Examples:
+// __detail_ANYXX_ADD_HEAD(H, A, B, C, D)  -> H, A, B, C, D
+// __detail_ANYXX_ADD_HEAD((H), (A), (B), (C), (D)) -> (H), (A), (B), (C), (D)
+// __detail_ANYXX_ADD_HEAD_LIST(((H1),(H2)), (A), (B), (C), (D))
+//  -> (H1), (H2), (A), (B), (C), (D)
 
 #define _typename _typename1
 #define _typename1(t) t
@@ -348,10 +352,13 @@
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                 \
-  ANY_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),         \
-                    _add_head((Concrete), t), _add_head((Other), t), t, n, \
-                    BASE, btpl, l)
+#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                    \
+  ANY_META_FUNCTION(                                                          \
+      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),        \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                 \
+      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),          \
+      __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)), t, n, BASE, \
+      btpl, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
 
@@ -519,10 +526,13 @@
 #define ANY_INLINE(n, ...) \
   ANY_INLINE_(n, ::anyxx::erased_data_holder, __VA_ARGS__)
 
-#define ANY_INLINE_TEMPLATE_(t, n, BASE, btpl, l)                              \
-  ANY_INLINE_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t),      \
-                           _add_head((Concrete), t), _add_head((Other), t), t, \
-                           n, BASE, btpl, l)
+#define ANY_INLINE_TEMPLATE_(t, n, BASE, btpl, l)                             \
+  ANY_INLINE_META_FUNCTION(                                                   \
+      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),        \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                 \
+      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),          \
+      __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)), t, n, BASE, \
+      btpl, l)
 
 #define ANY_INLINE_TEMPLATE(t, n, l) \
   ANY_INLINE_TEMPLATE_(t, n, ::anyxx::erased_data_holder, (), l)
@@ -533,7 +543,8 @@
       : interface_##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
 
 #define ANY_TEMPLATE_MODEL_MAP(class_, interface_, t) \
-  __ANY_MODEL_MAP(class_, interface_, _add_head(class_, t))
+  __ANY_MODEL_MAP(class_, interface_,                 \
+                  __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))
 
 #define ANY_MODEL_MAP(class_, interface_) \
   __ANY_MODEL_MAP(class_, interface_, class_)
@@ -615,9 +626,12 @@
 
 #define TRAIT(n, ...) TRAIT_(n, ::anyxx::trait_base, __VA_ARGS__)
 
-#define TRAIT_TEMPLATE_(t, n, BASE, btpl, l)                         \
-  TRAIT_META_FUNCTION(_add_head((ErasedData), t), _add_head((T), t), \
-                      _add_head((ErasedData), t), n, BASE, btpl, l)
+#define TRAIT_TEMPLATE_(t, n, BASE, btpl, l)                              \
+  TRAIT_META_FUNCTION(                                                    \
+      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),    \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),             \
+      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)), n, \
+      BASE, btpl, l)
 
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
@@ -2518,8 +2532,9 @@ struct dispatch<R(Args...)> {
       interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t), \
       _detail_REMOVE_PARENS(class_)>();                                   \
   }
-#define ANY_REGISTER_TEMPLATE_MODEL(class_, interface_, t) \
-  __ANY_REGISTER_TEMPLATE_MODEL(class_, t, _add_head(class_, t), interface_)
+#define ANY_REGISTER_TEMPLATE_MODEL(class_, interface_, t)                     \
+  __ANY_REGISTER_TEMPLATE_MODEL(class_, t, __detail_ANYXX_ADD_HEAD(class_, t), \
+                                interface_)
 
 #ifdef ANY_DLL_MODE
 
@@ -2553,14 +2568,34 @@ struct dispatch<R(Args...)> {
     return &v_table;                                                           \
   }
 
-#define ANY_TEMPLATE_MODEL(class_, ins, i, t)                   \
-  __ANY_TEMPLATE_MODEL(class_, t, _add_head(class_, t), ins, i) \
+#define ANY_TEMPLATE_MODEL(class_, ins, i, t)                               \
+  __ANY_TEMPLATE_MODEL(                                                     \
+      class_, t, __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)), \
+      ins, i)                                                               \
   ANY_REGISTER_TEMPLATE_MODEL(class_, ins::i, t)
+
+#define __ANY_TEMPLATE_MODEL_FWD(export_, class_, interface_namespace_,        \
+                                 interface_, t, all)                           \
+  namespace interface_namespace_ {                                             \
+  template <>                                                                  \
+      export_ interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS( \
+          t) *                                                                 \
+      _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(                                \
+          interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>();                     \
+  }
+
+#define ANY_TEMPLATE_MODEL_FWD(export_, class_, interface_namespace_, \
+                               interface_, t)                         \
+  __ANY_TEMPLATE_MODEL_FWD(                                           \
+      export_, class_, interface_namespace_, interface_, t,           \
+      __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))
 
 #else
 
 #define ANY_MODEL_FWD(...)
 #define ANY_MODEL(...)
+#define ANY_TEMPLATE_MODEL_FWD(...)
+#define ANY_TEMPLATE_MODEL(...)
 
 #endif
 

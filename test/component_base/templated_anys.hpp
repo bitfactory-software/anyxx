@@ -6,21 +6,6 @@
 
 #include "component_base.hpp"
 
-#define __ANY_TEMPLATE_MODEL_FWD(export_, class_, interface_namespace_,        \
-                                 interface_, t, all)                           \
-  namespace interface_namespace_ {                                             \
-  template <>                                                                  \
-      export_ interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS( \
-          t) *                                                                 \
-      _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(                                \
-          interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>();                     \
-  }
-
-#define ANY_TEMPLATE_MODEL_FWD(export_, class_, interface_namespace_,         \
-                               interface_, t)                                 \
-  __ANY_TEMPLATE_MODEL_FWD(export_, class_, interface_namespace_, interface_, \
-                           t, _add_head(class_, t))
-
 namespace test::component_base {
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
