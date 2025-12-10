@@ -125,7 +125,7 @@
 // __detail_ANYXX_ADD_HEAD_LIST(((H1),(H2)), (A), (B), (C), (D))
 //  -> (H1), (H2), (A), (B), (C), (D)
 
-#define __detail_ANYXX_ADD_TAIL(t, ...)  __VA_ARGS__ __VA_OPT__(, ) t
+#define __detail_ANYXX_ADD_TAIL(t, ...) __VA_ARGS__ __VA_OPT__(, ) t
 // Examples:
 // __detail_ANYXX_ADD_TAIL(T, A, B, C, D) -> (A), (B), (C), (D), (T)
 // __detail_ANYXX_ADD_TAIL(T, A, B, C, D) -> (A), (B), (C), (D), (T)
@@ -215,7 +215,7 @@
 
 #define ANY_META_FUNCTION(tpl1, tpl2, tpl3, tpl4, tpl, n, BASE, btpl, l)       \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1)>                           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl1) = anyxx::rtti>             \
   struct n;                                                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
@@ -352,14 +352,20 @@
     using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                     \
   };
 
+#define __detail_ANYXX_ANY_(t, n, BASE, l)                                     \
+  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t), (T), (Concrete), (Other), (), n, \
+                    BASE, (), l)
+
 #define ANY_(n, BASE, l) \
-  ANY_META_FUNCTION((ErasedData), (T), (Concrete), (Other), (), n, BASE, (), l)
+  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l)
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
 #define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                    \
   ANY_META_FUNCTION(                                                          \
-      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),        \
+      __detail_ANYXX_ADD_TAIL(                                                \
+          (Dispatch),                                                         \
+          __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t))),   \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                 \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),          \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)), t, n, BASE, \
@@ -393,7 +399,7 @@
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
-  template <typename ErasedData>                         \
+  template <typename ErasedData, typename Dispatch>      \
   struct interface_name;                                 \
   struct interface_name##_v_table;                       \
   }
@@ -1776,23 +1782,24 @@ auto query_v_table(any_base_v_table* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
 
-template <is_any Any> struct rtti{
-    using v_table_base = typename Any::v_table_base_t;
+struct rtti {
+  template <is_any Any>
+  using v_table_base = typename Any::v_table_base_t;
 };
 
-template <is_any Any> struct dyn{
-    struct v_table_base {};
-    using v_table_base = typename v_table_base;
+struct dyn {
+  template <is_any Any>
+  struct v_table_base {};
 };
 
 // --------------------------------------------------------------------------------
 // typed any
 
-template <typename V, template <is_erased_data> typename Any,
+template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
-struct typed_any : public Any<ErasedData> {
+struct typed_any : public Any<ErasedData, rtti> {
   using erased_data_t = ErasedData;
-  using any_t = Any<ErasedData>;
+  using any_t = Any<ErasedData, rtti>;
   using trait_t = any_t::trait_t;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
@@ -1833,47 +1840,48 @@ struct typed_any : public Any<ErasedData> {
   }
 };
 
-template <typename V, template <is_erased_data> typename Any>
+template <typename V, template <is_erased_data, typename> typename Any>
 struct bound_typed_any_impl {
   template <is_erased_data ErasedData>
   using type = typed_any<V, Any, ErasedData>;
 };
-template <typename V, template <is_erased_data> typename Any>
+template <typename V, template <is_erased_data, typename> typename Any>
 using bound_typed_any = bound_typed_any_impl<V, Any>;
 
-template <typename V, template <is_erased_data> typename Any,
+template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
 bool has_data(typed_any<V, Any, ErasedData> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, template <is_erased_data> typename Any,
+template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
 void const* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
   requires is_const_void<typename Any<ErasedData>::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, template <is_erased_data> typename Any,
+template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
 void* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
-  requires(!is_const_void<typename Any<ErasedData>::void_t>)
+  requires(!is_const_void<typename typed_any<V, Any, ErasedData>::void_t>)
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, template <is_erased_data> typename Any,
+template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
 auto get_meta(typed_any<V, Any, ErasedData> const& vv) {
-  using trait_t = typename Any<ErasedData>::trait_t;
+  using trait_t = typename typed_any<V, Any, ErasedData>::trait_t;
   return trait_t::meta(vv.erased_data_);
 }
 
-template <typename V, template <is_erased_data> typename Any,
+template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
-auto as(Any<ErasedData> source) {
+auto as(Any<ErasedData, rtti> source) {
   return typed_any<V, Any, ErasedData>{std::move(source)};
 }
 
-template <typename To, typename V, template <is_erased_data> typename Any,
+template <typename To, typename V,
+          template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
 auto as(typed_any<V, Any, ErasedData> source)
   requires std::convertible_to<V*, To*>
