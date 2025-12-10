@@ -1776,6 +1776,15 @@ auto query_v_table(any_base_v_table* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
 
+template <is_any Any> struct rtti{
+    using v_table_base = typename Any::v_table_base_t;
+};
+
+template <is_any Any> struct dyn{
+    struct v_table_base {};
+    using v_table_base = typename v_table_base;
+};
+
 // --------------------------------------------------------------------------------
 // typed any
 
