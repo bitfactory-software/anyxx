@@ -317,7 +317,7 @@
     }                                                                          \
                                                                                \
     using base_t::erased_data_;                                                \
-    using base_t::v_table_;                                                    \
+    using base_t::get_v_table_ptr;                                             \
                                                                                \
     n(erased_data_t erased_data, v_table_t* v_table)                           \
         : base_t(std::move(erased_data), v_table) {}                           \
@@ -349,9 +349,6 @@
           anyxx::moveable_from<erased_data_t, typename Other::erased_data_t>)  \
         : base_t(std::forward<Other>(other)) {}                                \
                                                                                \
-    auto get_v_table_ptr(this auto& self) {                                    \
-      return static_cast<v_table_t*>(self.v_table_);                           \
-    }                                                                          \
     _detail_ANYXX_METHODS(l)                                                   \
                                                                                \
         ~n() = default;                                                        \
@@ -1818,15 +1815,27 @@ struct derive_from;
 template <typename Dispatch, template <typename...> typename... BaseVTable>
 struct derive_v_table_from;
 
+template <typename Base>
+struct rtti_v_table_access : Base {
+  using Base::Base;
+  template <typename Self>
+  auto get_v_table_ptr(this Self& self) {
+    return static_cast<typename Self::v_table_t*>(self.Base::v_table_);
+  }
+  template <typename Concrete, typename Self>
+  void init_v_table(this Self& self) {
+    self.Base::template init_v_table<Concrete>();
+  }
+};
 template <template <typename...> typename Base>
 struct derive_from<rtti, Base> {
   template <typename... Args>
-  using type = Base<Args...>;
+  using type = rtti_v_table_access<Base<Args...>>;
 };
 template <>
 struct derive_from<rtti> {
   template <typename... Args>
-  using type = any_base<Args...>;
+  using type = rtti_v_table_access<any_base<Args...>>;
 };
 template <template <typename...> typename BaseVTable>
 struct derive_v_table_from<rtti, BaseVTable> {
@@ -1849,7 +1858,6 @@ struct derive_from<dyn> {
   template <typename... Args>
   using type = erased_data_holder<Args...>;
 };
-
 template <template <typename...> typename... BaseVTable>
 struct derive_v_table_from<dyn, BaseVTable...> {
   template <typename...>
