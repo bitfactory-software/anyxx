@@ -214,8 +214,8 @@
   _detail_CONCAT(make_, _detail_CONCAT(n, _v_table))
 
 #define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
-                          tpl3, tpl4, v_table_template_params, n, BASE, btpl,  \
-                          l)                                                   \
+                          tpl3, tpl4, v_table_template_params, n, BASE,        \
+                          base_template_params, l)                             \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
                 anyxx::rtti>                                                   \
@@ -242,10 +242,11 @@
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(                                       \
       v_table_template_params) struct n##_v_table                              \
       : BASE##_v_table                                                         \
-        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                            \
+        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(base_template_params),            \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> { \
     using v_table_base_t =                                                     \
-        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);             \
+        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(                   \
+            base_template_params);                                             \
     using v_table_t = n##_v_table;                                             \
     static constexpr bool dispatchs_enabled =                                  \
         anyxx::is_type_complete<n##_has_dispatch>;                             \
@@ -288,9 +289,11 @@
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
-  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
+  struct n                                                                     \
+      : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)> {  \
     using erased_data_t = ErasedData;                                          \
-    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
+    using base_t =                                                             \
+        BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)>;   \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
                                                                                \
@@ -368,7 +371,7 @@
 
 #define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
 
-#define ANY_TEMPLATE_(t, n, BASE, btpl, l)                                    \
+#define ANY_TEMPLATE_(t, n, BASE, base_template_params, l)                    \
   ANY_META_FUNCTION(                                                          \
       __detail_ANYXX_ADD_TAIL(                                                \
           (Dispatch),                                                         \
@@ -376,7 +379,7 @@
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                 \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),          \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)), t, n, BASE, \
-      btpl, l)
+      base_template_params, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
 
@@ -411,9 +414,9 @@
   struct interface_name##_v_table;                       \
   }
 
-#define ANY_INLINE_META_FUNCTION(any_template_params,                          \
-                                 model_map_template_params, tpl3, tpl4,        \
-                                 v_table_template_params, n, BASE, btpl, l)    \
+#define ANY_INLINE_META_FUNCTION(                                              \
+    any_template_params, model_map_template_params, tpl3, tpl4,                \
+    v_table_template_params, n, BASE, base_template_params, l)                 \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n;                                                                    \
@@ -439,10 +442,11 @@
   _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(                                       \
       v_table_template_params) struct n##_v_table                              \
       : BASE##_v_table                                                         \
-        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                            \
+        _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(base_template_params),            \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> { \
     using v_table_base_t =                                                     \
-        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl);             \
+        BASE##_v_table _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(                   \
+            base_template_params);                                             \
     using v_table_t = n##_v_table;                                             \
     static constexpr bool dispatchs_enabled =                                  \
         anyxx::is_type_complete<n##_has_dispatch>;                             \
@@ -485,9 +489,11 @@
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
-  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
+  struct n                                                                     \
+      : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)> {  \
     using erased_data_t = ErasedData;                                          \
-    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
+    using base_t =                                                             \
+        BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)>;   \
     using v_table_t = n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(  \
         v_table_template_params);                                              \
                                                                                \
@@ -548,13 +554,13 @@
 #define ANY_INLINE(n, ...) \
   ANY_INLINE_(n, ::anyxx::erased_data_holder, __VA_ARGS__)
 
-#define ANY_INLINE_TEMPLATE_(t, n, BASE, btpl, l)                             \
+#define ANY_INLINE_TEMPLATE_(t, n, BASE, base_template_params, l)             \
   ANY_INLINE_META_FUNCTION(                                                   \
       __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),        \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                 \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),          \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)), t, n, BASE, \
-      btpl, l)
+      base_template_params, l)
 
 #define ANY_INLINE_TEMPLATE(t, n, l) \
   ANY_INLINE_TEMPLATE_(t, n, ::anyxx::erased_data_holder, (), l)
@@ -606,43 +612,45 @@
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define TRAIT_META_FUNCTION(any_template_params, model_map_template_params, \
-                            tpl3, n, BASE, btpl, l)                         \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>         \
-  struct n;                                                                 \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>   \
-  struct n##_trait_default {                                                \
-    _detail_ANYXX_TRAIT_FUNCTIONS(l)                                        \
-  };                                                                        \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>   \
-  struct n##_trait : n##_trait_default<_detail_ANYXX_TEMPLATE_ARGS(         \
-                         model_map_template_params)> {                      \
-    static constexpr bool is_defined = false;                               \
-  };                                                                        \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>         \
-  struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {          \
-    using value_t = ErasedData;                                             \
-    using T = ErasedData;                                                   \
-    using trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;             \
-    using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;     \
-    using base_t::value_;                                                   \
-    n(ErasedData v) : base_t(std::move(v)) {}                               \
-    ErasedData& operator=(ErasedData v) {                                   \
-      base_t::value_ = std::move(v);                                        \
-      return *this;                                                         \
-    }                                                                       \
-    ~n() = default;                                                         \
-    n() = default;                                                          \
-    n(n const&) = default;                                                  \
-    n(n&&) = default;                                                       \
-    n& operator=(n const&) = default;                                       \
-    n& operator=(n&&) = default;                                            \
-                                                                            \
-    _detail_ANYXX_TRAIT_METHODS(l)                                          \
+#define TRAIT_META_FUNCTION(any_template_params, model_map_template_params,   \
+                            tpl3, n, BASE, base_template_params, l)           \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>           \
+  struct n;                                                                   \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>     \
+  struct n##_trait_default {                                                  \
+    _detail_ANYXX_TRAIT_FUNCTIONS(l)                                          \
+  };                                                                          \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>     \
+  struct n##_trait : n##_trait_default<_detail_ANYXX_TEMPLATE_ARGS(           \
+                         model_map_template_params)> {                        \
+    static constexpr bool is_defined = false;                                 \
+  };                                                                          \
+                                                                              \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>           \
+  struct n                                                                    \
+      : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)> { \
+    using value_t = ErasedData;                                               \
+    using T = ErasedData;                                                     \
+    using trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;               \
+    using base_t =                                                            \
+        BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)>;  \
+    using base_t::value_;                                                     \
+    n(ErasedData v) : base_t(std::move(v)) {}                                 \
+    ErasedData& operator=(ErasedData v) {                                     \
+      base_t::value_ = std::move(v);                                          \
+      return *this;                                                           \
+    }                                                                         \
+    ~n() = default;                                                           \
+    n() = default;                                                            \
+    n(n const&) = default;                                                    \
+    n(n&&) = default;                                                         \
+    n& operator=(n const&) = default;                                         \
+    n& operator=(n&&) = default;                                              \
+                                                                              \
+    _detail_ANYXX_TRAIT_METHODS(l)                                            \
   };
 
 #define TRAIT_(n, BASE, l) \
@@ -650,12 +658,12 @@
 
 #define TRAIT(n, ...) TRAIT_(n, ::anyxx::trait_base, __VA_ARGS__)
 
-#define TRAIT_TEMPLATE_(t, n, BASE, btpl, l)                              \
+#define TRAIT_TEMPLATE_(t, n, BASE, base_template_params, l)              \
   TRAIT_META_FUNCTION(                                                    \
       __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),    \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),             \
       __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)), n, \
-      BASE, btpl, l)
+      BASE, base_template_params, l)
 
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
