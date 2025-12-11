@@ -325,19 +325,16 @@
     explicit(false) n(ConstructedWith&& v)                                     \
       requires anyxx::constructibile_for<ConstructedWith, ErasedData>          \
         : base_t(std::forward<ConstructedWith>(v)) {                           \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ErasedData, ConstructedWith>>();                     \
+      base_t::template init_v_table<ConstructedWith>();                        \
     }                                                                          \
     template <typename V>                                                      \
     n(std::in_place_t, V&& v) : base_t(std::in_place, std::forward<V>(v)) {    \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ErasedData, V>>();                                   \
+      base_t::template init_v_table<V>();                                      \
     }                                                                          \
     template <typename T, typename... Args>                                    \
     explicit(false) n(std::in_place_type_t<T>, Args&&... args)                 \
         : base_t(std::in_place_type<T>, std::forward<Args>(args)...) {         \
-      v_table_ = v_table_t::template imlpementation<                           \
-          anyxx::unerased<ErasedData, T>>();                                   \
+      base_t::template init_v_table<T>();                                      \
     }                                                                          \
     template <typename Other>                                                  \
     explicit(false) n(const Other& other)                                      \
@@ -1634,6 +1631,13 @@ class any_base : public erased_data_holder<ErasedData> {
 
  protected:
   v_table_t* v_table_ = nullptr;
+
+  template <typename Concrete, typename Self>
+  void init_v_table(this Self& self) {
+    using derived_v_table_t = typename Self::v_table_t;
+    self.v_table_ = derived_v_table_t::template imlpementation<
+        anyxx::unerased<ErasedData, Concrete>>();
+  }
 
   any_base() = default;
   any_base(erased_data_t erased_data, v_table_t* v_table)
