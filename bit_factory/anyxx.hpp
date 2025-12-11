@@ -214,7 +214,8 @@
   _detail_CONCAT(make_, _detail_CONCAT(n, _v_table))
 
 #define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
-                          tpl3, tpl4, tpl, n, BASE, btpl, l)                   \
+                          tpl3, tpl4, v_table_template_params, n, BASE, btpl,  \
+                          l)                                                   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
                 anyxx::rtti>                                                   \
@@ -231,12 +232,15 @@
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
                                                                                \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;               \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(                                       \
+      v_table_template_params) struct n##_v_table;                             \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl3)>                           \
-      n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl) *            \
+      n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(                  \
+          v_table_template_params) *                                           \
       _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n)();                           \
                                                                                \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table                \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(                                       \
+      v_table_template_params) struct n##_v_table                              \
       : BASE##_v_table                                                         \
         _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                            \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> { \
@@ -290,7 +294,8 @@
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
                                                                                \
-        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);           \
+        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(                \
+            v_table_template_params);                                          \
                                                                                \
     template <typename Concrete>                                               \
     static auto v_table_imlpementation() {                                     \
@@ -407,8 +412,8 @@
   }
 
 #define ANY_INLINE_META_FUNCTION(any_template_params,                          \
-                                 model_map_template_params, tpl3, tpl4, tpl,   \
-                                 n, BASE, btpl, l)                             \
+                                 model_map_template_params, tpl3, tpl4,        \
+                                 v_table_template_params, n, BASE, btpl, l)    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n;                                                                    \
@@ -424,12 +429,15 @@
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
                                                                                \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table;               \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(                                       \
+      v_table_template_params) struct n##_v_table;                             \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl3)>                           \
-      n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl) *            \
+      n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(                  \
+          v_table_template_params) *                                           \
       _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n)();                           \
                                                                                \
-  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(tpl) struct n##_v_table                \
+  _detail_ANYXX_V_TABLE_TEMPLATE_HEADER(                                       \
+      v_table_template_params) struct n##_v_table                              \
       : BASE##_v_table                                                         \
         _detail_ANYXX_INVOKE_TEMPLATE_PARAMS(btpl),                            \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> { \
@@ -480,8 +488,8 @@
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
     using erased_data_t = ErasedData;                                          \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
-    using v_table_t =                                                          \
-        n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(tpl);           \
+    using v_table_t = n##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(  \
+        v_table_template_params);                                              \
                                                                                \
     using base_t::erased_data_;                                                \
     v_table_t v_table_;                                                        \
