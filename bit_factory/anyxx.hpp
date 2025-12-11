@@ -2552,10 +2552,10 @@ struct dispatch<R(Args...)> {
 
 #endif
 
-#define ANY_REGISTER_MODEL(class_, interface_)                          \
-  namespace {                                                           \
-  static auto __ =                                                      \
-      anyxx::bind_v_table_to_meta_data<interface_##_v_table, class_>(); \
+#define ANY_REGISTER_MODEL(class_, interface_)                            \
+  namespace {                                                             \
+  static auto __ =                                                        \
+      anyxx::bind_v_table_to_meta_data<interface_##_v_table<>, class_>(); \
   }
 
 #define __ANY_REGISTER_TEMPLATE_MODEL(class_, t, all, interface_)         \
@@ -2570,12 +2570,12 @@ struct dispatch<R(Args...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_)  \
-  ANY_FORWARD(interface_namespace_, interface_)                           \
-  namespace interface_namespace_ {                                        \
-  template <>                                                             \
+#define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_)    \
+  ANY_FORWARD(interface_namespace_, interface_)                             \
+  namespace interface_namespace_ {                                          \
+  template <>                                                               \
   export_ interface_##_v_table<>* _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME( \
-      interface_)<class_>();                                              \
+      interface_)<class_>();                                                \
   }
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)       \
