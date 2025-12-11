@@ -213,6 +213,11 @@
 #define _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n) \
   _detail_CONCAT(make_, _detail_CONCAT(n, _v_table))
 
+#define _detail_ANYXX_OPTIONAL_BASE_NAME(...) __VA_OPT__(, ) __VA_ARGS__
+
+#define _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(...) \
+  __VA_OPT__(, _detail_CONCAT(__VA_ARGS__, _v_table))
+
 #define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
                           tpl3, tpl4, v_table_template_params, n, BASE,        \
                           base_template_params, l)                             \
@@ -242,10 +247,13 @@
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params)>        \
   struct n##_v_table                                                           \
-      : BASE##_v_table<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>,     \
+      : anyxx::derive_v_table_from<                                            \
+            Dispatch _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(BASE)>::         \
+            template type<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>,  \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> { \
-    using v_table_base_t =                                                     \
-        BASE##_v_table<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;     \
+    using v_table_base_t = typename anyxx::derive_v_table_from<                \
+        Dispatch _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(BASE)>::             \
+        template type<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;      \
     using v_table_t = n##_v_table;                                             \
     static constexpr bool dispatchs_enabled =                                  \
         anyxx::is_type_complete<n##_has_dispatch>;                             \
@@ -289,10 +297,15 @@
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n                                                                     \
-      : BASE<ErasedData, _detail_ANYXX_TEMPLATE_ARGS(base_template_params)> {  \
+      : anyxx::derive_from<Dispatch _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::  \
+            template type<ErasedData,                                          \
+                          _detail_ANYXX_TEMPLATE_ARGS(base_template_params)> { \
     using erased_data_t = ErasedData;                                          \
     using base_t =                                                             \
-        BASE<ErasedData, _detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;   \
+        typename anyxx::derive_from<Dispatch _detail_ANYXX_OPTIONAL_BASE_NAME( \
+            BASE)>::template type<ErasedData,                                  \
+                                  _detail_ANYXX_TEMPLATE_ARGS(                 \
+                                      base_template_params)>;                  \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
@@ -366,7 +379,7 @@
 #define ANY_(n, BASE, l) \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l)
 
-#define ANY(n, ...) ANY_(n, ::anyxx::any_base, __VA_ARGS__)
+#define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
 #define ANY_TEMPLATE_(t, n, BASE, bt, l)                                      \
   ANY_META_FUNCTION(                                                          \
@@ -379,7 +392,7 @@
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)), n, BASE, \
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), l)
 
-#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, ::anyxx::any_base, (), l)
+#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 
@@ -1190,15 +1203,8 @@ struct erased_data_holder_v_table {
   }
 };
 
-struct rtti {
-  template <typename Any>
-  using v_table_base = typename Any::v_table_base_t;
-};
-
-struct dyn {
-  template <typename Any>
-  struct v_table_base {};
-};
+struct rtti {};
+struct dyn {};
 
 template <typename Dispatch = rtti>
 struct any_base_v_table {
@@ -1802,6 +1808,49 @@ template <typename ToAny>
 auto query_v_table(any_base_v_table<>* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
+
+template <typename Dispatch, template <typename...> typename... Base>
+struct derive_from;
+template <typename Dispatch, template <typename...> typename... BaseVTable>
+struct derive_v_table_from;
+
+template <template <typename...> typename Base>
+struct derive_from<rtti, Base> {
+  template <typename... Args>
+  using type = Base<Args...>;
+};
+template <>
+struct derive_from<rtti> {
+  template <typename... Args>
+  using type = any_base<Args...>;
+};
+template <template <typename...> typename BaseVTable>
+struct derive_v_table_from<rtti, BaseVTable> {
+  template <typename... Args>
+  using type = BaseVTable<Args...>;
+};
+template <>
+struct derive_v_table_from<rtti> {
+  template <typename... Args>
+  using type = any_base_v_table<Args...>;
+};
+
+template <template <typename...> typename Base>
+struct derive_from<dyn, Base> {
+  template <typename... Args>
+  using type = Base<Args...>;
+};
+template <>
+struct derive_from<dyn> {
+  template <typename... Args>
+  using type = erased_data_holder<Args...>;
+};
+
+template <template <typename...> typename... BaseVTable>
+struct derive_v_table_from<dyn, BaseVTable...> {
+  template <typename...>
+  struct type {};
+};
 
 // --------------------------------------------------------------------------------
 // typed any
@@ -2514,18 +2563,18 @@ struct dispatch<R(Args...)> {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \
-  namespace ns_ {}                                             \
-  namespace anyxx {                                            \
-  template <>                                                  \
-  export_ std::size_t& dispatchs_count<ns_::any_##_v_table>(); \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)               \
+  namespace ns_ {}                                               \
+  namespace anyxx {                                              \
+  template <>                                                    \
+  export_ std::size_t& dispatchs_count<ns_::any_##_v_table<>>(); \
   }
 
-#define ANY_DISPATCH_COUNT(ns_, any_)                          \
-  template <>                                                  \
-  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table>() { \
-    static std::size_t count = 0;                              \
-    return count;                                              \
+#define ANY_DISPATCH_COUNT(ns_, any_)                            \
+  template <>                                                    \
+  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table<>>() { \
+    static std::size_t count = 0;                                \
+    return count;                                                \
   }
 
 #define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \
@@ -2533,15 +2582,15 @@ struct dispatch<R(Args...)> {
   namespace anyxx {                                                 \
   template <>                                                       \
   export_ anyxx::dispatch_table_t* anyxx::dispatch_table_instance<  \
-      interface_namespace_::interface_##_v_table, class_>();        \
+      interface_namespace_::interface_##_v_table<>, class_>();      \
   }
 
 #define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \
   template <>                                                      \
   anyxx::dispatch_table_t* anyxx::dispatch_table_instance<         \
-      interface_namespace_::interface_##_v_table, class_>() {      \
+      interface_namespace_::interface_##_v_table<>, class_>() {    \
     return dispatch_table_instance_implementation<                 \
-        interface_namespace_::interface_##_v_table, class_>();     \
+        interface_namespace_::interface_##_v_table<>, class_>();   \
   }
 
 #else
@@ -2581,10 +2630,10 @@ struct dispatch<R(Args...)> {
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)       \
   template <>                                                     \
-  interface_namespace_::interface_##_v_table<>*                     \
+  interface_namespace_::interface_##_v_table<>*                   \
   interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME( \
       interface_)<class_>() {                                     \
-    static interface_namespace_::interface_##_v_table<> v_table{    \
+    static interface_namespace_::interface_##_v_table<> v_table{  \
         std::in_place_type<class_>};                              \
     return &v_table;                                              \
   }                                                               \
