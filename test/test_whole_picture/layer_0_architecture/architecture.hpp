@@ -54,9 +54,9 @@ inline point max(point lhs, point rhs) {
   return {.x = std::max(lhs.x, rhs.x), .y = std::max(lhs.y, rhs.y)};
 }
 
-ANY_INLINE(surface, (ANY_METHOD(void, write, (point, char), )))
-using mutable_observed_surface = surface<anyxx::mutable_observer>;
-using unique_surface = surface<anyxx::unique>;
+ANY(surface, (ANY_METHOD(void, write, (point, char), )))
+using mutable_observed_surface = surface<anyxx::mutable_observer,anyxx::dyn>;
+using unique_surface = surface<anyxx::unique,anyxx::dyn>;
 
 struct shape_has_dispatch {};
 ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const),

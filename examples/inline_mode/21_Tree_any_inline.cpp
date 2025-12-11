@@ -13,10 +13,10 @@ using namespace anyxx;
 
 namespace {
 
-ANY_INLINE(node_i, (ANY_METHOD(int, value, (), const),
+ANY(node_i, (ANY_METHOD(int, value, (), const),
                     ANY_METHOD(string, as_forth, (), const),
                     ANY_METHOD(string, as_lisp, (), const)))
-using node = node_i<shared_const>;
+using node = node_i<shared_const, anyxx::dyn>;
 
 struct Plus {
   Plus(node left, node right) : left(left), right(right) {}
