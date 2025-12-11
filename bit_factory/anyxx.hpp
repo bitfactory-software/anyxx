@@ -409,6 +409,7 @@
   namespace interface_namespace {                        \
   template <typename ErasedData, typename Dispatch>      \
   struct interface_name;                                 \
+  template <typename Dispatch>                           \
   struct interface_name##_v_table;                       \
   }
 
@@ -2580,10 +2581,10 @@ struct dispatch<R(Args...)> {
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)       \
   template <>                                                     \
-  interface_namespace_::interface_##_v_table*                     \
+  interface_namespace_::interface_##_v_table<>*                     \
   interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME( \
       interface_)<class_>() {                                     \
-    static interface_namespace_::interface_##_v_table v_table{    \
+    static interface_namespace_::interface_##_v_table<> v_table{    \
         std::in_place_type<class_>};                              \
     return &v_table;                                              \
   }                                                               \
