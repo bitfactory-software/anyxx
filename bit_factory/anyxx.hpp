@@ -213,18 +213,20 @@
 #define _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n) \
   _detail_CONCAT(make_, _detail_CONCAT(n, _v_table))
 
-#define ANY_META_FUNCTION(any_template_params, tpl2, tpl3, tpl4, tpl, n, BASE, btpl, l)       \
+#define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
+                          tpl3, tpl4, tpl, n, BASE, btpl, l)                   \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) = anyxx::rtti>             \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
+                anyxx::rtti>                                                   \
   struct n;                                                                    \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
-  struct n##_model_map                                                         \
-      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
+                             model_map_template_params)> {};                   \
                                                                                \
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
@@ -281,7 +283,7 @@
     }                                                                          \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>                           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
     using erased_data_t = ErasedData;                                          \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
@@ -404,19 +406,20 @@
   struct interface_name##_v_table;                       \
   }
 
-#define ANY_INLINE_META_FUNCTION(any_template_params, tpl2, tpl3, tpl4, tpl, n, BASE, btpl,   \
-                                 l)                                            \
+#define ANY_INLINE_META_FUNCTION(any_template_params,                          \
+                                 model_map_template_params, tpl3, tpl4, tpl,   \
+                                 n, BASE, btpl, l)                             \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>                           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n;                                                                    \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                           \
-  struct n##_model_map                                                         \
-      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> {};           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
+                             model_map_template_params)> {};                   \
                                                                                \
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_dispatch;                                                     \
@@ -473,7 +476,7 @@
     }                                                                          \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>                           \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {             \
     using erased_data_t = ErasedData;                                          \
     using base_t = BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)>;        \
@@ -595,22 +598,24 @@
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_METHOD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
-#define TRAIT_META_FUNCTION(any_template_params, tpl2, tpl3, n, BASE, btpl, l)             \
+#define TRAIT_META_FUNCTION(any_template_params, model_map_template_params, \
+                            tpl3, n, BASE, btpl, l)                         \
                                                                             \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>                        \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>         \
   struct n;                                                                 \
                                                                             \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                        \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>   \
   struct n##_trait_default {                                                \
     _detail_ANYXX_TRAIT_FUNCTIONS(l)                                        \
   };                                                                        \
                                                                             \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl2)>                        \
-  struct n##_trait : n##_trait_default<_detail_ANYXX_TEMPLATE_ARGS(tpl2)> { \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>   \
+  struct n##_trait : n##_trait_default<_detail_ANYXX_TEMPLATE_ARGS(         \
+                         model_map_template_params)> {                      \
     static constexpr bool is_defined = false;                               \
   };                                                                        \
                                                                             \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>                        \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>         \
   struct n : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(btpl)> {          \
     using value_t = ErasedData;                                             \
     using T = ErasedData;                                                   \
