@@ -297,15 +297,17 @@
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
   struct n                                                                     \
-      : anyxx::derive_from<Dispatch _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::  \
+      : anyxx::derive_from<Dispatch,                                           \
+                           n<_detail_ANYXX_TEMPLATE_ARGS(any_template_params)> \
+                               _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::       \
             template type<ErasedData,                                          \
                           _detail_ANYXX_TEMPLATE_ARGS(base_template_params)> { \
     using erased_data_t = ErasedData;                                          \
-    using base_t =                                                             \
-        typename anyxx::derive_from<Dispatch _detail_ANYXX_OPTIONAL_BASE_NAME( \
-            BASE)>::template type<ErasedData,                                  \
-                                  _detail_ANYXX_TEMPLATE_ARGS(                 \
-                                      base_template_params)>;                  \
+    using base_t = typename anyxx::derive_from<                                \
+        Dispatch, n<_detail_ANYXX_TEMPLATE_ARGS(any_template_params)>          \
+                      _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::                \
+        template type<ErasedData,                                              \
+                      _detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;      \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
@@ -1810,32 +1812,33 @@ auto query_v_table(any_base_v_table<>* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
 
-template <typename Dispatch, template <typename...> typename... Base>
+template <typename Dispatch, typename Self,
+          template <typename...> typename... Base>
 struct derive_from;
 template <typename Dispatch, template <typename...> typename... BaseVTable>
 struct derive_v_table_from;
 
-template <typename Base>
+template <typename Self, typename Base>
 struct rtti_v_table_access : Base {
   using Base::Base;
-  template <typename Self>
-  auto get_v_table_ptr(this Self& self) {
-    return static_cast<typename Self::v_table_t*>(self.Base::v_table_);
+  template <typename Derived>
+  auto get_v_table_ptr(this Derived& self) {
+    return static_cast<typename Derived::v_table_t*>(self.Base::v_table_);
   }
-  template <typename Concrete, typename Self>
-  void init_v_table(this Self& self) {
+  template <typename Concrete, typename Derived>
+  void init_v_table(this Derived& self) {
     self.Base::template init_v_table<Concrete>();
   }
 };
-template <template <typename...> typename Base>
-struct derive_from<rtti, Base> {
+template <typename Self, template <typename...> typename Base>
+struct derive_from<rtti, Self, Base> {
   template <typename... Args>
-  using type = rtti_v_table_access<Base<Args...>>;
+  using type = rtti_v_table_access<Self, Base<Args...>>;
 };
-template <>
-struct derive_from<rtti> {
+template <typename Self>
+struct derive_from<rtti, Self> {
   template <typename... Args>
-  using type = rtti_v_table_access<any_base<Args...>>;
+  using type = rtti_v_table_access<Self, any_base<Args...>>;
 };
 template <template <typename...> typename BaseVTable>
 struct derive_v_table_from<rtti, BaseVTable> {
@@ -1848,13 +1851,13 @@ struct derive_v_table_from<rtti> {
   using type = any_base_v_table<Args...>;
 };
 
-template <template <typename...> typename Base>
-struct derive_from<dyn, Base> {
+template <typename Self, template <typename...> typename Base>
+struct derive_from<dyn, Self, Base> {
   template <typename... Args>
   using type = Base<Args...>;
 };
-template <>
-struct derive_from<dyn> {
+template <typename Self>
+struct derive_from<dyn, Self> {
   template <typename... Args>
   using type = erased_data_holder<Args...>;
 };
