@@ -23,12 +23,15 @@
 #include <variant>
 #include <vector>
 
-#if defined(__clang__) || defined(__GNUC__)
+#if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wcast-function-type-mismatch"
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
 #pragma GCC diagnostic ignored "-Wunused-local-typedef"
 #pragma GCC diagnostic ignored "-Wextra-semi"
+#endif
+#if defined(__GNUC__) and !defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#pragma GCC diagnostic ignored "-Wcast-function-type"
 #endif
 
 // --------------------------------------------------------------------------------

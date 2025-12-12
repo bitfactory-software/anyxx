@@ -17,10 +17,10 @@ namespace whole_picture::core {
 
 class CORE_EXPORT surface {
  public:
-  using line = std::vector<char>;
+  using line_t = std::vector<char>;
 
  private:
-  std::vector<line> lines_;
+  std::vector<line_t> lines_;
   static auto make_line(std::size_t size_x) { return line(size_x, ' '); }
 
  public:
