@@ -47,8 +47,8 @@ ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
 
 struct any_map_to_tstring_v_table_as_static_inline {};
 ANY_TEMPLATE(((KEY)), any_map_to_tstring,
-             (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY const&),
-                         const)))
+             (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at,
+                         (KEY const&), const)))
 
 ANY_MODEL_MAP((int), any_to_tstring) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
@@ -61,14 +61,15 @@ ANY_MODEL_MAP((double), any_to_tstring) {
 
 using namespace anyxx;
 
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
+    ((std::string), (int))) {
+    int const& at(std::map<std::string, int> const& x, std::string const& i) {
+        return x.at(i);
+    };
+};
+
 }  // namespace
 
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
-                       ((std::string), (int))) {
-  int const& at(std::map<std::string, int> const& x, std::string const& i) {
-    return x.at(i);
-  };
-};
 
 TEST_CASE("any inline template test") {
   using namespace template_test;

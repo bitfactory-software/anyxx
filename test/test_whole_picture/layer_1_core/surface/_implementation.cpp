@@ -17,8 +17,8 @@ core::surface::surface(architecture::size size)
 core::surface::surface(std::initializer_list<std::string_view> const& lines) {
   for (auto l : lines) lines_.emplace_back(l.begin(), l.end());
   auto witdth = std::ranges::fold_left(lines, 0U,
-                                       [](std::size_t width, auto const& line) {
-                                         return std::max(width, line.size());
+                                       [](std::size_t width, auto const& l) {
+                                         return std::max(width, l.size());
                                        });
   for (auto& line : lines_) line.resize(witdth);
 }

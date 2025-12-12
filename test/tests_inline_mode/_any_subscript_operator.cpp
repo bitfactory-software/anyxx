@@ -9,19 +9,19 @@ using namespace anyxx;
 using namespace anyxx;
 
 namespace {
-using map_t = std::map<int, std::string>;
+using map_t = std::map<std::size_t, std::string>;
 using vector_t = std::vector<std::string>;
 }  // namespace
 
 namespace {
-ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (int), )))
+ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (std::size_t), )))
 
 ANY(map_i_to_string_const_and_mutable,
-    (ANY_OP_EXACT(std::string&, [], (int), ),
-     ANY_OP_EXACT(std::string const&, [], (int), const)))
+    (ANY_OP_EXACT(std::string&, [], (std::size_t), ),
+     ANY_OP_EXACT(std::string const&, [], (std::size_t), const)))
 
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-     (ANY_OP_EXACT_OVERLOAD(std::string const&, [], (int), const)))
+     (ANY_OP_EXACT_OVERLOAD(std::string const&, [], (std::size_t), const)))
 
 }  // namespace
 

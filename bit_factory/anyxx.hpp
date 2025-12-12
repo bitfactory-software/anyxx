@@ -23,11 +23,12 @@
 #include <variant>
 #include <vector>
 
-#ifdef __clang__
+#if defined(__clang__) || defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wcast-function-type-mismatch"
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
 #pragma GCC diagnostic ignored "-Wunused-local-typedef"
 #pragma GCC diagnostic ignored "-Wextra-semi"
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
 // --------------------------------------------------------------------------------
@@ -1943,8 +1944,8 @@ class hook<R(Args...)> {
     explicit operator bool() const { return index_ >= 0; }
     R operator()(Args&&... args) const {
       assert(index_ >= 0);
-      return hook_.callees_[index_].second(super{index_ - 1, hook_},
-                                           std::forward<Args>(args)...);
+      return hook_.callees_[((int)index_)].second(super{index_ - 1, hook_},
+                                                  std::forward<Args>(args)...);
     }
   };
 
