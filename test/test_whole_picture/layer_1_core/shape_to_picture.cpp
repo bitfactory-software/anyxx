@@ -1,5 +1,3 @@
-#pragma once
-
 #include <test/test_whole_picture/layer_1_core/shape_to_picture.hpp>
 
 using namespace whole_picture;
