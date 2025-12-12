@@ -1461,15 +1461,15 @@ class erased_data_holder {
   erased_data_holder& operator=(erased_data_holder const& other) = default;
   erased_data_holder& operator=(erased_data_holder&& other) = default;
 
-  template <is_erased_data FriendsErasedData, typename Dispatch>
+  template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto& get_erased_data(
-      erased_data_holder<FriendsErasedData, Dispatch> const& any);
-  template <is_erased_data FriendsErasedData, typename Dispatch>
+      erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
+  template <is_erased_data FriendsErasedData, FriendsDispatch FriendsDispatch>
   friend inline auto move_erased_data(
-      erased_data_holder<FriendsErasedData, Dispatch>&& any);
-  template <is_erased_data FriendsErasedData, typename Dispatch>
+      erased_data_holder<FriendsErasedData, FriendsDispatch>&& any);
+  template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto get_void_data_ptr(
-      erased_data_holder<FriendsErasedData, Dispatch> const& any);
+      erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
 };
 
 template <is_erased_data ErasedData, typename Dispatch>
@@ -1744,7 +1744,7 @@ struct derive_v_table_from<dyn, BaseVTable...> {
 // --------------------------------------------------------------------------------
 // typed any
 
-template <typename V, template <is_erased_data, typename> typename Any,
+template <typename V, template <is_erased_data, typename > typename Any,
           is_erased_data ErasedData>
 struct typed_any : public Any<ErasedData, rtti> {
   using erased_data_t = ErasedData;
@@ -1802,14 +1802,14 @@ template <typename V, template <is_erased_data, typename> typename Any,
 bool has_data(typed_any<V, Any, ErasedData> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, template <is_erased_data, typename> typename Any,
+template <typename V, template <is_erased_data, typename Dispatch> typename Any,
           is_erased_data ErasedData>
 void const* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
-  requires is_const_void<typename Any<ErasedData>::void_t>
+  requires is_const_void<typename Any<ErasedData, rtti>::void_t>
 {
   return get_void_data_ptr(vv.erased_data_);
 }
-template <typename V, template <is_erased_data, typename> typename Any,
+template <typename V, template <is_erased_data, typename Dispatch> typename Any,
           is_erased_data ErasedData>
 void* get_void_data_ptr(typed_any<V, Any, ErasedData> const& vv)
   requires(!is_const_void<typename typed_any<V, Any, ErasedData>::void_t>)
