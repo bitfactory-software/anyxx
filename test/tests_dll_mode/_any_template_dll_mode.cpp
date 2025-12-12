@@ -59,22 +59,15 @@ ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
-namespace {
-
-namespace template_test {
-
 ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base, any_map,
                    ((std::string), (int)))
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
+
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), test::component_base::any_map,
                        ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string i) {
     return x.at(i);
   };
 };
-
-}  // namespace template_test
-}  // namespace
-
 
 using KEY1 = test::component_base::any_recursive_map<
     anyxx::const_observer, std::string,
