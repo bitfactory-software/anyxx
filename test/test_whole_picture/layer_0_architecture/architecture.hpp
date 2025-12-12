@@ -55,10 +55,10 @@ inline point max(point lhs, point rhs) {
 }
 
 ANY(surface, (ANY_METHOD(void, write, (point, char), )))
-using mutable_observed_surface = surface<anyxx::mutable_observer,anyxx::dyn>;
-using unique_surface = surface<anyxx::unique,anyxx::dyn>;
+using mutable_observed_surface = surface<anyxx::mutable_observer, anyxx::dyn>;
+using unique_surface = surface<anyxx::unique, anyxx::dyn>;
 
-struct shape_has_dispatch {};
+struct shape_has_open_dispatch {};
 ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const),
             ANY_METHOD(architecture::point, top_left, (), const),
             ANY_METHOD(architecture::size, size, (), const)))
@@ -66,4 +66,6 @@ ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const),
 }  // namespace whole_picture::architecture
 
 ANY_DISPATCH_COUNT_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture, shape)
-ANY_DISPATCH_FOR_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture::shape<anyxx::const_observer>, whole_picture::architecture, shape)
+ANY_DISPATCH_FOR_FWD(ARCHITECTURE_EXPORT,
+                     whole_picture::architecture::shape<anyxx::const_observer>,
+                     whole_picture::architecture, shape)

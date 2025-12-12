@@ -236,7 +236,7 @@
                              model_map_template_params)> {};                   \
                                                                                \
   struct n##_v_table_as_static_inline;                                         \
-  struct n##_has_dispatch;                                                     \
+  struct n##_has_open_dispatch;                                                \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params) =       \
                 anyxx::rtti>                                                   \
@@ -251,15 +251,16 @@
       : anyxx::derive_v_table_from<                                            \
             Dispatch _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(BASE)>::         \
             template type<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>,  \
-        anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_dispatch>, n> { \
+        anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_open_dispatch>, \
+                               n> {                                            \
     using v_table_base_t = typename anyxx::derive_v_table_from<                \
         Dispatch _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(BASE)>::             \
         template type<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;      \
     using v_table_t = n##_v_table;                                             \
-    static constexpr bool dispatchs_enabled =                                  \
-        anyxx::is_type_complete<n##_has_dispatch>;                             \
+    static constexpr bool open_dispatch_enabeled =                                  \
+        anyxx::is_type_complete<n##_has_open_dispatch>;                        \
     using own_dispatch_holder_t =                                              \
-        typename anyxx::dispatch_holder<dispatchs_enabled, n>;                 \
+        typename anyxx::dispatch_holder<open_dispatch_enabeled, n>;                 \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -278,7 +279,7 @@
                                                                                \
       _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \
                                                                                \
-      if constexpr (dispatchs_enabled) {                                       \
+      if constexpr (open_dispatch_enabeled) {                                       \
         own_dispatch_holder_t::set_dispatch_table(                             \
             ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());        \
       }                                                                        \
@@ -1638,7 +1639,7 @@ template <typename VTable, typename Concrete>
 VTable* v_table_instance_implementaion();
 
 template <typename I>
-concept has_dispatchs_enabled = is_any<I> && I::v_table_t::dispatchs_enabled;
+concept has_open_dispatch_enabeled = is_any<I> && I::v_table_t::open_dispatch_enabeled;
 
 template <bool HasDispatch, template <typename...> typename Any>
 struct dispatch_holder;

@@ -11,7 +11,7 @@ using namespace anyxx;
 using namespace std::literals;
 
 namespace {
-struct any_thing_has_dispatch {};
+struct any_thing_has_open_dispatch {};
 ANY(any_thing, (ANY_METHOD(std::string, name, (), const)))
 }  // namespace
 
@@ -200,30 +200,32 @@ namespace {
 ANY(Dummy, )
 
 template <typename... ARGS>
-struct have_dispatchs_enabled {
+struct have_open_dispatch_enabeled {
   static constexpr bool value = true;
 };
 template <is_any ANY, typename... ARGS>
-  requires has_dispatchs_enabled<ANY>
-struct have_dispatchs_enabled<virtual_<ANY>, ARGS...>
-    : have_dispatchs_enabled<ARGS...> {};
+  requires has_open_dispatch_enabeled<ANY>
+struct have_open_dispatch_enabeled<virtual_<ANY>, ARGS...>
+    : have_open_dispatch_enabeled<ARGS...> {};
 template <is_any ANY, typename... ARGS>
-  requires(!has_dispatchs_enabled<ANY>)
-struct have_dispatchs_enabled<virtual_<ANY>, ARGS...> {
+  requires(!has_open_dispatch_enabeled<ANY>)
+struct have_open_dispatch_enabeled<virtual_<ANY>, ARGS...> {
   static constexpr bool value = false;
 };
-static_assert(!has_dispatchs_enabled<Dummy<const_observer>>);
-static_assert(has_dispatchs_enabled<any_thing<const_observer>>);
+static_assert(!has_open_dispatch_enabeled<Dummy<const_observer>>);
+static_assert(has_open_dispatch_enabeled<any_thing<const_observer>>);
 
-static_assert(!have_dispatchs_enabled<virtual_<Dummy<const_observer>>,
-                                      virtual_<Dummy<const_observer>>>::value);
 static_assert(
-    !have_dispatchs_enabled<virtual_<Dummy<const_observer>>,
-                            virtual_<any_thing<const_observer>>>::value);
-static_assert(!have_dispatchs_enabled<virtual_<any_thing<const_observer>>,
-                                      virtual_<Dummy<const_observer>>>::value);
+    !have_open_dispatch_enabeled<virtual_<Dummy<const_observer>>,
+                                 virtual_<Dummy<const_observer>>>::value);
 static_assert(
-    have_dispatchs_enabled<virtual_<any_thing<const_observer>>,
-                           virtual_<any_thing<const_observer>>>::value);
+    !have_open_dispatch_enabeled<virtual_<Dummy<const_observer>>,
+                                 virtual_<any_thing<const_observer>>>::value);
+static_assert(
+    !have_open_dispatch_enabeled<virtual_<any_thing<const_observer>>,
+                                 virtual_<Dummy<const_observer>>>::value);
+static_assert(
+    have_open_dispatch_enabeled<virtual_<any_thing<const_observer>>,
+                                virtual_<any_thing<const_observer>>>::value);
 
 }  // namespace

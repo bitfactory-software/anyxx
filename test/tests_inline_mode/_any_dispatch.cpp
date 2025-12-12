@@ -6,8 +6,8 @@ using namespace anyxx;
 
 namespace {
 
-struct test_base_i_has_dispatch {};
-struct test_derived_i_has_dispatch {};
+struct test_base_i_has_open_dispatch {};
+struct test_derived_i_has_open_dispatch {};
 
 ANY(test_base_i, (ANY_METHOD(std::string, to_string, (), const)))
 ANY_(test_derived_i, test_base_i,
@@ -20,12 +20,16 @@ struct x_t {
 using test_base_i_co = test_base_i<const_observer>;
 using test_derived_i_mo = test_derived_i<mutable_observer>;
 
-ANY_MODEL_MAP((x_t), test_base_i) {
-  static auto to_string(x_t const& self) { return self.s_; }
-};
-ANY_MODEL_MAP((x_t), test_derived_i) {
-  static void from_string(x_t& self, std::string_view s) { self.s_ = s; }
-};
+ANY_MODEL_MAP((x_t), test_base_i){
+    static auto to_string(x_t const& self){return self.s_;
+}  // namespace
+}
+;
+ANY_MODEL_MAP((x_t), test_derived_i){
+    static void from_string(x_t & self, std::string_view s){self.s_ = s;
+}
+}
+;
 
 dispatch<std::string(virtual_<test_base_i_co>)> to_string_otherwise;
 auto __ = to_string_otherwise.define<x_t>(
