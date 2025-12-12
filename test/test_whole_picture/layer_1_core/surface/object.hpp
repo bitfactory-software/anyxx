@@ -21,7 +21,7 @@ class CORE_EXPORT surface {
 
  private:
   std::vector<line_t> lines_;
-  static auto make_line(std::size_t size_x) { return line(size_x, ' '); }
+  static auto make_line(std::size_t size_x) { return line_t(size_x, ' '); }
 
  public:
   surface(architecture::size size);
