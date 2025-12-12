@@ -1464,7 +1464,7 @@ class erased_data_holder {
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto& get_erased_data(
       erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
-  template <is_erased_data FriendsErasedData, FriendsDispatch FriendsDispatch>
+  template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto move_erased_data(
       erased_data_holder<FriendsErasedData, FriendsDispatch>&& any);
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
@@ -1534,7 +1534,7 @@ class any_base : public erased_data_holder<ErasedData, Dispatch> {
   any_base& operator=(any_base const& other) = default;
   any_base& operator=(any_base&& other) = default;
 
-  template <is_erased_data Other, typename Dispatch>
+  template <is_erased_data Other, typename FriendsDispatch>
   friend class any_base;
 
   template <is_any I>
