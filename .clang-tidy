@@ -26,7 +26,9 @@ Checks: "*,
         -hicpp-*,
         -*old-style-cast,
         -clang-diagnostic-sign-conversion,
-        -bugprone-unused-local-non-trivial-variable
+        -bugprone-unused-local-non-trivial-variable,
+        -Wcast-function-type,
+        -Wunknown-pragmas
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''

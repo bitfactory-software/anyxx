@@ -11,7 +11,7 @@ using namespace whole_picture::architecture;
 //ANY_MODEL(core::surface, whole_picture::architecture, surface);
 
 core::surface::surface(architecture::size size)
-    : lines_(size.cy, make_line(size.cx)) {}
+    : lines_(static_cast<std::size_t>(size.cy), make_line(static_cast<std::size_t>(size.cx))) {}
 
 core::surface::surface(std::initializer_list<std::string_view> const& lines) {
   for (auto l : lines) lines_.emplace_back(l.begin(), l.end());

@@ -34,7 +34,7 @@ class CORE_EXPORT surface {
   bool contains(whole_picture::architecture::point p) const;
   auto& at(this auto& self, whole_picture::architecture::point p) {
     assert(self.contains(p));
-    return self.lines_[p.y][p.x];
+    return self.lines_[static_cast<std::size_t>(p.y)][static_cast<std::size_t>(p.x)];
   }
 
   void flush() const;
