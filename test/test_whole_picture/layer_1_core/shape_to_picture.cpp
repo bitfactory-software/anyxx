@@ -5,7 +5,6 @@ using namespace whole_picture;
 namespace {
 struct shape_surface_adapter {
   core::shapes::picture& picture;
-  architecture::size offset;
   void write(architecture::point p, char ch) {
     picture.content.write(architecture::as_point(p - picture.top_left), ch);
   }
