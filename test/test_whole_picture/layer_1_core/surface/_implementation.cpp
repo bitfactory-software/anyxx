@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include <test/test_whole_picture/layer_0_architecture/draw/picture.hpp>
 #include <test/test_whole_picture/layer_1_core/surface/object.hpp>
 
@@ -26,8 +27,8 @@ size core::surface::get_size() const {
   return size{.cx = (int)lines_.at(0).size(), .cy = (int)lines_.size()};
 }
 bool core::surface::contains(whole_picture::architecture::point p) const {
-  return (p.x >= 0 && p.x < static_cast<int>(lines_[0].size())) &&
-         (p.y >= 0 && p.y < static_cast<int>(lines_.size()));
+  return (p.x >= 0 && std::cmp_less(p.x, lines_[0].size())) &&
+         (p.y >= 0 && std::cmp_less(p.y, lines_.size()));
 }
 void core::surface::write(point p, char ch) {
   if (contains(p)) at(p) = ch;

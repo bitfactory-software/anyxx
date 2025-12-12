@@ -172,7 +172,7 @@ TEST_CASE("_interface_const_correct anyxx::shared_const") {
 namespace {
 struct text_object {
   std::string text = "hallo";
-  std::string get_text() const { return text; }
+  [[nodiscard]] std::string get_text() const { return text; }
   void set_text(std::string const& t) { text = t; }
 };
 

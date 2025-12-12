@@ -15,15 +15,14 @@ ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::line(surface, self.p1, self.p2);
   };
-  auto size(shapes::line const& self) const {
-    return architecture::abs(self.p1 - self.p2) + architecture::size{1,1};
+  [[nodiscard]] auto size(shapes::line const& self) const {
+    return architecture::abs(self.p1 - self.p2) +
+           architecture::size{.cx = 1, .cy = 1};
   };
-  architecture::point top_left(shapes::line const& self) const {
+  [[nodiscard]] architecture::point top_left(shapes::line const& self) const {
     auto min = architecture::min(self.p1, self.p2);
-    if(self.p1.x > self.p2.x)
-        min.x++;
-    if(self.p1.y > self.p2.y)
-        min.y++;
+    if (self.p1.x > self.p2.x) min.x++;
+    if (self.p1.y > self.p2.y) min.y++;
     return min;
   };
 };

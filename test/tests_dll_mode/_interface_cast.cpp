@@ -74,8 +74,8 @@ TEST_CASE("_interface_cast") {
       auto svc = downcast_to<set_value_i<mutable_observer>>(
           get_value_i_const_observer);
       CHECK(svc);
-      svc->set_value(666);
-      REQUIRE(svc->get_value() == 666);
+      svc->set_value(666); //NOLINT
+      REQUIRE(svc->get_value() == 666);//NOLINT
     }
     {
       static_assert(std::derived_from<get_value_i<unique>::v_table_t,
@@ -86,8 +86,8 @@ TEST_CASE("_interface_cast") {
       auto svu =
           downcast_to<set_value_i<unique>>(std::move(get_value_i_unique));
       CHECK(svu);
-      svu->set_value(1.44);
-      CHECK(svu->get_value() == 1.44);
+      svu->set_value(1.44);//NOLINT
+      CHECK(svu->get_value() == 1.44);//NOLINT
     }
   }
   {
@@ -120,7 +120,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(get_void_data_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_erased_data(i1d));  // moved!
+    REQUIRE(!get_erased_data(i1d));  //NOLINT
 #pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
   }

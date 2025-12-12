@@ -6,25 +6,25 @@
 #include <iostream>
 #include <string>
 
-using std::cout;
 using std::string;
 
 using namespace anyxx;
 
 namespace {
 
-ANY(node_i, (ANY_METHOD(int, value, (), const),
-                    ANY_METHOD(string, as_forth, (), const),
-                    ANY_METHOD(string, as_lisp, (), const)))
+ANY(node_i,
+    (ANY_METHOD(int, value, (), const), ANY_METHOD(string, as_forth, (), const),
+     ANY_METHOD(string, as_lisp, (), const)))
 using node = node_i<shared_const, anyxx::dyn>;
 
 struct Plus {
-  Plus(node left, node right) : left(left), right(right) {}
-  int value() const { return left.value() + right.value(); }
-  string as_forth() const {
+  Plus(node left, node right)
+      : left(std::move(left)), right(std::move(right)) {}
+  [[nodiscard]] int value() const { return left.value() + right.value(); }
+  [[nodiscard]] string as_forth() const {
     return left.as_forth() + " " + right.as_forth() + " +";
   }
-  string as_lisp() const {
+  [[nodiscard]] string as_lisp() const {
     return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
   }
 
@@ -32,12 +32,13 @@ struct Plus {
 };
 
 struct Times {
-  Times(node left, node right) : left(left), right(right) {}
-  int value() const { return left.value() * right.value(); }
-  string as_forth() const {
+  Times(node left, node right)
+      : left(std::move(left)), right(std::move(right)) {}
+  [[nodiscard]] int value() const { return left.value() * right.value(); }
+  [[nodiscard]] string as_forth() const {
     return left.as_forth() + " " + right.as_forth() + " *";
   }
-  string as_lisp() const {
+  [[nodiscard]] string as_lisp() const {
     return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
   }
 
@@ -46,15 +47,15 @@ struct Times {
 
 struct Integer {
   explicit Integer(int value) : int_(value) {}
-  int value() const { return int_; }
-  string as_forth() const { return std::to_string(int_); }
-  string as_lisp() const { return std::to_string(int_); }
+  [[nodiscard]] int value() const { return int_; }
+  [[nodiscard]] string as_forth() const { return std::to_string(int_); }
+  [[nodiscard]] string as_lisp() const { return std::to_string(int_); }
 
   int int_;
 };
 
 template <typename NODE, typename... ARGS>
-auto make_node(ARGS&&... args) {
+[[nodiscard]] auto make_node(ARGS&&... args) {
   return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
 }
 
@@ -77,4 +78,3 @@ TEST_CASE("21_Tree_any_inline") {
   BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
 #endif  // !_DEBUG
 }
-

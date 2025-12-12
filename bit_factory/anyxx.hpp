@@ -503,7 +503,7 @@
         BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)>;  \
     using base_t::value_;                                                     \
     n(ErasedData v) : base_t(std::move(v)) {}                                 \
-    ErasedData& operator=(ErasedData v) {                                     \
+    n& operator=(ErasedData v) {                                              \
       base_t::value_ = std::move(v);                                          \
       return *this;                                                           \
     }                                                                         \

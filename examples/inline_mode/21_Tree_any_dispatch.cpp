@@ -6,7 +6,6 @@
 #include <iostream>
 #include <string>
 
-using std::cout;
 using std::string;
 
 using namespace anyxx;
@@ -21,19 +20,21 @@ using model = node_i<shared_const>;
 };  // namespace node
 
 struct Plus {
-  Plus(node::model left, node::model right) : left(left), right(right) {}
+  Plus(node::model left, node::model right)
+      : left(std::move(left)), right(std::move(right)) {}
   node::model left, right;
-  int value() const { return left.value() + right.value(); }
+  [[nodiscard]] int value() const { return left.value() + right.value(); }
 };
 struct Times {
-  Times(node::model left, node::model right) : left(left), right(right) {}
+  Times(node::model left, node::model right)
+      : left(std::move(left)), right(std::move(right)) {}
   node::model left, right;
-  int value() const { return left.value() * right.value(); }
+  [[nodiscard]] int value() const { return left.value() * right.value(); }
 };
 struct Integer {
   explicit Integer(int i_) : i(i_) {}
   int i;
-  int value() const { return i; }
+  [[nodiscard]] int value() const { return i; }
 };
 
 // =============================================================================

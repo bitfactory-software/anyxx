@@ -4,7 +4,7 @@
 namespace {
 struct x_t {
   std::string s_;
-  [[maybe_unused]] std::string get() const { return s_; }
+  [[maybe_unused]][[nodiscard]] std::string get() const { return s_; }
 };
 ANY(has_meta_data, )
 }  // namespace

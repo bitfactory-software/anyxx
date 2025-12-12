@@ -3,7 +3,7 @@
 #include <string>
 
 struct A {
-  A(const std::string& sp) : s(sp) {}
+  A(std::string sp) : s(std::move(sp)) {}
   std::string s;
 };
 
@@ -51,7 +51,7 @@ TEST_CASE("data_erase_unerase/unique") {
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    auto u1 = erased<unique>(std::make_unique<A>("hallo"));
+    auto u1 = erased<unique>(std::make_unique<A>("hallo"));  // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo"); // NOLINT
   }
 }

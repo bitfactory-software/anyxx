@@ -36,7 +36,7 @@ ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
 
 struct any_map_to_tstring_v_table_as_static_inline {};
 ANY_TEMPLATE(((KEY)), any_map_to_tstring,
-             (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY),
+             (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY const&),
                          const)))
 
 ANY_MODEL_MAP((int), any_to_tstring) {
@@ -64,7 +64,7 @@ ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base, any_map,
 
 ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), test::component_base::any_map,
                        ((std::string), (int))) {
-  int const& at(std::map<std::string, int> const& x, std::string i) {
+  int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);
   };
 };

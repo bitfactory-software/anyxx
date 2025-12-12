@@ -22,7 +22,7 @@ const core::surface cross{
     " X",
 };
 
-void draw_scene(std::vector<architecture::shape<const_observer>> shapes) {
+void draw_scene(std::vector<architecture::shape<const_observer>> const& shapes) {
   core::surface b{screen};
   architecture::surface<mutable_observer,anyxx::dyn> s{b};
   for (auto const& shape : shapes) shape.draw(s);

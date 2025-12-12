@@ -17,13 +17,13 @@ ANY(any_creature, (ANY_METHOD(std::type_info const*, name, (), const)))
 namespace {
 
 struct cat {
-  auto name() const { return &typeid(*this); }
+   [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 struct dog {
-  auto name() const { return &typeid(*this); }
+   [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 struct man {
-  auto name() const { return &typeid(*this); }
+   [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 auto encounter = anyxx::dispatch<encounter_result(
     anyxx::virtual_<any_creature<anyxx::const_observer>>,

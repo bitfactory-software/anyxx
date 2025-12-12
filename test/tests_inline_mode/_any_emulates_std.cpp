@@ -96,7 +96,7 @@ TEST_CASE("std emulated function") {
     static_assert(!std::assignable_from<string_to_string_mutable<unique>,
                                         string_to_string_mutable<unique>>);
     string_to_string_mutable<unique> f2{std::move(f)};
-    REQUIRE(!has_data(get_erased_data(f)));
+    REQUIRE(!has_data(get_erased_data(f))); //NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
   }

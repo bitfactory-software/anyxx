@@ -11,13 +11,13 @@
 namespace {
 
 struct cat {
-  auto name() const { return &typeid(*this); }
+  [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 struct dog {
-  auto name() const { return &typeid(*this); }
+  [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 struct man {
-  auto name() const { return &typeid(*this); }
+  [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 
 // helper type for the visitor #4
@@ -29,7 +29,7 @@ struct overloaded : Ts... {
 using creature = std::variant<cat, dog, man>;
 using creatures_t = std::vector<creature>;
 
-encounter_result encounter(creature const& a, creature const& b) {
+[[nodiscard]]encounter_result encounter(creature const& a, creature const& b) {
   return std::visit(
       overloaded{[](cat const& l, dog const& r) -> encounter_result {
                    return {l.name(), encounter_action::hisses_at, r.name()};

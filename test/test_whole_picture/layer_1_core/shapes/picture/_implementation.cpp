@@ -18,10 +18,10 @@ ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::shape) {
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::picture(surface, self.top_left, self.content);
   };
-  auto size(shapes::picture const& self) const {
+  [[nodiscard]]auto size(shapes::picture const& self) const {
     return self.content.get_size();
   };
-  architecture::point top_left(shapes::picture const& self) const {
+  [[nodiscard]]architecture::point top_left(shapes::picture const& self) const {
     return self.top_left;
   };
 };

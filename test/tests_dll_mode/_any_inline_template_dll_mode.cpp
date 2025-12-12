@@ -6,20 +6,20 @@
 namespace {
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
-                    (ANY_METHOD(VALUE const&, at, (KEY), const),
-                     ANY_METHOD(std::size_t, size, (), const)))
+             (ANY_METHOD(VALUE const&, at, (KEY const&), const),
+              ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, ((KEY), (VALUE)),
-                     (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY), ),
-                      ANY_OP(VALUE&, [], (KEY), )))
+              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
+               ANY_OP(VALUE&, [], (KEY const&), )))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
-                    (ANY_METHOD(VALUE, at, (KEY), const),
-                     ANY_METHOD(std::size_t, size, (), const)))
+             (ANY_METHOD(VALUE, at, (KEY const&), const),
+              ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
-                    (ANY_METHOD(VALUE, at, (KEY), ),
-                     ANY_METHOD(std::size_t, size, (), const)))
+             (ANY_METHOD(VALUE, at, (KEY const&), ),
+              ANY_METHOD(std::size_t, size, (), const)))
 
 }  // namespace
 
@@ -28,7 +28,8 @@ static_assert(anyxx::is_in_dll_mode);
 namespace {
 
 template <typename KEY, typename VALUE>
-void test_any_map_template(any_map<anyxx::const_observer, KEY, VALUE, anyxx::dyn> map_i) {
+void test_any_map_template(
+    any_map<anyxx::const_observer, KEY, VALUE, anyxx::dyn> map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -46,7 +47,7 @@ ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
 
 struct any_map_to_tstring_v_table_as_static_inline {};
 ANY_TEMPLATE(((KEY)), any_map_to_tstring,
-             (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY),
+             (ANY_METHOD(any_to_tstring<anyxx::const_observer>, at, (KEY const&),
                          const)))
 
 ANY_MODEL_MAP((int), any_to_tstring) {
@@ -64,7 +65,7 @@ using namespace anyxx;
 
 ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
                        ((std::string), (int))) {
-  int const& at(std::map<std::string, int> const& x, std::string i) {
+  int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);
   };
 };
@@ -119,7 +120,9 @@ TEST_CASE("any inline template test3") {
       [](any_recursive_map<
           const_observer, int,
           any_recursive_map<const_observer, std::string,
-                            any_map<const_observer, int, double, anyxx::dyn>, anyxx::dyn>, anyxx::dyn>
+                            any_map<const_observer, int, double, anyxx::dyn>,
+                            anyxx::dyn>,
+          anyxx::dyn>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -135,7 +138,9 @@ TEST_CASE("any inline template test3") {
           mutable_observer, int,
           any_mutable_recursive_map<
               mutable_observer, std::string,
-              any_mutable_map<mutable_observer, int, double, anyxx::dyn>, anyxx::dyn>, anyxx::dyn>
+              any_mutable_map<mutable_observer, int, double, anyxx::dyn>,
+              anyxx::dyn>,
+          anyxx::dyn>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");

@@ -24,7 +24,8 @@ const architecture::size full_screen{80, 25};
 }  // namespace
 
 TEST_CASE("example 1 core") {
-//  std::cout << get_meta_data<core::surface>().get_type_info().name() << "\n";
+  //  std::cout << get_meta_data<core::surface>().get_type_info().name() <<
+  //  "\n";
   std::cout << get_meta_data<whole_picture::core::shapes::picture>()
                    .get_type_info()
                    .name()
@@ -84,8 +85,7 @@ TEST_CASE("example 3 architecture picture") {
 
     REQUIRE(members_count<shapes::picture>() == 1);
     auto any_shape = shapes::make_picture({0, 0}, duck);
-    core::shapes::picture const* duck_shape =
-        anyxx::unerase_cast<shapes::picture>(any_shape);
+    auto duck_shape = anyxx::unerase_cast<shapes::picture>(any_shape);
     CHECK(!duck_shape->get(internal::picture_author));
     auto duck_shape_clone = *duck_shape;
     duck_shape_clone[internal::picture_author] = "Max";

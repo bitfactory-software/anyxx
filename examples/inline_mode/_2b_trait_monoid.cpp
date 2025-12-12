@@ -7,13 +7,15 @@ namespace example_2b {
 TRAIT(monoid,
       (TRAIT_METHOD(monoid<T>, op, (monoid<T> const&), const,
                     [](const auto& value, monoid<T> const r) {
-                      return monoid<T>{}.concat(std::vector{monoid{value}, r});
+                      return monoid<T>{}.concat(
+                          std::vector{monoid{value}, r});  // NOLINT
                     }),
        TRAIT_METHOD(monoid<T>, concat, (const auto&), const,
                     []([[maybe_unused]] const auto& value, const auto& r) {
                       return std::ranges::fold_right(
-                          r, monoid<T>{},
-                          [&](auto m1, auto m2) { return m1.op(m2); });
+                          r, monoid<T>{}, [&](auto const& m1, auto const& m2) {
+                            return m1.op(m2);
+                          });
                     }),
        TRAIT_METHOD(monoid<T>, id, (), const,
                     []([[maybe_unused]] const auto& value) {
@@ -35,24 +37,26 @@ struct monoid_trait<int> : monoid_trait_default<int> {
 
 template <>
 struct monoid_trait<std::string> : monoid_trait_default<std::string> {
-  static monoid<std::string> op(std::string const& self, monoid<std::string> r) {
+  static monoid<std::string> op(std::string const& self,
+                                monoid<std::string> const& r) {
     return self + static_cast<std::string>(r);
   };
 };
 
 template <typename M, typename R>
-void test_monoid(monoid<M> m, R r)
+void test_monoid(monoid<M> const& m, R r)
   requires std::ranges::range<R> &&
            std::same_as<typename R::value_type, monoid<M>>
 {
   CHECK(m.op(monoid<M>{}).op(m) == m.op(m).op(monoid<M>{}));
   CHECK(m.id() == monoid<M>{});
-  CHECK(m.concat(r) ==
-        std::ranges::fold_right(r, monoid<M>{},
-                                [&](auto m1, auto m2) { return m1.op(m2); }));
+  CHECK(m.concat(r) == std::ranges::fold_right(
+                           r, monoid<M>{}, [&](auto const& m1, auto const& m2) {
+                             return m1.op(m2);
+                           }));
 }
 
-}  // namespace example_2
+}  // namespace example_2b
 
 TEST_CASE("example 2b monoid ") {
   using namespace example_2b;

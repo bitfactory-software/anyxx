@@ -25,48 +25,52 @@ ANY_(any_callable_shape, any_shape,
 struct circle {
   double radius = 10;
   void draw(position p) const {
-    std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << std::endl;
+    std::cout << " A Circle Is Recorded At " << p.x << " " << p.y << "\n";
   }
-  int count_sides() const { return 1; }
-  double area() const { return radius * radius * 3.14; }
-  double circumference() const { return radius * 2.0 * 3.14; }
-  double perimeter() const { return circumference(); }
-  std::string operator()(const std::string& x) const { return x + "circle"; }
+  [[nodiscard]] int count_sides() const { return 1; }
+  [[nodiscard]] double area() const { return radius * radius * 3.14; }
+  [[nodiscard]] double circumference() const { return radius * 2.0 * 3.14; }
+  [[nodiscard]] double perimeter() const { return circumference(); }
+  [[nodiscard]] std::string operator()(const std::string& x) const {
+    return x + "circle";
+  }
 };
 struct square {
   int w;
   void draw(position p) const {
-    std::cout << " A Square Is Recorded At " << p.x << " " << p.y << std::endl;
+    std::cout << " A Square Is Recorded At " << p.x << " " << p.y << "\n";
   }
-  int count_sides() const { return 4; }
-  double area() const { return w * w; }
-  double perimeter() const { return w * 4; }
-  std::string operator()(const std::string& x) const { return x + "square"; }
+  [[nodiscard]] int count_sides() const { return 4; }
+  [[nodiscard]] double area() const { return w * w; }
+  [[nodiscard]] double perimeter() const { return w * 4; }
+  [[nodiscard]] std::string operator()(const std::string& x) const {
+    return x + "square";
+  }
 };
 struct rectangle {
   int w, h;
   void draw(position p) const {
-    std::cout << " A Rectangle Is Recorded At " << p.x << " " << p.y
-              << std::endl;
+    std::cout << " A Rectangle Is Recorded At " << p.x << " " << p.y << "\n";
   }
-  int count_sides() const { return 4; }
-  double area() const { return w * h; }
-  double perimeter() const { return w + w + h + h; }
-  std::string operator()(const std::string& x) const { return x + "rectangle"; }
+  [[nodiscard]] int count_sides() const { return 4; }
+  [[nodiscard]] double area() const { return w * h; }
+  [[nodiscard]] double perimeter() const { return w + w + h + h; }
+  [[nodiscard]] std::string operator()(const std::string& x) const {
+    return x + "rectangle";
+  }
 };
 struct regular_polygon {
   int sides;
   double side_length;
   void draw(position p) const {
-    std::cout << " A Polygon Is Recorded At " << p.x << ", " << p.y
-              << std::endl;
+    std::cout << " A Polygon Is Recorded At " << p.x << ", " << p.y << "\n";
   }
-  int count_sides() const { return sides; }
-  double apothem() const { return (side_length / 2) / std::tan(3.14 / sides); }
-  double radius() const { return (side_length / 2) / std::sin(3.14 / sides); }
-  double perimeter() const { return sides * side_length; }
-  double area() const { return (perimeter() * apothem()) / 2; }
-  std::string operator()(const std::string& x) const {
+   [[nodiscard]]int count_sides() const { return sides; }
+   [[nodiscard]]double apothem() const { return (side_length / 2) / std::tan(3.14 / sides); }
+   [[nodiscard]]double radius() const { return (side_length / 2) / std::sin(3.14 / sides); }
+   [[nodiscard]]double perimeter() const { return sides * side_length; }
+   [[nodiscard]]double area() const { return (perimeter() * apothem()) / 2; }
+   [[nodiscard]]std::string operator()(const std::string& x) const {
     return x + "regular_polygon";
   }
 };
@@ -74,20 +78,20 @@ struct regular_polygon {
 ANY_MODEL_MAP((circle), any_drawable) {
   auto draw([[maybe_unused]] circle const& x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_any_drawable_model_map At "
-              << p.x << " " << p.y << std::endl;
+              << p.x << " " << p.y << "\n";
   };  // namespace smoke_test
 };
 
 void print_any_shape_const_observer(const any_shape<const_observer> s) {
-  s.draw({4.0, 5.0});
-  std::cout << "Shape Number Of Sides: " << s.count_sides() << std::endl;
-  std::cout << "Shape Perimeter: " << s.perimeter() << std::endl;
-  std::cout << "Shape Area: " << s.area() << std::endl;
+  s.draw({4.0, 5.0}); //NOLINT
+  std::cout << "Shape Number Of Sides: " << s.count_sides() << "\n";
+  std::cout << "Shape Perimeter: " << s.perimeter() << "\n";
+  std::cout << "Shape Area: " << s.area() << "\n";
 }
 void print_any_callable_shape_const_observer(
     const any_callable_shape<const_observer> s) {
   print_any_shape_const_observer(s);
-  std::cout << s("Shape type = ") << std::endl;
+  std::cout << s("Shape type = ") << "\n";
 }
 
 // using shape_double_base_error = any_shape<
@@ -102,10 +106,10 @@ using namespace smoke_test;
 TEST_CASE("dynamic v_table const_observer") {
   circle c{12.3};
   square s{32};
-  rectangle r{12, 9};
-  regular_polygon p{4, 32};
+  rectangle r{12, 9};//NOLINT
+  regular_polygon p{.sides = 4, .side_length = 32};
 
-  std::cout << "print_shape *******************************" << std::endl;
+  std::cout << "print_shape *******************************" << "\n";
 
   print_any_callable_shape_const_observer(c);
   print_any_callable_shape_const_observer(s);
@@ -125,7 +129,7 @@ TEST_CASE("dynamic v_table const_observer") {
   any_callable_shape<const_observer> any_callable_shape_onst_observer_circle2{
       a_circle};
 
-  const_observer o1 = erased<const_observer>(c);
+  auto o1 = erased<const_observer>(c);
   [[maybe_unused]] const_observer o2 = o1;
 
   {
@@ -177,7 +181,7 @@ TEST_CASE("dynamic v_table const_observer") {
   any_shape<const_observer> shape_circle_base =
       any_callable_shape_onst_observer_circle1;
   {
-    any_callable_shape<const_observer> any_shape_is_circle =
+    auto any_shape_is_circle =
         anyxx::unchecked_downcast_to<any_callable_shape<const_observer>>(
             shape_circle_base);
     print_any_callable_shape_const_observer(any_shape_is_circle);
@@ -198,7 +202,7 @@ TEST_CASE("dynamic any shared_const") {
   auto s = std::make_shared<square>(32);
   auto r = std::make_shared<rectangle>(12, 9);
   auto p = std::make_shared<regular_polygon>(4, 32);
-  std::cout << "print_shape_vv ********************************" << std::endl;
+  std::cout << "print_shape_vv ********************************\n";
 
   using typed_circle_shape_shared_const =
       typed_any<circle, any_shape, shared_const>;
@@ -212,7 +216,7 @@ TEST_CASE("dynamic any shared_const") {
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(),
                Catch::Matchers::WithinAbs(77.2, 77.3));
-  auto x = circle_shape_vv;
+  auto x = circle_shape_vv; // NOLINT
   {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, Catch::Matchers::WithinAbs(77.2, 77.3));
@@ -226,7 +230,9 @@ TEST_CASE("dynamic any shared_const") {
 }
 
 namespace {
-void print_any_shape_co(any_shape<const_observer> s) { s.draw({1, 2}); }
+void print_any_shape_co(any_shape<const_observer> s) {
+  s.draw({.x = 1, .y = 2});
+}
 
 }  // namespace
 TEST_CASE("dynamic any unique") {

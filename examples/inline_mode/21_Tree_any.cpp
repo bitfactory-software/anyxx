@@ -1,13 +1,12 @@
 ﻿// https://github.com/jll63/yomm2/blob/master/examples/accept_no_visitors.cpp
 
 #include <bit_factory/anyxx.hpp>
-#include <catch2/catch_test_macros.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <iostream>
 #include <memory>
 #include <string>
 
-using std::cout;
 using std::string;
 
 using namespace anyxx;
@@ -22,12 +21,12 @@ ANY(node_i,
 using node = node_i<shared_const>;
 
 struct Plus {
-  Plus(node left, node right) : left(left), right(right) {}
-  int value() const { return left.value() + right.value(); }
-  string as_forth() const {
+  Plus(node left, node right) : left(std::move(left)), right(std::move(right)) {}
+  [[nodiscard]] int value() const { return left.value() + right.value(); }
+  [[nodiscard]] string as_forth() const {
     return left.as_forth() + " " + right.as_forth() + " +";
   }
-  string as_lisp() const {
+  [[nodiscard]] string as_lisp() const {
     return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
   }
 
@@ -35,12 +34,12 @@ struct Plus {
 };
 
 struct Times {
-  Times(node left, node right) : left(left), right(right) {}
-  int value() const { return left.value() * right.value(); }
-  string as_forth() const {
+  Times(node left, node right) : left(std::move(left)), right(std::move(right)) {}
+  [[nodiscard]] int value() const { return left.value() * right.value(); }
+  [[nodiscard]] string as_forth() const {
     return left.as_forth() + " " + right.as_forth() + " *";
   }
-  string as_lisp() const {
+  [[nodiscard]] string as_lisp() const {
     return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
   }
 
@@ -49,9 +48,9 @@ struct Times {
 
 struct Integer {
   explicit Integer(int value) : int_(value) {}
-  int value() const { return int_; }
-  string as_forth() const { return std::to_string(int_); }
-  string as_lisp() const { return std::to_string(int_); }
+  [[nodiscard]] int value() const { return int_; }
+  [[nodiscard]] string as_forth() const { return std::to_string(int_); }
+  [[nodiscard]] string as_lisp() const { return std::to_string(int_); }
 
   int int_;
 };
@@ -76,7 +75,8 @@ TEST_CASE("21_Tree_any") {
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
   std::cout << out.str() << "\n";
 #ifndef _DEBUG
-  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE /Ob2)' is used!\n";
+  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
+               "/Ob2)' is used!\n";
   BENCHMARK("21_Tree any++ value") { return expr.value(); };
   BENCHMARK("21_Tree any++ as_lisp") { return expr.as_lisp(); };
 #endif  // !_DEBUG
