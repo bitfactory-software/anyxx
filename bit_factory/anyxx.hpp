@@ -167,16 +167,12 @@
   ErasedData _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(_detail_REMOVE_PARENS(t))
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
-#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,    \
-                               const_, trait_body, ...)                        \
-  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                    \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
-    if constexpr (std::same_as<decltype(_detail_REMOVE_PARENS(trait_body)),    \
-                               bool>) {                                        \
-      return x.name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
-    } else {                                                                   \
-      _detail_REMOVE_PARENS(trait_body);                                        \
-    }                                                                          \
+#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, \
+                               const_, trait_body, ...)                     \
+  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                 \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {               \
+    return _detail_REMOVE_PARENS(trait_body)(                               \
+        __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));              \
   };
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
@@ -418,6 +414,11 @@
 #define ANY_METHOD_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
+#define __detail_ANYXX_MEMBER_METHOD(overload, ret, name, name_ext, \
+                                     exact_const, const_, params)   \
+  ANY_METHOD_(overload, ret, name, name_ext, exact_const, const_,   \
+              (x.name_ext), _detail_EXPAND params)
+
 #define TRAIT_METHOD_PURE(ret, name, params, const_)     \
   ANY_METHOD_(, ret, name, name, false, const_,          \
               (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name)), \
@@ -429,24 +430,26 @@
               _detail_EXPAND params)
 
 #define ANY_METHOD(ret, name, params, const_) \
-  ANY_METHOD_(, ret, name, name, false, const_, (true), _detail_EXPAND params)
+  __detail_ANYXX_MEMBER_METHOD(, ret, name, name, false, const_, params)
 
-#define ANY_METHOD_OVERLOAD(ret, name, params, const_)                    \
-  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, (true), \
-              _detail_EXPAND params)
+#define ANY_METHOD_OVERLOAD(ret, name, params, const_)                     \
+  __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(name), ret, name, name, false, \
+                               const_, params)
 
 #define ANY_OP(ret, op, params, const_)                                       \
-  ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
-              const_, (true), _detail_EXPAND params)
+  __detail_ANYXX_MEMBER_METHOD(                                               \
+      , ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, const_, \
+      params)
 
 #define ANY_OP_EXACT(ret, op, params, const_)                                \
-  ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
-              const_, (true), _detail_EXPAND params)
+  __detail_ANYXX_MEMBER_METHOD(                                              \
+      , ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, \
+      params)
 
-#define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_)                        \
-  ANY_METHOD_(ANY_OVERLOAD(operator op), ret,                                 \
-              _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, \
-              (true), _detail_EXPAND params)
+#define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
+  __detail_ANYXX_MEMBER_METHOD(                        \
+      ANY_OVERLOAD(operator op), ret,                  \
+      _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
