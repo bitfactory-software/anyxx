@@ -15,26 +15,23 @@ namespace _21_Tree_TE_interface_dispatch {
 
 namespace node {
 struct node_i_has_open_dispatch {};
-ANY(node_i, (ANY_METHOD(int, value, (), const)))
+ANY(node_i, )
 using model = node_i<shared_const>;
 };  // namespace node
 
 struct Plus {
   Plus(node::model left, node::model right)
-      : left(std::move(left)), right(std::move(right)) {}
-  node::model left, right;
-  [[nodiscard]] int value() const { return left.value() + right.value(); }
+      : left_(std::move(left)), right_(std::move(right)) {}
+  node::model left_, right_;
 };
 struct Times {
   Times(node::model left, node::model right)
-      : left(std::move(left)), right(std::move(right)) {}
-  node::model left, right;
-  [[nodiscard]] int value() const { return left.value() * right.value(); }
+      : left_(std::move(left)), right_(std::move(right)) {}
+  node::model left_, right_;
 };
 struct Integer {
   explicit Integer(int i_) : i(i_) {}
   int i;
-  [[nodiscard]] int value() const { return i; }
 };
 
 // =============================================================================
@@ -44,19 +41,19 @@ struct Integer {
 // evaluate
 dispatch<int(virtual_<node::model>)> value;
 auto __ = value.define<Plus>(
-    [](auto const& expr) { return value(expr.left) + value(expr.right); });
+    [](auto const& expr) { return value(expr.left_) + value(expr.right_); });
 auto __ = value.define<Times>(
-    [](auto const& expr) { return value(expr.left) * value(expr.right); });
+    [](auto const& expr) { return value(expr.left_) * value(expr.right_); });
 auto __ = value.define<Integer>([](auto const& expr) { return expr.i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
 dispatch<std::string(virtual_<node::model>)> as_forth;
 auto __ = as_forth.define<Plus>([](auto const& expr) {
-  return as_forth(expr.left) + " " + as_forth(expr.right) + " +";
+  return as_forth(expr.left_) + " " + as_forth(expr.right_) + " +";
 });
 auto __ = as_forth.define<Times>([](auto const& expr) {
-  return as_forth(expr.left) + " " + as_forth(expr.right) + " *";
+  return as_forth(expr.left_) + " " + as_forth(expr.right_) + " *";
 });
 auto __ = as_forth.define<Integer>(
     [](auto const& expr) { return std::to_string(expr.i); });
@@ -65,10 +62,10 @@ auto __ = as_forth.define<Integer>(
 // render as Lisp
 dispatch<std::string(virtual_<node::model>)> as_lisp;
 auto __ = as_lisp.define<Plus>([](auto const& expr) {
-  return "(plus " + as_lisp(expr.left) + " " + as_lisp(expr.right) + ")";
+  return "(plus " + as_lisp(expr.left_) + " " + as_lisp(expr.right_) + ")";
 });
 auto __ = as_lisp.define<Times>([](auto const& expr) {
-  return "(times " + as_lisp(expr.left) + " " + as_lisp(expr.right) + ")";
+  return "(times " + as_lisp(expr.left_) + " " + as_lisp(expr.right_) + ")";
 });
 auto __ = as_lisp.define<Integer>(
     [](auto const& expr) { return std::to_string(expr.i); });

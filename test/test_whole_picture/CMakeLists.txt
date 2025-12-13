@@ -2,7 +2,11 @@
 
 file(GLOB_RECURSE layer_0_architecture_cpp_files "./layer_0_architecture/*.cpp")
 file(GLOB_RECURSE layer_0_architecture_hpp_files "./layer_0_architecture/*.hpp")
-add_library(layer_0_architecture SHARED ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
+if(MSVC)
+  add_library(layer_0_architecture SHARED ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
+else()
+  add_library(layer_0_architecture STATIC ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
+endif()
 set_target_properties(layer_0_architecture PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_definitions(layer_0_architecture PUBLIC ANY_DLL_MODE)
 target_compile_definitions(layer_0_architecture PRIVATE ARCHITECTURE_SHARED)
@@ -19,7 +23,11 @@ target_include_directories(layer_0_architecture INTERFACE
 
 file(GLOB_RECURSE layer_1_core_cpp_files "./layer_1_core/*.cpp")
 file(GLOB_RECURSE layer_1_core_hpp_files "./layer_1_core/*.hpp")
-add_library(layer_1_core SHARED ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
+if(MSVC)
+  add_library(layer_1_core SHARED ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
+else()
+  add_library(layer_1_core STATIC ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
+endif()
 set_target_properties(layer_1_core PROPERTIES LINKER_LANGUAGE CXX)
 target_link_libraries(layer_1_core 
   PRIVATE   anyxx::anyxx_warnings
@@ -34,7 +42,11 @@ target_include_directories(layer_1_core PUBLIC
 
 file(GLOB_RECURSE layer_2_collision_cpp_files "./layer_2_collision/*.cpp")
 file(GLOB_RECURSE layer_2_collision_hpp_files "./layer_2_collision/*.hpp")
-add_library(layer_2_collision SHARED ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
+if(MSVC)
+  add_library(layer_2_collision SHARED ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
+else()
+  add_library(layer_2_collision STATIC ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
+endif()
 set_target_properties(layer_2_collision PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_definitions(layer_2_collision PUBLIC ANY_DLL_MODE)
 target_link_libraries(layer_2_collision 

@@ -19,30 +19,30 @@ using node = node_i<shared_const, anyxx::dyn>;
 
 struct Plus {
   Plus(node left, node right)
-      : left(std::move(left)), right(std::move(right)) {}
-  [[nodiscard]] int value() const { return left.value() + right.value(); }
+      : left_(std::move(left)), right_(std::move(right)) {}
+  [[nodiscard]] int value() const { return left_.value() + right_.value(); }
   [[nodiscard]] string as_forth() const {
-    return left.as_forth() + " " + right.as_forth() + " +";
+    return left_.as_forth() + " " + right_.as_forth() + " +";
   }
   [[nodiscard]] string as_lisp() const {
-    return "(plus " + left.as_lisp() + " " + right.as_lisp() + ")";
+    return "(plus " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  node left, right;
+  node left_, right_;
 };
 
 struct Times {
   Times(node left, node right)
-      : left(std::move(left)), right(std::move(right)) {}
-  [[nodiscard]] int value() const { return left.value() * right.value(); }
+      : left_(std::move(left)), right_(std::move(right)) {}
+  [[nodiscard]] int value() const { return left_.value() * right_.value(); }
   [[nodiscard]] string as_forth() const {
-    return left.as_forth() + " " + right.as_forth() + " *";
+    return left_.as_forth() + " " + right_.as_forth() + " *";
   }
   [[nodiscard]] string as_lisp() const {
-    return "(times " + left.as_lisp() + " " + right.as_lisp() + ")";
+    return "(times " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  node left, right;
+  node left_, right_;
 };
 
 struct Integer {
