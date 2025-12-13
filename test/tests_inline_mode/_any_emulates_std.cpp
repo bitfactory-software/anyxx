@@ -3,7 +3,10 @@
 #include <concepts>
 #include <string>
 
-using namespace anyxx;
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
+
 using namespace anyxx;
 
 namespace {

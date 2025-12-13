@@ -1947,7 +1947,7 @@ class hook<R(Args...)> {
     explicit operator bool() const { return index_ >= 0; }
     R operator()(Args&&... args) const {
       assert(index_ >= 0);
-      return hook_.callees_[((int)index_)].second(super{index_ - 1, hook_},
+      return hook_.callees_[((std::size_t)index_)].second(super{index_ - 1, hook_},
                                                   std::forward<Args>(args)...);
     }
   };
