@@ -44,15 +44,16 @@ TEST_CASE("data_erase_unerase/observer") {
 TEST_CASE("data_erase_unerase/unique") {
   {
     auto u1 = erased<unique>(std::make_unique<int>(1));
-    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1); // NOLINT
+    REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);  // NOLINT
   }
   {
-    const auto u1 = erased<unique>(std::make_unique<int>(1)); // NOLINT
+    const auto u1 = erased<unique>(std::make_unique<int>(1));  // NOLINT
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    auto u1 = erased<unique>(std::make_unique<A>("hallo"));  // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
-    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo"); // NOLINT
+    auto u1 = erased<unique>(std::make_unique<A>(
+        "hallo"));  // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+    REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");  // NOLINT
   }
 }
 TEST_CASE("data_erase_unerase/shared_const") {
@@ -83,7 +84,7 @@ TEST_CASE("data_erase_unerase/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    shared_const sp1 = trait<shared_const>::erase(ptr);
+    shared_const sp1 = erased_data_trait<shared_const>::erase(ptr);
     auto u1 = erased<shared_const>(ptr);
     [[maybe_unused]] A const* a = unchecked_unerase_cast<A>(u1);
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");
@@ -93,7 +94,7 @@ TEST_CASE("data_erase_unerase/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    unique up1 = trait<unique>::erase(std::move(ptr));
+    unique up1 = erased_data_trait<unique>::erase(std::move(ptr));
     A* a = unchecked_unerase_cast<A>(up1);
     REQUIRE(a->s == "hallo");
   }

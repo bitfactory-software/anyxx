@@ -446,10 +446,11 @@
 #define ANY_MODEL_MAP(class_, interface_) \
   __ANY_MODEL_MAP(class_, interface_, class_)
 
-#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)                 \
-  static_assert(anyxx::missing_trait_error<T>::not_specialized, \
-                "'" #name                                       \
-                "' is missing in the specialization of this trait!");
+#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)       \
+  static_assert(                                      \
+      anyxx::missing_trait_error<T>::not_specialized, \
+      "'" #name                                       \
+      "' is missing in the specialization of this erased_data_trait!");
 
 #define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda, ...) \
   return trait_body_lamda(                                              \
@@ -470,12 +471,12 @@
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define _detail_ANYXX_TRAIT_METHOD_H(l) _detail_ANYXX_TRAIT_METHOD l
-#define _detail_ANYXX_TRAIT_METHOD(overload, type, name, name_ext,       \
-                                   exact_const, const_, trait_body, ...) \
-  overload type name_ext(                                                \
-      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ {    \
-    return trait{}.name(base_t::value_ __VA_OPT__(, ) __VA_OPT__(        \
-        _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                      \
+#define _detail_ANYXX_TRAIT_METHOD(overload, type, name, name_ext,            \
+                                   exact_const, const_, trait_body, ...)      \
+  overload type name_ext(                                                     \
+      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_ {         \
+    return erased_data_trait{}.name(base_t::value_ __VA_OPT__(, ) __VA_OPT__( \
+        _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));                           \
   }
 #define _detail_ANYXX_TRAIT_METHODS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_METHOD_H, \
@@ -503,7 +504,7 @@
       : BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)> { \
     using value_t = ErasedData;                                               \
     using T = ErasedData;                                                     \
-    using trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;               \
+    using erased_data_trait = n##_trait<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;   \
     using base_t =                                                            \
         BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)>;  \
     using base_t::value_;                                                     \
@@ -608,28 +609,33 @@ void check_type_match(meta_data const& meta) {
 }
 
 template <typename Data>
-struct trait;
+struct erased_data_trait;
 
 template <class E>
 concept is_erased_data = requires(E e) {
-  typename trait<E>::void_t;
-  { trait<E>::is_constructibile_from_const } -> std::convertible_to<bool>;
-  { trait<E>::is_owner } -> std::convertible_to<bool>;
-  { trait<E>::value(e) } -> std::convertible_to<typename trait<E>::void_t>;
-  { trait<E>::has_value(e) } -> std::convertible_to<bool>;
-  { trait<E>::is_weak } -> std::convertible_to<bool>;
-  { trait<E>::default_construct() };
+  typename erased_data_trait<E>::void_t;
+  {
+    erased_data_trait<E>::is_constructibile_from_const
+  } -> std::convertible_to<bool>;
+  { erased_data_trait<E>::is_owner } -> std::convertible_to<bool>;
+  {
+    erased_data_trait<E>::value(e)
+  } -> std::convertible_to<typename erased_data_trait<E>::void_t>;
+  { erased_data_trait<E>::has_value(e) } -> std::convertible_to<bool>;
+  { erased_data_trait<E>::is_weak } -> std::convertible_to<bool>;
+  { erased_data_trait<E>::default_construct() };
 };
 
 template <is_erased_data Data>
-using data_void = trait<Data>::void_t;
+using data_void = erased_data_trait<Data>::void_t;
 
 template <typename ErasedData>
 concept is_const_data =
     is_erased_data<ErasedData> && is_const_void<data_void<ErasedData>>;
 
 template <typename ErasedData>
-concept is_weak_data = is_erased_data<ErasedData> && trait<ErasedData>::is_weak;
+concept is_weak_data =
+    is_erased_data<ErasedData> && erased_data_trait<ErasedData>::is_weak;
 
 template <bool CallIsConst, bool ErasedDataIsConst, bool ErasedDataIsWeak>
 concept const_correct_call =
@@ -646,30 +652,31 @@ concept const_correct_call_for_erased_data =
 
 template <is_erased_data ErasedData, typename From>
 ErasedData erased(From&& from) {
-  return trait<ErasedData>::erase(std::forward<From>(from));
+  return erased_data_trait<ErasedData>::erase(std::forward<From>(from));
 }
 
 template <is_erased_data ErasedData, typename ConstructedWith>
-using unerased =
-    trait<ErasedData>::template unerased<std::decay_t<ConstructedWith>>;
+using unerased = erased_data_trait<ErasedData>::template unerased<
+    std::decay_t<ConstructedWith>>;
 
 template <is_erased_data ErasedData>
 bool has_data(ErasedData const& vv) {
   // cppcheck-suppress-begin [accessMoved]
-  return trait<ErasedData>::has_value(vv);
+  return erased_data_trait<ErasedData>::has_value(vv);
   // cppcheck-suppress-end [accessMoved]
 }
 template <is_erased_data ErasedData>
 void const* get_void_data_ptr(ErasedData const& vv)
-  requires std::same_as<void const*, typename trait<ErasedData>::void_t>
+  requires std::same_as<void const*,
+                        typename erased_data_trait<ErasedData>::void_t>
 {
-  return trait<ErasedData>::value(vv);
+  return erased_data_trait<ErasedData>::value(vv);
 }
 template <is_erased_data ErasedData>
 void* get_void_data_ptr(ErasedData const& vv)
-  requires std::same_as<void*, typename trait<ErasedData>::void_t>
+  requires std::same_as<void*, typename erased_data_trait<ErasedData>::void_t>
 {
-  return trait<ErasedData>::value(vv);
+  return erased_data_trait<ErasedData>::value(vv);
 }
 
 template <typename U>
@@ -715,7 +722,7 @@ concept erased_constructibile_for =
     !std::derived_from<std::remove_cvref_t<ConstructedWith>, BASE> &&
     !is_erased_data<std::remove_cvref_t<ConstructedWith>> &&
     (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
-     trait<ErasedData>::is_constructibile_from_const);
+     erased_data_trait<ErasedData>::is_constructibile_from_const);
 
 // --------------------------------------------------------------------------------
 // erased data observer
@@ -764,14 +771,14 @@ struct observer_trait {
 };
 
 template <>
-struct trait<const_observer> : observer_trait<const_observer, const_observer> {
-};
+struct erased_data_trait<const_observer>
+    : observer_trait<const_observer, const_observer> {};
 template <>
-struct trait<mutable_observer>
+struct erased_data_trait<mutable_observer>
     : observer_trait<mutable_observer, mutable_observer> {};
 
-static_assert(trait<const_observer>::is_const);
-static_assert(!trait<mutable_observer>::is_const);
+static_assert(erased_data_trait<const_observer>::is_const);
+static_assert(!erased_data_trait<mutable_observer>::is_const);
 static_assert(is_erased_data<const_observer>);
 static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<mutable_observer>);
@@ -784,7 +791,7 @@ using shared_const = std::shared_ptr<void const>;
 using weak = std::weak_ptr<void const>;
 
 template <>
-struct trait<shared_const> {
+struct erased_data_trait<shared_const> {
   using void_t = void const*;
   template <typename V>
   using typed_t = const std::decay_t<V>;
@@ -822,7 +829,7 @@ struct trait<shared_const> {
 };
 
 template <>
-struct trait<weak> {
+struct erased_data_trait<weak> {
   using void_t = void const*;
   template <typename V>
   using typed_t = const std::decay_t<V>;
@@ -881,7 +888,7 @@ inline unique unique_nullptr() {
 }
 
 template <>
-struct trait<unique> {
+struct erased_data_trait<unique> {
   using void_t = void*;
   template <typename V>
   using typed_t = std::decay_t<V>;
@@ -1000,7 +1007,7 @@ U const* unchecked_unerase_cast(value const& v) {
 }
 
 template <>
-struct trait<value> {
+struct erased_data_trait<value> {
   using void_t = void*;
   template <typename V>
   using typed_t = std::decay_t<V>;
@@ -1299,7 +1306,7 @@ template <is_erased_data TOFROM>
 struct can_copy_to;
 
 template <typename To>
-concept cloneable_to = is_erased_data<To> && trait<To>::is_owner;
+concept cloneable_to = is_erased_data<To> && erased_data_trait<To>::is_owner;
 
 template <is_erased_data To, is_erased_data From>
   requires cloneable_to<To>
@@ -1427,7 +1434,7 @@ template <is_erased_data ErasedData, typename Dispatch>
 class erased_data_holder {
  public:
   using erased_data_t = ErasedData;
-  using trait_t = trait<erased_data_t>;
+  using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
 
  protected:
@@ -1446,12 +1453,13 @@ class erased_data_holder {
   // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
   erased_data_holder(std::in_place_t, V&& v)
-      : erased_data_(
-            trait<ErasedData>::construct_in_place(std::forward<V>(v))) {}
+      : erased_data_(erased_data_trait<ErasedData>::construct_in_place(
+            std::forward<V>(v))) {}
   template <typename T, typename... Args>
   erased_data_holder(std::in_place_type_t<T>, Args&&... args)
-      : erased_data_(trait<ErasedData>::template construct_type_in_place<T>(
-            std::forward<Args>(args)...)) {}
+      : erased_data_(
+            erased_data_trait<ErasedData>::template construct_type_in_place<T>(
+                std::forward<Args>(args)...)) {}
 
  public:
   template <is_erased_data_holder Other>
