@@ -29,35 +29,35 @@ using shared_const_node = std::shared_ptr<const Node>;
 struct Plus : Node {
   // NOLINTNEXTLINE
   Plus(shared_const_node const& left, shared_const_node const& right)
-      : left(left), right(right) {}  // NOLINT
+      : left_(left), right_(right) {}  // NOLINT
   [[nodiscard]] int value() const override {
-    return left->value() + right->value();
+    return left_->value() + right_->value();
   }
   [[nodiscard]] std::string as_forth() const override {
-    return left->as_forth() + " " + right->as_forth() + " +";
+    return left_->as_forth() + " " + right_->as_forth() + " +";
   }
   [[nodiscard]] std::string as_lisp() const override {
-    return "(plus " + left->as_lisp() + " " + right->as_lisp() + ")";
+    return "(plus " + left_->as_lisp() + " " + right_->as_lisp() + ")";
   }
 
-  shared_const_node left, right;
+  shared_const_node left_, right_;
 };
 
 struct Times : Node {
   // NOLINTNEXTLINE
   Times(shared_const_node const& left, shared_const_node const& right)
-      : left(left), right(right) {}  // NOLINT
+      : left_(left), right_(right) {}  // NOLINT
   [[nodiscard]] int value() const override {
-    return left->value() * right->value();
+    return left_->value() * right_->value();
   }
   [[nodiscard]] std::string as_forth() const override {
-    return left->as_forth() + " " + right->as_forth() + " *";
+    return left_->as_forth() + " " + right_->as_forth() + " *";
   }
   [[nodiscard]] std::string as_lisp() const override {
-    return "(times " + left->as_lisp() + " " + right->as_lisp() + ")";
+    return "(times " + left_->as_lisp() + " " + right_->as_lisp() + ")";
   }
 
-  shared_const_node left, right;
+  shared_const_node left_, right_;
 };
 
 struct Integer : Node {

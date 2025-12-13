@@ -2,6 +2,10 @@
 #include <string>
 #include <bit_factory/anyxx.hpp>
 
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
+
 using namespace anyxx;
 
 TEST_CASE("_data_conversion borrow") {
