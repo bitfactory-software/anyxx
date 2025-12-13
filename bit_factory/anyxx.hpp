@@ -167,11 +167,16 @@
   ErasedData _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(_detail_REMOVE_PARENS(t))
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
-#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
-                               const_, map_body, ...)                        \
-  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
-    return x.name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,    \
+                               const_, trait_body, ...)                        \
+  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                    \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                  \
+    if constexpr (std::same_as<decltype(_detail_REMOVE_PARENS(trait_body)),    \
+                               bool>) {                                        \
+      return x.name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+    } else {                                                                   \
+      _detail_REMOVE_PARENS(trait_body);                                        \
+    }                                                                          \
   };
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
@@ -424,24 +429,24 @@
               _detail_EXPAND params)
 
 #define ANY_METHOD(ret, name, params, const_) \
-  ANY_METHOD_(, ret, name, name, false, const_, (), _detail_EXPAND params)
+  ANY_METHOD_(, ret, name, name, false, const_, (true), _detail_EXPAND params)
 
-#define ANY_METHOD_OVERLOAD(ret, name, params, const_)                \
-  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, (), \
+#define ANY_METHOD_OVERLOAD(ret, name, params, const_)                    \
+  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, (true), \
               _detail_EXPAND params)
 
 #define ANY_OP(ret, op, params, const_)                                       \
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, \
-              const_, (), _detail_EXPAND params)
+              const_, (true), _detail_EXPAND params)
 
 #define ANY_OP_EXACT(ret, op, params, const_)                                \
   ANY_METHOD_(, ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, \
-              const_, (), _detail_EXPAND params)
+              const_, (true), _detail_EXPAND params)
 
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_)                        \
   ANY_METHOD_(ANY_OVERLOAD(operator op), ret,                                 \
               _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, \
-              (), _detail_EXPAND params)
+              (true), _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
@@ -548,7 +553,6 @@
 
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
-
 
 namespace anyxx {
 
