@@ -6,13 +6,15 @@ file(GLOB cpp_files "./*.cpp")
 if(MSVC)
   add_library(component_base SHARED ${hpp_files} ${cpp_files})
 else()    
-  add_library(component_base STATIC ${hpp_files} ${cpp_files})
+  add_library(component_base ${hpp_files} ${cpp_files})
 endif()
 
-target_link_libraries(component_base 
+target_link_libraries(component_base
+  PRIVATE
     anyxx::anyxx_warnings
     anyxx::anyxx_options
-    PUBLIC anyxx)
+  PUBLIC 
+    anyxx)
 
 target_compile_definitions(component_base PUBLIC ANY_DLL_MODE) # ANY_DLL_MODE works also for  static builds!
 target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)
