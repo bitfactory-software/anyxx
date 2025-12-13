@@ -3,15 +3,10 @@
 #include <bit_factory/anyxx.hpp>
 #include "../layer_0_architecture/architecture.hpp"
 
-#ifndef CORE_EXPORT
-#define CORE_EXPORT
-#endif
-
 #ifdef _MSVC_LANG
-#ifdef CORE_SHARED
-#undef CORE_EXPORT
 #define CORE_EXPORT __declspec(dllexport)
-#endif
+#else
+#define CORE_EXPORT __attribute__((__visibility__("default")))
 #endif
 
 namespace whole_picture::core {

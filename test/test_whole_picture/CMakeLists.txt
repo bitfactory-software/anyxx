@@ -26,7 +26,6 @@ target_link_libraries(layer_1_core
             anyxx::anyxx_options
   PUBLIC    layer_0_architecture
 )
-target_compile_definitions(layer_1_core PRIVATE CORE_SHARED)
 set_target_properties(layer_1_core PROPERTIES FOLDER "_example_whole_picture")
 target_include_directories(layer_1_core PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
