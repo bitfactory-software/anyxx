@@ -32,7 +32,7 @@
 #if defined(__GNUC__) and !defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wcast-function-type"
-#pragma GCC diagnostic ignored "-Wunused-local-typedef"
+#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
 // --------------------------------------------------------------------------------
