@@ -411,11 +411,20 @@
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
+#define ANY_OVERLOAD(name) using base_t::name;
+
+#define TRAIT_METHOD_PURE(ret, name, params, const_)     \
+  ANY_METHOD_(, ret, name, name, false, const_,          \
+              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name)), \
+              _detail_EXPAND params)
+
+#define TRAIT_METHOD(ret, name, params, const_, ...)                           \
+  ANY_METHOD_(, ret, name, name, false, const_,                                \
+              (_detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, (__VA_ARGS__))), \
+              _detail_EXPAND params)
 
 #define ANY_METHOD(ret, name, params, const_) \
   ANY_METHOD_(, ret, name, name, false, const_, (), _detail_EXPAND params)
-
-#define ANY_OVERLOAD(name) using base_t::name;
 
 #define ANY_METHOD_OVERLOAD(ret, name, params, const_)                \
   ANY_METHOD_(ANY_OVERLOAD(name), ret, name, name, false, const_, (), \
@@ -540,15 +549,6 @@
 #define TRAIT_TEMPLATE(t, n, l) \
   TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
 
-#define TRAIT_METHOD_PURE(ret, name, params, const_)     \
-  ANY_METHOD_(, ret, name, name, false, const_,          \
-              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name)), \
-              _detail_EXPAND params)
-
-#define TRAIT_METHOD(ret, name, params, const_, ...)                           \
-  ANY_METHOD_(, ret, name, name, false, const_,                                \
-              (_detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, (__VA_ARGS__))), \
-              _detail_EXPAND params)
 
 namespace anyxx {
 
