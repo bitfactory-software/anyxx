@@ -12,7 +12,7 @@ endif()
 target_link_libraries(component_base 
     anyxx::anyxx_warnings
     anyxx::anyxx_options
-    anyxx)
+    PUBLIC anyxx)
 
 target_compile_definitions(component_base PUBLIC ANY_DLL_MODE) # ANY_DLL_MODE works also for  static builds!
 target_compile_definitions(component_base PRIVATE COMPONENT_BASE_SHARED)

@@ -19,14 +19,6 @@ target_link_libraries(
 #  target_compile_options(tests_inline_mode PRIVATE /Ob2)
 #endif()
 
-if(WIN32 AND BUILD_SHARED_LIBS)
-  add_custom_command(
-    TARGET tests_inline_mode
-    PRE_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:tests_inline_mode> $<TARGET_FILE_DIR:tests_inline_mode>
-    COMMAND_EXPAND_LISTS)
-endif()
-
 # automatically discover tests that are defined in catch based test files you can modify the unittests. Set TEST_PREFIX
 # to whatever you want, or use different for different binaries
 #catch_discover_tests(
