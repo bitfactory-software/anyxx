@@ -5,6 +5,7 @@
 #include <typeinfo>
 #include <variant>
 #include <vector>
+#include <algorithm>
 
 #include "double_dispatch_result.hpp"
 
@@ -56,6 +57,7 @@ using creatures_t = std::vector<creature>;
       a, b);
 }
 
+// cppcheck-suppress-begin [useStlAlgorithm]
 auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);
@@ -63,6 +65,7 @@ auto apply_encounters(creatures_t const& creatures) {
     for (auto&& c2 : creatures) result.push_back(encounter(c1, c2));
   return result;
 }
+// cppcheck-suppress-end [useStlAlgorithm]
 }  // namespace
 
 TEST_CASE("30a_Animals variant visit") {

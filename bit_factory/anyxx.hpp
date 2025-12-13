@@ -461,7 +461,7 @@
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
 #define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
                                      exact_const, const_, trait_body, ...) \
-  auto name([[maybe_unused]] T const_& x __VA_OPT__(                       \
+  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
     _detail_REMOVE_PARENS(trait_body)                                      \
   };
@@ -507,7 +507,7 @@
     using base_t =                                                            \
         BASE<_detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(base_template_params)>;  \
     using base_t::value_;                                                     \
-    n(ErasedData v) : base_t(std::move(v)) {}                                 \
+    explicit n(ErasedData v) : base_t(std::move(v)) {}                        \
     n& operator=(ErasedData v) {                                              \
       base_t::value_ = std::move(v);                                          \
       return *this;                                                           \
@@ -525,6 +525,7 @@
 #define TRAIT_(n, BASE, l) \
   TRAIT_META_FUNCTION((ErasedData), (T), (ErasedData), n, BASE, (), l)
 
+// cppcheck-suppress-macro [functionStatic]
 #define TRAIT(n, ...) TRAIT_(n, ::anyxx::trait_base, __VA_ARGS__)
 
 #define TRAIT_TEMPLATE_(t, n, BASE, base_template_params, l)              \
@@ -654,7 +655,9 @@ using unerased =
 
 template <is_erased_data ErasedData>
 bool has_data(ErasedData const& vv) {
+  // cppcheck-suppress-begin [accessMoved]
   return trait<ErasedData>::has_value(vv);
+  // cppcheck-suppress-end [accessMoved]
 }
 template <is_erased_data ErasedData>
 void const* get_void_data_ptr(ErasedData const& vv)
@@ -924,7 +927,7 @@ struct value_v_table {
   using destroy_fn = void(void*) noexcept;
   using copy_fn = void*(const void*);
   template <class Data>
-  constexpr value_v_table(std::in_place_type_t<Data>)
+  explicit constexpr value_v_table(std::in_place_type_t<Data>)
       : destroy(&destroy_impl<Data>), copy(&copy_impl<Data>) {}
   template <class Data>
   static void destroy_impl(void* target) noexcept {
@@ -946,7 +949,7 @@ class value {
  public:
   value() = default;
   template <typename Data>
-  value(Data* ptr)
+  explicit value(Data* ptr)
       : ptr_(ptr), v_table_(&value_v_table_of<std::decay_t<Data>>) {}
   value(value const& rhs)
       : ptr_(rhs.ptr_ ? rhs.v_table_->copy(rhs.ptr_) : nullptr),
@@ -985,10 +988,12 @@ auto make_value(Args&&... args) {
   return value(new T(std::forward<Args>(args)...));
 }
 
+// cppcheck-suppress-begin [constParameterReference]
 template <typename U>
 U* unchecked_unerase_cast(value& v) {
   return static_cast<U*>(v.get());
 }
+// cppcheck-suppress-end [constParameterReference]
 template <typename U>
 U const* unchecked_unerase_cast(value const& v) {
   return static_cast<U const*>(v.get());
@@ -1063,7 +1068,8 @@ struct dyn {};
 template <typename Dispatch = rtti>
 struct any_base_v_table {
   template <typename Concrete>
-  any_base_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+  explicit any_base_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : _is_derived_from([](const std::type_info& from) {
           return static_is_derived_from(from);
         }) {}
@@ -1129,7 +1135,7 @@ class meta_data {
 
  public:
   template <typename CLASS>
-  constexpr meta_data(std::in_place_type_t<CLASS>)
+  explicit constexpr meta_data(std::in_place_type_t<CLASS>)
       : type_info_(typeid_of<CLASS>()),
         copy_construct_(+[]([[maybe_unused]] const_void from) {
           if constexpr (std::is_copy_constructible_v<CLASS>) {
@@ -1428,13 +1434,16 @@ class erased_data_holder {
   erased_data_t erased_data_ = trait_t::default_construct();
 
   erased_data_holder() = default;
-  erased_data_holder(erased_data_t erased_data)
+  explicit erased_data_holder(erased_data_t erased_data)
       : erased_data_(std::move(erased_data)) {}
+  // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
-  erased_data_holder(ConstructedWith&& constructed_with)
+  explicit(false)
+      erased_data_holder(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, ErasedData>
       : erased_data_(erased<erased_data_t>(
             std::forward<ConstructedWith>(constructed_with))) {}
+  // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
   erased_data_holder(std::in_place_t, V&& v)
       : erased_data_(
@@ -1446,11 +1455,11 @@ class erased_data_holder {
 
  public:
   template <is_erased_data_holder Other>
-  erased_data_holder(const Other& other)
+  explicit erased_data_holder(const Other& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
   template <typename Other>
-  erased_data_holder(Other&& other)
+  explicit erased_data_holder(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
       : erased_data_(move_to<ErasedData>(std::move(other.erased_data_))) {}
   template <typename Other>
@@ -1499,10 +1508,12 @@ class any_base : public erased_data_holder<ErasedData, Dispatch> {
   any_base() = default;
   any_base(erased_data_t erased_data, v_table_t* v_table)
       : erased_data_holder_t(std::move(erased_data)), v_table_(v_table) {}
+  // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
   any_base(ConstructedWith&& constructed_with)
     requires constructibile_for<ConstructedWith, ErasedData>
       : erased_data_holder_t(std::forward<ConstructedWith>(constructed_with)) {}
+  // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
   any_base(std::in_place_t in_place, V&& v)
       : erased_data_holder_t(in_place, std::forward<V>(v)) {}
@@ -1512,27 +1523,27 @@ class any_base : public erased_data_holder<ErasedData, Dispatch> {
 
  public:
   template <is_any Other>
-  any_base(const Other& other)
+  explicit any_base(const Other& other)
     requires(std::derived_from<typename Other::v_table_t, v_table_t> &&
              borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : erased_data_holder_t(other), v_table_(get_v_table(other)) {}
   template <typename Other>
-  any_base(Other&& other)
+  explicit any_base(Other&& other)  // NOLINT
     requires(std::derived_from<typename Other::v_table_t, v_table_t> &&
              moveable_from<erased_data_t, typename Other::erased_data_t>)
       : erased_data_holder_t(std::move(other.erased_data_)),
         v_table_(get_v_table(other)) {}
+  // cppcheck-suppress-begin duplInheritedMember
   template <typename Other>
-  any_base& operator=(Other&& other)
+  any_base& operator=(Other&& other)  // NOLINT
     requires(std::derived_from<typename Other::v_table_t, v_table_t>)
   {
     static_cast<erased_data_holder_t&>(*this) = std::move(other.erased_data_);
     v_table_ = get_v_table(other);
     return *this;
   }
+  // cppcheck-suppress-end duplInheritedMember
   any_base(const any_base&) = default;
-  // any_base(any_base&) requires(std::is_copy_constructible_v<any_base>) =
-  // default;
   any_base(any_base&& rhs) noexcept
       : erased_data_holder_t(std::move(rhs.erased_data_)),
         v_table_(rhs.v_table_) {}
@@ -1682,10 +1693,12 @@ struct derive_v_table_from;
 template <typename VTable, typename Base>
 struct rtti_v_table_access : Base {
   using Base::Base;
+  // cppcheck-suppress-begin functionConst
   template <typename Derived>
-  auto get_v_table_ptr(this Derived& self) {
+  auto get_v_table_ptr(this Derived const& self) {  // NOLINT
     return static_cast<typename Derived::v_table_t*>(self.Base::v_table_);
   }
+  // cppcheck-suppress-end functionConst
   template <typename Concrete, typename Derived>
   void init_v_table(this Derived& self) {
     self.Base::template init_v_table<Concrete>();
@@ -1718,10 +1731,12 @@ struct dyn_v_table_access : Base {
   using erased_data_t = typename Base::erased_data_t;
   using v_table_t = VTable;
   v_table_t v_table_;
+  // cppcheck-suppress-begin functionConst
   template <typename Derived>
-  auto get_v_table_ptr(this Derived& self) {
+  auto get_v_table_ptr(this Derived const& self) {  // NOLINT
     return &self.v_table_;
   }
+  // cppcheck-suppress-end functionConst
   template <typename Concrete, typename Derived>
   void init_v_table(this Derived& self) {
     self.v_table_ =
@@ -1762,9 +1777,13 @@ struct typed_any : public Any<ErasedData, rtti> {
 
   using any_t::any_t;
 
-  typed_any(V const& v) : any_t(v) {}
-  typed_any(V&& v) : any_t(std::move(v)) {}
-  typed_any(any_t i) : any_t(i) { check_type_match<V>(get_meta_data(*this)); }
+  // cppcheck-suppress-begin noExplicitConstructor
+  explicit(false) typed_any(V const& v) : any_t(v) {}        // NOLINT
+  explicit(false) typed_any(V&& v) : any_t(std::move(v)) {}  // NOLINT
+  explicit(false) typed_any(any_t i) : any_t(i) {            // NOLINT
+    check_type_match<V>(get_meta_data(*this));
+  }
+  // cppcheck-suppress-end noExplicitConstructor
 
   value_t const& operator*() const {
     return *unchecked_unerase_cast<value_t const>(this->erased_data_);
@@ -1948,8 +1967,8 @@ class hook<R(Args...)> {
     explicit operator bool() const { return index_ >= 0; }
     R operator()(Args&&... args) const {
       assert(index_ >= 0);
-      return hook_.callees_[((std::size_t)index_)].second(super{index_ - 1, hook_},
-                                                  std::forward<Args>(args)...);
+      return hook_.callees_[((std::size_t)index_)].second(
+          super{index_ - 1, hook_}, std::forward<Args>(args)...);
     }
   };
 

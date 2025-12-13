@@ -136,6 +136,7 @@ TEST_CASE("_data_conversion clone") {
     CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
   }
 }
+// cppcheck-suppress-begin [accessMoved]
 TEST_CASE("_data_conversion move") {
   std::string s1 = "hallo";
   {
@@ -159,3 +160,4 @@ TEST_CASE("_data_conversion move") {
 #pragma warning( pop )
   }
 }
+// cppcheck-suppress-end [accessMoved]

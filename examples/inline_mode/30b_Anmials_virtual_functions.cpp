@@ -132,6 +132,7 @@ struct man_encounter_visitor final : creature_visitor {
   return c2->apply(c1->get_encounter_visitor(), c1);
 }
 
+// cppcheck-suppress-begin [useStlAlgorithm]
 [[nodiscard]] auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);
@@ -139,6 +140,7 @@ struct man_encounter_visitor final : creature_visitor {
     for (auto&& c2 : creatures) result.push_back(encounter(c1.get(), c2.get()));
   return result;
 }
+// cppcheck-suppress-end [useStlAlgorithm]
 }  // namespace
 
 TEST_CASE("30b_Animals virtual functions") {

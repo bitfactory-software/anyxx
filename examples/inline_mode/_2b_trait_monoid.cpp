@@ -32,8 +32,8 @@ inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
 template <>
 struct monoid_trait<int> : monoid_trait_default<int> {
   static monoid<int> concat([[maybe_unused]] int self, auto const& r) {
-    return std::ranges::fold_right(r, 0,
-                                   [&](auto m1, auto m2) { return m1 + m2; });
+    return monoid<int>{ std::ranges::fold_right(r, 0,
+                                    [&](auto m1, auto m2) { return m1 + m2; })};
   };
 };
 
@@ -41,7 +41,7 @@ template <>
 struct monoid_trait<std::string> : monoid_trait_default<std::string> {
   static monoid<std::string> op(std::string const& self,
                                 monoid<std::string> const& r) {
-    return self + static_cast<std::string>(r);
+    return monoid<std::string>{ self + static_cast<std::string>(r) };
   };
 };
 

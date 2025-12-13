@@ -83,13 +83,13 @@ TEST_CASE("std emulated function") {
     CHECK(fc2() == "hallo world");
   }
   {
-    pure_functor_t pf{};
+    pure_functor_t pf{};;
     string_to_string<mutable_observer> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    pure_functor_t pf {}
-    string_to_string<const_observer> f{pf};  // thos works, because 'pure'
+    pure_functor_t pf {};
+    string_to_string<const_observer> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
