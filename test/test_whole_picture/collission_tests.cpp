@@ -62,7 +62,7 @@ TEST_CASE("test collision line intersect") {
   //CHECK(!collision::lines::intersect(l1, l8));
   //CHECK(!collision::lines::intersect(l8, l1));
 
-  //CHECK(collision_happened(l1,l2));
+  CHECK(collision_happened(l1,l2));
   //CHECK(collision_happened(l2, l1));
   //CHECK(!collision_happened(l3, l4));
   //CHECK(!collision_happened(l4, l3));
