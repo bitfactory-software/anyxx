@@ -7,7 +7,6 @@
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
-
 using namespace anyxx;
 
 namespace {
@@ -89,8 +88,8 @@ TEST_CASE("std emulated function") {
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    string_to_string<const_observer> f{
-        pure_functor_t{}};  // thos works, because 'pure'
+    pure_functor_t pf {}
+    string_to_string<const_observer> f{pf};  // thos works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
@@ -100,16 +99,14 @@ TEST_CASE("std emulated function") {
     static_assert(!std::assignable_from<string_to_string_mutable<unique>,
                                         string_to_string_mutable<unique>>);
     string_to_string_mutable<unique> f2{std::move(f)};
-    REQUIRE(!has_data(get_erased_data(f))); //NOLINT
+    REQUIRE(!has_data(get_erased_data(f)));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
   }
 
   {
-    auto f = [](std::string const& in) {
-      return in + " world!";
-      };
-    string_to_string<const_observer> sts{f}; // works, because pure
+    auto f = [](std::string const& in) { return in + " world!"; };
+    string_to_string<const_observer> sts{f};  // works, because pure
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
