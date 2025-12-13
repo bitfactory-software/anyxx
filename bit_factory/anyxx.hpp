@@ -169,9 +169,17 @@
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
                                const_, map_body, ...)                        \
-  auto name(T const_& x __VA_OPT__(                                          \
+  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
     return x.name_ext(__VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+  };
+
+#define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
+#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
+                                     exact_const, const_, trait_body, ...) \
+  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
+    _detail_REMOVE_PARENS(trait_body)                                      \
   };
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
@@ -459,13 +467,6 @@
   _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda,             \
                                            _detail_EXPAND params)
 
-#define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
-#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
-                                     exact_const, const_, trait_body, ...) \
-  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
-    _detail_REMOVE_PARENS(trait_body)                                      \
-  };
 #define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
