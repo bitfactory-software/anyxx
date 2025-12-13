@@ -7,6 +7,7 @@
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
+
 using namespace anyxx;
 
 namespace {
@@ -105,9 +106,10 @@ TEST_CASE("std emulated function") {
   }
 
   {
-    string_to_string<const_observer> sts{[](std::string const& in) {
+    auto f = [](std::string const& in) {
       return in + " world!";
-    }};  // works, because pure
+      };
+    string_to_string<const_observer> sts{f}; // works, because pure
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");

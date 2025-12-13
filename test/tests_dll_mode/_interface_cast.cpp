@@ -4,10 +4,11 @@
 
 #include "test/component_base/component_base.hpp"
 
-using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
 
+using namespace anyxx;
 using namespace test::component_base;
 
 namespace test::component_base {

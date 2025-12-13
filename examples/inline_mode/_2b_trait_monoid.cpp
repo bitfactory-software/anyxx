@@ -3,6 +3,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+#ifdef __cpp_lib_ranges_fold
+
 namespace example_2b {
 TRAIT(monoid,
       (TRAIT_METHOD(monoid<T>, op, (monoid<T> const&), const,
@@ -64,3 +66,5 @@ TEST_CASE("example 2b monoid ") {
   test_monoid(monoid{1}, std::vector{monoid{2}, monoid{3}});
   test_monoid(monoid{"1"s}, std::vector{monoid{"2"s}, monoid{"3"s}});
 }
+
+#endif

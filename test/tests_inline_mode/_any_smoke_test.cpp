@@ -65,12 +65,16 @@ struct regular_polygon {
   void draw(position p) const {
     std::cout << " A Polygon Is Recorded At " << p.x << ", " << p.y << "\n";
   }
-   [[nodiscard]]int count_sides() const { return sides; }
-   [[nodiscard]]double apothem() const { return (side_length / 2) / std::tan(3.14 / sides); }
-   [[nodiscard]]double radius() const { return (side_length / 2) / std::sin(3.14 / sides); }
-   [[nodiscard]]double perimeter() const { return sides * side_length; }
-   [[nodiscard]]double area() const { return (perimeter() * apothem()) / 2; }
-   [[nodiscard]]std::string operator()(const std::string& x) const {
+  [[nodiscard]] int count_sides() const { return sides; }
+  [[nodiscard]] double apothem() const {
+    return (side_length / 2) / std::tan(3.14 / sides);
+  }
+  [[nodiscard]] double radius() const {
+    return (side_length / 2) / std::sin(3.14 / sides);
+  }
+  [[nodiscard]] double perimeter() const { return sides * side_length; }
+  [[nodiscard]] double area() const { return (perimeter() * apothem()) / 2; }
+  [[nodiscard]] std::string operator()(const std::string& x) const {
     return x + "regular_polygon";
   }
 };
@@ -83,7 +87,7 @@ ANY_MODEL_MAP((circle), any_drawable) {
 };
 
 void print_any_shape_const_observer(const any_shape<const_observer> s) {
-  s.draw({4.0, 5.0}); //NOLINT
+  s.draw({4.0, 5.0});  // NOLINT
   std::cout << "Shape Number Of Sides: " << s.count_sides() << "\n";
   std::cout << "Shape Perimeter: " << s.perimeter() << "\n";
   std::cout << "Shape Area: " << s.area() << "\n";
@@ -106,7 +110,7 @@ using namespace smoke_test;
 TEST_CASE("dynamic v_table const_observer") {
   circle c{12.3};
   square s{32};
-  rectangle r{12, 9};//NOLINT
+  rectangle r{12, 9};  // NOLINT
   regular_polygon p{.sides = 4, .side_length = 32};
 
   std::cout << "print_shape *******************************" << "\n";
@@ -152,9 +156,9 @@ TEST_CASE("dynamic v_table const_observer") {
 
   //    any_base< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  anyxx::any_base<const_observer> base_shape =
+  [[maybe_unused]] anyxx::any_base<const_observer> base_shape =
       any_callable_shape_onst_observer_circle1;
-  anyxx::any_base<const_observer> base_shapeX =
+  [[maybe_unused]] anyxx::any_base<const_observer> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));
@@ -216,7 +220,7 @@ TEST_CASE("dynamic any shared_const") {
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(),
                Catch::Matchers::WithinAbs(77.2, 77.3));
-  auto x = circle_shape_vv; // NOLINT
+  auto x = circle_shape_vv;  // NOLINT
   {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, Catch::Matchers::WithinAbs(77.2, 77.3));
