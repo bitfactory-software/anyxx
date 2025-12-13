@@ -578,7 +578,7 @@ template <typename T>
 struct missing_trait_error {
   static constexpr bool not_specialized = false;
 };
-template <typename Value>
+template <typename Value, typename Dispatch = trait>
 struct trait_base {
   Value value_ = {};
   operator Value() const { return value_; }
@@ -1071,6 +1071,7 @@ meta_data& get_meta_data() {
 
 struct rtti {};
 struct dyn {};
+struct trait {};
 
 template <typename Dispatch = rtti>
 struct any_base_v_table {
@@ -1692,12 +1693,16 @@ auto query_v_table(any_base_v_table<>* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
 
+// --------------------------------------------------------------------------------
+// any customization points
 template <typename Dispatch, typename Self,
           template <typename...> typename... Base>
 struct derive_from;
 template <typename Dispatch, template <typename...> typename... BaseVTable>
 struct derive_v_table_from;
 
+// --------------------------------------------------------------------------------
+// dyn
 template <typename VTable, typename Base>
 struct rtti_v_table_access : Base {
   using Base::Base;
@@ -1733,6 +1738,8 @@ struct derive_v_table_from<rtti> {
   using type = any_base_v_table<Args...>;
 };
 
+// --------------------------------------------------------------------------------
+// dyn
 template <typename VTable, typename Base>
 struct dyn_v_table_access : Base {
   using Base::Base;
@@ -1763,6 +1770,27 @@ struct derive_from<dyn, VTable> {
 };
 template <template <typename...> typename... BaseVTable>
 struct derive_v_table_from<dyn, BaseVTable...> {
+  template <typename...>
+  struct type {
+    template <typename... Args>
+    type(Args&&...) {}
+  };
+};
+
+// --------------------------------------------------------------------------------
+// trait
+template <typename VTable, template <typename...> typename Base>
+struct derive_from<trait, VTable, Base> {
+  template <typename... Args>
+  using type = Base<Args...>;
+};
+template <typename VTable>
+struct derive_from<trait, VTable> {
+  template <typename... Args>
+  using type = trait_base<Args...>;
+};
+template <template <typename...> typename... BaseVTable>
+struct derive_v_table_from<trait, BaseVTable...> {
   template <typename...>
   struct type {
     template <typename... Args>
