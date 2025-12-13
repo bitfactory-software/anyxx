@@ -6,7 +6,6 @@ include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
 file(GLOB_RECURSE hpp_files "*.hpp")
 file(GLOB_RECURSE cpp_files "*.cpp")
 add_executable(tests_dll_mode ${cpp_files} ${hpp_files})
-#add_executable(tests_dll_mode _any_template.cpp)
 target_link_libraries(
   tests_dll_mode
   PRIVATE anyxx::anyxx_warnings
