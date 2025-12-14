@@ -201,9 +201,14 @@
     requires(::anyxx::const_correct_call_for_erased_data<                 \
              void const_*, erased_data_t, exact_const>)                   \
   {                                                                       \
-    return get_v_table_ptr()->name(                                       \
-        anyxx::get_void_data_ptr(base_t::erased_data_)                    \
-            __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
+    if constexpr (std::same_as<anyxx::trait, Dispatch>) {                 \
+      return static_dispatch_map_t::name(base_t::erased_data_ __VA_OPT__( \
+          , ) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
+    } else {                                                              \
+      return get_v_table_ptr()->name(                                     \
+          anyxx::get_void_data_ptr(base_t::erased_data_)                  \
+              __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+    }                                                                     \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
@@ -232,7 +237,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
-                          tpl3, tpl4, v_table_template_params, n, BASE,        \
+                          tpl3, tpl4, v_table_template_params,                 \
+                          static_dispatch_template_params, n, BASE,            \
                           base_template_params, l)                             \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
@@ -330,6 +336,9 @@
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
                                                                                \
+    using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
+        static_dispatch_template_params)>;                                     \
+                                                                               \
     template <typename Concrete>                                               \
     static auto v_table_imlpementation() {                                     \
       static_assert(!anyxx::is_any<Concrete>);                                 \
@@ -389,23 +398,24 @@
 
 #define __detail_ANYXX_ANY_(t, n, BASE, l)                              \
   ANY_META_FUNCTION(_detail_REMOVE_PARENS(t), (T), (Concrete), (Other), \
-                    (Dispatch), n, BASE, (Dispatch), l)
+                    (Dispatch), (ErasedData), n, BASE, (Dispatch), l)
 
 #define ANY_(n, BASE, l) \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l)
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
-#define ANY_TEMPLATE_(t, n, BASE, bt, l)                                      \
-  ANY_META_FUNCTION(                                                          \
-      __detail_ANYXX_ADD_TAIL(                                                \
-          (Dispatch),                                                         \
-          __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t))),   \
-      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                 \
-      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),          \
-      __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),             \
-      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)), n, BASE, \
-      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), l)
+#define ANY_TEMPLATE_(t, n, BASE, bt, l)                                    \
+  ANY_META_FUNCTION(                                                        \
+      __detail_ANYXX_ADD_TAIL(                                              \
+          (Dispatch),                                                       \
+          __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t))), \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),               \
+      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),        \
+      __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),           \
+      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),        \
+      __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t)), n,   \
+      BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
