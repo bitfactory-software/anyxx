@@ -233,12 +233,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 #define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
                           tpl3, tpl4, v_table_template_params,                 \
-                          static_dispatch_template_params, n, BASE,            \
-                          base_template_params, l)                             \
+                          static_dispatch_template_params,                     \
+                          traitet_template_params, n, BASE,                    \
+                          base_template_params, l, v_table_functions)          \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
                 anyxx::rtti>                                                   \
   struct n;                                                                    \
+                                                                               \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  using as_##n =                                                               \
+      n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params), anyxx::trait>;   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
@@ -281,7 +286,7 @@
                  : v_table_base_t::static_is_derived_from(from);               \
     }                                                                          \
                                                                                \
-    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
+    _detail_ANYXX_V_TABLE_FUNCTION_PTRS(v_table_functions);                    \
                                                                                \
     n##_v_table() = default;                                                   \
                                                                                \
@@ -290,7 +295,7 @@
         : v_table_base_t(concrete) {                                           \
       using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;    \
                                                                                \
-      _detail_ANYXX_V_TABLE_LAMBDAS(l);                                        \
+      _detail_ANYXX_V_TABLE_LAMBDAS(v_table_functions);                        \
                                                                                \
       if constexpr (open_dispatch_enabeled) {                                  \
         own_dispatch_holder_t::set_dispatch_table(                             \
@@ -321,6 +326,8 @@
             template type<ErasedData,                                          \
                           _detail_ANYXX_TEMPLATE_ARGS(base_template_params)> { \
     using erased_data_t = ErasedData;                                          \
+    using T =                                                                  \
+        typename anyxx::erased_data_trait<erased_data_t>::static_dispatch_t;   \
     using base_t = typename anyxx::derive_from<                                \
         Dispatch,                                                              \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>      \
@@ -375,7 +382,14 @@
                                                                                \
     _detail_ANYXX_METHODS(l)                                                   \
                                                                                \
-        ~n() = default;                                                        \
+        auto&                                                                  \
+        operator*(this auto&& self)                                            \
+      requires std::same_as<Dispatch, anyxx::trait>                            \
+    {                                                                          \
+      return self.erased_data_.value_;                                         \
+    }                                                                          \
+                                                                               \
+    ~n() = default;                                                            \
     n() = default;                                                             \
     n(n const&) = default;                                                     \
     n(n&&) = default;                                                          \
@@ -391,14 +405,14 @@
   };
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_(t, n, BASE, l)                                   \
-  ANY_META_FUNCTION(                                                         \
-      _detail_REMOVE_PARENS(t), (T), (Concrete), (Other), (Dispatch),        \
-      (typename anyxx::erased_data_trait<ErasedData>::static_dispatch_t), n, \
-      BASE, (Dispatch), l)
+#define __detail_ANYXX_ANY_(t, n, BASE, l, v_table_functions)             \
+  ANY_META_FUNCTION(                                                      \
+      _detail_REMOVE_PARENS(t), (T), (Concrete), (Other), (Dispatch),     \
+      (typename anyxx::erased_data_trait<ErasedData>::static_dispatch_t), \
+      (anyxx::traited<T>), n, BASE, (Dispatch), l, v_table_functions)
 
 #define ANY_(n, BASE, l) \
-  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l)
+  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l, l)
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
@@ -414,10 +428,16 @@
       __detail_ANYXX_ADD_TAIL(                                                 \
           (typename anyxx::erased_data_trait<ErasedData>::static_dispatch_t),  \
           _detail_REMOVE_PARENS(t)),                                           \
+      __detail_ANYXX_ADD_HEAD((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
-      l)
+      l, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
+
+#define TRAIT_(n, BASE, l) \
+  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l, )
+
+#define TRAIT(n, ...) TRAIT_(n, , __VA_ARGS__)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
@@ -546,22 +566,6 @@ return {};\
                                                                               \
     _detail_ANYXX_TRAIT_METHODS(l)                                            \
   };
-
-#define TRAIT_(n, BASE, l) \
-  TRAIT_META_FUNCTION((ErasedData), (T), (ErasedData), n, BASE, (), l)
-
-// cppcheck-suppress-macro [functionStatic]
-#define TRAIT(n, ...) TRAIT_(n, ::anyxx::trait_base, __VA_ARGS__)
-
-#define TRAIT_TEMPLATE_(t, n, BASE, base_template_params, l)              \
-  TRAIT_META_FUNCTION(                                                    \
-      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)),    \
-      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),             \
-      __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t)), n, \
-      BASE, base_template_params, l)
-
-#define TRAIT_TEMPLATE(t, n, l) \
-  TRAIT_TEMPLATE_(t, n, ::anyxx::trait_base, (), l)
 
 namespace anyxx {
 
@@ -765,7 +769,10 @@ struct erased_data_trait<traited<V>> {
   static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
     return V{std::forward<Args>(args)...};
   }
-  static auto erase(V&& v) { return traited<V>{std::move(v)}; }
+  template <typename Vx>
+  static auto erase(Vx&& v) {
+    return traited<V>{std::forward<Vx>(v)};
+  }
 };
 
 static_assert(

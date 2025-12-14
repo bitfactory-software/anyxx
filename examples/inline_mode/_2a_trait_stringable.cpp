@@ -11,6 +11,7 @@ using namespace std;
 ANY(stringable, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                       [x]() { return std::format("{}", x); })))
 
+
 template <>
 struct stringable_model_map<bool> {
   static std::string to_string(bool const& value) {
@@ -33,7 +34,7 @@ template <typename V>
 auto print(V s)
 //  requires stringable_trait<V>::is_defined
 {
-  return print_(stringable<anyxx::traited<V>, anyxx::trait>{std::move(s)});
+  return print_(as_stringable<V>{std::move(s)});
 }
 
 }  // namespace example_2a
