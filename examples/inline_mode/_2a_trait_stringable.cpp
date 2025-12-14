@@ -6,25 +6,24 @@
 
 namespace example_2a {
 
-using namespace std;
-
 ANY(stringable, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                       [x]() { return std::format("{}", x); })))
 
+}
 
-template <>
-struct stringable_model_map<bool> {
+ANY_MODEL_MAP((bool), example_2a::stringable) {
   static std::string to_string(bool const& value) {
     return value ? "wahr" : "falsch";
   };
 };
 
-template <>
-struct stringable_model_map<double> {
+ANY_MODEL_MAP((double), example_2a::stringable) {
   static std::string to_string(const double& value) {
     return std::format("{:6.3}", value);
-  }
+  };
 };
+
+namespace example_2a {
 
 template <typename V>
 std::string print_(stringable<V, anyxx::trait> const& s) {
