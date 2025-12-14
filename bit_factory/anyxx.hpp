@@ -508,7 +508,7 @@ return {};\
                                                                               \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>     \
   struct n##_trait_default {                                                  \
-    _detail_ANYXX_MAP_FUNCTIONS(l)                                          \
+    _detail_ANYXX_MAP_FUNCTIONS(l)                                            \
   };                                                                          \
                                                                               \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>     \
@@ -619,7 +619,7 @@ void check_type_match(meta_data const& meta) {
 template <typename Data>
 struct erased_data_trait;
 
-template <class E>
+template <typename E>
 concept is_erased_data = requires(E e) {
   typename erased_data_trait<E>::void_t;
   {
@@ -731,6 +731,34 @@ concept erased_constructibile_for =
     !is_erased_data<std::remove_cvref_t<ConstructedWith>> &&
     (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
      erased_data_trait<ErasedData>::is_constructibile_from_const);
+
+// --------------------------------------------------------------------------------
+// traited data
+
+template <typename V>
+struct traited : std::type_identity<V> {};
+
+template <typename V>
+struct erased_data_trait<traited<V>> {
+  using void_t = mutable_void;
+  static constexpr bool is_constructibile_from_const = true;
+  static constexpr bool is_owner = true;
+  static constexpr bool is_weak = false;
+  static auto default_construct() { return V{}; }
+
+  static bool has_value(const auto& ptr) { return true; }
+  static auto value(auto& value) { return &value; }
+
+  template <typename ConstructedWith>
+  using unerased = ConstructedWith;
+
+  static auto construct_in_place(V&& v) { return v; }
+  template <typename... Args>
+  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
+    return V{std::forward<Args>(args)...};
+  }
+  static auto erase(V const& v) { return v; }
+};
 
 // --------------------------------------------------------------------------------
 // erased data observer
