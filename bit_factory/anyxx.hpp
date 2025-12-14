@@ -175,12 +175,6 @@
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));              \
   };
 
-#define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
-#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,          \
-                                     exact_const, const_, trait_body, ...)    \
-  _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, const_, \
-                         trait_body, __VA_ARGS__)
-
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
@@ -494,10 +488,6 @@ return {};\
   _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda,             \
                                            _detail_EXPAND params)
 
-#define _detail_ANYXX_TRAIT_FUNCTIONS(...)                         \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_TRAIT_FUNCTION_H, \
-                                   _detail_EXPAND_LIST __VA_ARGS__))
-
 #define _detail_ANYXX_TRAIT_METHOD_H(l) _detail_ANYXX_TRAIT_METHOD l
 #define _detail_ANYXX_TRAIT_METHOD(overload, type, name, name_ext,            \
                                    exact_const, const_, trait_body, ...)      \
@@ -518,7 +508,7 @@ return {};\
                                                                               \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>     \
   struct n##_trait_default {                                                  \
-    _detail_ANYXX_TRAIT_FUNCTIONS(l)                                          \
+    _detail_ANYXX_MAP_FUNCTIONS(l)                                          \
   };                                                                          \
                                                                               \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>     \
