@@ -176,12 +176,10 @@
   };
 
 #define _detail_ANYXX_TRAIT_FUNCTION_H(l) _detail_ANYXX_TRAIT_FUNCTION l
-#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,       \
-                                     exact_const, const_, trait_body, ...) \
-  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {              \
-    _detail_REMOVE_PARENS(trait_body)                                      \
-  };
+#define _detail_ANYXX_TRAIT_FUNCTION(overload, type, name, name_ext,          \
+                                     exact_const, const_, trait_body, ...)    \
+  _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, const_, \
+                         trait_body, __VA_ARGS__)
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
@@ -419,14 +417,13 @@
   ANY_METHOD_(overload, ret, name, name_ext, exact_const, const_,   \
               (x.name_ext), _detail_EXPAND params)
 
-#define TRAIT_METHOD_PURE(ret, name, params, const_)     \
-  ANY_METHOD_(, ret, name, name, false, const_,          \
-              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name)), \
+#define ANY_METHOD_PURE(ret, name, params, const_)            \
+  ANY_METHOD_(, ret, name, name, false, const_,               \
+              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
               _detail_EXPAND params)
 
-#define TRAIT_METHOD(ret, name, params, const_, ...)                           \
-  ANY_METHOD_(, ret, name, name, false, const_,                                \
-              (_detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, (__VA_ARGS__))), \
+#define ANY_METHOD_DEFAULTED(ret, name, params, const_, ...)   \
+  ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
 #define ANY_METHOD(ret, name, params, const_) \
@@ -471,15 +468,18 @@
 #define ANY_MODEL_MAP(class_, interface_) \
   __ANY_MODEL_MAP(class_, interface_, class_)
 
-#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name)       \
+#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)     \
+[]<typename... Args>([[maybe_unused]](Args...) -> ret{ \
   static_assert(                                      \
       anyxx::missing_trait_error<T>::not_specialized, \
       "'" #name                                       \
-      "' is missing in the specialization of this erased_data_trait!");
+      "' is missing in the specialization of this erased_data_trait!"); \
+return {};\
+}
 
 #define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda, ...) \
-  return trait_body_lamda(                                              \
-      x __VA_OPT__(, ) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));
+  trait_body_lamda(x __VA_OPT__(, )                                     \
+                       __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));
 #define _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA(params, trait_body_lamda) \
   _detail_ANYXX_INVOKE_TRAIT_BODY_LAMBDA_H(trait_body_lamda,             \
                                            _detail_EXPAND params)

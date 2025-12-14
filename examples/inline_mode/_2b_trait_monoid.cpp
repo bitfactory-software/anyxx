@@ -7,20 +7,20 @@
 
 namespace example_2b {
 TRAIT(monoid,
-      (TRAIT_METHOD(monoid<T>, op, (monoid<T> const&), const,
-                    [](const auto& value, monoid<T> const r) {
+      (ANY_METHOD_DEFAULTED(monoid<T>, op, (monoid<T> const&), const,
+                    [x](monoid<T> const r) {
                       return monoid<T>{}.concat(
-                          std::vector{monoid{value}, r});  // NOLINT
+                          std::vector{monoid{x}, r});  // NOLINT
                     }),
-       TRAIT_METHOD(monoid<T>, concat, (const auto&), const,
-                    []([[maybe_unused]] const auto& value, const auto& r) {
+       ANY_METHOD_DEFAULTED(monoid<T>, concat, (const auto&), const,
+                    []([[maybe_unused]] const auto& r) {
                       return std::ranges::fold_right(
                           r, monoid<T>{}, [&](auto const& m1, auto const& m2) {
                             return m1.op(m2);
                           });
                     }),
-       TRAIT_METHOD(monoid<T>, id, (), const,
-                    []([[maybe_unused]] const auto& value) {
+       ANY_METHOD_DEFAULTED(monoid<T>, id, (), const,
+                    []() {
                       return monoid<T>{};
                     })))
 

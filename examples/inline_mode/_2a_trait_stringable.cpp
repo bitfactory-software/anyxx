@@ -9,8 +9,8 @@ namespace example_2a {
 using namespace std;
 
 TRAIT(stringable,
-      (TRAIT_METHOD(std::string, to_string, (), const, [](const auto& value) {
-        return std::format("{}", value);
+      (ANY_METHOD_DEFAULTED(std::string, to_string, (), const, [x]() {
+        return std::format("{}", x);
       })))
 
 template <>
