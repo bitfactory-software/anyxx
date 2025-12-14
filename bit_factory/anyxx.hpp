@@ -196,8 +196,9 @@
              void const_*, erased_data_t, exact_const>)                   \
   {                                                                       \
     if constexpr (std::same_as<anyxx::trait, Dispatch>) {                 \
-      return static_dispatch_map_t::name(base_t::erased_data_ __VA_OPT__( \
-          , ) __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
+      return static_dispatch_map_t::name(                                 \
+          base_t::erased_data_.value_ __VA_OPT__(, )                      \
+              __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
     } else {                                                              \
       return get_v_table_ptr()->name(                                     \
           anyxx::get_void_data_ptr(base_t::erased_data_)                  \
@@ -390,26 +391,31 @@
   };
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_(t, n, BASE, l)                              \
-  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t), (T), (Concrete), (Other), \
-                    (Dispatch), (ErasedData), n, BASE, (Dispatch), l)
+#define __detail_ANYXX_ANY_(t, n, BASE, l)                                   \
+  ANY_META_FUNCTION(                                                         \
+      _detail_REMOVE_PARENS(t), (T), (Concrete), (Other), (Dispatch),        \
+      (typename anyxx::erased_data_trait<ErasedData>::static_dispatch_t), n, \
+      BASE, (Dispatch), l)
 
 #define ANY_(n, BASE, l) \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l)
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
-#define ANY_TEMPLATE_(t, n, BASE, bt, l)                                    \
-  ANY_META_FUNCTION(                                                        \
-      __detail_ANYXX_ADD_TAIL(                                              \
-          (Dispatch),                                                       \
-          __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t))), \
-      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),               \
-      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),        \
-      __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),           \
-      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),        \
-      __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t)), n,   \
-      BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), l)
+#define ANY_TEMPLATE_(t, n, BASE, bt, l)                                       \
+  ANY_META_FUNCTION(                                                           \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (Dispatch),                                                          \
+          __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t))),    \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
+      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
+      __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
+      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (typename anyxx::erased_data_trait<ErasedData>::static_dispatch_t),  \
+          _detail_REMOVE_PARENS(t)),                                           \
+      n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
+      l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
@@ -586,7 +592,7 @@ template <typename T>
 struct missing_trait_error {
   static constexpr bool not_specialized = false;
 };
-template <typename Value, typename Dispatch = trait>
+template <typename Value>
 struct trait_base {
   Value value_ = {};
   operator Value() const { return value_; }
@@ -622,6 +628,7 @@ struct erased_data_trait;
 template <typename E>
 concept is_erased_data = requires(E e) {
   typename erased_data_trait<E>::void_t;
+  typename erased_data_trait<E>::static_dispatch_t;
   {
     erased_data_trait<E>::is_constructibile_from_const
   } -> std::convertible_to<bool>;
@@ -736,11 +743,12 @@ concept erased_constructibile_for =
 // traited data
 
 template <typename V>
-struct traited : std::type_identity<V> {};
+using traited = trait_base<V>;
 
 template <typename V>
 struct erased_data_trait<traited<V>> {
   using void_t = mutable_void;
+  using static_dispatch_t = V;
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
@@ -752,14 +760,17 @@ struct erased_data_trait<traited<V>> {
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
 
-  static auto construct_in_place(V&& v) { return v; }
+  static auto construct_in_place(V&& v) { return std::move(v); }
   template <typename... Args>
   static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
     return V{std::forward<Args>(args)...};
   }
-  static auto erase(V const& v) { return v; }
+  static auto erase(V&& v) { return traited<V>{std::move(v)}; }
 };
 
+static_assert(
+    std::same_as<typename erased_data_trait<traited<bool>>::static_dispatch_t,
+                 bool>);
 // --------------------------------------------------------------------------------
 // erased data observer
 
@@ -771,6 +782,7 @@ using mutable_observer = observer<mutable_void>;
 template <typename ErasedData, voidness Voidness>
 struct observer_trait {
   using void_t = Voidness;
+  using static_dispatch_t = void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
   static constexpr bool is_owner = false;
@@ -829,6 +841,7 @@ using weak = std::weak_ptr<void const>;
 template <>
 struct erased_data_trait<shared_const> {
   using void_t = void const*;
+  using static_dispatch_t = void_t;
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -867,6 +880,7 @@ struct erased_data_trait<shared_const> {
 template <>
 struct erased_data_trait<weak> {
   using void_t = void const*;
+  using static_dispatch_t = void_t;
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -926,6 +940,7 @@ inline unique unique_nullptr() {
 template <>
 struct erased_data_trait<unique> {
   using void_t = void*;
+  using static_dispatch_t = void_t;
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -1045,6 +1060,7 @@ U const* unchecked_unerase_cast(value const& v) {
 template <>
 struct erased_data_trait<value> {
   using void_t = void*;
+  using static_dispatch_t = void_t;
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -1794,6 +1810,13 @@ struct dyn_v_table_access : Base {
         v_table_t{std::in_place_type<anyxx::unerased<erased_data_t, Concrete>>};
   }
 };
+struct no_derived_v_table {
+  template <typename...>
+  struct type {
+    template <typename... Args>
+    type(Args&&...) {}
+  };
+};
 template <typename VTable, template <typename...> typename Base>
 struct derive_from<dyn, VTable, Base> {
   template <typename... Args>
@@ -1805,34 +1828,31 @@ struct derive_from<dyn, VTable> {
   using type = dyn_v_table_access<VTable, erased_data_holder<Args...>>;
 };
 template <template <typename...> typename... BaseVTable>
-struct derive_v_table_from<dyn, BaseVTable...> {
-  template <typename...>
-  struct type {
-    template <typename... Args>
-    type(Args&&...) {}
-  };
-};
+struct derive_v_table_from<dyn, BaseVTable...> : no_derived_v_table {};
 
 // --------------------------------------------------------------------------------
 // trait
+template <typename VTable, typename Base>
+struct no_v_table_access : Base {
+  using Base::Base;
+  using erased_data_t = typename Base::erased_data_t;
+  struct v_table_t {};
+  auto get_v_table_ptr() { return nullptr; }
+  template <typename Concrete>
+  void init_v_table() {}
+};
 template <typename VTable, template <typename...> typename Base>
 struct derive_from<trait, VTable, Base> {
   template <typename... Args>
-  using type = Base<Args...>;
+  using type = no_v_table_access<VTable, Base<Args...>>;
 };
 template <typename VTable>
 struct derive_from<trait, VTable> {
   template <typename... Args>
-  using type = trait_base<Args...>;
+  using type = no_v_table_access<VTable, erased_data_holder<Args...>>;
 };
 template <template <typename...> typename... BaseVTable>
-struct derive_v_table_from<trait, BaseVTable...> {
-  template <typename...>
-  struct type {
-    template <typename... Args>
-    type(Args&&...) {}
-  };
-};
+struct derive_v_table_from<trait, BaseVTable...> : no_derived_v_table {};
 
 // --------------------------------------------------------------------------------
 // typed any

@@ -8,37 +8,35 @@ namespace example_2a {
 
 using namespace std;
 
-TRAIT(stringable,
-      (ANY_METHOD_DEFAULTED(std::string, to_string, (), const, [x]() {
-        return std::format("{}", x);
-      })))
+ANY(stringable, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
+                                      [x]() { return std::format("{}", x); })))
 
 template <>
-struct stringable_trait<bool> {
+struct stringable_model_map<bool> {
   static std::string to_string(bool const& value) {
     return value ? "wahr" : "falsch";
   };
 };
 
 template <>
-struct stringable_trait<double> {
+struct stringable_model_map<double> {
   static std::string to_string(const double& value) {
     return std::format("{:6.3}", value);
   }
 };
 
 template <typename V>
-std::string print_(stringable<V> s) {
+std::string print_(stringable<V, anyxx::trait> const& s) {
   return s.to_string() + "\n";
 }
 template <typename V>
-auto print(V const& s)
+auto print(V s)
 //  requires stringable_trait<V>::is_defined
 {
-  return print_(stringable<V>{s});
+  return print_(stringable<anyxx::traited<V>, anyxx::trait>{std::move(s)});
 }
 
-}  // namespace example_2
+}  // namespace example_2a
 
 template <class V>
 concept is_print_callable = requires(V v) {

@@ -3,68 +3,68 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
-#ifdef __cpp_lib_ranges_fold
-
-namespace example_2b {
-TRAIT(monoid,
-      (ANY_METHOD_DEFAULTED(monoid<T>, op, (monoid<T> const&), const,
-                    [x](monoid<T> const r) {
-                      return monoid<T>{}.concat(
-                          std::vector{monoid{x}, r});  // NOLINT
-                    }),
-       ANY_METHOD_DEFAULTED(monoid<T>, concat, (const auto&), const,
-                    []([[maybe_unused]] const auto& r) {
-                      return std::ranges::fold_right(
-                          r, monoid<T>{}, [&](auto const& m1, auto const& m2) {
-                            return m1.op(m2);
-                          });
-                    }),
-       ANY_METHOD_DEFAULTED(monoid<T>, id, (), const,
-                    []() {
-                      return monoid<T>{};
-                    })))
-
-template <typename T>
-inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
-  return lhs.value_ == rhs.value_;
-};
-
-template <>
-struct monoid_trait<int> : monoid_trait_default<int> {
-  static monoid<int> concat([[maybe_unused]] int self, auto const& r) {
-    return monoid<int>{ std::ranges::fold_right(r, 0,
-                                    [&](auto m1, auto m2) { return m1 + m2; })};
-  };
-};
-
-template <>
-struct monoid_trait<std::string> : monoid_trait_default<std::string> {
-  static monoid<std::string> op(std::string const& self,
-                                monoid<std::string> const& r) {
-    return monoid<std::string>{ self + static_cast<std::string>(r) };
-  };
-};
-
-template <typename M, typename R>
-void test_monoid(monoid<M> const& m, R r)
-  requires std::ranges::range<R> &&
-           std::same_as<typename R::value_type, monoid<M>>
-{
-  CHECK(m.op(monoid<M>{}).op(m) == m.op(m).op(monoid<M>{}));
-  CHECK(m.id() == monoid<M>{});
-  CHECK(m.concat(r) == std::ranges::fold_right(
-                           r, monoid<M>{}, [&](auto const& m1, auto const& m2) {
-                             return m1.op(m2);
-                           }));
-}
-
-}  // namespace example_2b
-
-TEST_CASE("example 2b monoid ") {
-  using namespace example_2b;
-  using namespace std::string_literals;
-  test_monoid(monoid{1}, std::vector{monoid{2}, monoid{3}});
-  test_monoid(monoid{"1"s}, std::vector{monoid{"2"s}, monoid{"3"s}});
-}
-
-#endif
+//#ifdef __cpp_lib_ranges_fold
+//
+//namespace example_2b {
+//TRAIT(monoid,
+//      (ANY_METHOD_DEFAULTED(monoid<T>, op, (monoid<T> const&), const,
+//                    [x](monoid<T> const r) {
+//                      return monoid<T>{}.concat(
+//                          std::vector{monoid{x}, r});  // NOLINT
+//                    }),
+//       ANY_METHOD_DEFAULTED(monoid<T>, concat, (const auto&), const,
+//                    []([[maybe_unused]] const auto& r) {
+//                      return std::ranges::fold_right(
+//                          r, monoid<T>{}, [&](auto const& m1, auto const& m2) {
+//                            return m1.op(m2);
+//                          });
+//                    }),
+//       ANY_METHOD_DEFAULTED(monoid<T>, id, (), const,
+//                    []() {
+//                      return monoid<T>{};
+//                    })))
+//
+//template <typename T>
+//inline auto operator==(monoid<T> const& lhs, monoid<T> const& rhs) {
+//  return lhs.value_ == rhs.value_;
+//};
+//
+//template <>
+//struct monoid_trait<int> : monoid_trait_default<int> {
+//  static monoid<int> concat([[maybe_unused]] int self, auto const& r) {
+//    return monoid<int>{ std::ranges::fold_right(r, 0,
+//                                    [&](auto m1, auto m2) { return m1 + m2; })};
+//  };
+//};
+//
+//template <>
+//struct monoid_trait<std::string> : monoid_trait_default<std::string> {
+//  static monoid<std::string> op(std::string const& self,
+//                                monoid<std::string> const& r) {
+//    return monoid<std::string>{ self + static_cast<std::string>(r) };
+//  };
+//};
+//
+//template <typename M, typename R>
+//void test_monoid(monoid<M> const& m, R r)
+//  requires std::ranges::range<R> &&
+//           std::same_as<typename R::value_type, monoid<M>>
+//{
+//  CHECK(m.op(monoid<M>{}).op(m) == m.op(m).op(monoid<M>{}));
+//  CHECK(m.id() == monoid<M>{});
+//  CHECK(m.concat(r) == std::ranges::fold_right(
+//                           r, monoid<M>{}, [&](auto const& m1, auto const& m2) {
+//                             return m1.op(m2);
+//                           }));
+//}
+//
+//}  // namespace example_2b
+//
+//TEST_CASE("example 2b monoid ") {
+//  using namespace example_2b;
+//  using namespace std::string_literals;
+//  test_monoid(monoid{1}, std::vector{monoid{2}, monoid{3}});
+//  test_monoid(monoid{"1"s}, std::vector{monoid{"2"s}, monoid{"3"s}});
+//}
+//
+//#endif
