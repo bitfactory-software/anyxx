@@ -21,6 +21,11 @@ ANY(value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                    ss >> x;
                                  })))
 
+using vany_value = anyxx::vany_type<value, anyxx::shared_const, anyxx::rtti,
+                                    bool, int, double, std::string>;
+
+using vany_values_t = std::vector<vany_value>;
+
 }  // namespace example_2c
 
 ANY_MODEL_MAP((example_2c::custom), example_2c::value) {
@@ -32,45 +37,30 @@ ANY_MODEL_MAP((example_2c::custom), example_2c::value) {
   };
 };
 
-namespace example_2c {
-
-using namespace anyxx;
-
-template <template <typename...> typename any, is_erased_data ErasedData,
-          typename Dispatch, typename... Types>
-using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
-
-template <template <typename...> typename any, is_erased_data ErasedData,
-          typename Dispatch, typename... Types>
-using vany = any<vany_variant<any, ErasedData, Dispatch, Types...>, trait>;
-
-using vany_value =
-    vany<value, shared_const, rtti, bool, int, double, std::string>;
-
-using vany_values_t = std::vector<vany_value>;
-
-}  // namespace example_2c
+namespace example_2c {}  // namespace example_2c
 
 TEST_CASE("example 2c trait any variant") {
-  using namespace anyxx;
   using namespace example_2c;
   using namespace std::string_literals;
   vany_value vv3{std::string{"hello"}};
-  vany_value vv4{std::in_place_type<example_2c::value<shared_const>>,
+  vany_value vv4{std::in_place_type<example_2c::value<anyxx::shared_const>>,
                  std::in_place_type<custom>, "42"};
-  // static_assert(anyxx::erased_constructibile_for<
-  //     example_2c::value<shared_const>, vany_value, vany_value::base_t>);
-  static_assert(anyxx::constructibile_for<example_2c::value<shared_const>,
-                                          vany_value::erased_data_t>);
-  auto v6 = example_2c::value<shared_const>(std::in_place_type<custom>, "43");
+  static_assert(
+      anyxx::constructibile_for<example_2c::value<anyxx::shared_const>,
+                                vany_value::erased_data_t>);
+  auto v6 =
+      example_2c::value<anyxx::shared_const>(std::in_place_type<custom>, "43");
   vany_value vv6{v6};
   vany_value vv5{
-      example_2c::value<shared_const>{std::in_place_type<custom>, "42"}};
+      example_2c::value<anyxx::shared_const>{std::in_place_type<custom>, "42"}};
   auto custom_value =
-      example_2c::value<shared_const>{std::in_place_type<custom>, "42"};
+      example_2c::value<anyxx::shared_const>{std::in_place_type<custom>, "42"};
   vany_value vv1{custom_value};
-  vany_value vv2 =
-      example_2c::value<shared_const>{std::in_place_type<custom>, "43"};
+  vany_value vv_custom_43 =
+      example_2c::value<anyxx::shared_const>{std::in_place_type<custom>, "43"};
   vany_values_t vany_values = {
-      example_2c::value<shared_const>{std::in_place, custom{"42"}}};
+      example_2c::value<anyxx::shared_const>{std::in_place, custom{"42"}}};
+
+  CHECK(vany_value{true}.to_string() == "true");
+  CHECK(vv_custom_43.to_string() == "{ 43}");
 }
