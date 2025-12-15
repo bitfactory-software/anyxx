@@ -756,9 +756,9 @@ struct erased_data_trait<traited<V>> {
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
-  static auto default_construct() { return V{}; }
+  static auto default_construct() { return traited<V>{}; }
 
-  static bool has_value(const auto& ptr) { return true; }
+  static bool has_value([[maybe_unused]]const auto& ptr) { return true; }
   static auto value(auto& value) { return &value; }
 
   template <typename ConstructedWith>

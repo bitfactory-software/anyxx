@@ -51,12 +51,19 @@ void test_monoid(as_monoid<M> const& m, R r)
   requires std::ranges::range<R> &&
            std::same_as<typename R::value_type, as_monoid<M>>
 {
-  CHECK(m.op(as_monoid<M>{}).op(m) == m.op(m).op(as_monoid<M>{}));
-  CHECK(m.id() == as_monoid<M>{});
-  CHECK(m.concat(r) ==
-        std::ranges::fold_right(
-            r, as_monoid<M>{},
-            [&](auto const& m1, auto const& m2) { return m1.op(m2); }));
+  using type_1 = decltype(m.op(as_monoid<M>{}).op(m));
+  using type_2 = decltype(m.op(m).op(as_monoid<M>{}));
+  static_assert(std::same_as<type_1, type_2>);
+  static_assert(std::same_as<type_1, as_monoid<M>>);
+  auto c1 = m.op(as_monoid<M>{}).op(m) == m.op(m).op(as_monoid<M>{});
+  CHECK(c1);
+  auto c2 = m.concat(r) ==
+      std::ranges::fold_right(
+          r, as_monoid<M>{},
+          [&](auto const& m1, auto const& m2) { return m1.op(m2); });
+  CHECK(c2);
+  auto c3 = m.id() == as_monoid<M>{};
+  CHECK(c3);
 }
 
 }  // namespace example_2b
