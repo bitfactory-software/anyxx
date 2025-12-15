@@ -451,7 +451,7 @@
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_TAIL((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
-      __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
+      __detail_ANYXX_ADD_HEAD((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
       l, l)
 
