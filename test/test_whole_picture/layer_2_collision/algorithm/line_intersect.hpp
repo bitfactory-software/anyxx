@@ -7,7 +7,7 @@ namespace whole_picture::collision::lines {
 
 using point = whole_picture::architecture::point;
 
-bool on_segment(point p, point q, point r) {
+inline bool on_segment(point p, point q, point r) {
   return (q.x <= std::max(p.x, r.x) && q.x >= std::min(p.x, r.x) &&
           q.y <= std::max(p.y, r.y) && q.y >= std::min(p.y, r.y));
 }

@@ -3,13 +3,13 @@
 file(GLOB_RECURSE layer_0_architecture_cpp_files "./layer_0_architecture/*.cpp")
 file(GLOB_RECURSE layer_0_architecture_hpp_files "./layer_0_architecture/*.hpp")
 if(MSVC)
-  add_library(layer_0_architecture  ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
+  add_library(layer_0_architecture SHARED ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
 else()
   add_library(layer_0_architecture ${layer_0_architecture_cpp_files} ${layer_0_architecture_hpp_files})
 endif()
 set_target_properties(layer_0_architecture PROPERTIES LINKER_LANGUAGE CXX)
 target_compile_definitions(layer_0_architecture PUBLIC ANY_DLL_MODE)
-#target_compile_definitions(layer_0_architecture PRIVATE ARCHITECTURE_SHARED)
+target_compile_definitions(layer_0_architecture PRIVATE ARCHITECTURE_SHARED)
 set_target_properties(layer_0_architecture PROPERTIES FOLDER "_example_whole_picture")
 target_link_libraries(layer_0_architecture 
   PRIVATE   anyxx::anyxx_warnings
@@ -24,12 +24,12 @@ target_include_directories(layer_0_architecture INTERFACE
 file(GLOB_RECURSE layer_1_core_cpp_files "./layer_1_core/*.cpp")
 file(GLOB_RECURSE layer_1_core_hpp_files "./layer_1_core/*.hpp")
 if(MSVC)
-  add_library(layer_1_core  ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
+  add_library(layer_1_core SHARED ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
 else()
   add_library(layer_1_core ${layer_1_core_cpp_files} ${layer_1_core_hpp_files})
 endif()
 set_target_properties(layer_1_core PROPERTIES LINKER_LANGUAGE CXX)
-#target_compile_definitions(layer_1_core PRIVATE CORE_SHARED)
+target_compile_definitions(layer_1_core PRIVATE CORE_SHARED)
 target_link_libraries(layer_1_core 
   PRIVATE   anyxx::anyxx_warnings
             anyxx::anyxx_options
@@ -44,19 +44,17 @@ target_include_directories(layer_1_core PUBLIC
 file(GLOB_RECURSE layer_2_collision_cpp_files "./layer_2_collision/*.cpp")
 file(GLOB_RECURSE layer_2_collision_hpp_files "./layer_2_collision/*.hpp")
 if(MSVC)
-  add_library(layer_2_collision  ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
+  add_library(layer_2_collision SHARED ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
 else()
   add_library(layer_2_collision ${layer_2_collision_cpp_files} ${layer_2_collision_hpp_files})
 endif()
 set_target_properties(layer_2_collision PROPERTIES LINKER_LANGUAGE CXX)
-target_compile_definitions(layer_2_collision PUBLIC ANY_DLL_MODE)
+target_compile_definitions(layer_2_collision PRIVATE COLLISION_SHARED)
 target_link_libraries(layer_2_collision 
   PRIVATE   anyxx::anyxx_warnings
             anyxx::anyxx_options
   PUBLIC    layer_1_core
 )
-
-#target_compile_definitions(layer_2_collision PRIVATE COLLISION_SHARED)
 set_target_properties(layer_2_collision PROPERTIES FOLDER "_example_whole_picture")
 target_include_directories(layer_2_collision PUBLIC 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building
@@ -72,6 +70,7 @@ target_link_libraries(test_whole_picture
             layer_1_core
             layer_2_collision
             Catch2::Catch2WithMain
+            "$<LINK_LIBRARY:WHOLE_ARCHIVE,layer_2_collision>"
 )
 set_target_properties(test_whole_picture PROPERTIES FOLDER "_example_whole_picture")
 
