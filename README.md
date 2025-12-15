@@ -38,8 +38,8 @@ Square
 [Compiler Explorer](https://godbolt.org/z/4P6M8WrzP)
 
 # Feature overview
-- **External Polymorphis**m via *ANY...* metaclass
-  - Nonintrusive Runtime Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
+- **External Polymorphis**m via *ANY...* and *TRAIT...* metaclasses
+  - Nonintrusive **Runtime** ***AND*** **Static** Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
     - Deriveable
     - Operators
     - Choose implementation for specific type va *Concept Map*
@@ -58,6 +58,8 @@ Square
     - shared_const, weak via std::shared_ptr, std::week_ptr
     - unique, via std::unique_ptr and type erased deleter
     - value
+    - traited
+    - vany variant
   - Customizable via anyxx::trait
   - **Safe** interchange of **lifetime**  
     - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
