@@ -2376,7 +2376,7 @@ struct dispatch_function_types {
     using type = outer<Args...>::template type<Any, Anys...>;
   };
 
-  using type = outer<OuterArgs...>::template type<>;
+  using default_type = outer<OuterArgs...>::template type<>;
 };
 
 template <typename F, typename... Args>
@@ -2402,10 +2402,10 @@ struct dispatch<R(Args...)> {
   using dispatch_matrix_t = dispatch_matrix<erased_function_t, Args...>::type;
   dispatch_matrix_t dispatch_matrix_;
 
-  using dispatch_function_types_t = typename dispatch_function_types<R, Args...>::type;
-  dispatch_function_types_t::function_t dispatch_default_hook_;
-  dispatch_function_types_t::function_t::connection default_connection_ =
-      dispatch_default_hook_.insert(dispatch_function_types_t::function());
+  using default_ = typename dispatch_function_types<R, Args...>::default_type;
+  default_::function_t dispatch_default_hook_;
+  default_::function_t::connection default_connection_ =
+      dispatch_default_hook_.insert(default_::function());
 
   enum class kind { single, multiple };
   template <kind Kind, std::size_t Dimension, typename... DispatchArgs>
@@ -2500,7 +2500,7 @@ struct dispatch<R(Args...)> {
     }
 
     template <typename... Other>
-    R invoke(dispatch_function_types_t::function_t const& default_, Any const& any,
+    R invoke(default_::function_t const& default_, Any const& any,
              Other&&... other) const {
       auto v_table = get_v_table(any)->dispatch_table;
       auto target = get_function(v_table, index_);
@@ -2544,6 +2544,36 @@ struct dispatch<R(Args...)> {
   auto& get_dispatch_default_hook() { return dispatch_default_hook_; };
 };
 
+template <typename DynamicDispatch, typename StaticDispatch>
+class vany_dispatch {
+  DynamicDispatch* dynamic_dispatch_;
+  StaticDispatch static_dispatch_;
+
+ public:
+  vany_dispatch(DynamicDispatch& dynamic_dispatch,
+                StaticDispatch static_dispatch)
+      : dynamic_dispatch_(&dynamic_dispatch),
+        static_dispatch_(static_dispatch) {}
+  template <typename... Classes>
+  auto define(auto f) {
+    return dynamic_dispatch_define<Classes...>(f);
+  }
+  template <is_any VanyArg, typename... Others>
+  auto operator()(VanyArg&& vany, Others&&... others) const {
+    return std::visit(
+        overloads{[&]<typename Arg>([[maybe_unused]] Arg&& arg) { 
+                     return static_dispatch_(
+                         std::forward<Arg>(arg),
+                         std::forward<Others>(others)...);
+                  },
+                  [&]<is_any Arg>(Arg&& arg) {
+                    return (*dynamic_dispatch_)(
+                        std::forward<Arg>(arg),
+                        std::forward<Others>(others)...);
+                  }},
+        std::forward<VanyArg>(vany).erased_data_);
+  }
+};
 }  // namespace anyxx
 
 #define ANY_MERGE_(a, b) a##b

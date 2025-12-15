@@ -2,6 +2,9 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
+#include <ios>
+#include <iostream>
+#include <print>
 #include <sstream>
 #include <string>
 #include <variant>
@@ -12,14 +15,15 @@ struct custom {
   std::string answer;
 };
 
+struct any_value_has_open_dispatch{};
 ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                                 [x]() { return std::format("{}", x); }),
-            ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
-                                 [&x](std::string_view sv) {
-                                   std::stringstream ss{std::string{sv},
-                                                        std::ios_base::in};
-                                   ss >> x;
-                                 })))
+                                     [x]() { return std::format("{}", x); }),
+                ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
+                                     [&x](std::string_view sv) {
+                                       std::stringstream ss{std::string{sv},
+                                                            std::ios_base::in};
+                                       ss >> x;
+                                     })))
 
 using vany_value = anyxx::vany_type<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;
@@ -47,15 +51,11 @@ TEST_CASE("example 2ca trait any variant") {
   vany_value vv4{std::in_place_type<any_value<anyxx::shared_const>>,
                  std::in_place_type<custom>, "42"};
   static_assert(
-      constructibile_for<any_value<shared_const>,
-                                vany_value::erased_data_t>);
-  auto v6 =
-      any_value<shared_const>(std::in_place_type<custom>, "43");
+      constructibile_for<any_value<shared_const>, vany_value::erased_data_t>);
+  auto v6 = any_value<shared_const>(std::in_place_type<custom>, "43");
   vany_value vv6{v6};
-  vany_value vv5{
-      any_value<shared_const>{std::in_place_type<custom>, "42"}};
-  auto custom_value =
-      any_value<shared_const>{std::in_place_type<custom>, "42"};
+  vany_value vv5{any_value<shared_const>{std::in_place_type<custom>, "42"}};
+  auto custom_value = any_value<shared_const>{std::in_place_type<custom>, "42"};
   vany_value vv1{custom_value};
   vany_value vv_custom_43 =
       any_value<shared_const>{std::in_place_type<custom>, "43"};
@@ -70,10 +70,24 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
-  /*vany_value vv1{std::string{"hello"}};
-  vany_value vv1{int{42}};
-  vany_value vv2{any_value<shared_const>{std::in_place_type<custom>, "Hello world"}};
+  vany_value vv1{std::string{"hello"}};
+  vany_value vv2{int{42}};
+  vany_value vv3{
+      any_value<shared_const>{std::in_place_type<custom>, "Hello world"}};
 
-  dispatch<void(virtual_<any_value<shared_const>>)> stream;*/
+  static std::stringstream ss;
 
+  dispatch<void(virtual_<any_value<shared_const>>)> stream;
+  stream.define<custom>([](const custom& c) { ss << "Custom: " << c.answer; });
+  vany_dispatch vany_stream{
+      stream,
+      overloads{[&](const std::string& s) { ss << "String: " << s; },
+                [&](int i) { ss << "Int: " << i; },
+                [&](double d) { ss << "Double: " << d; },
+                [&](bool b) { ss << "Bool: " << std::boolalpha << b; }}};
+
+  vany_stream(vv1);
+  vany_stream(vv2);
+  vany_stream(vv3);
+  std::println("{}", ss.str());
 }
