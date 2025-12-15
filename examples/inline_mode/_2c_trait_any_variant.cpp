@@ -30,7 +30,7 @@ using vany_values_t = std::vector<vany_value>;
 
 ANY_MODEL_MAP((example_2c::custom), example_2c::value) {
   static std::string to_string(const custom& x) {
-    return "{ " + x.answer + "}";
+    return "{" + x.answer + "}";
   };
   static void from_string(custom & x, std::string_view sv) {
     x.answer = sv.substr(1, sv.length() - 2);
@@ -62,5 +62,5 @@ TEST_CASE("example 2c trait any variant") {
       example_2c::value<anyxx::shared_const>{std::in_place, custom{"42"}}};
 
   CHECK(vany_value{true}.to_string() == "true");
-  CHECK(vv_custom_43.to_string() == "{ 43}");
+  CHECK(vv_custom_43.to_string() == "{43}");
 }
