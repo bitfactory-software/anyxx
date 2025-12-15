@@ -738,13 +738,13 @@ U* unerase_cast_if(ErasedData const& o, meta_data const& meta)
 
 template <typename ConstructedWith, typename ErasedData, typename BASE>
 concept erased_constructibile_for =
-    !std::derived_from<std::remove_cvref_t<ConstructedWith>, BASE> &&
-    !is_erased_data<std::remove_cvref_t<ConstructedWith>> &&
-    (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
-     erased_data_trait<ErasedData>::is_constructibile_from_const);
+    (!std::derived_from<std::remove_cvref_t<ConstructedWith>, BASE> &&
+     !is_erased_data<std::remove_cvref_t<ConstructedWith>> &&
+     (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
+      erased_data_trait<ErasedData>::is_constructibile_from_const));
 
 // --------------------------------------------------------------------------------
-// traited data
+// (un)erased data traited
 
 template <typename V>
 using traited = trait_base<V>;
@@ -754,11 +754,15 @@ struct erased_data_trait<traited<V>> {
   using void_t = mutable_void;
   using static_dispatch_t = V;
   static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+    static constexpr bool value = std::is_constructible_v<V, ConstructedWith>;
+  };
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
   static auto default_construct() { return traited<V>{}; }
 
-  static bool has_value([[maybe_unused]]const auto& ptr) { return true; }
+  static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
   static auto value(auto& value) { return &value; }
 
   template <typename ConstructedWith>
@@ -775,9 +779,50 @@ struct erased_data_trait<traited<V>> {
   }
 };
 
-static_assert(
-    std::same_as<typename erased_data_trait<traited<bool>>::static_dispatch_t,
-                 bool>);
+// --------------------------------------------------------------------------------
+// erased data variant
+
+template <template <typename...> typename any, is_erased_data ErasedData,
+          typename Dispatch, typename... Types>
+using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
+
+template <template <typename...> typename any, is_erased_data ErasedData,
+          typename Dispatch, typename... Types>
+struct erased_data_trait<vany_variant<any, ErasedData, Dispatch, Types...>> {
+  using vany_variant_t = vany_variant<any, ErasedData, Dispatch, Types...>;
+  using void_t = typename erased_data_trait<ErasedData>::void_t;
+  using static_dispatch_t = vany_variant_t;
+  static constexpr bool is_constructibile_from_const =
+      erased_data_trait<ErasedData>::is_constructibile_from_const;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+    static constexpr bool value =
+        std::is_constructible_v<vany_variant_t, ConstructedWith>;
+  };
+  static constexpr bool is_owner = erased_data_trait<ErasedData>::is_owner;
+  static constexpr bool is_weak = erased_data_trait<ErasedData>::is_weak;
+  static auto default_construct() { return vany_variant_t{}; }
+
+  static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
+  static auto value(auto& value) { return &value; }
+
+  template <typename ConstructedWith>
+  using unerased = ConstructedWith;
+
+  template <typename V>
+  static vany_variant_t construct_in_place(V&& v) {
+    return vany_variant_t{std::forward<V>(v)};
+  }
+  template <typename T, typename... Args>
+  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
+    return vany_variant_t{T{std::forward<Args>(args)...}};
+  }
+  template <typename Vx>
+  static vany_variant_t erase(Vx&& v) {
+    return vany_variant_t{std::forward<Vx>(v)};
+  }
+};
+
 // --------------------------------------------------------------------------------
 // erased data observer
 
@@ -792,6 +837,10 @@ struct observer_trait {
   using static_dispatch_t = void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+    static constexpr bool value = false;
+  };
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = false;
   static auto default_construct() { return void_t{}; }
@@ -852,6 +901,10 @@ struct erased_data_trait<shared_const> {
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+      static constexpr bool value = false;
+  };
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
   static auto default_construct() { return shared_const{}; }
@@ -891,6 +944,10 @@ struct erased_data_trait<weak> {
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+      static constexpr bool value = false;
+  };
   static constexpr bool is_owner = false;
   static constexpr bool is_weak = true;
   static auto default_construct() { return weak{}; }
@@ -951,6 +1008,10 @@ struct erased_data_trait<unique> {
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+      static constexpr bool value = false;
+  };
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
   static auto default_construct() { return unique_nullptr(); }
@@ -1071,6 +1132,10 @@ struct erased_data_trait<value> {
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+      static constexpr bool value = false;
+  };
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
   static auto default_construct() { return anyxx::value{}; }
@@ -1485,10 +1550,12 @@ concept is_typed_any = is_any<E> && requires(E e) {
 
 template <typename ConstructedWith, typename ErasedData>
 concept constructibile_for =
-    erased_constructibile_for<ConstructedWith, ErasedData,
-                              any_base<ErasedData>> &&
-    !is_erased_data_holder<ConstructedWith> &&
-    !is_typed_any<std::remove_cvref_t<ConstructedWith>>;
+    (erased_data_trait<ErasedData>::template is_constructibile_from<
+        ConstructedWith>::value) ||
+    (erased_constructibile_for<ConstructedWith, ErasedData,
+                               any_base<ErasedData>> &&
+     !is_erased_data_holder<ConstructedWith> &&
+     !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
 template <is_erased_data ErasedData, typename Dispatch>
 class erased_data_holder {
