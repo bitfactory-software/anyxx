@@ -13,7 +13,7 @@ void line(auto surface, point p1_, point p2_){
 
   auto p1 = point{std::min(p1_.x, p2_.x), p1_.y};
   auto p2 = point{std::max(p1_.x, p2_.x), p2_.y};
-#
+
   auto dx = p2.x - p1.x;
   if (!dx) {
     for (auto y : std::views::iota(p1.y, p2.y)) surface.write({p1.x, y}, ch);

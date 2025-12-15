@@ -1,8 +1,6 @@
 #pragma once
 
-#include <cmath>
 #include <test/test_whole_picture/layer_0_architecture/architecture.hpp>
-#include <ranges>
 
 namespace whole_picture::architecture::draw{
 

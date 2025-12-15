@@ -6,7 +6,6 @@ include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
 file(GLOB_RECURSE hpp_files "*.hpp")
 file(GLOB_RECURSE cpp_files "*.cpp")
 add_executable(tests_dll_mode ${cpp_files} ${hpp_files})
-#add_executable(tests_dll_mode _any_template.cpp)
 target_link_libraries(
   tests_dll_mode
   PRIVATE anyxx::anyxx_warnings
@@ -15,7 +14,7 @@ target_link_libraries(
           component_base
           Catch2::Catch2WithMain)
 
-if(WIN32 AND BUILD_SHARED_LIBS)
+if(MSVC)
   add_custom_command(
     TARGET tests_dll_mode
     PRE_BUILD

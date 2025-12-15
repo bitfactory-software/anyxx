@@ -17,108 +17,130 @@ struct dog;
 struct man;
 struct creature;
 
-struct creature_visitor {
+struct creature_visitor {  // NOLINT
   virtual ~creature_visitor() = default;
   virtual encounter_result visit(creature const* l, cat const* r) const = 0;
   virtual encounter_result visit(creature const* l, dog const* r) const = 0;
   virtual encounter_result visit(creature const* l, man const* r) const = 0;
 };
 
-struct creature {
+struct creature {  // NOLINT
   virtual ~creature() = default;
-  virtual std::type_info const* name() const = 0;
-  virtual creature_visitor const& get_encounter_visitor() const = 0;
-  virtual encounter_result apply(creature_visitor const& visitor,
-                                 creature const* other) const = 0;
+  [[nodiscard]] virtual std::type_info const* name() const = 0;
+  [[nodiscard]] virtual creature_visitor const& get_encounter_visitor()
+      const = 0;
+  [[nodiscard]] virtual encounter_result apply(creature_visitor const& visitor,
+                                               creature const* other) const = 0;
 };
 using creatures_t = std::vector<std::shared_ptr<creature>>;
 
 struct cat final : creature {
-  std::type_info const* name() const override { return &typeid(*this); }
-  virtual creature_visitor const& get_encounter_visitor() const override;
-  virtual encounter_result apply(creature_visitor const& visitor,
-                                 creature const* other) const override {
+  [[nodiscard]] std::type_info const* name() const override {
+    return &typeid(*this);
+  }
+  [[nodiscard]] creature_visitor const& get_encounter_visitor()
+      const override;
+  [[nodiscard]] encounter_result apply(
+      creature_visitor const& visitor, creature const* other) const override {
     return visitor.visit(other, this);
   }
 };
 
 struct dog final : creature {
-  std::type_info const* name() const override { return &typeid(*this); }
-  virtual creature_visitor const& get_encounter_visitor() const override;
-  virtual encounter_result apply(creature_visitor const& visitor,
-                                 creature const* other) const override {
+  [[nodiscard]] std::type_info const* name() const override {
+    return &typeid(*this);
+  }
+  [[nodiscard]] creature_visitor const& get_encounter_visitor()
+      const override;
+  [[nodiscard]] encounter_result apply(
+      creature_visitor const& visitor, creature const* other) const override {
     return visitor.visit(other, this);
   }
 };
 
 struct man final : creature {
-  std::type_info const* name() const override { return &typeid(*this); }
-  virtual creature_visitor const& get_encounter_visitor() const override;
-  virtual encounter_result apply(creature_visitor const& visitor,
-                                 creature const* other) const override {
+  [[nodiscard]] std::type_info const* name() const override {
+    return &typeid(*this);
+  }
+  [[nodiscard]] creature_visitor const& get_encounter_visitor()
+      const override;
+  [[nodiscard]] encounter_result apply(
+      creature_visitor const& visitor, creature const* other) const override {
     return visitor.visit(other, this);
   }
 };
 
 struct cat_encounter_visitor final : creature_visitor {
-  encounter_result visit(creature const* l, cat const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       cat const* r) const override {
     return {l->name(), encounter_action::strolls_with, r->name()};
   }
-  encounter_result visit(creature const* l, dog const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       dog const* r) const override {
     return {l->name(), encounter_action::hisses_at, r->name()};
   }
-  encounter_result visit(creature const* l, man const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       man const* r) const override {
     return {l->name(), encounter_action::nestle_to, r->name()};
   }
 };
-creature_visitor const& cat::get_encounter_visitor() const {
+[[nodiscard]] creature_visitor const& cat::get_encounter_visitor() const {
   static cat_encounter_visitor vsitor;
   return vsitor;
 }
 
 struct dog_encounter_visitor final : creature_visitor {
-  encounter_result visit(creature const* l, cat const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       cat const* r) const override {
     return {l->name(), encounter_action::chases, r->name()};
   }
-  encounter_result visit(creature const* l, dog const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       dog const* r) const override {
     return {l->name(), encounter_action::snoops_at, r->name()};
   }
-  encounter_result visit(creature const* l, man const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       man const* r) const override {
     return {l->name(), encounter_action::nestle_to, r->name()};
   }
 };
-creature_visitor const& dog::get_encounter_visitor() const {
+[[nodiscard]] creature_visitor const& dog::get_encounter_visitor() const {
   static dog_encounter_visitor vsitor;
   return vsitor;
 }
 
 struct man_encounter_visitor final : creature_visitor {
-  encounter_result visit(creature const* l, cat const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       cat const* r) const override {
     return {l->name(), encounter_action::strokes, r->name()};
   }
-  encounter_result visit(creature const* l, dog const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       dog const* r) const override {
     return {l->name(), encounter_action::strokes, r->name()};
   }
-  encounter_result visit(creature const* l, man const* r) const override {
+  [[nodiscard]] encounter_result visit(creature const* l,
+                                       man const* r) const override {
     return {l->name(), encounter_action::shakes_hands_with, r->name()};
   }
 };
-creature_visitor const& man::get_encounter_visitor() const {
+[[nodiscard]] creature_visitor const& man::get_encounter_visitor() const {
   static man_encounter_visitor vsitor;
   return vsitor;
 }
 
-encounter_result encounter(creature const* c1, creature const* c2) {
+[[nodiscard]] encounter_result encounter(creature const* c1,
+                                         creature const* c2) {
   return c2->apply(c1->get_encounter_visitor(), c1);
 }
 
-auto apply_encounters(creatures_t const& creatures) {
+// cppcheck-suppress-begin [useStlAlgorithm]
+[[nodiscard]] auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);
   for (auto&& c1 : creatures)
     for (auto&& c2 : creatures) result.push_back(encounter(c1.get(), c2.get()));
   return result;
 }
+// cppcheck-suppress-end [useStlAlgorithm]
 }  // namespace
 
 TEST_CASE("30b_Animals virtual functions") {

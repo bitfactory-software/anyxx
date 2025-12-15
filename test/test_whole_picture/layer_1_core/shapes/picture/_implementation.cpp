@@ -11,26 +11,24 @@ using namespace anyxx;
 using namespace anyxx;
 
 ANY_META_CLASS(shapes::picture)
-ANY_MODEL(shapes::picture, whole_picture::architecture, shape);
 ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
-
-template <>
-struct architecture::shape_concept_map<shapes::picture>
-    : architecture::shape_default_concept_map<picture> {
+ANY_MODEL(shapes::picture, whole_picture::architecture, shape);
+ANY_MODEL_MAP((shapes::picture), whole_picture::architecture::shape) {
   void draw(shapes::picture const& self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::picture(surface, self.top_left, self.content);
-  }
+  };
+  [[nodiscard]]auto size(shapes::picture const& self) const {
+    return self.content.get_size();
+  };
+  [[nodiscard]]architecture::point top_left(shapes::picture const& self) const {
+    return self.top_left;
+  };
 };
-template <>
-struct architecture::surface_concept_map<shapes::picture>
-    : architecture::surface_default_concept_map<picture> {
-  void write(shapes::picture& self, point p, char ch) {
-    self.content.write(p, ch);
-  }
-};
+//ANY_MODEL(shapes::picture, whole_picture::architecture, surface);
+ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, shape)
 
 shape shapes::make_picture(architecture::point top_left,
-                           architecture::picture& content) {
+                           core::surface& content) {
   return std::make_shared<picture>(top_left, content);
 }

@@ -9,23 +9,21 @@
 
 #include "double_dispatch_result.hpp"
 
-namespace {}
-
-ANY_HAS_DISPATCH(, any_creature)
 namespace {
+struct any_creature_has_open_dispatch {};
 ANY(any_creature, (ANY_METHOD(std::type_info const*, name, (), const)))
 }  // namespace
 
 namespace {
 
 struct cat {
-  auto name() const { return &typeid(*this); }
+   [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 struct dog {
-  auto name() const { return &typeid(*this); }
+   [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 struct man {
-  auto name() const { return &typeid(*this); }
+   [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 auto encounter = anyxx::dispatch<encounter_result(
     anyxx::virtual_<any_creature<anyxx::const_observer>>,
@@ -102,7 +100,8 @@ TEST_CASE("31_Animals any dispatch") {
                          &typeid(man)});
 
 #ifndef _DEBUG
-  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE /Ob2)' is used!\n";
+  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
+               "/Ob2)' is used!\n";
   BENCHMARK("30a_Animals any dispatch") { return apply_encounters(creatures); };
 #endif  // !_DEBUG
 }

@@ -6,8 +6,6 @@
 #include <vector>
 
 using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
 
 namespace shapes_1 {
 
@@ -24,28 +22,28 @@ struct circle {
   void draw(std::ostream& os, position p) const {
     os << "Circle at: " << p << "\n";
   }
-  int count_sides() const { return 1; }
-  double area() const { return radius * radius * 3.14; }
-  double circumference() const { return radius * 2.0 * 3.14; }
-  double perimeter() const { return circumference(); }
+  [[nodiscard]] int count_sides() const { return 1; }
+  [[nodiscard]] double area() const { return radius * radius * 3.14; }
+  [[nodiscard]] double circumference() const { return radius * 2.0 * 3.14; }
+  [[nodiscard]] double perimeter() const { return circumference(); }
 };
 struct square {
   int w;
   void draw(std::ostream& os, position p) const {
     os << "Square at: " << p << "\n";
   }
-  int count_sides() const { return 4; }
-  double area() const { return w * w; }
-  double perimeter() const { return w * 4; }
+  [[nodiscard]] int count_sides() const { return 4; }
+  [[nodiscard]] double area() const { return w * w; }
+  [[nodiscard]] double perimeter() const { return w * 4; }
 };
 struct rectangle {
   int w, h;
   void draw(std::ostream& os, position p) const {
     os << "Rectangle at: " << p << "\n";
   }
-  int count_sides() const { return 4; }
-  double area() const { return w * h; }
-  double perimeter() const { return w + w + h + h; }
+  [[nodiscard]] int count_sides() const { return 4; }
+  [[nodiscard]] double area() const { return w * h; }
+  [[nodiscard]] double perimeter() const { return w + w + h + h; }
 };
 struct regular_polygon {
   int sides;
@@ -53,11 +51,15 @@ struct regular_polygon {
   void draw(std::ostream& os, position p) const {
     os << "Polygon at: " << p << "\n";
   }
-  int count_sides() const { return sides; }
-  double apothem() const { return (side_length / 2) / std::tan(3.14 / sides); }
-  double radius() const { return (side_length / 2) / std::sin(3.14 / sides); }
-  double perimeter() const { return sides * side_length; }
-  double area() const { return (perimeter() * apothem()) / 2; }
+  [[nodiscard]] int count_sides() const { return sides; }
+  [[nodiscard]] double apothem() const {
+    return (side_length / 2) / std::tan(3.14 / sides);
+  }
+  [[nodiscard]] double radius() const {
+    return (side_length / 2) / std::sin(3.14 / sides);
+  }
+  [[nodiscard]] double perimeter() const { return sides * side_length; }
+  [[nodiscard]] double area() const { return (perimeter() * apothem()) / 2; }
 };
 
 ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&, position), const)))
@@ -67,11 +69,10 @@ ANY_(any_shape, any_drawable,
       ANY_METHOD(double, area, (), const),
       ANY_METHOD(double, perimeter, (), const)))
 
-template <>
-struct any_drawable_concept_map<std::string> {
+ANY_MODEL_MAP((std::string), any_drawable) {
   auto draw(std::string const& x, std::ostream& os, position p) const {
     os << x << " at: " << p << "\n";
-  }
+  };  // namespace shapes_1
 };
 
 void draw(std::ostream& os,
@@ -117,7 +118,7 @@ TEST_CASE("example 1/2 upcast, downcast") {
   std::vector<any_drawable<shared_const>> any_drawables;
   any_drawables.insert(any_drawables.begin(), any_shapes.begin(),
                        any_shapes.end());
-  any_drawables.push_back(std::make_shared<std::string>("hello world"));
+  any_drawables.emplace_back(std::make_shared<std::string>("hello world"));
 
   std::stringstream os1;
   draw(os1, any_drawables);

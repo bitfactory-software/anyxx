@@ -10,15 +10,23 @@ using namespace anyxx;
 
 ANY_META_CLASS(line)
 ANY_MODEL(shapes::line, whole_picture::architecture, shape);
-
-template <>
-struct architecture::shape_concept_map<line>
-    : architecture::shape_default_concept_map<line> {
+ANY_MODEL_MAP((shapes::line), whole_picture::architecture::shape) {
   void draw(line const& self,
             architecture::mutable_observed_surface const& surface) const {
     architecture::draw::line(surface, self.p1, self.p2);
-  }
+  };
+  [[nodiscard]] auto size(shapes::line const& self) const {
+    return architecture::abs(self.p1 - self.p2) +
+           architecture::size{.cx = 1, .cy = 1};
+  };
+  [[nodiscard]] architecture::point top_left(shapes::line const& self) const {
+    auto min = architecture::min(self.p1, self.p2);
+    if (self.p1.x > self.p2.x) min.x++;
+    if (self.p1.y > self.p2.y) min.y++;
+    return min;
+  };
 };
+ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
 
 shape shapes::make_line(architecture::point p1, architecture::point p2) {
   return std::make_shared<line>(p1, p2);

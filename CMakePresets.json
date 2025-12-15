@@ -17,8 +17,8 @@
         "anyxx_ENABLE_CPPCHECK": false,
         "anyxx_ENABLE_CLANG_TIDY": false,
         "anyxx_ENABLE_SANITIZER_ADDRESS": false,
-        "anyxx_ENABLE_HARDENING": false,
-        "anyxx_ENABLE_GLOBAL_HARDENING": false
+        "anyxx_ENABLE_HARDENING": true,
+        "anyxx_ENABLE_GLOBAL_HARDENING": true
       }
     },
     {

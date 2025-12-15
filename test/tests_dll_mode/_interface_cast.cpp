@@ -4,10 +4,11 @@
 
 #include "test/component_base/component_base.hpp"
 
-using namespace anyxx;
-using namespace anyxx;
-using namespace anyxx;
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
+#endif
 
+using namespace anyxx;
 using namespace test::component_base;
 
 namespace test::component_base {
@@ -35,7 +36,7 @@ TEST_CASE("_interface_cast") {
     auto queried = borrow_as<unused_i<const_observer>>(to_string_i_co);
     CHECK(!queried.has_value());
     CHECK(std::string(queried.error().to.name()) ==
-          std::string(typeid(unused_i_v_table).name()));
+          std::string(typeid(unused_i_v_table<>).name()));
   }
   {
     to_string_i<shared_const> i0{
@@ -74,8 +75,8 @@ TEST_CASE("_interface_cast") {
       auto svc = downcast_to<set_value_i<mutable_observer>>(
           get_value_i_const_observer);
       CHECK(svc);
-      svc->set_value(666);
-      REQUIRE(svc->get_value() == 666);
+      svc->set_value(666); //NOLINT
+      REQUIRE(svc->get_value() == 666);//NOLINT
     }
     {
       static_assert(std::derived_from<get_value_i<unique>::v_table_t,
@@ -86,8 +87,8 @@ TEST_CASE("_interface_cast") {
       auto svu =
           downcast_to<set_value_i<unique>>(std::move(get_value_i_unique));
       CHECK(svu);
-      svu->set_value(1.44);
-      CHECK(svu->get_value() == 1.44);
+      svu->set_value(1.44);//NOLINT
+      CHECK(svu->get_value() == 1.44);//NOLINT
     }
   }
   {
@@ -120,7 +121,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(get_void_data_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_erased_data(i1d));  // moved!
+    REQUIRE(!get_erased_data(i1d));  //NOLINT
 #pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
   }

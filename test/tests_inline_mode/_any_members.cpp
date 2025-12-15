@@ -2,7 +2,9 @@
 #include <iostream>
 #include <string>
 #include <catch2/catch_test_macros.hpp>
+// cppcheck-suppress-begin [noExplicitConstructor,duplInheritedMember,functionConst]
 #include <bit_factory/anyxx.hpp>
+// cppcheck-suppress-end [noExplicitConstructor,duplInheritedMember,functionConst]
 
 using namespace anyxx;
 

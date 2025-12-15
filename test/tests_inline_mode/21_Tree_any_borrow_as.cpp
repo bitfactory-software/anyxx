@@ -6,7 +6,6 @@
 #include <print>
 #include <string>
 
-using std::cout;
 using std::string;
 
 using namespace anyxx;
@@ -49,7 +48,7 @@ void serialize_binary(auto const& self, std::string_view key,
 }
 
 struct Plus {
-  int value() const { return left.value() + right.value(); }
+  [[nodiscard]]int value() const { return left.value() + right.value(); }
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Plus ", archive);
   }
@@ -58,7 +57,7 @@ struct Plus {
 auto __ = register_deserialize_binary<Plus>("Plus");
 
 struct Times {
-  int value() const { return left.value() * right.value(); }
+  [[nodiscard]]int value() const { return left.value() * right.value(); }
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Times ", archive);
   }
@@ -67,7 +66,7 @@ struct Times {
 auto __ = register_deserialize_binary<Times>("Times");
 
 struct Integer {
-  int value() const { return int_; }
+  [[nodiscard]]int value() const { return int_; }
   void serialize(std::ostream& archive) const {
     archive << "Integer " << int_ << " ";
   }

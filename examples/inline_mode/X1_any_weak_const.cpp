@@ -9,7 +9,7 @@ using namespace anyxx;
 namespace {
 
 struct widget_a {
-  std::string get() const { return "widget_a"; }
+  [[nodiscard]]std::string get() const { return "widget_a"; }
 };
 
 ANY(any_widget, (ANY_METHOD(std::string, get, (), const)))
@@ -18,7 +18,7 @@ any_widget<weak> any_widget_weak;
 
 void observe(int expected_use_count) {
   auto s = std::make_shared<int>(1);
-  std::weak_ptr<int> w = std::move(s);
+  std::weak_ptr<int> w = s;
 
   CHECK(get_erased_data(any_widget_weak).use_count() == expected_use_count);
   // we have to make a copy of shared pointer before usage:

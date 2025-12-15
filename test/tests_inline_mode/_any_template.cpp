@@ -1,6 +1,5 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <cstddef>
 #include <map>  // NOLINT
 #include <string>
 
@@ -16,37 +15,31 @@ namespace {
 ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
-             (ANY_METHOD(VALUE const&, at, (KEY), const),
+             (ANY_METHOD(VALUE const&, at, (KEY const&), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
-ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, (KEY, VALUE),
-              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY), ),
-               ANY_OP(VALUE&, [], (KEY), )))
+ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, ((KEY), (VALUE)),
+              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
+               ANY_OP(VALUE&, [], (KEY const&), )))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY), const),
+             (ANY_METHOD(VALUE, at, (KEY const&), const),
               ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY), ),
+             (ANY_METHOD(VALUE, at, (KEY const&), ),
               ANY_METHOD(std::size_t, size, (), const)))
 
 ANY_TEMPLATE(((KEY)), any_map_to_tstring,
-             (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY), const)))
+             (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY const&),
+                         const)))
 
-template <>
-struct any_to_tstring_concept_map<int>
-    : any_to_tstring_default_concept_map<int> {
+ANY_MODEL_MAP((int), any_to_tstring) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-template <>
-struct any_to_tstring_concept_map<double>
-    : any_to_tstring_default_concept_map<double> {
+ANY_MODEL_MAP((double), any_to_tstring) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
-template <>
-struct any_to_tstring_concept_map<const double>
-    : any_to_tstring_concept_map<double> {};
 }  // namespace
 
 template <typename KEY, typename VALUE>
@@ -127,11 +120,19 @@ TEST_CASE("any template test3") {
   REQUIRE(map[2]["one"][4] == 8.28);
 }
 
-namespace {
+#define __ANY_TEMPLATE_MODEL__(class_, t, all, interface_namespace_,          \
+                               interface_)                                    \
+  template <>                                                                 \
+      interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) *    \
+      interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(         \
+          interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>() {                   \
+    static interface_##_v_table _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
+        v_table{std::in_place_type<_detail_REMOVE_PARENS(class_)>};           \
+    return &v_table;                                                          \
+  }
 
-template <>
-struct any_map_concept_map<std::map<int, double>, int, double>
-    : any_map_default_concept_map<std::map<int, double>, int, double> {
+namespace {
+ANY_TEMPLATE_MODEL_MAP((std::map<int, double>), any_map, ((int), (double))) {
   double const& at(std::map<int, double> const& x, int i) { return x.at(i); };
 };
 }  // namespace
