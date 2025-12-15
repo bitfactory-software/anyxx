@@ -2339,7 +2339,7 @@ struct dispatch_function<R, std::tuple<FArgs...>> {
 };
 
 template <typename R, typename... OuterArgs>
-struct dispatch_default {
+struct dispatch_function_types {
   template <is_any... Anys>
   struct inner {
     template <typename... Args>
@@ -2402,10 +2402,10 @@ struct dispatch<R(Args...)> {
   using dispatch_matrix_t = dispatch_matrix<erased_function_t, Args...>::type;
   dispatch_matrix_t dispatch_matrix_;
 
-  using dispatch_default_t = typename dispatch_default<R, Args...>::type;
-  dispatch_default_t::function_t dispatch_default_hook_;
-  dispatch_default_t::function_t::connection default_connection_ =
-      dispatch_default_hook_.insert(dispatch_default_t::function());
+  using dispatch_function_types_t = typename dispatch_function_types<R, Args...>::type;
+  dispatch_function_types_t::function_t dispatch_default_hook_;
+  dispatch_function_types_t::function_t::connection default_connection_ =
+      dispatch_default_hook_.insert(dispatch_function_types_t::function());
 
   enum class kind { single, multiple };
   template <kind Kind, std::size_t Dimension, typename... DispatchArgs>
@@ -2500,7 +2500,7 @@ struct dispatch<R(Args...)> {
     }
 
     template <typename... Other>
-    R invoke(dispatch_default_t::function_t const& default_, Any const& any,
+    R invoke(dispatch_function_types_t::function_t const& default_, Any const& any,
              Other&&... other) const {
       auto v_table = get_v_table(any)->dispatch_table;
       auto target = get_function(v_table, index_);
