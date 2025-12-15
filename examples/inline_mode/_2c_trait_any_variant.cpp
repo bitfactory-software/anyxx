@@ -2,8 +2,8 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <format>
+#include <sstream>
 #include <string>
-#include <strstream>
 #include <variant>
 
 namespace example_2c {
@@ -16,8 +16,7 @@ ANY(value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                  [x]() { return std::format("{}", x); }),
             ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
                                  [&x](std::string_view sv) {
-                                   std::strstream ss{std::string(sv),
-                                                     std::ios_base::in};
+                                   std::stringstream ss{sv, std::ios_base::in};
                                    ss >> x;
                                  })))
 
