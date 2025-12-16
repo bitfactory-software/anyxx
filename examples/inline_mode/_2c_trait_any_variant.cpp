@@ -47,22 +47,16 @@ TEST_CASE("example 2ca trait any variant") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
-  vany_value vv3{std::string{"hello"}};
-  vany_value vv4{std::in_place_type<any_value<anyxx::shared_const>>,
-                 std::in_place_type<custom>, "42"};
+
   static_assert(
       constructibile_for<any_value<shared_const>, vany_value::erased_data_t>);
-  auto v6 = any_value<shared_const>(std::in_place_type<custom>, "43");
-  vany_value vv6{v6};
-  vany_value vv5{any_value<shared_const>{std::in_place_type<custom>, "42"}};
-  auto custom_value = any_value<shared_const>{std::in_place_type<custom>, "42"};
-  vany_value vv1{custom_value};
   vany_value vv_custom_43 =
       any_value<shared_const>{std::in_place_type<custom>, "43"};
-  vany_values_t vany_values = {
+  vany_value vv_custom_42 = {
       any_value<shared_const>{std::in_place, custom{"42"}}};
 
   CHECK(vany_value{true}.to_string() == "true");
+  CHECK(vv_custom_42.to_string() == "{42}");
   CHECK(vv_custom_43.to_string() == "{43}");
 }
 
