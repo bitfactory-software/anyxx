@@ -69,18 +69,18 @@ TEST_CASE("example 2ca trait any variant") {
 namespace example_2c {
 
 constexpr static inline auto vany_stream_static_dispatch = anyxx::overloads{
-    [](const std::string& s, std::ostream* os) {
-      *os << "String: " << s << ", ";
+    [](const std::string& s, std::ostream& os) {
+      os << "String: " << s << ", ";
     },
-    [](int i, std::ostream* os) { *os << "Int: " << i << ", "; },
-    [](double d, std::ostream* os) { *os << "Double: " << d << ", "; },
-    [](bool b, std::ostream* os) {
-      *os << "Bool: " << std::boolalpha << b << ", ";
+    [](int i, std::ostream& os) { os << "Int: " << i << ", "; },
+    [](double d, std::ostream& os) { os << "Double: " << d << ", "; },
+    [](bool b, std::ostream& os) {
+      os << "Bool: " << std::boolalpha << b << ", ";
     }};
 
 extern anyxx::vany_dispatch<
     anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
-                         std::ostream*)>,
+                         std::ostream&)>,
     vany_stream_static_dispatch>
     vany_stream;
 }  // namespace example_2c
@@ -89,12 +89,12 @@ namespace example_2c {
 
 anyxx::vany_dispatch<
     anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
-                         std::ostream*)>,
+                         std::ostream&)>,
     vany_stream_static_dispatch>
     vany_stream;
 
 auto __ = vany_stream.define<custom>(
-    [](const custom& c, std::ostream* os) { *os << "Custom: " << c.answer; });
+    [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
 }  // namespace example_2c
 
 TEST_CASE("example 2cb trait any variant single open dispatch") {
@@ -107,10 +107,10 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
       any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
 
   std::stringstream ss;
-  vany_stream(vv1, &ss);
-  vany_stream(vv2, &ss);
-  vany_stream(vany_value{true}, &ss);
-  vany_stream(vv3, &ss);
+  vany_stream(vv1, ss);
+  vany_stream(vv2, ss);
+  vany_stream(vany_value{true}, ss);
+  vany_stream(vv3, ss);
   CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
 }
 
