@@ -75,11 +75,8 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
   vany_value vv3{
       any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
 
-  dispatch<void(virtual_<any_value<shared_const>>, std::ostream&)> stream;
-  stream.define<custom>(
-      [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
-  vany_dispatch vany_stream{
-      stream,
+  vany_dispatch<
+      dispatch<void(virtual_<any_value<shared_const>>, std::ostream&)>,
       overloads{
           [&](const std::string& s, std::ostream& os) {
             os << "String: " << s << ", ";
@@ -88,13 +85,15 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
           [&](double d, std::ostream& os) { os << "Double: " << d << ", "; },
           [&](bool b, std::ostream& os) {
             os << "Bool: " << std::boolalpha << b << ", ";
-          }}};
+          }}>
+      vany_stream;
+  vany_stream.define<custom>(
+      [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
 
   std::stringstream ss;
   vany_stream(vv1, ss);
   vany_stream(vv2, ss);
   vany_stream(vany_value{true}, ss);
   vany_stream(vv3, ss);
-  CHECK(ss.str() ==
-        "String: hello, Int: 42, Bool: true, Custom: Hello world!");
+  CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
 }

@@ -2544,30 +2544,25 @@ struct dispatch<R(Args...)> {
   auto& get_dispatch_default_hook() { return dispatch_default_hook_; };
 };
 
-template <typename DynamicDispatch, typename StaticDispatch>
+template <typename DynamicDispatch, auto StaticDispatch>
 class vany_dispatch {
-  DynamicDispatch* dynamic_dispatch_;
-  StaticDispatch static_dispatch_;
+  DynamicDispatch dynamic_dispatch_;
 
  public:
-  vany_dispatch(DynamicDispatch& dynamic_dispatch,
-                StaticDispatch static_dispatch)
-      : dynamic_dispatch_(&dynamic_dispatch),
-        static_dispatch_(static_dispatch) {}
   template <typename... Classes>
   auto define(auto f) {
-    return dynamic_dispatch_define<Classes...>(f);
+    return dynamic_dispatch_.define<Classes...>(f);
   }
   template <is_any VanyArg, typename... Others>
   auto operator()(VanyArg&& vany, Others&&... others) const {
     return std::visit(
         overloads{[&]<typename Arg>([[maybe_unused]] Arg&& arg) { 
-                     return static_dispatch_(
+                     return StaticDispatch(
                          std::forward<Arg>(arg),
                          std::forward<Others>(others)...);
                   },
                   [&]<is_any Arg>(Arg&& arg) {
-                    return (*dynamic_dispatch_)(
+                    return dynamic_dispatch_(
                         std::forward<Arg>(arg),
                         std::forward<Others>(others)...);
                   }},
