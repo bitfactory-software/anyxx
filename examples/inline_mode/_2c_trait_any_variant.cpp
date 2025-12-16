@@ -15,7 +15,7 @@ struct custom {
   std::string answer;
 };
 
-struct any_value_has_open_dispatch{};
+struct any_value_has_open_dispatch {};
 ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                      [x]() { return std::format("{}", x); }),
                 ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
@@ -73,21 +73,28 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
   vany_value vv1{std::string{"hello"}};
   vany_value vv2{int{42}};
   vany_value vv3{
-      any_value<shared_const>{std::in_place_type<custom>, "Hello world"}};
+      any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
 
-  static std::stringstream ss;
-
-  dispatch<void(virtual_<any_value<shared_const>>)> stream;
-  stream.define<custom>([](const custom& c) { ss << "Custom: " << c.answer; });
+  dispatch<void(virtual_<any_value<shared_const>>, std::ostream&)> stream;
+  stream.define<custom>(
+      [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
   vany_dispatch vany_stream{
       stream,
-      overloads{[&](const std::string& s) { ss << "String: " << s; },
-                [&](int i) { ss << "Int: " << i; },
-                [&](double d) { ss << "Double: " << d; },
-                [&](bool b) { ss << "Bool: " << std::boolalpha << b; }}};
+      overloads{
+          [&](const std::string& s, std::ostream& os) {
+            os << "String: " << s << ", ";
+          },
+          [&](int i, std::ostream& os) { os << "Int: " << i << ", "; },
+          [&](double d, std::ostream& os) { os << "Double: " << d << ", "; },
+          [&](bool b, std::ostream& os) {
+            os << "Bool: " << std::boolalpha << b << ", ";
+          }}};
 
-  vany_stream(vv1);
-  vany_stream(vv2);
-  vany_stream(vv3);
-  std::println("{}", ss.str());
+  std::stringstream ss;
+  vany_stream(vv1, ss);
+  vany_stream(vv2, ss);
+  vany_stream(vany_value{true}, ss);
+  vany_stream(vv3, ss);
+  CHECK(ss.str() ==
+        "String: hello, Int: 42, Bool: true, Custom: Hello world!");
 }
