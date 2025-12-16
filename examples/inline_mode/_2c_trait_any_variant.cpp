@@ -66,6 +66,37 @@ TEST_CASE("example 2ca trait any variant") {
   CHECK(vv_custom_43.to_string() == "{43}");
 }
 
+namespace example_2c {
+
+constexpr static inline auto vany_stream_static_dispatch = anyxx::overloads{
+    [](const std::string& s, std::ostream& os) {
+      os << "String: " << s << ", ";
+    },
+    [](int i, std::ostream& os) { os << "Int: " << i << ", "; },
+    [](double d, std::ostream& os) { os << "Double: " << d << ", "; },
+    [](bool b, std::ostream& os) {
+      os << "Bool: " << std::boolalpha << b << ", ";
+    }};
+
+extern anyxx::vany_dispatch<
+    anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
+                         std::ostream&)>,
+    vany_stream_static_dispatch>
+    vany_stream;
+}  // namespace example_2c
+
+namespace example_2c {
+
+anyxx::vany_dispatch<
+    anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
+                         std::ostream&)>,
+    vany_stream_static_dispatch>
+    vany_stream;
+
+auto __ = vany_stream.define<custom>(
+    [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
+}  // namespace example_2c
+
 TEST_CASE("example 2cb trait any variant single open dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
@@ -75,21 +106,6 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
   vany_value vv3{
       any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
 
-  vany_dispatch<
-      dispatch<void(virtual_<any_value<shared_const>>, std::ostream&)>,
-      overloads{
-          [&](const std::string& s, std::ostream& os) {
-            os << "String: " << s << ", ";
-          },
-          [&](int i, std::ostream& os) { os << "Int: " << i << ", "; },
-          [&](double d, std::ostream& os) { os << "Double: " << d << ", "; },
-          [&](bool b, std::ostream& os) {
-            os << "Bool: " << std::boolalpha << b << ", ";
-          }}>
-      vany_stream;
-  vany_stream.define<custom>(
-      [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
-
   std::stringstream ss;
   vany_stream(vv1, ss);
   vany_stream(vv2, ss);
@@ -98,9 +114,8 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
   CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
 }
 
-
-//template <size_t... Is>
-//auto ToTupleImpl(auto const& tokenVector, std::index_sequence< Is... >)
+// template <size_t... Is>
+// auto ToTupleImpl(auto const& tokenVector, std::index_sequence< Is... >)
 //{
-//    return std::make_tuple(tokenVector[Is]...);
-//}
+//     return std::make_tuple(tokenVector[Is]...);
+// }
