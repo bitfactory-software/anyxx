@@ -97,3 +97,10 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
   vany_stream(vv3, ss);
   CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
 }
+
+
+//template <size_t... Is>
+//auto ToTupleImpl(auto const& tokenVector, std::index_sequence< Is... >)
+//{
+//    return std::make_tuple(tokenVector[Is]...);
+//}
