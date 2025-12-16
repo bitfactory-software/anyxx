@@ -2544,6 +2544,16 @@ struct dispatch<R(Args...)> {
   auto& get_dispatch_default_hook() { return dispatch_default_hook_; };
 };
 
+template <size_t At, typename Tuple, size_t... Is>
+auto make_tuple_from_elements(Tuple&& tuple, std::index_sequence<Is...>) {
+  return std::make_tuple(std::get<Is + At>(std::forward<Tuple>(tuple))...);
+}
+template <size_t At, size_t N, typename Tuple>
+auto make_tuple_from_elements_at(Tuple&& tuple) {
+  return make_tuple_from_elements<At>(std::forward<Tuple>(tuple),
+                                      std::make_index_sequence<N>{});
+}
+
 template <typename DynamicDispatch, auto StaticDispatch>
 class vany_dispatch {
   DynamicDispatch dynamic_dispatch_;
@@ -2553,20 +2563,32 @@ class vany_dispatch {
   auto define(auto f) {
     return dynamic_dispatch_.define<Classes...>(f);
   }
-  template <is_any VanyArg, typename... Others>
-  auto operator()(VanyArg&& vany, Others&&... others) const {
-    return std::visit(
-        overloads{[&]<typename Arg>([[maybe_unused]] Arg&& arg) { 
-                     return StaticDispatch(
-                         std::forward<Arg>(arg),
-                         std::forward<Others>(others)...);
-                  },
-                  [&]<is_any Arg>(Arg&& arg) {
-                    return dynamic_dispatch_(
-                        std::forward<Arg>(arg),
-                        std::forward<Others>(others)...);
-                  }},
-        std::forward<VanyArg>(vany).erased_data_);
+
+  template <typename... Args>
+  auto operator()(Args&&... args) const {
+    auto argsTuple = std::make_tuple(std::forward<Args>(args)...);
+    constexpr std::size_t dimension_count = DynamicDispatch::dimension_count;
+    auto othersTuple = make_tuple_from_elements_at<
+        dimension_count, sizeof...(Args) - dimension_count>(argsTuple);
+
+    [&]<size_t... Is>(std::index_sequence<Is...>) {
+      return std::visit(
+          overloads{[&]<typename... TypedArgs>(TypedArgs&&... args) {
+                      return std::apply(
+                          StaticDispatch,
+                          std::tuple_cat(
+                              std::make_tuple(std::forward<TypedArgs>(args)...),
+                              othersTuple));
+                    },
+                    [&]<is_any... VanyArgs>([[maybe_unused]]VanyArgs&&... args) {
+                      return std::apply(
+                          dynamic_dispatch_,
+                          std::tuple_cat(
+                              std::make_tuple(std::forward<VanyArgs>(args)...),
+                              othersTuple));
+                    }},
+          std::get<Is>(argsTuple).erased_data_...);
+    }(std::make_index_sequence<dimension_count>{});
   }
 };
 }  // namespace anyxx
