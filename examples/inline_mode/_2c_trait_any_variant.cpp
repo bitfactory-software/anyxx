@@ -25,10 +25,9 @@ ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                        ss >> x;
                                      })))
 
-using vany_value = anyxx::vany_type<any_value, anyxx::shared_const, anyxx::rtti,
+using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;
 
-using vany_values_t = std::vector<vany_value>;
 
 }  // namespace example_2c
 
@@ -72,7 +71,7 @@ constexpr static inline auto vany_stream_static_dispatch = anyxx::overloads{
       os << "Bool: " << std::boolalpha << b << ", ";
     }};
 
-extern anyxx::vany_dispatch<
+extern anyxx::dispatch_vany<
     anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
                          std::ostream&)>,
     vany_stream_static_dispatch>
@@ -81,7 +80,7 @@ extern anyxx::vany_dispatch<
 
 namespace example_2c {
 
-anyxx::vany_dispatch<
+anyxx::dispatch_vany<
     anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
                          std::ostream&)>,
     vany_stream_static_dispatch>

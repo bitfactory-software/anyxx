@@ -195,7 +195,7 @@
     requires(::anyxx::const_correct_call_for_erased_data<                    \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
-    if constexpr (std::same_as<anyxx::vany, Dispatch>) {                     \
+    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {                     \
       using variant_t = erased_data_t;                                       \
       using any_t = std::variant_alternative_t<0, variant_t>;                \
       return std::visit(                                                     \
@@ -564,7 +564,7 @@ struct rtti {};
 struct dyn {};
 struct static_member_dispatch {};
 struct trait : static_member_dispatch {};
-struct vany : static_member_dispatch {};
+struct vany_dispatch : static_member_dispatch {};
 
 template <typename T>
 struct missing_trait_error {
@@ -762,7 +762,7 @@ using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
 
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>
-using vany_type = any<vany_variant<any, ErasedData, Dispatch, Types...>, vany>;
+using make_vany = any<vany_variant<any, ErasedData, Dispatch, Types...>, vany_dispatch>;
 
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>
@@ -1879,7 +1879,7 @@ template <template <typename...> typename... BaseVTable>
 struct derive_v_table_from<dyn, BaseVTable...> : no_derived_v_table {};
 
 // --------------------------------------------------------------------------------
-// trait, vany
+// trait, vany_dispatch
 template <typename VTable, typename Base>
 struct no_v_table_access : Base {
   using Base::Base;
@@ -2556,7 +2556,7 @@ auto make_tuple_from_elements_at(Tuple&& tuple) {
 }
 
 template <typename DynamicDispatch, auto StaticDispatch>
-class vany_dispatch {
+class dispatch_vany {
   DynamicDispatch dynamic_dispatch_;
 
  public:
