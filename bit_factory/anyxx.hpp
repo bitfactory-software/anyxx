@@ -195,7 +195,7 @@
     requires(::anyxx::const_correct_call_for_erased_data<                    \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
-    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {                     \
+    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {            \
       using variant_t = erased_data_t;                                       \
       using any_t = std::variant_alternative_t<0, variant_t>;                \
       return std::visit(                                                     \
@@ -762,7 +762,21 @@ using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
 
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>
-using make_vany = any<vany_variant<any, ErasedData, Dispatch, Types...>, vany_dispatch>;
+using make_vany =
+    any<vany_variant<any, ErasedData, Dispatch, Types...>, vany_dispatch>;
+
+template <typename Vany>
+struct vany_type_trait {
+  using vany = Vany;
+  using vany_variant = typename Vany::erased_data_t;
+  template <typename... Types>
+  struct concrete_variant_impl;
+  template <typename First, typename... Types>
+  struct concrete_variant_impl<std::variant<First, Types...>> {
+    using type = std::variant<Types...>;
+  };
+  using concrete_variant = typename concrete_variant_impl<vany_variant>::type;
+};
 
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>

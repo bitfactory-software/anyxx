@@ -28,7 +28,8 @@ ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
 using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;
 
-
+static_assert(std::same_as<typename anyxx::vany_type_trait<vany_value>::concrete_variant,
+                           std::variant<bool, int, double, std::string>>);
 }  // namespace example_2c
 
 ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
