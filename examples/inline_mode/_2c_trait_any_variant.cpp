@@ -28,8 +28,9 @@ ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
 using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;
 
-static_assert(std::same_as<typename anyxx::vany_type_trait<vany_value>::concrete_variant,
-                           std::variant<bool, int, double, std::string>>);
+static_assert(
+    std::same_as<typename anyxx::vany_type_trait<vany_value>::concrete_variant,
+                 std::variant<bool, int, double, std::string>>);
 }  // namespace example_2c
 
 ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
@@ -73,6 +74,7 @@ constexpr static inline auto vany_stream_static_dispatch = anyxx::overloads{
     }};
 
 extern anyxx::dispatch_vany<
+    vany_value,
     anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
                          std::ostream&)>,
     vany_stream_static_dispatch>
@@ -82,6 +84,7 @@ extern anyxx::dispatch_vany<
 namespace example_2c {
 
 anyxx::dispatch_vany<
+    vany_value,
     anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
                          std::ostream&)>,
     vany_stream_static_dispatch>

@@ -2569,7 +2569,7 @@ auto make_tuple_from_elements_at(Tuple&& tuple) {
                                       std::make_index_sequence<N>{});
 }
 
-template <typename DynamicDispatch, auto StaticDispatch>
+template <typename Vany, typename DynamicDispatch, auto StaticDispatch>
 class dispatch_vany {
   DynamicDispatch dynamic_dispatch_;
 
