@@ -31,6 +31,10 @@ using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
 static_assert(
     std::same_as<typename anyxx::vany_type_trait<vany_value>::concrete_variant,
                  std::variant<bool, int, double, std::string>>);
+static_assert(
+    std::same_as<typename anyxx::vany_type_trait<vany_value>::any_in_variant,
+                 any_value<anyxx::shared_const>>);
+
 }  // namespace example_2c
 
 ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
