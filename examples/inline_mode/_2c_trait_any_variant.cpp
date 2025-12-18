@@ -1,6 +1,8 @@
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <compare>
+#include <concepts>
 #include <format>
 #include <ios>
 #include <iostream>
@@ -19,7 +21,7 @@ struct any_value_has_open_dispatch {};
 ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                      [x]() { return std::format("{}", x); }),
                 ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
-                                     [&x](std::string_view sv) {
+                                     [&x](std::string_view sv) -> void{
                                        std::stringstream ss{std::string{sv},
                                                             std::ios_base::in};
                                        ss >> x;
@@ -27,22 +29,38 @@ ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
 
 using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;
+using concrete_value = anyxx::vany_type_trait<vany_value>::concrete_variant;
+using any_in_variant = anyxx::vany_type_trait<vany_value>::any_in_variant;
 
 static_assert(
-    std::same_as<typename anyxx::vany_type_trait<vany_value>::concrete_variant,
-                 std::variant<bool, int, double, std::string>>);
-static_assert(
-    std::same_as<typename anyxx::vany_type_trait<vany_value>::any_in_variant,
-                 any_value<anyxx::shared_const>>);
+    std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
+static_assert(std::same_as<any_in_variant, any_value<anyxx::shared_const>>);
 
 }  // namespace example_2c
 
 ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
-  static std::string to_string(const custom& x) {
+  static std::string to_string(custom const& x) {
     return "{" + x.answer + "}";
   };
   static void from_string(custom & x, std::string_view sv) {
     x.answer = sv.substr(1, sv.length() - 2);
+  };
+};
+
+ANY_MODEL_MAP((example_2c::concrete_value), example_2c::any_value) {
+  static std::string to_string(concrete_value const & x) {
+    return std::visit(
+        [&]<typename T>(T const & v) {
+          return any_value_model_map<T>::to_string(v);
+        },
+        x);
+  };
+  static void from_string(concrete_value & x, [[maybe_unused]]std::string_view sv) {
+    return std::visit(
+        [&]<typename T>([[maybe_unused]]T& ) -> void{
+          return any_value_model_map<T>::from_string(v, sv);
+        },
+        x);
   };
 };
 
@@ -99,6 +117,55 @@ auto __ = vany_stream.define<custom>(
 }  // namespace example_2c
 
 TEST_CASE("example 2cb trait any variant single open dispatch") {
+  using namespace example_2c;
+  using namespace std::string_literals;
+  using namespace anyxx;
+  vany_value vv1{std::string{"hello"}};
+  vany_value vv2{int{42}};
+  vany_value vv3{
+      any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
+
+  std::stringstream ss;
+  vany_stream(vv1, ss);
+  vany_stream(vv2, ss);
+  vany_stream(vany_value{true}, ss);
+  vany_stream(vv3, ss);
+  CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
+}
+
+namespace example_2c {
+
+struct compare_equal_types {
+  template <typename T>
+  constexpr auto operator()(T&& t, T&& u) const {
+    return std::forward<T>(t) <=> std::forward<T>(u);
+  }
+};
+
+constexpr static inline auto vany_compare_static_dispatch = anyxx::overloads{
+    compare_equal_types{},
+    [](std::integral auto lhs, std::integral auto rhs) { return lhs <=> rhs; },
+    [](std::floating_point auto lhs, std::floating_point auto rhs) {
+      return lhs <=> rhs;
+    }};
+
+anyxx::dispatch_vany<vany_value,
+                     anyxx::dispatch<std::weak_ordering(
+                         anyxx::virtual_<any_value<anyxx::shared_const>>,
+                         anyxx::virtual_<any_value<anyxx::shared_const>>)>,
+                     vany_compare_static_dispatch>
+    vany_compare;
+
+auto __ = vany_compare.define<custom, custom>(
+    [](const auto& lhs, const auto& rhs) { return lhs.answer <=> rhs.answer; });
+auto __ = vany_compare.define<concrete_value, concrete_value>(
+    [](const auto& lhs, const auto& rhs) {
+      return as_any_value<concrete_value>{lhs}.to_string() <=>
+             as_any_value<concrete_value>{rhs}.to_string();
+    });
+}  // namespace example_2c
+
+TEST_CASE("example 2cc trait any variant double dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
