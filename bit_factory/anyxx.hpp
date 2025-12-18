@@ -765,10 +765,9 @@ template <template <typename...> typename any, is_erased_data ErasedData,
 using make_vany =
     any<vany_variant<any, ErasedData, Dispatch, Types...>, vany_dispatch>;
 
-template <typename Vany>
-struct vany_type_trait {
-  using vany = Vany;
-  using vany_variant = typename Vany::erased_data_t;
+template <typename VanyVariant>
+struct vany_variant_trait {
+  using vany_variant = VanyVariant;
   template <typename... Types>
   struct concrete_variant_impl;
   template <typename First, typename... Types>
@@ -777,6 +776,16 @@ struct vany_type_trait {
   };
   using concrete_variant = typename concrete_variant_impl<vany_variant>::type;
   using any_in_variant = typename std::variant_alternative_t<0, vany_variant>;
+};
+
+template <typename Vany>
+struct vany_type_trait {
+  using vany = Vany;
+  using vany_variant = typename Vany::erased_data_t;
+  using concrete_variant =
+      typename vany_variant_trait<vany_variant>::concrete_variant;
+  using any_in_variant =
+      typename vany_variant_trait<vany_variant>::any_in_variant;
 };
 
 template <template <typename...> typename any, is_erased_data ErasedData,
@@ -2492,12 +2501,14 @@ struct dispatch<R(Args...)> {
                                std::forward<ActualArgs>(actual_args)...))
           return found;
 
-      return next_t::invoke(
-          target[0],
-          std::tuple_cat(get_tuple_head<Dimension>(dispatch_args_tuple),
-                         std::make_tuple(&any),
-                         get_tuple_tail<Dimension + 1>(dispatch_args_tuple)),
-          std::forward<ActualArgs>(actual_args)...);
+      if (target.size())
+        return next_t::invoke(
+            target[0],
+            std::tuple_cat(get_tuple_head<Dimension>(dispatch_args_tuple),
+                           std::make_tuple(&any),
+                           get_tuple_tail<Dimension + 1>(dispatch_args_tuple)),
+            std::forward<ActualArgs>(actual_args)...);
+      return {};
     }
   };
 
@@ -2580,14 +2591,69 @@ class dispatch_vany {
   auto invoke1(Vany&& vany, Args&&... args) const {
     return std::visit(
         [&]<typename TypedArg>([[maybe_unused]] TypedArg&& arg) {
-          overloads{
+          return overloads{
               StaticDispatch,
               [&]<is_any Any, typename... Vargs>(Any&& any, Vargs&&... vargs) {
-                dynamic_dispatch_(std::forward<Any>(any),
-                                  std::forward<Vargs>(vargs)...);
+                return dynamic_dispatch_(std::forward<Any>(any),
+                                         std::forward<Vargs>(vargs)...);
               }}(std::forward<TypedArg>(arg), std::forward<Args>(args)...);
         },
         vany.erased_data_);
+  }
+
+  template <is_any Vany1, is_any Vany2, typename... Args>
+  auto invoke2(Vany1&& vany1, Vany2&& vany2, Args&&... args) const {
+    using vany1_t = std::decay_t<Vany1>;
+    using vany2_t = std::decay_t<Vany2>;
+    using cv1_t = anyxx::vany_type_trait<vany1_t>::concrete_variant;
+    using any_v1 = anyxx::vany_type_trait<vany1_t>::any_in_variant;
+    using cv2_t = anyxx::vany_type_trait<vany2_t>::concrete_variant;
+    using any_v2 = anyxx::vany_type_trait<vany2_t>::any_in_variant;
+
+    return std::visit(
+        [&]<typename DA1, typename DA2>(DA1&& da1, DA2&& da2) {
+          return overloads{
+              StaticDispatch,
+              [&]<is_any A1, is_any A2, typename... VAs>(A1&& a1, A2&& a2,
+                                                         VAs&&... vas) {
+                return dynamic_dispatch_(std::forward<A1>(a1),
+                                         std::forward<A2>(a2),
+                                         std::forward<VAs>(vas)...);
+              },
+              [&]<is_any A1, typename A2, typename... VAs>(A1&& a1, A2 a2,
+                                                           VAs&&... vas)
+                requires std::constructible_from<cv2_t, A2>
+                         {
+                           return dynamic_dispatch_(
+                               std::forward<A1>(a1),
+                               any_v2{std::in_place, cv2_t{std::move(a2)}},
+                               std::forward<VAs>(vas)...);
+                         },
+                         [&]<typename A1, is_any A2, typename... VAs>(
+                             A1 a1, A2&& a2, VAs&&... vas)
+                           requires std::constructible_from<cv1_t, A1>
+                                    {
+                                      return dynamic_dispatch_(
+                                          any_v1{std::in_place,
+                                                 cv1_t{std::move(a1)}},
+                                          std::forward<A2>(a2),
+                                          std::forward<VAs>(vas)...);
+                                    },
+                                    [&]<typename A1, typename A2,
+                                        typename... VAs>(A1 a1, A2 a2,
+                                                         VAs&&... vas)
+                                      requires(
+                                          std::constructible_from<cv1_t, A1> &&
+                                          std::constructible_from<cv2_t, A2>)
+              {
+                return dynamic_dispatch_(
+                    any_v1{std::in_place, cv1_t{std::move(a1)}},
+                    any_v2{std::in_place, cv2_t{std::move(a2)}},
+                    std::forward<VAs>(vas)...);
+              }}(std::forward<DA1>(da1), std::forward<DA2>(da2),
+                 std::forward<Args>(args)...);
+        },
+        vany1.erased_data_, vany2.erased_data_);
   }
 
  public:
@@ -2600,6 +2666,13 @@ class dispatch_vany {
   auto operator()(Args&&... args) const {
     if constexpr (dimension_count == 1) {
       return invoke1(std::forward<Args>(args)...);
+    } else {
+      if constexpr (dimension_count == 2) {
+        return invoke2(std::forward<Args>(args)...);
+      } else {
+        static_assert(dimension_count <= 2,
+                      "dispatch_vany only supports up to 2 dispatches");
+      }
     }
   }
 };

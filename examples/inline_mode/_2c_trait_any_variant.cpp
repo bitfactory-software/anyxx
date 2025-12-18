@@ -21,7 +21,7 @@ struct any_value_has_open_dispatch {};
 ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                      [x]() { return std::format("{}", x); }),
                 ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
-                                     [&x](std::string_view sv) -> void{
+                                     [&x](std::string_view sv) -> void {
                                        std::stringstream ss{std::string{sv},
                                                             std::ios_base::in};
                                        ss >> x;
@@ -48,16 +48,16 @@ ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
 };
 
 ANY_MODEL_MAP((example_2c::concrete_value), example_2c::any_value) {
-  static std::string to_string(concrete_value const & x) {
+  static std::string to_string(concrete_value const& x) {
     return std::visit(
-        [&]<typename T>(T const & v) {
+        [&]<typename T>(T const& v) {
           return any_value_model_map<T>::to_string(v);
         },
         x);
   };
-  static void from_string(concrete_value & x, [[maybe_unused]]std::string_view sv) {
+  static void from_string(concrete_value & x, std::string_view sv) {
     return std::visit(
-        [&]<typename T>([[maybe_unused]]T& ) -> void{
+        [&]<typename T>(T& v) -> void {
           return any_value_model_map<T>::from_string(v, sv);
         },
         x);
@@ -137,29 +137,70 @@ namespace example_2c {
 
 struct compare_equal_types {
   template <typename T>
-  constexpr auto operator()(T&& t, T&& u) const {
+    requires(!anyxx::is_any<T>)
+  constexpr auto operator()(T&& t, T&& u) const -> std::partial_ordering {
     return std::forward<T>(t) <=> std::forward<T>(u);
   }
 };
 
 constexpr static inline auto vany_compare_static_dispatch = anyxx::overloads{
     compare_equal_types{},
-    [](std::integral auto lhs, std::integral auto rhs) { return lhs <=> rhs; },
-    [](std::floating_point auto lhs, std::floating_point auto rhs) {
+    [](bool lhs, std::integral auto rhs) -> std::partial_ordering {
+      return lhs <=> static_cast<bool>(rhs);
+    },
+    [](std::integral auto lhs, bool rhs) -> std::partial_ordering {
+      return static_cast<bool>(lhs) <=> rhs;
+    },
+    [](bool lhs, bool rhs) -> std::partial_ordering { return lhs <=> rhs; },
+    [](std::integral auto lhs, std::integral auto rhs) -> std::partial_ordering {
       return lhs <=> rhs;
-    }};
+    },
+    [](std::floating_point auto lhs, std::floating_point auto rhs)
+        -> std::partial_ordering { return lhs <=> rhs; }};
 
 anyxx::dispatch_vany<vany_value,
-                     anyxx::dispatch<std::weak_ordering(
+                     anyxx::dispatch<std::partial_ordering(
                          anyxx::virtual_<any_value<anyxx::shared_const>>,
                          anyxx::virtual_<any_value<anyxx::shared_const>>)>,
                      vany_compare_static_dispatch>
     vany_compare;
 
+auto operator<=>(const vany_value& lhs, const vany_value& rhs) {
+  return vany_compare(lhs, rhs);
+}
+auto operator==(const vany_value& lhs, const vany_value& rhs) {
+  return lhs <=> rhs == std::weak_ordering::equivalent;
+}
+auto operator!=(const vany_value& lhs, const vany_value& rhs) {
+  return lhs <=> rhs != std::weak_ordering::equivalent;
+}
+auto operator<(const vany_value& lhs, const vany_value& rhs) {
+  return lhs <=> rhs == std::weak_ordering::less;
+}
+auto operator>=(const vany_value& lhs, const vany_value& rhs) {
+  return lhs <=> rhs != std::weak_ordering::less;
+}
+auto operator>(const vany_value& lhs, const vany_value& rhs) {
+  return lhs <=> rhs == std::weak_ordering::greater;
+}
+auto operator<=(const vany_value& lhs, const vany_value& rhs) {
+  return lhs <=> rhs != std::weak_ordering::greater;
+}
+
 auto __ = vany_compare.define<custom, custom>(
-    [](const auto& lhs, const auto& rhs) { return lhs.answer <=> rhs.answer; });
+    [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
+      return lhs.answer <=> rhs.answer;
+    });
+auto __ = vany_compare.define<concrete_value, custom>(
+    [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
+      return as_any_value<concrete_value>(lhs).to_string() <=> rhs.answer;
+    });
+auto __ = vany_compare.define<custom, concrete_value>(
+    [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
+      return lhs.answer <=> as_any_value<concrete_value>(rhs).to_string() ;
+    });
 auto __ = vany_compare.define<concrete_value, concrete_value>(
-    [](const auto& lhs, const auto& rhs) {
+    [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
       return as_any_value<concrete_value>{lhs}.to_string() <=>
              as_any_value<concrete_value>{rhs}.to_string();
     });
@@ -169,15 +210,32 @@ TEST_CASE("example 2cc trait any variant double dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
-  vany_value vv1{std::string{"hello"}};
-  vany_value vv2{int{42}};
+  vany_value vv1{"hello"s};
+  vany_value vvbt{bool{true}};
+  vany_value vvbf{bool{false}};
+  vany_value vvi{int{42}};
+  vany_value vvi0{int{0}};
+  vany_value vvf{double{42.0}};
   vany_value vv3{
       any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
+  vany_value vv4{
+      any_value<shared_const>{std::in_place_type<custom>, "hello"}};
 
-  std::stringstream ss;
-  vany_stream(vv1, ss);
-  vany_stream(vv2, ss);
-  vany_stream(vany_value{true}, ss);
-  vany_stream(vv3, ss);
-  CHECK(ss.str() == "String: hello, Int: 42, Bool: true, Custom: Hello world!");
-}
+  bool x = vany_compare(vv1, vv1) == std::partial_ordering::equivalent;
+  CHECK(x);
+  auto y = vv1 <=> vv1;
+  CHECK(y == std::weak_ordering::equivalent);
+  auto z = vv1 == vv1;
+  CHECK(z);
+  CHECK(vv3 == vv3);
+  CHECK(vv3 != vv1);
+  CHECK("hello"s > "Hello world!"s);
+  CHECK(vv1 > vv3);
+  CHECK(vv3 != vv4);
+  CHECK(vv1 == vv4);
+  CHECK(vvi == vvf);
+  CHECK(vvbt != vvbf);
+  CHECK(vvi != vvbf);
+  CHECK(vvi == vvbt);
+  CHECK(vvi0 == vvbf);
+ }
