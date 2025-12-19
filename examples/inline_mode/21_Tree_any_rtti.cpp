@@ -4,27 +4,27 @@
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+#include <memory>
 #include <string>
-
-using std::string;
 
 using namespace anyxx;
 
 namespace {
 
-ANY(node_i,
-    (ANY_METHOD(int, value, (), const), ANY_METHOD(string, as_forth, (), const),
-     ANY_METHOD(string, as_lisp, (), const)))
-using node = node_i<shared_const, anyxx::dynm>;
+ANY(node_i, (ANY_METHOD(int, value, (), const),
+             ANY_METHOD(std::string, as_forth, (), const),
+             ANY_METHOD(std::string, as_lisp, (), const)))
+
+using node = node_i<shared_const>;
 
 struct Plus {
   Plus(node left, node right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() + right_.value(); }
-  [[nodiscard]] string as_forth() const {
+  [[nodiscard]] std::string as_forth() const {
     return left_.as_forth() + " " + right_.as_forth() + " +";
   }
-  [[nodiscard]] string as_lisp() const {
+  [[nodiscard]] std::string as_lisp() const {
     return "(plus " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
@@ -35,10 +35,10 @@ struct Times {
   Times(node left, node right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() * right_.value(); }
-  [[nodiscard]] string as_forth() const {
+  [[nodiscard]] std::string as_forth() const {
     return left_.as_forth() + " " + right_.as_forth() + " *";
   }
-  [[nodiscard]] string as_lisp() const {
+  [[nodiscard]] std::string as_lisp() const {
     return "(times " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
@@ -48,24 +48,26 @@ struct Times {
 struct Integer {
   explicit Integer(int value) : int_(value) {}
   [[nodiscard]] int value() const { return int_; }
-  [[nodiscard]] string as_forth() const { return std::to_string(int_); }
-  [[nodiscard]] string as_lisp() const { return std::to_string(int_); }
+  [[nodiscard]] std::string as_forth() const { return std::to_string(int_); }
+  [[nodiscard]] std::string as_lisp() const { return std::to_string(int_); }
 
   int int_;
 };
 
 template <typename NODE, typename... ARGS>
-[[nodiscard]] auto make_node(ARGS&&... args) {
+auto make_node(ARGS&&... args) {
   return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
 }
 
 }  // namespace
 
-TEST_CASE("21_Tree_any_inline") {
+TEST_CASE("21_Tree_any_rtti") {
   using namespace anyxx;
-  auto expr = make_node<Times>(
+
+  auto expr = node(make_node<Times>(
       make_node<Integer>(2),
-      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4)));
+      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));
+
   REQUIRE(expr.value() == 14);
   std::stringstream out;
   out << expr.as_forth() << " = " << expr.as_lisp() << " = " << expr.value();

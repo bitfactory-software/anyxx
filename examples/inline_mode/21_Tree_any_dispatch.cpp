@@ -6,9 +6,6 @@
 #include <iostream>
 #include <string>
 
-using std::string;
-
-using namespace anyxx;
 using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
