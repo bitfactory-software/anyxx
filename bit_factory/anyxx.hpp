@@ -1199,7 +1199,10 @@ meta_data& get_meta_data() {
 #endif
 
 template <typename Dispatch = rtti>
-struct any_base_v_table {
+struct any_base_v_table;
+
+template <>
+struct any_base_v_table<rtti> {
   template <typename Concrete>
   explicit any_base_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
@@ -1220,6 +1223,13 @@ inline bool is_derived_from(const std::type_info& from,
                             any_base_v_table<> const* any_base_v_table) {
   return any_base_v_table->_is_derived_from(from);
 }
+
+template <>
+struct any_base_v_table<dyns> {
+  template <typename Concrete>
+  explicit any_base_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete) {}
+};
 
 using dispatch_table_function_t = void (*)();
 using dispatch_table_dispatch_index_t = std::size_t;
