@@ -7,22 +7,20 @@
 
 namespace example_2b {
 
-TRAIT(monoid,
-      (ANY_METHOD_DEFAULTED(monoid_trait<T>, op, (monoid_trait<T> const&), const,
-                            [x](monoid_trait<T> const r) {
-                              return monoid_trait<T>{}.concat(
-                                  std::vector{monoid_trait<T>{x}, r});  // NOLINT
-                            }),
-       ANY_METHOD_DEFAULTED(monoid_trait<T>, concat, (const auto&), const,
-                            []([[maybe_unused]] const auto& r) {
-                              return std::ranges::fold_right(
-                                  r, monoid_trait<T>{},
-                                  [&](auto const& m1, auto const& m2) {
-                                    return m1.op(m2);
-                                  });
-                            }),
-       ANY_METHOD_DEFAULTED(monoid_trait<T>, id, (), const,
-                            []() { return monoid_trait<T>{}; })))
+TRAIT(monoid, (ANY_METHOD_DEFAULTED(monoid_trait<T>, op,
+                                    (monoid_trait<T> const&), const,
+                                    [x](monoid_trait<T> const r) {
+                                      return monoid_trait<T>{x}.concat(
+                                          std::vector{r});  // NOLINT
+                                    }),
+               ANY_METHOD_DEFAULTED(monoid_trait<T>, concat, (const auto&),
+                                    const, [x]([[maybe_unused]] const auto& r) {
+                                      return std::ranges::fold_right(
+                                          r, monoid_trait<T>{x},
+                                          [&](auto const& m1, auto const& m2) {
+                                            return m1.op(m2);
+                                          });
+                                    })))
 
 template <typename T>
 inline auto operator==(monoid_trait<T> const& lhs, monoid_trait<T> const& rhs) {
@@ -34,13 +32,13 @@ inline auto operator==(monoid_trait<T> const& lhs, monoid_trait<T> const& rhs) {
 ANY_MODEL_MAP((int), example_2b::monoid) {
   static monoid_trait<int> concat([[maybe_unused]] int self, auto const& r) {
     return monoid_trait<int>{std::ranges::fold_right(
-        r, 0, [&](auto m1, auto m2) { return *m1 + m2; })};
+        r, self, [&](auto m1, auto m2) { return *m1 + m2; })};
   };
 };
 
 ANY_MODEL_MAP((std::string), example_2b::monoid) {
   static monoid_trait<std::string> op(std::string const& self,
-                                   monoid_trait<std::string> const& r) {
+                                      monoid_trait<std::string> const& r) {
     return monoid_trait<std::string>{self + *r};
   };
 };
@@ -59,12 +57,10 @@ void test_monoid(monoid_trait<M> const& m, R r)
   auto c1 = m.op(monoid_trait<M>{}).op(m) == m.op(m).op(monoid_trait<M>{});
   CHECK(c1);
   auto c2 = m.concat(r) ==
-      std::ranges::fold_right(
-          r, monoid_trait<M>{},
-          [&](auto const& m1, auto const& m2) { return m1.op(m2); });
+            std::ranges::fold_right(r, m, [&](auto const& m1, auto const& m2) {
+              return m1.op(m2);
+            });
   CHECK(c2);
-  auto c3 = m.id() == monoid_trait<M>{};
-  CHECK(c3);
 }
 
 }  // namespace example_2b
