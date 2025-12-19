@@ -2362,6 +2362,10 @@ struct dispatch_function<R, std::tuple<FArgs...>> {
   using type = R (*)(FArgs...);
 };
 
+class no_default_function_error : public error {
+  using error::error;
+};
+
 template <typename R, typename... OuterArgs>
 struct dispatch_function_types {
   template <is_any... Anys>
@@ -2377,7 +2381,11 @@ struct dispatch_function_types {
             if constexpr (std::same_as<R, void>) {
               return;
             } else {
-              return R{};
+              if constexpr (std::is_default_constructible_v<R>) {
+                return R{};
+              } else {
+                throw no_default_function_error("no default function");
+              }
             }
           };
         }
