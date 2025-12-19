@@ -33,7 +33,7 @@ template <typename V>
 auto print(V s)
 //  requires stringable_trait<V>::is_defined
 {
-  return print_(as_stringable<V>{std::move(s)});
+  return print_(stringable_trait<V>{std::move(s)});
 }
 
 }  // namespace example_2a

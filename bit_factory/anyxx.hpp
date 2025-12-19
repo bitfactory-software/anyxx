@@ -265,7 +265,7 @@
   struct n;                                                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  using as_##n =                                                               \
+  using n##_trait =                                                            \
       n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params), anyxx::trait>;   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \

@@ -193,16 +193,16 @@ auto __ = vany_compare.define<custom, custom>(
     });
 auto __ = vany_compare.define<concrete_value, custom>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return as_any_value<concrete_value>(lhs).to_string() <=> rhs.answer;
+      return any_value_trait<concrete_value>(lhs).to_string() <=> rhs.answer;
     });
 auto __ = vany_compare.define<custom, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return lhs.answer <=> as_any_value<concrete_value>(rhs).to_string() ;
+      return lhs.answer <=> any_value_trait<concrete_value>(rhs).to_string() ;
     });
 auto __ = vany_compare.define<concrete_value, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return as_any_value<concrete_value>{lhs}.to_string() <=>
-             as_any_value<concrete_value>{rhs}.to_string();
+      return any_value_trait<concrete_value>{lhs}.to_string() <=>
+             any_value_trait<concrete_value>{rhs}.to_string();
     });
 }  // namespace example_2c
 
