@@ -561,7 +561,7 @@ class type_mismatch_error : public error {
 };
 
 struct rtti {};
-struct dyn {};
+struct dynm {};
 struct static_member_dispatch {};
 struct trait : static_member_dispatch {};
 struct vany_dispatch : static_member_dispatch {};
@@ -1826,7 +1826,7 @@ template <typename Dispatch, template <typename...> typename... BaseVTable>
 struct derive_v_table_from;
 
 // --------------------------------------------------------------------------------
-// dyn
+// dynm
 template <typename VTable, typename Base>
 struct rtti_v_table_access : Base {
   using Base::Base;
@@ -1863,7 +1863,7 @@ struct derive_v_table_from<rtti> {
 };
 
 // --------------------------------------------------------------------------------
-// dyn
+// dynm
 template <typename VTable, typename Base>
 struct dyn_v_table_access : Base {
   using Base::Base;
@@ -1890,17 +1890,17 @@ struct no_derived_v_table {
   };
 };
 template <typename VTable, template <typename...> typename Base>
-struct derive_from<dyn, VTable, Base> {
+struct derive_from<dynm, VTable, Base> {
   template <typename... Args>
   using type = dyn_v_table_access<VTable, Base<Args...>>;
 };
 template <typename VTable>
-struct derive_from<dyn, VTable> {
+struct derive_from<dynm, VTable> {
   template <typename... Args>
   using type = dyn_v_table_access<VTable, erased_data_holder<Args...>>;
 };
 template <template <typename...> typename... BaseVTable>
-struct derive_v_table_from<dyn, BaseVTable...> : no_derived_v_table {};
+struct derive_v_table_from<dynm, BaseVTable...> : no_derived_v_table {};
 
 // --------------------------------------------------------------------------------
 // trait, vany_dispatch

@@ -15,7 +15,7 @@ namespace {
 ANY(node_i,
     (ANY_METHOD(int, value, (), const), ANY_METHOD(string, as_forth, (), const),
      ANY_METHOD(string, as_lisp, (), const)))
-using node = node_i<shared_const, anyxx::dyn>;
+using node = node_i<shared_const, anyxx::dynm>;
 
 struct Plus {
   Plus(node left, node right)
