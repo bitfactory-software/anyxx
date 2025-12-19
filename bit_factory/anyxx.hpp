@@ -560,8 +560,11 @@ class type_mismatch_error : public error {
   using error::error;
 };
 
-struct rtti {};
-struct dynm {};
+struct dynamic_member_dispatch {};
+struct v_table_ptr_member_dispatch : dynamic_member_dispatch{};
+struct rtti : v_table_ptr_member_dispatch {};
+struct dyns : v_table_ptr_member_dispatch {};
+struct dynm : dynamic_member_dispatch {};
 struct static_member_dispatch {};
 struct trait : static_member_dispatch {};
 struct vany_dispatch : static_member_dispatch {};
@@ -1828,7 +1831,7 @@ struct derive_v_table_from;
 // --------------------------------------------------------------------------------
 // dynm
 template <typename VTable, typename Base>
-struct rtti_v_table_access : Base {
+struct v_table_ptr_access : Base {
   using Base::Base;
   // cppcheck-suppress-begin functionConst
   template <typename Derived>
@@ -1844,12 +1847,12 @@ struct rtti_v_table_access : Base {
 template <typename VTable, template <typename...> typename Base>
 struct derive_from<rtti, VTable, Base> {
   template <typename... Args>
-  using type = rtti_v_table_access<VTable, Base<Args...>>;
+  using type = v_table_ptr_access<VTable, Base<Args...>>;
 };
 template <typename VTable>
 struct derive_from<rtti, VTable> {
   template <typename... Args>
-  using type = rtti_v_table_access<VTable, any_base<Args...>>;
+  using type = v_table_ptr_access<VTable, any_base<Args...>>;
 };
 template <template <typename...> typename BaseVTable>
 struct derive_v_table_from<rtti, BaseVTable> {
