@@ -2587,8 +2587,8 @@ class dispatch_vany {
   constexpr static const std::size_t dimension_count =
       DynamicDispatch::dimension_count;
 
-  template <is_any Vany, typename... Args>
-  auto invoke1(Vany&& vany, Args&&... args) const {
+  template <typename Vany1, typename... Args>
+  auto invoke1(Vany1&& vany, Args&&... args) const {
     return std::visit(
         [&]<typename TypedArg>([[maybe_unused]] TypedArg&& arg) {
           return overloads{
@@ -2611,7 +2611,7 @@ class dispatch_vany {
     using any_v2 = anyxx::vany_type_trait<vany2_t>::any_in_variant;
 
     auto dispatch_combined = [&]<typename DA1, typename DA2>(DA1&& da1,
-                                                            DA2&& da2) {
+                                                             DA2&& da2) {
       auto dyn_case1 = [&]<is_any A1, is_any A2, typename... VAs>(
                            A1&& a1, A2&& a2, VAs&&... vas) {
         return dynamic_dispatch_(std::forward<A1>(a1), std::forward<A2>(a2),
@@ -2648,7 +2648,8 @@ class dispatch_vany {
                                   std::forward<Args>(args)...);
     };
 
-    return std::visit(dispatch_combined, vany1.erased_data_, vany2.erased_data_);
+    return std::visit(dispatch_combined, vany1.erased_data_,
+                      vany2.erased_data_);
   }
 
  public:
