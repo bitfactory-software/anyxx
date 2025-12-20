@@ -1,7 +1,7 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <format>
 #include <print>
-#include <ranges>
 #include <vector>
 
 using namespace anyxx;
@@ -49,6 +49,17 @@ TEST_CASE("factory2") {
   CHECK(get_meta_data(things[1]).get_type_info() == typeid_of<spaceship>());
 }
 
-// TEST_CASE("factory3") {
+ANY(any_to_string,
+    (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
+                          [x]() { return std::format("{}", x); })))
 
+factory<any_to_string, std::string> any_to_string_factory;
+
+auto __ = any_to_string_factory.register_(
+    "int", []() { return any_to_string<unique>{std::in_place, 42}; });
+
+static_assert(std::is_constructible_v<any_to_string<shared_const>,
+                                      any_to_string<unique>&&>);
+static_assert(!std::is_constructible_v<any_to_string<shared_const, dynm>,
+                                       any_to_string<unique>&&>);
 }  // namespace
