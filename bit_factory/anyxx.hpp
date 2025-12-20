@@ -773,6 +773,11 @@ concept erased_constructibile_for =
 template <typename V>
 using traited = trait_base<V>;
 
+template <template <typename, typename> typename Any, typename T>
+auto trait_as(T&& v) {
+  return Any<anyxx::traited<std::decay_t<T>>, trait>{std::forward<T>(v)};
+}
+
 template <typename V>
 struct erased_data_trait<traited<V>> {
   using void_t = mutable_void;

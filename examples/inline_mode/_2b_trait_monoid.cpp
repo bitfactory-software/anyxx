@@ -10,13 +10,13 @@ namespace example_2b {
 TRAIT(monoid, (ANY_METHOD_DEFAULTED(monoid_trait<T>, op,
                                     (monoid_trait<T> const&), const,
                                     [x](monoid_trait<T> const r) {
-                                      return monoid_trait<T>{x}.concat(
+                                      return anyxx::trait_as<monoid>(x).concat(
                                           std::vector{r});  // NOLINT
                                     }),
                ANY_METHOD_DEFAULTED(monoid_trait<T>, concat, (const auto&),
                                     const, [x]([[maybe_unused]] const auto& r) {
                                       return std::ranges::fold_right(
-                                          r, monoid_trait<T>{x},
+                                          r, anyxx::trait_as<monoid>(x),
                                           [&](auto const& m1, auto const& m2) {
                                             return m1.op(m2);
                                           });
@@ -39,7 +39,7 @@ ANY_MODEL_MAP((int), example_2b::monoid) {
 ANY_MODEL_MAP((std::string), example_2b::monoid) {
   static monoid_trait<std::string> op(std::string const& self,
                                       monoid_trait<std::string> const& r) {
-    return monoid_trait<std::string>{self + *r};
+    return self + *r;
   };
 };
 
@@ -68,8 +68,9 @@ void test_monoid(monoid_trait<M> const& m, R r)
 TEST_CASE("example 2b monoid ") {
   using namespace example_2b;
   using namespace std::string_literals;
-  test_monoid(monoid_trait<int>{1}, std::vector<monoid_trait<int>>{{2}, {3}});
-  test_monoid(monoid_trait<std::string>{"1"s},
+  using namespace anyxx;
+  test_monoid(trait_as<monoid>(1), std::vector<monoid_trait<int>>{{2}, {3}});
+  test_monoid(trait_as<monoid>("1"s),
               std::vector<monoid_trait<std::string>>{{"2"s}, {"3"s}});
 }
 

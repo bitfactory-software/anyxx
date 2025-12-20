@@ -11,6 +11,10 @@
 #include <string>
 #include <variant>
 
+namespace anyxx {
+
+}  // namespace anyxx
+
 namespace example_2c {
 
 struct custom {
@@ -133,9 +137,8 @@ constexpr static inline auto vany_compare_static_dispatch = anyxx::overloads{
       return static_cast<bool>(lhs) <=> rhs;
     },
     [](bool lhs, bool rhs) -> std::partial_ordering { return lhs <=> rhs; },
-    [](std::integral auto lhs, std::integral auto rhs) -> std::partial_ordering {
-      return lhs <=> rhs;
-    },
+    [](std::integral auto lhs,
+       std::integral auto rhs) -> std::partial_ordering { return lhs <=> rhs; },
     [](std::floating_point auto lhs, std::floating_point auto rhs)
         -> std::partial_ordering { return lhs <=> rhs; }};
 
@@ -174,16 +177,16 @@ auto __ = vany_compare.define<custom, custom>(
     });
 auto __ = vany_compare.define<concrete_value, custom>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return any_value_trait<concrete_value>(lhs).to_string() <=> rhs.answer;
+      return anyxx::trait_as<any_value>(lhs).to_string() <=> rhs.answer;
     });
 auto __ = vany_compare.define<custom, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return lhs.answer <=> any_value_trait<concrete_value>(rhs).to_string() ;
+      return lhs.answer <=> anyxx::trait_as<any_value>(rhs).to_string();
     });
 auto __ = vany_compare.define<concrete_value, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return any_value_trait<concrete_value>{lhs}.to_string() <=>
-             any_value_trait<concrete_value>{rhs}.to_string();
+      return anyxx::trait_as<any_value>(lhs).to_string() <=>
+             anyxx::trait_as<any_value>(rhs).to_string();
     });
 }  // namespace example_2c
 
@@ -199,8 +202,7 @@ TEST_CASE("example 2cc trait any variant double dispatch") {
   vany_value vvf{double{42.0}};
   vany_value vv3{
       any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
-  vany_value vv4{
-      any_value<shared_const>{std::in_place_type<custom>, "hello"}};
+  vany_value vv4{any_value<shared_const>{std::in_place_type<custom>, "hello"}};
 
   bool x = vany_compare(vv1, vv1) == std::partial_ordering::equivalent;
   CHECK(x);
@@ -219,4 +221,4 @@ TEST_CASE("example 2cc trait any variant double dispatch") {
   CHECK(vvi != vvbf);
   CHECK(vvi == vvbt);
   CHECK(vvi0 == vvbf);
- }
+}

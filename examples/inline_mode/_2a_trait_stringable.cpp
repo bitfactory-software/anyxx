@@ -26,14 +26,14 @@ ANY_MODEL_MAP((double), example_2a::stringable) {
 namespace example_2a {
 
 template <typename V>
-std::string print_(stringable<V, anyxx::trait> const& s) {
+std::string print_(stringable_trait<V> const& s) {
   return s.to_string() + "\n";
 }
 template <typename V>
 auto print(V s)
 //  requires stringable_trait<V>::is_defined
 {
-  return print_(stringable_trait<V>{std::move(s)});
+  return print_(anyxx::trait_as<stringable>(std::move(s)));
 }
 
 }  // namespace example_2a
