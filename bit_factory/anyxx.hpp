@@ -175,6 +175,20 @@
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));              \
   };
 
+#define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
+#define _detail_ANYXX_MAP_VARIANT_IMPL(overload, type, name, name_ext,       \
+                                       exact_const, const_, trait_body, ...) \
+  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
+      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
+    return std::visit(                                                       \
+        [&]<typename T>(T&& v) {                                             \
+          return x_model_map<std::decay_t<T>>::name(                         \
+              std::forward<T>(v) __VA_OPT__(, )                              \
+                  __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
+        },                                                                   \
+        x);                                                                  \
+  };
+
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
   type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
@@ -188,49 +202,64 @@
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,    \
-                             const_, map_body, ...)                          \
-  overload type name_ext(                                                    \
-      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_          \
-    requires(::anyxx::const_correct_call_for_erased_data<                    \
-             void const_*, erased_data_t, exact_const>)                      \
-  {                                                                          \
-    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {            \
-      using variant_t = erased_data_t;                                       \
-      using any_t = std::variant_alternative_t<0, variant_t>;                \
-      return std::visit(                                                     \
-          anyxx::overloads{                                                  \
-              [&]<typename ValueInVariant>(                                  \
-                  ValueInVariant&& value_in_variant) {                       \
-                return static_dispatch_map_t<std::decay_t<ValueInVariant>>:: \
-                    name(std::forward<ValueInVariant>(value_in_variant)      \
-                             __VA_OPT__(, ) __VA_OPT__(                      \
-                                 _detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
-              },                                                             \
-              [&](any_t const& any) {                                        \
-                return any.name(                                             \
-                    __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
-              },                                                             \
-              [&](any_t& any) {                                              \
-                return any.name(                                             \
-                    __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
-              }},                                                            \
-          base_t::erased_data_);                                             \
-    } else {                                                                 \
-      if constexpr (std::same_as<anyxx::trait, Dispatch>) {                  \
-        return static_dispatch_map_t<T>::name(                               \
-            base_t::erased_data_.value_ __VA_OPT__(, )                       \
-                __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));       \
-      } else {                                                               \
-        return get_v_table_ptr()->name(                                      \
-            anyxx::get_void_data_ptr(base_t::erased_data_)                   \
-                __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
-      }                                                                      \
-    }                                                                        \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
+                             const_, map_body, ...)                            \
+  overload type name_ext(                                                      \
+      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_            \
+    requires(::anyxx::const_correct_call_for_erased_data<                      \
+             void const_*, erased_data_t, exact_const>)                        \
+  {                                                                            \
+    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {              \
+      using variant_t = erased_data_t;                                         \
+      using any_t = std::variant_alternative_t<0, variant_t>;                  \
+      return std::visit(                                                       \
+          anyxx::overloads{                                                    \
+              [&]<typename ValueInVariant>(                                    \
+                  ValueInVariant&& value_in_variant) {                         \
+                return static_dispatch_map_t<std::decay_t<ValueInVariant>>::   \
+                    name(std::forward<ValueInVariant>(value_in_variant)        \
+                             __VA_OPT__(, ) __VA_OPT__(                        \
+                                 _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
+              },                                                               \
+              [&](any_t const& any) {                                          \
+                return any.name(                                               \
+                    __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
+              },                                                               \
+              [&](any_t& any) {                                                \
+                return any.name(                                               \
+                    __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
+              }},                                                              \
+          base_t::erased_data_);                                               \
+    } else {                                                                   \
+      if constexpr (std::same_as<anyxx::trait, Dispatch>) {                    \
+        using traited_t = typename erased_data_t::value_t;                     \
+        if constexpr (anyxx::is_variant<traited_t>) {                          \
+          return std::visit(                                                   \
+              [&]<typename Vx>(Vx&& vx) {                                      \
+                return static_dispatch_map_t<std::decay_t<Vx>>::name(          \
+                    std::forward<Vx>(vx) __VA_OPT__(, )                        \
+                        __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+              },                                                               \
+              base_t::erased_data_.value_);                                    \
+        } else {                                                               \
+          return static_dispatch_map_t<T>::name(                               \
+              base_t::erased_data_.value_ __VA_OPT__(, )                       \
+                  __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));       \
+        }                                                                      \
+      } else {                                                                 \
+        return get_v_table_ptr()->name(                                        \
+            anyxx::get_void_data_ptr(base_t::erased_data_)                     \
+                __VA_OPT__(, _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));       \
+      }                                                                        \
+    }                                                                          \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_LIMP_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
+#define _detail_ANYXX_MAP_VARIANT_FUNCTIONS(...)                     \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_VARIANT_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define _detail_ANYXX_V_TABLE_FUNCTION_PTRS(...)        \
@@ -275,6 +304,16 @@
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
                              model_map_template_params)> {};                   \
+                                                                               \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+    requires(anyxx::is_variant<T>)                                             \
+  struct n##                                                                   \
+      _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
+    template <typename T>                                                      \
+    using x_model_map =                                                        \
+        n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>; \
+    _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
+  };                                                                           \
                                                                                \
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_open_dispatch;                                                \
@@ -547,6 +586,13 @@ struct overloads : Ts... {
   using Ts::operator()...;
 };
 
+template <typename T>
+struct is_variant_impl : std::false_type {};
+template <typename... Args>
+struct is_variant_impl<std::variant<Args...>> : std::true_type {};
+template <typename T>
+inline constexpr bool is_variant = is_variant_impl<T>::value;
+
 #ifdef ANY_DLL_MODE
 constexpr bool is_in_dll_mode = true;
 #else
@@ -576,6 +622,7 @@ struct missing_trait_error {
 template <typename Value>
 struct trait_base {
   Value value_ = {};
+  using value_t = Value;
   operator Value() const { return value_; }
 };
 

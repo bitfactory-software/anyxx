@@ -47,25 +47,6 @@ ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
   };
 };
 
-ANY_MODEL_MAP((example_2c::concrete_value), example_2c::any_value) {
-  static std::string to_string(concrete_value const& x) {
-    return std::visit(
-        [&]<typename T>(T const& v) {
-          return any_value_model_map<T>::to_string(v);
-        },
-        x);
-  };
-  static void from_string(concrete_value & x, std::string_view sv) {
-    return std::visit(
-        [&]<typename T>(T& v) -> void {
-          return any_value_model_map<T>::from_string(v, sv);
-        },
-        x);
-  };
-};
-
-namespace example_2c {}  // namespace example_2c
-
 TEST_CASE("example 2ca trait any variant") {
   using namespace example_2c;
   using namespace std::string_literals;
