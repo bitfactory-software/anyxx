@@ -181,9 +181,9 @@
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
       , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
     return std::visit(                                                       \
-        [&]<typename T>(T&& v) {                                             \
-          return x_model_map<std::decay_t<T>>::name(                         \
-              std::forward<T>(v) __VA_OPT__(, )                              \
+        [&]<typename V>(V&& v) {                                             \
+          return x_model_map<std::decay_t<V>>::name(                         \
+              std::forward<V>(v) __VA_OPT__(, )                              \
                   __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
         },                                                                   \
         x);                                                                  \
