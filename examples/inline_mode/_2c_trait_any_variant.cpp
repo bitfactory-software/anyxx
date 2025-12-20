@@ -11,10 +11,6 @@
 #include <string>
 #include <variant>
 
-namespace anyxx {
-
-}  // namespace anyxx
-
 namespace example_2c {
 
 struct custom {
@@ -68,37 +64,45 @@ TEST_CASE("example 2ca trait any variant") {
   CHECK(vv_custom_43.to_string() == "{43}");
 }
 
+#define VANY_DISPACH_DECLARE(name, vany, signature, static_dispatch) \
+  constexpr static inline auto name##_static_dispatch =              \
+      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};      \
+                                                                     \
+  using name##_vany = vany;                                          \
+  using name##_dynamic_dispatch =                                    \
+      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;             \
+                                                                     \
+  extern anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,  \
+                              name##_static_dispatch>                \
+      name;
+
+#define VANY_DISPACH(name)                                   \
+  anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch, \
+                       name##_static_dispatch>               \
+      name;
+
 namespace example_2c {
 
-constexpr static inline auto vany_stream_static_dispatch = anyxx::overloads{
-    [](const std::string& s, std::ostream& os) {
-      os << "String: " << s << ", ";
-    },
-    [](int i, std::ostream& os) { os << "Int: " << i << ", "; },
-    [](double d, std::ostream& os) { os << "Double: " << d << ", "; },
-    [](bool b, std::ostream& os) {
-      os << "Bool: " << std::boolalpha << b << ", ";
-    }};
+VANY_DISPACH_DECLARE(
+    vany_stream, vany_value,
+    (void(anyxx::virtual_<any_value<anyxx::shared_const>>, std::ostream&)),
+    ([](const std::string& s,
+        std::ostream& os) { os << "String: " << s << ", "; },
+     [](int i, std::ostream& os) { os << "Int: " << i << ", "; },
+     [](double d, std::ostream& os) { os << "Double: " << d << ", "; },
+     [](bool b, std::ostream& os) {
+       os << "Bool: " << std::boolalpha << b << ", ";
+     }))
 
-extern anyxx::dispatch_vany<
-    vany_value,
-    anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
-                         std::ostream&)>,
-    vany_stream_static_dispatch>
-    vany_stream;
 }  // namespace example_2c
 
 namespace example_2c {
 
-anyxx::dispatch_vany<
-    vany_value,
-    anyxx::dispatch<void(anyxx::virtual_<any_value<anyxx::shared_const>>,
-                         std::ostream&)>,
-    vany_stream_static_dispatch>
-    vany_stream;
+VANY_DISPACH(vany_stream)
 
 auto __ = vany_stream.define<custom>(
     [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
+
 }  // namespace example_2c
 
 TEST_CASE("example 2cb trait any variant single open dispatch") {
