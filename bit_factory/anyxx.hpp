@@ -283,11 +283,11 @@
   __VA_OPT__(, _detail_CONCAT(__VA_ARGS__, _v_table))
 
 ////////////////////////////////////////////////////////////////////////////////
-#define ANY_META_FUNCTION(any_template_params, model_map_template_params,      \
-                          tpl3, tpl4, v_table_template_params,                 \
-                          static_dispatch_template_params,                     \
-                          traitet_template_params, n, BASE,                    \
-                          base_template_params, l, v_table_functions)          \
+#define ANY_META_FUNCTION(                                                     \
+    any_template_params, model_map_template_params, tpl3, tpl4,                \
+    v_table_template_params, static_dispatch_template_params,                  \
+    traitet_template_params, v_model_map_template_params, n, BASE,             \
+    base_template_params, l, v_table_functions)                                \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
                 anyxx::rtti>                                                   \
@@ -309,9 +309,9 @@
     requires(anyxx::is_variant<T>)                                             \
   struct n##                                                                   \
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
-    template <typename T>                                                      \
-    using x_model_map =                                                        \
-        n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>; \
+    template <typename V>                                                      \
+    using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
+        v_model_map_template_params)>;                                         \
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
                                                                                \
@@ -470,10 +470,10 @@
   };
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_(t, n, BASE, l, v_table_functions)                 \
-  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t), (T), (Concrete), (Other),       \
-                    (Dispatch), (StaticDispatchType), (anyxx::traited<T>), n, \
-                    BASE, (Dispatch), l, v_table_functions)
+#define __detail_ANYXX_ANY_(t, n, BASE, l, v_table_functions)              \
+  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t), (T), (Concrete), (Other),    \
+                    (Dispatch), (StaticDispatchType), (anyxx::traited<T>), \
+                    (V), n, BASE, (Dispatch), l, v_table_functions)
 
 #define ANY_(n, BASE, l) \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l, l)
@@ -491,8 +491,8 @@
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_TAIL((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_HEAD((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
-      n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
-      l, l)
+      __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, BASE,         \
+      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), l, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
