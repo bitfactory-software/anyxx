@@ -1941,44 +1941,44 @@ struct derive_v_table_from<Dispatch> {
 // --------------------------------------------------------------------------------
 // dynm
 template <typename VTable, typename Base>
-struct dyn_v_table_access : Base {
+struct dynm_v_table_access : Base {
   using erased_data_t = typename Base::erased_data_t;
   using v_table_t = VTable;
   v_table_t v_table_;
 
-  dyn_v_table_access() = default;
-  explicit dyn_v_table_access(erased_data_t erased_data)
+  dynm_v_table_access() = default;
+  explicit dynm_v_table_access(erased_data_t erased_data)
       : Base(std::move(erased_data)) {}
   // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
   explicit(false)
-      dyn_v_table_access(ConstructedWith&& constructed_with)  // NOLINT
+      dynm_v_table_access(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, erased_data_t>
       : Base(std::forward<ConstructedWith>(constructed_with)) {}
   // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
-  dyn_v_table_access(std::in_place_t, V&& v)
+  dynm_v_table_access(std::in_place_t, V&& v)
       : Base(std::in_place, std::forward<V>(v)) {}
   template <typename T, typename... Args>
-  dyn_v_table_access(std::in_place_type_t<T> t, Args&&... args)
+  dynm_v_table_access(std::in_place_type_t<T> t, Args&&... args)
       : Base(t, std::forward<Args>(args)...) {}
 
   template <typename OtherBase>
-  explicit dyn_v_table_access(dyn_v_table_access<VTable, OtherBase> const& other)
+  explicit dynm_v_table_access(dynm_v_table_access<VTable, OtherBase> const& other)
       : Base(other), v_table_(other.v_table_) {}
   template <typename Other>
-  explicit dyn_v_table_access(Other&& other)
+  explicit dynm_v_table_access(Other&& other)
       : Base(std::forward<Other>(other)), v_table_(other.v_table_) {}
   template <typename Other>
-  dyn_v_table_access& operator=(Other&& other) {
+  dynm_v_table_access& operator=(Other&& other) {
     *this = std::move(other);
     v_table_ = other.v_table_;
     return *this;
   }
-  dyn_v_table_access(const dyn_v_table_access&) = default;
-  dyn_v_table_access(dyn_v_table_access&& rhs) = default;
-  dyn_v_table_access& operator=(dyn_v_table_access const& other) = default;
-  dyn_v_table_access& operator=(dyn_v_table_access&& other) = default;
+  dynm_v_table_access(const dynm_v_table_access&) = default;
+  dynm_v_table_access(dynm_v_table_access&& rhs) = default;
+  dynm_v_table_access& operator=(dynm_v_table_access const& other) = default;
+  dynm_v_table_access& operator=(dynm_v_table_access&& other) = default;
 
   // cppcheck-suppress-begin functionConst
   template <typename Derived>
@@ -2002,12 +2002,12 @@ struct no_derived_v_table {
 template <typename VTable, template <typename...> typename Base>
 struct derive_from<dynm, VTable, Base> {
   template <typename... Args>
-  using type = dyn_v_table_access<VTable, Base<Args...>>;
+  using type = dynm_v_table_access<VTable, Base<Args...>>;
 };
 template <typename VTable>
 struct derive_from<dynm, VTable> {
   template <typename... Args>
-  using type = dyn_v_table_access<VTable, erased_data_holder<Args...>>;
+  using type = dynm_v_table_access<VTable, erased_data_holder<Args...>>;
 };
 template <template <typename...> typename... BaseVTable>
 struct derive_v_table_from<dynm, BaseVTable...> : no_derived_v_table {};
