@@ -12,7 +12,7 @@ struct X {
 };
 
 namespace {
-ANY(any_to_tstring, (ANY_METHOD(std::string, to_string, (), const)))
+ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)))
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
              (ANY_METHOD(VALUE const&, at, (KEY const&), const),
@@ -30,14 +30,14 @@ ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), ),
               ANY_METHOD(std::size_t, size, (), const)))
 
-ANY_TEMPLATE(((KEY)), any_map_to_tstring,
-             (ANY_METHOD(any_to_tstring<const_observer>, at, (KEY const&),
+ANY_TEMPLATE(((KEY)), any_map_to_string,
+             (ANY_METHOD(any_to_string<const_observer>, at, (KEY const&),
                          const)))
 
-ANY_MODEL_MAP((int), any_to_tstring) {
+ANY_MODEL_MAP((int), any_to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-ANY_MODEL_MAP((double), any_to_tstring) {
+ANY_MODEL_MAP((double), any_to_string) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 }  // namespace
@@ -62,23 +62,23 @@ TEST_CASE("any template test") {
 
   test_any_map_template<std::string, int>(map_string_to_int);
 
-  auto test_any_map_to_tstring_lambda =
-      [](any_map_to_tstring<const_observer, std::string> map_i) {
+  auto test_any_map_to_string_lambda =
+      [](any_map_to_string<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
-  test_any_map_to_tstring_lambda(map_string_to_int);
+  test_any_map_to_string_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_any_map_to_tstring_lambda =
-      [](any_map_to_tstring<const_observer, std::string> map_i) {
+  auto test_any_map_to_string_lambda =
+      [](any_map_to_string<const_observer, std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
-  test_any_map_to_tstring_lambda(map_string_to_int);
+  test_any_map_to_string_lambda(map_string_to_int);
 }
 
 TEST_CASE("any template test3") {

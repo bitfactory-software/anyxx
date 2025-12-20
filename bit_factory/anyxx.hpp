@@ -330,7 +330,7 @@
                                                                                \
     template <typename Concrete>                                               \
     static auto imlpementation() {                                             \
-      if constexpr (anyxx::is_type_complete<n##_v_table_as_static_inline> ||   \
+      if constexpr (std::same_as<anyxx::dyns, Dispatch> ||                     \
                     !anyxx::is_in_dll_mode) {                                  \
         return anyxx::v_table_instance_inline<v_table_t, Concrete>();          \
       } else {                                                                 \
@@ -561,7 +561,7 @@ class type_mismatch_error : public error {
 };
 
 struct dynamic_member_dispatch {};
-struct v_table_ptr_member_dispatch : dynamic_member_dispatch{};
+struct v_table_ptr_member_dispatch : dynamic_member_dispatch {};
 struct rtti : v_table_ptr_member_dispatch {};
 struct dyns : v_table_ptr_member_dispatch {};
 struct dynm : dynamic_member_dispatch {};
@@ -1210,6 +1210,8 @@ struct any_base_v_table<rtti> {
           return static_is_derived_from(from);
         }) {}
 
+  using dispatch_t = rtti;
+
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(any_base_v_table) == from;
   }
@@ -1229,6 +1231,7 @@ struct any_base_v_table<dyns> {
   template <typename Concrete>
   explicit any_base_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete) {}
+  using dispatch_t = dyns;
 };
 
 using dispatch_table_function_t = void (*)();
@@ -1792,8 +1795,10 @@ inline auto unerase_cast_if(Any const& o) {
 template <typename VTable, typename Concrete>
 VTable* v_table_instance_inline() {
   static VTable v_table{std::in_place_type<Concrete>};
-  [[maybe_unused]] static auto __ =
-      anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
+  if constexpr (std::same_as<typename VTable::dispatch_t, rtti>) {
+    [[maybe_unused]] static auto __ =
+        anyxx::get_meta_data<Concrete>().register_v_table(&v_table);
+  }
   return &v_table;
 }
 
@@ -1854,23 +1859,28 @@ struct v_table_ptr_access : Base {
     self.Base::template init_v_table<Concrete>();
   }
 };
-template <typename VTable, template <typename...> typename Base>
-struct derive_from<rtti, VTable, Base> {
+template <typename Dispatch, typename VTable,
+          template <typename...> typename Base>
+  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+struct derive_from<Dispatch, VTable, Base> {
   template <typename... Args>
   using type = v_table_ptr_access<VTable, Base<Args...>>;
 };
-template <typename VTable>
-struct derive_from<rtti, VTable> {
+template <typename Dispatch, typename VTable>
+  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+struct derive_from<Dispatch, VTable> {
   template <typename... Args>
   using type = v_table_ptr_access<VTable, any_base<Args...>>;
 };
-template <template <typename...> typename BaseVTable>
-struct derive_v_table_from<rtti, BaseVTable> {
+template <typename Dispatch, template <typename...> typename BaseVTable>
+  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+struct derive_v_table_from<Dispatch, BaseVTable> {
   template <typename... Args>
   using type = BaseVTable<Args...>;
 };
-template <>
-struct derive_v_table_from<rtti> {
+template <typename Dispatch>
+  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+struct derive_v_table_from<Dispatch> {
   template <typename... Args>
   using type = any_base_v_table<Args...>;
 };
