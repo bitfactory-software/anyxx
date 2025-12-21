@@ -51,7 +51,7 @@ ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)),
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
              (ANY_METHOD(any_to_string<>, at, (KEY const&), const)),
-             const_observer, anyxx::dyns)
+             anyxx::const_observer, anyxx::dyns)
 
 ANY_MODEL_MAP((int), any_to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
