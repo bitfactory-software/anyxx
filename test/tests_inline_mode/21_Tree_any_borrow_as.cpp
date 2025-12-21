@@ -28,7 +28,7 @@ ANY_SINGELTON_DECLARE(, deserialize_factory,
 any_serializeable<unique> deserialize(std::istream& archive) {
   std::string type;
   archive >> type;
-  return deserialize_factory.construct(type, archive);
+  return deserialize_factory.construct<anyxx::unique>(type, archive);
 }
 any_value<unique> deserialize_any_node(std::istream& archive) {
   return move_to<any_value<unique>>(deserialize(archive));

@@ -30,10 +30,10 @@ namespace {
 namespace example {
 
 TEST_CASE("factory1") {
-  auto asteroid_thing = thing_factory.construct("asteroid");
+  auto asteroid_thing = thing_factory.construct<unique>("asteroid");
   CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
   CHECK(get_meta_data(asteroid_thing).get_type_info() == typeid_of<asteroid>());
-  auto spaceship_thing = thing_factory.construct("spaceship");
+  auto spaceship_thing = thing_factory.construct<unique>("spaceship");
   CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
   CHECK(get_meta_data(spaceship_thing).get_type_info() ==
         typeid_of<spaceship>());
@@ -45,7 +45,7 @@ TEST_CASE("factory2") {
   while (archive) {
     std::string key;
     archive >> key;
-    if (!key.empty()) things.emplace_back(thing_factory.construct(key));
+    if (!key.empty()) things.emplace_back(thing_factory.construct<unique>(key));
   }
   CHECK(get_meta_data(things[0]).get_type_info() == typeid_of<asteroid>());
   CHECK(get_meta_data(things[1]).get_type_info() == typeid_of<spaceship>());

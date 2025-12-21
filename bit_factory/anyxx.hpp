@@ -2339,24 +2339,45 @@ class unkonwn_factory_key_error : public error {
 
 template <template <typename> typename Any, typename Key, typename... Args>
 class factory {
-  using constructor_t = std::function<Any<unique>(Args...)>;
-  std::map<Key, constructor_t> function_map_;
+  using unique_constructor_t = std::function<Any<unique>(Args...)>;
+  using shared_const_constructor_t = std::function<Any<shared_const>(Args...)>;
+  std::map<Key, unique_constructor_t> unique_factory_map_;
+  std::map<Key, shared_const_constructor_t> shared_factory_map_;
 
- public:
-  auto register_(Key const& key, auto const& construct) {
-    using type = std::invoke_result_t<decltype(construct), Args...>;
-    function_map_[key] = [construct](Args... args) -> Any<unique> {
-      return Any<unique>{std::in_place, construct(std::forward<Args>(args)...)};
+  template <is_erased_data ErasedData>
+  auto register_impl(auto& map, Key key, auto const& construct) {
+    map[key] = [construct](Args... args) -> Any<ErasedData> {
+      return Any<ErasedData>{std::in_place,
+                             construct(std::forward<Args>(args)...)};
     };
-    return nullptr;
-  }
-  Any<unique> construct(auto key, Args&&... args) {
-    if (auto found = function_map_.find(key); found != function_map_.end())
+  };
+
+  template <is_erased_data ErasedData>
+  auto construct_impl(auto const& map, Key key, Args... args) {
+    if (auto found = map.find(key); found != map.end())
       return found->second(std::forward<Args>(args)...);
     if constexpr (std::same_as<Key, std::string>) {
       throw unkonwn_factory_key_error{key};
     } else {
       throw unkonwn_factory_key_error{std::to_string(key)};
+    }
+  };
+
+ public:
+  auto register_(Key const& key, auto const& construct) {
+    register_impl<unique>(unique_factory_map_, key, construct);
+    register_impl<shared_const>(shared_factory_map_, key, construct);
+    return nullptr;
+  }
+  template <is_erased_data ErasedData>
+  auto construct(auto key, Args&&... args) {
+    if constexpr (std::same_as<ErasedData, unique>) {
+      return construct_impl<ErasedData>(unique_factory_map_, key,
+                                        std::forward<Args>(args)...);
+    } else {
+      static_assert(std::same_as<ErasedData, shared_const>);
+      return construct_impl<ErasedData>(shared_factory_map_, key,
+                                        std::forward<Args>(args)...);
     }
   };
 };
