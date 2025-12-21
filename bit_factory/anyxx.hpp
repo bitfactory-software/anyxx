@@ -2344,7 +2344,10 @@ class factory {
 
  public:
   auto register_(Key const& key, auto const& construct) {
-    function_map_[key] = construct;
+    using type = std::invoke_result_t<decltype(construct), Args...>;
+    function_map_[key] = [construct](Args... args) -> Any<unique> {
+      return Any<unique>{std::in_place, construct(std::forward<Args>(args)...)};
+    };
     return nullptr;
   }
   Any<unique> construct(auto key, Args&&... args) {

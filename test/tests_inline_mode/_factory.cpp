@@ -19,10 +19,10 @@ class spaceship {};
 ANY_SINGELTON_DECLARE(, thing_factory, factory<any_thing, std::string>);
 
 auto __ = thing_factory.register_("asteroid", []() {
-  return any_thing<unique>{std::make_unique<asteroid>()};
+  return asteroid{};
 });
 auto __ = thing_factory.register_("spaceship", []() {
-  return any_thing<unique>{std::make_unique<spaceship>()};
+  return spaceship{};
 });
 }}  // namespace
 
@@ -59,7 +59,7 @@ ANY_SINGELTON_DECLARE(, any_to_string_factory,
                       factory<any_to_string, std::string>);
 
 auto __ = any_to_string_factory.register_(
-    "int", []() { return any_to_string<unique>{std::in_place, 42}; });
+    "int", []() { return 42; });
 
 static_assert(std::is_constructible_v<any_to_string<shared_const>,
                                       any_to_string<unique>&&>);
