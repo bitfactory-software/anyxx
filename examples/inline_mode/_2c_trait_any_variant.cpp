@@ -64,27 +64,40 @@ TEST_CASE("example 2ca trait any variant") {
   CHECK(vv_custom_43.to_string() == "{43}");
 }
 
-#define VANY_DISPACH_DECLARE(name, vany, signature, static_dispatch) \
-  constexpr static inline auto name##_static_dispatch =              \
-      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};      \
-                                                                     \
-  using name##_vany = vany;                                          \
-  using name##_dynamic_dispatch =                                    \
-      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;             \
-                                                                     \
-  extern anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,  \
-                              name##_static_dispatch>                \
-      name;
+#define ANY_SINGELTON_DECLARE(export_, name, ...) \
+  using name##_t = __VA_ARGS__;                   \
+  export_ extern name##_t& get_##name();          \
+  static inline name##_t& name = get_##name();
 
-#define VANY_DISPACH(name)                                   \
-  anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch, \
-                       name##_static_dispatch>               \
-      name;
+#define ANY_SINGELTON(namespace_, name, type)      \
+  namespace_::name##_t& namespace_::get_##name() { \
+    static name##_t dispatch;                      \
+    return dispatch;                               \
+  };
+
+#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
+  constexpr static inline auto name##_static_dispatch =                       \
+      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \
+                                                                              \
+  using name##_vany = vany;                                                   \
+  using name##_dynamic_dispatch =                                             \
+      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                      \
+                                                                              \
+  using name##_t = anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch, \
+                                        name##_static_dispatch>;              \
+  extern name##_t& get_##name();                                              \
+  static inline name##_t& name = get_##name();
+
+#define VANY_DISPACH(namespace_, name)             \
+  namespace_::name##_t& namespace_::get_##name() { \
+    static name##_t dispatch;                      \
+    return dispatch;                               \
+  };
 
 namespace example_2c {
 
 VANY_DISPACH_DECLARE(
-    vany_stream, vany_value,
+    , vany_stream, vany_value,
     (void(anyxx::virtual_<any_value<anyxx::shared_const>>, std::ostream&)),
     ([](const std::string& s,
         std::ostream& os) { os << "String: " << s << ", "; },
@@ -98,12 +111,12 @@ VANY_DISPACH_DECLARE(
 
 namespace example_2c {
 
-VANY_DISPACH(vany_stream)
-
 auto __ = vany_stream.define<custom>(
     [](const custom& c, std::ostream& os) { os << "Custom: " << c.answer; });
 
 }  // namespace example_2c
+
+VANY_DISPACH(example_2c, vany_stream)
 
 TEST_CASE("example 2cb trait any variant single open dispatch") {
   using namespace example_2c;
@@ -132,26 +145,23 @@ struct compare_equal_types {
   }
 };
 
-constexpr static inline auto vany_compare_static_dispatch = anyxx::overloads{
-    compare_equal_types{},
-    [](bool lhs, std::integral auto rhs) -> std::partial_ordering {
-      return lhs <=> static_cast<bool>(rhs);
-    },
-    [](std::integral auto lhs, bool rhs) -> std::partial_ordering {
-      return static_cast<bool>(lhs) <=> rhs;
-    },
-    [](bool lhs, bool rhs) -> std::partial_ordering { return lhs <=> rhs; },
-    [](std::integral auto lhs,
-       std::integral auto rhs) -> std::partial_ordering { return lhs <=> rhs; },
-    [](std::floating_point auto lhs, std::floating_point auto rhs)
-        -> std::partial_ordering { return lhs <=> rhs; }};
-
-anyxx::dispatch_vany<vany_value,
-                     anyxx::dispatch<std::partial_ordering(
-                         anyxx::virtual_<any_value<anyxx::shared_const>>,
-                         anyxx::virtual_<any_value<anyxx::shared_const>>)>,
-                     vany_compare_static_dispatch>
-    vany_compare;
+VANY_DISPACH_DECLARE(
+    , vany_compare, vany_value,
+    (std::partial_ordering(anyxx::virtual_<any_value<anyxx::shared_const>>,
+                           anyxx::virtual_<any_value<anyxx::shared_const>>)),
+    (
+        compare_equal_types{},
+        [](bool lhs, std::integral auto rhs) -> std::partial_ordering {
+          return lhs <=> static_cast<bool>(rhs);
+        },
+        [](std::integral auto lhs, bool rhs) -> std::partial_ordering {
+          return static_cast<bool>(lhs) <=> rhs;
+        },
+        [](bool lhs, bool rhs) -> std::partial_ordering { return lhs <=> rhs; },
+        [](std::integral auto lhs, std::integral auto rhs)
+            -> std::partial_ordering { return lhs <=> rhs; },
+        [](std::floating_point auto lhs, std::floating_point auto rhs)
+            -> std::partial_ordering { return lhs <=> rhs; }));
 
 auto operator<=>(const vany_value& lhs, const vany_value& rhs) {
   return vany_compare(lhs, rhs);
@@ -192,7 +202,10 @@ auto __ = vany_compare.define<concrete_value, concrete_value>(
       return anyxx::trait_as<any_value>(lhs).to_string() <=>
              anyxx::trait_as<any_value>(rhs).to_string();
     });
+
 }  // namespace example_2c
+
+VANY_DISPACH(example_2c, vany_compare)
 
 TEST_CASE("example 2cc trait any variant double dispatch") {
   using namespace example_2c;
