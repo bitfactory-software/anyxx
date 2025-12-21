@@ -8,6 +8,7 @@ using namespace anyxx;
 using namespace std::literals;
 
 namespace {
+namespace example {
 
 ANY(any_thing, )
 
@@ -23,9 +24,10 @@ auto __ = thing_factory.register_("asteroid", []() {
 auto __ = thing_factory.register_("spaceship", []() {
   return any_thing<unique>{std::make_unique<spaceship>()};
 });
-};  // namespace
+}}  // namespace
 
 namespace {
+namespace example {
 
 TEST_CASE("factory1") {
   auto asteroid_thing = thing_factory.construct("asteroid");
@@ -63,7 +65,7 @@ static_assert(std::is_constructible_v<any_to_string<shared_const>,
                                       any_to_string<unique>&&>);
 static_assert(!std::is_constructible_v<any_to_string<shared_const, dynm>,
                                        any_to_string<unique>&&>);
-}  // namespace
+}}  // namespace
 
-ANY_SINGELTON(, thing_factory);
-ANY_SINGELTON(, any_to_string_factory);
+ANY_SINGELTON(example, thing_factory);
+ANY_SINGELTON(example, any_to_string_factory);
