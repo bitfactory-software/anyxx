@@ -21,7 +21,8 @@ std::ostream& operator<<(std::ostream& s,
   any.serialize(s);
   return s;
 }
-factory<any_serializeable, std::string, std::istream&> deserialize_factory;
+ANY_SINGELTON_DECLARE(, deserialize_factory,
+                      factory<any_serializeable, std::string, std::istream&>);
 
 any_serializeable<unique> deserialize(std::istream& archive) {
   std::string type;
@@ -48,7 +49,7 @@ void serialize_binary(auto const& self, std::string_view key,
 }
 
 struct Plus {
-  [[nodiscard]]int value() const { return left.value() + right.value(); }
+  [[nodiscard]] int value() const { return left.value() + right.value(); }
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Plus ", archive);
   }
@@ -57,7 +58,7 @@ struct Plus {
 auto __ = register_deserialize_binary<Plus>("Plus");
 
 struct Times {
-  [[nodiscard]]int value() const { return left.value() * right.value(); }
+  [[nodiscard]] int value() const { return left.value() * right.value(); }
   void serialize(std::ostream& archive) const {
     serialize_binary(*this, "Times ", archive);
   }
@@ -66,7 +67,7 @@ struct Times {
 auto __ = register_deserialize_binary<Times>("Times");
 
 struct Integer {
-  [[nodiscard]]int value() const { return int_; }
+  [[nodiscard]] int value() const { return int_; }
   void serialize(std::ostream& archive) const {
     archive << "Integer " << int_ << " ";
   }
@@ -82,6 +83,8 @@ auto __ = deserialize_factory.register_(
 }  // namespace _21_Tree_any_borrow_as
 
 using namespace _21_Tree_any_borrow_as;
+
+ANY_SINGELTON(_21_Tree_any_borrow_as, deserialize_factory)
 
 ANY_REGISTER_MODEL(Plus, any_value);
 ANY_REGISTER_MODEL(Plus, any_serializeable);

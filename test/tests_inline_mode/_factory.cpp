@@ -15,7 +15,7 @@ class asteroid {};
 
 class spaceship {};
 
-factory<any_thing, std::string> thing_factory;
+ANY_SINGELTON_DECLARE(, thing_factory, factory<any_thing, std::string>);
 
 auto __ = thing_factory.register_("asteroid", []() {
   return any_thing<unique>{std::make_unique<asteroid>()};
@@ -53,7 +53,8 @@ ANY(any_to_string,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                           [x]() { return std::format("{}", x); })))
 
-factory<any_to_string, std::string> any_to_string_factory;
+ANY_SINGELTON_DECLARE(, any_to_string_factory,
+                      factory<any_to_string, std::string>);
 
 auto __ = any_to_string_factory.register_(
     "int", []() { return any_to_string<unique>{std::in_place, 42}; });
@@ -63,3 +64,6 @@ static_assert(std::is_constructible_v<any_to_string<shared_const>,
 static_assert(!std::is_constructible_v<any_to_string<shared_const, dynm>,
                                        any_to_string<unique>&&>);
 }  // namespace
+
+ANY_SINGELTON(, thing_factory);
+ANY_SINGELTON(, any_to_string_factory);
