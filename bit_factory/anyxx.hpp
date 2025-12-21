@@ -287,7 +287,8 @@
     any_template_params, model_map_template_params, tpl3, tpl4,                \
     v_table_template_params, static_dispatch_template_params,                  \
     traitet_template_params, v_model_map_template_params, n, BASE,             \
-    base_template_params, l, v_table_functions)                                \
+    base_template_params, base_template_params_with_erased_data, l,            \
+    v_table_functions)                                                         \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
                 anyxx::rtti>                                                   \
@@ -385,8 +386,8 @@
             Dispatch,                                                          \
             n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>  \
                 _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::                      \
-            template type<ErasedData,                                          \
-                          _detail_ANYXX_TEMPLATE_ARGS(base_template_params)> { \
+            template type<_detail_ANYXX_TEMPLATE_ARGS(                         \
+                base_template_params_with_erased_data)> {                      \
     template <typename... Args>                                                \
     using any_template = n<Args...>;                                           \
     using erased_data_t = ErasedData;                                          \
@@ -396,8 +397,8 @@
         Dispatch,                                                              \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>      \
             _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::                          \
-        template type<ErasedData,                                              \
-                      _detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;      \
+        template type<_detail_ANYXX_TEMPLATE_ARGS(                             \
+            base_template_params_with_erased_data)>;                           \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
@@ -472,9 +473,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #define __detail_ANYXX_ANY_(t, n, BASE, l, v_table_functions)              \
-  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t), (T), (Concrete), (Other),    \
-                    (Dispatch), (StaticDispatchType), (anyxx::traited<T>), \
-                    (V), n, BASE, (Dispatch), l, v_table_functions)
+  ANY_META_FUNCTION(                                                       \
+      _detail_REMOVE_PARENS(t), (T), (Concrete), (Other), (Dispatch),      \
+      (StaticDispatchType), (anyxx::traited<T>), (V), n, BASE, (Dispatch), \
+      _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l, v_table_functions)
 
 #define ANY_(n, BASE, l) \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l, l)
@@ -485,15 +487,19 @@
   ANY_META_FUNCTION(                                                           \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
-          __detail_ANYXX_ADD_HEAD((ErasedData), _detail_REMOVE_PARENS(t))),    \
+          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_TAIL((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
-      __detail_ANYXX_ADD_HEAD((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
-      __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, BASE,         \
-      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), l, l)
+      __detail_ANYXX_ADD_TAIL((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
+      __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)), n, BASE,         \
+      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)),          \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (Dispatch),                                                          \
+          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),    \
+      l, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
@@ -1964,7 +1970,8 @@ struct dynm_v_table_access : Base {
       : Base(t, std::forward<Args>(args)...) {}
 
   template <typename OtherBase>
-  explicit dynm_v_table_access(dynm_v_table_access<VTable, OtherBase> const& other)
+  explicit dynm_v_table_access(
+      dynm_v_table_access<VTable, OtherBase> const& other)
       : Base(other), v_table_(other.v_table_) {}
   template <typename Other>
   explicit dynm_v_table_access(Other&& other)

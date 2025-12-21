@@ -15,7 +15,7 @@ namespace {
 
 template <typename KEY, typename VALUE>
 void test_any_map_template(
-    test::component_base::any_map<anyxx::const_observer, KEY, VALUE> map_i) {
+    test::component_base::any_map<KEY, VALUE, anyxx::const_observer> map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -33,7 +33,8 @@ namespace template_test {
 
 ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)))
 
-using any_to_string_const_observer_dyns = any_to_string<anyxx::const_observer, anyxx::dyns>;
+using any_to_string_const_observer_dyns =
+    any_to_string<anyxx::const_observer, anyxx::dyns>;
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
              (ANY_METHOD(any_to_string_const_observer_dyns, at, (KEY const&),
@@ -62,49 +63,51 @@ ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 ANY_TEMPLATE_MODEL((std::map<std::string, int>), test::component_base, any_map,
                    ((std::string), (int)))
 
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), test::component_base::any_map,
-                       ((std::string), (int))) {
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>),
+                       test::component_base::any_map, ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);
   };
 };
 
 using KEY1 = test::component_base::any_recursive_map<
-    anyxx::const_observer, std::string,
-    test::component_base::any_mutable_map<anyxx::const_observer, int, double>>;
+    std::string,
+    test::component_base::any_mutable_map<int, double, anyxx::const_observer>,
+    anyxx::const_observer>;
 ANY_TEMPLATE_MODEL(
     (std::map<int, std::map<std::string, std::map<int, double>>>),
     test::component_base, any_recursive_map, ((int), (KEY1)))
 
 using KEY2 = test::component_base::any_recursive_map<
-    anyxx::const_observer, std::string,
-    test::component_base::any_map<anyxx::const_observer, int, double>>;
+    std::string,
+    test::component_base::any_map<int, double, anyxx::const_observer>,
+    anyxx::const_observer>;
 ANY_TEMPLATE_MODEL(
     (std::map<int, std::map<std::string, std::map<int, double>>>),
     test::component_base, any_recursive_map, ((int), (KEY2)))
 
 using KEY3 = test::component_base::any_mutable_recursive_map<
-    anyxx::mutable_observer, std::string,
-    test::component_base::any_mutable_map<anyxx::mutable_observer, int,
-                                          double>>;
+    std::string,
+    test::component_base::any_mutable_map<int, double, anyxx::mutable_observer>,
+    anyxx::mutable_observer>;
 
 ANY_TEMPLATE_MODEL(
     (std::map<int, std::map<std::string, std::map<int, double>>>),
     test::component_base, any_mutable_recursive_map, ((int), (KEY3)))
 
-using KEY4 = test::component_base::any_map<anyxx::const_observer, int, double>;
+using KEY4 = test::component_base::any_map<int, double, anyxx::const_observer>;
 ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
                    test::component_base, any_recursive_map,
                    ((std::string), (KEY4)))
 
 using KEY5 =
-    test::component_base::any_mutable_map<anyxx::const_observer, int, double>;
+    test::component_base::any_mutable_map<int, double, anyxx::const_observer>;
 ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
                    test::component_base, any_recursive_map,
                    ((std::string), (KEY5)))
 
 using KEY6 =
-    test::component_base::any_mutable_map<anyxx::mutable_observer, int, double>;
+    test::component_base::any_mutable_map<int, double, anyxx::mutable_observer>;
 ANY_TEMPLATE_MODEL((std::map<std::string, std::map<int, double>>),
                    test::component_base, any_mutable_recursive_map,
                    ((std::string), (KEY6)))
@@ -117,7 +120,7 @@ TEST_CASE("any template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_lambda =
-      [](any_map<const_observer, std::string, int> map_i) {
+      [](any_map<std::string, int, const_observer> map_i) {
         REQUIRE(map_i.size() == 2);
         REQUIRE(map_i.at("one") == 1);
         REQUIRE(map_i.at("two") == 2);
@@ -127,7 +130,7 @@ TEST_CASE("any template test") {
   test_any_map_template<std::string, int>(map_string_to_int);
 
   auto test_any_map_to_string_lambda =
-      [](any_map_to_string<const_observer, std::string, anyxx::dyns> map_i) {
+      [](any_map_to_string<std::string, const_observer, anyxx::dyns> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
@@ -142,7 +145,7 @@ TEST_CASE("any template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_to_string_lambda =
-      [](any_map_to_string<const_observer, std::string, anyxx::dyns> map_i) {
+      [](any_map_to_string<std::string, const_observer, anyxx::dyns> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
@@ -160,9 +163,10 @@ TEST_CASE("any template test3") {
 
   auto test_map_lambda =
       [](any_recursive_map<
-          const_observer, int,
-          any_recursive_map<const_observer, std::string,
-                            any_map<const_observer, int, double>>>
+          int,
+          any_recursive_map<std::string, any_map<int, double, const_observer>,
+                            const_observer>,
+          const_observer>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -175,10 +179,11 @@ TEST_CASE("any template test3") {
 
   auto test_map_lambda_mutate =
       [](any_mutable_recursive_map<
-          mutable_observer, int,
+          int,
           any_mutable_recursive_map<
-              mutable_observer, std::string,
-              any_mutable_map<mutable_observer, int, double>>>
+              std::string, any_mutable_map<int, double, mutable_observer>,
+              mutable_observer>,
+          mutable_observer>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -199,6 +204,6 @@ TEST_CASE("any template test4") {
 
   std::map<int, double> map = {{3, 3.333}, {6, 4.333}};
 
-  any_map<const_observer, int, double> any_mutable_map{map};
+  any_map<int, double, const_observer> any_mutable_map{map};
   REQUIRE(any_mutable_map.at(3) == 3.333);
 }
