@@ -69,7 +69,7 @@ TEST_CASE("example 2ca trait any variant") {
   export_ extern name##_t& get_##name();          \
   static inline name##_t& name = get_##name();
 
-#define ANY_SINGELTON(namespace_, name, type)      \
+#define ANY_SINGELTON(namespace_, name)            \
   namespace_::name##_t& namespace_::get_##name() { \
     static name##_t dispatch;                      \
     return dispatch;                               \
@@ -83,16 +83,12 @@ TEST_CASE("example 2ca trait any variant") {
   using name##_dynamic_dispatch =                                             \
       anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                      \
                                                                               \
-  using name##_t = anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch, \
-                                        name##_static_dispatch>;              \
-  extern name##_t& get_##name();                                              \
-  static inline name##_t& name = get_##name();
+  ANY_SINGELTON_DECLARE(                                                      \
+      , name,                                                                 \
+      anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
+                           name##_static_dispatch>)
 
-#define VANY_DISPACH(namespace_, name)             \
-  namespace_::name##_t& namespace_::get_##name() { \
-    static name##_t dispatch;                      \
-    return dispatch;                               \
-  };
+#define VANY_DISPACH(namespace_, name) ANY_SINGELTON(namespace_, name);
 
 namespace example_2c {
 
