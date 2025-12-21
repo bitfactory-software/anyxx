@@ -29,9 +29,10 @@ struct X;
 
 namespace test::component_base {
 
-ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)))
-ANY(get_value_i, (ANY_METHOD(double, get_value, (), const)))
-ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double), )))
+ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)), , anyxx::rtti)
+ANY(get_value_i, (ANY_METHOD(double, get_value, (), const)), , anyxx::rtti)
+ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double), )), ,
+     anyxx::rtti)
 
 COMPONENT_BASE_EXPORT
 to_string_i<anyxx::const_observer> get_to_string_i_co();

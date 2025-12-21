@@ -12,15 +12,15 @@ struct position {
   float x, y;
 };
 
-ANY(any_drawable, (ANY_METHOD(void, draw, (position), const)))
+ANY(any_drawable, (ANY_METHOD(void, draw, (position), const)), , )
 
 ANY_(any_shape, any_drawable,
      (ANY_METHOD(int, count_sides, (), const),
       ANY_METHOD(double, area, (), const),
-      ANY_METHOD(double, perimeter, (), const)))
+      ANY_METHOD(double, perimeter, (), const)), , )
 
 ANY_(any_callable_shape, any_shape,
-     (ANY_OP(std::string, (), (std::string const&), const)))
+     (ANY_OP(std::string, (), (std::string const&), const)), , )
 
 struct circle {
   double radius = 10;

@@ -62,12 +62,12 @@ struct regular_polygon {
   [[nodiscard]] double area() const { return (perimeter() * apothem()) / 2; }
 };
 
-ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&, position), const)))
+ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&, position), const)), , )
 
 ANY_(any_shape, any_drawable,
      (ANY_METHOD(int, count_sides, (), const),
       ANY_METHOD(double, area, (), const),
-      ANY_METHOD(double, perimeter, (), const)))
+      ANY_METHOD(double, perimeter, (), const)), , )
 
 ANY_MODEL_MAP((std::string), any_drawable) {
   auto draw(std::string const& x, std::ostream& os, position p) const {

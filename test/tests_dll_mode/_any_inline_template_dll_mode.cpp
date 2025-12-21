@@ -7,19 +7,23 @@ namespace {
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
              (ANY_METHOD(VALUE const&, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)))
+              ANY_METHOD(std::size_t, size, (), const)),
+             anyxx::const_observer, anyxx::dyns)
 
 ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, ((KEY), (VALUE)),
               (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
-               ANY_OP(VALUE&, [], (KEY const&), )))
+               ANY_OP(VALUE&, [], (KEY const&), )),
+              anyxx::mutable_observer, anyxx::dyns)
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)))
+              ANY_METHOD(std::size_t, size, (), const)),
+             anyxx::const_observer, anyxx::dyns)
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), ),
-              ANY_METHOD(std::size_t, size, (), const)))
+              ANY_METHOD(std::size_t, size, (), const)),
+             anyxx::mutable_observer, anyxx::dynm)
 
 }  // namespace
 
@@ -42,14 +46,12 @@ struct X {
 
 namespace template_test {
 
-ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)))
-
-using any_to_string_const_observer_dyns =
-    any_to_string<anyxx::const_observer, anyxx::dyns>;
+ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)),
+    anyxx::const_observer, anyxx::dyns)
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
-             (ANY_METHOD(any_to_string_const_observer_dyns, at, (KEY const&),
-                         const)))
+             (ANY_METHOD(any_to_string<>, at, (KEY const&), const)),
+             const_observer, anyxx::dyns)
 
 ANY_MODEL_MAP((int), any_to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
@@ -88,7 +90,7 @@ TEST_CASE("any inline template test") {
   test_any_map_template<std::string, int>(map_string_to_int);
 
   auto test_any_map_to_string_lambda =
-      [](any_map_to_string<std::string, const_observer, anyxx::dyns> map_i) {
+      [](any_map_to_string<std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
@@ -102,7 +104,7 @@ TEST_CASE("any inline template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_to_string_lambda =
-      [](any_map_to_string<std::string, const_observer, anyxx::dyns> map_i) {
+      [](any_map_to_string<std::string> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };
@@ -118,12 +120,8 @@ TEST_CASE("any inline template test3") {
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
   auto test_map_lambda =
-      [](any_recursive_map<
-          int,
-          any_recursive_map<std::string,
-                            any_map<int, double, const_observer, anyxx::dyns>,
-                            const_observer, anyxx::dyns>,
-          const_observer, anyxx::dyns>
+      [](any_recursive_map<int,
+                           any_recursive_map<std::string, any_map<int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -137,11 +135,7 @@ TEST_CASE("any inline template test3") {
   auto test_map_lambda_mutate =
       [](any_mutable_recursive_map<
           int,
-          any_mutable_recursive_map<
-              std::string,
-              any_mutable_map<int, double, mutable_observer, anyxx::dynm>,
-              mutable_observer, anyxx::dynm>,
-          mutable_observer, anyxx::dynm>
+          any_mutable_recursive_map<std::string, any_mutable_map<int, double>>>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");
@@ -161,6 +155,6 @@ TEST_CASE("any inline template test4") {
 
   std::map<int, double> map = {{3, 3.333}, {6, 4.333}};
 
-  any_map<int, double, const_observer, anyxx::dyns> any_mutable_map{map};
+  any_map<int, double> any_mutable_map{map};
   REQUIRE(any_mutable_map.at(3) == 3.333);
 }

@@ -10,10 +10,10 @@
 using namespace anyxx;
 
 namespace {
-ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)))
+ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)), , )
 
 ANY(string_to_string_mutable, (ANY_OP(std::string, (), (), const),
-                               ANY_OP(std::string, (), (std::string const&), )))
+                               ANY_OP(std::string, (), (std::string const&), )), , )
 
 }  // namespace
 

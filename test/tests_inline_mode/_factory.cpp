@@ -10,7 +10,7 @@ using namespace std::literals;
 namespace {
 namespace example {
 
-ANY(any_thing, )
+ANY(any_thing, , , )
 
 class asteroid {};
 
@@ -53,7 +53,7 @@ TEST_CASE("factory2") {
 
 ANY(any_to_string,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [x]() { return std::format("{}", x); })))
+                          [x]() { return std::format("{}", x); })), , )
 
 ANY_SINGELTON_DECLARE(, any_to_string_factory,
                       factory<any_to_string, std::string>);

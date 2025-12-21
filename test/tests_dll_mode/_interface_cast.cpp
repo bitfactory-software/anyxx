@@ -13,7 +13,7 @@ using namespace test::component_base;
 
 namespace test::component_base {
 
-ANY(unused_i, (ANY_METHOD(int, fun, (), const)))
+ANY(unused_i, (ANY_METHOD(int, fun, (), const)), const_observer, rtti)
 
 }
 
@@ -33,7 +33,7 @@ TEST_CASE("_interface_cast") {
     std::cout << " i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(to_string_i_co));
 
-    auto queried = borrow_as<unused_i<const_observer>>(to_string_i_co);
+    auto queried = borrow_as<unused_i<>>(to_string_i_co);
     CHECK(!queried.has_value());
     CHECK(std::string(queried.error().to.name()) ==
           std::string(typeid(unused_i_v_table<>).name()));

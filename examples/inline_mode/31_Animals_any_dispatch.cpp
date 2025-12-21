@@ -11,7 +11,7 @@
 
 namespace {
 struct any_creature_has_open_dispatch {};
-ANY(any_creature, (ANY_METHOD(std::type_info const*, name, (), const)))
+ANY(any_creature, (ANY_METHOD(std::type_info const*, name, (), const)), , )
 }  // namespace
 
 namespace {

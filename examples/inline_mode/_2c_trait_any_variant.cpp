@@ -25,7 +25,7 @@ ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                                        std::stringstream ss{std::string{sv},
                                                             std::ios_base::in};
                                        ss >> x;
-                                     })))
+                                     })), , )
 
 using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;

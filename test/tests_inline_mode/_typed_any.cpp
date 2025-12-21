@@ -12,7 +12,7 @@ struct x_t {
 
 namespace typed_any_test {
 ANY(test_i, (ANY_METHOD(std::string, to_string, (), const),
-             ANY_METHOD(void, from_string, (std::string_view), )))
+             ANY_METHOD(void, from_string, (std::string_view), )), , )
 }  // namespace typed_any_test
 
 using namespace typed_any_test;

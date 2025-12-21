@@ -12,7 +12,7 @@ namespace _21_Tree_TE_interface_dispatch {
 
 namespace node {
 struct node_i_has_open_dispatch {};
-ANY(node_i, )
+ANY(node_i, , , )
 using model = node_i<shared_const>;
 };  // namespace node
 

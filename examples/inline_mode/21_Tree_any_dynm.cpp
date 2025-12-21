@@ -10,13 +10,12 @@ using namespace anyxx;
 
 namespace {
 
-ANY(node_i, (ANY_METHOD(int, value, (), const),
+ANY(node, (ANY_METHOD(int, value, (), const),
              ANY_METHOD(std::string, as_forth, (), const),
-             ANY_METHOD(std::string, as_lisp, (), const)))
-using node = node_i<shared_const, anyxx::dynm>;
+             ANY_METHOD(std::string, as_lisp, (), const)), shared_const, dynm)
 
 struct Plus {
-  Plus(node left, node right)
+  Plus(node<> left, node<> right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() + right_.value(); }
   [[nodiscard]] std::string as_forth() const {
@@ -26,11 +25,11 @@ struct Plus {
     return "(plus " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  node left_, right_;
+  node<> left_, right_;
 };
 
 struct Times {
-  Times(node left, node right)
+  Times(node<> left, node<> right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() * right_.value(); }
   [[nodiscard]] std::string as_forth() const {
@@ -40,7 +39,7 @@ struct Times {
     return "(times " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  node left_, right_;
+  node<> left_, right_;
 };
 
 struct Integer {
@@ -54,7 +53,7 @@ struct Integer {
 
 template <typename NODE, typename... ARGS>
 [[nodiscard]] auto make_node(ARGS&&... args) {
-  return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
+  return node<>{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
 }
 
 }  // namespace

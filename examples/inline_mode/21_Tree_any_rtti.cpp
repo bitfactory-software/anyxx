@@ -13,7 +13,7 @@ namespace {
 
 ANY(node_i, (ANY_METHOD(int, value, (), const),
              ANY_METHOD(std::string, as_forth, (), const),
-             ANY_METHOD(std::string, as_lisp, (), const)))
+             ANY_METHOD(std::string, as_lisp, (), const)), , )
 
 using node = node_i<shared_const>;
 

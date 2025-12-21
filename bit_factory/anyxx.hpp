@@ -479,20 +479,27 @@
       (anyxx::traited<T>), (V), n, BASE, (Dispatch),                           \
       _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l, v_table_functions)
 
-#define ANY_(n, BASE, l)                          \
-  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), \
-                      ((ErasedData), (Dispatch = anyxx::rtti)), n, BASE, l, l)
+#define ANY_(n, BASE, l, erased_data_default, dispatch_default)              \
+  __detail_ANYXX_ANY_(                                                       \
+      ((ErasedData), (Dispatch)),                                            \
+      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type), \
+       (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type)), \
+      n, BASE, l, l)
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
-#define ANY_TEMPLATE_(t, n, BASE, bt, l)                                       \
+#define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default,                  \
+                      dispatch_default)                                        \
   ANY_META_FUNCTION(                                                           \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (Dispatch = anyxx::rtti),                                            \
-          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
+          (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type), \
+          __detail_ANYXX_ADD_TAIL(                                             \
+              (ErasedData =                                                    \
+                   anyxx::default_erased_data<erased_data_default>::type),     \
+              _detail_REMOVE_PARENS(t))),                                      \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
@@ -506,7 +513,8 @@
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),   \
       l, l)
 
-#define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
+#define ANY_TEMPLATE(t, n, l, erased_data_default, dispatch_default) \
+  ANY_TEMPLATE_(t, n, , (), l, erased_data_default, dispatch_default)
 
 #define TRAIT_(n, BASE, l)                        \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), \
@@ -619,14 +627,23 @@ class type_mismatch_error : public error {
   using error::error;
 };
 
-struct dynamic_member_dispatch {};
+struct member_dispatch {};
+struct dynamic_member_dispatch : member_dispatch {};
 struct v_table_ptr_member_dispatch : dynamic_member_dispatch {};
 struct rtti : v_table_ptr_member_dispatch {};
 struct dyns : v_table_ptr_member_dispatch {};
 struct dynm : dynamic_member_dispatch {};
-struct static_member_dispatch {};
+struct static_member_dispatch : member_dispatch {};
 struct trait : static_member_dispatch {};
 struct vany_dispatch : static_member_dispatch {};
+
+template <typename Dispatch>
+concept is_member_dispatch = std::derived_from<Dispatch, member_dispatch>;
+static_assert(is_member_dispatch<rtti>);
+static_assert(is_member_dispatch<dyns>);
+static_assert(is_member_dispatch<dynm>);
+static_assert(is_member_dispatch<trait>);
+static_assert(is_member_dispatch<vany_dispatch>);
 
 template <typename T>
 struct missing_trait_error {
@@ -1901,7 +1918,31 @@ auto query_v_table(any_base_v_table<>* from) {
 }
 
 // --------------------------------------------------------------------------------
+// any customization traits
+
+template <bool is_in_dll_mode>
+struct member_dispatch_default;
+template <>
+struct member_dispatch_default<true> {
+  using type = dyns;
+};
+template <>
+struct member_dispatch_default<false> {
+  using type = rtti;
+};
+template <is_erased_data ErasedData = shared_const>
+struct default_erased_data {
+  using type = ErasedData;
+};
+template <is_member_dispatch Dispatch =
+              member_dispatch_default<is_in_dll_mode>::type>
+struct default_member_dispatch {
+  using type = Dispatch;
+};
+
+// --------------------------------------------------------------------------------
 // any customization points
+
 template <typename Dispatch, typename Self,
           template <typename...> typename... Base>
 struct derive_from;
