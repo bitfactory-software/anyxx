@@ -284,14 +284,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 #define ANY_META_FUNCTION(                                                     \
-    any_template_params, model_map_template_params, tpl3, tpl4,                \
-    v_table_template_params, static_dispatch_template_params,                  \
-    traitet_template_params, v_model_map_template_params, n, BASE,             \
-    base_template_params, base_template_params_with_erased_data, l,            \
-    v_table_functions)                                                         \
+    any_template_params, any_template_params_with_defaults,                    \
+    model_map_template_params, tpl3, tpl4, v_table_template_params,            \
+    static_dispatch_template_params, traitet_template_params,                  \
+    v_model_map_template_params, n, BASE, base_template_params,                \
+    base_template_params_with_erased_data, l, v_table_functions)               \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params) =           \
-                anyxx::rtti>                                                   \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
+      any_template_params_with_defaults)>                                      \
   struct n;                                                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
@@ -472,14 +472,16 @@
   };
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_(t, n, BASE, l, v_table_functions)              \
-  ANY_META_FUNCTION(                                                       \
-      _detail_REMOVE_PARENS(t), (T), (Concrete), (Other), (Dispatch),      \
-      (StaticDispatchType), (anyxx::traited<T>), (V), n, BASE, (Dispatch), \
+#define __detail_ANYXX_ANY_(t, t_with_defaults, n, BASE, l, v_table_functions) \
+  ANY_META_FUNCTION(                                                           \
+      _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
+      (Concrete), (Other), (Dispatch), (StaticDispatchType),                   \
+      (anyxx::traited<T>), (V), n, BASE, (Dispatch),                           \
       _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l, v_table_functions)
 
-#define ANY_(n, BASE, l) \
-  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l, l)
+#define ANY_(n, BASE, l)                          \
+  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), \
+                      ((ErasedData), (Dispatch = anyxx::rtti)), n, BASE, l, l)
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
@@ -487,6 +489,9 @@
   ANY_META_FUNCTION(                                                           \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
+          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (Dispatch = anyxx::rtti),                                            \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
@@ -498,13 +503,14 @@
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)),          \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
-          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),    \
+          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),   \
       l, l)
 
 #define ANY_TEMPLATE(t, n, l) ANY_TEMPLATE_(t, n, , (), l)
 
-#define TRAIT_(n, BASE, l) \
-  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), n, BASE, l, )
+#define TRAIT_(n, BASE, l)                        \
+  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), \
+                      ((ErasedData), (Dispatch = anyxx::trait)), n, BASE, l, )
 
 #define TRAIT(n, ...) TRAIT_(n, , __VA_ARGS__)
 
