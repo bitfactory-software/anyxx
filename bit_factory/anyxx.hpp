@@ -2798,6 +2798,32 @@ class dispatch_vany {
 #define ANY_UNIQUE_NAME ANY_UNIQUE_NAME_
 #define __ ANY_UNIQUE_NAME_
 
+#define ANY_SINGELTON_DECLARE(export_, name, ...) \
+  using name##_t = __VA_ARGS__;                   \
+  export_ extern name##_t& get_##name();          \
+  static inline name##_t& name = get_##name();
+
+#define ANY_SINGELTON(namespace_, name)            \
+  namespace_::name##_t& namespace_::get_##name() { \
+    static name##_t dispatch;                      \
+    return dispatch;                               \
+  };
+
+#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
+  constexpr static inline auto name##_static_dispatch =                       \
+      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \
+                                                                              \
+  using name##_vany = vany;                                                   \
+  using name##_dynamic_dispatch =                                             \
+      anyxx::dispatch<_detail_REMOVE_PARENS(signature)>;                      \
+                                                                              \
+  ANY_SINGELTON_DECLARE(                                                      \
+      , name,                                                                 \
+      anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
+                           name##_static_dispatch>)
+
+#define VANY_DISPACH(namespace_, name) ANY_SINGELTON(namespace_, name);
+
 #ifdef ANY_DLL_MODE
 
 #define ANY_META_CLASS_FWD(export_, ...)                         \
