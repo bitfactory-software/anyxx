@@ -17,10 +17,10 @@
 
 namespace whole_picture::collision {
 
-using happened_dispatch_t = anyxx::dispatch<bool(
-    anyxx::virtual_<architecture::shape<anyxx::const_observer>>,
-    anyxx::virtual_<architecture::shape<anyxx::const_observer>>)>;
-
-extern COLLISION_EXPORT happened_dispatch_t& happened();
+ANY_SINGELTON_DECLARE(
+    COLLISION_EXPORT, happened,
+    anyxx::dispatch<
+        bool(anyxx::virtual_<architecture::shape<anyxx::const_observer>>,
+             anyxx::virtual_<architecture::shape<anyxx::const_observer>>)>);
 
 }  // namespace whole_picture::collision

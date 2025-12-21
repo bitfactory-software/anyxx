@@ -12,62 +12,18 @@ using line = core::shapes::line;
 using circle = core::shapes::circle;
 using picture = core::shapes::picture;
 
-auto __ = collision::happened()
+auto __ = collision::happened
               .define<architecture::shape<anyxx::const_observer>,
                       architecture::shape<anyxx::const_observer>>(
                   [](auto const& lhs, auto const& rhs) {
                     return collision::fallback::intersect(lhs, rhs);
                   });
-auto __ = collision::happened().define<line, line>(
+auto __ = collision::happened.define<line, line>(
     [](auto const& lhs, auto const& rhs) {
       return collision::lines::intersect(lhs, rhs);
     });
-auto __ = collision::happened().define<picture, picture>(
+auto __ = collision::happened.define<picture, picture>(
     [](auto const& lhs, auto const& rhs) {
       return collision::pictures::intersect(lhs, rhs);
     });
 
-// auto __ = collision::happened().define<circle, line>(
-//     [](auto const& lhs, auto const& rhs) {
-//       return collision::happens(lhs, rhs);
-//     });
-// auto __ = collision::happened().define<line, circle>(
-//     [](auto const& lhs, auto const& rhs) {
-//       return collision::happens(rhs, lhs);
-//     });
-// auto __ = collision::happened().define<line, picture>(
-//     [](auto const& lhs, auto const& rhs) {
-//       return collision::happens(lhs, rhs);
-//     });
-// auto __ = collision::happened().define<picture, line>(
-//     [](auto const& lhs, auto const& rhs) {
-//       return collision::happens(rhs, lhs);
-//     });
-//
-// auto __ = collision::happened().define<circle, picture>(
-//     [](auto const& lhs, auto const& rhs) {
-//       return collision::happens(lhs, rhs);
-//     });
-// auto __ = collision::happened().define<picture, circle>(
-//     [](auto const& lhs, auto const& rhs) {
-//       return collision::happens(rhs, lhs);
-//     });
-//
-// bool collision::happens(circle const& lhs, circle const& rhs) {
-//   return fallback::intersect(lhs, rhs);
-// }
-// bool collision::happens(circle const& lhs, line const& rhs) {
-//   return fallback::intersect(lhs, rhs);
-// }
-// bool collision::happens(circle const& lhs, picture const& rhs) {
-//   return fallback::intersect(lhs, rhs);
-// }
-// bool collision::happens(line const& lhs, line const& rhs) {
-//   return lines::intersect(lhs, rhs);
-// }
-// bool collision::happens(line const& lhs, picture const& rhs) {
-//   return fallback::intersect(lhs, rhs);
-// }
-// bool collision::happens(picture const& lhs, picture const& rhs) {
-//   return pictures::intersect(lhs, rhs);
-// }

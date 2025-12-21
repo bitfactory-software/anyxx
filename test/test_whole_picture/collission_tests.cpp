@@ -31,7 +31,7 @@ void draw_scene(std::vector<architecture::shape<const_observer>> const& shapes) 
 }
 
 auto collision_happened(shape<const_observer> const& l, shape<const_observer> const& r) {
-  return collision::happened()(l, r);
+  return collision::happened(l, r);
 }
 
 }  // namespace
