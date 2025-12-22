@@ -221,11 +221,7 @@
                              __VA_OPT__(, ) __VA_OPT__(                        \
                                  _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
               },                                                               \
-              [&](any_t const& any) {                                          \
-                return any.name(                                               \
-                    __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
-              },                                                               \
-              [&](any_t& any) {                                                \
+              [&](any_t const_& any) {                                          \
                 return any.name(                                               \
                     __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
               }},                                                              \
