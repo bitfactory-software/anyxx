@@ -18,13 +18,10 @@ class spaceship {};
 
 ANY_SINGELTON_DECLARE(, thing_factory, factory<any_thing, std::string>);
 
-auto __ = thing_factory.register_("asteroid", []() {
-  return asteroid{};
-});
-auto __ = thing_factory.register_("spaceship", []() {
-  return spaceship{};
-});
-}}  // namespace
+auto __ = thing_factory.register_("asteroid", []() { return asteroid{}; });
+auto __ = thing_factory.register_("spaceship", []() { return spaceship{}; });
+}  // namespace example
+}  // namespace
 
 namespace {
 namespace example {
@@ -53,19 +50,38 @@ TEST_CASE("factory2") {
 
 ANY(any_to_string,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [x]() { return std::format("{}", x); })), , )
+                          [x]() { return std::format("{}", x); })),
+    , )
 
 ANY_SINGELTON_DECLARE(, any_to_string_factory,
                       factory<any_to_string, std::string>);
 
-auto __ = any_to_string_factory.register_(
-    "int", []() { return 42; });
+auto __ = any_to_string_factory.register_("int", []() { return 42; });
 
 static_assert(std::is_constructible_v<any_to_string<shared_const>,
                                       any_to_string<unique>&&>);
 static_assert(!std::is_constructible_v<any_to_string<shared_const, dynm>,
                                        any_to_string<unique>&&>);
-}}  // namespace
+}}
 
 ANY_SINGELTON(example, thing_factory);
 ANY_SINGELTON(example, any_to_string_factory);
+
+namespace {
+namespace example {
+
+
+TEST_CASE("factory3") {
+  struct tag_factory_test;
+  using f_key = key<tag_factory_test>;
+  factory<any_to_string, f_key> f;
+  f_key int_key {"int"};
+  f.register_(int_key, []() { return 42; });
+  auto a1 = f.construct<unique>(int_key);
+  CHECK(a1.to_string() == "42");
+  f_key false_key{"false key"};
+  CHECK_THROWS_AS(f.construct<unique>(false_key), unkonwn_factory_key_error);
+}
+
+}  // namespace example
+}  // namespace

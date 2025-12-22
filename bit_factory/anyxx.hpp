@@ -2336,6 +2336,17 @@ class hook<R(Args...)> {
 class unkonwn_factory_key_error : public error {
   using error::error;
 };
+template <typename Tag>
+struct key {
+  const char* label;
+  friend auto operator<=>(key, key) = default;
+};
+template <typename T>
+struct is_key_impl : std::false_type {};
+template <typename T>
+struct is_key_impl<key<T>> : std::true_type {};
+template <typename T>
+concept is_key = is_key_impl<T>::value;
 
 template <template <typename> typename Any, typename Key, typename... Args>
 class factory {
@@ -2358,6 +2369,8 @@ class factory {
       return found->second(std::forward<Args>(args)...);
     if constexpr (std::same_as<Key, std::string>) {
       throw unkonwn_factory_key_error{key};
+    } else if constexpr (is_key<Key>) {
+      throw unkonwn_factory_key_error{key.label};
     } else {
       throw unkonwn_factory_key_error{std::to_string(key)};
     }
