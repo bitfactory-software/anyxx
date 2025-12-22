@@ -18,14 +18,16 @@ struct custom {
 };
 
 struct any_value_has_open_dispatch {};
-ANY(any_value, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                                     [x]() { return std::format("{}", x); }),
-                ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
-                                     [&x](std::string_view sv) -> void {
-                                       std::stringstream ss{std::string{sv},
-                                                            std::ios_base::in};
-                                       ss >> x;
-                                     })), , )
+ANY(any_value,
+    (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
+                          [x]() { return std::format("{}", x); }),
+     ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
+                          [&x](std::string_view sv) -> void {
+                            std::stringstream ss{std::string{sv},
+                                                 std::ios_base::in};
+                            ss >> std::boolalpha >> x;
+                          })),
+    , )
 
 using vany_value = anyxx::make_vany<any_value, anyxx::shared_const, anyxx::rtti,
                                     bool, int, double, std::string>;
@@ -62,6 +64,10 @@ TEST_CASE("example 2ca trait any variant") {
   CHECK(vany_value{true}.to_string() == "true");
   CHECK(vv_custom_42.to_string() == "{42}");
   CHECK(vv_custom_43.to_string() == "{43}");
+
+  //vany_value b{true};
+  //b.from_string("false");
+  //CHECK(b == false);
 }
 
 namespace example_2c {
@@ -107,31 +113,24 @@ TEST_CASE("example 2cb trait any variant single open dispatch") {
 
 namespace example_2c {
 
-struct compare_equal_types {
-  template <typename T>
-    requires(!anyxx::is_any<T>)
-  constexpr auto operator()(T&& t, T&& u) const -> std::partial_ordering {
-    return std::forward<T>(t) <=> std::forward<T>(u);
-  }
-};
-
 VANY_DISPACH_DECLARE(
     , vany_compare, vany_value,
     (std::partial_ordering(anyxx::virtual_<any_value<anyxx::shared_const>>,
                            anyxx::virtual_<any_value<anyxx::shared_const>>)),
-    (
-        compare_equal_types{},
-        [](bool lhs, std::integral auto rhs) -> std::partial_ordering {
-          return lhs <=> static_cast<bool>(rhs);
-        },
-        [](std::integral auto lhs, bool rhs) -> std::partial_ordering {
-          return static_cast<bool>(lhs) <=> rhs;
-        },
-        [](bool lhs, bool rhs) -> std::partial_ordering { return lhs <=> rhs; },
-        [](std::integral auto lhs, std::integral auto rhs)
-            -> std::partial_ordering { return lhs <=> rhs; },
-        [](std::floating_point auto lhs, std::floating_point auto rhs)
-            -> std::partial_ordering { return lhs <=> rhs; }));
+    ([]<typename T>(T&& t, T&& u) -> std::partial_ordering
+       requires(!anyxx::is_any<T>)
+     { return std::forward<T>(t) <=> std::forward<T>(u); },
+     [](bool lhs, std::integral auto rhs) -> std::partial_ordering {
+       return lhs <=> static_cast<bool>(rhs);
+     },
+     [](std::integral auto lhs, bool rhs) -> std::partial_ordering {
+       return static_cast<bool>(lhs) <=> rhs;
+     },
+     [](bool lhs, bool rhs) -> std::partial_ordering { return lhs <=> rhs; },
+     [](std::integral auto lhs, std::integral auto rhs)
+         -> std::partial_ordering { return lhs <=> rhs; },
+     [](std::floating_point auto lhs, std::floating_point auto rhs)
+         -> std::partial_ordering { return lhs <=> rhs; }));
 
 auto operator<=>(const vany_value& lhs, const vany_value& rhs) {
   return vany_compare(lhs, rhs);
@@ -141,18 +140,6 @@ auto operator==(const vany_value& lhs, const vany_value& rhs) {
 }
 auto operator!=(const vany_value& lhs, const vany_value& rhs) {
   return lhs <=> rhs != std::weak_ordering::equivalent;
-}
-auto operator<(const vany_value& lhs, const vany_value& rhs) {
-  return lhs <=> rhs == std::weak_ordering::less;
-}
-auto operator>=(const vany_value& lhs, const vany_value& rhs) {
-  return lhs <=> rhs != std::weak_ordering::less;
-}
-auto operator>(const vany_value& lhs, const vany_value& rhs) {
-  return lhs <=> rhs == std::weak_ordering::greater;
-}
-auto operator<=(const vany_value& lhs, const vany_value& rhs) {
-  return lhs <=> rhs != std::weak_ordering::greater;
 }
 
 auto __ = vany_compare.define<custom, custom>(
