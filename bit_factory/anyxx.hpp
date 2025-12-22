@@ -2266,7 +2266,7 @@ class hook<R(Args...)> {
  public:
   struct connection_info {
     int id;
-    hook* hook;
+    hook* owner;
   };
   class connection {
     connection_info info_;
@@ -2285,8 +2285,8 @@ class hook<R(Args...)> {
     connection(connection&&) = default;
     connection& operator=(connection&&) = default;
     void close() {
-      if (info_.hook) info_.hook->remove(info_.id);
-      info_.hook = nullptr;
+      if (info_.owner) info_.owner->remove(info_.id);
+      info_.owner = nullptr;
     }
 
     ~connection() { close(); }
