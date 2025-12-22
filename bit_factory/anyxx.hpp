@@ -2268,21 +2268,29 @@ class hook;
 template <typename R, typename... Args>
 class hook<R(Args...)> {
  public:
+  struct connection_info {
+    int id;
+    hook* hook;
+  };
   class connection {
-    int id_;
-    hook* hook_;
+    connection_info info_;
     friend class hook;
 
-    connection(int id, hook* hook) : id_(id), hook_(hook) {}
     connection(connection const&) = delete;
     connection& operator=(connection const&) = delete;
 
    public:
+    connection(connection_info info) : info_(info) {}
+    connection& operator=(connection_info info) {
+      close();
+      info_ = info;
+      return *this;
+    }
     connection(connection&&) = default;
     connection& operator=(connection&&) = default;
     void close() {
-      if (hook_) hook_->remove(id_);
-      hook_ = nullptr;
+      if (info_.hook) info_.hook->remove(info_.id);
+      info_.hook = nullptr;
     }
 
     ~connection() { close(); }
@@ -2312,10 +2320,9 @@ class hook<R(Args...)> {
                                   std::forward<Args>(args)...);
   }
 
-  [[nodiscard]]
-  connection insert(callee const& f) {
+  connection_info insert(callee const& f) {
     callees_.emplace_back(entry{next_id_, f});
-    return connection{next_id_++, this};
+    return connection_info{next_id_++, this};
   }
 
  private:
