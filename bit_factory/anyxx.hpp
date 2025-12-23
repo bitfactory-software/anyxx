@@ -221,7 +221,7 @@
                              __VA_OPT__(, ) __VA_OPT__(                        \
                                  _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
               },                                                               \
-              [&](any_t const_& any) {                                          \
+              [&](any_t const_& any) {                                         \
                 return any.name(                                               \
                     __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
               }},                                                              \
@@ -530,32 +530,40 @@
   ANY_METHOD_(, ret, name, name, false, const_,               \
               (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
               _detail_EXPAND params)
-
 #define ANY_METHOD_DEFAULTED(ret, name, params, const_, ...)   \
   ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
-
 #define ANY_METHOD(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_METHOD(, ret, name, name, false, const_, params)
-
 #define ANY_METHOD_OVERLOAD(ret, name, params, const_)                     \
   __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(name), ret, name, name, false, \
                                const_, params)
 
-#define ANY_OP(ret, op, params, const_)                                       \
-  __detail_ANYXX_MEMBER_METHOD(                                               \
-      , ret, _detail_CONCAT(__op__, __COUNTER__), operator op, false, const_, \
-      params)
+#define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
+  __detail_ANYXX_MEMBER_METHOD(, ret, name, operator op, false, const_, params)
+#define ANY_OP(ret, op, params, const_) \
+  ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
+#define ANY_OP_DEFAULTED(ret, op, name, params, const_, ...) \
+  ANY_METHOD_(, ret, name, op, false, const_, (__VA_ARGS__), \
+              _detail_EXPAND params)
 
-#define ANY_OP_EXACT(ret, op, params, const_)                                \
-  __detail_ANYXX_MEMBER_METHOD(                                              \
-      , ret, _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, \
-      params)
+#define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
+  __detail_ANYXX_MEMBER_METHOD(, ret, name, operator op, true, const_, params)
+#define ANY_OP_EXACT(ret, op, params, const_) \
+  ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
+#define ANY_OP_EXACT_DEFAULTED(ret, op, name, params, const_, ...) \
+  ANY_METHOD_(, ret, name, op, true, const_, (__VA_ARGS__), \
+              _detail_EXPAND params)
 
+#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_) \
+  __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(operator op), ret,         \
+                               name, operator op, true, const_, params)
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
-  __detail_ANYXX_MEMBER_METHOD(                        \
-      ANY_OVERLOAD(operator op), ret,                  \
-      _detail_CONCAT(__op__, __COUNTER__), operator op, true, const_, params)
+  ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
+      ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
+#define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...) \
+  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, op, true, const_, (__VA_ARGS__), \
+              _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
