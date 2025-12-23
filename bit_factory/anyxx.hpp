@@ -336,6 +336,7 @@
         anyxx::is_type_complete<n##_has_open_dispatch>;                        \
     using own_dispatch_holder_t =                                              \
         typename anyxx::dispatch_holder<open_dispatch_enabeled, n>;            \
+    using dispatch_t = Dispatch;                                               \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -385,6 +386,7 @@
     template <typename... Args>                                                \
     using any_template = n<Args...>;                                           \
     using erased_data_t = ErasedData;                                          \
+    using dispatch_t = Dispatch;                                               \
     using T =                                                                  \
         typename anyxx::erased_data_trait<erased_data_t>::static_dispatch_t;   \
     using base_t = typename anyxx::derive_from<                                \
