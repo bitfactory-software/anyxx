@@ -17,7 +17,7 @@
 
 namespace whole_picture::collision {
 
-ANY_SINGELTON_DECLARE(
+ANY_SINGLETON_DECLARE(
     COLLISION_EXPORT, happened,
     anyxx::dispatch<
         bool(anyxx::virtual_<architecture::shape<anyxx::const_observer>>,

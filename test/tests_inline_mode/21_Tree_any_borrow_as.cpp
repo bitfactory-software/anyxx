@@ -22,7 +22,7 @@ std::ostream& operator<<(std::ostream& s,
   any.serialize(s);
   return s;
 }
-ANY_SINGELTON_DECLARE(, deserialize_factory,
+ANY_SINGLETON_DECLARE(, deserialize_factory,
                       factory<any_serializeable, std::string, std::istream&>);
 
 any_serializeable<unique> deserialize(std::istream& archive) {
@@ -83,7 +83,7 @@ auto __ = deserialize_factory.register_(
 
 using namespace _21_Tree_any_borrow_as;
 
-ANY_SINGELTON(_21_Tree_any_borrow_as, deserialize_factory)
+ANY_SINGLETON(_21_Tree_any_borrow_as, deserialize_factory)
 
 ANY_REGISTER_MODEL(Plus, any_value);
 ANY_REGISTER_MODEL(Plus, any_serializeable);
