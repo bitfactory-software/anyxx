@@ -17,13 +17,30 @@ namespace {
 
 ANY(map_i_to_string_const_and_mutable,
     (ANY_OP_EXACT(std::string&, [], (std::size_t), ),
-     ANY_OP_EXACT(std::string const&, [], (std::size_t), const)), , )
+     ANY_OP_EXACT_MAP_NAMED(std::string const&, [], subscript, (std::size_t),
+                            const)),
+    , )
 
-ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (std::size_t), )), , )
+ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (std::size_t), )),
+    , )
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
      (ANY_OP_EXACT_OVERLOAD(std::string const&, [], (std::size_t), const)), , )
 
 }  // namespace
+
+ANY_MODEL_MAP((map_t), map_i_to_string_const_and_mutable) {
+  static std::string const& subscript(map_t const& self,
+                                      std::size_t const key) {  // NOLINT
+    return self.at(key);
+  };
+};
+
+ANY_MODEL_MAP((vector_t), map_i_to_string_const_and_mutable) {
+  static std::string const& subscript(vector_t const& self,
+                                      std::size_t const key) {  // NOLINT
+    return self.at(key);
+  };
+};
 
 TEST_CASE("mutable subscript_operator with mutable_observer") {
   map_t map{{0, "hallo"}};

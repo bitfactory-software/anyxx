@@ -30,7 +30,7 @@ inline auto operator==(monoid_trait<T> const& lhs, monoid_trait<T> const& rhs) {
 }  // namespace example_2b
 
 ANY_MODEL_MAP((int), example_2b::monoid) {
-  static monoid_trait<int> concat([[maybe_unused]] int self, auto const& r) {
+  static monoid_trait<int> concat(int self, auto const& r) {
     return monoid_trait<int>{std::ranges::fold_right(
         r, self, [&](auto m1, auto m2) { return *m1 + m2; })};
   };
