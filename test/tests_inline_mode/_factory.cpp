@@ -67,21 +67,26 @@ static_assert(!std::is_constructible_v<any_to_string<shared_const, dynm>,
 ANY_SINGLETON(example, thing_factory);
 ANY_SINGLETON(example, any_to_string_factory);
 
+
 namespace {
 namespace example {
 
+struct tag_factory_test;
+using factory_test_key_kind = key<tag_factory_test>;
+
+ANY_SINGLETON_DECLARE(, factory_test_key, factory_test_key_kind)
+ANY_SINGLETON_DECLARE(, factory_test_negative_key, factory_test_key_kind)
 
 TEST_CASE("factory3") {
-  struct tag_factory_test;
-  using f_key = key<tag_factory_test>;
-  factory<any_to_string, f_key> f;
-  f_key int_key {"int"};
-  f.register_(int_key, []() { return 42; });
-  auto a1 = f.construct<unique>(int_key);
+  factory<any_to_string, factory_test_key_kind> f;
+  f.register_(factory_test_key, []() { return 42; });
+  auto a1 = f.construct<unique>(factory_test_key);
   CHECK(a1.to_string() == "42");
-  f_key false_key{"false key"};
-  CHECK_THROWS_AS(f.construct<unique>(false_key), unkonwn_factory_key_error);
+  CHECK_THROWS_AS(f.construct<unique>(factory_test_negative_key), unkonwn_factory_key_error);
 }
 
 }  // namespace example
 }  // namespace
+
+ANY_SINGLETON(example, factory_test_key, "factory_int_key")
+ANY_SINGLETON(example, factory_test_negative_key, "factory_test_negative_key")

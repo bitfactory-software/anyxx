@@ -2897,9 +2897,9 @@ class dispatch_vany {
   export_ extern name##_t& get_##name();          \
   static inline name##_t& name = get_##name();
 
-#define ANY_SINGLETON(namespace_, name)            \
+#define ANY_SINGLETON(namespace_, name, ...)       \
   namespace_::name##_t& namespace_::get_##name() { \
-    static name##_t dispatch;                      \
+    static name##_t dispatch{__VA_ARGS__};         \
     return dispatch;                               \
   };
 
