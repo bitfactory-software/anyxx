@@ -562,7 +562,7 @@
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
       ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
 #define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...) \
-  ANY_METHOD_(ANY_OVERLOAD(name), ret, name, operator op, true, const_, (__VA_ARGS__), \
+  ANY_METHOD_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \

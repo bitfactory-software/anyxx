@@ -9,12 +9,12 @@ namespace example_2b {
 
 TRAIT(monoid,
       (ANY_OP_DEFAULTED(monoid_trait<T>, +, op, (monoid_trait<T> const&), const,
-                        [x](monoid_trait<T> const r) {
+                        [&x](monoid_trait<T> const r) {
                           auto self = anyxx::trait_as<monoid>(x);
                           return self | (std::vector{r});  // NOLINT
                         }),
        ANY_OP_DEFAULTED(monoid_trait<T>, |, concat, (const auto&), const,
-                        [x](const auto& r) {
+                        [&x](const auto& r) {
                           auto self = anyxx::trait_as<monoid>(x);
                           return std::ranges::fold_right(
                               r, self, [&](auto const& m1, auto const& m2) {

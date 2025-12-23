@@ -20,7 +20,7 @@ struct custom {
 struct any_value_has_open_dispatch {};
 ANY(any_value,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [x]() { return std::format("{}", x); }),
+                          [&x]() { return std::format("{}", x); }),
      ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
                           [&x](std::string_view sv) -> void {
                             std::stringstream ss{std::string{sv},
