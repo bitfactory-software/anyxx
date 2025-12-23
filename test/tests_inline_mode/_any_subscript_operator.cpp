@@ -9,6 +9,8 @@ using namespace anyxx;
 using namespace anyxx;
 
 namespace {
+namespace subscript_operator_test {
+
 using map_t = std::map<std::size_t, std::string>;
 using vector_t = std::vector<std::string>;
 }  // namespace
@@ -29,21 +31,24 @@ ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
          [&x](std::size_t i) -> std::string const& { return x.at(i); })),
      , )
 
-}  // namespace
+}}  // namespace
 
-ANY_MODEL_MAP((map_t), map_i_to_string_const_and_mutable) {
+using namespace subscript_operator_test;
+
+ANY_MODEL_MAP((subscript_operator_test::map_t), map_i_to_string_const_and_mutable) {
   static std::string const& subscript(map_t const& self,
                                       std::size_t const key) {  // NOLINT
     return self.at(key);
   };
 };
 
-ANY_MODEL_MAP((vector_t), map_i_to_string_const_and_mutable) {
+ANY_MODEL_MAP((subscript_operator_test::vector_t), map_i_to_string_const_and_mutable) {
   static std::string const& subscript(vector_t const& self,
                                       std::size_t const key) {  // NOLINT
     return self.at(key);
   };
 };
+
 
 TEST_CASE("mutable subscript_operator with mutable_observer") {
   map_t map{{0, "hallo"}};
