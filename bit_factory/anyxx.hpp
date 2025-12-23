@@ -110,7 +110,7 @@
       _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, __VA_ARGS__))
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
-  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
+  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::rtti>)
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
   _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
@@ -221,7 +221,7 @@
                              __VA_OPT__(, ) __VA_OPT__(                        \
                                  _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
               },                                                               \
-              [&](any_t const_& any) {                                          \
+              [&](any_t const_& any) {                                         \
                 return any.name(                                               \
                     __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
               }},                                                              \
@@ -315,11 +315,9 @@
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_open_dispatch;                                                \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params) =       \
-                anyxx::rtti>                                                   \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params)>        \
   struct n##_v_table;                                                          \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl3),                           \
-            typename Dispatch = anyxx::rtti>                                   \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl3), typename Dispatch>        \
   n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>*           \
       _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n)();                           \
                                                                                \
@@ -371,7 +369,7 @@
         return anyxx::v_table_instance_inline<v_table_t, Concrete>();          \
       } else {                                                                 \
         return _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(                       \
-            n)<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>();                           \
+            n)<_detail_ANYXX_TEMPLATE_ARGS(tpl3), anyxx::rtti>();              \
       }                                                                        \
     }                                                                          \
   };                                                                           \
@@ -2987,34 +2985,34 @@ class dispatch_vany {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)               \
-  namespace ns_ {}                                               \
-  namespace anyxx {                                              \
-  template <>                                                    \
-  export_ std::size_t& dispatchs_count<ns_::any_##_v_table<>>(); \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)                          \
+  namespace ns_ {}                                                          \
+  namespace anyxx {                                                         \
+  template <>                                                               \
+  export_ std::size_t& dispatchs_count<ns_::any_##_v_table<anyxx::rtti>>(); \
   }
 
-#define ANY_DISPATCH_COUNT(ns_, any_)                            \
-  template <>                                                    \
-  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table<>>() { \
-    static std::size_t count = 0;                                \
-    return count;                                                \
+#define ANY_DISPATCH_COUNT(ns_, any_)                                       \
+  template <>                                                               \
+  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table<anyxx::rtti>>() { \
+    static std::size_t count = 0;                                           \
+    return count;                                                           \
   }
 
-#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \
-                             interface_)                            \
-  namespace anyxx {                                                 \
-  template <>                                                       \
-  export_ dispatch_table_t* dispatch_table_instance<                \
-      interface_namespace_::interface_##_v_table<>, class_>();      \
+#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_,       \
+                             interface_)                                  \
+  namespace anyxx {                                                       \
+  template <>                                                             \
+  export_ dispatch_table_t* dispatch_table_instance<                      \
+      interface_namespace_::interface_##_v_table<anyxx::rtti>, class_>(); \
   }
 
-#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \
-  template <>                                                      \
-  anyxx::dispatch_table_t* anyxx::dispatch_table_instance<         \
-      interface_namespace_::interface_##_v_table<>, class_>() {    \
-    return dispatch_table_instance_implementation<                 \
-        interface_namespace_::interface_##_v_table<>, class_>();   \
+#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)          \
+  template <>                                                               \
+  anyxx::dispatch_table_t* anyxx::dispatch_table_instance<                  \
+      interface_namespace_::interface_##_v_table<anyxx::rtti>, class_>() {  \
+    return dispatch_table_instance_implementation<                          \
+        interface_namespace_::interface_##_v_table<anyxx::rtti>, class_>(); \
   }
 
 #else
@@ -3029,7 +3027,8 @@ class dispatch_vany {
 #define ANY_REGISTER_MODEL(class_, interface_)                            \
   namespace {                                                             \
   static auto __ =                                                        \
-      anyxx::bind_v_table_to_meta_data<interface_##_v_table<>, class_>(); \
+      anyxx::bind_v_table_to_meta_data<interface_##_v_table<anyxx::rtti>, \
+                                       class_>();                         \
   }
 
 #define __ANY_REGISTER_TEMPLATE_MODEL(class_, t, all, interface_)         \
@@ -3044,23 +3043,23 @@ class dispatch_vany {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_)    \
-  ANY_FORWARD(interface_namespace_, interface_)                             \
-  namespace interface_namespace_ {                                          \
-  template <>                                                               \
-  export_ interface_##_v_table<>* _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME( \
-      interface_)<class_>();                                                \
+#define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_) \
+  ANY_FORWARD(interface_namespace_, interface_)                          \
+  namespace interface_namespace_ {                                       \
+  template <>                                                            \
+  export_ interface_##_v_table<anyxx::rtti>*                             \
+      _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(interface_)<class_>();    \
   }
 
-#define ANY_MODEL(class_, interface_namespace_, interface_)       \
-  template <>                                                     \
-  interface_namespace_::interface_##_v_table<>*                   \
-  interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME( \
-      interface_)<class_>() {                                     \
-    static interface_namespace_::interface_##_v_table<> v_table{  \
-        std::in_place_type<class_>};                              \
-    return &v_table;                                              \
-  }                                                               \
+#define ANY_MODEL(class_, interface_namespace_, interface_)                 \
+  template <>                                                               \
+  interface_namespace_::interface_##_v_table<anyxx::rtti>*                  \
+  interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(           \
+      interface_)<class_>() {                                               \
+    static interface_namespace_::interface_##_v_table<anyxx::rtti> v_table{ \
+        std::in_place_type<class_>};                                        \
+    return &v_table;                                                        \
+  }                                                                         \
   ANY_REGISTER_MODEL(class_, interface_namespace_::interface_)
 
 #define __ANY_TEMPLATE_MODEL(class_, t, all, interface_namespace_, interface_) \
