@@ -115,6 +115,15 @@
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
+#define _detail_ANYXX_MAP_PARAM_LIST_H(b, c, param_type, ...)                  \
+  [[maybe_unused]] anyxx::map_param<param_type, T> c __VA_OPT__(               \
+      , _detail_ANYXX_MAP_PARAM_LIST_A _detail_PARENS(b, _detail_CONCAT(b, c), \
+                                                      __VA_ARGS__))
+#define _detail_ANYXX_MAP_PARAM_LIST_A() _detail_ANYXX_MAP_PARAM_LIST_H
+#define _detail_ANYXX_MAP_PARAM_LIST(...) \
+  _detail_EXPAND_(_detail_ANYXX_MAP_PARAM_LIST_H(__VA_ARGS__))
+#define _detail_EXPAND_LIST(...) __VA_ARGS__
+
 #define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
 #define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
 #define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
@@ -197,7 +206,7 @@
 #define _detail_ANYXX_MAP_VARIANT_IMPL(overload, type, name, name_ext,       \
                                        exact_const, const_, trait_body, ...) \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {                \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__))) -> type {     \
     return std::visit(                                                       \
         [&]<typename V>(V&& v) {                                             \
           return x_model_map<std::decay_t<V>>::name(                         \
@@ -1975,6 +1984,21 @@ struct translate_v_table_param<self> {
 };
 template <typename Param>
 using v_table_param = typename translate_v_table_param<Param>::type;
+
+template <typename Param, typename T>
+struct translate_map_param {
+  using type = Param;
+};
+template <typename T>
+struct translate_map_param<self const, T> {
+  using type = T const&;
+};
+template <typename T>
+struct translate_map_param<self, T> {
+  using type = T const&;
+};
+template <typename Param, typename T>
+using map_param = typename translate_map_param<Param, T>::type;
 
 // --------------------------------------------------------------------------------
 // any customization traits
