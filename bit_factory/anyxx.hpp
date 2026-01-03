@@ -106,10 +106,11 @@
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...) \
-  [[maybe_unused]] anyxx::v_table_param<param_type> c __VA_OPT__( \
-      , _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(        \
-            b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)             \
+  [[maybe_unused]] anyxx::v_table_param<any_const_observer_t,                 \
+                                        any_mutable_observer_t, param_type> c \
+  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(             \
+                   b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
@@ -314,8 +315,9 @@
     any_template_params, any_template_params_with_defaults,                    \
     model_map_template_params, tpl3, tpl4, v_table_template_params,            \
     static_dispatch_template_params, traitet_template_params,                  \
-    v_model_map_template_params, any_value_template_params, n, BASE,           \
-    base_template_params, base_template_params_with_erased_data, l,            \
+    v_model_map_template_params, any_value_template_params,                    \
+    any_const_observer_template_params, any_mutable_observer_template_params,  \
+    n, BASE, base_template_params, base_template_params_with_erased_data, l,   \
     v_table_functions)                                                         \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
@@ -373,6 +375,10 @@
     using dispatch_t = Dispatch;                                               \
     using any_value_t =                                                        \
         n<_detail_ANYXX_TEMPLATE_ARGS(any_value_template_params)>;             \
+    using any_const_observer_t =                                               \
+        n<_detail_ANYXX_TEMPLATE_ARGS(any_const_observer_template_params)>;    \
+    using any_mutable_observer_t =                                             \
+        n<_detail_ANYXX_TEMPLATE_ARGS(any_mutable_observer_template_params)>;  \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -422,6 +428,10 @@
     template <typename... Args>                                                \
     using any_template = n<Args...>;                                           \
     using any_t = n;                                                           \
+    using any_const_observer_t =                                               \
+        n<_detail_ANYXX_TEMPLATE_ARGS(any_const_observer_template_params)>;    \
+    using any_mutable_observer_t =                                             \
+        n<_detail_ANYXX_TEMPLATE_ARGS(any_mutable_observer_template_params)>;  \
     using erased_data_t = ErasedData;                                          \
     using dispatch_t = Dispatch;                                               \
     using T =                                                                  \
@@ -510,8 +520,10 @@
       _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
       (Concrete), (Other), (Dispatch), (StaticDispatchType),                   \
       (anyxx::traited<T>), (V),                                                \
-      _detail_REMOVE_PARENS(((anyxx::value), (anyxx::rtti))), n, BASE,         \
-      (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,        \
+      _detail_REMOVE_PARENS(((anyxx::value), (anyxx::rtti))),                  \
+      _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::rtti))),         \
+      _detail_REMOVE_PARENS(((anyxx::mutable_observer), (anyxx::rtti))), n,    \
+      BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
       v_table_functions)
 
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default)              \
@@ -544,6 +556,12 @@
       __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (anyxx::value),                                                      \
+          __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (anyxx::const_observer),                                             \
+          __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (anyxx::mutable_observer),                                           \
           __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
       __detail_ANYXX_ADD_TAIL(                                                 \
@@ -1984,20 +2002,25 @@ struct translate_jacket_param<Any, self const> {
 template <typename Any, typename Param>
 using jacket_param = typename translate_jacket_param<Any, Param>::type;
 
-template <typename Param>
+template <typename AnyConstObserver, typename AnyMutableObserver,
+          typename Param>
 struct translate_v_table_param {
   using type = Param;
 };
-template <>
-struct translate_v_table_param<self const> {
-  using type = any_base<const_observer>;
+template <typename AnyConstObserver, typename AnyMutableObserver>
+struct translate_v_table_param<AnyConstObserver, AnyMutableObserver,
+                               self const> {
+  using type = AnyConstObserver;
 };
-template <>
-struct translate_v_table_param<self> {
-  using type = any_base<mutable_observer>;
+template <typename AnyConstObserver, typename AnyMutableObserver>
+struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, self> {
+  using type = AnyMutableObserver;
 };
-template <typename Param>
-using v_table_param = typename translate_v_table_param<Param>::type;
+template <typename AnyConstObserver, typename AnyMutableObserver,
+          typename Param>
+using v_table_param =
+    typename translate_v_table_param<AnyConstObserver, AnyMutableObserver,
+                                     Param>::type;
 
 template <typename AnyValue, typename Return>
 struct translate_v_table_return {
