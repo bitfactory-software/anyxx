@@ -197,7 +197,8 @@
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const, \
                                const_, trait_body, ...)                     \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                 \
-      , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {               \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))              \
+      -> anyxx::map_param<type, T> {                                        \
     return _detail_REMOVE_PARENS(trait_body)(                               \
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));              \
   };
