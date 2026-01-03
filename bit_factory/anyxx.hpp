@@ -97,6 +97,15 @@
   _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
+#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)       \
+  [[maybe_unused]] anyxx::jacket_param<param_type, any_t> c __VA_OPT__( \
+      , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(              \
+            b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
+#define _detail_ANYXX_JACKET_PARAM_LIST(...) \
+  _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
+#define _detail_EXPAND_LIST(...) __VA_ARGS__
+
 #define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
 #define _detail_ANYXX_TYPENAME_PARAM(t) , typename t
 #define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
@@ -205,13 +214,13 @@
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
   overload type name_ext(                                                      \
-      __VA_OPT__(_detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) const_            \
+      __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_            \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
     if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {              \
       using variant_t = erased_data_t;                                         \
-      using any_t = std::variant_alternative_t<0, variant_t>;                  \
+      using vany_any_t = std::variant_alternative_t<0, variant_t>;             \
       return std::visit(                                                       \
           anyxx::overloads{                                                    \
               [&]<typename ValueInVariant>(                                    \
@@ -221,7 +230,7 @@
                              __VA_OPT__(, ) __VA_OPT__(                        \
                                  _detail_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
               },                                                               \
-              [&](any_t const_& any) {                                         \
+              [&](vany_any_t const_& any) {                                    \
                 return any.name(                                               \
                     __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));     \
               }},                                                              \
@@ -385,6 +394,7 @@
                 base_template_params_with_erased_data)> {                      \
     template <typename... Args>                                                \
     using any_template = n<Args...>;                                           \
+    using any_t = n;                                                           \
     using erased_data_t = ErasedData;                                          \
     using dispatch_t = Dispatch;                                               \
     using T =                                                                  \
@@ -543,15 +553,16 @@
   __detail_ANYXX_MEMBER_METHOD(, ret, name, operator op, false, const_, params)
 #define ANY_OP(ret, op, params, const_) \
   ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_DEFAULTED(ret, op, name, params, const_, ...) \
+#define ANY_OP_DEFAULTED(ret, op, name, params, const_, ...)          \
   ANY_METHOD_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
   __detail_ANYXX_MEMBER_METHOD(, ret, name, operator op, true, const_, params)
-#define ANY_OP_EXACT(ret, op, params, const_) \
-  ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_EXACT_DEFAULTED(ret, op, name, params, const_, ...) \
+#define ANY_OP_EXACT(ret, op, params, const_)                                  \
+  ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
+                         const_)
+#define ANY_OP_EXACT_DEFAULTED(ret, op, name, params, const_, ...)   \
   ANY_METHOD_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
@@ -561,9 +572,9 @@
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
       ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...) \
-  ANY_METHOD_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, (__VA_ARGS__), \
-              _detail_EXPAND params)
+#define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...)    \
+  ANY_METHOD_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
+              (__VA_ARGS__), _detail_EXPAND params)
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
@@ -1920,6 +1931,23 @@ template <typename ToAny>
 auto query_v_table(any_base_v_table<>* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
+
+// --------------------------------------------------------------------------------
+// any parameter translation
+
+struct self {};
+
+template <typename Param, typename Any>
+struct translate_jacket_param {
+  using type = Param;
+};
+template <typename Any>
+struct translate_jacket_param<self, Any> {
+  using type = Any;
+};
+
+template <typename Param, typename Any>
+using jacket_param = typename translate_jacket_param<Param, Any>::type;
 
 // --------------------------------------------------------------------------------
 // any customization traits

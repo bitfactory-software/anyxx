@@ -13,7 +13,8 @@ TRAIT(monoid,
                           auto self = anyxx::trait_as<monoid>(x);
                           return self | (std::vector{r});  // NOLINT
                         }),
-       ANY_OP_DEFAULTED(monoid_trait<T>, |, concat, (const auto&), const,
+       ANY_OP_DEFAULTED(monoid_trait<T>, |, concat,
+                        (std::vector<monoid_trait<T>> const&), const,
                         [&x](const auto& r) {
                           auto self = anyxx::trait_as<monoid>(x);
                           return std::ranges::fold_right(
