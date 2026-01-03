@@ -97,13 +97,22 @@
   _detail_EXPAND_(_detail_PARAM_LIST_2H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)       \
+#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)        \
   [[maybe_unused]] anyxx::jacket_param<param_type, any_t> c __VA_OPT__( \
-      , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(              \
+      , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(               \
             b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
 #define _detail_ANYXX_JACKET_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
+#define _detail_EXPAND_LIST(...) __VA_ARGS__
+
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...) \
+  [[maybe_unused]] anyxx::v_table_param<param_type> c __VA_OPT__( \
+      , _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(        \
+            b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
+#define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
+  _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_ANYXX_TYPENAME_PARAM_H(t) _detail_ANYXX_TYPENAME_PARAM t
@@ -200,7 +209,8 @@
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
-  type (*name)(void const_* __VA_OPT__(, __VA_ARGS__));
+  type (*name)(void const_* __VA_OPT__(                                     \
+      , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
     overload, type, name, name_ext, exact_const, const_, map_body, ...) \
@@ -213,8 +223,8 @@
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
-  overload type name_ext(                                                      \
-      __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_            \
+  overload type name_ext(__VA_OPT__(                                           \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
@@ -345,6 +355,8 @@
         anyxx::is_type_complete<n##_has_open_dispatch>;                        \
     using own_dispatch_holder_t =                                              \
         typename anyxx::dispatch_holder<open_dispatch_enabeled, n>;            \
+                                                                               \
+    using any_t = n;                                                           \
     using dispatch_t = Dispatch;                                               \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
@@ -1945,9 +1957,23 @@ template <typename Any>
 struct translate_jacket_param<self, Any> {
   using type = Any;
 };
-
 template <typename Param, typename Any>
 using jacket_param = typename translate_jacket_param<Param, Any>::type;
+
+template <typename Param>
+struct translate_v_table_param {
+  using type = Param;
+};
+template <>
+struct translate_v_table_param<self const> {
+  using type = any_base<const_observer>;
+};
+template <>
+struct translate_v_table_param<self> {
+  using type = any_base<mutable_observer>;
+};
+template <typename Param>
+using v_table_param = typename translate_v_table_param<Param>::type;
 
 // --------------------------------------------------------------------------------
 // any customization traits
