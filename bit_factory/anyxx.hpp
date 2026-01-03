@@ -212,13 +212,14 @@
   type (*name)(void const_* __VA_OPT__(                                     \
       , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
-    overload, type, name, name_ext, exact_const, const_, map_body, ...) \
-  name = [](void const_* _vp __VA_OPT__(                                \
-             , _detail_PARAM_LIST2(a, _sig, __VA_ARGS__))) -> type {    \
-    return concept_map{}.name(                                          \
-        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )    \
-            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                                  \
+    overload, type, name, name_ext, exact_const, const_, map_body, ...)        \
+  name =                                                                       \
+      [](void const_* _vp __VA_OPT__(                                          \
+          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__))) -> type { \
+    return concept_map{}.name(                                                 \
+        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )           \
+            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));             \
   };
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
