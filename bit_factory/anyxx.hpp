@@ -98,7 +98,7 @@
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)        \
-  [[maybe_unused]] anyxx::jacket_param<param_type, any_t> c __VA_OPT__( \
+  [[maybe_unused]] anyxx::jacket_param<any_t, param_type> c __VA_OPT__( \
       , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(               \
             b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
@@ -116,7 +116,7 @@
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_ANYXX_MAP_PARAM_LIST_H(b, c, param_type, ...)                  \
-  [[maybe_unused]] anyxx::map_param<param_type, T> c __VA_OPT__(               \
+  [[maybe_unused]] anyxx::map_param<T, param_type> c __VA_OPT__(               \
       , _detail_ANYXX_MAP_PARAM_LIST_A _detail_PARENS(b, _detail_CONCAT(b, c), \
                                                       __VA_ARGS__))
 #define _detail_ANYXX_MAP_PARAM_LIST_A() _detail_ANYXX_MAP_PARAM_LIST_H
@@ -198,7 +198,7 @@
                                const_, trait_body, ...)                     \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                 \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))              \
-      -> anyxx::map_param<type, T> {                                        \
+      -> anyxx::map_param<T, type> {                                        \
     return _detail_REMOVE_PARENS(trait_body)(                               \
         __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));              \
   };
@@ -208,7 +208,7 @@
                                        exact_const, const_, trait_body, ...) \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
-      -> anyxx::map_param<type, T> {                                         \
+      -> anyxx::map_param<T, type> {                                         \
     return std::visit(                                                       \
         [&]<typename V>(V&& v) {                                             \
           return x_model_map<std::decay_t<V>>::name(                         \
@@ -220,14 +220,14 @@
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
-  anyxx::v_table_return<type, any_value_t> (*name)(void const_* __VA_OPT__( \
+  anyxx::v_table_return<any_value_t, type> (*name)(void const_* __VA_OPT__( \
       , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
     overload, type, name, name_ext, exact_const, const_, map_body, ...) \
   name = [](void const_* _vp __VA_OPT__(                                \
              , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__))) \
-      -> anyxx::v_table_return<type, any_value_t> {                     \
+      -> anyxx::v_table_return<any_value_t, type> {                     \
     return concept_map{}.name(                                          \
         *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )    \
             __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
@@ -235,7 +235,7 @@
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
-  overload anyxx::jacket_param<type, any_t> name_ext(__VA_OPT__(               \
+  overload anyxx::jacket_param<any_t, type> name_ext(__VA_OPT__(               \
       _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
@@ -1969,16 +1969,16 @@ auto query_v_table(any_base_v_table<>* from) {
 
 struct self {};
 
-template <typename Param, typename Any>
+template <typename Any, typename Param>
 struct translate_jacket_param {
   using type = Param;
 };
 template <typename Any>
-struct translate_jacket_param<self, Any> {
+struct translate_jacket_param<Any, self> {
   using type = Any;
 };
-template <typename Param, typename Any>
-using jacket_param = typename translate_jacket_param<Param, Any>::type;
+template <typename Any, typename Param>
+using jacket_param = typename translate_jacket_param<Any, Param>::type;
 
 template <typename Param>
 struct translate_v_table_param {
@@ -1995,32 +1995,32 @@ struct translate_v_table_param<self> {
 template <typename Param>
 using v_table_param = typename translate_v_table_param<Param>::type;
 
-template <typename Return, typename AnyValue>
+template <typename AnyValue, typename Return>
 struct translate_v_table_return {
   using type = Return;
 };
 template <typename AnyValue>
-struct translate_v_table_return<self, AnyValue> {
+struct translate_v_table_return<AnyValue, self> {
   using type = AnyValue;
 };
-template <typename Return, typename AnyValue>
+template <typename AnyValue, typename Return>
 using v_table_return =
-    typename translate_v_table_return<Return, AnyValue>::type;
+    typename translate_v_table_return<AnyValue, Return>::type;
 
-template <typename Param, typename T>
+template <typename T, typename Param>
 struct translate_map_param {
   using type = Param;
 };
 template <typename T>
-struct translate_map_param<self const, T> {
+struct translate_map_param<T, self const> {
   using type = T const&;
 };
 template <typename T>
-struct translate_map_param<self, T> {
+struct translate_map_param<T, self> {
   using type = T const&;
 };
-template <typename Param, typename T>
-using map_param = typename translate_map_param<Param, T>::type;
+template <typename T, typename Param>
+using map_param = typename translate_map_param<T, Param>::type;
 
 // --------------------------------------------------------------------------------
 // any customization traits
