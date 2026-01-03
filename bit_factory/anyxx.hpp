@@ -234,7 +234,7 @@
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
-  overload type name_ext(__VA_OPT__(                                           \
+  overload anyxx::jacket_param<type, any_t> name_ext(__VA_OPT__(               \
       _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
