@@ -1977,6 +1977,10 @@ template <typename Any>
 struct translate_jacket_param<Any, self> {
   using type = Any;
 };
+template <typename Any>
+struct translate_jacket_param<Any, self const> {
+  using type = Any;
+};
 template <typename Any, typename Param>
 using jacket_param = typename translate_jacket_param<Any, Param>::type;
 
