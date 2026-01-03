@@ -219,17 +219,17 @@
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
-  anyxx::v_table_return<type> (*name)(void const_* __VA_OPT__(              \
+  anyxx::v_table_return<type, any_value_t> (*name)(void const_* __VA_OPT__( \
       , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                               \
-    overload, type, name, name_ext, exact_const, const_, map_body, ...)     \
-  name = [](void const_* _vp __VA_OPT__(                                    \
-             , _detail_ANYXX_V_TABLE_PARAM_LIST(                            \
-                   a, _sig, __VA_ARGS__))) -> anyxx::v_table_return<type> { \
-    return concept_map{}.name(                                              \
-        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )        \
-            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
+    overload, type, name, name_ext, exact_const, const_, map_body, ...) \
+  name = [](void const_* _vp __VA_OPT__(                                \
+             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__))) \
+      -> anyxx::v_table_return<type, any_value_t> {                     \
+    return concept_map{}.name(                                          \
+        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )    \
+            __VA_OPT__(_detail_PARAM_LIST(a, _sig, __VA_ARGS__)));      \
   };
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
@@ -313,8 +313,9 @@
     any_template_params, any_template_params_with_defaults,                    \
     model_map_template_params, tpl3, tpl4, v_table_template_params,            \
     static_dispatch_template_params, traitet_template_params,                  \
-    v_model_map_template_params, n, BASE, base_template_params,                \
-    base_template_params_with_erased_data, l, v_table_functions)               \
+    v_model_map_template_params, any_value_template_params, n, BASE,           \
+    base_template_params, base_template_params_with_erased_data, l,            \
+    v_table_functions)                                                         \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
       any_template_params_with_defaults)>                                      \
@@ -369,6 +370,8 @@
                                                                                \
     using any_t = n;                                                           \
     using dispatch_t = Dispatch;                                               \
+    using any_value_t =                                                        \
+        n<_detail_ANYXX_TEMPLATE_ARGS(any_value_template_params)>;             \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       return typeid(v_table_t) == from                                         \
@@ -505,8 +508,10 @@
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
       (Concrete), (Other), (Dispatch), (StaticDispatchType),                   \
-      (anyxx::traited<T>), (V), n, BASE, (Dispatch),                           \
-      _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l, v_table_functions)
+      (anyxx::traited<T>), (V),                                                \
+      _detail_REMOVE_PARENS(((anyxx::value), (anyxx::rtti))), n, BASE,         \
+      (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,        \
+      v_table_functions)
 
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default)              \
   __detail_ANYXX_ANY_(                                                       \
@@ -535,8 +540,11 @@
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_TAIL((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_TAIL((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
-      __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)), n, BASE,         \
-      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)),          \
+      __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
+      __detail_ANYXX_ADD_TAIL(                                                 \
+          (anyxx::value),                                                      \
+          __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
+      n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),   \
@@ -1986,20 +1994,17 @@ struct translate_v_table_param<self> {
 template <typename Param>
 using v_table_param = typename translate_v_table_param<Param>::type;
 
-template <typename Return>
+template <typename Return, typename AnyValue>
 struct translate_v_table_return {
   using type = Return;
 };
-template <>
-struct translate_v_table_return<self const> {
-  using type = any_base<value>;
+template <typename AnyValue>
+struct translate_v_table_return<self, AnyValue> {
+  using type = AnyValue;
 };
-template <>
-struct translate_v_table_return<self> {
-  using type = any_base<value>;
-};
-template <typename Return>
-using v_table_return = typename translate_v_table_return<Return>::type;
+template <typename Return, typename AnyValue>
+using v_table_return =
+    typename translate_v_table_return<Return, AnyValue>::type;
 
 template <typename Param, typename T>
 struct translate_map_param {
