@@ -530,14 +530,7 @@
                                                                                \
     _detail_ANYXX_METHODS(l)                                                   \
                                                                                \
-        auto&                                                                  \
-        operator*(this auto&& self)                                            \
-      requires std::same_as<Dispatch, anyxx::trait>                            \
-    {                                                                          \
-      return self.erased_data_.value_;                                         \
-    }                                                                          \
-                                                                               \
-    ~n() = default;                                                            \
+        ~n() = default;                                                        \
     n() = default;                                                             \
     n(n const&) = default;                                                     \
     n(n&&) = default;                                                          \

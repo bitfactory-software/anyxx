@@ -11,7 +11,8 @@ TRAIT(monoid,
       (ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const), const,
                         [&x](auto const& r) {
                           auto self = anyxx::trait_as<monoid>(x);
-                          return self | (std::vector{anyxx::trait_as<monoid>(r)});  // NOLINT
+                          return self | (std::vector{anyxx::trait_as<monoid>(
+                                            r)});  // NOLINT
                         }),
        ANY_OP_DEFAULTED(anyxx::self, |, concat,
                         (std::vector<monoid_trait<T>> const&), const,
@@ -21,26 +22,23 @@ TRAIT(monoid,
                               r, self, [&](auto const& m1, auto const& m2) {
                                 return m1 + m2;
                               });
-                        })))
-
-template <typename T>
-inline auto operator==(monoid_trait<T> const& lhs, monoid_trait<T> const& rhs) {
-  return *lhs == *rhs;
-};
+                        }),
+       ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const), const,
+                        ([&x](auto const& r) { return x == r; }))))
 
 }  // namespace example_2b
 
 ANY_MODEL_MAP((int), example_2b::monoid) {
   static monoid_trait<int> concat(int self, auto const& r) {
     return monoid_trait<int>{std::ranges::fold_right(
-        r, self, [&](auto m1, auto m2) { return *m1 + m2; })};
+        r, self, [&](int m1, int m2) { return m1 + m2; })};
   };
 };
 
 ANY_MODEL_MAP((std::string), example_2b::monoid) {
   static monoid_trait<std::string> op(std::string const& self,
-                                      monoid_trait<std::string> const& r) {
-    return self + *r;
+                                      std::string const& r) {
+    return self + r;
   };
 };
 
