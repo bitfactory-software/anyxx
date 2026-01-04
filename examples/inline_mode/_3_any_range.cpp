@@ -15,7 +15,7 @@ anyxx::any_forward_range<int, int> a_range(bool use_list) {
 
 }  // namespace example_3
 
-TEST_CASE("example 3a any_forward_iterator") {
+TEST_CASE("example 3 any_forward_iterator (concrete value_type, erased iterator)") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -48,5 +48,19 @@ TEST_CASE("example 3a any_forward_iterator") {
     int x = 1;
     for (auto i : a_range(false)) CHECK(i == x++);
     for (auto i : a_range(true)) CHECK(i == x++);
+  }
+}
+
+TEST_CASE("example 3 any_forward_iterator (concrete value_type, concrete iterator)") {
+  using namespace anyxx;
+  using namespace std::string_literals;
+  using namespace example_3;
+
+  using v_t = std::vector<int>;
+  {
+    v_t v;
+    any_forward_range_trait<v_t, int, int> r{v};
+    int x = 0;
+    for (auto i : r) CHECK(i == v[x++]);
   }
 }

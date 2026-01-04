@@ -608,7 +608,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
-      __detail_ANYXX_ADD_TAIL((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
+      __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_TAIL((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
       __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_TAIL(                                                 \
