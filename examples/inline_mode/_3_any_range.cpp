@@ -65,16 +65,17 @@ TEST_CASE("example 3a any_forward_iterator") {
       any_forward_iterator<int, int> b{v.begin()};
       any_forward_iterator<int, int> e{v.end()};
       CHECK(b==e);
+      CHECK(!(b!=e));
       static_assert(std::movable<any_forward_iterator<int, int>>);
       static_assert(std::same_as<decltype(++b), any_forward_iterator<int, int> &>);
       static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
   }
   //{
   //    v_t v{1, 2, 3};
-  //    for( auto i = )
   //    any_forward_iterator<int, int> b{v.begin()};
-  //    any_forward_iterator<int, int> e{v.()};
-  //    CHECK(b==e);
+  //    any_forward_iterator<int, int> e{v.end()};
+  //    CHECK(b!=e);
+  //    for( auto i = )
   //    static_assert(std::movable<any_forward_iterator<int, int>>);
   //    static_assert(std::same_as<decltype(++b), any_forward_iterator<int, int> &>);
   //    static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
