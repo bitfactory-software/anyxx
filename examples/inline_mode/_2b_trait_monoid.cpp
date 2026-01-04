@@ -8,10 +8,10 @@
 namespace example_2b {
 
 TRAIT(monoid,
-      (ANY_OP_DEFAULTED(monoid_trait<T>, +, op, (monoid_trait<T> const&), const,
-                        [&x](monoid_trait<T> const r) {
+      (ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const), const,
+                        [&x](auto const& r) {
                           auto self = anyxx::trait_as<monoid>(x);
-                          return self | (std::vector{r});  // NOLINT
+                          return self | (std::vector{anyxx::trait_as<monoid>(r)});  // NOLINT
                         }),
        ANY_OP_DEFAULTED(monoid_trait<T>, |, concat,
                         (std::vector<monoid_trait<T>> const&), const,
