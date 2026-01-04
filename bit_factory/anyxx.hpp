@@ -91,6 +91,16 @@
 #define _detail_ANYXX_FORWARD_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
 
+#define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)     \
+  anyxx::v_table_to_map<Concrete, param_type>{}.forward<decltype(c)>(        \
+      std::forward<decltype(c)>(c))                                          \
+      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS( \
+                       b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A() \
+  _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H
+#define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(...) \
+  _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
+
 #define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)        \
   [[maybe_unused]] anyxx::jacket_param<any_t, param_type> c __VA_OPT__( \
       , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(               \
@@ -218,15 +228,15 @@
   anyxx::v_table_return<any_value_t, type> (*name)(void const_* __VA_OPT__( \
       , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                             \
-    overload, type, name, name_ext, exact_const, const_, map_body, ...)   \
-  name = [](void const_* _vp __VA_OPT__(                                  \
-             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))   \
-      -> anyxx::v_table_return<any_value_t, type> {                       \
-    return concept_map{}.name(                                            \
-        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
-            __VA_OPT__(                                                   \
-                _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                                  \
+    overload, type, name, name_ext, exact_const, const_, map_body, ...)        \
+  name = [](void const_* _vp __VA_OPT__(                                       \
+             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))        \
+      -> anyxx::v_table_return<any_value_t, type> {                            \
+    return concept_map{}.name(                                                 \
+        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )           \
+            __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(a, _sig,        \
+                                                               __VA_ARGS__))); \
   };
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,     \
@@ -2030,6 +2040,28 @@ struct translate_v_table_return<AnyValue, self> {
 template <typename AnyValue, typename Return>
 using v_table_return =
     typename translate_v_table_return<AnyValue, Return>::type;
+
+template <typename Concrete, typename T>
+struct v_table_to_map {
+  template <typename Sig>
+  static decltype(auto) forward(Sig&& sig) {
+    return std::forward<Sig>(sig);
+  }
+};
+template <typename Concrete>
+struct v_table_to_map<Concrete, self> {
+  template <typename Sig>
+  static Concrete& forward(Sig&& sig) {
+    return *unerase_cast<Concrete>(sig);
+  }
+};
+template <typename Concrete>
+struct v_table_to_map<Concrete, self const> {
+  template <typename Sig>
+  static Concrete const& forward(Sig&& sig) {
+    return *unerase_cast<Concrete>(sig);
+  }
+};
 
 template <typename T, typename Param>
 struct translate_map_param {
