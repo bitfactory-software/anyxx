@@ -5,14 +5,9 @@
 namespace anyxx {
 
 ANY_TEMPLATE_EX(((ValueType), (Reference)), any_forward_iterator,
-                (ANY_OP_DEFAULTED(anyxx::self &, ++, inc_prefix, (), ,
-                                  ([&x]() -> decltype(auto) { return ++x; })),
-                 ANY_OP_DEFAULTED(anyxx::self, ++, inc_postfix, (int), ,
-                                  ([&x](int) -> decltype(auto) {
-                                    return x++;
-                                  })),
-                 ANY_OP_DEFAULTED(Reference, *, dereference, (), const,
-                                  ([&x]() -> auto { return *x; })),
+                (ANY_OP(anyxx::self &, ++, (), ),
+                 ANY_OP(anyxx::self, ++, (int), ),
+                 ANY_OP(Reference, *, (), const),
                  ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const), const,
                                   ([&x](auto const &r) { return x == r; }))),
                 anyxx::value, ,
