@@ -1,6 +1,6 @@
 include(GenerateExportHeader)
 
-add_library(anyxx INTERFACE anyxx.hpp)
+add_library(anyxx INTERFACE anyxx.hpp anyxx_std.hpp)
 add_library(anyxx::anyxx ALIAS anyxx)
 
 if (MSVC)
