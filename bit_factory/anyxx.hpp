@@ -338,7 +338,7 @@
     v_model_map_template_params, any_value_template_params,                    \
     any_const_observer_template_params, any_mutable_observer_template_params,  \
     n, BASE, base_template_params, base_template_params_with_erased_data, l,   \
-    v_table_functions)                                                         \
+    v_table_functions, decoration)                                             \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
       any_template_params_with_defaults)>                                      \
@@ -532,10 +532,13 @@
       requires(std::derived_from<To, From>);                                   \
     template <anyxx::is_erased_data Other>                                     \
     using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                     \
+                                                                               \
+    _detail_REMOVE_PARENS(decoration)                                          \
   };
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_(t, t_with_defaults, n, BASE, l, v_table_functions) \
+#define __detail_ANYXX_ANY_(t, t_with_defaults, n, BASE, l, v_table_functions, \
+                            decoration)                                        \
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
       (Concrete), (Other), (Dispatch), (StaticDispatchType),                   \
@@ -544,14 +547,14 @@
       _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::rtti))),         \
       _detail_REMOVE_PARENS(((anyxx::mutable_observer), (anyxx::rtti))), n,    \
       BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
-      v_table_functions)
+      v_table_functions, decoration)
 
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default)              \
   __detail_ANYXX_ANY_(                                                       \
       ((ErasedData), (Dispatch)),                                            \
       ((ErasedData = anyxx::default_erased_data<erased_data_default>::type), \
        (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type)), \
-      n, BASE, l, l)
+      n, BASE, l, l, ())
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
 
@@ -587,14 +590,15 @@
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),   \
-      l, l)
+      l, l, ())
 
 #define ANY_TEMPLATE(t, n, l, erased_data_default, dispatch_default) \
   ANY_TEMPLATE_(t, n, , (), l, erased_data_default, dispatch_default)
 
-#define TRAIT_(n, BASE, l)                        \
-  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)), \
-                      ((ErasedData), (Dispatch = anyxx::trait)), n, BASE, l, )
+#define TRAIT_(n, BASE, l)                                                     \
+  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)),                              \
+                      ((ErasedData), (Dispatch = anyxx::trait)), n, BASE, l, , \
+                      ())
 
 #define TRAIT(n, ...) TRAIT_(n, , __VA_ARGS__)
 
