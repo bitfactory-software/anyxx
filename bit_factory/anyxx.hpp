@@ -39,6 +39,15 @@
 // any meta class, derived from this gem:
 // https://github.com/AlexCodesApps/dynamic_interface
 
+#define ANYXX_EXTRACT(...) ANYXX_EXTRACT __VA_ARGS__
+#define ANYXX_NOTHING_ANYXX_EXTRACT
+#define ANYXX_PASTE(x, ...) x##__VA_ARGS__
+#define ANYXX_EVALUATING_PASTE(x, ...) ANYXX_PASTE(x, __VA_ARGS__)
+#define ANYXX_UNPAREN(x) ANYXX_EVALUATING_PASTE(ANYXX_NOTHING_, ANYXX_EXTRACT x)
+// usage:
+static_assert(std::same_as<ANYXX_UNPAREN(int), int>);
+static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
+
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -215,7 +224,7 @@
                                const_, trait_body, ...)                      \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
-      -> anyxx::map_return<T, type> {                                        \
+      -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
     return _detail_REMOVE_PARENS(trait_body)(                                \
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
@@ -225,7 +234,7 @@
                                        exact_const, const_, trait_body, ...) \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
-      -> anyxx::map_param<T, type> {                                         \
+      -> anyxx::map_param<T, ANYXX_UNPAREN(type)> {                          \
     return std::visit(                                                       \
         [&]<typename V>(V&& v) {                                             \
           return x_model_map<std::decay_t<V>>::name(                         \
@@ -237,15 +246,16 @@
 
 #define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
                                         exact_const, const_, map_body, ...) \
-  anyxx::v_table_return<any_value_t, type> (*name)(void const_* __VA_OPT__( \
-      , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
+  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name)(          \
+      void const_* __VA_OPT__(                                              \
+          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
     overload, type, name, name_ext, exact_const, const_, map_body, ...) \
   name = [](void const_* _vp __VA_OPT__(                                \
              , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__))) \
-      -> anyxx::v_table_return<any_value_t, type> {                     \
-    if constexpr (std::same_as<anyxx::self&, type>) {                   \
+      -> anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> {      \
+    if constexpr (std::same_as<anyxx::self&, ANYXX_UNPAREN(type)>) {    \
       concept_map{}.name(                                               \
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(       \
@@ -261,8 +271,9 @@
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
-  overload anyxx::jacket_param<any_t, type> name_ext(__VA_OPT__(               \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
+  overload anyxx::jacket_param<any_t, ANYXX_UNPAREN(type)> name_ext(           \
+      __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))       \
+      const_                                                                   \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
@@ -297,13 +308,13 @@
               },                                                               \
               base_t::erased_data_.value_);                                    \
         } else {                                                               \
-          if constexpr (std::same_as<void, type>) {                            \
+          if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {             \
             static_dispatch_map_t<T>::name(                                    \
                 base_t::erased_data_.value_ __VA_OPT__(, )                     \
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__)));                               \
           } else {                                                             \
-            return anyxx::jacket_return<type>::forward(                        \
+            return anyxx::jacket_return<ANYXX_UNPAREN(type)>::forward(         \
                 static_dispatch_map_t<T>::name(                                \
                     base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(     \
                         _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(        \
@@ -312,12 +323,12 @@
           }                                                                    \
         }                                                                      \
       } else {                                                                 \
-        if constexpr (std::same_as<void, type>) {                              \
+        if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
           get_v_table_ptr()->name(                                             \
               anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(       \
                   , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
         } else {                                                               \
-          return anyxx::jacket_return<type>::forward(                          \
+          return anyxx::jacket_return<ANYXX_UNPAREN(type)>::forward(           \
               get_v_table_ptr()->name(                                         \
                   anyxx::get_void_data_ptr(base_t::erased_data_)               \
                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(           \
