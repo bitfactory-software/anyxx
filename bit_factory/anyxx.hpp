@@ -103,7 +103,7 @@
 
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,   \
                                                          ...)                \
-  anyxx::forward_trait_to_map<traited_t, param_type>{}.forward<decltype(c)>(  \
+  anyxx::forward_trait_to_map<traited_t, param_type>{}.forward<decltype(c)>( \
       std::forward<decltype(c)>(c))                                          \
       __VA_OPT__(                                                            \
           , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS( \
@@ -1800,6 +1800,14 @@ class erased_data_holder {
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto get_void_data_ptr(
       erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
+
+  operator auto() const {
+    if constexpr (std::derived_from<Dispatch, trait>) {
+      return erased_data_.value_;
+    } else {
+      return &erased_data_;
+    }
+  }
 };
 
 template <is_erased_data ErasedData, typename Dispatch>
