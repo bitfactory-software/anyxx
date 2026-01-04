@@ -251,55 +251,73 @@
                                                                __VA_ARGS__))); \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,     \
-                             const_, map_body, ...)                           \
-  overload anyxx::jacket_param<any_t, type> name_ext(__VA_OPT__(              \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_          \
-    requires(::anyxx::const_correct_call_for_erased_data<                     \
-             void const_*, erased_data_t, exact_const>)                       \
-  {                                                                           \
-    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {             \
-      using variant_t = erased_data_t;                                        \
-      using vany_any_t = std::variant_alternative_t<0, variant_t>;            \
-      return std::visit(                                                      \
-          anyxx::overloads{                                                   \
-              [&]<typename ValueInVariant>(                                   \
-                  ValueInVariant&& value_in_variant) {                        \
-                return static_dispatch_map_t<std::decay_t<ValueInVariant>>::  \
-                    name(std::forward<ValueInVariant>(value_in_variant)       \
-                             __VA_OPT__(, )                                   \
-                                 __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST( \
-                                     a, _sig, __VA_ARGS__)));                 \
-              },                                                              \
-              [&](vany_any_t const_& any) {                                   \
-                return any.name(__VA_OPT__(                                   \
-                    _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
-              }},                                                             \
-          base_t::erased_data_);                                              \
-    } else {                                                                  \
-      if constexpr (std::same_as<anyxx::trait, Dispatch>) {                   \
-        using traited_t = typename erased_data_t::value_t;                    \
-        if constexpr (anyxx::is_variant<traited_t>) {                         \
-          return std::visit(                                                  \
-              [&]<typename Vx>(Vx&& vx) {                                     \
-                return static_dispatch_map_t<std::decay_t<Vx>>::name(         \
-                    std::forward<Vx>(vx) __VA_OPT__(, )                       \
-                        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(          \
-                            a, _sig, __VA_ARGS__)));                          \
-              },                                                              \
-              base_t::erased_data_.value_);                                   \
-        } else {                                                              \
-          return static_dispatch_map_t<T>::name(                              \
-              base_t::erased_data_.value_ __VA_OPT__(, )                      \
-                  __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(  \
-                      a, _sig, __VA_ARGS__)));                                \
-        }                                                                     \
-      } else {                                                                \
-        return get_v_table_ptr()->name(                                       \
-            anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(        \
-                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
-      }                                                                       \
-    }                                                                         \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
+                             const_, map_body, ...)                            \
+  overload anyxx::jacket_param<any_t, type> name_ext(__VA_OPT__(               \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
+    requires(::anyxx::const_correct_call_for_erased_data<                      \
+             void const_*, erased_data_t, exact_const>)                        \
+  {                                                                            \
+    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {              \
+      using variant_t = erased_data_t;                                         \
+      using vany_any_t = std::variant_alternative_t<0, variant_t>;             \
+      return std::visit(                                                       \
+          anyxx::overloads{                                                    \
+              [&]<typename ValueInVariant>(                                    \
+                  ValueInVariant&& value_in_variant) {                         \
+                return static_dispatch_map_t<std::decay_t<ValueInVariant>>::   \
+                    name(std::forward<ValueInVariant>(value_in_variant)        \
+                             __VA_OPT__(, )                                    \
+                                 __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(  \
+                                     a, _sig, __VA_ARGS__)));                  \
+              },                                                               \
+              [&](vany_any_t const_& any) {                                    \
+                return any.name(__VA_OPT__(                                    \
+                    _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
+              }},                                                              \
+          base_t::erased_data_);                                               \
+    } else {                                                                   \
+      if constexpr (std::same_as<anyxx::trait, Dispatch>) {                    \
+        using traited_t = typename erased_data_t::value_t;                     \
+        if constexpr (anyxx::is_variant<traited_t>) {                          \
+          return std::visit(                                                   \
+              [&]<typename Vx>(Vx&& vx) {                                      \
+                return static_dispatch_map_t<std::decay_t<Vx>>::name(          \
+                    std::forward<Vx>(vx) __VA_OPT__(, )                        \
+                        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(           \
+                            a, _sig, __VA_ARGS__)));                           \
+              },                                                               \
+              base_t::erased_data_.value_);                                    \
+        } else {                                                               \
+          if constexpr (std::same_as<void, type>) {                            \
+            static_dispatch_map_t<T>::name(                                    \
+                base_t::erased_data_.value_ __VA_OPT__(, )                     \
+                    __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
+                        a, _sig, __VA_ARGS__)));                               \
+          } else {                                                             \
+            return anyxx::jacket_return<type>::forward(                        \
+                static_dispatch_map_t<T>::name(                                \
+                    base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(     \
+                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(        \
+                            a, _sig, __VA_ARGS__))),                           \
+                *this);                                                        \
+          }                                                                    \
+        }                                                                      \
+      } else {                                                                 \
+        if constexpr (std::same_as<void, type>) {                              \
+          get_v_table_ptr()->name(                                             \
+              anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(       \
+                  , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
+        } else {                                                               \
+          return anyxx::jacket_return<type>::forward(                          \
+              get_v_table_ptr()->name(                                         \
+                  anyxx::get_void_data_ptr(base_t::erased_data_)               \
+                      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(           \
+                                       a, _sig, __VA_ARGS__))),                \
+              *this);                                                          \
+        }                                                                      \
+      }                                                                        \
+    }                                                                          \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
@@ -603,8 +621,10 @@
 #define ANY_TEMPLATE(t, n, l, erased_data_default, dispatch_default) \
   ANY_TEMPLATE_(t, n, , (), l, erased_data_default, dispatch_default)
 
-#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, dispatch_default) \
-  ANY_TEMPLATE_EX_(t, n, , (), l, erased_data_default, dispatch_default, ())
+#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, dispatch_default,  \
+                        decoration)                                      \
+  ANY_TEMPLATE_EX_(t, n, , (), l, erased_data_default, dispatch_default, \
+                   decoration)
 
 #define TRAIT_(n, BASE, l)                                                     \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)),                              \
@@ -2039,11 +2059,37 @@ struct translate_jacket_param<Any, self> {
   using type = Any;
 };
 template <typename Any>
+struct translate_jacket_param<Any, self&> {
+  using type = Any&;  // "return *this" semantics!
+};
+template <typename Any>
 struct translate_jacket_param<Any, self const> {
   using type = Any;
 };
 template <typename Any, typename Param>
 using jacket_param = typename translate_jacket_param<Any, Param>::type;
+
+template <typename Param>
+struct jacket_return {
+  template <typename Sig>
+  static decltype(auto) forward(Sig&& sig, auto&) {
+    return std::forward<Sig>(sig);
+  }
+};
+template <>
+struct jacket_return<self> {
+  template <typename Sig>
+  static decltype(auto) forward(Sig&& sig, auto&) {
+    return std::forward<Sig>(sig);
+  }
+};
+template <>
+struct jacket_return<self&> {
+  template <typename Sig>
+  static decltype(auto) forward(Sig&& sig, auto& any) {
+    return any;  // "return *this" semantics!
+  }
+};
 
 template <typename AnyConstObserver, typename AnyMutableObserver,
           typename Param>
