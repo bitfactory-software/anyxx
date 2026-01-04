@@ -549,17 +549,21 @@
       BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
       v_table_functions, decoration)
 
-#define ANY_(n, BASE, l, erased_data_default, dispatch_default)              \
-  __detail_ANYXX_ANY_(                                                       \
-      ((ErasedData), (Dispatch)),                                            \
-      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type), \
-       (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type)), \
-      n, BASE, l, l, ())
+#define ANY_EX_(n, BASE, l, erased_data_default, dispatch_default, decoration) \
+  __detail_ANYXX_ANY_(                                                         \
+      ((ErasedData), (Dispatch)),                                              \
+      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type),   \
+       (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type)),   \
+      n, BASE, l, l, decoration)
+
+#define ANY_(n, BASE, l, erased_data_default, dispatch_default) \
+  ANY_EX_(n, BASE, l, erased_data_default, dispatch_default, ())
 
 #define ANY(n, ...) ANY_(n, , __VA_ARGS__)
+#define ANY_EX(n, ...) ANY_EX_(n, , __VA_ARGS__)
 
-#define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default,                  \
-                      dispatch_default)                                        \
+#define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default,               \
+                         dispatch_default, decoration)                         \
   ANY_META_FUNCTION(                                                           \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
@@ -590,10 +594,17 @@
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),   \
-      l, l, ())
+      l, l, decoration)
+
+#define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default, \
+                      dispatch_default)                       \
+  ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, dispatch_default, ())
 
 #define ANY_TEMPLATE(t, n, l, erased_data_default, dispatch_default) \
   ANY_TEMPLATE_(t, n, , (), l, erased_data_default, dispatch_default)
+
+#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, dispatch_default) \
+  ANY_TEMPLATE_EX_(t, n, , (), l, erased_data_default, dispatch_default, ())
 
 #define TRAIT_(n, BASE, l)                                                     \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)),                              \
