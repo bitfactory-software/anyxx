@@ -101,6 +101,18 @@
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
 
+#define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,   \
+                                                         ...)                \
+  anyxx::forward_trait_to_map<traited_t, param_type>{}.forward<decltype(c)>(  \
+      std::forward<decltype(c)>(c))                                          \
+      __VA_OPT__(                                                            \
+          , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS( \
+                b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A() \
+  _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H
+#define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(...) \
+  _detail_EXPAND_(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
+
 #define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)        \
   [[maybe_unused]] anyxx::jacket_param<any_t, param_type> c __VA_OPT__( \
       , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(               \
@@ -203,7 +215,7 @@
                                const_, trait_body, ...)                      \
   static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
-      -> anyxx::map_param<T, type> {                                         \
+      -> anyxx::map_return<T, type> {                                        \
     return _detail_REMOVE_PARENS(trait_body)(                                \
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
@@ -278,8 +290,9 @@
               base_t::erased_data_.value_);                                   \
         } else {                                                              \
           return static_dispatch_map_t<T>::name(                              \
-              base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(          \
-                  _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));   \
+              base_t::erased_data_.value_ __VA_OPT__(, )                      \
+                  __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(  \
+                      a, _sig, __VA_ARGS__)));                                \
         }                                                                     \
       } else {                                                                \
         return get_v_table_ptr()->name(                                       \
@@ -2077,6 +2090,43 @@ struct translate_map_param<T, self> {
 };
 template <typename T, typename Param>
 using map_param = typename translate_map_param<T, Param>::type;
+
+template <typename T, typename Param>
+struct translate_map_return {
+  using type = Param;
+};
+template <typename T>
+struct translate_map_return<T, self const> {
+  using type = T;
+};
+template <typename T>
+struct translate_map_return<T, self> {
+  using type = T;
+};
+template <typename T, typename Param>
+using map_return = typename translate_map_return<T, Param>::type;
+
+template <typename, typename T>
+struct forward_trait_to_map {
+  template <typename Sig>
+  static decltype(auto) forward(Sig&& sig) {
+    return std::forward<Sig>(sig);
+  }
+};
+template <typename Traited>
+struct forward_trait_to_map<Traited, self> {
+  template <typename Sig>
+  static typename Traited& forward(Sig&& sig) {
+    return sig.erased_data_.value_;
+  }
+};
+template <typename Traited>
+struct forward_trait_to_map<Traited, self const> {
+  template <typename Sig>
+  static typename Traited const& forward(Sig&& sig) {
+    return sig.erased_data_.value_;
+  }
+};
 
 // --------------------------------------------------------------------------------
 // any customization traits
