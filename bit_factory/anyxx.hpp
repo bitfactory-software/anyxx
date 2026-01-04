@@ -240,15 +240,23 @@
   anyxx::v_table_return<any_value_t, type> (*name)(void const_* __VA_OPT__( \
       , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                                  \
-    overload, type, name, name_ext, exact_const, const_, map_body, ...)        \
-  name = [](void const_* _vp __VA_OPT__(                                       \
-             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))        \
-      -> anyxx::v_table_return<any_value_t, type> {                            \
-    return concept_map{}.name(                                                 \
-        *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )           \
-            __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(a, _sig,        \
-                                                               __VA_ARGS__))); \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                            \
+    overload, type, name, name_ext, exact_const, const_, map_body, ...)  \
+  name = [](void const_* _vp __VA_OPT__(                                 \
+             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))  \
+      -> anyxx::v_table_return<any_value_t, type> {                      \
+    if constexpr (std::same_as<anyxx::v_table_return<any_value_t, type>, \
+                               void>) {                                  \
+      concept_map{}.name(                                                \
+          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )   \
+              __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(        \
+                  a, _sig, __VA_ARGS__)));                               \
+    } else {                                                             \
+      return concept_map{}.name(                                         \
+          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )   \
+              __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(        \
+                  a, _sig, __VA_ARGS__)));                               \
+    }                                                                    \
   };
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
@@ -593,14 +601,14 @@
       __detail_ANYXX_ADD_TAIL((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
       __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::value),                                                      \
+          (anyxx::rtti),                                                       \
           __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::const_observer),                                             \
-          __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
+          (anyxx::rtti), __detail_ANYXX_ADD_TAIL((anyxx::const_observer),      \
+                                                 _detail_REMOVE_PARENS(t))),   \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::mutable_observer),                                           \
-          __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
+          (anyxx::rtti), __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),    \
+                                                 _detail_REMOVE_PARENS(t))),   \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
@@ -1829,7 +1837,9 @@ class erased_data_holder {
   friend inline auto get_void_data_ptr(
       erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
 
-  operator auto() const {
+  operator auto() const
+    requires std::derived_from<Dispatch, trait>
+  {
     if constexpr (std::derived_from<Dispatch, trait>) {
       return erased_data_.value_;
     } else {
@@ -2112,6 +2122,10 @@ template <typename AnyValue>
 struct translate_v_table_return<AnyValue, self> {
   using type = AnyValue;
 };
+template <typename AnyValue>
+struct translate_v_table_return<AnyValue, self&> {
+  using type = void;
+};
 template <typename AnyValue, typename Return>
 using v_table_return =
     typename translate_v_table_return<AnyValue, Return>::type;
@@ -2158,12 +2172,12 @@ struct translate_map_return {
   using type = Param;
 };
 template <typename T>
-struct translate_map_return<T, self const> {
+struct translate_map_return<T, self> {
   using type = T;
 };
 template <typename T>
-struct translate_map_return<T, self> {
-  using type = T;
+struct translate_map_return<T, self&> {
+  using type = T&;
 };
 template <typename T, typename Param>
 using map_return = typename translate_map_return<T, Param>::type;
