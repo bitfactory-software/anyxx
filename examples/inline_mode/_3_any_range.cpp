@@ -13,12 +13,22 @@ anyxx::any_forward_range<int, int> a_range(bool use_list) {
     return v;
 }
 
-ANY(stringable, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                                      [&x]() { return std::format("{}", x); })), , )
+anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
+  if (use_list)
+    return std::list<int>{4, 5, 6};
+  else
+    return std::vector<int>{1, 2, 3};
+}
+
+ANY(stringable,
+    (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
+                          [&x]() { return std::format("{}", x); })),
+    , )
 
 }  // namespace example_3
 
-TEST_CASE("example 3 any_forward_iterator (concrete value_type, erased iterator)") {
+TEST_CASE(
+    "example 3 any_forward_iterator (concrete value_type, erased iterator)") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -52,9 +62,15 @@ TEST_CASE("example 3 any_forward_iterator (concrete value_type, erased iterator)
     for (auto i : a_range(false)) CHECK(i == x++);
     for (auto i : a_range(true)) CHECK(i == x++);
   }
+  {
+    int x = 1;
+    for (auto i : a_range_value(false)) CHECK(i == x++);
+    for (auto i : a_range_value(true)) CHECK(i == x++);
+  }
 }
 
-TEST_CASE("example 3 any_forward_iterator (concrete value_type, concrete iterator)") {
+TEST_CASE(
+    "example 3 any_forward_iterator (concrete value_type, concrete iterator)") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -62,7 +78,7 @@ TEST_CASE("example 3 any_forward_iterator (concrete value_type, concrete iterato
   using v_t = std::vector<int>;
   {
     v_t v;
-    any_forward_range_trait<v_t, int, int> r{v};
+    any_forward_range_trait<v_t const &, int, int> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
   }
@@ -82,7 +98,9 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
   }
 }
 
-TEST_CASE("example 3 any_forward_iterator (any value_type, concrete iterator) only theory, not praxis relevant") {
+TEST_CASE(
+    "example 3 any_forward_iterator (any value_type, concrete iterator) only "
+    "theory, not praxis relevant") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -90,7 +108,9 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, concrete iterator) on
   using v_t = std::vector<int>;
   {
     v_t v;
-    any_forward_range_trait<v_t, stringable<anyxx::value>, stringable<anyxx::value>> r{v};
+    any_forward_range_trait<v_t const &, stringable<anyxx::value>,
+                            stringable<anyxx::value>>
+        r{v};
     int x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
   }
