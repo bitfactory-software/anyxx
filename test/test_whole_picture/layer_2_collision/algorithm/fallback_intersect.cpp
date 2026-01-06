@@ -6,8 +6,7 @@ namespace whole_picture::collision::fallback {
 
 bool intersect(architecture::shape<anyxx::const_observer> const& lhs,
                architecture::shape<anyxx::const_observer> const& rhs) {
-  auto picture = core::shape_to_picture(lhs);
-  return pictures::intersect_with_picture(picture, rhs);
+  return pictures::intersect(core::shape_to_picture(lhs), rhs);
 }
 
 }  // namespace whole_picture::collision::fallback
