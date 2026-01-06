@@ -1854,8 +1854,7 @@ class erased_data_holder {
   friend inline auto get_void_data_ptr(
       erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
 
-  operator auto() const
-    requires std::derived_from<Dispatch, trait>
+  operator decltype(auto)() const
   {
     if constexpr (std::derived_from<Dispatch, trait>) {
       return erased_data_.value_;
