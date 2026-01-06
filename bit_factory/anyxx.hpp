@@ -447,19 +447,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n##_v_table() = default;                                                   \
                                                                                \
     template <typename Concrete>                                               \
-    explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete)       \
-        : v_table_base_t(concrete) {                                           \
-      using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;    \
-                                                                               \
-      _detail_ANYXX_V_TABLE_LAMBDAS(v_table_functions);                        \
-                                                                               \
-      if constexpr (open_dispatch_enabeled) {                                  \
-        own_dispatch_holder_t::set_dispatch_table(                             \
-            ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());        \
-      }                                                                        \
-                                                                               \
-      ::anyxx::set_is_derived_from<Dispatch, v_table_t>(this);                 \
-    };                                                                         \
+    explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete);      \
                                                                                \
     template <typename Concrete>                                               \
     static auto imlpementation() {                                             \
@@ -563,7 +551,25 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using type_for = n<_detail_ANYXX_TEMPLATE_ARGS(tpl4)>;                     \
                                                                                \
     _detail_REMOVE_PARENS(decoration)                                          \
+  };                                                                           \
+                                                                               \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params)>        \
+  template <typename Concrete>                                                 \
+  n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>::          \
+      n##_v_table(std::in_place_type_t<Concrete> concrete)                     \
+      : v_table_base_t(concrete) {                                             \
+    using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;      \
+                                                                               \
+    _detail_ANYXX_V_TABLE_LAMBDAS(v_table_functions);                          \
+                                                                               \
+    if constexpr (open_dispatch_enabeled) {                                    \
+      own_dispatch_holder_t::set_dispatch_table(                               \
+          ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());          \
+    }                                                                          \
+                                                                               \
+    ::anyxx::set_is_derived_from<Dispatch, v_table_t>(this);                   \
   };
+
 ////////////////////////////////////////////////////////////////////////////////
 
 #define __detail_ANYXX_ANY_(t, t_with_defaults, n, BASE, l, v_table_functions, \
@@ -2149,6 +2155,10 @@ struct handle_self_ref_return {
 template <>
 struct handle_self_ref_return<void> {
   static void operator()() {}
+};
+template <>
+struct handle_self_ref_return<self&> {
+  static int operator()() { return 0; }
 };
 
 template <typename Concrete, typename T>
