@@ -100,10 +100,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_FORWARD_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
 
-#define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)     \
-  anyxx::v_table_to_map<Concrete, param_type>{}.forward<decltype(c)>(        \
-      std::forward<decltype(c)>(c))                                          \
-      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS( \
+#define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)      \
+  anyxx::v_table_to_map<Concrete, param_type>::template forward<decltype(c)>( \
+      std::forward<decltype(c)>(c))                                           \
+      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS(  \
                        b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A() \
   _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H
@@ -112,8 +112,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,   \
                                                          ...)                \
-  anyxx::forward_trait_to_map<traited_t, param_type>{}.forward<decltype(c)>( \
-      std::forward<decltype(c)>(c))                                          \
+  anyxx::forward_trait_to_map<traited_t, param_type>::template forward<      \
+      decltype(c)>(std::forward<decltype(c)>(c))                             \
       __VA_OPT__(                                                            \
           , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS( \
                 b, _detail_CONCAT(b, c), __VA_ARGS__))
@@ -260,7 +260,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(       \
                   a, _sig, __VA_ARGS__)));                              \
-      return 0;                                                         \
+      return anyxx::handle_self_ref_return<ANYXX_UNPAREN(type)>{}();    \
     } else {                                                            \
       return concept_map{}.name(                                        \
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
@@ -428,7 +428,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using own_dispatch_holder_t =                                              \
         typename anyxx::dispatch_holder<open_dispatch_enabeled, n>;            \
                                                                                \
-    using any_t = n;                                                           \
     using dispatch_t = Dispatch;                                               \
     using any_value_t =                                                        \
         n<_detail_ANYXX_TEMPLATE_ARGS(any_value_template_params)>;             \
@@ -2140,6 +2139,18 @@ template <typename AnyValue, typename Return>
 using v_table_return =
     typename translate_v_table_return<AnyValue, Return>::type;
 
+template <typename T>
+struct handle_self_ref_return {
+  static T operator()() {
+    static std::remove_reference_t<T> dummy;
+    return dummy;
+  }
+};
+template <>
+struct handle_self_ref_return<void> {
+  static void operator()() {}
+};
+
 template <typename Concrete, typename T>
 struct v_table_to_map {
   template <typename Sig>
@@ -2202,14 +2213,14 @@ struct forward_trait_to_map {
 template <typename Traited>
 struct forward_trait_to_map<Traited, self> {
   template <typename Sig>
-  static typename Traited& forward(Sig&& sig) {
+  static Traited& forward(Sig&& sig) {
     return sig.erased_data_.value_;
   }
 };
 template <typename Traited>
 struct forward_trait_to_map<Traited, self const> {
   template <typename Sig>
-  static typename Traited const& forward(Sig&& sig) {
+  static Traited const& forward(Sig&& sig) {
     return sig.erased_data_.value_;
   }
 };
