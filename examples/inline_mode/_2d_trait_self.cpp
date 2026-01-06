@@ -5,7 +5,7 @@
 namespace example_2d {
 
 ANY(any_has_equal,
-    (ANY_METHOD_DEFAULTED(bool, is_equal, (anyxx::self const), const,
+    (ANY_METHOD_DEFAULTED(bool, is_equal, (anyxx::self const&), const,
                           [&x](T const& y) { return x == y; })),
     , )
 
@@ -33,12 +33,12 @@ TEST_CASE("example 2da any_has_equal") {
 namespace example_2d {
 
 ANY_(any_has_plus, any_has_equal,
-     (ANY_METHOD_DEFAULTED(anyxx::self, plus, (anyxx::self const), const,
+     (ANY_METHOD_DEFAULTED(anyxx::self, plus, (anyxx::self const&), const,
                            ([&x](T const& y) {
                              return anyxx::trait_as<any_has_plus>(x) +
                                     anyxx::trait_as<any_has_plus>(y);
                            })),
-      ANY_OP_DEFAULTED(anyxx::self, +, plus_op, (anyxx::self const), const,
+      ANY_OP_DEFAULTED(anyxx::self, +, plus_op, (anyxx::self const&), const,
                        ([&x](T const& y) { return x + y; }))),
      anyxx::value, )
 

@@ -8,7 +8,7 @@
 namespace example_2b {
 
 TRAIT(monoid,
-      (ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const), const,
+      (ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
                         [&x](auto const& r) {
                           auto self = anyxx::trait_as<monoid>(x);
                           return self | (std::vector{anyxx::trait_as<monoid>(
@@ -23,7 +23,7 @@ TRAIT(monoid,
                                 return m1 + m2;
                               });
                         }),
-       ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const), const,
+       ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const&), const,
                         ([&x](auto const& r) { return x == r; }))))
 
 }  // namespace example_2b

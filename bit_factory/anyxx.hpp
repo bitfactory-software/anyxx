@@ -368,6 +368,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(, _detail_CONCAT(__VA_ARGS__, _v_table))
 
 ////////////////////////////////////////////////////////////////////////////////
+// cppcheck-suppress-macro performance-unnecessary-value-param
 #define ANY_META_FUNCTION(                                                     \
     any_template_params, any_template_params_with_defaults,                    \
     model_map_template_params, tpl3, tpl4, v_table_template_params,            \
@@ -2079,11 +2080,11 @@ struct translate_jacket_param<Any, self> {
 };
 template <typename Any>
 struct translate_jacket_param<Any, self&> {
-  using type = Any&;  // "return *this" semantics!
+  using type = Any&;
 };
 template <typename Any>
-struct translate_jacket_param<Any, self const> {
-  using type = Any;
+struct translate_jacket_param<Any, self const&> {
+  using type = Any const&;
 };
 template <typename Any, typename Param>
 using jacket_param = typename translate_jacket_param<Any, Param>::type;
@@ -2104,7 +2105,7 @@ struct jacket_return<self> {
 };
 template <>
 struct jacket_return<self&> {
-  static decltype(auto) forward(auto, auto& any) {
+  static auto& forward(auto, auto& any) {
     return any;  // "return *this" semantics!
   }
 };
@@ -2116,11 +2117,11 @@ struct translate_v_table_param {
 };
 template <typename AnyConstObserver, typename AnyMutableObserver>
 struct translate_v_table_param<AnyConstObserver, AnyMutableObserver,
-                               self const> {
+                               self const&> {
   using type = AnyConstObserver;
 };
 template <typename AnyConstObserver, typename AnyMutableObserver>
-struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, self> {
+struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, self&> {
   using type = AnyMutableObserver;
 };
 template <typename AnyConstObserver, typename AnyMutableObserver,
@@ -2169,14 +2170,14 @@ struct v_table_to_map {
   }
 };
 template <typename Concrete>
-struct v_table_to_map<Concrete, self> {
+struct v_table_to_map<Concrete, self&> {
   template <typename Sig>
   static Concrete& forward(Sig&& sig) {
     return *unerase_cast<Concrete>(sig);
   }
 };
 template <typename Concrete>
-struct v_table_to_map<Concrete, self const> {
+struct v_table_to_map<Concrete, self const&> {
   template <typename Sig>
   static Concrete const& forward(Sig&& sig) {
     return *unerase_cast<Concrete>(sig);
@@ -2188,11 +2189,11 @@ struct translate_map_param {
   using type = Param;
 };
 template <typename T>
-struct translate_map_param<T, self const> {
+struct translate_map_param<T, self const&> {
   using type = T const&;
 };
 template <typename T>
-struct translate_map_param<T, self> {
+struct translate_map_param<T, self&> {
   using type = T const&;
 };
 template <typename T, typename Param>
@@ -2221,14 +2222,14 @@ struct forward_trait_to_map {
   }
 };
 template <typename Traited>
-struct forward_trait_to_map<Traited, self> {
+struct forward_trait_to_map<Traited, self&> {
   template <typename Sig>
   static Traited& forward(Sig&& sig) {
     return sig.erased_data_.value_;
   }
 };
 template <typename Traited>
-struct forward_trait_to_map<Traited, self const> {
+struct forward_trait_to_map<Traited, self const&> {
   template <typename Sig>
   static Traited const& forward(Sig&& sig) {
     return sig.erased_data_.value_;
@@ -2338,13 +2339,15 @@ struct dynm_v_table_access : Base {
   explicit dynm_v_table_access(
       dynm_v_table_access<VTable, OtherBase> const& other)
       : Base(other), v_table_(other.v_table_) {}
+  // cppcheck-suppress-begin accessForwarded
   template <typename Other>
   explicit dynm_v_table_access(Other&& other)
       : Base(std::forward<Other>(other)), v_table_(other.v_table_) {}
+  // cppcheck-suppress-end accessForwarded
   template <typename Other>
   dynm_v_table_access& operator=(Other&& other) {
-    *this = std::move(other);
     v_table_ = other.v_table_;
+    *this = std::move(other);
     return *this;
   }
   dynm_v_table_access(const dynm_v_table_access&) = default;
@@ -2391,9 +2394,9 @@ struct no_v_table_access : Base {
   using Base::Base;
   using erased_data_t = typename Base::erased_data_t;
   struct v_table_t {};
-  auto get_v_table_ptr() { return nullptr; }
+  static auto get_v_table_ptr() { return nullptr; }
   template <typename Concrete>
-  void init_v_table() {}
+  static void init_v_table() {}
 };
 template <typename Dispatch, typename VTable,
           template <typename...> typename Base>
@@ -2598,7 +2601,9 @@ class hook<R(Args...)> {
     connection& operator=(connection const&) = delete;
 
    public:
-    connection(connection_info info) : info_(info) {}
+    // cppcheck-suppress-begin noExplicitConstructor
+    explicit(false) connection(connection_info info) : info_(info) {}
+    // cppcheck-suppress-end noExplicitConstructor
     connection& operator=(connection_info info) {
       close();
       info_ = info;

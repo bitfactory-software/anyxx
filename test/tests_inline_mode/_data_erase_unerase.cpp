@@ -51,8 +51,8 @@ TEST_CASE("data_erase_unerase/unique") {
     REQUIRE(*unchecked_unerase_cast<int>(u1) == 1);
   }
   {
-    auto u1 = erased<unique>(std::make_unique<A>(
-        "hallo"));  // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+    auto u1 = erased<unique>(std::make_unique<A>(// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+        "hallo"));  
     REQUIRE(unchecked_unerase_cast<A>(u1)->s == "hallo");  // NOLINT
   }
 }

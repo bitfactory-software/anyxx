@@ -18,7 +18,7 @@ namespace {
 ANY(any_test, (ANY_METHOD(int, fun, (), const)), const_observer, dyns)
 
 struct test_class {
-  int fun() const { return 42; }
+  [[nodiscard]] int fun() const { return 42; }
 };
 
 anyxx::factory<any_test, std::string> make_any_test;

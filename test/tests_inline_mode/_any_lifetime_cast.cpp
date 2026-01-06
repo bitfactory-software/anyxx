@@ -74,7 +74,7 @@ using to_string_mo_dynm = to_string_i<mutable_observer, dynm>;
 TEST_CASE("any dynm lifetiem cast1") {
   auto sc1{to_string_u_dynm{std::make_unique<X>("hello dynm")}};
   CHECK(sc1.to_string() == "hello dynm");
-}
+}// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
 TEST_CASE("any dynm lifetiem cast2") {
   to_string_u_dynm u1_dynm{std::make_unique<X>("hello dynm")};
   CHECK(u1_dynm.to_string() == "hello dynm");
@@ -82,4 +82,4 @@ TEST_CASE("any dynm lifetiem cast2") {
       std::same_as<to_string_mo_dynm::v_table_t, to_string_u_dynm::v_table_t>);
   to_string_mo_dynm mo1{u1_dynm};
   CHECK(mo1.to_string() == "hello dynm");
-}
+}// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
