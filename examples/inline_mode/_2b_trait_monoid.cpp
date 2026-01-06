@@ -134,8 +134,11 @@ ANY_MODEL_MAP((std::string), example_2b::monoid) {
 
 namespace example_2b {
 
-template <typename M, typename R>
-void test_monoid(monoid_trait<M> const& m, R r) {
+template <typename M>
+void test_monoid(monoid_trait<M> const& m,
+                 anyxx::any_forward_range<monoid_trait<M>, monoid_trait<M>,
+                                          anyxx::value>
+                     r) {
   using type_1 = decltype(m + (monoid_trait<M>{}) + m);
   using type_2 = decltype(m + (m + (monoid_trait<M>{})));
   static_assert(std::same_as<type_1, type_2>);
@@ -180,8 +183,9 @@ TEST_CASE("example 2b monoid ") {
           anyxx::any_forward_range<monoid_trait<int>, monoid_trait<int>,
                                    anyxx::value>>);
   x | ri;
-  test_monoid(trait_as<monoid>(1), std::vector<int>{{2}, {3}});
-  test_monoid(trait_as<monoid>("1"s), std::vector<std::string>{{"2"s}, {"3"s}});
+  test_monoid<int>(1, std::vector<monoid_trait<int>>{{2}, {3}});
+  test_monoid<std::string>(
+      "1"s, std::vector<monoid_trait<std::string>>{{"2"s}, {"3"s}});
 }
 
 #endif
