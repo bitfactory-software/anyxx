@@ -28,7 +28,12 @@ inline bool intersect(core::shapes::picture const& lhs,
   return false;
 }
 
-bool intersect(core::shapes::picture const& lhs,
-               architecture::shape<anyxx::const_observer> const& rhs);
+bool intersect_with_picture(
+    core::shapes::picture const& lhs,
+    architecture::shape<anyxx::const_observer> const& rhs);
+inline bool intersect(core::shapes::picture const& lhs,
+                      architecture::shape<anyxx::const_observer> const& rhs) {
+  return intersect_with_picture(lhs, rhs);
+}
 
 }  // namespace whole_picture::collision::pictures
