@@ -100,7 +100,7 @@ ANY(monoid,
                       }),
      ANY_OP_DEFAULTED(anyxx::self, |, concat,
                       ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                 anyxx::value> const&)),
+                                                 anyxx::const_observer> const&)),
                       const,
                       [&x](const auto& r) {
                         auto self = anyxx::trait_as<monoid>(x);
@@ -137,7 +137,7 @@ namespace example_2b {
 template <typename M>
 void test_monoid(monoid_trait<M> const& m,
                  anyxx::any_forward_range<monoid_trait<M>, monoid_trait<M>,
-                                          anyxx::value>
+                                          anyxx::const_observer>
                      r) {
   using type_1 = decltype(m + (monoid_trait<M>{}) + m);
   using type_2 = decltype(m + (m + (monoid_trait<M>{})));
@@ -167,21 +167,21 @@ TEST_CASE("example 2b monoid ") {
       ri = vi;
   static_assert(std::same_as<x_t::any_t, monoid_trait<int>>);
   static_assert(is_any_self_forward_range<anyxx::any_forward_range<
-                    anyxx::self, anyxx::self, anyxx::value> const&>);
+                    anyxx::self, anyxx::self, anyxx::const_observer> const&>);
   std::println(
       "{}",
       typeid(
           anyxx::jacket_param<x_t::any_t,
                               anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                       anyxx::value> const&>)
+                                                       anyxx::const_observer> const&>)
           .name());
   static_assert(
       std::same_as<
           std::decay_t<anyxx::jacket_param<
               x_t::any_t, anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                   anyxx::value> const&>>,
+                                                   anyxx::const_observer> const&>>,
           anyxx::any_forward_range<monoid_trait<int>, monoid_trait<int>,
-                                   anyxx::value>>);
+                                   anyxx::const_observer>>);
   x | ri;
   test_monoid<int>(1, std::vector<monoid_trait<int>>{{2}, {3}});
   test_monoid<std::string>(
