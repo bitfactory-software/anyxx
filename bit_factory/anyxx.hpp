@@ -131,10 +131,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)             \
-  [[maybe_unused]] anyxx::v_table_param<any_const_observer_t,                 \
-                                        any_mutable_observer_t, param_type> c \
-  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(             \
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)              \
+  [[maybe_unused]] anyxx::v_table_param<                                       \
+      any_const_observer_t, any_mutable_observer_t, any_value_t, param_type> c \
+  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(              \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
@@ -1854,8 +1854,7 @@ class erased_data_holder {
   friend inline auto get_void_data_ptr(
       erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
 
-  operator decltype(auto)() const
-  {
+  operator decltype(auto)() const {
     if constexpr (std::derived_from<Dispatch, trait>) {
       return erased_data_.value_;
     } else {
@@ -2110,24 +2109,27 @@ struct jacket_return<self&> {
 };
 
 template <typename AnyConstObserver, typename AnyMutableObserver,
-          typename Param>
+          typename AnyValue, typename Param>
 struct translate_v_table_param {
   using type = Param;
 };
-template <typename AnyConstObserver, typename AnyMutableObserver>
-struct translate_v_table_param<AnyConstObserver, AnyMutableObserver,
+template <typename AnyConstObserver, typename AnyMutableObserver,
+          typename AnyValue>
+struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
                                self const&> {
   using type = AnyConstObserver;
 };
-template <typename AnyConstObserver, typename AnyMutableObserver>
-struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, self&> {
+template <typename AnyConstObserver, typename AnyMutableObserver,
+          typename AnyValue>
+struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
+                               self&> {
   using type = AnyMutableObserver;
 };
 template <typename AnyConstObserver, typename AnyMutableObserver,
-          typename Param>
+          typename AnyValue, typename Param>
 using v_table_param =
     typename translate_v_table_param<AnyConstObserver, AnyMutableObserver,
-                                     Param>::type;
+                                     AnyValue, Param>::type;
 
 template <typename AnyValue, typename Return>
 struct translate_v_table_return {

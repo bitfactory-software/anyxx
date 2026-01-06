@@ -1,9 +1,68 @@
 #include <algorithm>
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx_std.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
 #ifdef __cpp_lib_ranges_fold
+
+//namespace anyxx {
+//
+//template <typename A>
+//concept is_any_self_forward_range =
+//    is_any<A> && std::ranges::forward_range<A> &&
+//    std::same_as<std::ranges::range_value_t<A>, self>;
+//
+//template <typename Any, typename AnyForwardRange>
+//  requires is_any_self_forward_range<AnyForwardRange>
+//struct translate_jacket_param<Any, AnyForwardRange const&> {
+//  using type =
+//      anyxx::any_forward_range<Any, Any,
+//                               typename AnyForwardRange::erased_data_t,
+//                               typename AnyForwardRange::dispatch_t> const&;
+//};
+//template <typename AnyConstObserver, typename AnyMutableObserver,
+//          typename AnyForwardRange>
+//  requires is_any_self_forward_range<AnyForwardRange>
+//struct translate_v_table_param<AnyConstObserver, AnyMutableObserver,
+//                               typename AnyForwardRange const&> {
+//  using type =
+//      anyxx::any_forward_range<Any, Any, typename anyxx::erased_data_t,
+//                               typename AnyForwardRange::dispatch_t> const&;
+//};
+//
+//template <typename Concrete, typename AnyForwardRange>
+//  requires is_any_self_forward_range<AnyForwardRange>
+//struct v_table_to_map<Concrete, AnyForwardRange const&> {
+//  static Concrete const& forward(auto const& any_range) {
+//    return any_range | std::views::transform([](auto const& any) {
+//             *unerase_cast<Concrete>(any);
+//           });
+//  }
+//};
+//template <typename T>
+//struct translate_map_param<T, anyxx::any_forward_range<anyxx::self, anyxx::self,
+//                                                       anyxx::value> const&> {
+//  using type =
+//      anyxx::any_forward_range<T, T, anyxx::const_observer,
+//                               typename AnyForwardRange::dispatch_t> const&;
+//};
+//template <typename Traited>
+//struct forward_trait_to_map<
+//    Traited,
+//    anyxx::any_forward_range<anyxx::self, anyxx::self, anyxx::value> const&> {
+//  template <typename Sig>
+//  static Traited const& forward(Sig&& sig) {
+//    return sig.erased_data_.value_;
+//  }
+//};
+//
+//}  // namespace anyxx
+
+                        //(anyxx::any_forward_range<anyxx::self, anyxx::self,
+                        //                          anyxx::value> const&),
+                        //const,
+
 
 namespace example_2b {
 
