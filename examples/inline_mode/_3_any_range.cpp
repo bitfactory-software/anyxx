@@ -2,6 +2,7 @@
 #include <bit_factory/anyxx_std.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <list>
+#include <print>
 
 namespace example_3 {
 
@@ -52,21 +53,28 @@ TEST_CASE(
     any_forward_iterator<int, int> b{v.begin()};
     any_forward_iterator<int, int> e{v.end()};
     CHECK(b != e);
+    CHECK(!(b == e));
     int x = 0;
-    for (auto i = b; i != e; ++i) CHECK(*i == v[x++]);
+    for (auto i = b; i != e; ++i) {
+      CHECK(*i == v[x++]);
+    }
+    CHECK(x == 3);
     any_forward_range<int, int> r{v};
     x = 0;
     for (auto i : r) CHECK(i == v[x++]);
+    CHECK(x == 3);
   }
   {
     int x = 1;
     for (auto i : a_range(false)) CHECK(i == x++);
     for (auto i : a_range(true)) CHECK(i == x++);
+    CHECK(x == 7);
   }
   {
     int x = 1;
     for (auto i : a_range_value(false)) CHECK(i == x++);
     for (auto i : a_range_value(true)) CHECK(i == x++);
+    CHECK(x == 7);
   }
 }
 
@@ -78,10 +86,11 @@ TEST_CASE(
 
   using v_t = std::vector<int>;
   {
-    v_t v;
+    v_t v{1, 2, 3};
     any_forward_range_trait<v_t const &, int, int> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
+    CHECK(x == 3);
   }
 }
 
@@ -92,10 +101,11 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
 
   using v_t = std::vector<int>;
   {
-    v_t v;
+    v_t v{1, 2, 3};
     any_forward_range<stringable<anyxx::value>, stringable<anyxx::value>> r{v};
     int x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
+    CHECK(x == 3);
   }
 }
 
@@ -108,11 +118,37 @@ TEST_CASE(
 
   using v_t = std::vector<int>;
   {
-    v_t v;
+    v_t v{1, 2, 3};
     any_forward_range_trait<v_t const &, stringable<anyxx::value>,
                             stringable<anyxx::value>>
         r{v};
     int x = 0;
-    for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
+    for (auto i : r) {
+      CHECK(i.to_string() == std::to_string(v[x++]));
+    }
+    CHECK(x == 3);
+  }
+}
+
+TEST_CASE("example 3 transform unerase") {
+  using namespace anyxx;
+  using namespace std::string_literals;
+  using namespace example_3;
+
+  using v_t = std::vector<int>;
+  {
+    v_t v{1, 2, 3};
+    any_forward_range_trait<v_t const &, stringable<anyxx::value>,
+                            stringable<anyxx::value>>
+        r{v};
+    int x = 0;
+    for (auto i :
+         std::views::transform(r, [](stringable<anyxx::value> v) -> int {
+           return *anyxx::unerase_cast<int>(v);
+         })) {
+      std::println("{}", i);
+      CHECK(i == ++x);
+    }
+    CHECK(x == 3);
   }
 }
