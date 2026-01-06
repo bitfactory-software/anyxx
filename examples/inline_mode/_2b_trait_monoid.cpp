@@ -17,17 +17,17 @@
 //  requires is_any_self_forward_range<AnyForwardRange>
 //struct translate_jacket_param<Any, AnyForwardRange const&> {
 //  using type =
-//      anyxx::any_forward_range<Any, Any,
+//      anyxx::any_forward_range<typename Any::any_value_t, typename Any::any_value_t,
 //                               typename AnyForwardRange::erased_data_t,
 //                               typename AnyForwardRange::dispatch_t> const&;
 //};
-//template <typename AnyConstObserver, typename AnyMutableObserver,
+//template <typename AnyConstObserver, typename AnyMutableObserver,typename AnyValue, 
 //          typename AnyForwardRange>
 //  requires is_any_self_forward_range<AnyForwardRange>
-//struct translate_v_table_param<AnyConstObserver, AnyMutableObserver,
+//struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
 //                               typename AnyForwardRange const&> {
 //  using type =
-//      anyxx::any_forward_range<Any, Any, typename anyxx::erased_data_t,
+//      anyxx::any_forward_range<AnyValue, AnyValue, typename anyxx::erased_data_t,
 //                               typename AnyForwardRange::dispatch_t> const&;
 //};
 //
