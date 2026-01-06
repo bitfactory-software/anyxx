@@ -491,7 +491,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
                                                                                \
-    using dispatch_t = Dispatch;                                               \
     using any_value_t =                                                        \
         n<_detail_ANYXX_TEMPLATE_ARGS(any_value_template_params)>;             \
     using any_const_observer_t =                                               \
