@@ -101,50 +101,50 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)      \
-  anyxx::v_table_to_map<Concrete, param_type>::template forward<decltype(c)>( \
-      std::forward<decltype(c)>(c))                                           \
-      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS(  \
-                       b, _detail_CONCAT(b, c), __VA_ARGS__))
+  anyxx::v_table_to_map<Concrete, ANYXX_UNPAREN(param_type)>::                \
+      template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
+          , _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A _detail_PARENS(         \
+                b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_A() \
   _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
 
-#define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,   \
-                                                         ...)                \
-  anyxx::forward_trait_to_map<traited_t, param_type>::template forward<      \
-      decltype(c)>(std::forward<decltype(c)>(c))                             \
-      __VA_OPT__(                                                            \
-          , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS( \
+#define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(b, c, param_type,    \
+                                                         ...)                 \
+  anyxx::forward_trait_to_map<traited_t, ANYXX_UNPAREN(param_type)>::         \
+      template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
+          , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A _detail_PARENS(  \
                 b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_A() \
   _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
 
-#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)        \
-  [[maybe_unused]] anyxx::jacket_param<any_t, param_type> c __VA_OPT__( \
-      , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(               \
-            b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)           \
+  [[maybe_unused]] anyxx::jacket_param<any_t, ANYXX_UNPAREN(param_type)> c \
+  __VA_OPT__(, _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(           \
+                   b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
 #define _detail_ANYXX_JACKET_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)              \
-  [[maybe_unused]] anyxx::v_table_param<                                       \
-      any_const_observer_t, any_mutable_observer_t, any_value_t, param_type> c \
-  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(              \
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)            \
+  [[maybe_unused]] anyxx::v_table_param<any_const_observer_t,                \
+                                        any_mutable_observer_t, any_value_t, \
+                                        ANYXX_UNPAREN(param_type)> c         \
+  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(            \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_MAP_PARAM_LIST_H(b, c, param_type, ...)                  \
-  [[maybe_unused]] anyxx::map_param<T, param_type> c __VA_OPT__(               \
-      , _detail_ANYXX_MAP_PARAM_LIST_A _detail_PARENS(b, _detail_CONCAT(b, c), \
-                                                      __VA_ARGS__))
+#define _detail_ANYXX_MAP_PARAM_LIST_H(b, c, param_type, ...)       \
+  [[maybe_unused]] anyxx::map_param<T, ANYXX_UNPAREN(param_type)> c \
+  __VA_OPT__(, _detail_ANYXX_MAP_PARAM_LIST_A _detail_PARENS(       \
+                   b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_MAP_PARAM_LIST_A() _detail_ANYXX_MAP_PARAM_LIST_H
 #define _detail_ANYXX_MAP_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_MAP_PARAM_LIST_H(__VA_ARGS__))
