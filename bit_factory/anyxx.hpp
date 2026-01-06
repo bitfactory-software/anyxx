@@ -473,12 +473,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     template <typename... Args>                                                \
     using any_template = n<Args...>;                                           \
     using any_t = n;                                                           \
-    using any_const_observer_t =                                               \
-        n<_detail_ANYXX_TEMPLATE_ARGS(any_const_observer_template_params)>;    \
-    using any_mutable_observer_t =                                             \
-        n<_detail_ANYXX_TEMPLATE_ARGS(any_mutable_observer_template_params)>;  \
     using erased_data_t = ErasedData;                                          \
     using dispatch_t = Dispatch;                                               \
+                                                                               \
     using T =                                                                  \
         typename anyxx::erased_data_trait<erased_data_t>::static_dispatch_t;   \
     using base_t = typename anyxx::derive_from<                                \
@@ -487,6 +484,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
             _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::                          \
         template type<_detail_ANYXX_TEMPLATE_ARGS(                             \
             base_template_params_with_erased_data)>;                           \
+                                                                               \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
