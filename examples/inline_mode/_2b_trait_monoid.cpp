@@ -44,14 +44,14 @@
 #define ANYXX_BITAND_0(y) 0
 #define ANYXX_BITAND_1(y) y
 
-#define CHECK_N(x, n, ...) n
-#define CHECK(...) CHECK_N(__VA_ARGS__, 0,)
+#define ANYXX_CHECK_N(x, n, ...) n
+#define ANYXX_CHECK(...) ANYXX_CHECK_N(__VA_ARGS__, 0,)
 #define PROBE(x) x, 1,
 
-#define IS_PAREN(x) CHECK(IS_PAREN_PROBE x)
+#define IS_PAREN(x) ANYXX_CHECK(IS_PAREN_PROBE x)
 #define IS_PAREN_PROBE(...) PROBE(~)
 
-#define NOT(x) CHECK(ANYXX_PRIMITIVE_CAT(NOT_, x))
+#define NOT(x) ANYXX_CHECK(ANYXX_PRIMITIVE_CAT(NOT_, x))
 #define NOT_0 PROBE(~)
 
 #define BOOL(x) ANYXX_COMPL(NOT(x))
@@ -79,6 +79,7 @@ IIF(ANYXX_BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)
 
 #define ANYXX_JACKET_PARAM_TYPE(...) \
 IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( auto, anyxx::jacket_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)   
+//usage:
 ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
 ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) -> anyxx::jacket_param<std::vector<int> const&>
 
