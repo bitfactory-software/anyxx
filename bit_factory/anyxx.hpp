@@ -48,6 +48,107 @@
 static_assert(std::same_as<ANYXX_UNPAREN(int), int>);
 static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
+// count arguments
+#define ANYXX_NARGS(...) \
+  ANYXX_NARGS_(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+#define ANYXX_NARGS_(_10, _9, _8, _7, _6, _5, _4, _3, _2, _1, N, ...) N
+
+// utility (concatenation)
+#define ANYXX_CAT(a, ...) ANYXX_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define ANYXX_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
+
+#define ANYXX_GET_ELEM(N, ...) ANYXX_CAT(ANYXX_GET_ELEM_, N)(__VA_ARGS__)
+#define ANYXX_GET_ELEM_0(_0, ...) _0
+#define ANYXX_GET_ELEM_1(_0, _1, ...) _1
+#define ANYXX_GET_ELEM_2(_0, _1, _2, ...) _2
+#define ANYXX_GET_ELEM_3(_0, _1, _2, _3, ...) _3
+#define ANYXX_GET_ELEM_4(_0, _1, _2, _3, _4, ...) _4
+#define ANYXX_GET_ELEM_5(_0, _1, _2, _3, _4, _5, ...) _5
+#define ANYXX_GET_ELEM_6(_0, _1, _2, _3, _4, _5, _6, ...) _6
+#define ANYXX_GET_ELEM_7(_0, _1, _2, _3, _4, _5, _6, _7, ...) _7
+#define ANYXX_GET_ELEM_8(_0, _1, _2, _3, _4, _5, _6, _7, _8, ...) _8
+#define ANYXX_GET_ELEM_9(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, ...) _9
+#define ANYXX_GET_ELEM_10(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, ...) _10
+
+// Get last argument - placeholder decrements by one
+#define ANYXX_GET_LAST(...) \
+  ANYXX_GET_ELEM(ANYXX_NARGS(__VA_ARGS__), _, __VA_ARGS__, , , , , , , , , , , )
+// usage:
+// ANYXX_GET_LAST((A), B)
+// expands to:
+//  B
+
+#define ANYXX_COMPL(b) ANYXX_PRIMITIVE_CAT(ANYXX_COMPL_, b)
+#define ANYXX_COMPL_0 1
+#define ANYXX_COMPL_1 0
+
+#define ANYXX_BITAND(x) ANYXX_PRIMITIVE_CAT(ANYXX_BITAND_, x)
+#define ANYXX_BITAND_0(y) 0
+#define ANYXX_BITAND_1(y) y
+
+#define ANYXX_CHECK_N(x, n, ...) n
+#define ANYXX_CHECK(...) ANYXX_CHECK_N(__VA_ARGS__, 0, )
+#define ANYXX_PROBE(x) x, 1,
+
+#define ANYXX_IS_PAREN(x) ANYXX_CHECK(ANYXX_IS_PAREN_PROBE x)
+#define ANYXX_IS_PAREN_PROBE(...) ANYXX_PROBE(~)
+
+#define ANYXX_NOT(x) ANYXX_CHECK(ANYXX_PRIMITIVE_CAT(ANYXX_NOT_, x))
+#define ANYXX_NOT_0 ANYXX_PROBE(~)
+
+#define ANYXX_BOOL(x) ANYXX_COMPL(ANYXX_NOT(x))
+
+#define ANYXX_IIF(c) ANYXX_PRIMITIVE_CAT(ANYXX_IIF_, c)
+#define ANYXX_IIF_0(t, ...) __VA_ARGS__
+#define ANYXX_IIF_1(t, ...) t
+
+#define ANYXX_IF(c) ANYXX_IIF(ANYXX_BOOL(c))
+
+#define ANYXX_EAT(...)
+#define ANYXX_EXPAND(...) __VA_ARGS__
+#define ANYXX_WHEN(c) ANYXX_IF(c)(ANYXX_EXPAND, EAT)
+
+#define ANYXX_PRIMITIVE_COMPARE(x, y) \
+  ANYXX_IS_PAREN(ANYXX_COMPARE_##x(ANYXX_COMPARE_##y)(()))
+
+#define ANYXX_IS_COMPARABLE(x) ANYXX_IS_PAREN(ANYXX_CAT(ANYXX_COMPARE_, x)(()))
+
+#define ANYXX_NOT_EQUAL(x, y)                                              \
+  ANYXX_IIF(ANYXX_BITAND(ANYXX_IS_COMPARABLE(x))(ANYXX_IS_COMPARABLE(y)))( \
+      ANYXX_PRIMITIVE_COMPARE, 1 ANYXX_EAT)(x, y)
+
+#define ANYXX_EQUAL(x, y) ANYXX_COMPL(ANYXX_NOT_EQUAL(x, y))
+
+#define ANYXX_COMPARE_auto(x) x
+
+#define ANYXX_JACKET_PARAM_TYPE(...)                        \
+  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( \
+      auto, anyxx::jacket_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)
+// usage:
+// ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
+// ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) ->
+// anyxx::jacket_param<std::vector<int> const&>
+// ANYXX_JACKET_PARAM_TYPE(std::vector<int> const&) ->
+// anyxx::jacket_param<std::vector<int> const&>
+#define ANYXX_V_TABLE_PARAM_TYPE(...) \
+  anyxx::v_table_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>
+// usage:
+// ANYXX_V_TABLE_PARAM_TYPE((std::vector<int> const&), auto) ->
+// anyxx::v_table_param<std::vector<int> const&>
+// ANYXX_V_TABLE_PARAM_TYPE((std::vector<int> const&)) ->
+// anyxx::v_table_param<std::vector<int> const&>
+// ANYXX_V_TABLE_PARAM_TYPE(std::vector<int> const&) ->
+// anyxx::v_table_param<std::vector<int> const&>
+#define ANYXX_MAP_PARAM_TYPE(...)                           \
+  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( \
+      auto, anyxx::map_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)
+// usage:
+// ANYXX_MAP_PARAM_TYPE((std::vector<int> const&), auto) -> auto
+// ANYXX_MAP_PARAM_TYPE((std::vector<int> const&)) ->
+// anyxx::map_param<std::vector<int> const&>
+// ANYXX_MAP_PARAM_TYPE(std::vector<int> const&) ->
+// anyxx::map_param<std::vector<int> const&>
+
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
