@@ -62,9 +62,9 @@
 
 #define ANYXX_IF(c) ANYXX_IIF(ANYXX_BOOL(c))
 
-#define EAT(...)
-#define EXPAND(...) __VA_ARGS__
-#define WHEN(c) ANYXX_IF(c)(EXPAND, EAT)
+#define ANYXX_EAT(...)
+#define ANYXX_EXPAND(...) __VA_ARGS__
+#define ANYXX_WHEN(c) ANYXX_IF(c)(ANYXX_EXPAND, EAT)
 
 #define PRIMITIVE_COMPARE(x, y) ANYXX_IS_PAREN(ANYXX_COMPARE_ ## x ( ANYXX_COMPARE_ ## y) (()))
 
