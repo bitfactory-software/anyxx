@@ -18,7 +18,7 @@ template <typename Any, typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
 struct translate_jacket_param<Any, AnyForwardRange const&> {
   using type =
-      anyxx::any_forward_range<typename Any, typename Any,
+      anyxx::any_forward_range<Any, Any,
                                typename AnyForwardRange::erased_data_t,
                                typename AnyForwardRange::dispatch_t> const&;
 };
