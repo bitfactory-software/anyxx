@@ -35,14 +35,14 @@
 // expands to:
 //  B
 
-#define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
-#define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+#define ANYXX_CAT(a, ...) ANYXX_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define ANYXX_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 
-#define ANYXX_COMPL(b) PRIMITIVE_CAT(ANYXX_COMPL_, b)
+#define ANYXX_COMPL(b) ANYXX_PRIMITIVE_CAT(ANYXX_COMPL_, b)
 #define ANYXX_COMPL_0 1
 #define ANYXX_COMPL_1 0
 
-#define BITAND(x) PRIMITIVE_CAT(BITAND_, x)
+#define BITAND(x) ANYXX_PRIMITIVE_CAT(BITAND_, x)
 #define BITAND_0(y) 0
 #define BITAND_1(y) y
 
@@ -53,12 +53,12 @@
 #define IS_PAREN(x) CHECK(IS_PAREN_PROBE x)
 #define IS_PAREN_PROBE(...) PROBE(~)
 
-#define NOT(x) CHECK(PRIMITIVE_CAT(NOT_, x))
+#define NOT(x) CHECK(ANYXX_PRIMITIVE_CAT(NOT_, x))
 #define NOT_0 PROBE(~)
 
 #define BOOL(x) ANYXX_COMPL(NOT(x))
 
-#define IIF(c) PRIMITIVE_CAT(IIF_, c)
+#define IIF(c) ANYXX_PRIMITIVE_CAT(IIF_, c)
 #define IIF_0(t, ...) __VA_ARGS__
 #define IIF_1(t, ...) t
 
@@ -74,7 +74,7 @@
 
 #define PRIMITIVE_COMPARE(x, y) IS_PAREN(ANYXX_COMPARE_ ## x ( ANYXX_COMPARE_ ## y) (()))
 
-#define IS_COMPARABLE(x) IS_PAREN( CAT(ANYXX_COMPARE_, x) (()) )
+#define IS_COMPARABLE(x) IS_PAREN( ANYXX_CAT(ANYXX_COMPARE_, x) (()) )
 
 #define NOT_EQUAL(x, y) \
 IIF(BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)(x, y)
