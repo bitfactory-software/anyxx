@@ -27,7 +27,7 @@ template <typename AnyConstObserver, typename AnyMutableObserver,
           typename AnyValue, typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
 struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
-                               typename AnyForwardRange const&> {
+                               AnyForwardRange const&> {
   using type =
       anyxx::any_forward_range<AnyValue, AnyValue,
                                typename AnyForwardRange::erased_data_t,
