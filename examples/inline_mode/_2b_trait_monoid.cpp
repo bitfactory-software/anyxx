@@ -46,13 +46,13 @@
 
 #define ANYXX_CHECK_N(x, n, ...) n
 #define ANYXX_CHECK(...) ANYXX_CHECK_N(__VA_ARGS__, 0,)
-#define PROBE(x) x, 1,
+#define ANYXX_PROBE(x) x, 1,
 
 #define IS_PAREN(x) ANYXX_CHECK(IS_PAREN_PROBE x)
-#define IS_PAREN_PROBE(...) PROBE(~)
+#define IS_PAREN_PROBE(...) ANYXX_PROBE(~)
 
 #define NOT(x) ANYXX_CHECK(ANYXX_PRIMITIVE_CAT(NOT_, x))
-#define NOT_0 PROBE(~)
+#define NOT_0 ANYXX_PROBE(~)
 
 #define BOOL(x) ANYXX_COMPL(NOT(x))
 
