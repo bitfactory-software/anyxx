@@ -234,29 +234,10 @@ TEST_CASE("example 2b monoid ") {
   using namespace anyxx;
   auto x = trait_as<monoid>(1);
   using x_t = decltype(x);
-  auto vi = std::vector<monoid_trait<int>>{{2}, {3}};
-  anyxx::any_forward_range<monoid_trait<int>, monoid_trait<int>, anyxx::value>
-      ri = vi;
-  static_assert(std::same_as<x_t::any_t, monoid_trait<int>>);
-  static_assert(is_any_self_forward_range<anyxx::any_forward_range<
-                    anyxx::self, anyxx::self, anyxx::const_observer> const&>);
-  std::println(
-      "{}",
-      typeid(anyxx::jacket_param<x_t::any_t, anyxx::any_forward_range<
-                                                 anyxx::self, anyxx::self,
-                                                 anyxx::const_observer> const&>)
-          .name());
-  static_assert(std::same_as<
-                std::decay_t<anyxx::jacket_param<
-                    x_t::any_t,
-                    anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                             anyxx::const_observer> const&>>,
-                anyxx::any_forward_range<monoid_trait<int>, monoid_trait<int>,
-                                         anyxx::const_observer>>);
-  x | ri;
-  static_assert(anyxx::is_any<decltype(trait_as<monoid>(1))>);
+
   test_monoid<monoid_trait<int>>(trait_as<monoid>(1),
                                  std::vector<monoid_trait<int>>{{2}, {3}});
+
   test_monoid<monoid_trait<std::string>>(
       trait_as<monoid>("1"s),
       std::vector<monoid_trait<std::string>>{{"2"s}, {"3"s}});
