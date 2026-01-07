@@ -167,7 +167,8 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
 namespace example_2b {
 
 ANY(monoid,
-    (ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
+    (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const, [&x]() { return T{}; }),
+     ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
                       [&x](auto const& r) {
                         auto self = anyxx::trait_as<monoid>(x);
                         return self | (std::vector{anyxx::trait_as<monoid>(
@@ -192,15 +193,14 @@ ANY(monoid,
 }  // namespace example_2b
 
 ANY_MODEL_MAP((int), example_2b::monoid) {
-  static monoid_trait<int> concat(int self, auto const& r) {
+  static int concat(int self, auto const& r) {
     return monoid_trait<int>{std::ranges::fold_left(
         r, self, [&](int m1, int m2) { return m1 + m2; })};
   };
 };
 
 ANY_MODEL_MAP((std::string), example_2b::monoid) {
-  static monoid_trait<std::string> op(std::string const& self,
-                                      std::string const& r) {
+  static std::string op(std::string const& self, std::string const& r) {
     return self + r;
   };
 };
@@ -211,11 +211,12 @@ template <anyxx::is_any Monoid>
 void test_monoid(
     Monoid const& m,
     anyxx::any_forward_range<Monoid, Monoid, anyxx::const_observer> r) {
-  using type_1 = decltype(m + (Monoid{}) + m);
-  using type_2 = decltype(m + (m + (Monoid{})));
+  auto id = m.id();
+  using type_1 = decltype(m + id + m);
+  using type_2 = decltype(m + (m + id));
   static_assert(std::same_as<type_1, type_2>);
   static_assert(std::same_as<type_1, Monoid>);
-  auto c1 = m + Monoid{} + m == m + m + Monoid{};
+  auto c1 = m + id + m == m + m + id;
   CHECK(c1);
   auto c2 = (m | r) ==
             std::ranges::fold_left(
@@ -259,9 +260,9 @@ TEST_CASE("example 2b monoid ") {
   test_monoid<monoid_trait<std::string>>(
       trait_as<monoid>("1"s),
       std::vector<monoid_trait<std::string>>{{"2"s}, {"3"s}});
-  //test_monoid<monoid<anyxx::value>>(
-  //    "1"s,
-  //    std::vector<monoid_trait<std::string>>{{"2"s}, {"3"s}});
+
+  test_monoid<monoid<anyxx::value>>(
+      "1"s, std::vector<monoid<anyxx::value>>{{"2"s}, {"3"s}});
 }
 
 #endif
