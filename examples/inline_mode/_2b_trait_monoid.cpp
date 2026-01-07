@@ -54,13 +54,13 @@
 #define ANYXX_NOT(x) ANYXX_CHECK(ANYXX_PRIMITIVE_CAT(ANYXX_NOT_, x))
 #define ANYXX_NOT_0 ANYXX_PROBE(~)
 
-#define BOOL(x) ANYXX_COMPL(ANYXX_NOT(x))
+#define ANYXX_BOOL(x) ANYXX_COMPL(ANYXX_NOT(x))
 
 #define IIF(c) ANYXX_PRIMITIVE_CAT(IIF_, c)
 #define IIF_0(t, ...) __VA_ARGS__
 #define IIF_1(t, ...) t
 
-#define IF(c) IIF(BOOL(c))
+#define IF(c) IIF(ANYXX_BOOL(c))
 
 #define EAT(...)
 #define EXPAND(...) __VA_ARGS__
