@@ -121,33 +121,38 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define ANYXX_COMPARE_auto(x) x
 
-#define ANYXX_JACKET_PARAM_TYPE(...)                        \
-  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( \
-      auto, anyxx::jacket_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)
-// usage:
-// ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
-// ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) ->
-// anyxx::jacket_param<std::vector<int> const&>
-// ANYXX_JACKET_PARAM_TYPE(std::vector<int> const&) ->
-// anyxx::jacket_param<std::vector<int> const&>
-#define ANYXX_V_TABLE_PARAM_TYPE(...) \
-  anyxx::v_table_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>
-// usage:
-// ANYXX_V_TABLE_PARAM_TYPE((std::vector<int> const&), auto) ->
-// anyxx::v_table_param<std::vector<int> const&>
-// ANYXX_V_TABLE_PARAM_TYPE((std::vector<int> const&)) ->
-// anyxx::v_table_param<std::vector<int> const&>
-// ANYXX_V_TABLE_PARAM_TYPE(std::vector<int> const&) ->
-// anyxx::v_table_param<std::vector<int> const&>
-#define ANYXX_MAP_PARAM_TYPE(...)                           \
-  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( \
-      auto, anyxx::map_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)
-// usage:
-// ANYXX_MAP_PARAM_TYPE((std::vector<int> const&), auto) -> auto
-// ANYXX_MAP_PARAM_TYPE((std::vector<int> const&)) ->
-// anyxx::map_param<std::vector<int> const&>
-// ANYXX_MAP_PARAM_TYPE(std::vector<int> const&) ->
-// anyxx::map_param<std::vector<int> const&>
+#define ANYXX_JACKET_PARAM_TYPE(...)                                \
+  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))(         \
+      auto, anyxx::jacket_param<any_t, ANYXX_UNPAREN(ANYXX_UNPAREN( \
+                                           ANYXX_GET_ELEM_0(__VA_ARGS__)))>)
+
+#define ANYXX_JACKET_RETURN(...)      \
+  anyxx::jacket_return<ANYXX_UNPAREN( \
+      ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__)))>
+
+#define ANYXX_V_TABLE_PARAM_TYPE(...)                            \
+  anyxx::v_table_param<                                          \
+      any_const_observer_t, any_mutable_observer_t, any_value_t, \
+      ANYXX_UNPAREN(ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__)))>
+
+#define ANYXX_V_TABLE_RETURN_TYPE(...)                            \
+  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(ANYXX_UNPAREN( \
+                                         ANYXX_GET_ELEM_0(__VA_ARGS__)))>
+
+//#define ANYXX_MAP_PARAM_TYPE(...)                            \
+//  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))(  \
+//      auto, anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN( \
+//                                    ANYXX_GET_ELEM_0(__VA_ARGS__)))>)
+#define ANYXX_MAP_PARAM_TYPE(...)                            \
+anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
+
+
+#define ANYXX_MAP_RETURN_TYPE(...)                            \
+  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))(   \
+      auto, anyxx::map_return<T, ANYXX_UNPAREN(ANYXX_UNPAREN( \
+                                     ANYXX_GET_ELEM_0(__VA_ARGS__)))>)
+
+// ANYXX_MAP_RETURN_TYPE((any_forward_iterator<ValueType, Reference>))
 
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
@@ -225,7 +230,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)           \
   [[maybe_unused]] anyxx::jacket_param<any_t, ANYXX_UNPAREN(param_type)> c \
   __VA_OPT__(, _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(           \
-                   b, _detail_CONCAT(b, c), __VA_ARGS__))
+            b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
 #define _detail_ANYXX_JACKET_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
@@ -236,7 +241,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                         any_mutable_observer_t, any_value_t, \
                                         ANYXX_UNPAREN(param_type)> c         \
   __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(            \
-                   b, _detail_CONCAT(b, c), __VA_ARGS__))
+            b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
@@ -349,7 +354,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                         exact_const, const_, map_body, ...) \
   anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name)(          \
       void const_* __VA_OPT__(                                              \
-          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
+      , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
     overload, type, name, name_ext, exact_const, const_, map_body, ...) \
