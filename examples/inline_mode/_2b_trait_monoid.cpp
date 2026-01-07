@@ -82,8 +82,19 @@ ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( auto, anyxx::jacket_pa
 //usage:
 //ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
 //ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) -> anyxx::jacket_param<std::vector<int> const&>
-
-
+//ANYXX_JACKET_PARAM_TYPE(std::vector<int> const&) -> anyxx::jacket_param<std::vector<int> const&>
+#define ANYXX_V_TABLE_PARAM_TYPE(...) \
+anyxx::v_table_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>   
+//usage:
+//ANYXX_V_TABLE_PARAM_TYPE((std::vector<int> const&), auto) -> anyxx::v_table_param<std::vector<int> const&>
+//ANYXX_V_TABLE_PARAM_TYPE((std::vector<int> const&)) -> anyxx::v_table_param<std::vector<int> const&>
+//ANYXX_V_TABLE_PARAM_TYPE(std::vector<int> const&) -> anyxx::v_table_param<std::vector<int> const&>
+#define ANYXX_MAP_PARAM_TYPE(...) \
+ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( auto, anyxx::map_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)   
+//usage:
+//ANYXX_MAP_PARAM_TYPE((std::vector<int> const&), auto) -> auto
+//ANYXX_MAP_PARAM_TYPE((std::vector<int> const&)) -> anyxx::map_param<std::vector<int> const&>
+//ANYXX_MAP_PARAM_TYPE(std::vector<int> const&) -> anyxx::map_param<std::vector<int> const&>
 
 namespace anyxx {
 
