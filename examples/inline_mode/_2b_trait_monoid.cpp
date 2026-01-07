@@ -7,6 +7,93 @@
 
 #ifdef __cpp_lib_ranges_fold
 
+// count arguments
+#define _detail_ANYXX_NARGS(...) _detail_ANYXX_NARGS_(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
+#define _detail_ANYXX_NARGS_(_10, _9, _8, _7, _6, _5, _4, _3, _2, _1, N, ...) N
+
+// utility (concatenation)
+#define _detail_ANYXX_CONC(A, B) _detail_ANYXX_CONC_(A, B)
+#define _detail_ANYXX_CONC_(A, B) A##B
+
+#define _detail_ANYXX_GET_ELEM(N, ...) _detail_ANYXX_CONC(_detail_ANYXX_GET_ELEM_, N)(__VA_ARGS__)
+#define _detail_ANYXX_GET_ELEM_0(_0, ...) _0
+#define _detail_ANYXX_GET_ELEM_1(_0, _1, ...) _1
+#define _detail_ANYXX_GET_ELEM_2(_0, _1, _2, ...) _2
+#define _detail_ANYXX_GET_ELEM_3(_0, _1, _2, _3, ...) _3
+#define _detail_ANYXX_GET_ELEM_4(_0, _1, _2, _3, _4, ...) _4
+#define _detail_ANYXX_GET_ELEM_5(_0, _1, _2, _3, _4, _5, ...) _5
+#define _detail_ANYXX_GET_ELEM_6(_0, _1, _2, _3, _4, _5, _6, ...) _6
+#define _detail_ANYXX_GET_ELEM_7(_0, _1, _2, _3, _4, _5, _6, _7, ...) _7
+#define _detail_ANYXX_GET_ELEM_8(_0, _1, _2, _3, _4, _5, _6, _7, _8, ...) _8
+#define _detail_ANYXX_GET_ELEM_9(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, ...) _9
+#define _detail_ANYXX_GET_ELEM_10(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, ...) _10
+
+// Get last argument - placeholder decrements by one
+#define _detail_ANYXX_GET_LAST(...) _detail_ANYXX_GET_ELEM(_detail_ANYXX_NARGS(__VA_ARGS__), _, __VA_ARGS__ ,,,,,,,,,,,)
+// usage: 
+//_detail_ANYXX_GET_LAST((A), B)
+// expands to:
+//  B
+
+#define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
+#define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
+
+#define COMPL(b) PRIMITIVE_CAT(COMPL_, b)
+#define COMPL_0 1
+#define COMPL_1 0
+
+#define BITAND(x) PRIMITIVE_CAT(BITAND_, x)
+#define BITAND_0(y) 0
+#define BITAND_1(y) y
+
+#define CHECK_N(x, n, ...) n
+#define CHECK(...) CHECK_N(__VA_ARGS__, 0,)
+#define PROBE(x) x, 1,
+
+#define IS_PAREN(x) CHECK(IS_PAREN_PROBE x)
+#define IS_PAREN_PROBE(...) PROBE(~)
+
+#define NOT(x) CHECK(PRIMITIVE_CAT(NOT_, x))
+#define NOT_0 PROBE(~)
+
+#define COMPL(b) PRIMITIVE_CAT(COMPL_, b)
+#define COMPL_0 1
+#define COMPL_1 0
+
+#define BOOL(x) COMPL(NOT(x))
+
+#define IIF(c) PRIMITIVE_CAT(IIF_, c)
+#define IIF_0(t, ...) __VA_ARGS__
+#define IIF_1(t, ...) t
+
+#define IF(c) IIF(BOOL(c))
+
+#define EAT(...)
+#define EXPAND(...) __VA_ARGS__
+#define WHEN(c) IF(c)(EXPAND, EAT)
+
+#define EMPTY()
+#define DEFER(id) id EMPTY()
+#define OBSTRUCT(id) id DEFER(EMPTY)()
+
+#define PRIMITIVE_COMPARE(x, y) IS_PAREN(ANYXX_COMPARE_ ## x ( ANYXX_COMPARE_ ## y) (()))
+
+#define IS_COMPARABLE(x) IS_PAREN( CAT(ANYXX_COMPARE_, x) (()) )
+
+#define NOT_EQUAL(x, y) \
+IIF(BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)(x, y)
+
+#define ANYXX_EQUAL(x, y) COMPL(NOT_EQUAL(x, y))
+
+#define ANYXX_COMPARE_auto(x) x
+
+#define ANYXX_JACKET_PARAM_TYPE(...) \
+IF(ANYXX_EQUAL(_detail_ANYXX_GET_LAST(__VA_ARGS__), auto))( auto, anyxx::jacket_param<ANYXX_UNPAREN(_detail_ANYXX_GET_ELEM_0(__VA_ARGS__))>)   
+ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
+ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) -> anyxx::jacket_param<std::vector<int> const&>
+
+
+
 namespace anyxx {
 
 template <typename A>
