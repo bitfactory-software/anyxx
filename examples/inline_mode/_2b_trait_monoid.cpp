@@ -12,10 +12,10 @@
 #define ANYXX_NARGS_(_10, _9, _8, _7, _6, _5, _4, _3, _2, _1, N, ...) N
 
 // utility (concatenation)
-#define ANYXX_CONC(A, B) ANYXX_CONC_(A, B)
-#define ANYXX_CONC_(A, B) A##B
+#define ANYXX_CAT(a, ...) ANYXX_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define ANYXX_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 
-#define ANYXX_GET_ELEM(N, ...) ANYXX_CONC(ANYXX_GET_ELEM_, N)(__VA_ARGS__)
+#define ANYXX_GET_ELEM(N, ...) ANYXX_CAT(ANYXX_GET_ELEM_, N)(__VA_ARGS__)
 #define ANYXX_GET_ELEM_0(_0, ...) _0
 #define ANYXX_GET_ELEM_1(_0, _1, ...) _1
 #define ANYXX_GET_ELEM_2(_0, _1, _2, ...) _2
@@ -35,16 +35,14 @@
 // expands to:
 //  B
 
-#define ANYXX_CAT(a, ...) ANYXX_PRIMITIVE_CAT(a, __VA_ARGS__)
-#define ANYXX_PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 
 #define ANYXX_COMPL(b) ANYXX_PRIMITIVE_CAT(ANYXX_COMPL_, b)
 #define ANYXX_COMPL_0 1
 #define ANYXX_COMPL_1 0
 
-#define BITAND(x) ANYXX_PRIMITIVE_CAT(BITAND_, x)
-#define BITAND_0(y) 0
-#define BITAND_1(y) y
+#define ANYXX_BITAND(x) ANYXX_PRIMITIVE_CAT(ANYXX_BITAND_, x)
+#define ANYXX_BITAND_0(y) 0
+#define ANYXX_BITAND_1(y) y
 
 #define CHECK_N(x, n, ...) n
 #define CHECK(...) CHECK_N(__VA_ARGS__, 0,)
@@ -77,7 +75,7 @@
 #define IS_COMPARABLE(x) IS_PAREN( ANYXX_CAT(ANYXX_COMPARE_, x) (()) )
 
 #define NOT_EQUAL(x, y) \
-IIF(BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)(x, y)
+IIF(ANYXX_BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)(x, y)
 
 #define ANYXX_EQUAL(x, y) ANYXX_COMPL(NOT_EQUAL(x, y))
 
