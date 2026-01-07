@@ -56,10 +56,6 @@
 #define NOT(x) CHECK(PRIMITIVE_CAT(NOT_, x))
 #define NOT_0 PROBE(~)
 
-#define COMPL(b) PRIMITIVE_CAT(COMPL_, b)
-#define COMPL_0 1
-#define COMPL_1 0
-
 #define BOOL(x) COMPL(NOT(x))
 
 #define IIF(c) PRIMITIVE_CAT(IIF_, c)
