@@ -66,12 +66,12 @@
 #define ANYXX_EXPAND(...) __VA_ARGS__
 #define ANYXX_WHEN(c) ANYXX_IF(c)(ANYXX_EXPAND, EAT)
 
-#define PRIMITIVE_COMPARE(x, y) ANYXX_IS_PAREN(ANYXX_COMPARE_ ## x ( ANYXX_COMPARE_ ## y) (()))
+#define ANYXX_PRIMITIVE_COMPARE(x, y) ANYXX_IS_PAREN(ANYXX_COMPARE_ ## x ( ANYXX_COMPARE_ ## y) (()))
 
-#define IS_COMPARABLE(x) ANYXX_IS_PAREN( ANYXX_CAT(ANYXX_COMPARE_, x) (()) )
+#define ANYXX_IS_COMPARABLE(x) ANYXX_IS_PAREN( ANYXX_CAT(ANYXX_COMPARE_, x) (()) )
 
 #define ANYXX_NOT_EQUAL(x, y) \
-ANYXX_IIF(ANYXX_BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)(x, y)
+ANYXX_IIF(ANYXX_BITAND(ANYXX_IS_COMPARABLE(x))(ANYXX_IS_COMPARABLE(y)) )(ANYXX_PRIMITIVE_COMPARE, 1 ANYXX_EAT)(x, y)
 
 #define ANYXX_EQUAL(x, y) ANYXX_COMPL(ANYXX_NOT_EQUAL(x, y))
 
@@ -80,8 +80,8 @@ ANYXX_IIF(ANYXX_BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 
 #define ANYXX_JACKET_PARAM_TYPE(...) \
 ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))( auto, anyxx::jacket_param<ANYXX_UNPAREN(ANYXX_GET_ELEM_0(__VA_ARGS__))>)   
 //usage:
-ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
-ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) -> anyxx::jacket_param<std::vector<int> const&>
+//ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&), auto) -> auto
+//ANYXX_JACKET_PARAM_TYPE((std::vector<int> const&)) -> anyxx::jacket_param<std::vector<int> const&>
 
 
 
