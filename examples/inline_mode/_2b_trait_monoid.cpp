@@ -38,9 +38,9 @@
 #define CAT(a, ...) PRIMITIVE_CAT(a, __VA_ARGS__)
 #define PRIMITIVE_CAT(a, ...) a ## __VA_ARGS__
 
-#define COMPL(b) PRIMITIVE_CAT(COMPL_, b)
-#define COMPL_0 1
-#define COMPL_1 0
+#define ANYXX_COMPL(b) PRIMITIVE_CAT(ANYXX_COMPL_, b)
+#define ANYXX_COMPL_0 1
+#define ANYXX_COMPL_1 0
 
 #define BITAND(x) PRIMITIVE_CAT(BITAND_, x)
 #define BITAND_0(y) 0
@@ -56,7 +56,7 @@
 #define NOT(x) CHECK(PRIMITIVE_CAT(NOT_, x))
 #define NOT_0 PROBE(~)
 
-#define BOOL(x) COMPL(NOT(x))
+#define BOOL(x) ANYXX_COMPL(NOT(x))
 
 #define IIF(c) PRIMITIVE_CAT(IIF_, c)
 #define IIF_0(t, ...) __VA_ARGS__
@@ -79,7 +79,7 @@
 #define NOT_EQUAL(x, y) \
 IIF(BITAND(IS_COMPARABLE(x))(IS_COMPARABLE(y)) )(PRIMITIVE_COMPARE, 1 EAT)(x, y)
 
-#define ANYXX_EQUAL(x, y) COMPL(NOT_EQUAL(x, y))
+#define ANYXX_EQUAL(x, y) ANYXX_COMPL(NOT_EQUAL(x, y))
 
 #define ANYXX_COMPARE_auto(x) x
 
