@@ -66,10 +66,6 @@
 #define EXPAND(...) __VA_ARGS__
 #define WHEN(c) IF(c)(EXPAND, EAT)
 
-#define EMPTY()
-#define DEFER(id) id EMPTY()
-#define OBSTRUCT(id) id DEFER(EMPTY)()
-
 #define PRIMITIVE_COMPARE(x, y) IS_PAREN(ANYXX_COMPARE_ ## x ( ANYXX_COMPARE_ ## y) (()))
 
 #define IS_COMPARABLE(x) IS_PAREN( ANYXX_CAT(ANYXX_COMPARE_, x) (()) )
