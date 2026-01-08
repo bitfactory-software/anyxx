@@ -15,7 +15,7 @@ namespace anyxx {
 namespace example_2b {
 
 ANY(monoid,
-    (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const, [&x]() { return T{}; }),
+    (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const, []() { return T{}; }),
      ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
                       [&x](auto const& r) {
                         auto self = anyxx::trait_as<monoid>(x);
