@@ -16,12 +16,12 @@ void line(auto surface, point p1_, point p2_){
 
   auto dx = p2.x - p1.x;
   if (!dx) {
-    for (auto y : std::views::iota(p1.y, p2.y)) surface.write({p1.x, y}, ch);
+    for (auto y : std::views::iota(p1.y, p2.y)) surface.write(point{p1.x, y}, ch);
     return;
   }
   auto dy = p2.y - p1.y;
   if (!dx) {
-    for (auto x : std::views::iota(p1.x, p2.x)) surface.write({x, p1.y}, ch);
+    for (auto x : std::views::iota(p1.x, p2.x)) surface.write(point{x, p1.y}, ch);
     return;
   }
 
@@ -30,9 +30,9 @@ void line(auto surface, point p1_, point p2_){
   for (int x = p1.x; x < p2.x; ++x) {
     auto y = static_cast<int>(std::round(p1.x + x * m) + p1.y);
     while (last_y - 1 < y - 1) {
-      surface.write({x, ++last_y}, ch);
+      surface.write(point{x, ++last_y}, ch);
     }
-    surface.write({x, y}, ch);
+    surface.write(point{x, y}, ch);
   }
 }
 }

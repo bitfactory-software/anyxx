@@ -2,20 +2,20 @@
 
 #include <test/test_whole_picture/layer_0_architecture/architecture.hpp>
 
-namespace whole_picture::architecture::draw{
+namespace whole_picture::architecture::draw {
 
-void circle(auto surface, point center, int radius){
+void circle(auto surface, point center, int radius) {
   const auto ch = '*';
   auto writeToAllQuadrants = [&](int x1, int x2, int y1, int y2) {
-    surface.write({x1 + center.x, -y1 + center.y}, ch);
-    surface.write({-x1 + center.x, -y1 + center.y}, ch);
-    surface.write({x2 + center.x, y2 + center.y}, ch);
-    surface.write({-x2 + center.x, y2 + center.y}, ch);
+    surface.write(point{x1 + center.x, -y1 + center.y}, ch);
+    surface.write(point{-x1 + center.x, -y1 + center.y}, ch);
+    surface.write(point{x2 + center.x, y2 + center.y}, ch);
+    surface.write(point{-x2 + center.x, y2 + center.y}, ch);
   };
 
   int x = radius, y = 0;
 
-  surface.write({x + center.x, y + center.y}, ch);
+  surface.write(point{x + center.x, y + center.y}, ch);
   if (radius > 0) writeToAllQuadrants(x, y, y, x);
 
   int P = 1 - radius;
@@ -33,7 +33,7 @@ void circle(auto surface, point center, int radius){
     if (x != y) writeToAllQuadrants(y, y, x, x);
   }
 
-  surface.write({center.x, -radius + center.y}, ch);
+  surface.write(point{center.x, -radius + center.y}, ch);
 }
 
-}
+}  // namespace whole_picture::architecture::draw

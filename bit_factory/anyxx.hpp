@@ -28,6 +28,7 @@
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
 #pragma GCC diagnostic ignored "-Wunused-local-typedef"
 #pragma GCC diagnostic ignored "-Wextra-semi"
+#pragma GCC diagnostic ignored "-Wambiguous-reversed-operator"
 #endif
 #if defined(__GNUC__) and !defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
@@ -226,10 +227,10 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
 
-#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)           \
-  [[maybe_unused]] anyxx::jacket_param<any_t, ANYXX_UNPAREN(param_type)> c \
-  __VA_OPT__(, _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(           \
-                   b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...) \
+  [[maybe_unused]] auto&& c __VA_OPT__(                          \
+      , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(        \
+            b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
 #define _detail_ANYXX_JACKET_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))

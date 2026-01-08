@@ -79,7 +79,7 @@ void draw(std::ostream& os,
           std::vector<any_drawable<shared_const>> const& any_drawables) {
   float x = 0.0, y = 0.0;
   for (auto const& any_drawable : any_drawables)
-    any_drawable.draw(os, {x++, y++});
+    any_drawable.draw(os, position{x++, y++});
 }
 
 void process(
@@ -134,7 +134,7 @@ TEST_CASE("example 1/2 upcast, downcast") {
           [](std::ostream& os, any_drawable<shared_const> const& drawable) {
             downcast_to<any_shape<shared_const>>(drawable).and_then(
                 [&](any_shape<shared_const> const& shape) {
-                  shape.draw(os, {});
+                  shape.draw(os, position{});
                   os << "...area: " << shape.area() << "\n";
                   return std::optional{shape};
                 });
