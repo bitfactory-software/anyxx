@@ -143,9 +143,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 //  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))(  \
 //      auto, anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN( \
 //                                    ANYXX_GET_ELEM_0(__VA_ARGS__)))>)
-#define ANYXX_MAP_PARAM_TYPE(...)                            \
+#define ANYXX_MAP_PARAM_TYPE(...) \
 anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
-
 
 #define ANYXX_MAP_RETURN_TYPE(...)                            \
   ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))(   \
@@ -230,7 +229,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
 #define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)           \
   [[maybe_unused]] anyxx::jacket_param<any_t, ANYXX_UNPAREN(param_type)> c \
   __VA_OPT__(, _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(           \
-            b, _detail_CONCAT(b, c), __VA_ARGS__))
+                   b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
 #define _detail_ANYXX_JACKET_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
@@ -241,7 +240,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
                                         any_mutable_observer_t, any_value_t, \
                                         ANYXX_UNPAREN(param_type)> c         \
   __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(            \
-            b, _detail_CONCAT(b, c), __VA_ARGS__))
+                   b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
@@ -354,7 +353,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
                                         exact_const, const_, map_body, ...) \
   anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name)(          \
       void const_* __VA_OPT__(                                              \
-      , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
+          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
     overload, type, name, name_ext, exact_const, const_, map_body, ...) \
@@ -420,7 +419,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__)));                               \
           } else {                                                             \
-            return anyxx::jacket_return<ANYXX_UNPAREN(type)>::forward(         \
+            return ANYXX_JACKET_RETURN(type)::forward(                         \
                 static_dispatch_map_t<T>::name(                                \
                     base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(     \
                         _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(        \
@@ -434,7 +433,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
               anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(       \
                   , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
         } else {                                                               \
-          return anyxx::jacket_return<ANYXX_UNPAREN(type)>::forward(           \
+          return ANYXX_JACKET_RETURN(type)::forward(                           \
               get_v_table_ptr()->name(                                         \
                   anyxx::get_void_data_ptr(base_t::erased_data_)               \
                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(           \
