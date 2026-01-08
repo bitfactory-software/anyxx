@@ -5,11 +5,11 @@
 namespace anyxx {
 
 ANY_TEMPLATE_EX(((ValueType), (Reference)), any_forward_iterator,
-                (ANY_OP(anyxx::self &, ++, (), ),
+                (ANY_OP(anyxx::self&, ++, (), ),
                  ANY_OP(anyxx::self, ++, (int), ),
                  ANY_OP(Reference, *, (), const),
                  ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const&), const,
-                                  ([&x](auto const &r) { return x == r; }))),
+                                  ([&x](auto const& r) { return x == r; }))),
                 anyxx::value, ,
                 (using iterator_category = std::forward_iterator_tag;
                  using difference_type = std::ptrdiff_t;
@@ -51,26 +51,28 @@ template <typename Concrete, typename AnyForwardRange>
 struct v_table_to_map<Concrete, AnyForwardRange const&> {
   static auto forward(auto const& any_range) {
     return std::views::transform(any_range, [](auto const& any) {
-      return *unerase_cast<Concrete>(any);
+  return *unerase_cast<Concrete>(any);
     });
-  }
-};
-//
-template <typename T, typename AnyForwardRange>
-  requires is_any_self_forward_range<AnyForwardRange>
-struct translate_map_param<T, AnyForwardRange const&> {
-  using type =
-      anyxx::any_forward_range<T, T, typename AnyForwardRange::erased_data_t,
-                               typename AnyForwardRange::dispatch_t> const&;
-};
-//
-template <typename Traited, typename AnyForwardRange>
-  requires is_any_self_forward_range<AnyForwardRange>
-struct forward_trait_to_map<Traited, AnyForwardRange const&> {
-  static auto forward(auto any_range) {
-    return std::views::transform(
-        any_range, [](auto const& any) -> Traited { return any; });
-  }
-};
+    }  // namespace anyxx
+    }
+    ;
+    //
+    template <typename T, typename AnyForwardRange>
+      requires is_any_self_forward_range<AnyForwardRange>
+    struct translate_map_param<T, AnyForwardRange const&> {
+      using type =
+          anyxx::any_forward_range<T, T,
+                                   typename AnyForwardRange::erased_data_t,
+                                   typename AnyForwardRange::dispatch_t> const&;
+    };
+    //
+    template <typename Traited, typename AnyForwardRange>
+      requires is_any_self_forward_range<AnyForwardRange>
+    struct forward_trait_to_map<Traited, AnyForwardRange const&> {
+      static auto forward(auto any_range) {
+        return std::views::transform(
+            any_range, [](auto const& any) -> Traited { return any; });
+      }
+    };
 
-}  // namespace anyxx
+    }  // namespace anyxx

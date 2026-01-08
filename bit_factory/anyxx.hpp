@@ -23,6 +23,9 @@
 #include <variant>
 #include <vector>
 
+#ifdef _MSC_VER
+#pragma warning(disable : 5103, justification : "It is a feature...")
+#endif  // _MSC_VER
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wcast-function-type-mismatch"
 #pragma GCC diagnostic ignored "-Wmicrosoft-template-shadow"
@@ -121,9 +124,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define ANYXX_COMPARE_auto(x) x
 
-#define ANYXX_JACKET_PARAM_TYPE(...)                                \
-  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(__VA_ARGS__), auto))(         \
-      auto, anyxx::jacket_param<any_t, ANYXX_UNPAREN(ANYXX_UNPAREN( \
+#define ANYXX_JACKET_PARAM_TYPE(...)                                        \
+  ANYXX_IF(ANYXX_EQUAL(ANYXX_GET_LAST(ANYXX_GET_LAST(__VA_ARGS__)), auto))( \
+      auto, anyxx::jacket_param<any_t, ANYXX_UNPAREN(ANYXX_UNPAREN(         \
                                            ANYXX_GET_ELEM_0(__VA_ARGS__)))>)
 
 #define ANYXX_JACKET_RETURN(...)      \
@@ -226,10 +229,10 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
 #define _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP_H(__VA_ARGS__))
 
-#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)           \
-  [[maybe_unused]] anyxx::jacket_param<any_t, ANYXX_UNPAREN(param_type)> c \
-  __VA_OPT__(, _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(           \
-                   b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_JACKET_PARAM_LIST_H(b, c, param_type, ...)     \
+  [[maybe_unused]] ANYXX_JACKET_PARAM_TYPE(param_type) c __VA_OPT__( \
+      , _detail_ANYXX_JACKET_PARAM_LIST_A _detail_PARENS(            \
+            b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_JACKET_PARAM_LIST_A() _detail_ANYXX_JACKET_PARAM_LIST_H
 #define _detail_ANYXX_JACKET_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
@@ -376,9 +379,8 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
-  overload anyxx::jacket_param<any_t, ANYXX_UNPAREN(type)> name_ext(           \
-      __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))       \
-      const_                                                                   \
+  overload ANYXX_JACKET_PARAM_TYPE(type) name_ext(__VA_OPT__(                  \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
