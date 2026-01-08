@@ -376,9 +376,8 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
 
 #define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
-  overload anyxx::jacket_param<any_t, ANYXX_UNPAREN(type)> name_ext(           \
-      __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))       \
-      const_                                                                   \
+  overload decltype(auto) name_ext(__VA_OPT__(                                 \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
@@ -414,7 +413,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
               base_t::erased_data_.value_);                                    \
         } else {                                                               \
           if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {             \
-            static_dispatch_map_t<T>::name(                                    \
+            return static_dispatch_map_t<T>::name(                             \
                 base_t::erased_data_.value_ __VA_OPT__(, )                     \
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__)));                               \
@@ -429,7 +428,7 @@ anyxx::map_param<T, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>)
         }                                                                      \
       } else {                                                                 \
         if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
-          get_v_table_ptr()->name(                                             \
+          return get_v_table_ptr()->name(                                      \
               anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(       \
                   , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
         } else {                                                               \
@@ -2198,7 +2197,19 @@ template <typename Any, typename Param>
 using jacket_param = typename translate_jacket_param<Any, Param>::type;
 
 template <typename Param>
-struct jacket_return {
+struct jacket_return;
+
+template <typename Param>
+  requires(!std::is_reference_v<Param>)
+struct jacket_return<Param> {
+  template <typename Sig>
+  static Param forward(Sig&& sig, auto&) {
+    return std::forward<Sig>(sig);
+  }
+};
+template <typename Param>
+  requires std::is_reference_v<Param>
+struct jacket_return<Param> {
   template <typename Sig>
   static decltype(auto) forward(Sig&& sig, auto&) {
     return std::forward<Sig>(sig);
@@ -2206,9 +2217,9 @@ struct jacket_return {
 };
 template <>
 struct jacket_return<self> {
-  template <typename Sig>
-  static decltype(auto) forward(Sig&& sig, auto&) {
-    return std::forward<Sig>(sig);
+  template <typename Sig, typename Any>
+  static decltype(auto) forward(Sig&& sig, Any const&) {
+    return Any{std::forward<Sig>(sig)};
   }
 };
 template <>

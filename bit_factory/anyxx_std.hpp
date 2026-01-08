@@ -8,8 +8,10 @@ ANY_TEMPLATE_EX(((ValueType), (Reference)), any_forward_iterator,
                 (ANY_OP(anyxx::self &, ++, (), ),
                  ANY_OP(anyxx::self, ++, (int), ),
                  ANY_OP(Reference, *, (), const),
-                 ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const&), const,
-                                  ([&x](auto const &r) { return x == r; }))),
+                 ANY_OP_DEFAULTED(bool, ==, equal_to, (anyxx::self const&), const,
+                                  ([&x](auto const &r) { return x == r; })),
+                 ANY_OP_DEFAULTED(bool, !=, not_equal_to, (anyxx::self const&), const,
+                                  ([&x](auto const &r) { return x != r; }))),
                 anyxx::value, ,
                 (using iterator_category = std::forward_iterator_tag;
                  using difference_type = std::ptrdiff_t;
