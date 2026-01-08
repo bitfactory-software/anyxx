@@ -14,7 +14,7 @@ namespace anyxx {
 
 namespace example_2b {
 
-ANY(monoid,
+ANY_EX(monoid,
     (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const, []() { return T{}; }),
      ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
                       [&x](auto const& r) {
@@ -34,9 +34,11 @@ ANY(monoid,
                        [](auto y) { return anyxx::trait_as<monoid>(y); }),
                self, [&](auto const& m1, auto const& m2) { return m1 + m2; });
          }),
-     ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const&), const,
-                      ([&x](auto const& r) { return x == r; }))),
-    , )
+     ANY_METHOD_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
+                          ([&x](auto const& r) { return x == r; }))),
+    , , (friend bool operator==(any_t const& l, any_t const& r) {
+      return l.equal_to(r);
+    }))
 
 }  // namespace example_2b
 
