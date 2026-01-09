@@ -246,11 +246,17 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
       -> decltype(auto) {                                                    \
     return std::visit(                                                       \
-        [&]<typename V>(V&& v) {                                             \
-          return x_model_map<std::decay_t<V>>::name(                         \
-              std::forward<V>(v) __VA_OPT__(, ) __VA_OPT__(                  \
+        anyxx::overloads{                                                    \
+            [&]<typename V>(V&& v) {                                         \
+              return x_model_map<std::decay_t<V>>::name(                     \
+                  std::forward<V>(v) __VA_OPT__(, )                          \
+                      __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(           \
+                          a, _sig, __VA_ARGS__)));                           \
+            },                                                               \
+            [&]<anyxx::is_any Any>(Any&& any) {                              \
+              return std::forward<Any>(any).name(__VA_OPT__(                 \
                   _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
-        },                                                                   \
+            }},                                                              \
         x);                                                                  \
   };
 
