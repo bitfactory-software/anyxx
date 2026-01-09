@@ -30,15 +30,6 @@ concept is_any_self_forward_range =
     is_any<A> && std::ranges::forward_range<A> &&
     std::same_as<std::ranges::range_value_t<A>, self>;
 //
-template <typename Any, typename AnyForwardRange>
-  requires is_any_self_forward_range<AnyForwardRange>
-struct translate_jacket_param<Any, AnyForwardRange const &> {
-  using type =
-      anyxx::any_forward_range<Any, Any,
-                               typename AnyForwardRange::erased_data_t,
-                               typename AnyForwardRange::dispatch_t> const &;
-};
-//
 template <typename AnyConstObserver, typename AnyMutableObserver,
           typename AnyValue, typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
@@ -58,14 +49,6 @@ struct v_table_to_map<Concrete, AnyForwardRange const &> {
       return *unerase_cast<Concrete>(any);
     });
   }
-};
-//
-template <typename T, typename AnyForwardRange>
-  requires is_any_self_forward_range<AnyForwardRange>
-struct translate_map_param<T, AnyForwardRange const &> {
-  using type =
-      anyxx::any_forward_range<T, T, typename AnyForwardRange::erased_data_t,
-                               typename AnyForwardRange::dispatch_t> const &;
 };
 //
 template <typename Traited, typename AnyForwardRange>

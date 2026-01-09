@@ -2050,25 +2050,6 @@ auto query_v_table(any_base_v_table<>* from) {
 
 struct self {};
 
-template <typename Any, typename Param>
-struct translate_jacket_param {
-  using type = Param;
-};
-template <typename Any>
-struct translate_jacket_param<Any, self> {
-  using type = Any;
-};
-template <typename Any>
-struct translate_jacket_param<Any, self&> {
-  using type = Any&;
-};
-template <typename Any>
-struct translate_jacket_param<Any, self const&> {
-  using type = Any const&;
-};
-template <typename Any, typename Param>
-using jacket_param = typename translate_jacket_param<Any, Param>::type;
-
 template <typename Param>
 struct jacket_return;
 
@@ -2178,21 +2159,6 @@ struct v_table_to_map<Concrete, self const&> {
     return *unerase_cast<Concrete>(sig);
   }
 };
-
-template <typename T, typename Param>
-struct translate_map_param {
-  using type = Param;
-};
-template <typename T>
-struct translate_map_param<T, self const&> {
-  using type = T const&;
-};
-template <typename T>
-struct translate_map_param<T, self&> {
-  using type = T const&;
-};
-template <typename T, typename Param>
-using map_param = typename translate_map_param<T, Param>::type;
 
 template <typename T, typename Param>
 struct translate_map_return {
