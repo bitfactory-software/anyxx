@@ -50,7 +50,20 @@ ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
   };
 };
 
-TEST_CASE("example 2ca trait any variant") {
+TEST_CASE("example 2ca trait simple variant") {
+  using namespace example_2c;
+  using namespace std::string_literals;
+  using namespace anyxx;
+
+  using any_variant = any_value<anyxx::traited<std::variant<bool, int, double, std::string>>, trait>;
+
+  CHECK(any_variant{true}.to_string() == "true");
+  CHECK(any_variant{42}.to_string() == "42");
+  CHECK(any_variant{3.14}.to_string() == "3.14");
+  CHECK(any_variant{"hello world"s}.to_string() == "hello world"s);
+}
+
+TEST_CASE("example 2cb trait any variant") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -73,7 +86,8 @@ TEST_CASE("example 2ca trait any variant") {
       !anyxx::is_const_data<vany_value<anyxx::unique>::erased_data_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
-  vany_value<anyxx::unique> vv_custom_FS{any_value<anyxx::unique>{std::in_place_type<custom>}};
+  vany_value<anyxx::unique> vv_custom_FS{
+      any_value<anyxx::unique>{std::in_place_type<custom>}};
   vv_custom_FS.from_string("{43}");
   CHECK(vv_custom_FS.to_string() == "{43}");
 }
@@ -102,7 +116,7 @@ auto __ = vany_stream.define<custom>(
 
 VANY_DISPACH(example_2c, vany_stream)
 
-TEST_CASE("example 2cb trait any variant single open dispatch") {
+TEST_CASE("example 2cc trait any variant single open dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -172,7 +186,7 @@ auto __ = vany_compare.define<concrete_value, concrete_value>(
 
 VANY_DISPACH(example_2c, vany_compare)
 
-TEST_CASE("example 2cc trait any variant double dispatch") {
+TEST_CASE("example 2cd trait any variant double dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -191,9 +205,9 @@ TEST_CASE("example 2cc trait any variant double dispatch") {
   CHECK(x);
   auto y = vv1 <=> vv1;
   CHECK(y == std::weak_ordering::equivalent);
-  auto z = vv1 == vv1; // NOLINT
+  auto z = vv1 == vv1;  // NOLINT
   CHECK(z);
-  CHECK(vv3 == vv3); // NOLINT
+  CHECK(vv3 == vv3);  // NOLINT
   CHECK(vv3 != vv1);
   CHECK("hello"s > "Hello world!"s);
   CHECK(vv1 > vv3);
