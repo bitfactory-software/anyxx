@@ -65,21 +65,3 @@ TEST_CASE("any lifetime cast") {
   REQUIRE(co_from_u.to_string() == "hallo");
 }
 
-namespace {
-using to_string_sc_dynm = to_string_i<shared_const, dynm>;
-using to_string_u_dynm = to_string_i<unique, dynm>;
-using to_string_mo_dynm = to_string_i<mutable_observer, dynm>;
-}  // namespace
-
-TEST_CASE("any dynm lifetiem cast1") {
-  auto sc1{to_string_u_dynm{std::make_unique<X>("hello dynm")}};
-  CHECK(sc1.to_string() == "hello dynm");
-}// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
-TEST_CASE("any dynm lifetiem cast2") {
-  to_string_u_dynm u1_dynm{std::make_unique<X>("hello dynm")};
-  CHECK(u1_dynm.to_string() == "hello dynm");
-  static_assert(
-      std::same_as<to_string_mo_dynm::v_table_t, to_string_u_dynm::v_table_t>);
-  to_string_mo_dynm mo1{u1_dynm};
-  CHECK(mo1.to_string() == "hello dynm");
-}// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)

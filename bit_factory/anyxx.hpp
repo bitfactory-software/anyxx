@@ -494,7 +494,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using base_t::get_v_table_ptr;                                             \
                                                                                \
     n(erased_data_t erased_data, v_table_t* v_table)                           \
-      requires(!std::same_as<Dispatch, anyxx::dynm>)                           \
         : base_t(std::move(erased_data), v_table) {}                           \
     template <typename ConstructedWith>                                        \
     explicit(false) n(ConstructedWith&& v)                                     \
@@ -758,7 +757,6 @@ struct dynamic_member_dispatch : member_dispatch {};
 struct v_table_ptr_member_dispatch : dynamic_member_dispatch {};
 struct rtti : v_table_ptr_member_dispatch {};
 struct dyns : v_table_ptr_member_dispatch {};
-struct dynm : dynamic_member_dispatch {};
 struct static_member_dispatch : member_dispatch {};
 struct trait : static_member_dispatch {};
 
@@ -766,7 +764,6 @@ template <typename Dispatch>
 concept is_member_dispatch = std::derived_from<Dispatch, member_dispatch>;
 static_assert(is_member_dispatch<rtti>);
 static_assert(is_member_dispatch<dyns>);
-static_assert(is_member_dispatch<dynm>);
 static_assert(is_member_dispatch<trait>);
 
 template <typename T>
@@ -2309,62 +2306,7 @@ struct derive_v_table_from<Dispatch> {
 };
 
 // --------------------------------------------------------------------------------
-// dynm
-template <typename VTable, typename Base>
-struct dynm_v_table_access : Base {
-  using erased_data_t = typename Base::erased_data_t;
-  using v_table_t = VTable;
-  v_table_t v_table_;
-
-  dynm_v_table_access() = default;
-  explicit dynm_v_table_access(erased_data_t erased_data)
-      : Base(std::move(erased_data)) {}
-  // cppcheck-suppress-begin noExplicitConstructor
-  template <typename ConstructedWith>
-  explicit(false)
-      dynm_v_table_access(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, erased_data_t>
-      : Base(std::forward<ConstructedWith>(constructed_with)) {}
-  // cppcheck-suppress-end noExplicitConstructor
-  template <typename V>
-  dynm_v_table_access(std::in_place_t, V&& v)
-      : Base(std::in_place, std::forward<V>(v)) {}
-  template <typename T, typename... Args>
-  dynm_v_table_access(std::in_place_type_t<T> t, Args&&... args)
-      : Base(t, std::forward<Args>(args)...) {}
-
-  template <typename OtherBase>
-  explicit dynm_v_table_access(
-      dynm_v_table_access<VTable, OtherBase> const& other)
-      : Base(other), v_table_(other.v_table_) {}
-  // cppcheck-suppress-begin accessForwarded
-  template <typename Other>
-  explicit dynm_v_table_access(Other&& other)
-      : Base(std::forward<Other>(other)), v_table_(other.v_table_) {}
-  // cppcheck-suppress-end accessForwarded
-  template <typename Other>
-  dynm_v_table_access& operator=(Other&& other) {
-    v_table_ = other.v_table_;
-    *this = std::move(other);
-    return *this;
-  }
-  dynm_v_table_access(const dynm_v_table_access&) = default;
-  dynm_v_table_access(dynm_v_table_access&& rhs) = default;
-  dynm_v_table_access& operator=(dynm_v_table_access const& other) = default;
-  dynm_v_table_access& operator=(dynm_v_table_access&& other) = default;
-
-  // cppcheck-suppress-begin functionConst
-  template <typename Derived>
-  auto get_v_table_ptr(this Derived const& self) {  // NOLINT
-    return &self.v_table_;
-  }
-  // cppcheck-suppress-end functionConst
-  template <typename Concrete, typename Derived>
-  void init_v_table(this Derived& self) {
-    self.v_table_ =
-        v_table_t{std::in_place_type<anyxx::unerased<erased_data_t, Concrete>>};
-  }
-};
+// trait
 struct no_derived_v_table {
   template <typename...>
   struct type {
@@ -2372,21 +2314,7 @@ struct no_derived_v_table {
     type(Args&&...) {}
   };
 };
-template <typename VTable, template <typename...> typename Base>
-struct derive_from<dynm, VTable, Base> {
-  template <typename... Args>
-  using type = dynm_v_table_access<VTable, Base<Args...>>;
-};
-template <typename VTable>
-struct derive_from<dynm, VTable> {
-  template <typename... Args>
-  using type = dynm_v_table_access<VTable, erased_data_holder<Args...>>;
-};
-template <template <typename...> typename... BaseVTable>
-struct derive_v_table_from<dynm, BaseVTable...> : no_derived_v_table {};
 
-// --------------------------------------------------------------------------------
-// trait
 template <typename VTable, typename Base>
 struct no_v_table_access : Base {
   using Base::Base;
