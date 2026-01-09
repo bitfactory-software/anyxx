@@ -50,8 +50,8 @@ ANY_EX(monoid,
 ANY_MODEL_MAP((int), example_2b::monoid) {
   static int concat(int self, auto const& r) {
     std::println("concat {}", typeid(int).name());
-    return monoid_trait<int>{std::ranges::fold_left(
-        r, self, [&](int m1, int m2) { return m1 + m2; })};
+    return std::ranges::fold_left(r, self,
+                                  [&](int m1, int m2) { return m1 + m2; });
   };
 };
 
