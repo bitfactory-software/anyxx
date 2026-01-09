@@ -48,7 +48,6 @@
 static_assert(std::same_as<ANYXX_UNPAREN(int), int>);
 static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
-
 #define ANYXX_JACKET_RETURN(...) \
   anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
@@ -592,9 +591,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                             decoration)                                        \
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
-      (Concrete), (Other), (Dispatch), (StaticDispatchType),                   \
-      (anyxx::traited<T>), (V),                                                \
-      _detail_REMOVE_PARENS(((anyxx::value), (anyxx::rtti))),                  \
+      (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
+      (V), _detail_REMOVE_PARENS(((anyxx::value), (anyxx::rtti))),             \
       _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::rtti))),         \
       _detail_REMOVE_PARENS(((anyxx::mutable_observer), (anyxx::rtti))), n,    \
       BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
@@ -630,7 +628,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
-      __detail_ANYXX_ADD_TAIL((anyxx::traited<T>), _detail_REMOVE_PARENS(t)),  \
+      __detail_ANYXX_ADD_TAIL((anyxx::val<T>), _detail_REMOVE_PARENS(t)),      \
       __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (anyxx::rtti),                                                       \
@@ -803,7 +801,7 @@ struct missing_trait_error {
   static constexpr bool not_specialized = false;
 };
 template <typename Value>
-struct trait_base {
+struct val {
   Value value_ = {};
   using value_t = Value;
   operator Value() const { return value_; }
@@ -951,18 +949,15 @@ concept erased_constructibile_for =
       erased_data_trait<ErasedData>::is_constructibile_from_const));
 
 // --------------------------------------------------------------------------------
-// (un)erased data traited
-
-template <typename V>
-using traited = trait_base<V>;
+// (un)erased data val
 
 template <template <typename, typename> typename Any, typename T>
 auto trait_as(T&& v) {
-  return Any<anyxx::traited<std::decay_t<T>>, trait>{std::forward<T>(v)};
+  return Any<anyxx::val<std::decay_t<T>>, trait>{std::forward<T>(v)};
 }
 
 template <typename V>
-struct erased_data_trait<traited<V>> {
+struct erased_data_trait<val<V>> {
   using void_t = mutable_void;
   using static_dispatch_t = V;
   static constexpr bool is_constructibile_from_const = true;
@@ -972,7 +967,7 @@ struct erased_data_trait<traited<V>> {
   };
   static constexpr bool is_owner = true;
   static constexpr bool is_weak = false;
-  static auto default_construct() { return traited<V>{}; }
+  static auto default_construct() { return val<V>{}; }
 
   static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
   static auto value(auto& value) { return &value; }
@@ -987,7 +982,7 @@ struct erased_data_trait<traited<V>> {
   }
   template <typename Vx>
   static auto erase(Vx&& v) {
-    return traited<V>{std::forward<Vx>(v)};
+    return val<V>{std::forward<Vx>(v)};
   }
 };
 

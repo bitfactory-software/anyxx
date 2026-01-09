@@ -55,7 +55,7 @@ TEST_CASE("example 2ca trait simple variant") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  using any_variant = any_value<anyxx::traited<std::variant<bool, int, double, std::string>>, trait>;
+  using any_variant = any_value<val<std::variant<bool, int, double, std::string>>, trait>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");
