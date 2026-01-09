@@ -15,37 +15,38 @@ namespace anyxx {
 namespace example_2b {
 
 ANY_EX(monoid,
-    (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const, []() { return T{}; }),
-     ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
-                      [&x](auto const& r) {
-                        auto self = anyxx::trait_as<monoid>(x);
-                        return self | (std::vector{anyxx::trait_as<monoid>(
-                                          r)});  // NOLINT
-                      }),
-     ANY_OP_DEFAULTED(
-         anyxx::self, |, concat,
-         ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                    anyxx::const_observer> const&)),
-         const,
-         [&x](const auto& r) {
-           auto self = anyxx::trait_as<monoid>(x);
-           return std::ranges::fold_left(
-               r | std::views::transform(
-                       [](auto y) { return anyxx::trait_as<monoid>(y); }),
-               self, [&](auto const& m1, auto const& m2) { return m1 + m2; });
-         }),
-     ANY_METHOD_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
-                          ([&x](auto const& r) { return x == r; }))),
-    , , (friend bool operator==(any_t const& l, any_t const& r) {
-      return l.equal_to(r);
-    }))
+       (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const, []() { return T{}; }),
+        ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
+                         [&x](auto const& r) {
+                           auto self = anyxx::trait_as<monoid>(x);
+                           return self | (std::vector{anyxx::trait_as<monoid>(
+                                             r)});  // NOLINT
+                         }),
+        ANY_OP_DEFAULTED(
+            anyxx::self, |, concat,
+            ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                       anyxx::const_observer> const&)),
+            const,
+            [&x](const auto& r) {
+              auto self = anyxx::trait_as<monoid>(x);
+              return std::ranges::fold_left(
+                  r | std::views::transform(
+                          [](auto y) { return anyxx::trait_as<monoid>(y); }),
+                  self,
+                  [&](auto const& m1, auto const& m2) { return m1 + m2; });
+            }),
+        ANY_METHOD_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
+                             ([&x](auto const& r) { return x == r; }))),
+       , , (friend bool operator==(any_t const& l, any_t const& r) {
+         return l.equal_to(r);
+       }))
 
 }  // namespace example_2b
 
 ANY_MODEL_MAP((int), example_2b::monoid) {
   static int concat(int self, auto const& r) {
-    return monoid_trait<int>{std::ranges::fold_left(
-        r, self, [&](int m1, int m2) { return m1 + m2; })};
+    return std::ranges::fold_left(r, self,
+                                  [&](int m1, int m2) { return m1 + m2; });
   };
 };
 
