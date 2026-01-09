@@ -285,62 +285,42 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,     \
-                             const_, map_body, ...)                           \
-  overload decltype(auto) name_ext(__VA_OPT__(                                \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_          \
-    requires(::anyxx::const_correct_call_for_erased_data<                     \
-             void const_*, erased_data_t, exact_const>)                       \
-  {                                                                           \
-    if constexpr (std::same_as<anyxx::vany_dispatch, Dispatch>) {             \
-      using variant_t = erased_data_t;                                        \
-      using vany_any_t = std::variant_alternative_t<0, variant_t>;            \
-      return std::visit(                                                      \
-          anyxx::overloads{                                                   \
-              [&]<typename ValueInVariant>(                                   \
-                  ValueInVariant&& value_in_variant) {                        \
-                return static_dispatch_map_t<std::decay_t<ValueInVariant>>::  \
-                    name(std::forward<ValueInVariant>(value_in_variant)       \
-                             __VA_OPT__(, )                                   \
-                                 __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST( \
-                                     a, _sig, __VA_ARGS__)));                 \
-              },                                                              \
-              [&](vany_any_t const_& any) {                                   \
-                return any.name(__VA_OPT__(                                   \
-                    _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
-              }},                                                             \
-          base_t::erased_data_);                                              \
-    } else {                                                                  \
-      if constexpr (std::same_as<anyxx::trait, Dispatch>) {                   \
-        using traited_t = typename erased_data_t::value_t;                    \
-        if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {              \
-          return static_dispatch_map_t<T>::name(                              \
-              base_t::erased_data_.value_ __VA_OPT__(, )                      \
-                  __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(  \
-                      a, _sig, __VA_ARGS__)));                                \
-        } else {                                                              \
-          return ANYXX_JACKET_RETURN(type)::forward(                          \
-              static_dispatch_map_t<T>::name(                                 \
-                  base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(      \
-                      _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(         \
-                          a, _sig, __VA_ARGS__))),                            \
-              *this);                                                         \
-        }                                                                     \
-      } else {                                                                \
-        if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {              \
-          return get_v_table_ptr()->name(                                     \
-              anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(      \
-                  , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
-        } else {                                                              \
-          return ANYXX_JACKET_RETURN(type)::forward(                          \
-              get_v_table_ptr()->name(                                        \
-                  anyxx::get_void_data_ptr(base_t::erased_data_)              \
-                      __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(          \
-                                       a, _sig, __VA_ARGS__))),               \
-              *this);                                                         \
-        }                                                                     \
-      }                                                                       \
-    }                                                                         \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
+                             const_, map_body, ...)                            \
+  overload decltype(auto) name_ext(__VA_OPT__(                                 \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
+    requires(::anyxx::const_correct_call_for_erased_data<                      \
+             void const_*, erased_data_t, exact_const>)                        \
+  {                                                                            \
+    if constexpr (std::same_as<anyxx::trait, Dispatch>) {                      \
+      using traited_t = typename erased_data_t::value_t;                       \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
+        return static_dispatch_map_t<T>::name(                                 \
+            base_t::erased_data_.value_ __VA_OPT__(, )                         \
+                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
+                    a, _sig, __VA_ARGS__)));                                   \
+      } else {                                                                 \
+        return ANYXX_JACKET_RETURN(type)::forward(                             \
+            static_dispatch_map_t<T>::name(                                    \
+                base_t::erased_data_.value_ __VA_OPT__(, )                     \
+                    __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
+                        a, _sig, __VA_ARGS__))),                               \
+            *this);                                                            \
+      }                                                                        \
+    } else {                                                                   \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
+        return get_v_table_ptr()->name(                                        \
+            anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(         \
+                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+      } else {                                                                 \
+        return ANYXX_JACKET_RETURN(type)::forward(                             \
+            get_v_table_ptr()->name(                                           \
+                anyxx::get_void_data_ptr(base_t::erased_data_)                 \
+                    __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(             \
+                                     a, _sig, __VA_ARGS__))),                  \
+            *this);                                                            \
+      }                                                                        \
+    }                                                                          \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
@@ -781,7 +761,6 @@ struct dyns : v_table_ptr_member_dispatch {};
 struct dynm : dynamic_member_dispatch {};
 struct static_member_dispatch : member_dispatch {};
 struct trait : static_member_dispatch {};
-struct vany_dispatch : static_member_dispatch {};
 
 template <typename Dispatch>
 concept is_member_dispatch = std::derived_from<Dispatch, member_dispatch>;
@@ -789,7 +768,6 @@ static_assert(is_member_dispatch<rtti>);
 static_assert(is_member_dispatch<dyns>);
 static_assert(is_member_dispatch<dynm>);
 static_assert(is_member_dispatch<trait>);
-static_assert(is_member_dispatch<vany_dispatch>);
 
 template <typename T>
 struct missing_trait_error {
@@ -991,11 +969,12 @@ using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>
 using make_vany =
-    any<vany_variant<any, ErasedData, Dispatch, Types...>, vany_dispatch>;
+    any<val<vany_variant<any, ErasedData, Dispatch, Types...>>, trait>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
-  using vany_variant = VanyVariant;
+  using vany_variant_val = VanyVariant;
+  using vany_variant = typename VanyVariant::value_t;
   template <typename... Types>
   struct concrete_variant_impl;
   template <typename First, typename... Types>
@@ -1018,7 +997,8 @@ struct vany_type_trait {
 
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>
-struct erased_data_trait<vany_variant<any, ErasedData, Dispatch, Types...>> {
+struct erased_data_trait<
+    val<vany_variant<any, ErasedData, Dispatch, Types...>>> {
   using vany_variant_t = vany_variant<any, ErasedData, Dispatch, Types...>;
   using void_t = typename erased_data_trait<ErasedData>::void_t;
   using static_dispatch_t = vany_variant_t;
@@ -1041,15 +1021,15 @@ struct erased_data_trait<vany_variant<any, ErasedData, Dispatch, Types...>> {
 
   template <typename V>
   static vany_variant_t construct_in_place(V&& v) {
-    return vany_variant_t{std::forward<V>(v)};
+    return val<vany_variant_t>{std::forward<V>(v)};
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
-    return vany_variant_t{T{std::forward<Args>(args)...}};
+    return val<vany_variant_t>{T{std::forward<Args>(args)...}};
   }
   template <typename Vx>
-  static vany_variant_t erase(Vx&& v) {
-    return vany_variant_t{std::forward<Vx>(v)};
+  static auto erase(Vx&& v) {
+    return val<vany_variant_t>{std::forward<Vx>(v)};
   }
 };
 
@@ -2406,7 +2386,7 @@ template <template <typename...> typename... BaseVTable>
 struct derive_v_table_from<dynm, BaseVTable...> : no_derived_v_table {};
 
 // --------------------------------------------------------------------------------
-// trait, vany_dispatch
+// trait
 template <typename VTable, typename Base>
 struct no_v_table_access : Base {
   using Base::Base;
@@ -3155,7 +3135,7 @@ class dispatch_vany {
                                          std::forward<Vargs>(vargs)...);
               }}(std::forward<TypedArg>(arg), std::forward<Args>(args)...);
         },
-        vany.erased_data_);
+        vany.erased_data_.value_);
   }
 
   template <is_any Vany1, is_any Vany2, typename... Args>
@@ -3205,8 +3185,8 @@ class dispatch_vany {
                                   std::forward<Args>(args)...);
     };
 
-    return std::visit(dispatch_combined, vany1.erased_data_,
-                      vany2.erased_data_);
+    return std::visit(dispatch_combined, vany1.erased_data_.value_,
+                      vany2.erased_data_.value_);
   }
 
  public:

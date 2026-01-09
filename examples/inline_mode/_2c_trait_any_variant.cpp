@@ -35,6 +35,8 @@ using vany_value = anyxx::make_vany<any_value, ErasedData, anyxx::rtti, bool,
 using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 
+static_assert(anyxx::is_erased_data<anyxx::val<anyxx::vany_variant<
+                  any_value, anyxx::shared_const, anyxx::rtti, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
 static_assert(std::same_as<any_in_variant, any_value<anyxx::shared_const>>);
@@ -55,7 +57,8 @@ TEST_CASE("example 2ca trait simple variant") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  using any_variant = any_value<val<std::variant<bool, int, double, std::string>>, trait>;
+  using any_variant =
+      any_value<val<std::variant<bool, int, double, std::string>>, trait>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");
