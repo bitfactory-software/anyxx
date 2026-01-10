@@ -1457,11 +1457,28 @@ struct any_base_v_table<dyns> : any_v_table {
 };
 
 template <typename Dispatch>
-struct any_base_v_table_holder {};
+struct any_base_v_table_holder {
+  static auto get_v_table_ptr() { return nullptr; }
+  template <typename...>
+  static void init_v_table() {}
+};
 template <typename Dispatch>
   requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct any_base_v_table_holder<Dispatch> {
   any_base_v_table<Dispatch>* v_table_ = nullptr;
+  // cppcheck-suppress-begin functionConst
+  template <typename Derived>
+  auto get_v_table_ptr(this Derived const& self) {  // NOLINT
+    return static_cast<typename Derived::v_table_t*>(v_table_);
+  }
+  // cppcheck-suppress-end functionConst
+
+  template <typename ErasedData, typename Concrete, typename Self>
+  void init_v_table(this Self& self) {
+    using derived_v_table_t = typename Self::v_table_t;
+    self.v_table_ = derived_v_table_t::template imlpementation<
+        anyxx::unerased<ErasedData, Concrete>>();
+  }
 };
 
 using dispatch_table_function_t = void (*)();
