@@ -1400,15 +1400,34 @@ meta_data& get_meta_data() {
 }
 #endif
 
+struct any_v_table {
+  template <typename Concrete>
+  explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : copy_construct_(+[]([[maybe_unused]] const_void from) -> mutable_void {
+          if constexpr (std::is_copy_constructible_v<Concrete>) {
+            return ::new Concrete(*static_cast<Concrete const*>(from));
+          } else {
+            return nullptr;
+          };
+        }),
+        deleter_(+[](mutable_void data) noexcept -> void {
+          delete static_cast<Concrete*>(data);
+        }) {}
+
+  mutable_void (*copy_construct_)(const_void from);
+  void (*deleter_)(mutable_void target_) noexcept;
+};
+
 template <typename Dispatch = rtti>
 struct any_base_v_table;
 
 template <>
-struct any_base_v_table<rtti> {
+struct any_base_v_table<rtti> : any_v_table {
   template <typename Concrete>
   explicit any_base_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : _is_derived_from([](const std::type_info& from) {
+      : any_v_table(std::in_place_type<Concrete>),
+        is_derived_from_(+[](const std::type_info& from) {
           return static_is_derived_from(from);
         }) {}
 
@@ -1420,19 +1439,20 @@ struct any_base_v_table<rtti> {
 
   meta_data* meta_data_ = nullptr;
 
-  bool (*_is_derived_from)(const std::type_info&);
+  bool (*is_derived_from_)(const std::type_info&);
 };
 
 inline bool is_derived_from(const std::type_info& from,
                             any_base_v_table<> const* any_base_v_table) {
-  return any_base_v_table->_is_derived_from(from);
+  return any_base_v_table->is_derived_from_(from);
 }
 
 template <>
-struct any_base_v_table<dyns> {
+struct any_base_v_table<dyns> : any_v_table {
   template <typename Concrete>
   explicit any_base_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete) {}
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : any_v_table(std::in_place_type<Concrete>) {}
   using dispatch_t = dyns;
 };
 
@@ -1942,7 +1962,7 @@ inline const auto& get_meta_data(Any const& any) {
 
 template <is_erased_data VV>
 bool is_derived_from(const std::type_info& from, any_base<VV> const& any) {
-  return get_v_table(any)->_is_derived_from(from);
+  return get_v_table(any)->is_derived_from_(from);
 }
 template <is_any From, is_erased_data VV>
 bool is_derived_from(any_base<VV> const& any) {
@@ -1952,7 +1972,7 @@ bool is_derived_from(any_base<VV> const& any) {
 template <typename Dispatch, typename VTable>
 void set_is_derived_from(auto v_table) {
   if constexpr (std::same_as<Dispatch, rtti>) {
-    v_table->_is_derived_from = +[](const std::type_info& from) {
+    v_table->is_derived_from_ = +[](const std::type_info& from) {
       return VTable::static_is_derived_from(from);
     };
   }
