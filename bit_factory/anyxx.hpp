@@ -754,9 +754,8 @@ class type_mismatch_error : public error {
 
 struct member_dispatch {};
 struct dynamic_member_dispatch : member_dispatch {};
-struct v_table_ptr_member_dispatch : dynamic_member_dispatch {};
-struct rtti : v_table_ptr_member_dispatch {};
-struct dyns : v_table_ptr_member_dispatch {};
+struct rtti : dynamic_member_dispatch {};
+struct dyns : dynamic_member_dispatch {};
 struct static_member_dispatch : member_dispatch {};
 struct trait : static_member_dispatch {};
 
@@ -1421,6 +1420,7 @@ struct any_v_table {
 template <typename Dispatch = rtti>
 struct any_base_v_table;
 
+
 template <>
 struct any_base_v_table<rtti> : any_v_table {
   template <typename Concrete>
@@ -1454,6 +1454,14 @@ struct any_base_v_table<dyns> : any_v_table {
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : any_v_table(std::in_place_type<Concrete>) {}
   using dispatch_t = dyns;
+};
+
+template <typename Dispatch>
+struct any_base_v_table_holder {};
+template <typename Dispatch>
+  requires std::derived_from<Dispatch, dynamic_member_dispatch>
+struct any_base_v_table_holder<Dispatch> {
+  any_base_v_table<Dispatch>* v_table_ = nullptr;
 };
 
 using dispatch_table_function_t = void (*)();
@@ -1793,8 +1801,9 @@ concept constructibile_for =
      !is_erased_data_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
+
 template <is_erased_data ErasedData, typename Dispatch>
-class erased_data_holder {
+class erased_data_holder : any_base_v_table_holder<Dispatch>{
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
@@ -2267,25 +2276,25 @@ struct v_table_ptr_access : Base {
 };
 template <typename Dispatch, typename VTable,
           template <typename...> typename Base>
-  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+  requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct derive_from<Dispatch, VTable, Base> {
   template <typename... Args>
   using type = v_table_ptr_access<VTable, Base<Args...>>;
 };
 template <typename Dispatch, typename VTable>
-  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+  requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct derive_from<Dispatch, VTable> {
   template <typename... Args>
   using type = v_table_ptr_access<VTable, any_base<Args...>>;
 };
 template <typename Dispatch, template <typename...> typename BaseVTable>
-  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+  requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct derive_v_table_from<Dispatch, BaseVTable> {
   template <typename... Args>
   using type = BaseVTable<Args...>;
 };
 template <typename Dispatch>
-  requires std::derived_from<Dispatch, v_table_ptr_member_dispatch>
+  requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct derive_v_table_from<Dispatch> {
   template <typename... Args>
   using type = any_base_v_table<Args...>;
