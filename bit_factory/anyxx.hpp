@@ -1420,7 +1420,6 @@ struct any_v_table {
 template <typename Dispatch = rtti>
 struct any_base_v_table;
 
-
 template <>
 struct any_base_v_table<rtti> : any_v_table {
   template <typename Concrete>
@@ -1458,6 +1457,9 @@ struct any_base_v_table<dyns> : any_v_table {
 
 template <typename Dispatch>
 struct any_base_v_table_holder {
+  any_base_v_table_holder() = default;
+  any_base_v_table_holder(nullptr_t) {}
+  static void set_v_table_ptr(auto) {}
   static auto get_v_table_ptr() { return nullptr; }
   template <typename...>
   static void init_v_table() {}
@@ -1465,6 +1467,12 @@ struct any_base_v_table_holder {
 template <typename Dispatch>
   requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct any_base_v_table_holder<Dispatch> {
+  any_base_v_table_holder() = default;
+  any_base_v_table_holder(any_base_v_table<Dispatch>* v_table)
+      : v_table_(v_table) {}
+  static void set_v_table_ptr(any_base_v_table<Dispatch>* v_table) {
+    v_table_ = v_table;
+  }
   any_base_v_table<Dispatch>* v_table_ = nullptr;
   // cppcheck-suppress-begin functionConst
   template <typename Derived>
@@ -1820,18 +1828,20 @@ concept constructibile_for =
 
 
 template <is_erased_data ErasedData, typename Dispatch>
-class erased_data_holder : any_base_v_table_holder<Dispatch>{
+class erased_data_holder : any_base_v_table_holder<Dispatch> {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
+  using v_table_holder_t = any_base_v_table_holder<Dispatch>;
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
 
   erased_data_holder() = default;
   explicit erased_data_holder(erased_data_t erased_data)
-      : erased_data_(std::move(erased_data)) {}
+      :  // v_table_holder_t(erased_data.get_v_table_ptr()),
+        erased_data_(std::move(erased_data)) {}
   // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
   explicit(false)
@@ -1854,13 +1864,16 @@ class erased_data_holder : any_base_v_table_holder<Dispatch>{
   template <is_erased_data_holder Other>
   explicit erased_data_holder(const Other& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
-      : erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
+      : v_table_holder_t(other.get_v_table_ptr()),
+        erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
   template <typename Other>
   explicit erased_data_holder(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
-      : erased_data_(move_to<ErasedData>(std::move(other.erased_data_))) {}
+      : v_table_holder_t(other.get_v_table_ptr()),
+        erased_data_(move_to<ErasedData>(std::move(other.erased_data_))) {}
   template <typename Other>
   erased_data_holder& operator=(Other&& other) {
+    set_v_table_ptr(other.get_v_table_ptr());
     erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
     return *this;
   }
