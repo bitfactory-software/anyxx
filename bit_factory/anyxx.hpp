@@ -788,9 +788,10 @@ concept is_const_void = is_const_void_<Voidness>::value;
 
 class meta_data;
 
-struct any_v_table {
+struct basic_any_v_table {
   template <typename Concrete>
-  explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+  explicit basic_any_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : copy_construct_(+[]([[maybe_unused]] const_void from) -> mutable_void {
           if constexpr (std::is_copy_constructible_v<Concrete>) {
             return ::new Concrete(*static_cast<Concrete const*>(from));
@@ -821,11 +822,11 @@ template <typename ErasedData>
 struct basic_erased_data_trait {
   inline static constexpr bool is_weak = false;
   static ErasedData copy(ErasedData const& from,
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] basic_any_v_table* v_table) {
     return from;
   }
   static void destroy([[maybe_unused]] ErasedData const& data,
-                      [[maybe_unused]] any_v_table* v_table) {}
+                      [[maybe_unused]] basic_any_v_table* v_table) {}
 };
 
 template <typename E>
@@ -1401,7 +1402,7 @@ static_assert(is_erased_data<value>);
 
 class meta_data;
 template <typename Dispatch>
-struct any_base_v_table;
+struct any_v_table;
 
 template <typename TYPE>
 auto& runtime_implementation();
@@ -1423,7 +1424,7 @@ meta_data& get_meta_data() {
 #endif
 
 template <typename Dispatch = rtti>
-struct any_base_v_table;
+struct any_v_table;
 
 template <typename VTable, typename Concrete>
 static auto any_base_v_table_instance() {
@@ -1435,11 +1436,10 @@ static auto any_base_v_table_instance() {
 }
 
 template <>
-struct any_base_v_table<rtti> : any_v_table {
+struct any_v_table<rtti> : basic_any_v_table {
   template <typename Concrete>
-  explicit any_base_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : any_v_table(std::in_place_type<Concrete>),
+  explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : basic_any_v_table(std::in_place_type<Concrete>),
         is_derived_from_(+[](const std::type_info& from) {
           return static_is_derived_from(from);
         }) {}
@@ -1448,11 +1448,11 @@ struct any_base_v_table<rtti> : any_v_table {
 
   template <typename Concrete>
   static auto imlpementation() {
-    return any_base_v_table_instance<any_base_v_table<rtti>, Concrete>();
+    return any_base_v_table_instance<any_v_table<rtti>, Concrete>();
   }
 
   static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(any_base_v_table) == from;
+    return typeid(any_v_table) == from;
   }
 
   meta_data* meta_data_ = nullptr;
@@ -1461,18 +1461,18 @@ struct any_base_v_table<rtti> : any_v_table {
 };
 
 inline bool is_derived_from(const std::type_info& from,
-                            any_base_v_table<> const* any_base_v_table) {
-  return any_base_v_table->is_derived_from_(from);
+                            any_v_table<> const* any_v_table) {
+  return any_v_table->is_derived_from_(from);
 }
 
 template <>
-struct any_base_v_table<dyns> : any_v_table {
-  using any_v_table::any_v_table;
+struct any_v_table<dyns> : basic_any_v_table {
+  using basic_any_v_table::basic_any_v_table;
   using dispatch_t = dyns;
 
   template <typename Concrete>
   static auto imlpementation() {
-    return any_base_v_table_instance<any_base_v_table<dyns>, Concrete>();
+    return any_base_v_table_instance<any_v_table<dyns>, Concrete>();
   }
 };
 
@@ -1490,12 +1490,10 @@ template <typename Dispatch>
   requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct any_base_v_table_holder<Dispatch> {
   any_base_v_table_holder() = default;
-  explicit any_base_v_table_holder(any_base_v_table<Dispatch>* v_table)
+  explicit any_base_v_table_holder(any_v_table<Dispatch>* v_table)
       : v_table_(v_table) {}
-  void set_v_table_ptr(any_base_v_table<Dispatch>* v_table) {
-    v_table_ = v_table;
-  }
-  using v_table_t = any_base_v_table<Dispatch>;
+  void set_v_table_ptr(any_v_table<Dispatch>* v_table) { v_table_ = v_table; }
+  using v_table_t = any_v_table<Dispatch>;
   v_table_t* v_table_ = nullptr;
   // cppcheck-suppress-begin [functionConst, functionStatic]
   template <typename Derived>
@@ -1555,7 +1553,7 @@ class meta_data {
   using copy_construct_t = auto(const_void) -> unique;
   copy_construct_t* copy_construct_;
 
-  std::vector<any_base_v_table<>*> i_table_;
+  std::vector<any_v_table<>*> i_table_;
 
  public:
   template <typename CLASS>
@@ -1576,14 +1574,14 @@ class meta_data {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  std::expected<any_base_v_table<>*, cast_error> get_v_table(
+  std::expected<any_v_table<>*, cast_error> get_v_table(
       std::type_info const& typeid_) const {
     auto const& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
-  auto register_v_table(any_base_v_table<>* v_table) {
+  auto register_v_table(any_v_table<>* v_table) {
     v_table->meta_data_ = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
@@ -1971,11 +1969,11 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <typename To>
-auto unchecked_v_table_downcast_to(any_base_v_table<>* v_table) {
+auto unchecked_v_table_downcast_to(any_v_table<>* v_table) {
   return static_cast<To*>(v_table);
 }
 template <is_any To>
-auto unchecked_v_table_downcast_to(any_base_v_table<>* v_table) {
+auto unchecked_v_table_downcast_to(any_v_table<>* v_table) {
   return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
 }
 
@@ -2053,7 +2051,7 @@ auto query_v_table(const meta_data& meta_data)
 }
 
 template <typename ToAny>
-auto query_v_table(any_base_v_table<>* from) {
+auto query_v_table(any_v_table<>* from) {
   return find_v_table<ToAny>(*from->meta_data_);
 }
 
@@ -2242,7 +2240,7 @@ struct derive_from {
 };
 
 template <typename Dispatch,
-          template <typename...> typename BaseVTable = any_base_v_table>
+          template <typename...> typename BaseVTable = any_v_table>
 struct derive_v_table_from {
   template <typename... Args>
   using type = BaseVTable<Args...>;
