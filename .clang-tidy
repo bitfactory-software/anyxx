@@ -25,6 +25,9 @@ Checks: "*,
         -cppcoreguidelines-avoid-magic-numbers,
         -cppcoreguidelines-avoid-const-or-ref-data-members,
         -cppcoreguidelines-pro-type-member-init,
+        -cppcoreguidelines-pro-bounds-array-to-pointer-decay,
+        -cppcoreguidelines-avoid-c-arrays,
+        -modernize-avoid-c-arrays,
         -readability-*,
         -hicpp-*,
         -*old-style-cast,
@@ -34,7 +37,9 @@ Checks: "*,
         -Wunknown-pragmas,
         -bugprone-macro-parentheses,
         -bugprone-reserved-identifier,
-        -bugprone-easily-swappable-parameters
+        -bugprone-easily-swappable-parameters,
+        -duplInheritedMember,
+        -performance-move-const-arg
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''

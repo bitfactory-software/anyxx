@@ -5,6 +5,13 @@
 #include <iostream>
 #include <string>
 
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 using namespace anyxx;
 
 namespace smoke_test {
@@ -20,7 +27,7 @@ ANY_(any_shape, any_drawable,
       ANY_METHOD(double, perimeter, (), const)), , )
 
 ANY_(any_callable_shape, any_shape,
-     (ANY_OP(std::string, (), (std::string const&), const)), , )
+     (ANY_OP(std::string, (), (std::string const&), const)), , ) 
 
 struct circle {
   double radius = 10;

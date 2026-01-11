@@ -143,7 +143,7 @@ TEST_CASE("example 3 transform unerase") {
         r{v};
     int x = 0;
     for (auto i :
-         std::views::transform(r, [](stringable<anyxx::value> v) -> int {
+         std::views::transform(r, [](stringable<anyxx::value> const &v) -> int {
            return *anyxx::unerase_cast<int>(v);
          })) {
       std::println("{}", i);

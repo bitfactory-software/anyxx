@@ -35,7 +35,7 @@ ANY_EX(monoid,
               auto self = anyxx::trait_as<monoid>(x);
               return std::ranges::fold_left(
                   r | std::views::transform(
-                          [](auto y) { return anyxx::trait_as<monoid>(y); }),
+                          [](auto const&y) { return anyxx::trait_as<monoid>(y); }),
                   self,
                   [&](auto const& m1, auto const& m2) { return m1 + m2; });
             }),
@@ -97,7 +97,7 @@ TEST_CASE("example 2b monoid ") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
-  auto x = trait_as<monoid>(1);
+  auto x = trait_as<monoid>(1);  // NOLINT
   using x_t = decltype(x);
 
   test_monoid<monoid_trait<int>>(trait_as<monoid>(1),

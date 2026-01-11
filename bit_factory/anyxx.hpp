@@ -824,7 +824,7 @@ struct basic_erased_data_trait {
                          [[maybe_unused]] any_v_table* v_table) {
     return from;
   }
-  static void destroy([[maybe_unused]] ErasedData& data,
+  static void destroy([[maybe_unused]] ErasedData const& data,
                       [[maybe_unused]] any_v_table* v_table) {}
 };
 
@@ -1031,7 +1031,7 @@ struct erased_data_trait<val<vany_variant<any, ErasedData, Dispatch, Types...>>>
         std::is_constructible_v<vany_variant_t, ConstructedWith>;
   };
   static constexpr bool is_owner = erased_data_trait<ErasedData>::is_owner;
-  static constexpr bool is_weak = erased_data_trait<ErasedData>::is_weak;
+  static constexpr bool is_weak = erased_data_trait<ErasedData>::is_weak; // cppcheck-suppress duplInheritedMember
   static auto default_construct() { return vany_variant_t{}; }
 
   static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
@@ -1177,7 +1177,7 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = false;
-  static constexpr bool is_weak = true;
+  static constexpr bool is_weak = true; // cppcheck-suppress duplInheritedMember
   static auto default_construct() { return weak{}; }
 
   static void const* value([[maybe_unused]] const auto& ptr) { return nullptr; }
@@ -1458,7 +1458,7 @@ template <typename Dispatch>
 struct any_base_v_table_holder {
   struct v_table_t {};
   any_base_v_table_holder() = default;
-  any_base_v_table_holder(nullptr_t) {}
+  explicit any_base_v_table_holder(nullptr_t) {}
   static void set_v_table_ptr(auto) {}
   static auto get_v_table_ptr() { return nullptr; }
   template <typename...>
@@ -1468,20 +1468,20 @@ template <typename Dispatch>
   requires std::derived_from<Dispatch, dynamic_member_dispatch>
 struct any_base_v_table_holder<Dispatch> {
   any_base_v_table_holder() = default;
-  any_base_v_table_holder(any_base_v_table<Dispatch>* v_table)
+  explicit any_base_v_table_holder(any_base_v_table<Dispatch>* v_table)
       : v_table_(v_table) {}
-  static void set_v_table_ptr(any_base_v_table<Dispatch>* v_table) {
+  void set_v_table_ptr(any_base_v_table<Dispatch>* v_table) {
     v_table_ = v_table;
   }
   using v_table_t = any_base_v_table<Dispatch>;
   v_table_t* v_table_ = nullptr;
-  // cppcheck-suppress-begin functionConst
+  // cppcheck-suppress-begin [functionConst, functionStatic]
   template <typename Derived>
   auto get_v_table_ptr(this Derived const& self) {  // NOLINT
     static_assert(std::derived_from<typename Derived::v_table_t, v_table_t>);
     return static_cast<typename Derived::v_table_t*>(self.v_table_);
   }
-  // cppcheck-suppress-end functionConst
+  // cppcheck-suppress-end [functionConst, functionStatic]
   template <typename ErasedData, typename Concrete, typename Self>
   void init_v_table(this Self& self) {
     using derived_v_table_t = typename Self::v_table_t;
