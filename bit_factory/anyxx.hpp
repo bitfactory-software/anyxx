@@ -1878,11 +1878,6 @@ class erased_data_holder : public any_base_v_table_holder<Dispatch> {
     erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
     return *this;
   }
-  erased_data_holder(const erased_data_holder&) = default;
-  erased_data_holder(erased_data_holder&& rhs) noexcept
-      : erased_data_(std::move(rhs.erased_data_)) {}
-  erased_data_holder& operator=(erased_data_holder const& other) = default;
-  erased_data_holder& operator=(erased_data_holder&& other) = default;
 
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto& get_erased_data(
