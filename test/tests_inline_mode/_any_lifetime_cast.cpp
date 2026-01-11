@@ -23,7 +23,7 @@ using to_string_mo = to_string_i<mutable_observer>;
 TEST_CASE("any lifetime cast") {
   const to_string_sc sc{std::make_shared<X>("hallo")};
   REQUIRE(sc.to_string() == "hallo");
-  REQUIRE(is_derived_from<erased_data_holder<shared_const>>(sc));
+  REQUIRE(is_derived_from<any<shared_const>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);
@@ -47,7 +47,7 @@ TEST_CASE("any lifetime cast") {
   to_string_co co{sc};  // NOLINT
   REQUIRE(co.to_string() == "hallo");
   static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
-  REQUIRE(is_derived_from<erased_data_holder<const_observer>>(co));
+  REQUIRE(is_derived_from<any<const_observer>>(co));
 
   to_string_u u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u.to_string() == "hallo");
@@ -64,4 +64,3 @@ TEST_CASE("any lifetime cast") {
   to_string_co co_from_u{u1};
   REQUIRE(co_from_u.to_string() == "hallo");
 }
-

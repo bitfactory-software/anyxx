@@ -528,7 +528,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
     template <anyxx::is_erased_data Other, typename OtherDispatch>             \
-    friend class anyxx::erased_data_holder;                                    \
+    friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
       requires(std::derived_from<To, From>);                                   \
@@ -1425,6 +1425,15 @@ meta_data& get_meta_data() {
 template <typename Dispatch = rtti>
 struct any_base_v_table;
 
+template <typename VTable, typename Concrete>
+static auto any_base_v_table_instance() {
+  static VTable v_table{std::in_place_type<Concrete>};
+  if constexpr (std::same_as<typename VTable::dispatch_t, rtti>) {
+    v_table.meta_data_ = &get_meta_data<Concrete>();
+  }
+  return &v_table;
+}
+
 template <>
 struct any_base_v_table<rtti> : any_v_table {
   template <typename Concrete>
@@ -1436,6 +1445,11 @@ struct any_base_v_table<rtti> : any_v_table {
         }) {}
 
   using dispatch_t = rtti;
+
+  template <typename Concrete>
+  static auto imlpementation() {
+    return any_base_v_table_instance<any_base_v_table<rtti>, Concrete>();
+  }
 
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(any_base_v_table) == from;
@@ -1455,6 +1469,11 @@ template <>
 struct any_base_v_table<dyns> : any_v_table {
   using any_v_table::any_v_table;
   using dispatch_t = dyns;
+
+  template <typename Concrete>
+  static auto imlpementation() {
+    return any_base_v_table_instance<any_base_v_table<dyns>, Concrete>();
+  }
 };
 
 template <typename Dispatch>
@@ -1795,7 +1814,7 @@ static_assert(moveable_from<value, value>);
 // any base
 
 template <is_erased_data ErasedData, typename Dispatch = rtti>
-class erased_data_holder;
+class any;
 
 template <typename I>
 concept is_erased_data_holder_impl = requires(I i) {
@@ -1825,13 +1844,12 @@ template <typename ConstructedWith, typename ErasedData>
 concept constructibile_for =
     (erased_data_trait<ErasedData>::template is_constructibile_from<
         ConstructedWith>::value) ||
-    (erased_constructibile_for<ConstructedWith, ErasedData,
-                               erased_data_holder<ErasedData>> &&
+    (erased_constructibile_for<ConstructedWith, ErasedData, any<ErasedData>> &&
      !is_erased_data_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
 template <is_erased_data ErasedData, typename Dispatch>
-class erased_data_holder : public any_base_v_table_holder<Dispatch> {
+class any : public any_base_v_table_holder<Dispatch> {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
@@ -1842,41 +1860,46 @@ class erased_data_holder : public any_base_v_table_holder<Dispatch> {
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
 
-  explicit erased_data_holder(erased_data_t erased_data, v_table_t* v_table)
+ public:
+  explicit any(erased_data_t erased_data, v_table_t* v_table)
       : v_table_holder_t(v_table), erased_data_(std::move(erased_data)) {}
   // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
-  explicit(false)
-      erased_data_holder(ConstructedWith&& constructed_with)  // NOLINT
+  explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, ErasedData>
       : erased_data_(erased<erased_data_t>(
-            std::forward<ConstructedWith>(constructed_with))) {}
+            std::forward<ConstructedWith>(constructed_with))) {
+    v_table_holder_t::template init_v_table<ErasedData, ConstructedWith>();
+  }
   // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
-  erased_data_holder(std::in_place_t, V&& v)
+  any(std::in_place_t, V&& v)
       : erased_data_(erased_data_trait<ErasedData>::construct_in_place(
-            std::forward<V>(v))) {}
+            std::forward<V>(v))) {
+    v_table_holder_t::template init_v_table<ErasedData, V>();
+  }
   template <typename T, typename... Args>
-  erased_data_holder(std::in_place_type_t<T>, Args&&... args)
+  any(std::in_place_type_t<T>, Args&&... args)
       : erased_data_(
             erased_data_trait<ErasedData>::template construct_type_in_place<T>(
-                std::forward<Args>(args)...)) {}
+                std::forward<Args>(args)...)) {
+    v_table_holder_t::template init_v_table<ErasedData, T>();
+  }
 
- public:
-  erased_data_holder() = default;
+  any() = default;
 
   template <is_erased_data_holder Other>
-  explicit erased_data_holder(const Other& other)
+  explicit any(const Other& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
   template <typename Other>
-  explicit erased_data_holder(Other&& other)
+  explicit any(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(move_to<ErasedData>(std::move(other.erased_data_))) {}
   template <typename Other>
-  erased_data_holder& operator=(Other&& other) {
+  any& operator=(Other&& other) {
     set_v_table_ptr(other.get_v_table_ptr());
     erased_data_ = move_to<ErasedData>(std::move(other.erased_data_));
     return *this;
@@ -1884,16 +1907,16 @@ class erased_data_holder : public any_base_v_table_holder<Dispatch> {
 
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto& get_erased_data(
-      erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
+      any<FriendsErasedData, FriendsDispatch> const& any);
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto move_erased_data(
-      erased_data_holder<FriendsErasedData, FriendsDispatch>&& any);
+      any<FriendsErasedData, FriendsDispatch>&& any);
   template <is_erased_data FriendsErasedData, typename FriendsDispatch>
   friend inline auto get_void_data_ptr(
-      erased_data_holder<FriendsErasedData, FriendsDispatch> const& any);
+      any<FriendsErasedData, FriendsDispatch> const& any);
 
   template <is_erased_data Other, typename FriendsDispatch>
-  friend class erased_data_holder;
+  friend class any;
 
   template <is_any I>
   friend inline auto get_v_table(I const& any);
@@ -1912,17 +1935,15 @@ class erased_data_holder : public any_base_v_table_holder<Dispatch> {
 };
 
 template <is_erased_data ErasedData, typename Dispatch>
-inline auto& get_erased_data(
-    erased_data_holder<ErasedData, Dispatch> const& any) {
+inline auto& get_erased_data(any<ErasedData, Dispatch> const& any) {
   return any.erased_data_;
 }
 template <is_erased_data ErasedData, typename Dispatch>
-inline auto move_erased_data(erased_data_holder<ErasedData, Dispatch>&& any) {
+inline auto move_erased_data(any<ErasedData, Dispatch>&& any) {
   return std::move(any.erased_data_);
 }
 template <is_erased_data ErasedData, typename Dispatch>
-inline auto get_void_data_ptr(
-    erased_data_holder<ErasedData, Dispatch> const& any) {
+inline auto get_void_data_ptr(any<ErasedData, Dispatch> const& any) {
   return get_void_data_ptr(get_erased_data(any));
 }
 
@@ -1932,12 +1953,11 @@ inline const auto& get_meta_data(Any const& any) {
 }
 
 template <is_erased_data VV>
-bool is_derived_from(const std::type_info& from,
-                     erased_data_holder<VV> const& any) {
+bool is_derived_from(const std::type_info& from, any<VV> const& any) {
   return get_v_table(any)->is_derived_from_(from);
 }
 template <is_any From, is_erased_data VV>
-bool is_derived_from(erased_data_holder<VV> const& any) {
+bool is_derived_from(any<VV> const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
 
@@ -2215,8 +2235,7 @@ struct default_member_dispatch {
 // --------------------------------------------------------------------------------
 // any customization points
 
-template <typename Dispatch,
-          template <typename...> typename Base = erased_data_holder>
+template <typename Dispatch, template <typename...> typename Base = any>
 struct derive_from {
   template <typename... Args>
   using type = Base<Args...>;

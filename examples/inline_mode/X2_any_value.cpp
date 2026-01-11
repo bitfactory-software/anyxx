@@ -6,7 +6,7 @@ using namespace anyxx;
 
 namespace {
 
-ANY(any, , , )
+//ANY(any, , , )
 
 }  // namespace
 

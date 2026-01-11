@@ -24,10 +24,11 @@ ANY(any_drawable, (ANY_METHOD(void, draw, (position), const)), , )
 ANY_(any_shape, any_drawable,
      (ANY_METHOD(int, count_sides, (), const),
       ANY_METHOD(double, area, (), const),
-      ANY_METHOD(double, perimeter, (), const)), , )
+      ANY_METHOD(double, perimeter, (), const)),
+     , )
 
 ANY_(any_callable_shape, any_shape,
-     (ANY_OP(std::string, (), (std::string const&), const)), , ) 
+     (ANY_OP(std::string, (), (std::string const&), const)), , )
 
 struct circle {
   double radius = 10;
@@ -128,7 +129,7 @@ TEST_CASE("dynamic v_table const_observer") {
   print_any_callable_shape_const_observer(p);
 
   using erased_const_observer = const_observer;
-  static_assert(std::is_base_of_v<erased_data_holder<erased_const_observer>,
+  static_assert(std::is_base_of_v<any<erased_const_observer>,
                                   any_callable_shape<const_observer>>);
   static_assert(std::is_base_of_v<any_shape<const_observer>,
                                   any_callable_shape<const_observer>>);
@@ -161,11 +162,11 @@ TEST_CASE("dynamic v_table const_observer") {
     any_drawable_mutable_observer sb2{std::move(sb1)};
   }
 
-  //    erased_data_holder< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
+  //    any< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  [[maybe_unused]] anyxx::erased_data_holder<const_observer> base_shape =
+  [[maybe_unused]] anyxx::any<const_observer> base_shape =
       any_callable_shape_onst_observer_circle1;
-  [[maybe_unused]] anyxx::erased_data_holder<const_observer> base_shapeX =
+  [[maybe_unused]] anyxx::any<const_observer> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));

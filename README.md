@@ -162,7 +162,7 @@ This is where **programming on a large scale** begins and get_meta_data dispatch
 
 At this point arises another problem, when it comes to "inversion of control" in regard to the type of the parameter objects passed into the callback:
 - In static dispatch, you have the full type information.
-- In dynamic dispatch, the original type is usually abstracted away (either via a erased_data_holder class or "type erasure") and must be cast back to access more concrete information.
+- In dynamic dispatch, the original type is usually abstracted away (either via a any class or "type erasure") and must be cast back to access more concrete information.
 
 ### *Runtime* versus *compile-time*
 
