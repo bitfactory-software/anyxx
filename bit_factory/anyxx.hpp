@@ -791,7 +791,24 @@ template <typename Voidness>
 concept is_const_void = is_const_void_<Voidness>::value;
 
 class meta_data;
-struct any_v_table;
+
+struct any_v_table {
+  template <typename Concrete>
+  explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : copy_construct_(+[]([[maybe_unused]] const_void from) -> mutable_void {
+          if constexpr (std::is_copy_constructible_v<Concrete>) {
+            return ::new Concrete(*static_cast<Concrete const*>(from));
+          } else {
+            return nullptr;
+          };
+        }),
+        deleter_(+[](mutable_void data) noexcept -> void {
+          delete static_cast<Concrete*>(data);
+        }) {}
+
+  mutable_void (*copy_construct_)(const_void from);
+  void (*deleter_)(mutable_void target_) noexcept;
+};
 
 template <typename U>
 bool type_match(meta_data const& meta);
@@ -807,13 +824,10 @@ struct erased_data_trait;
 template <typename ErasedData>
 struct basic_erased_data_trait {
   inline static constexpr bool is_weak = false;
-  inline static constexpr bool can_copy = true;
-  template <typename Dispatch>
   static ErasedData copy(ErasedData const& from,
                          [[maybe_unused]] any_v_table* v_table) {
     return from;
   }
-  template <typename Dispatch>
   static void destroy([[maybe_unused]] ErasedData& data,
                       [[maybe_unused]] any_v_table* v_table) {}
 };
@@ -1409,24 +1423,6 @@ meta_data& get_meta_data() {
 }
 #endif
 
-struct any_v_table {
-  template <typename Concrete>
-  explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : copy_construct_(+[]([[maybe_unused]] const_void from) -> mutable_void {
-          if constexpr (std::is_copy_constructible_v<Concrete>) {
-            return ::new Concrete(*static_cast<Concrete const*>(from));
-          } else {
-            return nullptr;
-          };
-        }),
-        deleter_(+[](mutable_void data) noexcept -> void {
-          delete static_cast<Concrete*>(data);
-        }) {}
-
-  mutable_void (*copy_construct_)(const_void from);
-  void (*deleter_)(mutable_void target_) noexcept;
-};
-
 template <typename Dispatch = rtti>
 struct any_base_v_table;
 
@@ -1483,7 +1479,8 @@ struct any_base_v_table_holder<Dispatch> {
   static void set_v_table_ptr(any_base_v_table<Dispatch>* v_table) {
     v_table_ = v_table;
   }
-  any_base_v_table<Dispatch>* v_table_ = nullptr;
+  using v_table_t = any_base_v_table<Dispatch>;
+  v_table_t* v_table_ = nullptr;
   // cppcheck-suppress-begin functionConst
   template <typename Derived>
   auto get_v_table_ptr(this Derived const& self) {  // NOLINT
@@ -1837,7 +1834,7 @@ concept constructibile_for =
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
 template <is_erased_data ErasedData, typename Dispatch>
-class erased_data_holder : any_base_v_table_holder<Dispatch> {
+class erased_data_holder : public any_base_v_table_holder<Dispatch> {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
@@ -1847,7 +1844,6 @@ class erased_data_holder : any_base_v_table_holder<Dispatch> {
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
 
-  erased_data_holder() = default;
   explicit erased_data_holder(erased_data_t erased_data)
       :  // v_table_holder_t(erased_data.get_v_table_ptr()),
         erased_data_(std::move(erased_data)) {}
@@ -1870,6 +1866,8 @@ class erased_data_holder : any_base_v_table_holder<Dispatch> {
                 std::forward<Args>(args)...)) {}
 
  public:
+  erased_data_holder() = default;
+
   template <is_erased_data_holder Other>
   explicit erased_data_holder(const Other& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
