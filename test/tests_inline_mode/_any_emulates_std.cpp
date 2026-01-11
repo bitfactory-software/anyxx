@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <concepts>
 #include <string>
+#include <print>
 
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
@@ -10,10 +11,13 @@
 using namespace anyxx;
 
 namespace {
-ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)), , )
+ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)),
+    , )
 
-ANY(string_to_string_mutable, (ANY_OP(std::string, (), (), const),
-                               ANY_OP(std::string, (), (std::string const&), )), , )
+ANY(string_to_string_mutable,
+    (ANY_OP(std::string, (), (), const),
+     ANY_OP(std::string, (), (std::string const&), )),
+    , )
 
 }  // namespace
 
@@ -21,6 +25,18 @@ using namespace anyxx;
 
 namespace {
 struct functor_t {
+  static inline int tracker_ = 0;
+  functor_t(std::string const& s = {}) : s_(s) 
+  { 
+      ++tracker_; 
+      std::println("{}", tracker_);
+  }
+  ~functor_t() 
+  { 
+      --tracker_; 
+      std::println("{}", tracker_);
+  }
+
   std::string s_;
   std::string operator()() const { return s_; }
   std::string operator()(const std::string& s) {
@@ -83,16 +99,27 @@ TEST_CASE("std emulated function") {
     CHECK(fc2() == "hallo world");
   }
   {
-    pure_functor_t pf{};;
+    pure_functor_t pf{};
+    ;
     string_to_string<mutable_observer> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    pure_functor_t pf {};
+    pure_functor_t pf{};
     string_to_string<const_observer> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
+    functor_t::tracker_ = 0;
+    {
+      {
+        string_to_string_mutable<unique> f{std::make_unique<functor_t>()};
+        REQUIRE(functor_t::tracker_ == 1);
+        REQUIRE(f("hello") == "");
+        REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello");
+      }
+      REQUIRE(functor_t::tracker_ == 0);
+    }
     string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");

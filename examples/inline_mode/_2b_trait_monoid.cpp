@@ -34,8 +34,9 @@ ANY_EX(monoid,
               std::println("concat-default {}", typeid(T).name());
               auto self = anyxx::trait_as<monoid>(x);
               return std::ranges::fold_left(
-                  r | std::views::transform(
-                          [](auto const&y) { return anyxx::trait_as<monoid>(y); }),
+                  r | std::views::transform([](auto const& y) {
+                    return anyxx::trait_as<monoid>(y);
+                  }),
                   self,
                   [&](auto const& m1, auto const& m2) { return m1 + m2; });
             }),
@@ -93,12 +94,26 @@ make_a_range(bool use_list) {
 
 }  // namespace example_2b
 //
+TEST_CASE("example 2b monoid simple") {
+  example_2b::monoid<anyxx::val<int>, anyxx::trait> x{2};
+  example_2b::monoid<anyxx::val<int>, anyxx::trait> y{x};
+  example_2b::monoid<anyxx::val<int>, anyxx::trait> z = y;
+  example_2b::monoid<anyxx::val<int>, anyxx::trait> a{std::move(x)};
+  static_assert(anyxx::is_erased_data<decltype(x)::erased_data_t>);
+  static_assert(anyxx::is_any<decltype(x)>);
+  static_assert(anyxx::moveable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
+  static_assert(anyxx::borrowable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
+}
 TEST_CASE("example 2b monoid ") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
   auto x = trait_as<monoid>(1);  // NOLINT
   using x_t = decltype(x);
+
+  static_assert(
+      std::convertible_to<example_2b::monoid<anyxx::val<int>, anyxx::trait>,
+                          example_2b::monoid<anyxx::val<int>, anyxx::trait>>);
 
   test_monoid<monoid_trait<int>>(trait_as<monoid>(1),
                                  std::vector<monoid_trait<int>>{{2}, {3}});
