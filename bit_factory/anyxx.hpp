@@ -1031,7 +1031,9 @@ struct erased_data_trait<val<vany_variant<any, ErasedData, Dispatch, Types...>>>
         std::is_constructible_v<vany_variant_t, ConstructedWith>;
   };
   static constexpr bool is_owner = erased_data_trait<ErasedData>::is_owner;
-  static constexpr bool is_weak = erased_data_trait<ErasedData>::is_weak; // cppcheck-suppress duplInheritedMember
+  static constexpr bool is_weak =
+      erased_data_trait<ErasedData>::is_weak;  // cppcheck-suppress
+                                               // duplInheritedMember
   static auto default_construct() { return vany_variant_t{}; }
 
   static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
@@ -1177,7 +1179,8 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = false;
-  static constexpr bool is_weak = true; // cppcheck-suppress duplInheritedMember
+  static constexpr bool is_weak =
+      true;  // cppcheck-suppress duplInheritedMember
   static auto default_construct() { return weak{}; }
 
   static void const* value([[maybe_unused]] const auto& ptr) { return nullptr; }
@@ -1458,7 +1461,7 @@ template <typename Dispatch>
 struct any_base_v_table_holder {
   struct v_table_t {};
   any_base_v_table_holder() = default;
-  explicit any_base_v_table_holder(nullptr_t) {}
+  explicit any_base_v_table_holder(std::nullptr_t) {}
   static void set_v_table_ptr(auto) {}
   static auto get_v_table_ptr() { return nullptr; }
   template <typename...>
