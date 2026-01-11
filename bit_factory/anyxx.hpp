@@ -826,10 +826,6 @@ struct basic_erased_data_trait {
     return std::move(data);
   }
 
-  static ErasedData copy(ErasedData const& from,
-                         [[maybe_unused]] basic_any_v_table* v_table) {
-    return from;
-  }
   static void destroy([[maybe_unused]] ErasedData const& data,
                       [[maybe_unused]] basic_any_v_table* v_table) {}
 };
@@ -1334,11 +1330,6 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
     return static_cast<bool>(ptr.data_);
   }
 
-  static unique copy([[maybe_unused]] unique const& from,
-                     [[maybe_unused]] basic_any_v_table* v_table) {
-    assert(false);
-    return unique{};
-  }
   static void destroy(unique& u, basic_any_v_table* v_table) {
     v_table->deleter_(u.data_);
   }
