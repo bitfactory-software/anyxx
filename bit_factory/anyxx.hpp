@@ -991,8 +991,8 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
   static constexpr bool is_constructibile_from_const = true;
   template <typename ConstructedWith>
   struct is_constructibile_from {
-    static constexpr bool value = std::is_constructible_v<V, ConstructedWith> &&
-                                  !is_any<ConstructedWith>;
+    static constexpr bool value =
+        std::is_constructible_v<V, ConstructedWith> && !is_any<ConstructedWith>;
   };
   static constexpr bool is_owner = true;
   static auto default_construct() { return val<V>{}; }
@@ -1916,7 +1916,6 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-
 template <is_erased_data ErasedData, typename Dispatch>
 class any : public any_base_v_table_holder<Dispatch> {
  public:
@@ -2458,12 +2457,14 @@ template <is_any ToAny, is_any FromAny>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   if constexpr (std::same_as<typename ToAny::v_table_t,
                              typename FromAny::v_table_t>) {
-    return from;
+    return {ToAny{from}};
   } else if constexpr (std::derived_from<typename ToAny::v_table_t,
                                          typename FromAny::v_table_t>) {
     if (auto to = downcast_to<ToAny>(from)) return *to;
+    return borrow_as<ToAny>(get_erased_data(from), get_meta_data(from));
+  } else {
+    return borrow_as<ToAny>(get_erased_data(from), get_meta_data(from));
   }
-  return borrow_as<ToAny>(get_erased_data(from), get_meta_data(from));
 }
 
 template <is_any ToAny, is_any FromAny>

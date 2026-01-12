@@ -1,6 +1,6 @@
+#include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
-#include <bit_factory/anyxx.hpp>
 
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
@@ -11,69 +11,66 @@ using namespace anyxx;
 TEST_CASE("_data_conversion borrow") {
   std::string s1 = "hallo";
   {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<const_observer>(s1);
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    static_assert(borrowable_from<const_observer, mutable_observer>);
+    any<const_observer> vv2a{ vv1 };
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<const_observer>(s1);
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    auto vv2 = borrow_as<any<mutable_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<const_observer>(s1);
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    auto vv2 = borrow_as<any<mutable_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<shared_const>(std::make_shared<std::string>(s1));
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
+    auto vv2 = borrow_as<any<const_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
+    auto vv2 = borrow_as<any<mutable_observer>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = borrow_as<shared_const>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
+    auto vv1 = any<shared_const>(std::make_shared<std::string>(s1));
+    auto vv2 = borrow_as<any<shared_const>>(vv1);
+    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
 }
 TEST_CASE("_data_conversion clone") {
@@ -143,21 +140,21 @@ TEST_CASE("_data_conversion move") {
     auto vv1 = any<unique>(std::make_unique<std::string>(s1));
     auto vv2 = move_to<any<unique>>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
-#pragma warning( push )
-#pragma warning( disable : 26800)
+#pragma warning(push)
+#pragma warning(disable : 26800)
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(!has_data(get_erased_data(vv1)));
-#pragma warning( pop )
+#pragma warning(pop)
   }
   {
     auto vv1 = any<unique>(std::make_unique<std::string>(s1));
     auto vv2 = move_to<any<shared_const>>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
-#pragma warning( push )
-#pragma warning( disable : 26800)
+#pragma warning(push)
+#pragma warning(disable : 26800)
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(!has_data(get_erased_data(vv1)));
-#pragma warning( pop )
+#pragma warning(pop)
   }
 }
 // cppcheck-suppress-end [accessMoved]
