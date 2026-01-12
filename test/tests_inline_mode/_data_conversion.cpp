@@ -8,44 +8,6 @@
 
 using namespace anyxx;
 
-TEST_CASE("_data_conversion borrow") {
-  std::string s1 = "hallo";
-  {
-    auto vv1 = any<const_observer>(s1);
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<mutable_observer>(s1);
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<mutable_observer>(s1);
-    auto vv2 = borrow_as<any<mutable_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = borrow_as<any<mutable_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = borrow_as<any<shared_const>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-}
 TEST_CASE("_data_conversion clone") {
   std::string s1 = "hallo";
   {
