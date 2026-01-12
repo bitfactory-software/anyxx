@@ -1773,10 +1773,6 @@ template <>
 struct borrow_trait<weak, shared_const> {
   auto operator()(const auto& from) const { return weak{from}; }
 };
-template <typename V>
-struct borrow_trait<val<V>, val<V>> {
-  auto operator()(const auto& from) const { return from; }
-};
 
 template <typename To, typename From>
   requires borrowable_from<To, From>

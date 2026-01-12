@@ -102,7 +102,7 @@ TEST_CASE("example 2b monoid simple") {
   static_assert(anyxx::is_erased_data<decltype(x)::erased_data_t>);
   static_assert(anyxx::is_any<decltype(x)>);
   static_assert(anyxx::moveable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
-  static_assert(anyxx::borrowable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
+  static_assert(!anyxx::borrowable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
 }
 TEST_CASE("example 2b monoid ") {
   using namespace example_2b;
