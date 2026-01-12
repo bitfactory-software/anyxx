@@ -1270,8 +1270,12 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
     return nullptr;
   }
   template <typename V>
+  static auto erase(std::shared_ptr<V> const& v) {
+    return weak{static_pointer_cast<void const>(v)};
+  }
+  template <typename V>
   static auto erase(std::weak_ptr<V> const& v) {
-    return static_pointer_cast<void const>(v);
+    return erase(v.lock());
   }
 };
 
@@ -1966,12 +1970,21 @@ class any : public any_base_v_table_holder<Dispatch> {
   }
 
   template <is_any Other>
-  explicit any(const Other& other)
+  explicit(false) any(const Other& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
   template <is_any Other>
-  explicit any(Other&& other)
+  any& operator=(Other const& other)
+    requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
+  {
+    v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
+    erased_data_(borrow_as<ErasedData>(other.erased_data_));
+    return *this;
+  }
+
+  template <is_any Other>
+  explicit(false) any(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(move_to<ErasedData>(std::move(other.erased_data_),
@@ -1985,15 +1998,8 @@ class any : public any_base_v_table_holder<Dispatch> {
                                        other.get_v_table_ptr());
     return *this;
   }
-
-  template <is_any Other>
-  any& operator=(Other const& other)
-    requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
-  {
-    v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
-    erased_data_(borrow_as<ErasedData>(other.erased_data_));
-    return *this;
-  }
+  template <typename... Args>
+  using type_for = any<Args...>;
 
   template <is_any Friend>
   friend inline auto& get_erased_data(Friend const& any);
@@ -2484,7 +2490,7 @@ auto lock(FromAny const& from_interface) {
   static_assert(is_any<to_interface_t>);
   using return_t = std::optional<to_interface_t>;
   if (auto locked = get_erased_data(from_interface).lock())
-    return return_t{{locked, get_v_table(from_interface)}};
+    return return_t{to_interface_t{locked, get_v_table(from_interface)}};
   return return_t{};
 }
 
