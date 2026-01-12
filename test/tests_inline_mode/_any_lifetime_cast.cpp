@@ -16,16 +16,16 @@ struct X {
   X& operator=(X const& x) { s_ = x.s_; return *this; }
   X& operator=(X&& x) { s_ = std::move(x.s_); return *this; }
   std::string s_;
-  [[nodiscard]] std::string to_string() const { return s_; }
+  [[nodiscard]] std::string operator()() const { return s_; }
 };
 
-ANY(any_stringable, (ANY_METHOD(std::string, to_string, (), const)), , )
+ANY(any_stringable, (ANY_OP(std::string, (), (), const)), , )
 
 }  // namespace
 
 TEST_CASE("any lifetime cast") {
   const any_stringable<shared_const> sc{std::make_shared<X>("hallo")};
-  REQUIRE(sc.to_string() == "hallo");
+  REQUIRE(sc() == "hallo");
   REQUIRE(is_derived_from<any<shared_const>>(sc));
 
   static_assert(
@@ -48,22 +48,22 @@ TEST_CASE("any lifetime cast") {
   static_assert(
       std::derived_from<any_stringable<shared_const>::v_table_t, any_stringable<const_observer>::v_table_t>);
   any_stringable<const_observer> co{sc};  // NOLINT
-  REQUIRE(co.to_string() == "hallo");
+  REQUIRE(co() == "hallo");
   static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
   REQUIRE(is_derived_from<any<const_observer>>(co));
 
   any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
-  REQUIRE(u.to_string() == "hallo");
+  REQUIRE(u() == "hallo");
   static_assert(!is_typed_any<any_stringable<unique>>);
   static_assert(is_any<any_stringable<unique>>);
   static_assert(!constructibile_for<any_stringable<unique>, any_stringable<mutable_observer>::erased_data_t>);
   static_assert(
       std::derived_from<any_stringable<mutable_observer>::v_table_t, any_stringable<unique>::v_table_t>);
   any_stringable<mutable_observer> mo{u};
-  REQUIRE(mo.to_string() == "hallo");
+  REQUIRE(mo() == "hallo");
 
   any_stringable<unique> u1{std::make_unique<X>("hallo")};
-  REQUIRE(u1.to_string() == "hallo");
+  REQUIRE(u1() == "hallo");
   any_stringable<const_observer> co_from_u{u1};
-  REQUIRE(co_from_u.to_string() == "hallo");
+  REQUIRE(co_from_u() == "hallo");
 }
