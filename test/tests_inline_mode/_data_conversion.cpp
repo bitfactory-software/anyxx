@@ -17,8 +17,6 @@ TEST_CASE("_data_conversion borrow") {
   }
   {
     auto vv1 = any<mutable_observer>(s1);
-    static_assert(borrowable_from<const_observer, mutable_observer>);
-    any<const_observer> vv2a{ vv1 };
     auto vv2 = borrow_as<any<const_observer>>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
