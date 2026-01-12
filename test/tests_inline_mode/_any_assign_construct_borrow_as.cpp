@@ -8,6 +8,7 @@
 
 using namespace anyxx;
 
+//
 TEST_CASE("assign construct borrow_as") {
   std::string s1 = "hallo";
   {
