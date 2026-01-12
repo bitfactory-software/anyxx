@@ -914,11 +914,6 @@ concept const_correct_call_for_erased_data =
       const_correct_call<is_const_void<CALL>, is_const_data<ErasedData>,
                          is_weak_data<ErasedData>>));
 
-template <is_erased_data ErasedData, typename From>
-ErasedData erased(From&& from) {
-  return erased_data_trait<ErasedData>::erase(std::forward<From>(from));
-}
-
 template <is_erased_data ErasedData, typename ConstructedWith>
 using unerased = erased_data_trait<ErasedData>::template unerased<
     std::decay_t<ConstructedWith>>;
@@ -2021,6 +2016,11 @@ class any : public any_base_v_table_holder<Dispatch> {
     }
   }
 };
+
+template <is_erased_data ErasedData, typename From>
+ErasedData erased(From&& from) {
+  return erased_data_trait<ErasedData>::erase(std::forward<From>(from));
+}
 
 template <is_any Any>
 inline auto& get_erased_data(Any const& any) {
