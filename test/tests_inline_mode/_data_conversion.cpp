@@ -21,31 +21,6 @@ TEST_CASE("_data_conversion borrow") {
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
   }
   {
-    auto vv1 = any<const_observer>(s1);
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<mutable_observer>(s1);
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<mutable_observer>(s1);
-    auto vv2 = borrow_as<any<mutable_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<const_observer>(s1);
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
-    auto vv1 = any<mutable_observer>(s1);
-    auto vv2 = borrow_as<any<const_observer>>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-  }
-  {
     auto vv1 = any<mutable_observer>(s1);
     auto vv2 = borrow_as<any<mutable_observer>>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
