@@ -39,8 +39,8 @@ to_string_i<anyxx::const_observer> get_to_string_i_co();
 COMPONENT_BASE_EXPORT to_string_i<anyxx::shared_const> get_to_string_i_sc(
     double v);
 COMPONENT_BASE_EXPORT to_string_i<anyxx::unique> get_to_string_i_u(double v);
-COMPONENT_BASE_EXPORT anyxx::shared_const sc_X(double v);
-COMPONENT_BASE_EXPORT anyxx::unique u_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared_const> sc_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique> u_X(double v);
 
 }  // namespace test::component_base
 

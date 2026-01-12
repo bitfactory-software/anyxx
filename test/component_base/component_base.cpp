@@ -54,9 +54,9 @@ to_string_i<anyxx::unique> test::component_base::get_to_string_i_u(double v) {
   return std::make_unique<X>(v);
 }
 
-anyxx::shared_const test::component_base::sc_X(double v) {
-  return anyxx::erased<shared_const>(std::make_shared<X>(v));
+anyxx::any<anyxx::shared_const> test::component_base::sc_X(double v) {
+  return anyxx::any<shared_const>(std::make_shared<X>(v));
 }
-anyxx::unique test::component_base::u_X(double v) {
-  return anyxx::erased<unique>(std::make_unique<X>(v));
+anyxx::any<anyxx::unique> test::component_base::u_X(double v) {
+  return anyxx::any<unique>(std::make_unique<X>(v));
 }
