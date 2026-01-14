@@ -70,7 +70,16 @@ TEST_CASE("unique lifetime") {
       REQUIRE((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
+      REQUIRE(get_void_data_ptr(u) == nullptr);
       REQUIRE((*unerase_cast<X>(u2))() == "hallo");
+      CHECK(X::tracker_ == 1);
+      auto u3 = std::move(u2);
+      REQUIRE(get_void_data_ptr(u2) == nullptr);
+      REQUIRE((*unerase_cast<X>(u3))() == "hallo");
+      CHECK(X::tracker_ == 1);
+      auto u4 = move_to<any<unique>>(std::move(u3));
+      REQUIRE(get_void_data_ptr(u3) == nullptr);
+      REQUIRE((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
