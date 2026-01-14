@@ -71,7 +71,7 @@ Square
   - A overrideable **customization point**     
 - Single **header only library**
 - **static-** or **DLL/SO mode** for v-tables, dispatch tables and other static meta data.
-  - Default for *static build*: the compiler manages the details.
+  - Default for *static build*: the compiler manages the details via *static inline*.
   - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibility and location of the static meta data.
 
 # Useage in CMakeLists.txt:
