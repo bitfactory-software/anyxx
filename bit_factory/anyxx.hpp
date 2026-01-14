@@ -1429,7 +1429,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static auto default_construct() { return anyxx::value{}; }
   static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
                                   [[maybe_unused]] basic_any_v_table* v_table) {
-    return anyxx::value{};
+    return anyxx::value{data_ptr};
   }
 
   static void move_to(value& to, value&& from,

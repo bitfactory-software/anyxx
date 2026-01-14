@@ -117,6 +117,21 @@ TEST_CASE("value lifetime") {
     }
     CHECK(X::tracker_ == 0);
   }
+  {
+    CHECK(X::tracker_ == 0);
+    {
+      any<value> v{std::in_place_type<X>, "hallo"};
+      REQUIRE((*unerase_cast<X>(v))() == "hallo");
+      CHECK(X::tracker_ == 1);
+      auto v2 = clone_to<any<value>>(v);
+      CHECK(X::tracker_ == 2);
+      REQUIRE(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      REQUIRE((*unerase_cast<X>(v))() == "hallo");
+      REQUIRE((*unerase_cast<X>(*v2))() == "hallo");
+    }
+    CHECK(X::tracker_ == 0);
+    X::tracker_ = 0;
+  }
 }
 
 TEST_CASE("unique lifetime") {
