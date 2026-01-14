@@ -489,8 +489,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using base_t::erased_data_;                                                \
     using base_t::get_v_table_ptr;                                             \
                                                                                \
-    n(erased_data_t erased_data, v_table_t* v_table)                           \
-        : base_t(std::move(erased_data), v_table) {}                           \
     template <typename ConstructedWith>                                        \
     explicit(false) n(ConstructedWith&& v)                                     \
       requires anyxx::constructibile_for<ConstructedWith, ErasedData>          \
@@ -506,6 +504,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         : base_t(std::in_place_type<T>, std::forward<Args>(args)...) {         \
       base_t::template init_v_table<erased_data_t, T>();                       \
     }                                                                          \
+    template <anyxx::is_erased_data OtherErasedData>                           \
+      requires(anyxx::moveable_from<erased_data_t, OtherErasedData>)           \
+    n(OtherErasedData&& erased_data, v_table_t* v_table)                       \
+        : base_t(std::move(erased_data), v_table) {}                           \
     template <typename Other>                                                  \
     explicit(false) n(const Other& other)                                      \
       requires(std::derived_from<typename Other::v_table_t, v_table_t> &&      \
@@ -822,8 +824,8 @@ template <typename ErasedData>
 struct basic_erased_data_trait {
   inline static constexpr bool is_weak = false;
 
-  static auto move_to(auto&& data, [[maybe_unused]] auto) {
-    return std::move(data);
+  static void move_to(auto& to, auto&& from, [[maybe_unused]] auto) {
+    to = std::move(from);
   }
 
   static void destroy([[maybe_unused]] ErasedData const& data,
@@ -1128,10 +1130,8 @@ struct observer_trait : basic_erased_data_trait<Voidness> {
                                   [[maybe_unused]] basic_any_v_table* v_table) {
     return void_t{};
   }
-  template <voidness ToVoidness>
-    requires(std::convertible_to<Voidness, ToVoidness>)
-  static auto move_to(void_t observer, [[maybe_unused]] auto) {
-    return observer;
+  static void move_to(Voidness& to, Voidness from, [[maybe_unused]] auto) {
+    to = from;
   }
 
   static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
@@ -1177,6 +1177,85 @@ static_assert(is_erased_data<mutable_observer>);
 static_assert(is_erased_data<const_observer>);
 
 // --------------------------------------------------------------------------------
+// erased data unique
+
+struct unique {
+  mutable_void data_ = nullptr;
+  explicit unique(mutable_void p = nullptr) : data_(p) {}
+  unique(unique const&) = delete;
+  unique& operator=(unique const&) = delete;
+  unique(unique&& other) { std::swap(data_, other.data_); }
+  unique& operator=(unique&& other) {
+    assert(!data_);
+    std::swap(data_, other.data_);
+    return *this;
+  };
+  ~unique() = default;
+  explicit operator bool() const { return static_cast<bool>(data_); }
+};
+
+template <>
+struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
+  using void_t = void*;
+  using static_dispatch_t = void_t;
+  template <typename V>
+  using typed_t = std::decay_t<V>;
+  static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+    static constexpr bool value = false;
+  };
+  static constexpr bool is_owner = true;
+  static auto default_construct() { return unique{}; }
+  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
+                                  [[maybe_unused]] basic_any_v_table* v_table) {
+    return unique{data_ptr};
+  }
+  static void move_to(unique& to, unique&& from,
+                      [[maybe_unused]] basic_any_v_table* v_table) {
+    mutable_void old = nullptr;
+    std::swap(to.data_, old);
+    std::swap(to.data_, from.data_);
+    v_table->deleter_(old);
+  }
+
+  static void* value(const auto& ptr) { return ptr.data_; }
+  static bool has_value(const auto& ptr) {
+    return static_cast<bool>(ptr.data_);
+  }
+
+  static void destroy(unique& u, basic_any_v_table* v_table) {
+    v_table->deleter_(u.data_);
+  }
+
+  template <typename ConstructedWith>
+  struct unerased_impl {
+    using type = std::decay_t<ConstructedWith>;
+  };
+  template <typename V>
+  struct unerased_impl<std::unique_ptr<V>> {
+    using type = std::decay_t<V>;
+  };
+  template <typename ConstructedWith>
+  using unerased = unerased_impl<ConstructedWith>::type;
+
+  template <typename V>
+  static auto construct_in_place(V&& v) {
+    return unique{new V{std::forward<V>(v)}};
+  }
+  template <typename T, typename... Args>
+  static auto construct_type_in_place(Args&&... args) {
+    return unique{new T{std::forward<Args>(args)...}};
+  }
+  template <typename V>
+  static auto erase(std::unique_ptr<V>&& v) {
+    return unique{v.release()};
+  }
+};
+
+static_assert(is_erased_data<unique>);
+
+// --------------------------------------------------------------------------------
 // erased data shared_const + weak
 
 using shared_const = std::shared_ptr<void const>;
@@ -1199,10 +1278,15 @@ struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
                                   basic_any_v_table* v_table) {
     return shared_const{data_ptr, v_table->deleter_};
   }
-  template <typename T>
-    requires(std::same_as<T, shared_const>)
-  static auto move_to(shared_const data, [[maybe_unused]] auto) {
-    return data;
+  static void move_to(shared_const& to, shared_const&& from,
+                      [[maybe_unused]] auto) {
+    to = std::move(from);
+  }
+  static void move_to(shared_const& to, unique from,
+                      basic_any_v_table* v_table) {
+    mutable_void p = nullptr;
+    std::swap(from.data_, p);
+    to = construct_from_void(p, v_table);
   }
 
   static void const* value(const auto& ptr) { return ptr.get(); }
@@ -1281,89 +1365,6 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
 
 static_assert(is_erased_data<shared_const>);
 static_assert(is_erased_data<weak>);
-
-// --------------------------------------------------------------------------------
-// erased data unique
-
-struct unique {
-  mutable_void data_ = nullptr;
-  explicit unique(mutable_void p = nullptr) : data_(p) {}
-  unique(unique const&) = delete;
-  unique& operator=(unique const&) = delete;
-  unique(unique&& from) { std::swap(data_, from.data_); }
-  unique& operator=(unique&& from) {
-    std::swap(data_, from.data_);
-    return *this;
-  }
-  ~unique() = default;
-  explicit operator bool() const { return static_cast<bool>(data_); }
-};
-
-template <>
-struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
-  using void_t = void*;
-  using static_dispatch_t = void_t;
-  template <typename V>
-  using typed_t = std::decay_t<V>;
-  static constexpr bool is_constructibile_from_const = true;
-  template <typename ConstructedWith>
-  struct is_constructibile_from {
-    static constexpr bool value = false;
-  };
-  static constexpr bool is_owner = true;
-  static auto default_construct() { return unique{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
-    return unique{data_ptr};
-  }
-  template <typename T>
-    requires(std::same_as<T, unique>)
-  static auto move_to(unique data,
-                      [[maybe_unused]] basic_any_v_table* v_table) {
-    return data;
-  }
-  template <typename T>
-    requires(std::same_as<T, shared_const>)
-  static auto move_to(unique u, basic_any_v_table* v_table) {
-    return erased_data_trait<shared_const>::construct_from_void(u.data_,
-                                                                v_table);
-  }
-
-  static void* value(const auto& ptr) { return ptr.data_; }
-  static bool has_value(const auto& ptr) {
-    return static_cast<bool>(ptr.data_);
-  }
-
-  static void destroy(unique& u, basic_any_v_table* v_table) {
-    v_table->deleter_(u.data_);
-  }
-
-  template <typename ConstructedWith>
-  struct unerased_impl {
-    using type = std::decay_t<ConstructedWith>;
-  };
-  template <typename V>
-  struct unerased_impl<std::unique_ptr<V>> {
-    using type = std::decay_t<V>;
-  };
-  template <typename ConstructedWith>
-  using unerased = unerased_impl<ConstructedWith>::type;
-
-  template <typename V>
-  static auto construct_in_place(V&& v) {
-    return unique{new V{std::forward<V>(v)}};
-  }
-  template <typename T, typename... Args>
-  static auto construct_type_in_place(Args&&... args) {
-    return unique{new T{std::forward<Args>(args)...}};
-  }
-  template <typename V>
-  static auto erase(std::unique_ptr<V>&& v) {
-    return unique{v.release()};
-  }
-};
-
-static_assert(is_erased_data<unique>);
 
 // --------------------------------------------------------------------------------
 // erased data value
@@ -1468,15 +1469,12 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                                   [[maybe_unused]] basic_any_v_table* v_table) {
     return anyxx::value{};
   }
-  template <typename T>
-    requires(std::same_as<T, value>)
-  static auto move_to(value data, [[maybe_unused]] basic_any_v_table* v_table) {
-    return data;
+  static void move_to(value& to, value&& from,
+                      [[maybe_unused]] basic_any_v_table* v_table) {
+    to = std::move(from);
   }
-  template <typename T>
-    requires(std::same_as<T, unique>)
-  static auto move_to(value v, basic_any_v_table* v_table) {
-    return erased_data_trait<unique>::construct_from_void(v.release(), v_table);
+  static void move_to(unique& to, value&& v, basic_any_v_table* v_table) {
+    erased_data_trait<unique>::move_to(to, unique{v.release()}, v_table);
   }
 
   static void* value(const auto& v) { return v.get(); }
@@ -1588,7 +1586,7 @@ template <typename Dispatch>
 struct any_base_v_table_holder {
   struct v_table_t {};
   any_base_v_table_holder() = default;
-  explicit any_base_v_table_holder(std::nullptr_t) {}
+  explicit any_base_v_table_holder(v_table_t*) {}
   static void set_v_table_ptr(auto) {}
   static auto get_v_table_ptr() { return nullptr; }
   template <typename...>
@@ -1871,9 +1869,8 @@ inline static bool constexpr can_move_to_from<To, From> = true;
 
 template <is_erased_data To, is_erased_data From>
   requires moveable_from<To, std::decay_t<From>>
-To move_to(From&& from, basic_any_v_table* v_table) {
-  return erased_data_trait<From>::template move_to<To>(std::move(from),
-                                                       v_table);
+void move_to(To& to, From&& from, basic_any_v_table* v_table) {
+  return erased_data_trait<From>::move_to(to, std::move(from), v_table);
 }
 
 static_assert(!moveable_from<mutable_observer, const_observer>);
@@ -1934,8 +1931,6 @@ class any : public any_base_v_table_holder<Dispatch> {
   erased_data_t erased_data_ = trait_t::default_construct();
 
  public:
-  explicit any(erased_data_t erased_data, v_table_t* v_table)
-      : v_table_holder_t(v_table), erased_data_(std::move(erased_data)) {}
   // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
@@ -1979,19 +1974,23 @@ class any : public any_base_v_table_holder<Dispatch> {
     return *this;
   }
 
+  template <is_erased_data OtherErasedData>
+    requires(moveable_from<erased_data_t, OtherErasedData>)
+  explicit any(OtherErasedData&& erased_data, v_table_t* v_table)
+      : v_table_holder_t(v_table) {
+    trait_t::move_to(erased_data_, std::move(erased_data), v_table);
+  }
   template <is_any Other>
   explicit(false) any(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
-      : v_table_holder_t(other.get_v_table_ptr()),
-        erased_data_(move_to<ErasedData>(std::move(other.erased_data_),
-                                         other.get_v_table_ptr())) {}
+      : any(std::move(other.erased_data_), other.get_v_table_ptr()) {}
   template <is_any Other>
   any& operator=(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
-    erased_data_ = move_to<ErasedData>(std::move(other.erased_data_),
-                                       other.get_v_table_ptr());
+    trait_t::move_to(erased_data_, std::move(other.erased_data_),
+                     other.get_v_table_ptr());
     return *this;
   }
   template <typename... Args>
@@ -2486,7 +2485,8 @@ auto lock(FromAny const& from_interface) {
   static_assert(is_any<to_interface_t>);
   using return_t = std::optional<to_interface_t>;
   if (auto locked = get_erased_data(from_interface).lock())
-    return return_t{to_interface_t{locked, get_v_table(from_interface)}};
+    return return_t{
+        to_interface_t{std::move(locked), get_v_table(from_interface)}};
   return return_t{};
 }
 
@@ -2495,7 +2495,7 @@ ToAny move_to(FromAny&& vv_from, const meta_data& get_meta_data) {
   using vv_to_t = typename ToAny::erased_data_t;
   static_assert(is_erased_data<vv_to_t>);
   auto v_table = query_v_table<ToAny>(get_meta_data);
-  return ToAny{move_to<vv_to_t>(std::move(vv_from), *v_table), *v_table};
+  return ToAny{std::move(vv_from), *v_table};
 }
 
 template <is_any ToAny, is_any FromAny>
