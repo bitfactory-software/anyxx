@@ -794,19 +794,19 @@ struct basic_any_v_table {
   template <typename Concrete>
   explicit basic_any_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : copy_construct_(+[]([[maybe_unused]] const_void from) -> mutable_void {
+      : copy_construct(+[]([[maybe_unused]] const_void from) -> mutable_void {
           if constexpr (std::is_copy_constructible_v<Concrete>) {
             return ::new Concrete(*static_cast<Concrete const*>(from));
           } else {
             return nullptr;
           };
         }),
-        deleter_(+[](mutable_void data) noexcept -> void {
+        deleter(+[](mutable_void data) noexcept -> void {
           delete static_cast<Concrete*>(data);
         }) {}
 
-  mutable_void (*copy_construct_)(const_void from);
-  void (*deleter_)(mutable_void target_) noexcept;
+  mutable_void (*copy_construct)(const_void from);
+  void (*deleter)(mutable_void target_) noexcept;
 };
 
 template <typename U>
@@ -1216,7 +1216,7 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
     mutable_void old = nullptr;
     std::swap(to.data_, old);
     std::swap(to.data_, from.data_);
-    v_table->deleter_(old);
+    v_table->deleter(old);
   }
 
   static void* value(const auto& ptr) { return ptr.data_; }
@@ -1225,7 +1225,7 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
   }
 
   static void destroy(unique& u, basic_any_v_table* v_table) {
-    v_table->deleter_(u.data_);
+    v_table->deleter(u.data_);
   }
 
   template <typename ConstructedWith>
@@ -1276,7 +1276,7 @@ struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
   static auto default_construct() { return shared_const{}; }
   static auto construct_from_void(mutable_void data_ptr,
                                   basic_any_v_table* v_table) {
-    return shared_const{data_ptr, v_table->deleter_};
+    return shared_const{data_ptr, v_table->deleter};
   }
   static void move_to(shared_const& to, shared_const&& from,
                       [[maybe_unused]] auto) {
@@ -1665,18 +1665,9 @@ class meta_data {
  public:
   template <typename CLASS>
   explicit constexpr meta_data(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()),
-        copy_construct_(+[]([[maybe_unused]] const_void from) {
-          if constexpr (std::is_copy_constructible_v<CLASS>) {
-            return erased<unique>(
-                std::make_unique<CLASS>(*static_cast<CLASS const*>(from)));
-          } else {
-            return unique{};
-          }
-        }) {}
+      : type_info_(typeid_of<CLASS>()) {}
 
   constexpr const std::type_info& get_type_info() const { return type_info_; }
-  auto copy_construct(const_void from) const { return copy_construct_(from); }
 
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
@@ -1834,7 +1825,7 @@ template <is_erased_data To, is_erased_data From>
   requires cloneable_to<To>
 To clone_to(From const& from, basic_any_v_table* v_table) {
   return erased_data_trait<To>::construct_from_void(
-      v_table->copy_construct_(get_void_data_ptr(from)), v_table);
+      v_table->copy_construct(get_void_data_ptr(from)), v_table);
 }
 
 static_assert(!cloneable_to<mutable_observer>);
