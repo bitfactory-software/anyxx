@@ -1493,7 +1493,8 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   }
   template <typename V>
   static auto erase(std::unique_ptr<V>&& v) {
-    return make_value<std::decay_t<V>>(std::move(v));
+    V* vp = v.release();
+    return anyxx::value(vp);
   }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
