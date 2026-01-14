@@ -43,14 +43,13 @@ Square
     - Deriveable
     - Operators
     - Choose implementation for specific type va *Concept Map*
-    - Upcast, **Downcast**, **Crosscast*** via *borrow_as*, *clone_to*, *move_to*
+    - Upcast, **Downcast**, **Crosscast** via *borrow_as*, *clone_to*(if concrete type is *copy constructable*), *move_to*
    - **Interface** can be **template**
      - 'recursive' to erase container
    - **open dispatch** with **O(1) runtime complexity**
      - **single** (visitor)
      - **multiple** (collision resolver, type erased binary operators)  
      - performance on par with vanilla virtual functions
-  - **Type erased clone**, if concrete type is *copy constructable*
 - **Abstract factory** for *ANY*s 
 - **Transparent storeage/lifetime management***
   - Out of the box:
@@ -69,7 +68,7 @@ Square
   - To **add members at load time**
   - Has access performance on par with *virtual* function getter
 - **Hook**
-  - A overrideable **customization point  **     
+  - A overrideable **customization point**     
 - Single **header only library**
 - **static-** or **DLL/SO mode** for v-tables, dispatch tables and other static meta data.
   - Default for *static build*: the compiler manages the details.
