@@ -74,6 +74,9 @@ Square
   - Default for *static build*: the compiler manages the details via *static inline*.
   - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibility and location of the static meta data.
 
+### architectural overview
+<img width="2695" height="1192" alt="anyxx architecture" src="https://github.com/user-attachments/assets/b6ae44bf-c78f-4b4f-83cf-201c6931ec98" />
+
 ### Useage in CMakeLists.txt:
 ```
 FetchContent_Declare(
