@@ -2,7 +2,9 @@
 
 # any++: *type erasure* vocabulary  for *programming on a large scale*
 
-This library is targeted to solve coupling problems and allow maximal seperation with reasonable runtime performance.
+This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**.
+
+The performance of dynamic dispatch is on par with virtual function calls.
 
 **Reasonable** means **on par with virtual functions**.
 
