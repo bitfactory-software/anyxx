@@ -4,9 +4,7 @@
 
 This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**.
 
-The performance of dynamic dispatch is on par with virtual function calls.
-
-**Reasonable** means **on par with virtual functions**.
+The performance of **dynamic dispatch is on par with virtual functions**.
 
 # Showcase 1: Basic *ANY* usage
 ```cpp
