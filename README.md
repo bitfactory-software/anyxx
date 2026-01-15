@@ -38,7 +38,7 @@ Square
 [Compiler Explorer](https://godbolt.org/z/4P6M8WrzP)
 
 # Feature overview
-- **External Polymorphis**m via *ANY...* and *TRAIT...* metaclasses
+- **External Polymorphism** via *ANY...* metaclasses
   - Nonintrusive **Runtime** ***AND*** **Static** Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
     - Deriveable
     - Operators
@@ -46,7 +46,7 @@ Square
     - Upcast, **Downcast**, **Crosscast** via *borrow_as*, *clone_to*(if concrete type is *copy constructable*), *move_to*
    - **Interface** can be **template**
      - 'recursive' to erase container
-   - **open dispatch** with **O(1) runtime complexity**
+   - **open runtime dispatch** with **O(1) runtime complexity**
      - **single** (visitor)
      - **multiple** (collision resolver, type erased binary operators)  
      - performance on par with vanilla virtual functions
