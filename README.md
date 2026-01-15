@@ -1,12 +1,12 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 
-# any++: *type erasure* vocabulary  for *programming on a large scale*
+# any++
 
 This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**.
 
 The performance of **dynamic dispatch is on par with virtual functions**.
 
-# Showcase 1: Basic *ANY* usage
+### Showcase 1: Basic *ANY* usage
 ```cpp
 #include <bit_factory/anyxx.hpp>
 #include <iostream>
@@ -37,7 +37,7 @@ Square
 ```
 [Compiler Explorer](https://godbolt.org/z/4P6M8WrzP)
 
-# Feature overview
+### Feature overview
 - **External Polymorphism** via *ANY...* metaclasses
   - Nonintrusive **Runtime** ***AND*** **Static** Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
     - Deriveable
@@ -74,7 +74,7 @@ Square
   - Default for *static build*: the compiler manages the details via *static inline*.
   - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibility and location of the static meta data.
 
-# Useage in CMakeLists.txt:
+### Useage in CMakeLists.txt:
 ```
 FetchContent_Declare(
     cogoproject
@@ -83,7 +83,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(anyxx)
 ```
-# Performace compared
+### Performace compared
 | Benchmark     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
 |:----------------------------|--------------:|-------:|-------:|
 | **Single dispatch** |   | |
@@ -101,7 +101,7 @@ FetchContent_MakeAvailable(anyxx)
 - any++ open method vs std::variant + std::visit with clang:
   - the meassured time with std::varaint/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.
 
-# CI Matrix
+### CI Matrix
 | OS \ Compiler | MSVC | Clang | GCC |
 |:-----------------:|:------:|:-------:|:-----:|
 | Windows(latest)           | 19   | 21   | - | 
