@@ -1630,9 +1630,6 @@ struct cast_error {
 
 class meta_data {
   const std::type_info& type_info_;
-  using copy_construct_t = auto(const_void) -> unique;
-  copy_construct_t* copy_construct_;
-
   std::vector<any_v_table<>*> i_table_;
 
  public:
