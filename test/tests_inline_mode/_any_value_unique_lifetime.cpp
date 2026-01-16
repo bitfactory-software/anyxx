@@ -189,7 +189,7 @@ TEST_CASE("v-table lifetime") {
       CHECK(x_ptr == ptr);
       CHECK(X::tracker_ == 1);
       CHECK((*x_ptr)() == "hallo");
-      v_table_x.deleter(ptr);
+      v_table_x.delete_(ptr);
       CHECK(X::tracker_ == 0);
     }
   }
@@ -213,7 +213,7 @@ TEST_CASE("v-table lifetime") {
     CHECK(x_ptr == ptr);
     CHECK(X::tracker_ == 1);
     CHECK((*x_ptr)() == "hallo");
-    v_table_x.deleter(ptr);
+    v_table_x.delete_(ptr);
     CHECK(X::tracker_ == 0);
     CHECK(X::move_constructed_ == 1);
   }

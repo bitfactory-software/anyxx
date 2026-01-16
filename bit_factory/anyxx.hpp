@@ -818,14 +818,21 @@ struct basic_any_v_table {
                 return nullptr;
               };
             }),
-        deleter(+[](mutable_void data) noexcept -> void {
-          delete static_cast<Concrete*>(data);
+        delete_(+[](mutable_void data) noexcept -> void {
+          if (!data) return;
+          auto p = static_cast<Concrete*>(data);
+          std::destroy_at(p);
+          std::allocator<Concrete>{}.deallocate(p, 1);
+        }),
+        destructor(+[](mutable_void data) noexcept -> void {
+          std::destroy_at(static_cast<Concrete*>(data));
         }) {}
 
   mutable_void (*allocate)();
   mutable_void (*copy_constructor)(mutable_void placement, const_void from);
   mutable_void (*move_constructor)(mutable_void placement, mutable_void from);
-  void (*deleter)(mutable_void data) noexcept;
+  void (*destructor)(mutable_void data) noexcept;
+  void (*delete_)(mutable_void) noexcept;
 };
 
 inline mutable_void copy_construct_at(basic_any_v_table* v_table,
@@ -839,10 +846,6 @@ inline mutable_void copy_construct(basic_any_v_table* v_table,
 inline mutable_void move_construct(basic_any_v_table* v_table,
                                    mutable_void placement, mutable_void from) {
   return v_table->move_constructor(placement, from);
-}
-inline void destroy(basic_any_v_table* v_table, mutable_void& data) {
-  v_table->deleter(data);
-  data = nullptr;
 }
 
 template <typename U>
@@ -1257,17 +1260,15 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
     mutable_void old = nullptr;
     std::swap(to.ptr, old);
     std::swap(to.ptr, from.ptr);
-    v_table->deleter(old);
+    v_table->delete_(old);
   }
 
   static void* value(const auto& ptr) { return ptr.ptr; }
-  static bool has_value(const auto& ptr) {
-    return static_cast<bool>(ptr.ptr);
-  }
+  static bool has_value(const auto& ptr) { return static_cast<bool>(ptr.ptr); }
 
   static void destroy(unique& u, basic_any_v_table* v_table) {
     assert(v_table || !u.ptr);
-    if (v_table) v_table->deleter(u.ptr);
+    if (v_table) v_table->delete_(u.ptr);
   }
 
   template <typename ConstructedWith>
@@ -1318,7 +1319,7 @@ struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
   static auto default_construct() { return shared_const{}; }
   static auto construct_from_void(mutable_void data_ptr,
                                   basic_any_v_table* v_table) {
-    return shared_const{data_ptr, v_table->deleter};
+    return shared_const{data_ptr, v_table->delete_};
   }
   static void move_to(shared_const& to, shared_const&& from,
                       [[maybe_unused]] auto) {
@@ -1466,11 +1467,10 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
     anyxx::value old;
     std::swap(to, old);
     std::swap(to, from);
-    std::visit(overloads{[&](heap_data& old_data) {
-                           v_table->deleter(old_data.ptr);
-                         },
-                         [&](local_data&) { assert(false); }},
-               old);
+    std::visit(
+        overloads{[&](heap_data& old_data) { v_table->delete_(old_data.ptr); },
+                  [&](local_data&) { assert(false); }},
+        old);
   }
   static void move_to(unique& to, value&& v, basic_any_v_table* v_table) {
     auto data_ptr = std::visit(
@@ -1486,7 +1486,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static void copy_asign_construct_from(value& to, value const& from,
                                         basic_any_v_table* v_table) {
     std::visit(overloads{[&](heap_data& to_data, heap_data const& from_data) {
-                           if (to_data.ptr) v_table->deleter(to_data.ptr);
+                           if (to_data.ptr) v_table->delete_(to_data.ptr);
                            to_data.ptr = nullptr;
                            if (from_data.ptr)
                              to_data.ptr =
@@ -1499,7 +1499,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static void destroy(value& v, basic_any_v_table* v_table) {
     std::visit(overloads{[&](heap_data& heap_data) {
                            assert(v_table || !heap_data.ptr);
-                           if (v_table) v_table->deleter(heap_data.ptr);
+                           if (v_table) v_table->delete_(heap_data.ptr);
                          },
                          [&](local_data&) { assert(false); }},
                v);
