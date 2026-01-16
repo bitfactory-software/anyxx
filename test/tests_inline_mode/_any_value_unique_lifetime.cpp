@@ -10,44 +10,46 @@
 using namespace anyxx;
 
 namespace {
-struct X {
+
+template <typename T=std::string>
+struct XX {
   static inline int tracker_ = 0;
   static inline int copy_constructed_ = 0;
   static inline int move_constructed_ = 0;
   static inline int copy_assigned_ = 0;
   static inline int move_assigned_ = 0;
-  X(std::string const& s = "") : s_(s) {
+  XX(T const& s = "") : s_(s) {
     std::println("X({})", s_);
     ++tracker_;
     std::println("X::tracker_ {})", tracker_);
   }
-  ~X() {
+  ~XX() {
     std::println("~X({} moved = {})", s_, moved_);
     if (!moved_) --tracker_;
     std::println("X::tracker_ {})", tracker_);
   }
-  X(X const& x) : s_(x.s_) {
+  XX(XX const& x) : s_(x.s_) {
     std::println("X(X const& {})", s_);
     ++tracker_;
     ++copy_constructed_;
     std::println("X::copy_constructed_ {})", copy_constructed_);
     std::println("X::tracker_ {})", tracker_);
   }
-  X(X&& x) : s_(std::move(x.s_)) {
+  XX(XX&& x) : s_(std::move(x.s_)) {
     std::println("X(X&& {})", s_);
     x.moved_ = true;
     ++move_constructed_;
     std::println("X::move_constructed_ {})", move_constructed_);
     std::println("X::tracker_ {})", tracker_);
   }
-  X& operator=(X const& x) {
+  XX operator=(XX const& x) {
     s_ = x.s_;
     std::println("X =(X const& {})", s_);
     ++copy_assigned_;
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
-  X& operator=(X&& x) {
+  XX& operator=(XX&& x) {
     std::println("X =(X&& {})", s_);
     x.moved_ = true;
     s_ = std::move(x.s_);
@@ -55,12 +57,13 @@ struct X {
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
-  std::string s_;
+  T s_;
   bool moved_ = false;
-  [[nodiscard]] std::string operator()() const { return s_; }
+  [[nodiscard]] T operator()() const { return s_; }
 };
 
-// ANY(anything, (ANY_OP(std::string, (), (), const)), , )
+using X = XX<>;
+
 
 }  // namespace
 
