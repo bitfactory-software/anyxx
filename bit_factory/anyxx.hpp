@@ -816,11 +816,13 @@ struct basic_any_v_table {
   void (*deleter)(mutable_void data) noexcept;
 };
 
+inline mutable_void copy_construct_at(basic_any_v_table* v_table,
+                                      mutable_void placement, const_void from) {
+  return v_table->copy_constructor(placement, from);
+}
 inline mutable_void copy_construct(basic_any_v_table* v_table,
                                    const_void from) {
-  auto placement = v_table->allocate();
-  v_table->copy_constructor(placement, from);
-  return placement;
+  return copy_construct_at(v_table, v_table->allocate(), from);
 }
 
 template <typename U>
