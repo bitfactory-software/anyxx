@@ -1438,11 +1438,7 @@ struct heap_value {
 
 using local_data = std::array<std::byte, sizeof(mutable_void)>;
 
-struct value {
-  std::variant<heap_value, local_data> data_;
-  value() = default;
-  value(heap_value data) : data_(std::move(data)) {}
-};
+using value = std::variant<heap_value, local_data>;
 
 template <typename T, typename... Args>
 auto make_value(Args&&... args) {
@@ -1476,7 +1472,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                            v_table->deleter(old_data.data_);
                          },
                          [&](local_data&) { assert(false); }},
-               old.data_);
+               old);
   }
   static void move_to(unique& to, value&& v, basic_any_v_table* v_table) {
     auto data_ptr = std::visit(
@@ -1485,7 +1481,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                     assert(false);
                     return mutable_void{};
                   }},
-        v.data_);
+        v);
     erased_data_trait<unique>::move_to(to, unique{data_ptr}, v_table);
   }
 
@@ -1499,7 +1495,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                                  copy_construct(v_table, from_data.data_);
                          },
                          [&](auto&, auto const&) { assert(false); }},
-               to.data_, from.data_);
+               to, from);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
@@ -1508,7 +1504,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                            if (v_table) v_table->deleter(heap_data.data_);
                          },
                          [&](local_data&) { assert(false); }},
-               v.data_);
+               v);
   }
 
   static void* value(const auto& v) {
@@ -1517,7 +1513,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                                   assert(false);
                                   return mutable_void{};
                                 }},
-                      v.data_);
+                      v);
   }
   static bool has_value(const auto& v) { return value(v) != nullptr; }
 
