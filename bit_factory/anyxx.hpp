@@ -1436,12 +1436,12 @@ struct heap_value {
   friend void swap(heap_value& l, heap_value& r) noexcept { std::swap(l, r); }
 };
 
+using local_data = std::array<std::byte, sizeof(mutable_void)>;
+
 struct value {
-  // std::variant<mutable_void, std::array<std::byte, sizeof(mutable_void)>>
-  // data_;
+  std::variant<heap_value, local_data> data_;
   value() = default;
   value(heap_value data) : data_(std::move(data)) {}
-  heap_value data_;
 };
 
 template <typename T, typename... Args>
@@ -1469,30 +1469,57 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
 
   static void move_to(value& to, value&& from,
                       [[maybe_unused]] basic_any_v_table* v_table) {
-    heap_value old;
-    std::swap(to.data_, old);
-    std::swap(to.data_, from.data_);
-    v_table->deleter(old.data_);
+    anyxx::value old;
+    std::swap(to, old);
+    std::swap(to, from);
+    std::visit(overloads{[&](heap_value& old_data) {
+                           v_table->deleter(old_data.data_);
+                         },
+                         [&](local_data&) { assert(false); }},
+               old.data_);
   }
   static void move_to(unique& to, value&& v, basic_any_v_table* v_table) {
-    erased_data_trait<unique>::move_to(to, unique{v.data_.release()}, v_table);
+    auto data_ptr = std::visit(
+        overloads{[&](heap_value& old_data) { return old_data.release(); },
+                  [&](local_data&) {
+                    assert(false);
+                    return mutable_void{};
+                  }},
+        v.data_);
+    erased_data_trait<unique>::move_to(to, unique{data_ptr}, v_table);
   }
 
   static void copy_asign_construct_from(value& to, value const& from,
                                         basic_any_v_table* v_table) {
-    if (to.data_.data_) v_table->deleter(to.data_.data_);
-    to.data_.data_ = nullptr;
-    if (from.data_.data_)
-      to.data_.data_ = copy_construct(v_table, from.data_.data_);
+    std::visit(overloads{[&](heap_value& to_data, heap_value const& from_data) {
+                           if (to_data.data_) v_table->deleter(to_data.data_);
+                           to_data.data_ = nullptr;
+                           if (from_data.data_)
+                             to_data.data_ =
+                                 copy_construct(v_table, from_data.data_);
+                         },
+                         [&](auto&, auto const&) { assert(false); }},
+               to.data_, from.data_);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
-    assert(v_table || !v.data_.data_);
-    if (v_table) v_table->deleter(v.data_.data_);
+    std::visit(overloads{[&](heap_value& heap_data) {
+                           assert(v_table || !heap_data.data_);
+                           if (v_table) v_table->deleter(heap_data.data_);
+                         },
+                         [&](local_data&) { assert(false); }},
+               v.data_);
   }
 
-  static void* value(const auto& v) { return v.data_.data_; }
-  static bool has_value(const auto& v) { return v; }
+  static void* value(const auto& v) {
+    return std::visit(overloads{[&](heap_value const& data) { return data.data_; },
+                                [&](local_data const&) {
+                                  assert(false);
+                                  return mutable_void{};
+                                }},
+                      v.data_);
+  }
+  static bool has_value(const auto& v) { return value(v) != nullptr; }
 
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
