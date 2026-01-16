@@ -794,9 +794,15 @@ struct basic_any_v_table {
   template <typename Concrete>
   explicit basic_any_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : copy_constructor(+[]([[maybe_unused]] const_void from) -> mutable_void {
+      : allocate(+[] -> mutable_void {
+          return std::allocator<Concrete>{}.allocate(1);
+        }),
+        copy_constructor(+[]([[maybe_unused]] mutable_void placement,
+                             [[maybe_unused]] const_void from) -> mutable_void {
           if constexpr (std::is_copy_constructible_v<Concrete>) {
-            return ::new Concrete(*static_cast<Concrete const*>(from));
+            return std::construct_at<Concrete>(
+                static_cast<Concrete*>(placement),
+                *static_cast<Concrete const*>(from));
           } else {
             return nullptr;
           };
@@ -805,13 +811,16 @@ struct basic_any_v_table {
           delete static_cast<Concrete*>(data);
         }) {}
 
-  mutable_void (*copy_constructor)(const_void from);
-  void (*deleter)(mutable_void target_) noexcept;
+  mutable_void (*allocate)();
+  mutable_void (*copy_constructor)(mutable_void placement, const_void from);
+  void (*deleter)(mutable_void data) noexcept;
 };
 
 inline mutable_void copy_construct(basic_any_v_table* v_table,
                                    const_void from) {
-  return v_table->copy_constructor(from);
+  auto placement = v_table->allocate();
+  v_table->copy_constructor(placement, from);
+  return placement;
 }
 
 template <typename U>
