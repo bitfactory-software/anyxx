@@ -1411,32 +1411,42 @@ static_assert(is_erased_data<weak>);
 // --------------------------------------------------------------------------------
 // erased data value
 
-struct value {
+struct heap_value {
+  // std::variant<mutable_void, std::array<std::byte, sizeof(mutable_void)>>
+  // data_;
   mutable_void data_ = nullptr;
-  value(value const&) {}
-  value& operator=(value const&) {
+  heap_value(heap_value const&) {}
+  heap_value& operator=(heap_value const&) {
     assert(!data_);
     return *this;
   }
-  explicit value(mutable_void p = nullptr) : data_(p) {}
-  value(value&& other) { std::swap(data_, other.data_); }
-  value& operator=(value&& other) {
+  explicit heap_value(mutable_void p = nullptr) : data_(p) {}
+  heap_value(heap_value&& other) { std::swap(data_, other.data_); }
+  heap_value& operator=(heap_value&& other) {
     assert(!data_);
     std::swap(data_, other.data_);
     return *this;
   };
-  ~value() = default;
-  explicit operator bool() const { return static_cast<bool>(data_); }
+  ~heap_value() = default;
   mutable_void release() noexcept {
     mutable_void p = data_;
     data_ = nullptr;
     return p;
   }
+  friend void swap(heap_value& l, heap_value& r) noexcept { std::swap(l, r); }
+};
+
+struct value {
+  // std::variant<mutable_void, std::array<std::byte, sizeof(mutable_void)>>
+  // data_;
+  value() = default;
+  value(heap_value data) : data_(std::move(data)) {}
+  heap_value data_;
 };
 
 template <typename T, typename... Args>
 auto make_value(Args&&... args) {
-  return value(new T(std::forward<Args>(args)...));
+  return value{heap_value{new T(std::forward<Args>(args)...)}};
 }
 
 template <>
@@ -1454,33 +1464,34 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static auto default_construct() { return anyxx::value{}; }
   static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
                                   [[maybe_unused]] basic_any_v_table* v_table) {
-    return anyxx::value{data_ptr};
+    return anyxx::value{heap_value{data_ptr}};
   }
 
   static void move_to(value& to, value&& from,
                       [[maybe_unused]] basic_any_v_table* v_table) {
-    mutable_void old = nullptr;
+    heap_value old;
     std::swap(to.data_, old);
     std::swap(to.data_, from.data_);
-    v_table->deleter(old);
+    v_table->deleter(old.data_);
   }
   static void move_to(unique& to, value&& v, basic_any_v_table* v_table) {
-    erased_data_trait<unique>::move_to(to, unique{v.release()}, v_table);
+    erased_data_trait<unique>::move_to(to, unique{v.data_.release()}, v_table);
   }
 
   static void copy_asign_construct_from(value& to, value const& from,
                                         basic_any_v_table* v_table) {
-    if (to.data_) v_table->deleter(to.data_);
-    to.data_ = nullptr;
-    if (from.data_) to.data_ = copy_construct(v_table, from.data_);
+    if (to.data_.data_) v_table->deleter(to.data_.data_);
+    to.data_.data_ = nullptr;
+    if (from.data_.data_)
+      to.data_.data_ = copy_construct(v_table, from.data_.data_);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
-    assert(v_table || !v.data_);
-    if (v_table) v_table->deleter(v.data_);
+    assert(v_table || !v.data_.data_);
+    if (v_table) v_table->deleter(v.data_.data_);
   }
 
-  static void* value(const auto& v) { return v.data_; }
+  static void* value(const auto& v) { return v.data_.data_; }
   static bool has_value(const auto& v) { return v; }
 
   template <typename ConstructedWith>
