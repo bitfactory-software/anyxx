@@ -794,7 +794,7 @@ struct basic_any_v_table {
   template <typename Concrete>
   explicit basic_any_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : copy_construct(+[]([[maybe_unused]] const_void from) -> mutable_void {
+      : copy_constructor(+[]([[maybe_unused]] const_void from) -> mutable_void {
           if constexpr (std::is_copy_constructible_v<Concrete>) {
             return ::new Concrete(*static_cast<Concrete const*>(from));
           } else {
@@ -805,9 +805,14 @@ struct basic_any_v_table {
           delete static_cast<Concrete*>(data);
         }) {}
 
-  mutable_void (*copy_construct)(const_void from);
+  mutable_void (*copy_constructor)(const_void from);
   void (*deleter)(mutable_void target_) noexcept;
 };
+
+inline mutable_void copy_construct(basic_any_v_table* v_table,
+                                   const_void from) {
+  return v_table->copy_constructor(from);
+}
 
 template <typename U>
 bool type_match(meta_data const& meta);
@@ -1447,7 +1452,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                                         basic_any_v_table* v_table) {
     if (to.data_) v_table->deleter(to.data_);
     to.data_ = nullptr;
-    if (from.data_) to.data_ = v_table->copy_construct(from.data_);
+    if (from.data_) to.data_ = copy_construct(v_table, from.data_);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
@@ -1795,7 +1800,7 @@ template <is_erased_data To, is_erased_data From>
   requires cloneable_to<To>
 To clone_to(From const& from, basic_any_v_table* v_table) {
   return erased_data_trait<To>::construct_from_void(
-      v_table->copy_construct(get_void_data_ptr(from)), v_table);
+      copy_construct(v_table, get_void_data_ptr(from)), v_table);
 }
 
 static_assert(!cloneable_to<mutable_observer>);
