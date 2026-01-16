@@ -1439,17 +1439,6 @@ auto make_value(Args&&... args) {
   return value(new T(std::forward<Args>(args)...));
 }
 
-//// cppcheck-suppress-begin [constParameterReference]
-// template <typename U>
-// U* unchecked_unerase_cast(value& v) {
-//   return static_cast<U*>(v.data_);
-// }
-//// cppcheck-suppress-end [constParameterReference]
-// template <typename U>
-// U const* unchecked_unerase_cast(value const& v) {
-//   return static_cast<U const*>(v.data_);
-// }
-
 template <>
 struct erased_data_trait<value> : basic_erased_data_trait<value> {
   using void_t = void*;
