@@ -807,12 +807,24 @@ struct basic_any_v_table {
             return nullptr;
           };
         }),
+        move_constructor(
+            +[]([[maybe_unused]] mutable_void placement,
+                [[maybe_unused]] mutable_void from) -> mutable_void {
+              if constexpr (std::is_move_constructible_v<Concrete>) {
+                return std::construct_at<Concrete>(
+                    static_cast<Concrete*>(placement),
+                    std::move(*static_cast<Concrete*>(from)));
+              } else {
+                return nullptr;
+              };
+            }),
         deleter(+[](mutable_void data) noexcept -> void {
           delete static_cast<Concrete*>(data);
         }) {}
 
   mutable_void (*allocate)();
   mutable_void (*copy_constructor)(mutable_void placement, const_void from);
+  mutable_void (*move_constructor)(mutable_void placement, mutable_void from);
   void (*deleter)(mutable_void data) noexcept;
 };
 
@@ -823,6 +835,14 @@ inline mutable_void copy_construct_at(basic_any_v_table* v_table,
 inline mutable_void copy_construct(basic_any_v_table* v_table,
                                    const_void from) {
   return copy_construct_at(v_table, v_table->allocate(), from);
+}
+inline mutable_void move_construct(basic_any_v_table* v_table,
+                                   mutable_void placement, mutable_void from) {
+  return v_table->move_constructor(placement, from);
+}
+inline void destroy(basic_any_v_table* v_table, mutable_void& data) {
+  v_table->deleter(data);
+  data = nullptr;
 }
 
 template <typename U>

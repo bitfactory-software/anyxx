@@ -169,3 +169,52 @@ TEST_CASE("unique lifetime") {
     CHECK(X::tracker_ == 0);
   }
 }
+
+TEST_CASE("v-table lifetime") {
+    X::move_constructed_ = 0;
+    {
+    CHECK(X::tracker_ == 0);
+    {
+      basic_any_v_table v_table_x(std::in_place_type<X>);
+      auto ptr = v_table_x.allocate();
+      CHECK(X::tracker_ == 0);
+      X* x_ptr = nullptr;
+      {
+        X x{"hallo"};
+        CHECK(X::tracker_ == 1);
+        x_ptr = static_cast<X*>(copy_construct_at(&v_table_x, ptr, &x));
+        CHECK(X::tracker_ == 2);
+      }
+      CHECK(x_ptr);
+      CHECK(x_ptr == ptr);
+      CHECK(X::tracker_ == 1);
+      CHECK((*x_ptr)() == "hallo");
+      v_table_x.deleter(ptr);
+      CHECK(X::tracker_ == 0);
+    }
+  }
+  CHECK(X::tracker_ == 0);
+  {
+      CHECK(X::move_constructed_ == 0);
+      basic_any_v_table v_table_x(std::in_place_type<X>);
+    auto ptr = v_table_x.allocate();
+    CHECK(X::tracker_ == 0);
+    X* x_ptr = nullptr;
+    {
+      X x{"hallo"};
+      CHECK(X::move_constructed_ == 0);
+      CHECK(X::tracker_ == 1);
+      x_ptr = static_cast<X*>(move_construct(&v_table_x, ptr, &x));
+      CHECK(X::move_constructed_ == 1);
+      CHECK(X::tracker_ == 1);
+      CHECK(x.moved_);
+    }
+    CHECK(x_ptr);
+    CHECK(x_ptr == ptr);
+    CHECK(X::tracker_ == 1);
+    CHECK((*x_ptr)() == "hallo");
+    v_table_x.deleter(ptr);
+    CHECK(X::tracker_ == 0);
+    CHECK(X::move_constructed_ == 1);
+  }
+}
