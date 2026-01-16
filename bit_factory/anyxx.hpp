@@ -843,9 +843,18 @@ inline mutable_void copy_construct(basic_any_v_table* v_table,
                                    const_void from) {
   return copy_construct_at(v_table, v_table->allocate(), from);
 }
-inline mutable_void move_construct(basic_any_v_table* v_table,
-                                   mutable_void placement, mutable_void from) {
+inline mutable_void move_construct_at(basic_any_v_table* v_table,
+                                      mutable_void placement,
+                                      mutable_void from) {
   return v_table->move_constructor(placement, from);
+}
+inline mutable_void move_construct(basic_any_v_table* v_table,
+                                   mutable_void from) {
+  return move_construct_at(v_table, v_table->allocate(), from);
+}
+inline void delete_(basic_any_v_table* v_table, mutable_void& data) noexcept {
+  v_table->delete_(data);
+  data = nullptr;
 }
 
 template <typename U>
@@ -867,8 +876,8 @@ struct basic_erased_data_trait {
     to = std::move(from);
   }
 
-  static void copy_asign_construct_from(ErasedData& to, auto const& from,
-                                        [[maybe_unused]] auto) {
+  static void copy_construct_from(ErasedData& to, auto const& from,
+                                  [[maybe_unused]] auto) {
     to = from;
   }
 
@@ -1268,7 +1277,7 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
 
   static void destroy(unique& u, basic_any_v_table* v_table) {
     assert(v_table || !u.ptr);
-    if (v_table) v_table->delete_(u.ptr);
+    if (v_table) delete_(v_table, u.ptr);
   }
 
   template <typename ConstructedWith>
@@ -1440,8 +1449,24 @@ using local_data = std::array<std::byte, sizeof(mutable_void)>;
 using value = std::variant<heap_data, local_data>;
 
 template <typename T, typename... Args>
+auto make_local_value(Args&&... args) {
+  static_assert(alignof(T) <= alignof(mutable_void));
+  static_assert(sizeof(T) <= sizeof(mutable_void));
+  value local{local_data{}};
+  std::construct_at<T>(static_cast<T*>(static_cast<mutable_void>(
+                           std::get<local_data>(local).data())),
+                       std::forward<Args>(args)...);
+  return local;
+}
+
+template <typename T, typename... Args>
 auto make_value(Args&&... args) {
-  return value{heap_data{new T(std::forward<Args>(args)...)}};
+  static_assert(alignof(T) <= alignof(mutable_void));
+  if constexpr (sizeof(T) <= sizeof(mutable_void)) {
+    return make_local_value<T>(std::forward<Args>(args)...);
+  } else {
+    return value{heap_data{new T(std::forward<Args>(args)...)}};
+  }
 }
 
 template <>
@@ -1464,27 +1489,39 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
 
   static void move_to(value& to, value&& from,
                       [[maybe_unused]] basic_any_v_table* v_table) {
-    anyxx::value old;
-    std::swap(to, old);
-    std::swap(to, from);
-    std::visit(
-        overloads{[&](heap_data& old_data) { v_table->delete_(old_data.ptr); },
-                  [&](local_data&) { assert(false); }},
-        old);
+    std::visit(overloads{[&](heap_data& t, heap_data& f) {
+                           heap_data old;
+                           std::swap(t, old);
+                           std::swap(t, f);
+                           delete_(v_table, old.ptr);
+                         },
+                         [&](local_data& t, local_data& f) {
+                           v_table->destructor(t.data());
+                           v_table->move_constructor(t.data(), f.data());
+                         },
+                         [&](local_data& t, heap_data& f) {
+                           v_table->destructor(t.data());
+                           to.emplace<heap_data>(f.release());
+                         },
+                         [&](heap_data& t, local_data& f) {
+                           delete_(v_table, t.ptr);
+                           v_table->move_constructor(
+                               to.emplace<local_data>().data(), f.data());
+                         }},
+               to, from);
   }
   static void move_to(unique& to, value&& v, basic_any_v_table* v_table) {
-    auto data_ptr = std::visit(
-        overloads{[&](heap_data& old_data) { return old_data.release(); },
-                  [&](local_data&) {
-                    assert(false);
-                    return mutable_void{};
-                  }},
-        v);
+    auto data_ptr =
+        std::visit(overloads{[&](heap_data& heap) { return heap.release(); },
+                             [&](local_data& local) {
+                               return move_construct(v_table, local.data());
+                             }},
+                   v);
     erased_data_trait<unique>::move_to(to, unique{data_ptr}, v_table);
   }
 
-  static void copy_asign_construct_from(value& to, value const& from,
-                                        basic_any_v_table* v_table) {
+  static void copy_construct_from(value& to, value const& from,
+                                  basic_any_v_table* v_table) {
     std::visit(overloads{[&](heap_data& to_data, heap_data const& from_data) {
                            if (to_data.ptr) v_table->delete_(to_data.ptr);
                            to_data.ptr = nullptr;
@@ -1492,26 +1529,39 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                              to_data.ptr =
                                  copy_construct(v_table, from_data.ptr);
                          },
-                         [&](auto&, auto const&) { assert(false); }},
+                         [&](local_data& t, local_data const& f) {
+                           v_table->copy_constructor(t.data(), f.data());
+                         },
+                         [&](local_data& t, heap_data const& f) {
+                           v_table->destructor(t.data());
+                           to.emplace<heap_data>(f.ptr);
+                         },
+                         [&](heap_data& t, local_data const& f) {
+                           delete_(v_table, t.ptr);
+                           v_table->copy_constructor(
+                               to.emplace<local_data>().data(), f.data());
+                         }},
                to, from);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
-    std::visit(overloads{[&](heap_data& heap_data) {
-                           assert(v_table || !heap_data.ptr);
-                           if (v_table) v_table->delete_(heap_data.ptr);
+    std::visit(overloads{[&](heap_data& heap) {
+                           assert(v_table || !heap.ptr);
+                           if (v_table) delete_(v_table, heap.ptr);
                          },
-                         [&](local_data&) { assert(false); }},
+                         [&](local_data& local) {
+                           v_table->destructor(local.data());
+                         }},
                v);
   }
 
-  static void* value(const auto& v) {
-    return std::visit(overloads{[&](heap_data const& data) { return data.ptr; },
-                                [&](local_data const&) {
-                                  assert(false);
-                                  return mutable_void{};
-                                }},
-                      v);
+  static void* value(auto& v) {
+    return std::visit(
+        overloads{[&](heap_data const& heap) { return heap.ptr; },
+                  [&](local_data const& local) -> mutable_void {
+                    return static_cast<mutable_void>(const_cast<std::byte*>(local.data()));
+                  }},
+        v);
   }
   static bool has_value(const auto& v) { return value(v) != nullptr; }
 
@@ -1967,30 +2017,29 @@ class any : public any_base_v_table_holder<Dispatch> {
   }
   template <typename T, typename... Args>
   any(std::in_place_type_t<T>, Args&&... args)
-      : erased_data_(
-            erased_data_trait<ErasedData>::template construct_type_in_place<T>(
-                std::forward<Args>(args)...)) {
+      : erased_data_(trait_t::template construct_type_in_place<T>(
+            std::forward<Args>(args)...)) {
     v_table_holder_t::template init_v_table<ErasedData, T>();
   }
 
   any() = default;
   ~any() {
-    erased_data_trait<erased_data_t>::destroy(
-        erased_data_, v_table_holder_t::get_v_table_ptr());
+    trait_t::destroy(erased_data_, v_table_holder_t::get_v_table_ptr());
   }
 
   any(const any& other)
     requires std::copyable<erased_data_t>
       : v_table_holder_t(other.get_v_table_ptr()) {
-    trait_t::copy_asign_construct_from(erased_data_, other.erased_data_,
-                                       other.get_v_table_ptr());
+    trait_t::copy_construct_from(erased_data_, other.erased_data_,
+                                 other.get_v_table_ptr());
   }
   any& operator=(any const& other)
     requires std::copyable<erased_data_t>
   {
     if (this == &other) return *this;
-    trait_t::copy_asign_construct_from(erased_data_, other.erased_data_,
-                                       other.get_v_table_ptr());
+    trait_t::destroy(erased_data_, v_table_holder_t::get_v_table_ptr());
+    trait_t::copy_construct_from(erased_data_, other.erased_data_,
+                                 other.get_v_table_ptr());
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     return *this;
   }
