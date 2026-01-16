@@ -63,7 +63,9 @@ struct XX {
 };
 
 using X = XX<>;
-
+static_assert(sizeof(X)>=sizeof(mutable_void));
+using Y = XX<int>;
+static_assert(sizeof(Y)==sizeof(mutable_void));
 
 }  // namespace
 
@@ -133,6 +135,76 @@ TEST_CASE("value lifetime") {
       REQUIRE((*unerase_cast<X>(*v2))() == "hallo");
     }
     CHECK(X::tracker_ == 0);
+    X::tracker_ = 0;
+  }
+}
+
+TEST_CASE("value lifetime small object") {
+  {
+    CHECK(Y::tracker_ == 0);
+    {
+      any<value> u{std::in_place_type<Y>, 42};
+      REQUIRE((*unerase_cast<Y>(u))() == 42);
+      CHECK(Y::tracker_ == 1);
+    }
+    CHECK(Y::tracker_ == 0);
+  }
+  {
+    CHECK(Y::tracker_ == 0);
+    {
+      any<value> u{std::in_place_type<Y>, 42};
+      REQUIRE((*unerase_cast<Y>(u))() == 42);
+      CHECK(Y::tracker_ == 1);
+      any<value> u2{std::in_place_type<Y>, 100};
+      REQUIRE((*unerase_cast<Y>(u2))() == 100);
+      CHECK(Y::tracker_ == 2);
+      u2 = std::move(u);
+      REQUIRE(get_void_data_ptr(u) == nullptr);
+      REQUIRE((*unerase_cast<Y>(u2))() == 42);
+      CHECK(Y::tracker_ == 1);
+      auto u3 = std::move(u2);
+      REQUIRE(get_void_data_ptr(u2) == nullptr);
+      REQUIRE((*unerase_cast<Y>(u3))() == 42);
+      CHECK(Y::tracker_ == 1);
+      auto u4 = move_to<any<value>>(std::move(u3));
+      REQUIRE(get_void_data_ptr(u3) == nullptr);
+      REQUIRE((*unerase_cast<Y>(u4))() == 42);
+      CHECK(Y::tracker_ == 1);
+    }
+    CHECK(Y::tracker_ == 0);
+  }
+  {
+    CHECK(Y::tracker_ == 0);
+    {
+      any<value> v{std::in_place_type<Y>, 42};
+      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      CHECK(Y::tracker_ == 1);
+      auto v2 = v;
+      CHECK(Y::tracker_ == 2);
+      REQUIRE(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      REQUIRE((*unerase_cast<Y>(v2))() == 42);
+      v2 = Y{100};
+      CHECK(Y::tracker_ == 2);
+      REQUIRE(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      REQUIRE((*unerase_cast<Y>(v2))() == 100);
+    }
+    CHECK(Y::tracker_ == 0);
+  }
+  {
+    CHECK(Y::tracker_ == 0);
+    {
+      any<value> v{std::in_place_type<Y>, 42};
+      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      CHECK(Y::tracker_ == 1);
+      auto v2 = clone_to<any<value>>(v);
+      CHECK(Y::tracker_ == 2);
+      REQUIRE(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      REQUIRE((*unerase_cast<Y>(*v2))() == 42);
+    }
+    CHECK(Y::tracker_ == 0);
     X::tracker_ = 0;
   }
 }
@@ -219,5 +291,54 @@ TEST_CASE("v-table lifetime") {
     v_table_x.delete_(ptr);
     CHECK(X::tracker_ == 0);
     CHECK(X::move_constructed_ == 1);
+  }
+}
+
+TEST_CASE("v-table lifetime small object") {
+    Y::move_constructed_ = 0;
+    {
+    CHECK(Y::tracker_ == 0);
+    {
+      basic_any_v_table v_table_x(std::in_place_type<Y>);
+      auto ptr = v_table_x.allocate();
+      CHECK(Y::tracker_ == 0);
+      Y* x_ptr = nullptr;
+      {
+        Y x{42};
+        CHECK(Y::tracker_ == 1);
+        x_ptr = static_cast<Y*>(copy_construct_at(&v_table_x, ptr, &x));
+        CHECK(Y::tracker_ == 2);
+      }
+      CHECK(x_ptr);
+      CHECK(x_ptr == ptr);
+      CHECK(Y::tracker_ == 1);
+      CHECK((*x_ptr)() == 42);
+      v_table_x.delete_(ptr);
+      CHECK(Y::tracker_ == 0);
+    }
+  }
+  CHECK(Y::tracker_ == 0);
+  {
+      CHECK(Y::move_constructed_ == 0);
+      basic_any_v_table v_table_x(std::in_place_type<Y>);
+    auto ptr = v_table_x.allocate();
+    CHECK(Y::tracker_ == 0);
+    Y* x_ptr = nullptr;
+    {
+      Y x{42};
+      CHECK(Y::move_constructed_ == 0);
+      CHECK(Y::tracker_ == 1);
+      x_ptr = static_cast<Y*>(move_construct(&v_table_x, ptr, &x));
+      CHECK(Y::move_constructed_ == 1);
+      CHECK(Y::tracker_ == 1);
+      CHECK(x.moved_);
+    }
+    CHECK(x_ptr);
+    CHECK(x_ptr == ptr);
+    CHECK(Y::tracker_ == 1);
+    CHECK((*x_ptr)() == 42);
+    v_table_x.delete_(ptr);
+    CHECK(Y::tracker_ == 0);
+    CHECK(Y::move_constructed_ == 1);
   }
 }
