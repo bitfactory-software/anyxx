@@ -74,7 +74,7 @@ TEST_CASE("value lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<value> u{std::in_place_type<X>, "hallo"};
-      REQUIRE((*unerase_cast<X>(u))() == "hallo");
+      CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -83,22 +83,22 @@ TEST_CASE("value lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<value> u{std::in_place_type<X>, "hallo"};
-      REQUIRE((*unerase_cast<X>(u))() == "hallo");
+      CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
       any<value> u2{std::in_place_type<X>, "world"};
-      REQUIRE((*unerase_cast<X>(u2))() == "world");
+      CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      REQUIRE(get_void_data_ptr(u) == nullptr);
-      REQUIRE((*unerase_cast<X>(u2))() == "hallo");
+      CHECK(get_void_data_ptr(u) == nullptr);
+      CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      REQUIRE(get_void_data_ptr(u2) == nullptr);
-      REQUIRE((*unerase_cast<X>(u3))() == "hallo");
+      CHECK(get_void_data_ptr(u2) == nullptr);
+      CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<value>>(std::move(u3));
-      REQUIRE(get_void_data_ptr(u3) == nullptr);
-      REQUIRE((*unerase_cast<X>(u4))() == "hallo");
+      CHECK(get_void_data_ptr(u3) == nullptr);
+      CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -107,18 +107,18 @@ TEST_CASE("value lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<value> v{std::in_place_type<X>, "hallo"};
-      REQUIRE((*unerase_cast<X>(v))() == "hallo");
+      CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = v;
       CHECK(X::tracker_ == 2);
-      REQUIRE(get_void_data_ptr(v2) != get_void_data_ptr(v));
-      REQUIRE((*unerase_cast<X>(v))() == "hallo");
-      REQUIRE((*unerase_cast<X>(v2))() == "hallo");
+      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<X>(v))() == "hallo");
+      CHECK((*unerase_cast<X>(v2))() == "hallo");
       v2 = X{"world!"};
       CHECK(X::tracker_ == 2);
-      REQUIRE(get_void_data_ptr(v2) != get_void_data_ptr(v));
-      REQUIRE((*unerase_cast<X>(v))() == "hallo");
-      REQUIRE((*unerase_cast<X>(v2))() == "world!");
+      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<X>(v))() == "hallo");
+      CHECK((*unerase_cast<X>(v2))() == "world!");
     }
     CHECK(X::tracker_ == 0);
   }
@@ -126,13 +126,13 @@ TEST_CASE("value lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<value> v{std::in_place_type<X>, "hallo"};
-      REQUIRE((*unerase_cast<X>(v))() == "hallo");
+      CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any<value>>(v);
       CHECK(X::tracker_ == 2);
-      REQUIRE(get_void_data_ptr(*v2) != get_void_data_ptr(v));
-      REQUIRE((*unerase_cast<X>(v))() == "hallo");
-      REQUIRE((*unerase_cast<X>(*v2))() == "hallo");
+      CHECK(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<X>(v))() == "hallo");
+      CHECK((*unerase_cast<X>(*v2))() == "hallo");
     }
     CHECK(X::tracker_ == 0);
     X::tracker_ = 0;
@@ -144,7 +144,7 @@ TEST_CASE("value lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<value> u{std::in_place_type<Y>, 42};
-      REQUIRE((*unerase_cast<Y>(u))() == 42);
+      CHECK((*unerase_cast<Y>(u))() == 42);
       CHECK(Y::tracker_ == 1);
     }
     CHECK(Y::tracker_ == 0);
@@ -153,43 +153,43 @@ TEST_CASE("value lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<value> u{std::in_place_type<Y>, 42};
-      REQUIRE((*unerase_cast<Y>(u))() == 42);
+      CHECK((*unerase_cast<Y>(u))() == 42);
       CHECK(Y::tracker_ == 1);
       any<value> u2{std::in_place_type<Y>, 100};
-      REQUIRE((*unerase_cast<Y>(u2))() == 100);
+      CHECK((*unerase_cast<Y>(u2))() == 100);
       CHECK(Y::tracker_ == 2);
       u2 = std::move(u);
-      REQUIRE(get_void_data_ptr(u) == nullptr);
-      REQUIRE((*unerase_cast<Y>(u2))() == 42);
+      CHECK(get_v_table(u) == nullptr);
+      CHECK((*unerase_cast<Y>(u2))() == 42);
       CHECK(Y::tracker_ == 1);
       auto u3 = std::move(u2);
-      REQUIRE(get_void_data_ptr(u2) == nullptr);
-      // REQUIRE((*unerase_cast<Y>(u3))() == 42); 
-      // ^^^ is Small Object, so get_void_data_ptr brings data to empty buffer. 
+      CHECK(get_v_table(u2) == nullptr);
+      CHECK((*unerase_cast<Y>(u3))() == 42); 
       CHECK(Y::tracker_ == 1);
       auto u4 = move_to<any<value>>(std::move(u3));
-      REQUIRE(get_void_data_ptr(u3) == nullptr);
-      REQUIRE((*unerase_cast<Y>(u4))() == 42);
+      CHECK(get_v_table(u3) == nullptr);
+      CHECK((*unerase_cast<Y>(u4))() == 42);
       CHECK(Y::tracker_ == 1);
     }
     CHECK(Y::tracker_ == 0);
+    Y::tracker_ = 0;
   }
   {
     CHECK(Y::tracker_ == 0);
     {
       any<value> v{std::in_place_type<Y>, 42};
-      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK(Y::tracker_ == 1);
       auto v2 = v;
       CHECK(Y::tracker_ == 2);
-      REQUIRE(get_void_data_ptr(v2) != get_void_data_ptr(v));
-      REQUIRE((*unerase_cast<Y>(v))() == 42);
-      REQUIRE((*unerase_cast<Y>(v2))() == 42);
+      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<Y>(v))() == 42);
+      CHECK((*unerase_cast<Y>(v2))() == 42);
       v2 = Y{100};
       CHECK(Y::tracker_ == 2);
-      REQUIRE(get_void_data_ptr(v2) != get_void_data_ptr(v));
-      REQUIRE((*unerase_cast<Y>(v))() == 42);
-      REQUIRE((*unerase_cast<Y>(v2))() == 100);
+      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<Y>(v))() == 42);
+      CHECK((*unerase_cast<Y>(v2))() == 100);
     }
     CHECK(Y::tracker_ == 0);
   }
@@ -197,13 +197,13 @@ TEST_CASE("value lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       any<value> v{std::in_place_type<Y>, 42};
-      REQUIRE((*unerase_cast<Y>(v))() == 42);
+      CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK(Y::tracker_ == 1);
       auto v2 = clone_to<any<value>>(v);
       CHECK(Y::tracker_ == 2);
-      REQUIRE(get_void_data_ptr(*v2) != get_void_data_ptr(v));
-      REQUIRE((*unerase_cast<Y>(v))() == 42);
-      REQUIRE((*unerase_cast<Y>(*v2))() == 42);
+      CHECK(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<Y>(v))() == 42);
+      CHECK((*unerase_cast<Y>(*v2))() == 42);
     }
     CHECK(Y::tracker_ == 0);
     X::tracker_ = 0;
@@ -215,7 +215,7 @@ TEST_CASE("unique lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<unique> u{std::make_unique<X>("hallo")};
-      REQUIRE((*unerase_cast<X>(u))() == "hallo");
+      CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);
@@ -224,22 +224,22 @@ TEST_CASE("unique lifetime") {
     CHECK(X::tracker_ == 0);
     {
       any<unique> u{std::make_unique<X>("hallo")};
-      REQUIRE((*unerase_cast<X>(u))() == "hallo");
+      CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
       any<unique> u2{std::make_unique<X>("world")};
-      REQUIRE((*unerase_cast<X>(u2))() == "world");
+      CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      REQUIRE(get_void_data_ptr(u) == nullptr);
-      REQUIRE((*unerase_cast<X>(u2))() == "hallo");
+      CHECK(get_void_data_ptr(u) == nullptr);
+      CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      REQUIRE(get_void_data_ptr(u2) == nullptr);
-      REQUIRE((*unerase_cast<X>(u3))() == "hallo");
+      CHECK(get_void_data_ptr(u2) == nullptr);
+      CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<unique>>(std::move(u3));
-      REQUIRE(get_void_data_ptr(u3) == nullptr);
-      REQUIRE((*unerase_cast<X>(u4))() == "hallo");
+      CHECK(get_void_data_ptr(u3) == nullptr);
+      CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
     CHECK(X::tracker_ == 0);

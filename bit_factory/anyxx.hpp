@@ -1550,18 +1550,18 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                            if (v_table) delete_(v_table, heap.ptr);
                          },
                          [&](local_data& local) {
-                           v_table->destructor(local.data());
+                           if (v_table) v_table->destructor(local.data());
                          }},
                v);
   }
 
   static void* value(auto& v) {
-    return std::visit(
-        overloads{[&](heap_data const& heap) { return heap.ptr; },
-                  [&](local_data const& local) -> mutable_void {
-                    return static_cast<mutable_void>(const_cast<std::byte*>(local.data()));
-                  }},
-        v);
+    return std::visit(overloads{[&](heap_data const& heap) { return heap.ptr; },
+                                [&](local_data const& local) -> mutable_void {
+                                  return static_cast<mutable_void>(
+                                      const_cast<std::byte*>(local.data()));
+                                }},
+                      v);
   }
   static bool has_value(const auto& v) { return value(v) != nullptr; }
 
@@ -1672,6 +1672,7 @@ struct any_base_v_table_holder {
   static auto get_v_table_ptr() { return nullptr; }
   template <typename...>
   static void init_v_table() {}
+  static auto release_v_table() { return nullptr; }
 };
 template <typename Dispatch>
   requires std::derived_from<Dispatch, dynamic_member_dispatch>
@@ -1695,6 +1696,7 @@ struct any_base_v_table_holder<Dispatch> {
     self.v_table_ = derived_v_table_t::template imlpementation<
         anyxx::unerased<ErasedData, Concrete>>();
   }
+  auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
 using dispatch_table_function_t = void (*)();
@@ -2067,14 +2069,14 @@ class any : public any_base_v_table_holder<Dispatch> {
   template <is_any Other>
   explicit(false) any(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
-      : any(std::move(other.erased_data_), other.get_v_table_ptr()) {}
+      : any(std::move(other.erased_data_), other.release_v_table()) {}
   template <is_any Other>
   any& operator=(Other&& other)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     trait_t::move_to(erased_data_, std::move(other.erased_data_),
-                     other.get_v_table_ptr());
+                     other.release_v_table());
     return *this;
   }
   template <typename... Args>
@@ -2574,18 +2576,13 @@ auto lock(FromAny const& from_interface) {
   return return_t{};
 }
 
-template <is_any ToAny, is_erased_data FromAny>
-ToAny move_to(FromAny&& vv_from, const meta_data& get_meta_data) {
-  using vv_to_t = typename ToAny::erased_data_t;
-  static_assert(is_erased_data<vv_to_t>);
-  auto v_table = query_v_table<ToAny>(get_meta_data);
-  return ToAny{std::move(vv_from), *v_table};
-}
 
 template <is_any ToAny, is_any FromAny>
-ToAny move_to(FromAny&& from_interface) {
-  return move_to<ToAny>(move_erased_data(std::move(from_interface)),
-                        get_meta_data(from_interface));
+ToAny move_to(FromAny&& from) {
+  auto from_v_table = from.release_v_table();
+  auto const& meta_from = *from_v_table->meta_data_;
+  auto to_v_table = query_v_table<ToAny>(meta_from);
+  return ToAny{move_erased_data(std::move(from)), *to_v_table};
 }
 
 // --------------------------------------------------------------------------------
