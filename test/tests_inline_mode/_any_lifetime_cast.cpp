@@ -9,12 +9,12 @@ static_assert(anyxx::is_in_dll_mode == false);
 namespace {
 struct X {
   static inline int tracker_ = 0;
-  X(std::string const& s = "") : s_(s) { ++tracker_; }
+  X(std::string s = "") : s_(std::move(s)) { ++tracker_; }
   ~X() { --tracker_; }
   X(X const& x) : s_(x.s_) { ++tracker_; }
-  X(X&& x) : s_(std::move(x.s_)) {}
-  X& operator=(X const& x) { s_ = x.s_; return *this; }
-  X& operator=(X&& x) { s_ = std::move(x.s_); return *this; }
+  X(X&& x) noexcept : s_(std::move(x.s_)) {}
+  X& operator=(X const& x) = default;
+  X& operator=(X&& x) noexcept { s_ = std::move(x.s_); return *this; }
   std::string s_;
   [[nodiscard]] std::string operator()() const { return s_; }
 };

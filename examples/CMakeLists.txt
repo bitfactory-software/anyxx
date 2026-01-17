@@ -13,6 +13,9 @@ target_link_libraries(examples_inline_mode
     Catch2::Catch2WithMain
 )
 set_target_properties(examples_inline_mode PROPERTIES FOLDER "_examples")
+if(MSVC)
+  set_target_properties(examples_inline_mode PROPERTIES VS_DEBUGGER_ENVIRONMENT "PATH=$(VC_ExecutablePath_x64);%PATH%")
+endif()
 
 # use /Ob2 for benchmarks with Clang-Cl & Cl)
 #if (MSVC)

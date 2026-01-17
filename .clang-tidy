@@ -39,7 +39,8 @@ Checks: "*,
         -bugprone-reserved-identifier,
         -bugprone-easily-swappable-parameters,
         -duplInheritedMember,
-        -performance-move-const-arg
+        -performance-move-const-arg,
+        -performance-unnecessary-value-param
 "
 WarningsAsErrors: ''
 HeaderFilterRegex: ''

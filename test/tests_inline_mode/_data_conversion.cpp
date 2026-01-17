@@ -77,7 +77,7 @@ TEST_CASE("_data_conversion move") {
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));  // NOLINT
     CHECK(!has_data(get_erased_data(vv1)));
 #pragma warning(pop)
   }
@@ -87,7 +87,7 @@ TEST_CASE("_data_conversion move") {
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));  // NOLINT
     CHECK(!has_data(get_erased_data(vv1)));
 #pragma warning(pop)
   }

@@ -94,7 +94,7 @@ ANY_MODEL_MAP((circle), any_drawable) {
   };  // namespace smoke_test
 };
 
-void print_any_shape_const_observer(const any_shape<const_observer> s) {
+void print_any_shape_const_observer(any_shape<const_observer> const& s) {
   s.draw(position{4.0, 5.0});  // NOLINT
   std::cout << "Shape Number Of Sides: " << s.count_sides() << "\n";
   std::cout << "Shape Perimeter: " << s.perimeter() << "\n";
@@ -242,7 +242,7 @@ TEST_CASE("dynamic any shared_const") {
 }
 
 namespace {
-void print_any_shape_co(any_shape<const_observer> s) {
+void print_any_shape_co(any_shape<const_observer> const& s) {
   s.draw(position{.x = 1, .y = 2});
 }
 

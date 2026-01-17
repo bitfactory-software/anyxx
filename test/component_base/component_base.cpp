@@ -21,19 +21,17 @@ static X a_x{3.14};
 
 using namespace test::component_base;
 
-
-
 ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
               test::component_base, get_value_i)
-//ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-//              test::component_base, set_value_i)
+// ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
+//               test::component_base, set_value_i)
 ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
               test::component_base, to_string_i)
 //
 ANY_META_CLASS_STATIC(X)
 ANY_MODEL(X, test::component_base, get_value_i)
 ANY_MODEL(X, test::component_base, set_value_i)
-//ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
+// ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
 ANY_MODEL(X, test::component_base, to_string_i)
 
 to_string_i<anyxx::const_observer> test::component_base::get_to_string_i_co() {
@@ -55,8 +53,8 @@ to_string_i<anyxx::unique> test::component_base::get_to_string_i_u(double v) {
 }
 
 anyxx::any<anyxx::shared_const> test::component_base::sc_X(double v) {
-  return anyxx::any<shared_const>(std::make_shared<X>(v));
+  return {std::make_shared<X>(v)};
 }
 anyxx::any<anyxx::unique> test::component_base::u_X(double v) {
-  return anyxx::any<unique>(std::make_unique<X>(v));
+  return {anyxx::any<unique>(std::make_unique<X>(v))};
 }

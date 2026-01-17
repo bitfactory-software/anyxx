@@ -102,7 +102,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
     functor const const_function_object;
     const_function cf = const_function_object;
     REQUIRE(cf() == "hallo");
-    [[maybe_unused]] const_function cf2{cf};
+    [[maybe_unused]] const_function cf2{cf};  // NOLINT
     // cf2 = cf; //should compile
   }
 

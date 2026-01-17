@@ -17,9 +17,9 @@ TEST_CASE("assign construct borrow_as") {
     auto vv1 = from_t(s1);
     auto vv2 = borrow_as<to_t>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-    to_t vv3 = vv1;
+    to_t vv3 = vv1;  // NOLINT
     CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
-    to_t vv4{vv1};
+    to_t vv4{vv1};// NOLINT
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {
@@ -41,9 +41,9 @@ TEST_CASE("assign construct borrow_as") {
     auto vv1 = from_t(s1);
     auto vv2 = borrow_as<to_t>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-    to_t vv3 = vv1;
+    to_t vv3 = vv1;// NOLINT
     CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
-    to_t vv4{vv1};
+    to_t vv4{vv1};// NOLINT
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {
@@ -90,9 +90,9 @@ TEST_CASE("assign construct borrow_as") {
     auto vv1 = from_t{sp};
     auto vv2 = borrow_as<to_t>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-    to_t vv3 = vv1;
+    to_t vv3 = vv1;// NOLINT
     CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
-    to_t vv4{vv1};
+    to_t vv4{vv1};// NOLINT
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {
@@ -104,9 +104,9 @@ TEST_CASE("assign construct borrow_as") {
     auto vv1 = from_t{wp};
     auto vv2 = borrow_as<to_t>(vv1);
     CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
-    to_t vv3 = vv1;
+    to_t vv3 = vv1;// NOLINT
     CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
-    to_t vv4{vv1};
+    to_t vv4{vv1};// NOLINT
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {

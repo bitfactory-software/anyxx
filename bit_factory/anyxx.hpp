@@ -507,7 +507,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     template <anyxx::is_erased_data OtherErasedData>                           \
       requires(anyxx::moveable_from<erased_data_t, OtherErasedData>)           \
     n(OtherErasedData&& erased_data, v_table_t* v_table)                       \
-        : base_t(std::move(erased_data), v_table) {}                           \
+        : base_t(std::forward<OtherErasedData>(erased_data), v_table) {}       \
     template <typename Other>                                                  \
     explicit(false) n(const Other& other)                                      \
       requires(std::derived_from<typename Other::v_table_t, v_table_t> &&      \
@@ -818,14 +818,14 @@ struct basic_any_v_table {
                 return nullptr;
               };
             }),
+        destructor(+[](mutable_void data) noexcept -> void {
+          std::destroy_at(static_cast<Concrete*>(data));
+        }),
         delete_(+[](mutable_void data) noexcept -> void {
           if (!data) return;
           auto p = static_cast<Concrete*>(data);
           std::destroy_at(p);
           std::allocator<Concrete>{}.deallocate(p, 1);
-        }),
-        destructor(+[](mutable_void data) noexcept -> void {
-          std::destroy_at(static_cast<Concrete*>(data));
         }) {}
 
   mutable_void (*allocate)();
@@ -1381,11 +1381,12 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = false;
-  static constexpr bool is_weak =
-      true;  // cppcheck-suppress duplInheritedMember
+  static constexpr bool is_weak =  // NOLINT([duplInheritedMember)
+      true;                        // cppcheck-suppress duplInheritedMember
   static auto default_construct() { return weak{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
+  static auto construct_from_void(
+      [[maybe_unused]] mutable_void data_ptr,  // NOLINT
+      [[maybe_unused]] basic_any_v_table* v_table) {
     return weak{};
   }
 
@@ -1423,7 +1424,7 @@ static_assert(is_erased_data<weak>);
 
 struct heap_data {
   mutable_void ptr = nullptr;
-  heap_data(heap_data const&) {}
+  heap_data(heap_data const&) {}  // NOLINT(missingMemberCopy)
   heap_data& operator=(heap_data const&) {
     assert(!ptr);
     return *this;
@@ -2047,7 +2048,7 @@ class any : public any_base_v_table_holder<Dispatch> {
   }
 
   template <is_any Other>
-  explicit(false) any(const Other& other)
+  explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
@@ -2062,16 +2063,16 @@ class any : public any_base_v_table_holder<Dispatch> {
 
   template <is_erased_data OtherErasedData>
     requires(moveable_from<erased_data_t, OtherErasedData>)
-  explicit any(OtherErasedData&& erased_data, v_table_t* v_table)
+  explicit any(OtherErasedData&& erased_data, v_table_t* v_table) noexcept
       : v_table_holder_t(v_table) {
     trait_t::move_to(erased_data_, std::move(erased_data), v_table);
   }
   template <is_any Other>
-  explicit(false) any(Other&& other)
+  explicit(false) any(Other&& other)  noexcept // NOLINT(noExplicitConstructor)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
       : any(std::move(other.erased_data_), other.release_v_table()) {}
   template <is_any Other>
-  any& operator=(Other&& other)
+  any& operator=(Other&& other) noexcept
     requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
@@ -2575,7 +2576,6 @@ auto lock(FromAny const& from_interface) {
         to_interface_t{std::move(locked), get_v_table(from_interface)}};
   return return_t{};
 }
-
 
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from) {
