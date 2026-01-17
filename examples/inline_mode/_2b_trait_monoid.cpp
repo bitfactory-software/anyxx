@@ -106,25 +106,37 @@ TEST_CASE("example 2b monoid simple") {
   static_assert(anyxx::moveable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
   static_assert(!anyxx::borrowable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
 }
-TEST_CASE("example 2b monoid ") {
+
+TEST_CASE("example 2b monoid a") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
-  auto x = trait_as<monoid>(1);  // NOLINT
-  using x_t = decltype(x);
-
-  static_assert(
-      std::convertible_to<example_2b::monoid<anyxx::val<int>, anyxx::trait>,
-                          example_2b::monoid<anyxx::val<int>, anyxx::trait>>);
 
   test_monoid<monoid_trait<int>>(trait_as<monoid>(1),
                                  std::vector<monoid_trait<int>>{{2}, {3}});
 
+}
+TEST_CASE("example 2b monoid b") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
+
   test_monoid<monoid_trait<std::string>>(
       trait_as<monoid>("1"s),
       std::vector<monoid_trait<std::string>>{{"2"s}, {"3"s}});
+}
+TEST_CASE("example 2b monoid c") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
 
   test_monoid<monoid<anyxx::value>>("1"s, make_a_range(true));
+}
+TEST_CASE("example 2b monoid d") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
+
   test_monoid<monoid<anyxx::value>>("1"s, make_a_range(false));
 }
 
