@@ -1,8 +1,8 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <concepts>
-#include <string>
 #include <print>
+#include <string>
 
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
@@ -26,15 +26,17 @@ using namespace anyxx;
 namespace {
 struct functor_t {
   static inline int tracker_ = 0;
-  functor_t(std::string const& s = {}) : s_(s) 
-  { 
-      ++tracker_; 
-      std::println("{}", tracker_);
+  functor_t(std::string s = {}) : s_(std::move(s)) {
+    ++tracker_;
+    std::println("{}", tracker_);
   }
-  ~functor_t() 
-  { 
-      --tracker_; 
-      std::println("{}", tracker_);
+  functor_t(functor_t const&) = default;
+  functor_t(functor_t&&) = default;
+  functor_t& operator=(functor_t const&) = default;
+  functor_t& operator=(functor_t&&) = default;
+  ~functor_t() {  // NOLINT
+    --tracker_;
+    std::println("{}", tracker_);
   }
 
   std::string s_;

@@ -18,12 +18,12 @@ struct XX {
   static inline int move_constructed_ = 0;
   static inline int copy_assigned_ = 0;
   static inline int move_assigned_ = 0;
-  XX(T const& s = "") : s_(s) {
+  XX(T s = "") : s_(std::move(s)) {
     std::println("X({})", s_);
     ++tracker_;
     std::println("X::tracker_ {})", tracker_);
   }
-  ~XX() {
+  ~XX() {  // NOLINT
     std::println("~X({} moved = {})", s_, moved_);
     if (!moved_) --tracker_;
     std::println("X::tracker_ {})", tracker_);
@@ -35,21 +35,21 @@ struct XX {
     std::println("X::copy_constructed_ {})", copy_constructed_);
     std::println("X::tracker_ {})", tracker_);
   }
-  XX(XX&& x) : s_(std::move(x.s_)) {
+  XX(XX&& x) : s_(std::move(x.s_)) {  // NOLINT
     std::println("X(X&& {})", s_);
     x.moved_ = true;
     ++move_constructed_;
     std::println("X::move_constructed_ {})", move_constructed_);
     std::println("X::tracker_ {})", tracker_);
   }
-  XX operator=(XX const& x) {
+  XX& operator=(XX const& x) {
     s_ = x.s_;
     std::println("X =(X const& {})", s_);
     ++copy_assigned_;
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
-  XX& operator=(XX&& x) {
+  XX& operator=(XX&& x) {  // NOLINT
     std::println("X =(X&& {})", s_);
     x.moved_ = true;
     s_ = std::move(x.s_);
@@ -89,15 +89,15 @@ TEST_CASE("value lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_void_data_ptr(u) == nullptr);
+      CHECK(get_void_data_ptr(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_void_data_ptr(u2) == nullptr);
+      CHECK(get_void_data_ptr(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<value>>(std::move(u3));
-      CHECK(get_void_data_ptr(u3) == nullptr);
+      CHECK(get_void_data_ptr(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -159,15 +159,15 @@ TEST_CASE("value lifetime small object") {
       CHECK((*unerase_cast<Y>(u2))() == 100);
       CHECK(Y::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_v_table(u) == nullptr);
+      CHECK(get_v_table(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(u2))() == 42);
       CHECK(Y::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_v_table(u2) == nullptr);
+      CHECK(get_v_table(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(u3))() == 42);
       CHECK(Y::tracker_ == 1);
       auto u4 = move_to<any<value>>(std::move(u3));
-      CHECK(get_v_table(u3) == nullptr);
+      CHECK(get_v_table(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(u4))() == 42);
       CHECK(Y::tracker_ == 1);
     }
@@ -230,15 +230,15 @@ TEST_CASE("unique lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_void_data_ptr(u) == nullptr);
+      CHECK(get_void_data_ptr(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_void_data_ptr(u2) == nullptr);
+      CHECK(get_void_data_ptr(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<unique>>(std::move(u3));
-      CHECK(get_void_data_ptr(u3) == nullptr);
+      CHECK(get_void_data_ptr(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -357,8 +357,8 @@ TEST_CASE("value lifetime small/big object") {
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v1 = v2;
-      CHECK(get_v_table(v1) != nullptr);
-      CHECK(get_v_table(v2) != nullptr);
+      CHECK(get_v_table(v1) != nullptr);  // NOLINT
+      CHECK(get_v_table(v2) != nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 2);
@@ -378,8 +378,8 @@ TEST_CASE("value lifetime small/big object") {
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v2 = v1;
-      CHECK(get_v_table(v1) != nullptr);
-      CHECK(get_v_table(v2) != nullptr);
+      CHECK(get_v_table(v1) != nullptr);  // NOLINT
+      CHECK(get_v_table(v2) != nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(v2))() == 42);
       CHECK(Y::tracker_ == 2);
       CHECK(X::tracker_ == 0);
@@ -399,7 +399,7 @@ TEST_CASE("value lifetime small/big object") {
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v1 = std::move(v2);
-      CHECK(get_v_table(v2) == nullptr);
+      CHECK(get_v_table(v2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 1);
@@ -419,7 +419,7 @@ TEST_CASE("value lifetime small/big object") {
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
       v2 = std::move(v1);
-      CHECK(get_v_table(v1) == nullptr);
+      CHECK(get_v_table(v1) == nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(v2))() == 42);
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);

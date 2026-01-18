@@ -1503,11 +1503,11 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                            delete_(v_table_to, old.ptr);
                          },
                          [&](local_data& t, local_data& f) {
-                           v_table_to->destructor(t.data());
+                           if (v_table_to) v_table_to->destructor(t.data());
                            v_table_from->move_constructor(t.data(), f.data());
                          },
                          [&](local_data& t, heap_data& f) {
-                           v_table_to->destructor(t.data());
+                           if (v_table_to) v_table_to->destructor(t.data());
                            to.emplace<heap_data>(f.release());
                          },
                          [&](heap_data& t, local_data& f) {
