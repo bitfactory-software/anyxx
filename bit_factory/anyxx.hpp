@@ -1460,7 +1460,7 @@ struct heap_data {
   friend void swap(heap_data& l, heap_data& r) noexcept { std::swap(l, r); }
 };
 
-using local_data = std::array<std::byte, sizeof(mutable_void)>;
+struct local_data : std::array<std::byte, sizeof(mutable_void)>{};
 
 using value = std::variant<heap_data, local_data>;
 
