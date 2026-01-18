@@ -2551,11 +2551,6 @@ struct bound_typed_any_impl {
 template <typename V, template <is_erased_data, typename> typename Any>
 using bound_typed_any = bound_typed_any_impl<V, Any>;
 
-template <typename V, template <is_erased_data, typename> typename Any,
-          is_erased_data ErasedData>
-bool has_data(typed_any<V, Any, ErasedData> const& vv) {
-  return has_data(vv.erased_data_);
-}
 
 template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
