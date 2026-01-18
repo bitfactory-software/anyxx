@@ -2543,13 +2543,6 @@ struct typed_any : public Any<ErasedData, rtti> {
   }
 };
 
-template <typename V, template <is_erased_data, typename> typename Any>
-struct bound_typed_any_impl {
-  template <is_erased_data ErasedData>
-  using type = typed_any<V, Any, ErasedData>;
-};
-template <typename V, template <is_erased_data, typename> typename Any>
-using bound_typed_any = bound_typed_any_impl<V, Any>;
 
 
 template <typename V, template <is_erased_data, typename> typename Any,
