@@ -790,11 +790,21 @@ concept is_const_void = is_const_void_<Voidness>::value;
 
 class meta_data;
 
+template <typename Model>
+constexpr inline std::size_t compute_model_size() {
+  if constexpr (std::is_trivially_copyable_v<Model>) {
+    return 0;
+  } else {
+    return sizeof(Model);
+  }
+}
+
 struct basic_any_v_table {
   template <typename Concrete>
   explicit basic_any_v_table(
       [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : allocate(+[] -> mutable_void {
+      : model_size(compute_model_size<Concrete>()),
+        allocate(+[] -> mutable_void {
           return std::allocator<Concrete>{}.allocate(1);
         }),
         copy_constructor(+[]([[maybe_unused]] mutable_void placement,
@@ -827,7 +837,7 @@ struct basic_any_v_table {
           std::destroy_at(p);
           std::allocator<Concrete>{}.deallocate(p, 1);
         }) {}
-
+  std::size_t model_size = 0u;
   mutable_void (*allocate)();
   mutable_void (*copy_constructor)(mutable_void placement, const_void from);
   mutable_void (*move_constructor)(mutable_void placement, mutable_void from);
