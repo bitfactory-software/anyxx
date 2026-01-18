@@ -212,6 +212,55 @@ TEST_CASE("value lifetime small object") {
   }
 }
 
+TEST_CASE("value lifetime trivial object") {
+  {
+    {
+      any<value> u{std::in_place_type<int>, 42};
+      CHECK((*unerase_cast<int>(u)) == 42);
+    }
+  }
+  {
+    {
+      any<value> u{std::in_place_type<int>, 42};
+      CHECK((*unerase_cast<int>(u)) == 42);
+      any<value> u2{std::in_place_type<int>, 100};
+      CHECK((*unerase_cast<int>(u2)) == 100);
+      u2 = std::move(u);
+      CHECK(get_v_table(u) == nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(u2)) == 42);
+      auto u3 = std::move(u2);
+      CHECK(get_v_table(u2) == nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(u3)) == 42);
+      auto u4 = move_to<any<value>>(std::move(u3));
+      CHECK(get_v_table(u3) == nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(u4)) == 42);
+    }
+  }
+  {
+    {
+      any<value> v{std::in_place_type<int>, 42};
+      CHECK((*unerase_cast<int>(v)) == 42);
+      auto v2 = v;
+      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<int>(v)) == 42);
+      CHECK((*unerase_cast<int>(v2)) == 42);
+      v2 = int{100};
+      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK((*unerase_cast<int>(v)) == 42);
+      CHECK((*unerase_cast<int>(v2)) == 100);
+    }
+  }
+  {
+    {
+      any<value> v{std::in_place_type<int>, 42};
+      CHECK((*unerase_cast<int>(v)) == 42);
+      auto v2 = clone_to<any<value>>(v);
+      CHECK((*unerase_cast<int>(v)) == 42);
+      CHECK((*unerase_cast<int>(*v2)) == 42);
+    }
+  }
+}
+
 TEST_CASE("unique lifetime") {
   {
     CHECK(X::tracker_ == 0);
@@ -471,29 +520,108 @@ TEST_CASE("value lifetime trivial/small/big object") {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
   }
+  CHECK(Y::tracker_ == 0);
+  CHECK(X::tracker_ == 0);
+  {
+    any<value> v1{std::in_place_type<int>, 41};
+    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 0);
+    any<value> v2{std::in_place_type<X>, "hello"};
+    CHECK((*unerase_cast<X>(v2))() == "hello");
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 1);
+    v1 = std::move(v2);
+    CHECK(get_v_table(v2) == nullptr);  // NOLINT
+    CHECK((*unerase_cast<X>(v1))() == "hello");
+    CHECK(get_v_table(v1) != nullptr);  // NOLINT
+    CHECK(get_v_table(v2) == nullptr);  // NOLINT
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 1);
+  }
+  CHECK(Y::tracker_ == 0);
+  CHECK(X::tracker_ == 0);
+  {
+    any<value> v1{std::in_place_type<int>, 41};
+    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 0);
+    any<value> v2{std::in_place_type<Y>, 42};
+    CHECK((*unerase_cast<Y>(v2))() == 42);
+    CHECK(Y::tracker_ == 1);
+    CHECK(X::tracker_ == 0);
+    v1 = std::move(v2);
+    CHECK(get_v_table(v2) == nullptr);  // NOLINT
+    CHECK((*unerase_cast<Y>(v1))() == 42);
+    CHECK(get_v_table(v1) != nullptr);  // NOLINT
+    CHECK(get_v_table(v2) == nullptr);  // NOLINT
+    CHECK(Y::tracker_ == 1);
+    CHECK(X::tracker_ == 0);
+  }
+  CHECK(Y::tracker_ == 0);
+  CHECK(X::tracker_ == 0);
+  {
+    any<value> v1{std::in_place_type<int>, 41};
+    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 0);
+    any<value> v2{std::in_place_type<X>, "hello"};
+    CHECK((*unerase_cast<X>(v2))() == "hello");
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 1);
+    v1 = v2;
+    CHECK((*unerase_cast<X>(v1))() == "hello");
+    CHECK((*unerase_cast<X>(v2))() == "hello");
+    CHECK(get_v_table(v1) != nullptr);
+    CHECK(get_v_table(v2) != nullptr);
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 2);
+  }
+  CHECK(Y::tracker_ == 0);
+  CHECK(X::tracker_ == 0);
+  {
+    any<value> v1{std::in_place_type<int>, 41};
+    CHECK((*unerase_cast<int>(v1)) == 41);
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 0);
+    any<value> v2{std::in_place_type<Y>, 42};
+    CHECK((*unerase_cast<Y>(v2))() == 42);
+    CHECK(Y::tracker_ == 1);
+    CHECK(X::tracker_ == 0);
+    v1 = v2;
+    CHECK((*unerase_cast<Y>(v1))() == 42);
+    CHECK((*unerase_cast<Y>(v2))() == 42);
+    CHECK(get_v_table(v1) != nullptr);
+    CHECK(get_v_table(v2) != nullptr);
+    CHECK(Y::tracker_ == 2);
+    CHECK(X::tracker_ == 0);
+  }
+  CHECK(Y::tracker_ == 0);
+  CHECK(X::tracker_ == 0);
 }
 
-//namespace {
-//template <typename T>
-//struct container {
-//  T value;
-//  container(T u) : value(std::move(u)) {}
-//  container(container const& other) = default;
-//  container(container&& other) = default;
-//  container& operator=(container const& other) = default;
-//  container& operator=(container&& other) = default;
-//  ~container() = default;
-//};
+
+// namespace {
+// template <typename T>
+// struct container {
+//   T value;
+//   container(T u) : value(std::move(u)) {}
+//   container(container const& other) = default;
+//   container(container&& other) = default;
+//   container& operator=(container const& other) = default;
+//   container& operator=(container&& other) = default;
+//   ~container() = default;
+// };
 //
-//template <typename T>
-//void f(container<T> const& c) {
-//  std::println("f: {}", c.value);
-//}
-//void g(auto v) { f(container{v}); }
+// template <typename T>
+// void f(container<T> const& c) {
+//   std::println("f: {}", c.value);
+// }
+// void g(auto v) { f(container{v}); }
 //
-//TEST_CASE("deduce template areg") {
-//  container c{42};
-//  //f(42);
-//  g(42);
-//}
-//}  // namespace
+// TEST_CASE("deduce template areg") {
+//   container c{42};
+//   //f(42);
+//   g(42);
+// }
+// }  // namespace

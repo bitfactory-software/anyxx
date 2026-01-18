@@ -51,6 +51,8 @@ struct pure_functor_t {
   std::string operator()() const { return "literal"; }
   std::string operator()(const std::string& s) const { return s; }
 };
+static_assert(std::is_trivial_v<pure_functor_t>);
+
 struct pure_functor_with_context {
   std::string s_;
   std::string operator()(const std::string& s) const { return s_ + s; }

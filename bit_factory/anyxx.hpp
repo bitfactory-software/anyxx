@@ -1465,16 +1465,18 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
   static constexpr inline bool is_trivial = Trivial;
 };
 
-using value = std::variant<heap_data, local_data<false>>;
+using value = std::variant<heap_data, local_data<false>, local_data<true>>;
 
 template <typename T, typename... Args>
 auto make_local_value(Args&&... args) {
   static_assert(alignof(T) <= alignof(mutable_void));
   static_assert(sizeof(T) <= sizeof(mutable_void));
-  value local{local_data<false>{}};
-  std::construct_at<T>(static_cast<T*>(static_cast<mutable_void>(
-                           std::get<local_data<false>>(local).data())),
-                       std::forward<Args>(args)...);
+  constexpr bool is_trivial = std::is_trivial_v<T>;
+  using local_data_type = local_data<is_trivial>;
+  value local;
+  auto buffer = static_cast<T*>(
+      static_cast<mutable_void>(local.emplace<local_data_type>().data()));
+  std::construct_at<T>(buffer, std::forward<Args>(args)...);
   return local;
 }
 
@@ -1509,33 +1511,51 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static void move_to(value& to, [[maybe_unused]] basic_any_v_table* v_table_to,
                       value&& from,
                       [[maybe_unused]] basic_any_v_table* v_table_from) {
-    std::visit(overloads{[&](heap_data& t, heap_data& f) {
-                           heap_data old;
-                           std::swap(t, old);
-                           std::swap(t, f);
-                           delete_(v_table_to, old.ptr);
-                         },
-                         [&](local_data<false>& t, local_data<false>& f) {
-                           if (v_table_to) v_table_to->destructor(t.data());
-                           v_table_from->move_constructor(t.data(), f.data());
-                         },
-                         [&](local_data<false>& t, heap_data& f) {
-                           if (v_table_to) v_table_to->destructor(t.data());
-                           to.emplace<heap_data>(f.release());
-                         },
-                         [&](heap_data& t, local_data<false>& f) {
-                           delete_(v_table_to, t.ptr);
-                           v_table_from->move_constructor(
-                               to.emplace<local_data<false>>().data(),
-                               f.data());
-                         }},
-               to, from);
+    std::visit(
+        overloads{[&](heap_data& t, heap_data& f) {
+                    heap_data old;
+                    std::swap(t, old);
+                    std::swap(t, f);
+                    delete_(v_table_to, old.ptr);
+                  },
+                  [&](heap_data& t, local_data<false>& f) {
+                    delete_(v_table_to, t.ptr);
+                    v_table_from->move_constructor(
+                        to.emplace<local_data<false>>().data(), f.data());
+                  },
+                  [&](heap_data& t, local_data<true>& f) {
+                    delete_(v_table_to, t.ptr);
+                    to.emplace<local_data<true>>() = std::move(f);
+                  },
+                  [&](local_data<false>& t, heap_data& f) {
+                    if (v_table_to) v_table_to->destructor(t.data());
+                    to.emplace<heap_data>(f.release());
+                  },
+                  [&](local_data<false>& t, local_data<false>& f) {
+                    if (v_table_to) v_table_to->destructor(t.data());
+                    v_table_from->move_constructor(t.data(), f.data());
+                  },
+                  [&](local_data<false>& t, local_data<true>& f) {
+                    if (v_table_to) v_table_to->destructor(t.data());
+                    to.emplace<local_data<true>>() = std::move(f);
+                  },
+                  [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
+                    to.emplace<heap_data>(f.release());
+                  },
+                  [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
+                    v_table_from->move_constructor(
+                        to.emplace<local_data<false>>().data(), f.data());
+                  },
+                  [&](local_data<true>& t, local_data<true>& f) {
+                    t = std::move(f);
+                  }},
+        to, from);
   }
   static void move_to(unique& to, basic_any_v_table* to_v_table, value&& v,
                       basic_any_v_table* v_table) {
     auto data_ptr =
         std::visit(overloads{[&](heap_data& heap) { return heap.release(); },
-                             [&](local_data<false>& local) {
+                             [&]<bool Trivial>(local_data<Trivial>& local) {
                                return move_construct(v_table, local.data());
                              }},
                    v);
@@ -1546,28 +1566,45 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static void copy_construct_from(value& to, basic_any_v_table* to_v_table,
                                   value const& from,
                                   basic_any_v_table* from_v_table) {
-    std::visit(overloads{[&](heap_data& to_data, heap_data const& from_data) {
-                           delete_(to_v_table, to_data.ptr);
-                           to_data.ptr = nullptr;
-                           if (from_data.ptr)
-                             to_data.ptr =
-                                 copy_construct(from_v_table, from_data.ptr);
-                         },
-                         [&](local_data<false>& t, local_data<false> const& f) {
-                           if (to_v_table) to_v_table->destructor(t.data());
-                           from_v_table->copy_constructor(t.data(), f.data());
-                         },
-                         [&](local_data<false>& t, heap_data const& f) {
-                           if (to_v_table) to_v_table->destructor(t.data());
-                           to.emplace<heap_data>().ptr =
-                               copy_construct(from_v_table, f.ptr);
-                         },
-                         [&](heap_data& t, local_data<false> const& f) {
-                           delete_(to_v_table, t.ptr);
-                           from_v_table->copy_constructor(
-                               to.emplace<local_data<false>>().data(), f.data());
-                         }},
-               to, from);
+    std::visit(
+        overloads{
+            [&](heap_data& to_data, heap_data const& from_data) {
+              delete_(to_v_table, to_data.ptr);
+              to_data.ptr = nullptr;
+              if (from_data.ptr)
+                to_data.ptr = copy_construct(from_v_table, from_data.ptr);
+            },
+            [&](heap_data& t, local_data<false> const& f) {
+              delete_(to_v_table, t.ptr);
+              from_v_table->copy_constructor(
+                  to.emplace<local_data<false>>().data(), f.data());
+            },
+            [&](heap_data& t, local_data<true> const& f) {
+              delete_(to_v_table, t.ptr);
+              to.emplace<local_data<true>>() = f;
+            },
+            [&](local_data<false>& t, heap_data const& f) {
+              if (to_v_table) to_v_table->destructor(t.data());
+              to.emplace<heap_data>().ptr = copy_construct(from_v_table, f.ptr);
+            },
+            [&](local_data<false>& t, local_data<false> const& f) {
+              if (to_v_table) to_v_table->destructor(t.data());
+              from_v_table->copy_constructor(t.data(), f.data());
+            },
+            [&](local_data<false>& t, local_data<true> const& f) {
+              if (to_v_table) to_v_table->destructor(t.data());
+              to.emplace<local_data<true>>() = f;
+            },
+            [&]([[maybe_unused]] local_data<true>& t, heap_data const& f) {
+              to.emplace<heap_data>().ptr = copy_construct(from_v_table, f.ptr);
+            },
+            [&]([[maybe_unused]] local_data<true>& t,
+                local_data<false> const& f) {
+              from_v_table->copy_constructor(
+                  to.emplace<local_data<false>>().data(), f.data());
+            },
+            [&](local_data<true>& t, local_data<true> const& f) { t = f; }},
+        to, from);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
@@ -1577,17 +1614,20 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                          },
                          [&](local_data<false>& local) {
                            if (v_table) v_table->destructor(local.data());
-                         }},
+                         },
+                         [&]([[maybe_unused]] local_data<true>& local) {}},
                v);
   }
 
   static void* value(auto& v) {
-    return std::visit(overloads{[&](heap_data const& heap) { return heap.ptr; },
-                                [&](local_data<false> const& local) -> mutable_void {
-                                  return static_cast<mutable_void>(
-                                      const_cast<std::byte*>(local.data()));
-                                }},
-                      v);
+    return std::visit(
+        overloads{[&](heap_data const& heap) { return heap.ptr; },
+                  [&]<bool Trivial>(
+                      local_data<Trivial> const& local) -> mutable_void {
+                    return static_cast<mutable_void>(
+                        const_cast<std::byte*>(local.data()));
+                  }},
+        v);
   }
   static bool has_value(const auto& v) { return value(v) != nullptr; }
 
