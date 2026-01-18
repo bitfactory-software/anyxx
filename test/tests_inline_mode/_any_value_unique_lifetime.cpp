@@ -63,9 +63,11 @@ struct XX {
 };
 
 using X = XX<>;
-static_assert(sizeof(X) >= sizeof(mutable_void));
+static_assert(sizeof(X) > sizeof(mutable_void));
 using Y = XX<int>;
-static_assert(sizeof(Y) == sizeof(mutable_void));
+static_assert(sizeof(Y) <= sizeof(mutable_void));
+static_assert(std::is_trivial_v<int>);
+static_assert(sizeof(int) <= sizeof(mutable_void));
 
 }  // namespace
 
@@ -344,7 +346,19 @@ TEST_CASE("v-table lifetime small object") {
   }
 }
 
-TEST_CASE("value lifetime small/big object") {
+TEST_CASE("value lifetime trivial/small/big object") {
+  {
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 0);
+    {
+      any<value> v1{std::in_place_type<Y>, 42};
+      CHECK((*unerase_cast<Y>(v1))() == 42);
+      CHECK(Y::tracker_ == 1);
+      CHECK(X::tracker_ == 0);
+    }
+    CHECK(Y::tracker_ == 0);
+    CHECK(X::tracker_ == 0);
+  }
   {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -362,6 +376,14 @@ TEST_CASE("value lifetime small/big object") {
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 2);
+      any<value> v3{std::in_place_type<int>, 42};
+      v1 = v3;
+      CHECK(Y::tracker_ == 0);
+      CHECK(X::tracker_ == 1);
+      CHECK(get_v_table(v1) != nullptr);  // NOLINT
+      CHECK(get_v_table(v3) != nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(v1)) == 42);
+      CHECK((*unerase_cast<int>(v3)) == 42);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -383,6 +405,14 @@ TEST_CASE("value lifetime small/big object") {
       CHECK((*unerase_cast<Y>(v2))() == 42);
       CHECK(Y::tracker_ == 2);
       CHECK(X::tracker_ == 0);
+      any<value> v3{std::in_place_type<int>, 41};
+      v2 = v3;
+      CHECK(Y::tracker_ == 1);
+      CHECK(X::tracker_ == 0);
+      CHECK(get_v_table(v2) != nullptr);  // NOLINT
+      CHECK(get_v_table(v3) != nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(v2)) == 41);
+      CHECK((*unerase_cast<int>(v3)) == 41);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -403,6 +433,13 @@ TEST_CASE("value lifetime small/big object") {
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 1);
+      any<value> v3{std::in_place_type<int>, 42};
+      v1 = std::move(v3);
+      CHECK(Y::tracker_ == 0);
+      CHECK(X::tracker_ == 0);
+      CHECK(get_v_table(v1) != nullptr);  // NOLINT
+      CHECK(get_v_table(v3) == nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(v1)) == 42);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
@@ -423,8 +460,40 @@ TEST_CASE("value lifetime small/big object") {
       CHECK((*unerase_cast<Y>(v2))() == 42);
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);
+      any<value> v3{std::in_place_type<int>, 42};
+      v2 = std::move(v3);
+      CHECK(Y::tracker_ == 0);
+      CHECK(X::tracker_ == 0);
+      CHECK(get_v_table(v2) != nullptr);  // NOLINT
+      CHECK(get_v_table(v3) == nullptr);  // NOLINT
+      CHECK((*unerase_cast<int>(v2)) == 42);
     }
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
   }
 }
+
+//namespace {
+//template <typename T>
+//struct container {
+//  T value;
+//  container(T u) : value(std::move(u)) {}
+//  container(container const& other) = default;
+//  container(container&& other) = default;
+//  container& operator=(container const& other) = default;
+//  container& operator=(container&& other) = default;
+//  ~container() = default;
+//};
+//
+//template <typename T>
+//void f(container<T> const& c) {
+//  std::println("f: {}", c.value);
+//}
+//void g(auto v) { f(container{v}); }
+//
+//TEST_CASE("deduce template areg") {
+//  container c{42};
+//  //f(42);
+//  g(42);
+//}
+//}  // namespace
