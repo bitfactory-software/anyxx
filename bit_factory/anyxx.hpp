@@ -1495,24 +1495,24 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
 
   static void move_to(value& to, [[maybe_unused]] basic_any_v_table* v_table_to,
                       value&& from,
-                      [[maybe_unused]] basic_any_v_table* v_table) {
+                      [[maybe_unused]] basic_any_v_table* v_table_from) {
     std::visit(overloads{[&](heap_data& t, heap_data& f) {
                            heap_data old;
                            std::swap(t, old);
                            std::swap(t, f);
-                           delete_(v_table, old.ptr);
+                           delete_(v_table_to, old.ptr);
                          },
                          [&](local_data& t, local_data& f) {
-                           v_table->destructor(t.data());
-                           v_table->move_constructor(t.data(), f.data());
+                           v_table_to->destructor(t.data());
+                           v_table_from->move_constructor(t.data(), f.data());
                          },
                          [&](local_data& t, heap_data& f) {
-                           v_table->destructor(t.data());
+                           v_table_to->destructor(t.data());
                            to.emplace<heap_data>(f.release());
                          },
                          [&](heap_data& t, local_data& f) {
-                           delete_(v_table, t.ptr);
-                           v_table->move_constructor(
+                           delete_(v_table_to, t.ptr);
+                           v_table_from->move_constructor(
                                to.emplace<local_data>().data(), f.data());
                          }},
                to, from);
@@ -1545,7 +1545,8 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
                          },
                          [&](local_data& t, heap_data const& f) {
                            if (to_v_table) to_v_table->destructor(t.data());
-                           to.emplace<heap_data>(f.ptr);
+                           to.emplace<heap_data>().ptr =
+                               copy_construct(from_v_table, f.ptr);
                          },
                          [&](heap_data& t, local_data const& f) {
                            delete_(to_v_table, t.ptr);
