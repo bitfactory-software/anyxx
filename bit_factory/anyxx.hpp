@@ -310,12 +310,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     } else {                                                                   \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return get_v_table_ptr()->name(                                        \
-            anyxx::get_void_data_ptr(base_t::erased_data_) __VA_OPT__(         \
+            anyxx::get_void_data_ptr(*this) __VA_OPT__(                        \
                 , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             get_v_table_ptr()->name(                                           \
-                anyxx::get_void_data_ptr(base_t::erased_data_)                 \
+                anyxx::get_void_data_ptr(*this)                                \
                     __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(             \
                                      a, _sig, __VA_ARGS__))),                  \
             *this);                                                            \
@@ -845,6 +845,9 @@ struct basic_any_v_table {
   void (*delete_)(mutable_void) noexcept;
 };
 
+inline std::size_t model_size(basic_any_v_table* v_table) {
+  return v_table ? v_table->model_size : 0u;
+}
 inline mutable_void copy_construct_at(basic_any_v_table* v_table,
                                       mutable_void placement, const_void from) {
   return v_table->copy_constructor(placement, from);
@@ -907,13 +910,15 @@ concept is_erased_data =
       } -> std::convertible_to<bool>;
       { erased_data_trait<E>::is_owner } -> std::convertible_to<bool>;
       {
-        erased_data_trait<E>::value(e)
+        erased_data_trait<E>::value(e, v_table)
       } -> std::convertible_to<typename erased_data_trait<E>::void_t>;
-      { erased_data_trait<E>::has_value(e) } -> std::convertible_to<bool>;
+      {
+        erased_data_trait<E>::has_value(e, v_table)
+      } -> std::convertible_to<bool>;
       { erased_data_trait<E>::is_weak } -> std::convertible_to<bool>;
       { erased_data_trait<E>::default_construct() };
       {
-        erased_data_trait<E>::construct_from_void(void_data, v_table)
+        erased_data_trait<E>::clone_from(void_data, v_table)
       } -> std::same_as<E>;
     };
 
@@ -922,7 +927,6 @@ class any;
 
 template <typename I>
 concept is_erased_data_holder_impl = requires(I i) {
-  typename I::void_t;
   typename I::erased_data_t;
   typename I::trait_t;
 };
@@ -991,23 +995,23 @@ using unerased = erased_data_trait<ErasedData>::template unerased<
     std::decay_t<ConstructedWith>>;
 
 template <is_erased_data ErasedData>
-bool has_data(ErasedData const& vv) {
+bool has_data(ErasedData const& vv, basic_any_v_table* v_table) {
   // cppcheck-suppress-begin [accessMoved]
-  return erased_data_trait<ErasedData>::has_value(vv);
+  return erased_data_trait<ErasedData>::has_value(vv, v_table);
   // cppcheck-suppress-end [accessMoved]
 }
 template <is_erased_data ErasedData>
-void const* get_void_data_ptr(ErasedData const& vv)
+void const* get_void_data_ptr(ErasedData const& vv, basic_any_v_table* v_table)
   requires std::same_as<void const*,
                         typename erased_data_trait<ErasedData>::void_t>
 {
-  return erased_data_trait<ErasedData>::value(vv);
+  return erased_data_trait<ErasedData>::value(vv, v_table);
 }
 template <is_erased_data ErasedData>
-void* get_void_data_ptr(ErasedData const& vv)
+void* get_void_data_ptr(ErasedData const& vv, basic_any_v_table* v_table)
   requires std::same_as<void*, typename erased_data_trait<ErasedData>::void_t>
 {
-  return erased_data_trait<ErasedData>::value(vv);
+  return erased_data_trait<ErasedData>::value(vv, v_table);
 }
 
 template <typename U>
@@ -1020,31 +1024,34 @@ auto unchecked_unerase_cast(void* p) {
 }
 
 template <typename U, is_erased_data ErasedData>
-auto unchecked_unerase_cast(ErasedData const& o) {
-  return unchecked_unerase_cast<U>(get_void_data_ptr(o));
+auto unchecked_unerase_cast(ErasedData const& o, basic_any_v_table* v_table) {
+  return unchecked_unerase_cast<U>(get_void_data_ptr(o, v_table));
 }
 template <typename U, is_erased_data ErasedData>
-auto unchecked_unerase_cast(ErasedData const& o)
+auto unchecked_unerase_cast(ErasedData const& o, basic_any_v_table* v_table)
   requires(!is_const_data<ErasedData>)
 {
-  return unchecked_unerase_cast<U>(get_void_data_ptr(o));
+  return unchecked_unerase_cast<U>(get_void_data_ptr(o, v_table));
 }
 
 template <typename U, is_erased_data ErasedData>
-auto unerase_cast(ErasedData const& o, meta_data const& meta) {
+auto unerase_cast(ErasedData const& o, meta_data const& meta,
+                  basic_any_v_table* v_table) {
   check_type_match<U>(meta);
-  return unchecked_unerase_cast<U>(o);
+  return unchecked_unerase_cast<U>(o, v_table);
 }
 template <typename U, is_erased_data ErasedData>
-U const* unerase_cast_if(ErasedData const& o, meta_data const& meta) {
-  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o);
+U const* unerase_cast_if(ErasedData const& o, meta_data const& meta,
+                         basic_any_v_table* v_table) {
+  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
 }
 template <typename U, is_erased_data ErasedData>
-U* unerase_cast_if(ErasedData const& o, meta_data const& meta)
+U* unerase_cast_if(ErasedData const& o, meta_data const& meta,
+                   basic_any_v_table* v_table)
   requires(!is_const_data<ErasedData>)
 {
-  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o);
+  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
 }
 
@@ -1068,13 +1075,18 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
   };
   static constexpr bool is_owner = true;
   static auto default_construct() { return val<V>{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] basic_any_v_table* v_table) {
     return val<V>{};
   }
 
-  static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
-  static auto value(auto& value) { return &value; }
+  static bool has_value([[maybe_unused]] const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return true;
+  }
+  static auto value(auto& value, [[maybe_unused]] basic_any_v_table* v_table) {
+    return &value;
+  }
 
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
@@ -1146,13 +1158,18 @@ struct erased_data_trait<val<vany_variant<any, ErasedData, Dispatch, Types...>>>
       erased_data_trait<ErasedData>::is_weak;  // cppcheck-suppress
                                                // duplInheritedMember
   static auto default_construct() { return vany_variant_t{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] basic_any_v_table* v_table) {
     return val<vany_variant_t>{};
   }
 
-  static bool has_value([[maybe_unused]] const auto& ptr) { return true; }
-  static auto value(auto& value) { return &value; }
+  static bool has_value([[maybe_unused]] const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return true;
+  }
+  static auto value(auto& value, [[maybe_unused]] basic_any_v_table* v_table) {
+    return &value;
+  }
 
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
@@ -1191,8 +1208,8 @@ struct observer_trait : basic_erased_data_trait<Voidness> {
   };
   static constexpr bool is_owner = false;
   static auto default_construct() { return void_t{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] basic_any_v_table* v_table) {
     return void_t{};
   }
   static void move_to(Voidness& to, [[maybe_unused]] auto, Voidness from,
@@ -1200,8 +1217,14 @@ struct observer_trait : basic_erased_data_trait<Voidness> {
     to = from;
   }
 
-  static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
-  static Voidness value(const auto& ptr) { return ptr; }
+  static bool has_value(const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return static_cast<bool>(ptr);
+  }
+  static Voidness value(const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return ptr;
+  }
 
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
@@ -1273,9 +1296,9 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
   };
   static constexpr bool is_owner = true;
   static auto default_construct() { return unique{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
-    return unique{data_ptr};
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] basic_any_v_table* v_table) {
+    return unique{copy_construct(v_table, data_ptr)};
   }
   static void move_to(unique& to, basic_any_v_table* v_table_to, unique&& from,
                       [[maybe_unused]] basic_any_v_table* v_table_from) {
@@ -1285,8 +1308,14 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
     delete_(v_table_to, old);
   }
 
-  static void* value(const auto& ptr) { return ptr.ptr; }
-  static bool has_value(const auto& ptr) { return static_cast<bool>(ptr.ptr); }
+  static void* value(const auto& ptr,
+                     [[maybe_unused]] basic_any_v_table* v_table) {
+    return ptr.ptr;
+  }
+  static bool has_value(const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return static_cast<bool>(ptr.ptr);
+  }
 
   static void destroy(unique& u, basic_any_v_table* v_table) {
     assert(v_table || !u.ptr);
@@ -1339,9 +1368,8 @@ struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
   };
   static constexpr bool is_owner = true;
   static auto default_construct() { return shared_const{}; }
-  static auto construct_from_void(mutable_void data_ptr,
-                                  basic_any_v_table* v_table) {
-    return shared_const{data_ptr, v_table->delete_};
+  static auto clone_from(const_void data_ptr, basic_any_v_table* v_table) {
+    return shared_const{copy_construct(v_table, data_ptr), v_table->delete_};
   }
   static void move_to(shared_const& to,
                       [[maybe_unused]] basic_any_v_table* v_table_to,
@@ -1353,11 +1381,17 @@ struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
                       unique from, basic_any_v_table* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
-    to = construct_from_void(p, v_table);
+    to = shared_const{p, v_table->delete_};
   }
 
-  static void const* value(const auto& ptr) { return ptr.get(); }
-  static bool has_value(const auto& ptr) { return static_cast<bool>(ptr); }
+  static void const* value(const auto& ptr,
+                           [[maybe_unused]] basic_any_v_table* v_table) {
+    return ptr.get();
+  }
+  static bool has_value(const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return static_cast<bool>(ptr);
+  }
 
   template <typename ConstructedWith>
   struct unerased_impl {
@@ -1399,14 +1433,19 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
   static constexpr bool is_weak =  // NOLINT([duplInheritedMember)
       true;                        // cppcheck-suppress duplInheritedMember
   static auto default_construct() { return weak{}; }
-  static auto construct_from_void(
-      [[maybe_unused]] mutable_void data_ptr,  // NOLINT
-      [[maybe_unused]] basic_any_v_table* v_table) {
+  static auto clone_from([[maybe_unused]] const_void data_ptr,  // NOLINT
+                         [[maybe_unused]] basic_any_v_table* v_table) {
     return weak{};
   }
 
-  static void const* value([[maybe_unused]] const auto& ptr) { return nullptr; }
-  static bool has_value(const auto& ptr) { return !ptr.expired(); }
+  static void const* value([[maybe_unused]] const auto& ptr,
+                           [[maybe_unused]] basic_any_v_table* v_table) {
+    return nullptr;
+  }
+  static bool has_value(const auto& ptr,
+                        [[maybe_unused]] basic_any_v_table* v_table) {
+    return !ptr.expired();
+  }
 
   template <typename ConstructedWith>
   using unerased = std::decay_t<typename ConstructedWith::element_type>;
@@ -1465,7 +1504,70 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
   static constexpr inline bool is_trivial = Trivial;
 };
 
-using value = std::variant<heap_data, local_data<false>, local_data<true>>;
+union value {
+  value(mutable_void ptr = 0) : heap{ptr} {}
+  value(value const& other) noexcept {
+    std::memcpy(this, &other, sizeof(value));
+  }
+  value& operator=(value const& other) noexcept {
+    std::memcpy(this, &other, sizeof(value));
+    return *this;
+  }
+  ~value() {}
+  heap_data heap;
+  local_data<false> local;
+  local_data<true> trivial;
+};
+
+template <typename V>
+auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
+  if (size > sizeof(mutable_void)) {
+    return std::forward<decltype(visitor)>(visitor)(std::forward<V>(v).heap);
+  } else if (size > 0) {
+    return std::forward<decltype(visitor)>(visitor)(std::forward<V>(v).local);
+  }
+  assert(size == 0);
+  return std::forward<decltype(visitor)>(visitor)(std::forward<V>(v).trivial);
+};
+
+template <typename V2>
+auto visit_value(auto&& visitor, value& v1, std::size_t size1, V2&& v2,
+                 std::size_t size2) -> decltype(auto) {
+  if (size1 > sizeof(mutable_void)) {
+    if (size2 > sizeof(mutable_void)) {
+      return std::forward<decltype(visitor)>(visitor)(
+          v1.heap, std::forward<V2>(v2).heap);
+    } else if (size2 > 0) {
+      return std::forward<decltype(visitor)>(visitor)(
+          v1.heap, std::forward<V2>(v2).local);
+    }
+    assert(size2 == 0);
+    return std::forward<decltype(visitor)>(visitor)(
+        v1.heap, std::forward<V2>(v2).trivial);
+  } else if (size1 > 0) {
+    if (size2 > sizeof(mutable_void)) {
+      return std::forward<decltype(visitor)>(visitor)(
+          v1.local, std::forward<V2>(v2).heap);
+    } else if (size2 > 0) {
+      return std::forward<decltype(visitor)>(visitor)(
+          v1.local, std::forward<V2>(v2).local);
+    }
+    assert(size2 == 0);
+    return std::forward<decltype(visitor)>(visitor)(
+        v1.local, std::forward<V2>(v2).trivial);
+  }
+  assert(size1 == 0);
+  if (size2 > sizeof(mutable_void)) {
+    return std::forward<decltype(visitor)>(visitor)(v1.trivial,
+                                                    std::forward<V2>(v2).heap);
+  } else if (size2 > 0) {
+    return std::forward<decltype(visitor)>(visitor)(v1.trivial,
+                                                    std::forward<V2>(v2).local);
+  }
+  assert(size2 == 0);
+  return std::forward<decltype(visitor)>(visitor)(v1.trivial,
+                                                  std::forward<V2>(v2).trivial);
+};
 
 template <typename T, typename... Args>
 auto make_local_value(Args&&... args) {
@@ -1473,11 +1575,10 @@ auto make_local_value(Args&&... args) {
   static_assert(sizeof(T) <= sizeof(mutable_void));
   constexpr bool is_trivial = std::is_trivial_v<T>;
   using local_data_type = local_data<is_trivial>;
-  value local;
-  auto buffer = static_cast<T*>(
-      static_cast<mutable_void>(local.emplace<local_data_type>().data()));
-  std::construct_at<T>(buffer, std::forward<Args>(args)...);
-  return local;
+  value v;
+  auto location = static_cast<T*>(static_cast<mutable_void>(v.local.data()));
+  std::construct_at<T>(location, std::forward<Args>(args)...);
+  return v;
 }
 
 template <typename T, typename... Args>
@@ -1486,7 +1587,7 @@ auto make_value(Args&&... args) {
   if constexpr (sizeof(T) <= sizeof(mutable_void)) {
     return make_local_value<T>(std::forward<Args>(args)...);
   } else {
-    return value{heap_data{new T(std::forward<Args>(args)...)}};
+    return value{new T(std::forward<Args>(args)...)};
   }
 }
 
@@ -1503,62 +1604,75 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   };
   static constexpr bool is_owner = true;
   static auto default_construct() { return anyxx::value{}; }
-  static auto construct_from_void([[maybe_unused]] mutable_void data_ptr,
-                                  [[maybe_unused]] basic_any_v_table* v_table) {
-    return anyxx::value{heap_data{data_ptr}};
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] basic_any_v_table* v_table) {
+    assert(v_table);
+    anyxx::value v;
+    visit_value(overloads{[&](heap_data& heap) {
+                            heap.ptr = copy_construct(v_table, data_ptr);
+                          },
+                          [&]<bool Trivial>(local_data<Trivial>& local) {
+                            copy_construct_at(
+                                v_table,
+                                static_cast<mutable_void>(local.data()),
+                                data_ptr);
+                          }},
+                v, v_table->model_size);
+    return v;
   }
 
   static void move_to(value& to, [[maybe_unused]] basic_any_v_table* v_table_to,
                       value&& from,
                       [[maybe_unused]] basic_any_v_table* v_table_from) {
-    std::visit(
-        overloads{[&](heap_data& t, heap_data& f) {
-                    heap_data old;
-                    std::swap(t, old);
-                    std::swap(t, f);
-                    delete_(v_table_to, old.ptr);
-                  },
-                  [&](heap_data& t, local_data<false>& f) {
-                    delete_(v_table_to, t.ptr);
-                    v_table_from->move_constructor(
-                        to.emplace<local_data<false>>().data(), f.data());
-                  },
-                  [&](heap_data& t, local_data<true>& f) {
-                    delete_(v_table_to, t.ptr);
-                    to.emplace<local_data<true>>() = std::move(f);
-                  },
-                  [&](local_data<false>& t, heap_data& f) {
-                    if (v_table_to) v_table_to->destructor(t.data());
-                    to.emplace<heap_data>(f.release());
-                  },
-                  [&](local_data<false>& t, local_data<false>& f) {
-                    if (v_table_to) v_table_to->destructor(t.data());
-                    v_table_from->move_constructor(t.data(), f.data());
-                  },
-                  [&](local_data<false>& t, local_data<true>& f) {
-                    if (v_table_to) v_table_to->destructor(t.data());
-                    to.emplace<local_data<true>>() = std::move(f);
-                  },
-                  [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
-                    to.emplace<heap_data>(f.release());
-                  },
-                  [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
-                    v_table_from->move_constructor(
-                        to.emplace<local_data<false>>().data(), f.data());
-                  },
-                  [&](local_data<true>& t, local_data<true>& f) {
-                    t = std::move(f);
-                  }},
-        to, from);
+    assert(v_table_from);
+    visit_value(
+        overloads{
+            [&](heap_data& t, heap_data& f) {
+              heap_data old;
+              std::swap(t, old);
+              std::swap(t, f);
+              delete_(v_table_to, old.ptr);
+            },
+            [&](heap_data& t, local_data<false>& f) {
+              delete_(v_table_to, t.ptr);
+              v_table_from->move_constructor(to.local.data(), f.data());
+            },
+            [&](heap_data& t, local_data<true>& f) {
+              delete_(v_table_to, t.ptr);
+              to.trivial = std::move(f);
+            },
+            [&](local_data<false>& t, heap_data& f) {
+              if (v_table_to) v_table_to->destructor(t.data());
+              to.heap.ptr = f.release();
+            },
+            [&](local_data<false>& t, local_data<false>& f) {
+              if (v_table_to) v_table_to->destructor(t.data());
+              v_table_from->move_constructor(t.data(), f.data());
+            },
+            [&](local_data<false>& t, local_data<true>& f) {
+              if (v_table_to) v_table_to->destructor(t.data());
+              to.trivial = std::move(f);
+            },
+            [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
+              to.heap.ptr = f.release();
+            },
+            [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
+              v_table_from->move_constructor(to.local.data(), f.data());
+            },
+            [&](local_data<true>& t, local_data<true>& f) {
+              t = std::move(f);
+            }},
+        to, model_size(v_table_to), from, v_table_from->model_size);
   }
   static void move_to(unique& to, basic_any_v_table* to_v_table, value&& v,
                       basic_any_v_table* v_table) {
+    assert(v_table);
     auto data_ptr =
-        std::visit(overloads{[&](heap_data& heap) { return heap.release(); },
-                             [&]<bool Trivial>(local_data<Trivial>& local) {
-                               return move_construct(v_table, local.data());
-                             }},
-                   v);
+        visit_value(overloads{[&](heap_data& heap) { return heap.release(); },
+                              [&]<bool Trivial>(local_data<Trivial>& local) {
+                                return move_construct(v_table, local.data());
+                              }},
+                    v, v_table->model_size);
     erased_data_trait<unique>::move_to(to, to_v_table, unique{data_ptr},
                                        v_table);
   }
@@ -1566,7 +1680,8 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static void copy_construct_from(value& to, basic_any_v_table* to_v_table,
                                   value const& from,
                                   basic_any_v_table* from_v_table) {
-    std::visit(
+    if (!from_v_table) return;
+    visit_value(
         overloads{
             [&](heap_data& to_data, heap_data const& from_data) {
               delete_(to_v_table, to_data.ptr);
@@ -1576,16 +1691,15 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
             },
             [&](heap_data& t, local_data<false> const& f) {
               delete_(to_v_table, t.ptr);
-              from_v_table->copy_constructor(
-                  to.emplace<local_data<false>>().data(), f.data());
+              from_v_table->copy_constructor(to.local.data(), f.data());
             },
             [&](heap_data& t, local_data<true> const& f) {
               delete_(to_v_table, t.ptr);
-              to.emplace<local_data<true>>() = f;
+              to.trivial = f;
             },
             [&](local_data<false>& t, heap_data const& f) {
               if (to_v_table) to_v_table->destructor(t.data());
-              to.emplace<heap_data>().ptr = copy_construct(from_v_table, f.ptr);
+              to.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&](local_data<false>& t, local_data<false> const& f) {
               if (to_v_table) to_v_table->destructor(t.data());
@@ -1593,43 +1707,47 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
             },
             [&](local_data<false>& t, local_data<true> const& f) {
               if (to_v_table) to_v_table->destructor(t.data());
-              to.emplace<local_data<true>>() = f;
+              to.trivial = f;
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data const& f) {
-              to.emplace<heap_data>().ptr = copy_construct(from_v_table, f.ptr);
+              to.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&]([[maybe_unused]] local_data<true>& t,
                 local_data<false> const& f) {
-              from_v_table->copy_constructor(
-                  to.emplace<local_data<false>>().data(), f.data());
+              from_v_table->copy_constructor(to.local.data(), f.data());
             },
             [&](local_data<true>& t, local_data<true> const& f) { t = f; }},
-        to, from);
+        to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
   static void destroy(value& v, basic_any_v_table* v_table) {
-    std::visit(overloads{[&](heap_data& heap) {
-                           assert(v_table || !heap.ptr);
-                           if (v_table) delete_(v_table, heap.ptr);
-                         },
-                         [&](local_data<false>& local) {
-                           if (v_table) v_table->destructor(local.data());
-                         },
-                         [&]([[maybe_unused]] local_data<true>& local) {}},
-               v);
+    visit_value(overloads{[&](heap_data& heap) {
+                            assert(v_table || !heap.ptr);
+                            if (v_table) delete_(v_table, heap.ptr);
+                          },
+                          [&](local_data<false>& local) {
+                            if (v_table) v_table->destructor(local.data());
+                          },
+                          [&]([[maybe_unused]] local_data<true>& local) {}},
+                v, model_size(v_table));
   }
 
-  static void* value(auto& v) {
-    return std::visit(
+  template <typename V>
+  static void* value(V&& v, [[maybe_unused]] basic_any_v_table* v_table) {
+    if (!v_table) return nullptr;
+    auto model_size = v_table->model_size;
+    return visit_value(
         overloads{[&](heap_data const& heap) { return heap.ptr; },
                   [&]<bool Trivial>(
                       local_data<Trivial> const& local) -> mutable_void {
                     return static_cast<mutable_void>(
                         const_cast<std::byte*>(local.data()));
                   }},
-        v);
+        std::forward<V>(v), model_size);
   }
-  static bool has_value(const auto& v) { return value(v) != nullptr; }
+  static bool has_value(const auto& v, basic_any_v_table* v_table) {
+    return value(v, v_table) != nullptr;
+  }
 
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
@@ -1877,42 +1995,54 @@ template <is_erased_data To, is_erased_data From>
 struct borrow_trait;
 
 template <typename To, typename From>
-concept borrowable_from =
-    is_erased_data<From> && is_erased_data<To> && requires(From f) {
-      { borrow_trait<To, From>{}(f) } -> std::same_as<To>;
-    };
+concept borrowable_from = is_erased_data<From> && is_erased_data<To> &&
+                          requires(From f, basic_any_v_table* v_table) {
+                            {
+                              borrow_trait<To, From>{}(f, v_table)
+                            } -> std::same_as<To>;
+                          };
 
 template <typename To, typename From>
   requires borrowable_from<To, From>
-To borrow_as(From const& from) {
-  return borrow_trait<To, From>{}(from);
+To borrow_as(From const& from, basic_any_v_table* v_table) {
+  return borrow_trait<To, From>{}(from, v_table);
 }
 
 template <is_erased_data From>
   requires(!is_const_data<From> && !is_weak_data<From>)
 struct borrow_trait<mutable_observer, From> {
-  auto operator()(const auto& from) const {
-    return mutable_observer{get_void_data_ptr(from)};
+  auto operator()(const auto& from, basic_any_v_table* v_table) const {
+    return mutable_observer{get_void_data_ptr(from, v_table)};
   }
 };
 template <is_erased_data From>
   requires(!is_weak_data<From>)
 struct borrow_trait<const_observer, From> {
-  auto operator()(const auto& from) const {
-    return const_observer{get_void_data_ptr(from)};
+  auto operator()(const auto& from,
+                  [[maybe_unused]] basic_any_v_table* v_table) const {
+    return const_observer{get_void_data_ptr(from, v_table)};
   }
 };
 template <>
 struct borrow_trait<shared_const, shared_const> {
-  auto operator()(const auto& from) const { return from; }
+  auto operator()(const auto& from,
+                  [[maybe_unused]] basic_any_v_table* v_table) const {
+    return from;
+  }
 };
 template <>
 struct borrow_trait<weak, weak> {
-  auto operator()(const auto& from) const { return from; }
+  auto operator()(const auto& from,
+                  [[maybe_unused]] basic_any_v_table* v_table) const {
+    return from;
+  }
 };
 template <>
 struct borrow_trait<weak, shared_const> {
-  auto operator()(const auto& from) const { return weak{from}; }
+  auto operator()(const auto& from,
+                  [[maybe_unused]] basic_any_v_table* v_table) const {
+    return weak{from};
+  }
 };
 
 static_assert(!borrowable_from<mutable_observer, const_observer>);
@@ -1969,8 +2099,8 @@ concept cloneable_to = is_erased_data<To> && erased_data_trait<To>::is_owner;
 template <is_erased_data To, is_erased_data From>
   requires cloneable_to<To>
 To clone_to(From const& from, basic_any_v_table* v_table) {
-  return erased_data_trait<To>::construct_from_void(
-      copy_construct(v_table, get_void_data_ptr(from)), v_table);
+  return erased_data_trait<To>::clone_from(get_void_data_ptr(from, v_table),
+                                           v_table);
 }
 
 static_assert(!cloneable_to<mutable_observer>);
@@ -2118,13 +2248,15 @@ class any : public any_base_v_table_holder<Dispatch> {
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
-        erased_data_(borrow_as<ErasedData>(other.erased_data_)) {}
+        erased_data_(borrow_as<ErasedData>(other.erased_data_,
+                                           other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
-    erased_data_(borrow_as<ErasedData>(other.erased_data_));
+    erased_data_(
+        borrow_as<ErasedData>(other.erased_data_, other.get_v_table_ptr()));
     return *this;
   }
 
@@ -2177,6 +2309,12 @@ class any : public any_base_v_table_holder<Dispatch> {
 };
 
 template <is_any Any>
+bool has_data(Any const& any) {
+  // cppcheck-suppress-begin [accessMoved]
+  return has_data(get_erased_data(any), get_v_table(any));
+  // cppcheck-suppress-end [accessMoved]
+}
+template <is_any Any>
 inline auto& get_erased_data(Any const& any) {
   return any.erased_data_;
 }
@@ -2186,7 +2324,7 @@ inline auto move_erased_data(Any&& any) {
 }
 template <is_any Any>
 inline auto get_void_data_ptr(Any const& any) {
-  return get_void_data_ptr(get_erased_data(any));
+  return get_void_data_ptr(get_erased_data(any), get_v_table(any));
 }
 
 template <is_any Any>
@@ -2213,11 +2351,11 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <typename To>
-auto unchecked_v_table_downcast_to(any_v_table<>* v_table) {
+auto unchecked_v_table_downcast_to(basic_any_v_table* v_table) {
   return static_cast<To*>(v_table);
 }
 template <is_any To>
-auto unchecked_v_table_downcast_to(any_v_table<>* v_table) {
+auto unchecked_v_table_downcast_to(basic_any_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
 }
 
@@ -2245,16 +2383,17 @@ inline std::optional<To> downcast_to(From from)
 
 template <typename U, is_any Any>
 inline auto unchecked_unerase_cast(Any const& o) {
-  return unchecked_unerase_cast<U>(get_erased_data(o));
+  return unchecked_unerase_cast<U>(get_erased_data(o), get_v_table(o));
 }
 template <typename U, typename Any>
   requires is_any<Any>
 inline auto unerase_cast(Any const& o) {
-  return unerase_cast<U>(get_erased_data(o), get_meta_data(o));
+  return unerase_cast<U>(get_erased_data(o), get_meta_data(o), get_v_table(o));
 }
 template <typename U, is_any Any>
 inline auto unerase_cast_if(Any const& o) {
-  return unerase_cast_if<U>(get_erased_data(o), get_meta_data(o));
+  return unerase_cast_if<U>(get_erased_data(o), get_meta_data(o),
+                            get_v_table(o));
 }
 
 template <typename VTable, typename Concrete>
@@ -2515,35 +2654,33 @@ struct typed_any : public Any<ErasedData, rtti> {
   // cppcheck-suppress-end noExplicitConstructor
 
   value_t const& operator*() const {
-    return *unchecked_unerase_cast<value_t const>(this->erased_data_);
+    return *unchecked_unerase_cast<value_t const>(*this);
   }
   value_t const* operator->() const {
-    return unchecked_unerase_cast<value_t const>(this->erased_data_);
+    return unchecked_unerase_cast<value_t const>(*this);
   }
   value_t const* get() const {
-    return unchecked_unerase_cast<value_t const>(this->erased_data_);
+    return unchecked_unerase_cast<value_t const>(*this);
   }
   value_t& operator*() const
     requires(!is_const)
   {
-    return *unchecked_unerase_cast<value_t>(this->erased_data_);
+    return *unchecked_unerase_cast<value_t>(*this);
   }
   value_t* operator->() const
     requires(!is_const)
   {
-    return unchecked_unerase_cast<value_t>(this->erased_data_);
+    return unchecked_unerase_cast<value_t>(*this);
   }
   value_t* get() const
     requires(!is_const)
   {
-    return unchecked_unerase_cast<value_t>(this->erased_data_);
+    return unchecked_unerase_cast<value_t>(*this);
   }
   explicit operator bool() const {
     return static_cast<bool>(this->erased_data_);
   }
 };
-
-
 
 template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
@@ -2572,8 +2709,9 @@ template <is_any ToAny, is_erased_data FromErasedData>
 std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
                                            const meta_data& meta_data) {
   using to = typename ToAny::erased_data_t;
-  return query_v_table<ToAny>(meta_data).transform(
-      [&](auto v_table) { return ToAny{borrow_as<to>(from), v_table}; });
+  return query_v_table<ToAny>(meta_data).transform([&](auto v_table) {
+    return ToAny{borrow_as<to>(from, v_table), v_table};
+  });
 }
 
 template <is_any ToAny, is_any FromAny>

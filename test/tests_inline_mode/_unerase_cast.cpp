@@ -16,7 +16,7 @@ TEST_CASE("unerase_cast") {
 
   {
     auto e = erased<shared_const>(std::make_shared<x_t>("hallo"));
-    REQUIRE(unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
+    REQUIRE(unchecked_unerase_cast<x_t>(e, nullptr)->s_ == "hallo");
   }
   {
     value_with_meta_data v(std::make_shared<x_t>("hallo"));
