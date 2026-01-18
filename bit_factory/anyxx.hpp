@@ -2556,18 +2556,6 @@ template <typename V, template <is_erased_data, typename> typename Any,
 bool has_data(typed_any<V, Any, ErasedData> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <is_typed_any Any>
-void const* get_void_data_ptr(is_typed_any auto const& vv)
-  requires is_const_void<typename Any::void_t>
-{
-  return get_void_data_ptr(vv.erased_data_);
-}
-template <is_typed_any Any>
-void* get_void_data_ptr(is_typed_any auto const& vv)
-  requires(!is_const_void<typename Any::void_t>)
-{
-  return get_void_data_ptr(vv.erased_data_);
-}
 template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
 auto get_meta(typed_any<V, Any, ErasedData> const& vv) {
