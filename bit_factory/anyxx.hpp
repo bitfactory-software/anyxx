@@ -2556,12 +2556,6 @@ template <typename V, template <is_erased_data, typename> typename Any,
 bool has_data(typed_any<V, Any, ErasedData> const& vv) {
   return has_data(vv.erased_data_);
 }
-template <typename V, template <is_erased_data, typename> typename Any,
-          is_erased_data ErasedData>
-auto get_meta(typed_any<V, Any, ErasedData> const& vv) {
-  using trait_t = typename typed_any<V, Any, ErasedData>::trait_t;
-  return trait_t::meta(vv.erased_data_);
-}
 
 template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
