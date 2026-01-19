@@ -568,7 +568,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __detail_ANYXX_ANY_(                                                         \
       ((ErasedData), (Dispatch)),                                              \
       ((ErasedData = anyxx::default_erased_data<erased_data_default>::type),   \
-       (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type)),   \
+       (Dispatch = anyxx::dyn)),   \
       n, BASE, l, l, decoration)
 
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default) \
@@ -584,7 +584,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (Dispatch = anyxx::default_member_dispatch<dispatch_default>::type), \
+          (Dispatch = anyxx::dyn), \
           __detail_ANYXX_ADD_TAIL(                                             \
               (ErasedData =                                                    \
                    anyxx::default_erased_data<erased_data_default>::type),     \
@@ -2548,24 +2548,9 @@ struct forward_trait_to_map<Traited, self const&> {
 // --------------------------------------------------------------------------------
 // any customization traits
 
-template <bool is_in_dll_mode>
-struct member_dispatch_default;
-template <>
-struct member_dispatch_default<true> {
-  using type = dyn;
-};
-template <>
-struct member_dispatch_default<false> {
-  using type = dyn;
-};
 template <is_erased_data ErasedData = shared_const>
 struct default_erased_data {
   using type = ErasedData;
-};
-template <is_member_dispatch Dispatch =
-              member_dispatch_default<is_in_dll_mode>::type>
-struct default_member_dispatch {
-  using type = Dispatch;
 };
 
 
