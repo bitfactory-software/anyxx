@@ -8,6 +8,7 @@
 #include <cassert>
 #include <concepts>
 #include <cstddef>
+#include <cstring>
 #include <expected>
 #include <functional>
 #include <map>
@@ -1507,10 +1508,10 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 union value {
   value(mutable_void ptr = 0) : heap{ptr} {}
   value([[maybe_unused]] value const& other) noexcept {
-    memcpy(this, &other, sizeof(value));
+    std::memcpy(this, &other, sizeof(value));
   }
   value& operator=([[maybe_unused]] value const& other) noexcept {
-    memcpy(this, &other, sizeof(value));
+    std::memcpy(this, &other, sizeof(value));
     return *this;
   }
   ~value() {}
