@@ -1506,13 +1506,8 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 
 union value {
   value(mutable_void ptr = 0) : heap{ptr} {}
-  value(value const& other) noexcept {
-    std::memcpy(this, &other, sizeof(value));
-  }
-  value& operator=(value const& other) noexcept {
-    std::memcpy(this, &other, sizeof(value));
-    return *this;
-  }
+  value([[maybe_unused]] value const& other) noexcept {}
+  value& operator=([[maybe_unused]] value const& other) noexcept { return *this; }
   ~value() {}
   heap_data heap;
   local_data<false> local;
@@ -2285,7 +2280,7 @@ class any : public any_base_v_table_holder<Dispatch> {
   template <is_any Friend>
   friend inline auto& get_erased_data(Friend const& any);
   template <is_any Friend>
-  friend inline auto move_erased_data(Friend&& any);
+  friend inline decltype(auto) move_erased_data(Friend&& any);
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
 
@@ -2319,7 +2314,7 @@ inline auto& get_erased_data(Any const& any) {
   return any.erased_data_;
 }
 template <is_any Any>
-inline auto move_erased_data(Any&& any) {
+inline decltype(auto) move_erased_data(Any&& any) {
   return std::move(any.erased_data_);
 }
 template <is_any Any>
