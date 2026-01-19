@@ -293,7 +293,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
-    if constexpr (std::same_as<anyxx::static_, Dispatch>) {                    \
+    if constexpr (!anyxx::voidness<T>) {                                       \
       using traited_t = typename erased_data_t::value_t;                       \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
@@ -568,7 +568,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __detail_ANYXX_ANY_(                                                         \
       ((ErasedData), (Dispatch)),                                              \
       ((ErasedData = anyxx::default_erased_data<erased_data_default>::type),   \
-       (Dispatch = anyxx::dyn)),   \
+       (Dispatch = anyxx::dyn)),                                               \
       n, BASE, l, l, decoration)
 
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default) \
@@ -584,7 +584,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (Dispatch = anyxx::dyn), \
+          (Dispatch = anyxx::dyn),                                             \
           __detail_ANYXX_ADD_TAIL(                                             \
               (ErasedData =                                                    \
                    anyxx::default_erased_data<erased_data_default>::type),     \
@@ -2552,7 +2552,6 @@ template <is_erased_data ErasedData = shared_const>
 struct default_erased_data {
   using type = ErasedData;
 };
-
 
 // --------------------------------------------------------------------------------
 // typed any
