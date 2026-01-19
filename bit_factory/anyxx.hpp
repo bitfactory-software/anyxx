@@ -392,7 +392,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   struct n##_v_table_as_static_inline;                                         \
   struct n##_has_open_dispatch;                                                \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params)>        \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params) =       \
+                anyxx::dyn>                                                    \
   struct n##_v_table;                                                          \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(tpl3), typename Dispatch>        \
   n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>*           \
