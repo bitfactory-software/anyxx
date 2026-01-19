@@ -401,14 +401,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(v_table_template_params)>        \
   struct n##_v_table                                                           \
-      : anyxx::derive_v_table_from<                                            \
-            Dispatch _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(BASE)>::         \
-            template type<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>,  \
+      : BASE##_v_table<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>,     \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_open_dispatch>, \
                                n> {                                            \
-    using v_table_base_t = typename anyxx::derive_v_table_from<                \
-        Dispatch _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(BASE)>::             \
-        template type<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;      \
+    using v_table_base_t =                                                     \
+        BASE##_v_table<_detail_ANYXX_TEMPLATE_ARGS(base_template_params)>;     \
     using v_table_t = n##_v_table;                                             \
     static constexpr bool open_dispatch_enabeled =                             \
         anyxx::is_type_complete<n##_has_open_dispatch>;                        \
@@ -582,8 +579,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default) \
   ANY_EX_(n, BASE, l, erased_data_default, dispatch_default, ())
 
-#define ANY(n, ...) ANY_(n, , __VA_ARGS__)
-#define ANY_EX(n, ...) ANY_EX_(n, , __VA_ARGS__)
+#define ANY(n, ...) ANY_(n, anyxx::any, __VA_ARGS__)
+#define ANY_EX(n, ...) ANY_EX_(n, anyxx::any, __VA_ARGS__)
 
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default,               \
                          dispatch_default, decoration)                         \
@@ -624,19 +621,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, dispatch_default, ())
 
 #define ANY_TEMPLATE(t, n, l, erased_data_default, dispatch_default) \
-  ANY_TEMPLATE_(t, n, , (), l, erased_data_default, dispatch_default)
+  ANY_TEMPLATE_(t, n, anyxx::any, (), l, erased_data_default, dispatch_default)
 
-#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, dispatch_default,  \
-                        decoration)                                      \
-  ANY_TEMPLATE_EX_(t, n, , (), l, erased_data_default, dispatch_default, \
-                   decoration)
-
-#define TRAIT_(n, BASE, l)                                                     \
-  __detail_ANYXX_ANY_(((ErasedData), (Dispatch)),                              \
-                      ((ErasedData), (Dispatch = anyxx::static_)), n, BASE, l, \
-                      , ())
-
-#define TRAIT(n, ...) TRAIT_(n, , __VA_ARGS__)
+#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, dispatch_default, \
+                        decoration)                                     \
+  ANY_TEMPLATE_EX_(t, n, anyxx::any, (), l, erased_data_default,        \
+                   dispatch_default, decoration)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
@@ -2590,13 +2580,6 @@ template <typename Dispatch, template <typename...> typename Base = any>
 struct derive_from {
   template <typename... Args>
   using type = Base<Args...>;
-};
-
-template <typename Dispatch,
-          template <typename...> typename BaseVTable = any_v_table>
-struct derive_v_table_from {
-  template <typename... Args>
-  using type = BaseVTable<Args...>;
 };
 
 // --------------------------------------------------------------------------------
