@@ -33,7 +33,7 @@ namespace {
 
 template <typename KEY, typename VALUE>
 void test_any_map_template(
-    any_map<KEY, VALUE, anyxx::const_observer, anyxx::dyn> const& map_i) {
+    any_map<KEY, VALUE, anyxx::const_observer> const& map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -80,7 +80,7 @@ TEST_CASE("any inline template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_lambda =
-      [](any_map<std::string, int, const_observer, anyxx::dyn> const& map_i) {
+      [](any_map<std::string, int, const_observer> const& map_i) {
         REQUIRE(map_i.size() == 2);
         REQUIRE(map_i.at("one") == 1);
         REQUIRE(map_i.at("two") == 2);

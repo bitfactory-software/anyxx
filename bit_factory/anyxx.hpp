@@ -370,8 +370,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   struct n;                                                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  using n##_trait =                                                            \
-      n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params), anyxx::static_>; \
+  using n##_trait = n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params)>;   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
@@ -414,7 +413,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using own_dispatch_holder_t =                                              \
         typename anyxx::dispatch_holder<open_dispatch_enabeled, n>;            \
                                                                                \
-    using dispatch_t = Dispatch;                                               \
     using any_value_t =                                                        \
         n<_detail_ANYXX_TEMPLATE_ARGS(any_value_template_params)>;             \
     using any_const_observer_t =                                               \
@@ -454,7 +452,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using any_template = n<Args...>;                                           \
     using any_t = n;                                                           \
     using erased_data_t = ErasedData;                                          \
-    using dispatch_t = Dispatch;                                               \
                                                                                \
     using T =                                                                  \
         typename anyxx::erased_data_trait<erased_data_t>::static_dispatch_t;   \
@@ -583,15 +580,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                          dispatch_default, decoration)                         \
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t),                                                \
+      __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t)),         \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (Dispatch),                                                          \
-          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
-      __detail_ANYXX_ADD_TAIL(                                                 \
-          (Dispatch = anyxx::dyn),                                             \
-          __detail_ANYXX_ADD_TAIL(                                             \
-              (ErasedData =                                                    \
-                   anyxx::default_erased_data<erased_data_default>::type),     \
-              _detail_REMOVE_PARENS(t))),                                      \
+          (ErasedData =                                                        \
+               anyxx::default_erased_data<erased_data_default>::type),         \
+          _detail_REMOVE_PARENS(t)),                                           \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((Other), _detail_REMOVE_PARENS(t)),              \
@@ -605,10 +598,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),                       \
                               _detail_REMOVE_PARENS(t)),                       \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
-      __detail_ANYXX_ADD_TAIL(                                                 \
-          (Dispatch),                                                          \
-          __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt))),   \
-      l, l, decoration)
+      __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt)), l, l,  \
+      decoration)
 
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default, \
                       dispatch_default)                       \
@@ -1073,7 +1064,7 @@ U* unerase_cast_if(ErasedData const& o, any_v_table<>* v_table)
 
 template <template <typename, typename> typename Any, typename T>
 auto trait_as(T&& v) {
-  return Any<anyxx::val<std::decay_t<T>>, static_>{std::forward<T>(v)};
+  return Any<anyxx::val<std::decay_t<T>>>{std::forward<T>(v)};
 }
 
 template <typename V>
@@ -2252,7 +2243,7 @@ class any : public any_base_v_table_holder<Dispatch> {
     requires(std::derived_from<To, From>);
 
   operator decltype(auto)() const {
-    if constexpr (std::derived_from<Dispatch, static_>) {
+    if constexpr (!voidness<typename trait_t::static_dispatch_t>) {
       return erased_data_.value_;
     } else {
       return &erased_data_;

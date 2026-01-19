@@ -37,8 +37,7 @@ struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
                                AnyForwardRange const &> {
   using type =
       anyxx::any_forward_range<AnyValue, AnyValue,
-                               typename AnyForwardRange::erased_data_t,
-                               typename AnyForwardRange::dispatch_t> const &;
+                               typename AnyForwardRange::erased_data_t> const &;
 };
 //
 template <typename Concrete, typename AnyForwardRange>
