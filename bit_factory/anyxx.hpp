@@ -2351,7 +2351,7 @@ struct is_key_impl<key<T>> : std::true_type {};
 template <typename T>
 concept is_key = is_key_impl<T>::value;
 
-template <template <typename> typename Any, typename Key, typename... Args>
+template <template <typename...> typename Any, typename Key, typename... Args>
 class factory {
   using unique_constructor_t = std::function<Any<unique>(Args...)>;
   using shared_const_constructor_t = std::function<Any<shared_const>(Args...)>;
