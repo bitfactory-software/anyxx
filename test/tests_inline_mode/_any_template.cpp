@@ -43,7 +43,7 @@ ANY_MODEL_MAP((double), any_to_string) {
 }  // namespace
 
 template <typename KEY, typename VALUE>
-void test_any_map_template(any_map<KEY, VALUE, const_observer> map_i) {
+void test_any_map_template(any_map<KEY, VALUE, const_observer> const& map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);

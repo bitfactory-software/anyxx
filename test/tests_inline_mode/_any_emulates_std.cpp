@@ -1,6 +1,7 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <concepts>
+#include <print>
 #include <string>
 
 #if defined(__clang__)
@@ -10,10 +11,13 @@
 using namespace anyxx;
 
 namespace {
-ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)), , )
+ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)),
+    , )
 
-ANY(string_to_string_mutable, (ANY_OP(std::string, (), (), const),
-                               ANY_OP(std::string, (), (std::string const&), )), , )
+ANY(string_to_string_mutable,
+    (ANY_OP(std::string, (), (), const),
+     ANY_OP(std::string, (), (std::string const&), )),
+    , )
 
 }  // namespace
 
@@ -21,6 +25,20 @@ using namespace anyxx;
 
 namespace {
 struct functor_t {
+  static inline int tracker_ = 0;
+  functor_t(std::string s = {}) : s_(std::move(s)) {
+    ++tracker_;
+    std::println("{}", tracker_);
+  }
+  functor_t(functor_t const&) = default;
+  functor_t(functor_t&&) = default;
+  functor_t& operator=(functor_t const&) = default;
+  functor_t& operator=(functor_t&&) = default;
+  ~functor_t() {  // NOLINT
+    --tracker_;
+    std::println("{}", tracker_);
+  }
+
   std::string s_;
   std::string operator()() const { return s_; }
   std::string operator()(const std::string& s) {
@@ -33,6 +51,8 @@ struct pure_functor_t {
   std::string operator()() const { return "literal"; }
   std::string operator()(const std::string& s) const { return s; }
 };
+static_assert(std::is_trivial_v<pure_functor_t>);
+
 struct pure_functor_with_context {
   std::string s_;
   std::string operator()(const std::string& s) const { return s_ + s; }
@@ -83,23 +103,34 @@ TEST_CASE("std emulated function") {
     CHECK(fc2() == "hallo world");
   }
   {
-    pure_functor_t pf{};;
+    pure_functor_t pf{};
+    ;
     string_to_string<mutable_observer> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    pure_functor_t pf {};
+    pure_functor_t pf{};
     string_to_string<const_observer> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
+    functor_t::tracker_ = 0;
+    {
+      {
+        string_to_string_mutable<unique> f{std::make_unique<functor_t>()};
+        REQUIRE(functor_t::tracker_ == 1);
+        REQUIRE(f("hello") == "");
+        REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello");
+      }
+      REQUIRE(functor_t::tracker_ == 0);
+    }
     string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
     static_assert(!std::assignable_from<string_to_string_mutable<unique>,
                                         string_to_string_mutable<unique>>);
     string_to_string_mutable<unique> f2{std::move(f)};
-    REQUIRE(!has_data(get_erased_data(f)));  // NOLINT
+    REQUIRE(!has_data(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
   }

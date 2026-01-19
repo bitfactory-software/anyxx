@@ -61,7 +61,7 @@ auto make_node(ARGS&&... args) {
 
 }  // namespace
 
-TEST_CASE("21_Tree_any_rtti") {
+TEST_CASE("21_Tree_any") {
   using namespace anyxx;
 
   auto expr = node(make_node<Times>(

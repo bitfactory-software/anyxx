@@ -5,6 +5,13 @@
 #include <iostream>
 #include <string>
 
+#if defined(__clang__)
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+#if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+
 using namespace anyxx;
 
 namespace smoke_test {
@@ -17,7 +24,8 @@ ANY(any_drawable, (ANY_METHOD(void, draw, (position), const)), , )
 ANY_(any_shape, any_drawable,
      (ANY_METHOD(int, count_sides, (), const),
       ANY_METHOD(double, area, (), const),
-      ANY_METHOD(double, perimeter, (), const)), , )
+      ANY_METHOD(double, perimeter, (), const)),
+     , )
 
 ANY_(any_callable_shape, any_shape,
      (ANY_OP(std::string, (), (std::string const&), const)), , )
@@ -86,8 +94,8 @@ ANY_MODEL_MAP((circle), any_drawable) {
   };  // namespace smoke_test
 };
 
-void print_any_shape_const_observer(const any_shape<const_observer> s) {
-  s.draw({4.0, 5.0});  // NOLINT
+void print_any_shape_const_observer(any_shape<const_observer> const& s) {
+  s.draw(position{4.0, 5.0});  // NOLINT
   std::cout << "Shape Number Of Sides: " << s.count_sides() << "\n";
   std::cout << "Shape Perimeter: " << s.perimeter() << "\n";
   std::cout << "Shape Area: " << s.area() << "\n";
@@ -121,7 +129,7 @@ TEST_CASE("dynamic v_table const_observer") {
   print_any_callable_shape_const_observer(p);
 
   using erased_const_observer = const_observer;
-  static_assert(std::is_base_of_v<any_base<erased_const_observer>,
+  static_assert(std::is_base_of_v<any<erased_const_observer>,
                                   any_callable_shape<const_observer>>);
   static_assert(std::is_base_of_v<any_shape<const_observer>,
                                   any_callable_shape<const_observer>>);
@@ -154,11 +162,11 @@ TEST_CASE("dynamic v_table const_observer") {
     any_drawable_mutable_observer sb2{std::move(sb1)};
   }
 
-  //    any_base< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
+  //    any< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  [[maybe_unused]] anyxx::any_base<const_observer> base_shape =
+  [[maybe_unused]] anyxx::any<const_observer> base_shape =
       any_callable_shape_onst_observer_circle1;
-  [[maybe_unused]] anyxx::any_base<const_observer> base_shapeX =
+  [[maybe_unused]] anyxx::any<const_observer> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));
@@ -234,8 +242,8 @@ TEST_CASE("dynamic any shared_const") {
 }
 
 namespace {
-void print_any_shape_co(any_shape<const_observer> s) {
-  s.draw({.x = 1, .y = 2});
+void print_any_shape_co(any_shape<const_observer> const& s) {
+  s.draw(position{.x = 1, .y = 2});
 }
 
 }  // namespace

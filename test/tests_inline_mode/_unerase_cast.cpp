@@ -11,14 +11,12 @@ ANY(has_meta_data, , , )
 
 TEST_CASE("unerase_cast") {
   using namespace anyxx;
-  using namespace anyxx;
-  using value = shared_const;
 
-  using value_with_meta_data = has_meta_data<value>;
+  using value_with_meta_data = has_meta_data<shared_const>;
 
   {
-    auto e = erased<value>(std::make_shared<x_t>("hallo"));
-    REQUIRE(unchecked_unerase_cast<x_t>(e)->s_ == "hallo");
+    auto e = erased<shared_const>(std::make_shared<x_t>("hallo"));
+    REQUIRE(unchecked_unerase_cast<x_t>(e, nullptr)->s_ == "hallo");
   }
   {
     value_with_meta_data v(std::make_shared<x_t>("hallo"));

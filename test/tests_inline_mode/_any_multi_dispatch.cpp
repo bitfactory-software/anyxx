@@ -74,9 +74,9 @@ TEST_CASE("multi_dispatch 1") {
         return l.name() + "->" + r.name();
       });
 
-  CHECK(any_thing_v_table<anyxx::rtti>::imlpementation<Asteroid>()
+  CHECK(any_thing_v_table<anyxx::dyn>::imlpementation<Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
-  CHECK(any_thing_v_table<anyxx::rtti>::imlpementation<Spaceship>()
+  CHECK(any_thing_v_table<anyxx::dyn>::imlpementation<Spaceship>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
 
   Asteroid asteroid;
@@ -173,7 +173,7 @@ TEST_CASE("multi_dispatch 4") {
       []([[maybe_unused]] auto a, [[maybe_unused]] auto s) { return "a->a"; });
   collide.define<any_thing<const_observer>, Spaceship>(
       [](auto const& any, [[maybe_unused]] auto const& s) {
-        return get_meta_data(any).get_type_info().name() + "->s"s;
+        return get_type_info(any).name() + "->s"s;
       });
   collide.define<any_thing<const_observer>, Asteroid>(
       []([[maybe_unused]] auto const& any, [[maybe_unused]] auto const& a) {

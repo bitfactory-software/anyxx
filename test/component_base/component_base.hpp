@@ -29,18 +29,18 @@ struct X;
 
 namespace test::component_base {
 
-ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)), , anyxx::rtti)
-ANY(get_value_i, (ANY_METHOD(double, get_value, (), const)), , anyxx::rtti)
+ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)), , anyxx::dyn)
+ANY(get_value_i, (ANY_METHOD(double, get_value, (), const)), , anyxx::dyn)
 ANY_(set_value_i, get_value_i, (ANY_METHOD(void, set_value, (double), )), ,
-     anyxx::rtti)
+     anyxx::dyn)
 
 COMPONENT_BASE_EXPORT
 to_string_i<anyxx::const_observer> get_to_string_i_co();
 COMPONENT_BASE_EXPORT to_string_i<anyxx::shared_const> get_to_string_i_sc(
     double v);
 COMPONENT_BASE_EXPORT to_string_i<anyxx::unique> get_to_string_i_u(double v);
-COMPONENT_BASE_EXPORT anyxx::shared_const sc_X(double v);
-COMPONENT_BASE_EXPORT anyxx::unique u_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared_const> sc_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique> u_X(double v);
 
 }  // namespace test::component_base
 

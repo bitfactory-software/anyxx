@@ -29,11 +29,10 @@ namespace example {
 TEST_CASE("factory1") {
   auto asteroid_thing = thing_factory.construct<unique>("asteroid");
   CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
-  CHECK(get_meta_data(asteroid_thing).get_type_info() == typeid_of<asteroid>());
+  CHECK(get_type_info(asteroid_thing) == typeid(asteroid));
   auto spaceship_thing = thing_factory.construct<unique>("spaceship");
   CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
-  CHECK(get_meta_data(spaceship_thing).get_type_info() ==
-        typeid_of<spaceship>());
+  CHECK(get_type_info(spaceship_thing) == typeid(spaceship));
 }
 
 TEST_CASE("factory2") {
@@ -44,8 +43,8 @@ TEST_CASE("factory2") {
     archive >> key;
     if (!key.empty()) things.emplace_back(thing_factory.construct<unique>(key));
   }
-  CHECK(get_meta_data(things[0]).get_type_info() == typeid_of<asteroid>());
-  CHECK(get_meta_data(things[1]).get_type_info() == typeid_of<spaceship>());
+  CHECK(get_type_info(things[0]) == typeid(asteroid));
+  CHECK(get_type_info(things[1]) == typeid(spaceship));
 }
 
 ANY(any_to_string,
@@ -60,13 +59,11 @@ auto __ = any_to_string_factory.register_("int", []() { return 42; });
 
 static_assert(std::is_constructible_v<any_to_string<shared_const>,
                                       any_to_string<unique>&&>);
-static_assert(!std::is_constructible_v<any_to_string<shared_const, dynm>,
-                                       any_to_string<unique>&&>);
-}}
+}  // namespace example
+}  // namespace
 
 ANY_SINGLETON(example, thing_factory);
 ANY_SINGLETON(example, any_to_string_factory);
-
 
 namespace {
 namespace example {
@@ -82,7 +79,8 @@ TEST_CASE("factory3") {
   f.register_(factory_test_key, []() { return 42; });
   auto a1 = f.construct<unique>(factory_test_key);
   CHECK(a1.to_string() == "42");
-  CHECK_THROWS_AS(f.construct<unique>(factory_test_negative_key), unkonwn_factory_key_error);
+  CHECK_THROWS_AS(f.construct<unique>(factory_test_negative_key),
+                  unkonwn_factory_key_error);
 }
 
 }  // namespace example

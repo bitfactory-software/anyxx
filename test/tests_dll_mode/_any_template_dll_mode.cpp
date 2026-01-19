@@ -31,14 +31,14 @@ namespace {
 
 namespace template_test {
 
-ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)), anyxx::const_observer, anyxx::dyns)
+ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)), anyxx::const_observer, anyxx::dyn)
 
 //using any_to_string_const_observer_dyns =
-//    any_to_string<anyxx::const_observer, anyxx::dyns>;
+//    any_to_string<anyxx::const_observer, anyxx::dyn>;
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
              (ANY_METHOD(any_to_string<>, at, (KEY const&),
-                         const)), anyxx::const_observer, anyxx::dyns)
+                         const)), anyxx::const_observer, anyxx::dyn)
 
 ANY_MODEL_MAP((int), any_to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
@@ -130,7 +130,7 @@ TEST_CASE("any template test") {
   test_any_map_template<std::string, int>(map_string_to_int);
 
   auto test_any_map_to_string_lambda =
-      [](any_map_to_string<std::string, const_observer, anyxx::dyns> map_i) {
+      [](any_map_to_string<std::string, const_observer, anyxx::dyn> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
@@ -145,7 +145,7 @@ TEST_CASE("any template test2") {
   std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_to_string_lambda =
-      [](any_map_to_string<std::string, const_observer, anyxx::dyns> map_i) {
+      [](any_map_to_string<std::string, const_observer, anyxx::dyn> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1.000000");
         REQUIRE(map_i.at("two").to_string() == "2.000000");
       };

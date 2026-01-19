@@ -1,6 +1,6 @@
+#include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
-#include <bit_factory/anyxx.hpp>
 
 #if defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
@@ -8,156 +8,90 @@
 
 using namespace anyxx;
 
-TEST_CASE("_data_conversion borrow") {
-  std::string s1 = "hallo";
-  {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = borrow_as<const_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = borrow_as<mutable_observer>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-  {
-    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = borrow_as<shared_const>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(vv2));
-  }
-}
 TEST_CASE("_data_conversion clone") {
   std::string s1 = "hallo";
-  auto& meta_data = get_meta_data<std::string>();
   {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = clone_to<shared_const>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<const_observer>(s1);
+    static_assert(anyxx::is_any<decltype(vv1)>);
+    auto vv2 = clone_to<any<shared_const>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<const_observer>(s1);
-    auto vv2 = clone_to<unique>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<const_observer>(s1);
+    auto vv2 = clone_to<any<unique>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = clone_to<shared_const>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    auto vv2 = clone_to<any<shared_const>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<mutable_observer>(s1);
-    auto vv2 = clone_to<unique>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<mutable_observer>(s1);
+    auto vv2 = clone_to<any<unique>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = clone_to<shared_const>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<shared_const>(std::make_shared<std::string>(s1));
+    auto vv2 = clone_to<any<shared_const>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<shared_const>(std::make_shared<std::string>(s1));
-    auto vv2 = clone_to<unique>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<shared_const>(std::make_shared<std::string>(s1));
+    auto vv2 = clone_to<any<unique>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = clone_to<shared_const>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
+    auto vv2 = clone_to<any<shared_const>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = clone_to<unique>(vv1, meta_data);
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
+    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
+    auto vv2 = clone_to<any<unique>>(vv1);
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
-    CHECK(*unchecked_unerase_cast<std::string>(vv2) == s1);
+    CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
 }
 // cppcheck-suppress-begin [accessMoved]
 TEST_CASE("_data_conversion move") {
   std::string s1 = "hallo";
   {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = move_to<unique>(std::move(vv1));
+    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
+    auto vv2 = move_to<any<unique>>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
-#pragma warning( push )
-#pragma warning( disable : 26800)
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
-    CHECK(!has_data(vv1));
-#pragma warning( pop )
+    static_assert(anyxx::is_any<decltype(vv1)>);
+    static_assert(anyxx::is_any<decltype(vv2)>);
+#pragma warning(push)
+#pragma warning(disable : 26800)
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));  // NOLINT
+    CHECK(!has_data(get_erased_data(vv1), nullptr));
+#pragma warning(pop)
   }
   {
-    auto vv1 = erased<unique>(std::make_unique<std::string>(s1));
-    auto vv2 = move_to<shared_const>(std::move(vv1));
+    auto vv1 = any<unique>(std::make_unique<std::string>(s1));
+    auto vv2 = move_to<any<shared_const>>(std::move(vv1));
     CHECK(s1 == *unchecked_unerase_cast<std::string>(vv2));
-#pragma warning( push )
-#pragma warning( disable : 26800)
-    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));
-    CHECK(!has_data(vv1));
-#pragma warning( pop )
+#pragma warning(push)
+#pragma warning(disable : 26800)
+    CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));  // NOLINT
+    CHECK(!has_data(get_erased_data(vv1), nullptr));
+#pragma warning(pop)
   }
 }
 // cppcheck-suppress-end [accessMoved]

@@ -8,22 +8,25 @@ static_assert(anyxx::is_in_dll_mode == false);
 
 namespace {
 struct X {
+  static inline int tracker_ = 0;
+  X(std::string s = "") : s_(std::move(s)) { ++tracker_; }
+  ~X() { --tracker_; }
+  X(X const& x) : s_(x.s_) { ++tracker_; }
+  X(X&& x) noexcept : s_(std::move(x.s_)) {}
+  X& operator=(X const& x) = default;
+  X& operator=(X&& x) noexcept { s_ = std::move(x.s_); return *this; }
   std::string s_;
-  [[nodiscard]] std::string to_string() const { return s_; }
+  [[nodiscard]] std::string operator()() const { return s_; }
 };
 
-ANY(to_string_i, (ANY_METHOD(std::string, to_string, (), const)), , )
-using to_string_sc = to_string_i<shared_const>;
-using to_string_co = to_string_i<const_observer>;
+ANY(any_stringable, (ANY_OP(std::string, (), (), const)), , )
 
-using to_string_u = to_string_i<unique>;
-using to_string_mo = to_string_i<mutable_observer>;
 }  // namespace
 
 TEST_CASE("any lifetime cast") {
-  const to_string_sc sc{std::make_shared<X>("hallo")};
-  REQUIRE(sc.to_string() == "hallo");
-  REQUIRE(is_derived_from<any_base<shared_const>>(sc));
+  const any_stringable<shared_const> sc{std::make_shared<X>("hallo")};
+  REQUIRE(sc() == "hallo");
+  REQUIRE(is_derived_from<any<shared_const>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);
@@ -41,45 +44,26 @@ TEST_CASE("any lifetime cast") {
     CHECK(false);
   }
 
-  static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
+  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
   static_assert(
-      std::derived_from<to_string_sc::v_table_t, to_string_co::v_table_t>);
-  to_string_co co{sc};  // NOLINT
-  REQUIRE(co.to_string() == "hallo");
-  static_assert(std::same_as<to_string_co::v_table_t, to_string_sc::v_table_t>);
-  REQUIRE(is_derived_from<any_base<const_observer>>(co));
+      std::derived_from<any_stringable<shared_const>::v_table_t, any_stringable<const_observer>::v_table_t>);
+  any_stringable<const_observer> co{sc};  // NOLINT
+  REQUIRE(co() == "hallo");
+  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
+  REQUIRE(is_derived_from<any<const_observer>>(co));
 
-  to_string_u u{std::make_unique<X>("hallo")};  // NOLINT
-  REQUIRE(u.to_string() == "hallo");
-  static_assert(!is_typed_any<to_string_u>);
-  static_assert(is_any<to_string_u>);
-  static_assert(!constructibile_for<to_string_u, to_string_mo::erased_data_t>);
+  any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
+  REQUIRE(u() == "hallo");
+  static_assert(!is_typed_any<any_stringable<unique>>);
+  static_assert(is_any<any_stringable<unique>>);
+  static_assert(!constructibile_for<any_stringable<unique>, any_stringable<mutable_observer>::erased_data_t>);
   static_assert(
-      std::derived_from<to_string_mo::v_table_t, to_string_u::v_table_t>);
-  to_string_mo mo{u};
-  REQUIRE(mo.to_string() == "hallo");
+      std::derived_from<any_stringable<mutable_observer>::v_table_t, any_stringable<unique>::v_table_t>);
+  any_stringable<mutable_observer> mo{u};
+  REQUIRE(mo() == "hallo");
 
-  to_string_u u1{std::make_unique<X>("hallo")};
-  REQUIRE(u1.to_string() == "hallo");
-  to_string_co co_from_u{u1};
-  REQUIRE(co_from_u.to_string() == "hallo");
+  any_stringable<unique> u1{std::make_unique<X>("hallo")};
+  REQUIRE(u1() == "hallo");
+  any_stringable<const_observer> co_from_u{u1};
+  REQUIRE(co_from_u() == "hallo");
 }
-
-namespace {
-using to_string_sc_dynm = to_string_i<shared_const, dynm>;
-using to_string_u_dynm = to_string_i<unique, dynm>;
-using to_string_mo_dynm = to_string_i<mutable_observer, dynm>;
-}  // namespace
-
-TEST_CASE("any dynm lifetiem cast1") {
-  auto sc1{to_string_u_dynm{std::make_unique<X>("hello dynm")}};
-  CHECK(sc1.to_string() == "hello dynm");
-}// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
-TEST_CASE("any dynm lifetiem cast2") {
-  to_string_u_dynm u1_dynm{std::make_unique<X>("hello dynm")};
-  CHECK(u1_dynm.to_string() == "hello dynm");
-  static_assert(
-      std::same_as<to_string_mo_dynm::v_table_t, to_string_u_dynm::v_table_t>);
-  to_string_mo_dynm mo1{u1_dynm};
-  CHECK(mo1.to_string() == "hello dynm");
-}// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)

@@ -1,6 +1,7 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <print>
 #include <catch2/catch_test_macros.hpp>
 // cppcheck-suppress-begin [noExplicitConstructor,duplInheritedMember,functionConst]
 #include <bit_factory/anyxx.hpp>
@@ -41,16 +42,17 @@ TEST_CASE("open object 1") {
 TEST_CASE("open object 2") {
   test_object a_test_object;
   auto r = a_test_object.get(test_member);
+  std::println("get");
   REQUIRE(!r);
   a_test_object[test_member] = "hello world";
+  std::println("set");
   REQUIRE(a_test_object[test_member] == "hello world");
+  std::println("end");
 }
 TEST_CASE("open object 3") {
   test_object a_test_object;
   auto r = a_test_object.get(test_member);
   REQUIRE(!r);
   REQUIRE(a_test_object[test_member] == "");
-}
-TEST_CASE("test fails for test test") {
-  REQUIRE(true); // for now
+  std::println("end");
 }

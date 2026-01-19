@@ -6,12 +6,22 @@ using namespace anyxx;
 
 namespace {
 
-ANY(any, , , )
+// ANY(any, , , )
 
 }  // namespace
 
 TEST_CASE("example X2/ any value") {
   any<value> a1{std::string{"hello world"}};
+  static_assert(anyxx::is_any<decltype(a1)>);
   CHECK(*unerase_cast<std::string>(a1) == "hello world");
-  CHECK(get_meta_data(a1).get_type_info() == typeid(std::string));
+  CHECK(get_type_info(a1) == typeid(std::string));
+  auto a2 = a1;  // copy
+  CHECK(*unerase_cast<std::string>(a2) == "hello world");
+  CHECK(get_type_info(a2) == typeid(std::string));
+  a2 = 42;
+  CHECK(*unerase_cast<std::string>(a1) == "hello world");
+  CHECK(get_type_info(a1) == typeid(std::string));
+  CHECK(*unerase_cast<int>(a2) == 42);
+  CHECK(get_type_info(a2) == typeid(int));
 }
+

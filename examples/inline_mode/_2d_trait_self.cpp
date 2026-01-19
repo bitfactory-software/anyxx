@@ -44,11 +44,10 @@ ANY_(any_has_plus, any_has_equal,
 
 }  // namespace example_2d
 
-TEST_CASE("example 2db any_has_plus") {
+TEST_CASE("example 2db any_has_plus dynamic") {
   using namespace example_2d;
   using namespace anyxx;
   using namespace std::string_literals;
-
   {
     any_has_plus a{std::in_place, "a"s};
     any_has_plus b{std::in_place, "b"s};
@@ -57,6 +56,11 @@ TEST_CASE("example 2db any_has_plus") {
     CHECK((a.plus(a)).is_equal(any_has_plus{"aa"s}));
     CHECK((a.plus(b)).is_equal(any_has_plus{"ab"s}));
   }
+}
+TEST_CASE("example 2db any_has_plus static") {
+  using namespace example_2d;
+  using namespace anyxx;
+  using namespace std::string_literals;
   {
     auto a = trait_as<any_has_plus>("a"s);
     auto b = trait_as<any_has_plus>("b"s);
