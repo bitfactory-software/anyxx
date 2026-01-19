@@ -1506,8 +1506,13 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 
 union value {
   value(mutable_void ptr = 0) : heap{ptr} {}
-  value([[maybe_unused]] value const& other) noexcept {}
-  value& operator=([[maybe_unused]] value const& other) noexcept { return *this; }
+  value([[maybe_unused]] value const& other) noexcept {
+    memcpy(this, &other, sizeof(value));
+  }
+  value& operator=([[maybe_unused]] value const& other) noexcept {
+    memcpy(this, &other, sizeof(value));
+    return *this;
+  }
   ~value() {}
   heap_data heap;
   local_data<false> local;
