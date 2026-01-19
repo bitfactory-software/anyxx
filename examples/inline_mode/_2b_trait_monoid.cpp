@@ -7,39 +7,38 @@
 
 namespace example_2b {
 
-TRAIT(monoid, (ANY_METHOD_DEFAULTED(monoid_trait<T>, op,
-                                    (monoid_trait<T> const&), const,
-                                    [x](monoid_trait<T> const r) {
-                                      return anyxx::trait_as<monoid>(x).concat(
-                                          std::vector{r});  // NOLINT
-                                    }),
-               ANY_METHOD_DEFAULTED(monoid_trait<T>, concat, (const auto&),
-                                    const, [x]([[maybe_unused]] const auto& r) {
-                                      return std::ranges::fold_right(
-                                          r, anyxx::trait_as<monoid>(x),
-                                          [&](auto const& m1, auto const& m2) {
-                                            return m1.op(m2);
-                                          });
-                                    })))
-
-template <typename T>
-inline auto operator==(monoid_trait<T> const& lhs, monoid_trait<T> const& rhs) {
-  return *lhs == *rhs;
-};
+TRAIT(monoid,
+      (ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
+                        [&x](auto const& r) {
+                          auto self = anyxx::trait_as<monoid>(x);
+                          return self | (std::vector{anyxx::trait_as<monoid>(
+                                            r)});  // NOLINT
+                        }),
+       ANY_OP_DEFAULTED(anyxx::self, |, concat,
+                        (std::vector<monoid_trait<T>> const&), const,
+                        [&x](const auto& r) {
+                          auto self = anyxx::trait_as<monoid>(x);
+                          return std::ranges::fold_right(
+                              r, self, [&](auto const& m1, auto const& m2) {
+                                return m1 + m2;
+                              });
+                        }),
+       ANY_OP_DEFAULTED(bool, ==, equal, (anyxx::self const&), const,
+                        ([&x](auto const& r) { return x == r; }))))
 
 }  // namespace example_2b
 
 ANY_MODEL_MAP((int), example_2b::monoid) {
-  static monoid_trait<int> concat([[maybe_unused]] int self, auto const& r) {
+  static monoid_trait<int> concat(int self, auto const& r) {
     return monoid_trait<int>{std::ranges::fold_right(
-        r, self, [&](auto m1, auto m2) { return *m1 + m2; })};
+        r, self, [&](int m1, int m2) { return m1 + m2; })};
   };
 };
 
 ANY_MODEL_MAP((std::string), example_2b::monoid) {
   static monoid_trait<std::string> op(std::string const& self,
-                                      monoid_trait<std::string> const& r) {
-    return self + *r;
+                                      std::string const& r) {
+    return self + r;
   };
 };
 
@@ -50,16 +49,15 @@ void test_monoid(monoid_trait<M> const& m, R r)
   requires std::ranges::range<R> &&
            std::same_as<typename R::value_type, monoid_trait<M>>
 {
-  using type_1 = decltype(m.op(monoid_trait<M>{}).op(m));
-  using type_2 = decltype(m.op(m).op(monoid_trait<M>{}));
+  using type_1 = decltype(m + (monoid_trait<M>{}) + m);
+  using type_2 = decltype(m + (m + (monoid_trait<M>{})));
   static_assert(std::same_as<type_1, type_2>);
   static_assert(std::same_as<type_1, monoid_trait<M>>);
-  auto c1 = m.op(monoid_trait<M>{}).op(m) == m.op(m).op(monoid_trait<M>{});
+  auto c1 = m + monoid_trait<M>{} + m == m + m + monoid_trait<M>{};
   CHECK(c1);
-  auto c2 = m.concat(r) ==
-            std::ranges::fold_right(r, m, [&](auto const& m1, auto const& m2) {
-              return m1.op(m2);
-            });
+  auto c2 = (m | r) ==
+            std::ranges::fold_right(
+                r, m, [&](auto const& m1, auto const& m2) { return m1 + m2; });
   CHECK(c2);
 }
 

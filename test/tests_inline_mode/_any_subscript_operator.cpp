@@ -9,21 +9,45 @@ using namespace anyxx;
 using namespace anyxx;
 
 namespace {
+namespace subscript_operator_test {
+
 using map_t = std::map<std::size_t, std::string>;
 using vector_t = std::vector<std::string>;
-}  // namespace
-
-namespace {
-ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (std::size_t), )), , )
 
 ANY(map_i_to_string_const_and_mutable,
     (ANY_OP_EXACT(std::string&, [], (std::size_t), ),
-     ANY_OP_EXACT(std::string const&, [], (std::size_t), const)), , )
+     ANY_OP_EXACT_MAP_NAMED(std::string const&, [], subscript, (std::size_t),
+                            const)),
+    , )
 
+ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (std::size_t), )),
+    , )
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-     (ANY_OP_EXACT_OVERLOAD(std::string const&, [], (std::size_t), const)), , )
+     (ANY_OP_EXACT_OVERLOAD_DEFAULTED(
+         std::string const&, [], subscript, (std::size_t), const,
+         [&x](std::size_t i) -> std::string const& { return x.at(i); })),
+     , )
 
+}  // namespace subscript_operator_test
 }  // namespace
+
+using namespace subscript_operator_test;
+
+ANY_MODEL_MAP((subscript_operator_test::map_t),
+              subscript_operator_test::map_i_to_string_const_and_mutable) {
+  static std::string const& subscript(map_t const& self,
+                                      std::size_t const key) {  // NOLINT
+    return self.at(key);
+  };
+};
+
+ANY_MODEL_MAP((subscript_operator_test::vector_t),
+              subscript_operator_test::map_i_to_string_const_and_mutable) {
+  static std::string const& subscript(vector_t const& self,
+                                      std::size_t const key) {  // NOLINT
+    return self.at(key);
+  };
+};
 
 TEST_CASE("mutable subscript_operator with mutable_observer") {
   map_t map{{0, "hallo"}};

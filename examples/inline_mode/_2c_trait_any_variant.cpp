@@ -20,7 +20,7 @@ struct custom {
 struct any_value_has_open_dispatch {};
 ANY(any_value,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [x]() { return std::format("{}", x); }),
+                          [&x]() { return std::format("{}", x); }),
      ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,
                           [&x](std::string_view sv) -> void {
                             std::stringstream ss{std::string{sv},
@@ -144,10 +144,10 @@ auto operator<=>(const vany_value<>& lhs, const vany_value<>& rhs) {
   return vany_compare(lhs, rhs);
 }
 auto operator==(const vany_value<>& lhs, const vany_value<>& rhs) {
-  return lhs <=> rhs == std::weak_ordering::equivalent;
+  return (lhs <=> rhs) == std::weak_ordering::equivalent;
 }
 auto operator!=(const vany_value<>& lhs, const vany_value<>& rhs) {
-  return lhs <=> rhs != std::weak_ordering::equivalent;
+  return (lhs <=> rhs) != std::weak_ordering::equivalent;
 }
 
 auto __ = vany_compare.define<custom, custom>(
@@ -191,9 +191,9 @@ TEST_CASE("example 2cc trait any variant double dispatch") {
   CHECK(x);
   auto y = vv1 <=> vv1;
   CHECK(y == std::weak_ordering::equivalent);
-  auto z = vv1 == vv1;
+  auto z = vv1 == vv1; // NOLINT
   CHECK(z);
-  CHECK(vv3 == vv3);
+  CHECK(vv3 == vv3); // NOLINT
   CHECK(vv3 != vv1);
   CHECK("hello"s > "Hello world!"s);
   CHECK(vv1 > vv3);
