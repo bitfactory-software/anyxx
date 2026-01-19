@@ -74,9 +74,9 @@ TEST_CASE("multi_dispatch 1") {
         return l.name() + "->" + r.name();
       });
 
-  CHECK(any_thing_v_table<anyxx::rtti>::imlpementation<Asteroid>()
+  CHECK(any_thing_v_table<anyxx::dyn>::imlpementation<Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
-  CHECK(any_thing_v_table<anyxx::rtti>::imlpementation<Spaceship>()
+  CHECK(any_thing_v_table<anyxx::dyn>::imlpementation<Spaceship>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
 
   Asteroid asteroid;

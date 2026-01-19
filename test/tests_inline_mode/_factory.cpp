@@ -59,8 +59,6 @@ auto __ = any_to_string_factory.register_("int", []() { return 42; });
 
 static_assert(std::is_constructible_v<any_to_string<shared_const>,
                                       any_to_string<unique>&&>);
-static_assert(!std::is_constructible_v<any_to_string<shared_const, dyns>,
-                                       any_to_string<unique>&&>);
 }  // namespace example
 }  // namespace
 

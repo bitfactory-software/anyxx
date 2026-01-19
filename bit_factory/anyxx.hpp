@@ -174,7 +174,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, __VA_ARGS__))
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
-  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::rtti>)
+  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::dyn>)
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS(t) \
   _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t
 
@@ -437,12 +437,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     template <typename Concrete>                                               \
     static auto imlpementation() {                                             \
-      if constexpr (std::same_as<anyxx::dyns, Dispatch> ||                     \
+      if constexpr (std::same_as<anyxx::dyn, Dispatch> ||                     \
                     !anyxx::is_in_dll_mode) {                                  \
         return anyxx::v_table_instance_inline<v_table_t, Concrete>();          \
       } else {                                                                 \
         return _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(                       \
-            n)<_detail_ANYXX_TEMPLATE_ARGS(tpl3), anyxx::rtti>();              \
+            n)<_detail_ANYXX_TEMPLATE_ARGS(tpl3), anyxx::dyn>();              \
       }                                                                        \
     }                                                                          \
   };                                                                           \
@@ -565,9 +565,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
       (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
-      (V), _detail_REMOVE_PARENS(((anyxx::value), (anyxx::rtti))),             \
-      _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::rtti))),         \
-      _detail_REMOVE_PARENS(((anyxx::mutable_observer), (anyxx::rtti))), n,    \
+      (V), _detail_REMOVE_PARENS(((anyxx::value), (anyxx::dyn))),             \
+      _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::dyn))),         \
+      _detail_REMOVE_PARENS(((anyxx::mutable_observer), (anyxx::dyn))), n,    \
       BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
       v_table_functions, decoration)
 
@@ -604,13 +604,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_TAIL((anyxx::val<T>), _detail_REMOVE_PARENS(t)),      \
       __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::rtti),                                                       \
+          (anyxx::dyn),                                                       \
           __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::rtti), __detail_ANYXX_ADD_TAIL((anyxx::const_observer),      \
+          (anyxx::dyn), __detail_ANYXX_ADD_TAIL((anyxx::const_observer),      \
                                                  _detail_REMOVE_PARENS(t))),   \
       __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::rtti), __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),    \
+          (anyxx::dyn), __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),    \
                                                  _detail_REMOVE_PARENS(t))),   \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
       __detail_ANYXX_ADD_TAIL(                                                 \
@@ -752,16 +752,13 @@ class type_mismatch_error : public error {
 };
 
 struct member_dispatch {};
-struct dynamic_member_dispatch : member_dispatch {};
-struct rtti : dynamic_member_dispatch {};
-struct dyns : dynamic_member_dispatch {};
+struct dyn : member_dispatch {};
 struct static_member_dispatch : member_dispatch {};
 struct trait : static_member_dispatch {};
 
 template <typename Dispatch>
 concept is_member_dispatch = std::derived_from<Dispatch, member_dispatch>;
-static_assert(is_member_dispatch<rtti>);
-static_assert(is_member_dispatch<dyns>);
+static_assert(is_member_dispatch<dyn>);
 static_assert(is_member_dispatch<trait>);
 
 template <typename T>
@@ -927,7 +924,7 @@ concept is_erased_data =
       } -> std::same_as<E>;
     };
 
-template <is_erased_data ErasedData, typename Dispatch = rtti>
+template <is_erased_data ErasedData, typename Dispatch = dyn>
 class any;
 
 template <typename I>
@@ -1791,7 +1788,7 @@ meta_data& get_meta_data() {
 }
 #endif
 
-template <typename Dispatch = rtti>
+template <typename Dispatch = dyn>
 struct any_v_table;
 
 template <typename VTable, typename Concrete>
@@ -1803,7 +1800,7 @@ static auto any_base_v_table_instance() {
 }
 
 template <>
-struct any_v_table<rtti> : basic_any_v_table {
+struct any_v_table<dyn> : basic_any_v_table {
   template <typename Concrete>
   explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : basic_any_v_table(std::in_place_type<Concrete>),
@@ -1811,11 +1808,11 @@ struct any_v_table<rtti> : basic_any_v_table {
           return static_is_derived_from(from);
         }) {}
 
-  using dispatch_t = rtti;
+  using dispatch_t = dyn;
 
   template <typename Concrete>
   static auto imlpementation() {
-    return any_base_v_table_instance<any_v_table<rtti>, Concrete>();
+    return any_base_v_table_instance<any_v_table<dyn>, Concrete>();
   }
 
   static bool static_is_derived_from(const std::type_info& from) {
@@ -1832,17 +1829,6 @@ inline bool is_derived_from(const std::type_info& from,
   return any_v_table->is_derived_from_(from);
 }
 
-template <>
-struct any_v_table<dyns> : basic_any_v_table {
-  using basic_any_v_table::basic_any_v_table;
-  using dispatch_t = dyns;
-
-  template <typename Concrete>
-  static auto imlpementation() {
-    return any_base_v_table_instance<any_v_table<dyns>, Concrete>();
-  }
-};
-
 template <typename Dispatch>
 struct any_base_v_table_holder {
   struct v_table_t {};
@@ -1855,7 +1841,7 @@ struct any_base_v_table_holder {
   static auto release_v_table() { return nullptr; }
 };
 template <typename Dispatch>
-  requires std::derived_from<Dispatch, dynamic_member_dispatch>
+  requires std::derived_from<Dispatch, dyn>
 struct any_base_v_table_holder<Dispatch> {
   any_base_v_table_holder() = default;
   explicit any_base_v_table_holder(any_v_table<Dispatch>* v_table)
@@ -2344,7 +2330,7 @@ bool is_derived_from(any<VV> const& any) {
 
 template <typename Dispatch, typename VTable>
 void set_is_derived_from(auto v_table) {
-  if constexpr (std::same_as<Dispatch, rtti>) {
+  if constexpr (std::same_as<Dispatch, dyn>) {
     v_table->is_derived_from_ = +[](const std::type_info& from) {
       return VTable::static_is_derived_from(from);
     };
@@ -2422,7 +2408,7 @@ struct dispatch_holder<true, Any> {
 };
 
 template <is_any ToAny>
-auto query_v_table(any_v_table<rtti>* from)
+auto query_v_table(any_v_table<dyn>* from)
     -> std::expected<typename ToAny::v_table_t*, anyxx::cast_error> {
   using v_table_t = typename ToAny::v_table_t;
   if (from->is_derived_from_(typeid(v_table_t))) return static_cast<v_table_t*>(from);
@@ -2595,11 +2581,11 @@ template <bool is_in_dll_mode>
 struct member_dispatch_default;
 template <>
 struct member_dispatch_default<true> {
-  using type = dyns;
+  using type = dyn;
 };
 template <>
 struct member_dispatch_default<false> {
-  using type = rtti;
+  using type = dyn;
 };
 template <is_erased_data ErasedData = shared_const>
 struct default_erased_data {
@@ -2632,9 +2618,9 @@ struct derive_v_table_from {
 
 template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
-struct typed_any : public Any<ErasedData, rtti> {
+struct typed_any : public Any<ErasedData, dyn> {
   using erased_data_t = ErasedData;
-  using any_t = Any<ErasedData, rtti>;
+  using any_t = Any<ErasedData, dyn>;
   using trait_t = any_t::trait_t;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
@@ -2681,7 +2667,7 @@ struct typed_any : public Any<ErasedData, rtti> {
 
 template <typename V, template <is_erased_data, typename> typename Any,
           is_erased_data ErasedData>
-auto as(Any<ErasedData, rtti> source) {
+auto as(Any<ErasedData, dyn> source) {
   return typed_any<V, Any, ErasedData>{std::move(source)};
 }
 
@@ -2704,7 +2690,7 @@ auto as(typed_any<V, Any, ErasedData> source)
 template <is_any ToAny, is_erased_data FromErasedData>
   requires borrowable_from<typename ToAny::erased_data_t, FromErasedData>
 std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
-                                           any_v_table<rtti>* from_v_table) {
+                                           any_v_table<dyn>* from_v_table) {
   using to = typename ToAny::erased_data_t;
   return query_v_table<ToAny>(from_v_table).transform([&](auto v_table) {
     return ToAny{borrow_as<to>(from, v_table), v_table};
@@ -2915,7 +2901,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<value, dyns>;
+  using any_value_t = any<value, dyn>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
@@ -3487,12 +3473,12 @@ class dispatch_vany {
   namespace ns_ {}                                                          \
   namespace anyxx {                                                         \
   template <>                                                               \
-  export_ std::size_t& dispatchs_count<ns_::any_##_v_table<anyxx::rtti>>(); \
+  export_ std::size_t& dispatchs_count<ns_::any_##_v_table<anyxx::dyn>>(); \
   }
 
 #define ANY_DISPATCH_COUNT(ns_, any_)                                       \
   template <>                                                               \
-  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table<anyxx::rtti>>() { \
+  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table<anyxx::dyn>>() { \
     static std::size_t count = 0;                                           \
     return count;                                                           \
   }
@@ -3502,15 +3488,15 @@ class dispatch_vany {
   namespace anyxx {                                                       \
   template <>                                                             \
   export_ dispatch_table_t* dispatch_table_instance<                      \
-      interface_namespace_::interface_##_v_table<anyxx::rtti>, class_>(); \
+      interface_namespace_::interface_##_v_table<anyxx::dyn>, class_>(); \
   }
 
 #define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)          \
   template <>                                                               \
   anyxx::dispatch_table_t* anyxx::dispatch_table_instance<                  \
-      interface_namespace_::interface_##_v_table<anyxx::rtti>, class_>() {  \
+      interface_namespace_::interface_##_v_table<anyxx::dyn>, class_>() {  \
     return dispatch_table_instance_implementation<                          \
-        interface_namespace_::interface_##_v_table<anyxx::rtti>, class_>(); \
+        interface_namespace_::interface_##_v_table<anyxx::dyn>, class_>(); \
   }
 
 #else
@@ -3525,7 +3511,7 @@ class dispatch_vany {
 #define ANY_REGISTER_MODEL(class_, interface_)                            \
   namespace {                                                             \
   static auto __ =                                                        \
-      anyxx::bind_v_table_to_meta_data<interface_##_v_table<anyxx::rtti>, \
+      anyxx::bind_v_table_to_meta_data<interface_##_v_table<anyxx::dyn>, \
                                        class_>();                         \
   }
 
@@ -3545,16 +3531,16 @@ class dispatch_vany {
   ANY_FORWARD(interface_namespace_, interface_)                          \
   namespace interface_namespace_ {                                       \
   template <>                                                            \
-  export_ interface_##_v_table<anyxx::rtti>*                             \
+  export_ interface_##_v_table<anyxx::dyn>*                             \
       _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(interface_)<class_>();    \
   }
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)                 \
   template <>                                                               \
-  interface_namespace_::interface_##_v_table<anyxx::rtti>*                  \
+  interface_namespace_::interface_##_v_table<anyxx::dyn>*                  \
   interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(           \
       interface_)<class_>() {                                               \
-    static interface_namespace_::interface_##_v_table<anyxx::rtti> v_table{ \
+    static interface_namespace_::interface_##_v_table<anyxx::dyn> v_table{ \
         std::in_place_type<class_>};                                        \
     return &v_table;                                                        \
   }                                                                         \

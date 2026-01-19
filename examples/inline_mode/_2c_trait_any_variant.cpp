@@ -30,13 +30,13 @@ ANY(any_value,
     , )
 
 template <typename ErasedData = anyxx::shared_const>
-using vany_value = anyxx::make_vany<any_value, ErasedData, anyxx::rtti, bool,
+using vany_value = anyxx::make_vany<any_value, ErasedData, anyxx::dyn, bool,
                                     int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 
 static_assert(anyxx::is_erased_data<anyxx::val<anyxx::vany_variant<
-                  any_value, anyxx::shared_const, anyxx::rtti, bool, int>>>);
+                  any_value, anyxx::shared_const, anyxx::dyn, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
 static_assert(std::same_as<any_in_variant, any_value<anyxx::shared_const>>);

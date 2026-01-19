@@ -14,7 +14,7 @@
      (ANY_METHOD(int, value, (), const), ANY_METHOD(std::string, as_forth, (),
      const),
       ANY_METHOD(std::string, as_lisp, (), const)), , )
- using node = node_i<shared_const, anyxx::dyns>;
+ using node = node_i<shared_const, anyxx::dyn>;
 
  struct Plus {
    Plus(node left, node right)

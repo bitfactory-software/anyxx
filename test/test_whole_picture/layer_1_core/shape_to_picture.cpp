@@ -15,7 +15,7 @@ core::shapes::picture core::shape_to_picture(
     architecture::shape<anyxx::const_observer> const& shape) {
   core::shapes::picture picture{shape.top_left(), core::surface{shape.size()}};
   shape_surface_adapter adapter{picture};
-  architecture::surface<anyxx::mutable_observer, anyxx::dyns> surface{adapter};
+  architecture::surface<anyxx::mutable_observer, anyxx::dyn> surface{adapter};
   shape.draw(surface);
   return picture;
 }

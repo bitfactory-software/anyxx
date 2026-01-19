@@ -24,7 +24,7 @@ const core::surface cross{
 
 void draw_scene(std::vector<architecture::shape<const_observer>> const& shapes) {
   core::surface b{screen};
-  architecture::surface<mutable_observer,anyxx::dyns> s{b};
+  architecture::surface<mutable_observer,anyxx::dyn> s{b};
   for (auto const& shape : shapes) shape.draw(s);
   std::cout << "0123456789\n";
   b.flush();
