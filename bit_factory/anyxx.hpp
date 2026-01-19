@@ -169,9 +169,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_TEMPLATE_ARG_H(t) _detail_ANYXX_TEMPLATE_ARG t
 #define _detail_ANYXX_TEMPLATE_ARG(t) , t
-#define _detail_ANYXX_TEMPLATE_ARGS(head, ...) \
-  _detail_REMOVE_PARENS(head) __VA_OPT__(      \
+#define _detail_ANYXX_TEMPLATE_ARGS1(head, ...) \
+  _detail_REMOVE_PARENS(head) __VA_OPT__(       \
       _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, __VA_ARGS__))
+#define _detail_ANYXX_TEMPLATE_ARGS(...) \
+  __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS1(__VA_ARGS__))
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::dyn>)
@@ -355,13 +357,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
 #define ANY_META_FUNCTION(                                                     \
-    any_template_params, any_template_params_with_defaults,                    \
-    model_map_template_params, tpl3, tpl4, v_table_template_params,            \
-    static_dispatch_template_params, traitet_template_params,                  \
-    v_model_map_template_params, any_value_template_params,                    \
-    any_const_observer_template_params, any_mutable_observer_template_params,  \
-    n, BASE, base_template_params, base_template_params_with_erased_data, l,   \
-    v_table_functions, decoration)                                             \
+    pure_template_params, any_template_params,                                 \
+    any_template_params_with_defaults, model_map_template_params, tpl3, tpl4,  \
+    v_table_template_params, static_dispatch_template_params,                  \
+    traitet_template_params, v_model_map_template_params,                      \
+    any_value_template_params, any_const_observer_template_params,             \
+    any_mutable_observer_template_params, n, BASE, base_template_params,       \
+    base_template_params_with_erased_data, l, v_table_functions, decoration)   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
       any_template_params_with_defaults)>                                      \
@@ -461,7 +463,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
-        n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>;     \
+        n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(pure_template_params)>;        \
                                                                                \
     using any_value_t =                                                        \
         n<_detail_ANYXX_TEMPLATE_ARGS(any_value_template_params)>;             \
@@ -556,7 +558,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define __detail_ANYXX_ANY_(t, t_with_defaults, n, BASE, l, v_table_functions, \
                             decoration)                                        \
   ANY_META_FUNCTION(                                                           \
-      _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T),   \
+      , _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T), \
       (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
       (V), _detail_REMOVE_PARENS(((anyxx::value), (anyxx::dyn))),              \
       _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::dyn))),          \
@@ -580,6 +582,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default,               \
                          dispatch_default, decoration)                         \
   ANY_META_FUNCTION(                                                           \
+      _detail_REMOVE_PARENS(t),                                                \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
           __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t))),    \
