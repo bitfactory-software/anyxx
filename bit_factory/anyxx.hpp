@@ -560,9 +560,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_META_FUNCTION(                                                           \
       , _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T), \
       (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
-      (V), _detail_REMOVE_PARENS(((anyxx::value), (anyxx::dyn))),              \
-      _detail_REMOVE_PARENS(((anyxx::const_observer), (anyxx::dyn))),          \
-      _detail_REMOVE_PARENS(((anyxx::mutable_observer), (anyxx::dyn))), n,     \
+      (V), _detail_REMOVE_PARENS(((anyxx::value))),              \
+      _detail_REMOVE_PARENS(((anyxx::const_observer))),          \
+      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), n,     \
       BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
       v_table_functions, decoration)
 
