@@ -837,6 +837,9 @@ struct basic_any_v_table {
           auto p = static_cast<Concrete*>(data);
           std::destroy_at(p);
           std::allocator<Concrete>{}.deallocate(p, 1);
+        }),
+        get_type_info(+[]() noexcept -> std::type_info const& {
+          return typeid(Concrete);
         }) {}
   std::size_t model_size = 0u;
   mutable_void (*allocate)();
@@ -844,6 +847,7 @@ struct basic_any_v_table {
   mutable_void (*move_constructor)(mutable_void placement, mutable_void from);
   void (*destructor)(mutable_void data) noexcept;
   void (*delete_)(mutable_void) noexcept;
+  std::type_info const& (*get_type_info)() noexcept;
 };
 
 inline std::size_t model_size(basic_any_v_table* v_table) {
@@ -872,11 +876,11 @@ inline void delete_(basic_any_v_table* v_table, mutable_void& data) noexcept {
 }
 
 template <typename U>
-bool type_match(meta_data const& meta);
+bool type_match(basic_any_v_table* v_table);
 
 template <typename U>
-void check_type_match(meta_data const& meta) {
-  if (!type_match<U>(meta)) throw type_mismatch_error("type mismatch");
+void check_type_match(basic_any_v_table* v_table) {
+  if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
 template <typename Data>
@@ -1036,23 +1040,20 @@ auto unchecked_unerase_cast(ErasedData const& o, basic_any_v_table* v_table)
 }
 
 template <typename U, is_erased_data ErasedData>
-auto unerase_cast(ErasedData const& o, meta_data const& meta,
-                  basic_any_v_table* v_table) {
-  check_type_match<U>(meta);
+auto unerase_cast(ErasedData const& o, basic_any_v_table* v_table) {
+  check_type_match<U>(v_table);
   return unchecked_unerase_cast<U>(o, v_table);
 }
 template <typename U, is_erased_data ErasedData>
-U const* unerase_cast_if(ErasedData const& o, meta_data const& meta,
-                         basic_any_v_table* v_table) {
-  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o, v_table);
+U const* unerase_cast_if(ErasedData const& o, basic_any_v_table* v_table) {
+  if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
 }
 template <typename U, is_erased_data ErasedData>
-U* unerase_cast_if(ErasedData const& o, meta_data const& meta,
-                   basic_any_v_table* v_table)
+U* unerase_cast_if(ErasedData const& o, basic_any_v_table* v_table)
   requires(!is_const_data<ErasedData>)
 {
-  if (type_match<U>(meta)) return unchecked_unerase_cast<U>(o, v_table);
+  if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
 }
 
@@ -1979,8 +1980,8 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(meta_data const& meta) {
-  return meta.get_type_info() == typeid(std::decay_t<U>);
+bool type_match(basic_any_v_table* v_table) {
+  return v_table->get_type_info() == typeid(std::decay_t<U>);
 }
 
 // --------------------------------------------------------------------------------
@@ -2383,12 +2384,11 @@ inline auto unchecked_unerase_cast(Any const& o) {
 template <typename U, typename Any>
   requires is_any<Any>
 inline auto unerase_cast(Any const& o) {
-  return unerase_cast<U>(get_erased_data(o), get_meta_data(o), get_v_table(o));
+  return unerase_cast<U>(get_erased_data(o), get_v_table(o));
 }
 template <typename U, is_any Any>
 inline auto unerase_cast_if(Any const& o) {
-  return unerase_cast_if<U>(get_erased_data(o), get_meta_data(o),
-                            get_v_table(o));
+  return unerase_cast_if<U>(get_erased_data(o), get_v_table(o));
 }
 
 template <typename VTable, typename Concrete>
@@ -2644,7 +2644,7 @@ struct typed_any : public Any<ErasedData, rtti> {
   explicit(false) typed_any(V const& v) : any_t(v) {}        // NOLINT
   explicit(false) typed_any(V&& v) : any_t(std::move(v)) {}  // NOLINT
   explicit(false) typed_any(any_t i) : any_t(i) {            // NOLINT
-    check_type_match<V>(get_meta_data(*this));
+    check_type_match<V>(get_v_table(*this));
   }
   // cppcheck-suppress-end noExplicitConstructor
 
@@ -3423,8 +3423,8 @@ class dispatch_vany {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_META_CLASS_FWD(export_, ...)                         \
-  template <>                                                    \
+#define ANY_META_CLASS_FWD(export_, ...) \
+  template <>                            \
   export_ anyxx::meta_data& anyxx::get_meta_data<__VA_ARGS__>();
 
 #define ANY_META_CLASS(...)                                             \
