@@ -922,7 +922,8 @@ struct basic_erased_data_trait {
     to = std::move(from);
   }
 
-  static void copy_construct_from(ErasedData& to, [[maybe_unused]] any_v_table<>*,
+  static void copy_construct_from(ErasedData& to,
+                                  [[maybe_unused]] any_v_table<>*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
   }
@@ -1651,7 +1652,7 @@ struct erased_data_trait<value> : basic_erased_data_trait<value> {
   static void move_to(value& to, [[maybe_unused]] any_v_table<>* v_table_to,
                       value&& from,
                       [[maybe_unused]] any_v_table<>* v_table_from) {
-    assert(v_table_from);
+    if (!v_table_from && !v_table_to) return;
     visit_value(
         overloads{
             [&](heap_data& t, heap_data& f) {
@@ -1829,7 +1830,8 @@ template <typename Dispatch>
   requires std::derived_from<Dispatch, dyn>
 struct any_base_v_table_holder<Dispatch> {
   any_base_v_table_holder() = default;
-  explicit any_base_v_table_holder(any_v_table<>* v_table) : v_table_(v_table) {}
+  explicit any_base_v_table_holder(any_v_table<>* v_table)
+      : v_table_(v_table) {}
   void set_v_table_ptr(any_v_table<>* v_table) { v_table_ = v_table; }
   using v_table_t = any_v_table<>;
   v_table_t* v_table_ = nullptr;
