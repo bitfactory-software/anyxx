@@ -560,11 +560,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_META_FUNCTION(                                                           \
       , _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T), \
       (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
-      (V), _detail_REMOVE_PARENS(((anyxx::value))),              \
-      _detail_REMOVE_PARENS(((anyxx::const_observer))),          \
-      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), n,     \
-      BASE, (Dispatch), _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l,  \
-      v_table_functions, decoration)
+      (V), _detail_REMOVE_PARENS(((anyxx::value))),                            \
+      _detail_REMOVE_PARENS(((anyxx::const_observer))),                        \
+      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), n, BASE, (Dispatch), \
+      _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l, v_table_functions, \
+      decoration)
 
 #define ANY_EX_(n, BASE, l, erased_data_default, dispatch_default, decoration) \
   __detail_ANYXX_ANY_(                                                         \
@@ -599,15 +599,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_TAIL((anyxx::val<T>), _detail_REMOVE_PARENS(t)),      \
       __detail_ANYXX_ADD_TAIL((V), _detail_REMOVE_PARENS(t)),                  \
-      __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::dyn),                                                        \
-          __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t))),  \
-      __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::dyn), __detail_ANYXX_ADD_TAIL((anyxx::const_observer),       \
-                                                _detail_REMOVE_PARENS(t))),    \
-      __detail_ANYXX_ADD_TAIL(                                                 \
-          (anyxx::dyn), __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),     \
-                                                _detail_REMOVE_PARENS(t))),    \
+      __detail_ANYXX_ADD_TAIL((anyxx::value), _detail_REMOVE_PARENS(t)),       \
+      __detail_ANYXX_ADD_TAIL((anyxx::const_observer),                         \
+                              _detail_REMOVE_PARENS(t)),                       \
+      __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),                       \
+                              _detail_REMOVE_PARENS(t)),                       \
       n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
       __detail_ANYXX_ADD_TAIL(                                                 \
           (Dispatch),                                                          \
