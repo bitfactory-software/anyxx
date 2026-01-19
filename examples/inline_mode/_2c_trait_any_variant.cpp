@@ -52,13 +52,13 @@ ANY_MODEL_MAP((example_2c::custom), example_2c::any_value) {
   };
 };
 
-TEST_CASE("example 2ca trait simple variant") {
+TEST_CASE("example 2ca static_ simple variant") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
 
   using any_variant =
-      any_value<val<std::variant<bool, int, double, std::string>>, trait>;
+      any_value<val<std::variant<bool, int, double, std::string>>, static_>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");
@@ -66,7 +66,7 @@ TEST_CASE("example 2ca trait simple variant") {
   CHECK(any_variant{"hello world"s}.to_string() == "hello world"s);
 }
 
-TEST_CASE("example 2cb trait any variant") {
+TEST_CASE("example 2cb static_ any variant") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -119,7 +119,7 @@ auto __ = vany_stream.define<custom>(
 
 VANY_DISPACH(example_2c, vany_stream)
 
-TEST_CASE("example 2cc trait any variant single open dispatch") {
+TEST_CASE("example 2cc static_ any variant single open dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;
@@ -189,7 +189,7 @@ auto __ = vany_compare.define<concrete_value, concrete_value>(
 
 VANY_DISPACH(example_2c, vany_compare)
 
-TEST_CASE("example 2cd trait any variant double dispatch") {
+TEST_CASE("example 2cd static_ any variant double dispatch") {
   using namespace example_2c;
   using namespace std::string_literals;
   using namespace anyxx;

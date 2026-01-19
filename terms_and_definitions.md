@@ -17,7 +17,7 @@ The target function for the *multi diapatch* resides in the **multi dispatch mat
 ### erased_data
 #### A concept describing an object that **erases** the **type** of **another** object for a given *lifetime* kind.
 
-The description of these types is implemented via a specialication of *trait*.  
+The description of these types is implemented via a specialication of *erased_data_trait*.  
 
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.

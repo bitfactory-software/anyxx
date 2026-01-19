@@ -95,16 +95,18 @@ make_a_range(bool use_list) {
 }  // namespace example_2b
 //
 TEST_CASE("example 2b monoid simple") {
-  example_2b::monoid<anyxx::val<int>, anyxx::trait> x{2};
-  example_2b::monoid<anyxx::val<int>, anyxx::trait> y{x};
-  example_2b::monoid<anyxx::val<int>, anyxx::trait> z = y;
-  CHECK(static_cast<int>(z)==2);
-  example_2b::monoid<anyxx::val<int>, anyxx::trait> a{std::move(x)};
-  CHECK(static_cast<int>(a)==2);
+  example_2b::monoid<anyxx::val<int>, anyxx::static_> x{2};
+  example_2b::monoid<anyxx::val<int>, anyxx::static_> y{x};
+  example_2b::monoid<anyxx::val<int>, anyxx::static_> z = y;
+  CHECK(static_cast<int>(z) == 2);
+  example_2b::monoid<anyxx::val<int>, anyxx::static_> a{std::move(x)};
+  CHECK(static_cast<int>(a) == 2);
   static_assert(anyxx::is_erased_data<decltype(x)::erased_data_t>);
   static_assert(anyxx::is_any<decltype(x)>);
-  static_assert(anyxx::moveable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
-  static_assert(!anyxx::borrowable_from<decltype(x)::erased_data_t, decltype(y)::erased_data_t>);
+  static_assert(anyxx::moveable_from<decltype(x)::erased_data_t,
+                                     decltype(y)::erased_data_t>);
+  static_assert(!anyxx::borrowable_from<decltype(x)::erased_data_t,
+                                        decltype(y)::erased_data_t>);
 }
 
 TEST_CASE("example 2b monoid a") {
@@ -114,7 +116,6 @@ TEST_CASE("example 2b monoid a") {
 
   test_monoid<monoid_trait<int>>(trait_as<monoid>(1),
                                  std::vector<monoid_trait<int>>{{2}, {3}});
-
 }
 TEST_CASE("example 2b monoid b") {
   using namespace example_2b;

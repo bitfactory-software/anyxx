@@ -293,7 +293,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     requires(::anyxx::const_correct_call_for_erased_data<                      \
              void const_*, erased_data_t, exact_const>)                        \
   {                                                                            \
-    if constexpr (std::same_as<anyxx::trait, Dispatch>) {                      \
+    if constexpr (std::same_as<anyxx::static_, Dispatch>) {                    \
       using traited_t = typename erased_data_t::value_t;                       \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
@@ -369,7 +369,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   using n##_trait =                                                            \
-      n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params), anyxx::trait>;   \
+      n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params), anyxx::static_>; \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
@@ -632,8 +632,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define TRAIT_(n, BASE, l)                                                     \
   __detail_ANYXX_ANY_(((ErasedData), (Dispatch)),                              \
-                      ((ErasedData), (Dispatch = anyxx::trait)), n, BASE, l, , \
-                      ())
+                      ((ErasedData), (Dispatch = anyxx::static_)), n, BASE, l, \
+                      , ())
 
 #define TRAIT(n, ...) TRAIT_(n, , __VA_ARGS__)
 
@@ -753,13 +753,12 @@ class type_mismatch_error : public error {
 
 struct member_dispatch {};
 struct dyn : member_dispatch {};
-struct static_member_dispatch : member_dispatch {};
-struct trait : static_member_dispatch {};
+struct static_ : member_dispatch {};
 
 template <typename Dispatch>
 concept is_member_dispatch = std::derived_from<Dispatch, member_dispatch>;
 static_assert(is_member_dispatch<dyn>);
-static_assert(is_member_dispatch<trait>);
+static_assert(is_member_dispatch<static_>);
 
 template <typename T>
 struct missing_trait_error {
@@ -1089,7 +1088,7 @@ U* unerase_cast_if(ErasedData const& o, any_v_table<>* v_table)
 
 template <template <typename, typename> typename Any, typename T>
 auto trait_as(T&& v) {
-  return Any<anyxx::val<std::decay_t<T>>, trait>{std::forward<T>(v)};
+  return Any<anyxx::val<std::decay_t<T>>, static_>{std::forward<T>(v)};
 }
 
 template <typename V>
@@ -1141,7 +1140,7 @@ using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename Dispatch, typename... Types>
 using make_vany =
-    any<val<vany_variant<any, ErasedData, Dispatch, Types...>>, trait>;
+    any<val<vany_variant<any, ErasedData, Dispatch, Types...>>, static_>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -2268,7 +2267,7 @@ class any : public any_base_v_table_holder<Dispatch> {
     requires(std::derived_from<To, From>);
 
   operator decltype(auto)() const {
-    if constexpr (std::derived_from<Dispatch, trait>) {
+    if constexpr (std::derived_from<Dispatch, static_>) {
       return erased_data_.value_;
     } else {
       return &erased_data_;
