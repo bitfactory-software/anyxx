@@ -1,10 +1,15 @@
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
+
+#include <bit_factory/anyxx.hpp>
+
+static_assert(anyxx::is_in_dll_mode);
+
+#include <test/test_whole_picture/layer_1_core/shapes/picture/object.hpp>
 #include <test/test_whole_picture/layer_0_architecture/architecture.hpp>
 #include <test/test_whole_picture/layer_1_core/shape_to_picture.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/circle/object.hpp>
 #include <test/test_whole_picture/layer_1_core/shapes/line/object.hpp>
-#include <test/test_whole_picture/layer_1_core/shapes/picture/object.hpp>
 #include <test/test_whole_picture/layer_1_core/surface/object.hpp>
 
 using namespace whole_picture;
