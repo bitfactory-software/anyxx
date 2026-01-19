@@ -29,10 +29,10 @@ namespace example {
 TEST_CASE("factory1") {
   auto asteroid_thing = thing_factory.construct<unique>("asteroid");
   CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
-  CHECK(get_meta_data(asteroid_thing).get_type_info() == typeid(asteroid));
+  CHECK(get_type_info(asteroid_thing) == typeid(asteroid));
   auto spaceship_thing = thing_factory.construct<unique>("spaceship");
   CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
-  CHECK(get_meta_data(spaceship_thing).get_type_info() == typeid(spaceship));
+  CHECK(get_type_info(spaceship_thing) == typeid(spaceship));
 }
 
 TEST_CASE("factory2") {
@@ -43,8 +43,8 @@ TEST_CASE("factory2") {
     archive >> key;
     if (!key.empty()) things.emplace_back(thing_factory.construct<unique>(key));
   }
-  CHECK(get_meta_data(things[0]).get_type_info() == typeid(asteroid));
-  CHECK(get_meta_data(things[1]).get_type_info() == typeid(spaceship));
+  CHECK(get_type_info(things[0]) == typeid(asteroid));
+  CHECK(get_type_info(things[1]) == typeid(spaceship));
 }
 
 ANY(any_to_string,
