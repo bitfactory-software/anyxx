@@ -1782,14 +1782,8 @@ auto& runtime_implementation();
 
 #ifdef ANY_DLL_MODE
 template <typename T>
-const std::type_info& typeid_of();
-template <typename T>
 meta_data& get_meta_data();
 #else
-template <typename T>
-const std::type_info& typeid_of() {
-  return typeid(T);
-}
 template <typename T>
 meta_data& get_meta_data() {
   return runtime_implementation<std::decay_t<T>>();
@@ -1929,7 +1923,7 @@ class meta_data {
  public:
   template <typename CLASS>
   explicit constexpr meta_data(std::in_place_type_t<CLASS>)
-      : type_info_(typeid_of<CLASS>()) {}
+      : type_info_(typeid(CLASS)) {}
 
   constexpr const std::type_info& get_type_info() const { return type_info_; }
 
@@ -1986,7 +1980,7 @@ auto bind_v_table_to_meta_data() {
 
 template <typename U>
 bool type_match(meta_data const& meta) {
-  return &meta.get_type_info() == &typeid_of<std::decay_t<U>>();
+  return meta.get_type_info() == typeid(std::decay_t<U>);
 }
 
 // --------------------------------------------------------------------------------
@@ -3431,15 +3425,9 @@ class dispatch_vany {
 
 #define ANY_META_CLASS_FWD(export_, ...)                         \
   template <>                                                    \
-  export_ const std::type_info& anyxx::typeid_of<__VA_ARGS__>(); \
-  template <>                                                    \
   export_ anyxx::meta_data& anyxx::get_meta_data<__VA_ARGS__>();
 
 #define ANY_META_CLASS(...)                                             \
-  template <>                                                           \
-  const std::type_info& anyxx::typeid_of<__VA_ARGS__>() {               \
-    return typeid(__VA_ARGS__);                                         \
-  }                                                                     \
   template <>                                                           \
   anyxx::meta_data& anyxx::get_meta_data<std::decay_t<__VA_ARGS__>>() { \
     return runtime_implementation<__VA_ARGS__>();                       \
