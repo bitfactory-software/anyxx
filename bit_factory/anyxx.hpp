@@ -446,10 +446,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
-  struct n                                                                     \
-      : anyxx::derive_from<Dispatch _detail_ANYXX_OPTIONAL_BASE_NAME(BASE)>::  \
-            template type<_detail_ANYXX_TEMPLATE_ARGS(                         \
-                base_template_params_with_erased_data)> {                      \
+  struct n : BASE<_detail_ANYXX_TEMPLATE_ARGS(                                 \
+                 base_template_params_with_erased_data)> {                     \
     template <typename... Args>                                                \
     using any_template = n<Args...>;                                           \
     using any_t = n;                                                           \
@@ -458,11 +456,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using T =                                                                  \
         typename anyxx::erased_data_trait<erased_data_t>::static_dispatch_t;   \
-    using base_t =                                                             \
-        typename anyxx::derive_from<Dispatch _detail_ANYXX_OPTIONAL_BASE_NAME( \
-            BASE)>::                                                           \
-            template type<_detail_ANYXX_TEMPLATE_ARGS(                         \
-                base_template_params_with_erased_data)>;                       \
+    using base_t = BASE<_detail_ANYXX_TEMPLATE_ARGS(                           \
+        base_template_params_with_erased_data)>;                               \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -2573,14 +2568,6 @@ struct default_member_dispatch {
   using type = Dispatch;
 };
 
-// --------------------------------------------------------------------------------
-// any customization points
-
-template <typename Dispatch, template <typename...> typename Base = any>
-struct derive_from {
-  template <typename... Args>
-  using type = Base<Args...>;
-};
 
 // --------------------------------------------------------------------------------
 // typed any
