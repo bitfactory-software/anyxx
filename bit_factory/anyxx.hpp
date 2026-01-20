@@ -523,7 +523,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
     template <anyxx::is_erased_data Other,                                     \
-              template <typename> typename... Traits>                        \
+              template <typename> typename... Traits>                          \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
@@ -2128,7 +2128,8 @@ static_assert(moveable_from<value, value>);
 // any base
 
 template <is_erased_data ErasedData, template <typename> typename... Traits>
-class any : public any_base_v_table_holder<is_dyn<ErasedData>> {
+class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
+            public Traits<any<ErasedData, Traits...>>... {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
