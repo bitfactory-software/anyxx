@@ -14,8 +14,6 @@ struct circle {
 }  // namespace whole_picture::core::shapes
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::circle)
-ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::shapes::circle,
-              whole_picture::architecture, any_shape)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::circle,
                      whole_picture::architecture, any_shape)
 

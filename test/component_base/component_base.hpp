@@ -43,9 +43,3 @@ COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique> u_X(double v);
 
 }  // namespace test::component_base
 
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-              test::component_base, any_get_value_i)
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-              test::component_base, any_set_value_i)
-ANY_MODEL_FWD(COMPONENT_BASE_EXPORT, test::component_base::X,
-              test::component_base, any_to_string_i)

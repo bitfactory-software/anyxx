@@ -3450,11 +3450,6 @@ class dispatch_vany {
 #ifdef ANY_DLL_MODE
 
 #define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_) \
-  namespace interface_namespace_ {                                       \
-  template <>                                                            \
-  export_ interface_##_v_table<anyxx::dyn>*                              \
-      _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(interface_)<class_>();    \
-  }
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)                \
   template <>                                                              \
