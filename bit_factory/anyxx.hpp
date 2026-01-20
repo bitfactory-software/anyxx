@@ -522,7 +522,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data Other, typename OtherDispatch>             \
+    template <anyxx::is_erased_data Other>                                     \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
@@ -598,7 +598,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt)), l, l,  \
       decoration)
 
-#define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default)                       \
+#define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default) \
   ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, ())
 
 #define ANY_TEMPLATE(t, n, l, erased_data_default) \
@@ -923,7 +923,7 @@ concept is_erased_data =
       } -> std::same_as<E>;
     };
 
-template <is_erased_data ErasedData, typename Dispatch = dyn>
+template <is_erased_data ErasedData>
 class any;
 
 template <typename ErasedData>
@@ -2126,7 +2126,7 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ErasedData, typename Dispatch>
+template <is_erased_data ErasedData>
 class any : public any_base_v_table_holder<is_dyn<ErasedData>> {
  public:
   using erased_data_t = ErasedData;
@@ -2228,7 +2228,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>> {
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
 
-  template <is_erased_data Other, typename FriendsDispatch>
+  template <is_erased_data Other>
   friend class any;
 
   template <is_any I>
@@ -2826,7 +2826,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<value, dyn>;
+  using any_value_t = any<value>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
