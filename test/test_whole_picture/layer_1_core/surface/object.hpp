@@ -42,6 +42,3 @@ class CORE_EXPORT surface {
 
 }  // namespace whole_picture::core
 
-//ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::surface)
-//ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::surface,
-//              whole_picture::architecture, surface)
