@@ -1110,13 +1110,13 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
 // erased data variant
 
 template <template <typename...> typename any, is_erased_data ErasedData,
-          typename Dispatch, typename... Types>
-using vany_variant = std::variant<any<ErasedData, Dispatch>, Types...>;
+          typename... Types>
+using vany_variant = std::variant<any<ErasedData, dyn>, Types...>;
 
 template <template <typename...> typename any, is_erased_data ErasedData,
-          typename Dispatch, typename... Types>
+          typename... Types>
 using make_vany =
-    any<val<vany_variant<any, ErasedData, Dispatch, Types...>>, static_>;
+    any<val<vany_variant<any, ErasedData, Types...>>, static_>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -1143,11 +1143,11 @@ struct vany_type_trait {
 };
 
 template <template <typename...> typename any, is_erased_data ErasedData,
-          typename Dispatch, typename... Types>
-struct erased_data_trait<val<vany_variant<any, ErasedData, Dispatch, Types...>>>
+          typename... Types>
+struct erased_data_trait<val<vany_variant<any, ErasedData, Types...>>>
     : basic_erased_data_trait<
-          val<vany_variant<any, ErasedData, Dispatch, Types...>>> {
-  using vany_variant_t = vany_variant<any, ErasedData, Dispatch, Types...>;
+          val<vany_variant<any, ErasedData, Types...>>> {
+  using vany_variant_t = vany_variant<any, ErasedData, Types...>;
   using void_t = typename erased_data_trait<ErasedData>::void_t;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =
