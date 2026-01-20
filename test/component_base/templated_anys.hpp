@@ -30,12 +30,3 @@ ANY_META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<int, double>)
 ANY_META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<std::string, int>)
 ANY_META_CLASS_FWD(COMPONENT_BASE_EXPORT, std::map<std::string, double>)
 
-ANY_TEMPLATE_MODEL_FWD(COMPONENT_BASE_EXPORT, (std::map<std::string, int>),
-                       test::component_base, any_mutable_map,
-                       ((std::string), (int)))
-ANY_TEMPLATE_MODEL_FWD(COMPONENT_BASE_EXPORT, (std::map<int, double>),
-                       test::component_base, any_mutable_map,
-                       ((int), (double)))
-ANY_TEMPLATE_MODEL_FWD(COMPONENT_BASE_EXPORT, (std::map<int, double>),
-                       test::component_base, any_map,
-                       ((int), (double)))
