@@ -435,13 +435,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     template <typename Concrete>                                               \
     static auto imlpementation() {                                             \
-      if constexpr (std::same_as<anyxx::dyn, Dispatch> ||                      \
-                    !anyxx::is_in_dll_mode) {                                  \
-        return anyxx::v_table_instance_inline<v_table_t, Concrete>();          \
-      } else {                                                                 \
-        return _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(                       \
-            n)<_detail_ANYXX_TEMPLATE_ARGS(tpl3), anyxx::dyn>();               \
-      }                                                                        \
+      return anyxx::v_table_instance_inline<v_table_t, Concrete>();            \
     }                                                                          \
   };                                                                           \
                                                                                \
@@ -547,7 +541,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());          \
     }                                                                          \
                                                                                \
-    ::anyxx::set_is_derived_from<Dispatch, v_table_t>(this);                   \
+    ::anyxx::set_is_derived_from<v_table_t>(this);                             \
   };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2297,13 +2291,11 @@ bool is_derived_from(any<VV> const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
 
-template <typename Dispatch, typename VTable>
+template <typename VTable>
 void set_is_derived_from(auto v_table) {
-  if constexpr (std::same_as<Dispatch, dyn>) {
-    v_table->is_derived_from_ = +[](const std::type_info& from) {
-      return VTable::static_is_derived_from(from);
-    };
-  }
+  v_table->is_derived_from_ = +[](const std::type_info& from) {
+    return VTable::static_is_derived_from(from);
+  };
 }
 
 template <typename To>
