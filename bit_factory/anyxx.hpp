@@ -3439,7 +3439,6 @@ class dispatch_vany {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_) \
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)                \
   template <>                                                              \
@@ -3479,21 +3478,11 @@ class dispatch_vany {
           interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>();                     \
   }
 
-#define ANY_TEMPLATE_MODEL_FWD(export_, class_, interface_namespace_, \
-                               interface_, t)                         \
-  __ANY_TEMPLATE_MODEL_FWD(                                           \
-      export_, class_, interface_namespace_, interface_, t,           \
-      __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))
 
 #else
 
-#define ANY_MODEL_FWD(...)
 #define ANY_MODEL(...)
-#define ANY_TEMPLATE_MODEL_FWD(...)
 #define ANY_TEMPLATE_MODEL(...)
 
 #endif
 
-#define ANY_MODEL_STATIC(class_, interface_, interface_namespace_) \
-  / ANY_MODEL_FWD(, class_, interface_, interface_namespace_)      \
-          ANY_MODEL(, class_, interface_, interface_namespace_)
