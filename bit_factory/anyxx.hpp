@@ -522,7 +522,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data Other>                                     \
+    template <anyxx::is_erased_data Other,                                     \
+              template <typename> typename... Traits>                        \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
@@ -923,7 +924,7 @@ concept is_erased_data =
       } -> std::same_as<E>;
     };
 
-template <is_erased_data ErasedData>
+template <is_erased_data ErasedData, template <typename> typename... Traits>
 class any;
 
 template <typename ErasedData>
@@ -2126,7 +2127,7 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ErasedData>
+template <is_erased_data ErasedData, template <typename> typename... Traits>
 class any : public any_base_v_table_holder<is_dyn<ErasedData>> {
  public:
   using erased_data_t = ErasedData;
@@ -2228,7 +2229,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>> {
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
 
-  template <is_erased_data Other>
+  template <is_erased_data Other, template <typename> typename... Traits>
   friend class any;
 
   template <is_any I>
