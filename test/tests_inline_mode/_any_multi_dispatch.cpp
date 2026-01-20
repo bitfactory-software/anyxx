@@ -12,7 +12,7 @@ using namespace std::literals;
 
 namespace {
 struct any_thing_has_open_dispatch {};
-ANY(any_thing, (ANY_METHOD(std::string, name, (), const)), , )
+ANY(any_thing, (ANY_METHOD(std::string, name, (), const)), )
 }  // namespace
 
 namespace {}  // namespace
@@ -197,7 +197,7 @@ TEST_CASE("multi_dispatch 4") {
 // some compile time self tests
 
 namespace {
-ANY(Dummy, , , )
+ANY(Dummy, , )
 
 template <typename... ARGS>
 struct have_open_dispatch_enabeled {

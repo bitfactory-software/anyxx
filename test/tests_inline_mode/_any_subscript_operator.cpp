@@ -17,16 +17,14 @@ using vector_t = std::vector<std::string>;
 ANY(map_i_to_string_const_and_mutable,
     (ANY_OP_EXACT(std::string&, [], (std::size_t), ),
      ANY_OP_EXACT_MAP_NAMED(std::string const&, [], subscript, (std::size_t),
-                            const)),
-    , )
+                            const)), )
 
-ANY(map_i_to_string_mutable, (ANY_OP_EXACT(std::string&, [], (std::size_t), )),
-    , )
+ANY(map_i_to_string_mutable,
+    (ANY_OP_EXACT(std::string&, [], (std::size_t), )), )
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
      (ANY_OP_EXACT_OVERLOAD_DEFAULTED(
          std::string const&, [], subscript, (std::size_t), const,
-         [&x](std::size_t i) -> std::string const& { return x.at(i); })),
-     , )
+         [&x](std::size_t i) -> std::string const& { return x.at(i); })), )
 
 }  // namespace subscript_operator_test
 }  // namespace

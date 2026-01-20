@@ -14,7 +14,7 @@ ANY_TEMPLATE_EX(
                       ([&x](auto const &r) { return x == r; })),
      ANY_OP_DEFAULTED(bool, !=, not_equal_to, (anyxx::self const &), const,
                       ([&x](auto const &r) { return x != r; }))),
-    anyxx::value, ,
+    anyxx::value,
     (using iterator_category = std::forward_iterator_tag;
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
      using reference = Reference; auto operator++(int) { return post_inc(); }))
@@ -23,7 +23,7 @@ ANY_TEMPLATE(
     ((ValueType), (Reference)), any_forward_range,
     (ANY_METHOD((any_forward_iterator<ValueType, Reference>), begin, (), const),
      ANY_METHOD((any_forward_iterator<ValueType, Reference>), end, (), const)),
-    anyxx::const_observer, )
+    anyxx::const_observer)
 
 template <typename A>
 concept is_any_self_forward_range =

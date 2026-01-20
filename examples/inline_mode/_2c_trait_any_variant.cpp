@@ -26,17 +26,17 @@ ANY(any_value,
                             std::stringstream ss{std::string{sv},
                                                  std::ios_base::in};
                             ss >> std::boolalpha >> x;
-                          })),
-    , )
+                          })), )
 
 template <typename ErasedData = anyxx::shared_const>
-using vany_value = anyxx::make_vany<any_value, ErasedData, bool,
-                                    int, double, std::string>;
+using vany_value =
+    anyxx::make_vany<any_value, ErasedData, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 
-static_assert(anyxx::is_erased_data<anyxx::val<anyxx::vany_variant<
-                  any_value, anyxx::shared_const, bool, int>>>);
+static_assert(
+    anyxx::is_erased_data<anyxx::val<
+        anyxx::vany_variant<any_value, anyxx::shared_const, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
 static_assert(std::same_as<any_in_variant, any_value<anyxx::shared_const>>);
@@ -85,8 +85,7 @@ TEST_CASE("example 2cb static_ any variant") {
   vany_value<anyxx::value> b{true};
   static_assert(anyxx::is_erased_data<vany_value<>::erased_data_t>);
   static_assert(anyxx::is_const_data<vany_value<>::erased_data_t>);
-  static_assert(
-      !anyxx::is_const_data<vany_value<anyxx::value>::erased_data_t>);
+  static_assert(!anyxx::is_const_data<vany_value<anyxx::value>::erased_data_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
   vany_value<anyxx::value> vv_custom_FS{

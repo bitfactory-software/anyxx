@@ -6,7 +6,7 @@ struct x_t {
   std::string s_;
   [[maybe_unused]][[nodiscard]] std::string get() const { return s_; }
 };
-ANY(has_meta_data, , , )
+ANY(has_meta_data, , )
 }  // namespace
 
 TEST_CASE("unerase_cast") {

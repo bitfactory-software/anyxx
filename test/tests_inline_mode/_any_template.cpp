@@ -12,27 +12,27 @@ struct X {
 };
 
 namespace {
-ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)), , )
+ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)), )
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
              (ANY_METHOD(VALUE const&, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)), , )
+              ANY_METHOD(std::size_t, size, (), const)), )
 
 ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, ((KEY), (VALUE)),
               (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
-               ANY_OP(VALUE&, [], (KEY const&), )), , )
+               ANY_OP(VALUE&, [], (KEY const&), )), )
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)), , )
+              ANY_METHOD(std::size_t, size, (), const)), )
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), ),
-              ANY_METHOD(std::size_t, size, (), const)), , )
+              ANY_METHOD(std::size_t, size, (), const)), )
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
              (ANY_METHOD(any_to_string<const_observer>, at, (KEY const&),
-                         const)), , )
+                         const)), )
 
 ANY_MODEL_MAP((int), any_to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };

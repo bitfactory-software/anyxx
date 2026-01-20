@@ -53,8 +53,8 @@ struct functor {
 
 namespace {
 
-ANY(const_function_i, (ANY_OP(std::string, (), (), const)), , )
-ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), , )
+ANY(const_function_i, (ANY_OP(std::string, (), (), const)), )
+ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), )
 
 using const_function = const_function_i<const_observer>;
 using mutating_function = mutating_function_i<mutable_observer>;
@@ -176,10 +176,10 @@ struct text_object {
   void set_text(std::string const& t) { text = t; }
 };
 
-ANY(text_i_const, (ANY_METHOD(std::string, get_text, (), const)), , )
+ANY(text_i_const, (ANY_METHOD(std::string, get_text, (), const)), )
 
 ANY_(text_i_mutable, text_i_const,
-     (ANY_METHOD(void, set_text, (std::string const&), )), , )
+     (ANY_METHOD(void, set_text, (std::string const&), )), )
 }  // namespace
 
 using const_text_i = text_i_const<const_observer>;

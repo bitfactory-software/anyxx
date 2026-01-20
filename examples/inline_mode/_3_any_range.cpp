@@ -25,7 +25,7 @@ anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
 ANY(stringable,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); })),
-    , )
+    )
 
 }  // namespace example_3
 

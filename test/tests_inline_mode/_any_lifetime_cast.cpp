@@ -19,7 +19,7 @@ struct X {
   [[nodiscard]] std::string operator()() const { return s_; }
 };
 
-ANY(any_stringable, (ANY_OP(std::string, (), (), const)), , )
+ANY(any_stringable, (ANY_OP(std::string, (), (), const)), )
 
 }  // namespace
 

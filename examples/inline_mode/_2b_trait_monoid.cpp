@@ -42,7 +42,7 @@ ANY_EX(monoid,
             }),
         ANY_METHOD_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
                              ([&x](auto const& r) { return x == r; }))),
-       , , (friend bool operator==(any_t const& l, any_t const& r) {
+       , (friend bool operator==(any_t const& l, any_t const& r) {
          return l.equal_to(r);
        }))
 

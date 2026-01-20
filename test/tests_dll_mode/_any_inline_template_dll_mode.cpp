@@ -8,22 +8,22 @@ namespace {
 ANY_TEMPLATE(((KEY), (VALUE)), any_map,
              (ANY_METHOD(VALUE const&, at, (KEY const&), const),
               ANY_METHOD(std::size_t, size, (), const)),
-             anyxx::const_observer, anyxx::dyn)
+             anyxx::const_observer)
 
 ANY_TEMPLATE_(((KEY), (VALUE)), any_mutable_map, any_map, ((KEY), (VALUE)),
               (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
                ANY_OP(VALUE&, [], (KEY const&), )),
-              anyxx::mutable_observer, anyxx::dyn)
+              anyxx::mutable_observer)
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), const),
               ANY_METHOD(std::size_t, size, (), const)),
-             anyxx::const_observer, anyxx::dyn)
+             anyxx::const_observer)
 
 ANY_TEMPLATE(((KEY), (VALUE)), any_mutable_recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), ),
               ANY_METHOD(std::size_t, size, (), const)),
-             anyxx::mutable_observer, anyxx::dyn)
+             anyxx::mutable_observer)
 
 }  // namespace
 
@@ -47,11 +47,11 @@ struct X {
 namespace template_test {
 
 ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)),
-    anyxx::const_observer, anyxx::dyn)
+    anyxx::const_observer)
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
              (ANY_METHOD(any_to_string<>, at, (KEY const&), const)),
-             anyxx::const_observer, anyxx::dyn)
+             anyxx::const_observer)
 
 ANY_MODEL_MAP((int), any_to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
