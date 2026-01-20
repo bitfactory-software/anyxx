@@ -34,7 +34,7 @@ namespace template_test {
 ANY(any_to_string, (ANY_METHOD(std::string, to_string, (), const)), anyxx::const_observer, anyxx::dyn)
 
 //using any_to_string_const_observer_dyns =
-//    any_to_string<anyxx::const_observer, anyxx::dyn>;
+//    any_to_string<anyxx::const_observer>;
 
 ANY_TEMPLATE(((KEY)), any_map_to_string,
              (ANY_METHOD(any_to_string<>, at, (KEY const&),

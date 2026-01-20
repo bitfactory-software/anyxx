@@ -26,7 +26,7 @@ bool collision::pictures::intersect(
     core::shapes::picture const& lhs,
     architecture::shape<anyxx::const_observer> const& rhs) {
   hitpad_picture_t hitpad_picture{.picture = lhs, .hit = false};
-  architecture::surface<anyxx::mutable_observer, anyxx::dyn> hitpad{
+  architecture::surface<anyxx::mutable_observer> hitpad{
       hitpad_picture};
   rhs.draw(hitpad);
   return hitpad_picture.hit;
