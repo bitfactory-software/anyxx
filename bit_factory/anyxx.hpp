@@ -661,11 +661,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_METHOD_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
               (__VA_ARGS__), _detail_EXPAND params)
 
-#define ANY_FORWARD(interface_namespace, interface_name) \
-  namespace interface_namespace {                        \
-  template <typename ErasedData>                         \
-  struct interface_name;                                 \
-  }
 
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
   template <>                                                   \
@@ -3455,7 +3450,6 @@ class dispatch_vany {
 #ifdef ANY_DLL_MODE
 
 #define ANY_MODEL_FWD(export_, class_, interface_namespace_, interface_) \
-  ANY_FORWARD(interface_namespace_, interface_)                          \
   namespace interface_namespace_ {                                       \
   template <>                                                            \
   export_ interface_##_v_table<anyxx::dyn>*                              \
