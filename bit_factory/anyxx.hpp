@@ -932,6 +932,11 @@ concept is_erased_data =
 template <is_erased_data ErasedData, typename Dispatch = dyn>
 class any;
 
+template <typename ErasedData>
+concept is_dyn =
+    is_erased_data<ErasedData> &&
+    voidness<typename erased_data_trait<ErasedData>::static_dispatch_t>;
+
 template <typename I>
 concept is_erased_data_holder_impl = requires(I i) {
   typename I::erased_data_t;
@@ -1115,8 +1120,7 @@ using vany_variant = std::variant<any<ErasedData, dyn>, Types...>;
 
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename... Types>
-using make_vany =
-    any<val<vany_variant<any, ErasedData, Types...>>, static_>;
+using make_vany = any<val<vany_variant<any, ErasedData, Types...>>, static_>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -1145,8 +1149,7 @@ struct vany_type_trait {
 template <template <typename...> typename any, is_erased_data ErasedData,
           typename... Types>
 struct erased_data_trait<val<vany_variant<any, ErasedData, Types...>>>
-    : basic_erased_data_trait<
-          val<vany_variant<any, ErasedData, Types...>>> {
+    : basic_erased_data_trait<val<vany_variant<any, ErasedData, Types...>>> {
   using vany_variant_t = vany_variant<any, ErasedData, Types...>;
   using void_t = typename erased_data_trait<ErasedData>::void_t;
   using static_dispatch_t = vany_variant_t;
@@ -1790,7 +1793,7 @@ meta_data& get_meta_data() {
 }
 #endif
 
-template <typename Dispatch>
+template <bool dynamic = false>
 struct any_base_v_table_holder {
   struct v_table_t {};
   any_base_v_table_holder() = default;
@@ -1801,9 +1804,8 @@ struct any_base_v_table_holder {
   static void init_v_table() {}
   static auto release_v_table() { return nullptr; }
 };
-template <typename Dispatch>
-  requires std::derived_from<Dispatch, dyn>
-struct any_base_v_table_holder<Dispatch> {
+template <>
+struct any_base_v_table_holder<true> {
   any_base_v_table_holder() = default;
   explicit any_base_v_table_holder(any_v_table<>* v_table)
       : v_table_(v_table) {}
@@ -2131,12 +2133,12 @@ static_assert(moveable_from<value, value>);
 // any base
 
 template <is_erased_data ErasedData, typename Dispatch>
-class any : public any_base_v_table_holder<Dispatch> {
+class any : public any_base_v_table_holder<is_dyn<ErasedData>> {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_holder_t = any_base_v_table_holder<Dispatch>;
+  using v_table_holder_t = any_base_v_table_holder<is_dyn<ErasedData>>;
   using v_table_t = typename v_table_holder_t::v_table_t;
 
  protected:
