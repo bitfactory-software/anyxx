@@ -95,11 +95,11 @@ make_a_range(bool use_list) {
 }  // namespace example_2b
 //
 TEST_CASE("example 2b monoid simple") {
-  example_2b::monoid<anyxx::val<int>, anyxx::static_> x{2};
-  example_2b::monoid<anyxx::val<int>, anyxx::static_> y{x};
-  example_2b::monoid<anyxx::val<int>, anyxx::static_> z = y;
+  example_2b::monoid<anyxx::val<int>> x{2};
+  example_2b::monoid<anyxx::val<int>> y{x};
+  example_2b::monoid<anyxx::val<int>> z = y;
   CHECK(static_cast<int>(z) == 2);
-  example_2b::monoid<anyxx::val<int>, anyxx::static_> a{std::move(x)};
+  example_2b::monoid<anyxx::val<int>> a{std::move(x)};
   CHECK(static_cast<int>(a) == 2);
   static_assert(anyxx::is_erased_data<decltype(x)::erased_data_t>);
   static_assert(anyxx::is_any<decltype(x)>);

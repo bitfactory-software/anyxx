@@ -58,7 +58,7 @@ TEST_CASE("example 2ca static_ simple variant") {
   using namespace anyxx;
 
   using any_variant =
-      any_value<val<std::variant<bool, int, double, std::string>>, static_>;
+      any_value<val<std::variant<bool, int, double, std::string>>>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");

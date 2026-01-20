@@ -256,7 +256,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                       __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(           \
                           a, _sig, __VA_ARGS__)));                           \
             },                                                               \
-            [&]<anyxx::is_any Any>(Any&& any) {                              \
+            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any) {             \
               return std::forward<Any>(any).name(__VA_OPT__(                 \
                   _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
             }},                                                              \
@@ -560,14 +560,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       (V), _detail_REMOVE_PARENS(((anyxx::value))),                            \
       _detail_REMOVE_PARENS(((anyxx::const_observer))),                        \
       _detail_REMOVE_PARENS(((anyxx::mutable_observer))), n, BASE, (Dispatch), \
-      _detail_REMOVE_PARENS(((ErasedData), (Dispatch))), l, v_table_functions, \
-      decoration)
+      _detail_REMOVE_PARENS(((ErasedData))), l, v_table_functions, decoration)
 
 #define ANY_EX_(n, BASE, l, erased_data_default, dispatch_default, decoration) \
   __detail_ANYXX_ANY_(                                                         \
-      ((ErasedData), (Dispatch)),                                              \
-      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type),   \
-       (Dispatch = anyxx::dyn)),                                               \
+      ((ErasedData)),                                                          \
+      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type)),  \
       n, BASE, l, l, decoration)
 
 #define ANY_(n, BASE, l, erased_data_default, dispatch_default) \
@@ -663,7 +661,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define ANY_FORWARD(interface_namespace, interface_name) \
   namespace interface_namespace {                        \
-  template <typename ErasedData, typename Dispatch>      \
+  template <typename ErasedData>                         \
   struct interface_name;                                 \
   template <typename Dispatch>                           \
   struct interface_name##_v_table;                       \
@@ -1067,7 +1065,7 @@ U* unerase_cast_if(ErasedData const& o, any_v_table<>* v_table)
 // --------------------------------------------------------------------------------
 // (un)erased data val
 
-template <template <typename, typename> typename Any, typename T>
+template <template <typename> typename Any, typename T>
 auto trait_as(T&& v) {
   return Any<anyxx::val<std::decay_t<T>>>{std::forward<T>(v)};
 }
@@ -1114,13 +1112,13 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
 // --------------------------------------------------------------------------------
 // erased data variant
 
-template <template <typename...> typename any, is_erased_data ErasedData,
+template <template <typename> typename Any, is_erased_data ErasedData,
           typename... Types>
-using vany_variant = std::variant<any<ErasedData, dyn>, Types...>;
+using vany_variant = std::variant<Any<ErasedData>, Types...>;
 
-template <template <typename...> typename any, is_erased_data ErasedData,
+template <template <typename> typename Any, is_erased_data ErasedData,
           typename... Types>
-using make_vany = any<val<vany_variant<any, ErasedData, Types...>>, static_>;
+using make_vany = Any<val<vany_variant<Any, ErasedData, Types...>>>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -1146,11 +1144,11 @@ struct vany_type_trait {
       typename vany_variant_trait<vany_variant>::any_in_variant;
 };
 
-template <template <typename...> typename any, is_erased_data ErasedData,
+template <template <typename> typename Any, is_erased_data ErasedData,
           typename... Types>
-struct erased_data_trait<val<vany_variant<any, ErasedData, Types...>>>
-    : basic_erased_data_trait<val<vany_variant<any, ErasedData, Types...>>> {
-  using vany_variant_t = vany_variant<any, ErasedData, Types...>;
+struct erased_data_trait<val<vany_variant<Any, ErasedData, Types...>>>
+    : basic_erased_data_trait<val<vany_variant<Any, ErasedData, Types...>>> {
+  using vany_variant_t = vany_variant<Any, ErasedData, Types...>;
   using void_t = typename erased_data_trait<ErasedData>::void_t;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =
@@ -2548,11 +2546,11 @@ struct default_erased_data {
 // --------------------------------------------------------------------------------
 // typed any
 
-template <typename V, template <is_erased_data, typename> typename Any,
+template <typename V, template <is_erased_data> typename Any,
           is_erased_data ErasedData>
-struct typed_any : public Any<ErasedData, dyn> {
+struct typed_any : public Any<ErasedData> {
   using erased_data_t = ErasedData;
-  using any_t = Any<ErasedData, dyn>;
+  using any_t = Any<ErasedData>;
   using trait_t = any_t::trait_t;
   using void_t = trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
@@ -2597,14 +2595,13 @@ struct typed_any : public Any<ErasedData, dyn> {
   }
 };
 
-template <typename V, template <is_erased_data, typename> typename Any,
+template <typename V, template <is_erased_data> typename Any,
           is_erased_data ErasedData>
-auto as(Any<ErasedData, dyn> source) {
+auto as(Any<ErasedData> source) {
   return typed_any<V, Any, ErasedData>{std::move(source)};
 }
 
-template <typename To, typename V,
-          template <is_erased_data, typename> typename Any,
+template <typename To, typename V, template <is_erased_data> typename Any,
           is_erased_data ErasedData>
 auto as(typed_any<V, Any, ErasedData> source)
   requires std::convertible_to<V*, To*>
