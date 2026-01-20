@@ -665,8 +665,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   namespace interface_namespace {                        \
   template <typename ErasedData>                         \
   struct interface_name;                                 \
-  template <typename Dispatch>                           \
-  struct interface_name##_v_table;                       \
   }
 
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
