@@ -42,16 +42,18 @@ auto __ =
       expr.s_ = std::string{"otherwise "} + s;
     });
 
-auto base_table = dispatch_table_instance<any_test_base_i_v_table<anyxx::dyn>, x_t>();
-auto derived_table = dispatch_table_instance<any_test_derived_i_v_table<anyxx::dyn>, x_t>();
+auto base_table =
+    dispatch_table_instance<any_test_base_i_v_table<anyxx::dyn>, x_t>();
+auto derived_table =
+    dispatch_table_instance<any_test_derived_i_v_table<anyxx::dyn>, x_t>();
 
 TEST_CASE("dispatch") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 
-  CHECK(any_test_base_i_v_table<anyxx::dyn>::imlpementation<x_t>()
+  CHECK(anyxx::v_table_instance<any_test_base_i_v_table<>, x_t>()
             ->own_dispatch_holder_t::dispatch_table);
-  CHECK(any_test_derived_i_v_table<anyxx::dyn>::imlpementation<x_t>()
+  CHECK(anyxx::v_table_instance<any_test_derived_i_v_table<>, x_t>()
             ->own_dispatch_holder_t::dispatch_table);
 
   x_t x{"hallo"};

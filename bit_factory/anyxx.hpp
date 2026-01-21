@@ -435,10 +435,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     template <typename Concrete>                                               \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete);      \
                                                                                \
-    template <typename Concrete>                                               \
-    static auto imlpementation() {                                             \
-      return anyxx::v_table_instance<v_table_t, Concrete>();                   \
-    }                                                                          \
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
@@ -829,11 +825,6 @@ struct any_v_table {
   }
 
   meta_data* meta_data_ = nullptr;
-
-  template <typename Concrete>
-  static auto imlpementation() {
-    return v_table_instance<any_v_table<>, Concrete>();
-  }
 };
 
 inline bool is_derived_from(const std::type_info& from,
@@ -1809,8 +1800,7 @@ struct any_base_v_table_holder<true> {
   template <typename ErasedData, typename Concrete, typename Self>
   void init_v_table(this Self& self) {
     using derived_v_table_t = typename Self::v_table_t;
-    self.v_table_ = derived_v_table_t::template imlpementation<
-        anyxx::unerased<ErasedData, Concrete>>();
+    self.v_table_ = v_table_instance<derived_v_table_t, anyxx::unerased<ErasedData, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
@@ -1910,7 +1900,7 @@ dispatch_table_t* dispatch_table_instance() {
 
 template <typename VTable, typename Concrete>
 auto bind_v_table_to_meta_data() {
-  auto v_table = VTable::template imlpementation<Concrete>();
+  auto v_table = v_table_instance<VTable, Concrete>();
   get_meta_data<Concrete>().register_v_table(v_table);
   return v_table;
 }
