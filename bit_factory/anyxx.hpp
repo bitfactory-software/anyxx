@@ -374,19 +374,20 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   using n##_trait = n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params)>;   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct name_pure##_default_model_map {                                               \
+  struct name_pure##_default_model_map {                                       \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct name_pure##_model_map : name_pure##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
-                             model_map_template_params)> {};                   \
+  struct name_pure##_model_map                                                 \
+      : name_pure##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
+            model_map_template_params)> {};                                    \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
-  struct name_pure##                                                                   \
+  struct name_pure##                                                           \
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
     template <typename V>                                                      \
-    using x_model_map = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
+    using x_model_map = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(     \
         v_model_map_template_params)>;                                         \
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
@@ -436,7 +437,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     template <typename Concrete>                                               \
     static auto imlpementation() {                                             \
-      return anyxx::v_table_instance_inline<v_table_t, Concrete>();            \
+      return anyxx::v_table_instance<v_table_t, Concrete>();                   \
     }                                                                          \
   };                                                                           \
                                                                                \
@@ -464,14 +465,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n<_detail_ANYXX_TEMPLATE_ARGS(any_mutable_observer_template_params)>;  \
                                                                                \
     template <typename StaticDispatchType>                                     \
-    using static_dispatch_map_t = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
-        static_dispatch_template_params)>;                                     \
-                                                                               \
-    template <typename Concrete>                                               \
-    static auto v_table_imlpementation() {                                     \
-      static_assert(!anyxx::is_any<Concrete>);                                 \
-      return v_table_t::template imlpementation<Concrete>();                   \
-    }                                                                          \
+    using static_dispatch_map_t =                                              \
+        name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(                     \
+            static_dispatch_template_params)>;                                 \
                                                                                \
     using base_t::erased_data_;                                                \
     using base_t::get_v_table_ptr;                                             \
@@ -533,7 +529,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>::          \
       n##_v_table(std::in_place_type_t<Concrete> concrete)                     \
       : v_table_base_t(concrete) {                                             \
-    using concept_map = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;      \
+    using concept_map =                                                        \
+        name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;              \
                                                                                \
     _detail_ANYXX_V_TABLE_LAMBDAS(v_table_functions);                          \
                                                                                \
@@ -771,12 +768,7 @@ template <typename Dispatch = dyn>
 struct any_v_table;
 
 template <typename VTable, typename Concrete>
-VTable* v_table_instance_inline();
-
-template <typename VTable, typename Concrete>
-static auto any_base_v_table_instance() {
-  return v_table_instance_inline<VTable, Concrete>();
-}
+VTable* v_table_instance();
 
 template <typename Dispatch>
 struct any_v_table {
@@ -840,7 +832,7 @@ struct any_v_table {
 
   template <typename Concrete>
   static auto imlpementation() {
-    return any_base_v_table_instance<any_v_table<>, Concrete>();
+    return v_table_instance<any_v_table<>, Concrete>();
   }
 };
 
@@ -2346,13 +2338,10 @@ inline auto unerase_cast_if(Any const& o) {
 }
 
 template <typename VTable, typename Concrete>
-VTable* v_table_instance_inline() {
+VTable* v_table_instance() {
   static VTable v_table{std::in_place_type<Concrete>};
   return &v_table;
 }
-
-template <typename VTable, typename Concrete>
-VTable* v_table_instance_implementaion();
 
 template <typename I>
 concept has_open_dispatch_enabeled =
