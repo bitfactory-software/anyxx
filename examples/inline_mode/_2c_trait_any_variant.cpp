@@ -18,7 +18,7 @@ struct custom {
 };
 
 struct any_value_has_open_dispatch {};
-ANY(any_value,
+ANY(value,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); }),
      ANY_METHOD_DEFAULTED(void, from_string, (std::string_view), ,

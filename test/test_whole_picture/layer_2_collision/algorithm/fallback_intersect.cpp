@@ -4,8 +4,8 @@
 
 namespace whole_picture::collision::fallback {
 
-bool intersect(architecture::shape<anyxx::const_observer> const& lhs,
-               architecture::shape<anyxx::const_observer> const& rhs) {
+bool intersect(architecture::any_shape<anyxx::const_observer> const& lhs,
+               architecture::any_shape<anyxx::const_observer> const& rhs) {
   return pictures::intersect(core::shape_to_picture(lhs), rhs);
 }
 

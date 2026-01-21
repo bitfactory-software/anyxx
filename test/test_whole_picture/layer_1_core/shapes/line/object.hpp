@@ -14,10 +14,10 @@ struct line {
 }  // namespace whole_picture::core
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::line)
-ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, shape)
-ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, shape)
+ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, any_shape)
+ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, any_shape)
 
-ANY_MODEL_MAP((whole_picture::core::shapes::line), whole_picture::architecture::shape) {
+ANY_MODEL_MAP((whole_picture::core::shapes::line), whole_picture::architecture::any_shape) {
     void draw(whole_picture::core::shapes::line const& self,
         architecture::mutable_observed_surface const& surface) const {
         architecture::draw::line(surface, self.p1, self.p2);

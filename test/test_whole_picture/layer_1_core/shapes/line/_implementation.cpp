@@ -9,8 +9,8 @@ using namespace whole_picture::core::shapes;
 using namespace anyxx;
 
 ANY_META_CLASS(line)
-ANY_MODEL(shapes::line, whole_picture::architecture, shape);
-ANY_DISPATCH_FOR(line, whole_picture::architecture, shape)
+ANY_MODEL(shapes::line, whole_picture::architecture, any_shape);
+ANY_DISPATCH_FOR(line, whole_picture::architecture, any_shape)
 
 shape shapes::make_line(architecture::point p1, architecture::point p2) {
   return std::make_shared<line>(p1, p2);

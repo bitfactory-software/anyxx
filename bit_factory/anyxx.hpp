@@ -552,29 +552,34 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_(t, t_with_defaults, n, BASE, l, v_table_functions, \
-                            decoration)                                        \
+#define __detail_ANYXX_ANY_CMF(t, t_with_defaults, n, BASE, l,                 \
+                               v_table_functions, decoration)                  \
   ANY_META_FUNCTION(                                                           \
       , _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T), \
       (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
       (V), _detail_REMOVE_PARENS(((anyxx::value))),                            \
       _detail_REMOVE_PARENS(((anyxx::const_observer))),                        \
-      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), n, BASE, (Dispatch), \
-      _detail_REMOVE_PARENS(((ErasedData))), l, v_table_functions, decoration)
+      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), any_##n, BASE,       \
+      (Dispatch), _detail_REMOVE_PARENS(((ErasedData))), l, v_table_functions, \
+      decoration)
 
-#define ANY_EX_(n, BASE, l, erased_data_default, decoration)                  \
-  __detail_ANYXX_ANY_(                                                        \
+#define __detail_ANYXX_ANY_EX_(n, BASE, l, erased_data_default, decoration)   \
+  __detail_ANYXX_ANY_CMF(                                                     \
       ((ErasedData)),                                                         \
       ((ErasedData = anyxx::default_erased_data<erased_data_default>::type)), \
       n, BASE, l, l, decoration)
 
+#define ANY_EX_(n, BASE, l, erased_data_default, decoration) \
+  __detail_ANYXX_ANY_EX_(n, any_##BASE, l, l, decoration)
+#define ANY_EX(n, l, erased_data_default, decoration) \
+  __detail_ANYXX_ANY_EX_(n, anyxx::any, l, l, decoration)
+
 #define ANY_(n, BASE, l, erased_data_default) \
-  ANY_EX_(n, BASE, l, erased_data_default, ())
+  __detail_ANYXX_ANY_EX_(n, any_##BASE, l, erased_data_default, ())
+#define ANY(n, l, ...) __detail_ANYXX_ANY_EX_(n, anyxx::any, l, __VA_ARGS__, ())
 
-#define ANY(n, ...) ANY_(n, anyxx::any, __VA_ARGS__)
-#define ANY_EX(n, ...) ANY_EX_(n, anyxx::any, __VA_ARGS__)
-
-#define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, decoration)   \
+#define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, BASE, bt, l,                     \
+                                        erased_data_default, decoration)       \
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t),                                                \
       __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(t)),         \
@@ -594,18 +599,25 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                               _detail_REMOVE_PARENS(t)),                       \
       __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),                       \
                               _detail_REMOVE_PARENS(t)),                       \
-      n, BASE, __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)), \
+      any_##n, BASE,                                                           \
+      __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)),          \
       __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt)), l, l,  \
       decoration)
+
+#define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, decoration) \
+  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, any_##BASE, bt, l,                   \
+                                  erased_data_default, decoration)
 
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default) \
   ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, ())
 
-#define ANY_TEMPLATE(t, n, l, erased_data_default) \
-  ANY_TEMPLATE_(t, n, anyxx::any, (), l, erased_data_default)
+#define ANY_TEMPLATE(t, n, l, erased_data_default)         \
+  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, anyxx::any, (), l, \
+                                  erased_data_default, ())
 
 #define ANY_TEMPLATE_EX(t, n, l, erased_data_default, decoration) \
-  ANY_TEMPLATE_EX_(t, n, anyxx::any, (), l, erased_data_default, decoration)
+  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, anyxx::any, (), l,        \
+                                  erased_data_default, decoration)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;

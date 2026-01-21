@@ -8,6 +8,6 @@
 namespace whole_picture::core {
 
 CORE_EXPORT shapes::picture shape_to_picture(
-    architecture::shape<anyxx::const_observer> const& shape);
+    architecture::any_shape<anyxx::const_observer> const& shape);
 
 }  // namespace whole_picture::core

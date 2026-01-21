@@ -20,19 +20,19 @@ struct picture : anyxx::members<picture> {
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
-              whole_picture::architecture, shape)
+              whole_picture::architecture, any_shape)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
-                     whole_picture::architecture, shape)
+                     whole_picture::architecture, any_shape)
 // ANY_MODEL_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
 //               whole_picture::architecture, surface)
 
 ANY_MODEL_MAP((whole_picture::core::shapes::picture),
-              whole_picture::architecture::surface) {
+              whole_picture::architecture::any_surface) {
   void write(auto& self, point p, char ch) { self.content.write(p, ch); };
 };
 
 ANY_MODEL_MAP((whole_picture::core::shapes::picture),
-              whole_picture::architecture::shape) {
+              whole_picture::architecture::any_shape) {
   using picture = whole_picture::core::shapes::picture;
   void draw(picture const& self,
             architecture::mutable_observed_surface const& surface) const {

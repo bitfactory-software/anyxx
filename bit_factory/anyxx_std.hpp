@@ -5,7 +5,7 @@
 namespace anyxx {
 
 ANY_TEMPLATE_EX(
-    ((ValueType), (Reference)), any_forward_iterator,
+    ((ValueType), (Reference)), forward_iterator,
     (ANY_OP(anyxx::self &, ++, (), ),
      ANY_METHOD_DEFAULTED(anyxx::self, post_inc, (), ,
                           ([&x]() { return x++; })),
@@ -20,7 +20,7 @@ ANY_TEMPLATE_EX(
      using reference = Reference; auto operator++(int) { return post_inc(); }))
 
 ANY_TEMPLATE(
-    ((ValueType), (Reference)), any_forward_range,
+    ((ValueType), (Reference)), forward_range,
     (ANY_METHOD((any_forward_iterator<ValueType, Reference>), begin, (), const),
      ANY_METHOD((any_forward_iterator<ValueType, Reference>), end, (), const)),
     anyxx::const_observer)

@@ -12,7 +12,7 @@ using namespace std::literals;
 
 namespace {
 struct any_thing_has_open_dispatch {};
-ANY(any_thing, (ANY_METHOD(std::string, name, (), const)), )
+ANY(thing, (ANY_METHOD(std::string, name, (), const)), )
 }  // namespace
 
 namespace {}  // namespace
@@ -212,18 +212,18 @@ template <is_any ANY, typename... ARGS>
 struct have_open_dispatch_enabeled<virtual_<ANY>, ARGS...> {
   static constexpr bool value = false;
 };
-static_assert(!has_open_dispatch_enabeled<Dummy<const_observer>>);
+static_assert(!has_open_dispatch_enabeled<any_Dummy<const_observer>>);
 static_assert(has_open_dispatch_enabeled<any_thing<const_observer>>);
 
 static_assert(
-    !have_open_dispatch_enabeled<virtual_<Dummy<const_observer>>,
-                                 virtual_<Dummy<const_observer>>>::value);
+    !have_open_dispatch_enabeled<virtual_<any_Dummy<const_observer>>,
+                                 virtual_<any_Dummy<const_observer>>>::value);
 static_assert(
-    !have_open_dispatch_enabeled<virtual_<Dummy<const_observer>>,
+    !have_open_dispatch_enabeled<virtual_<any_Dummy<const_observer>>,
                                  virtual_<any_thing<const_observer>>>::value);
 static_assert(
     !have_open_dispatch_enabeled<virtual_<any_thing<const_observer>>,
-                                 virtual_<Dummy<const_observer>>>::value);
+                                 virtual_<any_Dummy<const_observer>>>::value);
 static_assert(
     have_open_dispatch_enabeled<virtual_<any_thing<const_observer>>,
                                 virtual_<any_thing<const_observer>>>::value);

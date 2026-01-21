@@ -56,10 +56,10 @@ namespace {
 ANY(const_function_i, (ANY_OP(std::string, (), (), const)), )
 ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), )
 
-using const_function = const_function_i<const_observer>;
-using mutating_function = mutating_function_i<mutable_observer>;
-using shared_const_function = const_function_i<shared_const>;
-using shared_mutating_function = mutating_function_i<shared_const>;
+using const_function = any_const_function_i<const_observer>;
+using mutating_function = any_mutating_function_i<mutable_observer>;
+using shared_const_function =any_const_function_i<shared_const>;
+using shared_mutating_function = any_mutating_function_i<shared_const>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
 static_assert(std::is_assignable_v<const_function, const_function>);
@@ -182,8 +182,8 @@ ANY_(text_i_mutable, text_i_const,
      (ANY_METHOD(void, set_text, (std::string const&), )), )
 }  // namespace
 
-using const_text_i = text_i_const<const_observer>;
-using const_text_i_mutable = text_i_const<mutable_observer>;
+using const_text_i = any_text_i_const<const_observer>;
+using const_text_i_mutable = any_text_i_const<mutable_observer>;
 
 template <class C>
 concept can_call_get_text = requires(C c) {
@@ -201,8 +201,8 @@ static_assert(can_call_get_text<const_text_i const>);
 static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
-using mutable_text_i_const = text_i_mutable<const_observer>;
-using mutable_text_i_mutable = text_i_mutable<mutable_observer>;
+using mutable_text_i_const = any_text_i_mutable<const_observer>;
+using mutable_text_i_mutable = any_text_i_mutable<mutable_observer>;
 static_assert(
     std::same_as<mutable_text_i_mutable::erased_data_t, mutable_observer>);
 
