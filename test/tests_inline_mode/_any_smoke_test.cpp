@@ -84,7 +84,7 @@ struct regular_polygon {
   }
 };
 
-ANY_MODEL_MAP((circle), any_drawable) {
+ANY_MODEL_MAP((circle), drawable) {
   auto draw([[maybe_unused]] circle const& x, position p) const {
     std::cout << " A Circle Is Recorded VIA circle_any_drawable_model_map At "
               << p.x << " " << p.y << "\n";

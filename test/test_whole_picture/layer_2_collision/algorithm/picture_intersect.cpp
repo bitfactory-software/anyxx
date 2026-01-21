@@ -9,7 +9,7 @@ struct hitpad_picture_t {
 };
 }  // namespace
 
-ANY_MODEL_MAP((hitpad_picture_t), architecture::any_surface) {
+ANY_MODEL_MAP((hitpad_picture_t), architecture::surface) {
   void write(hitpad_picture_t & self, architecture::point p,
              [[maybe_unused]] char ch) {
     if (collision::pictures::intersect_point(

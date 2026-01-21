@@ -53,10 +53,10 @@ ANY_TEMPLATE(((KEY)), map_to_string,
              (ANY_METHOD(any_to_string<>, at, (KEY const&), const)),
              anyxx::const_observer)
 
-ANY_MODEL_MAP((int), any_to_string) {
+ANY_MODEL_MAP((int), to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-ANY_MODEL_MAP((double), any_to_string) {
+ANY_MODEL_MAP((double), to_string) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 
@@ -64,7 +64,7 @@ ANY_MODEL_MAP((double), any_to_string) {
 
 using namespace anyxx;
 
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), map,
                        ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);

@@ -20,12 +20,12 @@ struct x_t {
 using test_base_i_co = any_test_base_i<const_observer>;
 using test_derived_i_mo = any_test_derived_i<mutable_observer>;
 
-ANY_MODEL_MAP((x_t), any_test_base_i){
+ANY_MODEL_MAP((x_t), test_base_i){
     static auto to_string(x_t const& self){return self.s_;
 }  // namespace
 }
 ;
-ANY_MODEL_MAP((x_t), any_test_derived_i){
+ANY_MODEL_MAP((x_t), test_derived_i){
     static void from_string(x_t & self, std::string_view s){self.s_ = s;
 }
 }

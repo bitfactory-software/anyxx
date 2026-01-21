@@ -45,7 +45,7 @@ TEST_CASE("typed_any/observer") {
 
 namespace typed_any_test {
 
-ANY_MODEL_MAP((x_t), any_test_i) {
+ANY_MODEL_MAP((x_t), test_i) {
   static auto to_string(x_t const& x) { return x.s_; };
   static void from_string(x_t & x, std::string_view s) { x.s_ = s; };
 };

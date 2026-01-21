@@ -48,7 +48,7 @@ ANY_EX(monoid,
 
 }  // namespace example_2b
 
-ANY_MODEL_MAP((int), example_2b::any_monoid) {
+ANY_MODEL_MAP((int), example_2b::monoid) {
   static int concat(int self, auto const& r) {
     std::println("concat {}", typeid(int).name());
     return std::ranges::fold_left(r, self,
@@ -56,7 +56,7 @@ ANY_MODEL_MAP((int), example_2b::any_monoid) {
   };
 };
 
-ANY_MODEL_MAP((std::string), example_2b::any_monoid) {
+ANY_MODEL_MAP((std::string), example_2b::monoid) {
   static std::string op(std::string const& self, std::string const& r) {
     std::println("op {}", typeid(std::string).name());
     return self + r;

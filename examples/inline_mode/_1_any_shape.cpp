@@ -69,7 +69,7 @@ ANY_(shape, drawable,
       ANY_METHOD(double, area, (), const),
       ANY_METHOD(double, perimeter, (), const)), )
 
-ANY_MODEL_MAP((std::string), any_drawable) {
+ANY_MODEL_MAP((std::string), drawable) {
   auto draw(std::string const& x, std::ostream& os, position p) const {
     os << x << " at: " << p << "\n";
   };  // namespace shapes_1

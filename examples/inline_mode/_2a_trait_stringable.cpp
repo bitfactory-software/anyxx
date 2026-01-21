@@ -11,13 +11,13 @@ ANY(stringable, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
 
 }
 
-ANY_MODEL_MAP((bool), example_2a::any_stringable) {
+ANY_MODEL_MAP((bool), example_2a::stringable) {
   static std::string to_string(bool const& value) {
     return value ? "wahr" : "falsch";
   };
 };
 
-ANY_MODEL_MAP((double), example_2a::any_stringable) {
+ANY_MODEL_MAP((double), example_2a::stringable) {
   static std::string to_string(const double& value) {
     return std::format("{:6.3}", value);
   };

@@ -34,10 +34,10 @@ ANY_TEMPLATE(((KEY)), map_to_string,
              (ANY_METHOD((any_to_string<const_observer>), at, (KEY const&),
                          const)), )
 
-ANY_MODEL_MAP((int), any_to_string) {
+ANY_MODEL_MAP((int), to_string) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-ANY_MODEL_MAP((double), any_to_string) {
+ANY_MODEL_MAP((double), to_string) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 }  // namespace
@@ -123,7 +123,7 @@ TEST_CASE("any template test3") {
 }
 
 namespace {
-ANY_TEMPLATE_MODEL_MAP((std::map<int, double>), any_map, ((int), (double))) {
+ANY_TEMPLATE_MODEL_MAP((std::map<int, double>), map, ((int), (double))) {
   double const& at(std::map<int, double> const& x, int i) { return x.at(i); };
 };
 }  // namespace

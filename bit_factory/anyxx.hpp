@@ -374,19 +374,19 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   using n##_trait = n<_detail_ANYXX_TEMPLATE_ARGS(traitet_template_params)>;   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct n##_default_model_map {                                               \
+  struct name_pure##_default_model_map {                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
+  struct name_pure##_model_map : name_pure##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
                              model_map_template_params)> {};                   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
-  struct n##                                                                   \
+  struct name_pure##                                                                   \
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
     template <typename V>                                                      \
-    using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
+    using x_model_map = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
         v_model_map_template_params)>;                                         \
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
@@ -464,7 +464,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n<_detail_ANYXX_TEMPLATE_ARGS(any_mutable_observer_template_params)>;  \
                                                                                \
     template <typename StaticDispatchType>                                     \
-    using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
+    using static_dispatch_map_t = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
         static_dispatch_template_params)>;                                     \
                                                                                \
     template <typename Concrete>                                               \
@@ -533,7 +533,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(v_table_template_params)>::          \
       n##_v_table(std::in_place_type_t<Concrete> concrete)                     \
       : v_table_base_t(concrete) {                                             \
-    using concept_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;      \
+    using concept_map = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(tpl3)>;      \
                                                                                \
     _detail_ANYXX_V_TABLE_LAMBDAS(v_table_functions);                          \
                                                                                \
