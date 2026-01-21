@@ -111,7 +111,10 @@ struct emtpty_trait_v_table {
   emtpty_trait_v_table(std::in_place_type_t<Concrete> concrete){};
 };
 template <typename Any>
-struct emtpty_trait {};
+struct emtpty_trait {
+  template <typename Any>
+  using v_table_t = emtpty_trait_v_table<Any>;
+};
 }  // namespace anyxx
 
 using namespace anyxx;
@@ -119,6 +122,104 @@ using namespace anyxx;
 namespace {
 
 // TRAIT(trait1, (ANY_METHOD(std::string, fn1, (), const)), )
-TRAIT(trait1, (ANY_METHOD(std::string, fn1, (), const)))
+template <typename Any>
+struct trait1;
+template <typename T>
+struct trait1_default_model_map {
+  static auto fn1([[maybe_unused]] T const& x)
+      -> anyxx::map_return<T, std::string> {
+    return x.fn1();
+  };
+};
+template <typename T>
+struct trait1_model_map : trait1_default_model_map<T> {};
+template <typename T>
+  requires(anyxx::is_variant<T>)
+struct trait1_model_map<T> {
+  template <typename V>
+  using x_model_map = trait1_model_map<V>;
+  static auto fn1([[maybe_unused]] T const& x) -> decltype(auto) {
+    return std::visit(
+        anyxx::overloads{[&]<typename V>(V&& v) {
+                           return x_model_map<std::decay_t<V>>::fn1(
+                               std::forward<V>(v));
+                         },
+                         [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any) {
+                           return std::forward<Any>(any).fn1();
+                         }},
+        x);
+  };
+};
+template <typename Any>
+struct trait1_v_table;
+template <typename Any>
+struct trait1_v_table : anyxx::emtpty_trait_v_table<Any> {
+  using v_table_base_t = anyxx::emtpty_trait_v_table<Any>;
+  using v_table_t = trait1_v_table;
+  using any = Any;
+  using any_value_t = typename any::any_value_t;
+  using any_const_observer_t = typename any::any_const_observer_t;
+  using any_mutable_observer_t = typename any::any_mutable_observer_t;
+  anyxx::v_table_return<any_value_t, std::string> (*fn1)(void const*);
+  ;
+  ;
+  trait1_v_table() = default;
+  template <typename Concrete>
+  explicit(false) trait1_v_table(std::in_place_type_t<Concrete> concrete);
+};
+template <typename Any>
+struct trait1 : anyxx::emtpty_trait<Any> {
+  using self_t = Any;
+  decltype(auto) fn1() const
+    requires(::anyxx::const_correct_call_for_erased_data<
+             void const*, typename Any::erased_data_t, false>)
+  {
+    using T = typename self_t::T;
+    using static_dispatch_map_t = trait1_model_map<T>;
+    auto self = static_cast<const self_t&>(*this);
+
+    if constexpr (!anyxx::voidness<T>) {
+      if constexpr (std::same_as<void, std::string>) {
+        return static_dispatch_map_t::fn1(self->erased_data_.value_);
+      } else {
+        return anyxx::jacket_return<std::string>::forward(
+            static_dispatch_map_t::fn1(self->erased_data_.value_), *this);
+      }
+    } else {
+      if constexpr (std::same_as<void, std::string>) {
+        return anyxx::get_v_table(*this)->fn1(anyxx::get_void_data_ptr(*this));
+      } else {
+        // return anyxx::jacket_return<std::string>::forward(
+        //     anyxx::get_v_table(*this)->fn1(anyxx::get_void_data_ptr(*this)),
+        //     *this);
+        return std::string{"Error: fn1()"};
+      }
+    }
+  }
+};
+template <typename Any>
+template <typename Concrete>
+trait1_v_table<Any>::trait1_v_table(std::in_place_type_t<Concrete> concrete)
+    : v_table_base_t(concrete) {
+  using concept_map = trait1_model_map<Concrete>;
+  fn1 = [](void const* _vp) -> anyxx::v_table_return<any_value_t, std::string> {
+    if constexpr (std::same_as<anyxx::self&, std::string>) {
+      concept_map{}.fn1(*anyxx::unchecked_unerase_cast<Concrete>(_vp));
+      return anyxx::handle_self_ref_return<std::string>{}();
+    } else {
+      return concept_map{}.fn1(*anyxx::unchecked_unerase_cast<Concrete>(_vp));
+    }
+  };
+  ;
+  ;
+};
 
 }  // namespace
+
+TEST_CASE("any via concept simple") {
+  struct model1 {
+    std::string fn1() const { return "model1"; }
+  };
+  any<value, trait1> test{model1{}};
+  CHECK(test.fn1() == "Error: fn1()");
+}

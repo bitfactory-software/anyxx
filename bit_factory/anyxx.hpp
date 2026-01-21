@@ -447,11 +447,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using any_t = n;                                                           \
     using erased_data_t = ErasedData;                                          \
                                                                                \
-    using T =                                                                  \
-        typename anyxx::erased_data_trait<erased_data_t>::static_dispatch_t;   \
     using base_t = BASE<_detail_ANYXX_TEMPLATE_ARGS(                           \
         base_template_params_with_erased_data)>;                               \
                                                                                \
+    using T = base_t::T;                                                       \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(pure_template_params)>;        \
@@ -649,7 +648,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...)    \
   ANY_METHOD_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
               (__VA_ARGS__), _detail_EXPAND params)
-
 
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
   template <>                                                   \
@@ -2123,6 +2121,12 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
   using void_t = typename trait_t::void_t;
   using v_table_holder_t = any_base_v_table_holder<is_dyn<ErasedData>>;
   using v_table_t = typename v_table_holder_t::v_table_t;
+  using T = trait_t::static_dispatch_t;
+  using any_value_t = any<value, Traits...>;
+  using any_const_observer_t = any<const_observer, Traits...>;
+  using any_mutable_observer_t = any<mutable_observer, Traits...>;
+  using trait_v_table_t = struct v_table : any_v_table<v_table>,
+        Traits<any<ErasedData, Traits...>>::v_table_t... { };
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
@@ -3439,7 +3443,6 @@ class dispatch_vany {
 
 #ifdef ANY_DLL_MODE
 
-
 #define ANY_MODEL(class_, interface_namespace_, interface_)                \
   template <>                                                              \
   interface_namespace_::interface_##_v_table<anyxx::dyn>*                  \
@@ -3478,11 +3481,9 @@ class dispatch_vany {
           interface_)<_detail_ANYXX_TEMPLATE_ARGS(all)>();                     \
   }
 
-
 #else
 
 #define ANY_MODEL(...)
 #define ANY_TEMPLATE_MODEL(...)
 
 #endif
-
