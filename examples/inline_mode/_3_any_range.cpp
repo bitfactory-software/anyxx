@@ -24,8 +24,7 @@ anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
 
 ANY(stringable,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [&x]() { return std::format("{}", x); })),
-    )
+                          [&x]() { return std::format("{}", x); })), )
 
 }  // namespace example_3
 
@@ -102,7 +101,9 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<stringable<anyxx::value>, stringable<anyxx::value>> r{v};
+    any_forward_range<any_stringable<anyxx::value>,
+                      any_stringable<anyxx::value>>
+        r{v};
     int x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
     CHECK(x == 3);
@@ -119,8 +120,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, stringable<anyxx::value>,
-                            stringable<anyxx::value>>
+    any_forward_range_trait<v_t const &, any_stringable<anyxx::value>,
+                            any_stringable<anyxx::value>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -138,14 +139,14 @@ TEST_CASE("example 3 transform unerase") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, stringable<anyxx::value>,
-                            stringable<anyxx::value>>
+    any_forward_range_trait<v_t const &, any_stringable<anyxx::value>,
+                            any_stringable<anyxx::value>>
         r{v};
     int x = 0;
-    for (auto i :
-         std::views::transform(r, [](stringable<anyxx::value> const &v) -> int {
-           return *anyxx::unerase_cast<int>(v);
-         })) {
+    for (auto i : std::views::transform(
+             r, [](any_stringable<anyxx::value> const &v) -> int {
+               return *anyxx::unerase_cast<int>(v);
+             })) {
       std::println("{}", i);
       CHECK(i == ++x);
     }

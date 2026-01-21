@@ -15,7 +15,7 @@ static_assert(anyxx::is_in_dll_mode);
 
 namespace {
 
-ANY(any_test, (ANY_METHOD(int, fun, (), const)), const_observer)
+ANY(test, (ANY_METHOD(int, fun, (), const)), const_observer)
 
 struct test_class {
   [[nodiscard]] int fun() const { return 42; }

@@ -9,9 +9,9 @@ using namespace anyxx;
 
 ANY_META_CLASS(shapes::picture)
 ANY_MEMBERS_COUNT_IMPL(whole_picture::core::shapes, picture)
-ANY_MODEL(shapes::picture, whole_picture::architecture, shape);
+ANY_MODEL(shapes::picture, whole_picture::architecture, any_shape);
 //ANY_MODEL(shapes::picture, whole_picture::architecture, surface);
-ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, shape)
+ANY_DISPATCH_FOR(shapes::picture, whole_picture::architecture, any_shape)
 
 shape shapes::make_picture(architecture::point top_left,
                            core::surface& content) {

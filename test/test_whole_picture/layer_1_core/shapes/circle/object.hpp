@@ -15,9 +15,9 @@ struct circle {
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::circle)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::circle,
-                     whole_picture::architecture, shape)
+                     whole_picture::architecture, any_shape)
 
-ANY_MODEL_MAP((whole_picture::core::shapes::circle), whole_picture::architecture::shape) {
+ANY_MODEL_MAP((whole_picture::core::shapes::circle), whole_picture::architecture::any_shape) {
   using circle = whole_picture::core::shapes::circle;
   void draw(circle const& self,
             architecture::mutable_observed_surface const& surface) const {

@@ -11,11 +11,11 @@ using namespace anyxx;
 
 namespace {
 
-ANY(node_i, (ANY_METHOD(int, value, (), const),
+ANY(node, (ANY_METHOD(int, value, (), const),
              ANY_METHOD(std::string, as_forth, (), const),
              ANY_METHOD(std::string, as_lisp, (), const)), )
 
-using node = node_i<shared_const>;
+using node = any_node<shared_const>;
 
 struct Plus {
   Plus(node left, node right)

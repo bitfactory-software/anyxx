@@ -10,7 +10,7 @@ using namespace std::literals;
 namespace {
 namespace example {
 
-ANY(any_thing, , )
+ANY(thing, , )
 
 class asteroid {};
 
@@ -47,7 +47,7 @@ TEST_CASE("factory2") {
   CHECK(get_type_info(things[1]) == typeid(spaceship));
 }
 
-ANY(any_to_string,
+ANY(to_string,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); })),
     )
