@@ -362,8 +362,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     v_table_template_params, static_dispatch_template_params,                  \
     traitet_template_params, v_model_map_template_params,                      \
     any_value_template_params, any_const_observer_template_params,             \
-    any_mutable_observer_template_params, n, BASE, base_template_params,       \
-    base_template_params_with_erased_data, l, v_table_functions, decoration)   \
+    any_mutable_observer_template_params, n, name_pure, BASE, base_name_pur,   \
+    base_template_params, base_template_params_with_erased_data, l,            \
+    v_table_functions, decoration)                                             \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
       any_template_params_with_defaults)>                                      \
@@ -546,33 +547,35 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define __detail_ANYXX_ANY_CMF(t, t_with_defaults, n, BASE, l,                 \
+#define __detail_ANYXX_ANY_CMF(t, t_with_defaults, n, BASE, base_name_pur, l,  \
                                v_table_functions, decoration)                  \
   ANY_META_FUNCTION(                                                           \
       , _detail_REMOVE_PARENS(t), _detail_REMOVE_PARENS(t_with_defaults), (T), \
       (Concrete), (Other), (Dispatch), (StaticDispatchType), (anyxx::val<T>),  \
       (V), _detail_REMOVE_PARENS(((anyxx::value))),                            \
       _detail_REMOVE_PARENS(((anyxx::const_observer))),                        \
-      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), any_##n, BASE,       \
-      (Dispatch), _detail_REMOVE_PARENS(((ErasedData))), l, v_table_functions, \
-      decoration)
+      _detail_REMOVE_PARENS(((anyxx::mutable_observer))), any_##n, n, BASE,    \
+      base_name_pur, (Dispatch), _detail_REMOVE_PARENS(((ErasedData))), l,     \
+      v_table_functions, decoration)
 
-#define __detail_ANYXX_ANY_EX_(n, BASE, l, erased_data_default, decoration)   \
-  __detail_ANYXX_ANY_CMF(                                                     \
-      ((ErasedData)),                                                         \
-      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type)), \
-      n, BASE, l, l, decoration)
+#define __detail_ANYXX_ANY_EX_(n, BASE, base_name_pur, l, erased_data_default, \
+                               decoration)                                     \
+  __detail_ANYXX_ANY_CMF(                                                      \
+      ((ErasedData)),                                                          \
+      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type)),  \
+      n, BASE, base_name_pur, l, l, decoration)
 
 #define ANY_EX_(n, BASE, l, erased_data_default, decoration) \
-  __detail_ANYXX_ANY_EX_(n, any_##BASE, l, l, decoration)
+  __detail_ANYXX_ANY_EX_(n, any_##BASE, BASE, l, l, decoration)
 #define ANY_EX(n, l, erased_data_default, decoration) \
-  __detail_ANYXX_ANY_EX_(n, anyxx::any, l, l, decoration)
+  __detail_ANYXX_ANY_EX_(n, anyxx::any, anyxx::any, l, l, decoration)
 
 #define ANY_(n, BASE, l, erased_data_default) \
-  __detail_ANYXX_ANY_EX_(n, any_##BASE, l, erased_data_default, ())
-#define ANY(n, l, ...) __detail_ANYXX_ANY_EX_(n, anyxx::any, l, __VA_ARGS__, ())
+  __detail_ANYXX_ANY_EX_(n, any_##BASE, BASE, l, erased_data_default, ())
+#define ANY(n, l, ...) \
+  __detail_ANYXX_ANY_EX_(n, anyxx::any, anyxx::any, l, __VA_ARGS__, ())
 
-#define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, BASE, bt, l,                     \
+#define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, BASE, base_name_pur, bt, l,      \
                                         erased_data_default, decoration)       \
   ANY_META_FUNCTION(                                                           \
       _detail_REMOVE_PARENS(t),                                                \
@@ -593,24 +596,24 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                               _detail_REMOVE_PARENS(t)),                       \
       __detail_ANYXX_ADD_TAIL((anyxx::mutable_observer),                       \
                               _detail_REMOVE_PARENS(t)),                       \
-      any_##n, BASE,                                                           \
+      any_##n, n, BASE, base_name_pur,                                         \
       __detail_ANYXX_ADD_TAIL((Dispatch), _detail_REMOVE_PARENS(bt)),          \
       __detail_ANYXX_ADD_TAIL((ErasedData), _detail_REMOVE_PARENS(bt)), l, l,  \
       decoration)
 
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, decoration) \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, any_##BASE, bt, l,                   \
+  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, any_##BASE, BASE, bt, l,             \
                                   erased_data_default, decoration)
 
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, erased_data_default) \
   ANY_TEMPLATE_EX_(t, n, BASE, bt, l, erased_data_default, ())
 
-#define ANY_TEMPLATE(t, n, l, erased_data_default)         \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, anyxx::any, (), l, \
+#define ANY_TEMPLATE(t, n, l, erased_data_default)                     \
+  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, anyxx::any, anyxx::any, (), l, \
                                   erased_data_default, ())
 
-#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, decoration) \
-  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, anyxx::any, (), l,        \
+#define ANY_TEMPLATE_EX(t, n, l, erased_data_default, decoration)      \
+  __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, anyxx::any, anyxx::any, (), l, \
                                   erased_data_default, decoration)
 
 #define ANY_METHOD_(...) (__VA_ARGS__)
@@ -2138,7 +2141,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
   using any_const_observer_t = any<const_observer, Traits...>;
   using any_mutable_observer_t = any<mutable_observer, Traits...>;
   using trait_v_table_t = struct v_table : any_v_table<v_table>,
-        Traits<any<ErasedData, Traits...>>::v_table_t... { };
+        Traits<any<ErasedData, Traits...>>::v_table_t... {};
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
