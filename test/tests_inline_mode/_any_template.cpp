@@ -32,8 +32,7 @@ ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
               ANY_METHOD(std::size_t, size, (), const)), )
 
 ANY_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), ),
-              ANY_METHOD(std::size_t, size, (), const)), )
+             (ANY_METHOD(VALUE, at, (KEY const&), )), )
 
 ANY_TEMPLATE(((KEY)), map_to_string,
              (ANY_METHOD((any_to_string<const_observer>), at, (KEY const&),
