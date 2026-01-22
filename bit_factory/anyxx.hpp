@@ -296,6 +296,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     requires(::anyxx::const_correct_call_for_erased_data<                    \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
+    using self_t = std::decay_t<Self>;                                      \
+    using T = typename self_t::T;                                            \
+    using erased_data_t = typename self_t::erased_data_t;                    \
+                                                                             \
     if constexpr (!anyxx::voidness<T>) {                                     \
       using traited_t = typename erased_data_t::value_t;                     \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
@@ -451,7 +455,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using base_t = BASE<_detail_ANYXX_TEMPLATE_ARGS(                           \
         base_template_params_with_erased_data)>;                               \
                                                                                \
-    using T = base_t::T;                                                       \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
         n##_v_table<_detail_ANYXX_TEMPLATE_ARGS(pure_template_params)>;        \
@@ -511,8 +514,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data Other,                                     \
-              typename... Traits>                          \
+    template <anyxx::is_erased_data Other, typename... Traits>                 \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
