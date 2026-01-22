@@ -298,7 +298,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(        \
       _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                \
     requires(::anyxx::const_correct_call_for_erased_data<                    \
-             void const_*, erased_data_t, exact_const>)                      \
+             void const_*, typename std::decay_t<Self>::erased_data_t,       \
+             exact_const>)                                                   \
   {                                                                          \
     using self_t = std::decay_t<Self>;                                       \
     using T = typename self_t::T;                                            \
