@@ -167,7 +167,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   typename _detail_REMOVE_PARENS(head) __VA_OPT__(   \
       _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
 #define _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(...) \
-  __VA_OPT__(<_detail_ANYXX_TYPENAME_PARAM_LIST(__VA_ARGS__)>)
+  __VA_OPT__(template <_detail_ANYXX_TYPENAME_PARAM_LIST(__VA_ARGS__)>)
 
 #define _detail_ANYXX_TEMPLATE_ARG_H(t) _detail_ANYXX_TEMPLATE_ARG t
 #define _detail_ANYXX_TEMPLATE_ARG(t) , t
@@ -177,7 +177,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_TEMPLATE_ARGS(...) \
   __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS1(__VA_ARGS__))
 #define _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(...) \
-  __VA_OPT__(template <_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
+  __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::dyn>)
