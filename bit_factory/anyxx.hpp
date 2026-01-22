@@ -561,10 +561,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       ((ErasedData = anyxx::default_erased_data<erased_data_default>::type)),  \
       n, BASE, base_name_pur, l, l, decoration)
 
-#define ANY_EX_(n, BASE, l, erased_data_default, decoration) \
-  __detail_ANYXX_ANY_EX_(n, any_##BASE, BASE, l, l, decoration)
-#define ANY_EX(n, l, erased_data_default, decoration) \
-  __detail_ANYXX_ANY_EX_(n, anyxx::any, anyxx::any, l, l, decoration)
+#define ANY_EX_(n, BASE, l, erased_data_default, decoration)          \
+  __detail_ANYXX_ANY_EX_(n, any_##BASE, BASE, l, erased_data_default, \
+                         decoration)
+#define ANY_EX(n, l, erased_data_default, decoration)                       \
+  __detail_ANYXX_ANY_EX_(n, anyxx::any, anyxx::any, l, erased_data_default, \
+                         decoration)
 
 #define ANY_(n, BASE, l, erased_data_default) \
   __detail_ANYXX_ANY_EX_(n, any_##BASE, BASE, l, erased_data_default, ())
@@ -1506,10 +1508,10 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 union value {
   value(mutable_void ptr = 0) : heap{ptr} {}
   value([[maybe_unused]] value const& other) noexcept {
-    std::memcpy(this, &other, sizeof(value));
+    trivial = other.trivial;
   }
   value& operator=([[maybe_unused]] value const& other) noexcept {
-    std::memcpy(this, &other, sizeof(value));
+    trivial = other.trivial;
     return *this;
   }
   ~value() {}
