@@ -787,6 +787,27 @@ constexpr inline std::size_t compute_model_size() {
 template <typename Dispatch = dyn>
 struct any_v_table;
 
+template <bool HasDispatch, template <typename...> typename Any>
+struct dispatch_holder;
+using dispatch_table_function_t = void (*)();
+using dispatch_table_dispatch_index_t = std::size_t;
+using dispatch_table_entry_t = unsigned long long;
+using dispatch_table_t = std::vector<dispatch_table_entry_t>;
+template <typename AnyVTable, typename Class>
+dispatch_table_t* dispatch_table_instance_implementation() {
+  static dispatch_table_t dispatch_table;
+  return &dispatch_table;
+}
+#ifdef ANY_DLL_MODE
+template <typename AnyVTable, typename Class>
+dispatch_table_t* dispatch_table_instance();
+#else
+template <typename AnyVTable, typename Class>
+dispatch_table_t* dispatch_table_instance() {
+  return dispatch_table_instance_implementation<AnyVTable, Class>();
+}
+#endif
+
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
 
@@ -1795,8 +1816,10 @@ meta_data& get_meta_data() {
 }
 #endif
 
-template <bool dynamic = false>
-struct any_base_v_table_holder {
+template <bool dynamic, typename... Traits>
+struct any_base_v_table_holder;
+template <typename... Traits>
+struct any_base_v_table_holder<false, Traits...> {
   struct v_table_t {};
   any_base_v_table_holder() = default;
   explicit any_base_v_table_holder(v_table_t*) {}
@@ -1830,10 +1853,64 @@ struct any_base_v_table_holder<true> {
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
-using dispatch_table_function_t = void (*)();
-using dispatch_table_dispatch_index_t = std::size_t;
-using dispatch_table_entry_t = unsigned long long;
-using dispatch_table_t = std::vector<dispatch_table_entry_t>;
+template <typename VTable>
+void set_is_derived_from(auto v_table) {
+  v_table->is_derived_from_ = +[](const std::type_info& from) {
+    return VTable::static_is_derived_from(from);
+  };
+}
+
+template <typename... Traits>
+struct with_open_dispatch : std::false_type {};
+
+template <typename... Traits>
+struct traits_v_table
+    : any_v_table<>,
+      Traits::v_table_t...,
+      dispatch_holder<with_open_dispatch<Traits...>::value, any> {
+ public:
+  using v_table_t = traits_v_table;
+  static constexpr bool open_dispatch_enabeled =
+      with_open_dispatch<Traits...>::value;
+  using own_dispatch_holder_t =
+      typename anyxx::dispatch_holder<open_dispatch_enabeled, any>;
+
+  template <typename Concrete>
+  traits_v_table(std::in_place_type_t<Concrete> concrete)
+      : any_v_table(concrete), Traits::v_table_t(concrete)... {
+    set_is_derived_from<v_table_t>(this);
+    if constexpr (open_dispatch_enabeled) {
+      own_dispatch_holder_t::set_dispatch_table(
+          ::anyxx::dispatch_table_instance<v_table_t, Concrete>());
+    }
+  }
+};
+
+template <typename Trait, typename... Traits>
+struct any_base_v_table_holder<true, Trait, Traits...> {
+ public:
+  using v_table_t = traits_v_table<Trait, Traits...>;
+
+ private:
+  v_table_t* v_table_ = nullptr;
+
+ public:
+  any_base_v_table_holder() = default;
+  explicit any_base_v_table_holder(any_v_table<>* v_table)
+      : v_table_(v_table) {}
+  void set_v_table_ptr(v_table_t* v_table) { v_table_ = v_table; }
+  // cppcheck-suppress-begin [functionConst, functionStatic]
+  auto get_v_table_ptr() {  // NOLINT
+    return v_table_;
+  }
+  // cppcheck-suppress-end [functionConst, functionStatic]
+  template <typename ErasedData, typename Concrete>
+  void init_v_table() {
+    v_table_ =
+        v_table_instance<v_table_t, anyxx::unerased<ErasedData, Concrete>>();
+  }
+  auto release_v_table() { return std::exchange(v_table_, nullptr); }
+};
 
 void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
   if (table->size() <= index) table->resize(index + 1);
@@ -1903,25 +1980,6 @@ auto& runtime_implementation() {
   return meta_data_;
 }
 
-template <typename AnyVTable, typename Class>
-dispatch_table_t* dispatch_table_instance_implementation() {
-  static dispatch_table_t dispatch_table;
-  return &dispatch_table;
-}
-
-#ifdef ANY_DLL_MODE
-
-template <typename AnyVTable, typename Class>
-dispatch_table_t* dispatch_table_instance();
-
-#else
-
-template <typename AnyVTable, typename Class>
-dispatch_table_t* dispatch_table_instance() {
-  return dispatch_table_instance_implementation<AnyVTable, Class>();
-}
-
-#endif  //
 
 template <typename VTable, typename Concrete>
 auto bind_v_table_to_meta_data() {
@@ -2135,7 +2193,7 @@ static_assert(moveable_from<value, value>);
 // any base
 
 template <is_erased_data ErasedData, typename... Traits>
-class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
+class any : public any_base_v_table_holder<is_dyn<ErasedData>, Traits...>,
             public Traits... {
  public:
   using erased_data_t = ErasedData;
@@ -2298,13 +2356,6 @@ bool is_derived_from(any<VV> const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
 
-template <typename VTable>
-void set_is_derived_from(auto v_table) {
-  v_table->is_derived_from_ = +[](const std::type_info& from) {
-    return VTable::static_is_derived_from(from);
-  };
-}
-
 template <typename To>
 auto unchecked_v_table_downcast_to(any_v_table<>* v_table) {
   return static_cast<To*>(v_table);
@@ -2360,8 +2411,6 @@ template <typename I>
 concept has_open_dispatch_enabeled =
     is_any<I> && I::v_table_t::open_dispatch_enabeled;
 
-template <bool HasDispatch, template <typename...> typename Any>
-struct dispatch_holder;
 template <template <typename...> typename Any>
 struct dispatch_holder<false, Any> {
   static void set_dispatch_table([[maybe_unused]] dispatch_table_t* t) {}
