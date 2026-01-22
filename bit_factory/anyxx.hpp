@@ -52,13 +52,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANYXX_JACKET_RETURN(...) \
   anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
-#define ANYXX_V_TABLE_PARAM_TYPE(...)                                \
-  anyxx::v_table_param<any_const_observer_t, any_mutable_observer_t, \
-                       any_value_t, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
-
-#define ANYXX_V_TABLE_RETURN_TYPE(...) \
-  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
-
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
