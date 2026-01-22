@@ -1900,9 +1900,7 @@ struct any_base_v_table_holder<true, Trait, Traits...> {
       : v_table_(v_table) {}
   void set_v_table_ptr(v_table_t* v_table) { v_table_ = v_table; }
   // cppcheck-suppress-begin [functionConst, functionStatic]
-  auto get_v_table_ptr() {  // NOLINT
-    return v_table_;
-  }
+  auto get_v_table_ptr() const { return v_table_; }
   // cppcheck-suppress-end [functionConst, functionStatic]
   template <typename ErasedData, typename Concrete>
   void init_v_table() {
@@ -1979,7 +1977,6 @@ auto& runtime_implementation() {
   static meta_data meta_data_{std::in_place_type<TYPE>};
   return meta_data_;
 }
-
 
 template <typename VTable, typename Concrete>
 auto bind_v_table_to_meta_data() {
@@ -2199,7 +2196,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>, Traits...>,
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_holder_t = any_base_v_table_holder<is_dyn<ErasedData>>;
+  using v_table_holder_t = any_base_v_table_holder<is_dyn<ErasedData>, Traits...>;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = trait_t::static_dispatch_t;
   using any_value_t = any<value, Traits...>;
