@@ -9,11 +9,11 @@
 namespace test::component_base {
 
 ANY_TEMPLATE(((KEY), (VALUE)), map,
-             (ANY_METHOD(VALUE const&, at, (KEY), const),
+             (ANY_METHOD_EXACT(VALUE const&, at, (KEY), const),
               ANY_METHOD(std::size_t, size, (), const)), anyxx::const_observer)
 
 ANY_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY), ),
+              (ANY_METHOD_OVERLOAD_EXACT(VALUE&, at, (KEY), ),
                ANY_OP(VALUE&, [], (KEY), )), anyxx::mutable_observer)
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,

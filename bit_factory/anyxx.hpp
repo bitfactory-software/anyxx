@@ -288,46 +288,46 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,     \
-                             const_, map_body, ...)                           \
-  overload template <typename Self>                                           \
-  decltype(auto) name_ext(this Self && self __VA_OPT__(, ) __VA_OPT__(   \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                 \
-    requires(::anyxx::const_correct_call_for_erased_data<                     \
-             void const_*, erased_data_t, exact_const>)                       \
-  {                                                                           \
-    if constexpr (!anyxx::voidness<T>) {                                      \
-      using traited_t = typename erased_data_t::value_t;                      \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                \
-        return static_dispatch_map_t<T>::name(                                \
-            std::forward<Self>(self)->base_t::erased_data_.value_ __VA_OPT__( \
-                , )                                                           \
-                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(    \
-                    a, _sig, __VA_ARGS__)));                                  \
-      } else {                                                                \
-        return ANYXX_JACKET_RETURN(type)::forward(                            \
-            static_dispatch_map_t<T>::name(                                   \
-                std::forward<Self>(self)                                      \
-                    ->base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(  \
-                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(       \
-                            a, _sig, __VA_ARGS__))),                          \
-            std::forward<Self>(self));                                        \
-      }                                                                       \
-    } else {                                                                  \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                \
-        return get_v_table(std::forward<Self>(self))                          \
-            ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))         \
-                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(         \
-                                        a, _sig, __VA_ARGS__)));              \
-      } else {                                                                \
-        return ANYXX_JACKET_RETURN(type)::forward(                            \
-            get_v_table(std::forward<Self>(self))                             \
-                ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))     \
-                           __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(     \
-                                            a, _sig, __VA_ARGS__))),          \
-            std::forward<Self>(self));                                        \
-      }                                                                       \
-    }                                                                         \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,    \
+                             const_, map_body, ...)                          \
+  overload template <typename Self>                                          \
+  decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(        \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                \
+    requires(::anyxx::const_correct_call_for_erased_data<                    \
+             void const_*, erased_data_t, exact_const>)                      \
+  {                                                                          \
+    if constexpr (!anyxx::voidness<T>) {                                     \
+      using traited_t = typename erased_data_t::value_t;                     \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
+        return static_dispatch_map_t<T>::name(                               \
+            std::forward<Self>(self).base_t::erased_data_.value_ __VA_OPT__( \
+                , )                                                          \
+                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(   \
+                    a, _sig, __VA_ARGS__)));                                 \
+      } else {                                                               \
+        return ANYXX_JACKET_RETURN(type)::forward(                           \
+            static_dispatch_map_t<T>::name(                                  \
+                std::forward<Self>(self)                                     \
+                    .base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(  \
+                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(      \
+                            a, _sig, __VA_ARGS__))),                         \
+            std::forward<Self>(self));                                       \
+      }                                                                      \
+    } else {                                                                 \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
+        return get_v_table(std::forward<Self>(self))                         \
+            ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))        \
+                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(        \
+                                        a, _sig, __VA_ARGS__)));             \
+      } else {                                                               \
+        return ANYXX_JACKET_RETURN(type)::forward(                           \
+            get_v_table(std::forward<Self>(self))                            \
+                ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))    \
+                           __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(    \
+                                            a, _sig, __VA_ARGS__))),         \
+            std::forward<Self>(self));                                       \
+      }                                                                      \
+    }                                                                        \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
@@ -624,13 +624,25 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_METHOD_(, ret, name, name, false, const_,               \
               (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
               _detail_EXPAND params)
+#define ANY_METHOD_PURE_EXACT(ret, name, params, const_)      \
+  ANY_METHOD_(, ret, name, name, true, const_,                \
+              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
+              _detail_EXPAND params)
 #define ANY_METHOD_DEFAULTED(ret, name, params, const_, ...)   \
   ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
+#define ANY_METHOD_DEFAULTED_EXACT(ret, name, params, const_, ...) \
+  ANY_METHOD_(, ret, name, name, true, const_, (__VA_ARGS__),      \
+              _detail_EXPAND params)
 #define ANY_METHOD(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_METHOD(, ret, name, name, false, const_, params)
+#define ANY_METHOD_EXACT(ret, name, params, const_) \
+  __detail_ANYXX_MEMBER_METHOD(, ret, name, name, true, const_, params)
 #define ANY_METHOD_OVERLOAD(ret, name, params, const_)                     \
   __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(name), ret, name, name, false, \
+                               const_, params)
+#define ANY_METHOD_OVERLOAD_EXACT(ret, name, params, const_)              \
+  __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(name), ret, name, name, true, \
                                const_, params)
 
 #define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \

@@ -6,12 +6,12 @@
 namespace {
 
 ANY_TEMPLATE(((KEY), (VALUE)), map,
-             (ANY_METHOD(VALUE const&, at, (KEY const&), const),
+             (ANY_METHOD_EXACT(VALUE const&, at, (KEY const&), const),
               ANY_METHOD(std::size_t, size, (), const)),
              anyxx::const_observer)
 
 ANY_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
+              (ANY_METHOD_OVERLOAD_EXACT(VALUE&, at, (KEY const&), ),
                ANY_OP(VALUE&, [], (KEY const&), )),
               anyxx::mutable_observer)
 
