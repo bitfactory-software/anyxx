@@ -402,9 +402,17 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
             base_template_params);                                             \
     using v_table_t = n##_v_table;                                             \
                                                                                \
-    using any_value_t = anyxx::any<anyxx::value, n>;                           \
-    using any_const_observer_t = anyxx::any<anyxx::const_observer, n>;         \
-    using any_mutable_observer_t = anyxx::any<anyxx::mutable_observer, n>;     \
+    using any_value_t =                                                        \
+        anyxx::any<anyxx::value, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
+                                     any_template_params)>;                    \
+    using any_const_observer_t =                                               \
+        anyxx::any<anyxx::const_observer,                                      \
+                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params)>;                                  \
+    using any_mutable_observer_t =                                             \
+        anyxx::any<anyxx::mutable_observer,                                    \
+                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params)>;                                  \
                                                                                \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
@@ -417,9 +425,17 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
       : BASE                                                                   \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
-    using any_value_t = anyxx::any<anyxx::value, n>;                           \
-    using any_const_observer_t = anyxx::any<anyxx::const_observer, n>;         \
-    using any_mutable_observer_t = anyxx::any<anyxx::mutable_observer, n>;     \
+    using any_value_t =                                                        \
+        anyxx::any<anyxx::value, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
+                                     any_template_params)>;                    \
+    using any_const_observer_t =                                               \
+        anyxx::any<anyxx::const_observer,                                      \
+                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params)>;                                  \
+    using any_mutable_observer_t =                                             \
+        anyxx::any<anyxx::mutable_observer,                                    \
+                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
+                       any_template_params)>;                                  \
                                                                                \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
@@ -460,9 +476,23 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT(n, fns) TRAIT_(n, anyxx::emtpty_trait, fns)
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::emtpty_trait, __VA_ARGS__)
 
-#define TRAIT_TEMPLATE(t, n, l)                                           \
-  TRAIT_META_FUNCTION(t, (T), (Concrete), , (StaticDispatchType), (V), n, \
-                      BASE, , l, decoration)
+#define TRAIT_TEMPLATE(t, n, l)                                                \
+  TRAIT_META_FUNCTION(                                                         \
+      _detail_REMOVE_PARENS(t),                                                \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
+      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
+      __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
+      __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n,               \
+      anyxx::emtpty_trait, , l, ())
+
+#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)                    \
+  TRAIT_META_FUNCTION(                                                         \
+      _detail_REMOVE_PARENS(t),                                                \
+      __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
+      __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
+      __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
+      __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, base,         \
+      _detail_REMOVE_PARENS(base_template_types), l, ())
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param

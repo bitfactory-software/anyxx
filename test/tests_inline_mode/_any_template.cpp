@@ -13,16 +13,19 @@ struct X {
 namespace {
 
 TRAIT(stringable, (ANY_METHOD(std::string, to_string, (), const)))
-template<typename Box = value>
+template <typename Box = value>
 using any_to_string = any<Box, stringable>;
 
-ANY_TEMPLATE(((KEY), (VALUE)), map,
-             (ANY_METHOD_EXACT(VALUE const&, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)), )
+TRAIT_TEMPLATE(((KEY), (VALUE)), map,
+               (ANY_METHOD_EXACT(VALUE const&, at, (KEY const&), const),
+                ANY_METHOD(std::size_t, size, (), const)))
+template <typename Key, typename Value, typename Box = value>
+using any_map = any<Box, map<Key, Value>>;
 
-ANY_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-              (ANY_METHOD_OVERLOAD_EXACT(VALUE&, at, (KEY const&), ),
-               ANY_OP(VALUE&, [], (KEY const&), )), )
+TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
+               (ANY_METHOD_EXACT(VALUE&, at, (KEY const&), ), ))
+template <typename Key, typename Value, typename Box = value>
+using any_mutable_map = any<Box, mutable_map<Key, Value>>;
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
              (ANY_METHOD(VALUE, at, (KEY const&), const),
