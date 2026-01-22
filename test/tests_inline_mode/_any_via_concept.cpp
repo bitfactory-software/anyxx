@@ -108,7 +108,7 @@ template <typename Any>
 struct emtpty_trait_v_table {
   emtpty_trait_v_table() = default;
   template <typename Concrete>
-  emtpty_trait_v_table(std::in_place_type_t<Concrete> concrete){};
+  emtpty_trait_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete){};
 };
 template <typename Any>
 struct emtpty_trait {
