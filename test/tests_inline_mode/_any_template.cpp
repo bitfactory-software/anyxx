@@ -114,6 +114,9 @@ TEST_CASE("any template test3") {
         auto y = x.at("one");
         auto z = y.at(1);
         REQUIRE(z == 3.14);
+        {
+          auto xx = map_i.at(1).at("one");
+        };
         REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
         REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
         map_i.at(2).at("one").at(4) = 8.28;

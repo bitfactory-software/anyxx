@@ -288,42 +288,46 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
-                             const_, map_body, ...)                            \
-  overload decltype(auto) name_ext(__VA_OPT__(                                 \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) const_           \
-    requires(::anyxx::const_correct_call_for_erased_data<                      \
-             void const_*, erased_data_t, exact_const>)                        \
-  {                                                                            \
-    if constexpr (!anyxx::voidness<T>) {                                       \
-      using traited_t = typename erased_data_t::value_t;                       \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
-        return static_dispatch_map_t<T>::name(                                 \
-            base_t::erased_data_.value_ __VA_OPT__(, )                         \
-                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
-                    a, _sig, __VA_ARGS__)));                                   \
-      } else {                                                                 \
-        return ANYXX_JACKET_RETURN(type)::forward(                             \
-            static_dispatch_map_t<T>::name(                                    \
-                base_t::erased_data_.value_ __VA_OPT__(, )                     \
-                    __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
-                        a, _sig, __VA_ARGS__))),                               \
-            *this);                                                            \
-      }                                                                        \
-    } else {                                                                   \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
-        return get_v_table_ptr()->name(                                        \
-            anyxx::get_void_data_ptr(*this) __VA_OPT__(                        \
-                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
-      } else {                                                                 \
-        return ANYXX_JACKET_RETURN(type)::forward(                             \
-            get_v_table_ptr()->name(                                           \
-                anyxx::get_void_data_ptr(*this)                                \
-                    __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(             \
-                                     a, _sig, __VA_ARGS__))),                  \
-            *this);                                                            \
-      }                                                                        \
-    }                                                                          \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,     \
+                             const_, map_body, ...)                           \
+  overload template <typename Self>                                           \
+  decltype(auto) name_ext(this Self && self __VA_OPT__(, ) __VA_OPT__(   \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                 \
+    requires(::anyxx::const_correct_call_for_erased_data<                     \
+             void const_*, erased_data_t, exact_const>)                       \
+  {                                                                           \
+    if constexpr (!anyxx::voidness<T>) {                                      \
+      using traited_t = typename erased_data_t::value_t;                      \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                \
+        return static_dispatch_map_t<T>::name(                                \
+            std::forward<Self>(self)->base_t::erased_data_.value_ __VA_OPT__( \
+                , )                                                           \
+                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(    \
+                    a, _sig, __VA_ARGS__)));                                  \
+      } else {                                                                \
+        return ANYXX_JACKET_RETURN(type)::forward(                            \
+            static_dispatch_map_t<T>::name(                                   \
+                std::forward<Self>(self)                                      \
+                    ->base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(  \
+                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(       \
+                            a, _sig, __VA_ARGS__))),                          \
+            std::forward<Self>(self));                                        \
+      }                                                                       \
+    } else {                                                                  \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                \
+        return get_v_table(std::forward<Self>(self))                          \
+            ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))         \
+                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(         \
+                                        a, _sig, __VA_ARGS__)));              \
+      } else {                                                                \
+        return ANYXX_JACKET_RETURN(type)::forward(                            \
+            get_v_table(std::forward<Self>(self))                             \
+                ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))     \
+                           __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(     \
+                                            a, _sig, __VA_ARGS__))),          \
+            std::forward<Self>(self));                                        \
+      }                                                                       \
+    }                                                                         \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
@@ -434,7 +438,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     template <typename Concrete>                                               \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete);      \
-                                                                               \
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(any_template_params)>            \
@@ -1800,7 +1803,8 @@ struct any_base_v_table_holder<true> {
   template <typename ErasedData, typename Concrete, typename Self>
   void init_v_table(this Self& self) {
     using derived_v_table_t = typename Self::v_table_t;
-    self.v_table_ = v_table_instance<derived_v_table_t, anyxx::unerased<ErasedData, Concrete>>();
+    self.v_table_ = v_table_instance<derived_v_table_t,
+                                     anyxx::unerased<ErasedData, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
@@ -2376,7 +2380,7 @@ template <typename Param>
   requires(!std::is_reference_v<Param>)
 struct jacket_return<Param> {
   template <typename Sig>
-  static Param forward(Sig&& sig, auto&) {
+  static Param forward(Sig&& sig, auto&&) {
     return std::forward<Sig>(sig);
   }
 };
@@ -2384,7 +2388,7 @@ template <typename Param>
   requires std::is_reference_v<Param>
 struct jacket_return<Param> {
   template <typename Sig>
-  static decltype(auto) forward(Sig&& sig, auto&) {
+  static decltype(auto) forward(Sig&& sig, auto&&) {
     return std::forward<Sig>(sig);
   }
 };
@@ -2397,7 +2401,7 @@ struct jacket_return<self> {
 };
 template <>
 struct jacket_return<self&> {
-  static auto& forward(auto, auto& any) {
+  static auto& forward(auto, auto&& any) {
     return any;  // "return *this" semantics!
   }
 };
