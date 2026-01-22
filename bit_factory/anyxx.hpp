@@ -512,7 +512,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
     template <anyxx::is_erased_data Other,                                     \
-              template <typename> typename... Traits>                          \
+              typename... Traits>                          \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
@@ -922,7 +922,7 @@ concept is_erased_data =
       } -> std::same_as<E>;
     };
 
-template <is_erased_data ErasedData, template <typename> typename... Traits>
+template <is_erased_data ErasedData, typename... Traits>
 class any;
 
 template <typename ErasedData>
@@ -2125,9 +2125,9 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ErasedData, template <typename> typename... Traits>
+template <is_erased_data ErasedData, typename... Traits>
 class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
-            public Traits<any<ErasedData, Traits...>>... {
+            public Traits... {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
@@ -2138,8 +2138,6 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
   using any_value_t = any<value, Traits...>;
   using any_const_observer_t = any<const_observer, Traits...>;
   using any_mutable_observer_t = any<mutable_observer, Traits...>;
-  using trait_v_table_t = struct v_table : any_v_table<v_table>,
-        Traits<any<ErasedData, Traits...>>::v_table_t... {};
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
@@ -2234,7 +2232,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>>,
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
 
-  template <is_erased_data Other, template <typename> typename... Traits>
+  template <is_erased_data Other, typename... Traits>
   friend class any;
 
   template <is_any I>
