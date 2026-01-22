@@ -4,7 +4,6 @@
 #include <string>
 
 using namespace anyxx;
-using namespace anyxx;
 
 struct X {
   std::string s_;
@@ -12,7 +11,10 @@ struct X {
 };
 
 namespace {
-ANY(to_string, (ANY_METHOD(std::string, to_string, (), const)), )
+
+TRAIT(stringable, (ANY_METHOD(std::string, to_string, (), const)))
+template<typename Box = value>
+using any_to_string = any<Box, stringable>;
 
 ANY_TEMPLATE(((KEY), (VALUE)), map,
              (ANY_METHOD_EXACT(VALUE const&, at, (KEY const&), const),
@@ -34,10 +36,10 @@ ANY_TEMPLATE(((KEY)), map_to_string,
              (ANY_METHOD((any_to_string<const_observer>), at, (KEY const&),
                          const)), )
 
-ANY_MODEL_MAP((int), to_string) {
+ANY_MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-ANY_MODEL_MAP((double), to_string) {
+ANY_MODEL_MAP((double), stringable) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 }  // namespace

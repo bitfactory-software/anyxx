@@ -1989,7 +1989,7 @@ struct any_base_v_table_holder<true, Trait, Traits...> {
 
  public:
   any_base_v_table_holder() = default;
-  explicit any_base_v_table_holder(any_v_table<>* v_table)
+  explicit any_base_v_table_holder(v_table_t* v_table)
       : v_table_(v_table) {}
   void set_v_table_ptr(v_table_t* v_table) { v_table_ = v_table; }
   // cppcheck-suppress-begin [functionConst, functionStatic]
