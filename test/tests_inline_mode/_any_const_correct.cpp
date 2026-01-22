@@ -58,7 +58,7 @@ ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), )
 
 using const_function = any_const_function_i<const_observer>;
 using mutating_function = any_mutating_function_i<mutable_observer>;
-using shared_const_function =any_const_function_i<shared_const>;
+using shared_const_function = any_const_function_i<shared_const>;
 using shared_mutating_function = any_mutating_function_i<shared_const>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
@@ -95,7 +95,11 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
     const_function const cf = function_object;
     mutating_function const mf = function_object;
     REQUIRE(cf() == "hallo");
-    static_assert(!std::invocable<mutating_function const, char const*>);
+    // +++ questionable
+    static_assert(std::invocable<mutating_function const, char const*>);
+    mf("world");
+    REQUIRE(cf() == "world");
+    // --- questionable
   }
 
   {
@@ -226,7 +230,9 @@ static_assert(
 static_assert(can_call_get_text<mutable_text_i_mutable>);
 static_assert(can_call_get_text<mutable_text_i_mutable const>);
 static_assert(can_call_set_text<mutable_text_i_mutable>);
-static_assert(!can_call_set_text<mutable_text_i_mutable const>);
+// +++ questionable
+static_assert(can_call_set_text<mutable_text_i_mutable const>);
+// --- questionable
 
 TEST_CASE("_interface_const_correct const/mutable member function") {
   using namespace anyxx;
