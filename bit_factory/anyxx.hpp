@@ -370,8 +370,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 // cppcheck-suppress-macro performance-unnecessary-value-param
 #define TRAIT_META_FUNCTION(                                                   \
     any_template_params, model_map_template_params, concrete_template_params,  \
-    v_table_template_params, static_dispatch_template_params,                  \
-    v_model_map_template_params, n, BASE, base_template_params, l, decoration) \
+    static_dispatch_template_params, variant_model_map_template_params, n,     \
+    BASE, base_template_params, l, decoration)                                 \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
                                                                                \
@@ -389,12 +389,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
     template <typename V>                                                      \
     using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
-        v_model_map_template_params)>;                                         \
+        variant_model_map_template_params)>;                                   \
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
-      v_table_template_params) struct n##_v_table                              \
+      any_template_params) struct n##_v_table                                  \
       : BASE##_v_table                                                         \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
     using v_table_base_t =                                                     \
@@ -437,9 +437,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
-      v_table_template_params) template <typename Concrete>                    \
+      any_template_params) template <typename Concrete>                        \
   n##_v_table                                                                  \
-  _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(v_table_template_params)::n##_v_table(  \
+  _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)::n##_v_table(      \
       std::in_place_type_t<Concrete> concrete)                                 \
       : v_table_base_t(concrete) {                                             \
     using concept_map =                                                        \
@@ -449,8 +449,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define __detail_ANYXX_TRAIT_(t, n, BASE, l, decoration)                       \
-  TRAIT_META_FUNCTION(, (T), (Concrete), , (StaticDispatchType), (V), n, BASE, \
-                      , l, decoration)
+  TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
+                      l, decoration)
 
 #define TRAIT_EX_(n, BASE, l, decoration) \
   __detail_ANYXX_TRAIT_(, n, BASE, l, decoration)
@@ -460,13 +460,17 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT(n, fns) TRAIT_(n, anyxx::emtpty_trait, fns)
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::emtpty_trait, __VA_ARGS__)
 
+#define TRAIT_TEMPLATE(t, n, l)                                           \
+  TRAIT_META_FUNCTION(t, (T), (Concrete), , (StaticDispatchType), (V), n, \
+                      BASE, , l, decoration)
+
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
 #define ANY_META_FUNCTION(                                                     \
     pure_template_params, any_template_params,                                 \
     any_template_params_with_defaults, model_map_template_params, tpl3, tpl4,  \
     v_table_template_params, static_dispatch_template_params,                  \
-    traitet_template_params, v_model_map_template_params,                      \
+    traitet_template_params, variant_model_map_template_params,                \
     any_value_template_params, any_const_observer_template_params,             \
     any_mutable_observer_template_params, n, name_pure, BASE, base_name_pur,   \
     base_template_params, base_template_params_with_erased_data, l,            \
@@ -494,7 +498,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
     template <typename V>                                                      \
     using x_model_map = name_pure##_model_map<_detail_ANYXX_TEMPLATE_ARGS(     \
-        v_model_map_template_params)>;                                         \
+        variant_model_map_template_params)>;                                   \
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
                                                                                \
@@ -1989,8 +1993,7 @@ struct any_base_v_table_holder<true, Trait, Traits...> {
 
  public:
   any_base_v_table_holder() = default;
-  explicit any_base_v_table_holder(v_table_t* v_table)
-      : v_table_(v_table) {}
+  explicit any_base_v_table_holder(v_table_t* v_table) : v_table_(v_table) {}
   void set_v_table_ptr(v_table_t* v_table) { v_table_ = v_table; }
   // cppcheck-suppress-begin [functionConst, functionStatic]
   auto get_v_table_ptr() const { return v_table_; }
