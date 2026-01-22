@@ -166,6 +166,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
   typename _detail_REMOVE_PARENS(head) __VA_OPT__(   \
       _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
+#define _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(...) \
+  __VA_OPT__(<_detail_ANYXX_TYPENAME_PARAM_LIST(__VA_ARGS__)>)
 
 #define _detail_ANYXX_TEMPLATE_ARG_H(t) _detail_ANYXX_TEMPLATE_ARG t
 #define _detail_ANYXX_TEMPLATE_ARG(t) , t
@@ -174,6 +176,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _detail_foreach_macro(_detail_ANYXX_TEMPLATE_ARG_H, __VA_ARGS__))
 #define _detail_ANYXX_TEMPLATE_ARGS(...) \
   __VA_OPT__(_detail_ANYXX_TEMPLATE_ARGS1(__VA_ARGS__))
+#define _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(...) \
+  __VA_OPT__(template <_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__)>)
 
 #define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H(...) \
   __VA_OPT__(<_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::dyn>)
@@ -296,7 +300,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     requires(::anyxx::const_correct_call_for_erased_data<                    \
              void const_*, erased_data_t, exact_const>)                      \
   {                                                                          \
-    using self_t = std::decay_t<Self>;                                      \
+    using self_t = std::decay_t<Self>;                                       \
     using T = typename self_t::T;                                            \
     using erased_data_t = typename self_t::erased_data_t;                    \
                                                                              \
