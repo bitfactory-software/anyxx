@@ -476,17 +476,20 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT(n, fns) TRAIT_(n, anyxx::emtpty_trait, fns)
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::emtpty_trait, __VA_ARGS__)
 
-#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)                    \
+#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)     \
   TRAIT_META_FUNCTION(                                                         \
       _detail_REMOVE_PARENS(t),                                                \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, base,         \
-      _detail_REMOVE_PARENS(base_template_types), l, ())
+      _detail_REMOVE_PARENS(base_template_types), l, decoration)
 
-#define TRAIT_TEMPLATE(t, n, l)                                                \
-    TRAIT_TEMPLATE_(t, n, anyxx::emtpty_trait, (), l)
+#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
+  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
+
+#define TRAIT_TEMPLATE(t, n, l) \
+  TRAIT_TEMPLATE_(t, n, anyxx::emtpty_trait, (), l)
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
