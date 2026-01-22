@@ -5,7 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
-#define CONCEPT_META_FUNCTION(                                                 \
+#define TRAIT_META_FUNCTION(                                                   \
     any_template_params, model_map_template_params, concrete_template_params,  \
     v_table_template_params, static_dispatch_template_params,                  \
     v_model_map_template_params, n, BASE, base_template_params, l, decoration) \
@@ -85,9 +85,9 @@
     _detail_ANYXX_V_TABLE_LAMBDAS(l);                                          \
   };
 
-#define __detail_ANYXX_TRAIT_(t, n, BASE, l, decoration)                   \
-  CONCEPT_META_FUNCTION(, (T), (Concrete), , (StaticDispatchType), (V), n, \
-                        BASE, , l, decoration)
+#define __detail_ANYXX_TRAIT_(t, n, BASE, l, decoration)                       \
+  TRAIT_META_FUNCTION(, (T), (Concrete), , (StaticDispatchType), (V), n, BASE, \
+                      , l, decoration)
 
 #define TRAIT_EX_(n, BASE, l, decoration) \
   __detail_ANYXX_TRAIT_(, n, BASE, l, decoration)
