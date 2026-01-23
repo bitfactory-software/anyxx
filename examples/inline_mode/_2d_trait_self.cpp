@@ -8,6 +8,13 @@ ANY(has_equal,
     (ANY_METHOD_DEFAULTED(bool, is_equal, (anyxx::self const&), const,
                           [&x](T const& y) { return x == y; })), )
 
+//TRAIT(has_equal,
+//    (ANY_METHOD_DEFAULTED(bool, is_equal, (anyxx::self const&), const,
+//                          [&x](T const& y) { return x == y; })))
+//
+//template< typename Box = anyxx::shared_const>
+//using any_has_equal = anyxx::any<Box, has_equal>;
+
 }  // namespace example_2d
 
 TEST_CASE("example 2da any_has_equal") {
