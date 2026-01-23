@@ -643,7 +643,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data Other, typename... Traits>                 \
+    template <anyxx::is_erased_data Other, typename Trait>                 \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
@@ -1076,7 +1076,17 @@ concept is_erased_data =
       } -> std::same_as<E>;
     };
 
-template <is_erased_data ErasedData, typename... Traits>
+struct emtpty_trait_v_table {
+  emtpty_trait_v_table() = default;
+  template <typename Concrete>
+  emtpty_trait_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete){};
+};
+struct emtpty_trait {
+  using v_table_t = emtpty_trait_v_table;
+};
+
+template <is_erased_data ErasedData, typename Trait = emtpty_trait>
 class any;
 
 template <typename ErasedData>
@@ -1940,10 +1950,10 @@ meta_data& get_meta_data() {
 }
 #endif
 
-template <bool dynamic, typename... Traits>
+template <bool dynamic, typename Trait>
 struct any_base_v_table_holder;
-template <typename... Traits>
-struct any_base_v_table_holder<false, Traits...> {
+template <typename Trait>
+struct any_base_v_table_holder<false, Trait> {
   struct v_table_t {};
   any_base_v_table_holder() = default;
   explicit any_base_v_table_holder(v_table_t*) {}
@@ -1954,7 +1964,7 @@ struct any_base_v_table_holder<false, Traits...> {
   static auto release_v_table() { return nullptr; }
 };
 template <>
-struct any_base_v_table_holder<true> {
+struct any_base_v_table_holder<true, emtpty_trait> {
   any_base_v_table_holder() = default;
   explicit any_base_v_table_holder(any_v_table<>* v_table)
       : v_table_(v_table) {}
@@ -1984,7 +1994,7 @@ void set_is_derived_from(auto v_table) {
   };
 }
 
-template <typename... Traits>
+template <typename Trait>
 struct with_open_dispatch : std::false_type {};
 
 template <typename... Traits>
@@ -2010,10 +2020,10 @@ struct traits_v_table
   }
 };
 
-template <typename Trait, typename... Traits>
-struct any_base_v_table_holder<true, Trait, Traits...> {
+template <typename Trait>
+struct any_base_v_table_holder<true, Trait> {
  public:
-  using v_table_t = traits_v_table<Trait, Traits...>;
+  using v_table_t = traits_v_table<Trait>;
 
  private:
   v_table_t* v_table_ = nullptr;
@@ -2031,16 +2041,6 @@ struct any_base_v_table_holder<true, Trait, Traits...> {
         v_table_instance<v_table_t, anyxx::unerased<ErasedData, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
-};
-
-struct emtpty_trait_v_table {
-  emtpty_trait_v_table() = default;
-  template <typename Concrete>
-  emtpty_trait_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete){};
-};
-struct emtpty_trait {
-  using v_table_t = emtpty_trait_v_table;
 };
 
 void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
@@ -2322,20 +2322,20 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ErasedData, typename... Traits>
-class any : public any_base_v_table_holder<is_dyn<ErasedData>, Traits...>,
-            public Traits... {
+template <is_erased_data ErasedData, typename Trait>
+class any : public any_base_v_table_holder<is_dyn<ErasedData>, Trait>,
+            public Trait {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
   using v_table_holder_t =
-      any_base_v_table_holder<is_dyn<ErasedData>, Traits...>;
+      any_base_v_table_holder<is_dyn<ErasedData>, Trait>;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = trait_t::static_dispatch_t;
-  using any_value_t = any<value, Traits...>;
-  using any_const_observer_t = any<const_observer, Traits...>;
-  using any_mutable_observer_t = any<mutable_observer, Traits...>;
+  using any_value_t = any<value, Trait>;
+  using any_const_observer_t = any<const_observer, Trait>;
+  using any_mutable_observer_t = any<mutable_observer, Trait>;
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
@@ -2430,7 +2430,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>, Traits...>,
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
 
-  template <is_erased_data Other, typename... Traits>
+  template <is_erased_data Other, typename Trait>
   friend class any;
 
   template <is_any I>
