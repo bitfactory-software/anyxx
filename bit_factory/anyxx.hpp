@@ -292,51 +292,51 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,    \
-                             const_, map_body, ...)                          \
-  overload template <typename Self>                                          \
-  decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(        \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                \
-    requires(::anyxx::const_correct_call_for_erased_data<                    \
-             void const_*, typename std::decay_t<Self>::erased_data_t,       \
-             exact_const>)                                                   \
-  {                                                                          \
-    using self_t = std::decay_t<Self>;                                       \
-    using T = typename self_t::T;                                            \
-    using erased_data_t = typename self_t::erased_data_t;                    \
-                                                                             \
-    if constexpr (!anyxx::voidness<T>) {                                     \
-      using traited_t = typename erased_data_t::value_t;                     \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
-        return static_dispatch_map_t<T>::name(                               \
-            std::forward<Self>(self).base_t::erased_data_.value_ __VA_OPT__( \
-                , )                                                          \
-                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(   \
-                    a, _sig, __VA_ARGS__)));                                 \
-      } else {                                                               \
-        return ANYXX_JACKET_RETURN(type)::forward(                           \
-            static_dispatch_map_t<T>::name(                                  \
-                std::forward<Self>(self)                                     \
-                    .base_t::erased_data_.value_ __VA_OPT__(, ) __VA_OPT__(  \
-                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(      \
-                            a, _sig, __VA_ARGS__))),                         \
-            std::forward<Self>(self));                                       \
-      }                                                                      \
-    } else {                                                                 \
-      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {               \
-        return get_v_table(std::forward<Self>(self))                         \
-            ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))        \
-                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(        \
-                                        a, _sig, __VA_ARGS__)));             \
-      } else {                                                               \
-        return ANYXX_JACKET_RETURN(type)::forward(                           \
-            get_v_table(std::forward<Self>(self))                            \
-                ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))    \
-                           __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(    \
-                                            a, _sig, __VA_ARGS__))),         \
-            std::forward<Self>(self));                                       \
-      }                                                                      \
-    }                                                                        \
+#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
+                             const_, map_body, ...)                            \
+  overload template <typename Self>                                            \
+  decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(          \
+      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                  \
+    requires(::anyxx::const_correct_call_for_erased_data<                      \
+             void const_*, typename std::decay_t<Self>::erased_data_t,         \
+             exact_const>)                                                     \
+  {                                                                            \
+    using self_t = std::decay_t<Self>;                                         \
+    using T = typename self_t::T;                                              \
+    using erased_data_t = typename self_t::erased_data_t;                      \
+                                                                               \
+    if constexpr (!anyxx::voidness<T>) {                                       \
+      using traited_t = typename erased_data_t::value_t;                       \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
+        return static_dispatch_map_t<T>::name(                                 \
+            get_erased_data(std::forward<Self>(self))                          \
+                .value_ __VA_OPT__(, )                                         \
+                    __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
+                        a, _sig, __VA_ARGS__)));                               \
+      } else {                                                                 \
+        return ANYXX_JACKET_RETURN(type)::forward(                             \
+            static_dispatch_map_t<T>::name(                                    \
+                get_erased_data(std::forward<Self>(self))                      \
+                    .value_ __VA_OPT__(, ) __VA_OPT__(                         \
+                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(        \
+                            a, _sig, __VA_ARGS__))),                           \
+            std::forward<Self>(self));                                         \
+      }                                                                        \
+    } else {                                                                   \
+      if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
+        return get_v_table(std::forward<Self>(self))                           \
+            ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))          \
+                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(          \
+                                        a, _sig, __VA_ARGS__)));               \
+      } else {                                                                 \
+        return ANYXX_JACKET_RETURN(type)::forward(                             \
+            get_v_table(std::forward<Self>(self))                              \
+                ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))      \
+                           __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(      \
+                                            a, _sig, __VA_ARGS__))),           \
+            std::forward<Self>(self));                                         \
+      }                                                                        \
+    }                                                                          \
   }
 
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
@@ -2435,6 +2435,8 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>,
   template <is_any Friend>
   friend inline auto& get_erased_data(Friend const& any);
   template <is_any Friend>
+  friend inline auto& get_erased_data(Friend& any);
+  template <is_any Friend>
   friend inline decltype(auto) move_erased_data(Friend&& any);
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
@@ -2466,6 +2468,10 @@ bool has_data(Any const& any) {
 }
 template <is_any Any>
 inline auto& get_erased_data(Any const& any) {
+  return any.erased_data_;
+}
+template <is_any Any>
+inline auto& get_erased_data(Any& any) {
   return any.erased_data_;
 }
 template <is_any Any>
