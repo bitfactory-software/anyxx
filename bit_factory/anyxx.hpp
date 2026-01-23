@@ -1226,10 +1226,6 @@ U* unerase_cast_if(ErasedData const& o, any_v_table<>* v_table)
 // --------------------------------------------------------------------------------
 // (un)erased data val
 
-template <template <typename> typename Any, typename T>
-auto trait_as(T&& v) {
-  return Any<anyxx::val<std::decay_t<T>>>{std::forward<T>(v)};
-}
 
 template <typename V>
 struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
@@ -2545,6 +2541,16 @@ inline auto unerase_cast(Any const& o) {
 template <typename U, is_any Any>
 inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_erased_data(o), get_v_table(o));
+}
+
+template <template <typename> typename Any, typename T>
+auto trait_as(T&& v) {
+  return Any<anyxx::val<std::decay_t<T>>>{std::forward<T>(v)};
+}
+
+template <typename Trait, typename T>
+auto trait_as(T&& v) {
+  return any<anyxx::val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
 }
 
 template <typename VTable, typename Concrete>
