@@ -19,11 +19,14 @@ ANY_TEMPLATE_EX(
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
      using reference = Reference; auto operator++(int) { return post_inc(); }))
 
-ANY_TEMPLATE(
+TRAIT_TEMPLATE(
     ((ValueType), (Reference)), forward_range,
     (ANY_METHOD((any_forward_iterator<ValueType, Reference>), begin, (), const),
-     ANY_METHOD((any_forward_iterator<ValueType, Reference>), end, (), const)),
-    anyxx::const_observer)
+     ANY_METHOD((any_forward_iterator<ValueType, Reference>), end, (), const)))
+
+template <typename ValueType, typename Reference,
+          typename Box = anyxx::const_observer>
+using any_forward_range = any<Box, forward_range<ValueType, Reference>>;
 
 template <typename A>
 concept is_any_self_forward_range =

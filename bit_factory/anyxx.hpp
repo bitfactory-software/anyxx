@@ -2635,13 +2635,13 @@ template <typename AnyConstObserver, typename AnyMutableObserver,
           typename AnyValue>
 struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
                                self const&> {
-  using type = AnyConstObserver;
+  using type = any<const_observer>;
 };
 template <typename AnyConstObserver, typename AnyMutableObserver,
           typename AnyValue>
 struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
                                self&> {
-  using type = AnyMutableObserver;
+  using type = any<mutable_observer>;
 };
 template <typename AnyConstObserver, typename AnyMutableObserver,
           typename AnyValue, typename Param>

@@ -22,9 +22,12 @@ anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
     return std::vector<int>{1, 2, 3};
 }
 
-ANY(stringable,
+TRAIT(stringable,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [&x]() { return std::format("{}", x); })), )
+                          [&x]() { return std::format("{}", x); })))
+
+template<typename Box>
+using any_stringable = anyxx::any<Box, stringable>;
 
 }  // namespace example_3
 
@@ -86,7 +89,7 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, int, int> r{v};
+    any<val<v_t const &>, forward_range<int, int>> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
     CHECK(x == 3);
@@ -120,8 +123,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, any_stringable<anyxx::value>,
-                            any_stringable<anyxx::value>>
+    any<val<v_t const &>, forward_range<any_stringable<anyxx::value>,
+                            any_stringable<anyxx::value>>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -139,7 +142,7 @@ TEST_CASE("example 3 transform unerase") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, any_stringable<anyxx::value>,
+    any_forward_range<any_stringable<anyxx::value>,
                             any_stringable<anyxx::value>>
         r{v};
     int x = 0;
