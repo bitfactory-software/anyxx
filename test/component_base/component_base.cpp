@@ -23,10 +23,6 @@ using namespace test::component_base;
 
 //
 ANY_META_CLASS_STATIC(X)
-ANY_MODEL(X, test::component_base, any_get_value_i)
-ANY_MODEL(X, test::component_base, any_set_value_i)
-// ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
-ANY_MODEL(X, test::component_base, any_to_string_i)
 
 any_to_string_i<anyxx::const_observer> test::component_base::get_to_string_i_co() {
   any_to_string_i<anyxx::const_observer> i{a_x};

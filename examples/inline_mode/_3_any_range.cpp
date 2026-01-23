@@ -86,7 +86,7 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, int, int> r{v};
+    any<val<v_t const &>, forward_range<int, int>> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
     CHECK(x == 3);
@@ -120,8 +120,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, any_stringable<anyxx::value>,
-                            any_stringable<anyxx::value>>
+    any<val<v_t const &>, forward_range<any_stringable<anyxx::value>,
+                                        any_stringable<anyxx::value>>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -139,8 +139,8 @@ TEST_CASE("example 3 transform unerase") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range_trait<v_t const &, any_stringable<anyxx::value>,
-                            any_stringable<anyxx::value>>
+    any<val<v_t const &>, forward_range<any_stringable<anyxx::value>,
+                                        any_stringable<anyxx::value>>>
         r{v};
     int x = 0;
     for (auto i : std::views::transform(

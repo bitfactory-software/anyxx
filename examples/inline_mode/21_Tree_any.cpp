@@ -13,12 +13,10 @@ namespace {
 
 ANY(node, (ANY_METHOD(int, value, (), const),
              ANY_METHOD(std::string, as_forth, (), const),
-             ANY_METHOD(std::string, as_lisp, (), const)), )
-
-using node = any_node<shared_const>;
+             ANY_METHOD(std::string, as_lisp, (), const)), shared_const)
 
 struct Plus {
-  Plus(node left, node right)
+  Plus(any_node<> left, any_node<> right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() + right_.value(); }
   [[nodiscard]] std::string as_forth() const {
@@ -28,11 +26,11 @@ struct Plus {
     return "(plus " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  node left_, right_;
+  any_node<> left_, right_;
 };
 
 struct Times {
-  Times(node left, node right)
+  Times(any_node<> left, any_node<> right)
       : left_(std::move(left)), right_(std::move(right)) {}
   [[nodiscard]] int value() const { return left_.value() * right_.value(); }
   [[nodiscard]] std::string as_forth() const {
@@ -42,7 +40,7 @@ struct Times {
     return "(times " + left_.as_lisp() + " " + right_.as_lisp() + ")";
   }
 
-  node left_, right_;
+  any_node<> left_, right_;
 };
 
 struct Integer {
@@ -56,7 +54,7 @@ struct Integer {
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
-  return node{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
+  return any_node<>{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
 }
 
 }  // namespace
@@ -64,7 +62,7 @@ auto make_node(ARGS&&... args) {
 TEST_CASE("21_Tree_any") {
   using namespace anyxx;
 
-  auto expr = node(make_node<Times>(
+  auto expr = any_node<>(make_node<Times>(
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));
 
