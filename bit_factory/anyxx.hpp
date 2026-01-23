@@ -2723,14 +2723,14 @@ template <typename Traited>
 struct forward_trait_to_map<Traited, self&> {
   template <typename Sig>
   static Traited& forward(Sig&& sig) {
-    return sig.erased_data_.value_;
+    return get_erased_data(std::forward<Sig>(sig)).value_;
   }
 };
 template <typename Traited>
 struct forward_trait_to_map<Traited, self const&> {
   template <typename Sig>
   static Traited const& forward(Sig&& sig) {
-    return sig.erased_data_.value_;
+    return get_erased_data(std::forward<Sig>(sig)).value_;
   }
 };
 
