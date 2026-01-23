@@ -643,7 +643,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     n(n&&) = default;                                                          \
     n& operator=(n const&) = default;                                          \
     n& operator=(n&&) = default;                                               \
-    template <anyxx::is_erased_data Other, typename Trait>                 \
+    template <anyxx::is_erased_data Other, typename Trait,                     \
+              bool WithOpenDispatch>                                           \
     friend class anyxx::any;                                                   \
     template <anyxx::is_any To, anyxx::is_any From>                            \
     friend To anyxx::unchecked_downcast_to(From from)                          \
@@ -1086,7 +1087,8 @@ struct emtpty_trait {
   using v_table_t = emtpty_trait_v_table;
 };
 
-template <is_erased_data ErasedData, typename Trait = emtpty_trait>
+template <is_erased_data ErasedData, typename Trait = emtpty_trait,
+          bool WithOpenDispatch = false>
 class any;
 
 template <typename ErasedData>
@@ -1997,17 +1999,25 @@ void set_is_derived_from(auto v_table) {
 template <typename Trait>
 struct with_open_dispatch : std::false_type {};
 
+template <bool WithOpenDispatch>
+struct bound_any {
+  template <typename ErasedData>
+  using type = any<ErasedData, emtpty_trait, WithOpenDispatch>;
+};
+
 template <typename... Traits>
 struct traits_v_table
     : any_v_table<>,
       Traits::v_table_t...,
-      dispatch_holder<with_open_dispatch<Traits...>::value, any> {
+      dispatch_holder<with_open_dispatch<Traits...>::value,
+                      typename bound_any<with_open_dispatch<Traits...>::value>::type> {
  public:
   using v_table_t = traits_v_table;
   static constexpr bool open_dispatch_enabeled =
       with_open_dispatch<Traits...>::value;
   using own_dispatch_holder_t =
-      typename anyxx::dispatch_holder<open_dispatch_enabeled, any>;
+      typename anyxx::dispatch_holder<open_dispatch_enabeled,
+                                      bound_any<open_dispatch_enabeled>::type>;
 
   template <typename Concrete>
   traits_v_table(std::in_place_type_t<Concrete> concrete)
@@ -2322,20 +2332,19 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ErasedData, typename Trait>
+template <is_erased_data ErasedData, typename Trait, bool WithOpenDispatch>
 class any : public any_base_v_table_holder<is_dyn<ErasedData>, Trait>,
             public Trait {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_holder_t =
-      any_base_v_table_holder<is_dyn<ErasedData>, Trait>;
+  using v_table_holder_t = any_base_v_table_holder<is_dyn<ErasedData>, Trait>;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = trait_t::static_dispatch_t;
-  using any_value_t = any<value, Trait>;
-  using any_const_observer_t = any<const_observer, Trait>;
-  using any_mutable_observer_t = any<mutable_observer, Trait>;
+  using any_value_t = any<value, Trait, WithOpenDispatch>;
+  using any_const_observer_t = any<const_observer, Trait, WithOpenDispatch>;
+  using any_mutable_observer_t = any<mutable_observer, Trait, WithOpenDispatch>;
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
@@ -2430,7 +2439,7 @@ class any : public any_base_v_table_holder<is_dyn<ErasedData>, Trait>,
   template <is_any Friend>
   friend inline auto get_void_data_ptr(Friend const& any);
 
-  template <is_erased_data Other, typename Trait>
+  template <is_erased_data Other, typename Trait, bool WithOpenDispatch>
   friend class any;
 
   template <is_any I>
