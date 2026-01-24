@@ -52,10 +52,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANYXX_JACKET_RETURN(...) \
   anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
-#define ANYXX_V_TABLE_PARAM_TYPE(...)                                \
-  anyxx::v_table_param<any_const_observer_t, any_mutable_observer_t, \
-                       any_value_t, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
-
 #define ANYXX_V_TABLE_RETURN_TYPE(...) \
   anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
@@ -142,8 +138,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)            \
-  [[maybe_unused]] anyxx::v_table_param<any_const_observer_t,                \
-                                        any_mutable_observer_t, any_value_t, \
+  [[maybe_unused]] anyxx::v_table_param<any_value_t, \
                                         ANYXX_UNPAREN(param_type)> c         \
   __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(            \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
@@ -2429,28 +2424,23 @@ struct jacket_return<self&> {
   }
 };
 
-template <typename AnyConstObserver, typename AnyMutableObserver,
-          typename AnyValue, typename Param>
+template <typename AnyValue, typename Param>
 struct translate_v_table_param {
   using type = Param;
 };
-template <typename AnyConstObserver, typename AnyMutableObserver,
-          typename AnyValue>
-struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
+template <typename AnyValue>
+struct translate_v_table_param<AnyValue,
                                self const&> {
   using type = any<const_observer>;
 };
-template <typename AnyConstObserver, typename AnyMutableObserver,
-          typename AnyValue>
-struct translate_v_table_param<AnyConstObserver, AnyMutableObserver, AnyValue,
+template <typename AnyValue>
+struct translate_v_table_param<AnyValue,
                                self&> {
   using type = any<mutable_observer>;
 };
-template <typename AnyConstObserver, typename AnyMutableObserver,
-          typename AnyValue, typename Param>
+template <typename AnyValue, typename Param>
 using v_table_param =
-    typename translate_v_table_param<AnyConstObserver, AnyMutableObserver,
-                                     AnyValue, Param>::type;
+    typename translate_v_table_param<AnyValue, Param>::type;
 
 template <typename AnyValue, typename Return>
 struct translate_v_table_return {
