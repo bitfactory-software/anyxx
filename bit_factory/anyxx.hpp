@@ -52,9 +52,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANYXX_JACKET_RETURN(...) \
   anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
-#define ANYXX_V_TABLE_RETURN_TYPE(...) \
-  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
-
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -400,14 +397,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using any_value_t =                                                        \
         anyxx::any<anyxx::value, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
                                      any_template_params)>;                    \
-    using any_const_observer_t =                                               \
-        anyxx::any<anyxx::const_observer,                                      \
-                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params)>;                                  \
-    using any_mutable_observer_t =                                             \
-        anyxx::any<anyxx::mutable_observer,                                    \
-                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params)>;                                  \
                                                                                \
     static constexpr bool open_dispatch_enabeled =                             \
         anyxx::is_type_complete<n##_has_open_dispatch>;                        \
@@ -430,17 +419,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
       : BASE                                                                   \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
+                                                                               \
     using any_value_t =                                                        \
         anyxx::any<anyxx::value, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
                                      any_template_params)>;                    \
-    using any_const_observer_t =                                               \
-        anyxx::any<anyxx::const_observer,                                      \
-                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params)>;                                  \
-    using any_mutable_observer_t =                                             \
-        anyxx::any<anyxx::mutable_observer,                                    \
-                   n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
-                       any_template_params)>;                                  \
                                                                                \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
@@ -2117,8 +2099,6 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = trait_t::static_dispatch_t;
   using any_value_t = any<value, Trait>;
-  using any_const_observer_t = any<const_observer, Trait>;
-  using any_mutable_observer_t = any<mutable_observer, Trait>;
   static constexpr bool dyn = is_dyn<ErasedData>;
 
  protected:
