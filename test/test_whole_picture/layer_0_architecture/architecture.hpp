@@ -58,7 +58,7 @@ ANY(surface, (ANY_METHOD(void, write, (point, char), )), )
 using mutable_observed_surface = any_surface<anyxx::mutable_observer>;
 using unique_surface = any_surface<anyxx::unique>;
 
-struct any_shape_has_open_dispatch {};
+struct shape_has_open_dispatch {};
 ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const),
             ANY_METHOD(architecture::point, top_left, (), const),
             ANY_METHOD(architecture::size, size, (), const)), )

@@ -20,7 +20,7 @@ struct picture : anyxx::members<picture> {
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::picture)
 ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::picture,
-                     whole_picture::architecture, any_shape)
+                     whole_picture::architecture, shape)
 ANY_MODEL_MAP((whole_picture::core::shapes::picture),
               whole_picture::architecture::surface) {
   void write(auto& self, point p, char ch) { self.content.write(p, ch); };

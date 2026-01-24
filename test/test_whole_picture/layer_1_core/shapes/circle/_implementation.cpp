@@ -11,7 +11,7 @@ using namespace anyxx;
 
 ANY_META_CLASS(circle)
 ANY_REGISTER_MODEL(circle, whole_picture::architecture::shape);
-ANY_DISPATCH_FOR(circle, whole_picture::architecture, any_shape)
+ANY_DISPATCH_FOR(circle, whole_picture::architecture, shape)
 
 shape shapes::make_circle(architecture::point center, int radius) {
   return std::make_shared<circle>(center, radius);

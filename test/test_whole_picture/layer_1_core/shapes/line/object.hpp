@@ -14,7 +14,7 @@ struct line {
 }  // namespace whole_picture::core
 
 ANY_META_CLASS_FWD(CORE_EXPORT, whole_picture::core::shapes::line)
-ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, any_shape)
+ANY_DISPATCH_FOR_FWD(CORE_EXPORT, whole_picture::core::shapes::line, whole_picture::architecture, shape)
 
 ANY_MODEL_MAP((whole_picture::core::shapes::line), whole_picture::architecture::shape) {
     void draw(whole_picture::core::shapes::line const& self,
