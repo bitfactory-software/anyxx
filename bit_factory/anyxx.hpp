@@ -2187,13 +2187,15 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
 
   template <is_any Other>
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
-    requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
+    requires(borrowable_from<erased_data_t, typename Other::erased_data_t> &&
+             std::derived_from<typename Other::v_table_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(borrow_as<ErasedData>(other.erased_data_,
                                            other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
-    requires(borrowable_from<erased_data_t, typename Other::erased_data_t>)
+    requires(borrowable_from<erased_data_t, typename Other::erased_data_t> &&
+             std::derived_from<typename Other::v_table_t, v_table_t>)
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     erased_data_ =
@@ -2209,11 +2211,13 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   }
   template <is_any Other>
   explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
-    requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
+    requires(moveable_from<erased_data_t, typename Other::erased_data_t> &&
+             std::derived_from<typename Other::v_table_t, v_table_t>)
       : any(std::move(other.erased_data_), other.release_v_table()) {}
   template <is_any Other>
   any& operator=(Other&& other) noexcept
-    requires(moveable_from<erased_data_t, typename Other::erased_data_t>)
+    requires(moveable_from<erased_data_t, typename Other::erased_data_t> &&
+             std::derived_from<typename Other::v_table_t, v_table_t>)
   {
     trait_t::move_to(erased_data_, v_table_holder_t::get_v_table_ptr(),
                      std::move(other.erased_data_), other.get_v_table_ptr());
@@ -3405,34 +3409,34 @@ class dispatch_vany {
 
 #ifdef ANY_DLL_MODE
 
-#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)                         \
-  namespace ns_ {}                                                         \
-  namespace anyxx {                                                        \
-  template <>                                                              \
-  export_ std::size_t& dispatchs_count<ns_::any_##_v_table<anyxx::dyn>>(); \
+#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \
+  namespace ns_ {}                                             \
+  namespace anyxx {                                            \
+  template <>                                                  \
+  export_ std::size_t& dispatchs_count<ns_::any_##_v_table>(); \
   }
 
-#define ANY_DISPATCH_COUNT(ns_, any_)                                      \
-  template <>                                                              \
-  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table<anyxx::dyn>>() { \
-    static std::size_t count = 0;                                          \
-    return count;                                                          \
+#define ANY_DISPATCH_COUNT(ns_, any_)                          \
+  template <>                                                  \
+  std::size_t& anyxx::dispatchs_count<ns_::any_##_v_table>() { \
+    static std::size_t count = 0;                              \
+    return count;                                              \
   }
 
-#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_,      \
-                             interface_)                                 \
-  namespace anyxx {                                                      \
-  template <>                                                            \
-  export_ dispatch_table_t* dispatch_table_instance<                     \
-      interface_namespace_::interface_##_v_table<anyxx::dyn>, class_>(); \
+#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \
+                             interface_)                            \
+  namespace anyxx {                                                 \
+  template <>                                                       \
+  export_ dispatch_table_t* dispatch_table_instance<                \
+      interface_namespace_::interface_##_v_table, class_>();        \
   }
 
-#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_)         \
-  template <>                                                              \
-  anyxx::dispatch_table_t* anyxx::dispatch_table_instance<                 \
-      interface_namespace_::interface_##_v_table<anyxx::dyn>, class_>() {  \
-    return dispatch_table_instance_implementation<                         \
-        interface_namespace_::interface_##_v_table<anyxx::dyn>, class_>(); \
+#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \
+  template <>                                                      \
+  anyxx::dispatch_table_t* anyxx::dispatch_table_instance<         \
+      interface_namespace_::interface_##_v_table, class_>() {      \
+    return dispatch_table_instance_implementation<                 \
+        interface_namespace_::interface_##_v_table, class_>();     \
   }
 
 #else

@@ -65,7 +65,7 @@ ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const),
 
 }  // namespace whole_picture::architecture
 
-ANY_DISPATCH_COUNT_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture, any_shape)
+ANY_DISPATCH_COUNT_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture, shape)
 ANY_DISPATCH_FOR_FWD(ARCHITECTURE_EXPORT,
                      whole_picture::architecture::any_shape<anyxx::const_observer>,
-                     whole_picture::architecture, any_shape)
+                     whole_picture::architecture, shape)

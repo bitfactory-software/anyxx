@@ -11,7 +11,7 @@ using namespace anyxx;
 using namespace std::literals;
 
 namespace {
-struct any_thing_has_open_dispatch {};
+struct thing_has_open_dispatch {};
 ANY(thing, (ANY_METHOD(std::string, name, (), const)), )
 }  // namespace
 
@@ -74,9 +74,9 @@ TEST_CASE("multi_dispatch 1") {
         return l.name() + "->" + r.name();
       });
 
-  CHECK(v_table_instance<any_thing_v_table<>, Asteroid>()
+  CHECK(v_table_instance<thing_v_table, Asteroid>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
-  CHECK(v_table_instance<any_thing_v_table<>, Spaceship>()
+  CHECK(v_table_instance<thing_v_table, Spaceship>()
             ->own_dispatch_holder_t::dispatch_table->size() == 3);
 
   Asteroid asteroid;

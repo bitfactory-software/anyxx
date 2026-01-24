@@ -6,8 +6,8 @@ using namespace anyxx;
 
 namespace {
 
-struct any_test_base_i_has_open_dispatch {};
-struct any_test_derived_i_has_open_dispatch {};
+struct test_base_i_has_open_dispatch {};
+struct test_derived_i_has_open_dispatch {};
 
 ANY(test_base_i, (ANY_METHOD(std::string, to_string, (), const)), )
 ANY_(test_derived_i, test_base_i,
@@ -43,17 +43,17 @@ auto __ =
     });
 
 auto base_table =
-    dispatch_table_instance<any_test_base_i_v_table<anyxx::dyn>, x_t>();
+    dispatch_table_instance<test_base_i_v_table, x_t>();
 auto derived_table =
-    dispatch_table_instance<any_test_derived_i_v_table<anyxx::dyn>, x_t>();
+    dispatch_table_instance<test_derived_i_v_table, x_t>();
 
 TEST_CASE("dispatch") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 
-  CHECK(anyxx::v_table_instance<any_test_base_i_v_table<>, x_t>()
+  CHECK(anyxx::v_table_instance<test_base_i_v_table, x_t>()
             ->own_dispatch_holder_t::dispatch_table);
-  CHECK(anyxx::v_table_instance<any_test_derived_i_v_table<>, x_t>()
+  CHECK(anyxx::v_table_instance<test_derived_i_v_table, x_t>()
             ->own_dispatch_holder_t::dispatch_table);
 
   x_t x{"hallo"};

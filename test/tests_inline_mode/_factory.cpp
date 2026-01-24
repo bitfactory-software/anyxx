@@ -47,23 +47,23 @@ TEST_CASE("factory2") {
   CHECK(get_type_info(things[1]) == typeid(spaceship));
 }
 
-ANY(to_string,
+ANY(stringable,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); })),
     )
 
-ANY_SINGLETON_DECLARE(, any_to_string_factory,
-                      factory<any_to_string, std::string>);
+ANY_SINGLETON_DECLARE(, any_stringable_factory,
+                      factory<any_stringable, std::string>);
 
-auto __ = any_to_string_factory.register_("int", []() { return 42; });
+auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
-static_assert(std::is_constructible_v<any_to_string<shared_const>,
-                                      any_to_string<unique>&&>);
+static_assert(std::is_constructible_v<any_stringable<shared_const>,
+                                      any_stringable<unique>&&>);
 }  // namespace example
 }  // namespace
 
 ANY_SINGLETON(example, thing_factory);
-ANY_SINGLETON(example, any_to_string_factory);
+ANY_SINGLETON(example, any_stringable_factory);
 
 namespace {
 namespace example {
@@ -75,7 +75,7 @@ ANY_SINGLETON_DECLARE(, factory_test_key, factory_test_key_kind)
 ANY_SINGLETON_DECLARE(, factory_test_negative_key, factory_test_key_kind)
 
 TEST_CASE("factory3") {
-  factory<any_to_string, factory_test_key_kind> f;
+  factory<any_stringable, factory_test_key_kind> f;
   f.register_(factory_test_key, []() { return 42; });
   auto a1 = f.construct<unique>(factory_test_key);
   CHECK(a1.to_string() == "42");
