@@ -17,7 +17,10 @@ ANY_TEMPLATE_EX(
     anyxx::value,
     (using iterator_category = std::forward_iterator_tag;
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
-     using reference = Reference; auto operator++(int) { return post_inc(); }))
+     using reference = Reference;
+     template <typename Self> auto operator++(this Self &&self, int) {
+       return std::forward<Self>(self).post_inc();
+     }))
 
 TRAIT_TEMPLATE(
     ((ValueType), (Reference)), forward_range,

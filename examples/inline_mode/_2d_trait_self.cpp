@@ -29,8 +29,8 @@ TEST_CASE("example 2da any_has_equal") {
     CHECK(!b.is_equal(a));
   }
   {
-    auto a = trait_as<any_has_equal>("a"s);
-    auto b = trait_as<any_has_equal>("b"s);
+    auto a = trait_as<has_equal>("a"s);
+    auto b = trait_as<has_equal>("b"s);
     CHECK(a.is_equal(a));
     CHECK(!b.is_equal(a));
   }

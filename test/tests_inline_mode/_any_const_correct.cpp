@@ -144,10 +144,13 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
 TEST_CASE("_interface_const_correct anyxx::shared_const") {
   {
     shared_const_function cf = std::make_shared<functor>();
-    static_assert(
-        !std::is_assignable_v<shared_mutating_function,
-                              shared_const_function>);  // <- may not compile!
+    //static_assert(
+    //    !std::is_assignable_v<shared_mutating_function,
+    //                          shared_const_function>);  // <- 
     REQUIRE(cf() == "hallo");
+    shared_mutating_function smf = cf;
+    static_assert(!std::invocable<shared_mutating_function, std::string>); // <- or avove!
+    static_assert(!std::invocable<shared_mutating_function>); // questionable...
   }
 
   {
