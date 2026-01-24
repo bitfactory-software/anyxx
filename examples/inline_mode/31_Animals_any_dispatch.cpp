@@ -10,7 +10,7 @@
 #include "double_dispatch_result.hpp"
 
 namespace {
-struct any_creature_has_open_dispatch {};
+struct creature_has_open_dispatch {};
 ANY(creature, (ANY_METHOD(std::type_info const*, name, (), const)), )
 }  // namespace
 

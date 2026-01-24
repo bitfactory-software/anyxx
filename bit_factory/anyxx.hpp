@@ -428,8 +428,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
-    n##_v_table() = default;                                                   \
-                                                                               \
     template <typename Concrete>                                               \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete);      \
   };                                                                           \
@@ -1054,8 +1052,8 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
   static constexpr bool is_constructibile_from_const = true;
   template <typename ConstructedWith>
   struct is_constructibile_from {
-    static constexpr bool value =
-        std::is_constructible_v<V, ConstructedWith> && !is_any<ConstructedWith>;
+    static constexpr bool value = std::is_constructible_v<
+        V, ConstructedWith>;  // && !is_any<ConstructedWith>;
   };
   static constexpr bool is_owner = true;
   static auto default_construct() { return val<V>{}; }
@@ -2144,7 +2142,8 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, ErasedData>
+    requires constructibile_for<ConstructedWith, ErasedData> &&
+             (!std::same_as<any, std::decay_t<ConstructedWith>>)
       : erased_data_(erased<erased_data_t>(
             std::forward<ConstructedWith>(constructed_with))) {
     v_table_holder_t::template init_v_table<ErasedData, ConstructedWith>();
@@ -2188,14 +2187,16 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   template <is_any Other>
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t> &&
-             std::derived_from<typename Other::v_table_t, v_table_t>)
+             (!is_dyn<ErasedData> ||
+              std::derived_from<typename Other::v_table_t, v_table_t>))
       : v_table_holder_t(other.get_v_table_ptr()),
         erased_data_(borrow_as<ErasedData>(other.erased_data_,
                                            other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t> &&
-             std::derived_from<typename Other::v_table_t, v_table_t>)
+             (!is_dyn<ErasedData> ||
+              std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     erased_data_ =
@@ -2212,12 +2213,14 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   template <is_any Other>
   explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t> &&
-             std::derived_from<typename Other::v_table_t, v_table_t>)
+             (!is_dyn<ErasedData> ||
+              std::derived_from<typename Other::v_table_t, v_table_t>))
       : any(std::move(other.erased_data_), other.release_v_table()) {}
   template <is_any Other>
   any& operator=(Other&& other) noexcept
     requires(moveable_from<erased_data_t, typename Other::erased_data_t> &&
-             std::derived_from<typename Other::v_table_t, v_table_t>)
+             (!is_dyn<ErasedData> ||
+              std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     trait_t::move_to(erased_data_, v_table_holder_t::get_v_table_ptr(),
                      std::move(other.erased_data_), other.get_v_table_ptr());
@@ -2341,11 +2344,6 @@ inline auto unerase_cast(Any const& o) {
 template <typename U, is_any Any>
 inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_erased_data(o), get_v_table(o));
-}
-
-template <template <typename> typename Any, typename T>
-auto trait_as(T&& v) {
-  return Any<anyxx::val<std::decay_t<T>>>{std::forward<T>(v)};
 }
 
 template <typename Value>
@@ -3238,7 +3236,7 @@ class dispatch_vany {
                                          std::forward<Vargs>(vargs)...);
               }}(std::forward<TypedArg>(arg), std::forward<Args>(args)...);
         },
-        vany.erased_data_.value_);
+        get_erased_data(std::forward<Vany1>(vany)).value_);
   }
 
   template <is_any Vany1, is_any Vany2, typename... Args>
@@ -3288,8 +3286,9 @@ class dispatch_vany {
                                   std::forward<Args>(args)...);
     };
 
-    return std::visit(dispatch_combined, vany1.erased_data_.value_,
-                      vany2.erased_data_.value_);
+    return std::visit(dispatch_combined,
+                      get_erased_data(std::forward<Vany1>(vany1)).value_,
+                      get_erased_data(std::forward<Vany2>(vany2)).value_);
   }
 
  public:

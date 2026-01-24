@@ -17,7 +17,7 @@ struct custom {
   std::string answer;
 };
 
-struct any_value_has_open_dispatch {};
+struct value_has_open_dispatch {};
 ANY(value,
     (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); }),
@@ -84,7 +84,7 @@ TEST_CASE("example 2cb static_ any variant") {
 
   vany_value<anyxx::value> b{true};
   static_assert(anyxx::is_erased_data<vany_value<>::erased_data_t>);
-  static_assert(anyxx::is_const_data<vany_value<>::erased_data_t>);
+  static_assert(!anyxx::is_const_data<vany_value<>::erased_data_t>);
   static_assert(!anyxx::is_const_data<vany_value<anyxx::value>::erased_data_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
@@ -172,16 +172,16 @@ auto __ = vany_compare.define<custom, custom>(
     });
 auto __ = vany_compare.define<concrete_value, custom>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return anyxx::trait_as<any_value>(lhs).to_string() <=> rhs.answer;
+      return anyxx::trait_as<value>(lhs).to_string() <=> rhs.answer;
     });
 auto __ = vany_compare.define<custom, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return lhs.answer <=> anyxx::trait_as<any_value>(rhs).to_string();
+      return lhs.answer <=> anyxx::trait_as<value>(rhs).to_string();
     });
 auto __ = vany_compare.define<concrete_value, concrete_value>(
     [](const auto& lhs, const auto& rhs) -> std::partial_ordering {
-      return anyxx::trait_as<any_value>(lhs).to_string() <=>
-             anyxx::trait_as<any_value>(rhs).to_string();
+      return anyxx::trait_as<value>(lhs).to_string() <=>
+             anyxx::trait_as<value>(rhs).to_string();
     });
 
 }  // namespace example_2c

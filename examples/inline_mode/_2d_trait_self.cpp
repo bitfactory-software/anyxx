@@ -23,8 +23,8 @@ TEST_CASE("example 2da any_has_equal") {
   using namespace std::string_literals;
 
   {
-    any_has_equal a{std::in_place, "a"s};
-    any_has_equal b{std::in_place, "b"s};
+    any_has_equal<> a{std::in_place, "a"s};
+    any_has_equal<> b{std::in_place, "b"s};
     CHECK(a.is_equal(a));
     CHECK(!b.is_equal(a));
   }
@@ -57,12 +57,12 @@ TEST_CASE("example 2db any_has_plus dynamic") {
   using namespace anyxx;
   using namespace std::string_literals;
   {
-    any_has_plus a{std::in_place, "a"s};
-    any_has_plus b{std::in_place, "b"s};
-    CHECK((a + a).is_equal(any_has_plus{"aa"s}));
-    CHECK((a + b).is_equal(any_has_plus{"ab"s}));
-    CHECK((a.plus(a)).is_equal(any_has_plus{"aa"s}));
-    CHECK((a.plus(b)).is_equal(any_has_plus{"ab"s}));
+    any_has_plus<> a{std::in_place, "a"s};
+    any_has_plus<> b{std::in_place, "b"s};
+    CHECK((a + a).is_equal(any_has_plus<>{"aa"s}));
+    CHECK((a + b).is_equal(any_has_plus<>{"ab"s}));
+    CHECK((a.plus(a)).is_equal(any_has_plus<>{"aa"s}));
+    CHECK((a.plus(b)).is_equal(any_has_plus<>{"ab"s}));
   }
 }
 TEST_CASE("example 2db any_has_plus static") {

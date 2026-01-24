@@ -81,10 +81,10 @@ void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
   auto c2 = (m | r) ==
             std::ranges::fold_left(
                 r, m, [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
-                  return m1 + m2;
-                });
+                                         return m1 + m2;
+                                       });
   CHECK(c2);
-}
+ }
 
 anyxx::any_forward_range<any_monoid<anyxx::value>, any_monoid<anyxx::value>,
                          anyxx::value>
@@ -121,28 +121,28 @@ TEST_CASE("example 2b monoid a") {
   test_monoid<any<val<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<val<int>, monoid>>{{2}, {3}});
 }
-TEST_CASE("example 2b monoid b") {
-  using namespace example_2b;
-  using namespace std::string_literals;
-  using namespace anyxx;
+ TEST_CASE("example 2b monoid b") {
+   using namespace example_2b;
+   using namespace std::string_literals;
+   using namespace anyxx;
 
-  test_monoid<val<std::string>::as<monoid>>(
-      trait_as<monoid>("1"s),
-      std::vector<val<std::string>::as<monoid>>{{"2"s}, {"3"s}});
-}
-TEST_CASE("example 2b monoid c") {
-  using namespace example_2b;
-  using namespace std::string_literals;
-  using namespace anyxx;
+   test_monoid<val<std::string>::as<monoid>>(
+       trait_as<monoid>("1"s),
+       std::vector<val<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+ }
+ TEST_CASE("example 2b monoid c") {
+   using namespace example_2b;
+   using namespace std::string_literals;
+   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(true));
-}
-TEST_CASE("example 2b monoid d") {
-  using namespace example_2b;
-  using namespace std::string_literals;
-  using namespace anyxx;
+   test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(true));
+ }
+ TEST_CASE("example 2b monoid d") {
+   using namespace example_2b;
+   using namespace std::string_literals;
+   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(false));
-}
+   test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(false));
+ }
 
 #endif
