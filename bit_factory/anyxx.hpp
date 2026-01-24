@@ -52,6 +52,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANYXX_JACKET_RETURN(...) \
   anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
+
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))

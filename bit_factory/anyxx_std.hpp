@@ -76,4 +76,28 @@ struct forward_trait_to_map<Traited, AnyForwardRange const &> {
   }
 };
 
+template <typename R, typename... Args>
+struct function_v_table : any_v_table {
+  R (*f_)(const_void, Args...);
+  template <typename Concrete>
+  function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : any_v_table(concrete) {
+    f_ = +[](const_void self_ptr, Args... args) -> R {
+      auto self = static_cast<Concrete const*>(self_ptr);
+      return (*self)(std::forward<Args>(args)...);
+    };
+  }
+};
+template <typename R, typename... Args>
+struct function;
+template <typename R, typename... Args>
+struct function<R(Args...)> : emtpty_trait {
+  using v_table_t = function_v_table<R, Args...>;
+  template <typename Self>
+  auto operator()(this Self &&self, Args... args) -> R {
+    return get_v_table(self)->f_(get_void_data_ptr(self),
+                                 std::forward<Args>(args)...);
+  }
+};
+
 }  // namespace anyxx

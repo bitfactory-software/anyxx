@@ -1,4 +1,5 @@
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx_std.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <concepts>
 #include <print>
@@ -138,5 +139,8 @@ TEST_CASE("std emulated function") {
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
+
+    any<const_observer, function<std::string(std::string const&)>> any_f{f};
+    CHECK(any_f("C++") == "C++ world!");
   }
 }
