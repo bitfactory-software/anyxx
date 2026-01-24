@@ -23,11 +23,24 @@ anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
 }
 
 TRAIT(stringable,
-    (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
-                          [&x]() { return std::format("{}", x); })))
+      (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
+                            [&x]() { return std::format("{}", x); })))
 
-template<typename Box>
+template <typename Box>
 using any_stringable = anyxx::any<Box, stringable>;
+
+ANY(node,
+    (ANY_METHOD_DEFAULTED(
+        anyxx::self, sum,
+        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                   anyxx::const_observer> const &)),
+        const, [&x](auto const &r) {
+          auto s = x;
+          for (auto i : r) {
+            s += i;
+          }
+          return s;
+        })), );
 
 }  // namespace example_3
 
@@ -81,7 +94,8 @@ TEST_CASE(
 }
 
 TEST_CASE(
-    "example 3 any_forward_iterator (concrete value_type, concrete iterator)") {
+    "example 3 any_forward_iterator (concrete value_type, concrete "
+    "iterator)") {
   using namespace anyxx;
   using namespace std::string_literals;
   using namespace example_3;
@@ -114,7 +128,8 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
 }
 
 TEST_CASE(
-    "example 3 any_forward_iterator (any value_type, concrete iterator) only "
+    "example 3 any_forward_iterator (any value_type, concrete iterator) "
+    "only "
     "theory, not praxis relevant") {
   using namespace anyxx;
   using namespace std::string_literals;
@@ -124,7 +139,7 @@ TEST_CASE(
   {
     v_t v{1, 2, 3};
     any<val<v_t const &>, forward_range<any_stringable<anyxx::value>,
-                            any_stringable<anyxx::value>>>
+                                        any_stringable<anyxx::value>>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -143,7 +158,7 @@ TEST_CASE("example 3 transform unerase") {
   {
     v_t v{1, 2, 3};
     any_forward_range<any_stringable<anyxx::value>,
-                            any_stringable<anyxx::value>>
+                      any_stringable<anyxx::value>>
         r{v};
     int x = 0;
     for (auto i : std::views::transform(
@@ -155,4 +170,16 @@ TEST_CASE("example 3 transform unerase") {
     }
     CHECK(x == 3);
   }
+}
+
+TEST_CASE("example 3 self in range") {
+  using namespace anyxx;
+  using namespace std::string_literals;
+  using namespace example_3;
+
+  std::vector<int> v = {1, 2, 3};
+  any_node<value> n1{0};
+
+  auto r = n1.sum(v);
+  CHECK(*unerase_cast<int>(r) == 6);
 }
