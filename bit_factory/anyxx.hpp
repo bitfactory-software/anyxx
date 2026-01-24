@@ -878,11 +878,7 @@ struct missing_trait_error {
   static constexpr bool not_specialized = false;
 };
 template <typename Value>
-struct val {
-  Value value_ = {};
-  using value_t = Value;
-  operator Value() const { return value_; }
-};
+struct val;
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -1225,7 +1221,6 @@ U* unerase_cast_if(ErasedData const& o, any_v_table<>* v_table)
 
 // --------------------------------------------------------------------------------
 // (un)erased data val
-
 
 template <typename V>
 struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
@@ -1964,8 +1959,7 @@ struct v_table_holder<false, Trait> {
 template <>
 struct v_table_holder<true, emtpty_trait> {
   v_table_holder() = default;
-  explicit v_table_holder(any_v_table<>* v_table)
-      : v_table_(v_table) {}
+  explicit v_table_holder(any_v_table<>* v_table) : v_table_(v_table) {}
   void set_v_table_ptr(any_v_table<>* v_table) { v_table_ = v_table; }
   using v_table_t = any_v_table<>;
   v_table_t* v_table_ = nullptr;
@@ -2005,8 +1999,9 @@ template <typename... Traits>
 struct traits_v_table
     : any_v_table<>,
       Traits::v_table_t...,
-      dispatch_holder<with_open_dispatch<Traits...>::value,
-                      typename bound_any<with_open_dispatch<Traits...>::value>::type> {
+      dispatch_holder<
+          with_open_dispatch<Traits...>::value,
+          typename bound_any<with_open_dispatch<Traits...>::value>::type> {
  public:
   using v_table_t = traits_v_table;
   static constexpr bool open_dispatch_enabeled =
@@ -2329,8 +2324,7 @@ static_assert(moveable_from<value, value>);
 // any base
 
 template <is_erased_data ErasedData, typename Trait, bool WithOpenDispatch>
-class any : public v_table_holder<is_dyn<ErasedData>, Trait>,
-            public Trait {
+class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
  public:
   using erased_data_t = ErasedData;
   using trait_t = erased_data_trait<erased_data_t>;
@@ -2547,6 +2541,15 @@ template <template <typename> typename Any, typename T>
 auto trait_as(T&& v) {
   return Any<anyxx::val<std::decay_t<T>>>{std::forward<T>(v)};
 }
+
+template <typename Value>
+struct val {
+  Value value_ = {};
+  using value_t = Value;
+  operator Value() const { return value_; }
+  template <typename Trait>
+  using as = any<val<Value>, Trait>;
+};
 
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
