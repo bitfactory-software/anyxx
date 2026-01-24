@@ -35,11 +35,11 @@ ANY(node,
         ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                    anyxx::const_observer> const &)),
         const, [&x](auto const &r) {
-          auto s = x;
-          for (auto i : r) {
-            s += i;
-          }
-          return s;
+      auto s = x;
+      for (auto i : r) {
+        s += i;
+      }
+      return s;
         })), );
 
 }  // namespace example_3
@@ -59,8 +59,7 @@ TEST_CASE(
     CHECK(b == e);
     CHECK(!(b != e));
     static_assert(std::movable<any_forward_iterator<int, int>>);
-    static_assert(
-        std::same_as<decltype(++b), any_forward_iterator<int, int> &>);
+    static_assert(std::same_as<decltype(++b), any_forward_iterator<int, int>&>);
     static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
   }
   {
@@ -103,7 +102,7 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<val<v_t const &>, forward_range<int, int>> r{v};
+    any<val<v_t const&>, forward_range<int, int>> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
     CHECK(x == 3);
@@ -138,8 +137,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<val<v_t const &>, forward_range<any_stringable<anyxx::value>,
-                                        any_stringable<anyxx::value>>>
+    any<val<v_t const&>, forward_range<any_stringable<anyxx::value>,
+                                       any_stringable<anyxx::value>>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -162,7 +161,7 @@ TEST_CASE("example 3 transform unerase") {
         r{v};
     int x = 0;
     for (auto i : std::views::transform(
-             r, [](any_stringable<anyxx::value> const &v) -> int {
+             r, [](any_stringable<anyxx::value> const& v) -> int {
                return *anyxx::unerase_cast<int>(v);
              })) {
       std::println("{}", i);
@@ -178,8 +177,26 @@ TEST_CASE("example 3 self in range") {
   using namespace example_3;
 
   std::vector<int> v = {1, 2, 3};
-  any_node<value> n1{0};
-
-  auto r = n1.sum(v);
-  CHECK(*unerase_cast<int>(r) == 6);
+  {
+    any_node<value> n1{0};
+    auto r = n1.sum(v);
+    CHECK(*unerase_cast<int>(r) == 6);
+  }
+  {
+    any_node<val<int>> n1{0};
+    auto r = n1.sum(v);
+    CHECK(r == 6);
+  }
+  {
+    any_forward_range<any_node<anyxx::value>, any_node<anyxx::value>, anyxx::value> r{v};
+    any_node<val<int>> n1{0};
+    auto result = n1.sum(r);
+    CHECK(result == 6);
+  }
+ {
+    any_forward_range<any_node<anyxx::value>, any_node<anyxx::value>, anyxx::value> r{v};
+    any_node<value> n1{0};
+    auto result = n1.sum(r);
+    CHECK(*unerase_cast<int>(result) == 6);
+  }
 }
