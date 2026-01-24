@@ -1073,12 +1073,7 @@ concept is_erased_data =
       } -> std::same_as<E>;
     };
 
-struct emtpty_trait_v_table {
-  emtpty_trait_v_table() = default;
-  template <typename Concrete>
-  emtpty_trait_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete){};
-};
+using emtpty_trait_v_table = any_v_table<>;
 struct emtpty_trait {
   using v_table_t = emtpty_trait_v_table;
 };
@@ -1997,8 +1992,7 @@ struct bound_any {
 
 template <typename... Traits>
 struct traits_v_table
-    : any_v_table<>,
-      Traits::v_table_t...,
+    : Traits::v_table_t...,
       dispatch_holder<
           with_open_dispatch<Traits...>::value,
           typename bound_any<with_open_dispatch<Traits...>::value>::type> {
@@ -2012,7 +2006,7 @@ struct traits_v_table
 
   template <typename Concrete>
   traits_v_table(std::in_place_type_t<Concrete> concrete)
-      : any_v_table(concrete), Traits::v_table_t(concrete)... {
+      : Traits::v_table_t(concrete)... {
     set_is_derived_from<v_table_t>(this);
     if constexpr (open_dispatch_enabeled) {
       own_dispatch_holder_t::set_dispatch_table(
