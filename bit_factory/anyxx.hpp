@@ -867,8 +867,7 @@ struct basic_erased_data_trait {
     to = std::move(from);
   }
 
-  static void copy_construct_from(ErasedData& to,
-                                  [[maybe_unused]] any_v_table*,
+  static void copy_construct_from(ErasedData& to, [[maybe_unused]] any_v_table*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
   }
@@ -2125,6 +2124,7 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   using any_value_t = any<value, Trait>;
   using any_const_observer_t = any<const_observer, Trait>;
   using any_mutable_observer_t = any<mutable_observer, Trait>;
+  static constexpr bool dyn = is_dyn<ErasedData>;
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
@@ -2233,8 +2233,9 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   template <is_erased_data Other, typename Trait>
   friend class any;
 
-  template <is_any I>
-  friend inline auto get_v_table(I const& any);
+  template <typename AAny>
+    requires is_any<AAny> && AAny::dyn
+  friend inline auto get_v_table(AAny const& any);
 
   template <is_any To, is_any From>
   friend inline To unchecked_downcast_to(From from)
@@ -2293,15 +2294,18 @@ bool is_derived_from(Any const& any) {
 }
 
 template <typename To>
+  requires std::derived_from<To, any_v_table>
 auto unchecked_v_table_downcast_to(any_v_table* v_table) {
   return static_cast<To*>(v_table);
 }
 template <is_any To>
+  requires std::derived_from<typename To::v_table_t, any_v_table>
 auto unchecked_v_table_downcast_to(any_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
 }
 
-template <is_any Any>
+template <typename Any>
+  requires is_any<Any> && Any::dyn 
 inline auto get_v_table(Any const& any) {
   return unchecked_v_table_downcast_to<Any>(any.get_v_table_ptr());
 }
@@ -2328,11 +2332,12 @@ inline auto unchecked_unerase_cast(Any const& o) {
   return unchecked_unerase_cast<U>(get_erased_data(o), get_v_table(o));
 }
 template <typename U, typename Any>
-  requires is_any<Any>
+  requires is_any<Any> && Any::dyn
 inline auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_erased_data(o), get_v_table(o));
 }
-template <typename U, is_any Any>
+template <typename U, typename Any>
+  requires is_any<Any> && Any::dyn
 inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_erased_data(o), get_v_table(o));
 }
