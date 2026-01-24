@@ -362,11 +362,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n) \
   _detail_CONCAT(make_, _detail_CONCAT(n, _v_table))
 
-#define _detail_ANYXX_OPTIONAL_BASE_NAME(...) __VA_OPT__(, ) __VA_ARGS__
-
-#define _detail_ANYXX_OPTIONAL_BASE_V_TABLE_NAME(...) \
-  __VA_OPT__(, _detail_CONCAT(__VA_ARGS__, _v_table))
-
 // cppcheck-suppress-macro performance-unnecessary-value-param
 #define TRAIT_META_FUNCTION(                                                   \
     any_template_params, model_map_template_params, concrete_template_params,  \
@@ -393,10 +388,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     _detail_ANYXX_MAP_VARIANT_FUNCTIONS(l)                                     \
   };                                                                           \
                                                                                \
+  struct n##_has_open_dispatch;                                                \
+                                                                               \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
       any_template_params) struct n##_v_table                                  \
       : BASE##_v_table                                                         \
-        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
+        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params),            \
+        anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_open_dispatch>, \
+                               n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
+                                   any_template_params)> {                     \
     using v_table_base_t =                                                     \
         BASE##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                   \
             base_template_params);                                             \
@@ -413,6 +413,18 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         anyxx::any<anyxx::mutable_observer,                                    \
                    n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                     \
                        any_template_params)>;                                  \
+                                                                               \
+    static constexpr bool open_dispatch_enabeled =                             \
+        anyxx::is_type_complete<n##_has_open_dispatch>;                        \
+    using own_dispatch_holder_t = typename anyxx::dispatch_holder<             \
+        open_dispatch_enabeled,                                                \
+        n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)>;          \
+                                                                               \
+    static bool static_is_derived_from(const std::type_info& from) {           \
+      return typeid(v_table_t) == from                                         \
+                 ? true                                                        \
+                 : v_table_base_t::static_is_derived_from(from);               \
+    }                                                                          \
                                                                                \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
@@ -462,6 +474,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(concrete_template_params)>;  \
                                                                                \
     _detail_ANYXX_V_TABLE_LAMBDAS(l);                                          \
+                                                                               \
+    if constexpr (open_dispatch_enabeled) {                                    \
+      own_dispatch_holder_t::set_dispatch_table(                               \
+          ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());          \
+    }                                                                          \
+                                                                               \
+    ::anyxx::set_is_derived_from<v_table_t>(this);                             \
   };
 
 #define __detail_ANYXX_TRAIT_(t, n, BASE, l, decoration)                       \
@@ -719,7 +738,7 @@ constexpr inline std::size_t compute_model_size() {
 template <typename Dispatch = dyn>
 struct any_v_table;
 
-template <bool HasDispatch, template <typename...> typename Any>
+template <bool HasDispatch, typename Trait>
 struct dispatch_holder;
 using dispatch_table_function_t = void (*)();
 using dispatch_table_dispatch_index_t = std::size_t;
@@ -2349,12 +2368,12 @@ template <typename I>
 concept has_open_dispatch_enabeled =
     is_any<I> && I::v_table_t::open_dispatch_enabeled;
 
-template <template <typename...> typename Any>
-struct dispatch_holder<false, Any> {
+template <typename Trait>
+struct dispatch_holder<false, Trait> {
   static void set_dispatch_table([[maybe_unused]] dispatch_table_t* t) {}
 };
-template <template <typename...> typename Any>
-struct dispatch_holder<true, Any> {
+template <typename Trait>
+struct dispatch_holder<true, Trait> {
   void set_dispatch_table(dispatch_table_t* t) { dispatch_table = t; }
   dispatch_table_t* dispatch_table = nullptr;
 };
@@ -3425,11 +3444,11 @@ class dispatch_vany {
 
 #endif
 
-#define ANY_REGISTER_MODEL(class_, interface_)                           \
-  namespace {                                                            \
-  static auto __ =                                                       \
-      anyxx::bind_v_table_to_meta_data<interface_##_v_table<anyxx::dyn>, \
-                                       class_>();                        \
+#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \
+  namespace {                                                                 \
+  static auto __ = anyxx::bind_v_table_to_meta_data<                          \
+      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
+      ANYXX_UNPAREN(class_)>();                                               \
   }
 
 #define __ANY_REGISTER_TEMPLATE_MODEL(class_, t, all, interface_)         \
@@ -3446,7 +3465,7 @@ class dispatch_vany {
 
 #define ANY_MODEL(class_, interface_namespace_, interface_)                \
   template <>                                                              \
-  interface_namespace_::interface_##_v_table<anyxx::dyn>*                  \
+  interface_namespace_::interface_##_v_table*                              \
   interface_namespace_::_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(          \
       interface_)<class_>() {                                              \
     static interface_namespace_::interface_##_v_table<anyxx::dyn> v_table{ \

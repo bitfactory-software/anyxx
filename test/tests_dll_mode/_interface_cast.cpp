@@ -36,7 +36,7 @@ TEST_CASE("_interface_cast") {
     auto queried = borrow_as<any_unused_i<>>(to_string_i_co);
     CHECK(!queried.has_value());
     CHECK(std::string(queried.error().to.name()) ==
-          std::string(typeid(any_unused_i_v_table<anyxx::dyn>).name()));
+          std::string(typeid(unused_i_v_table).name()));
   }
   {
     any_to_string_i<shared_const> i0{
