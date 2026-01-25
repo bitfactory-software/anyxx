@@ -8,7 +8,7 @@ TRAIT_TEMPLATE_(((Base)), has_equal, Base, (),
       (ANY_FN_DEF(bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
-template <typename Box = anyxx::shared, typename Base = anyxx::emtpty_trait>
+template <typename Box = anyxx::shared, typename Base = anyxx::base_trait>
 using any_has_equal = anyxx::any<Box, has_equal<Base>>;
 
 }  // namespace example_2d
@@ -25,8 +25,8 @@ TEST_CASE("example 2da any_has_equal") {
     CHECK(!b.is_equal(a));
   }
   {
-    auto a = trait_as<has_equal<emtpty_trait>>("a"s);
-    auto b = trait_as<has_equal<emtpty_trait>>("b"s);
+    auto a = trait_as<has_equal<base_trait>>("a"s);
+    auto b = trait_as<has_equal<base_trait>>("b"s);
     CHECK(a.is_equal(a));
     CHECK(!b.is_equal(a));
   }
@@ -34,7 +34,7 @@ TEST_CASE("example 2da any_has_equal") {
 
 namespace example_2d {
 
-TRAIT_(has_plus, has_equal<anyxx::emtpty_trait>,
+TRAIT_(has_plus, has_equal<anyxx::base_trait>,
       (ANY_FN_DEF(anyxx::self, plus, (anyxx::self const&), const,
                             ([&x](T const& y) {
                               return anyxx::trait_as<has_plus>(x) +

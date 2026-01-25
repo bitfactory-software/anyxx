@@ -463,8 +463,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
-#define TRAIT(n, fns) TRAIT_(n, anyxx::emtpty_trait, fns)
-#define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::emtpty_trait, __VA_ARGS__)
+#define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
+#define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
 
 #define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)     \
   TRAIT_META_FUNCTION(                                                         \
@@ -476,13 +476,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _detail_REMOVE_PARENS(base_template_types), l, decoration)
 
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
-  TRAIT_TEMPLATE_EX_(t, n, anyxx::emtpty_trait, (), l, decoration)
+  TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
 
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
 
 #define TRAIT_TEMPLATE(t, n, l) \
-  TRAIT_TEMPLATE_(t, n, anyxx::emtpty_trait, (), l)
+  TRAIT_TEMPLATE_(t, n, anyxx::base_trait, (), l)
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
@@ -857,11 +857,11 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
 };
 
 using emtpty_trait_v_table = any_v_table;
-struct emtpty_trait {
+struct base_trait {
   using v_table_t = emtpty_trait_v_table;
 };
 
-template <is_proxy Proxy, typename Trait = emtpty_trait>
+template <is_proxy Proxy, typename Trait = base_trait>
 class any;
 
 template <typename Proxy>
@@ -1687,7 +1687,7 @@ struct v_table_holder<false, Trait> {
   static auto release_v_table() { return nullptr; }
 };
 // template <>
-// struct v_table_holder<true, emtpty_trait> {
+// struct v_table_holder<true, base_trait> {
 //   v_table_holder() = default;
 //   explicit v_table_holder(any_v_table* v_table) : v_table_(v_table) {}
 //   void set_v_table_ptr(any_v_table* v_table) { v_table_ = v_table; }

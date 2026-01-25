@@ -28,7 +28,7 @@ struct function_v_table : any_v_table {
 template <typename Constness, typename R, typename... Args>
 struct function;
 template <typename Constness, typename R, typename... Args>
-struct function<R(Args...), Constness> : emtpty_trait {
+struct function<R(Args...), Constness> : base_trait {
   using v_table_t = function_v_table<Constness, R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R
