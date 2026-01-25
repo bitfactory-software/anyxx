@@ -4,6 +4,30 @@
 
 namespace anyxx {
 
+TRAIT_TEMPLATE_EX_(
+    ((Base)), incrementable, Base, (),
+    (ANY_OP(anyxx::self &, ++, (), ),
+     ANY_FN_DEF(anyxx::self, post_inc, (), , ([&x]() { return x++; }))),
+    (template <typename Self> auto operator++(this Self &&self, int) {
+      return std::forward<Self>(self).post_inc();
+    }))
+
+// target for 0.9.1: this works!
+// ANY_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator,
+//                  incrementable<anyxx::base_trait>, (),
+//                  (ANY_OP(Reference, *, (), const),
+//                   ANY_OP_DEF(bool, ==, equal_to, (anyxx::self const &),
+//                   const,
+//                              ([&x](auto const &r) { return x == r; })),
+//                   ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &),
+//                              const, ([&x](auto const &r) { return x != r;
+//                              }))),
+//                  anyxx::val,
+//                  (using iterator_category = std::forward_iterator_tag;
+//                   using difference_type = std::ptrdiff_t;
+//                   using value_type = ValueType; using reference =
+//                   Reference;))
+
 ANY_TEMPLATE_EX(
     ((ValueType), (Reference)), forward_iterator,
     (ANY_OP(anyxx::self &, ++, (), ),
