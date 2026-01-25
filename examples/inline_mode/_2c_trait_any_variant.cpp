@@ -28,9 +28,9 @@ ANY(value,
                             ss >> std::boolalpha >> x;
                           })), )
 
-template <typename ErasedData = anyxx::shared>
+template <typename Proxy = anyxx::shared>
 using vany_value =
-    anyxx::make_vany<any_value, ErasedData, bool, int, double, std::string>;
+    anyxx::make_vany<any_value, Proxy, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 

@@ -227,7 +227,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(...) __VA_OPT__(, ) __VA_ARGS__
 
 #define _detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(t) \
-  ErasedData _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(_detail_REMOVE_PARENS(t))
+  Proxy _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(_detail_REMOVE_PARENS(t))
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
@@ -497,7 +497,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(                       \
       any_template_params_with_defaults)>                            \
   using any_##n =                                                    \
-      anyxx::any<ErasedData, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
+      anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
                                  pure_template_params)>;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -507,8 +507,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define __detail_ANYXX_ANY_EX_(n, erased_data_default)                        \
   __detail_ANYXX_ANY_CMF(                                                     \
-      ((ErasedData)),                                                         \
-      ((ErasedData = anyxx::default_erased_data<erased_data_default>::type)), \
+      ((Proxy)),                                                         \
+      ((Proxy = anyxx::default_erased_data<erased_data_default>::type)), \
       n)
 
 #define ANY_EX_(n, BASE, l, erased_data_default, decoration) \
@@ -531,7 +531,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_META_FUNCTION(                                                   \
       _detail_REMOVE_PARENS(t),                                        \
       __detail_ANYXX_ADD_TAIL(                                         \
-          (ErasedData =                                                \
+          (Proxy =                                                \
                anyxx::default_erased_data<erased_data_default>::type), \
           _detail_REMOVE_PARENS(t)),                                   \
       n)
@@ -836,7 +836,7 @@ void check_type_match(any_v_table* v_table) {
 template <typename Data>
 struct erased_data_trait;
 
-template <typename ErasedData>
+template <typename Proxy>
 struct basic_erased_data_trait {
   inline static constexpr bool is_weak = false;
 
@@ -845,12 +845,12 @@ struct basic_erased_data_trait {
     to = std::move(from);
   }
 
-  static void copy_construct_from(ErasedData& to, [[maybe_unused]] any_v_table*,
+  static void copy_construct_from(Proxy& to, [[maybe_unused]] any_v_table*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
   }
 
-  static void destroy([[maybe_unused]] ErasedData const& data,
+  static void destroy([[maybe_unused]] Proxy const& data,
                       [[maybe_unused]] any_v_table* v_table) {}
 };
 
@@ -881,13 +881,13 @@ struct emtpty_trait {
   using v_table_t = emtpty_trait_v_table;
 };
 
-template <is_erased_data ErasedData, typename Trait = emtpty_trait>
+template <is_erased_data Proxy, typename Trait = emtpty_trait>
 class any;
 
-template <typename ErasedData>
+template <typename Proxy>
 concept is_dyn =
-    is_erased_data<ErasedData> &&
-    voidness<typename erased_data_trait<ErasedData>::static_dispatch_t>;
+    is_erased_data<Proxy> &&
+    voidness<typename erased_data_trait<Proxy>::static_dispatch_t>;
 
 template <typename I>
 concept is_erased_data_holder_impl = requires(I i) {
@@ -910,72 +910,72 @@ concept is_typed_any = is_any<E> && requires(E e) {
   { E::is_const } -> std::convertible_to<bool>;
 };
 
-template <typename ConstructedWith, typename ErasedData, typename BASE>
+template <typename ConstructedWith, typename Proxy, typename BASE>
 concept erased_constructibile_for =
     (!std::derived_from<std::remove_cvref_t<ConstructedWith>, BASE> &&
      !is_erased_data<std::remove_cvref_t<ConstructedWith>> &&
      (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
-      erased_data_trait<ErasedData>::is_constructibile_from_const));
+      erased_data_trait<Proxy>::is_constructibile_from_const));
 
-template <typename ConstructedWith, typename ErasedData>
+template <typename ConstructedWith, typename Proxy>
 concept constructibile_for =
-    (erased_data_trait<ErasedData>::template is_constructibile_from<
+    (erased_data_trait<Proxy>::template is_constructibile_from<
         ConstructedWith>::value) ||
-    (erased_constructibile_for<ConstructedWith, ErasedData, any<ErasedData>> &&
+    (erased_constructibile_for<ConstructedWith, Proxy, any<Proxy>> &&
      !is_erased_data_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
 template <is_erased_data Data>
 using data_void = erased_data_trait<Data>::void_t;
 
-template <typename ErasedData>
+template <typename Proxy>
 concept is_const_data =
-    is_erased_data<ErasedData> && is_const_void<data_void<ErasedData>>;
+    is_erased_data<Proxy> && is_const_void<data_void<Proxy>>;
 
-template <typename ErasedData>
+template <typename Proxy>
 concept is_weak_data =
-    is_erased_data<ErasedData> && erased_data_trait<ErasedData>::is_weak;
+    is_erased_data<Proxy> && erased_data_trait<Proxy>::is_weak;
 
 template <bool CallIsConst, bool ErasedDataIsConst, bool ErasedDataIsWeak>
 concept const_correct_call =
     !ErasedDataIsWeak &&
     ((CallIsConst == ErasedDataIsConst) || !ErasedDataIsConst);
 
-template <typename CALL, typename ErasedData, bool Exact>
+template <typename CALL, typename Proxy, bool Exact>
 concept const_correct_call_for_erased_data =
-    !is_weak_data<ErasedData> && voidness<CALL> && is_erased_data<ErasedData> &&
-    ((Exact && (is_const_void<CALL> == is_const_data<ErasedData>)) ||
+    !is_weak_data<Proxy> && voidness<CALL> && is_erased_data<Proxy> &&
+    ((Exact && (is_const_void<CALL> == is_const_data<Proxy>)) ||
      (!Exact &&
-      const_correct_call<is_const_void<CALL>, is_const_data<ErasedData>,
-                         is_weak_data<ErasedData>>));
+      const_correct_call<is_const_void<CALL>, is_const_data<Proxy>,
+                         is_weak_data<Proxy>>));
 
-template <is_erased_data ErasedData, typename From>
-ErasedData erased(From&& from) {
-  return erased_data_trait<ErasedData>::erase(std::forward<From>(from));
+template <is_erased_data Proxy, typename From>
+Proxy erased(From&& from) {
+  return erased_data_trait<Proxy>::erase(std::forward<From>(from));
 }
 
-template <is_erased_data ErasedData, typename ConstructedWith>
-using unerased = erased_data_trait<ErasedData>::template unerased<
+template <is_erased_data Proxy, typename ConstructedWith>
+using unerased = erased_data_trait<Proxy>::template unerased<
     std::decay_t<ConstructedWith>>;
 
-template <is_erased_data ErasedData>
-bool has_data(ErasedData const& vv, any_v_table* v_table) {
+template <is_erased_data Proxy>
+bool has_data(Proxy const& vv, any_v_table* v_table) {
   // cppcheck-suppress-begin [accessMoved]
-  return erased_data_trait<ErasedData>::has_value(vv, v_table);
+  return erased_data_trait<Proxy>::has_value(vv, v_table);
   // cppcheck-suppress-end [accessMoved]
 }
-template <is_erased_data ErasedData>
-void const* get_void_data_ptr(ErasedData const& vv, any_v_table* v_table)
+template <is_erased_data Proxy>
+void const* get_void_data_ptr(Proxy const& vv, any_v_table* v_table)
   requires std::same_as<void const*,
-                        typename erased_data_trait<ErasedData>::void_t>
+                        typename erased_data_trait<Proxy>::void_t>
 {
-  return erased_data_trait<ErasedData>::value(vv, v_table);
+  return erased_data_trait<Proxy>::value(vv, v_table);
 }
-template <is_erased_data ErasedData>
-void* get_void_data_ptr(ErasedData const& vv, any_v_table* v_table)
-  requires std::same_as<void*, typename erased_data_trait<ErasedData>::void_t>
+template <is_erased_data Proxy>
+void* get_void_data_ptr(Proxy const& vv, any_v_table* v_table)
+  requires std::same_as<void*, typename erased_data_trait<Proxy>::void_t>
 {
-  return erased_data_trait<ErasedData>::value(vv, v_table);
+  return erased_data_trait<Proxy>::value(vv, v_table);
 }
 
 template <typename U>
@@ -987,30 +987,30 @@ auto unchecked_unerase_cast(void* p) {
   return static_cast<U*>(p);
 }
 
-template <typename U, is_erased_data ErasedData>
-auto unchecked_unerase_cast(ErasedData const& o, any_v_table* v_table) {
+template <typename U, is_erased_data Proxy>
+auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table) {
   return unchecked_unerase_cast<U>(get_void_data_ptr(o, v_table));
 }
-template <typename U, is_erased_data ErasedData>
-auto unchecked_unerase_cast(ErasedData const& o, any_v_table* v_table)
-  requires(!is_const_data<ErasedData>)
+template <typename U, is_erased_data Proxy>
+auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table)
+  requires(!is_const_data<Proxy>)
 {
   return unchecked_unerase_cast<U>(get_void_data_ptr(o, v_table));
 }
 
-template <typename U, is_erased_data ErasedData>
-auto unerase_cast(ErasedData const& o, any_v_table* v_table) {
+template <typename U, is_erased_data Proxy>
+auto unerase_cast(Proxy const& o, any_v_table* v_table) {
   check_type_match<U>(v_table);
   return unchecked_unerase_cast<U>(o, v_table);
 }
-template <typename U, is_erased_data ErasedData>
-U const* unerase_cast_if(ErasedData const& o, any_v_table* v_table) {
+template <typename U, is_erased_data Proxy>
+U const* unerase_cast_if(Proxy const& o, any_v_table* v_table) {
   if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
 }
-template <typename U, is_erased_data ErasedData>
-U* unerase_cast_if(ErasedData const& o, any_v_table* v_table)
-  requires(!is_const_data<ErasedData>)
+template <typename U, is_erased_data Proxy>
+U* unerase_cast_if(Proxy const& o, any_v_table* v_table)
+  requires(!is_const_data<Proxy>)
 {
   if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
@@ -1061,13 +1061,13 @@ struct erased_data_trait<by_val<V>> : basic_erased_data_trait<by_val<V>> {
 // --------------------------------------------------------------------------------
 // erased data variant
 
-template <template <typename> typename Any, is_erased_data ErasedData,
+template <template <typename> typename Any, is_erased_data Proxy,
           typename... Types>
-using vany_variant = std::variant<Any<ErasedData>, Types...>;
+using vany_variant = std::variant<Any<Proxy>, Types...>;
 
-template <template <typename> typename Any, is_erased_data ErasedData,
+template <template <typename> typename Any, is_erased_data Proxy,
           typename... Types>
-using make_vany = Any<by_val<vany_variant<Any, ErasedData, Types...>>>;
+using make_vany = Any<by_val<vany_variant<Any, Proxy, Types...>>>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -1093,23 +1093,23 @@ struct vany_type_trait {
       typename vany_variant_trait<vany_variant>::any_in_variant;
 };
 
-template <template <typename> typename Any, is_erased_data ErasedData,
+template <template <typename> typename Any, is_erased_data Proxy,
           typename... Types>
-struct erased_data_trait<by_val<vany_variant<Any, ErasedData, Types...>>>
-    : basic_erased_data_trait<by_val<vany_variant<Any, ErasedData, Types...>>> {
-  using vany_variant_t = vany_variant<Any, ErasedData, Types...>;
-  using void_t = typename erased_data_trait<ErasedData>::void_t;
+struct erased_data_trait<by_val<vany_variant<Any, Proxy, Types...>>>
+    : basic_erased_data_trait<by_val<vany_variant<Any, Proxy, Types...>>> {
+  using vany_variant_t = vany_variant<Any, Proxy, Types...>;
+  using void_t = typename erased_data_trait<Proxy>::void_t;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =
-      erased_data_trait<ErasedData>::is_constructibile_from_const;
+      erased_data_trait<Proxy>::is_constructibile_from_const;
   template <typename ConstructedWith>
   struct is_constructibile_from {
     static constexpr bool value =
         std::is_constructible_v<vany_variant_t, ConstructedWith>;
   };
-  static constexpr bool is_owner = erased_data_trait<ErasedData>::is_owner;
+  static constexpr bool is_owner = erased_data_trait<Proxy>::is_owner;
   static constexpr bool is_weak =
-      erased_data_trait<ErasedData>::is_weak;  // cppcheck-suppress
+      erased_data_trait<Proxy>::is_weak;  // cppcheck-suppress
                                                // duplInheritedMember
   static auto default_construct() { return vany_variant_t{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
@@ -1768,11 +1768,11 @@ struct v_table_holder<false, Trait> {
 //     return static_cast<typename Derived::v_table_t*>(self.v_table_);
 //   }
 //   // cppcheck-suppress-end [functionConst, functionStatic]
-//   template <typename ErasedData, typename Concrete, typename Self>
+//   template <typename Proxy, typename Concrete, typename Self>
 //   void init_v_table(this Self& self) {
 //     using derived_v_table_t = typename Self::v_table_t;
 //     self.v_table_ = v_table_instance<derived_v_table_t,
-//                                      anyxx::unerased<ErasedData,
+//                                      anyxx::unerased<Proxy,
 //                                      Concrete>>();
 //   }
 //   auto release_v_table() { return std::exchange(v_table_, nullptr); }
@@ -1803,10 +1803,10 @@ struct v_table_holder<true, Trait> {
   // cppcheck-suppress-begin [functionConst, functionStatic]
   auto get_v_table_ptr() const { return v_table_; }
   // cppcheck-suppress-end [functionConst, functionStatic]
-  template <typename ErasedData, typename Concrete>
+  template <typename Proxy, typename Concrete>
   void init_v_table() {
     v_table_ =
-        v_table_instance<v_table_t, anyxx::unerased<ErasedData, Concrete>>();
+        v_table_instance<v_table_t, anyxx::unerased<Proxy, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
@@ -2090,17 +2090,17 @@ static_assert(moveable_from<value, value>);
 // --------------------------------------------------------------------------------
 // any base
 
-template <is_erased_data ErasedData, typename Trait>
-class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
+template <is_erased_data Proxy, typename Trait>
+class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:
-  using erased_data_t = ErasedData;
+  using erased_data_t = Proxy;
   using trait_t = erased_data_trait<erased_data_t>;
   using void_t = typename trait_t::void_t;
-  using v_table_holder_t = v_table_holder<is_dyn<ErasedData>, Trait>;
+  using v_table_holder_t = v_table_holder<is_dyn<Proxy>, Trait>;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = trait_t::static_dispatch_t;
   using any_value_t = any<value, Trait>;
-  static constexpr bool dyn = is_dyn<ErasedData>;
+  static constexpr bool dyn = is_dyn<Proxy>;
 
  protected:
   erased_data_t erased_data_ = trait_t::default_construct();
@@ -2109,24 +2109,24 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   // cppcheck-suppress-begin noExplicitConstructor
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, ErasedData> &&
+    requires constructibile_for<ConstructedWith, Proxy> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>)
       : erased_data_(erased<erased_data_t>(
             std::forward<ConstructedWith>(constructed_with))) {
-    v_table_holder_t::template init_v_table<ErasedData, ConstructedWith>();
+    v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
   }
   // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
   any(std::in_place_t, V&& v)
-      : erased_data_(erased_data_trait<ErasedData>::construct_in_place(
+      : erased_data_(erased_data_trait<Proxy>::construct_in_place(
             std::forward<V>(v))) {
-    v_table_holder_t::template init_v_table<ErasedData, V>();
+    v_table_holder_t::template init_v_table<Proxy, V>();
   }
   template <typename T, typename... Args>
   any(std::in_place_type_t<T>, Args&&... args)
       : erased_data_(trait_t::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {
-    v_table_holder_t::template init_v_table<ErasedData, T>();
+    v_table_holder_t::template init_v_table<Proxy, T>();
   }
 
   any() = default;
@@ -2154,20 +2154,20 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   template <is_any Other>
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t> &&
-             (!is_dyn<ErasedData> ||
+             (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
       : v_table_holder_t(other.get_v_table_ptr()),
-        erased_data_(borrow_as<ErasedData>(other.erased_data_,
+        erased_data_(borrow_as<Proxy>(other.erased_data_,
                                            other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
     requires(borrowable_from<erased_data_t, typename Other::erased_data_t> &&
-             (!is_dyn<ErasedData> ||
+             (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     erased_data_ =
-        borrow_as<ErasedData>(other.erased_data_, other.get_v_table_ptr());
+        borrow_as<Proxy>(other.erased_data_, other.get_v_table_ptr());
     return *this;
   }
 
@@ -2180,13 +2180,13 @@ class any : public v_table_holder<is_dyn<ErasedData>, Trait>, public Trait {
   template <is_any Other>
   explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(moveable_from<erased_data_t, typename Other::erased_data_t> &&
-             (!is_dyn<ErasedData> ||
+             (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
       : any(std::move(other.erased_data_), other.release_v_table()) {}
   template <is_any Other>
   any& operator=(Other&& other) noexcept
     requires(moveable_from<erased_data_t, typename Other::erased_data_t> &&
-             (!is_dyn<ErasedData> ||
+             (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     trait_t::move_to(erased_data_, v_table_holder_t::get_v_table_ptr(),
@@ -2517,9 +2517,9 @@ struct forward_trait_to_map<Traited, self const&> {
 // --------------------------------------------------------------------------------
 // any customization traits
 
-template <is_erased_data ErasedData = shared>
+template <is_erased_data Proxy = shared>
 struct default_erased_data {
-  using type = ErasedData;
+  using type = Proxy;
 };
 
 // --------------------------------------------------------------------------------
@@ -2749,15 +2749,15 @@ class factory {
   std::map<Key, unique_constructor_t> unique_factory_map_;
   std::map<Key, shared_const_constructor_t> shared_factory_map_;
 
-  template <is_erased_data ErasedData>
+  template <is_erased_data Proxy>
   auto register_impl(auto& map, Key key, auto const& construct) {
-    map[key] = [construct](Args... args) -> Any<ErasedData> {
-      return Any<ErasedData>{std::in_place,
+    map[key] = [construct](Args... args) -> Any<Proxy> {
+      return Any<Proxy>{std::in_place,
                              construct(std::forward<Args>(args)...)};
     };
   };
 
-  template <is_erased_data ErasedData>
+  template <is_erased_data Proxy>
   auto construct_impl(auto const& map, Key key, Args... args) {
     if (auto found = map.find(key); found != map.end())
       return found->second(std::forward<Args>(args)...);
@@ -2776,14 +2776,14 @@ class factory {
     register_impl<shared>(shared_factory_map_, key, construct);
     return nullptr;
   }
-  template <is_erased_data ErasedData>
+  template <is_erased_data Proxy>
   auto construct(auto key, Args&&... args) {
-    if constexpr (std::same_as<ErasedData, unique>) {
-      return construct_impl<ErasedData>(unique_factory_map_, key,
+    if constexpr (std::same_as<Proxy, unique>) {
+      return construct_impl<Proxy>(unique_factory_map_, key,
                                         std::forward<Args>(args)...);
     } else {
-      static_assert(std::same_as<ErasedData, shared>);
-      return construct_impl<ErasedData>(shared_factory_map_, key,
+      static_assert(std::same_as<Proxy, shared>);
+      return construct_impl<Proxy>(shared_factory_map_, key,
                                         std::forward<Args>(args)...);
     }
   };
