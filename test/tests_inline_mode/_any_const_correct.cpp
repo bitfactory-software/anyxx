@@ -210,7 +210,7 @@ static_assert(!can_call_set_text<const_text_i const>);
 using mutable_text_i_const = any_text_i_mutable<const_observer>;
 using mutable_text_i_mutable = any_text_i_mutable<mutable_observer>;
 static_assert(
-    std::same_as<mutable_text_i_mutable::erased_data_t, mutable_observer>);
+    std::same_as<mutable_text_i_mutable::proxy_t, mutable_observer>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);

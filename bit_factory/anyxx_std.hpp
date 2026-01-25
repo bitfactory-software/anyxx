@@ -44,7 +44,7 @@ struct translate_v_table_param<AnyValue, AnyForwardRange const &> {
       anyxx::any_forward_range<AnyValue, AnyValue,
                                //      anyxx::any_forward_range<any<value>,
                                //      any<value>,
-                               typename AnyForwardRange::erased_data_t> const &;
+                               typename AnyForwardRange::proxy_t> const &;
 };
 //
 template <typename Concrete, typename AnyForwardRange>

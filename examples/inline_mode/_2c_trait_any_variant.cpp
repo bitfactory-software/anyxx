@@ -72,7 +72,7 @@ TEST_CASE("example 2cb static_ any variant") {
   using namespace anyxx;
 
   static_assert(
-      constructibile_for<any_value<shared>, vany_value<>::erased_data_t>);
+      constructibile_for<any_value<shared>, vany_value<>::proxy_t>);
   vany_value<> vv_custom_43 =
       any_value<shared>{std::in_place_type<custom>, "43"};
   vany_value<> vv_custom_42 = {
@@ -83,9 +83,9 @@ TEST_CASE("example 2cb static_ any variant") {
   CHECK(vv_custom_43.to_string() == "{43}");
 
   vany_value<anyxx::value> b{true};
-  static_assert(anyxx::is_erased_data<vany_value<>::erased_data_t>);
-  static_assert(!anyxx::is_const_data<vany_value<>::erased_data_t>);
-  static_assert(!anyxx::is_const_data<vany_value<anyxx::value>::erased_data_t>);
+  static_assert(anyxx::is_erased_data<vany_value<>::proxy_t>);
+  static_assert(!anyxx::is_const_data<vany_value<>::proxy_t>);
+  static_assert(!anyxx::is_const_data<vany_value<anyxx::value>::proxy_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
   vany_value<anyxx::value> vv_custom_FS{

@@ -218,7 +218,7 @@ TEST_CASE("dynamic any shared") {
   typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), Catch::Matchers::WithinAbs(77.2, 77.3));
-  static_assert(std::same_as<typed_circle_shape_shared_const::erased_data_t,
+  static_assert(std::same_as<typed_circle_shape_shared_const::proxy_t,
                              shared>);
   static_assert(is_typed_any<decltype(sc_typed)>);
   any_shape<shared> circle_shape_vv{sc_typed};

@@ -24,8 +24,8 @@ TEST_CASE("_interface_cast") {
     auto s = to_string_i_co.to_string();
     REQUIRE(s == "3.140000");
 
-    static_assert(borrowable_from<any_get_value_i<const_observer>::erased_data_t,
-                                  any_get_value_i<const_observer>::erased_data_t>);
+    static_assert(borrowable_from<any_get_value_i<const_observer>::proxy_t,
+                                  any_get_value_i<const_observer>::proxy_t>);
 
     any_get_value_i<const_observer> i1 =
         *borrow_as<any_get_value_i<const_observer>>(to_string_i_co);

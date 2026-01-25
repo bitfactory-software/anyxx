@@ -56,7 +56,7 @@ TEST_CASE("any lifetime cast") {
   REQUIRE(u() == "hallo");
   static_assert(!is_typed_any<any_stringable<unique>>);
   static_assert(is_any<any_stringable<unique>>);
-  static_assert(!constructibile_for<any_stringable<unique>, any_stringable<mutable_observer>::erased_data_t>);
+  static_assert(!constructibile_for<any_stringable<unique>, any_stringable<mutable_observer>::proxy_t>);
   static_assert(
       std::derived_from<any_stringable<mutable_observer>::v_table_t, any_stringable<unique>::v_table_t>);
   any_stringable<mutable_observer> mo{u};
