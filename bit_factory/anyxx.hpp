@@ -892,7 +892,7 @@ concept is_dyn =
 template <typename I>
 concept is_proxy_holder_impl = requires(I i) {
   typename I::proxy_t;
-  typename I::trait_t;
+  typename I::proxy_trait_t;
 };
 template <typename I>
 concept is_proxy_holder = is_proxy_holder_impl<std::decay_t<I>>;
@@ -905,7 +905,7 @@ concept is_any = is_any_impl<std::decay_t<I>>;
 
 template <class E>
 concept is_typed_any = is_any<E> && requires(E e) {
-  typename E::trait_t;
+  typename E::proxy_trait_t;
   typename E::value_t;
   { E::is_const } -> std::convertible_to<bool>;
 };
@@ -2094,16 +2094,16 @@ template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:
   using proxy_t = Proxy;
-  using trait_t = proxy_trait<proxy_t>;
-  using void_t = typename trait_t::void_t;
+  using proxy_trait_t = proxy_trait<proxy_t>;
+  using void_t = typename proxy_trait_t::void_t;
   using v_table_holder_t = v_table_holder<is_dyn<Proxy>, Trait>;
   using v_table_t = typename v_table_holder_t::v_table_t;
-  using T = trait_t::static_dispatch_t;
+  using T = proxy_trait_t::static_dispatch_t;
   using any_value_t = any<value, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
 
  protected:
-  proxy_t proxy_ = trait_t::default_construct();
+  proxy_t proxy_ = proxy_trait_t::default_construct();
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2124,20 +2124,20 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   }
   template <typename T, typename... Args>
   any(std::in_place_type_t<T>, Args&&... args)
-      : proxy_(trait_t::template construct_type_in_place<T>(
+      : proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {
     v_table_holder_t::template init_v_table<Proxy, T>();
   }
 
   any() = default;
   ~any() {
-    trait_t::destroy(proxy_, v_table_holder_t::get_v_table_ptr());
+    proxy_trait_t::destroy(proxy_, v_table_holder_t::get_v_table_ptr());
   }
 
   any(const any& other)
     requires std::copyable<proxy_t>
       : v_table_holder_t(other.get_v_table_ptr()) {
-    trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
+    proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                  other.get_v_table_ptr());
   }
   any& operator=(any const& other)
@@ -2145,7 +2145,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   {
     if (this == &other) return *this;
     auto const v_table_ptr = v_table_holder_t::get_v_table_ptr();
-    trait_t::copy_construct_from(proxy_, v_table_ptr, other.proxy_,
+    proxy_trait_t::copy_construct_from(proxy_, v_table_ptr, other.proxy_,
                                  other.get_v_table_ptr());
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     return *this;
@@ -2175,7 +2175,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     requires(moveable_from<proxy_t, OtherErasedData>)
   explicit any(OtherErasedData&& proxy, v_table_t* v_table) noexcept
       : v_table_holder_t(v_table) {
-    trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
+    proxy_trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
   }
   template <is_any Other>
   explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
@@ -2189,7 +2189,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
-    trait_t::move_to(proxy_, v_table_holder_t::get_v_table_ptr(),
+    proxy_trait_t::move_to(proxy_, v_table_holder_t::get_v_table_ptr(),
                      std::move(other.proxy_), other.get_v_table_ptr());
     v_table_holder_t::set_v_table_ptr(other.release_v_table());
     return *this;
@@ -2219,7 +2219,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
 
   operator decltype(auto)() const {
-    if constexpr (!voidness<typename trait_t::static_dispatch_t>) {
+    if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       return proxy_.value_;
     } else {
       return &proxy_;
@@ -2529,8 +2529,8 @@ template <typename V, is_any Any>
 struct typed_any : public Any {
   using any_t = Any;
   using proxy_t = typename any_t::proxy_t;
-  using trait_t = any_t::trait_t;
-  using void_t = trait_t::void_t;
+  using proxy_trait_t = any_t::proxy_trait_t;
+  using void_t = proxy_trait_t::void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   using value_t = V;
 
