@@ -135,7 +135,7 @@ TEST_CASE("example 2b monoid c") {
   using namespace anyxx;
 
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(true));
-}
+}  // NOLINT
 TEST_CASE("example 2b monoid d") {
   using namespace example_2b;
   using namespace std::string_literals;

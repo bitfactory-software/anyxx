@@ -299,28 +299,25 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       using traited_t = typename proxy_t::value_t;                             \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
-            get_proxy_value(std::forward<Self>(self)) __VA_OPT__(, )           \
+            get_proxy_value(self) __VA_OPT__(, )                               \
                 __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
                     a, _sig, __VA_ARGS__)));                                   \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             static_dispatch_map_t<T>::name(                                    \
-                get_proxy_value(std::forward<Self>(self)) __VA_OPT__(, )       \
+                get_proxy_value(self) __VA_OPT__(, )                           \
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__))),                               \
             std::forward<Self>(self));                                         \
       }                                                                        \
     } else {                                                                   \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
-        return get_v_table(std::forward<Self>(self))                           \
-            ->name(anyxx::get_proxy_ptr(std::forward<Self>(self)) __VA_OPT__(  \
-                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+        return get_v_table(self)->name(anyxx::get_proxy_ptr(self) __VA_OPT__(  \
+            , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
-            get_v_table(std::forward<Self>(self))                              \
-                ->name(anyxx::get_proxy_ptr(std::forward<Self>(self))          \
-                           __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(      \
-                                            a, _sig, __VA_ARGS__))),           \
+            get_v_table(self)->name(anyxx::get_proxy_ptr(self) __VA_OPT__(     \
+                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))),    \
             std::forward<Self>(self));                                         \
       }                                                                        \
     }                                                                          \
@@ -481,8 +478,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
 
-#define TRAIT_TEMPLATE(t, n, l) \
-  TRAIT_TEMPLATE_(t, n, anyxx::base_trait, (), l)
+#define TRAIT_TEMPLATE(t, n, l) TRAIT_TEMPLATE_(t, n, anyxx::base_trait, (), l)
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
@@ -810,9 +806,11 @@ inline mutable_void move_construct(any_v_table* v_table, mutable_void from) {
   return move_construct_at(v_table, v_table->allocate(), from);
 }
 inline void delete_(any_v_table* v_table, mutable_void& data) noexcept {
-  if (v_table && data) v_table->delete_(data);
+  if (!data) return;
+  assert(v_table);
+  v_table->delete_(data);
   data = nullptr;
-}
+}  // NOLINT
 
 template <typename U>
 bool type_match(any_v_table* v_table);

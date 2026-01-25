@@ -15,7 +15,7 @@ TEST_CASE("any via concept simple") {
   using namespace anyxx;
 
   struct model1 {
-    std::string fn1() const { return "model1"; }
+    [[nodiscard]] std::string fn1() const { return "model1"; }
   };
   any<val, trait1> test{model1{}};
   CHECK(test.fn1() == "model1");

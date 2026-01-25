@@ -30,7 +30,7 @@ ANY_REGISTER_MODEL(X, test::component_base::to_string_i)
 any_to_string_i<anyxx::cref> test::component_base::get_to_string_i_co() {
   any_to_string_i<anyxx::cref> i{a_x};
   auto meta = get_v_table(i)->meta_data_;
-  [[maybe_unused]] const std::type_info* type_info = &meta->get_type_info();
+  [[maybe_unused]] const std::type_info* type_info = &meta->get_type_info(); // NOLINT
   static_assert(is_any<any_to_string_i<anyxx::cref>>);
   [[maybe_unused]] const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);

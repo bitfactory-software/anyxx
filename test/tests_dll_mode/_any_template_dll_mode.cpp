@@ -20,12 +20,12 @@ void test_any_map_template(
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
 }
+}  // namespace
 
-struct X {
+struct test::component_base::X {
   std::string s_;
   [[nodiscard]] std::string to_string() const { return s_; }
 };
-}  // namespace
 
 namespace {
 
