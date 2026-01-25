@@ -17,6 +17,6 @@ TEST_CASE("any via concept simple") {
   struct model1 {
     std::string fn1() const { return "model1"; }
   };
-  any<value, trait1> test{model1{}};
+  any<val, trait1> test{model1{}};
   CHECK(test.fn1() == "model1");
 }

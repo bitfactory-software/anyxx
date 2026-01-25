@@ -396,7 +396,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using v_table_t = n##_v_table;                                             \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<anyxx::value, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
+        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
                                      any_template_params)>;                    \
                                                                                \
     static constexpr bool open_dispatch_enabeled =                             \
@@ -422,7 +422,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<anyxx::value, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
+        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
                                      any_template_params)>;                    \
                                                                                \
     using base_t =                                                             \
@@ -1027,8 +1027,8 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
     return by_val<V>{};
   }
 
-  static auto get_proxy_ptr_in(auto& value, [[maybe_unused]] any_v_table* v_table) {
-    return &value;
+  static auto get_proxy_ptr_in(auto& val, [[maybe_unused]] any_v_table* v_table) {
+    return &val;
   }
 
   template <typename ConstructedWith>
@@ -1104,8 +1104,8 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
     return by_val<vany_variant_t>{};
   }
 
-  static auto get_proxy_ptr_in(auto& value, [[maybe_unused]] any_v_table* v_table) {
-    return &value;
+  static auto get_proxy_ptr_in(auto& val, [[maybe_unused]] any_v_table* v_table) {
+    return &val;
   }
 
   template <typename ConstructedWith>
@@ -1394,7 +1394,7 @@ static_assert(is_proxy<shared>);
 static_assert(is_proxy<weak>);
 
 // --------------------------------------------------------------------------------
-// erased data value
+// erased data val
 
 struct heap_data {
   mutable_void ptr = nullptr;
@@ -1424,16 +1424,16 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
   static constexpr inline bool is_trivial = Trivial;
 };
 
-union value {
-  value(mutable_void ptr = 0) : heap{ptr} {}
-  value([[maybe_unused]] value const& other) noexcept {
+union val {
+  val(mutable_void ptr = 0) : heap{ptr} {}
+  val([[maybe_unused]] val const& other) noexcept {
     trivial = other.trivial;
   }
-  value& operator=([[maybe_unused]] value const& other) noexcept {
+  val& operator=([[maybe_unused]] val const& other) noexcept {
     trivial = other.trivial;
     return *this;
   }
-  ~value() {}
+  ~val() {}
   heap_data heap;
   local_data<false> local;
   local_data<true> trivial;
@@ -1451,7 +1451,7 @@ auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
 };
 
 template <typename V2>
-auto visit_value(auto&& visitor, value& v1, std::size_t size1, V2&& v2,
+auto visit_value(auto&& visitor, val& v1, std::size_t size1, V2&& v2,
                  std::size_t size2) -> decltype(auto) {
   if (size1 > sizeof(mutable_void)) {
     if (size2 > sizeof(mutable_void)) {
@@ -1495,7 +1495,7 @@ auto make_local_value(Args&&... args) {
   static_assert(sizeof(T) <= sizeof(mutable_void));
   constexpr bool is_trivial = std::is_trivial_v<T>;
   using local_data_type = local_data<is_trivial>;
-  value v;
+  val v;
   auto location = static_cast<T*>(static_cast<mutable_void>(v.local.data()));
   std::construct_at<T>(location, std::forward<Args>(args)...);
   return v;
@@ -1507,12 +1507,12 @@ auto make_value(Args&&... args) {
   if constexpr (sizeof(T) <= sizeof(mutable_void)) {
     return make_local_value<T>(std::forward<Args>(args)...);
   } else {
-    return value{new T(std::forward<Args>(args)...)};
+    return val{new T(std::forward<Args>(args)...)};
   }
 }
 
 template <>
-struct proxy_trait<value> : basic_proxy_trait<value> {
+struct proxy_trait<val> : basic_proxy_trait<val> {
   using void_t = void*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -1523,11 +1523,11 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return anyxx::value{}; }
+  static auto default_construct() { return anyxx::val{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     assert(v_table);
-    anyxx::value v;
+    anyxx::val v;
     visit_value(overloads{[&](heap_data& heap) {
                             heap.ptr = copy_construct(v_table, data_ptr);
                           },
@@ -1541,8 +1541,8 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
     return v;
   }
 
-  static void move_to(value& to, [[maybe_unused]] any_v_table* v_table_to,
-                      value&& from,
+  static void move_to(val& to, [[maybe_unused]] any_v_table* v_table_to,
+                      val&& from,
                       [[maybe_unused]] any_v_table* v_table_from) {
     if (!v_table_from && !v_table_to) return;
     visit_value(
@@ -1584,7 +1584,7 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
             }},
         to, model_size(v_table_to), from, v_table_from->model_size);
   }
-  static void move_to(unique& to, any_v_table* to_v_table, value&& v,
+  static void move_to(unique& to, any_v_table* to_v_table, val&& v,
                       any_v_table* v_table) {
     assert(v_table);
     auto data_ptr =
@@ -1597,8 +1597,8 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
                                        v_table);
   }
 
-  static void copy_construct_from(value& to, any_v_table* to_v_table,
-                                  value const& from,
+  static void copy_construct_from(val& to, any_v_table* to_v_table,
+                                  val const& from,
                                   any_v_table* from_v_table) {
     if (!from_v_table) return;
     visit_value(
@@ -1640,7 +1640,7 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  static void destroy(value& v, any_v_table* v_table) {
+  static void destroy(val& v, any_v_table* v_table) {
     visit_value(overloads{[&](heap_data& heap) {
                             assert(v_table || !heap.ptr);
                             if (v_table) delete_(v_table, heap.ptr);
@@ -1684,7 +1684,7 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
   }
 };
 
-static_assert(is_proxy<value>);
+static_assert(is_proxy<val>);
 
 // --------------------------------------------------------------------------------
 // meta data
@@ -1917,42 +1917,42 @@ static_assert(borrowable_from<mutable_observer, mutable_observer>);
 static_assert(borrowable_from<mutable_observer, unique>);
 static_assert(!borrowable_from<mutable_observer, shared>);
 static_assert(!borrowable_from<mutable_observer, weak>);
-static_assert(borrowable_from<mutable_observer, value>);
+static_assert(borrowable_from<mutable_observer, val>);
 
 static_assert(borrowable_from<const_observer, const_observer>);
 static_assert(borrowable_from<const_observer, mutable_observer>);
 static_assert(borrowable_from<const_observer, unique>);
 static_assert(borrowable_from<const_observer, shared>);
 static_assert(!borrowable_from<const_observer, weak>);
-static_assert(borrowable_from<const_observer, value>);
+static_assert(borrowable_from<const_observer, val>);
 
 static_assert(!borrowable_from<shared, const_observer>);
 static_assert(!borrowable_from<shared, mutable_observer>);
 static_assert(!borrowable_from<shared, unique>);
 static_assert(borrowable_from<shared, shared>);
 static_assert(!borrowable_from<shared, weak>);
-static_assert(!borrowable_from<shared, value>);
+static_assert(!borrowable_from<shared, val>);
 
 static_assert(!borrowable_from<weak, const_observer>);
 static_assert(!borrowable_from<weak, mutable_observer>);
 static_assert(!borrowable_from<weak, unique>);
 static_assert(borrowable_from<weak, shared>);
 static_assert(borrowable_from<weak, weak>);
-static_assert(!borrowable_from<weak, value>);
+static_assert(!borrowable_from<weak, val>);
 
 static_assert(!borrowable_from<unique, const_observer>);
 static_assert(!borrowable_from<unique, mutable_observer>);
 static_assert(!borrowable_from<unique, unique>);
 static_assert(!borrowable_from<unique, shared>);
 static_assert(!borrowable_from<unique, weak>);
-static_assert(!borrowable_from<unique, value>);
+static_assert(!borrowable_from<unique, val>);
 
-static_assert(!borrowable_from<value, const_observer>);
-static_assert(!borrowable_from<value, mutable_observer>);
-static_assert(!borrowable_from<value, unique>);
-static_assert(!borrowable_from<value, shared>);
-static_assert(!borrowable_from<value, weak>);
-static_assert(!borrowable_from<value, value>);
+static_assert(!borrowable_from<val, const_observer>);
+static_assert(!borrowable_from<val, mutable_observer>);
+static_assert(!borrowable_from<val, unique>);
+static_assert(!borrowable_from<val, shared>);
+static_assert(!borrowable_from<val, weak>);
+static_assert(!borrowable_from<val, val>);
 
 // --------------------------------------------------------------------------------
 // clone erased data
@@ -1975,7 +1975,7 @@ static_assert(!cloneable_to<const_observer>);
 static_assert(cloneable_to<shared>);
 static_assert(!cloneable_to<weak>);
 static_assert(cloneable_to<unique>);
-static_assert(cloneable_to<value>);
+static_assert(cloneable_to<val>);
 
 // --------------------------------------------------------------------------------
 // move erased data
@@ -2014,42 +2014,42 @@ static_assert(moveable_from<mutable_observer, mutable_observer>);
 static_assert(!moveable_from<mutable_observer, unique>);
 static_assert(!moveable_from<mutable_observer, shared>);
 static_assert(!moveable_from<mutable_observer, weak>);
-static_assert(!moveable_from<mutable_observer, value>);
+static_assert(!moveable_from<mutable_observer, val>);
 
 static_assert(moveable_from<const_observer, const_observer>);
 static_assert(moveable_from<const_observer, mutable_observer>);
 static_assert(!moveable_from<const_observer, unique>);
 static_assert(!moveable_from<const_observer, shared>);
 static_assert(!moveable_from<const_observer, weak>);
-static_assert(!moveable_from<const_observer, value>);
+static_assert(!moveable_from<const_observer, val>);
 
 static_assert(!moveable_from<shared, const_observer>);
 static_assert(!moveable_from<shared, mutable_observer>);
 static_assert(moveable_from<shared, unique>);
 static_assert(moveable_from<shared, shared>);
 static_assert(!moveable_from<shared, weak>);
-static_assert(!moveable_from<shared, value>);
+static_assert(!moveable_from<shared, val>);
 
 static_assert(!moveable_from<weak, const_observer>);
 static_assert(!moveable_from<weak, mutable_observer>);
 static_assert(!moveable_from<weak, unique>);
 static_assert(moveable_from<weak, shared>);
 static_assert(moveable_from<weak, weak>);
-static_assert(!moveable_from<weak, value>);
+static_assert(!moveable_from<weak, val>);
 
 static_assert(!moveable_from<unique, const_observer>);
 static_assert(!moveable_from<unique, mutable_observer>);
 static_assert(moveable_from<unique, unique>);
 static_assert(!moveable_from<unique, shared>);
 static_assert(!moveable_from<unique, weak>);
-static_assert(!moveable_from<unique, value>);
+static_assert(!moveable_from<unique, val>);
 
-static_assert(!moveable_from<value, const_observer>);
-static_assert(!moveable_from<value, mutable_observer>);
-static_assert(!moveable_from<value, unique>);
-static_assert(!moveable_from<value, shared>);
-static_assert(!moveable_from<value, weak>);
-static_assert(moveable_from<value, value>);
+static_assert(!moveable_from<val, const_observer>);
+static_assert(!moveable_from<val, mutable_observer>);
+static_assert(!moveable_from<val, unique>);
+static_assert(!moveable_from<val, shared>);
+static_assert(!moveable_from<val, weak>);
+static_assert(moveable_from<val, val>);
 
 // --------------------------------------------------------------------------------
 // any base
@@ -2063,7 +2063,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   using v_table_holder_t = v_table_holder<is_dyn<Proxy>, Trait>;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
-  using any_value_t = any<value, Trait>;
+  using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
 
  protected:
@@ -2764,7 +2764,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<value>;
+  using any_value_t = any<val>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
@@ -2774,20 +2774,20 @@ struct members {
   }
   template <typename Member>
   typename Member::value_t const* get(Member member) const {
-    const auto& value = table_[member.index];
-    if (!value) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(value);
+    const auto& val = table_[member.index];
+    if (!val) return {};
+    return unchecked_unerase_cast<typename Member::value_t>(val);
   }
   template <typename Member>
   typename Member::value_t* get(Member member) {
-    auto& value = table_[member.index];
-    if (!value) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(value);
+    auto& val = table_[member.index];
+    if (!val) return {};
+    return unchecked_unerase_cast<typename Member::value_t>(val);
   }
   template <typename Member>
   typename Member::value_t& operator[](Member member) {
-    if (auto value = get(member)) {
-      return *value;
+    if (auto val = get(member)) {
+      return *val;
     }
     using value_t = typename Member::value_t;
     set(member, value_t());

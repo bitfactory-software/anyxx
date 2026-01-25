@@ -15,7 +15,7 @@ anyxx::any_forward_range<int, int> a_range(bool use_list) {
     return v;
 }
 
-anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
+anyxx::any_forward_range<int, int, anyxx::val> a_range_value(bool use_list) {
   if (use_list)
     return std::list<int>{4, 5, 6};
   else
@@ -117,8 +117,8 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::value>,
-                      any_stringable<anyxx::value>>
+    any_forward_range<any_stringable<anyxx::val>,
+                      any_stringable<anyxx::val>>
         r{v};
     int x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
@@ -137,8 +137,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<by_val<v_t const&>, forward_range<any_stringable<anyxx::value>,
-                                       any_stringable<anyxx::value>>>
+    any<by_val<v_t const&>, forward_range<any_stringable<anyxx::val>,
+                                       any_stringable<anyxx::val>>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -156,12 +156,12 @@ TEST_CASE("example 3 transform unerase") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::value>,
-                      any_stringable<anyxx::value>>
+    any_forward_range<any_stringable<anyxx::val>,
+                      any_stringable<anyxx::val>>
         r{v};
     int x = 0;
     for (auto i : std::views::transform(
-             r, [](any_stringable<anyxx::value> const& v) -> int {
+             r, [](any_stringable<anyxx::val> const& v) -> int {
                return *anyxx::unerase_cast<int>(v);
              })) {
       std::println("{}", i);
@@ -178,7 +178,7 @@ TEST_CASE("example 3 self in range") {
 
   std::vector<int> v = {1, 2, 3};
   {
-    any_node<value> n1{0};
+    any_node<val> n1{0};
     auto r = n1.sum(v);
     CHECK(*unerase_cast<int>(r) == 6);
   }
@@ -188,14 +188,14 @@ TEST_CASE("example 3 self in range") {
     CHECK(r == 6);
   }
   {
-    any_forward_range<any_node<anyxx::value>, any_node<anyxx::value>, anyxx::value> r{v};
+    any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{v};
     any_node<by_val<int>> n1{0};
     auto result = n1.sum(r);
     CHECK(result == 6);
   }
  {
-    any_forward_range<any_node<anyxx::value>, any_node<anyxx::value>, anyxx::value> r{v};
-    any_node<value> n1{0};
+    any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{v};
+    any_node<val> n1{0};
     auto result = n1.sum(r);
     CHECK(*unerase_cast<int>(result) == 6);
   }

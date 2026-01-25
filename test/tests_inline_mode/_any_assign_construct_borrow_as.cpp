@@ -122,7 +122,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(*lock(vv4)) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<value>;
+    using from_t = any<val>;
     using to_t = any<const_observer>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{s1};
@@ -134,7 +134,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<value>;
+    using from_t = any<val>;
     using to_t = any<mutable_observer>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{s1};

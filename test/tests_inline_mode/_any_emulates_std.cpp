@@ -64,7 +64,7 @@ TEST_CASE("std emulated function") {
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<value> f{pure_functor_with_context("hallo")};
+    any_string_to_string<val> f{pure_functor_with_context("hallo")};
     REQUIRE(f(" world") == "hallo world");
   }
   {
@@ -72,7 +72,7 @@ TEST_CASE("std emulated function") {
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    any_string_to_string<value> f{pure_functor_t{}};
+    any_string_to_string<val> f{pure_functor_t{}};
     REQUIRE(f("hello world") == "hello world");
   }
   {
@@ -97,7 +97,7 @@ TEST_CASE("std emulated function") {
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
-    any_string_to_string_mutable<value> fc2{functor_t{"hallo world"}};
+    any_string_to_string_mutable<val> fc2{functor_t{"hallo world"}};
     CHECK(fc2() == "hallo world");
   }
   {

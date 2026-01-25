@@ -46,7 +46,7 @@ TRAIT_EX(monoid,
              anyxx::any<Box, monoid> const& l,
              anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))
 
-template <typename Box = anyxx::value>
+template <typename Box = anyxx::val>
 using any_monoid = anyxx::any<Box, monoid>;
 
 }  // namespace example_2b
@@ -85,14 +85,14 @@ void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
   CHECK(c2);
 }
 
-anyxx::any_forward_range<any_monoid<anyxx::value>, any_monoid<anyxx::value>,
-                         anyxx::value>
+anyxx::any_forward_range<any_monoid<anyxx::val>, any_monoid<anyxx::val>,
+                         anyxx::val>
 make_a_range(bool use_list) {
   using namespace std::string_literals;
   if (use_list)
-    return std::list<any_monoid<anyxx::value>>{{"2"s}, {"3"s}};
+    return std::list<any_monoid<anyxx::val>>{{"2"s}, {"3"s}};
   else
-    return std::vector<any_monoid<anyxx::value>>{{"2"s}, {"3"s}};
+    return std::vector<any_monoid<anyxx::val>>{{"2"s}, {"3"s}};
 }
 
 }  // namespace example_2b
@@ -134,14 +134,14 @@ TEST_CASE("example 2b monoid c") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(true));
+  test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(true));
 }
 TEST_CASE("example 2b monoid d") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(false));
+  test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
 }
 
 #endif

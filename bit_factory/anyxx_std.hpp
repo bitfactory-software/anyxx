@@ -14,7 +14,7 @@ ANY_TEMPLATE_EX(
                       ([&x](auto const &r) { return x == r; })),
      ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &), const,
                       ([&x](auto const &r) { return x != r; }))),
-    anyxx::value,
+    anyxx::val,
     (using iterator_category = std::forward_iterator_tag;
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
      using reference = Reference;
@@ -42,8 +42,8 @@ template <typename AnyValue, typename AnyForwardRange>
 struct translate_v_table_param<AnyValue, AnyForwardRange const &> {
   using type =
       anyxx::any_forward_range<AnyValue, AnyValue,
-                               //      anyxx::any_forward_range<any<value>,
-                               //      any<value>,
+                               //      anyxx::any_forward_range<any<val>,
+                               //      any<val>,
                                typename AnyForwardRange::proxy_t> const &;
 };
 //

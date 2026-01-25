@@ -58,7 +58,7 @@ auto __ = encounter.define<any_creature<anyxx::const_observer>, man>(
       return {l.name(), encounter_action::nestle_to, r.name()};
     });
 
-using creatures_t = std::vector<any_creature<anyxx::value>>;
+using creatures_t = std::vector<any_creature<anyxx::val>>;
 auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);

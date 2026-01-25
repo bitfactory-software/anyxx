@@ -82,14 +82,14 @@ TEST_CASE("example 2cb static_ any variant") {
   CHECK(vv_custom_42.to_string() == "{42}");
   CHECK(vv_custom_43.to_string() == "{43}");
 
-  vany_value<anyxx::value> b{true};
+  vany_value<anyxx::val> b{true};
   static_assert(anyxx::is_proxy<vany_value<>::proxy_t>);
   static_assert(!anyxx::is_const_data<vany_value<>::proxy_t>);
-  static_assert(!anyxx::is_const_data<vany_value<anyxx::value>::proxy_t>);
+  static_assert(!anyxx::is_const_data<vany_value<anyxx::val>::proxy_t>);
   b.from_string("false");
   CHECK(b.to_string() == "false");
-  vany_value<anyxx::value> vv_custom_FS{
-      any_value<anyxx::value>{std::in_place_type<custom>}};
+  vany_value<anyxx::val> vv_custom_FS{
+      any_value<anyxx::val>{std::in_place_type<custom>}};
   vv_custom_FS.from_string("{43}");
   CHECK(vv_custom_FS.to_string() == "{43}");
 }

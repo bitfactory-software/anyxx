@@ -47,7 +47,7 @@ TRAIT_(has_plus, has_equal,
        ANY_OP_DEF(anyxx::self, +, plus_op, (anyxx::self const&), const,
                         ([&x](T const& y) { return x + y; }))))
 
-template <typename Box = anyxx::value>
+template <typename Box = anyxx::val>
 using any_has_plus = anyxx::any<Box, has_plus>;
 
 }  // namespace example_2d
