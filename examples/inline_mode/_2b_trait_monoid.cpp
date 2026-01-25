@@ -99,11 +99,11 @@ make_a_range(bool use_list) {
 }  // namespace example_2b
 //
 TEST_CASE("example 2b monoid simple") {
-  example_2b::any_monoid<anyxx::val<int>> x{2};
-  example_2b::any_monoid<anyxx::val<int>> y{x};
-  example_2b::any_monoid<anyxx::val<int>> z = y;
+  example_2b::any_monoid<anyxx::by_val<int>> x{2};
+  example_2b::any_monoid<anyxx::by_val<int>> y{x};
+  example_2b::any_monoid<anyxx::by_val<int>> z = y;
   CHECK(static_cast<int>(z) == 2);
-  example_2b::any_monoid<anyxx::val<int>> a{std::move(x)};
+  example_2b::any_monoid<anyxx::by_val<int>> a{std::move(x)};
   CHECK(static_cast<int>(a) == 2);
   static_assert(anyxx::is_erased_data<decltype(x)::erased_data_t>);
   static_assert(anyxx::is_any<decltype(x)>);
@@ -118,17 +118,17 @@ TEST_CASE("example 2b monoid a") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any<val<int>, monoid>>(
-      trait_as<monoid>(1), std::vector<any<val<int>, monoid>>{{2}, {3}});
+  test_monoid<any<by_val<int>, monoid>>(
+      trait_as<monoid>(1), std::vector<any<by_val<int>, monoid>>{{2}, {3}});
 }
  TEST_CASE("example 2b monoid b") {
    using namespace example_2b;
    using namespace std::string_literals;
    using namespace anyxx;
 
-   test_monoid<val<std::string>::as<monoid>>(
+   test_monoid<by_val<std::string>::as<monoid>>(
        trait_as<monoid>("1"s),
-       std::vector<val<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+       std::vector<by_val<std::string>::as<monoid>>{{"2"s}, {"3"s}});
  }
  TEST_CASE("example 2b monoid c") {
    using namespace example_2b;

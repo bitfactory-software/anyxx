@@ -684,7 +684,7 @@ struct missing_trait_error {
   static constexpr bool not_specialized = false;
 };
 template <typename Value>
-struct val;
+struct by_val;
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -1017,10 +1017,10 @@ U* unerase_cast_if(ErasedData const& o, any_v_table* v_table)
 }
 
 // --------------------------------------------------------------------------------
-// (un)erased data val
+// (un)erased data by_val
 
 template <typename V>
-struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
+struct erased_data_trait<by_val<V>> : basic_erased_data_trait<by_val<V>> {
   using void_t = mutable_void;
   using static_dispatch_t = V;
   static constexpr bool is_constructibile_from_const = true;
@@ -1030,10 +1030,10 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
         V, ConstructedWith>;  // && !is_any<ConstructedWith>;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return val<V>{}; }
+  static auto default_construct() { return by_val<V>{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
-    return val<V>{};
+    return by_val<V>{};
   }
 
   static bool has_value([[maybe_unused]] const auto& ptr,
@@ -1054,7 +1054,7 @@ struct erased_data_trait<val<V>> : basic_erased_data_trait<val<V>> {
   }
   template <typename Vx>
   static auto erase(Vx&& v) {
-    return val<V>{std::forward<Vx>(v)};
+    return by_val<V>{std::forward<Vx>(v)};
   }
 };
 
@@ -1067,7 +1067,7 @@ using vany_variant = std::variant<Any<ErasedData>, Types...>;
 
 template <template <typename> typename Any, is_erased_data ErasedData,
           typename... Types>
-using make_vany = Any<val<vany_variant<Any, ErasedData, Types...>>>;
+using make_vany = Any<by_val<vany_variant<Any, ErasedData, Types...>>>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -1095,8 +1095,8 @@ struct vany_type_trait {
 
 template <template <typename> typename Any, is_erased_data ErasedData,
           typename... Types>
-struct erased_data_trait<val<vany_variant<Any, ErasedData, Types...>>>
-    : basic_erased_data_trait<val<vany_variant<Any, ErasedData, Types...>>> {
+struct erased_data_trait<by_val<vany_variant<Any, ErasedData, Types...>>>
+    : basic_erased_data_trait<by_val<vany_variant<Any, ErasedData, Types...>>> {
   using vany_variant_t = vany_variant<Any, ErasedData, Types...>;
   using void_t = typename erased_data_trait<ErasedData>::void_t;
   using static_dispatch_t = vany_variant_t;
@@ -1114,7 +1114,7 @@ struct erased_data_trait<val<vany_variant<Any, ErasedData, Types...>>>
   static auto default_construct() { return vany_variant_t{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
-    return val<vany_variant_t>{};
+    return by_val<vany_variant_t>{};
   }
 
   static bool has_value([[maybe_unused]] const auto& ptr,
@@ -1130,15 +1130,15 @@ struct erased_data_trait<val<vany_variant<Any, ErasedData, Types...>>>
 
   template <typename V>
   static vany_variant_t construct_in_place(V&& v) {
-    return val<vany_variant_t>{std::forward<V>(v)};
+    return by_val<vany_variant_t>{std::forward<V>(v)};
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
-    return val<vany_variant_t>{T{std::forward<Args>(args)...}};
+    return by_val<vany_variant_t>{T{std::forward<Args>(args)...}};
   }
   template <typename Vx>
   static auto erase(Vx&& v) {
-    return val<vany_variant_t>{std::forward<Vx>(v)};
+    return by_val<vany_variant_t>{std::forward<Vx>(v)};
   }
 };
 
@@ -2319,17 +2319,17 @@ inline auto unerase_cast_if(Any const& o) {
 }
 
 template <typename Value>
-struct val {
+struct by_val {
   Value value_ = {};
   using value_t = Value;
   operator Value() const { return value_; }
   template <typename Trait>
-  using as = any<val<Value>, Trait>;
+  using as = any<by_val<Value>, Trait>;
 };
 
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
-  return any<anyxx::val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
+  return any<anyxx::by_val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
 }
 
 template <typename VTable, typename Concrete>

@@ -57,7 +57,7 @@ Square
     - shared_const, weak via std::shared_ptr, std::week_ptr
     - unique, via std::unique_ptr and type erased deleter
     - value
-    - val
+    - by_val
     - vany variant
   - Customizable via anyxx::erased_data_trait
   - **Safe** interchange of **lifetime**  

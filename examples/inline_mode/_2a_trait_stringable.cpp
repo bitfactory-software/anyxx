@@ -26,7 +26,7 @@ ANY_MODEL_MAP((double), example_2a::stringable) {
 namespace example_2a {
 
 template <typename V>
-std::string print_(anyxx::any<anyxx::val<V>, stringable> const& s) {
+std::string print_(anyxx::any<anyxx::by_val<V>, stringable> const& s) {
   return s.to_string() + "\n";
 }
 template <typename V>
