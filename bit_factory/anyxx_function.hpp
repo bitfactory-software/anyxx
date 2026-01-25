@@ -4,18 +4,6 @@
 
 namespace anyxx {
 
-template <typename R, typename... Args>
-struct function_v_table : any_v_table {
-  R (*f_)(const_void, Args...);
-  template <typename Concrete>
-  function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : any_v_table(concrete) {
-    f_ = +[](const_void self_ptr, Args... args) -> R {
-      auto self = static_cast<Concrete const *>(self_ptr);
-      return (*self)(std::forward<Args>(args)...);
-    };
-  }
-};
 struct constness {};
 struct const_ : constness {
   using type = const_void;
@@ -25,10 +13,23 @@ struct mutable_ : constness {
 };
 
 template <typename Constness, typename R, typename... Args>
+struct function_v_table : any_v_table {
+  R (*f_)(typename Constness::type, Args...);
+  template <typename Concrete>
+  function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : any_v_table(concrete) {
+    f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
+      return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
+                         std::forward<Args>(args)...);
+    };
+  }
+};
+
+template <typename Constness, typename R, typename... Args>
 struct function;
 template <typename Constness, typename R, typename... Args>
 struct function<R(Args...), Constness> : emtpty_trait {
-  using v_table_t = function_v_table<R, Args...>;
+  using v_table_t = function_v_table<Constness, R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R
     requires(const_correct_call_for_proxy<typename Constness::type,
@@ -40,8 +41,10 @@ struct function<R(Args...), Constness> : emtpty_trait {
       return get_v_table(self)->f_(get_proxy_ptr(self),
                                    std::forward<Args>(args)...);
     } else {
-      return get_proxy_value(std::forward<Self>(self))(
-          std::forward<Args>(args)...);
+      using T =
+          typename proxy_trait<typename self_t::proxy_t>::static_dispatch_t;
+      return std::invoke(get_proxy_value(std::forward<Self>(self)),
+                         std::forward<Args>(args)...);
     }
   }
 };
