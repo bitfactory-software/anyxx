@@ -300,17 +300,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       using traited_t = typename proxy_t::value_t;                             \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
-            get_proxy(std::forward<Self>(self))                                \
-                .value_ __VA_OPT__(, )                                         \
-                    __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
-                        a, _sig, __VA_ARGS__)));                               \
+            get_proxy_value(std::forward<Self>(self)) __VA_OPT__(, )           \
+                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
+                    a, _sig, __VA_ARGS__)));                                   \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             static_dispatch_map_t<T>::name(                                    \
-                get_proxy(std::forward<Self>(self))                            \
-                    .value_ __VA_OPT__(, ) __VA_OPT__(                         \
-                        _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(        \
-                            a, _sig, __VA_ARGS__))),                           \
+                get_proxy_value(std::forward<Self>(self)) __VA_OPT__(, )       \
+                    __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
+                        a, _sig, __VA_ARGS__))),                               \
             std::forward<Self>(self));                                         \
       }                                                                        \
     } else {                                                                   \
@@ -2164,6 +2162,11 @@ template <is_any Any>
 inline auto& get_proxy(Any& any) {
   return any.proxy_;
 }
+template <typename Any>
+  requires is_any<std::decay_t<Any>> && !std::decay_t<Any>::dyn
+inline auto& get_proxy_value(Any&& any) {
+  return get_proxy(std::forward<Any>(any)).value_;
+}
 template <is_any Any>
 inline decltype(auto) move_proxy(Any&& any) {
   return std::move(any.proxy_);
@@ -2423,14 +2426,14 @@ template <typename Traited>
 struct forward_trait_to_map<Traited, self&> {
   template <typename Sig>
   static Traited& forward(Sig&& sig) {
-    return get_proxy(std::forward<Sig>(sig)).value_;
+    return get_proxy_value(std::forward<Sig>(sig));
   }
 };
 template <typename Traited>
 struct forward_trait_to_map<Traited, self const&> {
   template <typename Sig>
   static Traited const& forward(Sig&& sig) {
-    return get_proxy(std::forward<Sig>(sig)).value_;
+    return get_proxy_value(std::forward<Sig>(sig));
   }
 };
 
@@ -3119,7 +3122,7 @@ class dispatch_vany {
                                          std::forward<Vargs>(vargs)...);
               }}(std::forward<TypedArg>(arg), std::forward<Args>(args)...);
         },
-        get_proxy(std::forward<Vany1>(vany)).value_);
+        get_proxy_value(std::forward<Vany1>(vany)));
   }
 
   template <is_any Vany1, is_any Vany2, typename... Args>
@@ -3170,8 +3173,8 @@ class dispatch_vany {
     };
 
     return std::visit(dispatch_combined,
-                      get_proxy(std::forward<Vany1>(vany1)).value_,
-                      get_proxy(std::forward<Vany2>(vany2)).value_);
+                      get_proxy_value(std::forward<Vany1>(vany1)),
+                      get_proxy_value(std::forward<Vany2>(vany2)));
   }
 
  public:
