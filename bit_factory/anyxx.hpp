@@ -296,7 +296,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using T = typename self_t::T;                                              \
     using proxy_t = typename self_t::proxy_t;                                  \
                                                                                \
-    if constexpr (!anyxx::voidness<T>) {                                       \
+    if constexpr (!self_t::dyn) {                                              \
       using traited_t = typename proxy_t::value_t;                             \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
@@ -2164,7 +2164,8 @@ inline auto& get_proxy(Any& any) {
 }
 template <typename Any>
   requires is_any<std::decay_t<Any>> && !std::decay_t<Any>::dyn
-inline auto& get_proxy_value(Any&& any) {
+                                            inline auto &
+           get_proxy_value(Any && any) {
   return get_proxy(std::forward<Any>(any)).value_;
 }
 template <is_any Any>
