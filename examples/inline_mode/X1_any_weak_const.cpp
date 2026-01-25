@@ -12,7 +12,7 @@ struct widget_a {
   [[nodiscard]]std::string get() const { return "widget_a"; }
 };
 
-ANY(widget, (ANY_METHOD(std::string, get, (), const)), )
+ANY(widget, (ANY_FN(std::string, get, (), const)), )
 
 any_widget<weak> any_widget_weak;
 

@@ -6,23 +6,23 @@
 namespace {
 
 ANY_TEMPLATE(((KEY), (VALUE)), map,
-             (ANY_METHOD_EXACT(VALUE const&, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)),
+             (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
+              ANY_FN(std::size_t, size, (), const)),
              anyxx::const_observer)
 
 ANY_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-              (ANY_METHOD_OVERLOAD_EXACT(VALUE&, at, (KEY const&), ),
+              (ANY_FN_OVERLOAD_EXACT(VALUE&, at, (KEY const&), ),
                ANY_OP(VALUE&, [], (KEY const&), )),
               anyxx::mutable_observer)
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)),
+             (ANY_FN(VALUE, at, (KEY const&), const),
+              ANY_FN(std::size_t, size, (), const)),
              anyxx::const_observer)
 
 ANY_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), ),
-              ANY_METHOD(std::size_t, size, (), const)),
+             (ANY_FN(VALUE, at, (KEY const&), ),
+              ANY_FN(std::size_t, size, (), const)),
              anyxx::mutable_observer)
 
 }  // namespace
@@ -46,11 +46,11 @@ struct X {
 
 namespace template_test {
 
-ANY(stringable, (ANY_METHOD(std::string, to_string, (), const)),
+ANY(stringable, (ANY_FN(std::string, to_string, (), const)),
     anyxx::const_observer)
 
 ANY_TEMPLATE(((KEY)), map_to_string,
-             (ANY_METHOD(any_stringable<>, at, (KEY const&), const)),
+             (ANY_FN(any_stringable<>, at, (KEY const&), const)),
              anyxx::const_observer)
 
 ANY_MODEL_MAP((int), stringable) {

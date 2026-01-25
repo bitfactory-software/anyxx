@@ -19,11 +19,11 @@ struct position {
   float x, y;
 };
 
-ANY(drawable, (ANY_METHOD(void, draw, (position), const)), )
+ANY(drawable, (ANY_FN(void, draw, (position), const)), )
 ANY_(shape, drawable,
-     (ANY_METHOD(int, count_sides, (), const),
-      ANY_METHOD(double, area, (), const),
-      ANY_METHOD(double, perimeter, (), const)), )
+     (ANY_FN(int, count_sides, (), const),
+      ANY_FN(double, area, (), const),
+      ANY_FN(double, perimeter, (), const)), )
 ANY_(callable_shape, shape,
      (ANY_OP(std::string, (), (std::string const&), const)), )
 

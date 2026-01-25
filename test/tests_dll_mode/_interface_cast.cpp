@@ -13,7 +13,7 @@ using namespace test::component_base;
 
 namespace test::component_base {
 
-ANY(unused_i, (ANY_METHOD(int, fun, (), const)), const_observer)
+ANY(unused_i, (ANY_FN(int, fun, (), const)), const_observer)
 
 }
 

@@ -7,7 +7,7 @@ namespace anyxx {
 ANY_TEMPLATE_EX(
     ((ValueType), (Reference)), forward_iterator,
     (ANY_OP(anyxx::self &, ++, (), ),
-     ANY_METHOD_DEFAULTED(anyxx::self, post_inc, (), ,
+     ANY_FN_DEFAULTED(anyxx::self, post_inc, (), ,
                           ([&x]() { return x++; })),
      ANY_OP(Reference, *, (), const),
      ANY_OP_DEFAULTED(bool, ==, equal_to, (anyxx::self const &), const,
@@ -24,8 +24,8 @@ ANY_TEMPLATE_EX(
 
 TRAIT_TEMPLATE(
     ((ValueType), (Reference)), forward_range,
-    (ANY_METHOD((any_forward_iterator<ValueType, Reference>), begin, (), const),
-     ANY_METHOD((any_forward_iterator<ValueType, Reference>), end, (), const)))
+    (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),
+     ANY_FN((any_forward_iterator<ValueType, Reference>), end, (), const)))
 
 template <typename ValueType, typename Reference,
           typename Box = anyxx::const_observer>

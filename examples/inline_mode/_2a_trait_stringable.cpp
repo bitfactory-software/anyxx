@@ -6,7 +6,7 @@
 
 namespace example_2a {
 
-ANY(stringable, (ANY_METHOD_DEFAULTED(std::string, to_string, (), const,
+ANY(stringable, (ANY_FN_DEFAULTED(std::string, to_string, (), const,
                                       [&x]() { return std::format("{}", x); })), )
 
 }

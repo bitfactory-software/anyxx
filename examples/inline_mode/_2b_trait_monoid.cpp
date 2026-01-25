@@ -17,7 +17,7 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX(monoid,
-         (ANY_METHOD_DEFAULTED(anyxx::self, id, (), const,
+         (ANY_FN_DEFAULTED(anyxx::self, id, (), const,
                                []() { return T{}; }),
           ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
                            [&x](auto const& r) {
@@ -41,7 +41,7 @@ TRAIT_EX(monoid,
                     self,
                     [&](auto const& m1, auto const& m2) { return m1 + m2; });
               }),
-          ANY_METHOD_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
+          ANY_FN_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
                                ([&x](auto const& r) { return x == r; }))),
          (template <typename Box> friend bool operator==(
              anyxx::any<Box, monoid> const& l,

@@ -12,30 +12,30 @@ struct X {
 
 namespace {
 
-TRAIT(stringable, (ANY_METHOD(std::string, to_string, (), const)))
+TRAIT(stringable, (ANY_FN(std::string, to_string, (), const)))
 template <typename Box = value>
 using any_to_string = any<Box, stringable>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), map,
-               (ANY_METHOD_EXACT(VALUE const&, at, (KEY const&), const),
-                ANY_METHOD(std::size_t, size, (), const)))
+               (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
+                ANY_FN(std::size_t, size, (), const)))
 template <typename Key, typename Value, typename Box = value>
 using any_map = any<Box, map<Key, Value>>;
 
 TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-               (ANY_METHOD_EXACT(VALUE&, at, (KEY const&), ), ))
+               (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
 template <typename Key, typename Value, typename Box = value>
 using any_mutable_map = any<Box, mutable_map<Key, Value>>;
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)), )
+             (ANY_FN(VALUE, at, (KEY const&), const),
+              ANY_FN(std::size_t, size, (), const)), )
 
 ANY_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), )), )
+             (ANY_FN(VALUE, at, (KEY const&), )), )
 
 ANY_TEMPLATE(((KEY)), map_to_string,
-             (ANY_METHOD((any_to_string<const_observer>), at, (KEY const&),
+             (ANY_FN((any_to_string<const_observer>), at, (KEY const&),
                          const)), )
 
 ANY_MODEL_MAP((int), stringable) {

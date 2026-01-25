@@ -54,14 +54,14 @@ inline point max(point lhs, point rhs) {
   return {.x = std::max(lhs.x, rhs.x), .y = std::max(lhs.y, rhs.y)};
 }
 
-ANY(surface, (ANY_METHOD(void, write, (point, char), )), )
+ANY(surface, (ANY_FN(void, write, (point, char), )), )
 using mutable_observed_surface = any_surface<anyxx::mutable_observer>;
 using unique_surface = any_surface<anyxx::unique>;
 
 struct shape_has_open_dispatch {};
-ANY(shape, (ANY_METHOD(void, draw, (mutable_observed_surface), const),
-            ANY_METHOD(architecture::point, top_left, (), const),
-            ANY_METHOD(architecture::size, size, (), const)), )
+ANY(shape, (ANY_FN(void, draw, (mutable_observed_surface), const),
+            ANY_FN(architecture::point, top_left, (), const),
+            ANY_FN(architecture::size, size, (), const)), )
 
 }  // namespace whole_picture::architecture
 

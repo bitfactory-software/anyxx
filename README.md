@@ -18,7 +18,7 @@ struct square {
     void draw(std::ostream& os) const { os << "Square\n"; }
 };
 
-ANY(any_drawable, (ANY_METHOD(void, draw, (std::ostream&), const)))
+ANY(any_drawable, (ANY_FN(void, draw, (std::ostream&), const)))
 
 void draw(std::ostream& os,
           std::vector<any_drawable<anyxx::shared_const>> const& drawables) {

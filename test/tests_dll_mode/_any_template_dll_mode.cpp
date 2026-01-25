@@ -31,14 +31,14 @@ namespace {
 
 namespace template_test {
 
-ANY(stringable, (ANY_METHOD(std::string, to_string, (), const)),
+ANY(stringable, (ANY_FN(std::string, to_string, (), const)),
     anyxx::const_observer)
 
 // using any_to_string_const_observer_dyns =
 //     any_to_string<anyxx::const_observer>;
 
 ANY_TEMPLATE(((KEY)), map_to_string,
-             (ANY_METHOD(any_stringable<>, at, (KEY const&), const)),
+             (ANY_FN(any_stringable<>, at, (KEY const&), const)),
              anyxx::const_observer)
 
 ANY_MODEL_MAP((int), stringable) {

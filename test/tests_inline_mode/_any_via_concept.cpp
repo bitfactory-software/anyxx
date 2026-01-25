@@ -7,7 +7,7 @@
 
 namespace {
 
-TRAIT(trait1, (ANY_METHOD(std::string, fn1, (), const)))
+TRAIT(trait1, (ANY_FN(std::string, fn1, (), const)))
 
 }  // namespace
 

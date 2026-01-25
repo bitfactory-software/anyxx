@@ -11,9 +11,9 @@ using namespace anyxx;
 
 namespace {
 
-ANY(node, (ANY_METHOD(int, value, (), const),
-             ANY_METHOD(std::string, as_forth, (), const),
-             ANY_METHOD(std::string, as_lisp, (), const)), shared_const)
+ANY(node, (ANY_FN(int, value, (), const),
+             ANY_FN(std::string, as_forth, (), const),
+             ANY_FN(std::string, as_lisp, (), const)), shared_const)
 
 struct Plus {
   Plus(any_node<> left, any_node<> right)

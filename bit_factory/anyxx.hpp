@@ -180,7 +180,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
 #define _detail_ANYXX_FPD_H(l) _detail_ANYXX_FUNCTION_PTR_DECL l
 #define _detail_ANYXX_MEMEBER_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL l
-#define _detail_ANYXX_METHOD_H(l) _detail_ANYXX_METHOD l
+#define _detail_ANYXX_FN_H(l) _detail_ANYXX_FN l
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
@@ -285,7 +285,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
-#define _detail_ANYXX_METHOD(overload, type, name, name_ext, exact_const,      \
+#define _detail_ANYXX_FN(overload, type, name, name_ext, exact_const,      \
                              const_, map_body, ...)                            \
   overload template <typename Self>                                            \
   decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(          \
@@ -348,8 +348,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MEMEBER_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
 
-#define _detail_ANYXX_METHODS(...)                         \
-  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_METHOD_H, \
+#define _detail_ANYXX_FNS(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_FN_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n) \
@@ -435,7 +435,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
         static_dispatch_template_params)>;                                     \
                                                                                \
-    _detail_ANYXX_METHODS(l)                                                   \
+    _detail_ANYXX_FNS(l)                                                   \
                                                                                \
         _detail_REMOVE_PARENS(decoration)                                      \
   };                                                                           \
@@ -552,64 +552,64 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   TRAIT_TEMPLATE_EX(t, n, l, decoration)                          \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, erased_data_default)
 
-#define ANY_METHOD_(...) (__VA_ARGS__)
+#define ANY_FN_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
-#define __detail_ANYXX_MEMBER_METHOD(overload, ret, name, name_ext, \
+#define __detail_ANYXX_MEMBER_FN(overload, ret, name, name_ext, \
                                      exact_const, const_, params)   \
-  ANY_METHOD_(overload, ret, name, name_ext, exact_const, const_,   \
+  ANY_FN_(overload, ret, name, name_ext, exact_const, const_,   \
               (x.name_ext), _detail_EXPAND params)
 
-#define ANY_METHOD_PURE(ret, name, params, const_)            \
-  ANY_METHOD_(, ret, name, name, false, const_,               \
+#define ANY_FN_PURE(ret, name, params, const_)            \
+  ANY_FN_(, ret, name, name, false, const_,               \
               (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
               _detail_EXPAND params)
-#define ANY_METHOD_PURE_EXACT(ret, name, params, const_)      \
-  ANY_METHOD_(, ret, name, name, true, const_,                \
+#define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
+  ANY_FN_(, ret, name, name, true, const_,                \
               (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
               _detail_EXPAND params)
-#define ANY_METHOD_DEFAULTED(ret, name, params, const_, ...)   \
-  ANY_METHOD_(, ret, name, name, false, const_, (__VA_ARGS__), \
+#define ANY_FN_DEFAULTED(ret, name, params, const_, ...)   \
+  ANY_FN_(, ret, name, name, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
-#define ANY_METHOD_DEFAULTED_EXACT(ret, name, params, const_, ...) \
-  ANY_METHOD_(, ret, name, name, true, const_, (__VA_ARGS__),      \
+#define ANY_FN_DEFAULTED_EXACT(ret, name, params, const_, ...) \
+  ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__),      \
               _detail_EXPAND params)
-#define ANY_METHOD(ret, name, params, const_) \
-  __detail_ANYXX_MEMBER_METHOD(, ret, name, name, false, const_, params)
-#define ANY_METHOD_EXACT(ret, name, params, const_) \
-  __detail_ANYXX_MEMBER_METHOD(, ret, name, name, true, const_, params)
-#define ANY_METHOD_OVERLOAD(ret, name, params, const_)                     \
-  __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(name), ret, name, name, false, \
+#define ANY_FN(ret, name, params, const_) \
+  __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
+#define ANY_FN_EXACT(ret, name, params, const_) \
+  __detail_ANYXX_MEMBER_FN(, ret, name, name, true, const_, params)
+#define ANY_FN_OVERLOAD(ret, name, params, const_)                     \
+  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, false, \
                                const_, params)
-#define ANY_METHOD_OVERLOAD_EXACT(ret, name, params, const_)              \
-  __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(name), ret, name, name, true, \
+#define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)              \
+  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, true, \
                                const_, params)
 
 #define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_METHOD(, ret, name, operator op, false, const_, params)
+  __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
 #define ANY_OP(ret, op, params, const_) \
   ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
 #define ANY_OP_DEFAULTED(ret, op, name, params, const_, ...)          \
-  ANY_METHOD_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
+  ANY_FN_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_METHOD(, ret, name, operator op, true, const_, params)
+  __detail_ANYXX_MEMBER_FN(, ret, name, operator op, true, const_, params)
 #define ANY_OP_EXACT(ret, op, params, const_)                                  \
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
                          const_)
 #define ANY_OP_EXACT_DEFAULTED(ret, op, name, params, const_, ...)   \
-  ANY_METHOD_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
+  ANY_FN_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
 #define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_METHOD(ANY_OVERLOAD(operator op), ret,         \
+  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(operator op), ret,         \
                                name, operator op, true, const_, params)
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
       ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
 #define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...)    \
-  ANY_METHOD_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
+  ANY_FN_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
               (__VA_ARGS__), _detail_EXPAND params)
 
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \

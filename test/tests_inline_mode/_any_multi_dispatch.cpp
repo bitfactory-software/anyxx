@@ -12,7 +12,7 @@ using namespace std::literals;
 
 namespace {
 struct thing_has_open_dispatch {};
-ANY(thing, (ANY_METHOD(std::string, name, (), const)), )
+ANY(thing, (ANY_FN(std::string, name, (), const)), )
 }  // namespace
 
 namespace {}  // namespace
