@@ -7,13 +7,12 @@ namespace anyxx {
 ANY_TEMPLATE_EX(
     ((ValueType), (Reference)), forward_iterator,
     (ANY_OP(anyxx::self &, ++, (), ),
-     ANY_FN_DEF(anyxx::self, post_inc, (), ,
-                          ([&x]() { return x++; })),
+     ANY_FN_DEF(anyxx::self, post_inc, (), , ([&x]() { return x++; })),
      ANY_OP(Reference, *, (), const),
      ANY_OP_DEF(bool, ==, equal_to, (anyxx::self const &), const,
-                      ([&x](auto const &r) { return x == r; })),
+                ([&x](auto const &r) { return x == r; })),
      ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &), const,
-                      ([&x](auto const &r) { return x != r; }))),
+                ([&x](auto const &r) { return x != r; }))),
     anyxx::val,
     (using iterator_category = std::forward_iterator_tag;
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
@@ -27,8 +26,7 @@ TRAIT_TEMPLATE(
     (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),
      ANY_FN((any_forward_iterator<ValueType, Reference>), end, (), const)))
 
-template <typename ValueType, typename Reference,
-          typename Box = anyxx::cref>
+template <typename ValueType, typename Reference, typename Box = anyxx::cref>
 using any_forward_range = any<Box, forward_range<ValueType, Reference>>;
 
 template <typename A>
@@ -83,7 +81,7 @@ struct function_v_table : any_v_table {
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : any_v_table(concrete) {
     f_ = +[](const_void self_ptr, Args... args) -> R {
-      auto self = static_cast<Concrete const*>(self_ptr);
+      auto self = static_cast<Concrete const *>(self_ptr);
       return (*self)(std::forward<Args>(args)...);
     };
   }
@@ -95,8 +93,14 @@ struct function<R(Args...)> : emtpty_trait {
   using v_table_t = function_v_table<R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R {
-    return get_v_table(self)->f_(get_proxy_ptr(self),
-                                 std::forward<Args>(args)...);
+    using self_t = std::decay_t<Self>;
+    if constexpr (self_t::dyn) {
+      return get_v_table(self)->f_(get_proxy_ptr(self),
+                                   std::forward<Args>(args)...);
+    } else {
+      return get_proxy_value(std::forward<Self>(self))(
+          std::forward<Args>(args)...);
+    }
   }
 };
 

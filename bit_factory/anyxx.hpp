@@ -852,8 +852,8 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
     proxy_trait<E>::get_proxy_ptr_in(e, v_table)
   } -> std::convertible_to<typename proxy_trait<E>::void_t>;
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
-  { proxy_trait<E>::default_construct() };
-  { proxy_trait<E>::clone_from(void_data, v_table) } -> std::same_as<E>;
+//  { proxy_trait<E>::default_construct() };
+  { proxy_trait<E>::clone_from(void_data, v_table) };
 };
 
 using emtpty_trait_v_table = any_v_table;
@@ -1002,7 +1002,7 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
   static auto default_construct() { return by_val<V>{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
-    return by_val<V>{};
+    return void_t{};
   }
 
   static auto get_proxy_ptr_in(auto& val,
@@ -1077,7 +1077,7 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
   static auto default_construct() { return vany_variant_t{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
-    return by_val<vany_variant_t>{};
+    return void_t{};
   }
 
   static auto get_proxy_ptr_in(auto& val,
@@ -2247,7 +2247,8 @@ inline auto unerase_cast_if(Any const& o) {
 
 template <typename Value>
 struct by_val {
-  Value value_ = {};
+  by_val(Value&& v) : value_(std::forward<Value>(v)) {}
+  Value value_;
   using value_t = Value;
   operator Value() const { return value_; }
   template <typename Trait>
