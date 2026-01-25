@@ -9,7 +9,7 @@ struct hitpad_picture_t {
 };
 }  // namespace
 
-ANY_MODEL_MAP((hitpad_picture_t), architecture::any_surface) {
+ANY_MODEL_MAP((hitpad_picture_t), architecture::surface) {
   void write(hitpad_picture_t & self, architecture::point p,
              [[maybe_unused]] char ch) {
     if (collision::pictures::intersect_point(
@@ -24,9 +24,9 @@ ANY_MODEL_MAP((hitpad_picture_t), architecture::any_surface) {
 
 bool collision::pictures::intersect(
     core::shapes::picture const& lhs,
-    architecture::any_shape<anyxx::const_observer> const& rhs) {
+    architecture::any_shape<anyxx::cref> const& rhs) {
   hitpad_picture_t hitpad_picture{.picture = lhs, .hit = false};
-  architecture::any_surface<anyxx::mutable_observer> hitpad{
+  architecture::any_surface<anyxx::mutref> hitpad{
       hitpad_picture};
   rhs.draw(hitpad);
   return hitpad_picture.hit;

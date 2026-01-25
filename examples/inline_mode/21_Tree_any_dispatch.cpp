@@ -11,9 +11,9 @@ using namespace anyxx;
 namespace _21_Tree_TE_interface_dispatch {
 
 namespace node {
-struct any_node_has_open_dispatch {};
+struct node_has_open_dispatch {};
 ANY(node, , )
-using model = any_node<shared_const>;
+using model = any_node<shared>;
 };  // namespace node
 
 struct Plus {

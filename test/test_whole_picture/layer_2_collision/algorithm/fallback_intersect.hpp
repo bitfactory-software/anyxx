@@ -6,7 +6,7 @@
 namespace whole_picture::collision::fallback {
 
 COLLISION_EXPORT bool intersect(
-    architecture::any_shape<anyxx::const_observer> const& lhs,
-    architecture::any_shape<anyxx::const_observer> const& rhs);
+    architecture::any_shape<anyxx::cref> const& lhs,
+    architecture::any_shape<anyxx::cref> const& rhs);
 
 }  // namespace whole_picture::collision::fallback

@@ -24,9 +24,9 @@ ANY(stringable, (ANY_OP(std::string, (), (), const)), )
 }  // namespace
 
 TEST_CASE("any lifetime cast") {
-  const any_stringable<shared_const> sc{std::make_shared<X>("hallo")};
+  const any_stringable<shared> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
-  REQUIRE(is_derived_from<any<shared_const>>(sc));
+  REQUIRE(is_derived_from<any<shared>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);
@@ -35,35 +35,35 @@ TEST_CASE("any lifetime cast") {
   // std::add_const_t<void*>);
 
   try {
-    auto o1 = get_erased_data(sc);
+    auto o1 = get_proxy(sc);
     [[maybe_unused]] const auto x = unerase_cast<X>(sc);
     [[maybe_unused]] const auto x1 =
-        static_cast<X const*>(get_void_data_ptr(sc));
+        static_cast<X const*>(get_proxy_ptr(sc));
     REQUIRE(x->s_ == "hallo");
   } catch (anyxx::type_mismatch_error&) {
     CHECK(false);
   }
 
-  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
+  static_assert(std::same_as<any_stringable<cref>::v_table_t, any_stringable<shared>::v_table_t>);
   static_assert(
-      std::derived_from<any_stringable<shared_const>::v_table_t, any_stringable<const_observer>::v_table_t>);
-  any_stringable<const_observer> co{sc};  // NOLINT
+      std::derived_from<any_stringable<shared>::v_table_t, any_stringable<cref>::v_table_t>);
+  any_stringable<cref> co{sc};  // NOLINT
   REQUIRE(co() == "hallo");
-  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
-  REQUIRE(is_derived_from<any<const_observer>>(co));
+  static_assert(std::same_as<any_stringable<cref>::v_table_t, any_stringable<shared>::v_table_t>);
+  REQUIRE(is_derived_from<any<cref>>(co));
 
   any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u() == "hallo");
   static_assert(!is_typed_any<any_stringable<unique>>);
   static_assert(is_any<any_stringable<unique>>);
-  static_assert(!constructibile_for<any_stringable<unique>, any_stringable<mutable_observer>::erased_data_t>);
+  static_assert(!constructibile_for<any_stringable<unique>, any_stringable<mutref>::proxy_t>);
   static_assert(
-      std::derived_from<any_stringable<mutable_observer>::v_table_t, any_stringable<unique>::v_table_t>);
-  any_stringable<mutable_observer> mo{u};
+      std::derived_from<any_stringable<mutref>::v_table_t, any_stringable<unique>::v_table_t>);
+  any_stringable<mutref> mo{u};
   REQUIRE(mo() == "hallo");
 
   any_stringable<unique> u1{std::make_unique<X>("hallo")};
   REQUIRE(u1() == "hallo");
-  any_stringable<const_observer> co_from_u{u1};
+  any_stringable<cref> co_from_u{u1};
   REQUIRE(co_from_u() == "hallo");
 }

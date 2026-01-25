@@ -20,22 +20,22 @@ constexpr bool compiles1 =
 TEST_CASE("data_erase_unerase/observer") {
   {
     std::string s{"hallo"};
-    auto mo = erased<mutable_observer>(s);
+    auto mo = erased<mutref>(s);
     *unchecked_unerase_cast<std::string>(mo) = "world";
-    auto co = erased<const_observer>(s);
+    auto co = erased<cref>(s);
     REQUIRE(s == "world");
     REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "world");
     REQUIRE(*unchecked_unerase_cast<std::string>(mo) == "world");
     {
       [[maybe_unused]] const std::string cs;
-      // mutable_observer xx(cs);  // shall not compile!
+      // mutref xx(cs);  // shall not compile!
     }
     // tmo = as< std::string >( co ); // shall not compile!
   }
   {
     const std::string s{"hallo"};
-    // auto mo = mutable_observer(s);  // shall not compile
-    auto co = erased<const_observer>(s);
+    // auto mo = mutref(s);  // shall not compile
+    auto co = erased<cref>(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);
     REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "hallo");
@@ -56,27 +56,27 @@ TEST_CASE("data_erase_unerase/unique") {
     REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");  // NOLINT
   }
 }
-TEST_CASE("data_erase_unerase/shared_const") {
+TEST_CASE("data_erase_unerase/shared") {
   {
-    auto u1 = erased<shared_const>(std::make_shared<int>(1));
+    auto u1 = erased<shared>(std::make_shared<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);
   }
   {
-    const auto u1 = erased<shared_const>(std::make_shared<int>(1));
+    const auto u1 = erased<shared>(std::make_shared<int>(1));
     REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);
   }
   {
-    auto u1 = erased<shared_const>(std::make_shared<A>("hallo"));
+    auto u1 = erased<shared>(std::make_shared<A>("hallo"));
     REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");
   }
   {
     auto x = std::make_shared<A const>("hallo");
-    auto sc = erased<shared_const>(x);
+    auto sc = erased<shared>(x);
     REQUIRE(unchecked_unerase_cast<A>(sc, nullptr)->s == "hallo");
   }
   {
     auto x = std::make_shared<A>("hallo");
-    auto sc = erased<shared_const>(x);
+    auto sc = erased<shared>(x);
     REQUIRE(unchecked_unerase_cast<A>(sc, nullptr)->s == "hallo");
   }
 }
@@ -84,8 +84,8 @@ TEST_CASE("data_erase_unerase/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    shared_const sp1 = erased_data_trait<shared_const>::erase(ptr);
-    auto u1 = erased<shared_const>(ptr);
+    shared sp1 = proxy_trait<shared>::erase(ptr);
+    auto u1 = erased<shared>(ptr);
     [[maybe_unused]] A const* a = unchecked_unerase_cast<A>(u1, nullptr);
     REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");
   }
@@ -94,7 +94,7 @@ TEST_CASE("data_erase_unerase/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    unique up1 = erased_data_trait<unique>::erase(std::move(ptr));
+    unique up1 = proxy_trait<unique>::erase(std::move(ptr));
     A* a = unchecked_unerase_cast<A>(up1, nullptr);
     REQUIRE(a->s == "hallo");
   }

@@ -10,8 +10,8 @@
 #include "double_dispatch_result.hpp"
 
 namespace {
-struct any_creature_has_open_dispatch {};
-ANY(creature, (ANY_METHOD(std::type_info const*, name, (), const)), )
+struct creature_has_open_dispatch {};
+ANY(creature, (ANY_FN(std::type_info const*, name, (), const)), )
 }  // namespace
 
 namespace {
@@ -26,8 +26,8 @@ struct man {
    [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 auto encounter = anyxx::dispatch<encounter_result(
-    anyxx::virtual_<any_creature<anyxx::const_observer>>,
-    anyxx::virtual_<any_creature<anyxx::const_observer>>)>{};
+    anyxx::virtual_<any_creature<anyxx::cref>>,
+    anyxx::virtual_<any_creature<anyxx::cref>>)>{};
 
 auto __ = encounter.define<cat, dog>(
     [](auto const& l, auto const& r) -> encounter_result {
@@ -49,16 +49,16 @@ auto __ = encounter.define<man, man>(
     [](auto const& l, auto const& r) -> encounter_result {
       return {l.name(), encounter_action::shakes_hands_with, r.name()};
     });
-auto __ = encounter.define<man, any_creature<anyxx::const_observer>>(
+auto __ = encounter.define<man, any_creature<anyxx::cref>>(
     [](auto const& l, auto const& r) -> encounter_result {
       return {l.name(), encounter_action::strokes, r.name()};
     });
-auto __ = encounter.define<any_creature<anyxx::const_observer>, man>(
+auto __ = encounter.define<any_creature<anyxx::cref>, man>(
     [](auto const& l, man const& r) -> encounter_result {
       return {l.name(), encounter_action::nestle_to, r.name()};
     });
 
-using creatures_t = std::vector<any_creature<anyxx::value>>;
+using creatures_t = std::vector<any_creature<anyxx::val>>;
 auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);

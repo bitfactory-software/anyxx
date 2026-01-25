@@ -6,24 +6,24 @@
 namespace {
 
 ANY_TEMPLATE(((KEY), (VALUE)), map,
-             (ANY_METHOD(VALUE const&, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)),
-             anyxx::const_observer)
+             (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
+              ANY_FN(std::size_t, size, (), const)),
+             anyxx::cref)
 
 ANY_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
-              (ANY_METHOD_OVERLOAD(VALUE&, at, (KEY const&), ),
+              (ANY_FN_OVERLOAD_EXACT(VALUE&, at, (KEY const&), ),
                ANY_OP(VALUE&, [], (KEY const&), )),
-              anyxx::mutable_observer)
+              anyxx::mutref)
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), const),
-              ANY_METHOD(std::size_t, size, (), const)),
-             anyxx::const_observer)
+             (ANY_FN(VALUE, at, (KEY const&), const),
+              ANY_FN(std::size_t, size, (), const)),
+             anyxx::cref)
 
 ANY_TEMPLATE(((KEY), (VALUE)), mutable_recursive_map,
-             (ANY_METHOD(VALUE, at, (KEY const&), ),
-              ANY_METHOD(std::size_t, size, (), const)),
-             anyxx::mutable_observer)
+             (ANY_FN(VALUE, at, (KEY const&), ),
+              ANY_FN(std::size_t, size, (), const)),
+             anyxx::mutref)
 
 }  // namespace
 
@@ -33,7 +33,7 @@ namespace {
 
 template <typename KEY, typename VALUE>
 void test_any_map_template(
-    any_map<KEY, VALUE, anyxx::const_observer> const& map_i) {
+    any_map<KEY, VALUE, anyxx::cref> const& map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
@@ -46,17 +46,17 @@ struct X {
 
 namespace template_test {
 
-ANY(to_string, (ANY_METHOD(std::string, to_string, (), const)),
-    anyxx::const_observer)
+ANY(stringable, (ANY_FN(std::string, to_string, (), const)),
+    anyxx::cref)
 
 ANY_TEMPLATE(((KEY)), map_to_string,
-             (ANY_METHOD(any_to_string<>, at, (KEY const&), const)),
-             anyxx::const_observer)
+             (ANY_FN(any_stringable<>, at, (KEY const&), const)),
+             anyxx::cref)
 
-ANY_MODEL_MAP((int), any_to_string) {
+ANY_MODEL_MAP((int), stringable) {
   auto to_string(int const& x) -> std::string { return std::to_string(x); };
 };
-ANY_MODEL_MAP((double), any_to_string) {
+ANY_MODEL_MAP((double), stringable) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 
@@ -64,7 +64,7 @@ ANY_MODEL_MAP((double), any_to_string) {
 
 using namespace anyxx;
 
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), any_map,
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), map,
                        ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);
@@ -80,7 +80,7 @@ TEST_CASE("any inline template test") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
   auto test_any_map_lambda =
-      [](any_map<std::string, int, const_observer> const& map_i) {
+      [](any_map<std::string, int, cref> const& map_i) {
         REQUIRE(map_i.size() == 2);
         REQUIRE(map_i.at("one") == 1);
         REQUIRE(map_i.at("two") == 2);

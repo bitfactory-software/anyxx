@@ -23,22 +23,21 @@ using namespace test::component_base;
 
 //
 ANY_META_CLASS_STATIC(X)
-ANY_MODEL(X, test::component_base, any_get_value_i)
-ANY_MODEL(X, test::component_base, any_set_value_i)
-// ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
-ANY_MODEL(X, test::component_base, any_to_string_i)
+ANY_REGISTER_MODEL(X, test::component_base::get_value_i)
+ANY_REGISTER_MODEL(X, test::component_base::set_value_i)
+ANY_REGISTER_MODEL(X, test::component_base::to_string_i)
 
-any_to_string_i<anyxx::const_observer> test::component_base::get_to_string_i_co() {
-  any_to_string_i<anyxx::const_observer> i{a_x};
+any_to_string_i<anyxx::cref> test::component_base::get_to_string_i_co() {
+  any_to_string_i<anyxx::cref> i{a_x};
   auto meta = get_v_table(i)->meta_data_;
   [[maybe_unused]] const std::type_info* type_info = &meta->get_type_info();
-  static_assert(is_any<any_to_string_i<anyxx::const_observer>>);
+  static_assert(is_any<any_to_string_i<anyxx::cref>>);
   [[maybe_unused]] const std::type_info* type_info_1 = &typeid(X);
   assert(type_info == type_info_1);
   [[maybe_unused]] auto s = i.to_string();
   return i;
 }
-any_to_string_i<anyxx::shared_const> test::component_base::get_to_string_i_sc(
+any_to_string_i<anyxx::shared> test::component_base::get_to_string_i_sc(
     double v) {
   return std::make_shared<X>(v);
 }
@@ -46,7 +45,7 @@ any_to_string_i<anyxx::unique> test::component_base::get_to_string_i_u(double v)
   return std::make_unique<X>(v);
 }
 
-anyxx::any<anyxx::shared_const> test::component_base::sc_X(double v) {
+anyxx::any<anyxx::shared> test::component_base::sc_X(double v) {
   return {std::make_shared<X>(v)};
 }
 anyxx::any<anyxx::unique> test::component_base::u_X(double v) {

@@ -71,11 +71,11 @@ static_assert(sizeof(int) <= sizeof(mutable_void));
 
 }  // namespace
 
-TEST_CASE("value lifetime") {
+TEST_CASE("val lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<value> u{std::in_place_type<X>, "hallo"};
+      any<val> u{std::in_place_type<X>, "hallo"};
       CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -84,22 +84,22 @@ TEST_CASE("value lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<value> u{std::in_place_type<X>, "hallo"};
+      any<val> u{std::in_place_type<X>, "hallo"};
       CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
-      any<value> u2{std::in_place_type<X>, "world"};
+      any<val> u2{std::in_place_type<X>, "world"};
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_void_data_ptr(u) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_void_data_ptr(u2) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
-      auto u4 = move_to<any<value>>(std::move(u3));
-      CHECK(get_void_data_ptr(u3) == nullptr);  // NOLINT
+      auto u4 = move_to<any<val>>(std::move(u3));
+      CHECK(get_proxy_ptr(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -108,17 +108,17 @@ TEST_CASE("value lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<value> v{std::in_place_type<X>, "hallo"};
+      any<val> v{std::in_place_type<X>, "hallo"};
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = v;
       CHECK(X::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(v2))() == "hallo");
       v2 = X{"world!"};
       CHECK(X::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(v2))() == "world!");
     }
@@ -127,12 +127,12 @@ TEST_CASE("value lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any<value> v{std::in_place_type<X>, "hallo"};
+      any<val> v{std::in_place_type<X>, "hallo"};
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
-      auto v2 = clone_to<any<value>>(v);
+      auto v2 = clone_to<any<val>>(v);
       CHECK(X::tracker_ == 2);
-      CHECK(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(*v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(*v2))() == "hallo");
     }
@@ -141,11 +141,11 @@ TEST_CASE("value lifetime") {
   }
 }
 
-TEST_CASE("value lifetime small object") {
+TEST_CASE("val lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
-      any<value> u{std::in_place_type<Y>, 42};
+      any<val> u{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(u))() == 42);
       CHECK(Y::tracker_ == 1);
     }
@@ -154,10 +154,10 @@ TEST_CASE("value lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
-      any<value> u{std::in_place_type<Y>, 42};
+      any<val> u{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(u))() == 42);
       CHECK(Y::tracker_ == 1);
-      any<value> u2{std::in_place_type<Y>, 100};
+      any<val> u2{std::in_place_type<Y>, 100};
       CHECK((*unerase_cast<Y>(u2))() == 100);
       CHECK(Y::tracker_ == 2);
       u2 = std::move(u);
@@ -168,7 +168,7 @@ TEST_CASE("value lifetime small object") {
       CHECK(get_v_table(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(u3))() == 42);
       CHECK(Y::tracker_ == 1);
-      auto u4 = move_to<any<value>>(std::move(u3));
+      auto u4 = move_to<any<val>>(std::move(u3));
       CHECK(get_v_table(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<Y>(u4))() == 42);
       CHECK(Y::tracker_ == 1);
@@ -179,17 +179,17 @@ TEST_CASE("value lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
-      any<value> v{std::in_place_type<Y>, 42};
+      any<val> v{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK(Y::tracker_ == 1);
       auto v2 = v;
       CHECK(Y::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(v2))() == 42);
       v2 = Y{100};
       CHECK(Y::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(v2))() == 100);
     }
@@ -198,12 +198,12 @@ TEST_CASE("value lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
-      any<value> v{std::in_place_type<Y>, 42};
+      any<val> v{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK(Y::tracker_ == 1);
-      auto v2 = clone_to<any<value>>(v);
+      auto v2 = clone_to<any<val>>(v);
       CHECK(Y::tracker_ == 2);
-      CHECK(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(*v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(*v2))() == 42);
     }
@@ -215,15 +215,15 @@ TEST_CASE("value lifetime small object") {
 TEST_CASE("value lifetime trivial object") {
   {
     {
-      any<value> u{std::in_place_type<int>, 42};
+      any<val> u{std::in_place_type<int>, 42};
       CHECK((*unerase_cast<int>(u)) == 42);
     }
   }
   {
     {
-      any<value> u{std::in_place_type<int>, 42};
+      any<val> u{std::in_place_type<int>, 42};
       CHECK((*unerase_cast<int>(u)) == 42);
-      any<value> u2{std::in_place_type<int>, 100};
+      any<val> u2{std::in_place_type<int>, 100};
       CHECK((*unerase_cast<int>(u2)) == 100);
       u2 = std::move(u);
       CHECK(get_v_table(u) == nullptr);  // NOLINT
@@ -231,30 +231,30 @@ TEST_CASE("value lifetime trivial object") {
       auto u3 = std::move(u2);
       CHECK(get_v_table(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<int>(u3)) == 42);
-      auto u4 = move_to<any<value>>(std::move(u3));
+      auto u4 = move_to<any<val>>(std::move(u3));
       CHECK(get_v_table(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<int>(u4)) == 42);
     }
   }
   {
     {
-      any<value> v{std::in_place_type<int>, 42};
+      any<val> v{std::in_place_type<int>, 42};
       CHECK((*unerase_cast<int>(v)) == 42);
       auto v2 = v;
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(v2)) == 42);
       v2 = int{100};
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(v2)) == 100);
     }
   }
   {
     {
-      any<value> v{std::in_place_type<int>, 42};
+      any<val> v{std::in_place_type<int>, 42};
       CHECK((*unerase_cast<int>(v)) == 42);
-      auto v2 = clone_to<any<value>>(v);
+      auto v2 = clone_to<any<val>>(v);
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(*v2)) == 42);
     }
@@ -281,15 +281,15 @@ TEST_CASE("unique lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_void_data_ptr(u) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_void_data_ptr(u2) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<unique>>(std::move(u3));
-      CHECK(get_void_data_ptr(u3) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -302,7 +302,7 @@ TEST_CASE("v-table lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any_v_table<> v_table_x(std::in_place_type<X>);
+      any_v_table v_table_x(std::in_place_type<X>);
       auto ptr = v_table_x.allocate();
       CHECK(X::tracker_ == 0);
       X* x_ptr = nullptr;
@@ -323,7 +323,7 @@ TEST_CASE("v-table lifetime") {
   CHECK(X::tracker_ == 0);
   {
     CHECK(X::move_constructed_ == 0);
-    any_v_table<> v_table_x(std::in_place_type<X>);
+    any_v_table v_table_x(std::in_place_type<X>);
     auto ptr = v_table_x.allocate();
     CHECK(X::tracker_ == 0);
     X* x_ptr = nullptr;
@@ -351,7 +351,7 @@ TEST_CASE("v-table lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
-      any_v_table<> v_table_x(std::in_place_type<Y>);
+      any_v_table v_table_x(std::in_place_type<Y>);
       auto ptr = v_table_x.allocate();
       CHECK(Y::tracker_ == 0);
       Y* x_ptr = nullptr;
@@ -372,7 +372,7 @@ TEST_CASE("v-table lifetime small object") {
   CHECK(Y::tracker_ == 0);
   {
     CHECK(Y::move_constructed_ == 0);
-    any_v_table<> v_table_x(std::in_place_type<Y>);
+    any_v_table v_table_x(std::in_place_type<Y>);
     auto ptr = v_table_x.allocate();
     CHECK(Y::tracker_ == 0);
     Y* x_ptr = nullptr;
@@ -395,12 +395,12 @@ TEST_CASE("v-table lifetime small object") {
   }
 }
 
-TEST_CASE("value lifetime trivial/small/big object") {
+TEST_CASE("val lifetime trivial/small/big object") {
   {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     {
-      any<value> v1{std::in_place_type<Y>, 42};
+      any<val> v1{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v1))() == 42);
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);
@@ -412,10 +412,10 @@ TEST_CASE("value lifetime trivial/small/big object") {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     {
-      any<value> v1{std::in_place_type<Y>, 42};
+      any<val> v1{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v1))() == 42);
       CHECK(Y::tracker_ == 1);
-      any<value> v2{std::in_place_type<X>, "hello"};
+      any<val> v2{std::in_place_type<X>, "hello"};
       CHECK((*unerase_cast<X>(v2))() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
@@ -425,7 +425,7 @@ TEST_CASE("value lifetime trivial/small/big object") {
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 2);
-      any<value> v3{std::in_place_type<int>, 42};
+      any<val> v3{std::in_place_type<int>, 42};
       v1 = v3;
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 1);
@@ -441,10 +441,10 @@ TEST_CASE("value lifetime trivial/small/big object") {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     {
-      any<value> v1{std::in_place_type<Y>, 42};
+      any<val> v1{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v1))() == 42);
       CHECK(Y::tracker_ == 1);
-      any<value> v2{std::in_place_type<X>, "hello"};
+      any<val> v2{std::in_place_type<X>, "hello"};
       CHECK((*unerase_cast<X>(v2))() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
@@ -454,7 +454,7 @@ TEST_CASE("value lifetime trivial/small/big object") {
       CHECK((*unerase_cast<Y>(v2))() == 42);
       CHECK(Y::tracker_ == 2);
       CHECK(X::tracker_ == 0);
-      any<value> v3{std::in_place_type<int>, 41};
+      any<val> v3{std::in_place_type<int>, 41};
       v2 = v3;
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);
@@ -470,10 +470,10 @@ TEST_CASE("value lifetime trivial/small/big object") {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     {
-      any<value> v1{std::in_place_type<Y>, 42};
+      any<val> v1{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v1))() == 42);
       CHECK(Y::tracker_ == 1);
-      any<value> v2{std::in_place_type<X>, "hello"};
+      any<val> v2{std::in_place_type<X>, "hello"};
       CHECK((*unerase_cast<X>(v2))() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
@@ -482,7 +482,7 @@ TEST_CASE("value lifetime trivial/small/big object") {
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 1);
-      any<value> v3{std::in_place_type<int>, 42};
+      any<val> v3{std::in_place_type<int>, 42};
       v1 = std::move(v3);
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 0);
@@ -497,10 +497,10 @@ TEST_CASE("value lifetime trivial/small/big object") {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
     {
-      any<value> v1{std::in_place_type<Y>, 42};
+      any<val> v1{std::in_place_type<Y>, 42};
       CHECK((*unerase_cast<Y>(v1))() == 42);
       CHECK(Y::tracker_ == 1);
-      any<value> v2{std::in_place_type<X>, "hello"};
+      any<val> v2{std::in_place_type<X>, "hello"};
       CHECK((*unerase_cast<X>(v2))() == "hello");
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 1);
@@ -509,7 +509,7 @@ TEST_CASE("value lifetime trivial/small/big object") {
       CHECK((*unerase_cast<Y>(v2))() == 42);
       CHECK(Y::tracker_ == 1);
       CHECK(X::tracker_ == 0);
-      any<value> v3{std::in_place_type<int>, 42};
+      any<val> v3{std::in_place_type<int>, 42};
       v2 = std::move(v3);
       CHECK(Y::tracker_ == 0);
       CHECK(X::tracker_ == 0);
@@ -523,11 +523,11 @@ TEST_CASE("value lifetime trivial/small/big object") {
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
   {
-    any<value> v1{std::in_place_type<int>, 41};
+    any<val> v1{std::in_place_type<int>, 41};
     CHECK((*unerase_cast<int>(v1)) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
-    any<value> v2{std::in_place_type<X>, "hello"};
+    any<val> v2{std::in_place_type<X>, "hello"};
     CHECK((*unerase_cast<X>(v2))() == "hello");
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 1);
@@ -542,11 +542,11 @@ TEST_CASE("value lifetime trivial/small/big object") {
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
   {
-    any<value> v1{std::in_place_type<int>, 41};
+    any<val> v1{std::in_place_type<int>, 41};
     CHECK((*unerase_cast<int>(v1)) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
-    any<value> v2{std::in_place_type<Y>, 42};
+    any<val> v2{std::in_place_type<Y>, 42};
     CHECK((*unerase_cast<Y>(v2))() == 42);
     CHECK(Y::tracker_ == 1);
     CHECK(X::tracker_ == 0);
@@ -561,11 +561,11 @@ TEST_CASE("value lifetime trivial/small/big object") {
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
   {
-    any<value> v1{std::in_place_type<int>, 41};
+    any<val> v1{std::in_place_type<int>, 41};
     CHECK((*unerase_cast<int>(v1)) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
-    any<value> v2{std::in_place_type<X>, "hello"};
+    any<val> v2{std::in_place_type<X>, "hello"};
     CHECK((*unerase_cast<X>(v2))() == "hello");
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 1);
@@ -580,11 +580,11 @@ TEST_CASE("value lifetime trivial/small/big object") {
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
   {
-    any<value> v1{std::in_place_type<int>, 41};
+    any<val> v1{std::in_place_type<int>, 41};
     CHECK((*unerase_cast<int>(v1)) == 41);
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);
-    any<value> v2{std::in_place_type<Y>, 42};
+    any<val> v2{std::in_place_type<Y>, 42};
     CHECK((*unerase_cast<Y>(v2))() == 42);
     CHECK(Y::tracker_ == 1);
     CHECK(X::tracker_ == 0);
@@ -599,29 +599,3 @@ TEST_CASE("value lifetime trivial/small/big object") {
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
 }
-
-
-// namespace {
-// template <typename T>
-// struct container {
-//   T value;
-//   container(T u) : value(std::move(u)) {}
-//   container(container const& other) = default;
-//   container(container&& other) = default;
-//   container& operator=(container const& other) = default;
-//   container& operator=(container&& other) = default;
-//   ~container() = default;
-// };
-//
-// template <typename T>
-// void f(container<T> const& c) {
-//   std::println("f: {}", c.value);
-// }
-// void g(auto v) { f(container{v}); }
-//
-// TEST_CASE("deduce template areg") {
-//   container c{42};
-//   //f(42);
-//   g(42);
-// }
-// }  // namespace

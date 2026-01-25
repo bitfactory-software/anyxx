@@ -14,20 +14,20 @@ In these functions, the "self" parameter is cast back to a pointer to the uneras
 Similar to v_table, but if an entry is in ivolved in a **multi dispatch**, it describes the dispatch index in the **multi dispatch matrix**. 
 The target function for the *multi diapatch* resides in the **multi dispatch matrix**.
 
-### erased_data
+### proxy
 #### A concept describing an object that **erases** the **type** of **another** object for a given *lifetime* kind.
 
-The description of these types is implemented via a specialication of *erased_data_trait*.  
+The description of these types is implemented via a specialication of *proxy_trait*.  
 
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.
-- **shared_const**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*.
-- **weak**: Ownership as `std::weak_ptr`. No delivered adress. Use `lock` to gain a shared_const, if the object still exists.
+- **shared**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*.
+- **weak**: Ownership as `std::weak_ptr`. No delivered adress. Use `lock` to gain a shared, if the object still exists.
 - **unique**: Ownership as `std::unique_ptr`. The delivered address is a pointer to a *mutable* object.
 - **value**: Every value object holds its own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
 
 ### 'any' Versus 'typed_any'
-#### An *any* combines a **v_table** with an **erased_data**.
+#### An *any* combines a **v_table** with an **proxy**.
 
 #### A *typed_any* is a convenience wrapper of an **any** for the **eunerased** type. 
 
@@ -53,7 +53,7 @@ For upcasts and downcasts, the types must be related within the language rules.
 Static downcasts are guesses and as such unsafe. Dynamic downcasts are by definition safe and a kind of *type query*.
 
 ### Lifetime Cast
-#### An **erased_data** can recieve the content of an other **erased_data** with different **liftime** within certain rules.
+#### An **proxy** can recieve the content of an other **proxy** with different **liftime** within certain rules.
 #### Three ways, three rules:
 - *borrow*: assignemnt does not change ownership and constness.
 - *move*: left hand can hold ownership, right hand has ownership, left hand const or right hand mutable .

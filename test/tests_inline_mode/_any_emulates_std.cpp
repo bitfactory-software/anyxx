@@ -1,4 +1,5 @@
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx_function.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <concepts>
 #include <print>
@@ -59,55 +60,55 @@ struct pure_functor_with_context {
 TEST_CASE("std emulated function") {
   {
     auto functor = std::make_shared<pure_functor_with_context>("hallo");
-    any_string_to_string<shared_const> f{functor};
+    any_string_to_string<shared> f{functor};
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<value> f{pure_functor_with_context("hallo")};
+    any_string_to_string<val> f{pure_functor_with_context("hallo")};
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<shared_const> f{std::make_shared<pure_functor_t>()};
+    any_string_to_string<shared> f{std::make_shared<pure_functor_t>()};
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    any_string_to_string<value> f{pure_functor_t{}};
+    any_string_to_string<val> f{pure_functor_t{}};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     functor_t functor{"hallo"};
-    any_string_to_string_mutable<mutable_observer> f{functor};
+    any_string_to_string_mutable<mutref> f{functor};
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
     REQUIRE(f() == "hallo world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo world");
 
-    any_string_to_string_mutable<const_observer> fc{f};
+    any_string_to_string_mutable<cref> fc{f};
     REQUIRE(fc() == "hallo world");
 
     functor_t fx{"hallo world"};
-    any_string_to_string_mutable<const_observer> fc1{fx};
+    any_string_to_string_mutable<cref> fc1{fx};
     REQUIRE(fc1() == "hallo world");
 
     // does not work, because functor lives only during construction of
     // string_to_string_mutable
-    // string_to_string_mutable<const_observer> fc2{functor_t{"hallo
+    // string_to_string_mutable<cref> fc2{functor_t{"hallo
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
-    any_string_to_string_mutable<value> fc2{functor_t{"hallo world"}};
+    any_string_to_string_mutable<val> fc2{functor_t{"hallo world"}};
     CHECK(fc2() == "hallo world");
   }
   {
     pure_functor_t pf{};
     ;
-    any_string_to_string<mutable_observer> f{pf};
+    any_string_to_string<mutref> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {
     pure_functor_t pf{};
-    any_string_to_string<const_observer> f{pf};  // works, because 'pure'
+    any_string_to_string<cref> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
@@ -121,22 +122,32 @@ TEST_CASE("std emulated function") {
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
-    any_string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
+    any_string_to_string_mutable<unique> f{
+        std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
     static_assert(!std::assignable_from<any_string_to_string_mutable<unique>,
                                         any_string_to_string_mutable<unique>>);
     any_string_to_string_mutable<unique> f2{std::move(f)};
-    REQUIRE(!has_data(f));  // NOLINT
+    REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
   }
 
   {
     auto f = [](std::string const& in) { return in + " world!"; };
-    any_string_to_string<const_observer> sts{f};  // works, because pure
+    any_string_to_string<cref> sts{f};  // works, because pure
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
+
+    any<cref, function<std::string(std::string const&), const_>> any_f_cref{f};
+    CHECK(any_f_cref("C++") == "C++ world!");
+    any<cref, function<std::string(std::string const&), mutable_>> any_f_mref{
+        f};
+
+    any<by_val<decltype(f)&>, function<std::string(std::string const&), const_>>
+        any_f_by_val{f};
+    CHECK(any_f_by_val("static C++") == "static C++ world!");
   }
 }

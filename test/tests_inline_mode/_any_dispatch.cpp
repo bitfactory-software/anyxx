@@ -6,26 +6,26 @@ using namespace anyxx;
 
 namespace {
 
-struct any_test_base_i_has_open_dispatch {};
-struct any_test_derived_i_has_open_dispatch {};
+struct test_base_i_has_open_dispatch {};
+struct test_derived_i_has_open_dispatch {};
 
-ANY(test_base_i, (ANY_METHOD(std::string, to_string, (), const)), )
+ANY(test_base_i, (ANY_FN(std::string, to_string, (), const)), )
 ANY_(test_derived_i, test_base_i,
-     (ANY_METHOD(void, from_string, (std::string const&), )), )
+     (ANY_FN(void, from_string, (std::string const&), )), )
 
 struct x_t {
   std::string s_;
 };
 
-using test_base_i_co = any_test_base_i<const_observer>;
-using test_derived_i_mo = any_test_derived_i<mutable_observer>;
+using test_base_i_co = any_test_base_i<cref>;
+using test_derived_i_mo = any_test_derived_i<mutref>;
 
-ANY_MODEL_MAP((x_t), any_test_base_i){
+ANY_MODEL_MAP((x_t), test_base_i){
     static auto to_string(x_t const& self){return self.s_;
 }  // namespace
 }
 ;
-ANY_MODEL_MAP((x_t), any_test_derived_i){
+ANY_MODEL_MAP((x_t), test_derived_i){
     static void from_string(x_t & self, std::string_view s){self.s_ = s;
 }
 }
@@ -42,16 +42,18 @@ auto __ =
       expr.s_ = std::string{"otherwise "} + s;
     });
 
-auto base_table = dispatch_table_instance<any_test_base_i_v_table<anyxx::dyn>, x_t>();
-auto derived_table = dispatch_table_instance<any_test_derived_i_v_table<anyxx::dyn>, x_t>();
+auto base_table =
+    dispatch_table_instance<test_base_i_v_table, x_t>();
+auto derived_table =
+    dispatch_table_instance<test_derived_i_v_table, x_t>();
 
 TEST_CASE("dispatch") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 
-  CHECK(any_test_base_i_v_table<anyxx::dyn>::imlpementation<x_t>()
+  CHECK(anyxx::v_table_instance<test_base_i_v_table, x_t>()
             ->own_dispatch_holder_t::dispatch_table);
-  CHECK(any_test_derived_i_v_table<anyxx::dyn>::imlpementation<x_t>()
+  CHECK(anyxx::v_table_instance<test_derived_i_v_table, x_t>()
             ->own_dispatch_holder_t::dispatch_table);
 
   x_t x{"hallo"};

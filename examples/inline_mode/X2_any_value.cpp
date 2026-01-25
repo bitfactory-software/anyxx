@@ -10,9 +10,10 @@ namespace {
 
 }  // namespace
 
-TEST_CASE("example X2/ any value") {
-  any<value> a1{std::string{"hello world"}};
+TEST_CASE("example X2/ any val") {
+  any<val> a1{std::string{"hello world"}};
   static_assert(anyxx::is_any<decltype(a1)>);
+  static_assert(decltype(a1)::dyn);
   CHECK(*unerase_cast<std::string>(a1) == "hello world");
   CHECK(get_type_info(a1) == typeid(std::string));
   auto a2 = a1;  // copy
