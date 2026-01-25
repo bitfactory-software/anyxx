@@ -225,8 +225,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(...) __VA_OPT__(, ) __VA_ARGS__
 
-#define _detail_ANYXX_BASE_TEMPLATE_ACTUAL_ARGS(t) \
-  Proxy _detail_ANYXX_EXPAND_WITH_LEADING_COMMA(_detail_REMOVE_PARENS(t))
+#define _detail_ANYXX_OPTIONAL_TEMPLATE(...) __VA_OPT__(template)
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
@@ -380,14 +379,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
       any_template_params) struct n##_v_table                                  \
-      : BASE##_v_table                                                         \
-        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params),            \
+      : BASE                                                                   \
+        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params)::v_table_t, \
         anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_open_dispatch>, \
                                n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
                                    any_template_params)> {                     \
-    using v_table_base_t =                                                     \
-        BASE##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                   \
-            base_template_params);                                             \
+    using v_table_base_t = typename BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
+        base_template_params)::v_table_t;                                      \
+                                                                               \
     using v_table_t = n##_v_table;                                             \
                                                                                \
     using any_value_t =                                                        \
@@ -423,6 +422,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
+    using v_table_t =                                                          \
+        n##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params); \
     using v_table_t =                                                          \
         n##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params); \
     template <typename StaticDispatchType>                                     \
