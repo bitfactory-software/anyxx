@@ -110,9 +110,9 @@ TEST_CASE("any template test3") {
       [](any_mutable_recursive_map<
           int,
           any_mutable_recursive_map<
-              std::string, any_mutable_map<int, double, mutable_observer>,
-              mutable_observer>,
-          mutable_observer>
+              std::string, any_mutable_map<int, double, mutref>,
+              mutref>,
+          mutref>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");

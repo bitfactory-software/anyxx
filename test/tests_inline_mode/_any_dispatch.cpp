@@ -18,7 +18,7 @@ struct x_t {
 };
 
 using test_base_i_co = any_test_base_i<cref>;
-using test_derived_i_mo = any_test_derived_i<mutable_observer>;
+using test_derived_i_mo = any_test_derived_i<mutref>;
 
 ANY_MODEL_MAP((x_t), test_base_i){
     static auto to_string(x_t const& self){return self.s_;

@@ -86,8 +86,8 @@ ANY_REGISTER_MODEL(
     recursive_map, (int), (KEY2))
 
 using KEY3 = any_mutable_recursive_map<
-    std::string, any_mutable_map<int, double, anyxx::mutable_observer>,
-    anyxx::mutable_observer>;
+    std::string, any_mutable_map<int, double, anyxx::mutref>,
+    anyxx::mutref>;
 ANY_REGISTER_MODEL(
     (std::map<int, std::map<std::string, std::map<int, double>>>),
     mutable_recursive_map, (int), (KEY3))
@@ -100,7 +100,7 @@ using KEY5 = any_mutable_map<int, double, anyxx::cref>;
 ANY_REGISTER_MODEL((std::map<std::string, std::map<int, double>>),
                    test::component_base::recursive_map, (std::string), (KEY5))
 
-using KEY6 = any_mutable_map<int, double, anyxx::mutable_observer>;
+using KEY6 = any_mutable_map<int, double, anyxx::mutref>;
 ANY_REGISTER_MODEL((std::map<std::string, std::map<int, double>>),
                    test::component_base::mutable_recursive_map, (std::string),
                    (KEY6))
@@ -174,9 +174,9 @@ TEST_CASE("any template test3") {
       [](any_mutable_recursive_map<
           int,
           any_mutable_recursive_map<
-              std::string, any_mutable_map<int, double, mutable_observer>,
-              mutable_observer>,
-          mutable_observer>
+              std::string, any_mutable_map<int, double, mutref>,
+              mutref>,
+          mutref>
              map_i) {
         auto x = map_i.at(1);
         auto y = x.at("one");

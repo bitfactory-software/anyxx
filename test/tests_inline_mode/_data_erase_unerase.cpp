@@ -20,7 +20,7 @@ constexpr bool compiles1 =
 TEST_CASE("data_erase_unerase/observer") {
   {
     std::string s{"hallo"};
-    auto mo = erased<mutable_observer>(s);
+    auto mo = erased<mutref>(s);
     *unchecked_unerase_cast<std::string>(mo) = "world";
     auto co = erased<cref>(s);
     REQUIRE(s == "world");
@@ -28,13 +28,13 @@ TEST_CASE("data_erase_unerase/observer") {
     REQUIRE(*unchecked_unerase_cast<std::string>(mo) == "world");
     {
       [[maybe_unused]] const std::string cs;
-      // mutable_observer xx(cs);  // shall not compile!
+      // mutref xx(cs);  // shall not compile!
     }
     // tmo = as< std::string >( co ); // shall not compile!
   }
   {
     const std::string s{"hallo"};
-    // auto mo = mutable_observer(s);  // shall not compile
+    // auto mo = mutref(s);  // shall not compile
     auto co = erased<cref>(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);

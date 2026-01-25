@@ -70,9 +70,9 @@ TEST_CASE("_interface_cast") {
       // svc->set_value(666); // does not compile!
     }
     {
-      any_get_value_i<mutable_observer> get_value_i_const_observer{sv0};
+      any_get_value_i<mutref> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
-      auto svc = downcast_to<any_set_value_i<mutable_observer>>(
+      auto svc = downcast_to<any_set_value_i<mutref>>(
           get_value_i_const_observer);
       CHECK(svc);
       svc->set_value(666); //NOLINT

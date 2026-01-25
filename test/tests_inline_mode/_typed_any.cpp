@@ -30,7 +30,7 @@ TEST_CASE("typed_any/observer") {
   CHECK((*co_typed).s_ == "hallo");
   CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
-  any_test_i<mutable_observer> mo{s};
+  any_test_i<mutref> mo{s};
   CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
 
@@ -76,7 +76,7 @@ TEST_CASE("typed_any/observer/test_i") {
   CHECK(co_typed.to_string() == "hallo");
   CHECK_THROWS_AS(as<std::string>(co), type_mismatch_error);
 
-  any_test_i<mutable_observer> mo{s};
+  any_test_i<mutref> mo{s};
   CHECK(unerase_cast<x_t>(mo)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(mo), type_mismatch_error);
 

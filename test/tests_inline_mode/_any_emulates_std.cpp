@@ -77,7 +77,7 @@ TEST_CASE("std emulated function") {
   }
   {
     functor_t functor{"hallo"};
-    any_string_to_string_mutable<mutable_observer> f{functor};
+    any_string_to_string_mutable<mutref> f{functor};
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo");
     REQUIRE(f(" world") == "hallo");
     REQUIRE(functor.s_ == "hallo world");
@@ -103,7 +103,7 @@ TEST_CASE("std emulated function") {
   {
     pure_functor_t pf{};
     ;
-    any_string_to_string<mutable_observer> f{pf};
+    any_string_to_string<mutref> f{pf};
     REQUIRE(f("hello world") == "hello world");
   }
   {

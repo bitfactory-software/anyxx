@@ -43,12 +43,12 @@ concept call_const = requires(functor_t const functor, std::string s) {
 
 static_assert(!call_mutable<any_overloaded_function_object, cref>);
 static_assert(call_const<any_overloaded_function_object, cref>);
-static_assert(call_mutable<any_overloaded_function_object, mutable_observer>);
-static_assert(!call_const<any_overloaded_function_object, mutable_observer>);
+static_assert(call_mutable<any_overloaded_function_object, mutref>);
+static_assert(!call_const<any_overloaded_function_object, mutref>);
 
-TEST_CASE("call_operator overload with mutable_observer") {
+TEST_CASE("call_operator overload with mutref") {
   functor_t functor{"hallo"};
-  any_overloaded_function_object<mutable_observer> f{functor};
+  any_overloaded_function_object<mutref> f{functor};
   REQUIRE(f() == "hallo");
   REQUIRE(f(" world") == "hallo");
   REQUIRE(f() == "hallo world");

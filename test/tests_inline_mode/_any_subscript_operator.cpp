@@ -47,9 +47,9 @@ ANY_MODEL_MAP((subscript_operator_test::vector_t),
   };
 };
 
-TEST_CASE("mutable subscript_operator with mutable_observer") {
+TEST_CASE("mutable subscript_operator with mutref") {
   map_t map{{0, "hallo"}};
-  any_map_i_to_string_mutable<mutable_observer> m{map};
+  any_map_i_to_string_mutable<mutref> m{map};
   REQUIRE(m[0] == "hallo");
   m[1] = "world";
   REQUIRE(m[1] == "world");
@@ -61,15 +61,15 @@ TEST_CASE("const subscript_operator with cref") {
   any_map_i_to_string_const_and_mutable<cref> v{vector};
   REQUIRE(v[0] == "hallo");
 }
-TEST_CASE("const subscript_operator with mutable_observer") {
+TEST_CASE("const subscript_operator with mutref") {
   vector_t vector{"hallo"};
-  any_map_i_to_string_const_and_mutable<mutable_observer> v{vector};
+  any_map_i_to_string_const_and_mutable<mutref> v{vector};
   REQUIRE(v[0] == "hallo");
 }
 
-TEST_CASE("mutable subscript_operator (vector) with mutable_observer") {
+TEST_CASE("mutable subscript_operator (vector) with mutref") {
   vector_t vector{"hallo", ""};
-  any_map_i_to_string_mutable<mutable_observer> v{vector};
+  any_map_i_to_string_mutable<mutref> v{vector};
   REQUIRE(v[0] == "hallo");
   v[1] = "world";
   REQUIRE(v[1] == "world");
@@ -83,7 +83,7 @@ TEST_CASE("mutable subscript_operator (vector) with mutable_observer") {
   REQUIRE(v_const2[0] == "hallo");
   REQUIRE(v_const2[1] == "world");
 
-  any_map_i_to_string_const_derived_mutable<mutable_observer> v_mutable{vector};
+  any_map_i_to_string_const_derived_mutable<mutref> v_mutable{vector};
   REQUIRE(v_mutable[0] == "hallo");
   REQUIRE(v_mutable[1] == "world");
 

@@ -1131,7 +1131,7 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
 template <voidness Voidness>
 using observer = Voidness;
 using cref = observer<const_void>;
-using mutable_observer = observer<mutable_void>;
+using mutref = observer<mutable_void>;
 
 template <voidness Voidness>
 struct observer_trait : basic_proxy_trait<Voidness> {
@@ -1188,14 +1188,14 @@ struct observer_trait : basic_proxy_trait<Voidness> {
 template <>
 struct proxy_trait<cref> : observer_trait<cref> {};
 template <>
-struct proxy_trait<mutable_observer> : observer_trait<mutable_observer> {
+struct proxy_trait<mutref> : observer_trait<mutref> {
 };
 
 static_assert(proxy_trait<cref>::is_const);
-static_assert(!proxy_trait<mutable_observer>::is_const);
+static_assert(!proxy_trait<mutref>::is_const);
 static_assert(is_proxy<cref>);
-static_assert(is_proxy<mutable_observer>);
-static_assert(is_proxy<mutable_observer>);
+static_assert(is_proxy<mutref>);
+static_assert(is_proxy<mutref>);
 static_assert(is_proxy<cref>);
 
 // --------------------------------------------------------------------------------
@@ -1877,9 +1877,9 @@ To borrow_as(From const& from, any_v_table* v_table) {
 
 template <is_proxy From>
   requires(!is_const_data<From> && !is_weak_data<From>)
-struct borrow_trait<mutable_observer, From> {
+struct borrow_trait<mutref, From> {
   auto operator()(const auto& from, any_v_table* v_table) const {
-    return mutable_observer{get_proxy_ptr(from, v_table)};
+    return mutref{get_proxy_ptr(from, v_table)};
   }
 };
 template <is_proxy From>
@@ -1912,43 +1912,43 @@ struct borrow_trait<weak, shared> {
   }
 };
 
-static_assert(!borrowable_from<mutable_observer, cref>);
-static_assert(borrowable_from<mutable_observer, mutable_observer>);
-static_assert(borrowable_from<mutable_observer, unique>);
-static_assert(!borrowable_from<mutable_observer, shared>);
-static_assert(!borrowable_from<mutable_observer, weak>);
-static_assert(borrowable_from<mutable_observer, val>);
+static_assert(!borrowable_from<mutref, cref>);
+static_assert(borrowable_from<mutref, mutref>);
+static_assert(borrowable_from<mutref, unique>);
+static_assert(!borrowable_from<mutref, shared>);
+static_assert(!borrowable_from<mutref, weak>);
+static_assert(borrowable_from<mutref, val>);
 
 static_assert(borrowable_from<cref, cref>);
-static_assert(borrowable_from<cref, mutable_observer>);
+static_assert(borrowable_from<cref, mutref>);
 static_assert(borrowable_from<cref, unique>);
 static_assert(borrowable_from<cref, shared>);
 static_assert(!borrowable_from<cref, weak>);
 static_assert(borrowable_from<cref, val>);
 
 static_assert(!borrowable_from<shared, cref>);
-static_assert(!borrowable_from<shared, mutable_observer>);
+static_assert(!borrowable_from<shared, mutref>);
 static_assert(!borrowable_from<shared, unique>);
 static_assert(borrowable_from<shared, shared>);
 static_assert(!borrowable_from<shared, weak>);
 static_assert(!borrowable_from<shared, val>);
 
 static_assert(!borrowable_from<weak, cref>);
-static_assert(!borrowable_from<weak, mutable_observer>);
+static_assert(!borrowable_from<weak, mutref>);
 static_assert(!borrowable_from<weak, unique>);
 static_assert(borrowable_from<weak, shared>);
 static_assert(borrowable_from<weak, weak>);
 static_assert(!borrowable_from<weak, val>);
 
 static_assert(!borrowable_from<unique, cref>);
-static_assert(!borrowable_from<unique, mutable_observer>);
+static_assert(!borrowable_from<unique, mutref>);
 static_assert(!borrowable_from<unique, unique>);
 static_assert(!borrowable_from<unique, shared>);
 static_assert(!borrowable_from<unique, weak>);
 static_assert(!borrowable_from<unique, val>);
 
 static_assert(!borrowable_from<val, cref>);
-static_assert(!borrowable_from<val, mutable_observer>);
+static_assert(!borrowable_from<val, mutref>);
 static_assert(!borrowable_from<val, unique>);
 static_assert(!borrowable_from<val, shared>);
 static_assert(!borrowable_from<val, weak>);
@@ -1970,7 +1970,7 @@ To clone_to(From const& from, any_v_table* v_table) {
                                            v_table);
 }
 
-static_assert(!cloneable_to<mutable_observer>);
+static_assert(!cloneable_to<mutref>);
 static_assert(!cloneable_to<cref>);
 static_assert(cloneable_to<shared>);
 static_assert(!cloneable_to<weak>);
@@ -2009,43 +2009,43 @@ void move_to(To& to, any_v_table* to_v_table, From&& from,
                                           from_v_table);
 }
 
-static_assert(!moveable_from<mutable_observer, cref>);
-static_assert(moveable_from<mutable_observer, mutable_observer>);
-static_assert(!moveable_from<mutable_observer, unique>);
-static_assert(!moveable_from<mutable_observer, shared>);
-static_assert(!moveable_from<mutable_observer, weak>);
-static_assert(!moveable_from<mutable_observer, val>);
+static_assert(!moveable_from<mutref, cref>);
+static_assert(moveable_from<mutref, mutref>);
+static_assert(!moveable_from<mutref, unique>);
+static_assert(!moveable_from<mutref, shared>);
+static_assert(!moveable_from<mutref, weak>);
+static_assert(!moveable_from<mutref, val>);
 
 static_assert(moveable_from<cref, cref>);
-static_assert(moveable_from<cref, mutable_observer>);
+static_assert(moveable_from<cref, mutref>);
 static_assert(!moveable_from<cref, unique>);
 static_assert(!moveable_from<cref, shared>);
 static_assert(!moveable_from<cref, weak>);
 static_assert(!moveable_from<cref, val>);
 
 static_assert(!moveable_from<shared, cref>);
-static_assert(!moveable_from<shared, mutable_observer>);
+static_assert(!moveable_from<shared, mutref>);
 static_assert(moveable_from<shared, unique>);
 static_assert(moveable_from<shared, shared>);
 static_assert(!moveable_from<shared, weak>);
 static_assert(!moveable_from<shared, val>);
 
 static_assert(!moveable_from<weak, cref>);
-static_assert(!moveable_from<weak, mutable_observer>);
+static_assert(!moveable_from<weak, mutref>);
 static_assert(!moveable_from<weak, unique>);
 static_assert(moveable_from<weak, shared>);
 static_assert(moveable_from<weak, weak>);
 static_assert(!moveable_from<weak, val>);
 
 static_assert(!moveable_from<unique, cref>);
-static_assert(!moveable_from<unique, mutable_observer>);
+static_assert(!moveable_from<unique, mutref>);
 static_assert(moveable_from<unique, unique>);
 static_assert(!moveable_from<unique, shared>);
 static_assert(!moveable_from<unique, weak>);
 static_assert(!moveable_from<unique, val>);
 
 static_assert(!moveable_from<val, cref>);
-static_assert(!moveable_from<val, mutable_observer>);
+static_assert(!moveable_from<val, mutref>);
 static_assert(!moveable_from<val, unique>);
 static_assert(!moveable_from<val, shared>);
 static_assert(!moveable_from<val, weak>);
@@ -2375,7 +2375,7 @@ struct translate_v_table_param<AnyValue,
 template <typename AnyValue>
 struct translate_v_table_param<AnyValue,
                                self&> {
-  using type = any<mutable_observer>;
+  using type = any<mutref>;
 };
 template <typename AnyValue, typename Param>
 using v_table_param =

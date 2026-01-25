@@ -26,14 +26,14 @@ TEST_CASE("_data_conversion clone") {
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = any<mutable_observer>(s1);
+    auto vv1 = any<mutref>(s1);
     auto vv2 = clone_to<any<shared>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = any<mutable_observer>(s1);
+    auto vv1 = any<mutref>(s1);
     auto vv2 = clone_to<any<unique>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);

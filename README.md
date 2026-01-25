@@ -61,7 +61,7 @@ Square
     - vany variant
   - Customizable via anyxx::proxy_trait
   - **Safe** interchange of **lifetime**  
-    - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared -> cref, mutable_observer -> cref
+    - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared -> cref, mutref -> cref
     - **move_to**: value -> unique -> shared, unique -> value
     - **clone_to**: ..._observer -> shared -> unique -> value
 - **Extension member*

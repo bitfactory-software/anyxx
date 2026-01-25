@@ -55,7 +55,7 @@ inline point max(point lhs, point rhs) {
 }
 
 ANY(surface, (ANY_FN(void, write, (point, char), )), )
-using mutable_observed_surface = any_surface<anyxx::mutable_observer>;
+using mutable_observed_surface = any_surface<anyxx::mutref>;
 using unique_surface = any_surface<anyxx::unique>;
 
 struct shape_has_open_dispatch {};

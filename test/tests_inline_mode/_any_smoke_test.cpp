@@ -148,13 +148,13 @@ TEST_CASE("dynamic v_table cref") {
     sb1 = sb2;
   }
   {
-    using any_drawable_mutable_observer = any_drawable<mutable_observer>;
+    using any_drawable_mutable_observer = any_drawable<mutref>;
     any_drawable_mutable_observer sb1;
     any_drawable_mutable_observer sb2{c};
     sb1 = sb2;
   }
   {
-    using any_drawable_mutable_observer = any_drawable<mutable_observer>;
+    using any_drawable_mutable_observer = any_drawable<mutref>;
     any_drawable_mutable_observer sb1{c};
     any_drawable_mutable_observer sb2{std::move(sb1)};
   }
@@ -203,7 +203,7 @@ TEST_CASE("dynamic v_table cref") {
     print_any_callable_shape_const_observer(*any_shape_is_circle);
   }
 
-  print_any_shape_const_observer(any_shape<mutable_observer>{p});
+  print_any_shape_const_observer(any_shape<mutref>{p});
 }
 
 TEST_CASE("dynamic any shared") {

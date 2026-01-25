@@ -23,7 +23,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<mutable_observer>;
+    using from_t = any<mutref>;
     using to_t = any<cref>;
     auto vv1 = from_t(s1);
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
@@ -35,8 +35,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<mutable_observer>;
-    using to_t = any<mutable_observer>;
+    using from_t = any<mutref>;
+    using to_t = any<mutref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t(s1);
     auto vv2 = borrow_as<to_t>(vv1);
@@ -72,7 +72,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<unique>;
-    using to_t = any<mutable_observer>;
+    using to_t = any<mutref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{std::make_unique<std::string>(s1)};
     auto vv2 = borrow_as<to_t>(vv1);
@@ -135,7 +135,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<val>;
-    using to_t = any<mutable_observer>;
+    using to_t = any<mutref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{s1};
     auto vv2 = borrow_as<to_t>(vv1);
