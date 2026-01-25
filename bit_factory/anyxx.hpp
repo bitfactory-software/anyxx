@@ -2136,7 +2136,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend const& any);
 
-  template <is_proxy Other, typename Trait>
+  template <is_proxy Other, typename OtherTrait>
   friend class any;
 
   template <typename AAny>
