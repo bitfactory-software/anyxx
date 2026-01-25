@@ -52,7 +52,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANYXX_JACKET_RETURN(...) \
   anyxx::jacket_return<ANYXX_UNPAREN(ANYXX_UNPAREN(__VA_ARGS__))>
 
-
 #define _detail_EXPAND(...) \
   _detail_EXPAND4(          \
       _detail_EXPAND4(_detail_EXPAND4(_detail_EXPAND4(__VA_ARGS__))))
@@ -135,10 +134,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_EXPAND_(_detail_ANYXX_JACKET_PARAM_LIST_H(__VA_ARGS__))
 #define _detail_EXPAND_LIST(...) __VA_ARGS__
 
-#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)            \
-  [[maybe_unused]] anyxx::v_table_param<any_value_t, \
-                                        ANYXX_UNPAREN(param_type)> c         \
-  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(            \
+#define _detail_ANYXX_V_TABLE_PARAM_LIST_H(b, c, param_type, ...)    \
+  [[maybe_unused]] anyxx::v_table_param<any_value_t,                 \
+                                        ANYXX_UNPAREN(param_type)> c \
+  __VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(    \
                    b, _detail_CONCAT(b, c), __VA_ARGS__))
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
@@ -285,31 +284,30 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
-#define _detail_ANYXX_FN(overload, type, name, name_ext, exact_const,      \
-                             const_, map_body, ...)                            \
+#define _detail_ANYXX_FN(overload, type, name, name_ext, exact_const, const_,  \
+                         map_body, ...)                                        \
   overload template <typename Self>                                            \
   decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(          \
       _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                  \
-    requires(::anyxx::const_correct_call_for_proxy<                      \
-             void const_*, typename std::decay_t<Self>::proxy_t,         \
-             exact_const>)                                                     \
+    requires(::anyxx::const_correct_call_for_proxy<                            \
+             void const_*, typename std::decay_t<Self>::proxy_t, exact_const>) \
   {                                                                            \
     using self_t = std::decay_t<Self>;                                         \
     using T = typename self_t::T;                                              \
-    using proxy_t = typename self_t::proxy_t;                      \
+    using proxy_t = typename self_t::proxy_t;                                  \
                                                                                \
     if constexpr (!anyxx::voidness<T>) {                                       \
-      using traited_t = typename proxy_t::value_t;                       \
+      using traited_t = typename proxy_t::value_t;                             \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
-            get_proxy(std::forward<Self>(self))                          \
+            get_proxy(std::forward<Self>(self))                                \
                 .value_ __VA_OPT__(, )                                         \
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__)));                               \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             static_dispatch_map_t<T>::name(                                    \
-                get_proxy(std::forward<Self>(self))                      \
+                get_proxy(std::forward<Self>(self))                            \
                     .value_ __VA_OPT__(, ) __VA_OPT__(                         \
                         _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(        \
                             a, _sig, __VA_ARGS__))),                           \
@@ -318,13 +316,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     } else {                                                                   \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return get_v_table(std::forward<Self>(self))                           \
-            ->name(anyxx::get_proxy_ptr(std::forward<Self>(self))          \
-                       __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(          \
-                                        a, _sig, __VA_ARGS__)));               \
+            ->name(anyxx::get_proxy_ptr(std::forward<Self>(self)) __VA_OPT__(  \
+                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             get_v_table(std::forward<Self>(self))                              \
-                ->name(anyxx::get_proxy_ptr(std::forward<Self>(self))      \
+                ->name(anyxx::get_proxy_ptr(std::forward<Self>(self))          \
                            __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(      \
                                             a, _sig, __VA_ARGS__))),           \
             std::forward<Self>(self));                                         \
@@ -396,8 +393,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using v_table_t = n##_v_table;                                             \
                                                                                \
     using any_value_t =                                                        \
-        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
-                                     any_template_params)>;                    \
+        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
+                                   any_template_params)>;                      \
                                                                                \
     static constexpr bool open_dispatch_enabeled =                             \
         anyxx::is_type_complete<n##_has_open_dispatch>;                        \
@@ -420,10 +417,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
       : BASE                                                                   \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
-                                                                               \
     using any_value_t =                                                        \
-        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(       \
-                                     any_template_params)>;                    \
+        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
+                                   any_template_params)>;                      \
                                                                                \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
@@ -435,7 +431,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
         static_dispatch_template_params)>;                                     \
                                                                                \
-    _detail_ANYXX_FNS(l)                                                   \
+    _detail_ANYXX_FNS(l)                                                       \
                                                                                \
         _detail_REMOVE_PARENS(decoration)                                      \
   };                                                                           \
@@ -491,126 +487,120 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
-#define ANY_META_FUNCTION(pure_template_params,                      \
-                          any_template_params_with_defaults, n)      \
-                                                                     \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                       \
-      any_template_params_with_defaults)>                            \
-  using any_##n =                                                    \
-      anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
-                                 pure_template_params)>;
+#define ANY_META_FUNCTION(pure_template_params,                             \
+                          any_template_params_with_defaults, n)             \
+                                                                            \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                              \
+      any_template_params_with_defaults)>                                   \
+  using any_##n = anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
+                                        pure_template_params)>;
 
 ////////////////////////////////////////////////////////////////////////////////
 
 #define __detail_ANYXX_ANY_CMF(t, t_with_defaults, n) \
   ANY_META_FUNCTION(, _detail_REMOVE_PARENS(t_with_defaults), n)
 
-#define __detail_ANYXX_ANY_EX_(n, proxy_default)                        \
-  __detail_ANYXX_ANY_CMF(                                                     \
-      ((Proxy)),                                                         \
-      ((Proxy = anyxx::default_proxy<proxy_default>::type)), \
-      n)
+#define __detail_ANYXX_ANY_EX_(n, proxy_default) \
+  __detail_ANYXX_ANY_CMF(                        \
+      ((Proxy)), ((Proxy = anyxx::default_proxy<proxy_default>::type)), n)
 
 #define ANY_EX_(n, BASE, l, proxy_default, decoration) \
-  TRAIT_EX_(n, BASE, l, decoration)                          \
+  TRAIT_EX_(n, BASE, l, decoration)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 #define ANY_EX(n, l, proxy_default, decoration) \
-  TRAIT_EX(n, l, decoration)                          \
+  TRAIT_EX(n, l, decoration)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 #define ANY_(n, BASE, l, proxy_default) \
-  TRAIT_(n, BASE, l)                          \
+  TRAIT_(n, BASE, l)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
 
 #define ANY(n, l, ...) \
   TRAIT(n, l)          \
   __detail_ANYXX_ANY_EX_(n, __VA_ARGS__)
 
-#define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)     \
-  ANY_META_FUNCTION(                                                   \
-      _detail_REMOVE_PARENS(t),                                        \
-      __detail_ANYXX_ADD_TAIL(                                         \
-          (Proxy =                                                \
-               anyxx::default_proxy<proxy_default>::type), \
-          _detail_REMOVE_PARENS(t)),                                   \
-      n)
+#define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)                 \
+  ANY_META_FUNCTION(_detail_REMOVE_PARENS(t),                                \
+                    __detail_ANYXX_ADD_TAIL(                                 \
+                        (Proxy = anyxx::default_proxy<proxy_default>::type), \
+                        _detail_REMOVE_PARENS(t)),                           \
+                    n)
 
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
-  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                          \
+  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
-  TRAIT_TEMPLATE_(t, n, BASE, bt, l)                          \
+  TRAIT_TEMPLATE_(t, n, BASE, bt, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
-  TRAIT_TEMPLATE(t, n, l)                          \
+  TRAIT_TEMPLATE(t, n, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 #define ANY_TEMPLATE_EX(t, n, l, proxy_default, decoration) \
-  TRAIT_TEMPLATE_EX(t, n, l, decoration)                          \
+  TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 #define ANY_FN_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
-#define __detail_ANYXX_MEMBER_FN(overload, ret, name, name_ext, \
-                                     exact_const, const_, params)   \
-  ANY_FN_(overload, ret, name, name_ext, exact_const, const_,   \
-              (x.name_ext), _detail_EXPAND params)
+#define __detail_ANYXX_MEMBER_FN(overload, ret, name, name_ext, exact_const, \
+                                 const_, params)                             \
+  ANY_FN_(overload, ret, name, name_ext, exact_const, const_, (x.name_ext),  \
+          _detail_EXPAND params)
 
 #define ANY_FN_PURE(ret, name, params, const_)            \
   ANY_FN_(, ret, name, name, false, const_,               \
-              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
-              _detail_EXPAND params)
+          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
+          _detail_EXPAND params)
 #define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
   ANY_FN_(, ret, name, name, true, const_,                \
-              (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
-              _detail_EXPAND params)
-#define ANY_FN_DEF(ret, name, params, const_, ...)   \
+          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
+          _detail_EXPAND params)
+#define ANY_FN_DEF(ret, name, params, const_, ...)         \
   ANY_FN_(, ret, name, name, false, const_, (__VA_ARGS__), \
-              _detail_EXPAND params)
+          _detail_EXPAND params)
 #define ANY_FN_DEF_EXACT(ret, name, params, const_, ...) \
-  ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__),      \
-              _detail_EXPAND params)
+  ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__), _detail_EXPAND params)
 #define ANY_FN(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
 #define ANY_FN_EXACT(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, name, true, const_, params)
-#define ANY_FN_OVERLOAD(ret, name, params, const_)                     \
-  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, false, \
-                               const_, params)
-#define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)              \
-  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, true, \
-                               const_, params)
+#define ANY_FN_OVERLOAD(ret, name, params, const_)                             \
+  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, false, const_, \
+                           params)
+#define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)                      \
+  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, true, const_, \
+                           params)
 
 #define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
 #define ANY_OP(ret, op, params, const_) \
   ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_DEF(ret, op, name, params, const_, ...)          \
+#define ANY_OP_DEF(ret, op, name, params, const_, ...)            \
   ANY_FN_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
-              _detail_EXPAND params)
+          _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, operator op, true, const_, params)
 #define ANY_OP_EXACT(ret, op, params, const_)                                  \
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
                          const_)
-#define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)   \
+#define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)     \
   ANY_FN_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
-              _detail_EXPAND params)
+          _detail_EXPAND params)
 
-#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(operator op), ret,         \
-                               name, operator op, true, const_, params)
+#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)        \
+  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(operator op), ret, name, operator op, \
+                           true, const_, params)
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
       ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_EXACT_OVERLOAD_DEF(ret, op, name, params, const_, ...)    \
+#define ANY_OP_EXACT_OVERLOAD_DEF(ret, op, name, params, const_, ...)      \
   ANY_FN_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
-              (__VA_ARGS__), _detail_EXPAND params)
+          (__VA_ARGS__), _detail_EXPAND params)
 
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
   template <>                                                   \
@@ -855,23 +845,18 @@ struct basic_proxy_trait {
 };
 
 template <typename E>
-concept is_proxy =
-    requires(E e, mutable_void void_data, any_v_table* v_table) {
-      typename proxy_trait<E>::void_t;
-      typename proxy_trait<E>::static_dispatch_t;
-      {
-        proxy_trait<E>::is_constructibile_from_const
-      } -> std::convertible_to<bool>;
-      { proxy_trait<E>::is_owner } -> std::convertible_to<bool>;
-      {
-        proxy_trait<E>::get_proxy_ptr_in(e, v_table)
-      } -> std::convertible_to<typename proxy_trait<E>::void_t>;
-      { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
-      { proxy_trait<E>::default_construct() };
-      {
-        proxy_trait<E>::clone_from(void_data, v_table)
-      } -> std::same_as<E>;
-    };
+concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
+  typename proxy_trait<E>::void_t;
+  typename proxy_trait<E>::static_dispatch_t;
+  { proxy_trait<E>::is_constructibile_from_const } -> std::convertible_to<bool>;
+  { proxy_trait<E>::is_owner } -> std::convertible_to<bool>;
+  {
+    proxy_trait<E>::get_proxy_ptr_in(e, v_table)
+  } -> std::convertible_to<typename proxy_trait<E>::void_t>;
+  { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
+  { proxy_trait<E>::default_construct() };
+  { proxy_trait<E>::clone_from(void_data, v_table) } -> std::same_as<E>;
+};
 
 using emtpty_trait_v_table = any_v_table;
 struct emtpty_trait {
@@ -883,8 +868,7 @@ class any;
 
 template <typename Proxy>
 concept is_dyn =
-    is_proxy<Proxy> &&
-    voidness<typename proxy_trait<Proxy>::static_dispatch_t>;
+    is_proxy<Proxy> && voidness<typename proxy_trait<Proxy>::static_dispatch_t>;
 
 template <typename I>
 concept is_proxy_holder_impl = requires(I i) {
@@ -926,12 +910,10 @@ template <is_proxy Data>
 using data_void = proxy_trait<Data>::void_t;
 
 template <typename Proxy>
-concept is_const_data =
-    is_proxy<Proxy> && is_const_void<data_void<Proxy>>;
+concept is_const_data = is_proxy<Proxy> && is_const_void<data_void<Proxy>>;
 
 template <typename Proxy>
-concept is_weak_data =
-    is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
+concept is_weak_data = is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
 
 template <bool CallIsConst, bool ErasedDataIsConst, bool ErasedDataIsWeak>
 concept const_correct_call =
@@ -942,9 +924,8 @@ template <typename CALL, typename Proxy, bool Exact>
 concept const_correct_call_for_proxy =
     !is_weak_data<Proxy> && voidness<CALL> && is_proxy<Proxy> &&
     ((Exact && (is_const_void<CALL> == is_const_data<Proxy>)) ||
-     (!Exact &&
-      const_correct_call<is_const_void<CALL>, is_const_data<Proxy>,
-                         is_weak_data<Proxy>>));
+     (!Exact && const_correct_call<is_const_void<CALL>, is_const_data<Proxy>,
+                                   is_weak_data<Proxy>>));
 
 template <is_proxy Proxy, typename From>
 Proxy erased(From&& from) {
@@ -952,13 +933,12 @@ Proxy erased(From&& from) {
 }
 
 template <is_proxy Proxy, typename ConstructedWith>
-using unerased = proxy_trait<Proxy>::template unerased<
-    std::decay_t<ConstructedWith>>;
+using unerased =
+    proxy_trait<Proxy>::template unerased<std::decay_t<ConstructedWith>>;
 
 template <is_proxy Proxy>
 void const* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
-  requires std::same_as<void const*,
-                        typename proxy_trait<Proxy>::void_t>
+  requires std::same_as<void const*, typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
 }
@@ -1027,7 +1007,8 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
     return by_val<V>{};
   }
 
-  static auto get_proxy_ptr_in(auto& val, [[maybe_unused]] any_v_table* v_table) {
+  static auto get_proxy_ptr_in(auto& val,
+                               [[maybe_unused]] any_v_table* v_table) {
     return &val;
   }
 
@@ -1048,12 +1029,10 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
 // --------------------------------------------------------------------------------
 // erased data variant
 
-template <template <typename> typename Any, is_proxy Proxy,
-          typename... Types>
+template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using vany_variant = std::variant<Any<Proxy>, Types...>;
 
-template <template <typename> typename Any, is_proxy Proxy,
-          typename... Types>
+template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using make_vany = Any<by_val<vany_variant<Any, Proxy, Types...>>>;
 
 template <typename VanyVariant>
@@ -1080,8 +1059,7 @@ struct vany_type_trait {
       typename vany_variant_trait<vany_variant>::any_in_variant;
 };
 
-template <template <typename> typename Any, is_proxy Proxy,
-          typename... Types>
+template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
     : basic_proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>> {
   using vany_variant_t = vany_variant<Any, Proxy, Types...>;
@@ -1097,14 +1075,15 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
   static constexpr bool is_owner = proxy_trait<Proxy>::is_owner;
   static constexpr bool is_weak =
       proxy_trait<Proxy>::is_weak;  // cppcheck-suppress
-                                               // duplInheritedMember
+                                    // duplInheritedMember
   static auto default_construct() { return vany_variant_t{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     return by_val<vany_variant_t>{};
   }
 
-  static auto get_proxy_ptr_in(auto& val, [[maybe_unused]] any_v_table* v_table) {
+  static auto get_proxy_ptr_in(auto& val,
+                               [[maybe_unused]] any_v_table* v_table) {
     return &val;
   }
 
@@ -1155,7 +1134,7 @@ struct observer_trait : basic_proxy_trait<Voidness> {
   }
 
   static Voidness get_proxy_ptr_in(const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
+                                   [[maybe_unused]] any_v_table* v_table) {
     return ptr;
   }
 
@@ -1188,8 +1167,7 @@ struct observer_trait : basic_proxy_trait<Voidness> {
 template <>
 struct proxy_trait<cref> : observer_trait<cref> {};
 template <>
-struct proxy_trait<mutref> : observer_trait<mutref> {
-};
+struct proxy_trait<mutref> : observer_trait<mutref> {};
 
 static_assert(proxy_trait<cref>::is_const);
 static_assert(!proxy_trait<mutref>::is_const);
@@ -1241,10 +1219,11 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     delete_(v_table_to, old);
   }
 
-  static void* get_proxy_ptr_in(const auto& ptr, [[maybe_unused]] any_v_table* v_table) {
+  static void* get_proxy_ptr_in(const auto& ptr,
+                                [[maybe_unused]] any_v_table* v_table) {
     return ptr.ptr;
   }
-  
+
   static void destroy(unique& u, any_v_table* v_table) {
     assert(v_table || !u.ptr);
     if (v_table) delete_(v_table, u.ptr);
@@ -1299,24 +1278,22 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
   static auto clone_from(const_void data_ptr, any_v_table* v_table) {
     return shared{copy_construct(v_table, data_ptr), v_table->delete_};
   }
-  static void move_to(shared& to,
-                      [[maybe_unused]] any_v_table* v_table_to,
+  static void move_to(shared& to, [[maybe_unused]] any_v_table* v_table_to,
                       shared&& from, [[maybe_unused]] auto) {
     to = std::move(from);
   }
-  static void move_to(shared& to,
-                      [[maybe_unused]] any_v_table* v_table_to, unique from,
-                      any_v_table* v_table) {
+  static void move_to(shared& to, [[maybe_unused]] any_v_table* v_table_to,
+                      unique from, any_v_table* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
     to = shared{p, v_table->delete_};
   }
 
   static void const* get_proxy_ptr_in(const auto& v,
-                           [[maybe_unused]] any_v_table* v_table) {
+                                      [[maybe_unused]] any_v_table* v_table) {
     return v.get();
   }
-  
+
   template <typename ConstructedWith>
   struct unerased_impl {
     using type = std::decay_t<ConstructedWith>;
@@ -1363,10 +1340,10 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
   }
 
   static void const* get_proxy_ptr_in([[maybe_unused]] const auto& ptr,
-                           [[maybe_unused]] any_v_table* v_table) {
+                                      [[maybe_unused]] any_v_table* v_table) {
     return nullptr;
   }
-  
+
   template <typename ConstructedWith>
   using unerased = std::decay_t<typename ConstructedWith::element_type>;
 
@@ -1426,9 +1403,7 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 
 union val {
   val(mutable_void ptr = 0) : heap{ptr} {}
-  val([[maybe_unused]] val const& other) noexcept {
-    trivial = other.trivial;
-  }
+  val([[maybe_unused]] val const& other) noexcept { trivial = other.trivial; }
   val& operator=([[maybe_unused]] val const& other) noexcept {
     trivial = other.trivial;
     return *this;
@@ -1542,8 +1517,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
   }
 
   static void move_to(val& to, [[maybe_unused]] any_v_table* v_table_to,
-                      val&& from,
-                      [[maybe_unused]] any_v_table* v_table_from) {
+                      val&& from, [[maybe_unused]] any_v_table* v_table_from) {
     if (!v_table_from && !v_table_to) return;
     visit_value(
         overloads{
@@ -1593,13 +1567,11 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
                                 return move_construct(v_table, local.data());
                               }},
                     v, v_table->model_size);
-    proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr},
-                                       v_table);
+    proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   }
 
   static void copy_construct_from(val& to, any_v_table* to_v_table,
-                                  val const& from,
-                                  any_v_table* from_v_table) {
+                                  val const& from, any_v_table* from_v_table) {
     if (!from_v_table) return;
     visit_value(
         overloads{
@@ -1665,7 +1637,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
                   }},
         std::forward<V>(v), model_size);
   }
-  
+
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
 
@@ -1769,8 +1741,7 @@ struct v_table_holder<true, Trait> {
   // cppcheck-suppress-end [functionConst, functionStatic]
   template <typename Proxy, typename Concrete>
   void init_v_table() {
-    v_table_ =
-        v_table_instance<v_table_t, anyxx::unerased<Proxy, Concrete>>();
+    v_table_ = v_table_instance<v_table_t, anyxx::unerased<Proxy, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
@@ -1862,12 +1833,10 @@ template <is_proxy To, is_proxy From>
 struct borrow_trait;
 
 template <typename To, typename From>
-concept borrowable_from = is_proxy<From> && is_proxy<To> &&
-                          requires(From f, any_v_table* v_table) {
-                            {
-                              borrow_trait<To, From>{}(f, v_table)
-                            } -> std::same_as<To>;
-                          };
+concept borrowable_from =
+    is_proxy<From> && is_proxy<To> && requires(From f, any_v_table* v_table) {
+      { borrow_trait<To, From>{}(f, v_table) } -> std::same_as<To>;
+    };
 
 template <typename To, typename From>
   requires borrowable_from<To, From>
@@ -1966,8 +1935,7 @@ concept cloneable_to = is_proxy<To> && proxy_trait<To>::is_owner;
 template <is_proxy To, is_proxy From>
   requires cloneable_to<To>
 To clone_to(From const& from, any_v_table* v_table) {
-  return proxy_trait<To>::clone_from(get_proxy_ptr(from, v_table),
-                                           v_table);
+  return proxy_trait<To>::clone_from(get_proxy_ptr(from, v_table), v_table);
 }
 
 static_assert(!cloneable_to<mutref>);
@@ -2006,7 +1974,7 @@ template <is_proxy To, is_proxy From>
 void move_to(To& to, any_v_table* to_v_table, From&& from,
              any_v_table* from_v_table) {
   return proxy_trait<From>::move_to(to, to_v_table, std::move(from),
-                                          from_v_table);
+                                    from_v_table);
 }
 
 static_assert(!moveable_from<mutref, cref>);
@@ -2075,15 +2043,14 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, Proxy> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>)
-      : proxy_(erased<proxy_t>(
-            std::forward<ConstructedWith>(constructed_with))) {
+      : proxy_(
+            erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
   }
   // cppcheck-suppress-end noExplicitConstructor
   template <typename V>
   any(std::in_place_t, V&& v)
-      : proxy_(proxy_trait<Proxy>::construct_in_place(
-            std::forward<V>(v))) {
+      : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<Proxy, V>();
   }
   template <typename T, typename... Args>
@@ -2102,7 +2069,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     requires std::copyable<proxy_t>
       : v_table_holder_t(other.get_v_table_ptr()) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
-                                 other.get_v_table_ptr());
+                                       other.get_v_table_ptr());
   }
   any& operator=(any const& other)
     requires std::copyable<proxy_t>
@@ -2110,7 +2077,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     if (this == &other) return *this;
     auto const v_table_ptr = v_table_holder_t::get_v_table_ptr();
     proxy_trait_t::copy_construct_from(proxy_, v_table_ptr, other.proxy_,
-                                 other.get_v_table_ptr());
+                                       other.get_v_table_ptr());
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     return *this;
   }
@@ -2121,8 +2088,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
       : v_table_holder_t(other.get_v_table_ptr()),
-        proxy_(borrow_as<Proxy>(other.proxy_,
-                                           other.get_v_table_ptr())) {}
+        proxy_(borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
     requires(borrowable_from<proxy_t, typename Other::proxy_t> &&
@@ -2130,8 +2096,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
-    proxy_ =
-        borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr());
+    proxy_ = borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr());
     return *this;
   }
 
@@ -2154,7 +2119,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     proxy_trait_t::move_to(proxy_, v_table_holder_t::get_v_table_ptr(),
-                     std::move(other.proxy_), other.get_v_table_ptr());
+                           std::move(other.proxy_), other.get_v_table_ptr());
     v_table_holder_t::set_v_table_ptr(other.release_v_table());
     return *this;
   }
@@ -2239,7 +2204,7 @@ auto unchecked_v_table_downcast_to(any_v_table* v_table) {
 }
 
 template <typename Any>
-  requires is_any<Any> && Any::dyn 
+  requires is_any<Any> && Any::dyn
 inline auto get_v_table(Any const& any) {
   return unchecked_v_table_downcast_to<Any>(any.get_v_table_ptr());
 }
@@ -2368,18 +2333,15 @@ struct translate_v_table_param {
   using type = Param;
 };
 template <typename AnyValue>
-struct translate_v_table_param<AnyValue,
-                               self const&> {
+struct translate_v_table_param<AnyValue, self const&> {
   using type = any<cref>;
 };
 template <typename AnyValue>
-struct translate_v_table_param<AnyValue,
-                               self&> {
+struct translate_v_table_param<AnyValue, self&> {
   using type = any<mutref>;
 };
 template <typename AnyValue, typename Param>
-using v_table_param =
-    typename translate_v_table_param<AnyValue, Param>::type;
+using v_table_param = typename translate_v_table_param<AnyValue, Param>::type;
 
 template <typename AnyValue, typename Return>
 struct translate_v_table_return {
@@ -2526,9 +2488,7 @@ struct typed_any : public Any {
   {
     return unchecked_unerase_cast<value_t>(*this);
   }
-  explicit operator bool() const {
-    return static_cast<bool>(this->proxy_);
-  }
+  explicit operator bool() const { return static_cast<bool>(this->proxy_); }
 };
 
 template <typename V, is_any Any>
@@ -2561,8 +2521,7 @@ std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
 }
 
 template <is_any ToAny, is_any FromAny>
-  requires borrowable_from<typename ToAny::proxy_t,
-                           typename FromAny::proxy_t>
+  requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   if constexpr (std::same_as<typename ToAny::v_table_t,
                              typename FromAny::v_table_t>) {
@@ -2710,8 +2669,7 @@ class factory {
   template <is_proxy Proxy>
   auto register_impl(auto& map, Key key, auto const& construct) {
     map[key] = [construct](Args... args) -> Any<Proxy> {
-      return Any<Proxy>{std::in_place,
-                             construct(std::forward<Args>(args)...)};
+      return Any<Proxy>{std::in_place, construct(std::forward<Args>(args)...)};
     };
   };
 
@@ -2738,11 +2696,11 @@ class factory {
   auto construct(auto key, Args&&... args) {
     if constexpr (std::same_as<Proxy, unique>) {
       return construct_impl<Proxy>(unique_factory_map_, key,
-                                        std::forward<Args>(args)...);
+                                   std::forward<Args>(args)...);
     } else {
       static_assert(std::same_as<Proxy, shared>);
       return construct_impl<Proxy>(shared_factory_map_, key,
-                                        std::forward<Args>(args)...);
+                                   std::forward<Args>(args)...);
     }
   };
 };
