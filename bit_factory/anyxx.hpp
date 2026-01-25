@@ -864,7 +864,7 @@ concept is_proxy =
       } -> std::convertible_to<bool>;
       { proxy_trait<E>::is_owner } -> std::convertible_to<bool>;
       {
-        proxy_trait<E>::value(e, v_table)
+        proxy_trait<E>::get_proxy_ptr_in(e, v_table)
       } -> std::convertible_to<typename proxy_trait<E>::void_t>;
       {
         proxy_trait<E>::has_value(e, v_table)
@@ -969,13 +969,13 @@ void const* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
   requires std::same_as<void const*,
                         typename proxy_trait<Proxy>::void_t>
 {
-  return proxy_trait<Proxy>::value(vv, v_table);
+  return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
 }
 template <is_proxy Proxy>
 void* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
   requires std::same_as<void*, typename proxy_trait<Proxy>::void_t>
 {
-  return proxy_trait<Proxy>::value(vv, v_table);
+  return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
 }
 
 template <typename U>
@@ -1040,7 +1040,7 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
                         [[maybe_unused]] any_v_table* v_table) {
     return true;
   }
-  static auto value(auto& value, [[maybe_unused]] any_v_table* v_table) {
+  static auto get_proxy_ptr_in(auto& value, [[maybe_unused]] any_v_table* v_table) {
     return &value;
   }
 
@@ -1121,7 +1121,7 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
                         [[maybe_unused]] any_v_table* v_table) {
     return true;
   }
-  static auto value(auto& value, [[maybe_unused]] any_v_table* v_table) {
+  static auto get_proxy_ptr_in(auto& value, [[maybe_unused]] any_v_table* v_table) {
     return &value;
   }
 
@@ -1175,7 +1175,7 @@ struct observer_trait : basic_proxy_trait<Voidness> {
                         [[maybe_unused]] any_v_table* v_table) {
     return static_cast<bool>(ptr);
   }
-  static Voidness value(const auto& ptr,
+  static Voidness get_proxy_ptr_in(const auto& ptr,
                         [[maybe_unused]] any_v_table* v_table) {
     return ptr;
   }
@@ -1262,7 +1262,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     delete_(v_table_to, old);
   }
 
-  static void* value(const auto& ptr, [[maybe_unused]] any_v_table* v_table) {
+  static void* get_proxy_ptr_in(const auto& ptr, [[maybe_unused]] any_v_table* v_table) {
     return ptr.ptr;
   }
   static bool has_value(const auto& ptr,
@@ -1337,9 +1337,9 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     to = shared{p, v_table->delete_};
   }
 
-  static void const* value(const auto& ptr,
+  static void const* get_proxy_ptr_in(const auto& v,
                            [[maybe_unused]] any_v_table* v_table) {
-    return ptr.get();
+    return v.get();
   }
   static bool has_value(const auto& ptr,
                         [[maybe_unused]] any_v_table* v_table) {
@@ -1391,7 +1391,7 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
     return weak{};
   }
 
-  static void const* value([[maybe_unused]] const auto& ptr,
+  static void const* get_proxy_ptr_in([[maybe_unused]] const auto& ptr,
                            [[maybe_unused]] any_v_table* v_table) {
     return nullptr;
   }
@@ -1686,7 +1686,7 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
   }
 
   template <typename V>
-  static void* value(V&& v, [[maybe_unused]] any_v_table* v_table) {
+  static void* get_proxy_ptr_in(V&& v, [[maybe_unused]] any_v_table* v_table) {
     if (!v_table) return nullptr;
     auto model_size = v_table->model_size;
     return visit_value(
