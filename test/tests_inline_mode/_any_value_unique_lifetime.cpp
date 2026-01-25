@@ -91,15 +91,15 @@ TEST_CASE("value lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_void_data_ptr(u) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_void_data_ptr(u2) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<value>>(std::move(u3));
-      CHECK(get_void_data_ptr(u3) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -113,12 +113,12 @@ TEST_CASE("value lifetime") {
       CHECK(X::tracker_ == 1);
       auto v2 = v;
       CHECK(X::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(v2))() == "hallo");
       v2 = X{"world!"};
       CHECK(X::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(v2))() == "world!");
     }
@@ -132,7 +132,7 @@ TEST_CASE("value lifetime") {
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any<value>>(v);
       CHECK(X::tracker_ == 2);
-      CHECK(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(*v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(*v2))() == "hallo");
     }
@@ -184,12 +184,12 @@ TEST_CASE("value lifetime small object") {
       CHECK(Y::tracker_ == 1);
       auto v2 = v;
       CHECK(Y::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(v2))() == 42);
       v2 = Y{100};
       CHECK(Y::tracker_ == 2);
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(v2))() == 100);
     }
@@ -203,7 +203,7 @@ TEST_CASE("value lifetime small object") {
       CHECK(Y::tracker_ == 1);
       auto v2 = clone_to<any<value>>(v);
       CHECK(Y::tracker_ == 2);
-      CHECK(get_void_data_ptr(*v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(*v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(*v2))() == 42);
     }
@@ -241,11 +241,11 @@ TEST_CASE("value lifetime trivial object") {
       any<value> v{std::in_place_type<int>, 42};
       CHECK((*unerase_cast<int>(v)) == 42);
       auto v2 = v;
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(v2)) == 42);
       v2 = int{100};
-      CHECK(get_void_data_ptr(v2) != get_void_data_ptr(v));
+      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(v2)) == 100);
     }
@@ -281,15 +281,15 @@ TEST_CASE("unique lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_void_data_ptr(u) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_void_data_ptr(u2) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<unique>>(std::move(u3));
-      CHECK(get_void_data_ptr(u3) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }

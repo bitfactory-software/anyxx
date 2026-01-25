@@ -38,7 +38,7 @@ TEST_CASE("any lifetime cast") {
     auto o1 = get_proxy(sc);
     [[maybe_unused]] const auto x = unerase_cast<X>(sc);
     [[maybe_unused]] const auto x1 =
-        static_cast<X const*>(get_void_data_ptr(sc));
+        static_cast<X const*>(get_proxy_ptr(sc));
     REQUIRE(x->s_ == "hallo");
   } catch (anyxx::type_mismatch_error&) {
     CHECK(false);

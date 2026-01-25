@@ -31,7 +31,7 @@ TEST_CASE("_interface_cast") {
         *borrow_as<any_get_value_i<const_observer>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << " i1: " << i1.get_value() << "\n";
-    REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(to_string_i_co));
+    REQUIRE(get_proxy_ptr(i1) == get_proxy_ptr(to_string_i_co));
 
     auto queried = borrow_as<any_unused_i<>>(to_string_i_co);
     CHECK(!queried.has_value());
@@ -47,15 +47,15 @@ TEST_CASE("_interface_cast") {
     any_get_value_i<shared> i1 = *borrow_as<any_get_value_i<shared>>(i0);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "shared i1: " << i1.get_value() << "\n";
-    REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
+    REQUIRE(get_proxy_ptr(i1) == get_proxy_ptr(i0));
 
     any_get_value_i<unique> iu1 = *clone_to<any_get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
     std::cout << "shared/unique iu1: " << iu1.get_value() << "\n";
-    REQUIRE(get_void_data_ptr(iu1) != get_void_data_ptr(i0));
+    REQUIRE(get_proxy_ptr(iu1) != get_proxy_ptr(i0));
 
     any_set_value_i<unique> sv0 = *clone_to<any_set_value_i<unique>>(iu1);
-    REQUIRE(get_void_data_ptr(sv0) != get_void_data_ptr(i0));
+    REQUIRE(get_proxy_ptr(sv0) != get_proxy_ptr(i0));
     REQUIRE(sv0.get_value() == 3.14);
     std::cout << "shared/unique sv0: " << sv0.get_value() << "\n";
     sv0.set_value(sv0.get_value() * 2);
@@ -101,16 +101,16 @@ TEST_CASE("_interface_cast") {
 
     REQUIRE(i1.get_value() == 3.14);
     std::cout << "unique i1: " << i1.get_value() << "\n";
-    REQUIRE(get_void_data_ptr(i1) != get_void_data_ptr(i0));
+    REQUIRE(get_proxy_ptr(i1) != get_proxy_ptr(i0));
 
     auto i1c = clone_to<any_get_value_i<unique>>(i0);
 
     REQUIRE(i1c->get_value() == 3.14);
     std::cout << "unique i1c: " << i1c->get_value() << "\n";
-    REQUIRE(get_void_data_ptr(*i1c) != get_void_data_ptr(i0));
+    REQUIRE(get_proxy_ptr(*i1c) != get_proxy_ptr(i0));
 
     auto i1d = move_to<any_to_string_i<unique>>(std::move(*i1c));
-    REQUIRE(get_void_data_ptr((i1d)));
+    REQUIRE(get_proxy_ptr((i1d)));
 #pragma warning(push)
 #pragma warning(disable : 26800)
     REQUIRE(!get_proxy(*i1c));  // moved!
@@ -118,7 +118,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(i1d.to_string() == "3.140000");
 
     auto i1e = move_to<any_get_value_i<shared>>(std::move(i1d));
-    REQUIRE(get_void_data_ptr(i1e));
+    REQUIRE(get_proxy_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)
     REQUIRE(!get_proxy(i1d));  //NOLINT

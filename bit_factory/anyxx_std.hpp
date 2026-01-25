@@ -95,7 +95,7 @@ struct function<R(Args...)> : emtpty_trait {
   using v_table_t = function_v_table<R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R {
-    return get_v_table(self)->f_(get_void_data_ptr(self),
+    return get_v_table(self)->f_(get_proxy_ptr(self),
                                  std::forward<Args>(args)...);
   }
 };

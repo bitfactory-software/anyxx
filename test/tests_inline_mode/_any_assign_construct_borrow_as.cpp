@@ -16,11 +16,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t(s1);
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;  // NOLINT
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};// NOLINT
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<mutable_observer>;
@@ -28,11 +28,11 @@ TEST_CASE("assign construct borrow_as") {
     auto vv1 = from_t(s1);
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<mutable_observer>;
@@ -40,11 +40,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t(s1);
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;// NOLINT
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};// NOLINT
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<shared>;
@@ -52,11 +52,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t(std::make_shared<std::string>(s1));
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<unique>;
@@ -64,11 +64,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{std::make_unique<std::string>(s1)};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<unique>;
@@ -76,11 +76,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{std::make_unique<std::string>(s1)};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<shared>;
@@ -89,11 +89,11 @@ TEST_CASE("assign construct borrow_as") {
     auto sp = std::make_shared<std::string>(s1);
     auto vv1 = from_t{sp};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;// NOLINT
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};// NOLINT
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<weak>;
@@ -103,11 +103,11 @@ TEST_CASE("assign construct borrow_as") {
     std::weak_ptr<std::string> wp = sp;
     auto vv1 = from_t{wp};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;// NOLINT
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};// NOLINT
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<shared>;
@@ -115,11 +115,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{std::make_shared<std::string>(s1)};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*lock(*vv2)));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*lock(*vv2)));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(*lock(vv3)) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(*lock(vv3)) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(*lock(vv4)) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(*lock(vv4)) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<value>;
@@ -127,11 +127,11 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{s1};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
   {
     using from_t = any<value>;
@@ -139,10 +139,10 @@ TEST_CASE("assign construct borrow_as") {
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{s1};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_void_data_ptr(vv1) == get_void_data_ptr(*vv2));
+    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_void_data_ptr(vv3) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
     to_t vv4{vv1};
-    CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
+    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
   }
 }

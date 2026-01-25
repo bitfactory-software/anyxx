@@ -318,13 +318,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     } else {                                                                   \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return get_v_table(std::forward<Self>(self))                           \
-            ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))          \
+            ->name(anyxx::get_proxy_ptr(std::forward<Self>(self))          \
                        __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(          \
                                         a, _sig, __VA_ARGS__)));               \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             get_v_table(std::forward<Self>(self))                              \
-                ->name(anyxx::get_void_data_ptr(std::forward<Self>(self))      \
+                ->name(anyxx::get_proxy_ptr(std::forward<Self>(self))      \
                            __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(      \
                                             a, _sig, __VA_ARGS__))),           \
             std::forward<Self>(self));                                         \
@@ -965,14 +965,14 @@ bool has_data(Proxy const& vv, any_v_table* v_table) {
   // cppcheck-suppress-end [accessMoved]
 }
 template <is_proxy Proxy>
-void const* get_void_data_ptr(Proxy const& vv, any_v_table* v_table)
+void const* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
   requires std::same_as<void const*,
                         typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::value(vv, v_table);
 }
 template <is_proxy Proxy>
-void* get_void_data_ptr(Proxy const& vv, any_v_table* v_table)
+void* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
   requires std::same_as<void*, typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::value(vv, v_table);
@@ -989,13 +989,13 @@ auto unchecked_unerase_cast(void* p) {
 
 template <typename U, is_proxy Proxy>
 auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table) {
-  return unchecked_unerase_cast<U>(get_void_data_ptr(o, v_table));
+  return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
 template <typename U, is_proxy Proxy>
 auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table)
   requires(!is_const_data<Proxy>)
 {
-  return unchecked_unerase_cast<U>(get_void_data_ptr(o, v_table));
+  return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
 
 template <typename U, is_proxy Proxy>
@@ -1915,7 +1915,7 @@ template <is_proxy From>
   requires(!is_const_data<From> && !is_weak_data<From>)
 struct borrow_trait<mutable_observer, From> {
   auto operator()(const auto& from, any_v_table* v_table) const {
-    return mutable_observer{get_void_data_ptr(from, v_table)};
+    return mutable_observer{get_proxy_ptr(from, v_table)};
   }
 };
 template <is_proxy From>
@@ -1923,7 +1923,7 @@ template <is_proxy From>
 struct borrow_trait<const_observer, From> {
   auto operator()(const auto& from,
                   [[maybe_unused]] any_v_table* v_table) const {
-    return const_observer{get_void_data_ptr(from, v_table)};
+    return const_observer{get_proxy_ptr(from, v_table)};
   }
 };
 template <>
@@ -2002,7 +2002,7 @@ concept cloneable_to = is_proxy<To> && proxy_trait<To>::is_owner;
 template <is_proxy To, is_proxy From>
   requires cloneable_to<To>
 To clone_to(From const& from, any_v_table* v_table) {
-  return proxy_trait<To>::clone_from(get_void_data_ptr(from, v_table),
+  return proxy_trait<To>::clone_from(get_proxy_ptr(from, v_table),
                                            v_table);
 }
 
@@ -2204,7 +2204,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   template <is_any Friend>
   friend inline decltype(auto) move_proxy(Friend&& any);
   template <is_any Friend>
-  friend inline auto get_void_data_ptr(Friend const& any);
+  friend inline auto get_proxy_ptr(Friend const& any);
 
   template <is_proxy Other, typename Trait>
   friend class any;
@@ -2246,8 +2246,8 @@ inline decltype(auto) move_proxy(Any&& any) {
   return std::move(any.proxy_);
 }
 template <is_any Any>
-inline auto get_void_data_ptr(Any const& any) {
-  return get_void_data_ptr(get_proxy(any), get_v_table(any));
+inline auto get_proxy_ptr(Any const& any) {
+  return get_proxy_ptr(get_proxy(any), get_v_table(any));
 }
 
 template <is_any Any>
@@ -2934,7 +2934,7 @@ struct args_to_tuple<virtual_<Any>, DispatchArgs...> {
                   ActualArgs&&... actual_args) {
     return args_to_tuple<DispatchArgs...>{}(
         std::tuple_cat(std::forward<T>(dispatch_args),
-                       std::make_tuple(get_void_data_ptr(dispatch_arg))),
+                       std::make_tuple(get_proxy_ptr(dispatch_arg))),
         std::forward<ActualArgs>(actual_args)...);
   }
 };
@@ -3138,7 +3138,7 @@ struct dispatch<R(Args...)> {
       if (!target)
         return std::invoke(default_, any, std::forward<Other>(other)...);
       auto erased_function = reinterpret_cast<erased_function_t>(target);
-      return std::invoke(erased_function, get_void_data_ptr(any),
+      return std::invoke(erased_function, get_proxy_ptr(any),
                          std::forward<Other>(other)...);
     }
   };
