@@ -5,11 +5,11 @@
 namespace example_2d {
 
 // ANY(has_equal,
-//     (ANY_FN_DEFAULTED(bool, is_equal, (anyxx::self const&), const,
+//     (ANY_FN_DEF(bool, is_equal, (anyxx::self const&), const,
 //                           [&x](T const& y) { return x == y; })), )
 
 TRAIT(has_equal,
-      (ANY_FN_DEFAULTED(bool, is_equal, (anyxx::self const&), const,
+      (ANY_FN_DEF(bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
 template <typename Box = anyxx::shared_const>
@@ -39,12 +39,12 @@ TEST_CASE("example 2da any_has_equal") {
 namespace example_2d {
 
 TRAIT_(has_plus, has_equal,
-      (ANY_FN_DEFAULTED(anyxx::self, plus, (anyxx::self const&), const,
+      (ANY_FN_DEF(anyxx::self, plus, (anyxx::self const&), const,
                             ([&x](T const& y) {
                               return anyxx::trait_as<has_plus>(x) +
                                      anyxx::trait_as<has_plus>(y);
                             })),
-       ANY_OP_DEFAULTED(anyxx::self, +, plus_op, (anyxx::self const&), const,
+       ANY_OP_DEF(anyxx::self, +, plus_op, (anyxx::self const&), const,
                         ([&x](T const& y) { return x + y; }))))
 
 template <typename Box = anyxx::value>

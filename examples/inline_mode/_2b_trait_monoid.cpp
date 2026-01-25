@@ -17,32 +17,31 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX(monoid,
-         (ANY_FN_DEFAULTED(anyxx::self, id, (), const,
-                               []() { return T{}; }),
-          ANY_OP_DEFAULTED(anyxx::self, +, op, (anyxx::self const&), const,
-                           [&x](auto const& r) {
-                             std::println("op-default {}", typeid(T).name());
-                             auto self = anyxx::trait_as<monoid>(x);
-                             return self | (std::vector{anyxx::trait_as<monoid>(
-                                               r)});  // NOLINT
+         (ANY_FN_DEF(anyxx::self, id, (), const, []() { return T{}; }),
+          ANY_OP_DEF(anyxx::self, +, op, (anyxx::self const&), const,
+                     [&x](auto const& r) {
+                       std::println("op-default {}", typeid(T).name());
+                       auto self = anyxx::trait_as<monoid>(x);
+                       return self | (std::vector{anyxx::trait_as<monoid>(
+                                         r)});  // NOLINT
+                     }),
+          ANY_OP_DEF(anyxx::self, |, concat,
+                     ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                                anyxx::const_observer> const&)),
+                     const,
+                     [&x](const auto& r) {
+                       std::println("concat-default {}", typeid(T).name());
+                       auto self = anyxx::trait_as<monoid>(x);
+                       return std::ranges::fold_left(
+                           r | std::views::transform([](auto const& y) {
+                             return anyxx::trait_as<monoid>(y);
                            }),
-          ANY_OP_DEFAULTED(
-              anyxx::self, |, concat,
-              ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                         anyxx::const_observer> const&)),
-              const,
-              [&x](const auto& r) {
-                std::println("concat-default {}", typeid(T).name());
-                auto self = anyxx::trait_as<monoid>(x);
-                return std::ranges::fold_left(
-                    r | std::views::transform([](auto const& y) {
-                      return anyxx::trait_as<monoid>(y);
-                    }),
-                    self,
-                    [&](auto const& m1, auto const& m2) { return m1 + m2; });
-              }),
-          ANY_FN_DEFAULTED(bool, equal_to, (anyxx::self const&), const,
-                               ([&x](auto const& r) { return x == r; }))),
+                           self, [&](auto const& m1, auto const& m2) {
+                             return m1 + m2;
+                           });
+                     }),
+          ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
+                     ([&x](auto const& r) { return x == r; }))),
          (template <typename Box> friend bool operator==(
              anyxx::any<Box, monoid> const& l,
              anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))
@@ -81,10 +80,10 @@ void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
   auto c2 = (m | r) ==
             std::ranges::fold_left(
                 r, m, [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
-                                         return m1 + m2;
-                                       });
+                  return m1 + m2;
+                });
   CHECK(c2);
- }
+}
 
 anyxx::any_forward_range<any_monoid<anyxx::value>, any_monoid<anyxx::value>,
                          anyxx::value>
@@ -121,28 +120,28 @@ TEST_CASE("example 2b monoid a") {
   test_monoid<any<by_val<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<by_val<int>, monoid>>{{2}, {3}});
 }
- TEST_CASE("example 2b monoid b") {
-   using namespace example_2b;
-   using namespace std::string_literals;
-   using namespace anyxx;
+TEST_CASE("example 2b monoid b") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
 
-   test_monoid<by_val<std::string>::as<monoid>>(
-       trait_as<monoid>("1"s),
-       std::vector<by_val<std::string>::as<monoid>>{{"2"s}, {"3"s}});
- }
- TEST_CASE("example 2b monoid c") {
-   using namespace example_2b;
-   using namespace std::string_literals;
-   using namespace anyxx;
+  test_monoid<by_val<std::string>::as<monoid>>(
+      trait_as<monoid>("1"s),
+      std::vector<by_val<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+}
+TEST_CASE("example 2b monoid c") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
 
-   test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(true));
- }
- TEST_CASE("example 2b monoid d") {
-   using namespace example_2b;
-   using namespace std::string_literals;
-   using namespace anyxx;
+  test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(true));
+}
+TEST_CASE("example 2b monoid d") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
 
-   test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(false));
- }
+  test_monoid<any_monoid<anyxx::value>>("1"s, make_a_range(false));
+}
 
 #endif

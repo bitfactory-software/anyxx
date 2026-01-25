@@ -19,9 +19,9 @@ struct custom {
 
 struct value_has_open_dispatch {};
 ANY(value,
-    (ANY_FN_DEFAULTED(std::string, to_string, (), const,
+    (ANY_FN_DEF(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); }),
-     ANY_FN_DEFAULTED(void, from_string, (std::string_view), ,
+     ANY_FN_DEF(void, from_string, (std::string_view), ,
                           [&x](std::string_view sv) -> void {
                             std::stringstream ss{std::string{sv},
                                                  std::ios_base::in};

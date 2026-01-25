@@ -22,7 +22,7 @@ ANY(map_i_to_string_const_and_mutable,
 ANY(map_i_to_string_mutable,
     (ANY_OP_EXACT(std::string&, [], (std::size_t), )), )
 ANY_(map_i_to_string_const_derived_mutable, map_i_to_string_mutable,
-     (ANY_OP_EXACT_OVERLOAD_DEFAULTED(
+     (ANY_OP_EXACT_OVERLOAD_DEF(
          std::string const&, [], subscript, (std::size_t), const,
          [&x](std::size_t i) -> std::string const& { return x.at(i); })), )
 

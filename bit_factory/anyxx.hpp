@@ -568,10 +568,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_FN_(, ret, name, name, true, const_,                \
               (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
               _detail_EXPAND params)
-#define ANY_FN_DEFAULTED(ret, name, params, const_, ...)   \
+#define ANY_FN_DEF(ret, name, params, const_, ...)   \
   ANY_FN_(, ret, name, name, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
-#define ANY_FN_DEFAULTED_EXACT(ret, name, params, const_, ...) \
+#define ANY_FN_DEF_EXACT(ret, name, params, const_, ...) \
   ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__),      \
               _detail_EXPAND params)
 #define ANY_FN(ret, name, params, const_) \
@@ -589,7 +589,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
 #define ANY_OP(ret, op, params, const_) \
   ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_DEFAULTED(ret, op, name, params, const_, ...)          \
+#define ANY_OP_DEF(ret, op, name, params, const_, ...)          \
   ANY_FN_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
@@ -598,7 +598,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT(ret, op, params, const_)                                  \
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
                          const_)
-#define ANY_OP_EXACT_DEFAULTED(ret, op, name, params, const_, ...)   \
+#define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)   \
   ANY_FN_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
               _detail_EXPAND params)
 
@@ -608,7 +608,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
       ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-#define ANY_OP_EXACT_OVERLOAD_DEFAULTED(ret, op, name, params, const_, ...)    \
+#define ANY_OP_EXACT_OVERLOAD_DEF(ret, op, name, params, const_, ...)    \
   ANY_FN_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
               (__VA_ARGS__), _detail_EXPAND params)
 

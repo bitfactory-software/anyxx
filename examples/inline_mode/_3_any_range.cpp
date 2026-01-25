@@ -23,14 +23,14 @@ anyxx::any_forward_range<int, int, anyxx::value> a_range_value(bool use_list) {
 }
 
 TRAIT(stringable,
-      (ANY_FN_DEFAULTED(std::string, to_string, (), const,
+      (ANY_FN_DEF(std::string, to_string, (), const,
                             [&x]() { return std::format("{}", x); })))
 
 template <typename Box>
 using any_stringable = anyxx::any<Box, stringable>;
 
 ANY(node,
-    (ANY_FN_DEFAULTED(
+    (ANY_FN_DEF(
         anyxx::self, sum,
         ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                    anyxx::const_observer> const &)),

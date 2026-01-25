@@ -48,7 +48,7 @@ TEST_CASE("factory2") {
 }
 
 ANY(stringable,
-    (ANY_FN_DEFAULTED(std::string, to_string, (), const,
+    (ANY_FN_DEF(std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); })),
     )
 

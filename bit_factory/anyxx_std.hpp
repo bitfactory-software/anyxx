@@ -7,12 +7,12 @@ namespace anyxx {
 ANY_TEMPLATE_EX(
     ((ValueType), (Reference)), forward_iterator,
     (ANY_OP(anyxx::self &, ++, (), ),
-     ANY_FN_DEFAULTED(anyxx::self, post_inc, (), ,
+     ANY_FN_DEF(anyxx::self, post_inc, (), ,
                           ([&x]() { return x++; })),
      ANY_OP(Reference, *, (), const),
-     ANY_OP_DEFAULTED(bool, ==, equal_to, (anyxx::self const &), const,
+     ANY_OP_DEF(bool, ==, equal_to, (anyxx::self const &), const,
                       ([&x](auto const &r) { return x == r; })),
-     ANY_OP_DEFAULTED(bool, !=, not_equal_to, (anyxx::self const &), const,
+     ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &), const,
                       ([&x](auto const &r) { return x != r; }))),
     anyxx::value,
     (using iterator_category = std::forward_iterator_tag;
