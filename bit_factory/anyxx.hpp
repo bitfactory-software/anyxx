@@ -866,9 +866,6 @@ concept is_proxy =
       {
         proxy_trait<E>::get_proxy_ptr_in(e, v_table)
       } -> std::convertible_to<typename proxy_trait<E>::void_t>;
-      {
-        proxy_trait<E>::has_value(e, v_table)
-      } -> std::convertible_to<bool>;
       { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
       { proxy_trait<E>::default_construct() };
       {
@@ -959,12 +956,6 @@ using unerased = proxy_trait<Proxy>::template unerased<
     std::decay_t<ConstructedWith>>;
 
 template <is_proxy Proxy>
-bool has_data(Proxy const& vv, any_v_table* v_table) {
-  // cppcheck-suppress-begin [accessMoved]
-  return proxy_trait<Proxy>::has_value(vv, v_table);
-  // cppcheck-suppress-end [accessMoved]
-}
-template <is_proxy Proxy>
 void const* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
   requires std::same_as<void const*,
                         typename proxy_trait<Proxy>::void_t>
@@ -1036,10 +1027,6 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
     return by_val<V>{};
   }
 
-  static bool has_value([[maybe_unused]] const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
-    return true;
-  }
   static auto get_proxy_ptr_in(auto& value, [[maybe_unused]] any_v_table* v_table) {
     return &value;
   }
@@ -1117,10 +1104,6 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
     return by_val<vany_variant_t>{};
   }
 
-  static bool has_value([[maybe_unused]] const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
-    return true;
-  }
   static auto get_proxy_ptr_in(auto& value, [[maybe_unused]] any_v_table* v_table) {
     return &value;
   }
@@ -1171,10 +1154,6 @@ struct observer_trait : basic_proxy_trait<Voidness> {
     to = from;
   }
 
-  static bool has_value(const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
-    return static_cast<bool>(ptr);
-  }
   static Voidness get_proxy_ptr_in(const auto& ptr,
                         [[maybe_unused]] any_v_table* v_table) {
     return ptr;
@@ -1265,11 +1244,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   static void* get_proxy_ptr_in(const auto& ptr, [[maybe_unused]] any_v_table* v_table) {
     return ptr.ptr;
   }
-  static bool has_value(const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
-    return static_cast<bool>(ptr.ptr);
-  }
-
+  
   static void destroy(unique& u, any_v_table* v_table) {
     assert(v_table || !u.ptr);
     if (v_table) delete_(v_table, u.ptr);
@@ -1341,11 +1316,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
                            [[maybe_unused]] any_v_table* v_table) {
     return v.get();
   }
-  static bool has_value(const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
-    return static_cast<bool>(ptr);
-  }
-
+  
   template <typename ConstructedWith>
   struct unerased_impl {
     using type = std::decay_t<ConstructedWith>;
@@ -1395,11 +1366,7 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
                            [[maybe_unused]] any_v_table* v_table) {
     return nullptr;
   }
-  static bool has_value(const auto& ptr,
-                        [[maybe_unused]] any_v_table* v_table) {
-    return !ptr.expired();
-  }
-
+  
   template <typename ConstructedWith>
   using unerased = std::decay_t<typename ConstructedWith::element_type>;
 
@@ -1698,10 +1665,7 @@ struct proxy_trait<value> : basic_proxy_trait<value> {
                   }},
         std::forward<V>(v), model_size);
   }
-  static bool has_value(const auto& v, any_v_table* v_table) {
-    return value(v, v_table) != nullptr;
-  }
-
+  
   template <typename ConstructedWith>
   using unerased = ConstructedWith;
 
@@ -2227,12 +2191,6 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   }
 };
 
-template <is_any Any>
-bool has_data(Any const& any) {
-  // cppcheck-suppress-begin [accessMoved]
-  return has_data(get_proxy(any), get_v_table(any));
-  // cppcheck-suppress-end [accessMoved]
-}
 template <is_any Any>
 inline auto& get_proxy(Any const& any) {
   return any.proxy_;

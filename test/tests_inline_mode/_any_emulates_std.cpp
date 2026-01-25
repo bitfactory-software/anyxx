@@ -128,7 +128,7 @@ TEST_CASE("std emulated function") {
     static_assert(!std::assignable_from<any_string_to_string_mutable<unique>,
                                         any_string_to_string_mutable<unique>>);
     any_string_to_string_mutable<unique> f2{std::move(f)};
-    REQUIRE(!has_data(f));  // NOLINT
+    REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
   }
