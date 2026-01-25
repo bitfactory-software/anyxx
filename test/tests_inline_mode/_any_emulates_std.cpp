@@ -122,7 +122,8 @@ TEST_CASE("std emulated function") {
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
-    any_string_to_string_mutable<unique> f{std::make_unique<functor_t>("hello")};
+    any_string_to_string_mutable<unique> f{
+        std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
     static_assert(!std::assignable_from<any_string_to_string_mutable<unique>,
@@ -140,10 +141,13 @@ TEST_CASE("std emulated function") {
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<cref, function<std::string(std::string const&)>> any_f_cref{f};
+    any<cref, function<std::string(std::string const&), const_>> any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
+    any<cref, function<std::string(std::string const&), mutable_>> any_f_mref{
+        f};
 
-    any<by_val<decltype(f)&>, function<std::string(std::string const&)>> any_f_by_val{f};
+    any<by_val<decltype(f)&>, function<std::string(std::string const&), const_>>
+        any_f_by_val{f};
     CHECK(any_f_by_val("static C++") == "static C++ world!");
   }
 }
