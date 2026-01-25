@@ -13,8 +13,8 @@ using circle = core::shapes::circle;
 using picture = core::shapes::picture;
 
 auto __ = collision::happened
-              .define<architecture::any_shape<anyxx::const_observer>,
-                      architecture::any_shape<anyxx::const_observer>>(
+              .define<architecture::any_shape<anyxx::cref>,
+                      architecture::any_shape<anyxx::cref>>(
                   [](auto const& lhs, auto const& rhs) {
                     return collision::fallback::intersect(lhs, rhs);
                   });

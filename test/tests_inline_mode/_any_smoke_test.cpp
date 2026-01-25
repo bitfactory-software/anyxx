@@ -91,20 +91,20 @@ ANY_MODEL_MAP((circle), drawable) {
   };  // namespace smoke_test
 };
 
-void print_any_shape_const_observer(any_shape<const_observer> const& s) {
+void print_any_shape_const_observer(any_shape<cref> const& s) {
   s.draw(position{4.0, 5.0});  // NOLINT
   std::cout << "Shape Number Of Sides: " << s.count_sides() << "\n";
   std::cout << "Shape Perimeter: " << s.perimeter() << "\n";
   std::cout << "Shape Area: " << s.area() << "\n";
 }
 void print_any_callable_shape_const_observer(
-    const any_callable_shape<const_observer> s) {
+    const any_callable_shape<cref> s) {
   print_any_shape_const_observer(s);
   std::cout << s("Shape type = ") << "\n";
 }
 
 // using shape_double_base_error = any_shape<
-// const_observer, bases<
+// cref, bases<
 // any_shape, any_shape > >; //should not compile! void
 // should_not_compile(shape_double_base_error s) {}//should not compile!
 
@@ -112,7 +112,7 @@ void print_any_callable_shape_const_observer(
 
 using namespace smoke_test;
 
-TEST_CASE("dynamic v_table const_observer") {
+TEST_CASE("dynamic v_table cref") {
   circle c{12.3};
   square s{32};
   rectangle r{12, 9};  // NOLINT
@@ -125,24 +125,24 @@ TEST_CASE("dynamic v_table const_observer") {
   print_any_callable_shape_const_observer(r);
   print_any_callable_shape_const_observer(p);
 
-  using erased_const_observer = const_observer;
+  using erased_const_observer = cref;
   static_assert(std::is_base_of_v<any<erased_const_observer>::v_table_t,
-                                  any_callable_shape<const_observer>::v_table_t>);
-  static_assert(std::is_base_of_v<any_shape<const_observer>::v_table_t,
-                                  any_callable_shape<const_observer>::v_table_t>);
-  static_assert(std::derived_from<any_callable_shape<const_observer>::v_table_t,
-                                  any_shape<const_observer>::v_table_t>);
+                                  any_callable_shape<cref>::v_table_t>);
+  static_assert(std::is_base_of_v<any_shape<cref>::v_table_t,
+                                  any_callable_shape<cref>::v_table_t>);
+  static_assert(std::derived_from<any_callable_shape<cref>::v_table_t,
+                                  any_shape<cref>::v_table_t>);
   auto a_circle = circle{33.3};
-  any_callable_shape<const_observer> any_callable_shape_onst_observer_circle1{
+  any_callable_shape<cref> any_callable_shape_onst_observer_circle1{
       a_circle};
-  any_callable_shape<const_observer> any_callable_shape_onst_observer_circle2{
+  any_callable_shape<cref> any_callable_shape_onst_observer_circle2{
       a_circle};
 
-  auto o1 = erased<const_observer>(c);
-  [[maybe_unused]] const_observer o2 = o1;
+  auto o1 = erased<cref>(c);
+  [[maybe_unused]] cref o2 = o1;
 
   {
-    using any_drawable_const_observer = any_drawable<const_observer>;
+    using any_drawable_const_observer = any_drawable<cref>;
     any_drawable_const_observer sb1;
     any_drawable_const_observer sb2{c};
     sb1 = sb2;
@@ -161,43 +161,43 @@ TEST_CASE("dynamic v_table const_observer") {
 
   //    any< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  [[maybe_unused]] anyxx::any<const_observer> base_shape =
+  [[maybe_unused]] anyxx::any<cref> base_shape =
       any_callable_shape_onst_observer_circle1;
-  [[maybe_unused]] anyxx::any<const_observer> base_shapeX =
+  [[maybe_unused]] anyxx::any<cref> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
-  REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));
-  REQUIRE(is_derived_from<any_callable_shape<const_observer>>(base_shape));
-  REQUIRE(is_derived_from<any_callable_shape<const_observer>>(
+  REQUIRE(is_derived_from<any_callable_shape<cref>>(base_shape));
+  REQUIRE(is_derived_from<any_callable_shape<cref>>(base_shape));
+  REQUIRE(is_derived_from<any_callable_shape<cref>>(
       any_callable_shape_onst_observer_circle2));
-  REQUIRE(is_derived_from<any_callable_shape<const_observer>>(
+  REQUIRE(is_derived_from<any_callable_shape<cref>>(
       any_callable_shape_onst_observer_circle2));
-  static_assert(std::derived_from<any_callable_shape<const_observer>::v_table_t,
-                                  any_shape<const_observer>::v_table_t>);
-  static_assert(std::derived_from<any_callable_shape<const_observer>::v_table_t,
-                                  any_shape<const_observer>::v_table_t>);
-  REQUIRE(anyxx::downcast_to<any_callable_shape<const_observer>>(base_shape));
-  REQUIRE(anyxx::downcast_to<any_callable_shape<const_observer>>(
+  static_assert(std::derived_from<any_callable_shape<cref>::v_table_t,
+                                  any_shape<cref>::v_table_t>);
+  static_assert(std::derived_from<any_callable_shape<cref>::v_table_t,
+                                  any_shape<cref>::v_table_t>);
+  REQUIRE(anyxx::downcast_to<any_callable_shape<cref>>(base_shape));
+  REQUIRE(anyxx::downcast_to<any_callable_shape<cref>>(
       any_callable_shape_onst_observer_circle2));
 
   if (auto downcasted_shape =
-          anyxx::downcast_to<any_callable_shape<const_observer>>(base_shape)) {
+          anyxx::downcast_to<any_callable_shape<cref>>(base_shape)) {
     print_any_callable_shape_const_observer(*downcasted_shape);
   } else {
     FAIL("downcast_to failed");
   }
 
-  any_shape<const_observer> shape_circle_base =
+  any_shape<cref> shape_circle_base =
       any_callable_shape_onst_observer_circle1;
   {
     auto any_shape_is_circle =
-        anyxx::unchecked_downcast_to<any_callable_shape<const_observer>>(
+        anyxx::unchecked_downcast_to<any_callable_shape<cref>>(
             shape_circle_base);
     print_any_callable_shape_const_observer(any_shape_is_circle);
   }
   {
     auto any_shape_is_circle =
-        anyxx::downcast_to<any_callable_shape<const_observer>>(
+        anyxx::downcast_to<any_callable_shape<cref>>(
             shape_circle_base);
     REQUIRE(any_shape_is_circle);
     print_any_callable_shape_const_observer(*any_shape_is_circle);
@@ -239,7 +239,7 @@ TEST_CASE("dynamic any shared") {
 }
 
 namespace {
-void print_any_shape_co(any_shape<const_observer> const& s) {
+void print_any_shape_co(any_shape<cref> const& s) {
   s.draw(position{.x = 1, .y = 2});
 }
 
@@ -255,6 +255,6 @@ TEST_CASE("dynamic any unique") {
   REQUIRE_THAT(unerased_circle->perimeter(),
                Catch::Matchers::WithinAbs(77.2, 77.3));
 
-  static_assert(borrowable_from<const_observer, unique>);
+  static_assert(borrowable_from<cref, unique>);
   print_any_shape_co(s1);
 }

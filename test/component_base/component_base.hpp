@@ -34,7 +34,7 @@ ANY(get_value_i, (ANY_FN(double, get_value, (), const)), )
 ANY_(set_value_i, get_value_i, (ANY_FN(void, set_value, (double), )), )
 
 COMPONENT_BASE_EXPORT
-any_to_string_i<anyxx::const_observer> get_to_string_i_co();
+any_to_string_i<anyxx::cref> get_to_string_i_co();
 COMPONENT_BASE_EXPORT any_to_string_i<anyxx::shared> get_to_string_i_sc(
     double v);
 COMPONENT_BASE_EXPORT any_to_string_i<anyxx::unique> get_to_string_i_u(double v);

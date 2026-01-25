@@ -17,7 +17,7 @@ struct x_t {
   std::string s_;
 };
 
-using test_base_i_co = any_test_base_i<const_observer>;
+using test_base_i_co = any_test_base_i<cref>;
 using test_derived_i_mo = any_test_derived_i<mutable_observer>;
 
 ANY_MODEL_MAP((x_t), test_base_i){

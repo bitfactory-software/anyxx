@@ -22,7 +22,7 @@ TEST_CASE("data_erase_unerase/observer") {
     std::string s{"hallo"};
     auto mo = erased<mutable_observer>(s);
     *unchecked_unerase_cast<std::string>(mo) = "world";
-    auto co = erased<const_observer>(s);
+    auto co = erased<cref>(s);
     REQUIRE(s == "world");
     REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "world");
     REQUIRE(*unchecked_unerase_cast<std::string>(mo) == "world");
@@ -35,7 +35,7 @@ TEST_CASE("data_erase_unerase/observer") {
   {
     const std::string s{"hallo"};
     // auto mo = mutable_observer(s);  // shall not compile
-    auto co = erased<const_observer>(s);
+    auto co = erased<cref>(s);
     static_assert(std::is_const_v<std::remove_reference_t<std::string const>> ==
                   true);
     REQUIRE(*unchecked_unerase_cast<const std::string>(co) == "hallo");

@@ -44,13 +44,13 @@ TEST_CASE("any lifetime cast") {
     CHECK(false);
   }
 
-  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared>::v_table_t>);
+  static_assert(std::same_as<any_stringable<cref>::v_table_t, any_stringable<shared>::v_table_t>);
   static_assert(
-      std::derived_from<any_stringable<shared>::v_table_t, any_stringable<const_observer>::v_table_t>);
-  any_stringable<const_observer> co{sc};  // NOLINT
+      std::derived_from<any_stringable<shared>::v_table_t, any_stringable<cref>::v_table_t>);
+  any_stringable<cref> co{sc};  // NOLINT
   REQUIRE(co() == "hallo");
-  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared>::v_table_t>);
-  REQUIRE(is_derived_from<any<const_observer>>(co));
+  static_assert(std::same_as<any_stringable<cref>::v_table_t, any_stringable<shared>::v_table_t>);
+  REQUIRE(is_derived_from<any<cref>>(co));
 
   any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u() == "hallo");
@@ -64,6 +64,6 @@ TEST_CASE("any lifetime cast") {
 
   any_stringable<unique> u1{std::make_unique<X>("hallo")};
   REQUIRE(u1() == "hallo");
-  any_stringable<const_observer> co_from_u{u1};
+  any_stringable<cref> co_from_u{u1};
   REQUIRE(co_from_u() == "hallo");
 }

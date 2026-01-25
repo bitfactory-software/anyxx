@@ -26,8 +26,8 @@ struct man {
    [[nodiscard]]auto name() const { return &typeid(*this); }
 };
 auto encounter = anyxx::dispatch<encounter_result(
-    anyxx::virtual_<any_creature<anyxx::const_observer>>,
-    anyxx::virtual_<any_creature<anyxx::const_observer>>)>{};
+    anyxx::virtual_<any_creature<anyxx::cref>>,
+    anyxx::virtual_<any_creature<anyxx::cref>>)>{};
 
 auto __ = encounter.define<cat, dog>(
     [](auto const& l, auto const& r) -> encounter_result {
@@ -49,11 +49,11 @@ auto __ = encounter.define<man, man>(
     [](auto const& l, auto const& r) -> encounter_result {
       return {l.name(), encounter_action::shakes_hands_with, r.name()};
     });
-auto __ = encounter.define<man, any_creature<anyxx::const_observer>>(
+auto __ = encounter.define<man, any_creature<anyxx::cref>>(
     [](auto const& l, auto const& r) -> encounter_result {
       return {l.name(), encounter_action::strokes, r.name()};
     });
-auto __ = encounter.define<any_creature<anyxx::const_observer>, man>(
+auto __ = encounter.define<any_creature<anyxx::cref>, man>(
     [](auto const& l, man const& r) -> encounter_result {
       return {l.name(), encounter_action::nestle_to, r.name()};
     });

@@ -41,8 +41,8 @@ concept call_const = requires(functor_t const functor, std::string s) {
 };
 }  // namespace
 
-static_assert(!call_mutable<any_overloaded_function_object, const_observer>);
-static_assert(call_const<any_overloaded_function_object, const_observer>);
+static_assert(!call_mutable<any_overloaded_function_object, cref>);
+static_assert(call_const<any_overloaded_function_object, cref>);
 static_assert(call_mutable<any_overloaded_function_object, mutable_observer>);
 static_assert(!call_const<any_overloaded_function_object, mutable_observer>);
 
@@ -56,15 +56,15 @@ TEST_CASE("call_operator overload with mutable_observer") {
 
 // muy complicato... feature extravaganza... can be done, but is it worth the
 // time?
-// TEST_CASE("call_operator overload with const_observer") {
+// TEST_CASE("call_operator overload with cref") {
 //  functor_t functor{"hallo"};
-//  overloaded_function_object<const_observer> f{functor};
+//  overloaded_function_object<cref> f{functor};
 //  REQUIRE(f() == "hallo");
 //}
 
 TEST_CASE("make_overloaded_call_operator") {
   functor2_t functor{"hallo"};
 
-  auto f = any_overloaded_function_object<const_observer>{functor};
+  auto f = any_overloaded_function_object<cref>{functor};
   REQUIRE(f() == "hallo");
 }

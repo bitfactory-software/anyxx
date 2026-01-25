@@ -27,7 +27,7 @@ TRAIT_EX(monoid,
                      }),
           ANY_OP_DEF(anyxx::self, |, concat,
                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                anyxx::const_observer> const&)),
+                                                anyxx::cref> const&)),
                      const,
                      [&x](const auto& r) {
                        std::println("concat-default {}", typeid(T).name());

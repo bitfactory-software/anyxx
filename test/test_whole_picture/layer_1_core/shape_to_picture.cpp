@@ -12,7 +12,7 @@ struct shape_surface_adapter {
 }  // namespace
 
 core::shapes::picture core::shape_to_picture(
-    architecture::any_shape<anyxx::const_observer> const& shape) {
+    architecture::any_shape<anyxx::cref> const& shape) {
   core::shapes::picture picture{shape.top_left(), core::surface{shape.size()}};
   shape_surface_adapter adapter{picture};
   architecture::any_surface<anyxx::mutable_observer> surface{adapter};

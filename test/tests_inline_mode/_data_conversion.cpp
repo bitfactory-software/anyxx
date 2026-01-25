@@ -11,7 +11,7 @@ using namespace anyxx;
 TEST_CASE("_data_conversion clone") {
   std::string s1 = "hallo";
   {
-    auto vv1 = any<const_observer>(s1);
+    auto vv1 = any<cref>(s1);
     static_assert(anyxx::is_any<decltype(vv1)>);
     auto vv2 = clone_to<any<shared>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
@@ -19,7 +19,7 @@ TEST_CASE("_data_conversion clone") {
     CHECK(*unchecked_unerase_cast<std::string>(*vv2) == s1);
   }
   {
-    auto vv1 = any<const_observer>(s1);
+    auto vv1 = any<cref>(s1);
     auto vv2 = clone_to<any<unique>>(vv1);
     CHECK(get_proxy_ptr(vv1) != get_proxy_ptr(*vv2));
     CHECK(*unchecked_unerase_cast<std::string>(vv1) == s1);

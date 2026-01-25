@@ -13,22 +13,22 @@ using namespace test::component_base;
 
 namespace test::component_base {
 
-ANY(unused_i, (ANY_FN(int, fun, (), const)), const_observer)
+ANY(unused_i, (ANY_FN(int, fun, (), const)), cref)
 
 }
 
 TEST_CASE("_interface_cast") {
   {
-    any_to_string_i<const_observer> to_string_i_co{
+    any_to_string_i<cref> to_string_i_co{
         test::component_base::get_to_string_i_co()};
     auto s = to_string_i_co.to_string();
     REQUIRE(s == "3.140000");
 
-    static_assert(borrowable_from<any_get_value_i<const_observer>::proxy_t,
-                                  any_get_value_i<const_observer>::proxy_t>);
+    static_assert(borrowable_from<any_get_value_i<cref>::proxy_t,
+                                  any_get_value_i<cref>::proxy_t>);
 
-    any_get_value_i<const_observer> i1 =
-        *borrow_as<any_get_value_i<const_observer>>(to_string_i_co);
+    any_get_value_i<cref> i1 =
+        *borrow_as<any_get_value_i<cref>>(to_string_i_co);
     REQUIRE(i1.get_value() == 3.14);
     std::cout << " i1: " << i1.get_value() << "\n";
     REQUIRE(get_proxy_ptr(i1) == get_proxy_ptr(to_string_i_co));
@@ -62,10 +62,10 @@ TEST_CASE("_interface_cast") {
     REQUIRE(sv0.get_value() == 6.28);
     std::cout << "shared/unique sv0 (*2): " << sv0.get_value() << "\n";
     {
-      any_get_value_i<const_observer> get_value_i_const_observer{sv0};
+      any_get_value_i<cref> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
       auto svc =
-          downcast_to<any_set_value_i<const_observer>>(get_value_i_const_observer);
+          downcast_to<any_set_value_i<cref>>(get_value_i_const_observer);
       CHECK(svc);
       // svc->set_value(666); // does not compile!
     }

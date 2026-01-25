@@ -20,8 +20,8 @@ using namespace typed_any_test;
 TEST_CASE("typed_any/observer") {
   x_t s{"hallo"};
 
-  any_test_i<const_observer> co{s};
-  static_assert(is_any<any_test_i<const_observer>>);
+  any_test_i<cref> co{s};
+  static_assert(is_any<any_test_i<cref>>);
   CHECK_NOTHROW([&] { CHECK(unerase_cast<x_t>(co)->s_ == "hallo"); }());
   CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 
@@ -63,8 +63,8 @@ concept can_call_from_string = requires(X x, std::string_view s) {
 TEST_CASE("typed_any/observer/test_i") {
   x_t s{"hallo"};
 
-  any_test_i<const_observer> co{s};
-  static_assert(is_any<any_test_i<const_observer>>);
+  any_test_i<cref> co{s};
+  static_assert(is_any<any_test_i<cref>>);
   CHECK(unerase_cast<x_t>(co)->s_ == "hallo");
   CHECK_THROWS_AS(unerase_cast<std::string>(co), type_mismatch_error);
 

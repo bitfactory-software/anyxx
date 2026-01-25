@@ -84,16 +84,16 @@ TEST_CASE("std emulated function") {
     REQUIRE(f() == "hallo world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hallo world");
 
-    any_string_to_string_mutable<const_observer> fc{f};
+    any_string_to_string_mutable<cref> fc{f};
     REQUIRE(fc() == "hallo world");
 
     functor_t fx{"hallo world"};
-    any_string_to_string_mutable<const_observer> fc1{fx};
+    any_string_to_string_mutable<cref> fc1{fx};
     REQUIRE(fc1() == "hallo world");
 
     // does not work, because functor lives only during construction of
     // string_to_string_mutable
-    // string_to_string_mutable<const_observer> fc2{functor_t{"hallo
+    // string_to_string_mutable<cref> fc2{functor_t{"hallo
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
@@ -108,7 +108,7 @@ TEST_CASE("std emulated function") {
   }
   {
     pure_functor_t pf{};
-    any_string_to_string<const_observer> f{pf};  // works, because 'pure'
+    any_string_to_string<cref> f{pf};  // works, because 'pure'
     REQUIRE(f("hello world") == "hello world");
   }
   {
@@ -135,12 +135,12 @@ TEST_CASE("std emulated function") {
 
   {
     auto f = [](std::string const& in) { return in + " world!"; };
-    any_string_to_string<const_observer> sts{f};  // works, because pure
+    any_string_to_string<cref> sts{f};  // works, because pure
     auto hello_world = sts("hello");
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<const_observer, function<std::string(std::string const&)>> any_f{f};
+    any<cref, function<std::string(std::string const&)>> any_f{f};
     CHECK(any_f("C++") == "C++ world!");
   }
 }

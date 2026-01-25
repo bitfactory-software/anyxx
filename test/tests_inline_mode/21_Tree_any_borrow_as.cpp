@@ -42,8 +42,8 @@ auto register_deserialize_binary(std::string const& key) {
 void serialize_binary(auto const& self, std::string_view key,
                       std::ostream& archive) {
   archive << key << " "
-          << *borrow_as<any_serializeable<const_observer>>(self.left)
-          << *borrow_as<any_serializeable<const_observer>>(self.right);
+          << *borrow_as<any_serializeable<cref>>(self.left)
+          << *borrow_as<any_serializeable<cref>>(self.right);
 }
 
 struct Plus {
@@ -99,7 +99,7 @@ TEST_CASE("_21_Tree_any_borrow_as") {
   auto expr = move_to<any_node<unique>>(deserialize(archive));
   CHECK(expr.value() == 11);
   std::stringstream serialized;
-  borrow_as<any_serializeable<const_observer>>(expr)->serialize(serialized);
+  borrow_as<any_serializeable<cref>>(expr)->serialize(serialized);
   std::println("{}", serialized.str());
   auto expr2 = move_to<any_node<unique>>(deserialize(serialized));
   CHECK(expr2.value() == 11);

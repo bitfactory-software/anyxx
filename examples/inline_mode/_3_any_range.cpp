@@ -33,7 +33,7 @@ ANY(node,
     (ANY_FN_DEF(
         anyxx::self, sum,
         ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                   anyxx::const_observer> const &)),
+                                   anyxx::cref> const &)),
         const, [&x](auto const &r) {
       auto s = x;
       for (auto i : r) {

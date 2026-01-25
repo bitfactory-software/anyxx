@@ -67,5 +67,5 @@ ANY(shape, (ANY_FN(void, draw, (mutable_observed_surface), const),
 
 ANY_DISPATCH_COUNT_FWD(ARCHITECTURE_EXPORT, whole_picture::architecture, shape)
 ANY_DISPATCH_FOR_FWD(ARCHITECTURE_EXPORT,
-                     whole_picture::architecture::any_shape<anyxx::const_observer>,
+                     whole_picture::architecture::any_shape<anyxx::cref>,
                      whole_picture::architecture, shape)

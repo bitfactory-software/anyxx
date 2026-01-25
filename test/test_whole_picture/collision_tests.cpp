@@ -22,7 +22,7 @@ const core::surface cross{
     " X",
 };
 
-void draw_scene(std::vector<architecture::any_shape<const_observer>> const& shapes) {
+void draw_scene(std::vector<architecture::any_shape<cref>> const& shapes) {
   core::surface b{screen};
   architecture::any_surface<mutable_observer> s{b};
   for (auto const& shape : shapes) shape.draw(s);
@@ -30,7 +30,7 @@ void draw_scene(std::vector<architecture::any_shape<const_observer>> const& shap
   b.flush();
 }
 
-auto collision_happened(any_shape<const_observer> const& l, any_shape<const_observer> const& r) {
+auto collision_happened(any_shape<cref> const& l, any_shape<cref> const& r) {
   return collision::happened(l, r);
 }
 

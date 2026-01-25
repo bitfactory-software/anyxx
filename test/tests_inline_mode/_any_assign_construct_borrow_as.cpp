@@ -11,8 +11,8 @@ using namespace anyxx;
 TEST_CASE("assign construct borrow_as") {
   std::string s1 = "hallo";
   {
-    using from_t = any<const_observer>;
-    using to_t = any<const_observer>;
+    using from_t = any<cref>;
+    using to_t = any<cref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t(s1);
     auto vv2 = borrow_as<to_t>(vv1);
@@ -24,7 +24,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<mutable_observer>;
-    using to_t = any<const_observer>;
+    using to_t = any<cref>;
     auto vv1 = from_t(s1);
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv2 = borrow_as<to_t>(vv1);
@@ -48,7 +48,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<shared>;
-    using to_t = any<const_observer>;
+    using to_t = any<cref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t(std::make_shared<std::string>(s1));
     auto vv2 = borrow_as<to_t>(vv1);
@@ -60,7 +60,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<unique>;
-    using to_t = any<const_observer>;
+    using to_t = any<cref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{std::make_unique<std::string>(s1)};
     auto vv2 = borrow_as<to_t>(vv1);
@@ -123,7 +123,7 @@ TEST_CASE("assign construct borrow_as") {
   }
   {
     using from_t = any<val>;
-    using to_t = any<const_observer>;
+    using to_t = any<cref>;
     static_assert(borrowable_from<to_t::proxy_t, from_t::proxy_t>);
     auto vv1 = from_t{s1};
     auto vv2 = borrow_as<to_t>(vv1);

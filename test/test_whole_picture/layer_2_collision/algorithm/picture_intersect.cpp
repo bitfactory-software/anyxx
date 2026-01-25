@@ -24,7 +24,7 @@ ANY_MODEL_MAP((hitpad_picture_t), architecture::surface) {
 
 bool collision::pictures::intersect(
     core::shapes::picture const& lhs,
-    architecture::any_shape<anyxx::const_observer> const& rhs) {
+    architecture::any_shape<anyxx::cref> const& rhs) {
   hitpad_picture_t hitpad_picture{.picture = lhs, .hit = false};
   architecture::any_surface<anyxx::mutable_observer> hitpad{
       hitpad_picture};

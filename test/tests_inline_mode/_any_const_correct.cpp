@@ -29,7 +29,7 @@ struct test_interface {
 TEST_CASE("_interface_const_correct prototyping") {
   using namespace anyxx;
   static_assert(!test_trait<void*>::is_const);
-  static_assert(proxy_trait<const_observer>::is_const);
+  static_assert(proxy_trait<cref>::is_const);
   const test_interface<void const*> i1;
   REQUIRE(i1.f(1) == "const");
 
@@ -56,7 +56,7 @@ namespace {
 ANY(const_function_i, (ANY_OP(std::string, (), (), const)), )
 ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), )
 
-using const_function = any_const_function_i<const_observer>;
+using const_function = any_const_function_i<cref>;
 using mutating_function = any_mutating_function_i<mutable_observer>;
 using shared_const_function = any_const_function_i<shared>;
 using shared_mutating_function = any_mutating_function_i<shared>;
@@ -188,7 +188,7 @@ ANY_(text_i_mutable, text_i_const,
      (ANY_FN(void, set_text, (std::string const&), )), )
 }  // namespace
 
-using const_text_i = any_text_i_const<const_observer>;
+using const_text_i = any_text_i_const<cref>;
 using const_text_i_mutable = any_text_i_const<mutable_observer>;
 
 template <class C>
@@ -207,14 +207,14 @@ static_assert(can_call_get_text<const_text_i const>);
 static_assert(!can_call_set_text<const_text_i>);
 static_assert(!can_call_set_text<const_text_i const>);
 
-using mutable_text_i_const = any_text_i_mutable<const_observer>;
+using mutable_text_i_const = any_text_i_mutable<cref>;
 using mutable_text_i_mutable = any_text_i_mutable<mutable_observer>;
 static_assert(
     std::same_as<mutable_text_i_mutable::proxy_t, mutable_observer>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);
-using void_const = proxy_trait<anyxx::const_observer>::void_t;
+using void_const = proxy_trait<anyxx::cref>::void_t;
 static_assert(is_const_void<void_const>);
 using void_mutable = proxy_trait<anyxx::mutable_observer>::void_t;
 static_assert(!is_const_void<void_mutable>);
@@ -223,7 +223,7 @@ static_assert(
       is_const_void<void_mutable>));
 static_assert(!std::is_const_v<std::remove_reference_t<text_object const&&>> ||
               is_const_void<void_const>);
-static_assert(proxy_trait<const_observer>::is_const);
+static_assert(proxy_trait<cref>::is_const);
 static_assert(!proxy_trait<mutable_observer>::is_const);
 
 static_assert(std::constructible_from<mutable_text_i_mutable, text_object>);

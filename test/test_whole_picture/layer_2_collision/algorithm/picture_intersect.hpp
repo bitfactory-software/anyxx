@@ -30,5 +30,5 @@ inline bool intersect(core::shapes::picture const& lhs,
 
 bool intersect(
     core::shapes::picture const& lhs,
-    architecture::any_shape<anyxx::const_observer> const& rhs);
+    architecture::any_shape<anyxx::cref> const& rhs);
 }  // namespace whole_picture::collision::pictures

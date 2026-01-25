@@ -28,7 +28,7 @@ TRAIT_TEMPLATE(
      ANY_FN((any_forward_iterator<ValueType, Reference>), end, (), const)))
 
 template <typename ValueType, typename Reference,
-          typename Box = anyxx::const_observer>
+          typename Box = anyxx::cref>
 using any_forward_range = any<Box, forward_range<ValueType, Reference>>;
 
 template <typename A>
