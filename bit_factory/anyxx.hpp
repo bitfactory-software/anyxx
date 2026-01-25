@@ -987,9 +987,14 @@ U* unerase_cast_if(Proxy const& o, any_v_table* v_table)
 // --------------------------------------------------------------------------------
 // (un)erased data by_val
 
+static_assert(std::is_const_v<std::remove_reference_t<int const&>>);
+static_assert(!std::is_const_v<std::remove_reference_t<int&>>);
+static_assert(!std::is_const_v<std::remove_reference_t<int>>);
+
 template <typename V>
 struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
-  using void_t = mutable_void;
+  using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
+                                    const_void, mutable_void>;
   using static_dispatch_t = V;
   static constexpr bool is_constructibile_from_const = true;
   template <typename ConstructedWith>
