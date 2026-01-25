@@ -27,8 +27,6 @@ struct test::component_base::X {
   [[nodiscard]] std::string to_string() const { return s_; }
 };
 
-namespace {
-
 namespace template_test {
 
 ANY(stringable, (ANY_FN(std::string, to_string, (), const)),
@@ -48,12 +46,12 @@ ANY_MODEL_MAP((double), stringable) {
   auto to_string(double const& x) -> std::string { return std::to_string(x); };
 };
 
-}  // namespace template_test
-
 using namespace test::component_base;
 using namespace anyxx;
 
 }  // namespace
+
+using namespace template_test;
 
 ANY_META_CLASS_STATIC(int)
 ANY_META_CLASS_STATIC(double)
@@ -61,14 +59,15 @@ ANY_META_CLASS_STATIC(
     std::map<int, std::map<std::string, std::map<int, double>>>)
 ANY_META_CLASS_STATIC(std::map<std::string, std::map<int, double>>)
 
-ANY_REGISTER_MODEL((std::map<std::string, int>), map, (std::string), (int))
+ANY_REGISTER_MODEL((std::map<std::string, int>), template_test::map, (std::string), (int))
 
-ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), map,
+ANY_TEMPLATE_MODEL_MAP((std::map<std::string, int>), template_test::map,
                        ((std::string), (int))) {
   int const& at(std::map<std::string, int> const& x, std::string const& i) {
     return x.at(i);
   };
 };
+
 
 using KEY1 =
     any_recursive_map<std::string,
