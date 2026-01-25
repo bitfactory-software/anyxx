@@ -1303,13 +1303,13 @@ struct erased_data_trait<unique> : basic_erased_data_trait<unique> {
 static_assert(is_erased_data<unique>);
 
 // --------------------------------------------------------------------------------
-// erased data shared_const + weak
+// erased data shared + weak
 
-using shared_const = std::shared_ptr<void const>;
+using shared = std::shared_ptr<void const>;
 using weak = std::weak_ptr<void const>;
 
 template <>
-struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
+struct erased_data_trait<shared> : basic_erased_data_trait<shared> {
   using void_t = void const*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -1320,21 +1320,21 @@ struct erased_data_trait<shared_const> : basic_erased_data_trait<shared_const> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return shared_const{}; }
+  static auto default_construct() { return shared{}; }
   static auto clone_from(const_void data_ptr, any_v_table* v_table) {
-    return shared_const{copy_construct(v_table, data_ptr), v_table->delete_};
+    return shared{copy_construct(v_table, data_ptr), v_table->delete_};
   }
-  static void move_to(shared_const& to,
+  static void move_to(shared& to,
                       [[maybe_unused]] any_v_table* v_table_to,
-                      shared_const&& from, [[maybe_unused]] auto) {
+                      shared&& from, [[maybe_unused]] auto) {
     to = std::move(from);
   }
-  static void move_to(shared_const& to,
+  static void move_to(shared& to,
                       [[maybe_unused]] any_v_table* v_table_to, unique from,
                       any_v_table* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
-    to = shared_const{p, v_table->delete_};
+    to = shared{p, v_table->delete_};
   }
 
   static void const* value(const auto& ptr,
@@ -1423,7 +1423,7 @@ struct erased_data_trait<weak> : basic_erased_data_trait<weak> {
   }
 };
 
-static_assert(is_erased_data<shared_const>);
+static_assert(is_erased_data<shared>);
 static_assert(is_erased_data<weak>);
 
 // --------------------------------------------------------------------------------
@@ -1927,7 +1927,7 @@ struct borrow_trait<const_observer, From> {
   }
 };
 template <>
-struct borrow_trait<shared_const, shared_const> {
+struct borrow_trait<shared, shared> {
   auto operator()(const auto& from,
                   [[maybe_unused]] any_v_table* v_table) const {
     return from;
@@ -1941,7 +1941,7 @@ struct borrow_trait<weak, weak> {
   }
 };
 template <>
-struct borrow_trait<weak, shared_const> {
+struct borrow_trait<weak, shared> {
   auto operator()(const auto& from,
                   [[maybe_unused]] any_v_table* v_table) const {
     return weak{from};
@@ -1951,42 +1951,42 @@ struct borrow_trait<weak, shared_const> {
 static_assert(!borrowable_from<mutable_observer, const_observer>);
 static_assert(borrowable_from<mutable_observer, mutable_observer>);
 static_assert(borrowable_from<mutable_observer, unique>);
-static_assert(!borrowable_from<mutable_observer, shared_const>);
+static_assert(!borrowable_from<mutable_observer, shared>);
 static_assert(!borrowable_from<mutable_observer, weak>);
 static_assert(borrowable_from<mutable_observer, value>);
 
 static_assert(borrowable_from<const_observer, const_observer>);
 static_assert(borrowable_from<const_observer, mutable_observer>);
 static_assert(borrowable_from<const_observer, unique>);
-static_assert(borrowable_from<const_observer, shared_const>);
+static_assert(borrowable_from<const_observer, shared>);
 static_assert(!borrowable_from<const_observer, weak>);
 static_assert(borrowable_from<const_observer, value>);
 
-static_assert(!borrowable_from<shared_const, const_observer>);
-static_assert(!borrowable_from<shared_const, mutable_observer>);
-static_assert(!borrowable_from<shared_const, unique>);
-static_assert(borrowable_from<shared_const, shared_const>);
-static_assert(!borrowable_from<shared_const, weak>);
-static_assert(!borrowable_from<shared_const, value>);
+static_assert(!borrowable_from<shared, const_observer>);
+static_assert(!borrowable_from<shared, mutable_observer>);
+static_assert(!borrowable_from<shared, unique>);
+static_assert(borrowable_from<shared, shared>);
+static_assert(!borrowable_from<shared, weak>);
+static_assert(!borrowable_from<shared, value>);
 
 static_assert(!borrowable_from<weak, const_observer>);
 static_assert(!borrowable_from<weak, mutable_observer>);
 static_assert(!borrowable_from<weak, unique>);
-static_assert(borrowable_from<weak, shared_const>);
+static_assert(borrowable_from<weak, shared>);
 static_assert(borrowable_from<weak, weak>);
 static_assert(!borrowable_from<weak, value>);
 
 static_assert(!borrowable_from<unique, const_observer>);
 static_assert(!borrowable_from<unique, mutable_observer>);
 static_assert(!borrowable_from<unique, unique>);
-static_assert(!borrowable_from<unique, shared_const>);
+static_assert(!borrowable_from<unique, shared>);
 static_assert(!borrowable_from<unique, weak>);
 static_assert(!borrowable_from<unique, value>);
 
 static_assert(!borrowable_from<value, const_observer>);
 static_assert(!borrowable_from<value, mutable_observer>);
 static_assert(!borrowable_from<value, unique>);
-static_assert(!borrowable_from<value, shared_const>);
+static_assert(!borrowable_from<value, shared>);
 static_assert(!borrowable_from<value, weak>);
 static_assert(!borrowable_from<value, value>);
 
@@ -2008,7 +2008,7 @@ To clone_to(From const& from, any_v_table* v_table) {
 
 static_assert(!cloneable_to<mutable_observer>);
 static_assert(!cloneable_to<const_observer>);
-static_assert(cloneable_to<shared_const>);
+static_assert(cloneable_to<shared>);
 static_assert(!cloneable_to<weak>);
 static_assert(cloneable_to<unique>);
 static_assert(cloneable_to<value>);
@@ -2027,10 +2027,10 @@ template <is_erased_data X>
 inline static bool constexpr can_move_to_from<X, X> = true;
 
 template <>
-inline bool constexpr can_move_to_from<shared_const, unique> = true;
+inline bool constexpr can_move_to_from<shared, unique> = true;
 
 template <>
-inline bool constexpr can_move_to_from<weak, shared_const> = true;
+inline bool constexpr can_move_to_from<weak, shared> = true;
 
 template <voidness To, voidness From>
   requires const_correct_call<is_const_void<To>, is_const_void<From>,
@@ -2048,42 +2048,42 @@ void move_to(To& to, any_v_table* to_v_table, From&& from,
 static_assert(!moveable_from<mutable_observer, const_observer>);
 static_assert(moveable_from<mutable_observer, mutable_observer>);
 static_assert(!moveable_from<mutable_observer, unique>);
-static_assert(!moveable_from<mutable_observer, shared_const>);
+static_assert(!moveable_from<mutable_observer, shared>);
 static_assert(!moveable_from<mutable_observer, weak>);
 static_assert(!moveable_from<mutable_observer, value>);
 
 static_assert(moveable_from<const_observer, const_observer>);
 static_assert(moveable_from<const_observer, mutable_observer>);
 static_assert(!moveable_from<const_observer, unique>);
-static_assert(!moveable_from<const_observer, shared_const>);
+static_assert(!moveable_from<const_observer, shared>);
 static_assert(!moveable_from<const_observer, weak>);
 static_assert(!moveable_from<const_observer, value>);
 
-static_assert(!moveable_from<shared_const, const_observer>);
-static_assert(!moveable_from<shared_const, mutable_observer>);
-static_assert(moveable_from<shared_const, unique>);
-static_assert(moveable_from<shared_const, shared_const>);
-static_assert(!moveable_from<shared_const, weak>);
-static_assert(!moveable_from<shared_const, value>);
+static_assert(!moveable_from<shared, const_observer>);
+static_assert(!moveable_from<shared, mutable_observer>);
+static_assert(moveable_from<shared, unique>);
+static_assert(moveable_from<shared, shared>);
+static_assert(!moveable_from<shared, weak>);
+static_assert(!moveable_from<shared, value>);
 
 static_assert(!moveable_from<weak, const_observer>);
 static_assert(!moveable_from<weak, mutable_observer>);
 static_assert(!moveable_from<weak, unique>);
-static_assert(moveable_from<weak, shared_const>);
+static_assert(moveable_from<weak, shared>);
 static_assert(moveable_from<weak, weak>);
 static_assert(!moveable_from<weak, value>);
 
 static_assert(!moveable_from<unique, const_observer>);
 static_assert(!moveable_from<unique, mutable_observer>);
 static_assert(moveable_from<unique, unique>);
-static_assert(!moveable_from<unique, shared_const>);
+static_assert(!moveable_from<unique, shared>);
 static_assert(!moveable_from<unique, weak>);
 static_assert(!moveable_from<unique, value>);
 
 static_assert(!moveable_from<value, const_observer>);
 static_assert(!moveable_from<value, mutable_observer>);
 static_assert(!moveable_from<value, unique>);
-static_assert(!moveable_from<value, shared_const>);
+static_assert(!moveable_from<value, shared>);
 static_assert(!moveable_from<value, weak>);
 static_assert(moveable_from<value, value>);
 
@@ -2517,7 +2517,7 @@ struct forward_trait_to_map<Traited, self const&> {
 // --------------------------------------------------------------------------------
 // any customization traits
 
-template <is_erased_data ErasedData = shared_const>
+template <is_erased_data ErasedData = shared>
 struct default_erased_data {
   using type = ErasedData;
 };
@@ -2630,7 +2630,7 @@ std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
 template <is_any FromAny>
   requires std::same_as<typename FromAny::erased_data_t, weak>
 auto lock(FromAny const& from_interface) {
-  using to_interface_t = FromAny::template type_for<shared_const>;
+  using to_interface_t = FromAny::template type_for<shared>;
   static_assert(is_any<to_interface_t>);
   using return_t = std::optional<to_interface_t>;
   if (auto locked = get_erased_data(from_interface).lock())
@@ -2745,7 +2745,7 @@ concept is_key = is_key_impl<T>::value;
 template <template <typename...> typename Any, typename Key, typename... Args>
 class factory {
   using unique_constructor_t = std::function<Any<unique>(Args...)>;
-  using shared_const_constructor_t = std::function<Any<shared_const>(Args...)>;
+  using shared_const_constructor_t = std::function<Any<shared>(Args...)>;
   std::map<Key, unique_constructor_t> unique_factory_map_;
   std::map<Key, shared_const_constructor_t> shared_factory_map_;
 
@@ -2773,7 +2773,7 @@ class factory {
  public:
   auto register_(Key const& key, auto const& construct) {
     register_impl<unique>(unique_factory_map_, key, construct);
-    register_impl<shared_const>(shared_factory_map_, key, construct);
+    register_impl<shared>(shared_factory_map_, key, construct);
     return nullptr;
   }
   template <is_erased_data ErasedData>
@@ -2782,7 +2782,7 @@ class factory {
       return construct_impl<ErasedData>(unique_factory_map_, key,
                                         std::forward<Args>(args)...);
     } else {
-      static_assert(std::same_as<ErasedData, shared_const>);
+      static_assert(std::same_as<ErasedData, shared>);
       return construct_impl<ErasedData>(shared_factory_map_, key,
                                         std::forward<Args>(args)...);
     }

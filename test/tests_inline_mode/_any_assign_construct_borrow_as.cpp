@@ -47,7 +47,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {
-    using from_t = any<shared_const>;
+    using from_t = any<shared>;
     using to_t = any<const_observer>;
     static_assert(borrowable_from<to_t::erased_data_t, from_t::erased_data_t>);
     auto vv1 = from_t(std::make_shared<std::string>(s1));
@@ -83,8 +83,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {
-    using from_t = any<shared_const>;
-    using to_t = any<shared_const>;
+    using from_t = any<shared>;
+    using to_t = any<shared>;
     static_assert(borrowable_from<to_t::erased_data_t, from_t::erased_data_t>);
     auto sp = std::make_shared<std::string>(s1);
     auto vv1 = from_t{sp};
@@ -110,7 +110,7 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_void_data_ptr(vv4) == get_void_data_ptr(vv1));
   }
   {
-    using from_t = any<shared_const>;
+    using from_t = any<shared>;
     using to_t = any<weak>;
     static_assert(borrowable_from<to_t::erased_data_t, from_t::erased_data_t>);
     auto vv1 = from_t{std::make_shared<std::string>(s1)};

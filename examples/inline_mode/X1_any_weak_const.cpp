@@ -35,8 +35,8 @@ TEST_CASE("example X1/ weak cppreference") {
   // https://en.cppreference.com/w/cpp/memory/weak_ptr.html
   {
     auto any_widget_shared_const =
-        any_widget<shared_const>{std::make_shared<widget_a>()};
-    static_assert(borrowable_from<weak, shared_const>);
+        any_widget<shared>{std::make_shared<widget_a>()};
+    static_assert(borrowable_from<weak, shared>);
     any_widget_weak = any_widget_shared_const;
     observe(1);
   }
@@ -44,16 +44,16 @@ TEST_CASE("example X1/ weak cppreference") {
 }
 
 namespace {
-any_widget<shared_const> load_widget([[maybe_unused]] int id) {
+any_widget<shared> load_widget([[maybe_unused]] int id) {
   return std::make_shared<widget_a>();
 }
 
 static std::map<int, any_widget<weak>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
-any_widget<shared_const> make_widget(int id) {
+any_widget<shared> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
   return *lock(cache[id]).or_else(
-      [&] -> std::optional<any_widget<shared_const>> {
+      [&] -> std::optional<any_widget<shared>> {
         auto s = load_widget(id);
         cache[id] = s;
         return s;

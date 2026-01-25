@@ -57,7 +57,7 @@ ANY_SINGLETON_DECLARE(, any_stringable_factory,
 
 auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
-static_assert(std::is_constructible_v<any_stringable<shared_const>,
+static_assert(std::is_constructible_v<any_stringable<shared>,
                                       any_stringable<unique>&&>);
 }  // namespace example
 }  // namespace

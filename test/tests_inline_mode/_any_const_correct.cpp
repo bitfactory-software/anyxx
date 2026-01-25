@@ -58,8 +58,8 @@ ANY(mutating_function_i, (ANY_OP(void, (), (std::string const&), )), )
 
 using const_function = any_const_function_i<const_observer>;
 using mutating_function = any_mutating_function_i<mutable_observer>;
-using shared_const_function = any_const_function_i<shared_const>;
-using shared_mutating_function = any_mutating_function_i<shared_const>;
+using shared_const_function = any_const_function_i<shared>;
+using shared_mutating_function = any_mutating_function_i<shared>;
 
 static_assert(std::is_constructible_v<const_function, functor const>);
 static_assert(std::is_assignable_v<const_function, const_function>);
@@ -141,7 +141,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
   }
 }
 
-TEST_CASE("_interface_const_correct anyxx::shared_const") {
+TEST_CASE("_interface_const_correct anyxx::shared") {
   {
     shared_const_function cf = std::make_shared<functor>();
     static_assert(

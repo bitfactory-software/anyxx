@@ -60,7 +60,7 @@ struct pure_functor_with_context {
 TEST_CASE("std emulated function") {
   {
     auto functor = std::make_shared<pure_functor_with_context>("hallo");
-    any_string_to_string<shared_const> f{functor};
+    any_string_to_string<shared> f{functor};
     REQUIRE(f(" world") == "hallo world");
   }
   {
@@ -68,7 +68,7 @@ TEST_CASE("std emulated function") {
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<shared_const> f{std::make_shared<pure_functor_t>()};
+    any_string_to_string<shared> f{std::make_shared<pure_functor_t>()};
     REQUIRE(f("hello world") == "hello world");
   }
   {

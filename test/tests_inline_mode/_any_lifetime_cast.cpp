@@ -24,9 +24,9 @@ ANY(stringable, (ANY_OP(std::string, (), (), const)), )
 }  // namespace
 
 TEST_CASE("any lifetime cast") {
-  const any_stringable<shared_const> sc{std::make_shared<X>("hallo")};
+  const any_stringable<shared> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
-  REQUIRE(is_derived_from<any<shared_const>>(sc));
+  REQUIRE(is_derived_from<any<shared>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);
@@ -44,12 +44,12 @@ TEST_CASE("any lifetime cast") {
     CHECK(false);
   }
 
-  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
+  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared>::v_table_t>);
   static_assert(
-      std::derived_from<any_stringable<shared_const>::v_table_t, any_stringable<const_observer>::v_table_t>);
+      std::derived_from<any_stringable<shared>::v_table_t, any_stringable<const_observer>::v_table_t>);
   any_stringable<const_observer> co{sc};  // NOLINT
   REQUIRE(co() == "hallo");
-  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared_const>::v_table_t>);
+  static_assert(std::same_as<any_stringable<const_observer>::v_table_t, any_stringable<shared>::v_table_t>);
   REQUIRE(is_derived_from<any<const_observer>>(co));
 
   any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT

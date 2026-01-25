@@ -21,7 +21,7 @@ struct square {
 ANY(any_drawable, (ANY_FN(void, draw, (std::ostream&), const)))
 
 void draw(std::ostream& os,
-          std::vector<any_drawable<anyxx::shared_const>> const& drawables) {
+          std::vector<any_drawable<anyxx::shared>> const& drawables) {
     for (auto const& drawable : drawables) drawable.draw(os);
 }
 
@@ -54,16 +54,16 @@ Square
 - **Transparent storeage/lifetime management***
   - Out of the box:
     - const/mutable_observers, aka "pointer"
-    - shared_const, weak via std::shared_ptr, std::week_ptr
+    - shared, weak via std::shared_ptr, std::week_ptr
     - unique, via std::unique_ptr and type erased deleter
     - value
     - by_val
     - vany variant
   - Customizable via anyxx::erased_data_trait
   - **Safe** interchange of **lifetime**  
-    - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared_const -> const_observer, mutable_observer -> const_observer
-    - **move_to**: value -> unique -> shared_const, unique -> value
-    - **clone_to**: ..._observer -> shared_const -> unique -> value
+    - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared -> const_observer, mutable_observer -> const_observer
+    - **move_to**: value -> unique -> shared, unique -> value
+    - **clone_to**: ..._observer -> shared -> unique -> value
 - **Extension member*
   - To **add members at load time**
   - Has access performance on par with *virtual* function getter

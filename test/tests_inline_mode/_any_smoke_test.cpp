@@ -206,7 +206,7 @@ TEST_CASE("dynamic v_table const_observer") {
   print_any_shape_const_observer(any_shape<mutable_observer>{p});
 }
 
-TEST_CASE("dynamic any shared_const") {
+TEST_CASE("dynamic any shared") {
   auto c = std::make_shared<circle>(12.3);
   auto s = std::make_shared<square>(32);
   auto r = std::make_shared<rectangle>(12, 9);
@@ -214,14 +214,14 @@ TEST_CASE("dynamic any shared_const") {
   std::cout << "print_shape_vv ********************************\n";
 
   using typed_circle_shape_shared_const =
-      typed_any<circle, any_shape<shared_const>>;
+      typed_any<circle, any_shape<shared>>;
   typed_circle_shape_shared_const sc_typed{c};
   auto& c1 = sc_typed;
   REQUIRE_THAT(c1->perimeter(), Catch::Matchers::WithinAbs(77.2, 77.3));
   static_assert(std::same_as<typed_circle_shape_shared_const::erased_data_t,
-                             shared_const>);
+                             shared>);
   static_assert(is_typed_any<decltype(sc_typed)>);
-  any_shape<shared_const> circle_shape_vv{sc_typed};
+  any_shape<shared> circle_shape_vv{sc_typed};
   auto unerased_circle = unerase_cast<circle const>(circle_shape_vv);
   REQUIRE_THAT(unerased_circle->perimeter(),
                Catch::Matchers::WithinAbs(77.2, 77.3));

@@ -13,7 +13,7 @@ namespace {
 
 ANY(node, (ANY_FN(int, value, (), const),
              ANY_FN(std::string, as_forth, (), const),
-             ANY_FN(std::string, as_lisp, (), const)), shared_const)
+             ANY_FN(std::string, as_lisp, (), const)), shared)
 
 struct Plus {
   Plus(any_node<> left, any_node<> right)

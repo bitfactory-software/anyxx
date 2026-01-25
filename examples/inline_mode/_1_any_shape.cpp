@@ -65,8 +65,7 @@ struct regular_polygon {
 ANY(drawable, (ANY_FN(void, draw, (std::ostream&, position), const)), )
 
 ANY_(shape, drawable,
-     (ANY_FN(int, count_sides, (), const),
-      ANY_FN(double, area, (), const),
+     (ANY_FN(int, count_sides, (), const), ANY_FN(double, area, (), const),
       ANY_FN(double, perimeter, (), const)), )
 
 ANY_MODEL_MAP((std::string), drawable) {
@@ -76,17 +75,16 @@ ANY_MODEL_MAP((std::string), drawable) {
 };
 
 void draw(std::ostream& os,
-          std::vector<any_drawable<shared_const>> const& any_drawables) {
+          std::vector<any_drawable<shared>> const& any_drawables) {
   float x = 0.0, y = 0.0;
   for (auto const& any_drawable : any_drawables)
     any_drawable.draw(os, position{x++, y++});
 }
 
-void process(
-    std::ostream& os,
-    std::vector<any_drawable<shared_const>> const& any_drawables,
-    std::function<void(std::ostream&, any_drawable<shared_const> const&)> const&
-        command) {
+void process(std::ostream& os,
+             std::vector<any_drawable<shared>> const& any_drawables,
+             std::function<void(std::ostream&,
+                                any_drawable<shared> const&)> const& command) {
   for (auto const& any_drawable : any_drawables) command(os, any_drawable);
 }
 
@@ -109,13 +107,13 @@ TEST_CASE("example 1/1") {
 }
 
 TEST_CASE("example 1/2 upcast, downcast") {
-  std::vector<any_shape<shared_const>> any_shapes{
+  std::vector<any_shape<shared>> any_shapes{
       std::make_shared<circle>(12.3),
       std::make_shared<square>(32),
       std::make_shared<rectangle>(12, 9),
       std::make_shared<regular_polygon>(4, 32),
   };
-  std::vector<any_drawable<shared_const>> any_drawables;
+  std::vector<any_drawable<shared>> any_drawables;
   any_drawables.insert(any_drawables.begin(), any_shapes.begin(),
                        any_shapes.end());
   any_drawables.emplace_back(std::make_shared<std::string>("hello world"));
@@ -131,9 +129,9 @@ TEST_CASE("example 1/2 upcast, downcast") {
 
   std::stringstream os2;
   process(os2, any_drawables,
-          [](std::ostream& os, any_drawable<shared_const> const& drawable) {
-            downcast_to<any_shape<shared_const>>(drawable).and_then(
-                [&](any_shape<shared_const> const& shape) {
+          [](std::ostream& os, any_drawable<shared> const& drawable) {
+            downcast_to<any_shape<shared>>(drawable).and_then(
+                [&](any_shape<shared> const& shape) {
                   shape.draw(os, position{});
                   os << "...area: " << shape.area() << "\n";
                   return std::optional{shape};

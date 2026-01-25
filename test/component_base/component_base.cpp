@@ -37,7 +37,7 @@ any_to_string_i<anyxx::const_observer> test::component_base::get_to_string_i_co(
   [[maybe_unused]] auto s = i.to_string();
   return i;
 }
-any_to_string_i<anyxx::shared_const> test::component_base::get_to_string_i_sc(
+any_to_string_i<anyxx::shared> test::component_base::get_to_string_i_sc(
     double v) {
   return std::make_shared<X>(v);
 }
@@ -45,7 +45,7 @@ any_to_string_i<anyxx::unique> test::component_base::get_to_string_i_u(double v)
   return std::make_unique<X>(v);
 }
 
-anyxx::any<anyxx::shared_const> test::component_base::sc_X(double v) {
+anyxx::any<anyxx::shared> test::component_base::sc_X(double v) {
   return {std::make_shared<X>(v)};
 }
 anyxx::any<anyxx::unique> test::component_base::u_X(double v) {

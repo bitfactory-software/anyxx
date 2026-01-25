@@ -21,8 +21,8 @@ The description of these types is implemented via a specialication of *erased_da
 
 The library offers these *lifetime* holders:
 - **observer**: Takes no ownership. The creator of such an observer is responsible for ensuring that the referenced object outlives the observer. There are two flavors: *const* and *mutable*, for read-only or modifying access to the referenced object.
-- **shared_const**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*.
-- **weak**: Ownership as `std::weak_ptr`. No delivered adress. Use `lock` to gain a shared_const, if the object still exists.
+- **shared**: Ownership as `std::shared_ptr`. The delivered address is a pointer to *const void*.
+- **weak**: Ownership as `std::weak_ptr`. No delivered adress. Use `lock` to gain a shared, if the object still exists.
 - **unique**: Ownership as `std::unique_ptr`. The delivered address is a pointer to a *mutable* object.
 - **value**: Every value object holds its own copy. Same semantics as *int*. The delivered *void* pointer is *mutable*. [Tutorial](/tutorials/tutorial___1.md/#t1)
 

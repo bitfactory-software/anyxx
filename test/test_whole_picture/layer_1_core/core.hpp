@@ -16,6 +16,6 @@
 
 namespace whole_picture::core {
 
-using shape = architecture::any_shape<anyxx::shared_const>;
+using shape = architecture::any_shape<anyxx::shared>;
 
 }  // namespace whole_picture::core

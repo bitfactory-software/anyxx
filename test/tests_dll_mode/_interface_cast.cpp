@@ -39,28 +39,28 @@ TEST_CASE("_interface_cast") {
           std::string(typeid(unused_i_v_table).name()));
   }
   {
-    any_to_string_i<shared_const> i0{
+    any_to_string_i<shared> i0{
         test::component_base::get_to_string_i_sc(3.14)};
     REQUIRE(i0.to_string() == "3.140000");
-    std::cout << "shared_const i0: " << i0.to_string() << "\n";
+    std::cout << "shared i0: " << i0.to_string() << "\n";
 
-    any_get_value_i<shared_const> i1 = *borrow_as<any_get_value_i<shared_const>>(i0);
+    any_get_value_i<shared> i1 = *borrow_as<any_get_value_i<shared>>(i0);
     REQUIRE(i1.get_value() == 3.14);
-    std::cout << "shared_const i1: " << i1.get_value() << "\n";
+    std::cout << "shared i1: " << i1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(i1) == get_void_data_ptr(i0));
 
     any_get_value_i<unique> iu1 = *clone_to<any_get_value_i<unique>>(i0);
     REQUIRE(iu1.get_value() == 3.14);
-    std::cout << "shared_const/unique iu1: " << iu1.get_value() << "\n";
+    std::cout << "shared/unique iu1: " << iu1.get_value() << "\n";
     REQUIRE(get_void_data_ptr(iu1) != get_void_data_ptr(i0));
 
     any_set_value_i<unique> sv0 = *clone_to<any_set_value_i<unique>>(iu1);
     REQUIRE(get_void_data_ptr(sv0) != get_void_data_ptr(i0));
     REQUIRE(sv0.get_value() == 3.14);
-    std::cout << "shared_const/unique sv0: " << sv0.get_value() << "\n";
+    std::cout << "shared/unique sv0: " << sv0.get_value() << "\n";
     sv0.set_value(sv0.get_value() * 2);
     REQUIRE(sv0.get_value() == 6.28);
-    std::cout << "shared_const/unique sv0 (*2): " << sv0.get_value() << "\n";
+    std::cout << "shared/unique sv0 (*2): " << sv0.get_value() << "\n";
     {
       any_get_value_i<const_observer> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
@@ -117,7 +117,7 @@ TEST_CASE("_interface_cast") {
 #pragma warning(pop)
     REQUIRE(i1d.to_string() == "3.140000");
 
-    auto i1e = move_to<any_get_value_i<shared_const>>(std::move(i1d));
+    auto i1e = move_to<any_get_value_i<shared>>(std::move(i1d));
     REQUIRE(get_void_data_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)

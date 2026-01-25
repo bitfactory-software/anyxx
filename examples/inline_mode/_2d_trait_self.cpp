@@ -12,7 +12,7 @@ TRAIT(has_equal,
       (ANY_FN_DEF(bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
-template <typename Box = anyxx::shared_const>
+template <typename Box = anyxx::shared>
 using any_has_equal = anyxx::any<Box, has_equal>;
 
 }  // namespace example_2d

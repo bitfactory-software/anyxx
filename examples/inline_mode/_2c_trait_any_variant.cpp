@@ -28,7 +28,7 @@ ANY(value,
                             ss >> std::boolalpha >> x;
                           })), )
 
-template <typename ErasedData = anyxx::shared_const>
+template <typename ErasedData = anyxx::shared>
 using vany_value =
     anyxx::make_vany<any_value, ErasedData, bool, int, double, std::string>;
 using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
@@ -36,10 +36,10 @@ using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 
 static_assert(
     anyxx::is_erased_data<anyxx::by_val<
-        anyxx::vany_variant<any_value, anyxx::shared_const, bool, int>>>);
+        anyxx::vany_variant<any_value, anyxx::shared, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
-static_assert(std::same_as<any_in_variant, any_value<anyxx::shared_const>>);
+static_assert(std::same_as<any_in_variant, any_value<anyxx::shared>>);
 
 }  // namespace example_2c
 
@@ -72,11 +72,11 @@ TEST_CASE("example 2cb static_ any variant") {
   using namespace anyxx;
 
   static_assert(
-      constructibile_for<any_value<shared_const>, vany_value<>::erased_data_t>);
+      constructibile_for<any_value<shared>, vany_value<>::erased_data_t>);
   vany_value<> vv_custom_43 =
-      any_value<shared_const>{std::in_place_type<custom>, "43"};
+      any_value<shared>{std::in_place_type<custom>, "43"};
   vany_value<> vv_custom_42 = {
-      any_value<shared_const>{std::in_place, custom{"42"}}};
+      any_value<shared>{std::in_place, custom{"42"}}};
 
   CHECK(vany_value<>{true}.to_string() == "true");
   CHECK(vv_custom_42.to_string() == "{42}");
@@ -98,7 +98,7 @@ namespace example_2c {
 
 VANY_DISPACH_DECLARE(
     , vany_stream, vany_value<>,
-    (void(anyxx::virtual_<any_value<anyxx::shared_const>>, std::ostream&)),
+    (void(anyxx::virtual_<any_value<anyxx::shared>>, std::ostream&)),
     ([](const std::string& s,
         std::ostream& os) { os << "String: " << s << ", "; },
      [](int i, std::ostream& os) { os << "Int: " << i << ", "; },
@@ -125,7 +125,7 @@ TEST_CASE("example 2cc static_ any variant single open dispatch") {
   vany_value<> vv1{std::string{"hello"}};
   vany_value<> vv2{int{42}};
   vany_value<> vv3{
-      any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
+      any_value<shared>{std::in_place_type<custom>, "Hello world!"}};
 
   std::stringstream ss;
   vany_stream(vv1, ss);
@@ -139,8 +139,8 @@ namespace example_2c {
 
 VANY_DISPACH_DECLARE(
     , vany_compare, vany_value<>,
-    (std::partial_ordering(anyxx::virtual_<any_value<anyxx::shared_const>>,
-                           anyxx::virtual_<any_value<anyxx::shared_const>>)),
+    (std::partial_ordering(anyxx::virtual_<any_value<anyxx::shared>>,
+                           anyxx::virtual_<any_value<anyxx::shared>>)),
     ([]<typename T>(T&& t, T&& u) -> std::partial_ordering
        requires(!anyxx::is_any<T>)
      { return std::forward<T>(t) <=> std::forward<T>(u); },
@@ -199,9 +199,9 @@ TEST_CASE("example 2cd static_ any variant double dispatch") {
   vany_value<> vvi0{int{0}};
   vany_value<> vvf{double{42.0}};
   vany_value<> vv3{
-      any_value<shared_const>{std::in_place_type<custom>, "Hello world!"}};
+      any_value<shared>{std::in_place_type<custom>, "Hello world!"}};
   vany_value<> vv4{
-      any_value<shared_const>{std::in_place_type<custom>, "hello"}};
+      any_value<shared>{std::in_place_type<custom>, "hello"}};
 
   bool x = vany_compare(vv1, vv1) == std::partial_ordering::equivalent;
   CHECK(x);
