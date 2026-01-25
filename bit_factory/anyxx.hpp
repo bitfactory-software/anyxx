@@ -852,7 +852,6 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
     proxy_trait<E>::get_proxy_ptr_in(e, v_table)
   } -> std::convertible_to<typename proxy_trait<E>::void_t>;
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
-//  { proxy_trait<E>::default_construct() };
   { proxy_trait<E>::clone_from(void_data, v_table) };
 };
 
@@ -999,7 +998,6 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
         V, ConstructedWith>;  // && !is_any<ConstructedWith>;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return by_val<V>{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     return void_t{};
@@ -1074,7 +1072,6 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
   static constexpr bool is_weak =
       proxy_trait<Proxy>::is_weak;  // cppcheck-suppress
                                     // duplInheritedMember
-  static auto default_construct() { return vany_variant_t{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     return void_t{};
@@ -1121,7 +1118,6 @@ struct observer_trait : basic_proxy_trait<Voidness> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = false;
-  static auto default_construct() { return void_t{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     return void_t{};
@@ -1204,7 +1200,6 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return unique{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     return unique{copy_construct(v_table, data_ptr)};
@@ -1272,7 +1267,6 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return shared{}; }
   static auto clone_from(const_void data_ptr, any_v_table* v_table) {
     return shared{copy_construct(v_table, data_ptr), v_table->delete_};
   }
@@ -1331,7 +1325,6 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
   static constexpr bool is_owner = false;
   static constexpr bool is_weak =  // NOLINT([duplInheritedMember)
       true;                        // cppcheck-suppress duplInheritedMember
-  static auto default_construct() { return weak{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,  // NOLINT
                          [[maybe_unused]] any_v_table* v_table) {
     return weak{};
@@ -1496,7 +1489,6 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto default_construct() { return anyxx::val{}; }
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] any_v_table* v_table) {
     assert(v_table);
@@ -2033,7 +2025,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   static constexpr bool dyn = is_dyn<Proxy>;
 
  protected:
-  proxy_t proxy_ = proxy_trait_t::default_construct();
+  proxy_t proxy_;
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2064,11 +2056,14 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   }
 
   any(const any& other)
-    requires std::copyable<proxy_t>
+    requires(dyn && std::copyable<proxy_t>)
       : v_table_holder_t(other.get_v_table_ptr()) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                        other.get_v_table_ptr());
   }
+  any(const any& other)
+    requires(!dyn && std::copyable<proxy_t>)
+      : v_table_holder_t(other.get_v_table_ptr()), proxy_(other.proxy_) {}
   any& operator=(any const& other)
     requires std::copyable<proxy_t>
   {
@@ -2104,6 +2099,10 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
       : v_table_holder_t(v_table) {
     proxy_trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
   }
+  template <is_proxy OtherErasedData>
+    requires(moveable_from<proxy_t, OtherErasedData> && !dyn)
+  explicit any(OtherErasedData&& proxy, v_table_t* v_table) noexcept
+      : v_table_holder_t(v_table), proxy_(std::move(proxy)) {}
   template <is_any Other>
   explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(moveable_from<proxy_t, typename Other::proxy_t> &&
@@ -2163,9 +2162,8 @@ inline auto& get_proxy(Any& any) {
   return any.proxy_;
 }
 template <typename Any>
-  requires is_any<std::decay_t<Any>> && !std::decay_t<Any>::dyn
-                                            inline auto &
-           get_proxy_value(Any && any) {
+  requires is_any<std::decay_t<Any>> && (!std::decay_t<Any>::dyn)
+inline auto& get_proxy_value(Any&& any) {
   return get_proxy(std::forward<Any>(any)).value_;
 }
 template <is_any Any>
@@ -2247,7 +2245,9 @@ inline auto unerase_cast_if(Any const& o) {
 
 template <typename Value>
 struct by_val {
-  by_val(Value&& v) : value_(std::forward<Value>(v)) {}
+  template <typename V>
+    requires(!std::same_as<std::decay_t<V>, by_val>)
+  by_val(V&& v) : value_(std::forward<V>(v)) {}
   Value value_;
   using value_t = Value;
   operator Value() const { return value_; }
