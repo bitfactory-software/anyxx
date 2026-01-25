@@ -35,7 +35,7 @@ using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 
 static_assert(
-    anyxx::is_erased_data<anyxx::by_val<
+    anyxx::is_proxy<anyxx::by_val<
         anyxx::vany_variant<any_value, anyxx::shared, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
@@ -83,7 +83,7 @@ TEST_CASE("example 2cb static_ any variant") {
   CHECK(vv_custom_43.to_string() == "{43}");
 
   vany_value<anyxx::value> b{true};
-  static_assert(anyxx::is_erased_data<vany_value<>::proxy_t>);
+  static_assert(anyxx::is_proxy<vany_value<>::proxy_t>);
   static_assert(!anyxx::is_const_data<vany_value<>::proxy_t>);
   static_assert(!anyxx::is_const_data<vany_value<anyxx::value>::proxy_t>);
   b.from_string("false");

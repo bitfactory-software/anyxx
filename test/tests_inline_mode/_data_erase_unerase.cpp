@@ -84,7 +84,7 @@ TEST_CASE("data_erase_unerase/shared_const_ptr") {
   {
     auto ptr = std::make_shared<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    shared sp1 = erased_data_trait<shared>::erase(ptr);
+    shared sp1 = proxy_trait<shared>::erase(ptr);
     auto u1 = erased<shared>(ptr);
     [[maybe_unused]] A const* a = unchecked_unerase_cast<A>(u1, nullptr);
     REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");
@@ -94,7 +94,7 @@ TEST_CASE("data_erase_unerase/unique_ptr") {
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
-    unique up1 = erased_data_trait<unique>::erase(std::move(ptr));
+    unique up1 = proxy_trait<unique>::erase(std::move(ptr));
     A* a = unchecked_unerase_cast<A>(up1, nullptr);
     REQUIRE(a->s == "hallo");
   }

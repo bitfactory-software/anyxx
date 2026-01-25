@@ -15,7 +15,7 @@ namespace _21_Tree_any_borrow_as {
 ANY(node, (ANY_FN(int, value, (), const)), )
 ANY(serializeable, (ANY_FN(void, serialize, (std::ostream&), const)), )
 
-template <is_erased_data Proxy>
+template <is_proxy Proxy>
 std::ostream& operator<<(std::ostream& s,
                          any_serializeable<Proxy> const& any) {
   any.serialize(s);

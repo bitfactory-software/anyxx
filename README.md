@@ -59,7 +59,7 @@ Square
     - value
     - by_val
     - vany variant
-  - Customizable via anyxx::erased_data_trait
+  - Customizable via anyxx::proxy_trait
   - **Safe** interchange of **lifetime**  
     - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared -> const_observer, mutable_observer -> const_observer
     - **move_to**: value -> unique -> shared, unique -> value

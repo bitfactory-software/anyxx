@@ -80,7 +80,7 @@ TEST_CASE("_data_conversion move") {
 #pragma warning(push)
 #pragma warning(disable : 26800)
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));  // NOLINT
-    CHECK(!has_data(get_erased_data(vv1), nullptr));
+    CHECK(!has_data(get_proxy(vv1), nullptr));
 #pragma warning(pop)
   }
   {
@@ -90,7 +90,7 @@ TEST_CASE("_data_conversion move") {
 #pragma warning(push)
 #pragma warning(disable : 26800)
     CHECK(get_void_data_ptr(vv1) != get_void_data_ptr(vv2));  // NOLINT
-    CHECK(!has_data(get_erased_data(vv1), nullptr));
+    CHECK(!has_data(get_proxy(vv1), nullptr));
 #pragma warning(pop)
   }
 }

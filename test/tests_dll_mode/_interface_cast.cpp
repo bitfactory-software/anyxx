@@ -113,7 +113,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(get_void_data_ptr((i1d)));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_erased_data(*i1c));  // moved!
+    REQUIRE(!get_proxy(*i1c));  // moved!
 #pragma warning(pop)
     REQUIRE(i1d.to_string() == "3.140000");
 
@@ -121,7 +121,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(get_void_data_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_erased_data(i1d));  //NOLINT
+    REQUIRE(!get_proxy(i1d));  //NOLINT
 #pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
   }

@@ -35,7 +35,7 @@ TEST_CASE("any lifetime cast") {
   // std::add_const_t<void*>);
 
   try {
-    auto o1 = get_erased_data(sc);
+    auto o1 = get_proxy(sc);
     [[maybe_unused]] const auto x = unerase_cast<X>(sc);
     [[maybe_unused]] const auto x1 =
         static_cast<X const*>(get_void_data_ptr(sc));

@@ -20,7 +20,7 @@ void observe(int expected_use_count) {
   auto s = std::make_shared<int>(1);
   std::weak_ptr<int> w = s;
 
-  CHECK(get_erased_data(any_widget_weak).use_count() == expected_use_count);
+  CHECK(get_proxy(any_widget_weak).use_count() == expected_use_count);
   // we have to make a copy of shared pointer before usage:
   auto any_widget_shared_const = lock(any_widget_weak);
   if (expected_use_count > 0)
@@ -66,19 +66,19 @@ TEST_CASE("example X1/ sutters favorite 10 cpp lines") {
   {
     auto w1 = make_widget(0);
     CHECK(w1.get() == "widget_a");
-    CHECK(get_erased_data(w1).use_count() == 1);
+    CHECK(get_proxy(w1).use_count() == 1);
     CHECK(cache.size() == 1);
-    CHECK(get_erased_data(cache[0]).use_count() == 1);
+    CHECK(get_proxy(cache[0]).use_count() == 1);
     {
       auto w2 = make_widget(0);
       CHECK(w2.get() == "widget_a");
-      CHECK(get_erased_data(w2).use_count() == 2);
+      CHECK(get_proxy(w2).use_count() == 2);
       CHECK(cache.size() == 1);
-      CHECK(get_erased_data(cache[0]).use_count() == 2);
+      CHECK(get_proxy(cache[0]).use_count() == 2);
     }
-    CHECK(get_erased_data(w1).use_count() == 1);
+    CHECK(get_proxy(w1).use_count() == 1);
     CHECK(cache.size() == 1);
-    CHECK(get_erased_data(cache[0]).use_count() == 1);
+    CHECK(get_proxy(cache[0]).use_count() == 1);
   }
-  CHECK(get_erased_data(cache[0]).use_count() == 0);
+  CHECK(get_proxy(cache[0]).use_count() == 0);
 }

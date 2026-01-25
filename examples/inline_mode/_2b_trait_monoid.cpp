@@ -104,7 +104,7 @@ TEST_CASE("example 2b monoid simple") {
   CHECK(static_cast<int>(z) == 2);
   example_2b::any_monoid<anyxx::by_val<int>> a{std::move(x)};
   CHECK(static_cast<int>(a) == 2);
-  static_assert(anyxx::is_erased_data<decltype(x)::proxy_t>);
+  static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
   static_assert(anyxx::moveable_from<decltype(x)::proxy_t,
                                      decltype(y)::proxy_t>);
