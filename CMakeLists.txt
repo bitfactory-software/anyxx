@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.31)
 # Set the project name and language
 project(
   anyxx
+  VERSION 0.0.4
+  DESCRIPTION ""
   HOMEPAGE_URL "https://github.com/bitfactory-software/anyxx"
   LANGUAGES CXX C)
 
@@ -26,13 +28,6 @@ endif()
 # when compiling with PCH enabled
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Set the project name and language
-project(
-  anyxx
-  VERSION 0.0.1
-  DESCRIPTION ""
-  HOMEPAGE_URL "https://github.com/bitfactory-software/anyxx"
-  LANGUAGES CXX C)
 
 include(cmake/PreventInSourceBuilds.cmake)
 include(ProjectOptions.cmake)
