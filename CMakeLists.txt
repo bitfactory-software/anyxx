@@ -1,5 +1,17 @@
 cmake_minimum_required(VERSION 3.31)
 
+# Set the project name and language
+project(
+  anyxx
+  HOMEPAGE_URL "https://github.com/bitfactory-software/anyxx"
+  LANGUAGES CXX C)
+
+option( anyxx_INSTALL_ONLY					"Install only"		false )
+if (anyxx_INSTALL_ONLY)  
+  add_subdirectory(bit_factory)
+  return()  
+endif()
+
 # This template attempts to be "fetch_content"-able
 # so that it works well with tools like CPM or other
 # manual dependency management

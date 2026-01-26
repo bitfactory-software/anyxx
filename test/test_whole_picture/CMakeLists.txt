@@ -14,7 +14,7 @@ set_target_properties(layer_0_architecture PROPERTIES FOLDER "_example_whole_pic
 target_link_libraries(layer_0_architecture 
   PRIVATE   anyxx::anyxx_warnings
             anyxx::anyxx_options
-  PUBLIC    anyxx::anyxx
+  PUBLIC    bit_factory::anyxx
 )
 target_include_directories(layer_0_architecture INTERFACE 
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>   # for headers when building

@@ -1,7 +1,7 @@
 include(GenerateExportHeader)
 
 add_library(anyxx INTERFACE anyxx.hpp anyxx_range.hpp anyxx_function.hpp)
-add_library(anyxx::anyxx ALIAS anyxx)
+add_library(bit_factory::anyxx ALIAS anyxx)
 
 if (MSVC)
     if( NOT CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

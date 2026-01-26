@@ -10,7 +10,7 @@ target_link_libraries(
   tests_dll_mode
   PRIVATE anyxx::anyxx_warnings
           anyxx::anyxx_options
-          anyxx::anyxx
+          bit_factory::anyxx
           component_base
           Catch2::Catch2WithMain)
 

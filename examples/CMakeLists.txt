@@ -9,7 +9,7 @@ add_executable (examples_inline_mode ${inline_mode_cpp_files} ${inline_mode_hpp_
 target_link_libraries(examples_inline_mode 
     anyxx::anyxx_warnings
     anyxx::anyxx_options
-    anyxx
+    bit_factory::anyxx
     Catch2::Catch2WithMain
 )
 set_target_properties(examples_inline_mode PROPERTIES FOLDER "_examples")

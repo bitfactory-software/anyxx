@@ -11,7 +11,7 @@ target_link_libraries(
   tests_inline_mode
   PRIVATE anyxx::anyxx_warnings
           anyxx::anyxx_options
-          anyxx::anyxx
+          bit_factory::anyxx
           Catch2::Catch2WithMain)
 
 # use /Ob2 for benchmarks with Clang-Cl & Cl)
