@@ -134,6 +134,7 @@ find_package( Doxygen )
 
 if ( DOXYGEN_FOUND )
 
+set( DOXYGEN_FILE_PATTERNS *.hpp *.md )
 set( DOXYGEN_OUTPUT_DIRECTORY doxygen )
 
 set( DOXYGEN_EXTRACT_ALL NO )
