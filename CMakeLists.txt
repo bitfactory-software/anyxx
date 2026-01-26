@@ -157,7 +157,10 @@ set( DOXYGEN_DOT_TRANSPARENT YES )
 set( DOXYGEN_GENERATE_HTML YES )
 set( DOXYGEN_WARN_IF_UNDOCUMENTED NO )
 
-doxygen_add_docs( anyxx_doc "${PROJECT_SOURCE_DIR}/bit_factory/" ALL )
+doxygen_add_docs( anyxx_doc 
+    "${PROJECT_SOURCE_DIR}/bit_factory/" 
+    "${PROJECT_SOURCE_DIR}/README.md"
+    ALL )
 
 else()
 
