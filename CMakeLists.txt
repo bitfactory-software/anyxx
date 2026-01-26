@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.31)
 # Set the project name and language
 project(
   anyxx
-  VERSION 0.0.5
+  VERSION 0.4.1
   DESCRIPTION ""
   HOMEPAGE_URL "https://github.com/bitfactory-software/anyxx"
   LANGUAGES CXX C)
