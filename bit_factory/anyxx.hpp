@@ -1,9 +1,11 @@
 #pragma once
 
-//
-// for Microsoft C++, you must enable the C-Preprocessor with this flag:
-// /Zc:preprocessor (see CMakeLists.txt for example)
-//
+/*! \file bit_factory/anyxx.hpp
+    \brief C++ header only library for external polymorphism.
+
+    for Microsoft C++, you must enable the C-Preprocessor with this flag:
+    /Zc:preprocessor (see CMakeLists.txt for example)
+*/
 
 #include <cassert>
 #include <concepts>
@@ -458,6 +460,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
+/*! \def TRAIT(n, fns)
+    \brief Macro to define the functioanl behaviour for an \ref any
+
+    Example:
+
+    \code TRAIT(sample_trait,
+      (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
+   \endcode
+*/
 #define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
 
@@ -2011,9 +2022,20 @@ static_assert(!moveable_from<val, shared>);
 static_assert(!moveable_from<val, weak>);
 static_assert(moveable_from<val, val>);
 
-// --------------------------------------------------------------------------------
-// any base
-
+/// The core class template to control dispatch for external polymorphism
+/** To control the behaviour, any provides two template parameter, \ref Proxy
+ *and \ref Trait. Imagine this as a combination af a std::any and some
+ *std::function's. With the Proxy tempalate param you control, wether this any
+ *behaves like a copying funcction, a move_only function, a ref function or if
+ *the target object is caputred cooncrete inside of any. With the Trait tempalte
+ *paramteter you specify the member functions of an captured object, witch can
+ *be invoked on this any.
+ *@tparam Proxy Specifies the lifteime of the captured object. anyxx provides
+ *\ref by_val, \ref cref, \ref mutref .... All Proxy classes must conform to the
+ *\ref is_proxy concept.
+ *@tparam Trait Specifies the functionality of this any. A class of this type is
+ *normaly provided via a \ref TRAIT or \ref ANY macro.
+ */
 template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:
@@ -2245,6 +2267,11 @@ inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_proxy(o), get_v_table(o));
 }
 
+/// Proxy to capture the dispatch target concrete to enable static dispatch
+/** A simple warpper class over an object. Use '&' and 'const &' to capture by
+reference. This class template is only used to instanciate an \ref any.
+@tparam Value The caputured value
+*/
 template <typename Value>
 struct by_val {
   template <typename V>

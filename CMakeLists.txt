@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.31)
 
+option(anyxx_INSTALL_ONLY					"Install only" OFF)
+option(anyxx_BUILD_DOC                      "Build documentation" ON)
+
 # Set the project name and language
 project(
   anyxx
@@ -8,7 +11,7 @@ project(
   HOMEPAGE_URL "https://github.com/bitfactory-software/anyxx"
   LANGUAGES CXX C)
 
-option( anyxx_INSTALL_ONLY					"Install only"		false )
+
 if (anyxx_INSTALL_ONLY)  
   add_subdirectory(bit_factory)
   install(FILES bit_factory/anyxx.hpp DESTINATION include/bit_factory)
@@ -125,3 +128,28 @@ set(CPACK_PACKAGE_FILE_NAME
 )
 
 include(CPack)
+
+
+find_package( Doxygen )
+
+if ( DOXYGEN_FOUND )
+
+set( DOXYGEN_OUTPUT_DIRECTORY doxygen )
+set( DOXYGEN_EXTRACT_ALL NO )
+set( DOXYGEN_HIDE_UNDOC_RELATIONS YES )
+set( DOXYGEN_HIDE_UNDOC_CLASSES YES )
+set( DOXYGEN_HAVE_DOT YES )
+set( DOXYGEN_UML_LOOK YES )
+set( DOXYGEN_UML_LIMIT_NUM_FIELDS 50 )
+set( DOXYGEN_TEMPLATE_RELATIONS YES )
+set( DOXYGEN_DOT_GRAPH_MAX_NODES 100 )
+set( DOXYGEN_DOT_TRANSPARENT YES )
+set( DOXYGEN_GENERATE_HTML YES )
+
+doxygen_add_docs( anyxx_doc "${PROJECT_SOURCE_DIR}/bit_factory/" ALL )
+
+else()
+
+message( "Doxygen need to be installed to generate the doxygen documentation" )
+
+endif()
