@@ -14,7 +14,8 @@ endif()
 #    INTERFACE anyxx_options anyxx_warnings)
 target_include_directories(anyxx ${WARNING_GUARD} 
     INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>)
+              $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+              $<INSTALL_INTERFACE:include>)
 target_compile_features(anyxx INTERFACE cxx_std_23)
 set_target_properties(
   anyxx
@@ -23,4 +24,3 @@ set_target_properties(
              VISIBILITY_INLINES_HIDDEN YES)
 
 # generate_export_header(anyxx EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/anyxx/anyxx_export.hpp)
-

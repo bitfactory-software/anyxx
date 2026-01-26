@@ -11,6 +11,9 @@ project(
 option( anyxx_INSTALL_ONLY					"Install only"		false )
 if (anyxx_INSTALL_ONLY)  
   add_subdirectory(bit_factory)
+  install(FILES bit_factory/anyxx.hpp DESTINATION include/bit_factory)
+  install(TARGETS anyxx EXPORT anyxx-config)
+  install(EXPORT anyxx-config NAMESPACE bit_factory:: DESTINATION share/anyxx)  
   return()  
 endif()
 
