@@ -4,7 +4,7 @@
 
 This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**. The performance of **dynamic dispatch is on par with virtual functions**.
 
-<img img align="left" src="https://github.com/bitfactory-software/anyxx/blob/b215ece475a7eac91c5f51d4cfb83a4ad79767cc/docs/any%2B%2B%20(Klein).jpg"/>
+<img img align="left" src="https://github.com/bitfactory-software/anyxx/blob/f2c9ca99dc3460961d00f8963ab7cd78765df73a/docs/any%2B%2B.jpg"/>
 
 ### Showcase 1: Basic *ANY* usage
 ```cpp
