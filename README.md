@@ -42,7 +42,7 @@ Square
   - Nonintrusive **Runtime** ***AND*** **Static** Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
     - Deriveable
     - Operators
-    - Choose implementation for specific type va *Concept Map*
+    - Choose implementation for specific type via *Concept Map*
     - Upcast, **Downcast**, **Crosscast** via *borrow_as*, *clone_to*(if concrete type is *copy constructable*), *move_to*
    - **Interface** can be **template**
      - 'recursive' to erase container
