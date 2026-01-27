@@ -162,6 +162,8 @@ set( DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
 doxygen_add_docs( anyxx_doc 
     "${PROJECT_SOURCE_DIR}/bit_factory/" 
     "${PROJECT_SOURCE_DIR}/README.md"
+    "${PROJECT_SOURCE_DIR}/README.md"
+    "${PROJECT_SOURCE_DIR}/docs/"
     ALL )
 
 else()

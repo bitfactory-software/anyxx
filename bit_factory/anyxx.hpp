@@ -455,14 +455,32 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
                       l, decoration)
 
+/*! \defgroup trait_macros TRAIT... and ANY_ macros
+    \brief Macros to define \ref trait 's and \ref any '
+
+*/
+
+/*! \def TRAIT_EX_(n, base, fns, decoration)
+    \brief TRAIT derived from base with decoration
+    \ingroup trait_macros
+
+    Macro to define the functioanl behaviour for a \ref any, where the
+   behaviour of base are inherrited. The decoration are additional functions and
+   typdefs (in brakets).
+*/
 #define TRAIT_EX_(n, BASE, l, decoration) \
   __detail_ANYXX_TRAIT_(, n, BASE, l, decoration)
 
+/*! \def TRAIT_(n, base, fns)
+    \brief TRAIT derived from base
+    \ingroup trait_macros
+    Example:
+*/
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
 /*! \def TRAIT(n, fns)
     \brief Macro to define the functioanl behaviour for an \ref any
-
+    \ingroup trait_macros
     Example:
 
     \code TRAIT(sample_trait,
@@ -470,6 +488,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    \endcode
 */
 #define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
+
+/*! \def TRAIT_EX(n, base, fns, decoration)
+    \brief TRAIT with decoration
+    \ingroup trait_macros
+
+    Macro to define the functioanl behaviour for a \ref any, with decorations.
+   That are additional functions and typdefs (in brakets).
+*/
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
 
 #define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)     \
