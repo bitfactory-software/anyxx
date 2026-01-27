@@ -3,8 +3,8 @@
 # any++
 
 This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**. The performance of **dynamic dispatch is on par with virtual functions**.
+<img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
-<img img align="left" src="https://github.com/bitfactory-software/anyxx/blob/b215ece475a7eac91c5f51d4cfb83a4ad79767cc/docs/any%2B%2B%20(Klein).jpg"/>
 
 ### Showcase 1: Basic *ANY* usage
 ```cpp
@@ -42,7 +42,7 @@ Square
   - Nonintrusive **Runtime** ***AND*** **Static** Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
     - Deriveable
     - Operators
-    - Choose implementation for specific type va *Concept Map*
+    - Choose implementation for specific type via *Concept Map*
     - Upcast, **Downcast**, **Crosscast** via *borrow_as*, *clone_to*(if concrete type is *copy constructable*), *move_to*
    - **Interface** can be **template**
      - 'recursive' to erase container
