@@ -3,8 +3,8 @@
 # any++
 
 This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**. The performance of **dynamic dispatch is on par with virtual functions**.
+<img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
-<img img align="left" src="https://github.com/bitfactory-software/anyxx/blob/f2c9ca99dc3460961d00f8963ab7cd78765df73a/docs/any%2B%2B.jpg"/>
 
 ### Showcase 1: Basic *ANY* usage
 ```cpp
