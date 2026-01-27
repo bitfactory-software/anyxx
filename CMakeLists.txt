@@ -132,31 +132,11 @@ include(CPack)
 
 find_package( Doxygen )
 
-if ( DOXYGEN_FOUND )
-
-set( DOXYGEN_FILE_PATTERNS *.hpp *.md )
-set( DOXYGEN_OUTPUT_DIRECTORY doxygen )
-
-set( DOXYGEN_EXTRACT_ALL NO )
-set( DOXYGEN_HIDE_UNDOC_RELATIONS YES )
-set( DOXYGEN_HIDE_UNDOC_CLASSES YES )
-
-set( DOXYGEN_GENERATE_HTML YES )
-set( DOXYGEN_WARN_IF_UNDOCUMENTED NO )
-
-set( DOXYGEN_USE_MDFILE_AS_MAINPAGE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
-
-doxygen_add_docs( anyxx_doc 
-    "${PROJECT_SOURCE_DIR}/bit_factory/" 
-    "${PROJECT_SOURCE_DIR}/README.md"
-    "${PROJECT_SOURCE_DIR}/README.md"
-    "${PROJECT_SOURCE_DIR}/docs/"
+if(DOXYGEN_FOUND)
+  doxygen_add_docs( anyxx_doc 
     ALL     
-    #CONFIG_FILE "${PROJECT_SOURCE_DIR}/Doxyfile.in" 
-)
-
+    CONFIG_FILE "${PROJECT_SOURCE_DIR}/Doxyfile.in" 
+  )
 else()
-
-message( "Doxygen need to be installed to generate the doxygen documentation" )
-
+  message( "Doxygen need to be installed to generate the doxygen documentation" )
 endif()

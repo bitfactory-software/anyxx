@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /CMakeUserPresets.json
 /CMakeFiles
 /CMakeCache.txt
+/doxygen
