@@ -1,9 +1,27 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 
-# any++
+# Any++
 
-This library is targeted to solve coupling problems and allow maximal **static** and **dynamic seperation**. The performance of **dynamic dispatch is on par with virtual functions**.
+**How to trait *any* virtual static, dynamic or as variant?**
+
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
+
+**Any++** enhances the well known *boost/std::any* with
+- free choice of underlying storage mechanism
+  - type erased
+  - concrete
+  - variant
+- posibility to add functions/operators
+- posibilty to allow open (multi) dispatch
+- posibilty to add runtime support for down and crosscasts
+
+To enforce maximal **static** and **dynamic seperation**, the library adds utilities for
+- factories
+- hooks
+- load time extendable members
+
+The performance of **dynamic dispatch is on par with virtual functions**.
+
 
 
 ### Showcase 1: Basic *ANY* usage
