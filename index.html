@@ -94,23 +94,26 @@ $(function(){initNavTree('index.html','',''); });
 <div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
 Any++</h1>
-<p><b>How to trait <em>any</em> virtual static, dynamic or as variant?</b></p>
+<p><b>How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or <em>variant</em>?</b></p>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
-<p><b>Any++</b> enhances the well known <em>boost/std::any</em> with</p><ul>
-<li>free choice of underlying storage mechanism<ul>
-<li>type erased</li>
-<li>concrete</li>
-<li>variant</li>
+<p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p><ul>
+<li><b>Flexible choice of underlying storage mechanisms</b><ul>
+<li>Type-erased</li>
+<li>Concrete</li>
+<li>Variant</li>
 </ul>
 </li>
-<li>posibility to add functions/operators</li>
-<li>posibilty to allow open (multi) dispatch</li>
-<li>posibilty to add runtime support for down and crosscasts</li>
+<li><b>Extensibility</b><ul>
+<li>Ability to add functions and operators</li>
+<li>Support for open (multi-)dispatch</li>
+<li>Runtime support for downcasts and cross-casts</li>
 </ul>
-<p>To enforce maximal <b>static</b> and <b>dynamic seperation</b>, the library adds utilities for</p><ul>
-<li>factories</li>
-<li>hooks</li>
-<li>load time extendable members</li>
+</li>
+</ul>
+<p>To enforce maximal <b>static and dynamic separation</b>, the library adds utilities for:</p><ul>
+<li>Factories</li>
+<li>Hooks</li>
+<li>Load-time extendable members</li>
 </ul>
 <p>The performance of <b>dynamic dispatch is on par with virtual functions</b>.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
