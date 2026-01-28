@@ -195,12 +195,17 @@ requires ( std::derived_from&lt;typename To::v_table_t, typename From::v_table_t
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;is_proxy Proxy, typename Trait&gt;<br />
 class anyxx::any&lt; Proxy, Trait &gt;</div><p>The core class template to control dispatch for external polymorphism. </p>
-<p>To control the behaviour, any provides two template parameter, Proxy and Trait. Imagine this as a combination af a std::any and some std::function's. With the Proxy tempalate param you control, wether this any behaves like a copying funcction, a move_only function, a ref function or if the target object is caputred cooncrete inside of any. With the Trait tempalte paramteter you specify the member functions of an captured object, witch can be invoked on this any. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+<p>To control the behavior, any provides two template parameters: Proxy and Trait. Imagine this as a combination of a std::any and several std::functions.</p>
+<p>With the Proxy template parameter, you control whether this any behaves like a copying function, a move-only function, a reference function, or if the target object is captured concretely inside of any.</p>
+<p>With the Trait template parameter, you specify the member functions of a captured object which can be invoked on this any.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Proxy</td><td>Specifies the lifteime of the captured object. anyxx provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, cref, mutref .... All Proxy classes must conform to the is_proxy concept. </td></tr>
-    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normaly provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or ANY macro. </td></tr>
+    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, cref, mutref, etc. All Proxy classes must conform to the is_proxy concept. </td></tr>
+    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or ANY macro. See there for examples. </td></tr>
   </table>
   </dd>
+</dl>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#_a1">_2d_trait_self.cpp</a>, and <a class="el" href="_2o_trait_simple_8cpp-example.html#_a1">_2o_trait_simple.cpp</a>.</dd>
 </dl>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>

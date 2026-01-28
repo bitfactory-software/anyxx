@@ -7,6 +7,7 @@ var searchData=
   ['trait_5f_4',['TRAIT_',['../group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b',1,'anyxx.hpp']]],
   ['trait_5fex_5',['TRAIT_EX',['../group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c',1,'anyxx.hpp']]],
   ['trait_5fex_5f_6',['TRAIT_EX_',['../group__trait__macros.html#ga15fb0b1b9a60d6586108d9bd6cec2a54',1,'anyxx.hpp']]],
-  ['txt_3a_7',['Useage in CMakeLists.txt:',['../index.html#autotoc_md5',1,'']]],
-  ['types_20overview_8',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_2erased__data__overview.html',1,'']]]
+  ['trait_5ftemplate_5f_7',['TRAIT_TEMPLATE_',['../group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1',1,'anyxx.hpp']]],
+  ['txt_3a_8',['Useage in CMakeLists.txt:',['../index.html#autotoc_md5',1,'']]],
+  ['types_20overview_9',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_2erased__data__overview.html',1,'']]]
 ];

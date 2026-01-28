@@ -39,13 +39,14 @@ var NAVTREE =
         [ "All", "globals.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
-    ] ]
+    ] ],
+    [ "Examples", "examples.html", "examples" ]
   ] ]
 ];
 
 var NAVTREEINDEX =
 [
-"annotated.html"
+"21_Tree_any_8cpp-example.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronization';
