@@ -2,27 +2,26 @@
 
 # Any++
 
-**How to trait *any* virtual static, dynamic or as variant?**
+**How to *trait* *any* *virtual*, *static* or *variant*?**
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
-**Any++** enhances the well known *boost/std::any* with
-- free choice of underlying storage mechanism
-  - type erased
-  - concrete
-  - variant
-- posibility to add functions/operators
-- posibilty to allow open (multi) dispatch
-- posibilty to add runtime support for down and crosscasts
+**Any++** enhances the well-known *boost::any* and *std::any* with:
+- **Flexible choice of underlying storage mechanisms**
+  - Type-erased
+  - Concrete
+  - Variant
+- **Extensibility**
+  - Ability to add functions and operators
+  - Support for open (multi-)dispatch
+  - Runtime support for downcasts and cross-casts
 
-To enforce maximal **static** and **dynamic seperation**, the library adds utilities for
-- factories
-- hooks
-- load time extendable members
+To enforce maximal **static and dynamic separation**, the library adds utilities for:
+- Factories
+- Hooks
+- Load-time extendable members
 
 The performance of **dynamic dispatch is on par with virtual functions**.
-
-
 
 ### Showcase 1: Basic *ANY* usage
 ```cpp
