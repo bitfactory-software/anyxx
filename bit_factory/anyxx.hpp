@@ -474,7 +474,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /*! \def TRAIT_(n, base, fns)
     \brief TRAIT derived from base
     \ingroup trait_macros
-    Example:
+    \example _2d_trait_self.cpp
 */
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
@@ -486,6 +486,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \code TRAIT(sample_trait,
       (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
    \endcode
+
+   \example _2o_trait_simple.cpp
 */
 #define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
 
@@ -495,6 +497,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
     Macro to define the functioanl behaviour for a \ref any, with decorations.
    That are additional functions and typdefs (in brakets).
+   \example _2b_trait_monoid.cpp
 */
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
 
@@ -510,6 +513,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
 
+/*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args,
+   decoration)
+    \brief TRAIT template with a base TRAIT
+    \ingroup trait_macros
+
+   \example _2d_trait_self.cpp
+*/
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
 
@@ -2048,20 +2058,32 @@ static_assert(!moveable_from<val, shared>);
 static_assert(!moveable_from<val, weak>);
 static_assert(moveable_from<val, val>);
 
-/// The core class template to control dispatch for external polymorphism
-/** To control the behaviour, any provides two template parameter, \ref Proxy
- *and \ref Trait. Imagine this as a combination af a std::any and some
- *std::function's. With the Proxy tempalate param you control, wether this any
- *behaves like a copying funcction, a move_only function, a ref function or if
- *the target object is caputred cooncrete inside of any. With the Trait tempalte
- *paramteter you specify the member functions of an captured object, witch can
- *be invoked on this any.
- *@tparam Proxy Specifies the lifteime of the captured object. anyxx provides
- *\ref by_val, \ref cref, \ref mutref .... All Proxy classes must conform to the
- *\ref is_proxy concept.
- *@tparam Trait Specifies the functionality of this any. A class of this type is
- *normaly provided via a \ref TRAIT or \ref ANY macro.
- */
+/** \example _1_any_shape.cpp
+    \example 21_Tree_any.cpp
+    \example 21_Tree_any.cpp
+    \example 31_Animals_any_dispatch.cpp
+*/
+
+/** \brief The core class template to control dispatch for external
+*   polymorphism.
+*      
+*   To control the behavior, any provides two template parameters: \ref Proxy
+*   and \ref Trait. Imagine this as a combination of a std::any and several
+*   std::functions.
+*   
+*   With the Proxy template parameter, you control whether this any behaves
+*   like a copying function, a move-only function, a reference function, or if
+*   the target object is captured concretely inside of any.
+*      
+*   With the Trait template parameter, you specify the member functions of a
+*   captured object which can be invoked on this any.
+*   
+*   @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
+*   \ref by_val, \ref cref, \ref mutref, etc. All Proxy classes must conform
+*   to the \ref is_proxy concept.
+*   @tparam Trait Specifies the functionality of this any. A class of this type
+*   is normally provided via a \ref TRAIT or \ref ANY macro. See there for examples.     
+*/
 template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:

@@ -10,4 +10,4 @@ GENERATE_HTML = YES
 WARN_IF_UNDOCUMENTED = NO
 OUTPUT_DIRECTORY = ./doxygen/
 INPUT = bit_factory/ docs/ README.md
-
+EXAMPLE_PATH = examples/inline_mode/
