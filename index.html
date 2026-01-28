@@ -93,10 +93,10 @@ $(function(){initNavTree('index.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README"></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a></p>
 <h1 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
-Any++ <br  />
- How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or <em>variant</em>?</h1>
+Any++ : How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or <em>variant</em>?</h1>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
-<p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p><ul>
+<p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p>
+<ul>
 <li><b>Flexible choice of underlying storage mechanisms</b><ul>
 <li>Type-erased</li>
 <li>Concrete</li>
@@ -104,18 +104,19 @@ Any++ <br  />
 </ul>
 </li>
 <li><b>Extensibility</b><ul>
-<li>Ability to add functions and operators</li>
-<li>Support for open (multi-)dispatch</li>
-<li>Runtime support for downcasts and cross-casts</li>
+<li>Ability to add functions and operators using Rust-like <b>traits</b> (including templates)</li>
+<li>Support for <b>open (multi-)dispatch</b></li>
+<li>Runtime support for <b>downcasts and cross-casts</b></li>
 </ul>
 </li>
 </ul>
-<p>To allow easy <b>separation</b>, the library adds utilities for:</p><ul>
+<p>To allow easy <b>separation of concerns</b>, the library adds utilities for:</p><ul>
 <li>Factories</li>
 <li>Hooks</li>
 <li>Load-time extendable members</li>
 </ul>
 <p>The performance of <b>dynamic dispatch is on par with virtual functions</b>.</p>
+<p>The combination of static and runtime storage enables a hybrid approach of <span class="tt">std::variant</span> and <b>type erasure</b> with a unified syntax and open double dispatch.</p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 Showcase 1: Basic <em>ANY</em> usage</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
@@ -144,80 +145,17 @@ Showcase 1: Basic <em>ANY</em> usage</h3>
 <div class="line">Square</div>
 </div><!-- fragment --><p> <a href="https://godbolt.org/z/4P6M8WrzP">Compiler Explorer</a></p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
-Feature overview</h3>
-<ul>
-<li><b>External Polymorphism</b> via <em>ANY...</em> metaclasses<ul>
-<li>Nonintrusive <b>Runtime</b> <em><b>AND</b></em> <b>Static</b> Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"<ul>
-<li>Deriveable</li>
-<li>Operators</li>
-<li>Choose implementation for specific type via <em>Concept Map</em></li>
-<li>Upcast, <b>Downcast</b>, <b>Crosscast</b> via <em>borrow_as</em>, <em>clone_to</em>(if concrete type is <em>copy constructable</em>), <em>move_to</em></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p><b>Interface</b> can be <b>template</b></p><ul>
-<li>'recursive' to erase container</li>
-</ul>
-<p><b>open runtime dispatch</b> with <b>O(1) runtime complexity</b></p><ul>
-<li><b>single</b> (visitor)</li>
-<li><b>multiple</b> (collision resolver, type erased binary operators) <br  />
-</li>
-<li>performance on par with vanilla virtual functions</li>
-</ul>
-<p><b>Abstract factory</b> for *ANY*s</p><ul>
-<li><b>Transparent storeage/lifetime management***<ul>
-<li>Out of the box:<ul>
-<li>const/mutable_observers, aka "pointer"</li>
-<li>shared, weak via std::shared_ptr, std::week_ptr</li>
-<li>unique, via std::unique_ptr and type erased deleter</li>
-<li>value</li>
-<li>by_val</li>
-<li>vany variant</li>
-</ul>
-</li>
-<li>Customizable via anyxx::proxy_trait</li>
-<li>**Safe</li>
-</ul>
-</b> interchange of <b>lifetime</b> <br  />
-<ul>
-<li>(implicit) <b>borrow_as</b>: value -&gt; ..._observer, unique -&gt; ..._observer, shared -&gt; cref, mutref -&gt; cref</li>
-<li><b>move_to</b>: value -&gt; unique -&gt; shared, unique -&gt; value</li>
-<li><b>clone_to</b>: ..._observer -&gt; shared -&gt; unique -&gt; value</li>
-</ul>
-</li>
-<li><b>Extension member*<ul>
-<li>To **add members at load time</li>
-</ul>
-</b><ul>
-<li>Has access performance on par with <em>virtual</em> function getter</li>
-</ul>
-</li>
-<li><b>Hook</b><ul>
-<li>A overrideable <b>customization point</b> <br  />
-</li>
-</ul>
-</li>
-<li>Single <b>header only library</b></li>
-<li><b>static-</b> or <b>DLL/SO mode</b> for v-tables, dispatch tables and other static meta data.<ul>
-<li>Default for <em>static build</em>: the compiler manages the details via <em>static inline</em>.</li>
-<li><span class="tt">#define ANYXX_DLL_MODE</span>, works for <em>static</em> and <em>dynamic builds</em>`: You control the visibility and location of the static meta data.</li>
-</ul>
-</li>
-</ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 architectural overview</h3>
 <p><img src="https://github.com/user-attachments/assets/b6ae44bf-c78f-4b4f-83cf-201c6931ec98" alt="anyxx architecture" width="2695" height="1192" class="inline"/></p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 Useage in CMakeLists.txt:</h3>
 <div class="fragment"><div class="line">FetchContent_Declare(</div>
-<div class="line">    cogoproject</div>
+<div class="line">    bit_factory::anyxx</div>
 <div class="line">    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx.git</div>
 <div class="line">    GIT_TAG main</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(anyxx)</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 Performace compared</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -257,7 +195,7 @@ clang-cl /O2 /Ob2  </th></tr>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 CI Matrix</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
