@@ -116,7 +116,10 @@ Any++ : How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or 
 <li>Load-time extendable members</li>
 </ul>
 <p>The performance of <b>dynamic dispatch is on par with virtual functions</b>.</p>
-<p>The combination of static and runtime storage enables a hybrid approach of <span class="tt">std::variant</span> and <b>type erasure</b> with a unified syntax and open double dispatch.</p>
+<p>The combination of static and dynamic dispatch enables</p><ul>
+<li>a hybrid usage of <span class="tt">std::variant</span> and <b>type erasure</b> balance performance and coupling.</li>
+<li>c++0x like concept_maps and compile time customization points.</li>
+</ul>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
