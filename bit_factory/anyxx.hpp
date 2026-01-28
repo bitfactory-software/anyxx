@@ -513,8 +513,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
 
-/*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args,
-   decoration)
+/*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args)
     \brief TRAIT template with a base TRAIT
     \ingroup trait_macros
 
@@ -567,18 +566,44 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                         _detail_REMOVE_PARENS(t)),                           \
                     n)
 
+/*! \def ANY_TEMPLATE_EX_(template_args, n, base, base_template_args, fns,
+   proxy_default, decoration)
+    \brief ANY template with a base ANY and decoration
+    \ingroup trait_macros
+
+    \example _5_any_template.cpp
+*/
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/*! \def ANY_TEMPLATE_(template_args, n, base, base_template_args, fns,
+   proxy_default)
+    \brief ANY template with a base ANY
+    \ingroup trait_macros
+
+    \example _5_any_template.cpp
+*/
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
   TRAIT_TEMPLATE_(t, n, BASE, bt, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/*! \def ANY_TEMPLATE(template_args, n, fns, proxy_default)
+    \brief ANY template
+    \ingroup trait_macros
+
+    \example _5_any_template.cpp
+*/
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
   TRAIT_TEMPLATE(t, n, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/*! \def ANY_TEMPLATE_EX_(template_args, n, fns, proxy_default, decoration)
+    \brief ANY template with a and decoration
+    \ingroup trait_macros
+
+    \example _5_any_template.cpp
+*/
 #define ANY_TEMPLATE_EX(t, n, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
@@ -2065,25 +2090,26 @@ static_assert(moveable_from<val, val>);
 */
 
 /** \brief The core class template to control dispatch for external
-*   polymorphism.
-*      
-*   To control the behavior, any provides two template parameters: \ref Proxy
-*   and \ref Trait. Imagine this as a combination of a std::any and several
-*   std::functions.
-*   
-*   With the Proxy template parameter, you control whether this any behaves
-*   like a copying function, a move-only function, a reference function, or if
-*   the target object is captured concretely inside of any.
-*      
-*   With the Trait template parameter, you specify the member functions of a
-*   captured object which can be invoked on this any.
-*   
-*   @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
-*   \ref by_val, \ref cref, \ref mutref, etc. All Proxy classes must conform
-*   to the \ref is_proxy concept.
-*   @tparam Trait Specifies the functionality of this any. A class of this type
-*   is normally provided via a \ref TRAIT or \ref ANY macro. See there for examples.     
-*/
+ *   polymorphism.
+ *
+ *   To control the behavior, any provides two template parameters: \ref Proxy
+ *   and \ref Trait. Imagine this as a combination of a std::any and several
+ *   std::functions.
+ *
+ *   With the Proxy template parameter, you control whether this any behaves
+ *   like a copying function, a move-only function, a reference function, or if
+ *   the target object is captured concretely inside of any.
+ *
+ *   With the Trait template parameter, you specify the member functions of a
+ *   captured object which can be invoked on this any.
+ *
+ *   @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
+ *   \ref by_val, \ref cref, \ref mutref, etc. All Proxy classes must conform
+ *   to the \ref is_proxy concept.
+ *   @tparam Trait Specifies the functionality of this any. A class of this type
+ *   is normally provided via a \ref TRAIT or \ref ANY macro. See there for
+ * examples.
+ */
 template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:
