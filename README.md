@@ -1,8 +1,6 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 
-# Any++
-
-**How to *trait* *any* *virtual*, *static* or *variant*?**
+# Any++ <br> How to *trait* *any* *virtual*, *static* or *variant*?
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
