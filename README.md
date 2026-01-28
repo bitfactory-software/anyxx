@@ -16,7 +16,7 @@
   - Support for open (multi-)dispatch
   - Runtime support for downcasts and cross-casts
 
-To enforce maximal **static and dynamic separation**, the library adds utilities for:
+To allow easy **separation**, the library adds utilities for:
 - Factories
 - Hooks
 - Load-time extendable members
