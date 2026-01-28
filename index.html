@@ -219,13 +219,32 @@ Useage in CMakeLists.txt:</h3>
 <div class="line">FetchContent_MakeAvailable(anyxx)</div>
 </div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 Performace compared</h3>
-<p>| Benchmark | 12th Gen Intel(R)<br  />
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Benchmark  </th><th class="markdownTableHeadRight">12th Gen Intel(R)<br  />
 Core(TM) i12900H (2.50 GHz)<br  />
-MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br  />
+MS Visual C++ 18.0.1 /O2 /Ob2  </th><th class="markdownTableHeadRight">AMD Ryzen 9<br  />
  5900X 12-Core Processor (3.70 GHz)<br  />
-MS Visual C++ 17.14.14 /O2 /Ob2 | 12th Gen Intel(R)<br  />
+MS Visual C++ 17.14.14 /O2 /Ob2  </th><th class="markdownTableHeadRight">12th Gen Intel(R)<br  />
 Core(TM) i12900H (2.50 GHz)<br  />
-clang-cl /O2 /Ob2 | |:-------------------------&mdash;|-----------&mdash;:|----&mdash;:|----&mdash;:| | <b>Single dispatch</b> | | | | virtual function (reference*) | 100% | 100% | 100% | | any++ interface | <b>100%</b> | <b>100%</b> | <b>100%</b> | | any++ open method | <b>115%</b> | <b>200%</b> | <b>130%</b> | | <b>Double dispatch</b> | | | | | std::variant + std::visit (reference*) | 100% | 100% | 100% | | hand rolled w. virtual function | 150% | 150%| 400% | | any++ open method | <b>120%</b> | <b>150%</b> | <b>300%</b>(*) |</p>
+clang-cl /O2 /Ob2  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>Single dispatch</b>  </td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">virtual function (reference*)  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">any++ interface  </td><td class="markdownTableBodyRight"><b>100%</b>  </td><td class="markdownTableBodyRight"><b>100%</b>  </td><td class="markdownTableBodyRight"><b>100%</b>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">any++ open method  </td><td class="markdownTableBodyRight"><b>115%</b>  </td><td class="markdownTableBodyRight"><b>200%</b>  </td><td class="markdownTableBodyRight"><b>130%</b>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>Double dispatch</b>  </td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">std::variant + std::visit (reference*)  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">hand rolled w. virtual function  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">400%  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">any++ open method  </td><td class="markdownTableBodyRight"><b>120%</b>  </td><td class="markdownTableBodyRight"><b>150%</b>  </td><td class="markdownTableBodyRight"><b>300%</b>(*)  </td></tr>
+</table>
 <ul>
 <li>reference*:<ul>
 <li>100% in different colums do not compare<br  />
