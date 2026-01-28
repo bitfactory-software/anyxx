@@ -474,7 +474,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /*! \def TRAIT_(n, base, fns)
     \brief TRAIT derived from base
     \ingroup trait_macros
-    \example _2d_trait_self.cpp
 */
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
@@ -486,8 +485,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \code TRAIT(sample_trait,
       (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
    \endcode
-
-   \example _2o_trait_simple.cpp
 */
 #define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
 
@@ -497,7 +494,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
     Macro to define the functioanl behaviour for a \ref any, with decorations.
    That are additional functions and typdefs (in brakets).
-   \example _2b_trait_monoid.cpp
 */
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
 
@@ -517,7 +513,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT template with a base TRAIT
     \ingroup trait_macros
 
-   \example _2d_trait_self.cpp
 */
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
@@ -570,8 +565,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    proxy_default, decoration)
     \brief ANY template with a base ANY and decoration
     \ingroup trait_macros
-
-    \example _5_any_template.cpp
 */
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \
@@ -581,8 +574,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    proxy_default)
     \brief ANY template with a base ANY
     \ingroup trait_macros
-
-    \example _5_any_template.cpp
 */
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
   TRAIT_TEMPLATE_(t, n, BASE, bt, l)                    \
@@ -591,8 +582,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /*! \def ANY_TEMPLATE(template_args, n, fns, proxy_default)
     \brief ANY template
     \ingroup trait_macros
-
-    \example _5_any_template.cpp
 */
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
   TRAIT_TEMPLATE(t, n, l)                    \
@@ -601,8 +590,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /*! \def ANY_TEMPLATE_EX_(template_args, n, fns, proxy_default, decoration)
     \brief ANY template with a and decoration
     \ingroup trait_macros
-
-    \example _5_any_template.cpp
 */
 #define ANY_TEMPLATE_EX(t, n, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \
@@ -2083,12 +2070,6 @@ static_assert(!moveable_from<val, shared>);
 static_assert(!moveable_from<val, weak>);
 static_assert(moveable_from<val, val>);
 
-/** \example _1_any_shape.cpp
-    \example 21_Tree_any.cpp
-    \example 21_Tree_any.cpp
-    \example 31_Animals_any_dispatch.cpp
-*/
-
 /** \brief The core class template to control dispatch for external
  *   polymorphism.
  *
@@ -3444,3 +3425,22 @@ class dispatch_vany {
       interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
       ANYXX_UNPAREN(class_)>();                                               \
   }
+
+/**
+   \example _2d_trait_self.cpp
+   Shows self a referntial trait
+
+   \example _2o_trait_simple.cpp
+   Simple trait usage
+
+   \example _2b_trait_monoid.cpp
+   A self referntial trait that models a monoid. Show how to use a MODEL_MAP that 
+   acts simultanious as runtime and complitem customization point
+
+   \example _5_any_template.cpp
+   \example _1_any_shape.cpp
+   \example 21_Tree_any.cpp
+   \example 21_Tree_any.cpp
+   \example 31_Animals_any_dispatch.cpp
+
+*/
