@@ -24,7 +24,7 @@
 */
 var NAVTREE =
 [
-  [ "My Project", "index.html", [
+  [ "Any++", "index.html", [
     [ "any++", "index.html#autotoc_md2", null ],
     [ "Any++ <em>Proxy</em> types overview", "md_docs_2erased__data__overview.html", null ],
     [ "Comparison of <em>erased functionality</em> in <span class=\"tt\">virtual_void</span>", "md_docs_2erased__functionality.html", null ],
