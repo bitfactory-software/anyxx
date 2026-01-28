@@ -4,22 +4,26 @@
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
+
 **Any++** enhances the well-known *boost::any* and *std::any* with:
+
 - **Flexible choice of underlying storage mechanisms**
   - Type-erased
   - Concrete
   - Variant
 - **Extensibility**
-  - Ability to add functions and operators
-  - Support for open (multi-)dispatch
-  - Runtime support for downcasts and cross-casts
+  - Ability to add functions and operators using Rust-like **traits** (including templates)
+  - Support for **open (multi-)dispatch**
+  - Runtime support for **downcasts and cross-casts**
 
-To allow easy **separation**, the library adds utilities for:
+To allow easy **separation of concerns**, the library adds utilities for:
 - Factories
 - Hooks
 - Load-time extendable members
 
-The performance of **dynamic dispatch is on par with virtual functions**.
+The performance of **dynamic dispatch is on par with virtual functions**. 
+
+The combination of static and runtime storage enables a hybrid approach of `std::variant` and **type erasure** with a unified syntax and open double dispatch.
 
 ### Showcase 1: Basic *ANY* usage
 ```cpp
@@ -51,43 +55,6 @@ Circle
 Square
 ```
 [Compiler Explorer](https://godbolt.org/z/4P6M8WrzP)
-
-### Feature overview
-- **External Polymorphism** via *ANY...* metaclasses
-  - Nonintrusive **Runtime** ***AND*** **Static** Polymorphism, aka "type erased interfaces", "dynamic interfaces", "traits"
-    - Deriveable
-    - Operators
-    - Choose implementation for specific type via *Concept Map*
-    - Upcast, **Downcast**, **Crosscast** via *borrow_as*, *clone_to*(if concrete type is *copy constructable*), *move_to*
-   - **Interface** can be **template**
-     - 'recursive' to erase container
-   - **open runtime dispatch** with **O(1) runtime complexity**
-     - **single** (visitor)
-     - **multiple** (collision resolver, type erased binary operators)  
-     - performance on par with vanilla virtual functions
-- **Abstract factory** for *ANY*s 
-- **Transparent storeage/lifetime management***
-  - Out of the box:
-    - const/mutable_observers, aka "pointer"
-    - shared, weak via std::shared_ptr, std::week_ptr
-    - unique, via std::unique_ptr and type erased deleter
-    - value
-    - by_val
-    - vany variant
-  - Customizable via anyxx::proxy_trait
-  - **Safe** interchange of **lifetime**  
-    - (implicit) **borrow_as**: value -> ..._observer, unique -> ..._observer, shared -> cref, mutref -> cref
-    - **move_to**: value -> unique -> shared, unique -> value
-    - **clone_to**: ..._observer -> shared -> unique -> value
-- **Extension member*
-  - To **add members at load time**
-  - Has access performance on par with *virtual* function getter
-- **Hook**
-  - A overrideable **customization point**     
-- Single **header only library**
-- **static-** or **DLL/SO mode** for v-tables, dispatch tables and other static meta data.
-  - Default for *static build*: the compiler manages the details via *static inline*.
-  - ``#define ANYXX_DLL_MODE``, works for *static* and *dynamic builds*`: You control the visibility and location of the static meta data.
 
 ### architectural overview
 <img width="2695" height="1192" alt="anyxx architecture" src="https://github.com/user-attachments/assets/b6ae44bf-c78f-4b4f-83cf-201c6931ec98" />
