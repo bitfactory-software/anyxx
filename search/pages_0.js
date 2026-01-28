@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['any_2b_2b_20_3cem_3eproxy_3c_2fem_3e_20types_20overview_0',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_erased_data_overview.html',1,'']]]
+  ['1_3a_20basic_20any_20usage_0',['Showcase 1: Basic &lt;em&gt;ANY&lt;/em&gt; usage',['../index.html#autotoc_md3',1,'']]]
 ];
