@@ -3,10 +3,10 @@ var searchData=
   ['and_20any_5f_20macros_0',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
   ['any_1',['Any++',['../index.html',1,'']]],
   ['any_2',['any',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_20_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_3',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md2',1,'']]],
+  ['any_20_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_3',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md3',1,'']]],
   ['any_20proxy_20types_20overview_4',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_2erased__data__overview.html',1,'']]],
-  ['any_20usage_5',['Showcase 1: Basic &lt;em&gt;ANY&lt;/em&gt; usage',['../index.html#autotoc_md3',1,'']]],
-  ['any_20virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md2',1,'']]],
+  ['any_20usage_5',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md4',1,'']]],
+  ['any_20virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md3',1,'']]],
   ['any_3c_20box_2c_20trait_20_3e_7',['any&lt; Box, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20by_5fval_3c_20functor_20_26_20_3e_2c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_20_3e_8',['any&lt; by_val&lt; functor &amp; &gt;, function&lt; int(double), const_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20by_5fval_3c_20functor_20_26_20_3e_2c_20function_3c_20int_28double_29_2c_20mutable_5f_20_3e_20_3e_9',['any&lt; by_val&lt; functor &amp; &gt;, function&lt; int(double), mutable_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
@@ -22,6 +22,10 @@ var searchData=
   ['any_3c_20val_20_3e_19',['any&lt; val &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20val_2c_20trait_20_3e_20',['any&lt; val, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_5f_20macros_21',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
-  ['anyxx_2ehpp_22',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
-  ['architectural_20overview_23',['architectural overview',['../index.html#autotoc_md4',1,'']]]
+  ['any_5ftemplate_22',['ANY_TEMPLATE',['../group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb',1,'anyxx.hpp']]],
+  ['any_5ftemplate_5f_23',['ANY_TEMPLATE_',['../group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a',1,'anyxx.hpp']]],
+  ['any_5ftemplate_5fex_5f_24',['ANY_TEMPLATE_EX_',['../group__trait__macros.html#gae8358d6ce5723e6034308a27184df811',1,'anyxx.hpp']]],
+  ['anyxx_2ehpp_25',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
+  ['architectural_20overview_26',['Architectural overview',['../md_docs_2architectural__overview.html',1,'']]],
+  ['available_20via_20vcpkg_27',['Available via vcpkg',['../index.html#autotoc_md5',1,'']]]
 ];

@@ -107,10 +107,150 @@ Macros</h2></td></tr>
 <tr class="memdesc:gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT with decoration.  <br /></td></tr>
 <tr class="memitem:ga9ec9a5f2d475d1ddf481df8385fce4a1" id="r_ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t,  n,  base,  base_template_types,  l)</td></tr>
 <tr class="memdesc:ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with a base TRAIT.  <br /></td></tr>
+<tr class="memitem:gae8358d6ce5723e6034308a27184df811" id="r_gae8358d6ce5723e6034308a27184df811"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae8358d6ce5723e6034308a27184df811">ANY_TEMPLATE_EX_</a>(t,  n,  BASE,  bt,  l,  proxy_default,  decoration)</td></tr>
+<tr class="memdesc:gae8358d6ce5723e6034308a27184df811"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base ANY and decoration.  <br /></td></tr>
+<tr class="memitem:ga5efc06aca9d1e9f50d8c2b0896a0e99a" id="r_ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5efc06aca9d1e9f50d8c2b0896a0e99a">ANY_TEMPLATE_</a>(t,  n,  BASE,  bt,  l,  proxy_default)</td></tr>
+<tr class="memdesc:ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base ANY.  <br /></td></tr>
+<tr class="memitem:ga428ec0337c0d297d504f3c0d8f06a2bb" id="r_ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(t,  n,  l,  proxy_default)</td></tr>
+<tr class="memdesc:ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macros to define trait 's and any '. </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="ga428ec0337c0d297d504f3c0d8f06a2bb" name="ga428ec0337c0d297d504f3c0d8f06a2bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga428ec0337c0d297d504f3c0d8f06a2bb">&#9670;&#160;</a></span>ANY_TEMPLATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_TEMPLATE</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>proxy_default</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE(t, n, l)                    \</div>
+<div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
+</div><!-- fragment -->
+<p>ANY template. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga5efc06aca9d1e9f50d8c2b0896a0e99a" name="ga5efc06aca9d1e9f50d8c2b0896a0e99a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5efc06aca9d1e9f50d8c2b0896a0e99a">&#9670;&#160;</a></span>ANY_TEMPLATE_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_TEMPLATE_</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>BASE</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>bt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>proxy_default</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t, n, BASE, bt, l)                    \</div>
+<div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
+<div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:522</div></div>
+</div><!-- fragment -->
+<p>ANY template with a base ANY. </p>
+
+</div>
+</div>
+<a id="gae8358d6ce5723e6034308a27184df811" name="gae8358d6ce5723e6034308a27184df811"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae8358d6ce5723e6034308a27184df811">&#9670;&#160;</a></span>ANY_TEMPLATE_EX_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_TEMPLATE_EX_</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>BASE</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>bt</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>proxy_default</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>decoration</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \</div>
+<div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
+</div><!-- fragment -->
+<p>ANY template with a base ANY and decoration. </p>
+<p>ANY template with a and decoration. </p>
+
+</div>
+</div>
 <a id="gae0cb5618c6b82d8f6a7eaf36143647a9" name="gae0cb5618c6b82d8f6a7eaf36143647a9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">&#9670;&#160;</a></span>TRAIT</h2>
 
@@ -136,7 +276,7 @@ Macros</h2></td></tr>
 <div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(sample_trait,</div>
 <div class="line">  (ANY_FN(std::string, const_fn,(<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behaviour for an anyExample:</div><div class="ttdef"><b>Definition</b> anyxx.hpp:492</div></div>
-</div><!-- fragment --> <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>.</dd>
+</div><!-- fragment --> <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#a0">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -271,7 +411,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())</div>
 </div><!-- fragment -->
 <p>TRAIT template with a base TRAIT. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a0">_2d_trait_self.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a0">_2d_trait_self.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
