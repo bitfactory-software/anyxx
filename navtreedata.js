@@ -25,10 +25,11 @@
 var NAVTREE =
 [
   [ "Any++", "index.html", [
-    [ "Any++ : How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or <em>variant</em>?", "index.html#autotoc_md3", null ],
+    [ "Any++ : How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or <em>variant</em>?", "index.html#autotoc_md30", null ],
     [ "Architectural overview", "md_docs_2architectural__overview.html", null ],
     [ "Any++ <em>Proxy</em> types overview", "md_docs_2erased__data__overview.html", null ],
     [ "Comparison of <em>erased functionality</em> in <span class=\"tt\">virtual_void</span>", "md_docs_2erased__functionality.html", null ],
+    [ "Terms and Definitions in Context of This Library", "md_docs_2terms__and__definitions.html", null ],
     [ "Topics", "topics.html", "topics" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['usage_0',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md4',1,'']]],
-  ['useage_20in_20cmakelists_20txt_3a_1',['Useage in CMakeLists.txt:',['../index.html#autotoc_md6',1,'']]]
+  ['no_20additional_20members_20and_20where_20all_20members_20point_20to_20valid_20functions_0',['An object derived from v_table, with no additional members, and where all members point to valid functions.',['../md_docs_2terms__and__definitions.html#autotoc_md6',1,'']]]
 ];

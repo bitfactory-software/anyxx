@@ -102,15 +102,15 @@ Macros</h2></td></tr>
 <tr class="memitem:gadf5ede586c04f0c23d0b46a60e1d241b" id="r_gadf5ede586c04f0c23d0b46a60e1d241b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n,  BASE,  l)</td></tr>
 <tr class="memdesc:gadf5ede586c04f0c23d0b46a60e1d241b"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base.  <br /></td></tr>
 <tr class="memitem:gae0cb5618c6b82d8f6a7eaf36143647a9" id="r_gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(n,  fns)</td></tr>
-<tr class="memdesc:gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to define the functioanl behaviour for an anyExample:  <br /></td></tr>
+<tr class="memdesc:gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to define the functioanl behavior for an any.  <br /></td></tr>
 <tr class="memitem:gae6aebc8db498e6ac66bb2d3011f91c1c" id="r_gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a>(n, ...)</td></tr>
 <tr class="memdesc:gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT with decoration.  <br /></td></tr>
 <tr class="memitem:ga9ec9a5f2d475d1ddf481df8385fce4a1" id="r_ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t,  n,  base,  base_template_types,  l)</td></tr>
 <tr class="memdesc:ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with a base TRAIT.  <br /></td></tr>
 <tr class="memitem:gae8358d6ce5723e6034308a27184df811" id="r_gae8358d6ce5723e6034308a27184df811"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae8358d6ce5723e6034308a27184df811">ANY_TEMPLATE_EX_</a>(t,  n,  BASE,  bt,  l,  proxy_default,  decoration)</td></tr>
-<tr class="memdesc:gae8358d6ce5723e6034308a27184df811"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base ANY and decoration.  <br /></td></tr>
+<tr class="memdesc:gae8358d6ce5723e6034308a27184df811"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base and decoration.  <br /></td></tr>
 <tr class="memitem:ga5efc06aca9d1e9f50d8c2b0896a0e99a" id="r_ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5efc06aca9d1e9f50d8c2b0896a0e99a">ANY_TEMPLATE_</a>(t,  n,  BASE,  bt,  l,  proxy_default)</td></tr>
-<tr class="memdesc:ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base ANY.  <br /></td></tr>
+<tr class="memdesc:ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base.  <br /></td></tr>
 <tr class="memitem:ga428ec0337c0d297d504f3c0d8f06a2bb" id="r_ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(t,  n,  l,  proxy_default)</td></tr>
 <tr class="memdesc:ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template.  <br /></td></tr>
 </table>
@@ -196,7 +196,7 @@ Macros</h2></td></tr>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
 <div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:517</div></div>
 </div><!-- fragment -->
-<p>ANY template with a base ANY. </p>
+<p>ANY template with a base. </p>
 
 </div>
 </div>
@@ -246,8 +246,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
 </div><!-- fragment -->
-<p>ANY template with a base ANY and decoration. </p>
-<p>ANY template with a and decoration. </p>
+<p>ANY template with a base and decoration. </p>
 
 </div>
 </div>
@@ -272,10 +271,10 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n, anyxx::base_trait, fns)</div>
 <div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:478</div></div>
 </div><!-- fragment -->
-<p>Macro to define the functioanl behaviour for an anyExample: </p>
-<div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(sample_trait,</div>
+<p>Macro to define the functioanl behavior for an any. </p>
+<p>Example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(sample_trait,</div>
 <div class="line">  (ANY_FN(std::string, const_fn,(<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
-<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behaviour for an anyExample:</div><div class="ttdef"><b>Definition</b> anyxx.hpp:489</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:489</div></div>
 </div><!-- fragment --> <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#a0">_5_any_template.cpp</a>.</dd>
 </dl>
 
@@ -334,7 +333,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a>(n, anyxx::base_trait, __VA_ARGS__)</div>
 </div><!-- fragment -->
 <p>TRAIT with decoration. </p>
-<p>Macro to define the functioanl behaviour for a any, with decorations. That are additional functions and typdefs (in brakets). </p>
+<p>Macro to define the functioanl behavior for a any, with decorations. That are additional functions and typdefs (in brakets). </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a0">_2b_trait_monoid.cpp</a>.</dd>
 </dl>
 
@@ -371,7 +370,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_TRAIT_(, n, BASE, l, decoration)</div>
 </div><!-- fragment -->
 <p>TRAIT derived from base with decoration. </p>
-<p>Macro to define the functioanl behaviour for a any, where the behaviour of base are inherrited. The decoration are additional functions and typdefs (in brakets). </p>
+<p>Macro to define the functioanl behavior for a any, where the behavior of base is inherrited. The decoration are additional functions and typdefs (in brakets). </p>
 
 </div>
 </div>

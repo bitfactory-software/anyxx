@@ -1,7 +1,24 @@
 var searchData=
 [
-  ['ci_20matrix_0',['CI Matrix',['../index.html#autotoc_md8',1,'']]],
-  ['cmakelists_20txt_3a_1',['Useage in CMakeLists.txt:',['../index.html#autotoc_md6',1,'']]],
-  ['compared_2',['Performace compared',['../index.html#autotoc_md7',1,'']]],
-  ['comparison_20of_20erased_20functionality_20in_20virtual_5fvoid_3',['Comparison of &lt;em&gt;erased functionality&lt;/em&gt; in &lt;span class=&quot;tt&quot;&gt;virtual_void&lt;/span&gt;',['../md_docs_2erased__functionality.html',1,'']]]
+  ['callable_20witch_20acts_20a_20dispatch_5ftable_5ffunction_20on_20the_20first_20paramater_20must_20be_20an_20any_0',['An &lt;b&gt;extension method&lt;/b&gt; is a freestanding callable, witch acts a dispatch_table_function on the first paramater. (must be an &lt;b&gt;any&lt;/b&gt;).',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
+  ['can_20add_20data_20members_20without_20changing_20the_20definition_20of_20that_20struct_1',['An &lt;b&gt;extension members&lt;/b&gt; behaves like a &lt;em&gt;struct&lt;/em&gt;, where you can add data members without changing the definition of that &lt;em&gt;struct&lt;/em&gt;.',['../md_docs_2terms__and__definitions.html#autotoc_md28',1,'']]],
+  ['can_20recieve_20the_20content_20of_20an_20other_20proxy_20with_20different_20liftime_20within_20certain_20rules_2',['An &lt;b&gt;proxy&lt;/b&gt; can recieve the content of an other &lt;b&gt;proxy&lt;/b&gt; with different &lt;b&gt;liftime&lt;/b&gt; within certain rules.',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
+  ['cast_3',['Cast',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'Lifetime Cast'],['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'Static Cast vs Dynamic Cast']]],
+  ['cast_20vs_20dynamic_20cast_4',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
+  ['cast_3a_5',['cast:',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'A &lt;em&gt;dynamic cast&lt;/em&gt;:'],['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'A &lt;em&gt;static cast&lt;/em&gt;:']]],
+  ['certain_20rules_6',['An &lt;b&gt;proxy&lt;/b&gt; can recieve the content of an other &lt;b&gt;proxy&lt;/b&gt; with different &lt;b&gt;liftime&lt;/b&gt; within certain rules.',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
+  ['changing_20the_20definition_20of_20that_20struct_7',['An &lt;b&gt;extension members&lt;/b&gt; behaves like a &lt;em&gt;struct&lt;/em&gt;, where you can add data members without changing the definition of that &lt;em&gt;struct&lt;/em&gt;.',['../md_docs_2terms__and__definitions.html#autotoc_md28',1,'']]],
+  ['ci_20matrix_8',['CI Matrix',['../index.html#autotoc_md35',1,'']]],
+  ['cmakelists_20txt_3a_9',['Useage in CMakeLists.txt:',['../index.html#autotoc_md33',1,'']]],
+  ['combines_20a_20v_5ftable_20with_20an_20proxy_10',['An &lt;em&gt;any&lt;/em&gt; combines a &lt;b&gt;v_table&lt;/b&gt; with an &lt;b&gt;proxy&lt;/b&gt;.',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]],
+  ['compared_11',['Performace compared',['../index.html#autotoc_md34',1,'']]],
+  ['comparison_20of_20erased_20functionality_20in_20virtual_5fvoid_12',['Comparison of &lt;em&gt;erased functionality&lt;/em&gt; in &lt;span class=&quot;tt&quot;&gt;virtual_void&lt;/span&gt;',['../md_docs_2erased__functionality.html',1,'']]],
+  ['concept_20describing_20an_20object_20that_20erases_20the_20type_20of_20another_20object_20for_20a_20given_20lifetime_20kind_13',['A concept describing an object that &lt;b&gt;erases&lt;/b&gt; the &lt;b&gt;type&lt;/b&gt; of &lt;b&gt;another&lt;/b&gt; object for a given &lt;em&gt;lifetime&lt;/em&gt; kind.',['../md_docs_2terms__and__definitions.html#autotoc_md9',1,'']]],
+  ['content_20of_20an_20other_20proxy_20with_20different_20liftime_20within_20certain_20rules_14',['An &lt;b&gt;proxy&lt;/b&gt; can recieve the content of an other &lt;b&gt;proxy&lt;/b&gt; with different &lt;b&gt;liftime&lt;/b&gt; within certain rules.',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
+  ['context_20of_20this_20library_15',['Terms and Definitions in Context of This Library',['../md_docs_2terms__and__definitions.html',1,'']]],
+  ['convenience_20wrapper_20of_20an_20any_20for_20the_20eunerased_20type_16',['A &lt;em&gt;typed_any&lt;/em&gt; is a convenience wrapper of an &lt;b&gt;any&lt;/b&gt; for the &lt;b&gt;eunerased&lt;/b&gt; type.',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
+  ['conversion_20from_20a_20more_20detailed_20type_20to_20a_20general_20one_17',['An &lt;em&gt;upcast&lt;/em&gt; is a &lt;em&gt;conversion&lt;/em&gt; from a more detailed type to a general one.',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
+  ['conversion_20from_20a_20more_20general_20type_20to_20a_20more_20detailed_20one_18',['A &lt;em&gt;downcast&lt;/em&gt; is a conversion from a more general type to a more detailed one.',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['crosscast_19',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md22',1,'']]],
+  ['crosscasts_20are_20between_20unrelated_20types_20',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]]
 ];

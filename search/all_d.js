@@ -1,13 +1,22 @@
 var searchData=
 [
-  ['to_20trait_20any_20virtual_20static_20or_20variant_0',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md3',1,'']]],
-  ['trait_1',['TRAIT',['../group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9',1,'anyxx.hpp']]],
-  ['trait_20and_20any_5f_20macros_2',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
-  ['trait_20any_20virtual_20static_20or_20variant_3',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md3',1,'']]],
-  ['trait_5f_4',['TRAIT_',['../group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b',1,'anyxx.hpp']]],
-  ['trait_5fex_5',['TRAIT_EX',['../group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c',1,'anyxx.hpp']]],
-  ['trait_5fex_5f_6',['TRAIT_EX_',['../group__trait__macros.html#ga15fb0b1b9a60d6586108d9bd6cec2a54',1,'anyxx.hpp']]],
-  ['trait_5ftemplate_5f_7',['TRAIT_TEMPLATE_',['../group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1',1,'anyxx.hpp']]],
-  ['txt_3a_8',['Useage in CMakeLists.txt:',['../index.html#autotoc_md6',1,'']]],
-  ['types_20overview_9',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_2erased__data__overview.html',1,'']]]
+  ['macros_0',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
+  ['matrix_1',['CI Matrix',['../index.html#autotoc_md35',1,'']]],
+  ['matrix_2',['dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md7',1,'']]],
+  ['members_3',['Extension Members',['../md_docs_2terms__and__definitions.html#autotoc_md27',1,'']]],
+  ['members_20and_20where_20all_20members_20point_20to_20valid_20functions_4',['An object derived from v_table, with no additional members, and where all members point to valid functions.',['../md_docs_2terms__and__definitions.html#autotoc_md6',1,'']]],
+  ['members_20behaves_20like_20a_20struct_20where_20you_20can_20add_20data_20members_20without_20changing_20the_20definition_20of_20that_20struct_5',['An &lt;b&gt;extension members&lt;/b&gt; behaves like a &lt;em&gt;struct&lt;/em&gt;, where you can add data members without changing the definition of that &lt;em&gt;struct&lt;/em&gt;.',['../md_docs_2terms__and__definitions.html#autotoc_md28',1,'']]],
+  ['members_20point_20to_20valid_20functions_6',['An object derived from v_table, with no additional members, and where all members point to valid functions.',['../md_docs_2terms__and__definitions.html#autotoc_md6',1,'']]],
+  ['members_20without_20changing_20the_20definition_20of_20that_20struct_7',['An &lt;b&gt;extension members&lt;/b&gt; behaves like a &lt;em&gt;struct&lt;/em&gt;, where you can add data members without changing the definition of that &lt;em&gt;struct&lt;/em&gt;.',['../md_docs_2terms__and__definitions.html#autotoc_md28',1,'']]],
+  ['method_8',['Extension Method',['../md_docs_2terms__and__definitions.html#autotoc_md24',1,'']]],
+  ['method_20is_20a_20freestanding_20callable_20witch_20acts_20a_20dispatch_5ftable_5ffunction_20on_20the_20first_20paramater_20must_20be_20an_20any_9',['An &lt;b&gt;extension method&lt;/b&gt; is a freestanding callable, witch acts a dispatch_table_function on the first paramater. (must be an &lt;b&gt;any&lt;/b&gt;).',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
+  ['method_20is_20a_20generalistaion_20of_20the_20extension_20method_20to_20solve_20the_20multiple_20dispatch_10',['A &lt;b&gt;extension multi method&lt;/b&gt; is a generalistaion of the &lt;b&gt;extension method&lt;/b&gt;, to solve the &lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_dispatch&quot;&gt;multiple dispatch&lt;/a&gt; .',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
+  ['method_20to_20solve_20the_20multiple_20dispatch_11',['A &lt;b&gt;extension multi method&lt;/b&gt; is a generalistaion of the &lt;b&gt;extension method&lt;/b&gt;, to solve the &lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_dispatch&quot;&gt;multiple dispatch&lt;/a&gt; .',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
+  ['more_20detailed_20one_12',['A &lt;em&gt;downcast&lt;/em&gt; is a conversion from a more general type to a more detailed one.',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['more_20detailed_20type_20to_20a_20general_20one_13',['An &lt;em&gt;upcast&lt;/em&gt; is a &lt;em&gt;conversion&lt;/em&gt; from a more detailed type to a general one.',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
+  ['more_20general_20type_20to_20a_20more_20detailed_20one_14',['A &lt;em&gt;downcast&lt;/em&gt; is a conversion from a more general type to a more detailed one.',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['multi_20dispatch_20matrix_15',['dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md7',1,'']]],
+  ['multi_20method_20is_20a_20generalistaion_20of_20the_20extension_20method_20to_20solve_20the_20multiple_20dispatch_16',['A &lt;b&gt;extension multi method&lt;/b&gt; is a generalistaion of the &lt;b&gt;extension method&lt;/b&gt;, to solve the &lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_dispatch&quot;&gt;multiple dispatch&lt;/a&gt; .',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
+  ['multiple_20dispatch_17',['A &lt;b&gt;extension multi method&lt;/b&gt; is a generalistaion of the &lt;b&gt;extension method&lt;/b&gt;, to solve the &lt;a href=&quot;https://en.wikipedia.org/wiki/Multiple_dispatch&quot;&gt;multiple dispatch&lt;/a&gt; .',['../md_docs_2terms__and__definitions.html#autotoc_md26',1,'']]],
+  ['must_20be_20an_20any_18',['An &lt;b&gt;extension method&lt;/b&gt; is a freestanding callable, witch acts a dispatch_table_function on the first paramater. (must be an &lt;b&gt;any&lt;/b&gt;).',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]]
 ];
