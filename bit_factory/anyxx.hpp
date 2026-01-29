@@ -1256,7 +1256,7 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
 /// dynamic proxy) in a std::variant. This variant is then used with a \ref
 /// by_val proxy and the same \ref trait as before. See \ref make_vany
 /// So the dispatch for the types in variant is done internaly with a
-/// std::visit, and all other types are dispatch via there v-Table. Now you
+/// std::visit, and all other types are dispatched via there v-Table. Now you
 /// know, where the Any++ logo has its origin.
 /// \ingroup proxies
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
