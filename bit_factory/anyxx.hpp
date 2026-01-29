@@ -1247,15 +1247,18 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
   }
 };
 
+/// \defgroup proxies Proxies
+/// \brief Proxies manage the storage in an \ref any
+
 /// A Proxy for mixing std::variant and type erasure
 /// Use this, when some, at compile time known types, are dispatched in a hot
 /// path. Put this types plus an any (with the specific \ref trait and a
 /// dynamic proxy) in a std::variant. This variant is then used with a \ref
-/// by_val proxy and the same \ref trait as before.
-/// So the dispatch for the types in variant is done internaly with a std::visit,
-/// and all other types are dispatch via there v-Table.
-/// Now you know, where the Any++ logo has its origin.
-///
+/// by_val proxy and the same \ref trait as before. See \ref make_vany
+/// So the dispatch for the types in variant is done internaly with a
+/// std::visit, and all other types are dispatch via there v-Table. Now you
+/// know, where the Any++ logo has its origin.
+/// \ingroup proxies
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using vany_variant = std::variant<Any<Proxy>, Types...>;
 
@@ -1336,7 +1339,13 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
 
 template <voidness Voidness>
 using observer = Voidness;
+/// Proxy to capture the dispatch target type erased by const reference
+/// An any with such a proxy is lifetime bound to the object refernced!
+/// \ingroup proxies
 using cref = observer<const_void>;
+/// Proxy to capture the dispatch target type erased by mutable reference
+/// An any with such a proxy is lifetime bound to the object refernced!
+/// \ingroup proxies
 using mutref = observer<mutable_void>;
 
 template <voidness Voidness>
@@ -1405,6 +1414,16 @@ static_assert(is_proxy<cref>);
 // --------------------------------------------------------------------------------
 // erased data unique
 
+/// Proxy to manage the captured object via std::unique_ptr-like smart pointer
+/// * If you pass a std::unique_pt to the any constructor, this pointer will be
+/// released and the ownership goes to the unique. NOTE: The \ref any_v_able
+/// will build with the value_type of the std::unique_ptr.
+/// * If you pass an object as second paramter, with the std::in_place tag as
+/// first, this object will be moved to the memory managed by the unique.
+/// * If you pass as first parameter std::in_place_type<...>, the object will be
+/// constructed in place in the allocated memory with the other arguments
+/// forwarded.
+/// \ingroup proxies
 struct unique {
   mutable_void ptr = nullptr;
   explicit unique(mutable_void p = nullptr) : ptr(p) {}
@@ -1481,10 +1500,19 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
 
 static_assert(is_proxy<unique>);
 
-// --------------------------------------------------------------------------------
-// erased data shared + weak
-
+/// Proxy to manage the captured object via \c std::shared_ptr.
+/// * If you pass a \c std::shared_ptr to the \ref any constructor, this pointer
+/// will be casted to \c <const void*> and used as proxy.
+/// * If you pass an object as second paramter, with the std::in_place tag as
+/// first, this object will be forwarded to std::make_shared with the decayed
+/// type of object.
+/// * If you pass as first parameter std::in_place_type<T>, the other arguments
+/// will be forwarded to std::make_shared<T>(...).
+/// \ingroup proxies
 using shared = std::shared_ptr<void const>;
+/// Proxy to manage the captured object via \c std::weak_ptr.
+/// Assign or copy construct it form a  \c any<shared>
+/// \ingroup proxies
 using weak = std::weak_ptr<void const>;
 
 template <>
@@ -1624,6 +1652,16 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
   static constexpr inline bool is_trivial = Trivial;
 };
 
+/// \brief Proxy to manage the captured object as value with small object
+/// optimization
+/// * If you forward an object an any constructor, this object will be forwarded
+/// to the allocated storage.
+/// * To pass an object as second paramter, with the std::in_place tag as first,
+/// has the same behavior as above
+/// * If you pass as first parameter std::in_place_type<...>, the object will be
+/// constructed in place in the allocated memory with the other arguments
+/// forwarded
+/// \ingroup proxies
 union val {
   val(mutable_void ptr = 0) : heap{ptr} {}
   val([[maybe_unused]] val const& other) noexcept { trivial = other.trivial; }
@@ -2281,6 +2319,11 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
+  /// Type erasing constructor, the concrete behavior is controled by the proxy
+  /// via its corresponding /ref proxy_trait.
+  /// See  \ref by_val, \ref cref, \ref mutref \ref shared, \ref weak, \ref
+  /// unique and
+  /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, Proxy> &&
@@ -2290,11 +2333,16 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
   }
   // cppcheck-suppress-end noExplicitConstructor
+  /// Type erasing constructor, the concrete behavior is controled by the proxy
+  /// @V wil be forwarded to the managed storage
   template <typename V>
   any(std::in_place_t, V&& v)
       : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<Proxy, V>();
   }
+  /// Type erasing constructor, the concrete behavior is controled by the proxy
+  /// @T wil be used to construct the object in the managed storage with
+  /// forwarded @args
   template <typename T, typename... Args>
   any(std::in_place_type_t<T>, Args&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
@@ -2387,9 +2435,9 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   template <is_proxy Other, typename OtherTrait>
   friend class any;
 
-  template <typename AAny>
-    requires is_any<AAny> && AAny::dyn
-  friend inline auto get_v_table(AAny const& any);
+  template <typename Friend>
+    requires is_any<Friend> && Friend::dyn
+  friend inline auto get_v_table(Friend const& any);
 
   template <is_any To, is_any From>
   friend inline To unchecked_downcast_to(From from)
@@ -2471,6 +2519,11 @@ inline To unchecked_downcast_to(From from)
             unchecked_v_table_downcast_to<To>(get_v_table(from))};
 }
 
+/// \defgroup casts Casts
+/// \brief Mix and match downcast, crosscast and get \ref any with other \ref proxies
+
+/// \brief Safe downcast to derived trait via runtime info from the v-Tables
+/// \ingroup casts
 template <is_any To, is_any From>
 inline std::optional<To> downcast_to(From from)
   requires(std::derived_from<typename To::v_table_t, typename From::v_table_t>)
@@ -2484,11 +2537,15 @@ template <typename U, is_any Any>
 inline auto unchecked_unerase_cast(Any const& o) {
   return unchecked_unerase_cast<U>(get_proxy(o), get_v_table(o));
 }
+/// \brief Safe downcast to unerased type via runtime info from the v-Tables
+/// \ingroup casts
 template <typename U, typename Any>
   requires is_any<Any> && Any::dyn
 inline auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_proxy(o), get_v_table(o));
 }
+/// \brief Safe downcast to unerased type via runtime info from the v-Tables
+/// \ingroup casts
 template <typename U, typename Any>
   requires is_any<Any> && Any::dyn
 inline auto unerase_cast_if(Any const& o) {
@@ -2496,12 +2553,12 @@ inline auto unerase_cast_if(Any const& o) {
 }
 
 /// Proxy to capture the dispatch target concrete to enable static dispatch
-/// A simple warpper class over an object. Use '&' and 'const &' to capture by
-/// reference.
+/// A simple warpper class over an object. Use \c '&' and \c 'const &' to
+/// capture by reference.
 ///
 /// Usage:
 /// * Use the model map as static customization point.
-/// * Use by_val<std::variant<....>> to unify customization points and member
+/// * Use \c by_val<std::variant<....>> to unify customization points and member
 ///   function like invocation
 /// * Use with \ref vany_variant.
 ///
@@ -2523,7 +2580,6 @@ struct by_val {
 /// A factory function to bind an object as model to an \ref any with a \ref
 /// trait
 /// See alse \ref by_val::as
-///
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
   return any<anyxx::by_val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
@@ -2794,6 +2850,9 @@ std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
   });
 }
 
+/// \brief Safe crosscast via runtime info to an other any without changing the
+/// ownership.
+/// \ingroup casts
 template <is_any ToAny, is_any FromAny>
   requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
@@ -2809,6 +2868,8 @@ std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   }
 }
 
+/// \brief Clone via runtime info.
+/// \ingroup casts
 template <is_any ToAny, is_any FromAny>
 std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
   using vv_to_t = typename ToAny::proxy_t;
@@ -2818,6 +2879,8 @@ std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
   });
 }
 
+/// \brief Lock a shared \ref any.
+/// \ingroup casts
 template <is_any FromAny>
   requires std::same_as<typename FromAny::proxy_t, weak>
 auto lock(FromAny const& from_interface) {
@@ -2830,6 +2893,8 @@ auto lock(FromAny const& from_interface) {
   return return_t{};
 }
 
+/// \brief Move ownership to an other \ref any. Uses runtime info to crosscast, if neccessary.
+/// \ingroup casts
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from) {
   auto to_v_table = query_v_table<ToAny>(from.release_v_table());

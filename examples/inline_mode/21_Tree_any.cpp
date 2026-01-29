@@ -54,7 +54,7 @@ struct Integer {
 
 template <typename NODE, typename... ARGS>
 auto make_node(ARGS&&... args) {
-  return any_node<>{std::make_shared<NODE>(std::forward<ARGS>(args)...)};
+  return any_node<>{std::in_place_type<NODE>, std::forward<ARGS>(args)...};
 }
 
 }  // namespace
