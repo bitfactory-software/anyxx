@@ -1,7 +1,11 @@
 var anyxx_8hpp =
 [
+    [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", "structanyxx_1_1any__v__table" ],
     [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", null ],
-    [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", null ],
+    [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", "structanyxx_1_1by__val" ],
+    [ "anyxx::is_proxy", "conceptanyxx_1_1is__proxy.html", null ],
+    [ "anyxx::has_v_table", "conceptanyxx_1_1has__v__table.html", null ],
+    [ "anyxx::is_dyn", "conceptanyxx_1_1is__dyn.html", null ],
     [ "ANY", "group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22", null ],
     [ "ANY_EX", "group__trait__macros.html#gadb4b15be1ffc489081b75d8b81e6ec67", null ],
     [ "ANY_EX_", "group__trait__macros.html#ga9ac23604935d330f71d3b41f1c000906", null ],
@@ -29,5 +33,8 @@ var anyxx_8hpp =
     [ "TRAIT_EX_", "group__trait__macros.html#ga15fb0b1b9a60d6586108d9bd6cec2a54", null ],
     [ "TRAIT_TEMPLATE", "group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae", null ],
     [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ],
-    [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa", null ]
+    [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa", null ],
+    [ "anyxx::make_vany", "anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562", null ],
+    [ "anyxx::vany_variant", "anyxx_8hpp.html#af97e4130c5c467557b419eb6e97b8d80", null ],
+    [ "anyxx::trait_as", "anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c", null ]
 ];

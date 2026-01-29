@@ -92,18 +92,14 @@ $(function(){initNavTree('structanyxx_1_1by__val.html','','structanyxx_1_1by__va
 </div><!--header-->
 <div class="contents">
 
-<p>Proxy to capture the dispatch target concrete to enable static dispatch.  
- <a href="#details">More...</a></p>
-
 <p><code>#include &lt;<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:af4f8099821fc553a662f5045f096cb42" id="r_af4f8099821fc553a662f5045f096cb42"><td class="memItemLeft"><a id="af4f8099821fc553a662f5045f096cb42" name="af4f8099821fc553a662f5045f096cb42"></a>
 using&#160;</td><td class="memItemRight"><b>value_t</b> = Value</td></tr>
-<tr class="memitem:aa0a6c0f3d8d15c53da59cca4995e5561" id="r_aa0a6c0f3d8d15c53da59cca4995e5561"><td class="memTemplParams" colspan="2"><a id="aa0a6c0f3d8d15c53da59cca4995e5561" name="aa0a6c0f3d8d15c53da59cca4995e5561"></a>
-template&lt;typename Trait&gt; </td></tr>
-<tr class="memitem:aa0a6c0f3d8d15c53da59cca4995e5561 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>as</b> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;by_val&lt;Value&gt;, Trait&gt;</td></tr>
+<tr class="memitem:aa0a6c0f3d8d15c53da59cca4995e5561" id="r_aa0a6c0f3d8d15c53da59cca4995e5561"><td class="memTemplParams" colspan="2">template&lt;typename Trait&gt; </td></tr>
+<tr class="memitem:aa0a6c0f3d8d15c53da59cca4995e5561 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aa0a6c0f3d8d15c53da59cca4995e5561">as</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;by_val&lt;Value&gt;, Trait&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -120,14 +116,39 @@ Value&#160;</td><td class="memItemRight"><b>value_</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Value&gt;<br />
-struct anyxx::by_val&lt; Value &gt;</div><p>Proxy to capture the dispatch target concrete to enable static dispatch. </p>
-<p>A simple warpper class over an object. Use '&amp;' and 'const &amp;' to capture by reference. This class template is only used to instanciate an <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+struct anyxx::by_val&lt; Value &gt;</div><p>Proxy to capture the dispatch target concrete to enable static dispatch A simple warpper class over an object. Use '&amp;' and 'const &amp;' to capture by reference.</p>
+<p>Usage:</p><ul>
+<li>Use the model map as static customization point.</li>
+<li>Use <a class="el" href="structanyxx_1_1by__val.html">by_val&lt;std::variant&lt;....&gt;&gt;</a> to unify customization points and member function like invocation</li>
+<li>Use with <a class="el" href="anyxx_8hpp.html#af97e4130c5c467557b419eb6e97b8d80" title="vany_variant">vany_variant</a>.</li>
+</ul>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Value</td><td>The caputured value </td></tr>
   </table>
   </dd>
 </dl>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+</div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
+<a id="aa0a6c0f3d8d15c53da59cca4995e5561" name="aa0a6c0f3d8d15c53da59cca4995e5561"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0a6c0f3d8d15c53da59cca4995e5561">&#9670;&#160;</a></span>as</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Value&gt; </div>
+<div class="memtemplate">
+template&lt;typename Trait&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val</a>&lt; Value &gt;::as = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;by_val&lt;Value&gt;, Trait&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Helper typedef template to trait a model with an <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. See also <a class="el" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c" title="trait_as">trait_as</a>. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>
 </ul>
 </div><!-- contents -->

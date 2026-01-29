@@ -200,8 +200,8 @@ class anyxx::any&lt; Proxy, Trait &gt;</div><p>The core class template to contro
 <p>With the Trait template parameter, you specify the member functions of a captured object which can be invoked on this any.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, cref, mutref, etc. All Proxy classes must conform to the is_proxy concept. </td></tr>
-    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> macro. See there for examples. </td></tr>
+    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, cref, mutref shared, weak, unique and value. All Proxy classes must conform to the <a class="el" href="conceptanyxx_1_1is__proxy.html" title="is_proxy">is_proxy</a> concept. </td></tr>
+    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> macro. See there for examples. If the proxy is dynamic (=type erased) the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
   </table>
   </dd>
 </dl>

@@ -569,7 +569,7 @@ Macros</h2></td></tr>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior. </p>
 <p>Use if in a base TRAIT exists an equaly named FN </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#a4">_2d_trait_self.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#a5">_2d_trait_self.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -604,7 +604,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \</div>
 <div class="line">                       const_)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga31d722491c45e2315823f0eb3ebe541c"><div class="ttname"><a href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior and an programmer choosen name in map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:738</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga31d722491c45e2315823f0eb3ebe541c"><div class="ttname"><a href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior and an programmer choosen name in map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:745</div></div>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map. </p>
 <p>Use if in a base TRAIT exists an equaly named FN </p>
@@ -727,7 +727,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(                     \</div>
 <div class="line">    ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)</div>
-<div class="ttc" id="agroup__trait__macros_html_gabc1702b86750b11ed590d64e42d151e3"><div class="ttname"><a href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior and an programmer choosen name in map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:768</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gabc1702b86750b11ed590d64e42d151e3"><div class="ttname"><a href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior and an programmer choosen name in map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:778</div></div>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior is to call the related operator of the model. </p>
 <p>Use if in a base TRAIT exists an equaly named FN </p>
@@ -1021,7 +1021,7 @@ Macros</h2></td></tr>
 <p>Macro to define the functioanl behavior for an any. </p>
 <p>Example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(sample_trait,</div>
 <div class="line">  (<a class="code hl_define" href="#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, const_fn,(<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
-<div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:670</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:671</div></div>
 </div><!-- fragment --> <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#a0">_5_any_template.cpp</a>.</dd>
 </dl>
 
@@ -1053,7 +1053,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a>(n, BASE, l, ())</div>
 </div><!-- fragment -->
 <p>TRAIT derived from base. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a3">_2d_trait_self.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a4">_2d_trait_self.cpp</a>.</dd>
 </dl>
 
 </div>

@@ -85,10 +85,12 @@ var searchData=
   ['any_5ftemplate_82',['ANY_TEMPLATE',['../group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb',1,'anyxx.hpp']]],
   ['any_5ftemplate_5f_83',['ANY_TEMPLATE_',['../group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a',1,'anyxx.hpp']]],
   ['any_5ftemplate_5fex_5f_84',['ANY_TEMPLATE_EX_',['../group__trait__macros.html#gae8358d6ce5723e6034308a27184df811',1,'anyxx.hpp']]],
-  ['anyxx_2ehpp_85',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
-  ['architectural_20overview_86',['Architectural overview',['../md_docs_2architectural__overview.html',1,'']]],
-  ['architectural_20type_20tunnel_87',['&lt;em&gt;Ad hoc&lt;/em&gt; Type Erasure Versus Architectural &lt;em&gt;Type Tunnel&lt;/em&gt;',['../md_docs_2terms__and__definitions.html#autotoc_md29',1,'']]],
-  ['are_20between_20unrelated_20types_88',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
-  ['are_20within_20related_20types_20crosscasts_20are_20between_20unrelated_20types_89',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
-  ['available_20via_20vcpkg_90',['Available via vcpkg',['../index.html#autotoc_md32',1,'']]]
+  ['any_5fv_5ftable_85',['any_v_table',['../structanyxx_1_1any__v__table.html',1,'anyxx::any_v_table'],['../structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205',1,'anyxx::any_v_table::any_v_table()']]],
+  ['anyxx_2ehpp_86',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
+  ['architectural_20overview_87',['Architectural overview',['../md_docs_2architectural__overview.html',1,'']]],
+  ['architectural_20type_20tunnel_88',['&lt;em&gt;Ad hoc&lt;/em&gt; Type Erasure Versus Architectural &lt;em&gt;Type Tunnel&lt;/em&gt;',['../md_docs_2terms__and__definitions.html#autotoc_md29',1,'']]],
+  ['are_20between_20unrelated_20types_89',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
+  ['are_20within_20related_20types_20crosscasts_20are_20between_20unrelated_20types_90',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
+  ['as_91',['as',['../structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561',1,'anyxx::by_val']]],
+  ['available_20via_20vcpkg_92',['Available via vcpkg',['../index.html#autotoc_md32',1,'']]]
 ];

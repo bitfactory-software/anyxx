@@ -106,11 +106,11 @@ $(function(){initNavTree('anyxx__function_8hpp_source.html','',''); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>};</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">struct </span>function_v_table : any_v_table {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">struct </span>function_v_table : <a class="code hl_struct" href="structanyxx_1_1any__v__table.html">any_v_table</a> {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  R (*f_)(<span class="keyword">typename</span> Constness::type, Args...);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  function_v_table([[maybe_unused]] std::in_place_type_t&lt;Concrete&gt; concrete)</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      : any_v_table(concrete) {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      : <a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a>(concrete) {</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    f_ = +[](<span class="keyword">typename</span> Constness::type self_ptr, Args... args) -&gt; R {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>      <span class="keywordflow">return</span> std::invoke(*unchecked_unerase_cast&lt;Concrete&gt;(self_ptr),</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                         std::forward&lt;Args&gt;(args)...);</div>
@@ -171,6 +171,8 @@ $(function(){initNavTree('anyxx__function_8hpp_source.html','',''); });
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
 <div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>}  <span class="comment">// namespace anyxx</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
+<div class="ttc" id="astructanyxx_1_1any__v__table_html"><div class="ttname"><a href="structanyxx_1_1any__v__table.html">anyxx::any_v_table</a></div><div class="ttdoc">Basic liftime functionality.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:931</div></div>
+<div class="ttc" id="astructanyxx_1_1any__v__table_html_a7ac8badd88a2c68c0ffb5eb74a9e2205"><div class="ttname"><a href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">anyxx::any_v_table::any_v_table</a></div><div class="ttdeci">any_v_table(std::in_place_type_t&lt; Concrete &gt; concrete)</div><div class="ttdoc">Type erasing constructor.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:936</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
