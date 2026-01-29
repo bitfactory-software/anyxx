@@ -25,7 +25,7 @@ To allow easy **separation of concerns**, the library adds utilities for:
 The performance of **dynamic dispatch is on par with virtual functions**. 
 
 The combination of static and dynamic dispatch enables 
-- a hybrid usage of `std::variant` and **type erasure** balance performance and coupling.
+- a hybrid usage of `std::variant` and **type erasure** to balance performance and coupling.
 - C++0x-like concept maps for static and dynamic customization points and default behavior.
 
 ### Showcase 1: Basic *Any++* usage
