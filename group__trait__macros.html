@@ -105,18 +105,763 @@ Macros</h2></td></tr>
 <tr class="memdesc:gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to define the functioanl behavior for an any.  <br /></td></tr>
 <tr class="memitem:gae6aebc8db498e6ac66bb2d3011f91c1c" id="r_gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a>(n, ...)</td></tr>
 <tr class="memdesc:gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT with decoration.  <br /></td></tr>
+<tr class="memitem:ga5ee874de4f2988dc14324d0e652712aa" id="r_ga5ee874de4f2988dc14324d0e652712aa"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a>(t,  n,  base,  base_template_types,  l,  decoration)</td></tr>
+<tr class="memdesc:ga5ee874de4f2988dc14324d0e652712aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with base and decoration.  <br /></td></tr>
 <tr class="memitem:ga9ec9a5f2d475d1ddf481df8385fce4a1" id="r_ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t,  n,  base,  base_template_types,  l)</td></tr>
 <tr class="memdesc:ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with a base TRAIT.  <br /></td></tr>
+<tr class="memitem:gad2f206b96947eeba0d7f5cee72b33cae" id="r_gad2f206b96947eeba0d7f5cee72b33cae"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(t,  n,  l)</td></tr>
+<tr class="memdesc:gad2f206b96947eeba0d7f5cee72b33cae"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template.  <br /></td></tr>
+<tr class="memitem:ga9ac23604935d330f71d3b41f1c000906" id="r_ga9ac23604935d330f71d3b41f1c000906"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga9ac23604935d330f71d3b41f1c000906">ANY_EX_</a>(n,  BASE,  l,  proxy_default,  decoration)</td></tr>
+<tr class="memdesc:ga9ac23604935d330f71d3b41f1c000906"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with a base and decoration.  <br /></td></tr>
+<tr class="memitem:gadb4b15be1ffc489081b75d8b81e6ec67" id="r_gadb4b15be1ffc489081b75d8b81e6ec67"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gadb4b15be1ffc489081b75d8b81e6ec67">ANY_EX</a>(n,  l,  proxy_default,  decoration)</td></tr>
+<tr class="memdesc:gadb4b15be1ffc489081b75d8b81e6ec67"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with decoration.  <br /></td></tr>
+<tr class="memitem:ga47a5ba38b03d55fa5f63979281028d22" id="r_ga47a5ba38b03d55fa5f63979281028d22"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(n,  l, ...)</td></tr>
+<tr class="memdesc:ga47a5ba38b03d55fa5f63979281028d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with a base.  <br /></td></tr>
 <tr class="memitem:gae8358d6ce5723e6034308a27184df811" id="r_gae8358d6ce5723e6034308a27184df811"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gae8358d6ce5723e6034308a27184df811">ANY_TEMPLATE_EX_</a>(t,  n,  BASE,  bt,  l,  proxy_default,  decoration)</td></tr>
 <tr class="memdesc:gae8358d6ce5723e6034308a27184df811"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base and decoration.  <br /></td></tr>
 <tr class="memitem:ga5efc06aca9d1e9f50d8c2b0896a0e99a" id="r_ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5efc06aca9d1e9f50d8c2b0896a0e99a">ANY_TEMPLATE_</a>(t,  n,  BASE,  bt,  l,  proxy_default)</td></tr>
 <tr class="memdesc:ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base.  <br /></td></tr>
 <tr class="memitem:ga428ec0337c0d297d504f3c0d8f06a2bb" id="r_ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(t,  n,  l,  proxy_default)</td></tr>
 <tr class="memdesc:ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template.  <br /></td></tr>
+<tr class="memitem:ga7e35457fd2b7d0297132511962941a88" id="r_ga7e35457fd2b7d0297132511962941a88"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga7e35457fd2b7d0297132511962941a88">ANY_FN_PURE</a>(ret,  name,  params,  const_)</td></tr>
+<tr class="memdesc:ga7e35457fd2b7d0297132511962941a88"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function, witch must be provided by model.  <br /></td></tr>
+<tr class="memitem:gaef791af6302ddc20f90905f6d611cd70" id="r_gaef791af6302ddc20f90905f6d611cd70"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaef791af6302ddc20f90905f6d611cd70">ANY_FN_PURE_EXACT</a>(ret,  name,  params,  const_)</td></tr>
+<tr class="memdesc:gaef791af6302ddc20f90905f6d611cd70"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function, witch must be provided by model.  <br /></td></tr>
+<tr class="memitem:ga73e339005a697eb20b243d1622873b99" id="r_ga73e339005a697eb20b243d1622873b99"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga73e339005a697eb20b243d1622873b99">ANY_FN_DEF</a>(ret,  name,  params,  const_, ...)</td></tr>
+<tr class="memdesc:ga73e339005a697eb20b243d1622873b99"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function with default behavior.  <br /></td></tr>
+<tr class="memitem:ga6a5835dfafdaede08be54515be1208a8" id="r_ga6a5835dfafdaede08be54515be1208a8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(ret,  name,  params,  const_)</td></tr>
+<tr class="memdesc:ga6a5835dfafdaede08be54515be1208a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memitem:gaf7331be98b802b62e63563ce10b3cddf" id="r_gaf7331be98b802b62e63563ce10b3cddf"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaf7331be98b802b62e63563ce10b3cddf">ANY_FN_EXACT</a>(ret,  name,  params,  const_)</td></tr>
+<tr class="memdesc:gaf7331be98b802b62e63563ce10b3cddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memitem:gaff7e6ca79070dc93b6672492c05776ed" id="r_gaff7e6ca79070dc93b6672492c05776ed"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaff7e6ca79070dc93b6672492c05776ed">ANY_FN_OVERLOAD</a>(ret,  name,  params,  const_)</td></tr>
+<tr class="memdesc:gaff7e6ca79070dc93b6672492c05776ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memitem:ga3e26c93a4eb0d32d3859137998f542a9" id="r_ga3e26c93a4eb0d32d3859137998f542a9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga3e26c93a4eb0d32d3859137998f542a9">ANY_FN_OVERLOAD_EXACT</a>(ret,  name,  params,  const_)</td></tr>
+<tr class="memdesc:ga3e26c93a4eb0d32d3859137998f542a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memitem:ga055c58c6bfff95137a1534024dc0813d" id="r_ga055c58c6bfff95137a1534024dc0813d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
+<tr class="memdesc:ga055c58c6bfff95137a1534024dc0813d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map.  <br /></td></tr>
+<tr class="memitem:gabcbc5dedec9f5a6f2eed6e0959472af4" id="r_gabcbc5dedec9f5a6f2eed6e0959472af4"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gabcbc5dedec9f5a6f2eed6e0959472af4">ANY_OP_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
+<tr class="memdesc:gabcbc5dedec9f5a6f2eed6e0959472af4"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
+<tr class="memitem:ga31d722491c45e2315823f0eb3ebe541c" id="r_ga31d722491c45e2315823f0eb3ebe541c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
+<tr class="memdesc:ga31d722491c45e2315823f0eb3ebe541c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and an programmer choosen name in map.  <br /></td></tr>
+<tr class="memitem:ga7d46ca8afdfbcc0c3103f0dedb9710d5" id="r_ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga7d46ca8afdfbcc0c3103f0dedb9710d5">ANY_OP_EXACT</a>(ret,  op,  params,  const_)</td></tr>
+<tr class="memdesc:ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map.  <br /></td></tr>
+<tr class="memitem:ga5c441142284f6dad13de59245b656628" id="r_ga5c441142284f6dad13de59245b656628"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5c441142284f6dad13de59245b656628">ANY_OP_EXACT_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
+<tr class="memdesc:ga5c441142284f6dad13de59245b656628"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
+<tr class="memitem:gabc1702b86750b11ed590d64e42d151e3" id="r_gabc1702b86750b11ed590d64e42d151e3"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
+<tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and an programmer choosen name in map.  <br /></td></tr>
+<tr class="memitem:gad1214e29f913c519ecf9f4b1e9934fa8" id="r_gad1214e29f913c519ecf9f4b1e9934fa8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gad1214e29f913c519ecf9f4b1e9934fa8">ANY_OP_EXACT_OVERLOAD</a>(ret,  op,  params,  const_)</td></tr>
+<tr class="memdesc:gad1214e29f913c519ecf9f4b1e9934fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
+<tr class="memitem:ga2ec66b211ef38c2274fd0c00155f89d2" id="r_ga2ec66b211ef38c2274fd0c00155f89d2"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga2ec66b211ef38c2274fd0c00155f89d2">ANY_OP_EXACT_OVERLOAD_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
+<tr class="memdesc:ga2ec66b211ef38c2274fd0c00155f89d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macros to define trait 's and any '. </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
+<a id="ga47a5ba38b03d55fa5f63979281028d22" name="ga47a5ba38b03d55fa5f63979281028d22"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga47a5ba38b03d55fa5f63979281028d22">&#9670;&#160;</a></span>ANY</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(n, l)          \</div>
+<div class="line">__detail_ANYXX_ANY_EX_(n, __VA_ARGS__)</div>
+<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:488</div></div>
+</div><!-- fragment -->
+<p>ANY with a base. </p>
+<p>ANY. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_8cpp-example.html#a0">21_Tree_any.cpp</a>, <a class="el" href="31_Animals_any_dispatch_8cpp-example.html#a0">31_Animals_any_dispatch.cpp</a>, and <a class="el" href="_1_any_shape_8cpp-example.html#a0">_1_any_shape.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gadb4b15be1ffc489081b75d8b81e6ec67" name="gadb4b15be1ffc489081b75d8b81e6ec67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadb4b15be1ffc489081b75d8b81e6ec67">&#9670;&#160;</a></span>ANY_EX</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_EX</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>proxy_default</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>decoration</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a>(n, l, decoration)                    \</div>
+<div class="line">__detail_ANYXX_ANY_EX_(n, proxy_default)</div>
+<div class="ttc" id="agroup__trait__macros_html_gae6aebc8db498e6ac66bb2d3011f91c1c"><div class="ttname"><a href="#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n,...)</div><div class="ttdoc">TRAIT with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:497</div></div>
+</div><!-- fragment -->
+<p>ANY with decoration. </p>
+
+</div>
+</div>
+<a id="ga9ac23604935d330f71d3b41f1c000906" name="ga9ac23604935d330f71d3b41f1c000906"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9ac23604935d330f71d3b41f1c000906">&#9670;&#160;</a></span>ANY_EX_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_EX_</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>BASE</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>proxy_default</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>decoration</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a>(n, BASE, l, decoration)                    \</div>
+<div class="line">__detail_ANYXX_ANY_EX_(n, proxy_default)</div>
+<div class="ttc" id="agroup__trait__macros_html_ga15fb0b1b9a60d6586108d9bd6cec2a54"><div class="ttname"><a href="#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:470</div></div>
+</div><!-- fragment -->
+<p>ANY with a base and decoration. </p>
+
+</div>
+</div>
+<a id="ga6a5835dfafdaede08be54515be1208a8" name="ga6a5835dfafdaede08be54515be1208a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6a5835dfafdaede08be54515be1208a8">&#9670;&#160;</a></span>ANY_FN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(, ret, name, name, <span class="keyword">false</span>, const_, params)</div>
+</div><!-- fragment -->
+<p>TRAIT function witch default behavior is to call an equaly named member function of the model. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_8cpp-example.html#a1">21_Tree_any.cpp</a>, <a class="el" href="31_Animals_any_dispatch_8cpp-example.html#a1">31_Animals_any_dispatch.cpp</a>, <a class="el" href="_1_any_shape_8cpp-example.html#a1">_1_any_shape.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#a1">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#a1">_5_any_template.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga73e339005a697eb20b243d1622873b99" name="ga73e339005a697eb20b243d1622873b99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga73e339005a697eb20b243d1622873b99">&#9670;&#160;</a></span>ANY_FN_DEF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN_DEF</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(, ret, name, name, <span class="keyword">false</span>, const_, (__VA_ARGS__), \</div>
+<div class="line">        _detail_EXPAND params)</div>
+</div><!-- fragment -->
+<p>TRAIT function with default behavior. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a1">_2b_trait_monoid.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#a1">_2d_trait_self.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gaf7331be98b802b62e63563ce10b3cddf" name="gaf7331be98b802b62e63563ce10b3cddf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaf7331be98b802b62e63563ce10b3cddf">&#9670;&#160;</a></span>ANY_FN_EXACT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN_EXACT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(, ret, name, name, <span class="keyword">true</span>, const_, params)</div>
+</div><!-- fragment -->
+<p>TRAIT function witch default behavior is to call an equaly named member function of the model. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a4">_5_any_template.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gaff7e6ca79070dc93b6672492c05776ed" name="gaff7e6ca79070dc93b6672492c05776ed"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaff7e6ca79070dc93b6672492c05776ed">&#9670;&#160;</a></span>ANY_FN_OVERLOAD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN_OVERLOAD</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, <span class="keyword">false</span>, const_, \</div>
+<div class="line">                         params)</div>
+</div><!-- fragment -->
+<p>TRAIT function witch default behavior is to call an equaly named member function of the model. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="ga3e26c93a4eb0d32d3859137998f542a9" name="ga3e26c93a4eb0d32d3859137998f542a9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga3e26c93a4eb0d32d3859137998f542a9">&#9670;&#160;</a></span>ANY_FN_OVERLOAD_EXACT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN_OVERLOAD_EXACT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, <span class="keyword">true</span>, const_, \</div>
+<div class="line">                         params)</div>
+</div><!-- fragment -->
+<p>TRAIT function witch default behavior is to call an equaly named member function of the model. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="ga7e35457fd2b7d0297132511962941a88" name="ga7e35457fd2b7d0297132511962941a88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7e35457fd2b7d0297132511962941a88">&#9670;&#160;</a></span>ANY_FN_PURE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN_PURE</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(, ret, name, name, <span class="keyword">false</span>, const_,               \</div>
+<div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</div>
+<div class="line">        _detail_EXPAND params)</div>
+</div><!-- fragment -->
+<p>TRAIT function, witch must be provided by model. </p>
+
+</div>
+</div>
+<a id="gaef791af6302ddc20f90905f6d611cd70" name="gaef791af6302ddc20f90905f6d611cd70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaef791af6302ddc20f90905f6d611cd70">&#9670;&#160;</a></span>ANY_FN_PURE_EXACT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_FN_PURE_EXACT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(, ret, name, name, <span class="keyword">true</span>, const_,                \</div>
+<div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</div>
+<div class="line">        _detail_EXPAND params)</div>
+</div><!-- fragment -->
+<p>TRAIT function, witch must be provided by model. </p>
+
+</div>
+</div>
+<a id="gabcbc5dedec9f5a6f2eed6e0959472af4" name="gabcbc5dedec9f5a6f2eed6e0959472af4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabcbc5dedec9f5a6f2eed6e0959472af4">&#9670;&#160;</a></span>ANY_OP_DEF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_DEF</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(, ret, name, <span class="keyword">operator</span> op, <span class="keyword">false</span>, const_, (__VA_ARGS__), \</div>
+<div class="line">        _detail_EXPAND params)</div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#a4">_2d_trait_self.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="ga7d46ca8afdfbcc0c3103f0dedb9710d5" name="ga7d46ca8afdfbcc0c3103f0dedb9710d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7d46ca8afdfbcc0c3103f0dedb9710d5">&#9670;&#160;</a></span>ANY_OP_EXACT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \</div>
+<div class="line">                       const_)</div>
+<div class="ttc" id="agroup__trait__macros_html_ga31d722491c45e2315823f0eb3ebe541c"><div class="ttname"><a href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior and an programmer choosen name in map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:738</div></div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="ga5c441142284f6dad13de59245b656628" name="ga5c441142284f6dad13de59245b656628"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5c441142284f6dad13de59245b656628">&#9670;&#160;</a></span>ANY_OP_EXACT_DEF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT_DEF</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(, ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>, const_, (__VA_ARGS__), \</div>
+<div class="line">        _detail_EXPAND params)</div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior is to call the related operator of the model. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="ga31d722491c45e2315823f0eb3ebe541c" name="ga31d722491c45e2315823f0eb3ebe541c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga31d722491c45e2315823f0eb3ebe541c">&#9670;&#160;</a></span>ANY_OP_EXACT_MAP_NAMED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT_MAP_NAMED</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(, ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>, const_, params)</div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior and an programmer choosen name in map. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="gad1214e29f913c519ecf9f4b1e9934fa8" name="gad1214e29f913c519ecf9f4b1e9934fa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad1214e29f913c519ecf9f4b1e9934fa8">&#9670;&#160;</a></span>ANY_OP_EXACT_OVERLOAD</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT_OVERLOAD</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(                     \</div>
+<div class="line">    ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)</div>
+<div class="ttc" id="agroup__trait__macros_html_gabc1702b86750b11ed590d64e42d151e3"><div class="ttname"><a href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior and an programmer choosen name in map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:768</div></div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior is to call the related operator of the model. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="ga2ec66b211ef38c2274fd0c00155f89d2" name="ga2ec66b211ef38c2274fd0c00155f89d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2ec66b211ef38c2274fd0c00155f89d2">&#9670;&#160;</a></span>ANY_OP_EXACT_OVERLOAD_DEF</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT_OVERLOAD_DEF</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(ANY_OVERLOAD(<span class="keyword">operator</span> op), ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>, const_, \</div>
+<div class="line">        (__VA_ARGS__), _detail_EXPAND params)</div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="gabc1702b86750b11ed590d64e42d151e3" name="gabc1702b86750b11ed590d64e42d151e3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gabc1702b86750b11ed590d64e42d151e3">&#9670;&#160;</a></span>ANY_OP_EXACT_OVERLOAD_MAP_NAMED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT_OVERLOAD_MAP_NAMED</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(<span class="keyword">operator</span> op), ret, name, <span class="keyword">operator</span> op, \</div>
+<div class="line">                         <span class="keyword">true</span>, const_, params)</div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior and an programmer choosen name in map. </p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
+<a id="ga055c58c6bfff95137a1534024dc0813d" name="ga055c58c6bfff95137a1534024dc0813d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga055c58c6bfff95137a1534024dc0813d">&#9670;&#160;</a></span>ANY_OP_MAP_NAMED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_MAP_NAMED</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(, ret, name, <span class="keyword">operator</span> op, <span class="keyword">false</span>, const_, params)</div>
+</div><!-- fragment -->
+<p>TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map. </p>
+<p>TRAIT operator with default behavior is to call the related operator of the model.</p>
+<p>Use if in a base TRAIT exists an equaly named FN </p>
+
+</div>
+</div>
 <a id="ga428ec0337c0d297d504f3c0d8f06a2bb" name="ga428ec0337c0d297d504f3c0d8f06a2bb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga428ec0337c0d297d504f3c0d8f06a2bb">&#9670;&#160;</a></span>ANY_TEMPLATE</h2>
 
@@ -145,11 +890,12 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE(t, n, l)                    \</div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(t, n, l)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
+<div class="ttc" id="agroup__trait__macros_html_gad2f206b96947eeba0d7f5cee72b33cae"><div class="ttname"><a href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a></div><div class="ttdeci">#define TRAIT_TEMPLATE(t, n, l)</div><div class="ttdoc">TRAIT template.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:529</div></div>
 </div><!-- fragment -->
 <p>ANY template. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a6">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -194,7 +940,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t, n, BASE, bt, l)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:517</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:522</div></div>
 </div><!-- fragment -->
 <p>ANY template with a base. </p>
 
@@ -243,8 +989,9 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \</div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a>(t, n, BASE, bt, l, decoration)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
+<div class="ttc" id="agroup__trait__macros_html_ga5ee874de4f2988dc14324d0e652712aa"><div class="ttname"><a href="#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)</div><div class="ttdoc">TRAIT template with base and decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:506</div></div>
 </div><!-- fragment -->
 <p>ANY template with a base and decoration. </p>
 
@@ -269,12 +1016,12 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n, anyxx::base_trait, fns)</div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:478</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:477</div></div>
 </div><!-- fragment -->
 <p>Macro to define the functioanl behavior for an any. </p>
 <p>Example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(sample_trait,</div>
-<div class="line">  (ANY_FN(std::string, const_fn,(<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
-<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:489</div></div>
+<div class="line">  (<a class="code hl_define" href="#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, const_fn,(<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
+<div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:670</div></div>
 </div><!-- fragment --> <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#a0">_5_any_template.cpp</a>.</dd>
 </dl>
 
@@ -304,10 +1051,9 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a>(n, BASE, l, ())</div>
-<div class="ttc" id="agroup__trait__macros_html_ga15fb0b1b9a60d6586108d9bd6cec2a54"><div class="ttname"><a href="#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:471</div></div>
 </div><!-- fragment -->
 <p>TRAIT derived from base. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a2">_2d_trait_self.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a3">_2d_trait_self.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -374,6 +1120,37 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="gad2f206b96947eeba0d7f5cee72b33cae" name="gad2f206b96947eeba0d7f5cee72b33cae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad2f206b96947eeba0d7f5cee72b33cae">&#9670;&#160;</a></span>TRAIT_TEMPLATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRAIT_TEMPLATE</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t, n, anyxx::base_trait, (), l)</div>
+</div><!-- fragment -->
+<p>TRAIT template. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
 <a id="ga9ec9a5f2d475d1ddf481df8385fce4a1" name="ga9ec9a5f2d475d1ddf481df8385fce4a1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">&#9670;&#160;</a></span>TRAIT_TEMPLATE_</h2>
 
@@ -407,11 +1184,62 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())</div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a>(t, n, base, base_template_types, l, ())</div>
 </div><!-- fragment -->
 <p>TRAIT template with a base TRAIT. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a0">_2d_trait_self.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a0">_2d_trait_self.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a5">_5_any_template.cpp</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="ga5ee874de4f2988dc14324d0e652712aa" name="ga5ee874de4f2988dc14324d0e652712aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5ee874de4f2988dc14324d0e652712aa">&#9670;&#160;</a></span>TRAIT_TEMPLATE_EX_</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRAIT_TEMPLATE_EX_</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>base</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>base_template_types</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>decoration</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">TRAIT_META_FUNCTION(                                                         \</div>
+<div class="line">    _detail_REMOVE_PARENS(t),                                                \</div>
+<div class="line">    __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \</div>
+<div class="line">    __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \</div>
+<div class="line">    __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \</div>
+<div class="line">    __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, base,         \</div>
+<div class="line">    _detail_REMOVE_PARENS(base_template_types), l, decoration)</div>
+</div><!-- fragment -->
+<p>TRAIT template with base and decoration. </p>
+<p>Macro to define the functioanl behavior for a any, with decorations. That are additional functions and typdefs (in brakets). </p>
 
 </div>
 </div>

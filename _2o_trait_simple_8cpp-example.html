@@ -98,7 +98,7 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(trait1, (ANY_FN(std::string, fn1, (), <span class="keyword">const</span>)))</div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(trait1, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, fn1, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
@@ -108,12 +108,13 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">struct </span>model1 {</div>
 <div class="line">    [[nodiscard]] std::string fn1()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;model1&quot;</span>; }</div>
 <div class="line">  };</div>
-<div class="line">  <a id="_a1" name="_a1"></a><a class="code hl_class" href="classanyxx_1_1any.html">any&lt;val, trait1&gt;</a> test{model1{}};</div>
+<div class="line">  <a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">any&lt;val, trait1&gt;</a> test{model1{}};</div>
 <div class="line">  CHECK(test.fn1() == <span class="stringliteral">&quot;model1&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2095</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:489</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2230</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:670</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:488</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

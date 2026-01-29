@@ -2,6 +2,24 @@ var anyxx_8hpp =
 [
     [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", null ],
+    [ "ANY", "group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22", null ],
+    [ "ANY_EX", "group__trait__macros.html#gadb4b15be1ffc489081b75d8b81e6ec67", null ],
+    [ "ANY_EX_", "group__trait__macros.html#ga9ac23604935d330f71d3b41f1c000906", null ],
+    [ "ANY_FN", "group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8", null ],
+    [ "ANY_FN_DEF", "group__trait__macros.html#ga73e339005a697eb20b243d1622873b99", null ],
+    [ "ANY_FN_EXACT", "group__trait__macros.html#gaf7331be98b802b62e63563ce10b3cddf", null ],
+    [ "ANY_FN_OVERLOAD", "group__trait__macros.html#gaff7e6ca79070dc93b6672492c05776ed", null ],
+    [ "ANY_FN_OVERLOAD_EXACT", "group__trait__macros.html#ga3e26c93a4eb0d32d3859137998f542a9", null ],
+    [ "ANY_FN_PURE", "group__trait__macros.html#ga7e35457fd2b7d0297132511962941a88", null ],
+    [ "ANY_FN_PURE_EXACT", "group__trait__macros.html#gaef791af6302ddc20f90905f6d611cd70", null ],
+    [ "ANY_OP_DEF", "group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4", null ],
+    [ "ANY_OP_EXACT", "group__trait__macros.html#ga7d46ca8afdfbcc0c3103f0dedb9710d5", null ],
+    [ "ANY_OP_EXACT_DEF", "group__trait__macros.html#ga5c441142284f6dad13de59245b656628", null ],
+    [ "ANY_OP_EXACT_MAP_NAMED", "group__trait__macros.html#ga31d722491c45e2315823f0eb3ebe541c", null ],
+    [ "ANY_OP_EXACT_OVERLOAD", "group__trait__macros.html#gad1214e29f913c519ecf9f4b1e9934fa8", null ],
+    [ "ANY_OP_EXACT_OVERLOAD_DEF", "group__trait__macros.html#ga2ec66b211ef38c2274fd0c00155f89d2", null ],
+    [ "ANY_OP_EXACT_OVERLOAD_MAP_NAMED", "group__trait__macros.html#gabc1702b86750b11ed590d64e42d151e3", null ],
+    [ "ANY_OP_MAP_NAMED", "group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d", null ],
     [ "ANY_TEMPLATE", "group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb", null ],
     [ "ANY_TEMPLATE_", "group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a", null ],
     [ "ANY_TEMPLATE_EX_", "group__trait__macros.html#gae8358d6ce5723e6034308a27184df811", null ],
@@ -9,5 +27,7 @@ var anyxx_8hpp =
     [ "TRAIT_", "group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b", null ],
     [ "TRAIT_EX", "group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c", null ],
     [ "TRAIT_EX_", "group__trait__macros.html#ga15fb0b1b9a60d6586108d9bd6cec2a54", null ],
-    [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ]
+    [ "TRAIT_TEMPLATE", "group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae", null ],
+    [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ],
+    [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa", null ]
 ];

@@ -104,7 +104,7 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"><span class="keyword">struct </span>creature_has_open_dispatch {};</div>
-<div class="line">ANY(creature, (ANY_FN(std::type_info <span class="keyword">const</span>*, name, (), <span class="keyword">const</span>)), )</div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(creature, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::type_info <span class="keyword">const</span>*, name, (), <span class="keyword">const</span>)), )</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
@@ -199,6 +199,8 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#endif  </span><span class="comment">// !_DEBUG</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">ANY with a base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:579</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:670</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

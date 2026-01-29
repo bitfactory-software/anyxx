@@ -111,15 +111,15 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>example_2b {</div>
 <div class="line"> </div>
 <div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a>(monoid,</div>
-<div class="line">         (ANY_FN_DEF(anyxx::self, <span class="keywordtype">id</span>, (), <span class="keyword">const</span>, []() { <span class="keywordflow">return</span> T{}; }),</div>
-<div class="line">          ANY_OP_DEF(anyxx::self, +, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">         (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#ga73e339005a697eb20b243d1622873b99">ANY_FN_DEF</a>(anyxx::self, <span class="keywordtype">id</span>, (), <span class="keyword">const</span>, []() { <span class="keywordflow">return</span> T{}; }),</div>
+<div class="line">          <a id="a2" name="a2"></a><a class="code hl_define" href="group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4">ANY_OP_DEF</a>(anyxx::self, +, op, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                     [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                       std::println(<span class="stringliteral">&quot;op-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
 <div class="line">                       <span class="keyword">auto</span> self = anyxx::trait_as&lt;monoid&gt;(x);</div>
 <div class="line">                       <span class="keywordflow">return</span> self | (std::vector{anyxx::trait_as&lt;monoid&gt;(</div>
 <div class="line">                                         r)});  <span class="comment">// NOLINT</span></div>
 <div class="line">                     }),</div>
-<div class="line">          ANY_OP_DEF(anyxx::self, |, concat,</div>
+<div class="line">          <a class="code hl_define" href="group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4">ANY_OP_DEF</a>(anyxx::self, |, concat,</div>
 <div class="line">                     ((anyxx::any_forward_range&lt;anyxx::self, anyxx::self,</div>
 <div class="line">                                                anyxx::cref&gt; <span class="keyword">const</span>&amp;)),</div>
 <div class="line">                     <span class="keyword">const</span>,</div>
@@ -134,7 +134,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">                             <span class="keywordflow">return</span> m1 + m2;</div>
 <div class="line">                           });</div>
 <div class="line">                     }),</div>
-<div class="line">          ANY_FN_DEF(<span class="keywordtype">bool</span>, equal_to, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">          <a class="code hl_define" href="group__trait__macros.html#ga73e339005a697eb20b243d1622873b99">ANY_FN_DEF</a>(<span class="keywordtype">bool</span>, equal_to, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                     ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }))),</div>
 <div class="line">         (template &lt;typename Box&gt; <span class="keyword">friend</span> <span class="keywordtype">bool</span> <span class="keyword">operator</span>==(</div>
 <div class="line">             anyxx::any&lt;Box, monoid&gt; <span class="keyword">const</span>&amp; l,</div>
@@ -240,7 +240,9 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gae6aebc8db498e6ac66bb2d3011f91c1c"><div class="ttname"><a href="group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n,...)</div><div class="ttdoc">TRAIT with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:498</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga73e339005a697eb20b243d1622873b99"><div class="ttname"><a href="group__trait__macros.html#ga73e339005a697eb20b243d1622873b99">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:655</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gabcbc5dedec9f5a6f2eed6e0959472af4"><div class="ttname"><a href="group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4">ANY_OP_DEF</a></div><div class="ttdeci">#define ANY_OP_DEF(ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:728</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gae6aebc8db498e6ac66bb2d3011f91c1c"><div class="ttname"><a href="group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n,...)</div><div class="ttdoc">TRAIT with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:497</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

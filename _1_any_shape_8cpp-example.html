@@ -155,11 +155,11 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> (perimeter() * apothem()) / 2; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">ANY(drawable, (ANY_FN(<span class="keywordtype">void</span>, draw, (std::ostream&amp;, position), <span class="keyword">const</span>)), )</div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(drawable, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, draw, (std::ostream&amp;, position), <span class="keyword">const</span>)), )</div>
 <div class="line"> </div>
 <div class="line">ANY_(shape, drawable,</div>
-<div class="line">     (ANY_FN(<span class="keywordtype">int</span>, count_sides, (), <span class="keyword">const</span>), ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>),</div>
-<div class="line">      ANY_FN(<span class="keywordtype">double</span>, perimeter, (), <span class="keyword">const</span>)), )</div>
+<div class="line">     (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, count_sides, (), <span class="keyword">const</span>), <a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>),</div>
+<div class="line">      <a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">double</span>, perimeter, (), <span class="keyword">const</span>)), )</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((std::string), drawable) {</div>
 <div class="line">  <span class="keyword">auto</span> draw(std::string <span class="keyword">const</span>&amp; x, std::ostream&amp; os, position p)<span class="keyword"> const </span>{</div>
@@ -241,6 +241,8 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">        <span class="stringliteral">&quot;...area: 1024.82\n&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">ANY with a base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:579</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:670</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
