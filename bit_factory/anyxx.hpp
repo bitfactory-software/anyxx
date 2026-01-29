@@ -925,7 +925,13 @@ dispatch_table_t* dispatch_table_instance() {
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
 
+/// Basic liftime functionality
+/** Base of all other v-tables
+ */
 struct any_v_table {
+  /// Type erasing constructor
+  /**
+   */
   template <typename Concrete>
   explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : model_size(compute_model_size<Concrete>()),
@@ -1044,6 +1050,9 @@ struct basic_proxy_trait {
                       [[maybe_unused]] any_v_table* v_table) {}
 };
 
+/// Requirements for a proxy type
+/**
+ */
 template <typename E>
 concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
   typename proxy_trait<E>::void_t;
@@ -1062,9 +1071,18 @@ struct base_trait {
   using v_table_t = emtpty_trait_v_table;
 };
 
+/// Requirements for a trait type
+/**
+ */
+template <typename T>
+concept has_v_table = std::derived_from<typename T::v_table_t, any_v_table>;
+
 template <is_proxy Proxy, typename Trait = base_trait>
 class any;
 
+/// Requirements for a dynamic, (= type erased) Proxy
+/**
+ */
 template <typename Proxy>
 concept is_dyn =
     is_proxy<Proxy> && voidness<typename proxy_trait<Proxy>::static_dispatch_t>;
@@ -1229,12 +1247,19 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
   }
 };
 
-// --------------------------------------------------------------------------------
-// erased data variant
-
+/// A Proxy for mixing std::variant and type erasure
+/// Use this, when some, at compile time known types, are dispatched in a hot
+/// path. Put this types plus an any (with the specific \ref trait and a
+/// dynamic proxy) in a std::variant. This variant is then used with a \ref
+/// by_val proxy and the same \ref trait as before.
+/// So the dispatch for the types in variant is done internaly with a std::visit,
+/// and all other types are dispatch via there v-Table.
+/// Now you know, where the Any++ logo has its origin.
+///
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using vany_variant = std::variant<Any<Proxy>, Types...>;
 
+/// A factory type to direct get the any for the vany
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using make_vany = Any<by_val<vany_variant<Any, Proxy, Types...>>>;
 
@@ -2217,25 +2242,26 @@ static_assert(!moveable_from<val, weak>);
 static_assert(moveable_from<val, val>);
 
 /** \brief The core class template to control dispatch for external
- *   polymorphism.
+ * polymorphism.
  *
- *   To control the behavior, any provides two template parameters: \ref Proxy
- *   and \ref Trait. Imagine this as a combination of a std::any and several
- *   std::functions.
+ * To control the behavior, any provides two template parameters: \ref Proxy
+ * and \ref Trait. Imagine this as a combination of a std::any and several
+ * std::functions.
  *
- *   With the Proxy template parameter, you control whether this any behaves
- *   like a copying function, a move-only function, a reference function, or if
- *   the target object is captured concretely inside of any.
+ * With the Proxy template parameter, you control whether this any behaves
+ * like a copying function, a move-only function, a reference function, or if
+ * the target object is captured concretely inside of any.
  *
- *   With the Trait template parameter, you specify the member functions of a
- *   captured object which can be invoked on this any.
+ * With the Trait template parameter, you specify the member functions of a
+ * captured object which can be invoked on this any.
  *
- *   @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
- *   \ref by_val, \ref cref, \ref mutref, etc. All Proxy classes must conform
- *   to the \ref is_proxy concept.
- *   @tparam Trait Specifies the functionality of this any. A class of this type
- *   is normally provided via a \ref TRAIT or \ref ANY macro. See there for
- * examples.
+ * @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
+ * \ref by_val, \ref cref, \ref mutref \ref shared, \ref weak, \ref unique and
+ * \ref value. All Proxy classes must conform to the \ref is_proxy concept.
+ * @tparam Trait Specifies the functionality of this any. A class of this type
+ * is normally provided via a \ref TRAIT or \ref ANY macro. See there for
+ * examples. If the proxy is dynamic (=type erased) the Trait must
+ * conform to the \ref has_v_table concept (that means: must provide a v-Table).
  */
 template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
@@ -2248,6 +2274,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   using T = proxy_trait_t::static_dispatch_t;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
+  static_assert(!dyn || has_v_table<Trait>);
 
  protected:
   proxy_t proxy_;
@@ -2469,10 +2496,16 @@ inline auto unerase_cast_if(Any const& o) {
 }
 
 /// Proxy to capture the dispatch target concrete to enable static dispatch
-/** A simple warpper class over an object. Use '&' and 'const &' to capture by
-reference. This class template is only used to instanciate an \ref any.
-@tparam Value The caputured value
-*/
+/// A simple warpper class over an object. Use '&' and 'const &' to capture by
+/// reference.
+///
+/// Usage:
+/// * Use the model map as static customization point.
+/// * Use by_val<std::variant<....>> to unify customization points and member
+///   function like invocation
+/// * Use with \ref vany_variant.
+///
+/// @tparam Value The caputured value
 template <typename Value>
 struct by_val {
   template <typename V>
@@ -2481,16 +2514,16 @@ struct by_val {
   Value value_;
   using value_t = Value;
   operator Value() const { return value_; }
-  /** Helper typedef template to \ref trait a model with an \ref any.
-   * See also \ref trait_as.
-   */
+  /// Helper typedef template to \ref trait a model with an \ref any.
+  /// See also \ref trait_as.
   template <typename Trait>
   using as = any<by_val<Value>, Trait>;
 };
 
-/// A factory function to bind an object as model to an \ref any with a \ref trait
-/** See alse \ref by_val::as
-*/
+/// A factory function to bind an object as model to an \ref any with a \ref
+/// trait
+/// See alse \ref by_val::as
+///
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
   return any<anyxx::by_val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
