@@ -1,7 +1,7 @@
 var anyxx_8hpp =
 [
     [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", "structanyxx_1_1any__v__table" ],
-    [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", null ],
+    [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", "structanyxx_1_1by__val" ],
     [ "anyxx::is_proxy", "conceptanyxx_1_1is__proxy.html", null ],
     [ "anyxx::has_v_table", "conceptanyxx_1_1has__v__table.html", null ],
@@ -34,7 +34,18 @@ var anyxx_8hpp =
     [ "TRAIT_TEMPLATE", "group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae", null ],
     [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ],
     [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa", null ],
+    [ "anyxx::cref", "group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf", null ],
     [ "anyxx::make_vany", "anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562", null ],
-    [ "anyxx::vany_variant", "anyxx_8hpp.html#af97e4130c5c467557b419eb6e97b8d80", null ],
-    [ "anyxx::trait_as", "anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c", null ]
+    [ "anyxx::mutref", "group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2", null ],
+    [ "anyxx::shared", "group__proxies.html#ga56505144f855bfd01c879bf63c62f09c", null ],
+    [ "anyxx::vany_variant", "group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80", null ],
+    [ "anyxx::weak", "group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c", null ],
+    [ "anyxx::borrow_as", "group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16", null ],
+    [ "anyxx::clone_to", "group__casts.html#gaf2b7730650bc77681cf299e2a6e77157", null ],
+    [ "anyxx::downcast_to", "group__casts.html#gadd0bed70326711f39e2efc190d006590", null ],
+    [ "anyxx::lock", "group__casts.html#gae988a6a809ee2910690366e1e4c7ae67", null ],
+    [ "anyxx::move_to", "group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946", null ],
+    [ "anyxx::trait_as", "anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c", null ],
+    [ "anyxx::unerase_cast", "group__casts.html#ga503c7a4639146953d0f21603ef83241e", null ],
+    [ "anyxx::unerase_cast_if", "group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8", null ]
 ];

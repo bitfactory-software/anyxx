@@ -15,7 +15,8 @@ var searchData=
   ['dispatch_5ftable_5ffunction_20on_20the_20first_20paramater_20must_20be_20an_20any_12',['An &lt;b&gt;extension method&lt;/b&gt; is a freestanding callable, witch acts a dispatch_table_function on the first paramater. (must be an &lt;b&gt;any&lt;/b&gt;).',['../md_docs_2terms__and__definitions.html#autotoc_md25',1,'']]],
   ['downcast_13',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
   ['downcast_20is_20a_20conversion_20from_20a_20more_20general_20type_20to_20a_20more_20detailed_20one_14',['A &lt;em&gt;downcast&lt;/em&gt; is a conversion from a more general type to a more detailed one.',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
-  ['downcasts_20are_20within_20related_20types_20crosscasts_20are_20between_20unrelated_20types_15',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
-  ['dynamic_20cast_16',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
-  ['dynamic_20cast_3a_17',['A &lt;em&gt;dynamic cast&lt;/em&gt;:',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]]
+  ['downcast_5fto_15',['downcast_to',['../group__casts.html#gadd0bed70326711f39e2efc190d006590',1,'anyxx']]],
+  ['downcasts_20are_20within_20related_20types_20crosscasts_20are_20between_20unrelated_20types_16',['While &lt;em&gt;up-&lt;/em&gt; and &lt;em&gt;downcasts&lt;/em&gt; are within related types, &lt;em&gt;crosscasts&lt;/em&gt; are between unrelated types.',['../md_docs_2terms__and__definitions.html#autotoc_md23',1,'']]],
+  ['dynamic_20cast_17',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
+  ['dynamic_20cast_3a_18',['A &lt;em&gt;dynamic cast&lt;/em&gt;:',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]]
 ];

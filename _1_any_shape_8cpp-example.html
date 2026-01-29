@@ -223,7 +223,7 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">  std::stringstream os2;</div>
 <div class="line">  process(os2, any_drawables,</div>
 <div class="line">          [](std::ostream&amp; os, any_drawable&lt;shared&gt; <span class="keyword">const</span>&amp; drawable) {</div>
-<div class="line">            downcast_to&lt;any_shape&lt;shared&gt;&gt;(drawable).and_then(</div>
+<div class="line">            <a id="_a2" name="_a2"></a><a class="code hl_function" href="group__casts.html#gadd0bed70326711f39e2efc190d006590">downcast_to&lt;any_shape&lt;shared&gt;</a>&gt;(drawable).and_then(</div>
 <div class="line">                [&amp;](any_shape&lt;shared&gt; <span class="keyword">const</span>&amp; shape) {</div>
 <div class="line">                  shape.draw(os, position{});</div>
 <div class="line">                  os &lt;&lt; <span class="stringliteral">&quot;...area: &quot;</span> &lt;&lt; shape.area() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
@@ -241,6 +241,7 @@ $(function(){initNavTree('_1_any_shape_8cpp-example.html','',''); });
 <div class="line">        <span class="stringliteral">&quot;...area: 1024.82\n&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
+<div class="ttc" id="agroup__casts_html_gadd0bed70326711f39e2efc190d006590"><div class="ttname"><a href="group__casts.html#gadd0bed70326711f39e2efc190d006590">anyxx::downcast_to</a></div><div class="ttdeci">std::optional&lt; To &gt; downcast_to(From from)</div><div class="ttdoc">Safe downcast to derived trait via runtime info from the v-Tables.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2528</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">ANY with a base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:579</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:671</div></div>
 </div><!-- fragment --> </div><!-- contents -->

@@ -106,21 +106,21 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
 <div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(stringable, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, to_string, (), <span class="keyword">const</span>)))</div>
-<div class="line">template &lt;typename Box = val&gt;</div>
-<div class="line">using any_to_string = <a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;Box, stringable&gt;;</div>
+<div class="line">template &lt;typename Box = <a id="_a2" name="_a2"></a><a class="code hl_union" href="unionanyxx_1_1val.html">val</a>&gt;</div>
+<div class="line">using any_to_string = <a id="_a3" name="_a3"></a><a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;Box, stringable&gt;;</div>
 <div class="line"> </div>
-<div class="line"><a id="_a3" name="_a3"></a><a class="code hl_define" href="group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(((KEY), (VALUE)), map,</div>
-<div class="line">               (<a id="_a4" name="_a4"></a><a class="code hl_define" href="group__trait__macros.html#gaf7331be98b802b62e63563ce10b3cddf">ANY_FN_EXACT</a>(VALUE const&amp;, at, (KEY const&amp;), const),</div>
+<div class="line"><a id="_a4" name="_a4"></a><a class="code hl_define" href="group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(((KEY), (VALUE)), map,</div>
+<div class="line">               (<a id="_a5" name="_a5"></a><a class="code hl_define" href="group__trait__macros.html#gaf7331be98b802b62e63563ce10b3cddf">ANY_FN_EXACT</a>(VALUE const&amp;, at, (KEY const&amp;), const),</div>
 <div class="line">                <a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::<span class="keywordtype">size_t</span>, size, (), const)))</div>
-<div class="line">template &lt;typename Key, typename Value, typename Box = val&gt;</div>
+<div class="line">template &lt;typename Key, typename Value, typename Box = <a class="code hl_union" href="unionanyxx_1_1val.html">val</a>&gt;</div>
 <div class="line">using any_map = <a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;Box, map&lt;Key, Value&gt;&gt;;</div>
 <div class="line"> </div>
-<div class="line"><a id="_a5" name="_a5"></a><a class="code hl_define" href="group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),</div>
+<div class="line"><a id="_a6" name="_a6"></a><a class="code hl_define" href="group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),</div>
 <div class="line">               (<a class="code hl_define" href="group__trait__macros.html#gaf7331be98b802b62e63563ce10b3cddf">ANY_FN_EXACT</a>(VALUE&amp;, at, (KEY const&amp;), ), ))</div>
-<div class="line">template &lt;typename Key, typename Value, typename Box = val&gt;</div>
+<div class="line">template &lt;typename Key, typename Value, typename Box = <a class="code hl_union" href="unionanyxx_1_1val.html">val</a>&gt;</div>
 <div class="line">using any_mutable_map = <a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;Box, mutable_map&lt;Key, Value&gt;&gt;;</div>
 <div class="line"> </div>
-<div class="line"><a id="_a6" name="_a6"></a><a class="code hl_define" href="group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(((KEY), (VALUE)), recursive_map,</div>
+<div class="line"><a id="_a7" name="_a7"></a><a class="code hl_define" href="group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(((KEY), (VALUE)), recursive_map,</div>
 <div class="line">             (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(VALUE, at, (KEY const&amp;), const),</div>
 <div class="line">              <a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::<span class="keywordtype">size_t</span>, size, (), const)), )</div>
 <div class="line"> </div>
@@ -128,7 +128,7 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">             (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(VALUE, at, (KEY const&amp;), )), )</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(((KEY)), map_to_string,</div>
-<div class="line">             (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>((any_to_string&lt;cref&gt;), at, (KEY const&amp;),</div>
+<div class="line">             (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>((any_to_string&lt;<a id="_a8" name="_a8"></a><a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;), at, (KEY const&amp;),</div>
 <div class="line">                         const)), )</div>
 <div class="line"> </div>
 <div class="line">ANY_MODEL_MAP((<span class="keywordtype">int</span>), stringable) {</div>
@@ -176,8 +176,8 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">      [](any_recursive_map&lt;</div>
 <div class="line">          int,</div>
 <div class="line">          any_recursive_map&lt;std::string, any_map&lt;int, double, cref&gt;,</div>
-<div class="line">                            cref&gt;,</div>
-<div class="line">          cref&gt;</div>
+<div class="line">                            <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;,</div>
+<div class="line">          <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;</div>
 <div class="line">             map_i) {</div>
 <div class="line">        <span class="keyword">auto</span> x = map_i.at(1);</div>
 <div class="line">        <span class="keyword">auto</span> y = x.at(<span class="stringliteral">&quot;one&quot;</span>);</div>
@@ -193,8 +193,8 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">          int,</div>
 <div class="line">          any_mutable_recursive_map&lt;</div>
 <div class="line">              std::string, any_mutable_map&lt;int, double, mutref&gt;,</div>
-<div class="line">              mutref&gt;,</div>
-<div class="line">          mutref&gt;</div>
+<div class="line">              <a id="_a9" name="_a9"></a><a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>&gt;,</div>
+<div class="line">          <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>&gt;</div>
 <div class="line">             map_i) {</div>
 <div class="line">        <span class="keyword">auto</span> x = map_i.at(1);</div>
 <div class="line">        <span class="keyword">auto</span> y = x.at(<span class="stringliteral">&quot;one&quot;</span>);</div>
@@ -224,13 +224,16 @@ $(function(){initNavTree('_5_any_template_8cpp-example.html','',''); });
 <div class="line">  REQUIRE(any_mutable_map.at(3) == 3.333);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2267</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2305</div></div>
+<div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1345</div></div>
+<div class="ttc" id="agroup__proxies_html_ga56d1fe32eadd3e57d34611a42fc845a2"><div class="ttname"><a href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">anyxx::mutref</a></div><div class="ttdeci">observer&lt; mutable_void &gt; mutref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1349</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga428ec0337c0d297d504f3c0d8f06a2bb"><div class="ttname"><a href="group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a></div><div class="ttdeci">#define ANY_TEMPLATE(t, n, l, proxy_default)</div><div class="ttdoc">ANY template.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:613</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:671</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:522</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gad2f206b96947eeba0d7f5cee72b33cae"><div class="ttname"><a href="group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a></div><div class="ttdeci">#define TRAIT_TEMPLATE(t, n, l)</div><div class="ttdoc">TRAIT template.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:529</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functioanl behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:488</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gaf7331be98b802b62e63563ce10b3cddf"><div class="ttname"><a href="group__trait__macros.html#gaf7331be98b802b62e63563ce10b3cddf">ANY_FN_EXACT</a></div><div class="ttdeci">#define ANY_FN_EXACT(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:679</div></div>
+<div class="ttc" id="aunionanyxx_1_1val_html"><div class="ttname"><a href="unionanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1665</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

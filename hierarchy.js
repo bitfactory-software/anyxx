@@ -16,5 +16,7 @@ var hierarchy =
     [ "anyxx::any&lt; val &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; val, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", null ],
-    [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", null ]
+    [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", null ],
+    [ "anyxx::unique", "structanyxx_1_1unique.html", null ],
+    [ "anyxx::val", "unionanyxx_1_1val.html", null ]
 ];

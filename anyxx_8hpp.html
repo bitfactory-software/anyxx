@@ -119,6 +119,9 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 Classes</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_5Fv_5Ftable" id="r_anyxx_3A_3Aany_5Fv_5Ftable"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1any__v__table.html">anyxx::any_v_table</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic liftime functionality.  <a href="structanyxx_1_1any__v__table.html#details">More...</a><br /></td></tr>
+<tr class="memitem:anyxx_3A_3Aunique" id="r_anyxx_3A_3Aunique"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1unique.html">anyxx::unique</a></td></tr>
+<tr class="memitem:anyxx_3A_3Aval" id="r_anyxx_3A_3Aval"><td class="memItemLeft">union &#160;</td><td class="memItemRight"><a class="el" href="unionanyxx_1_1val.html">anyxx::val</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy to manage the captured object as value with small object optimization.  <a href="unionanyxx_1_1val.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E" id="r_anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1any.html">anyxx::any&lt; Proxy, Trait &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core class template to control dispatch for external polymorphism.  <a href="classanyxx_1_1any.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aby_5Fval_3C_20Value_20_3E" id="r_anyxx_3A_3Aby_5Fval_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val&lt; Value &gt;</a></td></tr>
@@ -362,23 +365,19 @@ template&lt;is_proxy Data&gt; </td></tr>
 <tr class="memitem:ac95774b5b2d689feed50405f9b8b049f template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::data_void</b> = proxy_trait&lt;Data&gt;::void_t</td></tr>
 <tr class="memitem:a26cffc6820013e7206c36a5873ef13b1" id="r_a26cffc6820013e7206c36a5873ef13b1"><td class="memTemplParams" colspan="2">template&lt;is_proxy Proxy, typename ConstructedWith&gt; </td></tr>
 <tr class="memitem:a26cffc6820013e7206c36a5873ef13b1 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a26cffc6820013e7206c36a5873ef13b1">anyxx::unerased</a></td></tr>
-<tr class="memitem:af97e4130c5c467557b419eb6e97b8d80" id="r_af97e4130c5c467557b419eb6e97b8d80"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
-<tr class="memitem:af97e4130c5c467557b419eb6e97b8d80 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#af97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;</td></tr>
+<tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80" id="r_gaf97e4130c5c467557b419eb6e97b8d80"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
+<tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;</td></tr>
 <tr class="memitem:abb32933fc2d3ddd4236f3075dd5c1562" id="r_abb32933fc2d3ddd4236f3075dd5c1562"><td class="memTemplParams" colspan="2"><a id="abb32933fc2d3ddd4236f3075dd5c1562" name="abb32933fc2d3ddd4236f3075dd5c1562"></a>
 template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
-<tr class="memitem:abb32933fc2d3ddd4236f3075dd5c1562 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::make_vany</b> = Any&lt;<a class="el" href="structanyxx_1_1by__val.html">by_val</a>&lt;<a class="el" href="#af97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;</td></tr>
+<tr class="memitem:abb32933fc2d3ddd4236f3075dd5c1562 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::make_vany</b> = Any&lt;<a class="el" href="structanyxx_1_1by__val.html">by_val</a>&lt;<a class="el" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;</td></tr>
 <tr class="memdesc:abb32933fc2d3ddd4236f3075dd5c1562"><td class="mdescLeft">&#160;</td><td class="mdescRight">A factory type to direct get the any for the vany. <br /></td></tr>
 <tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add" id="r_a554eb25dc0742eb08d38968bd3ba6add"><td class="memTemplParams" colspan="2"><a id="a554eb25dc0742eb08d38968bd3ba6add" name="a554eb25dc0742eb08d38968bd3ba6add"></a>
 template&lt;voidness Voidness&gt; </td></tr>
 <tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::observer</b> = Voidness</td></tr>
-<tr class="memitem:a13249a9ab9228bed2d13f8be41984cbf" id="r_a13249a9ab9228bed2d13f8be41984cbf"><td class="memItemLeft"><a id="a13249a9ab9228bed2d13f8be41984cbf" name="a13249a9ab9228bed2d13f8be41984cbf"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::cref</b> = observer&lt;const_void&gt;</td></tr>
-<tr class="memitem:a56d1fe32eadd3e57d34611a42fc845a2" id="r_a56d1fe32eadd3e57d34611a42fc845a2"><td class="memItemLeft"><a id="a56d1fe32eadd3e57d34611a42fc845a2" name="a56d1fe32eadd3e57d34611a42fc845a2"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::mutref</b> = observer&lt;mutable_void&gt;</td></tr>
-<tr class="memitem:a56505144f855bfd01c879bf63c62f09c" id="r_a56505144f855bfd01c879bf63c62f09c"><td class="memItemLeft"><a id="a56505144f855bfd01c879bf63c62f09c" name="a56505144f855bfd01c879bf63c62f09c"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::shared</b> = std::shared_ptr&lt;void const&gt;</td></tr>
-<tr class="memitem:a7170135ae5d6f21abb97fb1fb1649f0c" id="r_a7170135ae5d6f21abb97fb1fb1649f0c"><td class="memItemLeft"><a id="a7170135ae5d6f21abb97fb1fb1649f0c" name="a7170135ae5d6f21abb97fb1fb1649f0c"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::weak</b> = std::weak_ptr&lt;void const&gt;</td></tr>
+<tr class="memitem:ga13249a9ab9228bed2d13f8be41984cbf" id="r_ga13249a9ab9228bed2d13f8be41984cbf"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a> = observer&lt;const_void&gt;</td></tr>
+<tr class="memitem:ga56d1fe32eadd3e57d34611a42fc845a2" id="r_ga56d1fe32eadd3e57d34611a42fc845a2"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">anyxx::mutref</a> = observer&lt;mutable_void&gt;</td></tr>
+<tr class="memitem:ga56505144f855bfd01c879bf63c62f09c" id="r_ga56505144f855bfd01c879bf63c62f09c"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">anyxx::shared</a> = std::shared_ptr&lt;void const&gt;</td></tr>
+<tr class="memitem:ga7170135ae5d6f21abb97fb1fb1649f0c" id="r_ga7170135ae5d6f21abb97fb1fb1649f0c"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">anyxx::weak</a> = std::weak_ptr&lt;void const&gt;</td></tr>
 <tr class="memitem:a26e3181b4c1471d407579ca47c95d01f" id="r_a26e3181b4c1471d407579ca47c95d01f"><td class="memTemplParams" colspan="2"><a id="a26e3181b4c1471d407579ca47c95d01f" name="a26e3181b4c1471d407579ca47c95d01f"></a>
 template&lt;typename AnyValue, typename Param&gt; </td></tr>
 <tr class="memitem:a26e3181b4c1471d407579ca47c95d01f template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_param</b> = typename translate_v_table_param&lt;AnyValue, Param&gt;::type</td></tr>
@@ -461,7 +460,7 @@ template&lt;typename V&gt; </td></tr>
 <tr class="memitem:aa1f914e45d8b3c67e3340133c2c8e1a6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::visit_value</b> (auto &amp;&amp;visitor, V &amp;&amp;v, std::size_t size) -&gt; decltype(auto)</td></tr>
 <tr class="memitem:aaceeef954e1db7865063780429fd4879" id="r_aaceeef954e1db7865063780429fd4879"><td class="memTemplParams" colspan="2"><a id="aaceeef954e1db7865063780429fd4879" name="aaceeef954e1db7865063780429fd4879"></a>
 template&lt;typename V2&gt; </td></tr>
-<tr class="memitem:aaceeef954e1db7865063780429fd4879 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::visit_value</b> (auto &amp;&amp;visitor, val &amp;v1, std::size_t size1, V2 &amp;&amp;v2, std::size_t size2) -&gt; decltype(auto)</td></tr>
+<tr class="memitem:aaceeef954e1db7865063780429fd4879 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::visit_value</b> (auto &amp;&amp;visitor, <a class="el" href="unionanyxx_1_1val.html">val</a> &amp;v1, std::size_t size1, V2 &amp;&amp;v2, std::size_t size2) -&gt; decltype(auto)</td></tr>
 <tr class="memitem:ae5cd93d856b046f410e76c06aa23f2c9" id="r_ae5cd93d856b046f410e76c06aa23f2c9"><td class="memTemplParams" colspan="2"><a id="ae5cd93d856b046f410e76c06aa23f2c9" name="ae5cd93d856b046f410e76c06aa23f2c9"></a>
 template&lt;typename T, typename... Args&gt; </td></tr>
 <tr class="memitem:ae5cd93d856b046f410e76c06aa23f2c9 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::make_local_value</b> (Args &amp;&amp;... args)</td></tr>
@@ -537,19 +536,22 @@ template&lt;typename Any&gt; </td></tr>
 template&lt;is_any To, is_any From&gt; <br />
 requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
 <tr class="memitem:a521054ce8b7f589a9c4b842a9bd4df21 template"><td class="memItemLeft">To&#160;</td><td class="memItemRight"><b>anyxx::unchecked_downcast_to</b> (From from)</td></tr>
-<tr class="memitem:add0bed70326711f39e2efc190d006590" id="r_add0bed70326711f39e2efc190d006590"><td class="memTemplParams" colspan="2"><a id="add0bed70326711f39e2efc190d006590" name="add0bed70326711f39e2efc190d006590"></a>
+<tr class="memitem:gadd0bed70326711f39e2efc190d006590" id="r_gadd0bed70326711f39e2efc190d006590"><td class="memTemplParams" colspan="2">
 template&lt;is_any To, is_any From&gt; <br />
 requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
-<tr class="memitem:add0bed70326711f39e2efc190d006590 template"><td class="memItemLeft">std::optional&lt; To &gt;&#160;</td><td class="memItemRight"><b>anyxx::downcast_to</b> (From from)</td></tr>
+<tr class="memitem:gadd0bed70326711f39e2efc190d006590 template"><td class="memItemLeft">std::optional&lt; To &gt;&#160;</td><td class="memItemRight"><b>anyxx::downcast_to</b> (From from)</td></tr>
+<tr class="memdesc:gadd0bed70326711f39e2efc190d006590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to derived trait via runtime info from the v-Tables. <br /></td></tr>
 <tr class="memitem:a5104ac3b68c36889c6c8d49f39798125" id="r_a5104ac3b68c36889c6c8d49f39798125"><td class="memTemplParams" colspan="2"><a id="a5104ac3b68c36889c6c8d49f39798125" name="a5104ac3b68c36889c6c8d49f39798125"></a>
 template&lt;typename U, is_any Any&gt; </td></tr>
 <tr class="memitem:a5104ac3b68c36889c6c8d49f39798125 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (Any const &amp;o)</td></tr>
-<tr class="memitem:a503c7a4639146953d0f21603ef83241e" id="r_a503c7a4639146953d0f21603ef83241e"><td class="memTemplParams" colspan="2"><a id="a503c7a4639146953d0f21603ef83241e" name="a503c7a4639146953d0f21603ef83241e"></a>
+<tr class="memitem:ga503c7a4639146953d0f21603ef83241e" id="r_ga503c7a4639146953d0f21603ef83241e"><td class="memTemplParams" colspan="2">
 template&lt;typename U, typename Any&gt; </td></tr>
-<tr class="memitem:a503c7a4639146953d0f21603ef83241e template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast</b> (Any const &amp;o)</td></tr>
-<tr class="memitem:a9ba68fb72727630cbb77b5104a93d2b8" id="r_a9ba68fb72727630cbb77b5104a93d2b8"><td class="memTemplParams" colspan="2"><a id="a9ba68fb72727630cbb77b5104a93d2b8" name="a9ba68fb72727630cbb77b5104a93d2b8"></a>
+<tr class="memitem:ga503c7a4639146953d0f21603ef83241e template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast</b> (Any const &amp;o)</td></tr>
+<tr class="memdesc:ga503c7a4639146953d0f21603ef83241e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to unerased type via runtime info from the v-Tables. <br /></td></tr>
+<tr class="memitem:ga9ba68fb72727630cbb77b5104a93d2b8" id="r_ga9ba68fb72727630cbb77b5104a93d2b8"><td class="memTemplParams" colspan="2">
 template&lt;typename U, typename Any&gt; </td></tr>
-<tr class="memitem:a9ba68fb72727630cbb77b5104a93d2b8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast_if</b> (Any const &amp;o)</td></tr>
+<tr class="memitem:ga9ba68fb72727630cbb77b5104a93d2b8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast_if</b> (Any const &amp;o)</td></tr>
+<tr class="memdesc:ga9ba68fb72727630cbb77b5104a93d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to unerased type via runtime info from the v-Tables. <br /></td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c" id="r_aa0a344700732ba661e0fb701ef1eba2c"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a> (T &amp;&amp;v)</td></tr>
 <tr class="memitem:a7136584f3cf3a3dee7ff6392af2ee08d" id="r_a7136584f3cf3a3dee7ff6392af2ee08d"><td class="memTemplParams" colspan="2"><a id="a7136584f3cf3a3dee7ff6392af2ee08d" name="a7136584f3cf3a3dee7ff6392af2ee08d"></a>
@@ -568,18 +570,22 @@ requires std::convertible_to&lt;V*, To*&gt;</td></tr>
 <tr class="memitem:afe86cf0a96780cd23f202c3b020ad938" id="r_afe86cf0a96780cd23f202c3b020ad938"><td class="memTemplParams" colspan="2"><a id="afe86cf0a96780cd23f202c3b020ad938" name="afe86cf0a96780cd23f202c3b020ad938"></a>
 template&lt;is_any ToAny, is_proxy FromErasedData&gt; </td></tr>
 <tr class="memitem:afe86cf0a96780cd23f202c3b020ad938 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::borrow_as</b> (FromErasedData const &amp;from, <a class="el" href="structanyxx_1_1any__v__table.html">any_v_table</a> *from_v_table)</td></tr>
-<tr class="memitem:a57a33d0becfcd08748cf97fd2b51aa16" id="r_a57a33d0becfcd08748cf97fd2b51aa16"><td class="memTemplParams" colspan="2"><a id="a57a33d0becfcd08748cf97fd2b51aa16" name="a57a33d0becfcd08748cf97fd2b51aa16"></a>
+<tr class="memitem:ga57a33d0becfcd08748cf97fd2b51aa16" id="r_ga57a33d0becfcd08748cf97fd2b51aa16"><td class="memTemplParams" colspan="2">
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
-<tr class="memitem:a57a33d0becfcd08748cf97fd2b51aa16 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::borrow_as</b> (FromAny const &amp;from)</td></tr>
-<tr class="memitem:af2b7730650bc77681cf299e2a6e77157" id="r_af2b7730650bc77681cf299e2a6e77157"><td class="memTemplParams" colspan="2"><a id="af2b7730650bc77681cf299e2a6e77157" name="af2b7730650bc77681cf299e2a6e77157"></a>
+<tr class="memitem:ga57a33d0becfcd08748cf97fd2b51aa16 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::borrow_as</b> (FromAny const &amp;from)</td></tr>
+<tr class="memdesc:ga57a33d0becfcd08748cf97fd2b51aa16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe crosscast via runtime info to an other any without changing the ownership. <br /></td></tr>
+<tr class="memitem:gaf2b7730650bc77681cf299e2a6e77157" id="r_gaf2b7730650bc77681cf299e2a6e77157"><td class="memTemplParams" colspan="2">
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
-<tr class="memitem:af2b7730650bc77681cf299e2a6e77157 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::clone_to</b> (FromAny const &amp;from)</td></tr>
-<tr class="memitem:ae988a6a809ee2910690366e1e4c7ae67" id="r_ae988a6a809ee2910690366e1e4c7ae67"><td class="memTemplParams" colspan="2"><a id="ae988a6a809ee2910690366e1e4c7ae67" name="ae988a6a809ee2910690366e1e4c7ae67"></a>
+<tr class="memitem:gaf2b7730650bc77681cf299e2a6e77157 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::clone_to</b> (FromAny const &amp;from)</td></tr>
+<tr class="memdesc:gaf2b7730650bc77681cf299e2a6e77157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone via runtime info. <br /></td></tr>
+<tr class="memitem:gae988a6a809ee2910690366e1e4c7ae67" id="r_gae988a6a809ee2910690366e1e4c7ae67"><td class="memTemplParams" colspan="2">
 template&lt;is_any FromAny&gt; </td></tr>
-<tr class="memitem:ae988a6a809ee2910690366e1e4c7ae67 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::lock</b> (FromAny const &amp;from_interface)</td></tr>
-<tr class="memitem:a0ad81aaf23ab3d32a02a12cec57c0946" id="r_a0ad81aaf23ab3d32a02a12cec57c0946"><td class="memTemplParams" colspan="2"><a id="a0ad81aaf23ab3d32a02a12cec57c0946" name="a0ad81aaf23ab3d32a02a12cec57c0946"></a>
+<tr class="memitem:gae988a6a809ee2910690366e1e4c7ae67 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::lock</b> (FromAny const &amp;from_interface)</td></tr>
+<tr class="memdesc:gae988a6a809ee2910690366e1e4c7ae67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Lock a shared <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. <br /></td></tr>
+<tr class="memitem:ga0ad81aaf23ab3d32a02a12cec57c0946" id="r_ga0ad81aaf23ab3d32a02a12cec57c0946"><td class="memTemplParams" colspan="2">
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
-<tr class="memitem:a0ad81aaf23ab3d32a02a12cec57c0946 template"><td class="memItemLeft">ToAny&#160;</td><td class="memItemRight"><b>anyxx::move_to</b> (FromAny &amp;&amp;from)</td></tr>
+<tr class="memitem:ga0ad81aaf23ab3d32a02a12cec57c0946 template"><td class="memItemLeft">ToAny&#160;</td><td class="memItemRight"><b>anyxx::move_to</b> (FromAny &amp;&amp;from)</td></tr>
+<tr class="memdesc:ga0ad81aaf23ab3d32a02a12cec57c0946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move ownership to an other <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. Uses runtime info to crosscast, if neccessary. <br /></td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258" id="r_aab26c23ca7cd37963cf41554460ca258"><td class="memTemplParams" colspan="2"><a id="aab26c23ca7cd37963cf41554460ca258" name="aab26c23ca7cd37963cf41554460ca258"></a>
 template&lt;typename InObject&gt; </td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258 template"><td class="memItemLeft">std::size_t &amp;&#160;</td><td class="memItemRight"><b>anyxx::members_count</b> ()</td></tr>
@@ -2890,7 +2896,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">    any_template_params_with_defaults)&gt;                                   \</div>
 <div class="line"><span class="keyword">using </span>any_##n = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \</div>
 <div class="line">                                      pure_template_params)&gt;;</div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2267</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2305</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3358,23 +3364,6 @@ template&lt;typename AnyValue, typename Return&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line"> </div>
 <div class="line"><span class="keyword">typename</span> translate_v_table_return&lt;AnyValue, Return&gt;::type</div>
 </div><!-- fragment -->
-</div>
-</div>
-<a id="af97e4130c5c467557b419eb6e97b8d80" name="af97e4130c5c467557b419eb6e97b8d80"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af97e4130c5c467557b419eb6e97b8d80">&#9670;&#160;</a></span>vany_variant</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="#af97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A Proxy for mixing std::variant and type erasure Use this, when some, at compile time known types, are dispatched in a hot path. Put this types plus an any (with the specific trait and a dynamic proxy) in a std::variant. This variant is then used with a by_val proxy and the same trait as before. So the dispatch for the types in variant is done internaly with a std::visit, and all other types are dispatch via there v-Table. Now you know, where the Any++ logo has its origin. </p>
-
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['macros_0',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]]
+  ['casts_0',['Casts',['../group__casts.html',1,'']]]
 ];

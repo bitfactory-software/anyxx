@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['make_5fvany_0',['make_vany',['../anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562',1,'anyxx']]]
+  ['cref_0',['cref',['../group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf',1,'anyxx']]]
 ];

@@ -112,23 +112,20 @@ using&#160;</td><td class="memItemRight"><b>v_table_t</b> = typename v_table_hol
 <tr class="memitem:a1fe32c4d9b62dedf8211b0798a6b9687" id="r_a1fe32c4d9b62dedf8211b0798a6b9687"><td class="memItemLeft"><a id="a1fe32c4d9b62dedf8211b0798a6b9687" name="a1fe32c4d9b62dedf8211b0798a6b9687"></a>
 using&#160;</td><td class="memItemRight"><b>T</b> = proxy_trait_t::static_dispatch_t</td></tr>
 <tr class="memitem:a7ac9c34392167cb991f869de19e23cf6" id="r_a7ac9c34392167cb991f869de19e23cf6"><td class="memItemLeft"><a id="a7ac9c34392167cb991f869de19e23cf6" name="a7ac9c34392167cb991f869de19e23cf6"></a>
-using&#160;</td><td class="memItemRight"><b>any_value_t</b> = any&lt;val, Trait&gt;</td></tr>
+using&#160;</td><td class="memItemRight"><b>any_value_t</b> = any&lt;<a class="el" href="unionanyxx_1_1val.html">val</a>, Trait&gt;</td></tr>
 <tr class="memitem:a889c6acc43ffb8760b32b6eadf9e85b3" id="r_a889c6acc43ffb8760b32b6eadf9e85b3"><td class="memTemplParams" colspan="2"><a id="a889c6acc43ffb8760b32b6eadf9e85b3" name="a889c6acc43ffb8760b32b6eadf9e85b3"></a>
 template&lt;typename Box&gt; </td></tr>
 <tr class="memitem:a889c6acc43ffb8760b32b6eadf9e85b3 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>type_for</b> = any&lt;Box, Trait&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a35473870adac5b3b3762e483ff878f56" id="r_a35473870adac5b3b3762e483ff878f56"><td class="memTemplParams" colspan="2"><a id="a35473870adac5b3b3762e483ff878f56" name="a35473870adac5b3b3762e483ff878f56"></a>
-template&lt;typename ConstructedWith&gt; <br />
+<tr class="memitem:a35473870adac5b3b3762e483ff878f56" id="r_a35473870adac5b3b3762e483ff878f56"><td class="memTemplParams" colspan="2">template&lt;typename ConstructedWith&gt; <br />
 requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;)</td></tr>
-<tr class="memitem:a35473870adac5b3b3762e483ff878f56 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(ConstructedWith &amp;&amp;const ructed_with)</td></tr>
-<tr class="memitem:a440c04e593e924f0518702df4b55cf60" id="r_a440c04e593e924f0518702df4b55cf60"><td class="memTemplParams" colspan="2"><a id="a440c04e593e924f0518702df4b55cf60" name="a440c04e593e924f0518702df4b55cf60"></a>
-template&lt;typename V&gt; </td></tr>
-<tr class="memitem:a440c04e593e924f0518702df4b55cf60 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>any</b> (std::in_place_t, V &amp;&amp;v)</td></tr>
-<tr class="memitem:a2dee555d6fc08f2449ab24e9d11a97d3" id="r_a2dee555d6fc08f2449ab24e9d11a97d3"><td class="memTemplParams" colspan="2"><a id="a2dee555d6fc08f2449ab24e9d11a97d3" name="a2dee555d6fc08f2449ab24e9d11a97d3"></a>
-template&lt;typename T, typename... Args&gt; </td></tr>
-<tr class="memitem:a2dee555d6fc08f2449ab24e9d11a97d3 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>any</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a35473870adac5b3b3762e483ff878f56 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a35473870adac5b3b3762e483ff878f56">explicit</a> (false) any(ConstructedWith &amp;&amp;const ructed_with)</td></tr>
+<tr class="memitem:a440c04e593e924f0518702df4b55cf60" id="r_a440c04e593e924f0518702df4b55cf60"><td class="memTemplParams" colspan="2">template&lt;typename V&gt; </td></tr>
+<tr class="memitem:a440c04e593e924f0518702df4b55cf60 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a440c04e593e924f0518702df4b55cf60">any</a> (std::in_place_t, V &amp;&amp;v)</td></tr>
+<tr class="memitem:a2dee555d6fc08f2449ab24e9d11a97d3" id="r_a2dee555d6fc08f2449ab24e9d11a97d3"><td class="memTemplParams" colspan="2">template&lt;typename T, typename... Args&gt; </td></tr>
+<tr class="memitem:a2dee555d6fc08f2449ab24e9d11a97d3 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a2dee555d6fc08f2449ab24e9d11a97d3">any</a> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
 <tr class="memitem:a2a9e06e04e60658cb845efab00e8d405" id="r_a2a9e06e04e60658cb845efab00e8d405"><td class="memItemLeft"><a id="a2a9e06e04e60658cb845efab00e8d405" name="a2a9e06e04e60658cb845efab00e8d405"></a>
 &#160;</td><td class="memItemRight"><b>any</b> (const any &amp;other)</td></tr>
 <tr class="memitem:a4d79d6ce864710664d6e8fc192ab229d" id="r_a4d79d6ce864710664d6e8fc192ab229d"><td class="memItemLeft"><a id="a4d79d6ce864710664d6e8fc192ab229d" name="a4d79d6ce864710664d6e8fc192ab229d"></a>
@@ -184,9 +181,9 @@ template&lt;is_any Friend&gt; </td></tr>
 <tr class="memitem:a67b4a900dbe7cc5a12f02f6cdb2b0597" id="r_a67b4a900dbe7cc5a12f02f6cdb2b0597"><td class="memTemplParams" colspan="2"><a id="a67b4a900dbe7cc5a12f02f6cdb2b0597" name="a67b4a900dbe7cc5a12f02f6cdb2b0597"></a>
 template&lt;is_any Friend&gt; </td></tr>
 <tr class="memitem:a67b4a900dbe7cc5a12f02f6cdb2b0597 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>get_proxy_ptr</b> (Friend const &amp;any)</td></tr>
-<tr class="memitem:a84ea0f652593345e0948f1d847f56504" id="r_a84ea0f652593345e0948f1d847f56504"><td class="memTemplParams" colspan="2"><a id="a84ea0f652593345e0948f1d847f56504" name="a84ea0f652593345e0948f1d847f56504"></a>
-template&lt;typename AAny&gt; </td></tr>
-<tr class="memitem:a84ea0f652593345e0948f1d847f56504 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>get_v_table</b> (AAny const &amp;any)</td></tr>
+<tr class="memitem:a625c9537c78256fff8461d2ef827a25b" id="r_a625c9537c78256fff8461d2ef827a25b"><td class="memTemplParams" colspan="2"><a id="a625c9537c78256fff8461d2ef827a25b" name="a625c9537c78256fff8461d2ef827a25b"></a>
+template&lt;typename Friend&gt; </td></tr>
+<tr class="memitem:a625c9537c78256fff8461d2ef827a25b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>get_v_table</b> (Friend const &amp;any)</td></tr>
 <tr class="memitem:afb3eb77526644fd605957dc25fa9fb30" id="r_afb3eb77526644fd605957dc25fa9fb30"><td class="memTemplParams" colspan="2"><a id="afb3eb77526644fd605957dc25fa9fb30" name="afb3eb77526644fd605957dc25fa9fb30"></a>
 template&lt;is_any To, is_any From&gt; <br />
 requires ( std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
@@ -200,14 +197,115 @@ class anyxx::any&lt; Proxy, Trait &gt;</div><p>The core class template to contro
 <p>With the Trait template parameter, you specify the member functions of a captured object which can be invoked on this any.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, cref, mutref shared, weak, unique and value. All Proxy classes must conform to the <a class="el" href="conceptanyxx_1_1is__proxy.html" title="is_proxy">is_proxy</a> concept. </td></tr>
+    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a> <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a> and value. All Proxy classes must conform to the <a class="el" href="conceptanyxx_1_1is__proxy.html" title="is_proxy">is_proxy</a> concept. </td></tr>
     <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> macro. See there for examples. If the proxy is dynamic (=type erased) the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#_a2">_2d_trait_self.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#_a2">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#_a2">_2d_trait_self.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#_a2">_2o_trait_simple.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
 </dl>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a440c04e593e924f0518702df4b55cf60" name="a440c04e593e924f0518702df4b55cf60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a440c04e593e924f0518702df4b55cf60">&#9670;&#160;</a></span>any() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;is_proxy Proxy, typename Trait&gt; </div>
+<div class="memtemplate">
+template&lt;typename V&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanyxx_1_1any.html">anyxx::any</a>&lt; Proxy, Trait &gt;::any </td>
+          <td>(</td>
+          <td class="paramtype">std::in_place_t</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">V &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Type erasing constructor, the concrete behavior is controled by the proxy @V wil be forwarded to the managed storage </p>
+
+</div>
+</div>
+<a id="a2dee555d6fc08f2449ab24e9d11a97d3" name="a2dee555d6fc08f2449ab24e9d11a97d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2dee555d6fc08f2449ab24e9d11a97d3">&#9670;&#160;</a></span>any() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;is_proxy Proxy, typename Trait&gt; </div>
+<div class="memtemplate">
+template&lt;typename T, typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanyxx_1_1any.html">anyxx::any</a>&lt; Proxy, Trait &gt;::any </td>
+          <td>(</td>
+          <td class="paramtype">std::in_place_type_t&lt; T &gt;</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...</td>          <td class="paramname"><span class="paramname"><em>args</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Type erasing constructor, the concrete behavior is controled by the proxy @T wil be used to construct the object in the managed storage with forwarded @args </p>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="a35473870adac5b3b3762e483ff878f56" name="a35473870adac5b3b3762e483ff878f56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35473870adac5b3b3762e483ff878f56">&#9670;&#160;</a></span>explicit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;is_proxy Proxy, typename Trait&gt; </div>
+<div class="memtemplate">
+template&lt;typename ConstructedWith&gt; <br />
+requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;)</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classanyxx_1_1any.html">anyxx::any</a>&lt; Proxy, Trait &gt;::explicit </td>
+          <td>(</td>
+          <td class="paramtype">false</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Type erasing constructor, the concrete behavior is controled by the proxy via its corresponding /ref proxy_trait. See <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a> <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a> and value. </p>
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>
 </ul>
 </div><!-- contents -->
