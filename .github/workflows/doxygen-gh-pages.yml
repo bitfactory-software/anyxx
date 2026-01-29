@@ -6,6 +6,7 @@ on:
       - main
       - doxygen
       - master
+      - develop
 
 jobs:
   deploy:
@@ -17,3 +18,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           config_file: Doxyfile.in
+          folder: doxygen/html
+          doxygen_version: 1.16.1

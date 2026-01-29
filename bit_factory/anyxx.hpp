@@ -464,8 +464,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT derived from base with decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behaviour for a \ref any, where the
-   behaviour of base are inherrited. The decoration are additional functions and
+    Macro to define the functioanl behavior for a \ref any, where the
+   behavior of base is inherrited. The decoration are additional functions and
    typdefs (in brakets).
 */
 #define TRAIT_EX_(n, BASE, l, decoration) \
@@ -474,15 +474,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /*! \def TRAIT_(n, base, fns)
     \brief TRAIT derived from base
     \ingroup trait_macros
-    Example:
 */
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
 /*! \def TRAIT(n, fns)
-    \brief Macro to define the functioanl behaviour for an \ref any
+    \brief Macro to define the functioanl behavior for an \ref any
     \ingroup trait_macros
+    
     Example:
-
     \code TRAIT(sample_trait,
       (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
    \endcode
@@ -493,7 +492,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT with decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behaviour for a \ref any, with decorations.
+    Macro to define the functioanl behavior for a \ref any, with decorations.
    That are additional functions and typdefs (in brakets).
 */
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
@@ -510,6 +509,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
 
+/*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args)
+    \brief TRAIT template with a base TRAIT
+    \ingroup trait_macros
+
+*/
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
 
@@ -557,18 +561,36 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                         _detail_REMOVE_PARENS(t)),                           \
                     n)
 
+/*! \def ANY_TEMPLATE_EX_(template_args, n, base, base_template_args, fns,
+   proxy_default, decoration)
+    \brief ANY template with a base and decoration
+    \ingroup trait_macros
+*/
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/*! \def ANY_TEMPLATE_(template_args, n, base, base_template_args, fns,
+   proxy_default)
+    \brief ANY template with a base
+    \ingroup trait_macros
+*/
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
   TRAIT_TEMPLATE_(t, n, BASE, bt, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/*! \def ANY_TEMPLATE(template_args, n, fns, proxy_default)
+    \brief ANY template
+    \ingroup trait_macros
+*/
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
   TRAIT_TEMPLATE(t, n, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/*! \def ANY_TEMPLATE_EX_(template_args, n, fns, proxy_default, decoration)
+    \brief ANY template with a base and decoration
+    \ingroup trait_macros
+*/
 #define ANY_TEMPLATE_EX(t, n, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
@@ -2048,19 +2070,26 @@ static_assert(!moveable_from<val, shared>);
 static_assert(!moveable_from<val, weak>);
 static_assert(moveable_from<val, val>);
 
-/// The core class template to control dispatch for external polymorphism
-/** To control the behaviour, any provides two template parameter, \ref Proxy
- *and \ref Trait. Imagine this as a combination af a std::any and some
- *std::function's. With the Proxy tempalate param you control, wether this any
- *behaves like a copying funcction, a move_only function, a ref function or if
- *the target object is caputred cooncrete inside of any. With the Trait tempalte
- *paramteter you specify the member functions of an captured object, witch can
- *be invoked on this any.
- *@tparam Proxy Specifies the lifteime of the captured object. anyxx provides
- *\ref by_val, \ref cref, \ref mutref .... All Proxy classes must conform to the
- *\ref is_proxy concept.
- *@tparam Trait Specifies the functionality of this any. A class of this type is
- *normaly provided via a \ref TRAIT or \ref ANY macro.
+/** \brief The core class template to control dispatch for external
+ *   polymorphism.
+ *
+ *   To control the behavior, any provides two template parameters: \ref Proxy
+ *   and \ref Trait. Imagine this as a combination of a std::any and several
+ *   std::functions.
+ *
+ *   With the Proxy template parameter, you control whether this any behaves
+ *   like a copying function, a move-only function, a reference function, or if
+ *   the target object is captured concretely inside of any.
+ *
+ *   With the Trait template parameter, you specify the member functions of a
+ *   captured object which can be invoked on this any.
+ *
+ *   @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
+ *   \ref by_val, \ref cref, \ref mutref, etc. All Proxy classes must conform
+ *   to the \ref is_proxy concept.
+ *   @tparam Trait Specifies the functionality of this any. A class of this type
+ *   is normally provided via a \ref TRAIT or \ref ANY macro. See there for
+ * examples.
  */
 template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
@@ -3396,3 +3425,22 @@ class dispatch_vany {
       interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
       ANYXX_UNPAREN(class_)>();                                               \
   }
+
+/**
+   \example _2d_trait_self.cpp
+   Shows self a referntial trait
+
+   \example _2o_trait_simple.cpp
+   Simple trait usage
+
+   \example _2b_trait_monoid.cpp
+   A self referntial trait that models a monoid. Show how to use a MODEL_MAP that 
+   acts simultanious as runtime and complitem customization point
+
+   \example _5_any_template.cpp
+   \example _1_any_shape.cpp
+   \example 21_Tree_any.cpp
+   \example 21_Tree_any.cpp
+   \example 31_Animals_any_dispatch.cpp
+
+*/

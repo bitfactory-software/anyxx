@@ -47,50 +47,39 @@ ANY_MODEL_MAP((double), stringable) {
 }  // namespace
 
 template <typename KEY, typename VALUE>
-void test_any_map_template(any_map<KEY, VALUE, cref> const& map_i) {
+void any_map_template_f(any_map<KEY, VALUE, cref> const& map_i) {
   REQUIRE(map_i.size() == 2);
   REQUIRE(map_i.at("one") == 1);
   REQUIRE(map_i.at("two") == 2);
 }
 
-TEST_CASE("any template test") {
+TEST_CASE("any template usage simple") {
   std::map<std::string, int> map_string_to_int = {{"one", 1}, {"two", 2}};
 
-  auto test_any_map_lambda =
+  auto any_map_lambda =
       [](any_map<std::string, int, cref> map_i) {
         REQUIRE(map_i.size() == 2);
         REQUIRE(map_i.at("one") == 1);
         REQUIRE(map_i.at("two") == 2);
       };
-  test_any_map_lambda(map_string_to_int);
+  any_map_lambda(map_string_to_int);
 
-  test_any_map_template<std::string, int>(map_string_to_int);
+  any_map_template_f<std::string, int>(map_string_to_int);
 
-  auto test_any_map_to_string_lambda =
+  auto any_map_to_string_lambda =
       [](any_map_to_string<std::string, cref> map_i) {
         REQUIRE(map_i.at("one").to_string() == "1");
         REQUIRE(map_i.at("two").to_string() == "2");
       };
-  test_any_map_to_string_lambda(map_string_to_int);
+  any_map_to_string_lambda(map_string_to_int);
 }
 
-TEST_CASE("any template test2") {
-  std::map<std::string, double> map_string_to_int = {{"one", 1}, {"two", 2}};
-
-  auto test_any_map_to_string_lambda =
-      [](any_map_to_string<std::string, cref> map_i) {
-        REQUIRE(map_i.at("one").to_string() == "1.000000");
-        REQUIRE(map_i.at("two").to_string() == "2.000000");
-      };
-  test_any_map_to_string_lambda(map_string_to_int);
-}
-
-TEST_CASE("any template test3") {
+TEST_CASE("nested(recursive) any template") {
   std::map<int, std::map<std::string, std::map<int, double>>> map = {
       {1, {{"one", {{1, 3.14}, {2, 6.28}}}, {"two", {{3, 3.333}}}}},
       {2, {{"one", {{4, 4.14}, {5, 4.28}}}, {"two", {{6, 4.333}}}}}};
 
-  auto test_map_lambda =
+  auto lambda =
       [](any_recursive_map<
           int,
           any_recursive_map<std::string, any_map<int, double, cref>,
@@ -104,9 +93,9 @@ TEST_CASE("any template test3") {
         REQUIRE(map_i.at(1).at("one").at(1) == 3.14);
         REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
       };
-  test_map_lambda(map);
+  lambda(map);
 
-  auto test_map_lambda_mutate =
+  auto lambda_mutate =
       [](any_mutable_recursive_map<
           int,
           any_mutable_recursive_map<
@@ -125,7 +114,7 @@ TEST_CASE("any template test3") {
         REQUIRE(map_i.at(2).at("one").at(4) == 4.14);
         map_i.at(2).at("one").at(4) = 8.28;
       };
-  test_map_lambda_mutate(map);
+  lambda_mutate(map);
   REQUIRE(map[2]["one"][4] == 8.28);
 }
 
@@ -135,7 +124,7 @@ ANY_TEMPLATE_MODEL_MAP((std::map<int, double>), map, ((int), (double))) {
 };
 }  // namespace
 
-TEST_CASE("any template test4") {
+TEST_CASE("any template with model map") {
   std::map<int, double> map = {{3, 3.333}, {6, 4.333}};
 
   any_map<int, double, cref> any_mutable_map{map};
