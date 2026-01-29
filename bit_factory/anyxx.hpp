@@ -469,24 +469,24 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 */
 #define TRAIT_EX_(n, BASE, l, decoration) \
   __detail_ANYXX_TRAIT_(, n, BASE, l, decoration)
-// 
+//
 /*! \def TRAIT_(n, base, fns)
     \brief TRAIT derived from base
     \ingroup trait_macros
 */
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
-// 
+//
 /*! \def TRAIT(n, fns)
     \brief Macro to define the functioanl behavior for an \ref any
     \ingroup trait_macros
-    
+
     Example:
     \code TRAIT(sample_trait,
       (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
    \endcode
 */
 #define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
-// 
+//
 /*! \def TRAIT_EX(n, base, fns, decoration)
     \brief TRAIT with decoration
     \ingroup trait_macros
@@ -495,7 +495,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    That are additional functions and typdefs (in brakets).
 */
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
-// 
+//
 /*! \def TRAIT_TEMPLATE_EX_(n, base, fns, decoration)
     \brief TRAIT template with base and decoration
     \ingroup trait_macros
@@ -511,23 +511,23 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, base,         \
       _detail_REMOVE_PARENS(base_template_types), l, decoration)
-// 
+//
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
-// 
+//
 /*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args)
     \brief TRAIT template with a base TRAIT
     \ingroup trait_macros
 */
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
   TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
-// 
+//
 /*! \def TRAIT_TEMPLATE
-    \brief TRAIT template 
+    \brief TRAIT template
     \ingroup trait_macros
 */
 #define TRAIT_TEMPLATE(t, n, l) TRAIT_TEMPLATE_(t, n, anyxx::base_trait, (), l)
-// 
+//
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
@@ -555,7 +555,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_EX_(n, BASE, l, proxy_default, decoration) \
   TRAIT_EX_(n, BASE, l, decoration)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
-// 
+//
 /*! \def ANY_EX
     \brief ANY with decoration
     \ingroup trait_macros
@@ -563,7 +563,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_EX(n, l, proxy_default, decoration) \
   TRAIT_EX(n, l, decoration)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
-// 
+//
 /*! \def ANY
     \brief ANY with a base
     \ingroup trait_macros
@@ -571,7 +571,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_(n, BASE, l, proxy_default) \
   TRAIT_(n, BASE, l)                    \
   __detail_ANYXX_ANY_EX_(n, proxy_default)
-// 
+//
 /*! \def ANY
     \brief ANY
     \ingroup trait_macros
@@ -579,7 +579,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY(n, l, ...) \
   TRAIT(n, l)          \
   __detail_ANYXX_ANY_EX_(n, __VA_ARGS__)
-// 
+//
 
 #define __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)                 \
   ANY_META_FUNCTION(_detail_REMOVE_PARENS(t),                                \
@@ -596,7 +596,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
-// 
+//
 /*! \def ANY_TEMPLATE_(template_args, n, base, base_template_args, fns,
    proxy_default)
     \brief ANY template with a base
@@ -605,7 +605,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
   TRAIT_TEMPLATE_(t, n, BASE, bt, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
-// 
+//
 /*! \def ANY_TEMPLATE(template_args, n, fns, proxy_default)
     \brief ANY template
     \ingroup trait_macros
@@ -613,7 +613,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_TEMPLATE(t, n, l, proxy_default) \
   TRAIT_TEMPLATE(t, n, l)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
-// 
+//
 /*! \def ANY_TEMPLATE_EX_(template_args, n, fns, proxy_default, decoration)
     \brief ANY template with a base and decoration
     \ingroup trait_macros
@@ -631,23 +631,23 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           _detail_EXPAND params)
 
 /*! \def ANY_FN_PURE
-    \brief TRAIT function, witch must be provided by model 
+    \brief TRAIT function, witch must be provided by model
     \ingroup trait_macros
 */
 #define ANY_FN_PURE(ret, name, params, const_)            \
   ANY_FN_(, ret, name, name, false, const_,               \
           (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
           _detail_EXPAND params)
-// 
+//
 /*! \def ANY_FN_PURE_EXACT
-    \brief TRAIT function, witch must be provided by model 
+    \brief TRAIT function, witch must be provided by model
     \ingroup trait_macros
 */
 #define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
   ANY_FN_(, ret, name, name, true, const_,                \
           (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
           _detail_EXPAND params)
-// 
+//
 /*! \def ANY_FN_DEF
     \brief TRAIT function with default behavior
     \ingroup trait_macros
@@ -655,30 +655,33 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_FN_DEF(ret, name, params, const_, ...)         \
   ANY_FN_(, ret, name, name, false, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
-// 
+//
 /*! \def ANY_FN_DEF
     \brief TRAIT function with default behavior
     \ingroup trait_macros
 */
 #define ANY_FN_DEF_EXACT(ret, name, params, const_, ...) \
   ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__), _detail_EXPAND params)
-// 
+//
 /*! \def ANY_FN
-    \brief TRAIT function witch default behavior is to call an equaly named member function of the model
+    \brief TRAIT function witch default behavior is to call an equaly named
+   member function of the model
     \ingroup trait_macros
 */
 #define ANY_FN(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
-// 
+//
 /*! \def ANY_FN_EXACT
-    \brief TRAIT function witch default behavior is to call an equaly named member function of the model
+    \brief TRAIT function witch default behavior is to call an equaly named
+   member function of the model
     \ingroup trait_macros
 */
 #define ANY_FN_EXACT(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, name, true, const_, params)
-// 
+//
 /*! \def ANY_FN_OVERLOAD
-    \brief TRAIT function witch default behavior is to call an equaly named member function of the model
+    \brief TRAIT function witch default behavior is to call an equaly named
+   member function of the model
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
@@ -686,9 +689,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_FN_OVERLOAD(ret, name, params, const_)                             \
   __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, false, const_, \
                            params)
-// 
+//
 /*! \def ANY_FN_OVERLOAD_EXACT
-    \brief TRAIT function witch default behavior is to call an equaly named member function of the model
+    \brief TRAIT function witch default behavior is to call an equaly named
+   member function of the model
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
@@ -698,26 +702,28 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                            params)
 //
 //
-// 
+//
 /*! \def ANY_OP_MAP_NAMED
-    \brief TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map
-    \ingroup trait_macros
-
-    Use if in a base TRAIT exists an equaly named FN
-*/ 
-#define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
-// 
-/*! \def ANY_OP_MAP_NAMED
-    \brief TRAIT operator with default behavior is to call the related operator of the model
+    \brief TRAIT operator with default behavior is to call the related operator
+   of the model and a programmer choosen name in map
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
 */
- 
+#define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
+  __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
+//
+/*! \def ANY_OP_MAP_NAMED
+    \brief TRAIT operator with default behavior is to call the related operator
+   of the model
+    \ingroup trait_macros
+
+    Use if in a base TRAIT exists an equaly named FN
+*/
+
 #define ANY_OP(ret, op, params, const_) \
   ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-// 
+//
 /*! \def ANY_OP_DEF
     \brief TRAIT operator with default behavior
     \ingroup trait_macros
@@ -728,18 +734,20 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_DEF(ret, op, name, params, const_, ...)            \
   ANY_FN_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
-// 
+//
 /*! \def ANY_OP_EXACT_MAP_NAMED
-    \brief TRAIT operator with default behavior and an programmer choosen name in map
+    \brief TRAIT operator with default behavior and an programmer choosen name
+   in map
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
 */
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, operator op, true, const_, params)
-// 
+//
 /*! \def ANY_OP_EXACT
-    \brief TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map
+    \brief TRAIT operator with default behavior is to call the related operator
+   of the model and a programmer choosen name in map
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
@@ -747,9 +755,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT(ret, op, params, const_)                                  \
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
                          const_)
-// 
+//
 /*! \def ANY_OP_EXACT_DEF
-    \brief TRAIT operator with default behavior is to call the related operator of the model
+    \brief TRAIT operator with default behavior is to call the related operator
+   of the model
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
@@ -757,19 +766,21 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)     \
   ANY_FN_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
-// 
+//
 /*! \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
-    \brief TRAIT operator with default behavior and an programmer choosen name in map
+    \brief TRAIT operator with default behavior and an programmer choosen name
+   in map
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
 */
-// 
+//
 #define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)        \
   __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(operator op), ret, name, operator op, \
                            true, const_, params)
 /*! \def ANY_OP_EXACT_OVERLOAD
-    \brief TRAIT operator with default behavior is to call the related operator of the model
+    \brief TRAIT operator with default behavior is to call the related operator
+   of the model
     \ingroup trait_macros
 
     Use if in a base TRAIT exists an equaly named FN
@@ -777,7 +788,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
       ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
-// 
+//
 /*! \def ANY_OP_EXACT_OVERLOAD_DEF
     \brief TRAIT operator with default behavior
     \ingroup trait_macros
@@ -788,7 +799,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_FN_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
           (__VA_ARGS__), _detail_EXPAND params)
 
-// 
+//
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
   template <>                                                   \
   struct interface_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
@@ -2470,10 +2481,16 @@ struct by_val {
   Value value_;
   using value_t = Value;
   operator Value() const { return value_; }
+  /** Helper typedef template to \ref trait a model with an \ref any.
+   * See also \ref trait_as.
+   */
   template <typename Trait>
   using as = any<by_val<Value>, Trait>;
 };
 
+/// A factory function to bind an object as model to an \ref any with a \ref trait
+/** See alse \ref by_val::as
+*/
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
   return any<anyxx::by_val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
@@ -3569,8 +3586,8 @@ class dispatch_vany {
    Simple trait usage
 
    \example _2b_trait_monoid.cpp
-   A self referntial trait that models a monoid. Show how to use a MODEL_MAP that 
-   acts simultanious as runtime and complitem customization point
+   A self referntial trait that models a monoid. Show how to use a MODEL_MAP
+   that acts simultanious as runtime and complitem customization point
 
    \example _5_any_template.cpp
    \example _1_any_shape.cpp
