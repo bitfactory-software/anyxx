@@ -464,8 +464,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT derived from base with decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behaviour for a \ref any, where the
-   behaviour of base are inherrited. The decoration are additional functions and
+    Macro to define the functioanl behavior for a \ref any, where the
+   behavior of base is inherrited. The decoration are additional functions and
    typdefs (in brakets).
 */
 #define TRAIT_EX_(n, BASE, l, decoration) \
@@ -478,10 +478,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 
 /*! \def TRAIT(n, fns)
-    \brief Macro to define the functioanl behaviour for an \ref any
+    \brief Macro to define the functioanl behavior for an \ref any
     \ingroup trait_macros
+    
     Example:
-
     \code TRAIT(sample_trait,
       (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
    \endcode
@@ -492,7 +492,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT with decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behaviour for a \ref any, with decorations.
+    Macro to define the functioanl behavior for a \ref any, with decorations.
    That are additional functions and typdefs (in brakets).
 */
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
@@ -563,7 +563,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /*! \def ANY_TEMPLATE_EX_(template_args, n, base, base_template_args, fns,
    proxy_default, decoration)
-    \brief ANY template with a base ANY and decoration
+    \brief ANY template with a base and decoration
     \ingroup trait_macros
 */
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
@@ -572,7 +572,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /*! \def ANY_TEMPLATE_(template_args, n, base, base_template_args, fns,
    proxy_default)
-    \brief ANY template with a base ANY
+    \brief ANY template with a base
     \ingroup trait_macros
 */
 #define ANY_TEMPLATE_(t, n, BASE, bt, l, proxy_default) \
@@ -588,7 +588,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /*! \def ANY_TEMPLATE_EX_(template_args, n, fns, proxy_default, decoration)
-    \brief ANY template with a and decoration
+    \brief ANY template with a base and decoration
     \ingroup trait_macros
 */
 #define ANY_TEMPLATE_EX(t, n, l, proxy_default, decoration) \
