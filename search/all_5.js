@@ -2,7 +2,7 @@ var searchData=
 [
   ['data_20macros_0',['Runtime data macros',['../group__runtime__macros.html',1,'']]],
   ['define_1',['define',['../classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049',1,'anyxx::dispatch&lt; R(Args...)&gt;']]],
-  ['definitions_20in_20context_20of_20this_20library_2',['Terms and Definitions in Context of This Library',['../md_docs_2terms__and__definitions.html',1,'']]],
+  ['definitions_20in_20context_20of_20any_2',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
   ['description_20of_20the_20generated_20code_3',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md19',1,'']]],
   ['dispatch_4',['dispatch',['../classanyxx_1_1dispatch.html',1,'anyxx']]],
   ['dispatch_20dispatch_5ftable_20dispatch_5ftable_20instance_20multi_20dispatch_20matrix_5',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md9',1,'']]],

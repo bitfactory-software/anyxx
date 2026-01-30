@@ -10,7 +10,7 @@ var searchData=
   ['cmakelists_20txt_3a_7',['Useage in CMakeLists.txt:',['../index.html#autotoc_md23',1,'']]],
   ['code_8',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md19',1,'']]],
   ['compared_9',['Performace compared',['../index.html#autotoc_md24',1,'']]],
-  ['context_20of_20this_20library_10',['Terms and Definitions in Context of This Library',['../md_docs_2terms__and__definitions.html',1,'']]],
+  ['context_20of_20any_10',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
   ['cref_11',['cref',['../group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf',1,'anyxx']]],
   ['crosscast_12',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]]
 ];

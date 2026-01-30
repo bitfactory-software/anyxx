@@ -26,8 +26,8 @@ var NAVTREE =
 [
   [ "Any++", "index.html", [
     [ "Any++ : How to <em>trait</em> <em>any</em> <em>virtual</em>, <em>static</em> or <em>variant</em>?", "index.html#autotoc_md20", null ],
-    [ "Any++ Type Erased *Proxy*s", "md_docs_2Proxy__overview.html", null ],
-    [ "Terms and Definitions in Context of This Library", "md_docs_2terms__and__definitions.html", null ],
+    [ "<span class=\"tt\">Any++</span> Type Erased <span class=\"tt\">Proxy</span>*s", "md_docs_2Proxy__overview.html", null ],
+    [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", null ],
     [ "The Inner Working Of <span class=\"tt\">Traits</span> In <span class=\"tt\">Any++</span>", "md_docs_2Traits__inner__working.html", null ],
     [ "Topics", "topics.html", "topics" ],
     [ "Concepts", "concepts.html", "concepts" ],
