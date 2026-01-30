@@ -91,22 +91,22 @@ $(function(){initNavTree('md_docs_2terms__and__definitions.html','',''); });
   <div class="headertitle"><div class="title">Terms and Definitions in Context of This Library </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md5"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md2"></a></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
 v_table</h2>
 <p>An object whose members are function pointers, and every function has as **its first parameter <em>self***. This is a pointer to (eventually *const</em>) <em>void</em>. The <em>v_table</em> points to a "meta_data* object and optional to a <em>m_table</em>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
 v_table instance</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
 An object derived from v_table, with no additional members, and where all members point to valid functions.</h3>
 <p>These functions are implemented via a templated constructor. The template parameter is called the <b>unerased</b> type. <br  />
  In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a <b>model_map</b> for the unerased type. Tutorial</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 dispatch_table, dispatch_table instance, multi dispatch matrix</h2>
 <p>Similar to v_table, but if an entry is in ivolved in a <b>multi dispatch</b>, it describes the dispatch index in the <b>multi dispatch matrix</b>. The target function for the <em>multi diapatch</em> resides in the <b>multi dispatch matrix</b>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 proxy</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 A concept describing an object that <b>erases</b> the <b>type</b> of <b>another</b> object for a given <em>lifetime</em> kind.</h3>
 <p>The description of these types is implemented via a specialication of <em>proxy_trait</em>. <br  />
 </p>
@@ -117,15 +117,15 @@ A concept describing an object that <b>erases</b> the <b>type</b> of <b>another<
 <li><b>unique</b>: Ownership as <span class="tt">std::unique_ptr</span>. The delivered address is a pointer to a <em>mutable</em> object.</li>
 <li><b>value</b>: Every value object holds its own copy. Same semantics as <em>int</em>. The delivered <em>void</em> pointer is <em>mutable</em>. <a href="/tutorials/tutorial___1.md/#t1">Tutorial</a></li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 'any' Versus 'typed_any'</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 An <em>any</em> combines a <b>v_table</b> with an <b>proxy</b>.</h3>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 A <em>typed_any</em> is a convenience wrapper of an <b>any</b> for the <b>eunerased</b> type.</h3>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Static Cast vs Dynamic Cast</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 A <em>static cast</em>:</h3>
 <ul>
 <li>Is in the language type rules and always checked by the compiler.</li>
@@ -133,7 +133,7 @@ A <em>static cast</em>:</h3>
 <li>Static downcasts are unsafe.</li>
 <li>Static casts are only a syntactic construct and leave no trace in the binary code.</li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 A <em>dynamic cast</em>:</h3>
 <ul>
 <li>Uses meta data to find the queried type.</li>
@@ -141,44 +141,44 @@ A <em>dynamic cast</em>:</h3>
 <li>All dynamic casts are safe.</li>
 <li>Dynamic casts have a runtime cost.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 'Upcast' vs 'Downcast'</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 An <em>upcast</em> is a <em>conversion</em> from a more detailed type to a general one.</h3>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md17"></a>
 A <em>downcast</em> is a conversion from a more general type to a more detailed one.</h3>
 <p>For upcasts and downcasts, the types must be related within the language rules. <br  />
  Static downcasts are guesses and as such unsafe. Dynamic downcasts are by definition safe and a kind of <em>type query</em>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md18"></a>
 Lifetime Cast</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md19"></a>
 An <b>proxy</b> can recieve the content of an other <b>proxy</b> with different <b>liftime</b> within certain rules.</h3>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md20"></a>
 Three ways, three rules:</h3>
 <ul>
 <li><em>borrow</em>: assignemnt does not change ownership and constness.</li>
 <li><em>move</em>: left hand can hold ownership, right hand has ownership, left hand const or right hand mutable .</li>
 <li><em>clone</em>: left hand can hold ownership.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md21"></a>
 Crosscast</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md22"></a>
 While <em>up-</em> and <em>downcasts</em> are within related types, <em>crosscasts</em> are between unrelated types.</h3>
 <p>A <b>crosscast</b> usually tests if one <b>any</b> can be reached from another <b>any</b>, and if so, provides access to it. To enable a <b>crosscast</b> to a certain <b>any</b> for an object, the target <em>any*s <b>v_table instance</b> must be registered for objects class. This is done With the *ANY_MODEL...</em> macros.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Extension Method</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 An <b>extension method</b> is a freestanding callable, witch acts a dispatch_table_function on the first paramater. (must be an <b>any</b>).</h3>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 A <b>extension multi method</b> is a generalistaion of the <b>extension method</b>, to solve the <a href="https://en.wikipedia.org/wiki/Multiple_dispatch">multiple dispatch</a> .</h3>
 <p><b>Extension methods</b> are a recipe to solve the <a href="https://en.wikipedia.org/wiki/Expression_problem">expression problem</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Extension Members</h2>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 An <b>extension members</b> behaves like a <em>struct</em>, where you can add data members without changing the definition of that <em>struct</em>.</h3>
 <p>This could be trivially implemented by a map from some kind of tag to an <span class="tt">std::any</span>. <br  />
  This library offers an efficient implementation with index based indirections and type-safe access.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 <em>Ad hoc</em> Type Erasure Versus Architectural <em>Type Tunnel</em></h2>
 <p><b>Type erasure</b>, as we see it today, and how it is supported by well-known libraries, often shares this pattern:</p>
 <p>An input parameter of a function can consume any object, as long as it conforms to the syntactic requirements of the <b>type-erasing</b> parameter.</p>

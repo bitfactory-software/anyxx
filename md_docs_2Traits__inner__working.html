@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: Traits in &lt;tt&gt;anyxx&lt;/tt&gt;</title>
+<title>Any++: The Inner Working Of &lt;tt&gt;Traits&lt;/tt&gt; In &lt;tt&gt;Any++&lt;/tt&gt;</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('md_docs_2architectural__overview.html','',''); });
+$(function(){initNavTree('md_docs_2Traits__inner__working.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,15 +88,15 @@ $(function(){initNavTree('md_docs_2architectural__overview.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Traits in <span class="tt">anyxx</span> </div></div>
+  <div class="headertitle"><div class="title">The Inner Working Of <span class="tt">Traits</span> In <span class="tt">Any++</span> </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a></p>
+<div class="textblock"><p><a class="anchor" id="autotoc_md29"></a></p>
 <p><b>Traits</b>:</p><ul>
-<li>define a set of requirements (functions, operators) that a type must satisfy to be used with <span class="tt">anyxx</span>.</li>
+<li>define a set of requirements (functions, operators) that a type must satisfy to be used with this <span class="tt">trait</span>.</li>
 <li>They are defined using macros like <span class="tt"><a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="Macro to define the functional behavior for an any.">TRAIT</a></span> and <span class="tt"><a class="el" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8" title="TRAIT function whose default behavior is to call an equally named member function of the model.">ANY_FN</a></span>, which specify the functions that must be implemented by any type conforming to the trait, if no default is provided.</li>
 </ul>
-<p>an example of a simple trait definition: </p><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(trait1, (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, fn1, (), <span class="keyword">const</span>)))</div>
+<p>An example of a simple trait definition: </p><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(trait1, (<a class="code hl_define" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, fn1, (), <span class="keyword">const</span>)))</div>
 <div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:683</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:486</div></div>
 </div><!-- fragment --><p>The above defines a trait <span class="tt">trait1</span> that requires a function <span class="tt">fn1</span> returning a <span class="tt">std::string</span> and taking no parameters.</p>
@@ -105,7 +105,9 @@ $(function(){initNavTree('md_docs_2architectural__overview.html','',''); });
 <summary >
 Show the generated code for our example</summary>
 <p></p>
-<div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="fragment"><div class="line"><span class="keyword">struct </span>trait1;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><span class="keyword">struct </span>trait1_default_model_map {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keyword">auto</span> fn1([[maybe_unused]] T <span class="keyword">const</span>&amp; x)</div>
 <div class="line">      -&gt; anyxx::map_return&lt;T, std::string&gt; {</div>
@@ -219,6 +221,7 @@ Show the generated code for our example</summary>
 <ul>
 <li><span class="tt">trait1_default_model_map&lt;T&gt;</span> provides a static implementation of the required trait functions (e.g., <span class="tt">fn1</span>), calling the corresponding member function on the underlying type.</li>
 <li><span class="tt">trait1_model_map&lt;T&gt;</span> inherits from the default model map, and is specialized for <span class="tt">std::variant</span> types to support visitation and recursive dispatch.</li>
+<li>For concrete types that are <span class="tt">std::variant</span>, this model map specialization dispatches to the active alternative, and recursively calls the appropriate model map for that alternative, or forwards the call if the alternative is itself an <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">anyxx::any</a></span>.</li>
 </ul>
 </li>
 <li><b>Open Dispatch Support</b>: <br  />
@@ -270,7 +273,7 @@ Show the generated code for our example</summary>
 </ul>
 <p><img src="https://github.com/user-attachments/assets/b6ae44bf-c78f-4b4f-83cf-201c6931ec98" alt="anyxx architecture" width="1348" height="596" class="inline"/></p>
 <hr  />
-<h3 class="doxsection"><a class="anchor" id="autotoc_md2"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Description of the Generated Code</h3>
 <p><b>In summary:</b> <br  />
  The generated code automates the boilerplate for type-erased polymorphism, providing both static and dynamic dispatch, variant support, and open dispatch, all while keeping the user-facing API simple and expressive. </p>
