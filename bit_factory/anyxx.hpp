@@ -1121,11 +1121,13 @@ concept const_correct_move_to_from =
 
 constexpr inline bool is_const_correct_call_for_proxy_and_self(
     bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact) {
-  if (call_is_const)
-    if (exact)
+  if (call_is_const) {
+    if (exact) {
       return (call_is_const == proxy_is_const);
-    else
+    } else {
       return true;
+    }
+  }
 
   if (proxy_is_const || self_is_const) return false;
 
@@ -2557,7 +2559,6 @@ struct by_val {
   operator Value() const { return value_; }
   /// Helper type alias template to trait a model with an \ref any.
   /// See also \ref trait_as.
-  template <typename Trait>
   template <typename Trait>
   using as = any<by_val<Value>, Trait>;
 };

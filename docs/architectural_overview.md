@@ -1,2 +1,185 @@
-### Architectural overview
+### Traits in `anyxx`
+
+**Traits**:
+   - define a set of requirements (functions, operators) that a type must satisfy to be used with `anyxx`.
+   - They are defined using macros like `TRAIT` and `ANY_FN`, which specify the functions that must be implemented by any type conforming to the trait, if no default is provided.
+
+   an example of a simple trait definition:
+```cpp
+	TRAIT(trait1, (ANY_FN(std::string, fn1, (), const)))
+```
+
+The above defines a trait `trait1` that requires a function `fn1` returning a `std::string` and taking no parameters.
+
+The TRAIT macro generates the necessary boilerplate code to manage the trait, including virtual function tables (vtables) for dynamic dispatch.
+
+<details>
+<summary>Show the generated code for our example</summary>
+
+```cpp
+template <typename T>
+struct trait1_default_model_map {
+  static auto fn1([[maybe_unused]] T const& x)
+      -> anyxx::map_return<T, std::string> {
+    return x.fn1();
+  };
+};
+
+template <typename T>
+struct trait1_model_map : trait1_default_model_map<T> {};
+
+template <typename T>
+  requires(anyxx::is_variant<T>)
+struct trait1_model_map<T> {
+  template <typename V>
+  using x_model_map = trait1_model_map<V>;
+  static auto fn1([[maybe_unused]] T const& x) -> decltype(auto) {
+    return std::visit(
+        anyxx::overloads{[&]<typename V>(V&& v) {
+                           return x_model_map<std::decay_t<V>>::fn1(
+                               std::forward<V>(v));
+                         },
+                         [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any) {
+                           return std::forward<Any>(any).fn1();
+                         }},
+        x);
+  };
+};
+
+struct trait1_has_open_dispatch;
+
+struct trait1_v_table
+    : anyxx::base_trait::v_table_t,
+      anyxx::dispatch_holder<anyxx::is_type_complete<trait1_has_open_dispatch>,
+                             trait1> {
+  using v_table_base_t = typename anyxx::base_trait::v_table_t;
+  using v_table_t = trait1_v_table;
+  using any_value_t = anyxx::any<anyxx::val, trait1>;
+  static constexpr bool open_dispatch_enabeled =
+      anyxx::is_type_complete<trait1_has_open_dispatch>;
+  using own_dispatch_holder_t =
+      typename anyxx::dispatch_holder<open_dispatch_enabeled, trait1>;
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(v_table_t) == from
+               ? true
+               : v_table_base_t::static_is_derived_from(from);
+  }
+  anyxx::v_table_return<any_value_t, std::string> (*fn1)(void const*);
+  template <typename Concrete>
+  explicit(false) trait1_v_table(std::in_place_type_t<Concrete> concrete);
+};
+
+struct trait1 : anyxx::base_trait {
+  using any_value_t = anyxx::any<anyxx::val, trait1>;
+  using base_t = anyxx::base_trait;
+  using v_table_base_t = base_t::v_table_t;
+  using v_table_t = trait1_v_table;
+  template <typename StaticDispatchType>
+  using static_dispatch_map_t = trait1_model_map<StaticDispatchType>;
+  template <typename Self>
+  decltype(auto) fn1(this Self&& self)
+    requires(::anyxx::const_correct_call_for_proxy_and_self<
+             void const*, typename std::decay_t<Self>::proxy_t,
+             std::is_const_v<std::remove_reference_t<Self>>, false>)
+  {
+    using self_t = std::decay_t<Self>;
+    using T = typename self_t::T;
+    using proxy_t = typename self_t::proxy_t;
+    if constexpr (!self_t::dyn) {
+      using traited_t = typename proxy_t::value_t;
+      if constexpr (std::same_as<void, std::string>) {
+        return static_dispatch_map_t<T>::fn1(get_proxy_value(self));
+      } else {
+        return anyxx::jacket_return<std::string>::forward(
+            static_dispatch_map_t<T>::fn1(get_proxy_value(self)),
+            std::forward<Self>(self));
+      }
+    } else {
+      if constexpr (std::same_as<void, std::string>) {
+        return get_v_table(self)->fn1(anyxx::get_proxy_ptr(self));
+      } else {
+        return anyxx::jacket_return<std::string>::forward(
+            get_v_table(self)->fn1(anyxx::get_proxy_ptr(self)),
+            std::forward<Self>(self));
+      }
+    }
+  }
+};
+
+template <typename Concrete>
+trait1_v_table::trait1_v_table(std::in_place_type_t<Concrete> concrete)
+    : v_table_base_t(concrete) {
+  using model_map = trait1_model_map<Concrete>;
+  fn1 = [](void const* _vp) -> anyxx::v_table_return<any_value_t, std::string> {
+    if constexpr (std::same_as<anyxx::self&, std::string>) {
+      model_map{}.fn1(*anyxx::unchecked_unerase_cast<Concrete>(_vp));
+      return anyxx::handle_self_ref_return<std::string>{}();
+    } else {
+      return model_map{}.fn1(*anyxx::unchecked_unerase_cast<Concrete>(_vp));
+    }
+  };
+  if constexpr (open_dispatch_enabeled) {
+    own_dispatch_holder_t::set_dispatch_table(
+        ::anyxx::dispatch_table_instance<trait1_v_table, Concrete>());
+  }
+  ::anyxx::set_is_derived_from<v_table_t>(this);
+};
+
+
+```
+</details>
+
+
+The code generated by the `TRAIT` and `ANY_FN` macros includes several key components:
+
+- **Model Map Structures**:  
+  - `trait1_default_model_map<T>` provides a static implementation of the required trait functions (e.g., `fn1`), calling the corresponding member function on the underlying type.
+  - `trait1_model_map<T>` inherits from the default model map, and is specialized for `std::variant` types to support visitation and recursive dispatch.
+
+- **Open Dispatch Support**:  
+  - `trait1_has_open_dispatch` is an empty struct used as a tag to enable open dispatch for this trait.
+  - If this type is a fully defined type, open dispatch is enabled in the vtable.
+
+- **Virtual Table (vtable) Structure**:  
+  - `trait1_v_table` inherits from the base vtable and a dispatch holder. It contains function pointers for each trait function (e.g., `fn1`). The constructor for this vtable sets up the function pointers to call the correct implementation for the concrete type.
+  - if open dispatch is enabled, the dispatch holder sets up the dispatch table for open dispatch, otherwise it is an empty class.
+ 
+- **Trait Structure**:  
+  - `struct trait1` inherits from the base trait and provides type aliases for the vtable and model map, as well as a forwarding function for each trait function (e.g., `fn1`). This function dispatches either statically (if the type is known at compile time) or dynamically (using the vtable) depending on how the `any` is constructed.
+
+- **VTable Constructor Implementation**:  
+  - The vtable constructor for each concrete type sets up the function pointers to call the correct implementation for that type, using the model map.
+
+**Summary Table**
+
+| Component                  | Purpose                                                                                   |
+|----------------------------|-------------------------------------------------------------------------------------------|
+| `*_default_model_map`      | Static dispatch: calls the trait function on the concrete type.                           |
+| `*_model_map`              | Handles both normal and variant types for dispatch.                                       |
+| `*_has_open_dispatch`      | Tag to enable open (runtime) dispatch for the trait.                                      |
+| `*_v_table`                | Holds function pointers for dynamic dispatch; constructed per concrete type.              |
+| `struct trait*`            | The trait interface: provides forwarding functions and type aliases for use with `anyxx`. |
+
+**This Enables:**
+
+- **Static Dispatch:**  
+  If the type is known at compile time, calls are forwarded directly to the concrete implementation.
+
+- **Dynamic Dispatch:**  
+  If the type is erased (e.g., stored in an `anyxx::any`), calls are routed through the vtable, which uses function pointers set up for the actual type stored.
+
+- **Open Dispatch:**  
+  The infrastructure supports open (multi-method) dispatch, allowing runtime selection of the correct function implementation based on the actual types involved.
+
+
+
 <img width="1348" height="596" alt="anyxx architecture" src="https://github.com/user-attachments/assets/b6ae44bf-c78f-4b4f-83cf-201c6931ec98" />
+
+
+
+---
+
+#### Description of the Generated Code
+
+**In summary:**  
+The generated code automates the boilerplate for type-erased polymorphism, providing both static and dynamic dispatch, variant support, and open dispatch, all while keeping the user-facing API simple and expressive.
