@@ -125,7 +125,7 @@ Typedefs</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Proxy to capture the dispatch target type erased by const reference An any with such a proxy is lifetime bound to the object referenced! </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a4">_2b_trait_monoid.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a8">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a4">_2b_trait_monoid.cpp</a>, <a class="el" href="_3_any_range_8cpp-example.html#_a4">_3_any_range.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a8">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -182,6 +182,8 @@ template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename...
       </table>
 </div><div class="memdoc">
 <p>A Proxy for mixing std::variant and type erasure Use this when some, at compile time, known types are dispatched in a hot path. Put these types plus an any (with the specific trait and a dynamic proxy) in a std::variant. This variant is then used with a <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a> proxy and the same trait as before. See <a class="el" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562" title="make_vany">make_vany</a> So the dispatch for the types in the variant is done internally with a std::visit, and all other types are dispatched via their v-Table. Now you know where the Any++ logo has its origin. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2c_trait_any_variant_8cpp-example.html#_a4">_2c_trait_any_variant.cpp</a>.</dd>
+</dl>
 
 </div>
 </div>
