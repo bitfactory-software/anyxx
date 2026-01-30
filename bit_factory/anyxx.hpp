@@ -464,9 +464,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT derived from base with decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behavior for a \ref any, where the
-   behavior of base is inherrited. The decoration are additional functions and
-   typdefs (in brakets).
+    Macro to define the functional behavior for a \ref any, where the
+    behavior of base is inherited. The decoration are additional functions and
+    typedefs (in brackets).
 */
 #define TRAIT_EX_(n, BASE, l, decoration) \
   __detail_ANYXX_TRAIT_(, n, BASE, l, decoration)
@@ -478,13 +478,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
 //
 /*! \def TRAIT(n, fns)
-    \brief Macro to define the functioanl behavior for an \ref any
+    \brief Macro to define the functional behavior for an \ref any
     \ingroup trait_macros
 
     Example:
     \code TRAIT(sample_trait,
       (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
-   \endcode
+    \endcode
 */
 #define TRAIT(n, fns) TRAIT_(n, anyxx::base_trait, fns)
 //
@@ -492,8 +492,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT with decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behavior for a \ref any, with decorations.
-   That are additional functions and typdefs (in brakets).
+    Macro to define the functional behavior for a \ref any, with decorations.
+    That are additional functions and typedefs (in brackets).
 */
 #define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
 //
@@ -501,8 +501,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT template with base and decoration
     \ingroup trait_macros
 
-    Macro to define the functioanl behavior for a \ref any, with decorations.
-   That are additional functions and typdefs (in brakets).
+    Macro to define the functional behavior for a \ref any, with decorations.
+    That are additional functions and typedefs (in brackets).
 */
 #define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)     \
   TRAIT_META_FUNCTION(                                                         \
@@ -632,7 +632,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           _detail_EXPAND params)
 
 /*! \def ANY_FN_PURE
-    \brief TRAIT function, witch must be provided by model
+    \brief TRAIT function, which must be provided by model
     \ingroup trait_macros
 */
 #define ANY_FN_PURE(ret, name, params, const_)            \
@@ -641,7 +641,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           _detail_EXPAND params)
 //
 /*! \def ANY_FN_PURE_EXACT
-    \brief TRAIT function, witch must be provided by model
+    \brief TRAIT function, which must be provided by model
     \ingroup trait_macros
 */
 #define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
