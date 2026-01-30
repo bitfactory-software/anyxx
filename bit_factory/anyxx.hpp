@@ -456,8 +456,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
                       l, decoration)
 
-/// \defgroup trait_macros TRAIT... and ANY_ macros
+/// \addtogroup trait_macros TRAIT... and ANY_ macros
 /// \brief Macros to define \ref trait 's and \ref any '
+///  @{
 
 /// \def TRAIT_EX_
 /// \brief TRAIT derived from base with decoration.
@@ -631,6 +632,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
+/// @}
+
 #define ANY_FN_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
@@ -638,6 +641,38 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                  const_, params)                             \
   ANY_FN_(overload, ret, name, name_ext, exact_const, const_, (x.name_ext),  \
           _detail_EXPAND params)
+
+/// \addtogroup fn_macros ANY_FN... and ANY_OP macros
+/// \brief Macros to define \ref trait's and \ref any's functions and operators
+/// 
+/// Name conventions:
+/// - FN: function
+/// - OP: operator
+/// - PURE: function must be provided by the model
+/// - DEF: function has a default behavior defined by the last parameter. Must
+/// be a lambda. The target model can be accessed via a capture in the lambda of
+/// the varaible x. This lambda is the last parameter of the macro.
+/// - OVERLOAD: use if in a base TRAIT exists an equally named FN or OP
+/// - MAP_NAMED: use to provide a programmer-chosen name for an operator in the
+/// map to have an defined name for overriding in derived TRAITs
+/// - EXACT: constness of the function must be matched exactly by the proxy.
+/// That means, if the function is const, the proxy must be const as well.
+/// Useful for functions and operators which have a seperate behavior for const
+/// and mutable objects, e.g., operator[].
+/// --- no suffix: function whose default behavior is to call an equally named
+/// member function of the model
+/// 
+/// syntax:
+/// 
+/// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXCACT]
+///     (return_type, name, (param_list),[_const]
+///     [, default_behavior])
+/// 
+/// ANY_OP[_OVERLOAD][_MAP_NAMED]([_DEF]|[_EXACT_DEF]
+///     (return_type, operator [,map_name], (param_list), [_const]
+///     [, default_behavior])
+///
+///  @{
 
 /// \def ANY_FN_PURE
 /// \brief TRAIT function, which must be provided by the model.
@@ -662,16 +697,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_FN_(, ret, name, name, false, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 
-/// \def ANY_FN_DEF
+/// \def ANY_FN_DEF_EXACT
 /// \brief TRAIT function with default behavior
-/// \ingroup trait_macros
 #define ANY_FN_DEF_EXACT(ret, name, params, const_, ...) \
   ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__), _detail_EXPAND params)
 
 /// \def ANY_FN
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model.
-/// \ingroup trait_macros
 ///
 /// Example:
 /// \code
@@ -693,7 +726,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_FN_OVERLOAD
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_FN_OVERLOAD(ret, name, params, const_)                             \
@@ -703,7 +735,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_FN_OVERLOAD_EXACT
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)                      \
@@ -713,7 +744,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_OP_MAP_NAMED
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model and a programmer-chosen name in the map.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
@@ -722,13 +752,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_OP
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model.
-/// \ingroup trait_macros
 #define ANY_OP(ret, op, params, const_) \
   ANY_OP_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)
 
 /// \def ANY_OP_DEF
 /// \brief TRAIT operator with default behavior.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_DEF(ret, op, name, params, const_, ...)            \
@@ -740,7 +768,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /// \def ANY_OP_DEF
 /// \brief TRAIT operator with default behavior.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT(ret, op, params, const_)                                  \
@@ -750,7 +777,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_OP_EXACT_DEF
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)     \
@@ -760,7 +786,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
 /// \brief TRAIT operator with default behavior and a programmer-chosen name
 /// in the map.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)        \
@@ -770,7 +795,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_OP_EXACT_OVERLOAD
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
@@ -779,14 +803,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /// \def ANY_OP_EXACT_OVERLOAD_DEF
 /// \brief TRAIT operator with default behavior.
-/// \ingroup trait_macros
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT_OVERLOAD_DEF(ret, op, name, params, const_, ...)      \
   ANY_FN_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
           (__VA_ARGS__), _detail_EXPAND params)
 
-//
+/// @}
+
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
   template <>                                                   \
   struct interface_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
@@ -1818,7 +1842,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
         to, model_size(v_table_to), from, v_table_from->model_size);
   }
   // TODO implement move from unique
-  //static void move_to(unique& to, any_v_table* to_v_table, val&& v,
+  // static void move_to(unique& to, any_v_table* to_v_table, val&& v,
   //                    any_v_table* v_table) {
   //  assert(v_table);
   //  auto data_ptr =
@@ -2163,7 +2187,7 @@ static_assert(!borrowable_from<val, val>);
 // --------------------------------------------------------------------------------
 // clone erased data
 
-template <is_proxy TOFROM>
+template <is_proxy To>
 struct can_copy_to;
 
 template <typename To>

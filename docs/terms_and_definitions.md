@@ -1,4 +1,4 @@
-# Terms and Definitions in Context of This Library
+### Terms and Definitions in Context of `Any++`
 
 ### v_table
 An object whose members are function pointers, and every function has as **its first parameter `self`**. This is a pointer to (eventually *const*) `void`.
