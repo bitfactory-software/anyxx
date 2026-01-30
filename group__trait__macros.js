@@ -1,6 +1,7 @@
 var group__trait__macros =
 [
     [ "ANY", "group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22", null ],
+    [ "ANY_", "group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b", null ],
     [ "ANY_EX", "group__trait__macros.html#gadb4b15be1ffc489081b75d8b81e6ec67", null ],
     [ "ANY_EX_", "group__trait__macros.html#ga9ac23604935d330f71d3b41f1c000906", null ],
     [ "ANY_FN", "group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8", null ],
@@ -10,10 +11,9 @@ var group__trait__macros =
     [ "ANY_FN_OVERLOAD_EXACT", "group__trait__macros.html#ga3e26c93a4eb0d32d3859137998f542a9", null ],
     [ "ANY_FN_PURE", "group__trait__macros.html#ga7e35457fd2b7d0297132511962941a88", null ],
     [ "ANY_FN_PURE_EXACT", "group__trait__macros.html#gaef791af6302ddc20f90905f6d611cd70", null ],
+    [ "ANY_OP", "group__trait__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce", null ],
     [ "ANY_OP_DEF", "group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4", null ],
-    [ "ANY_OP_EXACT", "group__trait__macros.html#ga7d46ca8afdfbcc0c3103f0dedb9710d5", null ],
     [ "ANY_OP_EXACT_DEF", "group__trait__macros.html#ga5c441142284f6dad13de59245b656628", null ],
-    [ "ANY_OP_EXACT_MAP_NAMED", "group__trait__macros.html#ga31d722491c45e2315823f0eb3ebe541c", null ],
     [ "ANY_OP_EXACT_OVERLOAD", "group__trait__macros.html#gad1214e29f913c519ecf9f4b1e9934fa8", null ],
     [ "ANY_OP_EXACT_OVERLOAD_DEF", "group__trait__macros.html#ga2ec66b211ef38c2274fd0c00155f89d2", null ],
     [ "ANY_OP_EXACT_OVERLOAD_MAP_NAMED", "group__trait__macros.html#gabc1702b86750b11ed590d64e42d151e3", null ],
@@ -27,5 +27,6 @@ var group__trait__macros =
     [ "TRAIT_EX_", "group__trait__macros.html#ga15fb0b1b9a60d6586108d9bd6cec2a54", null ],
     [ "TRAIT_TEMPLATE", "group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae", null ],
     [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ],
+    [ "TRAIT_TEMPLATE_EX", "group__trait__macros.html#ga8d4680fe2c2a272dcb00310f92cfbb39", null ],
     [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa", null ]
 ];

@@ -192,13 +192,13 @@ requires ( std::derived_from&lt;typename To::v_table_t, typename From::v_table_t
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;is_proxy Proxy, typename Trait&gt;<br />
 class anyxx::any&lt; Proxy, Trait &gt;</div><p>The core class template to control dispatch for external polymorphism. </p>
-<p>To control the behavior, any provides two template parameters: Proxy and Trait. Imagine this as a combination of a std::any and several std::functions.</p>
-<p>With the Proxy template parameter, you control whether this any behaves like a copying function, a move-only function, a reference function, or if the target object is captured concretely inside of any.</p>
-<p>With the Trait template parameter, you specify the member functions of a captured object which can be invoked on this any.</p>
+<p>To control the behavior, <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any</a></span> provides two template parameters: Proxy and Trait. Imagine this as a combination of a <span class="tt">std::any</span> and several <span class="tt">std::function</span>s.</p>
+<p>With the Proxy template parameter, you control whether this <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any</a></span> behaves like a copying function, a move-only function, a reference function, or if the target object is captured concretely inside of <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any</a></span>.</p>
+<p>With the Trait template parameter, you specify the member functions of a captured object which can be invoked on this <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any</a></span>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a> <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a> and value. All Proxy classes must conform to the <a class="el" href="conceptanyxx_1_1is__proxy.html" title="is_proxy">is_proxy</a> concept. </td></tr>
-    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> macro. See there for examples. If the proxy is dynamic (=type erased) the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
+    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a>, <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a>, and value. All Proxy classes must conform to the <a class="el" href="conceptanyxx_1_1is__proxy.html" title="is_proxy">is_proxy</a> concept. </td></tr>
+    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> macro. See there for examples. If the proxy is dynamic (i.e., type erased), the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
   </table>
   </dd>
 </dl>
@@ -235,7 +235,19 @@ template&lt;typename V&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Type erasing constructor, the concrete behavior is controled by the proxy @V wil be forwarded to the managed storage </p>
+<p>Type-erasing constructor. The concrete behavior is controlled by the proxy. The value <span class="tt">v</span> will be forwarded to the managed storage. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">V</td><td>The type of the object to be forwarded into the managed storage. Usually deduced. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">std::in_place_t</td><td>Tag to select in-place construction. (On call site, use <span class="tt">std::in_place</span>.) </td></tr>
+    <tr><td class="paramname">v</td><td>The object to be forwarded into the managed storage. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -269,7 +281,13 @@ template&lt;typename T, typename... Args&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Type erasing constructor, the concrete behavior is controled by the proxy @T wil be used to construct the object in the managed storage with forwarded @args </p>
+<p>Type erasing constructor, the concrete behavior is controled by the proxy </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">std::in_place_type_t&lt;T&gt;</td><td>Tag to select in-place construction of <span class="tt">T</span> </td></tr>
+    <tr><td class="paramname">args</td><td>The arguments to construct the object of type T with, will be forwarded. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -301,7 +319,7 @@ requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Type erasing constructor, the concrete behavior is controled by the proxy via its corresponding /ref proxy_trait. See <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a> <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a> and value. </p>
+<p>Type-erasing constructor. The concrete behavior is controlled by the proxy via its corresponding proxy_trait. See <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a>, <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a>, and value. </p>
 
 </div>
 </div>

@@ -124,7 +124,7 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Proxy to capture the dispatch target type erased by const reference An any with such a proxy is lifetime bound to the object refernced! </p>
+<p>Proxy to capture the dispatch target type erased by const reference An any with such a proxy is lifetime bound to the object referenced! </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a4">_2b_trait_monoid.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a8">_5_any_template.cpp</a>.</dd>
 </dl>
 
@@ -141,7 +141,7 @@ Typedefs</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Proxy to capture the dispatch target type erased by mutable reference An any with such a proxy is lifetime bound to the object refernced! </p>
+<p>Proxy to capture the dispatch target type erased by mutable reference An any with such a proxy is lifetime bound to the object referenced! </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a9">_5_any_template.cpp</a>.</dd>
 </dl>
 
@@ -160,7 +160,7 @@ Typedefs</h2></td></tr>
 </div><div class="memdoc">
 <p>Proxy to manage the captured object via <code>std::shared_ptr</code>.</p><ul>
 <li>If you pass a <code>std::shared_ptr</code> to the <a class="el" href="classanyxx_1_1any.html" title="any">any</a> constructor, this pointer will be casted to <code>&lt;const</code> void*&gt; and used as proxy.</li>
-<li>If you pass an object as second paramter, with the std::in_place tag as first, this object will be forwarded to std::make_shared with the decayed type of object.</li>
+<li>If you pass an object as second parameter, with the std::in_place tag as first, this object will be forwarded to std::make_shared with the decayed type of object.</li>
 <li>If you pass as first parameter std::in_place_type&lt;T&gt;, the other arguments will be forwarded to std::make_shared&lt;T&gt;(...). </li>
 </ul>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_8cpp-example.html#_a2">21_Tree_any.cpp</a>, and <a class="el" href="21_Tree_any_dispatch_8cpp-example.html#_a1">21_Tree_any_dispatch.cpp</a>.</dd>
@@ -196,7 +196,7 @@ template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename...
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Proxy to manage the captured object via <code>std::weak_ptr</code>. Assign or copy construct it form a <code><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any&lt;shared&gt;</a></code> </p>
+<p>Proxy to manage the captured object via <code>std::weak_ptr</code>. Assign or copy construct it from a <code><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any&lt;shared&gt;</a></code> </p>
 
 </div>
 </div>

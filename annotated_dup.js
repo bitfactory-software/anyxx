@@ -6,6 +6,10 @@ var annotated_dup =
       [ "any", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
       [ "unique", "structanyxx_1_1unique.html", null ],
       [ "val", "unionanyxx_1_1val.html", null ],
+      [ "hook", "classanyxx_1_1hook.html", null ],
+      [ "key", "structanyxx_1_1key.html", null ],
+      [ "factory", "classanyxx_1_1factory.html", null ],
+      [ "members", "structanyxx_1_1members.html", null ],
       [ "virtual_", "structanyxx_1_1virtual__.html", null ],
       [ "dispatch", "classanyxx_1_1dispatch.html", null ],
       [ "dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4" ]

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: anyxx::is_proxy Concept Reference</title>
+<title>Any++: anyxx::key&lt; Tag &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('conceptanyxx_1_1is__proxy.html','',''); });
+$(function(){initNavTree('structanyxx_1_1key.html','','structanyxx_1_1key-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,38 +88,45 @@ $(function(){initNavTree('conceptanyxx_1_1is__proxy.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">anyxx::is_proxy Concept Reference</div></div>
+  <div class="headertitle"><div class="title">anyxx::key&lt; Tag &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>Requirements for a proxy type.  
-<a href="#details">More...</a></p>
+<p>A key type for factory registration.  
+ <a href="#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a>&gt;</code></p>
-<h2 id="header-conceptdef" class="groupheader">Concept definition</h2>
-<div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> E&gt;</div>
-<div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy</a> = <span class="keyword">requires</span>(E e, mutable_void void_data, <a class="code hl_struct" href="structanyxx_1_1any__v__table.html">any_v_table</a>* v_table) {</div>
-<div class="line">  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::void_t;</div>
-<div class="line">  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::static_dispatch_t;</div>
-<div class="line">  { proxy_trait&lt;E&gt;::is_constructibile_from_const } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line">  { proxy_trait&lt;E&gt;::is_owner } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line">  {</div>
-<div class="line">    proxy_trait&lt;E&gt;::get_proxy_ptr_in(e, v_table)</div>
-<div class="line">  } -&gt; std::convertible_to&lt;typename proxy_trait&lt;E&gt;::void_t&gt;;</div>
-<div class="line">  { proxy_trait&lt;E&gt;::is_weak } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line">  { proxy_trait&lt;E&gt;::clone_from(void_data, v_table) };</div>
-<div class="line">}</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1045</div></div>
-<div class="ttc" id="astructanyxx_1_1any__v__table_html"><div class="ttname"><a href="structanyxx_1_1any__v__table.html">anyxx::any_v_table</a></div><div class="ttdoc">Basic lifetime functionality.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:919</div></div>
-</div><!-- fragment --><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Requirements for a proxy type. </p>
-</div></div><!-- contents -->
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:ab0e3b1b1ddb367089df6329d5b1980dd" id="r_ab0e3b1b1ddb367089df6329d5b1980dd"><td class="memItemLeft"><a id="ab0e3b1b1ddb367089df6329d5b1980dd" name="ab0e3b1b1ddb367089df6329d5b1980dd"></a>
+const char *&#160;</td><td class="memItemRight"><b>label</b></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:af7090f5e08c95ef58b706db8b8669434" id="r_af7090f5e08c95ef58b706db8b8669434"><td class="memItemLeft"><a id="af7090f5e08c95ef58b706db8b8669434" name="af7090f5e08c95ef58b706db8b8669434"></a>
+auto&#160;</td><td class="memItemRight"><b>operator&lt;=&gt;</b> (<a class="el" href="structanyxx_1_1key.html">key</a>, <a class="el" href="structanyxx_1_1key.html">key</a>)=default</td></tr>
+</table>
+<a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Tag&gt;<br />
+struct anyxx::key&lt; Tag &gt;</div><p>A key type for factory registration. </p>
+</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>
+</ul>
+</div><!-- contents -->
 </div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="conceptanyxx_1_1is__proxy.html">is_proxy</a></li>
+    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1key.html">key</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

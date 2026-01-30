@@ -92,7 +92,7 @@ $(function(){initNavTree('group__runtime__macros.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Macros to reduce boilerblate for declaring/defining static runtime Data.  
+<p>Macros to reduce boilerplate for declaring/defining static runtime data.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
@@ -107,9 +107,9 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga93a6d3c140de4e4c95f863b88385a27c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define a vany dispatch singleton object in a source file.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Macros to reduce boilerblate for declaring/defining static runtime Data. </p>
-<p>To enable some dynamic functionality (crosscast, open dispatch) there mus be some static data holding information to do this operations. Extra care must be taken in a dll scenario.</p>
-<p>To reduce boilerplate code and Any++ suplies this macros </p>
+<div class="textblock"><p>Macros to reduce boilerplate for declaring/defining static runtime data. </p>
+<p>To enable some dynamic functionality (crosscast, open dispatch) there must be some static data holding information to perform these operations. Extra care must be taken in a DLL scenario.</p>
+<p>To reduce boilerplate code, Any++ supplies these macros. </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
 <a id="gab55747625c4054406c3f615c19ab1499" name="gab55747625c4054406c3f615c19ab1499"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gab55747625c4054406c3f615c19ab1499">&#9670;&#160;</a></span>ANY_SINGLETON</h2>
@@ -142,13 +142,13 @@ Macros</h2></td></tr>
 <p>Define a singleton object in a source file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">namespace_</td><td>the namespace for the singleton </td></tr>
-    <tr><td class="paramname">name</td><td>of the singleton </td></tr>
-    <tr><td class="paramname">__VA_ARGS__</td><td>paramater for the singleton constructor</td></tr>
+    <tr><td class="paramname">namespace_</td><td>The namespace for the singleton. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the singleton. </td></tr>
+    <tr><td class="paramname">__VA_ARGS__</td><td>Parameters for the singleton constructor.</td></tr>
   </table>
   </dd>
 </dl>
-<p>See also <a class="el" href="#ga3f285810c0716bfa028b613342d910d1" title="ANY_SINGLETON_DECLARE">ANY_SINGLETON_DECLARE</a> </p>
+<p>See also <a class="el" href="#ga3f285810c0716bfa028b613342d910d1" title="ANY_SINGLETON_DECLARE">ANY_SINGLETON_DECLARE</a>. </p>
 
 </div>
 </div>
@@ -182,13 +182,13 @@ Macros</h2></td></tr>
 <p>Declare access to a singleton object in a header file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">export_</td><td>To supply an export macro in a dll scenario </td></tr>
-    <tr><td class="paramname">name</td><td>Name of the singleton </td></tr>
-    <tr><td class="paramname">__VARGS__</td><td>type of the singleton object</td></tr>
+    <tr><td class="paramname">export_</td><td>To supply an export macro in a DLL scenario. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the singleton. </td></tr>
+    <tr><td class="paramname">__VA_ARGS__</td><td>Type of the singleton object.</td></tr>
   </table>
   </dd>
 </dl>
-<p>This macro should reside insed the namespace you wish the singleton to reside. See also ANY_SINGLETON </p>
+<p>This macro should reside inside the namespace you wish the singleton to reside. See also <a class="el" href="#gab55747625c4054406c3f615c19ab1499" title="ANY_SINGLETON">ANY_SINGLETON</a>. </p>
 
 </div>
 </div>
@@ -211,17 +211,17 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gab55747625c4054406c3f615c19ab1499">ANY_SINGLETON</a>(namespace_, name);</div>
-<div class="ttc" id="agroup__runtime__macros_html_gab55747625c4054406c3f615c19ab1499"><div class="ttname"><a href="#gab55747625c4054406c3f615c19ab1499">ANY_SINGLETON</a></div><div class="ttdeci">#define ANY_SINGLETON(namespace_, name,...)</div><div class="ttdoc">Define a singleton object in a source file.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3637</div></div>
+<div class="ttc" id="agroup__runtime__macros_html_gab55747625c4054406c3f615c19ab1499"><div class="ttname"><a href="#gab55747625c4054406c3f615c19ab1499">ANY_SINGLETON</a></div><div class="ttdeci">#define ANY_SINGLETON(namespace_, name,...)</div><div class="ttdoc">Define a singleton object in a source file.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3611</div></div>
 </div><!-- fragment -->
 <p>Define a vany dispatch singleton object in a source file. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">namespace_</td><td>the namespace for the singleton </td></tr>
-    <tr><td class="paramname">name</td><td>of the singleton</td></tr>
+    <tr><td class="paramname">namespace_</td><td>The namespace for the singleton. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the singleton.</td></tr>
   </table>
   </dd>
 </dl>
-<p>See also <a class="el" href="#ga0a538605bcb4ae50bd736f0802af2c8b" title="VANY_DISPACH_DECLARE">VANY_DISPACH_DECLARE</a>, <a class="el" href="#gab55747625c4054406c3f615c19ab1499" title="ANY_SINGLETON">ANY_SINGLETON</a> </p>
+<p>See also <a class="el" href="#ga0a538605bcb4ae50bd736f0802af2c8b" title="VANY_DISPACH_DECLARE">VANY_DISPACH_DECLARE</a>, <a class="el" href="#gab55747625c4054406c3f615c19ab1499" title="ANY_SINGLETON">ANY_SINGLETON</a>. </p>
 
 </div>
 </div>
@@ -269,20 +269,20 @@ Macros</h2></td></tr>
 <div class="line">    , name,                                                                 \</div>
 <div class="line">    anyxx::dispatch_vany&lt;name##_vany, name##_dynamic_dispatch,              \</div>
 <div class="line">                         name##_static_dispatch&gt;)</div>
-<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves expression problem. See dispatch&lt;R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3307</div></div>
+<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves the expression problem. See dispatch&lt;R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3279</div></div>
 </div><!-- fragment -->
 <p>Declare a singleton object for open vany dispatch. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">export_</td><td>To supply an export macro in a dll scenario </td></tr>
-    <tr><td class="paramname">name</td><td>Name of the dispatch </td></tr>
-    <tr><td class="paramname">vany</td><td>Type of vany </td></tr>
-    <tr><td class="paramname">signature</td><td>Signature of the dispatch </td></tr>
-    <tr><td class="paramname">static_dispatch</td><td>static constexpr visitor for the non any members of the vany</td></tr>
+    <tr><td class="paramname">export_</td><td>To supply an export macro in a DLL scenario. </td></tr>
+    <tr><td class="paramname">name</td><td>Name of the dispatch. </td></tr>
+    <tr><td class="paramname">vany</td><td>Type of vany. </td></tr>
+    <tr><td class="paramname">signature</td><td>Signature of the dispatch. </td></tr>
+    <tr><td class="paramname">static_dispatch</td><td>Static constexpr visitor for the non-any members of the vany.</td></tr>
   </table>
   </dd>
 </dl>
-<p>See also <a class="el" href="#ga93a6d3c140de4e4c95f863b88385a27c" title="VANY_DISPACH">VANY_DISPACH</a>, <a class="el" href="#ga3f285810c0716bfa028b613342d910d1" title="ANY_SINGLETON_DECLARE">ANY_SINGLETON_DECLARE</a> </p>
+<p>See also <a class="el" href="#ga93a6d3c140de4e4c95f863b88385a27c" title="VANY_DISPACH">VANY_DISPACH</a>, <a class="el" href="#ga3f285810c0716bfa028b613342d910d1" title="ANY_SINGLETON_DECLARE">ANY_SINGLETON_DECLARE</a>. </p>
 
 </div>
 </div>

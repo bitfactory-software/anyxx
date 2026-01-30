@@ -19,6 +19,10 @@ var hierarchy =
     [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", null ],
     [ "anyxx::dispatch&lt; R, Args &gt;", "classanyxx_1_1dispatch.html", null ],
     [ "anyxx::dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", null ],
+    [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
+    [ "anyxx::hook&lt; R, Args &gt;", "classanyxx_1_1hook.html", null ],
+    [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
+    [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
     [ "anyxx::unique", "structanyxx_1_1unique.html", null ],
     [ "anyxx::val", "unionanyxx_1_1val.html", null ],
     [ "anyxx::virtual_&lt; Any &gt;", "structanyxx_1_1virtual__.html", null ]

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: anyxx::unique Struct Reference</title>
+<title>Any++: anyxx::members&lt; InObject &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structanyxx_1_1unique.html','','structanyxx_1_1unique-members'); });
+$(function(){initNavTree('structanyxx_1_1members.html','','structanyxx_1_1members-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,38 +88,43 @@ $(function(){initNavTree('structanyxx_1_1unique.html','','structanyxx_1_1unique-
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">anyxx::unique Struct Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
+  <div class="headertitle"><div class="title">anyxx::members&lt; InObject &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
+<p>A class template to implement extension members.  
+ <a href="#details">More...</a></p>
+
 <p><code>#include &lt;<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pub-types" class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
+<tr class="memitem:a6b53db40a5701dbe65c49fffd7b00275" id="r_a6b53db40a5701dbe65c49fffd7b00275"><td class="memItemLeft"><a id="a6b53db40a5701dbe65c49fffd7b00275" name="a6b53db40a5701dbe65c49fffd7b00275"></a>
+using&#160;</td><td class="memItemRight"><b>any_value_t</b> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;<a class="el" href="unionanyxx_1_1val.html">val</a>&gt;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ad343c1a26b65ecf306d3d45a97db984d" id="r_ad343c1a26b65ecf306d3d45a97db984d"><td class="memItemLeft"><a id="ad343c1a26b65ecf306d3d45a97db984d" name="ad343c1a26b65ecf306d3d45a97db984d"></a>
-&#160;</td><td class="memItemRight"><b>unique</b> (mutable_void p=nullptr)</td></tr>
-<tr class="memitem:a4298b86ec684ad2c203ca4b6e3196860" id="r_a4298b86ec684ad2c203ca4b6e3196860"><td class="memItemLeft"><a id="a4298b86ec684ad2c203ca4b6e3196860" name="a4298b86ec684ad2c203ca4b6e3196860"></a>
-&#160;</td><td class="memItemRight"><b>unique</b> (unique const &amp;)=delete</td></tr>
-<tr class="memitem:af1add8de0dc97146edf0746b40eeb507" id="r_af1add8de0dc97146edf0746b40eeb507"><td class="memItemLeft"><a id="af1add8de0dc97146edf0746b40eeb507" name="af1add8de0dc97146edf0746b40eeb507"></a>
-unique &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (unique const &amp;)=delete</td></tr>
-<tr class="memitem:adc92a5c3b59353081cc02a9f0b391dc4" id="r_adc92a5c3b59353081cc02a9f0b391dc4"><td class="memItemLeft"><a id="adc92a5c3b59353081cc02a9f0b391dc4" name="adc92a5c3b59353081cc02a9f0b391dc4"></a>
-&#160;</td><td class="memItemRight"><b>unique</b> (unique &amp;&amp;other)</td></tr>
-<tr class="memitem:a3279714c646d9d50a78c95be836dc877" id="r_a3279714c646d9d50a78c95be836dc877"><td class="memItemLeft"><a id="a3279714c646d9d50a78c95be836dc877" name="a3279714c646d9d50a78c95be836dc877"></a>
-unique &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (unique &amp;&amp;other)</td></tr>
-<tr class="memitem:a1da241e1ae7709d6d7907df4beebd203" id="r_a1da241e1ae7709d6d7907df4beebd203"><td class="memItemLeft"><a id="a1da241e1ae7709d6d7907df4beebd203" name="a1da241e1ae7709d6d7907df4beebd203"></a>
-&#160;</td><td class="memItemRight"><b>operator bool</b> () const</td></tr>
+<tr class="memitem:a46dea7aee47d12b2c8dc5f47f4350f98" id="r_a46dea7aee47d12b2c8dc5f47f4350f98"><td class="memTemplParams" colspan="2"><a id="a46dea7aee47d12b2c8dc5f47f4350f98" name="a46dea7aee47d12b2c8dc5f47f4350f98"></a>
+template&lt;typename Member, typename Arg&gt; </td></tr>
+<tr class="memitem:a46dea7aee47d12b2c8dc5f47f4350f98 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>set</b> (Member member, Arg &amp;&amp;arg)</td></tr>
+<tr class="memitem:a440dfd22e3fa7d9c66ba18b5dd301955" id="r_a440dfd22e3fa7d9c66ba18b5dd301955"><td class="memTemplParams" colspan="2"><a id="a440dfd22e3fa7d9c66ba18b5dd301955" name="a440dfd22e3fa7d9c66ba18b5dd301955"></a>
+template&lt;typename Member&gt; </td></tr>
+<tr class="memitem:a440dfd22e3fa7d9c66ba18b5dd301955 template"><td class="memItemLeft">Member::value_t const *&#160;</td><td class="memItemRight"><b>get</b> (Member member) const</td></tr>
+<tr class="memitem:adedda9b60448a536c178daf32914f123" id="r_adedda9b60448a536c178daf32914f123"><td class="memTemplParams" colspan="2"><a id="adedda9b60448a536c178daf32914f123" name="adedda9b60448a536c178daf32914f123"></a>
+template&lt;typename Member&gt; </td></tr>
+<tr class="memitem:adedda9b60448a536c178daf32914f123 template"><td class="memItemLeft">Member::value_t *&#160;</td><td class="memItemRight"><b>get</b> (Member member)</td></tr>
+<tr class="memitem:adbfbb650b503e4174eb71951fddcb1c5" id="r_adbfbb650b503e4174eb71951fddcb1c5"><td class="memTemplParams" colspan="2"><a id="adbfbb650b503e4174eb71951fddcb1c5" name="adbfbb650b503e4174eb71951fddcb1c5"></a>
+template&lt;typename Member&gt; </td></tr>
+<tr class="memitem:adbfbb650b503e4174eb71951fddcb1c5 template"><td class="memItemLeft">Member::value_t &amp;&#160;</td><td class="memItemRight"><b>operator[]</b> (Member member)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:abe29247ceaf66b8bfa4e10b59b40f382" id="r_abe29247ceaf66b8bfa4e10b59b40f382"><td class="memItemLeft"><a id="abe29247ceaf66b8bfa4e10b59b40f382" name="abe29247ceaf66b8bfa4e10b59b40f382"></a>
-mutable_void&#160;</td><td class="memItemRight"><b>ptr</b> = nullptr</td></tr>
+<tr class="memitem:ac62b9854c189010fbcc729f6a29741f1" id="r_ac62b9854c189010fbcc729f6a29741f1"><td class="memItemLeft"><a id="ac62b9854c189010fbcc729f6a29741f1" name="ac62b9854c189010fbcc729f6a29741f1"></a>
+std::vector&lt; any_value_t &gt;&#160;</td><td class="memItemRight"><b>table_</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Proxy to manage the captured object via std::unique_ptr-like smart pointer</p><ul>
-<li>If you pass a std::unique_ptr to the any constructor, this pointer will be released and the ownership goes to the unique. NOTE: The any_v_able will build with the value_type of the std::unique_ptr.</li>
-<li>If you pass an object as second parameter, with the std::in_place tag as first, this object will be moved to the memory managed by the unique.</li>
-<li>If you pass as first parameter std::in_place_type&lt;...&gt;, the object will be constructed in place in the allocated memory with the other arguments forwarded. </li>
-</ul>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename InObject&gt;<br />
+struct anyxx::members&lt; InObject &gt;</div><p>A class template to implement extension members. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>
 </ul>
@@ -136,7 +141,7 @@ mutable_void&#160;</td><td class="memItemRight"><b>ptr</b> = nullptr</td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1unique.html">unique</a></li>
+    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1members.html">members</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

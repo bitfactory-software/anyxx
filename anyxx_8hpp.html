@@ -125,10 +125,16 @@ Classes</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E" id="r_anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1any.html">anyxx::any&lt; Proxy, Trait &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core class template to control dispatch for external polymorphism.  <a href="classanyxx_1_1any.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aby_5Fval_3C_20Value_20_3E" id="r_anyxx_3A_3Aby_5Fval_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val&lt; Value &gt;</a></td></tr>
+<tr class="memitem:anyxx_3A_3Akey_3C_20Tag_20_3E" id="r_anyxx_3A_3Akey_3C_20Tag_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1key.html">anyxx::key&lt; Tag &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A key type for factory registration.  <a href="structanyxx_1_1key.html#details">More...</a><br /></td></tr>
+<tr class="memitem:anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E" id="r_anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1factory.html">anyxx::factory&lt; Any, Key, Args &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class template to implement a factory for <a class="el" href="classanyxx_1_1any.html" title="any">any</a> objects.  <a href="classanyxx_1_1factory.html#details">More...</a><br /></td></tr>
+<tr class="memitem:anyxx_3A_3Amembers_3C_20InObject_20_3E" id="r_anyxx_3A_3Amembers_3C_20InObject_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1members.html">anyxx::members&lt; InObject &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class template to implement extension members.  <a href="structanyxx_1_1members.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Avirtual_5F_3C_20Any_20_3E" id="r_anyxx_3A_3Avirtual_5F_3C_20Any_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1virtual__.html">anyxx::virtual_&lt; Any &gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates,that <a class="el" href="classanyxx_1_1dispatch.html" title="dispatch">dispatch</a> type parameter, must be used dispatch.  <a href="structanyxx_1_1virtual__.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A tag to indicate that the corresponding function parameter is an <a class="el" href="classanyxx_1_1any.html" title="any">any</a> used for dispatch.  <a href="structanyxx_1_1virtual__.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Adispatch_3C_20R_28Args_2E_2E_2E_29_3E" id="r_anyxx_3A_3Adispatch_3C_20R_28Args_2E_2E_2E_29_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html">anyxx::dispatch&lt; R(Args...)&gt;</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open dispatch method. Solves expression problem.  <a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open dispatch method. Solves the expression problem.  <a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-concepts" class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
@@ -242,7 +248,7 @@ Macros</h2></td></tr>
 #define&#160;</td><td class="memItemRight"><b>TRAIT_META_FUNCTION</b>( any_template_params,  model_map_template_params,  concrete_template_params,  static_dispatch_template_params,  variant_model_map_template_params,  n,  BASE,  base_template_params,  l,  decoration)</td></tr>
 <tr class="memitem:a88ef3f22ac66de5e69b4f654c9e4a540" id="r_a88ef3f22ac66de5e69b4f654c9e4a540"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a88ef3f22ac66de5e69b4f654c9e4a540">__detail_ANYXX_TRAIT_</a>(t,  n,  BASE,  l,  decoration)</td></tr>
 <tr class="memitem:ga15fb0b1b9a60d6586108d9bd6cec2a54" id="r_ga15fb0b1b9a60d6586108d9bd6cec2a54"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga15fb0b1b9a60d6586108d9bd6cec2a54">TRAIT_EX_</a>(n,  BASE,  l,  decoration)</td></tr>
-<tr class="memdesc:ga15fb0b1b9a60d6586108d9bd6cec2a54"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base with decoration.  <br /></td></tr>
+<tr class="memdesc:ga15fb0b1b9a60d6586108d9bd6cec2a54"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base with decoration.Macro to define the functional behavior for a any, where the behavior of base is inherited. The decoration are additional functions and typedefs (in brackets).  <br /></td></tr>
 <tr class="memitem:gadf5ede586c04f0c23d0b46a60e1d241b" id="r_gadf5ede586c04f0c23d0b46a60e1d241b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n,  BASE,  l)</td></tr>
 <tr class="memdesc:gadf5ede586c04f0c23d0b46a60e1d241b"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base.  <br /></td></tr>
 <tr class="memitem:gae0cb5618c6b82d8f6a7eaf36143647a9" id="r_gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(n,  fns)</td></tr>
@@ -251,7 +257,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT with decoration.  <br /></td></tr>
 <tr class="memitem:ga5ee874de4f2988dc14324d0e652712aa" id="r_ga5ee874de4f2988dc14324d0e652712aa"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a>(t,  n,  base,  base_template_types,  l,  decoration)</td></tr>
 <tr class="memdesc:ga5ee874de4f2988dc14324d0e652712aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with base and decoration.  <br /></td></tr>
-<tr class="memitem:a8d4680fe2c2a272dcb00310f92cfbb39" id="r_a8d4680fe2c2a272dcb00310f92cfbb39"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a8d4680fe2c2a272dcb00310f92cfbb39">TRAIT_TEMPLATE_EX</a>(t,  n,  l,  decoration)</td></tr>
+<tr class="memitem:ga8d4680fe2c2a272dcb00310f92cfbb39" id="r_ga8d4680fe2c2a272dcb00310f92cfbb39"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga8d4680fe2c2a272dcb00310f92cfbb39">TRAIT_TEMPLATE_EX</a>(t,  n,  l,  decoration)</td></tr>
+<tr class="memdesc:ga8d4680fe2c2a272dcb00310f92cfbb39"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with decoration.  <br /></td></tr>
 <tr class="memitem:ga9ec9a5f2d475d1ddf481df8385fce4a1" id="r_ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t,  n,  base,  base_template_types,  l)</td></tr>
 <tr class="memdesc:ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with a base TRAIT.  <br /></td></tr>
 <tr class="memitem:gad2f206b96947eeba0d7f5cee72b33cae" id="r_gad2f206b96947eeba0d7f5cee72b33cae"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(t,  n,  l)</td></tr>
@@ -260,27 +267,28 @@ Macros</h2></td></tr>
 <tr class="memitem:ae49c0bee4735c35003524c9c5ed72195" id="r_ae49c0bee4735c35003524c9c5ed72195"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ae49c0bee4735c35003524c9c5ed72195">__detail_ANYXX_ANY_CMF</a>(t,  t_with_defaults,  n)</td></tr>
 <tr class="memitem:a9a6e3c1637d17d1f943f825d4f78a85a" id="r_a9a6e3c1637d17d1f943f825d4f78a85a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a9a6e3c1637d17d1f943f825d4f78a85a">__detail_ANYXX_ANY_EX_</a>(n,  proxy_default)</td></tr>
 <tr class="memitem:ga9ac23604935d330f71d3b41f1c000906" id="r_ga9ac23604935d330f71d3b41f1c000906"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga9ac23604935d330f71d3b41f1c000906">ANY_EX_</a>(n,  BASE,  l,  proxy_default,  decoration)</td></tr>
-<tr class="memdesc:ga9ac23604935d330f71d3b41f1c000906"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with a base and decoration.  <br /></td></tr>
+<tr class="memdesc:ga9ac23604935d330f71d3b41f1c000906"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with a base and decorationSee <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation.  <br /></td></tr>
 <tr class="memitem:gadb4b15be1ffc489081b75d8b81e6ec67" id="r_gadb4b15be1ffc489081b75d8b81e6ec67"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gadb4b15be1ffc489081b75d8b81e6ec67">ANY_EX</a>(n,  l,  proxy_default,  decoration)</td></tr>
-<tr class="memdesc:gadb4b15be1ffc489081b75d8b81e6ec67"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with decoration.  <br /></td></tr>
-<tr class="memitem:a5cd6bea6951e6c56a7e253ae6ca0dd1b" id="r_a5cd6bea6951e6c56a7e253ae6ca0dd1b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(n,  BASE,  l,  proxy_default)</td></tr>
+<tr class="memdesc:gadb4b15be1ffc489081b75d8b81e6ec67"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with decorationSee <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation.  <br /></td></tr>
+<tr class="memitem:ga5cd6bea6951e6c56a7e253ae6ca0dd1b" id="r_ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(n,  BASE,  l,  proxy_default)</td></tr>
+<tr class="memdesc:ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with a baseSee <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation.  <br /></td></tr>
 <tr class="memitem:ga47a5ba38b03d55fa5f63979281028d22" id="r_ga47a5ba38b03d55fa5f63979281028d22"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(n,  l, ...)</td></tr>
-<tr class="memdesc:ga47a5ba38b03d55fa5f63979281028d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY with a base.  <br /></td></tr>
+<tr class="memdesc:ga47a5ba38b03d55fa5f63979281028d22"><td class="mdescLeft">&#160;</td><td class="mdescRight">Simple ANY macro.  <br /></td></tr>
 <tr class="memitem:a74f2617024ee1c59498d1bab914576d8" id="r_a74f2617024ee1c59498d1bab914576d8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a74f2617024ee1c59498d1bab914576d8">__detail_ANYXX_ANY_TEMPLATE_CMF</a>(t,  n,  proxy_default)</td></tr>
 <tr class="memitem:gae8358d6ce5723e6034308a27184df811" id="r_gae8358d6ce5723e6034308a27184df811"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gae8358d6ce5723e6034308a27184df811">ANY_TEMPLATE_EX_</a>(t,  n,  BASE,  bt,  l,  proxy_default,  decoration)</td></tr>
-<tr class="memdesc:gae8358d6ce5723e6034308a27184df811"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base and decoration.  <br /></td></tr>
+<tr class="memdesc:gae8358d6ce5723e6034308a27184df811"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base and decoration.See <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation.  <br /></td></tr>
 <tr class="memitem:ga5efc06aca9d1e9f50d8c2b0896a0e99a" id="r_ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a">ANY_TEMPLATE_</a>(t,  n,  BASE,  bt,  l,  proxy_default)</td></tr>
-<tr class="memdesc:ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base.  <br /></td></tr>
+<tr class="memdesc:ga5efc06aca9d1e9f50d8c2b0896a0e99a"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template with a base.See <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation.  <br /></td></tr>
 <tr class="memitem:ga428ec0337c0d297d504f3c0d8f06a2bb" id="r_ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb">ANY_TEMPLATE</a>(t,  n,  l,  proxy_default)</td></tr>
-<tr class="memdesc:ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template.  <br /></td></tr>
+<tr class="memdesc:ga428ec0337c0d297d504f3c0d8f06a2bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY template.See <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation.  <br /></td></tr>
 <tr class="memitem:a09a393439b0581968ccaab4807db29b6" id="r_a09a393439b0581968ccaab4807db29b6"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a09a393439b0581968ccaab4807db29b6">ANY_TEMPLATE_EX</a>(t,  n,  l,  proxy_default,  decoration)</td></tr>
 <tr class="memitem:a6a6613b5cca63f6479f232ee78a92572" id="r_a6a6613b5cca63f6479f232ee78a92572"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a6a6613b5cca63f6479f232ee78a92572">ANY_FN_</a>(...)</td></tr>
 <tr class="memitem:aaaf71064e12bba82d01833cc710b7007" id="r_aaaf71064e12bba82d01833cc710b7007"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aaaf71064e12bba82d01833cc710b7007">ANY_OVERLOAD</a>(name)</td></tr>
 <tr class="memitem:a785f16009bdd6f2f722de1eff961bbc7" id="r_a785f16009bdd6f2f722de1eff961bbc7"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a785f16009bdd6f2f722de1eff961bbc7">__detail_ANYXX_MEMBER_FN</a>(overload,  ret,  name,  name_ext,  exact_const,  const_,  params)</td></tr>
 <tr class="memitem:ga7e35457fd2b7d0297132511962941a88" id="r_ga7e35457fd2b7d0297132511962941a88"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga7e35457fd2b7d0297132511962941a88">ANY_FN_PURE</a>(ret,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga7e35457fd2b7d0297132511962941a88"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function, which must be provided by model.  <br /></td></tr>
+<tr class="memdesc:ga7e35457fd2b7d0297132511962941a88"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function, which must be provided by the model.  <br /></td></tr>
 <tr class="memitem:gaef791af6302ddc20f90905f6d611cd70" id="r_gaef791af6302ddc20f90905f6d611cd70"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gaef791af6302ddc20f90905f6d611cd70">ANY_FN_PURE_EXACT</a>(ret,  name,  params,  const_)</td></tr>
-<tr class="memdesc:gaef791af6302ddc20f90905f6d611cd70"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function, which must be provided by model.  <br /></td></tr>
+<tr class="memdesc:gaef791af6302ddc20f90905f6d611cd70"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function, which must be provided by the model.  <br /></td></tr>
 <tr class="memitem:ga73e339005a697eb20b243d1622873b99" id="r_ga73e339005a697eb20b243d1622873b99"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga73e339005a697eb20b243d1622873b99">ANY_FN_DEF</a>(ret,  name,  params,  const_, ...)</td></tr>
 <tr class="memdesc:ga73e339005a697eb20b243d1622873b99"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function with default behavior.  <br /></td></tr>
 <tr class="memitem:a7947e9eac1a7dc9b2c50276681801743" id="r_a7947e9eac1a7dc9b2c50276681801743"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7947e9eac1a7dc9b2c50276681801743">ANY_FN_DEF_EXACT</a>(ret,  name,  params,  const_, ...)</td></tr>
@@ -293,18 +301,17 @@ Macros</h2></td></tr>
 <tr class="memitem:ga3e26c93a4eb0d32d3859137998f542a9" id="r_ga3e26c93a4eb0d32d3859137998f542a9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga3e26c93a4eb0d32d3859137998f542a9">ANY_FN_OVERLOAD_EXACT</a>(ret,  name,  params,  const_)</td></tr>
 <tr class="memdesc:ga3e26c93a4eb0d32d3859137998f542a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function whose default behavior is to call an equally named member function of the model.  <br /></td></tr>
 <tr class="memitem:ga055c58c6bfff95137a1534024dc0813d" id="r_ga055c58c6bfff95137a1534024dc0813d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga055c58c6bfff95137a1534024dc0813d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer chosen name in map.  <br /></td></tr>
-<tr class="memitem:a13ac2582b41ea1a73ddb22d6a2acb4ce" id="r_a13ac2582b41ea1a73ddb22d6a2acb4ce"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(ret,  op,  params,  const_)</td></tr>
+<tr class="memdesc:ga055c58c6bfff95137a1534024dc0813d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer-chosen name in the map.  <br /></td></tr>
+<tr class="memitem:ga13ac2582b41ea1a73ddb22d6a2acb4ce" id="r_ga13ac2582b41ea1a73ddb22d6a2acb4ce"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(ret,  op,  params,  const_)</td></tr>
+<tr class="memdesc:ga13ac2582b41ea1a73ddb22d6a2acb4ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:gabcbc5dedec9f5a6f2eed6e0959472af4" id="r_gabcbc5dedec9f5a6f2eed6e0959472af4"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4">ANY_OP_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
 <tr class="memdesc:gabcbc5dedec9f5a6f2eed6e0959472af4"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
-<tr class="memitem:ga31d722491c45e2315823f0eb3ebe541c" id="r_ga31d722491c45e2315823f0eb3ebe541c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga31d722491c45e2315823f0eb3ebe541c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer chosen name in map.  <br /></td></tr>
-<tr class="memitem:ga7d46ca8afdfbcc0c3103f0dedb9710d5" id="r_ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga7d46ca8afdfbcc0c3103f0dedb9710d5">ANY_OP_EXACT</a>(ret,  op,  params,  const_)</td></tr>
-<tr class="memdesc:ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer chosen name in map.  <br /></td></tr>
+<tr class="memitem:a31d722491c45e2315823f0eb3ebe541c" id="r_a31d722491c45e2315823f0eb3ebe541c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
+<tr class="memitem:a7d46ca8afdfbcc0c3103f0dedb9710d5" id="r_a7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7d46ca8afdfbcc0c3103f0dedb9710d5">ANY_OP_EXACT</a>(ret,  op,  params,  const_)</td></tr>
 <tr class="memitem:ga5c441142284f6dad13de59245b656628" id="r_ga5c441142284f6dad13de59245b656628"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga5c441142284f6dad13de59245b656628">ANY_OP_EXACT_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
 <tr class="memdesc:ga5c441142284f6dad13de59245b656628"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:gabc1702b86750b11ed590d64e42d151e3" id="r_gabc1702b86750b11ed590d64e42d151e3"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
-<tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer chosen name in map.  <br /></td></tr>
+<tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer-chosen name in the map.  <br /></td></tr>
 <tr class="memitem:gad1214e29f913c519ecf9f4b1e9934fa8" id="r_gad1214e29f913c519ecf9f4b1e9934fa8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gad1214e29f913c519ecf9f4b1e9934fa8">ANY_OP_EXACT_OVERLOAD</a>(ret,  op,  params,  const_)</td></tr>
 <tr class="memdesc:gad1214e29f913c519ecf9f4b1e9934fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:ga2ec66b211ef38c2274fd0c00155f89d2" id="r_ga2ec66b211ef38c2274fd0c00155f89d2"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga2ec66b211ef38c2274fd0c00155f89d2">ANY_OP_EXACT_OVERLOAD_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
@@ -550,18 +557,18 @@ requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&
 template&lt;is_any To, is_any From&gt; <br />
 requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
 <tr class="memitem:gadd0bed70326711f39e2efc190d006590 template"><td class="memItemLeft">std::optional&lt; To &gt;&#160;</td><td class="memItemRight"><b>anyxx::downcast_to</b> (From from)</td></tr>
-<tr class="memdesc:gadd0bed70326711f39e2efc190d006590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to derived trait via runtime info from the v-Tables. <br /></td></tr>
+<tr class="memdesc:gadd0bed70326711f39e2efc190d006590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to a derived trait using runtime information from the v-Tables. <br /></td></tr>
 <tr class="memitem:a5104ac3b68c36889c6c8d49f39798125" id="r_a5104ac3b68c36889c6c8d49f39798125"><td class="memTemplParams" colspan="2"><a id="a5104ac3b68c36889c6c8d49f39798125" name="a5104ac3b68c36889c6c8d49f39798125"></a>
 template&lt;typename U, is_any Any&gt; </td></tr>
 <tr class="memitem:a5104ac3b68c36889c6c8d49f39798125 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (Any const &amp;o)</td></tr>
 <tr class="memitem:ga503c7a4639146953d0f21603ef83241e" id="r_ga503c7a4639146953d0f21603ef83241e"><td class="memTemplParams" colspan="2">
 template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memitem:ga503c7a4639146953d0f21603ef83241e template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast</b> (Any const &amp;o)</td></tr>
-<tr class="memdesc:ga503c7a4639146953d0f21603ef83241e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to unerased type via runtime info from the v-Tables. <br /></td></tr>
+<tr class="memdesc:ga503c7a4639146953d0f21603ef83241e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to an unerased type using runtime information from the v-Tables. <br /></td></tr>
 <tr class="memitem:ga9ba68fb72727630cbb77b5104a93d2b8" id="r_ga9ba68fb72727630cbb77b5104a93d2b8"><td class="memTemplParams" colspan="2">
 template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memitem:ga9ba68fb72727630cbb77b5104a93d2b8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast_if</b> (Any const &amp;o)</td></tr>
-<tr class="memdesc:ga9ba68fb72727630cbb77b5104a93d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to unerased type via runtime info from the v-Tables. <br /></td></tr>
+<tr class="memdesc:ga9ba68fb72727630cbb77b5104a93d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to an unerased type using runtime information from the v-Tables. <br /></td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c" id="r_aa0a344700732ba661e0fb701ef1eba2c"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a> (T &amp;&amp;v)</td></tr>
 <tr class="memitem:a7136584f3cf3a3dee7ff6392af2ee08d" id="r_a7136584f3cf3a3dee7ff6392af2ee08d"><td class="memTemplParams" colspan="2"><a id="a7136584f3cf3a3dee7ff6392af2ee08d" name="a7136584f3cf3a3dee7ff6392af2ee08d"></a>
@@ -583,11 +590,11 @@ template&lt;is_any ToAny, is_proxy FromErasedData&gt; </td></tr>
 <tr class="memitem:ga57a33d0becfcd08748cf97fd2b51aa16" id="r_ga57a33d0becfcd08748cf97fd2b51aa16"><td class="memTemplParams" colspan="2">
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 <tr class="memitem:ga57a33d0becfcd08748cf97fd2b51aa16 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::borrow_as</b> (FromAny const &amp;from)</td></tr>
-<tr class="memdesc:ga57a33d0becfcd08748cf97fd2b51aa16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe crosscast via runtime info to an other any without changing the ownership. <br /></td></tr>
+<tr class="memdesc:ga57a33d0becfcd08748cf97fd2b51aa16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe crosscast via runtime information to another <a class="el" href="classanyxx_1_1any.html" title="any">any</a> without changing the ownership. <br /></td></tr>
 <tr class="memitem:gaf2b7730650bc77681cf299e2a6e77157" id="r_gaf2b7730650bc77681cf299e2a6e77157"><td class="memTemplParams" colspan="2">
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 <tr class="memitem:gaf2b7730650bc77681cf299e2a6e77157 template"><td class="memItemLeft">std::expected&lt; ToAny, cast_error &gt;&#160;</td><td class="memItemRight"><b>anyxx::clone_to</b> (FromAny const &amp;from)</td></tr>
-<tr class="memdesc:gaf2b7730650bc77681cf299e2a6e77157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone via runtime info. <br /></td></tr>
+<tr class="memdesc:gaf2b7730650bc77681cf299e2a6e77157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clone via runtime information. <br /></td></tr>
 <tr class="memitem:gae988a6a809ee2910690366e1e4c7ae67" id="r_gae988a6a809ee2910690366e1e4c7ae67"><td class="memTemplParams" colspan="2">
 template&lt;is_any FromAny&gt; </td></tr>
 <tr class="memitem:gae988a6a809ee2910690366e1e4c7ae67 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::lock</b> (FromAny const &amp;from_interface)</td></tr>
@@ -595,13 +602,14 @@ template&lt;is_any FromAny&gt; </td></tr>
 <tr class="memitem:ga0ad81aaf23ab3d32a02a12cec57c0946" id="r_ga0ad81aaf23ab3d32a02a12cec57c0946"><td class="memTemplParams" colspan="2">
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 <tr class="memitem:ga0ad81aaf23ab3d32a02a12cec57c0946 template"><td class="memItemLeft">ToAny&#160;</td><td class="memItemRight"><b>anyxx::move_to</b> (FromAny &amp;&amp;from)</td></tr>
-<tr class="memdesc:ga0ad81aaf23ab3d32a02a12cec57c0946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move ownership to an other <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. Uses runtime info to crosscast, if neccessary. <br /></td></tr>
+<tr class="memdesc:ga0ad81aaf23ab3d32a02a12cec57c0946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move ownership to another <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. Uses runtime information to crosscast, if necessary. <br /></td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258" id="r_aab26c23ca7cd37963cf41554460ca258"><td class="memTemplParams" colspan="2"><a id="aab26c23ca7cd37963cf41554460ca258" name="aab26c23ca7cd37963cf41554460ca258"></a>
 template&lt;typename InObject&gt; </td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258 template"><td class="memItemLeft">std::size_t &amp;&#160;</td><td class="memItemRight"><b>anyxx::members_count</b> ()</td></tr>
 <tr class="memitem:ad0e4d3c5ff9f0082cf07ef367b55c87a" id="r_ad0e4d3c5ff9f0082cf07ef367b55c87a"><td class="memTemplParams" colspan="2"><a id="ad0e4d3c5ff9f0082cf07ef367b55c87a" name="ad0e4d3c5ff9f0082cf07ef367b55c87a"></a>
 template&lt;typename AnyVTable&gt; </td></tr>
 <tr class="memitem:ad0e4d3c5ff9f0082cf07ef367b55c87a template"><td class="memItemLeft">std::size_t &amp;&#160;</td><td class="memItemRight"><b>anyxx::dispatchs_count</b> ()</td></tr>
+<tr class="memdesc:ad0e4d3c5ff9f0082cf07ef367b55c87a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A counter for dispatch tables per v-table type. <br /></td></tr>
 <tr class="memitem:a0fecebe7ee9f310a8477fed5c8e16d18" id="r_a0fecebe7ee9f310a8477fed5c8e16d18"><td class="memTemplParams" colspan="2"><a id="a0fecebe7ee9f310a8477fed5c8e16d18" name="a0fecebe7ee9f310a8477fed5c8e16d18"></a>
 template&lt;std::size_t I, typename First, typename... Args&gt; </td></tr>
 <tr class="memitem:a0fecebe7ee9f310a8477fed5c8e16d18 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::arg_n</b> (First first, Args... args)</td></tr>
@@ -2730,40 +2738,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a5cd6bea6951e6c56a7e253ae6ca0dd1b" name="a5cd6bea6951e6c56a7e253ae6ca0dd1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5cd6bea6951e6c56a7e253ae6ca0dd1b">&#9670;&#160;</a></span>ANY_</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>BASE</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>proxy_default</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n, BASE, l)                    \</div>
-<div class="line">__detail_ANYXX_ANY_EX_(n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:478</div></div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="a6a6613b5cca63f6479f232ee78a92572" name="a6a6613b5cca63f6479f232ee78a92572"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6a6613b5cca63f6479f232ee78a92572">&#9670;&#160;</a></span>ANY_FN_</h2>
 
@@ -2906,7 +2880,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">    any_template_params_with_defaults)&gt;                                   \</div>
 <div class="line"><span class="keyword">using </span>any_##n = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \</div>
 <div class="line">                                      pure_template_params)&gt;;</div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2322</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2281</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2932,14 +2906,14 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a13ac2582b41ea1a73ddb22d6a2acb4ce" name="a13ac2582b41ea1a73ddb22d6a2acb4ce"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a13ac2582b41ea1a73ddb22d6a2acb4ce">&#9670;&#160;</a></span>ANY_OP</h2>
+<a id="a7d46ca8afdfbcc0c3103f0dedb9710d5" name="a7d46ca8afdfbcc0c3103f0dedb9710d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7d46ca8afdfbcc0c3103f0dedb9710d5">&#9670;&#160;</a></span>ANY_OP_EXACT</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ANY_OP</td>
+          <td class="memname">#define ANY_OP_EXACT</td>
           <td>(</td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
         </tr>
@@ -2960,8 +2934,45 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a>(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga055c58c6bfff95137a1534024dc0813d"><div class="ttname"><a href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior is to call the related operator of the model and a programmer ch...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:719</div></div>
+<b>Value:</b><div class="fragment"><div class="line">ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \</div>
+<div class="line">                       const_)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a31d722491c45e2315823f0eb3ebe541c" name="a31d722491c45e2315823f0eb3ebe541c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31d722491c45e2315823f0eb3ebe541c">&#9670;&#160;</a></span>ANY_OP_EXACT_MAP_NAMED</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT_MAP_NAMED</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(, ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>, const_, params)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3047,8 +3058,9 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \</div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#ga8d4680fe2c2a272dcb00310f92cfbb39">TRAIT_TEMPLATE_EX</a>(t, n, l, decoration)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
+<div class="ttc" id="agroup__trait__macros_html_ga8d4680fe2c2a272dcb00310f92cfbb39"><div class="ttname"><a href="group__trait__macros.html#ga8d4680fe2c2a272dcb00310f92cfbb39">TRAIT_TEMPLATE_EX</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX(t, n, l, decoration)</div><div class="ttdoc">TRAIT template with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:514</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3178,39 +3190,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a8d4680fe2c2a272dcb00310f92cfbb39" name="a8d4680fe2c2a272dcb00310f92cfbb39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8d4680fe2c2a272dcb00310f92cfbb39">&#9670;&#160;</a></span>TRAIT_TEMPLATE_EX</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define TRAIT_TEMPLATE_EX</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>n</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>l</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>decoration</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a>(t, n, anyxx::base_trait, (), l, decoration)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga5ee874de4f2988dc14324d0e652712aa"><div class="ttname"><a href="group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa">TRAIT_TEMPLATE_EX_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)</div><div class="ttdoc">TRAIT template with base and decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:507</div></div>
-</div><!-- fragment -->
-</div>
-</div>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
 <a id="a26cffc6820013e7206c36a5873ef13b1" name="a26cffc6820013e7206c36a5873ef13b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a26cffc6820013e7206c36a5873ef13b1">&#9670;&#160;</a></span>unerased</h2>
@@ -3265,7 +3244,7 @@ template&lt;typename Trait, typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A factory function to bind an object as model to an any with a trait See alse by_val::as </p>
+<p>A factory function to bind an object as a model to an any with a trait. See also by_val::as. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a3">_2b_trait_monoid.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>.</dd>
 </dl>
 

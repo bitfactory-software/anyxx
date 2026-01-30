@@ -118,8 +118,8 @@ local_data&lt; true &gt;&#160;</td><td class="memItemRight"><b>trivial</b></td><
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Proxy to manage the captured object as value with small object optimization. </p>
 <ul>
-<li>If you forward an object an any constructor, this object will be forwarded to the allocated storage.</li>
-<li>To pass an object as second paramter, with the std::in_place tag as first, has the same behavior as above</li>
+<li>If you forward an object to any constructor, this object will be forwarded to the allocated storage.</li>
+<li>To pass an object as second parameter, with the std::in_place tag as first, has the same behavior as above</li>
 <li>If you pass as first parameter std::in_place_type&lt;...&gt;, the object will be constructed in place in the allocated memory with the other arguments forwarded </li>
 </ul>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
