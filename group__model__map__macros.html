@@ -97,17 +97,17 @@ $(function(){initNavTree('group__model__map__macros.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:gadac7219300342690f02ccf52c9f7aa0c" id="r_gadac7219300342690f02ccf52c9f7aa0c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gadac7219300342690f02ccf52c9f7aa0c">__ANY_MODEL_MAP</a>(class_,  interface_,  t)</td></tr>
-<tr class="memitem:ga5e76f3ddd3b53ae5041dfaaec4b2288d" id="r_ga5e76f3ddd3b53ae5041dfaaec4b2288d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga5e76f3ddd3b53ae5041dfaaec4b2288d">ANY_TEMPLATE_MODEL_MAP</a>(class_,  trait_,  trait_types)</td></tr>
-<tr class="memdesc:ga5e76f3ddd3b53ae5041dfaaec4b2288d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
-<tr class="memitem:ga826d8afebc4f1e8bba64b431d9f7d611" id="r_ga826d8afebc4f1e8bba64b431d9f7d611"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga826d8afebc4f1e8bba64b431d9f7d611">ANY_MODEL_MAP</a>(class_,  trait_)</td></tr>
-<tr class="memdesc:ga826d8afebc4f1e8bba64b431d9f7d611"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
+<tr class="memitem:ga6ad7aa1322abedb9a0ebd5c2fa4ba32e" id="r_ga6ad7aa1322abedb9a0ebd5c2fa4ba32e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga6ad7aa1322abedb9a0ebd5c2fa4ba32e">__ANY_MODEL_MAP</a>(trait_,  t)</td></tr>
+<tr class="memitem:ga33732296f3b86795807ea45f564b1d70" id="r_ga33732296f3b86795807ea45f564b1d70"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga33732296f3b86795807ea45f564b1d70">ANY_TEMPLATE_MODEL_MAP</a>(model_,  trait_,  trait_types)</td></tr>
+<tr class="memdesc:ga33732296f3b86795807ea45f564b1d70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
+<tr class="memitem:gaa11989a5b380318c70cc1a59a8642384" id="r_gaa11989a5b380318c70cc1a59a8642384"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>(model_,  trait_)</td></tr>
+<tr class="memdesc:gaa11989a5b380318c70cc1a59a8642384"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macros to define behavior of models for trait's. </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
-<a id="gadac7219300342690f02ccf52c9f7aa0c" name="gadac7219300342690f02ccf52c9f7aa0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gadac7219300342690f02ccf52c9f7aa0c">&#9670;&#160;</a></span>__ANY_MODEL_MAP</h2>
+<a id="ga6ad7aa1322abedb9a0ebd5c2fa4ba32e" name="ga6ad7aa1322abedb9a0ebd5c2fa4ba32e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6ad7aa1322abedb9a0ebd5c2fa4ba32e">&#9670;&#160;</a></span>__ANY_MODEL_MAP</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -115,12 +115,7 @@ Macros</h2></td></tr>
         <tr>
           <td class="memname">#define __ANY_MODEL_MAP</td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>class_</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>interface_</em></span>, </td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>trait_</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -129,14 +124,14 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;                                                   \</div>
-<div class="line"><span class="keyword">struct </span>interface_##_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt; \</div>
-<div class="line">    : interface_##_default_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt;</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;                                               \</div>
+<div class="line"><span class="keyword">struct </span>trait_##_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt; \</div>
+<div class="line">    : trait_##_default_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt;</div>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="ga826d8afebc4f1e8bba64b431d9f7d611" name="ga826d8afebc4f1e8bba64b431d9f7d611"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga826d8afebc4f1e8bba64b431d9f7d611">&#9670;&#160;</a></span>ANY_MODEL_MAP</h2>
+<a id="gaa11989a5b380318c70cc1a59a8642384" name="gaa11989a5b380318c70cc1a59a8642384"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa11989a5b380318c70cc1a59a8642384">&#9670;&#160;</a></span>ANY_MODEL_MAP</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -144,7 +139,7 @@ Macros</h2></td></tr>
         <tr>
           <td class="memname">#define ANY_MODEL_MAP</td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>class_</em></span>, </td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>model_</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -153,7 +148,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">__ANY_MODEL_MAP(class_, trait_, class_)</div>
+<b>Value:</b><div class="fragment"><div class="line">__ANY_MODEL_MAP(trait_, model_)</div>
 </div><!-- fragment -->
 <p>ANY_MODEL_MAP macro. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -169,8 +164,8 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="ga5e76f3ddd3b53ae5041dfaaec4b2288d" name="ga5e76f3ddd3b53ae5041dfaaec4b2288d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga5e76f3ddd3b53ae5041dfaaec4b2288d">&#9670;&#160;</a></span>ANY_TEMPLATE_MODEL_MAP</h2>
+<a id="ga33732296f3b86795807ea45f564b1d70" name="ga33732296f3b86795807ea45f564b1d70"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga33732296f3b86795807ea45f564b1d70">&#9670;&#160;</a></span>ANY_TEMPLATE_MODEL_MAP</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -178,7 +173,7 @@ Macros</h2></td></tr>
         <tr>
           <td class="memname">#define ANY_TEMPLATE_MODEL_MAP</td>
           <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>class_</em></span>, </td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>model_</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -192,14 +187,14 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">__ANY_MODEL_MAP(class_, trait_,                 \</div>
-<div class="line">                __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))</div>
+<b>Value:</b><div class="fragment"><div class="line">__ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(          \</div>
+<div class="line">                            model_, _detail_REMOVE_PARENS(trait_types)))</div>
 </div><!-- fragment -->
 <p>ANY_TEMPLATE_MODEL_MAP macro. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">class_</td><td>name of the model, including template parameters and namespace in brackets </td></tr>
-    <tr><td class="paramname">interface_</td><td>name of the trait, including namespace </td></tr>
+    <tr><td class="paramname">model_</td><td>name of the model, including template parameters and namespace in brackets </td></tr>
+    <tr><td class="paramname">trait_</td><td>name of the trait, including namespace </td></tr>
     <tr><td class="paramname">trait_types</td><td>types to be used as template parameters for the trait</td></tr>
   </table>
   </dd>

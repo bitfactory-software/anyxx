@@ -754,18 +754,18 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00831" name="l00831"></a><span class="lineno">  831</span></div>
 <div class="line"><a id="l00833" name="l00833"></a><span class="lineno">  833</span></div>
 <div class="line"><a id="l00838" name="l00838"></a><span class="lineno">  838</span> </div>
-<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span><span class="preprocessor">#define __ANY_MODEL_MAP(class_, interface_, t)                  \</span></div>
-<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span><span class="preprocessor">  template &lt;&gt;                                                   \</span></div>
-<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="preprocessor">  struct interface_##_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt; \</span></div>
-<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">      : interface_##_default_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt;</span></div>
+<div class="line"><a id="l00839" name="l00839"></a><span class="lineno">  839</span><span class="preprocessor">#define __ANY_MODEL_MAP(trait_, t)                          \</span></div>
+<div class="line"><a id="l00840" name="l00840"></a><span class="lineno">  840</span><span class="preprocessor">  template &lt;&gt;                                               \</span></div>
+<div class="line"><a id="l00841" name="l00841"></a><span class="lineno">  841</span><span class="preprocessor">  struct trait_##_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt; \</span></div>
+<div class="line"><a id="l00842" name="l00842"></a><span class="lineno">  842</span><span class="preprocessor">      : trait_##_default_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt;</span></div>
 <div class="line"><a id="l00843" name="l00843"></a><span class="lineno">  843</span></div>
 <div class="foldopen" id="foldopen00853" data-start="" data-end="">
-<div class="line"><a id="l00853" name="l00853"></a><span class="lineno"><a class="line" href="group__model__map__macros.html#ga5e76f3ddd3b53ae5041dfaaec4b2288d">  853</a></span><span class="preprocessor">#define ANY_TEMPLATE_MODEL_MAP(class_, trait_, trait_types) \</span></div>
-<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="preprocessor">  __ANY_MODEL_MAP(class_, trait_,                 \</span></div>
-<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span><span class="preprocessor">                  __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))</span></div>
+<div class="line"><a id="l00853" name="l00853"></a><span class="lineno"><a class="line" href="group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70">  853</a></span><span class="preprocessor">#define ANY_TEMPLATE_MODEL_MAP(model_, trait_, trait_types) \</span></div>
+<div class="line"><a id="l00854" name="l00854"></a><span class="lineno">  854</span><span class="preprocessor">  __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(          \</span></div>
+<div class="line"><a id="l00855" name="l00855"></a><span class="lineno">  855</span><span class="preprocessor">                              model_, _detail_REMOVE_PARENS(trait_types)))</span></div>
 </div>
 <div class="line"><a id="l00856" name="l00856"></a><span class="lineno">  856</span></div>
-<div class="line"><a id="l00864" name="l00864"></a><span class="lineno"><a class="line" href="group__model__map__macros.html#ga826d8afebc4f1e8bba64b431d9f7d611">  864</a></span><span class="preprocessor">#define ANY_MODEL_MAP(class_, trait_) __ANY_MODEL_MAP(class_, trait_, class_)</span></div>
+<div class="line"><a id="l00864" name="l00864"></a><span class="lineno"><a class="line" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">  864</a></span><span class="preprocessor">#define ANY_MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, model_)</span></div>
 <div class="line"><a id="l00866" name="l00866"></a><span class="lineno">  866</span> </div>
 <div class="line"><a id="l00867" name="l00867"></a><span class="lineno">  867</span><span class="preprocessor">#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)     \</span></div>
 <div class="line"><a id="l00868" name="l00868"></a><span class="lineno">  868</span><span class="preprocessor">[]&lt;typename... Args&gt;([[maybe_unused]](Args...) -&gt; ret{ \</span></div>

@@ -1,5 +1,5 @@
 var group__model__map__macros =
 [
-    [ "ANY_MODEL_MAP", "group__model__map__macros.html#ga826d8afebc4f1e8bba64b431d9f7d611", null ],
-    [ "ANY_TEMPLATE_MODEL_MAP", "group__model__map__macros.html#ga5e76f3ddd3b53ae5041dfaaec4b2288d", null ]
+    [ "ANY_MODEL_MAP", "group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384", null ],
+    [ "ANY_TEMPLATE_MODEL_MAP", "group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70", null ]
 ];
