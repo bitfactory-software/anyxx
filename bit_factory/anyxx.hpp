@@ -665,7 +665,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__), _detail_EXPAND params)
 //
 /*! \def ANY_FN
-    \brief TRAIT function witch default behavior is to call an equaly named
+    \brief TRAIT function whose default behavior is to call an equally named
    member function of the model
     \ingroup trait_macros
 */
@@ -673,7 +673,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
 //
 /*! \def ANY_FN_EXACT
-    \brief TRAIT function witch default behavior is to call an equaly named
+    \brief TRAIT function whose default behavior is to call an equally named
    member function of the model
     \ingroup trait_macros
 */
@@ -681,22 +681,22 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __detail_ANYXX_MEMBER_FN(, ret, name, name, true, const_, params)
 //
 /*! \def ANY_FN_OVERLOAD
-    \brief TRAIT function witch default behavior is to call an equaly named
+    \brief TRAIT function whose default behavior is to call an equally named
    member function of the model
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_FN_OVERLOAD(ret, name, params, const_)                             \
   __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, false, const_, \
                            params)
 //
 /*! \def ANY_FN_OVERLOAD_EXACT
-    \brief TRAIT function witch default behavior is to call an equaly named
+    \brief TRAIT function whose default behavior is to call an equally named
    member function of the model
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)                      \
   __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, true, const_, \
@@ -706,10 +706,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 //
 /*! \def ANY_OP_MAP_NAMED
     \brief TRAIT operator with default behavior is to call the related operator
-   of the model and a programmer choosen name in map
+   of the model and a programmer chosen name in map
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
@@ -719,7 +719,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    of the model
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 
 #define ANY_OP(ret, op, params, const_) \
@@ -729,7 +729,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT operator with default behavior
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 
 #define ANY_OP_DEF(ret, op, name, params, const_, ...)            \
@@ -737,21 +737,21 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           _detail_EXPAND params)
 //
 /*! \def ANY_OP_EXACT_MAP_NAMED
-    \brief TRAIT operator with default behavior and an programmer choosen name
+    \brief TRAIT operator with default behavior and a programmer chosen name
    in map
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, operator op, true, const_, params)
 //
 /*! \def ANY_OP_EXACT
     \brief TRAIT operator with default behavior is to call the related operator
-   of the model and a programmer choosen name in map
+   of the model and a programmer chosen name in map
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_OP_EXACT(ret, op, params, const_)                                  \
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
@@ -762,18 +762,18 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    of the model
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)     \
   ANY_FN_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 //
 /*! \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
-    \brief TRAIT operator with default behavior and an programmer choosen name
+    \brief TRAIT operator with default behavior and a programmer chosen name
    in map
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 //
 #define ANY_OP_EXACT_OVERLOAD_MAP_NAMED(ret, op, name, params, const_)        \
@@ -784,7 +784,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
    of the model
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_OP_EXACT_OVERLOAD(ret, op, params, const_) \
   ANY_OP_EXACT_OVERLOAD_MAP_NAMED(                     \
@@ -794,7 +794,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT operator with default behavior
     \ingroup trait_macros
 
-    Use if in a base TRAIT exists an equaly named FN
+    Use if in a base TRAIT exists an equally named FN
 */
 #define ANY_OP_EXACT_OVERLOAD_DEF(ret, op, name, params, const_, ...)      \
   ANY_FN_(ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
@@ -926,11 +926,12 @@ dispatch_table_t* dispatch_table_instance() {
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
 
-/// Basic liftime functionality
+
+/// Basic lifetime functionality
 /** Base of all other v-tables
  */
 struct any_v_table {
-  /// Type erasing constructor
+  /// Type-erasing constructor
   /**
    */
   template <typename Concrete>
@@ -1073,17 +1074,13 @@ struct base_trait {
 };
 
 /// Requirements for a trait type
-/**
- */
 template <typename T>
 concept has_v_table = std::derived_from<typename T::v_table_t, any_v_table>;
 
 template <is_proxy Proxy, typename Trait = base_trait>
 class any;
 
-/// Requirements for a dynamic, (= type erased) Proxy
-/**
- */
+/// Requirements for a dynamic (i.e., type-erased) Proxy
 template <typename Proxy>
 concept is_dyn =
     is_proxy<Proxy> && voidness<typename proxy_trait<Proxy>::static_dispatch_t>;
