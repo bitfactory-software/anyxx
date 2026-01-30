@@ -458,11 +458,31 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /// \addtogroup trait_macros TRAIT... and ANY_ macros
 /// \brief Macros to define \ref trait 's and \ref any '
+///
+/// Name conventions:
+/// - TRAIT: macro to define the functional behavior of an \ref any
+/// - ANY: macro to define a \ref trait and a using for an \ref any based on
+/// this with a template parameter for the proxy.
+/// - EX: macro with decorations (additional functions and typedefs in
+/// brackets). A decoration can be any valid C++ code fragment in the context of
+/// the trait jacket
+/// - TEMPLATE: macro to define a template \ref trait or \ref any
+/// - trailing underscore: macro with base TRAIT
+///
+/// Syntax:
+///
+/// TRAIT[_TEMPLATE][_EX][_]
+///     ([template_types], name, [base, base_template_types,]
+///         function_list[,(decoration)])
+///
+/// ANY[_TEMPLATE][_EX][_]
+///     ([template_types], name, [base, base_template_types,]
+///         function_list[,(decoration)])
+///
 ///  @{
 
 /// \def TRAIT_EX_
 /// \brief TRAIT derived from base with decoration.
-/// \ingroup trait_macros
 /// Macro to define the functional behavior for a \ref any, where the
 /// behavior of base is inherited. The decoration are additional functions and
 /// typedefs (in brackets).
@@ -644,7 +664,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /// \addtogroup fn_macros ANY_FN... and ANY_OP macros
 /// \brief Macros to define \ref trait's and \ref any's functions and operators
-/// 
+///
 /// Name conventions:
 /// - FN: function
 /// - OP: operator
@@ -661,13 +681,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// and mutable objects, e.g., operator[].
 /// --- no suffix: function whose default behavior is to call an equally named
 /// member function of the model
-/// 
+///
 /// syntax:
-/// 
+///
 /// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXCACT]
 ///     (return_type, name, (param_list),[_const]
 ///     [, default_behavior])
-/// 
+///
 /// ANY_OP[_OVERLOAD][_MAP_NAMED]([_DEF]|[_EXACT_DEF]
 ///     (return_type, operator [,map_name], (param_list), [_const]
 ///     [, default_behavior])
@@ -3780,20 +3800,33 @@ class dispatch_vany {
   }
 
 /**
+   \example _1_any_shape.cpp
+   
    \example _2d_trait_self.cpp
    Shows self a referntial trait
 
-   \example _2o_trait_simple.cpp
-   Simple trait usage
-
+   
    \example _2b_trait_monoid.cpp
    A self referntial trait that models a monoid. Show how to use a MODEL_MAP
    that acts simultanious as runtime and complitem customization point
 
-   \example _5_any_template.cpp
-   \example _1_any_shape.cpp
-   \example 21_Tree_any.cpp
-   \example 21_Tree_any_dispatch.cpp
-   \example 31_Animals_any_dispatch.cpp
+   \example _2c_trait_any_variant.cpp
+   
+   \example _2o_trait_simple.cpp
+   Simple trait usage
 
+   \example _3_any_range.cpp
+   Type erased range example
+   \example _5_any_template.cpp
+   Templated anys recursively used
+   \example 21_Tree_any.cpp
+   Any in a tree structure
+   \example 21_Tree_any_borrow_as.cpp
+   factory, serialization and crosscast example
+   \example 21_Tree_any_dispatch.cpp
+   Open dispatch example
+   \example 31_Animals_any_dispatch.cpp
+   Open multi-dispatch example
+   \example X1_any_weak_const.cpp
+   Using any with weak and const proxies
 */
