@@ -3142,423 +3142,430 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03281" name="l03281"></a><span class="lineno"> 3281</span></div>
 <div class="line"><a id="l03289" name="l03289"></a><span class="lineno"> 3289</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l03290" name="l03290"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch.html"> 3290</a></span><span class="keyword">class </span><a class="code hl_class" href="classanyxx_1_1dispatch.html">dispatch</a>;</div>
-<div class="line"><a id="l03297" name="l03297"></a><span class="lineno"> 3297</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="foldopen" id="foldopen03298" data-start="{" data-end="};">
-<div class="line"><a id="l03298" name="l03298"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html"> 3298</a></span><span class="keyword">class </span><a class="code hl_class" href="classanyxx_1_1dispatch.html">dispatch</a>&lt;R(Args...)&gt; {</div>
-<div class="line"><a id="l03299" name="l03299"></a><span class="lineno"> 3299</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l03300" name="l03300"></a><span class="lineno"> 3300</span>  <span class="keyword">using </span>erased_function_t =</div>
-<div class="line"><a id="l03301" name="l03301"></a><span class="lineno"> 3301</span>      <span class="keyword">typename</span> translate_erased_function&lt;R, Args...&gt;::type;</div>
-<div class="line"><a id="l03302" name="l03302"></a><span class="lineno"> 3302</span> </div>
-<div class="line"><a id="l03303" name="l03303"></a><span class="lineno"> 3303</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t dimension_count =</div>
-<div class="line"><a id="l03304" name="l03304"></a><span class="lineno"> 3304</span>      dispatch_dimension_count&lt;0, Args...&gt;;</div>
-<div class="line"><a id="l03305" name="l03305"></a><span class="lineno"> 3305</span> </div>
-<div class="line"><a id="l03306" name="l03306"></a><span class="lineno"> 3306</span>  <span class="keyword">using </span>dispatch_matrix_t = dispatch_matrix&lt;erased_function_t, Args...&gt;::type;</div>
-<div class="line"><a id="l03307" name="l03307"></a><span class="lineno"> 3307</span>  dispatch_matrix_t dispatch_matrix_;</div>
-<div class="line"><a id="l03308" name="l03308"></a><span class="lineno"> 3308</span> </div>
-<div class="line"><a id="l03309" name="l03309"></a><span class="lineno"> 3309</span>  <span class="keyword">using </span>default_ = <span class="keyword">typename</span> dispatch_function_types&lt;R, Args...&gt;::default_type;</div>
-<div class="line"><a id="l03310" name="l03310"></a><span class="lineno"> 3310</span>  default_::function_t dispatch_default_hook_;</div>
-<div class="line"><a id="l03311" name="l03311"></a><span class="lineno"> 3311</span>  default_::function_t::connection default_connection_ =</div>
-<div class="line"><a id="l03312" name="l03312"></a><span class="lineno"> 3312</span>      dispatch_default_hook_.insert(default_::function());</div>
-<div class="line"><a id="l03313" name="l03313"></a><span class="lineno"> 3313</span> </div>
-<div class="line"><a id="l03314" name="l03314"></a><span class="lineno"> 3314</span>  <span class="keyword">enum class</span> kind { single, multiple };</div>
-<div class="line"><a id="l03315" name="l03315"></a><span class="lineno"> 3315</span>  <span class="keyword">template</span> &lt;kind Kind, std::size_t Dimension, <span class="keyword">typename</span>... DispatchArgs&gt;</div>
-<div class="line"><a id="l03316" name="l03316"></a><span class="lineno"> 3316</span>  <span class="keyword">struct </span>dispatch_access;</div>
+<div class="line"><a id="l03309" name="l03309"></a><span class="lineno"> 3309</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="foldopen" id="foldopen03310" data-start="{" data-end="};">
+<div class="line"><a id="l03310" name="l03310"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html"> 3310</a></span><span class="keyword">class </span><a class="code hl_class" href="classanyxx_1_1dispatch.html">dispatch</a>&lt;R(Args...)&gt; {</div>
+<div class="line"><a id="l03311" name="l03311"></a><span class="lineno"> 3311</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l03312" name="l03312"></a><span class="lineno"> 3312</span>  <span class="keyword">using </span>erased_function_t =</div>
+<div class="line"><a id="l03313" name="l03313"></a><span class="lineno"> 3313</span>      <span class="keyword">typename</span> translate_erased_function&lt;R, Args...&gt;::type;</div>
+<div class="line"><a id="l03314" name="l03314"></a><span class="lineno"> 3314</span> </div>
+<div class="line"><a id="l03315" name="l03315"></a><span class="lineno"> 3315</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t dimension_count =</div>
+<div class="line"><a id="l03316" name="l03316"></a><span class="lineno"> 3316</span>      dispatch_dimension_count&lt;0, Args...&gt;;</div>
 <div class="line"><a id="l03317" name="l03317"></a><span class="lineno"> 3317</span> </div>
-<div class="line"><a id="l03318" name="l03318"></a><span class="lineno"> 3318</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... DispatchArgs&gt;</div>
-<div class="line"><a id="l03319" name="l03319"></a><span class="lineno"> 3319</span>  <span class="keyword">struct </span>dispatch_access&lt;kind::multiple, dimension_count, DispatchArgs...&gt; {</div>
-<div class="line"><a id="l03320" name="l03320"></a><span class="lineno"> 3320</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> fp, <span class="keyword">auto</span>&amp; matrix) {</div>
-<div class="line"><a id="l03321" name="l03321"></a><span class="lineno"> 3321</span>      matrix = <span class="keyword">reinterpret_cast&lt;</span>erased_function_t<span class="keyword">&gt;</span>(fp);</div>
-<div class="line"><a id="l03322" name="l03322"></a><span class="lineno"> 3322</span>      <span class="keywordflow">return</span> fp;</div>
-<div class="line"><a id="l03323" name="l03323"></a><span class="lineno"> 3323</span>    }</div>
-<div class="line"><a id="l03324" name="l03324"></a><span class="lineno"> 3324</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> ArgsTuple&gt;</div>
-<div class="line"><a id="l03325" name="l03325"></a><span class="lineno"> 3325</span>    std::optional&lt;R&gt; invoke(F <span class="keyword">const</span>&amp; target, ArgsTuple&amp;&amp; dispatch_args_tuple,</div>
-<div class="line"><a id="l03326" name="l03326"></a><span class="lineno"> 3326</span>                            <span class="keyword">auto</span>&amp;&amp;...)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03327" name="l03327"></a><span class="lineno"> 3327</span>      <span class="keywordflow">if</span> (!target) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l03328" name="l03328"></a><span class="lineno"> 3328</span>      <span class="keyword">auto</span> typed_target = <span class="keyword">reinterpret_cast&lt;</span></div>
-<div class="line"><a id="l03329" name="l03329"></a><span class="lineno"> 3329</span>          typename dispatch_function&lt;R, std::decay_t&lt;ArgsTuple&gt;<span class="keyword">&gt;</span>::type&gt;(target);</div>
-<div class="line"><a id="l03330" name="l03330"></a><span class="lineno"> 3330</span>      <span class="keywordflow">return</span> std::apply(typed_target,</div>
-<div class="line"><a id="l03331" name="l03331"></a><span class="lineno"> 3331</span>                        std::forward&lt;ArgsTuple&gt;(dispatch_args_tuple));</div>
-<div class="line"><a id="l03332" name="l03332"></a><span class="lineno"> 3332</span>    }</div>
-<div class="line"><a id="l03333" name="l03333"></a><span class="lineno"> 3333</span>  };</div>
-<div class="line"><a id="l03334" name="l03334"></a><span class="lineno"> 3334</span> </div>
-<div class="line"><a id="l03335" name="l03335"></a><span class="lineno"> 3335</span>  <span class="keyword">template</span> &lt;std::size_t Dimension, is_any Any, <span class="keyword">typename</span>... DispatchArgs&gt;</div>
-<div class="line"><a id="l03336" name="l03336"></a><span class="lineno"> 3336</span>  <span class="keyword">struct </span>dispatch_access&lt;kind::multiple, Dimension, <a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_</a>&lt;Any&gt;,</div>
-<div class="line"><a id="l03337" name="l03337"></a><span class="lineno"> 3337</span>                         DispatchArgs...&gt;</div>
-<div class="line"><a id="l03338" name="l03338"></a><span class="lineno"> 3338</span>      : dispatch_access&lt;kind::multiple, Dimension + 1, DispatchArgs...&gt; {</div>
-<div class="line"><a id="l03339" name="l03339"></a><span class="lineno"> 3339</span>    <span class="keyword">using </span>interface_t = Any;</div>
-<div class="line"><a id="l03340" name="l03340"></a><span class="lineno"> 3340</span>    <span class="keyword">using </span>v_table_t = <span class="keyword">typename</span> interface_t::v_table_t;</div>
-<div class="line"><a id="l03341" name="l03341"></a><span class="lineno"> 3341</span>    <span class="keyword">using </span>next_t =</div>
-<div class="line"><a id="l03342" name="l03342"></a><span class="lineno"> 3342</span>        dispatch_access&lt;kind::multiple, Dimension + 1, DispatchArgs...&gt;;</div>
-<div class="line"><a id="l03343" name="l03343"></a><span class="lineno"> 3343</span> </div>
-<div class="line"><a id="l03344" name="l03344"></a><span class="lineno"> 3344</span>    <span class="comment">// index 0 is for the &#39;wildcard&#39; functions</span></div>
-<div class="line"><a id="l03345" name="l03345"></a><span class="lineno"> 3345</span>    std::size_t index_ = 1 + dispatchs_count&lt;v_table_t&gt;()++;</div>
-<div class="line"><a id="l03346" name="l03346"></a><span class="lineno"> 3346</span>    std::size_t dispatch_dimension_size_ = 1;</div>
-<div class="line"><a id="l03347" name="l03347"></a><span class="lineno"> 3347</span> </div>
-<div class="line"><a id="l03348" name="l03348"></a><span class="lineno"> 3348</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Class&gt;</div>
-<div class="line"><a id="l03349" name="l03349"></a><span class="lineno"> 3349</span>    std::size_t get_dispatch_index() {</div>
-<div class="line"><a id="l03350" name="l03350"></a><span class="lineno"> 3350</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::same_as&lt;Any, Class&gt;) {</div>
-<div class="line"><a id="l03351" name="l03351"></a><span class="lineno"> 3351</span>        <span class="keywordflow">return</span> 0;</div>
-<div class="line"><a id="l03352" name="l03352"></a><span class="lineno"> 3352</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l03353" name="l03353"></a><span class="lineno"> 3353</span>        <span class="keyword">auto</span> dispatch_table = dispatch_table_instance&lt;v_table_t, Class&gt;();</div>
-<div class="line"><a id="l03354" name="l03354"></a><span class="lineno"> 3354</span>        <span class="keywordflow">if</span> (<span class="keyword">auto</span> index = get_multi_dispatch_index_at(dispatch_table, index_))</div>
-<div class="line"><a id="l03355" name="l03355"></a><span class="lineno"> 3355</span>          <span class="keywordflow">return</span> index;</div>
-<div class="line"><a id="l03356" name="l03356"></a><span class="lineno"> 3356</span>        <span class="keywordflow">else</span></div>
-<div class="line"><a id="l03357" name="l03357"></a><span class="lineno"> 3357</span>          set_multi_dispatch_index_at(dispatch_table, index_,</div>
-<div class="line"><a id="l03358" name="l03358"></a><span class="lineno"> 3358</span>                                      dispatch_dimension_size_);</div>
-<div class="line"><a id="l03359" name="l03359"></a><span class="lineno"> 3359</span>        <span class="keywordflow">return</span> dispatch_dimension_size_++;</div>
-<div class="line"><a id="l03360" name="l03360"></a><span class="lineno"> 3360</span>      }</div>
-<div class="line"><a id="l03361" name="l03361"></a><span class="lineno"> 3361</span>    }</div>
-<div class="line"><a id="l03362" name="l03362"></a><span class="lineno"> 3362</span> </div>
-<div class="line"><a id="l03363" name="l03363"></a><span class="lineno"> 3363</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Class, <span class="keyword">typename</span>... Classes&gt;</div>
-<div class="line"><a id="l03364" name="l03364"></a><span class="lineno"> 3364</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> fp, <span class="keyword">auto</span>&amp; matrix) {</div>
-<div class="line"><a id="l03365" name="l03365"></a><span class="lineno"> 3365</span>      <span class="keyword">auto</span> dispatch_index = get_dispatch_index&lt;Class&gt;();</div>
-<div class="line"><a id="l03366" name="l03366"></a><span class="lineno"> 3366</span>      <span class="keywordflow">if</span> (matrix.size() &lt;= dispatch_index) matrix.resize(dispatch_index + 1);</div>
-<div class="line"><a id="l03367" name="l03367"></a><span class="lineno"> 3367</span>      <span class="keywordflow">return</span> next_t::template <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>&lt;Classes...&gt;(fp, matrix[dispatch_index]);</div>
-<div class="line"><a id="l03368" name="l03368"></a><span class="lineno"> 3368</span>    }</div>
-<div class="line"><a id="l03369" name="l03369"></a><span class="lineno"> 3369</span> </div>
-<div class="line"><a id="l03370" name="l03370"></a><span class="lineno"> 3370</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DispatchMatrix, <span class="keyword">typename</span> ArgsTuple,</div>
-<div class="line"><a id="l03371" name="l03371"></a><span class="lineno"> 3371</span>              <span class="keyword">typename</span>... ActualArgs&gt;</div>
-<div class="line"><a id="l03372" name="l03372"></a><span class="lineno"> 3372</span>    std::optional&lt;R&gt; invoke(DispatchMatrix <span class="keyword">const</span>&amp; target,</div>
-<div class="line"><a id="l03373" name="l03373"></a><span class="lineno"> 3373</span>                            ArgsTuple&amp;&amp; dispatch_args_tuple, Any <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>,</div>
-<div class="line"><a id="l03374" name="l03374"></a><span class="lineno"> 3374</span>                            ActualArgs&amp;&amp;... actual_args)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03375" name="l03375"></a><span class="lineno"> 3375</span>      <span class="keyword">auto</span> dispatch_table = get_v_table(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>)-&gt;dispatch_table;</div>
-<div class="line"><a id="l03376" name="l03376"></a><span class="lineno"> 3376</span>      <span class="keyword">auto</span> dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);</div>
-<div class="line"><a id="l03377" name="l03377"></a><span class="lineno"> 3377</span>      <span class="keywordflow">if</span> (dispatch_dim &amp;&amp; target.size() &gt; dispatch_dim)</div>
-<div class="line"><a id="l03378" name="l03378"></a><span class="lineno"> 3378</span>        <span class="keywordflow">if</span> (<span class="keyword">auto</span> found =</div>
-<div class="line"><a id="l03379" name="l03379"></a><span class="lineno"> 3379</span>                next_t::invoke(target[dispatch_dim],</div>
-<div class="line"><a id="l03380" name="l03380"></a><span class="lineno"> 3380</span>                               std::forward&lt;ArgsTuple&gt;(dispatch_args_tuple),</div>
-<div class="line"><a id="l03381" name="l03381"></a><span class="lineno"> 3381</span>                               std::forward&lt;ActualArgs&gt;(actual_args)...))</div>
-<div class="line"><a id="l03382" name="l03382"></a><span class="lineno"> 3382</span>          <span class="keywordflow">return</span> found;</div>
-<div class="line"><a id="l03383" name="l03383"></a><span class="lineno"> 3383</span> </div>
-<div class="line"><a id="l03384" name="l03384"></a><span class="lineno"> 3384</span>      <span class="keywordflow">if</span> (target.size())</div>
-<div class="line"><a id="l03385" name="l03385"></a><span class="lineno"> 3385</span>        <span class="keywordflow">return</span> next_t::invoke(</div>
-<div class="line"><a id="l03386" name="l03386"></a><span class="lineno"> 3386</span>            target[0],</div>
-<div class="line"><a id="l03387" name="l03387"></a><span class="lineno"> 3387</span>            std::tuple_cat(get_tuple_head&lt;Dimension&gt;(dispatch_args_tuple),</div>
-<div class="line"><a id="l03388" name="l03388"></a><span class="lineno"> 3388</span>                           std::make_tuple(&amp;<a class="code hl_class" href="classanyxx_1_1any.html">any</a>),</div>
-<div class="line"><a id="l03389" name="l03389"></a><span class="lineno"> 3389</span>                           get_tuple_tail&lt;Dimension + 1&gt;(dispatch_args_tuple)),</div>
-<div class="line"><a id="l03390" name="l03390"></a><span class="lineno"> 3390</span>            std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
-<div class="line"><a id="l03391" name="l03391"></a><span class="lineno"> 3391</span>      <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l03392" name="l03392"></a><span class="lineno"> 3392</span>    }</div>
-<div class="line"><a id="l03393" name="l03393"></a><span class="lineno"> 3393</span>  };</div>
-<div class="line"><a id="l03394" name="l03394"></a><span class="lineno"> 3394</span> </div>
-<div class="line"><a id="l03395" name="l03395"></a><span class="lineno"> 3395</span>  <span class="keyword">template</span> &lt;is_any Any, <span class="keyword">typename</span>... AccessArgs&gt;</div>
-<div class="line"><a id="l03396" name="l03396"></a><span class="lineno"> 3396</span>  <span class="keyword">struct </span>dispatch_access&lt;kind::single, 0, <a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_</a>&lt;Any&gt;, AccessArgs...&gt; {</div>
-<div class="line"><a id="l03397" name="l03397"></a><span class="lineno"> 3397</span>    <span class="keyword">using </span>interface_t = Any;</div>
-<div class="line"><a id="l03398" name="l03398"></a><span class="lineno"> 3398</span>    <span class="keyword">using </span>v_table_t = <span class="keyword">typename</span> interface_t::v_table_t;</div>
-<div class="line"><a id="l03399" name="l03399"></a><span class="lineno"> 3399</span>    std::size_t index_ = dispatchs_count&lt;v_table_t&gt;()++;</div>
-<div class="line"><a id="l03400" name="l03400"></a><span class="lineno"> 3400</span> </div>
-<div class="line"><a id="l03401" name="l03401"></a><span class="lineno"> 3401</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CLASS&gt;</div>
-<div class="line"><a id="l03402" name="l03402"></a><span class="lineno"> 3402</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> fp, <span class="keyword">auto</span>&amp;) {</div>
-<div class="line"><a id="l03403" name="l03403"></a><span class="lineno"> 3403</span>      <span class="keyword">auto</span> v_table = dispatch_table_instance&lt;v_table_t, CLASS&gt;();</div>
-<div class="line"><a id="l03404" name="l03404"></a><span class="lineno"> 3404</span>      insert_function(v_table, index_, fp);</div>
-<div class="line"><a id="l03405" name="l03405"></a><span class="lineno"> 3405</span>      <span class="keywordflow">return</span> fp;</div>
-<div class="line"><a id="l03406" name="l03406"></a><span class="lineno"> 3406</span>    }</div>
-<div class="line"><a id="l03407" name="l03407"></a><span class="lineno"> 3407</span> </div>
-<div class="line"><a id="l03408" name="l03408"></a><span class="lineno"> 3408</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Other&gt;</div>
-<div class="line"><a id="l03409" name="l03409"></a><span class="lineno"> 3409</span>    R invoke(default_::function_t <span class="keyword">const</span>&amp; default_, Any <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>,</div>
-<div class="line"><a id="l03410" name="l03410"></a><span class="lineno"> 3410</span>             Other&amp;&amp;... other)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03411" name="l03411"></a><span class="lineno"> 3411</span>      <span class="keyword">auto</span> v_table = get_v_table(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>)-&gt;dispatch_table;</div>
-<div class="line"><a id="l03412" name="l03412"></a><span class="lineno"> 3412</span>      <span class="keyword">auto</span> target = get_function(v_table, index_);</div>
-<div class="line"><a id="l03413" name="l03413"></a><span class="lineno"> 3413</span>      <span class="keywordflow">if</span> (!target)</div>
-<div class="line"><a id="l03414" name="l03414"></a><span class="lineno"> 3414</span>        <span class="keywordflow">return</span> std::invoke(default_, <a class="code hl_class" href="classanyxx_1_1any.html">any</a>, std::forward&lt;Other&gt;(other)...);</div>
-<div class="line"><a id="l03415" name="l03415"></a><span class="lineno"> 3415</span>      <span class="keyword">auto</span> erased_function = <span class="keyword">reinterpret_cast&lt;</span>erased_function_t<span class="keyword">&gt;</span>(target);</div>
-<div class="line"><a id="l03416" name="l03416"></a><span class="lineno"> 3416</span>      <span class="keywordflow">return</span> std::invoke(erased_function, get_proxy_ptr(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>),</div>
-<div class="line"><a id="l03417" name="l03417"></a><span class="lineno"> 3417</span>                         std::forward&lt;Other&gt;(other)...);</div>
+<div class="line"><a id="l03318" name="l03318"></a><span class="lineno"> 3318</span>  <span class="keyword">using </span>dispatch_matrix_t = dispatch_matrix&lt;erased_function_t, Args...&gt;::type;</div>
+<div class="line"><a id="l03319" name="l03319"></a><span class="lineno"> 3319</span>  dispatch_matrix_t dispatch_matrix_;</div>
+<div class="line"><a id="l03320" name="l03320"></a><span class="lineno"> 3320</span> </div>
+<div class="line"><a id="l03321" name="l03321"></a><span class="lineno"> 3321</span>  <span class="keyword">using </span>default_ = <span class="keyword">typename</span> dispatch_function_types&lt;R, Args...&gt;::default_type;</div>
+<div class="line"><a id="l03322" name="l03322"></a><span class="lineno"> 3322</span>  default_::function_t dispatch_default_hook_;</div>
+<div class="line"><a id="l03323" name="l03323"></a><span class="lineno"> 3323</span>  default_::function_t::connection default_connection_ =</div>
+<div class="line"><a id="l03324" name="l03324"></a><span class="lineno"> 3324</span>      dispatch_default_hook_.insert(default_::function());</div>
+<div class="line"><a id="l03325" name="l03325"></a><span class="lineno"> 3325</span> </div>
+<div class="line"><a id="l03326" name="l03326"></a><span class="lineno"> 3326</span>  <span class="keyword">enum class</span> kind { single, multiple };</div>
+<div class="line"><a id="l03327" name="l03327"></a><span class="lineno"> 3327</span>  <span class="keyword">template</span> &lt;kind Kind, std::size_t Dimension, <span class="keyword">typename</span>... DispatchArgs&gt;</div>
+<div class="line"><a id="l03328" name="l03328"></a><span class="lineno"> 3328</span>  <span class="keyword">struct </span>dispatch_access;</div>
+<div class="line"><a id="l03329" name="l03329"></a><span class="lineno"> 3329</span> </div>
+<div class="line"><a id="l03330" name="l03330"></a><span class="lineno"> 3330</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... DispatchArgs&gt;</div>
+<div class="line"><a id="l03331" name="l03331"></a><span class="lineno"> 3331</span>  <span class="keyword">struct </span>dispatch_access&lt;kind::multiple, dimension_count, DispatchArgs...&gt; {</div>
+<div class="line"><a id="l03332" name="l03332"></a><span class="lineno"> 3332</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> fp, <span class="keyword">auto</span>&amp; matrix) {</div>
+<div class="line"><a id="l03333" name="l03333"></a><span class="lineno"> 3333</span>      matrix = <span class="keyword">reinterpret_cast&lt;</span>erased_function_t<span class="keyword">&gt;</span>(fp);</div>
+<div class="line"><a id="l03334" name="l03334"></a><span class="lineno"> 3334</span>      <span class="keywordflow">return</span> fp;</div>
+<div class="line"><a id="l03335" name="l03335"></a><span class="lineno"> 3335</span>    }</div>
+<div class="line"><a id="l03336" name="l03336"></a><span class="lineno"> 3336</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> F, <span class="keyword">typename</span> ArgsTuple&gt;</div>
+<div class="line"><a id="l03337" name="l03337"></a><span class="lineno"> 3337</span>    std::optional&lt;R&gt; invoke(F <span class="keyword">const</span>&amp; target, ArgsTuple&amp;&amp; dispatch_args_tuple,</div>
+<div class="line"><a id="l03338" name="l03338"></a><span class="lineno"> 3338</span>                            <span class="keyword">auto</span>&amp;&amp;...)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03339" name="l03339"></a><span class="lineno"> 3339</span>      <span class="keywordflow">if</span> (!target) <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l03340" name="l03340"></a><span class="lineno"> 3340</span>      <span class="keyword">auto</span> typed_target = <span class="keyword">reinterpret_cast&lt;</span></div>
+<div class="line"><a id="l03341" name="l03341"></a><span class="lineno"> 3341</span>          typename dispatch_function&lt;R, std::decay_t&lt;ArgsTuple&gt;<span class="keyword">&gt;</span>::type&gt;(target);</div>
+<div class="line"><a id="l03342" name="l03342"></a><span class="lineno"> 3342</span>      <span class="keywordflow">return</span> std::apply(typed_target,</div>
+<div class="line"><a id="l03343" name="l03343"></a><span class="lineno"> 3343</span>                        std::forward&lt;ArgsTuple&gt;(dispatch_args_tuple));</div>
+<div class="line"><a id="l03344" name="l03344"></a><span class="lineno"> 3344</span>    }</div>
+<div class="line"><a id="l03345" name="l03345"></a><span class="lineno"> 3345</span>  };</div>
+<div class="line"><a id="l03346" name="l03346"></a><span class="lineno"> 3346</span> </div>
+<div class="line"><a id="l03347" name="l03347"></a><span class="lineno"> 3347</span>  <span class="keyword">template</span> &lt;std::size_t Dimension, is_any Any, <span class="keyword">typename</span>... DispatchArgs&gt;</div>
+<div class="line"><a id="l03348" name="l03348"></a><span class="lineno"> 3348</span>  <span class="keyword">struct </span>dispatch_access&lt;kind::multiple, Dimension, <a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_</a>&lt;Any&gt;,</div>
+<div class="line"><a id="l03349" name="l03349"></a><span class="lineno"> 3349</span>                         DispatchArgs...&gt;</div>
+<div class="line"><a id="l03350" name="l03350"></a><span class="lineno"> 3350</span>      : dispatch_access&lt;kind::multiple, Dimension + 1, DispatchArgs...&gt; {</div>
+<div class="line"><a id="l03351" name="l03351"></a><span class="lineno"> 3351</span>    <span class="keyword">using </span>interface_t = Any;</div>
+<div class="line"><a id="l03352" name="l03352"></a><span class="lineno"> 3352</span>    <span class="keyword">using </span>v_table_t = <span class="keyword">typename</span> interface_t::v_table_t;</div>
+<div class="line"><a id="l03353" name="l03353"></a><span class="lineno"> 3353</span>    <span class="keyword">using </span>next_t =</div>
+<div class="line"><a id="l03354" name="l03354"></a><span class="lineno"> 3354</span>        dispatch_access&lt;kind::multiple, Dimension + 1, DispatchArgs...&gt;;</div>
+<div class="line"><a id="l03355" name="l03355"></a><span class="lineno"> 3355</span> </div>
+<div class="line"><a id="l03356" name="l03356"></a><span class="lineno"> 3356</span>    <span class="comment">// index 0 is for the &#39;wildcard&#39; functions</span></div>
+<div class="line"><a id="l03357" name="l03357"></a><span class="lineno"> 3357</span>    std::size_t index_ = 1 + dispatchs_count&lt;v_table_t&gt;()++;</div>
+<div class="line"><a id="l03358" name="l03358"></a><span class="lineno"> 3358</span>    std::size_t dispatch_dimension_size_ = 1;</div>
+<div class="line"><a id="l03359" name="l03359"></a><span class="lineno"> 3359</span> </div>
+<div class="line"><a id="l03360" name="l03360"></a><span class="lineno"> 3360</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Class&gt;</div>
+<div class="line"><a id="l03361" name="l03361"></a><span class="lineno"> 3361</span>    std::size_t get_dispatch_index() {</div>
+<div class="line"><a id="l03362" name="l03362"></a><span class="lineno"> 3362</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::same_as&lt;Any, Class&gt;) {</div>
+<div class="line"><a id="l03363" name="l03363"></a><span class="lineno"> 3363</span>        <span class="keywordflow">return</span> 0;</div>
+<div class="line"><a id="l03364" name="l03364"></a><span class="lineno"> 3364</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l03365" name="l03365"></a><span class="lineno"> 3365</span>        <span class="keyword">auto</span> dispatch_table = dispatch_table_instance&lt;v_table_t, Class&gt;();</div>
+<div class="line"><a id="l03366" name="l03366"></a><span class="lineno"> 3366</span>        <span class="keywordflow">if</span> (<span class="keyword">auto</span> index = get_multi_dispatch_index_at(dispatch_table, index_))</div>
+<div class="line"><a id="l03367" name="l03367"></a><span class="lineno"> 3367</span>          <span class="keywordflow">return</span> index;</div>
+<div class="line"><a id="l03368" name="l03368"></a><span class="lineno"> 3368</span>        <span class="keywordflow">else</span></div>
+<div class="line"><a id="l03369" name="l03369"></a><span class="lineno"> 3369</span>          set_multi_dispatch_index_at(dispatch_table, index_,</div>
+<div class="line"><a id="l03370" name="l03370"></a><span class="lineno"> 3370</span>                                      dispatch_dimension_size_);</div>
+<div class="line"><a id="l03371" name="l03371"></a><span class="lineno"> 3371</span>        <span class="keywordflow">return</span> dispatch_dimension_size_++;</div>
+<div class="line"><a id="l03372" name="l03372"></a><span class="lineno"> 3372</span>      }</div>
+<div class="line"><a id="l03373" name="l03373"></a><span class="lineno"> 3373</span>    }</div>
+<div class="line"><a id="l03374" name="l03374"></a><span class="lineno"> 3374</span> </div>
+<div class="line"><a id="l03375" name="l03375"></a><span class="lineno"> 3375</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Class, <span class="keyword">typename</span>... Classes&gt;</div>
+<div class="line"><a id="l03376" name="l03376"></a><span class="lineno"> 3376</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> fp, <span class="keyword">auto</span>&amp; matrix) {</div>
+<div class="line"><a id="l03377" name="l03377"></a><span class="lineno"> 3377</span>      <span class="keyword">auto</span> dispatch_index = get_dispatch_index&lt;Class&gt;();</div>
+<div class="line"><a id="l03378" name="l03378"></a><span class="lineno"> 3378</span>      <span class="keywordflow">if</span> (matrix.size() &lt;= dispatch_index) matrix.resize(dispatch_index + 1);</div>
+<div class="line"><a id="l03379" name="l03379"></a><span class="lineno"> 3379</span>      <span class="keywordflow">return</span> next_t::template <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>&lt;Classes...&gt;(fp, matrix[dispatch_index]);</div>
+<div class="line"><a id="l03380" name="l03380"></a><span class="lineno"> 3380</span>    }</div>
+<div class="line"><a id="l03381" name="l03381"></a><span class="lineno"> 3381</span> </div>
+<div class="line"><a id="l03382" name="l03382"></a><span class="lineno"> 3382</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> DispatchMatrix, <span class="keyword">typename</span> ArgsTuple,</div>
+<div class="line"><a id="l03383" name="l03383"></a><span class="lineno"> 3383</span>              <span class="keyword">typename</span>... ActualArgs&gt;</div>
+<div class="line"><a id="l03384" name="l03384"></a><span class="lineno"> 3384</span>    std::optional&lt;R&gt; invoke(DispatchMatrix <span class="keyword">const</span>&amp; target,</div>
+<div class="line"><a id="l03385" name="l03385"></a><span class="lineno"> 3385</span>                            ArgsTuple&amp;&amp; dispatch_args_tuple, Any <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>,</div>
+<div class="line"><a id="l03386" name="l03386"></a><span class="lineno"> 3386</span>                            ActualArgs&amp;&amp;... actual_args)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03387" name="l03387"></a><span class="lineno"> 3387</span>      <span class="keyword">auto</span> dispatch_table = get_v_table(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>)-&gt;dispatch_table;</div>
+<div class="line"><a id="l03388" name="l03388"></a><span class="lineno"> 3388</span>      <span class="keyword">auto</span> dispatch_dim = get_multi_dispatch_index_at(dispatch_table, index_);</div>
+<div class="line"><a id="l03389" name="l03389"></a><span class="lineno"> 3389</span>      <span class="keywordflow">if</span> (dispatch_dim &amp;&amp; target.size() &gt; dispatch_dim)</div>
+<div class="line"><a id="l03390" name="l03390"></a><span class="lineno"> 3390</span>        <span class="keywordflow">if</span> (<span class="keyword">auto</span> found =</div>
+<div class="line"><a id="l03391" name="l03391"></a><span class="lineno"> 3391</span>                next_t::invoke(target[dispatch_dim],</div>
+<div class="line"><a id="l03392" name="l03392"></a><span class="lineno"> 3392</span>                               std::forward&lt;ArgsTuple&gt;(dispatch_args_tuple),</div>
+<div class="line"><a id="l03393" name="l03393"></a><span class="lineno"> 3393</span>                               std::forward&lt;ActualArgs&gt;(actual_args)...))</div>
+<div class="line"><a id="l03394" name="l03394"></a><span class="lineno"> 3394</span>          <span class="keywordflow">return</span> found;</div>
+<div class="line"><a id="l03395" name="l03395"></a><span class="lineno"> 3395</span> </div>
+<div class="line"><a id="l03396" name="l03396"></a><span class="lineno"> 3396</span>      <span class="keywordflow">if</span> (target.size())</div>
+<div class="line"><a id="l03397" name="l03397"></a><span class="lineno"> 3397</span>        <span class="keywordflow">return</span> next_t::invoke(</div>
+<div class="line"><a id="l03398" name="l03398"></a><span class="lineno"> 3398</span>            target[0],</div>
+<div class="line"><a id="l03399" name="l03399"></a><span class="lineno"> 3399</span>            std::tuple_cat(get_tuple_head&lt;Dimension&gt;(dispatch_args_tuple),</div>
+<div class="line"><a id="l03400" name="l03400"></a><span class="lineno"> 3400</span>                           std::make_tuple(&amp;<a class="code hl_class" href="classanyxx_1_1any.html">any</a>),</div>
+<div class="line"><a id="l03401" name="l03401"></a><span class="lineno"> 3401</span>                           get_tuple_tail&lt;Dimension + 1&gt;(dispatch_args_tuple)),</div>
+<div class="line"><a id="l03402" name="l03402"></a><span class="lineno"> 3402</span>            std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
+<div class="line"><a id="l03403" name="l03403"></a><span class="lineno"> 3403</span>      <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l03404" name="l03404"></a><span class="lineno"> 3404</span>    }</div>
+<div class="line"><a id="l03405" name="l03405"></a><span class="lineno"> 3405</span>  };</div>
+<div class="line"><a id="l03406" name="l03406"></a><span class="lineno"> 3406</span> </div>
+<div class="line"><a id="l03407" name="l03407"></a><span class="lineno"> 3407</span>  <span class="keyword">template</span> &lt;is_any Any, <span class="keyword">typename</span>... AccessArgs&gt;</div>
+<div class="line"><a id="l03408" name="l03408"></a><span class="lineno"> 3408</span>  <span class="keyword">struct </span>dispatch_access&lt;kind::single, 0, <a class="code hl_struct" href="structanyxx_1_1virtual__.html">virtual_</a>&lt;Any&gt;, AccessArgs...&gt; {</div>
+<div class="line"><a id="l03409" name="l03409"></a><span class="lineno"> 3409</span>    <span class="keyword">using </span>interface_t = Any;</div>
+<div class="line"><a id="l03410" name="l03410"></a><span class="lineno"> 3410</span>    <span class="keyword">using </span>v_table_t = <span class="keyword">typename</span> interface_t::v_table_t;</div>
+<div class="line"><a id="l03411" name="l03411"></a><span class="lineno"> 3411</span>    std::size_t index_ = dispatchs_count&lt;v_table_t&gt;()++;</div>
+<div class="line"><a id="l03412" name="l03412"></a><span class="lineno"> 3412</span> </div>
+<div class="line"><a id="l03413" name="l03413"></a><span class="lineno"> 3413</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CLASS&gt;</div>
+<div class="line"><a id="l03414" name="l03414"></a><span class="lineno"> 3414</span>    <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> fp, <span class="keyword">auto</span>&amp;) {</div>
+<div class="line"><a id="l03415" name="l03415"></a><span class="lineno"> 3415</span>      <span class="keyword">auto</span> v_table = dispatch_table_instance&lt;v_table_t, CLASS&gt;();</div>
+<div class="line"><a id="l03416" name="l03416"></a><span class="lineno"> 3416</span>      insert_function(v_table, index_, fp);</div>
+<div class="line"><a id="l03417" name="l03417"></a><span class="lineno"> 3417</span>      <span class="keywordflow">return</span> fp;</div>
 <div class="line"><a id="l03418" name="l03418"></a><span class="lineno"> 3418</span>    }</div>
-<div class="line"><a id="l03419" name="l03419"></a><span class="lineno"> 3419</span>  };</div>
-<div class="line"><a id="l03420" name="l03420"></a><span class="lineno"> 3420</span> </div>
-<div class="line"><a id="l03421" name="l03421"></a><span class="lineno"> 3421</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">constexpr</span> kind dispatch_kind =</div>
-<div class="line"><a id="l03422" name="l03422"></a><span class="lineno"> 3422</span>      (dimension_count &gt; 1) ? kind::multiple : kind::single;</div>
-<div class="line"><a id="l03423" name="l03423"></a><span class="lineno"> 3423</span>  dispatch_access&lt;dispatch_kind, 0, Args...&gt; dispatch_access_;</div>
-<div class="line"><a id="l03424" name="l03424"></a><span class="lineno"> 3424</span> </div>
-<div class="line"><a id="l03425" name="l03425"></a><span class="lineno"> 3425</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l03432" name="l03432"></a><span class="lineno"> 3432</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Classes&gt;</div>
-<div class="foldopen" id="foldopen03433" data-start="{" data-end="}">
-<div class="line"><a id="l03433" name="l03433"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049"> 3433</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> f) {</div>
-<div class="line"><a id="l03434" name="l03434"></a><span class="lineno"> 3434</span>    <span class="keyword">auto</span> fp = ensure_function_ptr_from_functor_t&lt;</div>
-<div class="line"><a id="l03435" name="l03435"></a><span class="lineno"> 3435</span>        R, Classes...&gt;::template instance&lt;Args...&gt;(f);</div>
-<div class="line"><a id="l03436" name="l03436"></a><span class="lineno"> 3436</span>    <span class="keywordflow">return</span> dispatch_access_.template <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>&lt;Classes...&gt;(fp, dispatch_matrix_);</div>
-<div class="line"><a id="l03437" name="l03437"></a><span class="lineno"> 3437</span>  };</div>
+<div class="line"><a id="l03419" name="l03419"></a><span class="lineno"> 3419</span> </div>
+<div class="line"><a id="l03420" name="l03420"></a><span class="lineno"> 3420</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Other&gt;</div>
+<div class="line"><a id="l03421" name="l03421"></a><span class="lineno"> 3421</span>    R invoke(default_::function_t <span class="keyword">const</span>&amp; default_, Any <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>,</div>
+<div class="line"><a id="l03422" name="l03422"></a><span class="lineno"> 3422</span>             Other&amp;&amp;... other)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03423" name="l03423"></a><span class="lineno"> 3423</span>      <span class="keyword">auto</span> v_table = get_v_table(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>)-&gt;dispatch_table;</div>
+<div class="line"><a id="l03424" name="l03424"></a><span class="lineno"> 3424</span>      <span class="keyword">auto</span> target = get_function(v_table, index_);</div>
+<div class="line"><a id="l03425" name="l03425"></a><span class="lineno"> 3425</span>      <span class="keywordflow">if</span> (!target)</div>
+<div class="line"><a id="l03426" name="l03426"></a><span class="lineno"> 3426</span>        <span class="keywordflow">return</span> std::invoke(default_, <a class="code hl_class" href="classanyxx_1_1any.html">any</a>, std::forward&lt;Other&gt;(other)...);</div>
+<div class="line"><a id="l03427" name="l03427"></a><span class="lineno"> 3427</span>      <span class="keyword">auto</span> erased_function = <span class="keyword">reinterpret_cast&lt;</span>erased_function_t<span class="keyword">&gt;</span>(target);</div>
+<div class="line"><a id="l03428" name="l03428"></a><span class="lineno"> 3428</span>      <span class="keywordflow">return</span> std::invoke(erased_function, get_proxy_ptr(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>),</div>
+<div class="line"><a id="l03429" name="l03429"></a><span class="lineno"> 3429</span>                         std::forward&lt;Other&gt;(other)...);</div>
+<div class="line"><a id="l03430" name="l03430"></a><span class="lineno"> 3430</span>    }</div>
+<div class="line"><a id="l03431" name="l03431"></a><span class="lineno"> 3431</span>  };</div>
+<div class="line"><a id="l03432" name="l03432"></a><span class="lineno"> 3432</span> </div>
+<div class="line"><a id="l03433" name="l03433"></a><span class="lineno"> 3433</span>  <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">constexpr</span> kind dispatch_kind =</div>
+<div class="line"><a id="l03434" name="l03434"></a><span class="lineno"> 3434</span>      (dimension_count &gt; 1) ? kind::multiple : kind::single;</div>
+<div class="line"><a id="l03435" name="l03435"></a><span class="lineno"> 3435</span>  dispatch_access&lt;dispatch_kind, 0, Args...&gt; dispatch_access_;</div>
+<div class="line"><a id="l03436" name="l03436"></a><span class="lineno"> 3436</span> </div>
+<div class="line"><a id="l03437" name="l03437"></a><span class="lineno"> 3437</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l03444" name="l03444"></a><span class="lineno"> 3444</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Classes&gt;</div>
+<div class="foldopen" id="foldopen03445" data-start="{" data-end="}">
+<div class="line"><a id="l03445" name="l03445"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049"> 3445</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>(<span class="keyword">auto</span> f) {</div>
+<div class="line"><a id="l03446" name="l03446"></a><span class="lineno"> 3446</span>    <span class="keyword">auto</span> fp = ensure_function_ptr_from_functor_t&lt;</div>
+<div class="line"><a id="l03447" name="l03447"></a><span class="lineno"> 3447</span>        R, Classes...&gt;::template instance&lt;Args...&gt;(f);</div>
+<div class="line"><a id="l03448" name="l03448"></a><span class="lineno"> 3448</span>    <span class="keywordflow">return</span> dispatch_access_.template <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">define</a>&lt;Classes...&gt;(fp, dispatch_matrix_);</div>
+<div class="line"><a id="l03449" name="l03449"></a><span class="lineno"> 3449</span>  };</div>
 </div>
-<div class="line"><a id="l03438" name="l03438"></a><span class="lineno"> 3438</span></div>
-<div class="line"><a id="l03445" name="l03445"></a><span class="lineno"> 3445</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... ActualArgs&gt;</div>
-<div class="foldopen" id="foldopen03446" data-start="{" data-end="}">
-<div class="line"><a id="l03446" name="l03446"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c"> 3446</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c">operator()</a>(ActualArgs&amp;&amp;... actual_args)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03447" name="l03447"></a><span class="lineno"> 3447</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (dispatch_kind == kind::multiple) {</div>
-<div class="line"><a id="l03448" name="l03448"></a><span class="lineno"> 3448</span>      <span class="keyword">auto</span> dispatch_args_tuple = args_to_tuple&lt;Args...&gt;{}(</div>
-<div class="line"><a id="l03449" name="l03449"></a><span class="lineno"> 3449</span>          std::tuple&lt;&gt;{}, std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
-<div class="line"><a id="l03450" name="l03450"></a><span class="lineno"> 3450</span>      <span class="keywordflow">return</span> *dispatch_access_</div>
-<div class="line"><a id="l03451" name="l03451"></a><span class="lineno"> 3451</span>                  .invoke(dispatch_matrix_, dispatch_args_tuple,</div>
-<div class="line"><a id="l03452" name="l03452"></a><span class="lineno"> 3452</span>                          std::forward&lt;ActualArgs&gt;(actual_args)...)</div>
-<div class="line"><a id="l03453" name="l03453"></a><span class="lineno"> 3453</span>                  .or_else([&amp;]() -&gt; std::optional&lt;R&gt; {</div>
-<div class="line"><a id="l03454" name="l03454"></a><span class="lineno"> 3454</span>                    <span class="keywordflow">return</span> std::invoke(</div>
-<div class="line"><a id="l03455" name="l03455"></a><span class="lineno"> 3455</span>                        dispatch_default_hook_,</div>
-<div class="line"><a id="l03456" name="l03456"></a><span class="lineno"> 3456</span>                        std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
-<div class="line"><a id="l03457" name="l03457"></a><span class="lineno"> 3457</span>                  });</div>
-<div class="line"><a id="l03458" name="l03458"></a><span class="lineno"> 3458</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l03459" name="l03459"></a><span class="lineno"> 3459</span>      <span class="keywordflow">return</span> dispatch_access_.invoke(dispatch_default_hook_,</div>
-<div class="line"><a id="l03460" name="l03460"></a><span class="lineno"> 3460</span>                                     std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
-<div class="line"><a id="l03461" name="l03461"></a><span class="lineno"> 3461</span>    }</div>
-<div class="line"><a id="l03462" name="l03462"></a><span class="lineno"> 3462</span>  }</div>
+<div class="line"><a id="l03450" name="l03450"></a><span class="lineno"> 3450</span></div>
+<div class="line"><a id="l03457" name="l03457"></a><span class="lineno"> 3457</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... ActualArgs&gt;</div>
+<div class="foldopen" id="foldopen03458" data-start="{" data-end="}">
+<div class="line"><a id="l03458" name="l03458"></a><span class="lineno"><a class="line" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c"> 3458</a></span>  <span class="keyword">auto</span> <a class="code hl_function" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c">operator()</a>(ActualArgs&amp;&amp;... actual_args)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03459" name="l03459"></a><span class="lineno"> 3459</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (dispatch_kind == kind::multiple) {</div>
+<div class="line"><a id="l03460" name="l03460"></a><span class="lineno"> 3460</span>      <span class="keyword">auto</span> dispatch_args_tuple = args_to_tuple&lt;Args...&gt;{}(</div>
+<div class="line"><a id="l03461" name="l03461"></a><span class="lineno"> 3461</span>          std::tuple&lt;&gt;{}, std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
+<div class="line"><a id="l03462" name="l03462"></a><span class="lineno"> 3462</span>      <span class="keywordflow">return</span> *dispatch_access_</div>
+<div class="line"><a id="l03463" name="l03463"></a><span class="lineno"> 3463</span>                  .invoke(dispatch_matrix_, dispatch_args_tuple,</div>
+<div class="line"><a id="l03464" name="l03464"></a><span class="lineno"> 3464</span>                          std::forward&lt;ActualArgs&gt;(actual_args)...)</div>
+<div class="line"><a id="l03465" name="l03465"></a><span class="lineno"> 3465</span>                  .or_else([&amp;]() -&gt; std::optional&lt;R&gt; {</div>
+<div class="line"><a id="l03466" name="l03466"></a><span class="lineno"> 3466</span>                    <span class="keywordflow">return</span> std::invoke(</div>
+<div class="line"><a id="l03467" name="l03467"></a><span class="lineno"> 3467</span>                        dispatch_default_hook_,</div>
+<div class="line"><a id="l03468" name="l03468"></a><span class="lineno"> 3468</span>                        std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
+<div class="line"><a id="l03469" name="l03469"></a><span class="lineno"> 3469</span>                  });</div>
+<div class="line"><a id="l03470" name="l03470"></a><span class="lineno"> 3470</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l03471" name="l03471"></a><span class="lineno"> 3471</span>      <span class="keywordflow">return</span> dispatch_access_.invoke(dispatch_default_hook_,</div>
+<div class="line"><a id="l03472" name="l03472"></a><span class="lineno"> 3472</span>                                     std::forward&lt;ActualArgs&gt;(actual_args)...);</div>
+<div class="line"><a id="l03473" name="l03473"></a><span class="lineno"> 3473</span>    }</div>
+<div class="line"><a id="l03474" name="l03474"></a><span class="lineno"> 3474</span>  }</div>
 </div>
-<div class="line"><a id="l03463" name="l03463"></a><span class="lineno"> 3463</span>  <span class="keyword">auto</span>&amp; get_dispatch_default_hook() { <span class="keywordflow">return</span> dispatch_default_hook_; };</div>
-<div class="line"><a id="l03464" name="l03464"></a><span class="lineno"> 3464</span>};</div>
+<div class="line"><a id="l03475" name="l03475"></a><span class="lineno"> 3475</span>  <span class="keyword">auto</span>&amp; get_dispatch_default_hook() { <span class="keywordflow">return</span> dispatch_default_hook_; };</div>
+<div class="line"><a id="l03476" name="l03476"></a><span class="lineno"> 3476</span>};</div>
 </div>
-<div class="line"><a id="l03465" name="l03465"></a><span class="lineno"> 3465</span> </div>
-<div class="line"><a id="l03466" name="l03466"></a><span class="lineno"> 3466</span><span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> At, <span class="keyword">typename</span> Tuple, <span class="keywordtype">size_t</span>... Is&gt;</div>
-<div class="line"><a id="l03467" name="l03467"></a><span class="lineno"> 3467</span><span class="keyword">auto</span> make_tuple_from_elements(Tuple&amp;&amp; tuple, std::index_sequence&lt;Is...&gt;) {</div>
-<div class="line"><a id="l03468" name="l03468"></a><span class="lineno"> 3468</span>  <span class="keywordflow">return</span> std::forward_as_tuple(</div>
-<div class="line"><a id="l03469" name="l03469"></a><span class="lineno"> 3469</span>      std::get&lt;Is + At&gt;(std::forward&lt;Tuple&gt;(tuple))...);</div>
-<div class="line"><a id="l03470" name="l03470"></a><span class="lineno"> 3470</span>}</div>
-<div class="line"><a id="l03471" name="l03471"></a><span class="lineno"> 3471</span><span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> At, <span class="keywordtype">size_t</span> N, <span class="keyword">typename</span> Tuple&gt;</div>
-<div class="line"><a id="l03472" name="l03472"></a><span class="lineno"> 3472</span><span class="keyword">auto</span> make_tuple_from_elements_at(Tuple&amp;&amp; tuple) {</div>
-<div class="line"><a id="l03473" name="l03473"></a><span class="lineno"> 3473</span>  <span class="keywordflow">return</span> make_tuple_from_elements&lt;At&gt;(std::forward&lt;Tuple&gt;(tuple),</div>
-<div class="line"><a id="l03474" name="l03474"></a><span class="lineno"> 3474</span>                                      std::make_index_sequence&lt;N&gt;{});</div>
-<div class="line"><a id="l03475" name="l03475"></a><span class="lineno"> 3475</span>}</div>
-<div class="line"><a id="l03476" name="l03476"></a><span class="lineno"> 3476</span> </div>
-<div class="line"><a id="l03477" name="l03477"></a><span class="lineno"> 3477</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Vany, <span class="keyword">typename</span> DynamicDispatch, auto StaticDispatch&gt;</div>
-<div class="line"><a id="l03478" name="l03478"></a><span class="lineno"> 3478</span><span class="keyword">class </span>dispatch_vany {</div>
-<div class="line"><a id="l03479" name="l03479"></a><span class="lineno"> 3479</span>  DynamicDispatch dynamic_dispatch_;</div>
-<div class="line"><a id="l03480" name="l03480"></a><span class="lineno"> 3480</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">const</span> std::size_t dimension_count =</div>
-<div class="line"><a id="l03481" name="l03481"></a><span class="lineno"> 3481</span>      DynamicDispatch::dimension_count;</div>
-<div class="line"><a id="l03482" name="l03482"></a><span class="lineno"> 3482</span> </div>
-<div class="line"><a id="l03483" name="l03483"></a><span class="lineno"> 3483</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Vany1, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l03484" name="l03484"></a><span class="lineno"> 3484</span>  <span class="keyword">auto</span> invoke1(Vany1&amp;&amp; vany, Args&amp;&amp;... args)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03485" name="l03485"></a><span class="lineno"> 3485</span>    <span class="keywordflow">return</span> std::visit(</div>
-<div class="line"><a id="l03486" name="l03486"></a><span class="lineno"> 3486</span>        [&amp;]&lt;<span class="keyword">typename</span> TypedArg&gt;([[maybe_unused]] TypedArg&amp;&amp; arg) {</div>
-<div class="line"><a id="l03487" name="l03487"></a><span class="lineno"> 3487</span>          <span class="keywordflow">return</span> overloads{</div>
-<div class="line"><a id="l03488" name="l03488"></a><span class="lineno"> 3488</span>              StaticDispatch,</div>
-<div class="line"><a id="l03489" name="l03489"></a><span class="lineno"> 3489</span>              [&amp;]&lt;is_any Any, <span class="keyword">typename</span>... Vargs&gt;(Any&amp;&amp; any, Vargs&amp;&amp;... vargs) {</div>
-<div class="line"><a id="l03490" name="l03490"></a><span class="lineno"> 3490</span>                <span class="keywordflow">return</span> dynamic_dispatch_(std::forward&lt;Any&gt;(any),</div>
-<div class="line"><a id="l03491" name="l03491"></a><span class="lineno"> 3491</span>                                         std::forward&lt;Vargs&gt;(vargs)...);</div>
-<div class="line"><a id="l03492" name="l03492"></a><span class="lineno"> 3492</span>              }}(std::forward&lt;TypedArg&gt;(arg), std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l03493" name="l03493"></a><span class="lineno"> 3493</span>        },</div>
-<div class="line"><a id="l03494" name="l03494"></a><span class="lineno"> 3494</span>        get_proxy_value(std::forward&lt;Vany1&gt;(vany)));</div>
-<div class="line"><a id="l03495" name="l03495"></a><span class="lineno"> 3495</span>  }</div>
-<div class="line"><a id="l03496" name="l03496"></a><span class="lineno"> 3496</span> </div>
-<div class="line"><a id="l03497" name="l03497"></a><span class="lineno"> 3497</span>  <span class="keyword">template</span> &lt;is_any Vany1, is_any Vany2, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l03498" name="l03498"></a><span class="lineno"> 3498</span>  <span class="keyword">auto</span> invoke2(Vany1&amp;&amp; vany1, Vany2&amp;&amp; vany2, Args&amp;&amp;... args)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03499" name="l03499"></a><span class="lineno"> 3499</span>    <span class="keyword">using </span>vany1_t = std::decay_t&lt;Vany1&gt;;</div>
-<div class="line"><a id="l03500" name="l03500"></a><span class="lineno"> 3500</span>    <span class="keyword">using </span>vany2_t = std::decay_t&lt;Vany2&gt;;</div>
-<div class="line"><a id="l03501" name="l03501"></a><span class="lineno"> 3501</span>    <span class="keyword">using </span>cv1_t = anyxx::vany_type_trait&lt;vany1_t&gt;::concrete_variant;</div>
-<div class="line"><a id="l03502" name="l03502"></a><span class="lineno"> 3502</span>    <span class="keyword">using </span>any_v1 = anyxx::vany_type_trait&lt;vany1_t&gt;::any_in_variant;</div>
-<div class="line"><a id="l03503" name="l03503"></a><span class="lineno"> 3503</span>    <span class="keyword">using </span>cv2_t = anyxx::vany_type_trait&lt;vany2_t&gt;::concrete_variant;</div>
-<div class="line"><a id="l03504" name="l03504"></a><span class="lineno"> 3504</span>    <span class="keyword">using </span>any_v2 = anyxx::vany_type_trait&lt;vany2_t&gt;::any_in_variant;</div>
-<div class="line"><a id="l03505" name="l03505"></a><span class="lineno"> 3505</span> </div>
-<div class="line"><a id="l03506" name="l03506"></a><span class="lineno"> 3506</span>    <span class="keyword">auto</span> dispatch_combined = [&amp;]&lt;<span class="keyword">typename</span> DA1, <span class="keyword">typename</span> DA2&gt;(DA1&amp;&amp; da1,</div>
-<div class="line"><a id="l03507" name="l03507"></a><span class="lineno"> 3507</span>                                                             DA2&amp;&amp; da2) {</div>
-<div class="line"><a id="l03508" name="l03508"></a><span class="lineno"> 3508</span>      <span class="keyword">auto</span> dyn_case1 = [&amp;]&lt;is_any A1, is_any A2, <span class="keyword">typename</span>... VAs&gt;(</div>
-<div class="line"><a id="l03509" name="l03509"></a><span class="lineno"> 3509</span>                           A1&amp;&amp; a1, A2&amp;&amp; a2, VAs&amp;&amp;... vas) {</div>
-<div class="line"><a id="l03510" name="l03510"></a><span class="lineno"> 3510</span>        <span class="keywordflow">return</span> dynamic_dispatch_(std::forward&lt;A1&gt;(a1), std::forward&lt;A2&gt;(a2),</div>
-<div class="line"><a id="l03511" name="l03511"></a><span class="lineno"> 3511</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
-<div class="line"><a id="l03512" name="l03512"></a><span class="lineno"> 3512</span>      };</div>
-<div class="line"><a id="l03513" name="l03513"></a><span class="lineno"> 3513</span>      <span class="keyword">auto</span> dyn_case2 = [&amp;]&lt;is_any A1, <span class="keyword">typename</span> A2, <span class="keyword">typename</span>... VAs&gt;(</div>
-<div class="line"><a id="l03514" name="l03514"></a><span class="lineno"> 3514</span>                           A1&amp;&amp; a1, A2 a2, VAs&amp;&amp;... vas)</div>
-<div class="line"><a id="l03515" name="l03515"></a><span class="lineno"> 3515</span>        <span class="keyword">requires</span> std::constructible_from&lt;cv2_t, A2&gt;</div>
-<div class="line"><a id="l03516" name="l03516"></a><span class="lineno"> 3516</span>      {</div>
-<div class="line"><a id="l03517" name="l03517"></a><span class="lineno"> 3517</span>        <span class="keywordflow">return</span> dynamic_dispatch_(std::forward&lt;A1&gt;(a1),</div>
-<div class="line"><a id="l03518" name="l03518"></a><span class="lineno"> 3518</span>                                 any_v2{std::in_place, cv2_t{std::move(a2)}},</div>
-<div class="line"><a id="l03519" name="l03519"></a><span class="lineno"> 3519</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
-<div class="line"><a id="l03520" name="l03520"></a><span class="lineno"> 3520</span>      };</div>
-<div class="line"><a id="l03521" name="l03521"></a><span class="lineno"> 3521</span>      <span class="keyword">auto</span> dyn_case3 = [&amp;]&lt;<span class="keyword">typename</span> A1, is_any A2, <span class="keyword">typename</span>... VAs&gt;(</div>
-<div class="line"><a id="l03522" name="l03522"></a><span class="lineno"> 3522</span>                           A1 a1, A2&amp;&amp; a2, VAs&amp;&amp;... vas)</div>
-<div class="line"><a id="l03523" name="l03523"></a><span class="lineno"> 3523</span>        <span class="keyword">requires</span> std::constructible_from&lt;cv1_t, A1&gt;</div>
-<div class="line"><a id="l03524" name="l03524"></a><span class="lineno"> 3524</span>      {</div>
-<div class="line"><a id="l03525" name="l03525"></a><span class="lineno"> 3525</span>        <span class="keywordflow">return</span> dynamic_dispatch_(any_v1{std::in_place, cv1_t{std::move(a1)}},</div>
-<div class="line"><a id="l03526" name="l03526"></a><span class="lineno"> 3526</span>                                 std::forward&lt;A2&gt;(a2),</div>
-<div class="line"><a id="l03527" name="l03527"></a><span class="lineno"> 3527</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
-<div class="line"><a id="l03528" name="l03528"></a><span class="lineno"> 3528</span>      };</div>
-<div class="line"><a id="l03529" name="l03529"></a><span class="lineno"> 3529</span>      <span class="keyword">auto</span> dyn_case4 = [&amp;]&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2, <span class="keyword">typename</span>... VAs&gt;(</div>
-<div class="line"><a id="l03530" name="l03530"></a><span class="lineno"> 3530</span>                           A1 a1, A2 a2, VAs&amp;&amp;... vas)</div>
-<div class="line"><a id="l03531" name="l03531"></a><span class="lineno"> 3531</span>        <span class="keyword">requires</span>(std::constructible_from&lt;cv1_t, A1&gt; &amp;&amp;</div>
-<div class="line"><a id="l03532" name="l03532"></a><span class="lineno"> 3532</span>                 std::constructible_from&lt;cv2_t, A2&gt;)</div>
-<div class="line"><a id="l03533" name="l03533"></a><span class="lineno"> 3533</span>      {</div>
-<div class="line"><a id="l03534" name="l03534"></a><span class="lineno"> 3534</span>        <span class="keywordflow">return</span> dynamic_dispatch_(any_v1{std::in_place, cv1_t{std::move(a1)}},</div>
-<div class="line"><a id="l03535" name="l03535"></a><span class="lineno"> 3535</span>                                 any_v2{std::in_place, cv2_t{std::move(a2)}},</div>
-<div class="line"><a id="l03536" name="l03536"></a><span class="lineno"> 3536</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
-<div class="line"><a id="l03537" name="l03537"></a><span class="lineno"> 3537</span>      };</div>
-<div class="line"><a id="l03538" name="l03538"></a><span class="lineno"> 3538</span>      <span class="keywordflow">return</span> overloads{StaticDispatch, dyn_case1, dyn_case2, dyn_case3,</div>
-<div class="line"><a id="l03539" name="l03539"></a><span class="lineno"> 3539</span>                       dyn_case4}(std::forward&lt;DA1&gt;(da1),</div>
-<div class="line"><a id="l03540" name="l03540"></a><span class="lineno"> 3540</span>                                  std::forward&lt;DA2&gt;(da2),</div>
-<div class="line"><a id="l03541" name="l03541"></a><span class="lineno"> 3541</span>                                  std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l03542" name="l03542"></a><span class="lineno"> 3542</span>    };</div>
-<div class="line"><a id="l03543" name="l03543"></a><span class="lineno"> 3543</span> </div>
-<div class="line"><a id="l03544" name="l03544"></a><span class="lineno"> 3544</span>    <span class="keywordflow">return</span> std::visit(dispatch_combined,</div>
-<div class="line"><a id="l03545" name="l03545"></a><span class="lineno"> 3545</span>                      get_proxy_value(std::forward&lt;Vany1&gt;(vany1)),</div>
-<div class="line"><a id="l03546" name="l03546"></a><span class="lineno"> 3546</span>                      get_proxy_value(std::forward&lt;Vany2&gt;(vany2)));</div>
-<div class="line"><a id="l03547" name="l03547"></a><span class="lineno"> 3547</span>  }</div>
-<div class="line"><a id="l03548" name="l03548"></a><span class="lineno"> 3548</span> </div>
-<div class="line"><a id="l03549" name="l03549"></a><span class="lineno"> 3549</span> <span class="keyword">public</span>:</div>
-<div class="line"><a id="l03550" name="l03550"></a><span class="lineno"> 3550</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Classes&gt;</div>
-<div class="line"><a id="l03551" name="l03551"></a><span class="lineno"> 3551</span>  <span class="keyword">auto</span> define(<span class="keyword">auto</span> f) {</div>
-<div class="line"><a id="l03552" name="l03552"></a><span class="lineno"> 3552</span>    <span class="keywordflow">return</span> dynamic_dispatch_.template define&lt;Classes...&gt;(f);</div>
-<div class="line"><a id="l03553" name="l03553"></a><span class="lineno"> 3553</span>  }</div>
-<div class="line"><a id="l03554" name="l03554"></a><span class="lineno"> 3554</span> </div>
-<div class="line"><a id="l03555" name="l03555"></a><span class="lineno"> 3555</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l03556" name="l03556"></a><span class="lineno"> 3556</span>  <span class="keyword">auto</span> operator()(Args&amp;&amp;... args)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03557" name="l03557"></a><span class="lineno"> 3557</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (dimension_count == 1) {</div>
-<div class="line"><a id="l03558" name="l03558"></a><span class="lineno"> 3558</span>      <span class="keywordflow">return</span> invoke1(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l03559" name="l03559"></a><span class="lineno"> 3559</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l03560" name="l03560"></a><span class="lineno"> 3560</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (dimension_count == 2) {</div>
-<div class="line"><a id="l03561" name="l03561"></a><span class="lineno"> 3561</span>        <span class="keywordflow">return</span> invoke2(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l03562" name="l03562"></a><span class="lineno"> 3562</span>      } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l03563" name="l03563"></a><span class="lineno"> 3563</span>        <span class="keyword">static_assert</span>(dimension_count &lt;= 2,</div>
-<div class="line"><a id="l03564" name="l03564"></a><span class="lineno"> 3564</span>                      <span class="stringliteral">&quot;dispatch_vany only supports one and two dimensions&quot;</span>);</div>
-<div class="line"><a id="l03565" name="l03565"></a><span class="lineno"> 3565</span>      }</div>
-<div class="line"><a id="l03566" name="l03566"></a><span class="lineno"> 3566</span>    }</div>
-<div class="line"><a id="l03567" name="l03567"></a><span class="lineno"> 3567</span>  }</div>
-<div class="line"><a id="l03568" name="l03568"></a><span class="lineno"> 3568</span>};</div>
-<div class="line"><a id="l03569" name="l03569"></a><span class="lineno"> 3569</span>}  <span class="comment">// namespace anyxx</span></div>
-<div class="line"><a id="l03570" name="l03570"></a><span class="lineno"> 3570</span> </div>
-<div class="line"><a id="l03571" name="l03571"></a><span class="lineno"> 3571</span><span class="preprocessor">#define ANY_MERGE_(a, b) a##b</span></div>
-<div class="line"><a id="l03572" name="l03572"></a><span class="lineno"> 3572</span><span class="preprocessor">#define ANY_LABEL_(a) ANY_MERGE_(unique_name_, a)</span></div>
-<div class="line"><a id="l03573" name="l03573"></a><span class="lineno"> 3573</span><span class="preprocessor">#define ANY_UNIQUE_NAME_ ANY_LABEL_(__COUNTER__)</span></div>
-<div class="line"><a id="l03574" name="l03574"></a><span class="lineno"> 3574</span><span class="preprocessor">#define ANY_UNIQUE_NAME ANY_UNIQUE_NAME_</span></div>
-<div class="line"><a id="l03575" name="l03575"></a><span class="lineno"> 3575</span><span class="preprocessor">#define __ ANY_UNIQUE_NAME_</span></div>
-<div class="line"><a id="l03576" name="l03576"></a><span class="lineno"> 3576</span> </div>
-<div class="line"><a id="l03577" name="l03577"></a><span class="lineno"> 3577</span><span class="preprocessor">#define ANY_SINGLETON_DECLARE(export_, name, ...) \</span></div>
-<div class="line"><a id="l03578" name="l03578"></a><span class="lineno"> 3578</span><span class="preprocessor">  using name##_t = __VA_ARGS__;                   \</span></div>
-<div class="line"><a id="l03579" name="l03579"></a><span class="lineno"> 3579</span><span class="preprocessor">  export_ extern name##_t&amp; get_##name();          \</span></div>
-<div class="line"><a id="l03580" name="l03580"></a><span class="lineno"> 3580</span><span class="preprocessor">  static inline name##_t&amp; name = get_##name();</span></div>
-<div class="line"><a id="l03581" name="l03581"></a><span class="lineno"> 3581</span> </div>
-<div class="line"><a id="l03582" name="l03582"></a><span class="lineno"> 3582</span><span class="preprocessor">#define ANY_SINGLETON(namespace_, name, ...)       \</span></div>
-<div class="line"><a id="l03583" name="l03583"></a><span class="lineno"> 3583</span><span class="preprocessor">  namespace_::name##_t&amp; namespace_::get_##name() { \</span></div>
-<div class="line"><a id="l03584" name="l03584"></a><span class="lineno"> 3584</span><span class="preprocessor">    static name##_t dispatch{__VA_ARGS__};         \</span></div>
-<div class="line"><a id="l03585" name="l03585"></a><span class="lineno"> 3585</span><span class="preprocessor">    return dispatch;                               \</span></div>
-<div class="line"><a id="l03586" name="l03586"></a><span class="lineno"> 3586</span><span class="preprocessor">  };</span></div>
-<div class="line"><a id="l03587" name="l03587"></a><span class="lineno"> 3587</span> </div>
-<div class="line"><a id="l03588" name="l03588"></a><span class="lineno"> 3588</span><span class="preprocessor">#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \</span></div>
-<div class="line"><a id="l03589" name="l03589"></a><span class="lineno"> 3589</span><span class="preprocessor">  constexpr static inline auto name##_static_dispatch =                       \</span></div>
-<div class="line"><a id="l03590" name="l03590"></a><span class="lineno"> 3590</span><span class="preprocessor">      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \</span></div>
-<div class="line"><a id="l03591" name="l03591"></a><span class="lineno"> 3591</span><span class="preprocessor">                                                                              \</span></div>
-<div class="line"><a id="l03592" name="l03592"></a><span class="lineno"> 3592</span><span class="preprocessor">  using name##_vany = vany;                                                   \</span></div>
-<div class="line"><a id="l03593" name="l03593"></a><span class="lineno"> 3593</span><span class="preprocessor">  using name##_dynamic_dispatch =                                             \</span></div>
-<div class="line"><a id="l03594" name="l03594"></a><span class="lineno"> 3594</span><span class="preprocessor">      anyxx::dispatch&lt;_detail_REMOVE_PARENS(signature)&gt;;                      \</span></div>
-<div class="line"><a id="l03595" name="l03595"></a><span class="lineno"> 3595</span><span class="preprocessor">                                                                              \</span></div>
-<div class="line"><a id="l03596" name="l03596"></a><span class="lineno"> 3596</span><span class="preprocessor">  ANY_SINGLETON_DECLARE(                                                      \</span></div>
-<div class="line"><a id="l03597" name="l03597"></a><span class="lineno"> 3597</span><span class="preprocessor">      , name,                                                                 \</span></div>
-<div class="line"><a id="l03598" name="l03598"></a><span class="lineno"> 3598</span><span class="preprocessor">      anyxx::dispatch_vany&lt;name##_vany, name##_dynamic_dispatch,              \</span></div>
-<div class="line"><a id="l03599" name="l03599"></a><span class="lineno"> 3599</span><span class="preprocessor">                           name##_static_dispatch&gt;)</span></div>
-<div class="line"><a id="l03600" name="l03600"></a><span class="lineno"> 3600</span> </div>
-<div class="line"><a id="l03601" name="l03601"></a><span class="lineno"> 3601</span><span class="preprocessor">#define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);</span></div>
-<div class="line"><a id="l03602" name="l03602"></a><span class="lineno"> 3602</span> </div>
-<div class="line"><a id="l03603" name="l03603"></a><span class="lineno"> 3603</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l03604" name="l03604"></a><span class="lineno"> 3604</span> </div>
-<div class="line"><a id="l03605" name="l03605"></a><span class="lineno"> 3605</span><span class="preprocessor">#define ANY_META_CLASS_FWD(export_, ...) \</span></div>
-<div class="line"><a id="l03606" name="l03606"></a><span class="lineno"> 3606</span><span class="preprocessor">  template &lt;&gt;                            \</span></div>
-<div class="line"><a id="l03607" name="l03607"></a><span class="lineno"> 3607</span><span class="preprocessor">  export_ anyxx::meta_data&amp; anyxx::get_meta_data&lt;__VA_ARGS__&gt;();</span></div>
-<div class="line"><a id="l03608" name="l03608"></a><span class="lineno"> 3608</span> </div>
-<div class="line"><a id="l03609" name="l03609"></a><span class="lineno"> 3609</span><span class="preprocessor">#define ANY_META_CLASS(...)                                             \</span></div>
-<div class="line"><a id="l03610" name="l03610"></a><span class="lineno"> 3610</span><span class="preprocessor">  template &lt;&gt;                                                           \</span></div>
-<div class="line"><a id="l03611" name="l03611"></a><span class="lineno"> 3611</span><span class="preprocessor">  anyxx::meta_data&amp; anyxx::get_meta_data&lt;std::decay_t&lt;__VA_ARGS__&gt;&gt;() { \</span></div>
-<div class="line"><a id="l03612" name="l03612"></a><span class="lineno"> 3612</span><span class="preprocessor">    return runtime_implementation&lt;__VA_ARGS__&gt;();                       \</span></div>
-<div class="line"><a id="l03613" name="l03613"></a><span class="lineno"> 3613</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03614" name="l03614"></a><span class="lineno"> 3614</span> </div>
-<div class="line"><a id="l03615" name="l03615"></a><span class="lineno"> 3615</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l03616" name="l03616"></a><span class="lineno"> 3616</span> </div>
-<div class="line"><a id="l03617" name="l03617"></a><span class="lineno"> 3617</span><span class="preprocessor">#define ANY_META_CLASS_FWD(...)</span></div>
-<div class="line"><a id="l03618" name="l03618"></a><span class="lineno"> 3618</span><span class="preprocessor">#define ANY_META_CLASS(...)</span></div>
-<div class="line"><a id="l03619" name="l03619"></a><span class="lineno"> 3619</span> </div>
-<div class="line"><a id="l03620" name="l03620"></a><span class="lineno"> 3620</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l03621" name="l03621"></a><span class="lineno"> 3621</span> </div>
-<div class="line"><a id="l03622" name="l03622"></a><span class="lineno"> 3622</span><span class="preprocessor">#define ANY_META_CLASS_STATIC(...)  \</span></div>
-<div class="line"><a id="l03623" name="l03623"></a><span class="lineno"> 3623</span><span class="preprocessor">  ANY_META_CLASS_FWD(, __VA_ARGS__) \</span></div>
-<div class="line"><a id="l03624" name="l03624"></a><span class="lineno"> 3624</span><span class="preprocessor">  ANY_META_CLASS(__VA_ARGS__)</span></div>
-<div class="line"><a id="l03625" name="l03625"></a><span class="lineno"> 3625</span> </div>
-<div class="line"><a id="l03626" name="l03626"></a><span class="lineno"> 3626</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l03627" name="l03627"></a><span class="lineno"> 3627</span> </div>
-<div class="line"><a id="l03628" name="l03628"></a><span class="lineno"> 3628</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)  \</span></div>
-<div class="line"><a id="l03629" name="l03629"></a><span class="lineno"> 3629</span><span class="preprocessor">  namespace ns_ {                                \</span></div>
-<div class="line"><a id="l03630" name="l03630"></a><span class="lineno"> 3630</span><span class="preprocessor">  struct c_;                                     \</span></div>
-<div class="line"><a id="l03631" name="l03631"></a><span class="lineno"> 3631</span><span class="preprocessor">  }                                              \</span></div>
-<div class="line"><a id="l03632" name="l03632"></a><span class="lineno"> 3632</span><span class="preprocessor">  namespace anyxx {                              \</span></div>
-<div class="line"><a id="l03633" name="l03633"></a><span class="lineno"> 3633</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
-<div class="line"><a id="l03634" name="l03634"></a><span class="lineno"> 3634</span><span class="preprocessor">  export_ std::size_t&amp; members_count&lt;ns_::c_&gt;(); \</span></div>
-<div class="line"><a id="l03635" name="l03635"></a><span class="lineno"> 3635</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03636" name="l03636"></a><span class="lineno"> 3636</span> </div>
-<div class="line"><a id="l03637" name="l03637"></a><span class="lineno"> 3637</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \</span></div>
-<div class="line"><a id="l03638" name="l03638"></a><span class="lineno"> 3638</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
-<div class="line"><a id="l03639" name="l03639"></a><span class="lineno"> 3639</span><span class="preprocessor">  std::size_t&amp; anyxx::members_count&lt;ns_::c_&gt;() { \</span></div>
-<div class="line"><a id="l03640" name="l03640"></a><span class="lineno"> 3640</span><span class="preprocessor">    static std::size_t count = 0;                \</span></div>
-<div class="line"><a id="l03641" name="l03641"></a><span class="lineno"> 3641</span><span class="preprocessor">    return count;                                \</span></div>
-<div class="line"><a id="l03642" name="l03642"></a><span class="lineno"> 3642</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03643" name="l03643"></a><span class="lineno"> 3643</span> </div>
-<div class="line"><a id="l03644" name="l03644"></a><span class="lineno"> 3644</span><span class="preprocessor">#define ANY_MEMBER_FWD(export_, object_, member_, type_)           \</span></div>
-<div class="line"><a id="l03645" name="l03645"></a><span class="lineno"> 3645</span><span class="preprocessor">  export_ anyxx::member&lt;object_, type_&gt;&amp; _inintialize_##member_(); \</span></div>
-<div class="line"><a id="l03646" name="l03646"></a><span class="lineno"> 3646</span><span class="preprocessor">  inline const anyxx::member&lt;object_, type_&gt;&amp; member_ =            \</span></div>
-<div class="line"><a id="l03647" name="l03647"></a><span class="lineno"> 3647</span><span class="preprocessor">      _inintialize_##member_();</span></div>
-<div class="line"><a id="l03648" name="l03648"></a><span class="lineno"> 3648</span> </div>
-<div class="line"><a id="l03649" name="l03649"></a><span class="lineno"> 3649</span><span class="preprocessor">#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \</span></div>
-<div class="line"><a id="l03650" name="l03650"></a><span class="lineno"> 3650</span><span class="preprocessor">  anyxx::member&lt;object_, type_&gt;&amp; ns_::_inintialize_##member_() { \</span></div>
-<div class="line"><a id="l03651" name="l03651"></a><span class="lineno"> 3651</span><span class="preprocessor">    static anyxx::member&lt;object_, type_&gt; instance;               \</span></div>
-<div class="line"><a id="l03652" name="l03652"></a><span class="lineno"> 3652</span><span class="preprocessor">    return instance;                                             \</span></div>
-<div class="line"><a id="l03653" name="l03653"></a><span class="lineno"> 3653</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03654" name="l03654"></a><span class="lineno"> 3654</span> </div>
-<div class="line"><a id="l03655" name="l03655"></a><span class="lineno"> 3655</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l03656" name="l03656"></a><span class="lineno"> 3656</span> </div>
-<div class="line"><a id="l03657" name="l03657"></a><span class="lineno"> 3657</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(...)</span></div>
-<div class="line"><a id="l03658" name="l03658"></a><span class="lineno"> 3658</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(...)</span></div>
-<div class="line"><a id="l03659" name="l03659"></a><span class="lineno"> 3659</span><span class="preprocessor">#define ANY_MEMBER_FWD(...)</span></div>
-<div class="line"><a id="l03660" name="l03660"></a><span class="lineno"> 3660</span><span class="preprocessor">#define ANY_MEMBER_IMPL(...)</span></div>
+<div class="line"><a id="l03477" name="l03477"></a><span class="lineno"> 3477</span> </div>
+<div class="line"><a id="l03478" name="l03478"></a><span class="lineno"> 3478</span><span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> At, <span class="keyword">typename</span> Tuple, <span class="keywordtype">size_t</span>... Is&gt;</div>
+<div class="line"><a id="l03479" name="l03479"></a><span class="lineno"> 3479</span><span class="keyword">auto</span> make_tuple_from_elements(Tuple&amp;&amp; tuple, std::index_sequence&lt;Is...&gt;) {</div>
+<div class="line"><a id="l03480" name="l03480"></a><span class="lineno"> 3480</span>  <span class="keywordflow">return</span> std::forward_as_tuple(</div>
+<div class="line"><a id="l03481" name="l03481"></a><span class="lineno"> 3481</span>      std::get&lt;Is + At&gt;(std::forward&lt;Tuple&gt;(tuple))...);</div>
+<div class="line"><a id="l03482" name="l03482"></a><span class="lineno"> 3482</span>}</div>
+<div class="line"><a id="l03483" name="l03483"></a><span class="lineno"> 3483</span><span class="keyword">template</span> &lt;<span class="keywordtype">size_t</span> At, <span class="keywordtype">size_t</span> N, <span class="keyword">typename</span> Tuple&gt;</div>
+<div class="line"><a id="l03484" name="l03484"></a><span class="lineno"> 3484</span><span class="keyword">auto</span> make_tuple_from_elements_at(Tuple&amp;&amp; tuple) {</div>
+<div class="line"><a id="l03485" name="l03485"></a><span class="lineno"> 3485</span>  <span class="keywordflow">return</span> make_tuple_from_elements&lt;At&gt;(std::forward&lt;Tuple&gt;(tuple),</div>
+<div class="line"><a id="l03486" name="l03486"></a><span class="lineno"> 3486</span>                                      std::make_index_sequence&lt;N&gt;{});</div>
+<div class="line"><a id="l03487" name="l03487"></a><span class="lineno"> 3487</span>}</div>
+<div class="line"><a id="l03488" name="l03488"></a><span class="lineno"> 3488</span> </div>
+<div class="line"><a id="l03489" name="l03489"></a><span class="lineno"> 3489</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Vany, <span class="keyword">typename</span> DynamicDispatch, auto StaticDispatch&gt;</div>
+<div class="line"><a id="l03490" name="l03490"></a><span class="lineno"> 3490</span><span class="keyword">class </span>dispatch_vany {</div>
+<div class="line"><a id="l03491" name="l03491"></a><span class="lineno"> 3491</span>  DynamicDispatch dynamic_dispatch_;</div>
+<div class="line"><a id="l03492" name="l03492"></a><span class="lineno"> 3492</span>  <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">const</span> std::size_t dimension_count =</div>
+<div class="line"><a id="l03493" name="l03493"></a><span class="lineno"> 3493</span>      DynamicDispatch::dimension_count;</div>
+<div class="line"><a id="l03494" name="l03494"></a><span class="lineno"> 3494</span> </div>
+<div class="line"><a id="l03495" name="l03495"></a><span class="lineno"> 3495</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Vany1, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l03496" name="l03496"></a><span class="lineno"> 3496</span>  <span class="keyword">auto</span> invoke1(Vany1&amp;&amp; vany, Args&amp;&amp;... args)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03497" name="l03497"></a><span class="lineno"> 3497</span>    <span class="keywordflow">return</span> std::visit(</div>
+<div class="line"><a id="l03498" name="l03498"></a><span class="lineno"> 3498</span>        [&amp;]&lt;<span class="keyword">typename</span> TypedArg&gt;([[maybe_unused]] TypedArg&amp;&amp; arg) {</div>
+<div class="line"><a id="l03499" name="l03499"></a><span class="lineno"> 3499</span>          <span class="keywordflow">return</span> overloads{</div>
+<div class="line"><a id="l03500" name="l03500"></a><span class="lineno"> 3500</span>              StaticDispatch,</div>
+<div class="line"><a id="l03501" name="l03501"></a><span class="lineno"> 3501</span>              [&amp;]&lt;is_any Any, <span class="keyword">typename</span>... Vargs&gt;(Any&amp;&amp; any, Vargs&amp;&amp;... vargs) {</div>
+<div class="line"><a id="l03502" name="l03502"></a><span class="lineno"> 3502</span>                <span class="keywordflow">return</span> dynamic_dispatch_(std::forward&lt;Any&gt;(any),</div>
+<div class="line"><a id="l03503" name="l03503"></a><span class="lineno"> 3503</span>                                         std::forward&lt;Vargs&gt;(vargs)...);</div>
+<div class="line"><a id="l03504" name="l03504"></a><span class="lineno"> 3504</span>              }}(std::forward&lt;TypedArg&gt;(arg), std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l03505" name="l03505"></a><span class="lineno"> 3505</span>        },</div>
+<div class="line"><a id="l03506" name="l03506"></a><span class="lineno"> 3506</span>        get_proxy_value(std::forward&lt;Vany1&gt;(vany)));</div>
+<div class="line"><a id="l03507" name="l03507"></a><span class="lineno"> 3507</span>  }</div>
+<div class="line"><a id="l03508" name="l03508"></a><span class="lineno"> 3508</span> </div>
+<div class="line"><a id="l03509" name="l03509"></a><span class="lineno"> 3509</span>  <span class="keyword">template</span> &lt;is_any Vany1, is_any Vany2, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l03510" name="l03510"></a><span class="lineno"> 3510</span>  <span class="keyword">auto</span> invoke2(Vany1&amp;&amp; vany1, Vany2&amp;&amp; vany2, Args&amp;&amp;... args)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03511" name="l03511"></a><span class="lineno"> 3511</span>    <span class="keyword">using </span>vany1_t = std::decay_t&lt;Vany1&gt;;</div>
+<div class="line"><a id="l03512" name="l03512"></a><span class="lineno"> 3512</span>    <span class="keyword">using </span>vany2_t = std::decay_t&lt;Vany2&gt;;</div>
+<div class="line"><a id="l03513" name="l03513"></a><span class="lineno"> 3513</span>    <span class="keyword">using </span>cv1_t = anyxx::vany_type_trait&lt;vany1_t&gt;::concrete_variant;</div>
+<div class="line"><a id="l03514" name="l03514"></a><span class="lineno"> 3514</span>    <span class="keyword">using </span>any_v1 = anyxx::vany_type_trait&lt;vany1_t&gt;::any_in_variant;</div>
+<div class="line"><a id="l03515" name="l03515"></a><span class="lineno"> 3515</span>    <span class="keyword">using </span>cv2_t = anyxx::vany_type_trait&lt;vany2_t&gt;::concrete_variant;</div>
+<div class="line"><a id="l03516" name="l03516"></a><span class="lineno"> 3516</span>    <span class="keyword">using </span>any_v2 = anyxx::vany_type_trait&lt;vany2_t&gt;::any_in_variant;</div>
+<div class="line"><a id="l03517" name="l03517"></a><span class="lineno"> 3517</span> </div>
+<div class="line"><a id="l03518" name="l03518"></a><span class="lineno"> 3518</span>    <span class="keyword">auto</span> dispatch_combined = [&amp;]&lt;<span class="keyword">typename</span> DA1, <span class="keyword">typename</span> DA2&gt;(DA1&amp;&amp; da1,</div>
+<div class="line"><a id="l03519" name="l03519"></a><span class="lineno"> 3519</span>                                                             DA2&amp;&amp; da2) {</div>
+<div class="line"><a id="l03520" name="l03520"></a><span class="lineno"> 3520</span>      <span class="keyword">auto</span> dyn_case1 = [&amp;]&lt;is_any A1, is_any A2, <span class="keyword">typename</span>... VAs&gt;(</div>
+<div class="line"><a id="l03521" name="l03521"></a><span class="lineno"> 3521</span>                           A1&amp;&amp; a1, A2&amp;&amp; a2, VAs&amp;&amp;... vas) {</div>
+<div class="line"><a id="l03522" name="l03522"></a><span class="lineno"> 3522</span>        <span class="keywordflow">return</span> dynamic_dispatch_(std::forward&lt;A1&gt;(a1), std::forward&lt;A2&gt;(a2),</div>
+<div class="line"><a id="l03523" name="l03523"></a><span class="lineno"> 3523</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
+<div class="line"><a id="l03524" name="l03524"></a><span class="lineno"> 3524</span>      };</div>
+<div class="line"><a id="l03525" name="l03525"></a><span class="lineno"> 3525</span>      <span class="keyword">auto</span> dyn_case2 = [&amp;]&lt;is_any A1, <span class="keyword">typename</span> A2, <span class="keyword">typename</span>... VAs&gt;(</div>
+<div class="line"><a id="l03526" name="l03526"></a><span class="lineno"> 3526</span>                           A1&amp;&amp; a1, A2 a2, VAs&amp;&amp;... vas)</div>
+<div class="line"><a id="l03527" name="l03527"></a><span class="lineno"> 3527</span>        <span class="keyword">requires</span> std::constructible_from&lt;cv2_t, A2&gt;</div>
+<div class="line"><a id="l03528" name="l03528"></a><span class="lineno"> 3528</span>      {</div>
+<div class="line"><a id="l03529" name="l03529"></a><span class="lineno"> 3529</span>        <span class="keywordflow">return</span> dynamic_dispatch_(std::forward&lt;A1&gt;(a1),</div>
+<div class="line"><a id="l03530" name="l03530"></a><span class="lineno"> 3530</span>                                 any_v2{std::in_place, cv2_t{std::move(a2)}},</div>
+<div class="line"><a id="l03531" name="l03531"></a><span class="lineno"> 3531</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
+<div class="line"><a id="l03532" name="l03532"></a><span class="lineno"> 3532</span>      };</div>
+<div class="line"><a id="l03533" name="l03533"></a><span class="lineno"> 3533</span>      <span class="keyword">auto</span> dyn_case3 = [&amp;]&lt;<span class="keyword">typename</span> A1, is_any A2, <span class="keyword">typename</span>... VAs&gt;(</div>
+<div class="line"><a id="l03534" name="l03534"></a><span class="lineno"> 3534</span>                           A1 a1, A2&amp;&amp; a2, VAs&amp;&amp;... vas)</div>
+<div class="line"><a id="l03535" name="l03535"></a><span class="lineno"> 3535</span>        <span class="keyword">requires</span> std::constructible_from&lt;cv1_t, A1&gt;</div>
+<div class="line"><a id="l03536" name="l03536"></a><span class="lineno"> 3536</span>      {</div>
+<div class="line"><a id="l03537" name="l03537"></a><span class="lineno"> 3537</span>        <span class="keywordflow">return</span> dynamic_dispatch_(any_v1{std::in_place, cv1_t{std::move(a1)}},</div>
+<div class="line"><a id="l03538" name="l03538"></a><span class="lineno"> 3538</span>                                 std::forward&lt;A2&gt;(a2),</div>
+<div class="line"><a id="l03539" name="l03539"></a><span class="lineno"> 3539</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
+<div class="line"><a id="l03540" name="l03540"></a><span class="lineno"> 3540</span>      };</div>
+<div class="line"><a id="l03541" name="l03541"></a><span class="lineno"> 3541</span>      <span class="keyword">auto</span> dyn_case4 = [&amp;]&lt;<span class="keyword">typename</span> A1, <span class="keyword">typename</span> A2, <span class="keyword">typename</span>... VAs&gt;(</div>
+<div class="line"><a id="l03542" name="l03542"></a><span class="lineno"> 3542</span>                           A1 a1, A2 a2, VAs&amp;&amp;... vas)</div>
+<div class="line"><a id="l03543" name="l03543"></a><span class="lineno"> 3543</span>        <span class="keyword">requires</span>(std::constructible_from&lt;cv1_t, A1&gt; &amp;&amp;</div>
+<div class="line"><a id="l03544" name="l03544"></a><span class="lineno"> 3544</span>                 std::constructible_from&lt;cv2_t, A2&gt;)</div>
+<div class="line"><a id="l03545" name="l03545"></a><span class="lineno"> 3545</span>      {</div>
+<div class="line"><a id="l03546" name="l03546"></a><span class="lineno"> 3546</span>        <span class="keywordflow">return</span> dynamic_dispatch_(any_v1{std::in_place, cv1_t{std::move(a1)}},</div>
+<div class="line"><a id="l03547" name="l03547"></a><span class="lineno"> 3547</span>                                 any_v2{std::in_place, cv2_t{std::move(a2)}},</div>
+<div class="line"><a id="l03548" name="l03548"></a><span class="lineno"> 3548</span>                                 std::forward&lt;VAs&gt;(vas)...);</div>
+<div class="line"><a id="l03549" name="l03549"></a><span class="lineno"> 3549</span>      };</div>
+<div class="line"><a id="l03550" name="l03550"></a><span class="lineno"> 3550</span>      <span class="keywordflow">return</span> overloads{StaticDispatch, dyn_case1, dyn_case2, dyn_case3,</div>
+<div class="line"><a id="l03551" name="l03551"></a><span class="lineno"> 3551</span>                       dyn_case4}(std::forward&lt;DA1&gt;(da1),</div>
+<div class="line"><a id="l03552" name="l03552"></a><span class="lineno"> 3552</span>                                  std::forward&lt;DA2&gt;(da2),</div>
+<div class="line"><a id="l03553" name="l03553"></a><span class="lineno"> 3553</span>                                  std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l03554" name="l03554"></a><span class="lineno"> 3554</span>    };</div>
+<div class="line"><a id="l03555" name="l03555"></a><span class="lineno"> 3555</span> </div>
+<div class="line"><a id="l03556" name="l03556"></a><span class="lineno"> 3556</span>    <span class="keywordflow">return</span> std::visit(dispatch_combined,</div>
+<div class="line"><a id="l03557" name="l03557"></a><span class="lineno"> 3557</span>                      get_proxy_value(std::forward&lt;Vany1&gt;(vany1)),</div>
+<div class="line"><a id="l03558" name="l03558"></a><span class="lineno"> 3558</span>                      get_proxy_value(std::forward&lt;Vany2&gt;(vany2)));</div>
+<div class="line"><a id="l03559" name="l03559"></a><span class="lineno"> 3559</span>  }</div>
+<div class="line"><a id="l03560" name="l03560"></a><span class="lineno"> 3560</span> </div>
+<div class="line"><a id="l03561" name="l03561"></a><span class="lineno"> 3561</span> <span class="keyword">public</span>:</div>
+<div class="line"><a id="l03562" name="l03562"></a><span class="lineno"> 3562</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Classes&gt;</div>
+<div class="line"><a id="l03563" name="l03563"></a><span class="lineno"> 3563</span>  <span class="keyword">auto</span> define(<span class="keyword">auto</span> f) {</div>
+<div class="line"><a id="l03564" name="l03564"></a><span class="lineno"> 3564</span>    <span class="keywordflow">return</span> dynamic_dispatch_.template define&lt;Classes...&gt;(f);</div>
+<div class="line"><a id="l03565" name="l03565"></a><span class="lineno"> 3565</span>  }</div>
+<div class="line"><a id="l03566" name="l03566"></a><span class="lineno"> 3566</span> </div>
+<div class="line"><a id="l03567" name="l03567"></a><span class="lineno"> 3567</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l03568" name="l03568"></a><span class="lineno"> 3568</span>  <span class="keyword">auto</span> operator()(Args&amp;&amp;... args)<span class="keyword"> const </span>{</div>
+<div class="line"><a id="l03569" name="l03569"></a><span class="lineno"> 3569</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (dimension_count == 1) {</div>
+<div class="line"><a id="l03570" name="l03570"></a><span class="lineno"> 3570</span>      <span class="keywordflow">return</span> invoke1(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l03571" name="l03571"></a><span class="lineno"> 3571</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l03572" name="l03572"></a><span class="lineno"> 3572</span>      <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (dimension_count == 2) {</div>
+<div class="line"><a id="l03573" name="l03573"></a><span class="lineno"> 3573</span>        <span class="keywordflow">return</span> invoke2(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l03574" name="l03574"></a><span class="lineno"> 3574</span>      } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l03575" name="l03575"></a><span class="lineno"> 3575</span>        <span class="keyword">static_assert</span>(dimension_count &lt;= 2,</div>
+<div class="line"><a id="l03576" name="l03576"></a><span class="lineno"> 3576</span>                      <span class="stringliteral">&quot;dispatch_vany only supports one and two dimensions&quot;</span>);</div>
+<div class="line"><a id="l03577" name="l03577"></a><span class="lineno"> 3577</span>      }</div>
+<div class="line"><a id="l03578" name="l03578"></a><span class="lineno"> 3578</span>    }</div>
+<div class="line"><a id="l03579" name="l03579"></a><span class="lineno"> 3579</span>  }</div>
+<div class="line"><a id="l03580" name="l03580"></a><span class="lineno"> 3580</span>};</div>
+<div class="line"><a id="l03581" name="l03581"></a><span class="lineno"> 3581</span>}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"><a id="l03582" name="l03582"></a><span class="lineno"> 3582</span> </div>
+<div class="line"><a id="l03583" name="l03583"></a><span class="lineno"> 3583</span><span class="preprocessor">#define ANY_MERGE_(a, b) a##b</span></div>
+<div class="line"><a id="l03584" name="l03584"></a><span class="lineno"> 3584</span><span class="preprocessor">#define ANY_LABEL_(a) ANY_MERGE_(unique_name_, a)</span></div>
+<div class="line"><a id="l03585" name="l03585"></a><span class="lineno"> 3585</span><span class="preprocessor">#define ANY_UNIQUE_NAME_ ANY_LABEL_(__COUNTER__)</span></div>
+<div class="line"><a id="l03586" name="l03586"></a><span class="lineno"> 3586</span><span class="preprocessor">#define ANY_UNIQUE_NAME ANY_UNIQUE_NAME_</span></div>
+<div class="line"><a id="l03587" name="l03587"></a><span class="lineno"> 3587</span><span class="preprocessor">#define __ ANY_UNIQUE_NAME_</span></div>
+<div class="line"><a id="l03588" name="l03588"></a><span class="lineno"> 3588</span></div>
+<div class="line"><a id="l03598" name="l03598"></a><span class="lineno"> 3598</span></div>
+<div class="foldopen" id="foldopen03607" data-start="" data-end="">
+<div class="line"><a id="l03607" name="l03607"></a><span class="lineno"><a class="line" href="group__runtime__macros.html#ga3f285810c0716bfa028b613342d910d1"> 3607</a></span><span class="preprocessor">#define ANY_SINGLETON_DECLARE(export_, name, ...) \</span></div>
+<div class="line"><a id="l03608" name="l03608"></a><span class="lineno"> 3608</span><span class="preprocessor">  using name##_t = __VA_ARGS__;                   \</span></div>
+<div class="line"><a id="l03609" name="l03609"></a><span class="lineno"> 3609</span><span class="preprocessor">  export_ extern name##_t&amp; get_##name();          \</span></div>
+<div class="line"><a id="l03610" name="l03610"></a><span class="lineno"> 3610</span><span class="preprocessor">  static inline name##_t&amp; name = get_##name();</span></div>
+</div>
+<div class="line"><a id="l03611" name="l03611"></a><span class="lineno"> 3611</span></div>
+<div class="foldopen" id="foldopen03619" data-start="" data-end="">
+<div class="line"><a id="l03619" name="l03619"></a><span class="lineno"><a class="line" href="group__runtime__macros.html#gab55747625c4054406c3f615c19ab1499"> 3619</a></span><span class="preprocessor">#define ANY_SINGLETON(namespace_, name, ...)       \</span></div>
+<div class="line"><a id="l03620" name="l03620"></a><span class="lineno"> 3620</span><span class="preprocessor">  namespace_::name##_t&amp; namespace_::get_##name() { \</span></div>
+<div class="line"><a id="l03621" name="l03621"></a><span class="lineno"> 3621</span><span class="preprocessor">    static name##_t singleton_{__VA_ARGS__};       \</span></div>
+<div class="line"><a id="l03622" name="l03622"></a><span class="lineno"> 3622</span><span class="preprocessor">    return singleton_;                             \</span></div>
+<div class="line"><a id="l03623" name="l03623"></a><span class="lineno"> 3623</span><span class="preprocessor">  };</span></div>
+</div>
+<div class="line"><a id="l03624" name="l03624"></a><span class="lineno"> 3624</span></div>
+<div class="foldopen" id="foldopen03635" data-start="" data-end="">
+<div class="line"><a id="l03635" name="l03635"></a><span class="lineno"><a class="line" href="group__runtime__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b"> 3635</a></span><span class="preprocessor">#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \</span></div>
+<div class="line"><a id="l03636" name="l03636"></a><span class="lineno"> 3636</span><span class="preprocessor">  constexpr static inline auto name##_static_dispatch =                       \</span></div>
+<div class="line"><a id="l03637" name="l03637"></a><span class="lineno"> 3637</span><span class="preprocessor">      anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \</span></div>
+<div class="line"><a id="l03638" name="l03638"></a><span class="lineno"> 3638</span><span class="preprocessor">                                                                              \</span></div>
+<div class="line"><a id="l03639" name="l03639"></a><span class="lineno"> 3639</span><span class="preprocessor">  using name##_vany = vany;                                                   \</span></div>
+<div class="line"><a id="l03640" name="l03640"></a><span class="lineno"> 3640</span><span class="preprocessor">  using name##_dynamic_dispatch =                                             \</span></div>
+<div class="line"><a id="l03641" name="l03641"></a><span class="lineno"> 3641</span><span class="preprocessor">      anyxx::dispatch&lt;_detail_REMOVE_PARENS(signature)&gt;;                      \</span></div>
+<div class="line"><a id="l03642" name="l03642"></a><span class="lineno"> 3642</span><span class="preprocessor">                                                                              \</span></div>
+<div class="line"><a id="l03643" name="l03643"></a><span class="lineno"> 3643</span><span class="preprocessor">  ANY_SINGLETON_DECLARE(                                                      \</span></div>
+<div class="line"><a id="l03644" name="l03644"></a><span class="lineno"> 3644</span><span class="preprocessor">      , name,                                                                 \</span></div>
+<div class="line"><a id="l03645" name="l03645"></a><span class="lineno"> 3645</span><span class="preprocessor">      anyxx::dispatch_vany&lt;name##_vany, name##_dynamic_dispatch,              \</span></div>
+<div class="line"><a id="l03646" name="l03646"></a><span class="lineno"> 3646</span><span class="preprocessor">                           name##_static_dispatch&gt;)</span></div>
+</div>
+<div class="line"><a id="l03647" name="l03647"></a><span class="lineno"> 3647</span></div>
+<div class="line"><a id="l03654" name="l03654"></a><span class="lineno"><a class="line" href="group__runtime__macros.html#ga93a6d3c140de4e4c95f863b88385a27c"> 3654</a></span><span class="preprocessor">#define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);</span></div>
+<div class="line"><a id="l03655" name="l03655"></a><span class="lineno"> 3655</span> </div>
+<div class="line"><a id="l03656" name="l03656"></a><span class="lineno"> 3656</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l03657" name="l03657"></a><span class="lineno"> 3657</span> </div>
+<div class="line"><a id="l03658" name="l03658"></a><span class="lineno"> 3658</span><span class="preprocessor">#define ANY_META_CLASS_FWD(export_, ...) \</span></div>
+<div class="line"><a id="l03659" name="l03659"></a><span class="lineno"> 3659</span><span class="preprocessor">  template &lt;&gt;                            \</span></div>
+<div class="line"><a id="l03660" name="l03660"></a><span class="lineno"> 3660</span><span class="preprocessor">  export_ anyxx::meta_data&amp; anyxx::get_meta_data&lt;__VA_ARGS__&gt;();</span></div>
 <div class="line"><a id="l03661" name="l03661"></a><span class="lineno"> 3661</span> </div>
-<div class="line"><a id="l03662" name="l03662"></a><span class="lineno"> 3662</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l03663" name="l03663"></a><span class="lineno"> 3663</span> </div>
-<div class="line"><a id="l03664" name="l03664"></a><span class="lineno"> 3664</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l03665" name="l03665"></a><span class="lineno"> 3665</span> </div>
-<div class="line"><a id="l03666" name="l03666"></a><span class="lineno"> 3666</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \</span></div>
-<div class="line"><a id="l03667" name="l03667"></a><span class="lineno"> 3667</span><span class="preprocessor">  namespace ns_ {}                                             \</span></div>
-<div class="line"><a id="l03668" name="l03668"></a><span class="lineno"> 3668</span><span class="preprocessor">  namespace anyxx {                                            \</span></div>
-<div class="line"><a id="l03669" name="l03669"></a><span class="lineno"> 3669</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
-<div class="line"><a id="l03670" name="l03670"></a><span class="lineno"> 3670</span><span class="preprocessor">  export_ std::size_t&amp; dispatchs_count&lt;ns_::any_##_v_table&gt;(); \</span></div>
-<div class="line"><a id="l03671" name="l03671"></a><span class="lineno"> 3671</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03662" name="l03662"></a><span class="lineno"> 3662</span><span class="preprocessor">#define ANY_META_CLASS(...)                                             \</span></div>
+<div class="line"><a id="l03663" name="l03663"></a><span class="lineno"> 3663</span><span class="preprocessor">  template &lt;&gt;                                                           \</span></div>
+<div class="line"><a id="l03664" name="l03664"></a><span class="lineno"> 3664</span><span class="preprocessor">  anyxx::meta_data&amp; anyxx::get_meta_data&lt;std::decay_t&lt;__VA_ARGS__&gt;&gt;() { \</span></div>
+<div class="line"><a id="l03665" name="l03665"></a><span class="lineno"> 3665</span><span class="preprocessor">    return runtime_implementation&lt;__VA_ARGS__&gt;();                       \</span></div>
+<div class="line"><a id="l03666" name="l03666"></a><span class="lineno"> 3666</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03667" name="l03667"></a><span class="lineno"> 3667</span> </div>
+<div class="line"><a id="l03668" name="l03668"></a><span class="lineno"> 3668</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l03669" name="l03669"></a><span class="lineno"> 3669</span> </div>
+<div class="line"><a id="l03670" name="l03670"></a><span class="lineno"> 3670</span><span class="preprocessor">#define ANY_META_CLASS_FWD(...)</span></div>
+<div class="line"><a id="l03671" name="l03671"></a><span class="lineno"> 3671</span><span class="preprocessor">#define ANY_META_CLASS(...)</span></div>
 <div class="line"><a id="l03672" name="l03672"></a><span class="lineno"> 3672</span> </div>
-<div class="line"><a id="l03673" name="l03673"></a><span class="lineno"> 3673</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(ns_, any_)                          \</span></div>
-<div class="line"><a id="l03674" name="l03674"></a><span class="lineno"> 3674</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
-<div class="line"><a id="l03675" name="l03675"></a><span class="lineno"> 3675</span><span class="preprocessor">  std::size_t&amp; anyxx::dispatchs_count&lt;ns_::any_##_v_table&gt;() { \</span></div>
-<div class="line"><a id="l03676" name="l03676"></a><span class="lineno"> 3676</span><span class="preprocessor">    static std::size_t count = 0;                              \</span></div>
-<div class="line"><a id="l03677" name="l03677"></a><span class="lineno"> 3677</span><span class="preprocessor">    return count;                                              \</span></div>
-<div class="line"><a id="l03678" name="l03678"></a><span class="lineno"> 3678</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03679" name="l03679"></a><span class="lineno"> 3679</span> </div>
-<div class="line"><a id="l03680" name="l03680"></a><span class="lineno"> 3680</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \</span></div>
-<div class="line"><a id="l03681" name="l03681"></a><span class="lineno"> 3681</span><span class="preprocessor">                             interface_)                            \</span></div>
-<div class="line"><a id="l03682" name="l03682"></a><span class="lineno"> 3682</span><span class="preprocessor">  namespace anyxx {                                                 \</span></div>
-<div class="line"><a id="l03683" name="l03683"></a><span class="lineno"> 3683</span><span class="preprocessor">  template &lt;&gt;                                                       \</span></div>
-<div class="line"><a id="l03684" name="l03684"></a><span class="lineno"> 3684</span><span class="preprocessor">  export_ dispatch_table_t* dispatch_table_instance&lt;                \</span></div>
-<div class="line"><a id="l03685" name="l03685"></a><span class="lineno"> 3685</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;();        \</span></div>
-<div class="line"><a id="l03686" name="l03686"></a><span class="lineno"> 3686</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03687" name="l03687"></a><span class="lineno"> 3687</span> </div>
-<div class="line"><a id="l03688" name="l03688"></a><span class="lineno"> 3688</span><span class="preprocessor">#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \</span></div>
-<div class="line"><a id="l03689" name="l03689"></a><span class="lineno"> 3689</span><span class="preprocessor">  template &lt;&gt;                                                      \</span></div>
-<div class="line"><a id="l03690" name="l03690"></a><span class="lineno"> 3690</span><span class="preprocessor">  anyxx::dispatch_table_t* anyxx::dispatch_table_instance&lt;         \</span></div>
-<div class="line"><a id="l03691" name="l03691"></a><span class="lineno"> 3691</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;() {      \</span></div>
-<div class="line"><a id="l03692" name="l03692"></a><span class="lineno"> 3692</span><span class="preprocessor">    return dispatch_table_instance_implementation&lt;                 \</span></div>
-<div class="line"><a id="l03693" name="l03693"></a><span class="lineno"> 3693</span><span class="preprocessor">        interface_namespace_::interface_##_v_table, class_&gt;();     \</span></div>
-<div class="line"><a id="l03694" name="l03694"></a><span class="lineno"> 3694</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03695" name="l03695"></a><span class="lineno"> 3695</span> </div>
-<div class="line"><a id="l03696" name="l03696"></a><span class="lineno"> 3696</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l03697" name="l03697"></a><span class="lineno"> 3697</span> </div>
-<div class="line"><a id="l03698" name="l03698"></a><span class="lineno"> 3698</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(...)</span></div>
-<div class="line"><a id="l03699" name="l03699"></a><span class="lineno"> 3699</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(...)</span></div>
-<div class="line"><a id="l03700" name="l03700"></a><span class="lineno"> 3700</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(...)</span></div>
-<div class="line"><a id="l03701" name="l03701"></a><span class="lineno"> 3701</span><span class="preprocessor">#define ANY_DISPATCH_FOR(...)</span></div>
-<div class="line"><a id="l03702" name="l03702"></a><span class="lineno"> 3702</span> </div>
-<div class="line"><a id="l03703" name="l03703"></a><span class="lineno"> 3703</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l03704" name="l03704"></a><span class="lineno"> 3704</span> </div>
-<div class="line"><a id="l03705" name="l03705"></a><span class="lineno"> 3705</span><span class="preprocessor">#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \</span></div>
-<div class="line"><a id="l03706" name="l03706"></a><span class="lineno"> 3706</span><span class="preprocessor">  namespace {                                                                 \</span></div>
-<div class="line"><a id="l03707" name="l03707"></a><span class="lineno"> 3707</span><span class="preprocessor">  static auto __ = anyxx::bind_v_table_to_meta_data&lt;                          \</span></div>
-<div class="line"><a id="l03708" name="l03708"></a><span class="lineno"> 3708</span><span class="preprocessor">      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \</span></div>
-<div class="line"><a id="l03709" name="l03709"></a><span class="lineno"> 3709</span><span class="preprocessor">      ANYXX_UNPAREN(class_)&gt;();                                               \</span></div>
-<div class="line"><a id="l03710" name="l03710"></a><span class="lineno"> 3710</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03711" name="l03711"></a><span class="lineno"> 3711</span></div>
+<div class="line"><a id="l03673" name="l03673"></a><span class="lineno"> 3673</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03674" name="l03674"></a><span class="lineno"> 3674</span> </div>
+<div class="line"><a id="l03675" name="l03675"></a><span class="lineno"> 3675</span><span class="preprocessor">#define ANY_META_CLASS_STATIC(...)  \</span></div>
+<div class="line"><a id="l03676" name="l03676"></a><span class="lineno"> 3676</span><span class="preprocessor">  ANY_META_CLASS_FWD(, __VA_ARGS__) \</span></div>
+<div class="line"><a id="l03677" name="l03677"></a><span class="lineno"> 3677</span><span class="preprocessor">  ANY_META_CLASS(__VA_ARGS__)</span></div>
+<div class="line"><a id="l03678" name="l03678"></a><span class="lineno"> 3678</span> </div>
+<div class="line"><a id="l03679" name="l03679"></a><span class="lineno"> 3679</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l03680" name="l03680"></a><span class="lineno"> 3680</span> </div>
+<div class="line"><a id="l03681" name="l03681"></a><span class="lineno"> 3681</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)  \</span></div>
+<div class="line"><a id="l03682" name="l03682"></a><span class="lineno"> 3682</span><span class="preprocessor">  namespace ns_ {                                \</span></div>
+<div class="line"><a id="l03683" name="l03683"></a><span class="lineno"> 3683</span><span class="preprocessor">  struct c_;                                     \</span></div>
+<div class="line"><a id="l03684" name="l03684"></a><span class="lineno"> 3684</span><span class="preprocessor">  }                                              \</span></div>
+<div class="line"><a id="l03685" name="l03685"></a><span class="lineno"> 3685</span><span class="preprocessor">  namespace anyxx {                              \</span></div>
+<div class="line"><a id="l03686" name="l03686"></a><span class="lineno"> 3686</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
+<div class="line"><a id="l03687" name="l03687"></a><span class="lineno"> 3687</span><span class="preprocessor">  export_ std::size_t&amp; members_count&lt;ns_::c_&gt;(); \</span></div>
+<div class="line"><a id="l03688" name="l03688"></a><span class="lineno"> 3688</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03689" name="l03689"></a><span class="lineno"> 3689</span> </div>
+<div class="line"><a id="l03690" name="l03690"></a><span class="lineno"> 3690</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \</span></div>
+<div class="line"><a id="l03691" name="l03691"></a><span class="lineno"> 3691</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
+<div class="line"><a id="l03692" name="l03692"></a><span class="lineno"> 3692</span><span class="preprocessor">  std::size_t&amp; anyxx::members_count&lt;ns_::c_&gt;() { \</span></div>
+<div class="line"><a id="l03693" name="l03693"></a><span class="lineno"> 3693</span><span class="preprocessor">    static std::size_t count = 0;                \</span></div>
+<div class="line"><a id="l03694" name="l03694"></a><span class="lineno"> 3694</span><span class="preprocessor">    return count;                                \</span></div>
+<div class="line"><a id="l03695" name="l03695"></a><span class="lineno"> 3695</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03696" name="l03696"></a><span class="lineno"> 3696</span> </div>
+<div class="line"><a id="l03697" name="l03697"></a><span class="lineno"> 3697</span><span class="preprocessor">#define ANY_MEMBER_FWD(export_, object_, member_, type_)           \</span></div>
+<div class="line"><a id="l03698" name="l03698"></a><span class="lineno"> 3698</span><span class="preprocessor">  export_ anyxx::member&lt;object_, type_&gt;&amp; _inintialize_##member_(); \</span></div>
+<div class="line"><a id="l03699" name="l03699"></a><span class="lineno"> 3699</span><span class="preprocessor">  inline const anyxx::member&lt;object_, type_&gt;&amp; member_ =            \</span></div>
+<div class="line"><a id="l03700" name="l03700"></a><span class="lineno"> 3700</span><span class="preprocessor">      _inintialize_##member_();</span></div>
+<div class="line"><a id="l03701" name="l03701"></a><span class="lineno"> 3701</span> </div>
+<div class="line"><a id="l03702" name="l03702"></a><span class="lineno"> 3702</span><span class="preprocessor">#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \</span></div>
+<div class="line"><a id="l03703" name="l03703"></a><span class="lineno"> 3703</span><span class="preprocessor">  anyxx::member&lt;object_, type_&gt;&amp; ns_::_inintialize_##member_() { \</span></div>
+<div class="line"><a id="l03704" name="l03704"></a><span class="lineno"> 3704</span><span class="preprocessor">    static anyxx::member&lt;object_, type_&gt; instance;               \</span></div>
+<div class="line"><a id="l03705" name="l03705"></a><span class="lineno"> 3705</span><span class="preprocessor">    return instance;                                             \</span></div>
+<div class="line"><a id="l03706" name="l03706"></a><span class="lineno"> 3706</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03707" name="l03707"></a><span class="lineno"> 3707</span> </div>
+<div class="line"><a id="l03708" name="l03708"></a><span class="lineno"> 3708</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l03709" name="l03709"></a><span class="lineno"> 3709</span> </div>
+<div class="line"><a id="l03710" name="l03710"></a><span class="lineno"> 3710</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(...)</span></div>
+<div class="line"><a id="l03711" name="l03711"></a><span class="lineno"> 3711</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(...)</span></div>
+<div class="line"><a id="l03712" name="l03712"></a><span class="lineno"> 3712</span><span class="preprocessor">#define ANY_MEMBER_FWD(...)</span></div>
+<div class="line"><a id="l03713" name="l03713"></a><span class="lineno"> 3713</span><span class="preprocessor">#define ANY_MEMBER_IMPL(...)</span></div>
+<div class="line"><a id="l03714" name="l03714"></a><span class="lineno"> 3714</span> </div>
+<div class="line"><a id="l03715" name="l03715"></a><span class="lineno"> 3715</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03716" name="l03716"></a><span class="lineno"> 3716</span> </div>
+<div class="line"><a id="l03717" name="l03717"></a><span class="lineno"> 3717</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l03718" name="l03718"></a><span class="lineno"> 3718</span> </div>
+<div class="line"><a id="l03719" name="l03719"></a><span class="lineno"> 3719</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \</span></div>
+<div class="line"><a id="l03720" name="l03720"></a><span class="lineno"> 3720</span><span class="preprocessor">  namespace ns_ {}                                             \</span></div>
+<div class="line"><a id="l03721" name="l03721"></a><span class="lineno"> 3721</span><span class="preprocessor">  namespace anyxx {                                            \</span></div>
+<div class="line"><a id="l03722" name="l03722"></a><span class="lineno"> 3722</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
+<div class="line"><a id="l03723" name="l03723"></a><span class="lineno"> 3723</span><span class="preprocessor">  export_ std::size_t&amp; dispatchs_count&lt;ns_::any_##_v_table&gt;(); \</span></div>
+<div class="line"><a id="l03724" name="l03724"></a><span class="lineno"> 3724</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03725" name="l03725"></a><span class="lineno"> 3725</span> </div>
+<div class="line"><a id="l03726" name="l03726"></a><span class="lineno"> 3726</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(ns_, any_)                          \</span></div>
+<div class="line"><a id="l03727" name="l03727"></a><span class="lineno"> 3727</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
+<div class="line"><a id="l03728" name="l03728"></a><span class="lineno"> 3728</span><span class="preprocessor">  std::size_t&amp; anyxx::dispatchs_count&lt;ns_::any_##_v_table&gt;() { \</span></div>
+<div class="line"><a id="l03729" name="l03729"></a><span class="lineno"> 3729</span><span class="preprocessor">    static std::size_t count = 0;                              \</span></div>
+<div class="line"><a id="l03730" name="l03730"></a><span class="lineno"> 3730</span><span class="preprocessor">    return count;                                              \</span></div>
+<div class="line"><a id="l03731" name="l03731"></a><span class="lineno"> 3731</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03732" name="l03732"></a><span class="lineno"> 3732</span> </div>
+<div class="line"><a id="l03733" name="l03733"></a><span class="lineno"> 3733</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \</span></div>
+<div class="line"><a id="l03734" name="l03734"></a><span class="lineno"> 3734</span><span class="preprocessor">                             interface_)                            \</span></div>
+<div class="line"><a id="l03735" name="l03735"></a><span class="lineno"> 3735</span><span class="preprocessor">  namespace anyxx {                                                 \</span></div>
+<div class="line"><a id="l03736" name="l03736"></a><span class="lineno"> 3736</span><span class="preprocessor">  template &lt;&gt;                                                       \</span></div>
+<div class="line"><a id="l03737" name="l03737"></a><span class="lineno"> 3737</span><span class="preprocessor">  export_ dispatch_table_t* dispatch_table_instance&lt;                \</span></div>
+<div class="line"><a id="l03738" name="l03738"></a><span class="lineno"> 3738</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;();        \</span></div>
+<div class="line"><a id="l03739" name="l03739"></a><span class="lineno"> 3739</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03740" name="l03740"></a><span class="lineno"> 3740</span> </div>
+<div class="line"><a id="l03741" name="l03741"></a><span class="lineno"> 3741</span><span class="preprocessor">#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \</span></div>
+<div class="line"><a id="l03742" name="l03742"></a><span class="lineno"> 3742</span><span class="preprocessor">  template &lt;&gt;                                                      \</span></div>
+<div class="line"><a id="l03743" name="l03743"></a><span class="lineno"> 3743</span><span class="preprocessor">  anyxx::dispatch_table_t* anyxx::dispatch_table_instance&lt;         \</span></div>
+<div class="line"><a id="l03744" name="l03744"></a><span class="lineno"> 3744</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;() {      \</span></div>
+<div class="line"><a id="l03745" name="l03745"></a><span class="lineno"> 3745</span><span class="preprocessor">    return dispatch_table_instance_implementation&lt;                 \</span></div>
+<div class="line"><a id="l03746" name="l03746"></a><span class="lineno"> 3746</span><span class="preprocessor">        interface_namespace_::interface_##_v_table, class_&gt;();     \</span></div>
+<div class="line"><a id="l03747" name="l03747"></a><span class="lineno"> 3747</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03748" name="l03748"></a><span class="lineno"> 3748</span> </div>
+<div class="line"><a id="l03749" name="l03749"></a><span class="lineno"> 3749</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l03750" name="l03750"></a><span class="lineno"> 3750</span> </div>
+<div class="line"><a id="l03751" name="l03751"></a><span class="lineno"> 3751</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(...)</span></div>
+<div class="line"><a id="l03752" name="l03752"></a><span class="lineno"> 3752</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(...)</span></div>
+<div class="line"><a id="l03753" name="l03753"></a><span class="lineno"> 3753</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(...)</span></div>
+<div class="line"><a id="l03754" name="l03754"></a><span class="lineno"> 3754</span><span class="preprocessor">#define ANY_DISPATCH_FOR(...)</span></div>
+<div class="line"><a id="l03755" name="l03755"></a><span class="lineno"> 3755</span> </div>
+<div class="line"><a id="l03756" name="l03756"></a><span class="lineno"> 3756</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03757" name="l03757"></a><span class="lineno"> 3757</span> </div>
+<div class="line"><a id="l03758" name="l03758"></a><span class="lineno"> 3758</span><span class="preprocessor">#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \</span></div>
+<div class="line"><a id="l03759" name="l03759"></a><span class="lineno"> 3759</span><span class="preprocessor">  namespace {                                                                 \</span></div>
+<div class="line"><a id="l03760" name="l03760"></a><span class="lineno"> 3760</span><span class="preprocessor">  static auto __ = anyxx::bind_v_table_to_meta_data&lt;                          \</span></div>
+<div class="line"><a id="l03761" name="l03761"></a><span class="lineno"> 3761</span><span class="preprocessor">      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \</span></div>
+<div class="line"><a id="l03762" name="l03762"></a><span class="lineno"> 3762</span><span class="preprocessor">      ANYXX_UNPAREN(class_)&gt;();                                               \</span></div>
+<div class="line"><a id="l03763" name="l03763"></a><span class="lineno"> 3763</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03764" name="l03764"></a><span class="lineno"> 3764</span></div>
 <div class="ttc" id="aanyxx_8hpp_html_aa0a344700732ba661e0fb701ef1eba2c"><div class="ttname"><a href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a></div><div class="ttdeci">auto trait_as(T &amp;&amp;v)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2585</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_abb32933fc2d3ddd4236f3075dd5c1562"><div class="ttname"><a href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; by_val&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1267</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2305</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html_a2dee555d6fc08f2449ab24e9d11a97d3"><div class="ttname"><a href="classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3">anyxx::any::any</a></div><div class="ttdeci">any(std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2347</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html_a440c04e593e924f0518702df4b55cf60"><div class="ttname"><a href="classanyxx_1_1any.html#a440c04e593e924f0518702df4b55cf60">anyxx::any::any</a></div><div class="ttdeci">any(std::in_place_t, V &amp;&amp;v)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2339</div></div>
-<div class="ttc" id="aclassanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4_html_a1780e02d465d06adc100e5ebdc451049"><div class="ttname"><a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">anyxx::dispatch&lt; R(Args...)&gt;::define</a></div><div class="ttdeci">auto define(auto f)</div><div class="ttdoc">Register a dispatch target for the model provided in the type parameter.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3433</div></div>
-<div class="ttc" id="aclassanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4_html_a7e8628df49b55d4cfa4ef8c8c5adae2c"><div class="ttname"><a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c">anyxx::dispatch&lt; R(Args...)&gt;::operator()</a></div><div class="ttdeci">auto operator()(ActualArgs &amp;&amp;... actual_args) const</div><div class="ttdoc">Invoke the dispatch. The called function is determined by the any &#39;s, marked with virtual_ in the cla...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3446</div></div>
-<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves expression problem. See dispatch&lt; R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3290</div></div>
+<div class="ttc" id="aclassanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4_html_a1780e02d465d06adc100e5ebdc451049"><div class="ttname"><a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049">anyxx::dispatch&lt; R(Args...)&gt;::define</a></div><div class="ttdeci">auto define(auto f)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3445</div></div>
+<div class="ttc" id="aclassanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4_html_a7e8628df49b55d4cfa4ef8c8c5adae2c"><div class="ttname"><a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c">anyxx::dispatch&lt; R(Args...)&gt;::operator()</a></div><div class="ttdeci">auto operator()(ActualArgs &amp;&amp;... actual_args) const</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3458</div></div>
+<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves expression problem. See dispatch&lt;R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3290</div></div>
 <div class="ttc" id="aconceptanyxx_1_1has__v__table_html"><div class="ttname"><a href="conceptanyxx_1_1has__v__table.html">anyxx::has_v_table</a></div><div class="ttdoc">Requirements for a trait type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1078</div></div>
 <div class="ttc" id="aconceptanyxx_1_1is__dyn_html"><div class="ttname"><a href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a></div><div class="ttdoc">Requirements for a dynamic, (= type erased) Proxy.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1087</div></div>
 <div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1057</div></div>
