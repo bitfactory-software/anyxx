@@ -1,13 +1,13 @@
-# Any++ Type Ersaed *Proxy*s
+# Any++ Type Erased *Proxy*s
 
 ### Overview 
 
 | Proxy type | Lifetime requirements | Concurrency considerations / Notes  | 
 |------|-------|--------|
-| ``cref`` | Observed object must outlive call. | Threadsave, if observed self object is ``const`` turing lifetime of observer. |
-| ``mutref`` | Observed object must outlive call. | Not threadsave. |
-| ``shared`` | Same as ``std::shared_ptr``.</br>| Threadsave.  |
-| ``unique`` | Same as ``std::unique_ptr``.</br> | Threadsave. |
+| ``cref`` | Observed object must outlive call. | Threadsafe, if observed object self is ``const`` during lifetime of observer. |
+| ``mutref`` | Observed object must outlive call. | Not threadsafe. |
+| ``shared`` | Same as ``std::shared_ptr``.</br>| Threadsafe.  |
+| ``unique`` | Same as ``std::unique_ptr``.</br> | Threadsafe. |
 | ``value`` | Same as ``std::any`` | Threadsafe. |
 
 
