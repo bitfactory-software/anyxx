@@ -6,7 +6,7 @@ var searchData=
   ['any_3',['Any',['../index.html',1,'Any++'],['../md_docs_2Traits__inner__working.html',1,'The Inner Working Of &lt;tt&gt;Traits&lt;/tt&gt; In &lt;tt&gt;Any++&lt;/tt&gt;']]],
   ['any_4',['any',['../classanyxx_1_1any.html',1,'anyxx::any&lt; Proxy, Trait &gt;'],['../classanyxx_1_1any.html#a440c04e593e924f0518702df4b55cf60',1,'anyxx::any::any(std::in_place_t, V &amp;&amp;v)'],['../classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3',1,'anyxx::any::any(std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)']]],
   ['any_20_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_5',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md20',1,'']]],
-  ['any_20type_20ersaed_20proxy_20s_6',['Any++ Type Ersaed *Proxy*s',['../md_docs_2Proxy__overview.html',1,'']]],
+  ['any_20type_20erased_20proxy_20s_6',['Any++ Type Erased *Proxy*s',['../md_docs_2Proxy__overview.html',1,'']]],
   ['any_20usage_7',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md21',1,'']]],
   ['any_20versus_20typed_5fany_8',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]],
   ['any_20virtual_20static_20or_20variant_9',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md20',1,'']]],

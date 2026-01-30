@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: Any++ Type Ersaed *Proxy*s</title>
+<title>Any++: Any++ Type Erased *Proxy*s</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -88,7 +88,7 @@ $(function(){initNavTree('md_docs_2Proxy__overview.html','',''); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">Any++ Type Ersaed *Proxy*s </div></div>
+  <div class="headertitle"><div class="title">Any++ Type Erased *Proxy*s </div></div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="autotoc_md0"></a></p>
@@ -98,13 +98,13 @@ Overview</h2>
 <tr class="markdownTableHead">
 <th class="markdownTableHeadNone">Proxy type  </th><th class="markdownTableHeadNone">Lifetime requirements  </th><th class="markdownTableHeadNone">Concurrency considerations / Notes  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">cref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  </td><td class="markdownTableBodyNone">Threadsave, if observed self object is <span class="tt">const</span> turing lifetime of observer.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">cref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  </td><td class="markdownTableBodyNone">Threadsafe, if observed object self is <span class="tt">const</span> during lifetime of observer.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">mutref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  </td><td class="markdownTableBodyNone">Not threadsave.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">mutref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  </td><td class="markdownTableBodyNone">Not threadsafe.  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">shared</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::shared_ptr</span>.  </td><td class="markdownTableBodyNone">Threadsave.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">shared</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::shared_ptr</span>.  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">unique</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::unique_ptr</span>.  </td><td class="markdownTableBodyNone">Threadsave.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">unique</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::unique_ptr</span>.  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">value</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::any</span>  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
 </table>
