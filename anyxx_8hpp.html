@@ -317,9 +317,11 @@ Macros</h2></td></tr>
 <tr class="memdesc:gad1214e29f913c519ecf9f4b1e9934fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:ga2ec66b211ef38c2274fd0c00155f89d2" id="r_ga2ec66b211ef38c2274fd0c00155f89d2"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#ga2ec66b211ef38c2274fd0c00155f89d2">ANY_OP_EXACT_OVERLOAD_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
 <tr class="memdesc:ga2ec66b211ef38c2274fd0c00155f89d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
-<tr class="memitem:adac7219300342690f02ccf52c9f7aa0c" id="r_adac7219300342690f02ccf52c9f7aa0c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#adac7219300342690f02ccf52c9f7aa0c">__ANY_MODEL_MAP</a>(class_,  interface_,  t)</td></tr>
-<tr class="memitem:a959c14d565ae3828c9f49a328f573792" id="r_a959c14d565ae3828c9f49a328f573792"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a959c14d565ae3828c9f49a328f573792">ANY_TEMPLATE_MODEL_MAP</a>(class_,  interface_,  t)</td></tr>
-<tr class="memitem:a76a79c3f9c2c32333397b6446ed1d1c9" id="r_a76a79c3f9c2c32333397b6446ed1d1c9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a76a79c3f9c2c32333397b6446ed1d1c9">ANY_MODEL_MAP</a>(class_,  interface_)</td></tr>
+<tr class="memitem:gadac7219300342690f02ccf52c9f7aa0c" id="r_gadac7219300342690f02ccf52c9f7aa0c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#gadac7219300342690f02ccf52c9f7aa0c">__ANY_MODEL_MAP</a>(class_,  interface_,  t)</td></tr>
+<tr class="memitem:ga5e76f3ddd3b53ae5041dfaaec4b2288d" id="r_ga5e76f3ddd3b53ae5041dfaaec4b2288d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga5e76f3ddd3b53ae5041dfaaec4b2288d">ANY_TEMPLATE_MODEL_MAP</a>(class_,  trait_,  trait_types)</td></tr>
+<tr class="memdesc:ga5e76f3ddd3b53ae5041dfaaec4b2288d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
+<tr class="memitem:ga826d8afebc4f1e8bba64b431d9f7d611" id="r_ga826d8afebc4f1e8bba64b431d9f7d611"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga826d8afebc4f1e8bba64b431d9f7d611">ANY_MODEL_MAP</a>(class_,  trait_)</td></tr>
+<tr class="memdesc:ga826d8afebc4f1e8bba64b431d9f7d611"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
 <tr class="memitem:a5d2de8eb9ee5c1f3ed17d98d348e5324" id="r_a5d2de8eb9ee5c1f3ed17d98d348e5324"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a5d2de8eb9ee5c1f3ed17d98d348e5324">_detail_ANYXX_TRAIT_ERROR_MESSAGE</a>(name,  ret)</td></tr>
 <tr class="memitem:a80f63e2eae17faf21d5aeb83ce2c35df" id="r_a80f63e2eae17faf21d5aeb83ce2c35df"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a80f63e2eae17faf21d5aeb83ce2c35df">ANY_MERGE_</a>(a,  b)</td></tr>
 <tr class="memitem:af980da0c3ea4edfd7deff01d15f2ac91" id="r_af980da0c3ea4edfd7deff01d15f2ac91"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af980da0c3ea4edfd7deff01d15f2ac91">ANY_LABEL_</a>(a)</td></tr>
@@ -650,35 +652,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="textblock"><p>C++ header only library for external polymorphism. </p>
 <p>for Microsoft C++, you must enable the C-Preprocessor with this flag: /Zc:preprocessor (see CMakeLists.txt for example) </p>
 </div><a name="doc-define-members" id="doc-define-members"></a><h2 id="header-doc-define-members" class="groupheader">Macro Definition Documentation</h2>
-<a id="adac7219300342690f02ccf52c9f7aa0c" name="adac7219300342690f02ccf52c9f7aa0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adac7219300342690f02ccf52c9f7aa0c">&#9670;&#160;</a></span>__ANY_MODEL_MAP</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define __ANY_MODEL_MAP</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>class_</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>interface_</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;&gt;                                                   \</div>
-<div class="line"><span class="keyword">struct </span>interface_##_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt; \</div>
-<div class="line">    : interface_##_default_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(t)&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="ae5155d1c4080a24affd7ecef2c472b02" name="ae5155d1c4080a24affd7ecef2c472b02"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae5155d1c4080a24affd7ecef2c472b02">&#9670;&#160;</a></span>__detail_ANYXX_ADD_HEAD</h2>
 
@@ -2735,28 +2708,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a76a79c3f9c2c32333397b6446ed1d1c9" name="a76a79c3f9c2c32333397b6446ed1d1c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76a79c3f9c2c32333397b6446ed1d1c9">&#9670;&#160;</a></span>ANY_MODEL_MAP</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_MODEL_MAP</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>class_</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>interface_</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">__ANY_MODEL_MAP(class_, interface_, class_)</div>
-</div><!-- fragment -->
-</div>
-</div>
 <a id="aaaf71064e12bba82d01833cc710b7007" name="aaaf71064e12bba82d01833cc710b7007"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaaf71064e12bba82d01833cc710b7007">&#9670;&#160;</a></span>ANY_OVERLOAD</h2>
 
@@ -2803,34 +2754,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">    interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \</div>
 <div class="line">    ANYXX_UNPAREN(class_)&gt;();                                               \</div>
 <div class="line">}</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a959c14d565ae3828c9f49a328f573792" name="a959c14d565ae3828c9f49a328f573792"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a959c14d565ae3828c9f49a328f573792">&#9670;&#160;</a></span>ANY_TEMPLATE_MODEL_MAP</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_TEMPLATE_MODEL_MAP</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>class_</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>interface_</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">__ANY_MODEL_MAP(class_, interface_,                 \</div>
-<div class="line">                __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2987,7 +2910,7 @@ template&lt;typename Trait, typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>A factory function to bind an object as a model to an any with a trait. See also by_val::as. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a3">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a7">_2c_trait_any_variant.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a3">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a8">_2c_trait_any_variant.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>.</dd>
 </dl>
 
 </div>
