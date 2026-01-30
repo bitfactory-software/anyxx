@@ -831,17 +831,38 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 /// @}
 
+/// \addtogroup model_map_macros MODEL_MAP macros
+/// \brief Macros to define behavior of models for \ref trait's
+///
+///  @{
+
 #define __ANY_MODEL_MAP(class_, interface_, t)                  \
   template <>                                                   \
   struct interface_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
       : interface_##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
 
-#define ANY_TEMPLATE_MODEL_MAP(class_, interface_, t) \
-  __ANY_MODEL_MAP(class_, interface_,                 \
+/// \def ANY_TEMPLATE_MODEL_MAP
+/// \brief ANY_TEMPLATE_MODEL_MAP macro
+/// \param class_ name of the model, including template parameters and namespace
+/// in brackets
+/// \param interface_ name of the trait, including namespace
+/// \param trait_types types to be used as template parameters for the trait
+/// 
+/// Must be placed in global namespace, and reachable for the instantiation of
+/// the associated v-table.
+#define ANY_TEMPLATE_MODEL_MAP(class_, trait_, trait_types) \
+  __ANY_MODEL_MAP(class_, trait_,                 \
                   __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))
 
-#define ANY_MODEL_MAP(class_, interface_) \
-  __ANY_MODEL_MAP(class_, interface_, class_)
+/// \def ANY_MODEL_MAP
+/// \brief ANY_MODEL_MAP macro
+/// \param class_ name of the model, including namespace, in brackets
+/// \param trait_ name of the trait, including namespace
+/// 
+/// Must be placed in global namespace, and reachable for the instantiation of
+/// the associated v-table.
+#define ANY_MODEL_MAP(class_, trait_) __ANY_MODEL_MAP(class_, trait_, class_)
+/// @}
 
 #define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)     \
 []<typename... Args>([[maybe_unused]](Args...) -> ret{ \
@@ -3801,17 +3822,17 @@ class dispatch_vany {
 
 /**
    \example _1_any_shape.cpp
-   
+
    \example _2d_trait_self.cpp
    Shows self a referntial trait
 
-   
+
    \example _2b_trait_monoid.cpp
    A self referntial trait that models a monoid. Show how to use a MODEL_MAP
    that acts simultanious as runtime and complitem customization point
 
    \example _2c_trait_any_variant.cpp
-   
+
    \example _2o_trait_simple.cpp
    Simple trait usage
 
