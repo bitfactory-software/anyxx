@@ -2520,7 +2520,8 @@ inline To unchecked_downcast_to(From from)
 }
 
 /// \defgroup casts Casts
-/// \brief Mix and match downcast, crosscast and get \ref any with other \ref proxies
+/// \brief Mix and match downcast, crosscast and get \ref any with other \ref
+/// proxies
 
 /// \brief Safe downcast to derived trait via runtime info from the v-Tables
 /// \ingroup casts
@@ -2893,7 +2894,8 @@ auto lock(FromAny const& from_interface) {
   return return_t{};
 }
 
-/// \brief Move ownership to an other \ref any. Uses runtime info to crosscast, if neccessary.
+/// \brief Move ownership to an other \ref any. Uses runtime info to crosscast,
+/// if neccessary.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from) {
@@ -3113,6 +3115,10 @@ std::size_t& dispatchs_count() {
 }
 #endif
 
+/// <summary>
+/// Indicates,that \ref dispatch type parameter, must be used dispatch.
+/// </summary>
+/// <typeparam name="Any">The \ref any used for dispatch</typeparam>
 template <is_any Any>
 struct virtual_ {
   using type = Any;
@@ -3273,10 +3279,24 @@ struct dispatch_matrix<DispatchMatrix, virtual_<Any>, Args...> {
       typename dispatch_matrix<std::vector<DispatchMatrix>, Args...>::type;
 };
 
+/// <summary>
+/// Open dispatch method. Solves expression problem. See \ref dispatch<
+/// R(Args...)> for details
+/// </summary>
+/// <typeparam name="R">Return type</typeparam>
+/// <typeparam name="...Args">Parameter types. The Paramters for open dispatch
+/// must be the first and braced as \ref virtual_</typeparam>
 template <typename R, typename... Args>
-struct dispatch;
+class dispatch;
+/// <summary>
+/// Open dispatch method. Solves expression problem.
+/// </summary>
+/// <typeparam name="R">Return type</typeparam>
+/// <typeparam name="...Args">Parameter types. The Paramters for open dispatch
+/// must be the first and braced as \ref virtual_</typeparam>
 template <typename R, typename... Args>
-struct dispatch<R(Args...)> {
+class dispatch<R(Args...)> {
+ public:
   using erased_function_t =
       typename translate_erased_function<R, Args...>::type;
 
@@ -3403,12 +3423,25 @@ struct dispatch<R(Args...)> {
   dispatch_access<dispatch_kind, 0, Args...> dispatch_access_;
 
  public:
+  /// <summary>
+  /// Register a dispatch target for the model provided in the type parameter
+  /// </summary>
+  /// <typeparam name="...Classes">The models, for wich the dispatch target is provided</typeparam>
+  /// <param name="f">The dispatch target</param>
+  /// <returns>dummy</returns>
   template <typename... Classes>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
         R, Classes...>::template instance<Args...>(f);
     return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
   };
+  /// <summary>
+  /// Invoke the dispatch. The called function is determined by the \ref any 's,
+  /// marked with \ref virtual_ in the class instantiation
+  /// </summary>
+  /// <typeparam name="...ActualArgs"></typeparam>
+  /// <param name="...actual_args"></param>
+  /// <returns></returns>
   template <typename... ActualArgs>
   auto operator()(ActualArgs&&... actual_args) const {
     if constexpr (dispatch_kind == kind::multiple) {
@@ -3690,7 +3723,7 @@ class dispatch_vany {
    \example _5_any_template.cpp
    \example _1_any_shape.cpp
    \example 21_Tree_any.cpp
-   \example 21_Tree_any.cpp
+   \example 21_Tree_any_dispatch.cpp
    \example 31_Animals_any_dispatch.cpp
 
 */
