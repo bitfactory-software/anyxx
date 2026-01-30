@@ -10,21 +10,19 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-namespace node {
 struct node_has_open_dispatch {};
-ANY(node, , )
-using model = any_node<shared>;
-};  // namespace node
+ANY(node, ,shared )
+
 
 struct Plus {
-  Plus(node::model left, node::model right)
+  Plus(any_node<> left, any_node<> right)
       : left_(std::move(left)), right_(std::move(right)) {}
-  node::model left_, right_;
+  any_node<> left_, right_;
 };
 struct Times {
-  Times(node::model left, node::model right)
+  Times(any_node<> left, any_node<> right)
       : left_(std::move(left)), right_(std::move(right)) {}
-  node::model left_, right_;
+  any_node<> left_, right_;
 };
 struct Integer {
   explicit Integer(int i_) : i(i_) {}
@@ -35,17 +33,17 @@ struct Integer {
 // add behavior to existing classes, without changing them
 
 //-----------------------------------------------------------------------------
-// evaluate
-dispatch<int(virtual_<node::model>)> value;
-auto __ = value.define<Plus>(
-    [](auto const& expr) { return value(expr.left_) + value(expr.right_); });
-auto __ = value.define<Times>(
-    [](auto const& expr) { return value(expr.left_) * value(expr.right_); });
-auto __ = value.define<Integer>([](auto const& expr) { return expr.i; });
+// open dispatch evaluate, returns int, dispatched via an any_node;
+dispatch<int(virtual_<any_node<>>)> evaluate;
+auto __ = evaluate.define<Plus>(
+    [](auto const& expr) { return evaluate(expr.left_) + evaluate(expr.right_); });
+auto __ = evaluate.define<Times>(
+    [](auto const& expr) { return evaluate(expr.left_) * evaluate(expr.right_); });
+auto __ = evaluate.define<Integer>([](auto const& expr) { return expr.i; });
 //
 //-----------------------------------------------------------------------------
 // render as Forth
-dispatch<std::string(virtual_<node::model>)> as_forth;
+dispatch<std::string(virtual_<any_node<>>)> as_forth;
 auto __ = as_forth.define<Plus>([](auto const& expr) {
   return as_forth(expr.left_) + " " + as_forth(expr.right_) + " +";
 });
@@ -57,7 +55,7 @@ auto __ = as_forth.define<Integer>(
 //
 //-----------------------------------------------------------------------------
 // render as Lisp
-dispatch<std::string(virtual_<node::model>)> as_lisp;
+dispatch<std::string(virtual_<any_node<>>)> as_lisp;
 auto __ = as_lisp.define<Plus>([](auto const& expr) {
   return "(plus " + as_lisp(expr.left_) + " " + as_lisp(expr.right_) + ")";
 });
@@ -76,7 +74,7 @@ namespace _21_Tree_TE_interface_dispatch {
 TEST_CASE("21_Tree any++ open method") {
   using namespace anyxx;
 
-  auto expr = node::model{std::make_shared<Times>(
+  auto expr = any_node<>{std::make_shared<Times>(
       std::make_shared<Integer>(2),
       std::make_shared<Plus>(std::make_shared<Integer>(3),
                              std::make_shared<Integer>(4)))};
@@ -87,17 +85,17 @@ TEST_CASE("21_Tree any++ open method") {
   // REQUIRE(v_table_instance<node, Times>()[1]);
   // REQUIRE(v_table_instance<node, Times>()[2]);
 
-  auto v = value(expr);
+  auto v = evaluate(expr);
   REQUIRE(v == 14);
   std::stringstream out;
-  out << as_forth(expr) << " = " << as_lisp(expr) << " = " << value(expr);
+  out << as_forth(expr) << " = " << as_lisp(expr) << " = " << evaluate(expr);
   std::cout << out.str() << "\n";
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
 
 #ifndef _DEBUG
   std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
                "/Ob2)' is used!\n";
-  BENCHMARK("21_Tree any++ open method value") { return value(expr); };
+  BENCHMARK("21_Tree any++ open method evaluate") { return evaluate(expr); };
   BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
 #endif  // !_DEBUG
 }

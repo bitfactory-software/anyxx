@@ -3280,20 +3280,32 @@ struct dispatch_matrix<DispatchMatrix, virtual_<Any>, Args...> {
 };
 
 /// <summary>
-/// Open dispatch method. Solves expression problem. See \ref dispatch<
-/// R(Args...)> for details
+/// Open dispatch method. Solves expression problem. See \ref dispatch_sig
+/// "dispatch<R(Args...)>" for details
 /// </summary>
 /// <typeparam name="R">Return type</typeparam>
 /// <typeparam name="...Args">Parameter types. The Paramters for open dispatch
 /// must be the first and braced as \ref virtual_</typeparam>
 template <typename R, typename... Args>
 class dispatch;
-/// <summary>
-/// Open dispatch method. Solves expression problem.
-/// </summary>
-/// <typeparam name="R">Return type</typeparam>
-/// <typeparam name="...Args">Parameter types. The Paramters for open dispatch
-/// must be the first and braced as \ref virtual_</typeparam>
+/// \anchor dispatch_sig
+/// \brief Open dispatch method. Solves expression problem.
+/// \tparam R(Args..) Signature of the dispatch
+///
+/// The open dispatch is managed via a sigleton object of this class. 
+/// 
+/// To declare and define a singleton use the \ref ANY_SINGLETON and \ref
+/// ANY_SINGLETON_DECLARE macros.
+/// 
+/// Each trait of the \ref any tagged as virtual, must have the open dispatch enabled.
+/// To enabele the open dispatch you have to declare a struct named 'trait_name'_has_open_dispatch.
+/// \code
+/// struct node_has_open_dispatch {};
+/// ANY(node<>, , )
+/// // open dispatch evaluate, returns int, dispatched via an any_node;
+/// dispatch<int(virtual_<any_node<>>)> evaluate;
+/// \endcode
+/// Examples are listed here \ref dispatch
 template <typename R, typename... Args>
 class dispatch<R(Args...)> {
  public:
@@ -3423,25 +3435,25 @@ class dispatch<R(Args...)> {
   dispatch_access<dispatch_kind, 0, Args...> dispatch_access_;
 
  public:
-  /// <summary>
-  /// Register a dispatch target for the model provided in the type parameter
-  /// </summary>
-  /// <typeparam name="...Classes">The models, for wich the dispatch target is provided</typeparam>
-  /// <param name="f">The dispatch target</param>
-  /// <returns>dummy</returns>
+  /// /brief Register a dispatch target for the model provided in the type
+  /// parameter
+  /// \tparam ...Classes The models, for wich the dispatch target is
+  /// \param f The dispatch target
+  /// \return dummy, but handy to use this function to initialize an auto
+  /// unnamed variable at (static) namespace scope.
   template <typename... Classes>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
         R, Classes...>::template instance<Args...>(f);
     return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
   };
-  /// <summary>
-  /// Invoke the dispatch. The called function is determined by the \ref any 's,
+  /// /brief Invoke the dispatch.
+  /// \tparam ...ActualArgs usual deduced
+  /// \param ...actual_args Arguments fullfilling the signature of this
+  /// dispatch- <returns></returns>
+  ///
+  /// The called function is determined by the \ref any 's,
   /// marked with \ref virtual_ in the class instantiation
-  /// </summary>
-  /// <typeparam name="...ActualArgs"></typeparam>
-  /// <param name="...actual_args"></param>
-  /// <returns></returns>
   template <typename... ActualArgs>
   auto operator()(ActualArgs&&... actual_args) const {
     if constexpr (dispatch_kind == kind::multiple) {
@@ -3574,17 +3586,52 @@ class dispatch_vany {
 #define ANY_UNIQUE_NAME ANY_UNIQUE_NAME_
 #define __ ANY_UNIQUE_NAME_
 
+/// \defgroup runtime_macros Runtime data macros
+/// \brief Macros to reduce boilerblate for declaring/defining static runtime
+/// Data
+///
+/// To enable some dynamic functionality (crosscast, open dispatch) there
+/// mus be some static data holding information to do this operations.
+/// Extra care must be taken in a dll scenario.
+///
+/// To reduce boilerplate code and Any++ suplies this macros
+
+/// \brief Declare access to a singleton object in a header file
+/// @param export_ To supply an export macro in a dll scenario
+/// @param name Name of the singleton
+/// @param __VARGS__ type of the singleton object
+///
+/// \ingroup runtime_macros
+/// This macro should reside insed the namespace you wish the singleton to
+/// reside. See also  ANY_SINGLETON
 #define ANY_SINGLETON_DECLARE(export_, name, ...) \
   using name##_t = __VA_ARGS__;                   \
   export_ extern name##_t& get_##name();          \
   static inline name##_t& name = get_##name();
 
+/// \brief Define a singleton object in a source file
+/// @param namespace_ the namespace for the singleton
+/// @param name of the singleton
+/// @param __VA_ARGS__ paramater for the singleton constructor
+///
+/// \ingroup runtime_macros
+/// See also \ref ANY_SINGLETON_DECLARE
 #define ANY_SINGLETON(namespace_, name, ...)       \
   namespace_::name##_t& namespace_::get_##name() { \
-    static name##_t dispatch{__VA_ARGS__};         \
-    return dispatch;                               \
+    static name##_t singleton_{__VA_ARGS__};       \
+    return singleton_;                             \
   };
 
+/// \brief Declare a singleton object for open \ref vany dispatch
+/// @param export_ To supply an export macro in a dll scenario
+/// @param name Name of the dispatch
+/// @param vany Type of \ref vany
+/// @param signature Signature of the \ref dispatch
+/// @param static_dispatch static constexpr visitor for the non any members of
+/// the \ref vany
+///
+/// \ingroup runtime_macros
+/// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE
 #define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
   constexpr static inline auto name##_static_dispatch =                       \
       anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \
@@ -3598,6 +3645,12 @@ class dispatch_vany {
       anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
                            name##_static_dispatch>)
 
+/// \brief Define a \ref vany dispatch singleton object in a source file
+/// @param namespace_ the namespace for the singleton
+/// @param name of the singleton
+///
+/// \ingroup runtime_macros
+/// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON
 #define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);
 
 #ifdef ANY_DLL_MODE
