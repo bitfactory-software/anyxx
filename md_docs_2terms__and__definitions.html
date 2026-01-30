@@ -100,7 +100,7 @@ v_table instance</h2>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
 An object derived from v_table, with no additional members, and where all members point to valid functions.</h3>
 <p>These functions are implemented via a templated constructor. The template parameter is called the <b>unerased</b> type. <br  />
- In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a <b>concept_map</b> for the unerased type. Tutorial</p>
+ In these functions, the "self" parameter is cast back to a pointer to the unerased type, and the correct function for the "unerased" type will be called. The default for the called function is a member function with the same name and signature fitting to v_table function. This behavior can be customized in a <b>model_map</b> for the unerased type. Tutorial</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 dispatch_table, dispatch_table instance, multi dispatch matrix</h2>
 <p>Similar to v_table, but if an entry is in ivolved in a <b>multi dispatch</b>, it describes the dispatch index in the <b>multi dispatch matrix</b>. The target function for the <em>multi diapatch</em> resides in the <b>multi dispatch matrix</b>.</p>
