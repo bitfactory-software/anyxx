@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['no_20additional_20members_20and_20where_20all_20members_20point_20to_20valid_20functions_0',['An object derived from v_table, with no additional members, and where all members point to valid functions.',['../md_docs_2terms__and__definitions.html#autotoc_md5',1,'']]]
+  ['performace_20compared_0',['Performace compared',['../index.html#autotoc_md20',1,'']]],
+  ['proxy_1',['proxy',['../md_docs_2terms__and__definitions.html#autotoc_md6',1,'']]],
+  ['proxy_20types_20overview_2',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_2erased__data__overview.html',1,'']]]
 ];

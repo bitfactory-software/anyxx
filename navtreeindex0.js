@@ -87,7 +87,7 @@ var NAVTREEINDEX0 =
 "group__trait__macros.html#gaff7e6ca79070dc93b6672492c05776ed":[5,0,7],
 "hierarchy.html":[7,2],
 "index.html":[],
-"index.html#autotoc_md32":[0],
+"index.html#autotoc_md16":[0],
 "md_docs_2Traits__inner__working.html":[4],
 "md_docs_2erased__data__overview.html":[1],
 "md_docs_2erased__functionality.html":[2],
