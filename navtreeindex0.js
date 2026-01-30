@@ -1,7 +1,8 @@
 var NAVTREEINDEX0 =
 {
 "21_Tree_any_8cpp-example.html":[9,5],
-"31_Animals_any_dispatch_8cpp-example.html":[9,6],
+"21_Tree_any_dispatch_8cpp-example.html":[9,6],
+"31_Animals_any_dispatch_8cpp-example.html":[9,7],
 "_1_any_shape_8cpp-example.html":[9,4],
 "_2b_trait_monoid_8cpp-example.html":[9,2],
 "_2d_trait_self_8cpp-example.html":[9,0],
@@ -16,6 +17,10 @@ var NAVTREEINDEX0 =
 "classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3":[7,0,0,2,1],
 "classanyxx_1_1any.html#a35473870adac5b3b3762e483ff878f56":[7,0,0,2,2],
 "classanyxx_1_1any.html#a440c04e593e924f0518702df4b55cf60":[7,0,0,2,0],
+"classanyxx_1_1dispatch.html":[7,0,0,6],
+"classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html":[7,0,0,7],
+"classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a1780e02d465d06adc100e5ebdc451049":[7,0,0,7,0],
+"classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c":[7,0,0,7,1],
 "classes.html":[7,1],
 "conceptanyxx_1_1has__v__table.html":[6,0,1],
 "conceptanyxx_1_1is__dyn.html":[6,0,2],
@@ -85,6 +90,7 @@ var NAVTREEINDEX0 =
 "structanyxx_1_1by__val.html":[7,0,0,0],
 "structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561":[7,0,0,0,0],
 "structanyxx_1_1unique.html":[5,1,0],
+"structanyxx_1_1virtual__.html":[7,0,0,5],
 "topics.html":[5],
 "unionanyxx_1_1val.html":[5,1,1]
 };

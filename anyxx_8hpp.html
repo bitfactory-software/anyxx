@@ -125,6 +125,10 @@ Classes</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E" id="r_anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1any.html">anyxx::any&lt; Proxy, Trait &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core class template to control dispatch for external polymorphism.  <a href="classanyxx_1_1any.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aby_5Fval_3C_20Value_20_3E" id="r_anyxx_3A_3Aby_5Fval_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val&lt; Value &gt;</a></td></tr>
+<tr class="memitem:anyxx_3A_3Avirtual_5F_3C_20Any_20_3E" id="r_anyxx_3A_3Avirtual_5F_3C_20Any_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1virtual__.html">anyxx::virtual_&lt; Any &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Indicates,that <a class="el" href="classanyxx_1_1dispatch.html" title="dispatch">dispatch</a> type parameter, must be used dispatch.  <a href="structanyxx_1_1virtual__.html#details">More...</a><br /></td></tr>
+<tr class="memitem:anyxx_3A_3Adispatch_3C_20R_28Args_2E_2E_2E_29_3E" id="r_anyxx_3A_3Adispatch_3C_20R_28Args_2E_2E_2E_29_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html">anyxx::dispatch&lt; R(Args...)&gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open dispatch method. Solves expression problem.  <a href="classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#details">More...</a><br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-concepts" class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
@@ -3320,12 +3324,13 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">                                                                            \</div>
 <div class="line"><span class="keyword">using </span>name##_vany = vany;                                                   \</div>
 <div class="line"><span class="keyword">using </span>name##_dynamic_dispatch =                                             \</div>
-<div class="line">    anyxx::dispatch&lt;_detail_REMOVE_PARENS(signature)&gt;;                      \</div>
+<div class="line">    <a class="code hl_class" href="classanyxx_1_1dispatch.html">anyxx::dispatch</a>&lt;_detail_REMOVE_PARENS(signature)&gt;;                      \</div>
 <div class="line">                                                                            \</div>
 <div class="line">ANY_SINGLETON_DECLARE(                                                      \</div>
 <div class="line">    , name,                                                                 \</div>
 <div class="line">    anyxx::dispatch_vany&lt;name##_vany, name##_dynamic_dispatch,              \</div>
 <div class="line">                         name##_static_dispatch&gt;)</div>
+<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves expression problem. See dispatch&lt; R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3290</div></div>
 </div><!-- fragment -->
 </div>
 </div>

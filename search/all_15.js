@@ -13,7 +13,8 @@ var searchData=
   ['versus_20typed_5fany_10',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md10',1,'']]],
   ['via_20vcpkg_11',['Available via vcpkg',['../index.html#autotoc_md32',1,'']]],
   ['virtual_20static_20or_20variant_12',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md30',1,'']]],
-  ['virtual_5fvoid_13',['Comparison of &lt;em&gt;erased functionality&lt;/em&gt; in &lt;span class=&quot;tt&quot;&gt;virtual_void&lt;/span&gt;',['../md_docs_2erased__functionality.html',1,'']]],
-  ['vs_20downcast_14',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
-  ['vs_20dynamic_20cast_15',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]]
+  ['virtual_5f_13',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
+  ['virtual_5fvoid_14',['Comparison of &lt;em&gt;erased functionality&lt;/em&gt; in &lt;span class=&quot;tt&quot;&gt;virtual_void&lt;/span&gt;',['../md_docs_2erased__functionality.html',1,'']]],
+  ['vs_20downcast_15',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
+  ['vs_20dynamic_20cast_16',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]]
 ];

@@ -3,6 +3,8 @@ var anyxx_8hpp =
     [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", "structanyxx_1_1any__v__table" ],
     [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", "structanyxx_1_1by__val" ],
+    [ "anyxx::virtual_&lt; Any &gt;", "structanyxx_1_1virtual__.html", null ],
+    [ "anyxx::dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4" ],
     [ "anyxx::is_proxy", "conceptanyxx_1_1is__proxy.html", null ],
     [ "anyxx::has_v_table", "conceptanyxx_1_1has__v__table.html", null ],
     [ "anyxx::is_dyn", "conceptanyxx_1_1is__dyn.html", null ],

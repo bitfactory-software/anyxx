@@ -118,9 +118,9 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">struct </span>man {</div>
 <div class="line">   [[nodiscard]]<span class="keyword">auto</span> name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> &amp;<span class="keyword">typeid</span>(*this); }</div>
 <div class="line">};</div>
-<div class="line"><span class="keyword">auto</span> encounter = anyxx::dispatch&lt;encounter_result(</div>
-<div class="line">    anyxx::virtual_&lt;any_creature&lt;anyxx::cref&gt;&gt;,</div>
-<div class="line">    anyxx::virtual_&lt;any_creature&lt;anyxx::cref&gt;&gt;)&gt;{};</div>
+<div class="line"><span class="keyword">auto</span> encounter = <a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1dispatch.html">anyxx::dispatch</a>&lt;encounter_result(</div>
+<div class="line">    <a id="_a3" name="_a3"></a><a class="code hl_struct" href="structanyxx_1_1virtual__.html">anyxx::virtual_</a>&lt;any_creature&lt;anyxx::cref&gt;&gt;,</div>
+<div class="line">    <a class="code hl_struct" href="structanyxx_1_1virtual__.html">anyxx::virtual_</a>&lt;any_creature&lt;anyxx::cref&gt;&gt;)&gt;{};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">auto</span> __ = encounter.define&lt;cat, dog&gt;(</div>
 <div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) -&gt; encounter_result {</div>
@@ -199,8 +199,10 @@ $(function(){initNavTree('31_Animals_any_dispatch_8cpp-example.html','',''); });
 <div class="line"><span class="preprocessor">#endif  </span><span class="comment">// !_DEBUG</span></div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
+<div class="ttc" id="aclassanyxx_1_1dispatch_html"><div class="ttname"><a href="classanyxx_1_1dispatch.html">anyxx::dispatch</a></div><div class="ttdoc">Open dispatch method. Solves expression problem. See dispatch&lt; R(Args...)&gt; for details.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3290</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">ANY with a base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:579</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function witch default behavior is to call an equaly named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:671</div></div>
+<div class="ttc" id="astructanyxx_1_1virtual___html"><div class="ttname"><a href="structanyxx_1_1virtual__.html">anyxx::virtual_</a></div><div class="ttdoc">Indicates,that dispatch type parameter, must be used dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3123</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

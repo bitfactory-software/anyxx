@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['val_0',['val',['../unionanyxx_1_1val.html',1,'anyxx']]]
+  ['unique_0',['unique',['../structanyxx_1_1unique.html',1,'anyxx']]]
 ];

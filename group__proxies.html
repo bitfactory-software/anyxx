@@ -181,7 +181,7 @@ template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename...
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A Proxy for mixing std::variant and type erasure Use this, when some, at compile time known types, are dispatched in a hot path. Put this types plus an any (with the specific trait and a dynamic proxy) in a std::variant. This variant is then used with a <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a> proxy and the same trait as before. See <a class="el" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562" title="make_vany">make_vany</a> So the dispatch for the types in variant is done internaly with a std::visit, and all other types are dispatch via there v-Table. Now you know, where the Any++ logo has its origin. </p>
+<p>A Proxy for mixing std::variant and type erasure Use this, when some, at compile time known types, are dispatched in a hot path. Put this types plus an any (with the specific trait and a dynamic proxy) in a std::variant. This variant is then used with a <a class="el" href="structanyxx_1_1by__val.html" title="by_val">by_val</a> proxy and the same trait as before. See <a class="el" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562" title="make_vany">make_vany</a> So the dispatch for the types in variant is done internaly with a std::visit, and all other types are dispatched via there v-Table. Now you know, where the Any++ logo has its origin. </p>
 
 </div>
 </div>

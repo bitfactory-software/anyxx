@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['trait_5fas_0',['trait_as',['../anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c',1,'anyxx']]]
+  ['operator_28_29_0',['operator()',['../classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html#a7e8628df49b55d4cfa4ef8c8c5adae2c',1,'anyxx::dispatch&lt; R(Args...)&gt;']]]
 ];
