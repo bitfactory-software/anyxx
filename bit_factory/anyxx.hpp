@@ -836,32 +836,32 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 ///  @{
 
-#define __ANY_MODEL_MAP(class_, interface_, t)                  \
-  template <>                                                   \
-  struct interface_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
-      : interface_##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
+#define __ANY_MODEL_MAP(trait_, t)                          \
+  template <>                                               \
+  struct trait_##_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)> \
+      : trait_##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(t)>
 
 /// \def ANY_TEMPLATE_MODEL_MAP
 /// \brief ANY_TEMPLATE_MODEL_MAP macro
-/// \param class_ name of the model, including template parameters and namespace
+/// \param model_ name of the model, including template parameters and namespace
 /// in brackets
-/// \param interface_ name of the trait, including namespace
+/// \param trait_ name of the trait, including namespace
 /// \param trait_types types to be used as template parameters for the trait
-/// 
+///
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
-#define ANY_TEMPLATE_MODEL_MAP(class_, trait_, trait_types) \
-  __ANY_MODEL_MAP(class_, trait_,                 \
-                  __detail_ANYXX_ADD_HEAD(class_, _detail_REMOVE_PARENS(t)))
+#define ANY_TEMPLATE_MODEL_MAP(model_, trait_, trait_types) \
+  __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(          \
+                              model_, _detail_REMOVE_PARENS(trait_types)))
 
 /// \def ANY_MODEL_MAP
 /// \brief ANY_MODEL_MAP macro
 /// \param class_ name of the model, including namespace, in brackets
 /// \param trait_ name of the trait, including namespace
-/// 
+///
 /// Must be placed in global namespace, and reachable for the instantiation of
 /// the associated v-table.
-#define ANY_MODEL_MAP(class_, trait_) __ANY_MODEL_MAP(class_, trait_, class_)
+#define ANY_MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, model_)
 /// @}
 
 #define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)     \
