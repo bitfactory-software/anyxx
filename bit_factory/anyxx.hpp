@@ -516,7 +516,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
 //
-/*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args)
+/*! \def TRAIT_TEMPLATE_(template_args, n, base, base_template_args, l)
     \brief TRAIT template with a base TRAIT
     \ingroup trait_macros
 */
@@ -668,6 +668,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT function whose default behavior is to call an equally named
    member function of the model
     \ingroup trait_macros
+
+    Example:
+    \code TRAIT(sample_trait,
+      (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
+    \endcode
 */
 #define ANY_FN(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
@@ -925,7 +930,6 @@ dispatch_table_t* dispatch_table_instance() {
 
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
-
 
 /// Basic lifetime functionality
 /** Base of all other v-tables
@@ -1263,13 +1267,13 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
 /// \brief Proxies manage the storage in an \ref any
 
 /// A Proxy for mixing std::variant and type erasure
-/// Use this, when some, at compile time known types, are dispatched in a hot
-/// path. Put this types plus an any (with the specific \ref trait and a
+/// Use this when some, at compile time, known types are dispatched in a hot
+/// path. Put these types plus an any (with the specific \ref trait and a
 /// dynamic proxy) in a std::variant. This variant is then used with a \ref
 /// by_val proxy and the same \ref trait as before. See \ref make_vany
-/// So the dispatch for the types in variant is done internaly with a
-/// std::visit, and all other types are dispatched via there v-Table. Now you
-/// know, where the Any++ logo has its origin.
+/// So the dispatch for the types in the variant is done internally with a
+/// std::visit, and all other types are dispatched via their v-Table. Now you
+/// know where the Any++ logo has its origin.
 /// \ingroup proxies
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using vany_variant = std::variant<Any<Proxy>, Types...>;
@@ -1352,11 +1356,11 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
 template <voidness Voidness>
 using observer = Voidness;
 /// Proxy to capture the dispatch target type erased by const reference
-/// An any with such a proxy is lifetime bound to the object refernced!
+/// An any with such a proxy is lifetime bound to the object referenced!
 /// \ingroup proxies
 using cref = observer<const_void>;
 /// Proxy to capture the dispatch target type erased by mutable reference
-/// An any with such a proxy is lifetime bound to the object refernced!
+/// An any with such a proxy is lifetime bound to the object referenced!
 /// \ingroup proxies
 using mutref = observer<mutable_void>;
 
@@ -1427,10 +1431,10 @@ static_assert(is_proxy<cref>);
 // erased data unique
 
 /// Proxy to manage the captured object via std::unique_ptr-like smart pointer
-/// * If you pass a std::unique_pt to the any constructor, this pointer will be
+/// * If you pass a std::unique_ptr to the any constructor, this pointer will be
 /// released and the ownership goes to the unique. NOTE: The \ref any_v_able
 /// will build with the value_type of the std::unique_ptr.
-/// * If you pass an object as second paramter, with the std::in_place tag as
+/// * If you pass an object as second parameter, with the std::in_place tag as
 /// first, this object will be moved to the memory managed by the unique.
 /// * If you pass as first parameter std::in_place_type<...>, the object will be
 /// constructed in place in the allocated memory with the other arguments
@@ -1515,7 +1519,7 @@ static_assert(is_proxy<unique>);
 /// Proxy to manage the captured object via \c std::shared_ptr.
 /// * If you pass a \c std::shared_ptr to the \ref any constructor, this pointer
 /// will be casted to \c <const void*> and used as proxy.
-/// * If you pass an object as second paramter, with the std::in_place tag as
+/// * If you pass an object as second parameter, with the std::in_place tag as
 /// first, this object will be forwarded to std::make_shared with the decayed
 /// type of object.
 /// * If you pass as first parameter std::in_place_type<T>, the other arguments
@@ -1523,7 +1527,7 @@ static_assert(is_proxy<unique>);
 /// \ingroup proxies
 using shared = std::shared_ptr<void const>;
 /// Proxy to manage the captured object via \c std::weak_ptr.
-/// Assign or copy construct it form a  \c any<shared>
+/// Assign or copy construct it from a  \c any<shared>
 /// \ingroup proxies
 using weak = std::weak_ptr<void const>;
 
@@ -1666,10 +1670,10 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 
 /// \brief Proxy to manage the captured object as value with small object
 /// optimization
-/// * If you forward an object an any constructor, this object will be forwarded
+/// * If you forward an object to any constructor, this object will be forwarded
 /// to the allocated storage.
-/// * To pass an object as second paramter, with the std::in_place tag as first,
-/// has the same behavior as above
+/// * To pass an object as second parameter, with the std::in_place tag as
+/// first, has the same behavior as above
 /// * If you pass as first parameter std::in_place_type<...>, the object will be
 /// constructed in place in the allocated memory with the other arguments
 /// forwarded
@@ -1962,29 +1966,6 @@ struct v_table_holder<false, Trait> {
   static void init_v_table() {}
   static auto release_v_table() { return nullptr; }
 };
-// template <>
-// struct v_table_holder<true, base_trait> {
-//   v_table_holder() = default;
-//   explicit v_table_holder(any_v_table* v_table) : v_table_(v_table) {}
-//   void set_v_table_ptr(any_v_table* v_table) { v_table_ = v_table; }
-//   using v_table_t = any_v_table;
-//   v_table_t* v_table_ = nullptr;
-//   // cppcheck-suppress-begin [functionConst, functionStatic]
-//   template <typename Derived>
-//   auto get_v_table_ptr(this Derived const& self) {  // NOLINT
-//     static_assert(std::derived_from<typename Derived::v_table_t, v_table_t>);
-//     return static_cast<typename Derived::v_table_t*>(self.v_table_);
-//   }
-//   // cppcheck-suppress-end [functionConst, functionStatic]
-//   template <typename Proxy, typename Concrete, typename Self>
-//   void init_v_table(this Self& self) {
-//     using derived_v_table_t = typename Self::v_table_t;
-//     self.v_table_ = v_table_instance<derived_v_table_t,
-//                                      anyxx::unerased<Proxy,
-//                                      Concrete>>();
-//   }
-//   auto release_v_table() { return std::exchange(v_table_, nullptr); }
-// };
 
 template <typename VTable>
 void set_is_derived_from(auto v_table) {
@@ -2291,28 +2272,29 @@ static_assert(!moveable_from<val, shared>);
 static_assert(!moveable_from<val, weak>);
 static_assert(moveable_from<val, val>);
 
-/** \brief The core class template to control dispatch for external
- * polymorphism.
- *
- * To control the behavior, any provides two template parameters: \ref Proxy
- * and \ref Trait. Imagine this as a combination of a std::any and several
- * std::functions.
- *
- * With the Proxy template parameter, you control whether this any behaves
- * like a copying function, a move-only function, a reference function, or if
- * the target object is captured concretely inside of any.
- *
- * With the Trait template parameter, you specify the member functions of a
- * captured object which can be invoked on this any.
- *
- * @tparam Proxy Specifies the lifetime of the captured object. Any++ provides
- * \ref by_val, \ref cref, \ref mutref \ref shared, \ref weak, \ref unique and
- * \ref value. All Proxy classes must conform to the \ref is_proxy concept.
- * @tparam Trait Specifies the functionality of this any. A class of this type
- * is normally provided via a \ref TRAIT or \ref ANY macro. See there for
- * examples. If the proxy is dynamic (=type erased) the Trait must
- * conform to the \ref has_v_table concept (that means: must provide a v-Table).
- */
+/// \brief The core class template to control dispatch for external
+/// polymorphism.
+///
+/// To control the behavior, `any` provides two template parameters: \ref Proxy
+/// and \ref Trait. Imagine this as a combination of a `std::any` and several
+/// `std::function`s.
+///
+/// With the Proxy template parameter, you control whether this `any` behaves
+/// like a copying function, a move-only function, a reference function, or if
+/// the target object is captured concretely inside of `any`.
+///
+/// With the Trait template parameter, you specify the member functions of a
+/// captured object which can be invoked on this `any`.
+///
+/// \tparam Proxy Specifies the lifetime of the captured object. Any++ provides
+/// \ref by_val, \ref cref, \ref mutref, \ref shared, \ref weak, \ref unique,
+/// and
+/// \ref value. All Proxy classes must conform to the \ref is_proxy concept.
+/// \tparam Trait Specifies the functionality of this any. A class of this type
+/// is normally provided via a \ref TRAIT or \ref ANY macro. See there for
+/// examples. If the proxy is dynamic (i.e., type erased), the Trait must
+/// conform to the \ref has_v_table concept (that means: must provide a
+/// v-Table).
 template <is_proxy Proxy, typename Trait>
 class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:
@@ -2331,11 +2313,10 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
-  /// Type erasing constructor, the concrete behavior is controled by the proxy
-  /// via its corresponding /ref proxy_trait.
-  /// See  \ref by_val, \ref cref, \ref mutref \ref shared, \ref weak, \ref
-  /// unique and
-  /// \ref value.
+  /// Type-erasing constructor. The concrete behavior is controlled by the proxy
+  /// via its corresponding \ref proxy_trait.
+  /// See \ref by_val, \ref cref, \ref mutref, \ref shared, \ref weak, \ref
+  /// unique, and \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, Proxy> &&
@@ -2345,16 +2326,22 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
   }
   // cppcheck-suppress-end noExplicitConstructor
-  /// Type erasing constructor, the concrete behavior is controled by the proxy
-  /// @V wil be forwarded to the managed storage
+  /// Type-erasing constructor. The concrete behavior is controlled by the
+  /// proxy. The value `v` will be forwarded to the managed storage.
+  /// \tparam V The type of the object to be forwarded into the managed storage.
+  /// Usually deduced.
+  /// \param std::in_place_t Tag to select in-place construction. (On call site,
+  /// use `std::in_place`.)
+  /// \param v The object to be forwarded into the managed storage.
   template <typename V>
   any(std::in_place_t, V&& v)
       : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<Proxy, V>();
   }
   /// Type erasing constructor, the concrete behavior is controled by the proxy
-  /// @T wil be used to construct the object in the managed storage with
-  /// forwarded @args
+  /// \param std::in_place_type_t<T> Tag to select in-place construction of `T`
+  /// \param args The arguments to construct the object of type T with, will be
+  /// forwarded.
   template <typename T, typename... Args>
   any(std::in_place_type_t<T>, Args&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
@@ -2532,10 +2519,11 @@ inline To unchecked_downcast_to(From from)
 }
 
 /// \defgroup casts Casts
-/// \brief Mix and match downcast, crosscast and get \ref any with other \ref
-/// proxies
+/// \brief Mix and match downcast, crosscast, and obtain \ref any with other
+/// \ref proxies.
 
-/// \brief Safe downcast to derived trait via runtime info from the v-Tables
+/// \brief Safe downcast to a derived trait using runtime information from the
+/// v-Tables.
 /// \ingroup casts
 template <is_any To, is_any From>
 inline std::optional<To> downcast_to(From from)
@@ -2550,14 +2538,16 @@ template <typename U, is_any Any>
 inline auto unchecked_unerase_cast(Any const& o) {
   return unchecked_unerase_cast<U>(get_proxy(o), get_v_table(o));
 }
-/// \brief Safe downcast to unerased type via runtime info from the v-Tables
+/// \brief Safe downcast to an unerased type using runtime information from the
+/// v-Tables.
 /// \ingroup casts
 template <typename U, typename Any>
   requires is_any<Any> && Any::dyn
 inline auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_proxy(o), get_v_table(o));
 }
-/// \brief Safe downcast to unerased type via runtime info from the v-Tables
+/// \brief Safe downcast to an unerased type using runtime information from the
+/// v-Tables.
 /// \ingroup casts
 template <typename U, typename Any>
   requires is_any<Any> && Any::dyn
@@ -2566,16 +2556,16 @@ inline auto unerase_cast_if(Any const& o) {
 }
 
 /// Proxy to capture the dispatch target concrete to enable static dispatch
-/// A simple warpper class over an object. Use \c '&' and \c 'const &' to
+/// A simple wrapper class over an object. Use \c '&' and \c 'const &' to
 /// capture by reference.
 ///
 /// Usage:
-/// * Use the model map as static customization point.
-/// * Use \c by_val<std::variant<....>> to unify customization points and member
-///   function like invocation
+/// * Use the model map as a static customization point.
+/// * Use \c by_val<std::variant<...>> to unify customization points and member
+///   function-like invocation.
 /// * Use with \ref vany_variant.
 ///
-/// @tparam Value The caputured value
+/// \tparam Value The captured value
 template <typename Value>
 struct by_val {
   template <typename V>
@@ -2584,15 +2574,16 @@ struct by_val {
   Value value_;
   using value_t = Value;
   operator Value() const { return value_; }
-  /// Helper typedef template to \ref trait a model with an \ref any.
+  /// Helper type alias template to trait a model with an \ref any.
   /// See also \ref trait_as.
+  template <typename Trait>
   template <typename Trait>
   using as = any<by_val<Value>, Trait>;
 };
 
-/// A factory function to bind an object as model to an \ref any with a \ref
-/// trait
-/// See alse \ref by_val::as
+/// A factory function to bind an object as a model to an \ref any with a \ref
+/// trait.
+/// See also \ref by_val::as.
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
   return any<anyxx::by_val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
@@ -2863,8 +2854,8 @@ std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
   });
 }
 
-/// \brief Safe crosscast via runtime info to an other any without changing the
-/// ownership.
+/// \brief Safe crosscast via runtime information to another \ref any without
+/// changing the ownership.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
   requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t>
@@ -2881,7 +2872,7 @@ std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   }
 }
 
-/// \brief Clone via runtime info.
+/// \brief Clone via runtime information.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
 std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
@@ -2906,8 +2897,8 @@ auto lock(FromAny const& from_interface) {
   return return_t{};
 }
 
-/// \brief Move ownership to an other \ref any. Uses runtime info to crosscast,
-/// if neccessary.
+/// \brief Move ownership to another \ref any. Uses runtime information to
+/// crosscast, if necessary.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from) {
@@ -2918,6 +2909,7 @@ ToAny move_to(FromAny&& from) {
 // --------------------------------------------------------------------------------
 // hook
 
+/// \brief A class template to implement a hook/callback chain.
 template <typename R, typename... Args>
 class hook;
 template <typename R, typename... Args>
@@ -3000,6 +2992,7 @@ class hook<R(Args...)> {
 class unkonwn_factory_key_error : public error {
   using error::error;
 };
+/// \brief A key type for factory registration.
 template <typename Tag>
 struct key {
   const char* label;
@@ -3012,6 +3005,7 @@ struct is_key_impl<key<T>> : std::true_type {};
 template <typename T>
 concept is_key = is_key_impl<T>::value;
 
+/// \brief A class template to implement a factory for \ref any objects.
 template <template <typename...> typename Any, typename Key, typename... Args>
 class factory {
   using unique_constructor_t = std::function<Any<unique>(Args...)>;
@@ -3072,6 +3066,7 @@ std::size_t& members_count() {
 }
 #endif
 
+/// \brief A class template to implement extension members.
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
@@ -3120,6 +3115,7 @@ struct member {
 template <typename AnyVTable>
 std::size_t& dispatchs_count();
 #else
+/// \brief A counter for dispatch tables per v-table type.
 template <typename AnyVTable>
 std::size_t& dispatchs_count() {
   static std::size_t count = 0;
@@ -3127,10 +3123,10 @@ std::size_t& dispatchs_count() {
 }
 #endif
 
-/// <summary>
-/// Indicates,that \ref dispatch type parameter, must be used dispatch.
-/// </summary>
-/// <typeparam name="Any">The \ref any used for dispatch</typeparam>
+/// \brief A tag to indicate that the corresponding function parameter is an
+/// \ref any used for dispatch.
+///
+/// \tparam Any The \ref any used for dispatch
 template <is_any Any>
 struct virtual_ {
   using type = Any;
@@ -3291,26 +3287,27 @@ struct dispatch_matrix<DispatchMatrix, virtual_<Any>, Args...> {
       typename dispatch_matrix<std::vector<DispatchMatrix>, Args...>::type;
 };
 
-/// <summary>
-/// Open dispatch method. Solves expression problem. See \ref dispatch_sig
-/// "dispatch<R(Args...)>" for details
-/// </summary>
-/// <typeparam name="R">Return type</typeparam>
-/// <typeparam name="...Args">Parameter types. The Paramters for open dispatch
-/// must be the first and braced as \ref virtual_</typeparam>
+/// \brief Open dispatch method. Solves the expression problem. See \ref
+/// dispatch_sig "dispatch<R(Args...)>" for details.
+///
+/// \tparam R Return type.
+/// \tparam ...Args Parameter types. The parameters for open dispatch
+/// must be the first and braced as \ref virtual_.
 template <typename R, typename... Args>
 class dispatch;
 /// \anchor dispatch_sig
-/// \brief Open dispatch method. Solves expression problem.
-/// \tparam R(Args..) Signature of the dispatch
+/// \brief Open dispatch method. Solves the expression problem.
+/// \tparam R The return type.
+/// \tparam Args The parameter types. The signature of the dispatch is
+/// R(Args...).
 ///
-/// The open dispatch is managed via a sigleton object of this class.
+/// The open dispatch is managed via a singleton object of this class.
 ///
-/// To declare and define a singleton use the \ref ANY_SINGLETON and \ref
+/// To declare and define a singleton, use the \ref ANY_SINGLETON and \ref
 /// ANY_SINGLETON_DECLARE macros.
 ///
-/// Each trait of the \ref any tagged as virtual, must have the open dispatch
-/// enabled. To enabele the open dispatch you have to declare a struct named
+/// Each trait of the \ref any tagged as virtual must have open dispatch
+/// enabled. To enable open dispatch, declare a struct named
 /// 'trait_name'_has_open_dispatch.
 /// \code
 /// struct node_has_open_dispatch {};
@@ -3318,7 +3315,7 @@ class dispatch;
 /// // open dispatch evaluate, returns int, dispatched via an any_node;
 /// dispatch<int(virtual_<any_node<>>)> evaluate;
 /// \endcode
-/// Examples are listed here \ref dispatch
+/// Examples are listed here: \ref dispatch
 template <typename R, typename... Args>
 class dispatch<R(Args...)> {
  public:
@@ -3448,25 +3445,25 @@ class dispatch<R(Args...)> {
   dispatch_access<dispatch_kind, 0, Args...> dispatch_access_;
 
  public:
-  /// /brief Register a dispatch target for the model provided in the type
-  /// parameter
-  /// \tparam ...Classes The models, for wich the dispatch target is
-  /// \param f The dispatch target
-  /// \return dummy, but handy to use this function to initialize an auto
-  /// unnamed variable at (static) namespace scope.
+  /// \brief Register a dispatch target for the model provided in the type
+  /// parameter.
+  /// \tparam Classes The models for which the dispatch target is registered.
+  /// \param f The dispatch target.
+  /// \return Dummy value, useful for initializing an auto unnamed variable at
+  /// (static) namespace scope.
   template <typename... Classes>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
         R, Classes...>::template instance<Args...>(f);
     return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
   };
-  /// /brief Invoke the dispatch.
-  /// \tparam ...ActualArgs usual deduced
-  /// \param ...actual_args Arguments fullfilling the signature of this
-  /// dispatch- <returns></returns>
+  /// \brief Invoke the dispatch.
+  /// \tparam ActualArgs The deduced argument types for the dispatch call.
+  /// \param actual_args Arguments fulfilling the signature of this dispatch.
+  /// \return The result of the dispatched function call.
   ///
-  /// The called function is determined by the \ref any 's,
-  /// marked with \ref virtual_ in the class instantiation
+  /// The called function is determined by the \ref any objects
+  /// marked with \ref virtual_ in the class instantiation.
   template <typename... ActualArgs>
   auto operator()(ActualArgs&&... actual_args) const {
     if constexpr (dispatch_kind == kind::multiple) {
@@ -3600,51 +3597,51 @@ class dispatch_vany {
 #define __ ANY_UNIQUE_NAME_
 
 /// \defgroup runtime_macros Runtime data macros
-/// \brief Macros to reduce boilerblate for declaring/defining static runtime
-/// Data
+/// \brief Macros to reduce boilerplate for declaring/defining static runtime
+/// data.
 ///
 /// To enable some dynamic functionality (crosscast, open dispatch) there
-/// mus be some static data holding information to do this operations.
-/// Extra care must be taken in a dll scenario.
+/// must be some static data holding information to perform these operations.
+/// Extra care must be taken in a DLL scenario.
 ///
-/// To reduce boilerplate code and Any++ suplies this macros
+/// To reduce boilerplate code, Any++ supplies these macros.
 
-/// \brief Declare access to a singleton object in a header file
-/// @param export_ To supply an export macro in a dll scenario
-/// @param name Name of the singleton
-/// @param __VARGS__ type of the singleton object
+/// \brief Declare access to a singleton object in a header file.
+/// \param export_ To supply an export macro in a DLL scenario.
+/// \param name Name of the singleton.
+/// \param __VA_ARGS__ Type of the singleton object.
 ///
 /// \ingroup runtime_macros
-/// This macro should reside insed the namespace you wish the singleton to
-/// reside. See also  ANY_SINGLETON
+/// This macro should reside inside the namespace you wish the singleton to
+/// reside. See also \ref ANY_SINGLETON.
 #define ANY_SINGLETON_DECLARE(export_, name, ...) \
   using name##_t = __VA_ARGS__;                   \
   export_ extern name##_t& get_##name();          \
   static inline name##_t& name = get_##name();
 
-/// \brief Define a singleton object in a source file
-/// @param namespace_ the namespace for the singleton
-/// @param name of the singleton
-/// @param __VA_ARGS__ paramater for the singleton constructor
+/// \brief Define a singleton object in a source file.
+/// \param namespace_ The namespace for the singleton.
+/// \param name Name of the singleton.
+/// \param __VA_ARGS__ Parameters for the singleton constructor.
 ///
 /// \ingroup runtime_macros
-/// See also \ref ANY_SINGLETON_DECLARE
+/// See also \ref ANY_SINGLETON_DECLARE.
 #define ANY_SINGLETON(namespace_, name, ...)       \
   namespace_::name##_t& namespace_::get_##name() { \
     static name##_t singleton_{__VA_ARGS__};       \
     return singleton_;                             \
   };
 
-/// \brief Declare a singleton object for open \ref vany dispatch
-/// @param export_ To supply an export macro in a dll scenario
-/// @param name Name of the dispatch
-/// @param vany Type of \ref vany
-/// @param signature Signature of the \ref dispatch
-/// @param static_dispatch static constexpr visitor for the non any members of
-/// the \ref vany
+/// \brief Declare a singleton object for open \ref vany dispatch.
+/// \param export_ To supply an export macro in a DLL scenario.
+/// \param name Name of the dispatch.
+/// \param vany Type of \ref vany.
+/// \param signature Signature of the \ref dispatch.
+/// \param static_dispatch Static constexpr visitor for the non-any members of
+///        the \ref vany.
 ///
 /// \ingroup runtime_macros
-/// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE
+/// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
 #define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
   constexpr static inline auto name##_static_dispatch =                       \
       anyxx::overloads{_detail_REMOVE_PARENS(static_dispatch)};               \
@@ -3658,12 +3655,12 @@ class dispatch_vany {
       anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
                            name##_static_dispatch>)
 
-/// \brief Define a \ref vany dispatch singleton object in a source file
-/// @param namespace_ the namespace for the singleton
-/// @param name of the singleton
+/// \brief Define a \ref vany dispatch singleton object in a source file.
+/// \param namespace_ The namespace for the singleton.
+/// \param name Name of the singleton.
 ///
 /// \ingroup runtime_macros
-/// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON
+/// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON.
 #define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);
 
 #ifdef ANY_DLL_MODE
