@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['performace_20compared_0',['Performace compared',['../index.html#autotoc_md20',1,'']]],
+  ['performace_20compared_0',['Performace compared',['../index.html#autotoc_md24',1,'']]],
   ['proxies_1',['Proxies',['../group__proxies.html',1,'']]],
-  ['proxy_2',['proxy',['../md_docs_2terms__and__definitions.html#autotoc_md6',1,'']]],
-  ['proxy_20types_20overview_3',['Any++ &lt;em&gt;Proxy&lt;/em&gt; types overview',['../md_docs_2erased__data__overview.html',1,'']]]
+  ['proxy_2',['proxy',['../md_docs_2terms__and__definitions.html#autotoc_md10',1,'']]],
+  ['proxy_20s_3',['Any++ Type Ersaed *Proxy*s',['../md_docs_2Proxy__overview.html',1,'']]]
 ];

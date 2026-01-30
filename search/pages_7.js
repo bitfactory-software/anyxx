@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['functionality_20in_20virtual_5fvoid_0',['Comparison of &lt;em&gt;erased functionality&lt;/em&gt; in &lt;span class=&quot;tt&quot;&gt;virtual_void&lt;/span&gt;',['../md_docs_2erased__functionality.html',1,'']]]
+  ['generated_20code_0',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md19',1,'']]]
 ];

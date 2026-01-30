@@ -1,6 +1,12 @@
 var searchData=
 [
-  ['upcast_20vs_20downcast_0',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md9',1,'']]],
-  ['usage_1',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md17',1,'']]],
-  ['useage_20in_20cmakelists_20txt_3a_2',['Useage in CMakeLists.txt:',['../index.html#autotoc_md19',1,'']]]
+  ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md7',1,'']]],
+  ['v_5ftable_20instance_1',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md8',1,'']]],
+  ['variant_2',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md20',1,'']]],
+  ['vcpkg_3',['Available via vcpkg',['../index.html#autotoc_md22',1,'']]],
+  ['versus_20typed_5fany_4',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]],
+  ['via_20vcpkg_5',['Available via vcpkg',['../index.html#autotoc_md22',1,'']]],
+  ['virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md20',1,'']]],
+  ['vs_20downcast_7',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
+  ['vs_20dynamic_20cast_8',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]]
 ];

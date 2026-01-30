@@ -1,6 +1,13 @@
 var searchData=
 [
-  ['showcase_201_3a_20basic_20any_20usage_0',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md17',1,'']]],
-  ['static_20cast_20vs_20dynamic_20cast_1',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md8',1,'']]],
-  ['static_20or_20variant_2',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md16',1,'']]]
+  ['terms_20and_20definitions_20in_20context_20of_20this_20library_0',['Terms and Definitions in Context of This Library',['../md_docs_2terms__and__definitions.html',1,'']]],
+  ['the_20generated_20code_1',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md19',1,'']]],
+  ['the_20inner_20working_20of_20traits_20in_20any_2',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
+  ['this_20library_3',['Terms and Definitions in Context of This Library',['../md_docs_2terms__and__definitions.html',1,'']]],
+  ['to_20trait_20any_20virtual_20static_20or_20variant_4',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md20',1,'']]],
+  ['trait_20any_20virtual_20static_20or_20variant_5',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md20',1,'']]],
+  ['traits_20in_20any_6',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
+  ['txt_3a_7',['Useage in CMakeLists.txt:',['../index.html#autotoc_md23',1,'']]],
+  ['type_20ersaed_20proxy_20s_8',['Any++ Type Ersaed *Proxy*s',['../md_docs_2Proxy__overview.html',1,'']]],
+  ['typed_5fany_9',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]]
 ];

@@ -91,20 +91,20 @@ $(function(){initNavTree('md_docs_2terms__and__definitions.html','',''); });
   <div class="headertitle"><div class="title">Terms and Definitions in Context of This Library </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md2"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md3"></a>
+<div class="textblock"><p><a class="anchor" id="autotoc_md6"></a></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
 v_table</h2>
 <p>An object whose members are function pointers, and every function has as <b>its first parameter <span class="tt">self</span></b>. This is a pointer to (eventually <em>const</em>) <span class="tt">void</span>. The <span class="tt">v_table</span> points to a <span class="tt">meta_data</span> object and optionally to an <span class="tt">m_table</span>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md4"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
 v_table instance</h2>
 <p>An object derived from <span class="tt">v_table</span>, with no additional members, and where all members point to valid functions.</p>
 <p>These functions are implemented via a templated constructor. The template parameter is called the <b>unerased</b> type. <br  />
  In these functions, the <span class="tt">self</span> parameter is cast back to a pointer to the unerased type, and the correct function for the unerased type will be called. By default, the called function is a member function with the same name and signature as the <span class="tt">v_table</span> function. This behavior can be customized in a <b>model_map</b> for the unerased type. Tutorial</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md5"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
 open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix</h2>
 <p>When an <span class="tt">any</span> is enabled for <b>open dispatch</b> (see <a href="https://en.wikipedia.org/wiki/Multiple_dispatch">open multi-methods</a>), its <span class="tt">v_table</span> instance holds a pointer to a <b>dispatch table</b>. An open dispatch <b>dispatch</b> singleton object holds an index for each involved <b>v_table</b>. If the dispatch is only on one <b>v_table</b>, the dispatch table holds direct pointers to the target functions at that index. If the dispatch is on multiple <b>v_table**s, the dispatch table holds the dispatch index in the **multi dispatch matrix</b>. The target function for the <em>multi dispatch</em> resides in this case in the <b>multi dispatch matrix</b>.</p>
 <p>Any++'s open <span class="tt">dispatch</span> class is a recipe to solve the <a href="https://en.wikipedia.org/wiki/Expression_problem">expression problem</a>.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md6"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
 proxy</h2>
 <p>A concept describing an object that manages access to the object associated with the <b>any</b>.</p>
 <p>A <span class="tt">proxy</span> can be a concrete object or a type-erased handle to an object.</p>
@@ -117,11 +117,11 @@ proxy</h2>
 <li><span class="tt">unique</span>: Ownership equivalent to <span class="tt">std::unique_ptr</span>. The delivered address is a pointer to a <em>mutable</em> object.</li>
 <li><span class="tt">val</span>: Every value object holds its own copy. Same semantics as <span class="tt">int</span>. The delivered <em>void</em> pointer is <em>mutable</em>. The storage has Small Object Optimization (SOO).</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md7"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
 'any' Versus 'typed_any'</h2>
 <p>An <span class="tt">any</span> combines a <b>v_table</b> with a <b>proxy</b>.</p>
 <p>A <span class="tt">typed_any</span> is a convenience wrapper of an <span class="tt">any</span> for the <b>unerased</b> type.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md8"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
 Static Cast vs Dynamic Cast</h2>
 <p>A <em>static cast</em>:</p><ul>
 <li>Is enforced by the language type rules and always checked by the compiler.</li>
@@ -135,24 +135,24 @@ Static Cast vs Dynamic Cast</h2>
 <li>All dynamic casts are safe.</li>
 <li>Dynamic casts have a runtime cost.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md9"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md13"></a>
 'Upcast' vs 'Downcast'</h2>
 <p>An <em>upcast</em> is a conversion from a more detailed type to a more general one.</p>
 <p>A <em>downcast</em> is a conversion from a more general type to a more detailed one.</p>
 <p>For upcasts and downcasts, the types must be related within the language rules. <br  />
  Static downcasts are guesses and as such unsafe. Dynamic downcasts are by definition safe and a kind of <em>type query</em>. <span class="tt">Anyxx</span> supports dynamic downcasts between related types.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md10"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md14"></a>
 Lifetime Cast</h2>
 <p>A <b>proxy</b> can receive the content of another <b>proxy</b> with a different <b>lifetime</b> within certain rules. Three ways, three rules:</p><ul>
 <li><em>borrow</em>: Assignment does not change ownership or constness.</li>
 <li><em>move</em>: Left hand can hold ownership, right hand has ownership, left hand is const or right hand is mutable.</li>
 <li><em>clone</em>: Left hand can hold ownership.</li>
 </ul>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md11"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md15"></a>
 Crosscast</h2>
 <p>While <em>upcasts</em> and <em>downcasts</em> are within related types, <em>crosscasts</em> are between unrelated types.</p>
 <p>A <b>crosscast</b> usually tests if one <span class="tt">trait</span> can be reached from another <span class="tt">trait</span>, and if so, provides access to it. To enable a <b>crosscast</b> to a certain <span class="tt">trait</span> for an object, the target trait's <b>v_table instance</b> must be registered for that object's class. This is done with the <span class="tt">ANY_MODEL...</span> macros.</p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md12"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md16"></a>
 Extension Members</h2>
 <p>An <b>extension member</b> behaves like a <span class="tt">struct</span>, where you can add data members without changing the definition of that <span class="tt">struct</span>.</p>
 <p>This could be trivially implemented by a map from some kind of tag to an <span class="tt">std::any</span>. <br  />
