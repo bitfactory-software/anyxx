@@ -118,7 +118,7 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_5Fv_5Ftable" id="r_anyxx_3A_3Aany_5Fv_5Ftable"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1any__v__table.html">anyxx::any_v_table</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic liftime functionality.  <a href="structanyxx_1_1any__v__table.html#details">More...</a><br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic lifetime functionality.  <a href="structanyxx_1_1any__v__table.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aunique" id="r_anyxx_3A_3Aunique"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1unique.html">anyxx::unique</a></td></tr>
 <tr class="memitem:anyxx_3A_3Aval" id="r_anyxx_3A_3Aval"><td class="memItemLeft">union &#160;</td><td class="memItemRight"><a class="el" href="unionanyxx_1_1val.html">anyxx::val</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy to manage the captured object as value with small object optimization.  <a href="unionanyxx_1_1val.html#details">More...</a><br /></td></tr>
@@ -137,7 +137,7 @@ Concepts</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Ahas_5Fv_5Ftable" id="r_anyxx_3A_3Ahas_5Fv_5Ftable"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptanyxx_1_1has__v__table.html">anyxx::has_v_table</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a trait type. <br /></td></tr>
 <tr class="memitem:anyxx_3A_3Ais_5Fdyn" id="r_anyxx_3A_3Ais_5Fdyn"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a dynamic, (= type erased) Proxy. <br /></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a dynamic (i.e., type-erased) Proxy. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -285,26 +285,26 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga73e339005a697eb20b243d1622873b99"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function with default behavior.  <br /></td></tr>
 <tr class="memitem:a7947e9eac1a7dc9b2c50276681801743" id="r_a7947e9eac1a7dc9b2c50276681801743"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7947e9eac1a7dc9b2c50276681801743">ANY_FN_DEF_EXACT</a>(ret,  name,  params,  const_, ...)</td></tr>
 <tr class="memitem:ga6a5835dfafdaede08be54515be1208a8" id="r_ga6a5835dfafdaede08be54515be1208a8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(ret,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga6a5835dfafdaede08be54515be1208a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memdesc:ga6a5835dfafdaede08be54515be1208a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function whose default behavior is to call an equally named member function of the model.  <br /></td></tr>
 <tr class="memitem:gaf7331be98b802b62e63563ce10b3cddf" id="r_gaf7331be98b802b62e63563ce10b3cddf"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gaf7331be98b802b62e63563ce10b3cddf">ANY_FN_EXACT</a>(ret,  name,  params,  const_)</td></tr>
-<tr class="memdesc:gaf7331be98b802b62e63563ce10b3cddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memdesc:gaf7331be98b802b62e63563ce10b3cddf"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function whose default behavior is to call an equally named member function of the model.  <br /></td></tr>
 <tr class="memitem:gaff7e6ca79070dc93b6672492c05776ed" id="r_gaff7e6ca79070dc93b6672492c05776ed"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gaff7e6ca79070dc93b6672492c05776ed">ANY_FN_OVERLOAD</a>(ret,  name,  params,  const_)</td></tr>
-<tr class="memdesc:gaff7e6ca79070dc93b6672492c05776ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memdesc:gaff7e6ca79070dc93b6672492c05776ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function whose default behavior is to call an equally named member function of the model.  <br /></td></tr>
 <tr class="memitem:ga3e26c93a4eb0d32d3859137998f542a9" id="r_ga3e26c93a4eb0d32d3859137998f542a9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga3e26c93a4eb0d32d3859137998f542a9">ANY_FN_OVERLOAD_EXACT</a>(ret,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga3e26c93a4eb0d32d3859137998f542a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function witch default behavior is to call an equaly named member function of the model.  <br /></td></tr>
+<tr class="memdesc:ga3e26c93a4eb0d32d3859137998f542a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT function whose default behavior is to call an equally named member function of the model.  <br /></td></tr>
 <tr class="memitem:ga055c58c6bfff95137a1534024dc0813d" id="r_ga055c58c6bfff95137a1534024dc0813d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga055c58c6bfff95137a1534024dc0813d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map.  <br /></td></tr>
+<tr class="memdesc:ga055c58c6bfff95137a1534024dc0813d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer chosen name in map.  <br /></td></tr>
 <tr class="memitem:a13ac2582b41ea1a73ddb22d6a2acb4ce" id="r_a13ac2582b41ea1a73ddb22d6a2acb4ce"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(ret,  op,  params,  const_)</td></tr>
 <tr class="memitem:gabcbc5dedec9f5a6f2eed6e0959472af4" id="r_gabcbc5dedec9f5a6f2eed6e0959472af4"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gabcbc5dedec9f5a6f2eed6e0959472af4">ANY_OP_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
 <tr class="memdesc:gabcbc5dedec9f5a6f2eed6e0959472af4"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
 <tr class="memitem:ga31d722491c45e2315823f0eb3ebe541c" id="r_ga31d722491c45e2315823f0eb3ebe541c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
-<tr class="memdesc:ga31d722491c45e2315823f0eb3ebe541c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and an programmer choosen name in map.  <br /></td></tr>
+<tr class="memdesc:ga31d722491c45e2315823f0eb3ebe541c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer chosen name in map.  <br /></td></tr>
 <tr class="memitem:ga7d46ca8afdfbcc0c3103f0dedb9710d5" id="r_ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga7d46ca8afdfbcc0c3103f0dedb9710d5">ANY_OP_EXACT</a>(ret,  op,  params,  const_)</td></tr>
-<tr class="memdesc:ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer choosen name in map.  <br /></td></tr>
+<tr class="memdesc:ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model and a programmer chosen name in map.  <br /></td></tr>
 <tr class="memitem:ga5c441142284f6dad13de59245b656628" id="r_ga5c441142284f6dad13de59245b656628"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga5c441142284f6dad13de59245b656628">ANY_OP_EXACT_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
 <tr class="memdesc:ga5c441142284f6dad13de59245b656628"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:gabc1702b86750b11ed590d64e42d151e3" id="r_gabc1702b86750b11ed590d64e42d151e3"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
-<tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and an programmer choosen name in map.  <br /></td></tr>
+<tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer chosen name in map.  <br /></td></tr>
 <tr class="memitem:gad1214e29f913c519ecf9f4b1e9934fa8" id="r_gad1214e29f913c519ecf9f4b1e9934fa8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gad1214e29f913c519ecf9f4b1e9934fa8">ANY_OP_EXACT_OVERLOAD</a>(ret,  op,  params,  const_)</td></tr>
 <tr class="memdesc:gad1214e29f913c519ecf9f4b1e9934fa8"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:ga2ec66b211ef38c2274fd0c00155f89d2" id="r_ga2ec66b211ef38c2274fd0c00155f89d2"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga2ec66b211ef38c2274fd0c00155f89d2">ANY_OP_EXACT_OVERLOAD_DEF</a>(ret,  op,  name,  params,  const_, ...)</td></tr>
@@ -2906,7 +2906,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">    any_template_params_with_defaults)&gt;                                   \</div>
 <div class="line"><span class="keyword">using </span>any_##n = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \</div>
 <div class="line">                                      pure_template_params)&gt;;</div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2320</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2322</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2961,7 +2961,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a>(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, const_)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga055c58c6bfff95137a1534024dc0813d"><div class="ttname"><a href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior is to call the related operator of the model and a programmer ch...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:714</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga055c58c6bfff95137a1534024dc0813d"><div class="ttname"><a href="group__trait__macros.html#ga055c58c6bfff95137a1534024dc0813d">ANY_OP_MAP_NAMED</a></div><div class="ttdeci">#define ANY_OP_MAP_NAMED(ret, op, name, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior is to call the related operator of the model and a programmer ch...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:719</div></div>
 </div><!-- fragment -->
 </div>
 </div>
