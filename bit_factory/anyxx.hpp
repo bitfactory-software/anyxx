@@ -516,7 +516,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
 //
-/*! \def TRAIT_TEMPLATE_(template_args, n, base, fns, base_template_args)
+/*! \def TRAIT_TEMPLATE_(template_args, n, base, base_template_args, l)
     \brief TRAIT template with a base TRAIT
     \ingroup trait_macros
 */
@@ -668,6 +668,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     \brief TRAIT function whose default behavior is to call an equally named
    member function of the model
     \ingroup trait_macros
+            
+    Example:
+    \code TRAIT(sample_trait,
+      (ANY_FN(std::string, const_fn,(double, std::string const&), const)))
+    \endcode
 */
 #define ANY_FN(ret, name, params, const_) \
   __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
@@ -1263,13 +1268,13 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
 /// \brief Proxies manage the storage in an \ref any
 
 /// A Proxy for mixing std::variant and type erasure
-/// Use this, when some, at compile time known types, are dispatched in a hot
-/// path. Put this types plus an any (with the specific \ref trait and a
+/// Use this when some, at compile time, known types are dispatched in a hot
+/// path. Put these types plus an any (with the specific \ref trait and a
 /// dynamic proxy) in a std::variant. This variant is then used with a \ref
 /// by_val proxy and the same \ref trait as before. See \ref make_vany
-/// So the dispatch for the types in variant is done internaly with a
-/// std::visit, and all other types are dispatched via there v-Table. Now you
-/// know, where the Any++ logo has its origin.
+/// So the dispatch for the types in the variant is done internally with a
+/// std::visit, and all other types are dispatched via their v-Table. Now you
+/// know where the Any++ logo has its origin.
 /// \ingroup proxies
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
 using vany_variant = std::variant<Any<Proxy>, Types...>;
