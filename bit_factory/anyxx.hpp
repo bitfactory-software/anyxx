@@ -1817,17 +1817,18 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             }},
         to, model_size(v_table_to), from, v_table_from->model_size);
   }
-  static void move_to(unique& to, any_v_table* to_v_table, val&& v,
-                      any_v_table* v_table) {
-    assert(v_table);
-    auto data_ptr =
-        visit_value(overloads{[&](heap_data& heap) { return heap.release(); },
-                              [&]<bool Trivial>(local_data<Trivial>& local) {
-                                return move_construct(v_table, local.data());
-                              }},
-                    v, v_table->model_size);
-    proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
-  }
+  // TODO implement move from unique
+  //static void move_to(unique& to, any_v_table* to_v_table, val&& v,
+  //                    any_v_table* v_table) {
+  //  assert(v_table);
+  //  auto data_ptr =
+  //      visit_value(overloads{[&](heap_data& heap) { return heap.release(); },
+  //                            [&]<bool Trivial>(local_data<Trivial>& local) {
+  //                              return move_construct(v_table, local.data());
+  //                            }},
+  //                  v, v_table->model_size);
+  //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
+  //}
 
   static void copy_construct_from(val& to, any_v_table* to_v_table,
                                   val const& from, any_v_table* from_v_table) {
