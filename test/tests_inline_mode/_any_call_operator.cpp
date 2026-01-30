@@ -31,9 +31,9 @@ ANY(overloaded_function_object,
 }
 
 namespace {
-template <template <typename> typename F, typename OBSERVER>
-concept call_mutable = requires(functor_t functor, std::string s) {
-  F<OBSERVER>{functor}(" world") == s;
+template <typename Any>
+concept call_mutable = requires(functor_t functor, std::string s, Any a) {
+  a(" world") == s;
 };
 template <template <typename> typename F, typename OBSERVER>
 concept call_const = requires(functor_t const functor, std::string s) {
@@ -41,9 +41,9 @@ concept call_const = requires(functor_t const functor, std::string s) {
 };
 }  // namespace
 
-static_assert(!call_mutable<any_overloaded_function_object, cref>);
+static_assert(!call_mutable<any_overloaded_function_object<cref>>);
 static_assert(call_const<any_overloaded_function_object, cref>);
-static_assert(call_mutable<any_overloaded_function_object, mutref>);
+static_assert(call_mutable<any_overloaded_function_object<mutref>>);
 static_assert(!call_const<any_overloaded_function_object, mutref>);
 
 TEST_CASE("call_operator overload with mutref") {

@@ -32,9 +32,10 @@ struct function<R(Args...), Constness> : base_trait {
   using v_table_t = function_v_table<Constness, R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R
-    requires(const_correct_call_for_proxy<typename Constness::type,
-                                          typename std::decay_t<Self>::proxy_t,
-                                          false /*exact const*/>)
+    requires(const_correct_call_for_proxy_and_self<
+             typename Constness::type, typename std::decay_t<Self>::proxy_t,
+             std::is_const_v<std::remove_reference_t<Self>>,
+             false /*exact const*/>)
   {
     using self_t = std::decay_t<Self>;
     if constexpr (self_t::dyn) {

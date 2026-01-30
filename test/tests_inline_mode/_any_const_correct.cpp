@@ -95,11 +95,7 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
     const_function const cf = function_object;
     mutating_function const mf = function_object;
     REQUIRE(cf() == "hallo");
-    // +++ questionable
-    static_assert(std::invocable<mutating_function const, char const*>);
-    mf("world");
-    REQUIRE(cf() == "world");
-    // --- questionable
+    static_assert(!std::invocable<mutating_function const, char const*>);
   }
 
   {
@@ -144,12 +140,12 @@ TEST_CASE("_interface_const_correct const/mutable_obseerver call operator") {
 TEST_CASE("_interface_const_correct anyxx::shared") {
   {
     shared_const_function cf = std::make_shared<functor>();
-    static_assert(
-        !std::constructible_from<shared_mutating_function,
-                              shared_const_function>);  // <- 
+    static_assert(!std::constructible_from<shared_mutating_function,
+                                           shared_const_function>);  // <-
     REQUIRE(cf() == "hallo");
-    //shared_mutating_function smf = cf;
-    static_assert(!std::invocable<shared_mutating_function, std::string>); // or avove!
+    // shared_mutating_function smf = cf;
+    static_assert(
+        !std::invocable<shared_mutating_function, std::string>);  // or avove!
   }
 
   {
@@ -209,8 +205,7 @@ static_assert(!can_call_set_text<const_text_i const>);
 
 using mutable_text_i_const = any_text_i_mutable<cref>;
 using mutable_text_i_mutable = any_text_i_mutable<mutref>;
-static_assert(
-    std::same_as<mutable_text_i_mutable::proxy_t, mutref>);
+static_assert(std::same_as<mutable_text_i_mutable::proxy_t, mutref>);
 
 static_assert(!std::is_const_v<std::remove_reference_t<text_object&&>>);
 static_assert(std::is_const_v<std::remove_reference_t<text_object const&&>>);
@@ -232,8 +227,7 @@ static_assert(
 static_assert(can_call_get_text<mutable_text_i_mutable>);
 static_assert(can_call_get_text<mutable_text_i_mutable const>);
 static_assert(can_call_set_text<mutable_text_i_mutable>);
-// +++ questionable
-static_assert(can_call_set_text<mutable_text_i_mutable const>);
+static_assert(!(can_call_set_text<mutable_text_i_mutable const>));
 // --- questionable
 
 TEST_CASE("_interface_const_correct const/mutable member function") {
@@ -260,6 +254,7 @@ TEST_CASE("_interface_const_correct const/mutable member function") {
   REQUIRE(mutable_text_i_mutable(a_text).get_text() == "hallo");
   //  REQUIRE(mutable_text_i(a_text_const).get_text() == "hallo"); // may not
   //  compile!
-  mutable_text_i_mutable(a_text).set_text("world");
+  mutable_text_i_mutable mutable_set_text(a_text);
+  mutable_set_text.set_text("world");
   REQUIRE(mutable_text_i_mutable(a_text).get_text() == "world");
 }

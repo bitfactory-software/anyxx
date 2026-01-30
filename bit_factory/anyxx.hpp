@@ -290,8 +290,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   overload template <typename Self>                                            \
   decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(          \
       _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                  \
-    requires(::anyxx::const_correct_call_for_proxy<                            \
-             void const_*, typename std::decay_t<Self>::proxy_t, exact_const>) \
+    requires(::anyxx::const_correct_call_for_proxy_and_self<                   \
+             void const_*, typename std::decay_t<Self>::proxy_t,               \
+             std::is_const_v<std::remove_reference_t<Self>>, exact_const>)     \
   {                                                                            \
     using self_t = std::decay_t<Self>;                                         \
     using T = typename self_t::T;                                              \
@@ -1132,17 +1133,31 @@ concept is_const_data = is_proxy<Proxy> && is_const_void<data_void<Proxy>>;
 template <typename Proxy>
 concept is_weak_data = is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
 
-template <bool CallIsConst, bool ErasedDataIsConst, bool ErasedDataIsWeak>
-concept const_correct_call =
-    !ErasedDataIsWeak &&
-    ((CallIsConst == ErasedDataIsConst) || !ErasedDataIsConst);
+template <bool ToIsConst, bool FromIsConst, bool FromIsWeak>
+concept const_correct_move_to_from =
+    !FromIsWeak && ((ToIsConst == FromIsConst) || !FromIsConst);
 
-template <typename CALL, typename Proxy, bool Exact>
-concept const_correct_call_for_proxy =
+constexpr inline bool is_const_correct_call_for_proxy_and_self(
+    bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact) {
+  if (call_is_const)
+    if (exact)
+      return (call_is_const == proxy_is_const);
+    else
+      return true;
+
+  if (proxy_is_const || self_is_const) return false;
+
+  if (exact)
+    return (call_is_const == proxy_is_const);
+  else
+    return true;
+}
+
+template <typename CALL, typename Proxy, bool SelfIsConst, bool Exact>
+concept const_correct_call_for_proxy_and_self =
     !is_weak_data<Proxy> && voidness<CALL> && is_proxy<Proxy> &&
-    ((Exact && (is_const_void<CALL> == is_const_data<Proxy>)) ||
-     (!Exact && const_correct_call<is_const_void<CALL>, is_const_data<Proxy>,
-                                   is_weak_data<Proxy>>));
+    is_const_correct_call_for_proxy_and_self(
+        is_const_void<CALL>, is_const_data<Proxy>, SelfIsConst, Exact);
 
 template <is_proxy Proxy, typename From>
 Proxy erased(From&& from) {
@@ -2225,8 +2240,8 @@ template <>
 inline bool constexpr can_move_to_from<weak, shared> = true;
 
 template <voidness To, voidness From>
-  requires const_correct_call<is_const_void<To>, is_const_void<From>,
-                              is_weak_data<From>>
+  requires const_correct_move_to_from<is_const_void<To>, is_const_void<From>,
+                                      is_weak_data<From>>
 inline static bool constexpr can_move_to_from<To, From> = true;
 
 template <is_proxy To, is_proxy From>
@@ -3292,13 +3307,14 @@ class dispatch;
 /// \brief Open dispatch method. Solves expression problem.
 /// \tparam R(Args..) Signature of the dispatch
 ///
-/// The open dispatch is managed via a sigleton object of this class. 
-/// 
+/// The open dispatch is managed via a sigleton object of this class.
+///
 /// To declare and define a singleton use the \ref ANY_SINGLETON and \ref
 /// ANY_SINGLETON_DECLARE macros.
-/// 
-/// Each trait of the \ref any tagged as virtual, must have the open dispatch enabled.
-/// To enabele the open dispatch you have to declare a struct named 'trait_name'_has_open_dispatch.
+///
+/// Each trait of the \ref any tagged as virtual, must have the open dispatch
+/// enabled. To enabele the open dispatch you have to declare a struct named
+/// 'trait_name'_has_open_dispatch.
 /// \code
 /// struct node_has_open_dispatch {};
 /// ANY(node<>, , )
