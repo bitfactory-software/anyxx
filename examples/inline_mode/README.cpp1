@@ -65,10 +65,15 @@ Square
 ```
 FetchContent_Declare(
     bit_factory::anyxx
-    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx.git
+    GIT_REPOSITORY C
     GIT_TAG main
 )
 FetchContent_MakeAvailable(anyxx)
+```
+
+### Clone the repo:
+```
+git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 ```
 
 ### Performace compared
