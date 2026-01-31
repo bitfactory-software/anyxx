@@ -23,7 +23,7 @@
 //
 #if 0
 // -->
-[Hello world!](#Showcase 1: Basic *Any++* usage)
+[Hello world!](#Showcase-1:-Basic-*Any++*-usage)
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
