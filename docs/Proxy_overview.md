@@ -18,7 +18,7 @@
 | v-to\from->| ``cref`` | ``mutref``|``shared`` | ``unique`` | ``value`` | 
 |:-----------|:--------:|:---------:|:----------|:----------:|:---------:|
 | ``cref``   | yes      | yes       | yes       | yes        | yes	     |
-| ``mutref`` | no       | yes       | no        | yes :skull:| yes	     |
+| ``mutref`` | no       | yes       | no        | yes        | yes	     |
 | ``shared`` | no       | no        | yes       | no         | no	     |
 | ``unique`` | no       | no        | no        | no         | no	     |
 | ``value``  | no       | no        | yes       | no         | no	     |
