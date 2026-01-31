@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: Topics</title>
+<title>Any++: Any++ configuration macro</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('topics.html','',''); });
+$(function(){initNavTree('group__anyxx__config.html','',''); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,25 +88,24 @@ $(function(){initNavTree('topics.html','',''); });
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">Topics</div></div>
+  <div class="headertitle"><div class="title">Any++ configuration macro </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all topics with brief descriptions:</div><div class="directory">
-<table class="directory">
-<tr id="row_0_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__proxies.html" target="_self">Proxies</a></td><td class="desc">Proxies manage the storage in an <a class="el" href="classanyxx_1_1any.html" title="any">any</a> </td></tr>
-<tr id="row_1_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__casts.html" target="_self">Casts</a></td><td class="desc">Mix and match downcast, crosscast, and obtain <a class="el" href="classanyxx_1_1any.html" title="any">any</a> with other </td></tr>
-<tr id="row_2_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__anyxx__config.html" target="_self">Any++ configuration macro</a></td><td class="desc">Macro to configure Any++ for DLL mode </td></tr>
-<tr id="row_3_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__trait__macros.html" target="_self">TRAIT... and ANY_ macros</a></td><td class="desc">Macros to define trait 's and any ' </td></tr>
-<tr id="row_4_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__fn__macros.html" target="_self">ANY_FN... and ANY_OP macros</a></td><td class="desc">Macros to define trait's and any's functions and operators </td></tr>
-<tr id="row_5_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__model__map__macros.html" target="_self">MODEL_MAP macros</a></td><td class="desc">Macros to define behavior of models for trait's </td></tr>
-<tr id="row_6_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__singleton__macros.html" target="_self">ANY_SINGLETON macros</a></td><td class="desc">Macros to reduce boilerplate for declaring/defining static runtime data </td></tr>
-<tr id="row_7_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__vany__macros.html" target="_self">VANY_DISPACH macros</a></td><td class="desc">Macros to reduce boilerplate for declaring/defining open dispatch with vany_variant. Only neccessary for DLL scenarios </td></tr>
-<tr id="row_8_" class="even"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__meta__class__macros.html" target="_self">ANY_META_CLASS macros for crosscast</a></td><td class="desc">Macros to define static runtime type data for a model. Only neccessary for DLL <b>and</b> crosscast scenarios </td></tr>
-<tr id="row_9_" class="odd"><td class="entry"><span style="width:16px;display:inline-block;">&#160;</span><a class="el" href="group__dispatch__macros.html" target="_self">DISPATCH_ macros</a></td><td class="desc">Macros to define static runtime data for open dispatch. Only neccessary for DLL scenarios </td></tr>
-</table>
-</div><!-- directory -->
-</div><!-- contents -->
+
+<p>Macro to configure Any++ for DLL mode.  
+</p>
+<div class="textblock"><p>Macro to configure Any++ for DLL mode. </p>
+<p>If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In DLL mode, some static runtime data is not instantiated in the header implicitly via static inline and must be manually instantiated in a single translation unit.</p>
+<p>See also <a class="el" href="group__singleton__macros.html#ga3f285810c0716bfa028b613342d910d1" title="ANY_SINGLETON_DECLARE">ANY_SINGLETON_DECLARE</a>, <a class="el" href="group__singleton__macros.html#gab55747625c4054406c3f615c19ab1499" title="ANY_SINGLETON">ANY_SINGLETON</a>, <a class="el" href="group__meta__class__macros.html#ga7d04ec93bbe9774ea87b00affe3f960b" title="ANY_META_CLASS_FWD">ANY_META_CLASS_FWD</a>, <a class="el" href="group__meta__class__macros.html#ga94ede558e44a0fd9d6a0a4e56bd68734" title="ANY_META_CLASS">ANY_META_CLASS</a>, <a class="el" href="group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4" title="ANY_DISPATCH_COUNT_FWD">ANY_DISPATCH_COUNT_FWD</a>, <a class="el" href="group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43" title="ANY_DISPATCH_COUNT">ANY_DISPATCH_COUNT</a>, <a class="el" href="group__dispatch__macros.html#ga1373b948d1de7ce120d00aedb00a0e6b" title="ANY_DISPATCH_FOR_FWD">ANY_DISPATCH_FOR_FWD</a>, <a class="el" href="group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac" title="ANY_DISPATCH_FOR">ANY_DISPATCH_FOR</a>, <a class="el" href="group__meta__class__macros.html#ga7d04ec93bbe9774ea87b00affe3f960b" title="ANY_META_CLASS_FWD">ANY_META_CLASS_FWD</a>, <a class="el" href="group__meta__class__macros.html#ga94ede558e44a0fd9d6a0a4e56bd68734" title="ANY_META_CLASS">ANY_META_CLASS</a>. </p>
+</div></div><!-- contents -->
 </div><!-- doc-content -->
+<div id="page-nav" class="page-nav-panel">
+<div id="page-nav-resize-handle"></div>
+<div id="page-nav-tree">
+<div id="page-nav-contents">
+</div><!-- page-nav-contents -->
+</div><!-- page-nav-tree -->
+</div><!-- page-nav -->
 </div><!-- container -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
