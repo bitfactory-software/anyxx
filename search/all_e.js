@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['macros_0',['macros',['../group__fn__macros.html',1,'ANY_FN... and ANY_OP macros'],['../group__dispatch__macros.html',1,'DISPATCH_ macros'],['../group__model__map__macros.html',1,'MODEL_MAP macros'],['../group__runtime__macros.html',1,'Runtime data macros'],['../group__trait__macros.html',1,'TRAIT... and ANY_ macros']]],
+  ['macros_0',['macros',['../group__fn__macros.html',1,'ANY_FN... and ANY_OP macros'],['../group__singleton__macros.html',1,'ANY_SINGLETON macros'],['../group__dispatch__macros.html',1,'DISPATCH_ macros'],['../group__model__map__macros.html',1,'MODEL_MAP macros'],['../group__trait__macros.html',1,'TRAIT... and ANY_ macros'],['../group__vany__macros.html',1,'VANY_DISPACH macros']]],
   ['make_5fvany_1',['make_vany',['../anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562',1,'anyxx']]],
   ['map_2',['Model map',['../md_docs_2terms__and__definitions.html#autotoc_md9',1,'']]],
   ['matrix_3',['CI Matrix',['../index.html#autotoc_md28',1,'']]],

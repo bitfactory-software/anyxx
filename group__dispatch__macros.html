@@ -92,7 +92,7 @@ $(function(){initNavTree('group__dispatch__macros.html','',''); });
 </div><!--header-->
 <div class="contents">
 
-<p>Macros to define static runtime data for open dispatch.  
+<p>Macros to define static runtime data for open dispatch. Only neccessary for DLL scenarios.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
@@ -107,7 +107,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:gadd935835248281ded77dd94b587509ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define the dispatch table instance function for a model. Must be placed in global namespace.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Macros to define static runtime data for open dispatch. </p>
+<div class="textblock"><p>Macros to define static runtime data for open dispatch. Only neccessary for DLL scenarios. </p>
 <p>Name conventions: _FWD: macro to declare the function signature only. To be used in header files.</p>
 <p>ANY_DISPATCH_COUNT macros declare/define the dispatch counter for a specific any. This dispatch counter is used to assign unique indices to each dispatch.</p>
 <p>ANY_DISPATCH_FOR macros declare/define the dispatch table instance for a any. This is necessary once for each model class that participates in open dispatch. </p>
