@@ -91,7 +91,7 @@ $(function(){initNavTree('index.html','',''); });
   <div class="headertitle"><div class="title">Any++ </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type erased Spaceship</a></p>
+<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visiitor</a></p>
 <p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/dos-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
 <p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
@@ -267,7 +267,7 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 </div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase3"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
-Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type erased binary operator)</h3>
+Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
@@ -338,7 +338,56 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type erased binary operator)</h
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:612</div></div>
 </div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
-<p>If you are still here, you are ready for (more Examples)[<a href="https://www.alexweb.io/anyxx/examples.html">https://www.alexweb.io/anyxx/examples.html</a>]   </p>
+<p><a class="anchor" id="showcase4"></a> </p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
+<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+<div class="line"><span class="keyword">namespace </span>showcase4 {</div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>circle {</div>
+<div class="line">  std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">struct </span>square {</div>
+<div class="line">  std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(figure, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), ayx::cref)</div>
+<div class="line"> </div>
+<div class="line">anyxx::dispatch&lt;std::string(ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt; latin, italian;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">auto</span> __ = latin.define&lt;circle&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;orbis&quot;</span>; });</div>
+<div class="line"><span class="keyword">auto</span> __ = latin.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadratum&quot;</span>; });</div>
+<div class="line"><span class="keyword">auto</span> __ = italian.define&lt;circle&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;cerchio&quot;</span>; });</div>
+<div class="line"><span class="keyword">auto</span> __ = italian.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadrato&quot;</span>; });</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> translate(std::stringstream&amp; os,</div>
+<div class="line">               std::vector&lt;anyxx::any&lt;anyxx::val, figure&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">  std::string sep;</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures)</div>
+<div class="line">    os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;; &quot;</span>) &lt;&lt; f.name() &lt;&lt; <span class="stringliteral">&quot;: latin = &quot;</span> &lt;&lt; latin(f)</div>
+<div class="line">       &lt;&lt; <span class="stringliteral">&quot;, italian = &quot;</span> &lt;&lt; italian(f);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase4&quot;</span>) {</div>
+<div class="line">  std::stringstream ss;</div>
+<div class="line">  translate(ss, {circle{}, square{}});</div>
+<div class="line">  CHECK(ss.str() ==</div>
+<div class="line">        <span class="stringliteral">&quot;circle: latin = orbis, italian = cerchio; square: latin = quadratum, italian = quadrato&quot;</span>);</div>
+<div class="line">}</div>
+<div class="line">};  <span class="comment">// namespace showcase4</span></div>
+<div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#if 0</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+<p>If you are still here, you are ready for <a href="https://www.alexweb.io/anyxx/examples.html">more Examples</a>   </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->

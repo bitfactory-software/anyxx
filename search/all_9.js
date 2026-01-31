@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['generated_20code_0',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md23',1,'']]]
+  ['factory_0',['factory',['../classanyxx_1_1factory.html',1,'anyxx']]],
+  ['for_20crosscast_1',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]]
 ];
