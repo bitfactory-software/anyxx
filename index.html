@@ -91,7 +91,7 @@ $(function(){initNavTree('index.html','',''); });
   <div class="headertitle"><div class="title">Any++ </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello world!</a></p>
+<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello world!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a></p>
 <p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/dos-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
 <p>#Any++ : How to* trait** any** virtual*, <em>static</em> or <em>variant</em> ?</p>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
@@ -130,18 +130,19 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>showcase1 {</div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello\n&quot;</span>; }</div>
+<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World\n&quot;</span>; }</div>
+<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
 <div class="line">          std::vector&lt;anyxx::any&lt;anyxx::val, drawable&gt;&gt; const&amp; drawables) {</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw();</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase1&quot;</span>) {</div>
@@ -149,6 +150,7 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line">  draw(ss, {circle{}, square{}});</div>
 <div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\n&quot;</span>);</div>
 <div class="line">}</div>
+<div class="line">}  <span class="comment">// namespace showcase1</span></div>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
@@ -221,6 +223,48 @@ CI Matrix</h3>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyCenter">MacOS(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">14  </td></tr>
 </table>
+<p><a class="anchor" id="showcase2"></a> </p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+Showcase 2: Basic <em>Any++</em> with Model Map</h3>
+<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+<div class="line"><span class="keyword">namespace </span>showcase2 {</div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>circle {};</div>
+<div class="line"><span class="keyword">struct </span>square {</div>
+<div class="line">  std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), drawable) {</div>
+<div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((square), drawable) {</div>
+<div class="line">  <span class="keyword">static</span> std::string draw(square <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.edgy_salute(); };</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;anyxx::val, drawable&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase2&quot;</span>) {</div>
+<div class="line">  std::stringstream ss;</div>
+<div class="line">  draw(ss, {circle{}, square{}});</div>
+<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Silent greetings\nedgy World\n&quot;</span>);</div>
+<div class="line">}</div>
+<div class="line">};  <span class="comment">// namespace showcase2</span></div>
+<div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#if 0</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+<div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:864</div></div>
+</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
