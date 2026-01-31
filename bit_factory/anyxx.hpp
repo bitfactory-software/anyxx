@@ -2569,7 +2569,9 @@ inline To unchecked_downcast_to(From from)
 
 /// \defgroup casts Casts
 /// \brief Mix and match downcast, crosscast, and obtain \ref any with other
-/// \ref proxies.
+/// 
+/// IMPORTANT: For crosscasts to work, the models must be registered with the
+/// \ref ANY_REGISTER_MODEL macro.
 
 /// \brief Safe downcast to a derived trait using runtime information from the
 /// v-Tables.
@@ -3730,14 +3732,46 @@ class dispatch_vany {
 
 #else
 
+/// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast 
+/// \brief Macros to define static runtime type data for a \ref model. Only
+/// neccessary for DLL \b and crosscast scenarios.
+/// @{
+
+/// \def ANY_META_CLASS_FWD
+/// \brief Declare access to the meta data for a specific model any. Must be in
+/// global namespace.
+/// \param export_ To supply an export macro in a DLL scenario
+/// \param ... Type of the model
 #define ANY_META_CLASS_FWD(...)
+/// \def ANY_META_CLASS
+/// \brief Define the meta data for a specific model any. Must be in global
+/// namespace.
+/// \param ... Type of the model
 #define ANY_META_CLASS(...)
 
 #endif
 
+
 #define ANY_META_CLASS_STATIC(...)  \
   ANY_META_CLASS_FWD(, __VA_ARGS__) \
   ANY_META_CLASS(__VA_ARGS__)
+
+/// \def ANY_REGISTER_MODEL
+/// \brief Register a model class for a specific any interface. Must be in
+/// global namespace.
+/// \param class_ The model class with fully qualified name. Must be parenthesized
+/// \param interface_ Name of the \ref any (without any_ prefix).
+/// \param ... Optional template parameters for the model class.  
+/// 
+/// See also \ref casts.
+#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \
+  namespace {                                                                 \
+  static auto __ = anyxx::bind_v_table_to_meta_data<                          \
+      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
+      ANYXX_UNPAREN(class_)>();                                               \
+  }
+
+/// @}
 
 #ifdef ANY_DLL_MODE
 
@@ -3860,12 +3894,19 @@ class dispatch_vany {
 
 #endif
 
-#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \
-  namespace {                                                                 \
-  static auto __ = anyxx::bind_v_table_to_meta_data<                          \
-      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \
-      ANYXX_UNPAREN(class_)>();                                               \
-  }
+/// \defgroup anyxx_config Any++ configuration macro
+/// \brief Macro to configure Any++ for DLL mode
+///
+/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In DLL mode,
+/// some static runtime data is not instantiated in the header implicitly via
+/// static inline and must be manually instantiated in a single translation
+/// unit.
+///
+/// See also \ref ANY_SINGLETON_DECLARE, \ref ANY_SINGLETON, \ref
+/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref ANY_DISPATCH_COUNT_FWD, \ref
+/// ANY_DISPATCH_COUNT, \ref ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
+/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS.
+
 
 /**
    \example _1_any_shape.cpp
