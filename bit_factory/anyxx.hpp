@@ -3644,7 +3644,7 @@ class dispatch_vany {
 #define ANY_UNIQUE_NAME ANY_UNIQUE_NAME_
 #define __ ANY_UNIQUE_NAME_
 
-/// \defgroup runtime_macros Runtime data macros
+/// \addtogroup singleton_macros ANY_SINGLETON macros
 /// \brief Macros to reduce boilerplate for declaring/defining static runtime
 /// data.
 ///
@@ -3653,13 +3653,13 @@ class dispatch_vany {
 /// Extra care must be taken in a DLL scenario.
 ///
 /// To reduce boilerplate code, Any++ supplies these macros.
+///  @{
 
 /// \brief Declare access to a singleton object in a header file.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param name Name of the singleton.
 /// \param __VA_ARGS__ Type of the singleton object.
 ///
-/// \ingroup runtime_macros
 /// This macro should reside inside the namespace you wish the singleton to
 /// reside. See also \ref ANY_SINGLETON.
 #define ANY_SINGLETON_DECLARE(export_, name, ...) \
@@ -3672,13 +3672,18 @@ class dispatch_vany {
 /// \param name Name of the singleton.
 /// \param __VA_ARGS__ Parameters for the singleton constructor.
 ///
-/// \ingroup runtime_macros
 /// See also \ref ANY_SINGLETON_DECLARE.
 #define ANY_SINGLETON(namespace_, name, ...)       \
   namespace_::name##_t& namespace_::get_##name() { \
     static name##_t singleton_{__VA_ARGS__};       \
     return singleton_;                             \
   };
+///  @}
+
+/// \addtogroup vany_macros VANY_DISPACH macros
+/// \brief Macros to reduce boilerplate for declaring/defining open dispatch
+/// with \ref vany_variant. Only neccessary for DLL scenarios 
+///  @{
 
 /// \brief Declare a singleton object for open \ref vany dispatch.
 /// \param export_ To supply an export macro in a DLL scenario.
@@ -3688,7 +3693,6 @@ class dispatch_vany {
 /// \param static_dispatch Static constexpr visitor for the non-any members of
 ///        the \ref vany.
 ///
-/// \ingroup runtime_macros
 /// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
 #define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch) \
   constexpr static inline auto name##_static_dispatch =                       \
@@ -3710,6 +3714,7 @@ class dispatch_vany {
 /// \ingroup runtime_macros
 /// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON.
 #define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);
+///  @}
 
 #ifdef ANY_DLL_MODE
 
@@ -3807,7 +3812,8 @@ class dispatch_vany {
 #else
 
 /// \addtogroup dispatch_macros DISPATCH_ macros
-/// \brief Macros to define static runtime data for open dispatch.
+/// \brief Macros to define static runtime data for open dispatch. Only
+/// neccessary for DLL scenarios.
 ///
 /// Name conventions:
 /// _FWD: macro to declare the function signature only. To be used in header
