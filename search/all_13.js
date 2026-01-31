@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['unerase_5fcast_0',['unerase_cast',['../group__casts.html#ga503c7a4639146953d0f21603ef83241e',1,'anyxx']]],
-  ['unerase_5fcast_5fif_1',['unerase_cast_if',['../group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8',1,'anyxx']]],
-  ['unique_2',['unique',['../structanyxx_1_1unique.html',1,'anyxx']]],
-  ['upcast_20vs_20downcast_3',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
-  ['usage_4',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md25',1,'']]],
-  ['useage_20in_20cmakelists_20txt_3a_5',['Useage in CMakeLists.txt:',['../index.html#autotoc_md27',1,'']]]
+  ['weak_0',['weak',['../group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c',1,'anyxx']]],
+  ['working_20of_20traits_20in_20any_1',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]]
 ];

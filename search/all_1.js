@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_0',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md24',1,'']]]
+  ['borrow_5fas_0',['borrow_as',['../group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16',1,'anyxx::borrow_as()'],['../md_docs_2Proxy__overview.html#autotoc_md4',1,'borrow_as']]],
+  ['by_5fval_1',['by_val',['../structanyxx_1_1by__val.html',1,'anyxx']]]
 ];

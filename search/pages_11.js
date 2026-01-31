@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['upcast_20vs_20downcast_0',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
-  ['usage_1',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md25',1,'']]],
-  ['useage_20in_20cmakelists_20txt_3a_2',['Useage in CMakeLists.txt:',['../index.html#autotoc_md27',1,'']]]
+  ['working_20of_20traits_20in_20any_0',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]]
 ];
