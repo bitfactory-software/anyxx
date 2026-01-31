@@ -28,7 +28,7 @@
 //
 #if 0
 // -->
-[Hello world!](#showcase1)
+[Hello world!](#showcase1) / [Model Map](#showcase2)
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
@@ -61,8 +61,8 @@ The combination of static and dynamic dispatch enables
 - a hybrid usage of `std::variant` and **type erasure** to balance performance and coupling.
 - C++0x-like concept maps for static and dynamic customization points and default behavior.
 
-<a name="showcase1"></a>
-### Showcase 1: Basic *Any++* usage
+
+### <a name="showcase1"></a> Showcase 1: Basic *Any++* usage
 ```cpp
 // <!--
 #endif
@@ -71,18 +71,19 @@ The combination of static and dynamic dispatch enables
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+namespace showcase1 {
 struct circle {
-  std::string draw() const { return "Hello\n"; }
+  std::string draw() const { return "Hello"; }
 };
 struct square {
-  std::string draw() const { return "World\n"; }
+  std::string draw() const { return "World"; }
 };
 
 TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
           std::vector<anyxx::any<anyxx::val, drawable>> const& drawables) {
-  for (auto const& drawable : drawables) os << drawable.draw();
+  for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
 TEST_CASE("Showcase1") {
@@ -90,6 +91,7 @@ TEST_CASE("Showcase1") {
   draw(ss, {circle{}, square{}});
   CHECK(ss.str() == "Hello\nWorld\n");
 }
+}  // namespace showcase1
 // <!--
 #if 0
 // -->
@@ -138,9 +140,48 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | Ubuntu(latest)           | - | 21   | 14 | 
 | MacOS(latest)           | - | 21   | 14 | 
 
+### <a name="showcase2"></a> Showcase 1: Basic *Any++* with Model Map
+```cpp
+// <!--
+#endif
+// -->
+namespace showcase2 {
+#include <bit_factory/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <string>
+
+struct circle {};
+struct square {
+  std::string edgy_salute() const { return "edgy World"; }
+};
+
+TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
+
+ANY_MODEL_MAP((circle), drawable) {
+  static std::string draw(circle const&) { return "Silent greetings"; };
+};
+
+ANY_MODEL_MAP((square), drawable) {
+  static std::string draw(square const& self) { return self.edgy_salute(); };
+};
+
+void draw(std::stringstream& os,
+          std::vector<anyxx::any<anyxx::val, drawable>> const& drawables) {
+  for (auto const& drawable : drawables) os << drawable.draw() << "\n";
+}
+
+TEST_CASE("Showcase2") {
+  std::stringstream ss;
+  draw(ss, {circle{}, square{}});
+  CHECK(ss.str() == "Silent greetings\nedgy World\n");
+}
+};  // namespace showcase2
+// <!--
+#if 0
+// -->
+```
+[Compiler Explorer] **TODO**
+
 <!--
 #endif
 // -->
-
-
-

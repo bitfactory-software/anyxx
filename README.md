@@ -26,9 +26,9 @@
 // mklink in PowerShell
 // cmd /c mklink README.md ..\examples\inline_mode\README.cpp
 //
+// [Hello world!](#showcase1) / [Model Map](#showcase2)
 #if 0
 // -->
-[Hello world!](#showcase1) / [Model Map](#showcase2)
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
