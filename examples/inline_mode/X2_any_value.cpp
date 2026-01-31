@@ -4,12 +4,6 @@
 
 using namespace anyxx;
 
-namespace {
-
-// ANY(any, , , )
-
-}  // namespace
-
 TEST_CASE("example X2/ any val") {
   any<val> a1{std::string{"hello world"}};
   static_assert(anyxx::is_any<decltype(a1)>);
@@ -24,5 +18,9 @@ TEST_CASE("example X2/ any val") {
   CHECK(get_type_info(a1) == typeid(std::string));
   CHECK(*unerase_cast<int>(a2) == 42);
   CHECK(get_type_info(a2) == typeid(int));
+
+  any<val> a3{std::in_place, std::string{"hello world"}};
+  CHECK(*unerase_cast<std::string>(a3) == "hello world");
+  CHECK(get_type_info(a3) == typeid(std::string));
 }
 

@@ -2569,7 +2569,7 @@ inline To unchecked_downcast_to(From from)
 
 /// \defgroup casts Casts
 /// \brief Mix and match downcast, crosscast, and obtain \ref any with other
-/// 
+///
 /// IMPORTANT: For crosscasts to work, the models must be registered with the
 /// \ref ANY_REGISTER_MODEL macro.
 
@@ -3060,8 +3060,10 @@ template <template <typename...> typename Any, typename Key, typename... Args>
 class factory {
   using unique_constructor_t = std::function<Any<unique>(Args...)>;
   using shared_const_constructor_t = std::function<Any<shared>(Args...)>;
+  using val_constructor_t = std::function<Any<val>(Args...)>;
   std::map<Key, unique_constructor_t> unique_factory_map_;
   std::map<Key, shared_const_constructor_t> shared_factory_map_;
+  std::map<Key, val_constructor_t> val_factory_map_;
 
   template <is_proxy Proxy>
   auto register_impl(auto& map, Key key, auto const& construct) {
@@ -3087,6 +3089,7 @@ class factory {
   auto register_(Key const& key, auto const& construct) {
     register_impl<unique>(unique_factory_map_, key, construct);
     register_impl<shared>(shared_factory_map_, key, construct);
+    register_impl<val>(val_factory_map_, key, construct);
     return nullptr;
   }
   template <is_proxy Proxy>
@@ -3094,12 +3097,16 @@ class factory {
     if constexpr (std::same_as<Proxy, unique>) {
       return construct_impl<Proxy>(unique_factory_map_, key,
                                    std::forward<Args>(args)...);
-    } else {
+    } else if constexpr (std::same_as<Proxy, shared>) {
       static_assert(std::same_as<Proxy, shared>);
       return construct_impl<Proxy>(shared_factory_map_, key,
                                    std::forward<Args>(args)...);
+    } else {
+      static_assert(std::same_as<Proxy, val>);
+      return construct_impl<Proxy>(val_factory_map_, key,
+                                   std::forward<Args>(args)...);
     }
-  };
+  }
 };
 
 // --------------------------------------------------------------------------------
@@ -3684,7 +3691,7 @@ class dispatch_vany {
 
 /// \addtogroup vany_macros VANY_DISPACH macros
 /// \brief Macros to reduce boilerplate for declaring/defining open dispatch
-/// with \ref vany_variant. Only neccessary for DLL scenarios 
+/// with \ref vany_variant. Only neccessary for DLL scenarios
 ///  @{
 
 /// \brief Declare a singleton object for open \ref vany dispatch.
@@ -3731,7 +3738,7 @@ class dispatch_vany {
 
 #else
 
-/// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast 
+/// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast
 /// \brief Macros to define static runtime type data for a \ref model. Only
 /// neccessary for DLL \b and crosscast scenarios.
 /// @{
@@ -3750,7 +3757,6 @@ class dispatch_vany {
 
 #endif
 
-
 #define ANY_META_CLASS_STATIC(...)  \
   ANY_META_CLASS_FWD(, __VA_ARGS__) \
   ANY_META_CLASS(__VA_ARGS__)
@@ -3758,10 +3764,11 @@ class dispatch_vany {
 /// \def ANY_REGISTER_MODEL
 /// \brief Register a model class for a specific any interface. Must be in
 /// global namespace.
-/// \param class_ The model class with fully qualified name. Must be parenthesized
+/// \param class_ The model class with fully qualified name. Must be
+/// parenthesized
 /// \param interface_ Name of the \ref any (without any_ prefix).
-/// \param ... Optional template parameters for the model class.  
-/// 
+/// \param ... Optional template parameters for the model class.
+///
 /// See also \ref casts.
 #define ANY_REGISTER_MODEL(class_, interface_, ...)                           \
   namespace {                                                                 \
@@ -3855,21 +3862,23 @@ class dispatch_vany {
 /// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for a
 /// specific any. This dispatch counter is used to assign unique indices to each
 /// dispatch.
-/// 
+///
 /// ANY_DISPATCH_FOR macros declare/define the dispatch table instance for a
 /// any. This is necessary once for each model class that participates in open
 /// dispatch.
-/// 
+///
 ///  @{
 
 /// \def ANY_DISPATCH_COUNT_FWD
-/// \brief Declare access to the dispatch counter for a specific \ref any. Must be placed in global namespace.
+/// \brief Declare access to the dispatch counter for a specific \ref any. Must
+/// be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT_FWD(...)
 /// \def ANY_DISPATCH_COUNT
-/// \brief Define the dispatch counter for a specific \ref any. Must be placed in global namespace.
+/// \brief Define the dispatch counter for a specific \ref any. Must be placed
+/// in global namespace.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT(...)
@@ -3905,7 +3914,6 @@ class dispatch_vany {
 /// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref ANY_DISPATCH_COUNT_FWD, \ref
 /// ANY_DISPATCH_COUNT, \ref ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
 /// ANY_META_CLASS_FWD, \ref ANY_META_CLASS.
-
 
 /**
    \example _1_any_shape.cpp

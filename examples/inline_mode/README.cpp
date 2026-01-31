@@ -29,6 +29,7 @@
 #if 0
 // -->
 [Hello World!](#showcase1) / [Model Map](#showcase2) / [Type Erased Spaceship](#showcase3) / [Open Dispatch As Visiitor](#showcase4) 
+/ [Crosscast + Factory = Serialization](#showcase5)
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
@@ -300,7 +301,8 @@ TEST_CASE("Showcase4") {
   std::stringstream ss;
   translate(ss, {circle{}, square{}});
   CHECK(ss.str() ==
-        "circle: latin = orbis, italian = cerchio; square: latin = quadratum, italian = quadrato");
+        "circle: latin = orbis, italian = cerchio; square: latin = quadratum, "
+        "italian = quadrato");
 }
 };  // namespace showcase4
 // <!--
@@ -308,6 +310,101 @@ TEST_CASE("Showcase4") {
 // -->
 ```
 [Compiler Explorer] **TODO**
+
+<a name="showcase5"></a> 
+### Showcase 5: *Any++* Crosscast + Factory = Serialization
+```cpp
+// <!--
+#endif
+// -->
+namespace showcase5 {
+#include <bit_factory/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <string>
+
+namespace ayx = anyxx;
+
+struct circle {
+  double radius = 0.0;
+  double area() const { return radius * radius * 3.14; }
+};
+struct square {
+  double area() const { return edge_length * edge_length; }
+  double edge_length = 0.0;
+};
+
+struct figure_has_open_dispatch {};
+ANY(figure, (ANY_FN(double, area, (), const)), ayx::val)
+ANY(serializeable, (ANY_FN(void, serialize, (std::ostream&), const)), ayx::val)
+
+ayx::factory<any_serializeable, std::string, std::istream&> deserialize;
+
+any_figure<> deserialize_any_figure(std::istream& archive) {
+  std::string type;
+  archive >> type;
+  return ayx::move_to<any_figure<>>(
+      deserialize.construct<ayx::val>(type, archive));
+}
+
+ANY_MODEL_MAP((circle), serializeable) {
+  static void serialize(circle const& self, std::ostream& os) {
+    os << "circle " << self.radius << " ";
+  };
+};
+auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
+  circle c;
+  archive >> c.radius;
+  return c;
+});
+ANY_REGISTER_MODEL(circle, figure);
+ANY_REGISTER_MODEL(circle, serializeable);
+
+ANY_MODEL_MAP((square), serializeable) {
+  static void serialize(square const& self, std::ostream& os) {
+    os << "square " << self.edge_length << " ";
+  };
+};
+auto __ = deserialize.register_("square", [](std::istream& archive) {
+  square s;
+  archive >> s.edge_length;
+  return s;
+});
+ANY_REGISTER_MODEL(square, figure);
+ANY_REGISTER_MODEL(square, serializeable);
+
+void areas(std::stringstream& os,
+           std::vector<anyxx::any<anyxx::val, figure>> const& figures) {
+  std::string sep;
+  for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
+}
+
+TEST_CASE("Showcase5") {
+  std::stringstream archive{": circle 1 : square 2 : circle 3 : circle 4 end" };
+  std::vector<any_figure<>> figures;
+  std::string more;
+  for (archive >> more; more != "end"; archive >> more)
+    figures.push_back(deserialize_any_figure(archive));
+
+  std::stringstream ss;
+  areas(ss, figures);
+  CHECK(ss.str() == "3.14, 4, 28.26, 50.24");
+
+  std::stringstream serialized;
+  for (auto f : figures) {
+    serialized << ": ";
+    anyxx::borrow_as<any_serializeable<anyxx::cref>>(f)->serialize(serialized);
+  }
+  serialized << "end";
+
+  CHECK(serialized.str() == archive.str());
+}
+};  // namespace showcase5
+// <!--
+#if 0
+// -->
+```
+[Compiler Explorer] **TODO**
+
 
 If you are still here, you are ready for [more Examples](https://www.alexweb.io/anyxx/examples.html)
 <!--
