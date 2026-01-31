@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jacket_0',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md8',1,'']]]
+  ['handling_20const_20in_20any_0',['Handling &lt;span class=&quot;tt&quot;&gt;const&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Constness.html',1,'']]]
 ];
