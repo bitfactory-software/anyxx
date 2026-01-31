@@ -91,7 +91,7 @@ $(function(){initNavTree('index.html','',''); });
   <div class="headertitle"><div class="title">Any++ </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visiitor</a> / <a class="el" href="#showcase5" title="showcase5">Crosscast + Factory = Serialization</a> / <a class="el" href="#showcase6" title="showcase6">Basic *Any++* std::variant usage</a></p>
+<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visiitor</a> / <a class="el" href="#showcase5" title="showcase5">Crosscast + Factory = Serialization</a> / <a class="el" href="#showcase6" title="showcase6">Basic *Any++* std::variant usage</a> / <a class="el" href="#showcase7" title="showcase7">Basic *Any++* open std::variant usage: 'vany'</a></p>
 <p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/dos-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
 <p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
@@ -158,6 +158,7 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:736</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:507</div></div>
 </div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+<p><a class="el" href="#showcase2" title="showcase2">More Showcases here...</a> <a href="https://www.alexweb.io/anyxx/">Docs</a></p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Available via vcpkg</h3>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
@@ -456,7 +457,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase5&quot;</span>) {</div>
-<div class="line">  std::stringstream archive{<span class="stringliteral">&quot;: circle 1 : square 2 : circle 3 : circle 4 end&quot;</span> };</div>
+<div class="line">  std::stringstream archive{<span class="stringliteral">&quot;: circle 1 : square 2 : circle 3 : circle 4 end&quot;</span>};</div>
 <div class="line">  std::vector&lt;any_figure&lt;&gt;&gt; figures;</div>
 <div class="line">  std::string more;</div>
 <div class="line">  <span class="keywordflow">for</span> (archive &gt;&gt; more; more != <span class="stringliteral">&quot;end&quot;</span>; archive &gt;&gt; more)</div>
@@ -504,7 +505,8 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;anyxx::by_val&lt;known_shapes&gt;, drawable&gt;&gt; const&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;anyxx::by_val&lt;known_shapes&gt;, drawable&gt;&gt; const&amp;</div>
+<div class="line">              drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -513,7 +515,55 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line">  draw(ss, {circle{}, square{}});</div>
 <div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\n&quot;</span>);</div>
 <div class="line">}</div>
-<div class="line">}  <span class="comment">// namespace showcase1</span></div>
+<div class="line">}  <span class="comment">// namespace showcase6</span></div>
+<div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#if 0</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+<p><a class="anchor" id="showcase7"></a> </p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
+<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>showcase7 {</div>
+<div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
+<div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>circle {</div>
+<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">struct </span>square {</div>
+<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(figure, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)), ayx::val)</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">using </span>known_and_unknown_shapes =</div>
+<div class="line">    anyxx::make_vany&lt;any_figure, ayx::val, circle, square&gt;;</div>
+<div class="line"><span class="keyword">static_assert</span>(</div>
+<div class="line">    std::same_as&lt;known_and_unknown_shapes,</div>
+<div class="line">                 any_figure&lt;ayx::by_val&lt;  <span class="comment">// see the Any++ logo at the top</span></div>
+<div class="line">                     std::variant&lt;any_figure&lt;ayx::val&gt;, circle, square&gt;&gt;&gt;&gt;);</div>
+<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((std::string), figure) {</div>
+<div class="line">  <span class="keyword">static</span> std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
+<div class="line">          std::vector&lt;known_and_unknown_shapes&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; f.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase7&quot;</span>) {</div>
+<div class="line">  std::stringstream ss;</div>
+<div class="line">  draw(ss, {circle{}, square{}, any_figure&lt;&gt;{<span class="stringliteral">&quot;The big unknown...&quot;</span>s}});</div>
+<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\nThe big unknown...\n&quot;</span>);</div>
+<div class="line">}</div>
+<div class="line">}  <span class="comment">// namespace showcase7</span></div>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>

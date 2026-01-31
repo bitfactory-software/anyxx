@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['generated_20code_0',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md23',1,'']]]
+  ['factory_20serialization_0',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
 ];

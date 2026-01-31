@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['factory_0',['factory',['../classanyxx_1_1factory.html',1,'anyxx']]],
-  ['factory_20serialization_1',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]],
-  ['for_20crosscast_2',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]]
+  ['erased_20binary_20operator_0',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
+  ['erased_20proxy_20s_1',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
+  ['explicit_2',['explicit',['../classanyxx_1_1any.html#a35473870adac5b3b3762e483ff878f56',1,'anyxx::any']]],
+  ['extension_20members_3',['Extension Members',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]]
 ];
