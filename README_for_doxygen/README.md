@@ -28,7 +28,7 @@
 //
 #if 0
 // -->
-[Hello World!](#showcase1) / [Model Map](#showcase2) / [Type erased Spaceship](#showcase3) 
+[Hello World!](#showcase1) / [Model Map](#showcase2) / [Type Erased Spaceship](#showcase3) / [Open Dispatch As Visiitor](#showcase4) 
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
@@ -184,7 +184,7 @@ TEST_CASE("Showcase2") {
 [Compiler Explorer] **TODO**
 
 <a name="showcase3"></a> 
-### Showcase 3: *Any++* Open Multi Dispatch, (Type erased binary operator)
+### Showcase 3: *Any++* Open Multi Dispatch, (Type Erased Binary Operator)
 ```cpp
 // <!--
 #endif
@@ -258,7 +258,58 @@ TEST_CASE("Showcase3") {
 [Compiler Explorer] **TODO**
 
 
-If you are still here, you are ready for (more Examples)[https://www.alexweb.io/anyxx/examples.html]
+<a name="showcase4"></a> 
+### Showcase 4: *Any++* Open Dispatch As Visiitor
+```cpp
+// <!--
+#endif
+// -->
+namespace showcase4 {
+#include <bit_factory/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <string>
+
+namespace ayx = anyxx;
+
+struct circle {
+  std::string name() const { return "circle"; }
+};
+struct square {
+  std::string name() const { return "square"; }
+};
+
+struct figure_has_open_dispatch {};
+ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)
+
+anyxx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
+
+auto __ = latin.define<circle>([](auto const&) { return "orbis"; });
+auto __ = latin.define<square>([](auto const&) { return "quadratum"; });
+auto __ = italian.define<circle>([](auto const&) { return "cerchio"; });
+auto __ = italian.define<square>([](auto const&) { return "quadrato"; });
+
+void translate(std::stringstream& os,
+               std::vector<anyxx::any<anyxx::val, figure>> const& figures) {
+  std::string sep;
+  for (auto const& f : figures)
+    os << std::exchange(sep, "; ") << f.name() << ": latin = " << latin(f)
+       << ", italian = " << italian(f);
+}
+
+TEST_CASE("Showcase4") {
+  std::stringstream ss;
+  translate(ss, {circle{}, square{}});
+  CHECK(ss.str() ==
+        "circle: latin = orbis, italian = cerchio; square: latin = quadratum, italian = quadrato");
+}
+};  // namespace showcase4
+// <!--
+#if 0
+// -->
+```
+[Compiler Explorer] **TODO**
+
+If you are still here, you are ready for [more Examples](https://www.alexweb.io/anyxx/examples.html)
 <!--
 #endif
 // -->
