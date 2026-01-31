@@ -3806,10 +3806,51 @@ class dispatch_vany {
 
 #else
 
+/// \addtogroup dispatch_macros DISPATCH_ macros
+/// \brief Macros to define static runtime data for open dispatch.
+///
+/// Name conventions:
+/// _FWD: macro to declare the function signature only. To be used in header
+/// files.
+///
+/// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for a
+/// specific any. This dispatch counter is used to assign unique indices to each
+/// dispatch.
+/// 
+/// ANY_DISPATCH_FOR macros declare/define the dispatch table instance for a
+/// any. This is necessary once for each model class that participates in open
+/// dispatch.
+/// 
+///  @{
+
+/// \def ANY_DISPATCH_COUNT_FWD
+/// \brief Declare access to the dispatch counter for a specific \ref any. Must be placed in global namespace.
+/// \param export_ To supply an export macro in a DLL scenario.
+/// \param ns_ Namespace of the \ref any.
+/// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT_FWD(...)
+/// \def ANY_DISPATCH_COUNT
+/// \brief Define the dispatch counter for a specific \ref any. Must be placed in global namespace.
+/// \param ns_ Namespace of the \ref any.
+/// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT(...)
+/// \def ANY_DISPATCH_FOR_FWD
+/// \brief Declare access to the dispatch table instance function for a
+/// model. Must be placed in global namespace.
+/// \param export_ To supply an export macro in a DLL scenario.
+/// \param class_ The model class with fully qualified name.
+/// \param interface_namespace_ Namespace of the \ref any.
+/// \param interface_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_FOR_FWD(...)
+/// \def ANY_DISPATCH_FOR
+/// \brief Define the dispatch table instance function for a model. Must be
+/// placed in global namespace
+/// \param class_ The model class with fully qualified name.
+/// \param interface_namespace_ Namespace of the \ref any.
+/// \param interface_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_FOR(...)
+
+///  @}
 
 #endif
 
