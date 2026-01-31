@@ -1480,7 +1480,7 @@ static_assert(is_proxy<cref>);
 
 /// Proxy to manage the captured object via std::unique_ptr-like smart pointer
 /// * If you pass a std::unique_ptr to the any constructor, this pointer will be
-/// released and the ownership goes to the unique. NOTE: The \ref any_v_able
+/// released and the ownership goes to the unique. NOTE: The \ref any_v_table
 /// will build with the value_type of the std::unique_ptr.
 /// * If you pass an object as second parameter, with the std::in_place tag as
 /// first, this object will be moved to the memory managed by the unique.
@@ -3713,7 +3713,6 @@ class dispatch_vany {
 /// \param namespace_ The namespace for the singleton.
 /// \param name Name of the singleton.
 ///
-/// \ingroup runtime_macros
 /// See also \ref VANY_DISPACH_DECLARE, \ref ANY_SINGLETON.
 #define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);
 ///  @}

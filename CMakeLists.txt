@@ -129,7 +129,8 @@ set(CPACK_PACKAGE_FILE_NAME
 
 include(CPack)
 
-
+# Because Doxygen can not process symlinked files well, we copy the README.cpp to a separate folder and rename it to README.md
+#configure_file(./examples/inline_mode/README.cpp ./README_for_doxygen/README.md  COPYONLY)
 find_package( Doxygen )
 
 if(DOXYGEN_FOUND)

@@ -5,7 +5,7 @@ include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
 
 file(GLOB inline_mode_hpp_files "./inline_mode/*.hpp")
 file(GLOB inline_mode_cpp_files "./inline_mode/*.cpp")
-add_executable (examples_inline_mode ${inline_mode_cpp_files} ${inline_mode_hpp_files})
+add_executable (examples_inline_mode ${inline_mode_cpp_files} ${inline_mode_hpp_files} ./inline_mode/README.cpp)
 target_link_libraries(examples_inline_mode 
     anyxx::anyxx_warnings
     anyxx::anyxx_options
