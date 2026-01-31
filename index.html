@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: Main Page</title>
+<title>Any++: Any++</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -87,10 +87,141 @@ $(function(){initNavTree('index.html','',''); });
 </div>
 </div>
 
-<div class="header">
-  <div class="headertitle"><div class="title">Any++ Documentation</div></div>
+<div><div class="header">
+  <div class="headertitle"><div class="title">Any++ </div></div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello world!</a></p>
+<p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/dos-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
+<p>#Any++ : How to* trait** any** virtual*, <em>static</em> or <em>variant</em> ?</p>
+<p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
+<p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p>
+<ul>
+<li><b>Flexible choice of underlying storage mechanisms</b><ul>
+<li>Type-erased</li>
+<li>Concrete</li>
+<li>Variant</li>
+</ul>
+</li>
+<li><b>Extensibility</b><ul>
+<li>Ability to add functions and operators using Rust-like <b>traits</b> (including templates)</li>
+<li>Support for <b>open (multi-)dispatch</b></li>
+<li>Runtime support for <b>downcasts and cross-casts</b></li>
+</ul>
+</li>
+</ul>
+<p>To allow easy <b>separation of concerns</b>, the library adds utilities for:</p><ul>
+<li>Factories</li>
+<li>Hooks</li>
+<li>Load-time extendable members</li>
+</ul>
+<p>The performance of <b>dynamic dispatch is on par with virtual functions</b>.</p>
+<p>The combination of static and dynamic dispatch enables</p><ul>
+<li>a hybrid usage of <span class="tt">std::variant</span> and <b>type erasure</b> to balance performance and coupling.</li>
+<li>C++0x-like concept maps for static and dynamic customization points and default behavior.</li>
+</ul>
+<p><a class="anchor" id="showcase1"></a> </p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+Showcase 1: Basic <em>Any++</em> usage</h3>
+<div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#endif</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">struct </span>circle {</div>
+<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello\n&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">struct </span>square {</div>
+<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World\n&quot;</span>; }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line"> </div>
+<div class="line">void draw(std::stringstream&amp; os,</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;anyxx::val, drawable&gt;&gt; const&amp; drawables) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw();</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;Showcase1&quot;</span>) {</div>
+<div class="line">  std::stringstream ss;</div>
+<div class="line">  draw(ss, {circle{}, square{}});</div>
+<div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;Hello\nWorld\n&quot;</span>);</div>
+<div class="line">}</div>
+<div class="line"><span class="comment">// &lt;!--</span></div>
+<div class="line"><span class="preprocessor">#if 0</span></div>
+<div class="line"><span class="comment">// --&gt;</span></div>
+<div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:736</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:507</div></div>
+</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+Available via vcpkg</h3>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+Useage in CMakeLists.txt:</h3>
+<div class="fragment"><div class="line">FetchContent_Declare(</div>
+<div class="line">    bit_factory::anyxx</div>
+<div class="line">    GIT_REPOSITORY C</div>
+<div class="line">    GIT_TAG main</div>
+<div class="line">)</div>
+<div class="line">FetchContent_MakeAvailable(anyxx)</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+Clone the repo:</h3>
+<div class="fragment"><div class="line">git clone -c core.symlinks=true git clone -c core.symlinks=true &lt;repo-url&gt;</div>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+Performace compared</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadLeft">Benchmark  </th><th class="markdownTableHeadRight">12th Gen Intel(R)<br  />
+Core(TM) i12900H (2.50 GHz)<br  />
+MS Visual C++ 18.0.1 /O2 /Ob2  </th><th class="markdownTableHeadRight">AMD Ryzen 9<br  />
+ 5900X 12-Core Processor (3.70 GHz)<br  />
+MS Visual C++ 17.14.14 /O2 /Ob2  </th><th class="markdownTableHeadRight">12th Gen Intel(R)<br  />
+Core(TM) i12900H (2.50 GHz)<br  />
+clang-cl /O2 /Ob2  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>Single dispatch</b>  </td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">virtual function (reference*)  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">any++ interface  </td><td class="markdownTableBodyRight"><b>100%</b>  </td><td class="markdownTableBodyRight"><b>100%</b>  </td><td class="markdownTableBodyRight"><b>100%</b>  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">any++ open method  </td><td class="markdownTableBodyRight"><b>115%</b>  </td><td class="markdownTableBodyRight"><b>200%</b>  </td><td class="markdownTableBodyRight"><b>130%</b>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft"><b>Double dispatch</b>  </td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td><td class="markdownTableBodyRight"></td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">std::variant + std::visit (reference*)  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyLeft">hand rolled w. virtual function  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">400%  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyLeft">any++ open method  </td><td class="markdownTableBodyRight"><b>120%</b>  </td><td class="markdownTableBodyRight"><b>150%</b>  </td><td class="markdownTableBodyRight"><b>300%</b>(*)  </td></tr>
+</table>
+<ul>
+<li>reference*:<ul>
+<li>100% in different colums do not compare<br  />
+</li>
+<li>100% <b>Single dispatch</b> does not compare to 100% <b>Double dispatch</b></li>
+</ul>
+</li>
+<li>any++ open method vs std::variant + std::visit with clang:<ul>
+<li>the meassured time with std::varaint/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.</li>
+</ul>
+</li>
+</ul>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+CI Matrix</h3>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadCenter">OS \ Compiler  </th><th class="markdownTableHeadCenter">MSVC  </th><th class="markdownTableHeadCenter">Clang  </th><th class="markdownTableHeadCenter">GCC  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">Windows(latest)  </td><td class="markdownTableBodyCenter">19  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">-  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyCenter">Ubuntu(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">14  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyCenter">MacOS(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">14  </td></tr>
+</table>
+</div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
 </div><!-- contents -->
 </div><!-- doc-content -->

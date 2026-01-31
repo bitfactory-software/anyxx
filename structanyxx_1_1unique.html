@@ -116,7 +116,7 @@ mutable_void&#160;</td><td class="memItemRight"><b>ptr</b> = nullptr</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Proxy to manage the captured object via std::unique_ptr-like smart pointer</p><ul>
-<li>If you pass a std::unique_ptr to the any constructor, this pointer will be released and the ownership goes to the unique. NOTE: The any_v_able will build with the value_type of the std::unique_ptr.</li>
+<li>If you pass a std::unique_ptr to the any constructor, this pointer will be released and the ownership goes to the unique. NOTE: The <a class="el" href="structanyxx_1_1any__v__table.html" title="any_v_table">any_v_table</a> will build with the value_type of the std::unique_ptr.</li>
 <li>If you pass an object as second parameter, with the std::in_place tag as first, this object will be moved to the memory managed by the unique.</li>
 <li>If you pass as first parameter std::in_place_type&lt;...&gt;, the object will be constructed in place in the allocated memory with the other arguments forwarded. </li>
 </ul>

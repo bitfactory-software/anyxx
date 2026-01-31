@@ -3452,126 +3452,126 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03710" name="l03710"></a><span class="lineno"> 3710</span><span class="preprocessor">                           name##_static_dispatch&gt;)</span></div>
 </div>
 <div class="line"><a id="l03711" name="l03711"></a><span class="lineno"> 3711</span></div>
-<div class="line"><a id="l03718" name="l03718"></a><span class="lineno"><a class="line" href="group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c"> 3718</a></span><span class="preprocessor">#define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);</span></div>
-<div class="line"><a id="l03720" name="l03720"></a><span class="lineno"> 3720</span> </div>
-<div class="line"><a id="l03721" name="l03721"></a><span class="lineno"> 3721</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l03722" name="l03722"></a><span class="lineno"> 3722</span> </div>
-<div class="line"><a id="l03723" name="l03723"></a><span class="lineno"> 3723</span><span class="preprocessor">#define ANY_META_CLASS_FWD(export_, ...) \</span></div>
-<div class="line"><a id="l03724" name="l03724"></a><span class="lineno"> 3724</span><span class="preprocessor">  template &lt;&gt;                            \</span></div>
-<div class="line"><a id="l03725" name="l03725"></a><span class="lineno"> 3725</span><span class="preprocessor">  export_ anyxx::meta_data&amp; anyxx::get_meta_data&lt;__VA_ARGS__&gt;();</span></div>
-<div class="line"><a id="l03726" name="l03726"></a><span class="lineno"> 3726</span> </div>
-<div class="line"><a id="l03727" name="l03727"></a><span class="lineno"> 3727</span><span class="preprocessor">#define ANY_META_CLASS(...)                                             \</span></div>
-<div class="line"><a id="l03728" name="l03728"></a><span class="lineno"> 3728</span><span class="preprocessor">  template &lt;&gt;                                                           \</span></div>
-<div class="line"><a id="l03729" name="l03729"></a><span class="lineno"> 3729</span><span class="preprocessor">  anyxx::meta_data&amp; anyxx::get_meta_data&lt;std::decay_t&lt;__VA_ARGS__&gt;&gt;() { \</span></div>
-<div class="line"><a id="l03730" name="l03730"></a><span class="lineno"> 3730</span><span class="preprocessor">    return runtime_implementation&lt;__VA_ARGS__&gt;();                       \</span></div>
-<div class="line"><a id="l03731" name="l03731"></a><span class="lineno"> 3731</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03732" name="l03732"></a><span class="lineno"> 3732</span> </div>
-<div class="line"><a id="l03733" name="l03733"></a><span class="lineno"> 3733</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l03734" name="l03734"></a><span class="lineno"> 3734</span></div>
-<div class="line"><a id="l03739" name="l03739"></a><span class="lineno"> 3739</span></div>
-<div class="line"><a id="l03745" name="l03745"></a><span class="lineno"><a class="line" href="group__meta__class__macros.html#ga7d04ec93bbe9774ea87b00affe3f960b"> 3745</a></span><span class="preprocessor">#define ANY_META_CLASS_FWD(...)</span></div>
-<div class="line"><a id="l03750" name="l03750"></a><span class="lineno"><a class="line" href="group__meta__class__macros.html#ga94ede558e44a0fd9d6a0a4e56bd68734"> 3750</a></span><span class="preprocessor">#define ANY_META_CLASS(...)</span></div>
-<div class="line"><a id="l03751" name="l03751"></a><span class="lineno"> 3751</span> </div>
-<div class="line"><a id="l03752" name="l03752"></a><span class="lineno"> 3752</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03717" name="l03717"></a><span class="lineno"><a class="line" href="group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c"> 3717</a></span><span class="preprocessor">#define VANY_DISPACH(namespace_, name) ANY_SINGLETON(namespace_, name);</span></div>
+<div class="line"><a id="l03719" name="l03719"></a><span class="lineno"> 3719</span> </div>
+<div class="line"><a id="l03720" name="l03720"></a><span class="lineno"> 3720</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l03721" name="l03721"></a><span class="lineno"> 3721</span> </div>
+<div class="line"><a id="l03722" name="l03722"></a><span class="lineno"> 3722</span><span class="preprocessor">#define ANY_META_CLASS_FWD(export_, ...) \</span></div>
+<div class="line"><a id="l03723" name="l03723"></a><span class="lineno"> 3723</span><span class="preprocessor">  template &lt;&gt;                            \</span></div>
+<div class="line"><a id="l03724" name="l03724"></a><span class="lineno"> 3724</span><span class="preprocessor">  export_ anyxx::meta_data&amp; anyxx::get_meta_data&lt;__VA_ARGS__&gt;();</span></div>
+<div class="line"><a id="l03725" name="l03725"></a><span class="lineno"> 3725</span> </div>
+<div class="line"><a id="l03726" name="l03726"></a><span class="lineno"> 3726</span><span class="preprocessor">#define ANY_META_CLASS(...)                                             \</span></div>
+<div class="line"><a id="l03727" name="l03727"></a><span class="lineno"> 3727</span><span class="preprocessor">  template &lt;&gt;                                                           \</span></div>
+<div class="line"><a id="l03728" name="l03728"></a><span class="lineno"> 3728</span><span class="preprocessor">  anyxx::meta_data&amp; anyxx::get_meta_data&lt;std::decay_t&lt;__VA_ARGS__&gt;&gt;() { \</span></div>
+<div class="line"><a id="l03729" name="l03729"></a><span class="lineno"> 3729</span><span class="preprocessor">    return runtime_implementation&lt;__VA_ARGS__&gt;();                       \</span></div>
+<div class="line"><a id="l03730" name="l03730"></a><span class="lineno"> 3730</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03731" name="l03731"></a><span class="lineno"> 3731</span> </div>
+<div class="line"><a id="l03732" name="l03732"></a><span class="lineno"> 3732</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l03733" name="l03733"></a><span class="lineno"> 3733</span></div>
+<div class="line"><a id="l03738" name="l03738"></a><span class="lineno"> 3738</span></div>
+<div class="line"><a id="l03744" name="l03744"></a><span class="lineno"><a class="line" href="group__meta__class__macros.html#ga7d04ec93bbe9774ea87b00affe3f960b"> 3744</a></span><span class="preprocessor">#define ANY_META_CLASS_FWD(...)</span></div>
+<div class="line"><a id="l03749" name="l03749"></a><span class="lineno"><a class="line" href="group__meta__class__macros.html#ga94ede558e44a0fd9d6a0a4e56bd68734"> 3749</a></span><span class="preprocessor">#define ANY_META_CLASS(...)</span></div>
+<div class="line"><a id="l03750" name="l03750"></a><span class="lineno"> 3750</span> </div>
+<div class="line"><a id="l03751" name="l03751"></a><span class="lineno"> 3751</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03752" name="l03752"></a><span class="lineno"> 3752</span> </div>
 <div class="line"><a id="l03753" name="l03753"></a><span class="lineno"> 3753</span> </div>
-<div class="line"><a id="l03754" name="l03754"></a><span class="lineno"> 3754</span> </div>
-<div class="line"><a id="l03755" name="l03755"></a><span class="lineno"> 3755</span><span class="preprocessor">#define ANY_META_CLASS_STATIC(...)  \</span></div>
-<div class="line"><a id="l03756" name="l03756"></a><span class="lineno"> 3756</span><span class="preprocessor">  ANY_META_CLASS_FWD(, __VA_ARGS__) \</span></div>
-<div class="line"><a id="l03757" name="l03757"></a><span class="lineno"> 3757</span><span class="preprocessor">  ANY_META_CLASS(__VA_ARGS__)</span></div>
-<div class="line"><a id="l03758" name="l03758"></a><span class="lineno"> 3758</span></div>
-<div class="foldopen" id="foldopen03767" data-start="" data-end="">
-<div class="line"><a id="l03767" name="l03767"></a><span class="lineno"><a class="line" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac"> 3767</a></span><span class="preprocessor">#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \</span></div>
-<div class="line"><a id="l03768" name="l03768"></a><span class="lineno"> 3768</span><span class="preprocessor">  namespace {                                                                 \</span></div>
-<div class="line"><a id="l03769" name="l03769"></a><span class="lineno"> 3769</span><span class="preprocessor">  static auto __ = anyxx::bind_v_table_to_meta_data&lt;                          \</span></div>
-<div class="line"><a id="l03770" name="l03770"></a><span class="lineno"> 3770</span><span class="preprocessor">      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \</span></div>
-<div class="line"><a id="l03771" name="l03771"></a><span class="lineno"> 3771</span><span class="preprocessor">      ANYXX_UNPAREN(class_)&gt;();                                               \</span></div>
-<div class="line"><a id="l03772" name="l03772"></a><span class="lineno"> 3772</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03754" name="l03754"></a><span class="lineno"> 3754</span><span class="preprocessor">#define ANY_META_CLASS_STATIC(...)  \</span></div>
+<div class="line"><a id="l03755" name="l03755"></a><span class="lineno"> 3755</span><span class="preprocessor">  ANY_META_CLASS_FWD(, __VA_ARGS__) \</span></div>
+<div class="line"><a id="l03756" name="l03756"></a><span class="lineno"> 3756</span><span class="preprocessor">  ANY_META_CLASS(__VA_ARGS__)</span></div>
+<div class="line"><a id="l03757" name="l03757"></a><span class="lineno"> 3757</span></div>
+<div class="foldopen" id="foldopen03766" data-start="" data-end="">
+<div class="line"><a id="l03766" name="l03766"></a><span class="lineno"><a class="line" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac"> 3766</a></span><span class="preprocessor">#define ANY_REGISTER_MODEL(class_, interface_, ...)                           \</span></div>
+<div class="line"><a id="l03767" name="l03767"></a><span class="lineno"> 3767</span><span class="preprocessor">  namespace {                                                                 \</span></div>
+<div class="line"><a id="l03768" name="l03768"></a><span class="lineno"> 3768</span><span class="preprocessor">  static auto __ = anyxx::bind_v_table_to_meta_data&lt;                          \</span></div>
+<div class="line"><a id="l03769" name="l03769"></a><span class="lineno"> 3769</span><span class="preprocessor">      interface_##_v_table _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(__VA_ARGS__), \</span></div>
+<div class="line"><a id="l03770" name="l03770"></a><span class="lineno"> 3770</span><span class="preprocessor">      ANYXX_UNPAREN(class_)&gt;();                                               \</span></div>
+<div class="line"><a id="l03771" name="l03771"></a><span class="lineno"> 3771</span><span class="preprocessor">  }</span></div>
 </div>
-<div class="line"><a id="l03773" name="l03773"></a><span class="lineno"> 3773</span></div>
-<div class="line"><a id="l03775" name="l03775"></a><span class="lineno"> 3775</span> </div>
-<div class="line"><a id="l03776" name="l03776"></a><span class="lineno"> 3776</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l03777" name="l03777"></a><span class="lineno"> 3777</span> </div>
-<div class="line"><a id="l03778" name="l03778"></a><span class="lineno"> 3778</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)  \</span></div>
-<div class="line"><a id="l03779" name="l03779"></a><span class="lineno"> 3779</span><span class="preprocessor">  namespace ns_ {                                \</span></div>
-<div class="line"><a id="l03780" name="l03780"></a><span class="lineno"> 3780</span><span class="preprocessor">  struct c_;                                     \</span></div>
-<div class="line"><a id="l03781" name="l03781"></a><span class="lineno"> 3781</span><span class="preprocessor">  }                                              \</span></div>
-<div class="line"><a id="l03782" name="l03782"></a><span class="lineno"> 3782</span><span class="preprocessor">  namespace anyxx {                              \</span></div>
-<div class="line"><a id="l03783" name="l03783"></a><span class="lineno"> 3783</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
-<div class="line"><a id="l03784" name="l03784"></a><span class="lineno"> 3784</span><span class="preprocessor">  export_ std::size_t&amp; members_count&lt;ns_::c_&gt;(); \</span></div>
-<div class="line"><a id="l03785" name="l03785"></a><span class="lineno"> 3785</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03786" name="l03786"></a><span class="lineno"> 3786</span> </div>
-<div class="line"><a id="l03787" name="l03787"></a><span class="lineno"> 3787</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \</span></div>
-<div class="line"><a id="l03788" name="l03788"></a><span class="lineno"> 3788</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
-<div class="line"><a id="l03789" name="l03789"></a><span class="lineno"> 3789</span><span class="preprocessor">  std::size_t&amp; anyxx::members_count&lt;ns_::c_&gt;() { \</span></div>
-<div class="line"><a id="l03790" name="l03790"></a><span class="lineno"> 3790</span><span class="preprocessor">    static std::size_t count = 0;                \</span></div>
-<div class="line"><a id="l03791" name="l03791"></a><span class="lineno"> 3791</span><span class="preprocessor">    return count;                                \</span></div>
-<div class="line"><a id="l03792" name="l03792"></a><span class="lineno"> 3792</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03793" name="l03793"></a><span class="lineno"> 3793</span> </div>
-<div class="line"><a id="l03794" name="l03794"></a><span class="lineno"> 3794</span><span class="preprocessor">#define ANY_MEMBER_FWD(export_, object_, member_, type_)           \</span></div>
-<div class="line"><a id="l03795" name="l03795"></a><span class="lineno"> 3795</span><span class="preprocessor">  export_ anyxx::member&lt;object_, type_&gt;&amp; _inintialize_##member_(); \</span></div>
-<div class="line"><a id="l03796" name="l03796"></a><span class="lineno"> 3796</span><span class="preprocessor">  inline const anyxx::member&lt;object_, type_&gt;&amp; member_ =            \</span></div>
-<div class="line"><a id="l03797" name="l03797"></a><span class="lineno"> 3797</span><span class="preprocessor">      _inintialize_##member_();</span></div>
-<div class="line"><a id="l03798" name="l03798"></a><span class="lineno"> 3798</span> </div>
-<div class="line"><a id="l03799" name="l03799"></a><span class="lineno"> 3799</span><span class="preprocessor">#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \</span></div>
-<div class="line"><a id="l03800" name="l03800"></a><span class="lineno"> 3800</span><span class="preprocessor">  anyxx::member&lt;object_, type_&gt;&amp; ns_::_inintialize_##member_() { \</span></div>
-<div class="line"><a id="l03801" name="l03801"></a><span class="lineno"> 3801</span><span class="preprocessor">    static anyxx::member&lt;object_, type_&gt; instance;               \</span></div>
-<div class="line"><a id="l03802" name="l03802"></a><span class="lineno"> 3802</span><span class="preprocessor">    return instance;                                             \</span></div>
-<div class="line"><a id="l03803" name="l03803"></a><span class="lineno"> 3803</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03804" name="l03804"></a><span class="lineno"> 3804</span> </div>
-<div class="line"><a id="l03805" name="l03805"></a><span class="lineno"> 3805</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l03806" name="l03806"></a><span class="lineno"> 3806</span> </div>
-<div class="line"><a id="l03807" name="l03807"></a><span class="lineno"> 3807</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(...)</span></div>
-<div class="line"><a id="l03808" name="l03808"></a><span class="lineno"> 3808</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(...)</span></div>
-<div class="line"><a id="l03809" name="l03809"></a><span class="lineno"> 3809</span><span class="preprocessor">#define ANY_MEMBER_FWD(...)</span></div>
-<div class="line"><a id="l03810" name="l03810"></a><span class="lineno"> 3810</span><span class="preprocessor">#define ANY_MEMBER_IMPL(...)</span></div>
-<div class="line"><a id="l03811" name="l03811"></a><span class="lineno"> 3811</span> </div>
-<div class="line"><a id="l03812" name="l03812"></a><span class="lineno"> 3812</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l03813" name="l03813"></a><span class="lineno"> 3813</span> </div>
-<div class="line"><a id="l03814" name="l03814"></a><span class="lineno"> 3814</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l03815" name="l03815"></a><span class="lineno"> 3815</span> </div>
-<div class="line"><a id="l03816" name="l03816"></a><span class="lineno"> 3816</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \</span></div>
-<div class="line"><a id="l03817" name="l03817"></a><span class="lineno"> 3817</span><span class="preprocessor">  namespace ns_ {}                                             \</span></div>
-<div class="line"><a id="l03818" name="l03818"></a><span class="lineno"> 3818</span><span class="preprocessor">  namespace anyxx {                                            \</span></div>
-<div class="line"><a id="l03819" name="l03819"></a><span class="lineno"> 3819</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
-<div class="line"><a id="l03820" name="l03820"></a><span class="lineno"> 3820</span><span class="preprocessor">  export_ std::size_t&amp; dispatchs_count&lt;ns_::any_##_v_table&gt;(); \</span></div>
-<div class="line"><a id="l03821" name="l03821"></a><span class="lineno"> 3821</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03822" name="l03822"></a><span class="lineno"> 3822</span> </div>
-<div class="line"><a id="l03823" name="l03823"></a><span class="lineno"> 3823</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(ns_, any_)                          \</span></div>
-<div class="line"><a id="l03824" name="l03824"></a><span class="lineno"> 3824</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
-<div class="line"><a id="l03825" name="l03825"></a><span class="lineno"> 3825</span><span class="preprocessor">  std::size_t&amp; anyxx::dispatchs_count&lt;ns_::any_##_v_table&gt;() { \</span></div>
-<div class="line"><a id="l03826" name="l03826"></a><span class="lineno"> 3826</span><span class="preprocessor">    static std::size_t count = 0;                              \</span></div>
-<div class="line"><a id="l03827" name="l03827"></a><span class="lineno"> 3827</span><span class="preprocessor">    return count;                                              \</span></div>
-<div class="line"><a id="l03828" name="l03828"></a><span class="lineno"> 3828</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03829" name="l03829"></a><span class="lineno"> 3829</span> </div>
-<div class="line"><a id="l03830" name="l03830"></a><span class="lineno"> 3830</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \</span></div>
-<div class="line"><a id="l03831" name="l03831"></a><span class="lineno"> 3831</span><span class="preprocessor">                             interface_)                            \</span></div>
-<div class="line"><a id="l03832" name="l03832"></a><span class="lineno"> 3832</span><span class="preprocessor">  namespace anyxx {                                                 \</span></div>
-<div class="line"><a id="l03833" name="l03833"></a><span class="lineno"> 3833</span><span class="preprocessor">  template &lt;&gt;                                                       \</span></div>
-<div class="line"><a id="l03834" name="l03834"></a><span class="lineno"> 3834</span><span class="preprocessor">  export_ dispatch_table_t* dispatch_table_instance&lt;                \</span></div>
-<div class="line"><a id="l03835" name="l03835"></a><span class="lineno"> 3835</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;();        \</span></div>
-<div class="line"><a id="l03836" name="l03836"></a><span class="lineno"> 3836</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03837" name="l03837"></a><span class="lineno"> 3837</span> </div>
-<div class="line"><a id="l03838" name="l03838"></a><span class="lineno"> 3838</span><span class="preprocessor">#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \</span></div>
-<div class="line"><a id="l03839" name="l03839"></a><span class="lineno"> 3839</span><span class="preprocessor">  template &lt;&gt;                                                      \</span></div>
-<div class="line"><a id="l03840" name="l03840"></a><span class="lineno"> 3840</span><span class="preprocessor">  anyxx::dispatch_table_t* anyxx::dispatch_table_instance&lt;         \</span></div>
-<div class="line"><a id="l03841" name="l03841"></a><span class="lineno"> 3841</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;() {      \</span></div>
-<div class="line"><a id="l03842" name="l03842"></a><span class="lineno"> 3842</span><span class="preprocessor">    return dispatch_table_instance_implementation&lt;                 \</span></div>
-<div class="line"><a id="l03843" name="l03843"></a><span class="lineno"> 3843</span><span class="preprocessor">        interface_namespace_::interface_##_v_table, class_&gt;();     \</span></div>
-<div class="line"><a id="l03844" name="l03844"></a><span class="lineno"> 3844</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l03845" name="l03845"></a><span class="lineno"> 3845</span> </div>
-<div class="line"><a id="l03846" name="l03846"></a><span class="lineno"> 3846</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l03847" name="l03847"></a><span class="lineno"> 3847</span></div>
-<div class="line"><a id="l03865" name="l03865"></a><span class="lineno"> 3865</span></div>
-<div class="line"><a id="l03871" name="l03871"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4"> 3871</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(...)</span></div>
-<div class="line"><a id="l03876" name="l03876"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43"> 3876</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT(...)</span></div>
-<div class="line"><a id="l03884" name="l03884"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga1373b948d1de7ce120d00aedb00a0e6b"> 3884</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(...)</span></div>
-<div class="line"><a id="l03891" name="l03891"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac"> 3891</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR(...)</span></div>
-<div class="line"><a id="l03892" name="l03892"></a><span class="lineno"> 3892</span></div>
-<div class="line"><a id="l03894" name="l03894"></a><span class="lineno"> 3894</span> </div>
-<div class="line"><a id="l03895" name="l03895"></a><span class="lineno"> 3895</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l03896" name="l03896"></a><span class="lineno"> 3896</span></div>
-<div class="line"><a id="l03909" name="l03909"></a><span class="lineno"> 3909</span> </div>
-<div class="line"><a id="l03910" name="l03910"></a><span class="lineno"> 3910</span></div>
+<div class="line"><a id="l03772" name="l03772"></a><span class="lineno"> 3772</span></div>
+<div class="line"><a id="l03774" name="l03774"></a><span class="lineno"> 3774</span> </div>
+<div class="line"><a id="l03775" name="l03775"></a><span class="lineno"> 3775</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l03776" name="l03776"></a><span class="lineno"> 3776</span> </div>
+<div class="line"><a id="l03777" name="l03777"></a><span class="lineno"> 3777</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)  \</span></div>
+<div class="line"><a id="l03778" name="l03778"></a><span class="lineno"> 3778</span><span class="preprocessor">  namespace ns_ {                                \</span></div>
+<div class="line"><a id="l03779" name="l03779"></a><span class="lineno"> 3779</span><span class="preprocessor">  struct c_;                                     \</span></div>
+<div class="line"><a id="l03780" name="l03780"></a><span class="lineno"> 3780</span><span class="preprocessor">  }                                              \</span></div>
+<div class="line"><a id="l03781" name="l03781"></a><span class="lineno"> 3781</span><span class="preprocessor">  namespace anyxx {                              \</span></div>
+<div class="line"><a id="l03782" name="l03782"></a><span class="lineno"> 3782</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
+<div class="line"><a id="l03783" name="l03783"></a><span class="lineno"> 3783</span><span class="preprocessor">  export_ std::size_t&amp; members_count&lt;ns_::c_&gt;(); \</span></div>
+<div class="line"><a id="l03784" name="l03784"></a><span class="lineno"> 3784</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03785" name="l03785"></a><span class="lineno"> 3785</span> </div>
+<div class="line"><a id="l03786" name="l03786"></a><span class="lineno"> 3786</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \</span></div>
+<div class="line"><a id="l03787" name="l03787"></a><span class="lineno"> 3787</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
+<div class="line"><a id="l03788" name="l03788"></a><span class="lineno"> 3788</span><span class="preprocessor">  std::size_t&amp; anyxx::members_count&lt;ns_::c_&gt;() { \</span></div>
+<div class="line"><a id="l03789" name="l03789"></a><span class="lineno"> 3789</span><span class="preprocessor">    static std::size_t count = 0;                \</span></div>
+<div class="line"><a id="l03790" name="l03790"></a><span class="lineno"> 3790</span><span class="preprocessor">    return count;                                \</span></div>
+<div class="line"><a id="l03791" name="l03791"></a><span class="lineno"> 3791</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03792" name="l03792"></a><span class="lineno"> 3792</span> </div>
+<div class="line"><a id="l03793" name="l03793"></a><span class="lineno"> 3793</span><span class="preprocessor">#define ANY_MEMBER_FWD(export_, object_, member_, type_)           \</span></div>
+<div class="line"><a id="l03794" name="l03794"></a><span class="lineno"> 3794</span><span class="preprocessor">  export_ anyxx::member&lt;object_, type_&gt;&amp; _inintialize_##member_(); \</span></div>
+<div class="line"><a id="l03795" name="l03795"></a><span class="lineno"> 3795</span><span class="preprocessor">  inline const anyxx::member&lt;object_, type_&gt;&amp; member_ =            \</span></div>
+<div class="line"><a id="l03796" name="l03796"></a><span class="lineno"> 3796</span><span class="preprocessor">      _inintialize_##member_();</span></div>
+<div class="line"><a id="l03797" name="l03797"></a><span class="lineno"> 3797</span> </div>
+<div class="line"><a id="l03798" name="l03798"></a><span class="lineno"> 3798</span><span class="preprocessor">#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \</span></div>
+<div class="line"><a id="l03799" name="l03799"></a><span class="lineno"> 3799</span><span class="preprocessor">  anyxx::member&lt;object_, type_&gt;&amp; ns_::_inintialize_##member_() { \</span></div>
+<div class="line"><a id="l03800" name="l03800"></a><span class="lineno"> 3800</span><span class="preprocessor">    static anyxx::member&lt;object_, type_&gt; instance;               \</span></div>
+<div class="line"><a id="l03801" name="l03801"></a><span class="lineno"> 3801</span><span class="preprocessor">    return instance;                                             \</span></div>
+<div class="line"><a id="l03802" name="l03802"></a><span class="lineno"> 3802</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03803" name="l03803"></a><span class="lineno"> 3803</span> </div>
+<div class="line"><a id="l03804" name="l03804"></a><span class="lineno"> 3804</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l03805" name="l03805"></a><span class="lineno"> 3805</span> </div>
+<div class="line"><a id="l03806" name="l03806"></a><span class="lineno"> 3806</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(...)</span></div>
+<div class="line"><a id="l03807" name="l03807"></a><span class="lineno"> 3807</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(...)</span></div>
+<div class="line"><a id="l03808" name="l03808"></a><span class="lineno"> 3808</span><span class="preprocessor">#define ANY_MEMBER_FWD(...)</span></div>
+<div class="line"><a id="l03809" name="l03809"></a><span class="lineno"> 3809</span><span class="preprocessor">#define ANY_MEMBER_IMPL(...)</span></div>
+<div class="line"><a id="l03810" name="l03810"></a><span class="lineno"> 3810</span> </div>
+<div class="line"><a id="l03811" name="l03811"></a><span class="lineno"> 3811</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03812" name="l03812"></a><span class="lineno"> 3812</span> </div>
+<div class="line"><a id="l03813" name="l03813"></a><span class="lineno"> 3813</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l03814" name="l03814"></a><span class="lineno"> 3814</span> </div>
+<div class="line"><a id="l03815" name="l03815"></a><span class="lineno"> 3815</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \</span></div>
+<div class="line"><a id="l03816" name="l03816"></a><span class="lineno"> 3816</span><span class="preprocessor">  namespace ns_ {}                                             \</span></div>
+<div class="line"><a id="l03817" name="l03817"></a><span class="lineno"> 3817</span><span class="preprocessor">  namespace anyxx {                                            \</span></div>
+<div class="line"><a id="l03818" name="l03818"></a><span class="lineno"> 3818</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
+<div class="line"><a id="l03819" name="l03819"></a><span class="lineno"> 3819</span><span class="preprocessor">  export_ std::size_t&amp; dispatchs_count&lt;ns_::any_##_v_table&gt;(); \</span></div>
+<div class="line"><a id="l03820" name="l03820"></a><span class="lineno"> 3820</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03821" name="l03821"></a><span class="lineno"> 3821</span> </div>
+<div class="line"><a id="l03822" name="l03822"></a><span class="lineno"> 3822</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(ns_, any_)                          \</span></div>
+<div class="line"><a id="l03823" name="l03823"></a><span class="lineno"> 3823</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
+<div class="line"><a id="l03824" name="l03824"></a><span class="lineno"> 3824</span><span class="preprocessor">  std::size_t&amp; anyxx::dispatchs_count&lt;ns_::any_##_v_table&gt;() { \</span></div>
+<div class="line"><a id="l03825" name="l03825"></a><span class="lineno"> 3825</span><span class="preprocessor">    static std::size_t count = 0;                              \</span></div>
+<div class="line"><a id="l03826" name="l03826"></a><span class="lineno"> 3826</span><span class="preprocessor">    return count;                                              \</span></div>
+<div class="line"><a id="l03827" name="l03827"></a><span class="lineno"> 3827</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03828" name="l03828"></a><span class="lineno"> 3828</span> </div>
+<div class="line"><a id="l03829" name="l03829"></a><span class="lineno"> 3829</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \</span></div>
+<div class="line"><a id="l03830" name="l03830"></a><span class="lineno"> 3830</span><span class="preprocessor">                             interface_)                            \</span></div>
+<div class="line"><a id="l03831" name="l03831"></a><span class="lineno"> 3831</span><span class="preprocessor">  namespace anyxx {                                                 \</span></div>
+<div class="line"><a id="l03832" name="l03832"></a><span class="lineno"> 3832</span><span class="preprocessor">  template &lt;&gt;                                                       \</span></div>
+<div class="line"><a id="l03833" name="l03833"></a><span class="lineno"> 3833</span><span class="preprocessor">  export_ dispatch_table_t* dispatch_table_instance&lt;                \</span></div>
+<div class="line"><a id="l03834" name="l03834"></a><span class="lineno"> 3834</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;();        \</span></div>
+<div class="line"><a id="l03835" name="l03835"></a><span class="lineno"> 3835</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03836" name="l03836"></a><span class="lineno"> 3836</span> </div>
+<div class="line"><a id="l03837" name="l03837"></a><span class="lineno"> 3837</span><span class="preprocessor">#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \</span></div>
+<div class="line"><a id="l03838" name="l03838"></a><span class="lineno"> 3838</span><span class="preprocessor">  template &lt;&gt;                                                      \</span></div>
+<div class="line"><a id="l03839" name="l03839"></a><span class="lineno"> 3839</span><span class="preprocessor">  anyxx::dispatch_table_t* anyxx::dispatch_table_instance&lt;         \</span></div>
+<div class="line"><a id="l03840" name="l03840"></a><span class="lineno"> 3840</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;() {      \</span></div>
+<div class="line"><a id="l03841" name="l03841"></a><span class="lineno"> 3841</span><span class="preprocessor">    return dispatch_table_instance_implementation&lt;                 \</span></div>
+<div class="line"><a id="l03842" name="l03842"></a><span class="lineno"> 3842</span><span class="preprocessor">        interface_namespace_::interface_##_v_table, class_&gt;();     \</span></div>
+<div class="line"><a id="l03843" name="l03843"></a><span class="lineno"> 3843</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l03844" name="l03844"></a><span class="lineno"> 3844</span> </div>
+<div class="line"><a id="l03845" name="l03845"></a><span class="lineno"> 3845</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l03846" name="l03846"></a><span class="lineno"> 3846</span></div>
+<div class="line"><a id="l03864" name="l03864"></a><span class="lineno"> 3864</span></div>
+<div class="line"><a id="l03870" name="l03870"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4"> 3870</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(...)</span></div>
+<div class="line"><a id="l03875" name="l03875"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43"> 3875</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT(...)</span></div>
+<div class="line"><a id="l03883" name="l03883"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga1373b948d1de7ce120d00aedb00a0e6b"> 3883</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(...)</span></div>
+<div class="line"><a id="l03890" name="l03890"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac"> 3890</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR(...)</span></div>
+<div class="line"><a id="l03891" name="l03891"></a><span class="lineno"> 3891</span></div>
+<div class="line"><a id="l03893" name="l03893"></a><span class="lineno"> 3893</span> </div>
+<div class="line"><a id="l03894" name="l03894"></a><span class="lineno"> 3894</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l03895" name="l03895"></a><span class="lineno"> 3895</span></div>
+<div class="line"><a id="l03908" name="l03908"></a><span class="lineno"> 3908</span> </div>
+<div class="line"><a id="l03909" name="l03909"></a><span class="lineno"> 3909</span></div>
 <div class="ttc" id="aanyxx_8hpp_html_aa0a344700732ba661e0fb701ef1eba2c"><div class="ttname"><a href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a></div><div class="ttdeci">auto trait_as(T &amp;&amp;v)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2638</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_abb32933fc2d3ddd4236f3075dd5c1562"><div class="ttname"><a href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; by_val&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1331</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_ad0e4d3c5ff9f0082cf07ef367b55c87a"><div class="ttname"><a href="anyxx_8hpp.html#ad0e4d3c5ff9f0082cf07ef367b55c87a">anyxx::dispatchs_count</a></div><div class="ttdeci">std::size_t &amp; dispatchs_count()</div><div class="ttdoc">A counter for dispatch tables per v-table type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3170</div></div>
