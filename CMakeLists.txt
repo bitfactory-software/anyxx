@@ -74,9 +74,6 @@ add_library(anyxx::anyxx_warnings ALIAS anyxx_warnings)
 #add_library(anyxx::anyxx_options INTERFACE IMPORTED)
 #add_library(anyxx::anyxx_warnings INTERFACE IMPORTED)
 
-# configure files based on CMake configuration options
-add_subdirectory(configured_files)
-
 # Adding the anyxx:
 add_subdirectory(bit_factory)
 

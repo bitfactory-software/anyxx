@@ -34,7 +34,7 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 [![Static Badge](https://img.shields.io/badge/dos-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
 
-#Any++ : How to* trait** any** virtual*, *static* or *variant* ?
+#Any++ : How to ``trait`` ``any`` ``virtual``, ``static`` or ``variant``?
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
@@ -61,8 +61,8 @@ The combination of static and dynamic dispatch enables
 - a hybrid usage of `std::variant` and **type erasure** to balance performance and coupling.
 - C++0x-like concept maps for static and dynamic customization points and default behavior.
 
-
-### <a name="showcase1"></a> Showcase 1: Basic *Any++* usage
+<a name="showcase1"></a> 
+### Showcase 1: Basic *Any++* usage
 ```cpp
 // <!--
 #endif
@@ -140,7 +140,8 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | Ubuntu(latest)           | - | 21   | 14 | 
 | MacOS(latest)           | - | 21   | 14 | 
 
-### <a name="showcase2"></a> Showcase 2: *Any++* with Model Map
+<a name="showcase2"></a> 
+### Showcase 2: *Any++* with Model Map
 ```cpp
 // <!--
 #endif
@@ -182,7 +183,8 @@ TEST_CASE("Showcase2") {
 ```
 [Compiler Explorer] **TODO**
 
-### <a name="showcase3"></a> Showcase 3: *Any++* Open Multi Dispatch, (Type erased binary operator)
+<a name="showcase3"></a> 
+### Showcase 3: *Any++* Open Multi Dispatch, (Type erased binary operator)
 ```cpp
 // <!--
 #endif
@@ -251,6 +253,8 @@ TEST_CASE("Showcase3") {
 ```
 [Compiler Explorer] **TODO**
 
+
+If you are still here, you are ready for (more Examples)[https://www.alexweb.io/anyxx/examples.html]
 <!--
 #endif
 // -->
