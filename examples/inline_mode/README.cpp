@@ -28,7 +28,7 @@
 //
 #if 0
 // -->
-[Hello world!](#showcase1) / [Model Map](#showcase2)
+[Hello World!](#showcase1) / [Model Map](#showcase2) / [Type erased Spaceship](#showcase3) 
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
@@ -140,7 +140,7 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | Ubuntu(latest)           | - | 21   | 14 | 
 | MacOS(latest)           | - | 21   | 14 | 
 
-### <a name="showcase2"></a> Showcase 2: Basic *Any++* with Model Map
+### <a name="showcase2"></a> Showcase 2: *Any++* with Model Map
 ```cpp
 // <!--
 #endif
@@ -176,6 +176,75 @@ TEST_CASE("Showcase2") {
   CHECK(ss.str() == "Silent greetings\nedgy World\n");
 }
 };  // namespace showcase2
+// <!--
+#if 0
+// -->
+```
+[Compiler Explorer] **TODO**
+
+### <a name="showcase3"></a> Showcase 3: *Any++* Open Multi Dispatch, (Type erased binary operator)
+```cpp
+// <!--
+#endif
+// -->
+namespace showcase3 {
+#include <bit_factory/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <compare>
+#include <string>
+
+namespace ayx = anyxx;
+
+struct circle {
+  std::string name() const { return "circle"; }
+};
+struct square {
+  std::string name() const { return "square"; }
+};
+
+struct figure_has_open_dispatch {};
+ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)
+
+anyxx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
+                                      ayx::virtual_<any_figure<>>)>
+    comapare_edges;
+
+std::partial_ordering operator<=>(any_figure<> const& l,
+                                  any_figure<> const& r) {
+  return comapare_edges(l, r);
+}
+
+auto __ = comapare_edges.define<circle, circle>(
+    [](auto const&, auto const&) { return std::partial_ordering::equivalent; });
+auto __ = comapare_edges.define<circle, square>(
+    [](auto const&, auto const&) { return std::partial_ordering::less; });
+auto __ = comapare_edges.define<square, square>(
+    [](auto const&, auto const&) { return std::partial_ordering::equivalent; });
+auto __ = comapare_edges.define<square, circle>(
+    [](auto const&, auto const&) { return std::partial_ordering::greater; });
+
+void compare_each(std::stringstream& os,
+                  std::vector<anyxx::any<anyxx::val, figure>> const& figures) {
+  std::string sep;
+  for (auto const& l : figures)
+    for (auto const& r : figures) {
+      os << std::exchange(sep, ", ") << l.name() << " ";
+      if (l == r)
+        os << "==";
+      else if (l < r)
+        os << "<";
+      else
+        os << ">";
+      os << " " << r.name();
+    }
+}
+
+TEST_CASE("Showcase3") {
+  std::stringstream ss;
+  compare_each(ss, {circle{}, square{}});
+  CHECK(ss.str() == "circle == circle, circle < square, square > circle, square == square");
+}
+};  // namespace showcase3
 // <!--
 #if 0
 // -->
