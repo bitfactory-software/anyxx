@@ -29,7 +29,9 @@
 #if 0
 // -->
 [Hello World!](#showcase1) / [Model Map](#showcase2) / [Type Erased Spaceship](#showcase3) / [Open Dispatch As Visiitor](#showcase4) 
-/ [Crosscast + Factory = Serialization](#showcase5) / [Basic *Any++* std::variant usage](#showcase6)
+/ [Crosscast + Factory = Serialization](#showcase5) / [Basic *Any++* std::variant usage](#showcase6) 
+/ [Basic *Any++* open std::variant usage: 'vany'](#showcase7)
+
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
@@ -98,6 +100,8 @@ TEST_CASE("Showcase1") {
 // -->
 ```
 [Compiler Explorer] **TODO**
+
+[More Showcases here...](#showcase2) [Docs](https://www.alexweb.io/anyxx/)
 
 ### Available via vcpkg
 
@@ -379,7 +383,7 @@ void areas(std::stringstream& os,
 }
 
 TEST_CASE("Showcase5") {
-  std::stringstream archive{": circle 1 : square 2 : circle 3 : circle 4 end" };
+  std::stringstream archive{": circle 1 : square 2 : circle 3 : circle 4 end"};
   std::vector<any_figure<>> figures;
   std::string more;
   for (archive >> more; more != "end"; archive >> more)
@@ -428,7 +432,8 @@ TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
 using known_shapes = std::variant<circle, square>;
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<anyxx::by_val<known_shapes>, drawable>> const& drawables) {
+          std::vector<anyxx::any<anyxx::by_val<known_shapes>, drawable>> const&
+              drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -437,7 +442,57 @@ TEST_CASE("Showcase6") {
   draw(ss, {circle{}, square{}});
   CHECK(ss.str() == "Hello\nWorld\n");
 }
-}  // namespace showcase1
+}  // namespace showcase6
+// <!--
+#if 0
+// -->
+```
+[Compiler Explorer] **TODO**
+
+<a name="showcase7"></a> 
+### Showcase 7: Basic *Any++* open std::variant usage: 'vany'
+```cpp
+// <!--
+#endif
+// -->
+#include <bit_factory/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <string>
+
+namespace showcase7 {
+namespace ayx = anyxx;
+using namespace std::string_literals;
+
+struct circle {
+  std::string draw() const { return "Hello"; }
+};
+struct square {
+  std::string draw() const { return "World"; }
+};
+
+ANY(figure, (ANY_FN(std::string, draw, (), const)), ayx::val)
+
+using known_and_unknown_shapes =
+    anyxx::make_vany<any_figure, ayx::val, circle, square>;
+static_assert(
+    std::same_as<known_and_unknown_shapes,
+                 any_figure<ayx::by_val<  // see the Any++ logo at the top
+                     std::variant<any_figure<ayx::val>, circle, square>>>>);
+ANY_MODEL_MAP((std::string), figure) {
+  static std::string draw(std::string const& s) { return s; };
+};
+
+void draw(std::stringstream& os,
+          std::vector<known_and_unknown_shapes> const& figures) {
+  for (auto const& f : figures) os << f.draw() << "\n";
+}
+
+TEST_CASE("Showcase7") {
+  std::stringstream ss;
+  draw(ss, {circle{}, square{}, any_figure<>{"The big unknown..."s}});
+  CHECK(ss.str() == "Hello\nWorld\nThe big unknown...\n");
+}
+}  // namespace showcase7
 // <!--
 #if 0
 // -->
