@@ -23,7 +23,7 @@
 //
 #if 0
 // -->
-[Hello world!](#Showcase-1:-Basic-*Any++*-usage)
+[Hello world!](#showcase1)
 
 [![MIT Licence](http://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit)
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
@@ -56,6 +56,7 @@ The combination of static and dynamic dispatch enables
 - a hybrid usage of `std::variant` and **type erasure** to balance performance and coupling.
 - C++0x-like concept maps for static and dynamic customization points and default behavior.
 
+<a name="showcase1"></a>
 ### Showcase 1: Basic *Any++* usage
 ```cpp
 #include <bit_factory/anyxx.hpp>
