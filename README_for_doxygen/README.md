@@ -189,6 +189,8 @@ TEST_CASE("Showcase2") {
 // <!--
 #endif
 // -->
+#if !defined(__clang__)  // clang makes no rewrite for our <=> operator :-(
+                         // gcc and msvc do!
 namespace showcase3 {
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -244,9 +246,11 @@ void compare_each(std::stringstream& os,
 TEST_CASE("Showcase3") {
   std::stringstream ss;
   compare_each(ss, {circle{}, square{}});
-  CHECK(ss.str() == "circle == circle, circle < square, square > circle, square == square");
+  CHECK(ss.str() ==
+        "circle == circle, circle < square, square > circle, square == square");
 }
 };  // namespace showcase3
+#endif  // __clang__
 // <!--
 #if 0
 // -->
