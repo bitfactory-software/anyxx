@@ -1,1 +1,1 @@
-../examples/inline_mode/README.cpp1
+../examples/inline_mode/README.cpp
