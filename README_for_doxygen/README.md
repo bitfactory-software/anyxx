@@ -61,8 +61,8 @@ The combination of static and dynamic dispatch enables
 - a hybrid usage of `std::variant` and **type erasure** to balance performance and coupling.
 - C++0x-like concept maps for static and dynamic customization points and default behavior.
 
-
-### <a name="showcase1"></a> Showcase 1: Basic *Any++* usage
+<a name="showcase1"></a> 
+### Showcase 1: Basic *Any++* usage
 ```cpp
 // <!--
 #endif
@@ -140,7 +140,8 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | Ubuntu(latest)           | - | 21   | 14 | 
 | MacOS(latest)           | - | 21   | 14 | 
 
-### <a name="showcase2"></a> Showcase 1: Basic *Any++* with Model Map
+<a name="showcase2"></a>
+###  Showcase 2: Basic *Any++* with Model Map
 ```cpp
 // <!--
 #endif

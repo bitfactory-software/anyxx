@@ -140,7 +140,7 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | Ubuntu(latest)           | - | 21   | 14 | 
 | MacOS(latest)           | - | 21   | 14 | 
 
-### <a name="showcase2"></a> Showcase 1: Basic *Any++* with Model Map
+### <a name="showcase2"></a> Showcase 2: Basic *Any++* with Model Map
 ```cpp
 // <!--
 #endif
