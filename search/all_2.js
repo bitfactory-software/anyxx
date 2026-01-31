@@ -4,13 +4,13 @@ var searchData=
   ['and_20any_5fop_20macros_1',['ANY_FN... and ANY_OP macros',['../group__fn__macros.html',1,'']]],
   ['and_20definitions_20in_20context_20of_20any_2',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
   ['any_3',['ANY',['../group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22',1,'anyxx.hpp']]],
-  ['any_4',['Any',['../index.html',1,'Any++'],['../md_docs_2terms__and__definitions.html',1,'Terms and Definitions in Context of &lt;tt&gt;Any++&lt;/tt&gt;'],['../md_docs_2Traits__inner__working.html',1,'The Inner Working Of &lt;tt&gt;Traits&lt;/tt&gt; In &lt;tt&gt;Any++&lt;/tt&gt;']]],
+  ['any_4',['Any',['../index.html',1,'Any++'],['../md_docs_2Constness.html',1,'Handling &lt;tt&gt;const&lt;/tt&gt; in &lt;tt&gt;Any++&lt;/tt&gt;'],['../md_docs_2terms__and__definitions.html',1,'Terms and Definitions in Context of &lt;tt&gt;Any++&lt;/tt&gt;'],['../md_docs_2Traits__inner__working.html',1,'The Inner Working Of &lt;tt&gt;Traits&lt;/tt&gt; In &lt;tt&gt;Any++&lt;/tt&gt;']]],
   ['any_5',['any',['../classanyxx_1_1any.html',1,'anyxx::any&lt; Proxy, Trait &gt;'],['../classanyxx_1_1any.html#a440c04e593e924f0518702df4b55cf60',1,'anyxx::any::any(std::in_place_t, V &amp;&amp;v)'],['../classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3',1,'anyxx::any::any(std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)']]],
-  ['any_20_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md22',1,'']]],
+  ['any_20_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md23',1,'']]],
   ['any_20type_20erased_20proxy_20s_7',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
-  ['any_20usage_8',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md23',1,'']]],
-  ['any_20versus_20typed_5fany_9',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
-  ['any_20virtual_20static_20or_20variant_10',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md22',1,'']]],
+  ['any_20usage_8',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md24',1,'']]],
+  ['any_20versus_20typed_5fany_9',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
+  ['any_20virtual_20static_20or_20variant_10',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md23',1,'']]],
   ['any_3c_20box_2c_20trait_20_3e_11',['any&lt; Box, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20by_5fval_3c_20functor_20_26_20_3e_2c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_20_3e_12',['any&lt; by_val&lt; functor &amp; &gt;, function&lt; int(double), const_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20by_5fval_3c_20functor_20_26_20_3e_2c_20function_3c_20int_28double_29_2c_20mutable_5f_20_3e_20_3e_13',['any&lt; by_val&lt; functor &amp; &gt;, function&lt; int(double), mutable_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
@@ -56,5 +56,5 @@ var searchData=
   ['any_5fv_5ftable_53',['any_v_table',['../structanyxx_1_1any__v__table.html',1,'anyxx::any_v_table'],['../structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205',1,'anyxx::any_v_table::any_v_table()']]],
   ['anyxx_2ehpp_54',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
   ['as_55',['as',['../structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561',1,'anyxx::by_val']]],
-  ['available_20via_20vcpkg_56',['Available via vcpkg',['../index.html#autotoc_md24',1,'']]]
+  ['available_20via_20vcpkg_56',['Available via vcpkg',['../index.html#autotoc_md25',1,'']]]
 ];

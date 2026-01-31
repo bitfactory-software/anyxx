@@ -1,13 +1,13 @@
 var searchData=
 [
   ['terms_20and_20definitions_20in_20context_20of_20any_0',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
-  ['the_20generated_20code_1',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md21',1,'']]],
+  ['the_20generated_20code_1',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md22',1,'']]],
   ['the_20inner_20working_20of_20traits_20in_20any_2',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
-  ['to_20trait_20any_20virtual_20static_20or_20variant_3',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md22',1,'']]],
+  ['to_20trait_20any_20virtual_20static_20or_20variant_3',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md23',1,'']]],
   ['trait_4',['TRAIT',['../group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9',1,'anyxx.hpp']]],
   ['trait_20and_20any_5f_20macros_5',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
-  ['trait_20any_20virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md22',1,'']]],
-  ['trait_20jacket_7',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md7',1,'']]],
+  ['trait_20any_20virtual_20static_20or_20variant_6',['Any++ : How to &lt;em&gt;trait&lt;/em&gt; &lt;em&gt;any&lt;/em&gt; &lt;em&gt;virtual&lt;/em&gt;, &lt;em&gt;static&lt;/em&gt; or &lt;em&gt;variant&lt;/em&gt;?',['../index.html#autotoc_md23',1,'']]],
+  ['trait_20jacket_7',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md8',1,'']]],
   ['trait_5f_8',['TRAIT_',['../group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b',1,'anyxx.hpp']]],
   ['trait_5fas_9',['trait_as',['../anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c',1,'anyxx']]],
   ['trait_5fex_10',['TRAIT_EX',['../group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c',1,'anyxx.hpp']]],
@@ -17,7 +17,7 @@ var searchData=
   ['trait_5ftemplate_5fex_14',['TRAIT_TEMPLATE_EX',['../group__trait__macros.html#ga8d4680fe2c2a272dcb00310f92cfbb39',1,'anyxx.hpp']]],
   ['trait_5ftemplate_5fex_5f_15',['TRAIT_TEMPLATE_EX_',['../group__trait__macros.html#ga5ee874de4f2988dc14324d0e652712aa',1,'anyxx.hpp']]],
   ['traits_20in_20any_16',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
-  ['txt_3a_17',['Useage in CMakeLists.txt:',['../index.html#autotoc_md25',1,'']]],
+  ['txt_3a_17',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
   ['type_20erased_20proxy_20s_18',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
-  ['typed_5fany_19',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]]
+  ['typed_5fany_19',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]]
 ];
