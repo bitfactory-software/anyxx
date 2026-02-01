@@ -149,6 +149,8 @@ Concepts</h2></td></tr>
 Macros</h2></td></tr>
 <tr class="memitem:a37bc3dacb49779a0d18439d4383e5fd9" id="r_a37bc3dacb49779a0d18439d4383e5fd9"><td class="memItemLeft"><a id="a37bc3dacb49779a0d18439d4383e5fd9" name="a37bc3dacb49779a0d18439d4383e5fd9"></a>
 #define&#160;</td><td class="memItemRight"><b>LIFETIMEBOUND</b></td></tr>
+<tr class="memitem:a671fdfb77f26710e3f24192e755f8db0" id="r_a671fdfb77f26710e3f24192e755f8db0"><td class="memItemLeft"><a id="a671fdfb77f26710e3f24192e755f8db0" name="a671fdfb77f26710e3f24192e755f8db0"></a>
+#define&#160;</td><td class="memItemRight"><b>AYXFORCEDINLINE</b>&#160;&#160;&#160;inline __attribute__((always_inline))</td></tr>
 <tr class="memitem:a2ab335b63d7d58ba6e46b550fd42a712" id="r_a2ab335b63d7d58ba6e46b550fd42a712"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2ab335b63d7d58ba6e46b550fd42a712">ANYXX_EXTRACT</a>(...)</td></tr>
 <tr class="memitem:ae5e8f4c5d62a2b3be7d8550581af037b" id="r_ae5e8f4c5d62a2b3be7d8550581af037b"><td class="memItemLeft"><a id="ae5e8f4c5d62a2b3be7d8550581af037b" name="ae5e8f4c5d62a2b3be7d8550581af037b"></a>
 #define&#160;</td><td class="memItemRight"><b>ANYXX_NOTHING_ANYXX_EXTRACT</b></td></tr>
@@ -1404,7 +1406,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keyword">auto</span> name([[maybe_unused]] T const_&amp; x __VA_OPT__(                  \</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> AYXFORCEDINLINE <span class="keyword">auto</span> name([[maybe_unused]] T const_&amp; x __VA_OPT__(  \</div>
 <div class="line">    , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \</div>
 <div class="line">    -&gt; anyxx::map_return&lt;T, ANYXX_UNPAREN(type)&gt; {                         \</div>
 <div class="line">  <span class="keywordflow">return</span> _detail_REMOVE_PARENS(trait_body)(                                \</div>
@@ -1568,7 +1570,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keyword">auto</span> name([[maybe_unused]] T const_&amp; x __VA_OPT__(                  \</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">static</span> AYXFORCEDINLINE <span class="keyword">auto</span> name([[maybe_unused]] T const_&amp; x __VA_OPT__(  \</div>
 <div class="line">    , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \</div>
 <div class="line">    -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {                                                    \</div>
 <div class="line">  <span class="keywordflow">return</span> std::visit(                                                       \</div>
