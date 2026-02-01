@@ -96,15 +96,15 @@ $(function(){initNavTree('md_docs_2Proxy__overview.html','',''); });
 Overview</h2>
 <table class="markdownTable">
 <tr class="markdownTableHead">
-<th class="markdownTableHeadNone">Proxy type  </th><th class="markdownTableHeadNone">Lifetime requirements  </th><th class="markdownTableHeadNone">Concurrency considerations / Notes  </th></tr>
+<th class="markdownTableHeadNone">Proxy type  </th><th class="markdownTableHeadNone">Lifetime  </th><th class="markdownTableHeadNone">Concurrency considerations / Notes  </th></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">cref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  </td><td class="markdownTableBodyNone">Threadsafe, if observed object self is <span class="tt">const</span> during lifetime of observer.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">cref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  Constructed with <span class="tt">[[msvc/clang::lifetimebound]]</span>  </td><td class="markdownTableBodyNone">Threadsafe, if observed object self is <span class="tt">const</span> during lifetime of observer.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">mutref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  </td><td class="markdownTableBodyNone">Not threadsafe.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">mutref</span>  </td><td class="markdownTableBodyNone">Observed object must outlive call.  Constructed with <span class="tt">[[msvc/clang::lifetimebound]]</span>  </td><td class="markdownTableBodyNone">Not threadsafe.  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyNone"><span class="tt">shared</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::shared_ptr</span>.  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">shared</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::shared_ptr&lt; const&gt;</span>.  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone"><span class="tt">unique</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::unique_ptr</span>.  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
+<td class="markdownTableBodyNone"><span class="tt">unique</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::unique_ptr</span>  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone"><span class="tt">value</span>  </td><td class="markdownTableBodyNone">Same as <span class="tt">std::any</span>  </td><td class="markdownTableBodyNone">Threadsafe.  </td></tr>
 </table>
