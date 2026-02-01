@@ -99,6 +99,14 @@ TEST_CASE("Showcase1") {
 #if 0
 // -->
 ```
+Showcase 1 demonstrates the most basic usage of the Any++ library for type-erased 
+polymorphism in C++. It defines two simple types, circle and square, each with a draw() method 
+returning a string. Using the Any++ macro system, a drawable trait is declared, 
+specifying the required interface (draw() const -> std::string).
+
+The draw function takes a vector of type-erased any objects that conform to the drawable trait.
+It shows how to create and use a heterogeneous collection of unrelated objects (circle and square).
+
 [Compiler Explorer] **TODO**
 
 [More Showcases here...](#showcase2) [Docs](https://www.alexweb.io/anyxx/)
@@ -186,6 +194,9 @@ TEST_CASE("Showcase2") {
 #if 0
 // -->
 ```
+Showcase 2 demonstrates, how to use the ``Any++`` library's "model map" feature 
+to provide custom behavior for different types using traits, whitch have nothing in common.
+
 [Compiler Explorer] **TODO**
 
 <a name="showcase3"></a> 
@@ -260,6 +271,13 @@ TEST_CASE("Showcase3") {
 #if 0
 // -->
 ```
+Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:
+•	Two types, circle and square, are defined, each with a name() method.
+•	A figure trait is declared using the Any++ macro system, specifying a name() function.
+•	The dispatch<R(Args...)> mechanism is used to define a type-erased, runtime-resolved binary operator (operator<=>) for comparing two any_figure<> objects.
+•	The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result.
+•	The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.
+
 [Compiler Explorer] **TODO**
 
 
@@ -313,6 +331,14 @@ TEST_CASE("Showcase4") {
 #if 0
 // -->
 ```
+Showcase 4 demonstrates how to use the Any++ library to implement open dispatch in the style of a visitor pattern, enabling runtime selection of behavior for different types without inheritance or virtual functions.
+•	Two types, circle and square, each provide a name() method.
+•	A figure trait is defined, specifying the required interface.
+•	Two open dispatchers, latin and italian, are created using dispatch<R(Args...)>, each mapping a figure to a localized string.
+•	The dispatchers are populated with type-specific translations for circle and square.
+•	The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian.
+This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity **without boilerplate**.
+
 [Compiler Explorer] **TODO**
 
 <a name="showcase5"></a> 
@@ -407,6 +433,16 @@ TEST_CASE("Showcase5") {
 #if 0
 // -->
 ```
+Showcase 5 demonstrates how to use the Any++ library to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.
+•	Two types, circle and square, are defined, each with an area() method and serializable state (radius or edge_length).
+•	Two traits are declared: figure (with an area() method) and serializeable (with a serialize(std::ostream&) method).
+•	A factory (deserialize) is created to construct type-erased any_serializeable objects from a type name and an input stream.
+•	Model maps provide custom serialization logic for each type.
+•	The deserialize_any_figure function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.
+•	The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input.
+Summary:
+This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.
+
 [Compiler Explorer] **TODO**
 
 <a name="showcase6"></a> 
@@ -446,7 +482,15 @@ TEST_CASE("Showcase6") {
 // <!--
 #if 0
 // -->
-```
+```Showcase 6 demonstrates how to use the Any++ library with `std::variant` to enable type-erased polymorphism over a fixed set of types.
+- Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
+- A `drawable` trait is declared, specifying the required interface (`draw() const -> std::string`).
+- A `known_shapes` type alias is defined as `std::variant<circle, square>`, representing a closed set of possible shapes.
+- The function `draw` takes a vector of type-erased objects (`anyxx::any<anyxx::by_val<known_shapes>, drawable>`) and calls `draw()` on each, writing the results to a stringstream.
+- The Catch2 test verifies that drawing a `circle` and a `square` produces the expected output.
+This example shows how Any++ can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
+Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
+
 [Compiler Explorer] **TODO**
 
 <a name="showcase7"></a> 
@@ -497,6 +541,22 @@ TEST_CASE("Showcase7") {
 #if 0
 // -->
 ```
+Showcase 7 demonstrates how to use the Any++ library to combine open type erasure with `std::variant` for extensible,
+heterogeneous collections. Let us call them "vany" (variant-any).
+- Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
+- A `figure` trait is declared, specifying the required interface (`draw() const -> std::string`).
+- The type alias `known_and_unknown_shapes` is created using `anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:
+  - All known types (`circle`, `square`)
+  - An open-ended type-erased fallback (`any_figure<ayx::val>`)
+- A model map is provided for `std::string`, allowing strings to be handled as figures.
+- So the vector passed to ``draw`` can seamlessly contain both known types (like circle and square) and dynamically extended types (like std::string), all accessed through the same trait-based interface. 
+
+This example shows how Any++ enables a hybrid approach: you get the performance of `std::variant` for known types, 
+while still supporting open-ended extension with type-erased objects. This is useful for scenarios where you want 
+to handle a fixed set of types efficiently, but also allow for runtime extension or plugin types, all through a uniform trait-based interface.
+
+"vany" is a modern, safer, and extensible ~~variant~~ version of OLEVariant and QVariant.
+
 [Compiler Explorer] **TODO**
 
 
