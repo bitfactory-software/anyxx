@@ -132,10 +132,10 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>showcase1 {</div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
@@ -157,7 +157,9 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:755</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:526</div></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 1 demonstrates the most basic usage of the Any++ library for type-erased polymorphism in C++. It defines two simple types, circle and square, each with a draw() method returning a string. Using the Any++ macro system, a drawable trait is declared, specifying the required interface (draw() const -&gt; std::string).</p>
+<p>The draw function takes a vector of type-erased any objects that conform to the drawable trait. It shows how to create and use a heterogeneous collection of unrelated objects (circle and square).</p>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="el" href="#showcase2" title="showcase2">More Showcases here...</a> <a href="https://www.alexweb.io/anyxx/">Docs</a></p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Available via vcpkg</h3>
@@ -237,7 +239,7 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
@@ -265,7 +267,8 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:883</div></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 2 demonstrates, how to use the <span class="tt">Any++</span> library's "model map" feature to provide custom behavior for different types using traits, whitch have nothing in common.</p>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase3"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h3>
@@ -283,10 +286,10 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
@@ -296,8 +299,8 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line">                                      ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</div>
 <div class="line">    comapare_edges;</div>
 <div class="line"> </div>
-<div class="line">std::partial_ordering operator&lt;=&gt;(any_figure&lt;&gt; <span class="keyword">const</span>&amp; l,</div>
-<div class="line">                                  any_figure&lt;&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(any_figure&lt;&gt; <span class="keyword">const</span>&amp; l,</div>
+<div class="line">                                                any_figure&lt;&gt; <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  <span class="keywordflow">return</span> comapare_edges(l, r);</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -338,7 +341,8 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:631</div></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example: • Two types, circle and square, are defined, each with a name() method. • A figure trait is declared using the Any++ macro system, specifying a name() function. • The dispatch&lt;R(Args...)&gt; mechanism is used to define a type-erased, runtime-resolved binary operator (operator&lt;=&gt;) for comparing two any_figure&lt;&gt; objects. • The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result. • The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</p>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase4"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
@@ -353,10 +357,10 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 <div class="line"><span class="keyword">namespace </span>ayx = anyxx;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;circle&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
@@ -388,7 +392,8 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 4 demonstrates how to use the Any++ library to implement open dispatch in the style of a visitor pattern, enabling runtime selection of behavior for different types without inheritance or virtual functions. • Two types, circle and square, each provide a name() method. • A figure trait is defined, specifying the required interface. • Two open dispatchers, latin and italian, are created using dispatch&lt;R(Args...)&gt;, each mapping a figure to a localized string. • The dispatchers are populated with type-specific translations for circle and square. • The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian. This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity <b>without boilerplate</b>.</p>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase5"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
@@ -404,10 +409,10 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
 <div class="line">  <span class="keywordtype">double</span> radius = 0.0;</div>
-<div class="line">  <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> radius * radius * 3.14; }</div>
+<div class="line">  [[nodiscard]] <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> radius * radius * 3.14; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> edge_length * edge_length; }</div>
+<div class="line">  [[nodiscard]] <span class="keywordtype">double</span> area()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> edge_length * edge_length; }</div>
 <div class="line">  <span class="keywordtype">double</span> edge_length = 0.0;</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -417,7 +422,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"> </div>
 <div class="line">ayx::factory&lt;any_serializeable, std::string, std::istream&amp;&gt; deserialize;</div>
 <div class="line"> </div>
-<div class="line">any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
+<div class="line">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
 <div class="line">  std::string type;</div>
 <div class="line">  archive &gt;&gt; type;</div>
 <div class="line">  <span class="keywordflow">return</span> ayx::move_to&lt;any_figure&lt;&gt;&gt;(</div>
@@ -468,7 +473,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  CHECK(ss.str() == <span class="stringliteral">&quot;3.14, 4, 28.26, 50.24&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">  std::stringstream serialized;</div>
-<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> f : figures) {</div>
+<div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) {</div>
 <div class="line">    serialized &lt;&lt; <span class="stringliteral">&quot;: &quot;</span>;</div>
 <div class="line">    anyxx::borrow_as&lt;any_serializeable&lt;anyxx::cref&gt;&gt;(f)-&gt;serialize(serialized);</div>
 <div class="line">  }</div>
@@ -481,7 +486,8 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3815</div></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 5 demonstrates how to use the Any++ library to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects. • Two types, circle and square, are defined, each with an area() method and serializable state (radius or edge_length). • Two traits are declared: figure (with an area() method) and serializeable (with a serialize(std::ostream&amp;) method). • A factory (deserialize) is created to construct type-erased any_serializeable objects from a type name and an input stream. • Model maps provide custom serialization logic for each type. • The deserialize_any_figure function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure. • The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input. Summary: This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.</p>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase6"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
@@ -494,10 +500,10 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>showcase6 {</div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
@@ -519,7 +525,14 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 6 demonstrates how to use the Any++ library with <span class="tt">std::variant</span> to enable type-erased polymorphism over a fixed set of types.</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
+<li>A <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
+<li>A <span class="tt">known_shapes</span> type alias is defined as <span class="tt">std::variant&lt;circle, square&gt;</span>, representing a closed set of possible shapes.</li>
+<li>The function <span class="tt">draw</span> takes a vector of type-erased objects (<span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">anyxx::any</a>&lt;<a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val</a>&lt;known_shapes&gt;, drawable&gt;</span>) and calls <span class="tt">draw()</span> on each, writing the results to a stringstream.</li>
+<li>The Catch2 test verifies that drawing a <span class="tt">circle</span> and a <span class="tt">square</span> produces the expected output. This example shows how Any++ can be combined with <span class="tt">std::variant</span> to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions. Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.</li>
+</ul>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase7"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
@@ -535,10 +548,10 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line"><span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>circle {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;Hello&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
-<div class="line">  std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
+<div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(figure, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)), ayx::val)</div>
@@ -567,7 +580,20 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> [Compiler Explorer] <b>TODO</b></p>
+</div><!-- fragment --><p> Showcase 7 demonstrates how to use the Any++ library to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any).</p><ul>
+<li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
+<li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
+<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt"><a class="el" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562" title="A factory type to direct get the any for the vany.">anyxx::make_vany</a></span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
+<li>All known types (<span class="tt">circle</span>, <span class="tt">square</span>)</li>
+<li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&gt;</span>)</li>
+</ul>
+</li>
+<li>A model map is provided for <span class="tt">std::string</span>, allowing strings to be handled as figures.</li>
+<li>So the vector passed to <span class="tt">draw</span> can seamlessly contain both known types (like circle and square) and dynamically extended types (like std::string), all accessed through the same trait-based interface.</li>
+</ul>
+<p>This example shows how Any++ enables a hybrid approach: you get the performance of <span class="tt">std::variant</span> for known types, while still supporting open-ended extension with type-erased objects. This is useful for scenarios where you want to handle a fixed set of types efficiently, but also allow for runtime extension or plugin types, all through a uniform trait-based interface.</p>
+<p>"vany" is a modern, safer, and extensible <strike>variant</strike> version of OLEVariant and QVariant.</p>
+<p>[Compiler Explorer] <b>TODO</b></p>
 <p>If you are still here, you are ready for <a href="https://www.alexweb.io/anyxx/examples.html">more Examples</a>   </p>
 </div></div><!-- PageDoc -->
 <a href="doxygen_crawl.html"></a>
