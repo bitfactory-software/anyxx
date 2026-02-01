@@ -38,14 +38,23 @@
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
-#if defined(_MSC_VER) && not defined(__clang__) // MSVC
-	#define LIFETIMEBOUND [[msvc::lifetimebound]]
-	#include <CppCoreCheck/Warnings.h>
-	#pragma warning(default: CPPCORECHECK_LIFETIME_WARNINGS) // Enable lifetimebound warnings
-#elif defined(__clang__) // Clang
-	#define LIFETIMEBOUND [[clang::lifetimebound]]
+#if defined(_MSC_VER) && not defined(__clang__)  // MSVC
+#define LIFETIMEBOUND [[msvc::lifetimebound]]
+#include <CppCoreCheck/Warnings.h>
+#pragma warning(default : CPPCORECHECK_LIFETIME_WARNINGS)  // Enable
+                                                           // lifetimebound
+                                                           // warnings
+#elif defined(__clang__)                                   // Clang
+#define LIFETIMEBOUND [[clang::lifetimebound]]
 #else
-	#define LIFETIMEBOUND
+#define LIFETIMEBOUND
+#endif
+
+#if defined(_MSC_VER) && not defined(__clang__)  // MSVC
+#define AYXFORCEDINLINE __forceinline
+#pragma warning(disable : 4714)
+#else
+#define AYXFORCEDINLINE inline __attribute__((always_inline))
 #endif
 
 // --------------------------------------------------------------------------------
@@ -242,7 +251,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
 #define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
                                const_, trait_body, ...)                      \
-  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
+  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
     return _detail_REMOVE_PARENS(trait_body)(                                \
@@ -252,7 +261,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
 #define _detail_ANYXX_MAP_VARIANT_IMPL(overload, type, name, name_ext,       \
                                        exact_const, const_, trait_body, ...) \
-  static auto name([[maybe_unused]] T const_& x __VA_OPT__(                  \
+  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
       -> decltype(auto) {                                                    \
     return std::visit(                                                       \
@@ -298,8 +307,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_FN(overload, type, name, name_ext, exact_const, const_,  \
                          map_body, ...)                                        \
   overload template <typename Self>                                            \
-  decltype(auto) name_ext(this Self&& self __VA_OPT__(, ) __VA_OPT__(          \
-      _detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))                  \
+  AYXFORCEDINLINE decltype(auto) name_ext(this Self&& self __VA_OPT__(         \
+      , ) __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))   \
     requires(::anyxx::const_correct_call_for_proxy_and_self<                   \
              void const_*, typename std::decay_t<Self>::proxy_t,               \
              std::is_const_v<std::remove_reference_t<Self>>, exact_const>)     \
@@ -1193,8 +1202,8 @@ template <typename Proxy>
 concept is_weak_data = is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
 
 template <typename Proxy>
-concept is_lifetime_bound = is_proxy<Proxy> && proxy_trait<Proxy>::is_lifetime_bound;
-
+concept is_lifetime_bound =
+    is_proxy<Proxy> && proxy_trait<Proxy>::is_lifetime_bound;
 
 template <bool ToIsConst, bool FromIsConst, bool FromIsWeak>
 concept const_correct_move_to_from =
@@ -2379,25 +2388,27 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
-  /// Type-erasing constructor for lifetime owning proxies. The concrete behavior is controlled by the proxy
-  /// via its corresponding \ref proxy_trait.
-  /// See \ref by_val, \ref shared, \ref weak, \ref unique, and \ref value.
+  /// Type-erasing constructor for lifetime owning proxies. The concrete
+  /// behavior is controlled by the proxy via its corresponding \ref
+  /// proxy_trait. See \ref by_val, \ref shared, \ref weak, \ref unique, and
+  /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, Proxy> &&
-             (!std::same_as<any, std::decay_t<ConstructedWith>>) && 
+             (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
              (!is_lifetime_bound<Proxy>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
   }
-  /// Type-erasing constructor for borrowing proxies. The concrete behavior is controlled by the proxy
-  /// via its corresponding \ref proxy_trait.
-  /// See \ref cref, \ref mutref
+  /// Type-erasing constructor for borrowing proxies. The concrete behavior is
+  /// controlled by the proxy via its corresponding \ref proxy_trait. See \ref
+  /// cref, \ref mutref
   template <typename ConstructedWith>
-  explicit(false) any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
+  explicit(false)
+      any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
     requires constructibile_for<ConstructedWith, Proxy> &&
-             (!std::same_as<any, std::decay_t<ConstructedWith>>) && 
+             (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
              (is_lifetime_bound<Proxy>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
@@ -2412,7 +2423,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   /// use `std::in_place`.)
   /// \param v The object to be forwarded into the managed storage.
   template <typename V>
-    requires (!is_lifetime_bound<Proxy>)
+    requires(!is_lifetime_bound<Proxy>)
   any(std::in_place_t, V&& v)
       : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<Proxy, V>();
@@ -2422,7 +2433,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   /// \param args The arguments to construct the object of type T with, will be
   /// forwarded.
   template <typename T, typename... Args>
-    requires (!is_lifetime_bound<Proxy>)
+    requires(!is_lifetime_bound<Proxy>)
   any(std::in_place_type_t<T>, Args&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {
