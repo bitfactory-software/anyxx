@@ -38,6 +38,16 @@
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
+#if defined(_MSC_VER) && not defined(__clang__) // MSVC
+	#define LIFETIMEBOUND [[msvc::lifetimebound]]
+	#include <CppCoreCheck/Warnings.h>
+	#pragma warning(default: CPPCORECHECK_LIFETIME_WARNINGS) // Enable lifetimebound warnings
+#elif defined(__clang__) // Clang
+	#define LIFETIMEBOUND [[clang::lifetimebound]]
+#else
+	#define LIFETIMEBOUND
+#endif
+
 // --------------------------------------------------------------------------------
 // any meta class, derived from this gem:
 // https://github.com/AlexCodesApps/dynamic_interface
@@ -1087,6 +1097,7 @@ struct proxy_trait;
 template <typename Proxy>
 struct basic_proxy_trait {
   inline static constexpr bool is_weak = false;
+  inline static constexpr bool is_lifetime_bound = false;
 
   static void move_to(auto& to, [[maybe_unused]] auto, auto&& from,
                       [[maybe_unused]] auto) {
@@ -1116,6 +1127,7 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
   } -> std::convertible_to<typename proxy_trait<E>::void_t>;
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
   { proxy_trait<E>::clone_from(void_data, v_table) };
+  { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
 };
 
 using emtpty_trait_v_table = any_v_table;
@@ -1179,6 +1191,10 @@ concept is_const_data = is_proxy<Proxy> && is_const_void<data_void<Proxy>>;
 
 template <typename Proxy>
 concept is_weak_data = is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
+
+template <typename Proxy>
+concept is_lifetime_bound = is_proxy<Proxy> && proxy_trait<Proxy>::is_lifetime_bound;
+
 
 template <bool ToIsConst, bool FromIsConst, bool FromIsWeak>
 concept const_correct_move_to_from =
@@ -1418,6 +1434,7 @@ struct observer_trait : basic_proxy_trait<Voidness> {
   using static_dispatch_t = void_t;
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
+  static constexpr bool is_lifetime_bound = true;
   template <typename ConstructedWith>
   struct is_constructibile_from {
     static constexpr bool value = false;
@@ -2362,14 +2379,26 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
-  /// Type-erasing constructor. The concrete behavior is controlled by the proxy
+  /// Type-erasing constructor for lifetime owning proxies. The concrete behavior is controlled by the proxy
   /// via its corresponding \ref proxy_trait.
-  /// See \ref by_val, \ref cref, \ref mutref, \ref shared, \ref weak, \ref
-  /// unique, and \ref value.
+  /// See \ref by_val, \ref shared, \ref weak, \ref unique, and \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
     requires constructibile_for<ConstructedWith, Proxy> &&
-             (!std::same_as<any, std::decay_t<ConstructedWith>>)
+             (!std::same_as<any, std::decay_t<ConstructedWith>>) && 
+             (!is_lifetime_bound<Proxy>)
+      : proxy_(
+            erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
+    v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
+  }
+  /// Type-erasing constructor for borrowing proxies. The concrete behavior is controlled by the proxy
+  /// via its corresponding \ref proxy_trait.
+  /// See \ref cref, \ref mutref
+  template <typename ConstructedWith>
+  explicit(false) any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
+    requires constructibile_for<ConstructedWith, Proxy> &&
+             (!std::same_as<any, std::decay_t<ConstructedWith>>) && 
+             (is_lifetime_bound<Proxy>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
@@ -2383,6 +2412,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   /// use `std::in_place`.)
   /// \param v The object to be forwarded into the managed storage.
   template <typename V>
+    requires (!is_lifetime_bound<Proxy>)
   any(std::in_place_t, V&& v)
       : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<Proxy, V>();
@@ -2392,6 +2422,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   /// \param args The arguments to construct the object of type T with, will be
   /// forwarded.
   template <typename T, typename... Args>
+    requires (!is_lifetime_bound<Proxy>)
   any(std::in_place_type_t<T>, Args&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {

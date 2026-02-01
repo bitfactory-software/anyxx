@@ -76,10 +76,10 @@ The combination of static and dynamic dispatch enables
 
 namespace showcase1 {
 struct circle {
-  std::string draw() const { return "Hello"; }
+  [[nodiscard]] std::string draw() const { return "Hello"; }
 };
 struct square {
-  std::string draw() const { return "World"; }
+  [[nodiscard]] std::string draw() const { return "World"; }
 };
 
 TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
@@ -158,7 +158,7 @@ namespace showcase2 {
 
 struct circle {};
 struct square {
-  std::string edgy_salute() const { return "edgy World"; }
+  [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
 };
 
 TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
@@ -205,10 +205,10 @@ namespace showcase3 {
 namespace ayx = anyxx;
 
 struct circle {
-  std::string name() const { return "circle"; }
+  [[nodiscard]] std::string name() const { return "circle"; }
 };
 struct square {
-  std::string name() const { return "square"; }
+  [[nodiscard]] std::string name() const { return "square"; }
 };
 
 struct figure_has_open_dispatch {};
@@ -218,8 +218,8 @@ anyxx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
                                       ayx::virtual_<any_figure<>>)>
     comapare_edges;
 
-std::partial_ordering operator<=>(any_figure<> const& l,
-                                  any_figure<> const& r) {
+[[nodiscard]] std::partial_ordering operator<=>(any_figure<> const& l,
+                                                any_figure<> const& r) {
   return comapare_edges(l, r);
 }
 
@@ -277,10 +277,10 @@ namespace showcase4 {
 namespace ayx = anyxx;
 
 struct circle {
-  std::string name() const { return "circle"; }
+  [[nodiscard]] std::string name() const { return "circle"; }
 };
 struct square {
-  std::string name() const { return "square"; }
+  [[nodiscard]] std::string name() const { return "square"; }
 };
 
 struct figure_has_open_dispatch {};
@@ -330,10 +330,10 @@ namespace ayx = anyxx;
 
 struct circle {
   double radius = 0.0;
-  double area() const { return radius * radius * 3.14; }
+  [[nodiscard]] double area() const { return radius * radius * 3.14; }
 };
 struct square {
-  double area() const { return edge_length * edge_length; }
+  [[nodiscard]] double area() const { return edge_length * edge_length; }
   double edge_length = 0.0;
 };
 
@@ -343,7 +343,7 @@ ANY(serializeable, (ANY_FN(void, serialize, (std::ostream&), const)), ayx::val)
 
 ayx::factory<any_serializeable, std::string, std::istream&> deserialize;
 
-any_figure<> deserialize_any_figure(std::istream& archive) {
+[[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
   std::string type;
   archive >> type;
   return ayx::move_to<any_figure<>>(
@@ -394,7 +394,7 @@ TEST_CASE("Showcase5") {
   CHECK(ss.str() == "3.14, 4, 28.26, 50.24");
 
   std::stringstream serialized;
-  for (auto f : figures) {
+  for (auto const& f : figures) {
     serialized << ": ";
     anyxx::borrow_as<any_serializeable<anyxx::cref>>(f)->serialize(serialized);
   }
@@ -421,10 +421,10 @@ TEST_CASE("Showcase5") {
 
 namespace showcase6 {
 struct circle {
-  std::string draw() const { return "Hello"; }
+  [[nodiscard]] std::string draw() const { return "Hello"; }
 };
 struct square {
-  std::string draw() const { return "World"; }
+  [[nodiscard]] std::string draw() const { return "World"; }
 };
 
 TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
@@ -464,10 +464,10 @@ namespace ayx = anyxx;
 using namespace std::string_literals;
 
 struct circle {
-  std::string draw() const { return "Hello"; }
+  [[nodiscard]] std::string draw() const { return "Hello"; }
 };
 struct square {
-  std::string draw() const { return "World"; }
+  [[nodiscard]] std::string draw() const { return "World"; }
 };
 
 ANY(figure, (ANY_FN(std::string, draw, (), const)), ayx::val)

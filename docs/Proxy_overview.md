@@ -2,12 +2,12 @@
 
 ### Overview 
 
-| Proxy type | Lifetime requirements | Concurrency considerations / Notes  | 
+| Proxy type | Lifetime | Concurrency considerations / Notes  | 
 |------|-------|--------|
-| ``cref`` | Observed object must outlive call. | Threadsafe, if observed object self is ``const`` during lifetime of observer. |
-| ``mutref`` | Observed object must outlive call. | Not threadsafe. |
-| ``shared`` | Same as ``std::shared_ptr``.</br>| Threadsafe.  |
-| ``unique`` | Same as ``std::unique_ptr``.</br> | Threadsafe. |
+| ``cref`` | Observed object must outlive call. </br> Constructed with ``[[msvc/clang::lifetimebound]]``| Threadsafe, if observed object self is ``const`` during lifetime of observer. |
+| ``mutref`` | Observed object must outlive call. </br> Constructed with ``[[msvc/clang::lifetimebound]]``| Not threadsafe. |
+| ``shared`` | Same as ``std::shared_ptr< const>``.| Threadsafe.  |
+| ``unique`` | Same as ``std::unique_ptr`` | Threadsafe. |
 | ``value`` | Same as ``std::any`` | Threadsafe. |
 
 
