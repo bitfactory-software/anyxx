@@ -341,7 +341,13 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:631</div></div>
-</div><!-- fragment --><p> Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example: • Two types, circle and square, are defined, each with a name() method. • A figure trait is declared using the Any++ macro system, specifying a name() function. • The dispatch&lt;R(Args...)&gt; mechanism is used to define a type-erased, runtime-resolved binary operator (operator&lt;=&gt;) for comparing two any_figure&lt;&gt; objects. • The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result. • The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</p>
+</div><!-- fragment --><p> Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:</p><ul>
+<li>Two types, circle and square, are defined, each with a name() method.</li>
+<li>A figure trait is declared using the Any++ macro system, specifying a name() function.</li>
+<li>The dispatch&lt;R(Args...)&gt; mechanism is used to define a type-erased, runtime-resolved binary operator (operator&lt;=&gt;) for comparing two any_figure&lt;&gt; objects.</li>
+<li>The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result.</li>
+<li>The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</li>
+</ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase4"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
@@ -392,7 +398,13 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-</div><!-- fragment --><p> Showcase 4 demonstrates how to use the Any++ library to implement open dispatch in the style of a visitor pattern, enabling runtime selection of behavior for different types without inheritance or virtual functions. • Two types, circle and square, each provide a name() method. • A figure trait is defined, specifying the required interface. • Two open dispatchers, latin and italian, are created using dispatch&lt;R(Args...)&gt;, each mapping a figure to a localized string. • The dispatchers are populated with type-specific translations for circle and square. • The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian. This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity <b>without boilerplate</b>.</p>
+</div><!-- fragment --><p> Showcase 4 demonstrates how to use the Any++ library to implement open dispatch in the style of a visitor pattern, enabling runtime selection of behavior for different types without inheritance or virtual functions.</p><ul>
+<li>Two types, circle and square, each provide a name() method.</li>
+<li>A figure trait is defined, specifying the required interface.</li>
+<li>Two open dispatchers, latin and italian, are created using dispatch&lt;R(Args...)&gt;, each mapping a figure to a localized string.</li>
+<li>The dispatchers are populated with type-specific translations for circle and square.</li>
+<li>The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian. This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity <b>without boilerplate</b>.</li>
+</ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase5"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
@@ -486,7 +498,14 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3815</div></div>
-</div><!-- fragment --><p> Showcase 5 demonstrates how to use the Any++ library to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects. • Two types, circle and square, are defined, each with an area() method and serializable state (radius or edge_length). • Two traits are declared: figure (with an area() method) and serializeable (with a serialize(std::ostream&amp;) method). • A factory (deserialize) is created to construct type-erased any_serializeable objects from a type name and an input stream. • Model maps provide custom serialization logic for each type. • The deserialize_any_figure function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure. • The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input. Summary: This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.</p>
+</div><!-- fragment --><p> Showcase 5 demonstrates how to use the Any++ library to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
+<li>Two types, circle and square, are defined, each with an area() method and serializable state (radius or edge_length).</li>
+<li>Two traits are declared: figure (with an area() method) and serializeable (with a serialize(std::ostream&amp;) method).</li>
+<li>A factory (deserialize) is created to construct type-erased any_serializeable objects from a type name and an input stream.</li>
+<li>Model maps provide custom serialization logic for each type.</li>
+<li>The deserialize_any_figure function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.</li>
+<li>The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input. Summary: This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.</li>
+</ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase6"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
