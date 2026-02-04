@@ -431,7 +431,7 @@ Showcase 5 demonstrates how to use the Any++ library to combine cross-casting an
 Summary:
 This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/4r5o6en94)
 
 <a name="showcase6"></a> 
 ### Showcase 6: Basic *Any++* std::variant usage
