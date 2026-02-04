@@ -546,7 +546,7 @@ to handle a fixed set of types efficiently, but also allow for runtime extension
 
 "vany" is a modern, safer, and extensible ~~variant~~ version of OLEVariant and QVariant.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/saWMv3brz)
 
 
 If you are still here, you are ready for [more Examples](https://www.alexweb.io/anyxx/examples.html)
