@@ -1,7 +1,7 @@
 // <!--
 // The MIT License (MIT)
 //
-// Copyright (c) 2024 Kris Jusiak <kris@jusiak.net>
+// Copyright (c) 2026 Bit Factory Software GmbH
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,26 +107,11 @@ specifying the required interface (draw() const -> std::string).
 The draw function takes a vector of type-erased any objects that conform to the drawable trait.
 It shows how to create and use a heterogeneous collection of unrelated objects (circle and square).
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/jbMGMjn8x)
 
 [More Showcases here...](#showcase2) [Docs](https://www.alexweb.io/anyxx/)
 
 ### Available via vcpkg
-
-### Useage in CMakeLists.txt:
-```
-FetchContent_Declare(
-    bit_factory::anyxx
-    GIT_REPOSITORY C
-    GIT_TAG main
-)
-FetchContent_MakeAvailable(anyxx)
-```
-
-### Clone the repo:
-```
-git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
-```
 
 ### Performace compared
 | Benchmark     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
@@ -137,7 +122,7 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | any++ open method | **115%** | **200%** | **130%** | 
 | **Double dispatch** |   | |  |
 | std::variant + std::visit (reference*) | 100% | 100% | 100% |
-| hand rolled w. virtual function  | 150% | 150%| 400% |
+| hand rolled w. virtual function  | 150% | 150%| 300% |
 | any++ open method | **120%** | **150%** | **300%**(*) |
 
 - reference*:
@@ -273,7 +258,10 @@ TEST_CASE("Showcase3") {
 ```
 Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:
 - Two types, circle and square, are defined, each with a name() method.
-- A figure trait is declared using the Any++ macro system, specifying a name() function.
+- A figure trait is declared using the Any++ macro system, specifying a name() function. 
+- - The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an `any` 
+  type, named `any_<first parameter of macro>`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, 
+  which is defaulted to the last parameter of the `ANY` macro.
 - The dispatch<R(Args...)> mechanism is used to define a type-erased, runtime-resolved binary operator (operator<=>) for comparing two any_figure<> objects.
 - The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result.
 - The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.
