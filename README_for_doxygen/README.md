@@ -107,7 +107,7 @@ specifying the required interface (draw() const -> std::string).
 The draw function takes a vector of type-erased any objects that conform to the drawable trait.
 It shows how to create and use a heterogeneous collection of unrelated objects (circle and square).
 
-[Compiler Explorer](https://godbolt.org/z/jbMGMjn8x)
+[Compiler Explorer](https://godbolt.org/z/nGjjs9xva)
 
 [More Showcases here...](#showcase2) [Docs](https://www.alexweb.io/anyxx/)
 
@@ -182,7 +182,7 @@ TEST_CASE("Showcase2") {
 Showcase 2 demonstrates, how to use the ``Any++`` library's "model map" feature 
 to provide custom behavior for different types using traits, whitch have nothing in common.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/P7rfbzecj)
 
 <a name="showcase3"></a> 
 ### Showcase 3: *Any++* Open Multi Dispatch, (Type Erased Binary Operator)
@@ -266,7 +266,7 @@ Showcase 3 demonstrates how to use the Any++ library to implement open multi-dis
 - The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result.
 - The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/caTnh9cf1)
 
 
 <a name="showcase4"></a> 

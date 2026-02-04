@@ -266,7 +266,7 @@ Showcase 3 demonstrates how to use the Any++ library to implement open multi-dis
 - The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result.
 - The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/caTnh9cf1)
 
 
 <a name="showcase4"></a> 
