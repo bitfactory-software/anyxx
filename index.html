@@ -396,7 +396,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 <li>The dispatchers are populated with type-specific translations for circle and square.</li>
 <li>The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian. This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity <b>without boilerplate</b>.</li>
 </ul>
-<p>[Compiler Explorer] <b>TODO</b></p>
+<p><a href="https://godbolt.org/z/c1eWsrdr7">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase5"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
@@ -497,7 +497,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <li>The deserialize_any_figure function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.</li>
 <li>The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input. Summary: This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.</li>
 </ul>
-<p>[Compiler Explorer] <b>TODO</b></p>
+<p><a href="https://godbolt.org/z/4r5o6en94">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase6"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
@@ -542,7 +542,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <li>The function <span class="tt">draw</span> takes a vector of type-erased objects (<span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">anyxx::any</a>&lt;<a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val</a>&lt;known_shapes&gt;, drawable&gt;</span>) and calls <span class="tt">draw()</span> on each, writing the results to a stringstream.</li>
 <li>The Catch2 test verifies that drawing a <span class="tt">circle</span> and a <span class="tt">square</span> produces the expected output. This example shows how Any++ can be combined with <span class="tt">std::variant</span> to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions. Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.</li>
 </ul>
-<p>[Compiler Explorer] <b>TODO</b></p>
+<p><a href="https://godbolt.org/z/5EYKa4daK">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase7"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
