@@ -327,7 +327,7 @@ Showcase 4 demonstrates how to use the Any++ library to implement open dispatch 
 - The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian.
 This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity **without boilerplate**.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/c1eWsrdr7)
 
 <a name="showcase5"></a> 
 ### Showcase 5: *Any++* Crosscast + Factory = Serialization
@@ -431,7 +431,7 @@ Showcase 5 demonstrates how to use the Any++ library to combine cross-casting an
 Summary:
 This example shows how Any++ enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/4r5o6en94)
 
 <a name="showcase6"></a> 
 ### Showcase 6: Basic *Any++* std::variant usage
@@ -480,7 +480,7 @@ Showcase 6 demonstrates how to use the Any++ library with `std::variant` to enab
 This example shows how Any++ can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/5EYKa4daK)
 
 <a name="showcase7"></a> 
 ### Showcase 7: Basic *Any++* open std::variant usage: 'vany'

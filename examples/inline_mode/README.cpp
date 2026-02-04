@@ -480,7 +480,7 @@ Showcase 6 demonstrates how to use the Any++ library with `std::variant` to enab
 This example shows how Any++ can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/5EYKa4daK)
 
 <a name="showcase7"></a> 
 ### Showcase 7: Basic *Any++* open std::variant usage: 'vany'
