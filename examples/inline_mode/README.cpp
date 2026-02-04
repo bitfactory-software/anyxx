@@ -327,7 +327,7 @@ Showcase 4 demonstrates how to use the Any++ library to implement open dispatch 
 - The translate function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian.
 This is the so called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity **without boilerplate**.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/c1eWsrdr7)
 
 <a name="showcase5"></a> 
 ### Showcase 5: *Any++* Crosscast + Factory = Serialization
