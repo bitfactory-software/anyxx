@@ -109,7 +109,13 @@ It shows how to create and use a heterogeneous collection of unrelated objects (
 
 [Compiler Explorer](https://godbolt.org/z/nGjjs9xva)
 
-[More Showcases here...](#showcase2) [Docs](https://www.alexweb.io/anyxx/)
+[Here to more Showcases ...](#showcase2) 
+
+[Here to Docs ...](https://www.alexweb.io/anyxx/)
+
+> [!IMPORTANT]
+> for Microsoft C++, you must enable the C-Preprocessor with this flag:
+> /Zc:preprocessor (see CMakeLists.txt for example)
 
 ### Available via vcpkg
 
