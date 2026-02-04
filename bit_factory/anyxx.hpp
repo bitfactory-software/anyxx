@@ -3987,4 +3987,6 @@ class dispatch_vany {
    Open multi-dispatch example
    \example X1_any_weak_const.cpp
    Using any with weak and const proxies
+   \example README.cpp
+   README showcases
 */

@@ -1,7 +1,7 @@
 // <!--
 // The MIT License (MIT)
 //
-// Copyright (c) 2024 Kris Jusiak <kris@jusiak.net>
+// Copyright (c) 2026 Bit Factory Software GmbH
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -107,26 +107,17 @@ specifying the required interface (`draw() const -> std::string`).
 The draw function takes a vector of type-erased any objects that conform to the `drawable` trait.
 It shows how to create and use a heterogeneous collection of unrelated objects (`circle` and `square`).
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/nGjjs9xva)
 
-[More Showcases here...](#showcase2) [Docs](https://www.alexweb.io/anyxx/)
+[Here to more Showcases ...](#showcase2) 
+
+[Here to Docs ...](https://www.alexweb.io/anyxx/)
+
+> [!IMPORTANT]
+> for Microsoft C++, you must enable the C-Preprocessor with this flag:
+> /Zc:preprocessor (see CMakeLists.txt for example)
 
 ### Available via vcpkg
-
-### Usage in CMakeLists.txt:
-```
-FetchContent_Declare(
-    bit_factory::anyxx
-    GIT_REPOSITORY C
-    GIT_TAG main
-)
-FetchContent_MakeAvailable(anyxx)
-```
-
-### Clone the repo:
-```
-git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
-```
 
 ### Performace compared
 | Benchmark     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
@@ -137,7 +128,7 @@ git clone -c core.symlinks=true git clone -c core.symlinks=true <repo-url>
 | any++ open method | **115%** | **200%** | **130%** | 
 | **Double dispatch** |   | |  |
 | std::variant + std::visit (reference*) | 100% | 100% | 100% |
-| hand rolled w. virtual function  | 150% | 150%| 400% |
+| hand rolled w. virtual function  | 150% | 150%| 300% |
 | any++ open method | **120%** | **150%** | **300%**(**) |
 
 - (*) reference:
@@ -197,7 +188,7 @@ TEST_CASE("Showcase2") {
 Showcase 2 demonstrates, how to use `Any++`'s "model map" feature 
 to provide custom behavior for unrelated types using traits.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/P7rfbzecj)
 
 <a name="showcase3"></a> 
 ### Showcase 3: *Any++* Open Multi Dispatch, (Type Erased Binary Operator)
@@ -271,14 +262,17 @@ TEST_CASE("Showcase3") {
 #if 0
 // -->
 ```
-Showcase 3 demonstrates how to use `Any++` to implement open multi-dispatch (type-erased binary operators) in C++. In this example:
+Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:
 - Two types, `circle` and `square`, are defined, each with a `name()` method.
 - A `figure` trait is declared using the `Any++` macro system, specifying a `name()` function.
+- The `ANY` macro is an extension of the `TRAIT` macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an `any` 
+  type, named `any_<first parameter of macro>`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, 
+  which is defaulted to the last parameter of the `ANY` macro.
 - The `dispatch<R(Args...)>` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator<=>`) for comparing two `any_figure<>` objects.
 - The dispatch table is populated with custom comparison logic for each pair of types (`circle` vs `circle`, `circle` vs `square`, etc.), returning the appropriate `std::partial_ordering` result.
 - The `compare_each` function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/caTnh9cf1)
 
 
 <a name="showcase4"></a> 
@@ -339,7 +333,7 @@ Showcase 4 demonstrates how to use `Any++` to implement open dispatch in the sty
 - The `translate` function iterates over a collection of type-erased figures, using the dispatchers to output the name and its translation in both Latin and Italian.
 This is the so-called "Open Visitor Pattern" implemented via open dispatch O(1) runtime complexity **without boilerplate**.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/c1eWsrdr7)
 
 <a name="showcase5"></a> 
 ### Showcase 5: *Any++* Crosscast + Factory = Serialization
@@ -445,7 +439,7 @@ Summary:
 
 This example shows how `Any++` enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/4r5o6en94)
 
 <a name="showcase6"></a> 
 ### Showcase 6: Basic *Any++* std::variant usage
@@ -494,7 +488,7 @@ Showcase 6 demonstrates how to use `Any++` with `std::variant` to enable type-er
 This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/5EYKa4daK)
 
 <a name="showcase7"></a> 
 ### Showcase 7: Basic *Any++* open std::variant usage: 'vany'
@@ -560,7 +554,7 @@ to handle a fixed set of types efficiently, but also allow for runtime extension
 
 "vany" is a modern, safer, and extensible ~~variant~~ version of OLEVariant and QVariant.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/saWMv3brz)
 
 
 If you are still here, you are ready for [more Examples](https://www.alexweb.io/anyxx/examples.html)
