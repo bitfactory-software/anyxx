@@ -100,11 +100,11 @@ TEST_CASE("Showcase1") {
 // -->
 ```
 Showcase 1 demonstrates the most basic usage of `Any++` for type-erased 
-polymorphism in C++. It defines two simple types, `circle` and `square`, each with a draw() method 
-returning a string. Using the `Any++` macro system, a drawable trait is declared, 
-specifying the required interface (draw() const -> std::string).
+polymorphism in C++. It defines two simple types, `circle` and `square`, each with a `draw()` method 
+returning a string. Using the `Any++` macro system, a `drawable` trait is declared, 
+specifying the required interface (`draw() const -> std::string`).
 
-The draw function takes a vector of type-erased any objects that conform to the drawable trait.
+The draw function takes a vector of type-erased any objects that conform to the `drawable` trait.
 It shows how to create and use a heterogeneous collection of unrelated objects (`circle` and `square`).
 
 [Compiler Explorer] **TODO**
