@@ -182,7 +182,7 @@ TEST_CASE("Showcase2") {
 Showcase 2 demonstrates, how to use the ``Any++`` library's "model map" feature 
 to provide custom behavior for different types using traits, whitch have nothing in common.
 
-[Compiler Explorer] **TODO**
+[Compiler Explorer](https://godbolt.org/z/P7rfbzecj)
 
 <a name="showcase3"></a> 
 ### Showcase 3: *Any++* Open Multi Dispatch, (Type Erased Binary Operator)
