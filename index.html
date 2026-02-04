@@ -93,7 +93,8 @@ $(function(){initNavTree('index.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_README__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visiitor</a> / <a class="el" href="#showcase5" title="showcase5">Crosscast + Factory = Serialization</a> / <a class="el" href="#showcase6" title="showcase6">Basic *Any++* std::variant usage</a> / <a class="el" href="#showcase7" title="showcase7">Basic *Any++* open std::variant usage: 'vany'</a></p>
 <p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/dos-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
-<p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
+<h1 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</h1>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
 <p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p>
 <ul>
@@ -121,7 +122,7 @@ $(function(){initNavTree('index.html','',''); });
 <li>C++0x-like concept maps for static and dynamic customization points and default behavior.</li>
 </ul>
 <p><a class="anchor" id="showcase1"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -161,9 +162,9 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <p>The draw function takes a vector of type-erased any objects that conform to the drawable trait. It shows how to create and use a heterogeneous collection of unrelated objects (circle and square).</p>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="el" href="#showcase2" title="showcase2">More Showcases here...</a> <a href="https://www.alexweb.io/anyxx/">Docs</a></p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
-Available via vcpkg</h3>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+Available via vcpkg</h3>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Useage in CMakeLists.txt:</h3>
 <div class="fragment"><div class="line">FetchContent_Declare(</div>
 <div class="line">    bit_factory::anyxx</div>
@@ -171,10 +172,10 @@ Useage in CMakeLists.txt:</h3>
 <div class="line">    GIT_TAG main</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(anyxx)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 Clone the repo:</h3>
 <div class="fragment"><div class="line">git clone -c core.symlinks=true git clone -c core.symlinks=true &lt;repo-url&gt;</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Performace compared</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -214,7 +215,7 @@ clang-cl /O2 /Ob2  </th></tr>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 CI Matrix</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -227,7 +228,7 @@ CI Matrix</h3>
 <td class="markdownTableBodyCenter">MacOS(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">14  </td></tr>
 </table>
 <p><a class="anchor" id="showcase2"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -270,7 +271,7 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 </div><!-- fragment --><p> Showcase 2 demonstrates, how to use the <span class="tt">Any++</span> library's "model map" feature to provide custom behavior for different types using traits, whitch have nothing in common.</p>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase3"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -350,7 +351,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase4"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -407,7 +408,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase5"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -508,7 +509,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase6"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -553,7 +554,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase7"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
 Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
