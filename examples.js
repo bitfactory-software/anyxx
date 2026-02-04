@@ -11,5 +11,6 @@ var examples =
     [ "21_Tree_any_borrow_as.cpp", "21_Tree_any_borrow_as_8cpp-example.html", null ],
     [ "21_Tree_any_dispatch.cpp", "21_Tree_any_dispatch_8cpp-example.html", null ],
     [ "31_Animals_any_dispatch.cpp", "31_Animals_any_dispatch_8cpp-example.html", null ],
-    [ "X1_any_weak_const.cpp", "X1_any_weak_const_8cpp-example.html", null ]
+    [ "X1_any_weak_const.cpp", "X1_any_weak_const_8cpp-example.html", null ],
+    [ "README.cpp", "README_8cpp-example.html", null ]
 ];

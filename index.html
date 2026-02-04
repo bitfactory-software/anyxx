@@ -160,22 +160,11 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:526</div></div>
 </div><!-- fragment --><p> Showcase 1 demonstrates the most basic usage of the Any++ library for type-erased polymorphism in C++. It defines two simple types, circle and square, each with a draw() method returning a string. Using the Any++ macro system, a drawable trait is declared, specifying the required interface (draw() const -&gt; std::string).</p>
 <p>The draw function takes a vector of type-erased any objects that conform to the drawable trait. It shows how to create and use a heterogeneous collection of unrelated objects (circle and square).</p>
-<p>[Compiler Explorer] <b>TODO</b></p>
+<p><a href="https://godbolt.org/z/jbMGMjn8x">Compiler Explorer</a></p>
 <p><a class="el" href="#showcase2" title="showcase2">More Showcases here...</a> <a href="https://www.alexweb.io/anyxx/">Docs</a></p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Available via vcpkg</h3>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
-Useage in CMakeLists.txt:</h3>
-<div class="fragment"><div class="line">FetchContent_Declare(</div>
-<div class="line">    bit_factory::anyxx</div>
-<div class="line">    GIT_REPOSITORY C</div>
-<div class="line">    GIT_TAG main</div>
-<div class="line">)</div>
-<div class="line">FetchContent_MakeAvailable(anyxx)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
-Clone the repo:</h3>
-<div class="fragment"><div class="line">git clone -c core.symlinks=true git clone -c core.symlinks=true &lt;repo-url&gt;</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Performace compared</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -199,7 +188,7 @@ clang-cl /O2 /Ob2  </th></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft">std::variant + std::visit (reference*)  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td><td class="markdownTableBodyRight">100%  </td></tr>
 <tr class="markdownTableRowOdd">
-<td class="markdownTableBodyLeft">hand rolled w. virtual function  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">400%  </td></tr>
+<td class="markdownTableBodyLeft">hand rolled w. virtual function  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">150%  </td><td class="markdownTableBodyRight">300%  </td></tr>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft">any++ open method  </td><td class="markdownTableBodyRight"><b>120%</b>  </td><td class="markdownTableBodyRight"><b>150%</b>  </td><td class="markdownTableBodyRight"><b>300%</b>(*)  </td></tr>
 </table>
@@ -215,7 +204,7 @@ clang-cl /O2 /Ob2  </th></tr>
 </ul>
 </li>
 </ul>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 CI Matrix</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -228,7 +217,7 @@ CI Matrix</h3>
 <td class="markdownTableBodyCenter">MacOS(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">14  </td></tr>
 </table>
 <p><a class="anchor" id="showcase2"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -271,7 +260,7 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 </div><!-- fragment --><p> Showcase 2 demonstrates, how to use the <span class="tt">Any++</span> library's "model map" feature to provide custom behavior for different types using traits, whitch have nothing in common.</p>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase3"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -345,13 +334,14 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 </div><!-- fragment --><p> Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:</p><ul>
 <li>Two types, circle and square, are defined, each with a name() method.</li>
 <li>A figure trait is declared using the Any++ macro system, specifying a name() function.</li>
+<li>- The <span class="tt"><a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="Simple ANY macro.">ANY</a></span> macro is an extension of the <span class="tt"><a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="Macro to define the functional behavior for an any.">TRAIT</a></span> macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an <span class="tt">any</span> type, named <span class="tt">any_&lt;first parameter of macro&gt;</span>, that uses this trait. The generated trait itself has a template parameter for the Proxy type, which is defaulted to the last parameter of the <span class="tt"><a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="Simple ANY macro.">ANY</a></span> macro.</li>
 <li>The dispatch&lt;R(Args...)&gt; mechanism is used to define a type-erased, runtime-resolved binary operator (operator&lt;=&gt;) for comparing two any_figure&lt;&gt; objects.</li>
 <li>The dispatch table is populated with custom comparison logic for each pair of types (circle vs circle, circle vs square, etc.), returning the appropriate std::partial_ordering result.</li>
 <li>The compare_each function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</li>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase4"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -408,7 +398,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visiitor</h3>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase5"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -509,7 +499,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase6"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -554,7 +544,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 </ul>
 <p>[Compiler Explorer] <b>TODO</b></p>
 <p><a class="anchor" id="showcase7"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>

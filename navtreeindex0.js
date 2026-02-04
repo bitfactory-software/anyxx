@@ -4,6 +4,7 @@ var NAVTREEINDEX0 =
 "21_Tree_any_borrow_as_8cpp-example.html":[9,8],
 "21_Tree_any_dispatch_8cpp-example.html":[9,9],
 "31_Animals_any_dispatch_8cpp-example.html":[9,10],
+"README_8cpp-example.html":[9,12],
 "X1_any_weak_const_8cpp-example.html":[9,11],
 "_1_any_shape_8cpp-example.html":[9,0],
 "_2b_trait_monoid_8cpp-example.html":[9,2],
