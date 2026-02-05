@@ -151,9 +151,9 @@ endif()
 
 ## vcpkg process to update to new version:
 # in forked vcpkg repo:
-# update the ports/anyxx/ *json and *cmake files for to new version
+# update the ports/anyxx/ *json to new version
 # vcpkg install anyxx --overlay-ports=./ports
-# enter new hashes in versions/anyxx.json an run again:
+# enter new hashes in portfile.cmake an run again:
 # vcpkg install anyxx --overlay-ports=./ports
 # vcpkg --x-builtin-ports-root=./ports --x-builtin-registry-versions-dir=./versions x-add-version --all --verbose
 # push changes to your forked vcpkg repo
