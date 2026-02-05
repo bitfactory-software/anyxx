@@ -144,7 +144,7 @@ git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
 
 ### Runtime Performance compared
 | Benchmark Invocation **Time** | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 18.2.1 /O2 /Ob2 | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 | Source | Data from ... |
-|:----------------------------|--------------:|-------:|-------:| ------- :|----:|
+|:------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|----------------------------------------------------------------------:|-------:| ------------ :|
 | **Single dispatch**          |              |        |        |          | |
 | virtual function (**reference**) |  1 | 1 | 1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/20_Tree_virtual_function.cpp) | ``BENCHMARK("20_Tree virtual function value") { return expr->value(); };``|
 | any++ interface |  x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK("21_Tree any value") { return expr->value(); };``|
