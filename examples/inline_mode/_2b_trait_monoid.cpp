@@ -69,7 +69,15 @@ ANY_MODEL_MAP((std::string), example_2b::monoid) {
 namespace example_2b {
 
 template <anyxx::is_any Monoid>
-void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
+void test_monoid_traited(Monoid const& m, std::ranges::forward_range auto const& r);
+
+template <typename P1>
+void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
+  test_monoid_traited<typename anyxx::use<P1>::template as<monoid>>(anyxx::trait_as<monoid>(p1), r);
+}
+
+template <anyxx::is_any Monoid>
+void test_monoid_traited(Monoid const& m, std::ranges::forward_range auto const& r) {
   auto id = m.id();
   using type_1 = decltype(m + id + m);
   using type_2 = decltype(m + (m + id));
@@ -106,10 +114,10 @@ TEST_CASE("example 2b monoid simple") {
   CHECK(static_cast<int>(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
-  static_assert(anyxx::moveable_from<decltype(x)::proxy_t,
-                                     decltype(y)::proxy_t>);
-  static_assert(!anyxx::borrowable_from<decltype(x)::proxy_t,
-                                        decltype(y)::proxy_t>);
+  static_assert(
+      anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
+  static_assert(
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
 }
 
 TEST_CASE("example 2b monoid a") {
@@ -117,7 +125,8 @@ TEST_CASE("example 2b monoid a") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any<use<int>, monoid>>(
+  test_monoid((1), std::vector<any<use<int>, monoid>>{{2}, {3}});
+  test_monoid_traited<any<use<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<use<int>, monoid>>{{2}, {3}});
 }
 TEST_CASE("example 2b monoid b") {
@@ -125,7 +134,8 @@ TEST_CASE("example 2b monoid b") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<use<std::string>::as<monoid>>(
+  test_monoid("1"s, std::vector<use<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+  test_monoid_traited<use<std::string>::as<monoid>>(
       trait_as<monoid>("1"s),
       std::vector<use<std::string>::as<monoid>>{{"2"s}, {"3"s}});
 }
@@ -134,14 +144,14 @@ TEST_CASE("example 2b monoid c") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(true));
+  test_monoid_traited<any_monoid<anyxx::val>>("1"s, make_a_range(true));
 }  // NOLINT
 TEST_CASE("example 2b monoid d") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
+  test_monoid_traited<any_monoid<anyxx::val>>("1"s, make_a_range(false));
 }
 
 #endif
