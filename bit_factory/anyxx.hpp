@@ -943,7 +943,7 @@ struct missing_trait_error {
   static constexpr bool not_specialized = false;
 };
 template <typename Value>
-struct by_val;
+struct use;
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -1294,14 +1294,14 @@ U* unerase_cast_if(Proxy const& o, any_v_table* v_table)
 }
 
 // --------------------------------------------------------------------------------
-// (un)erased data by_val
+// (un)erased data use
 
 static_assert(std::is_const_v<std::remove_reference_t<int const&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
 template <typename V>
-struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
+struct proxy_trait<use<V>> : basic_proxy_trait<use<V>> {
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
                                     const_void, mutable_void>;
   using static_dispatch_t = V;
@@ -1332,7 +1332,7 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
   }
   template <typename Vx>
   static auto erase(Vx&& v) {
-    return by_val<V>{std::forward<Vx>(v)};
+    return use<V>{std::forward<Vx>(v)};
   }
 };
 
@@ -1343,7 +1343,7 @@ struct proxy_trait<by_val<V>> : basic_proxy_trait<by_val<V>> {
 /// Use this when some, at compile time, known types are dispatched in a hot
 /// path. Put these types plus an any (with the specific \ref trait and a
 /// dynamic proxy) in a std::variant. This variant is then used with a \ref
-/// by_val proxy and the same \ref trait as before. See \ref make_vany
+/// use proxy and the same \ref trait as before. See \ref make_vany
 /// So the dispatch for the types in the variant is done internally with a
 /// std::visit, and all other types are dispatched via their v-Table. Now you
 /// know where the Any++ logo has its origin.
@@ -1353,7 +1353,7 @@ using vany_variant = std::variant<Any<Proxy>, Types...>;
 
 /// A factory type to direct get the any for the vany
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
-using make_vany = Any<by_val<vany_variant<Any, Proxy, Types...>>>;
+using make_vany = Any<use<vany_variant<Any, Proxy, Types...>>>;
 
 template <typename VanyVariant>
 struct vany_variant_trait {
@@ -1380,8 +1380,8 @@ struct vany_type_trait {
 };
 
 template <template <typename> typename Any, is_proxy Proxy, typename... Types>
-struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
-    : basic_proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>> {
+struct proxy_trait<use<vany_variant<Any, Proxy, Types...>>>
+    : basic_proxy_trait<use<vany_variant<Any, Proxy, Types...>>> {
   using vany_variant_t = vany_variant<Any, Proxy, Types...>;
   using void_t = typename proxy_trait<Proxy>::void_t;
   using static_dispatch_t = vany_variant_t;
@@ -1411,15 +1411,15 @@ struct proxy_trait<by_val<vany_variant<Any, Proxy, Types...>>>
 
   template <typename V>
   static vany_variant_t construct_in_place(V&& v) {
-    return by_val<vany_variant_t>{std::forward<V>(v)};
+    return use<vany_variant_t>{std::forward<V>(v)};
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
-    return by_val<vany_variant_t>{T{std::forward<Args>(args)...}};
+    return use<vany_variant_t>{T{std::forward<Args>(args)...}};
   }
   template <typename Vx>
   static auto erase(Vx&& v) {
-    return by_val<vany_variant_t>{std::forward<Vx>(v)};
+    return use<vany_variant_t>{std::forward<Vx>(v)};
   }
 };
 
@@ -2362,7 +2362,7 @@ static_assert(moveable_from<val, val>);
 /// captured object which can be invoked on this `any`.
 ///
 /// \tparam Proxy Specifies the lifetime of the captured object. Any++ provides
-/// \ref by_val, \ref cref, \ref mutref, \ref shared, \ref weak, \ref unique,
+/// \ref use, \ref cref, \ref mutref, \ref shared, \ref weak, \ref unique,
 /// and
 /// \ref value. All Proxy classes must conform to the \ref is_proxy concept.
 /// \tparam Trait Specifies the functionality of this any. A class of this type
@@ -2390,7 +2390,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   // cppcheck-suppress-begin noExplicitConstructor
   /// Type-erasing constructor for lifetime owning proxies. The concrete
   /// behavior is controlled by the proxy via its corresponding \ref
-  /// proxy_trait. See \ref by_val, \ref shared, \ref weak, \ref unique, and
+  /// proxy_trait. See \ref use, \ref shared, \ref weak, \ref unique, and
   /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
@@ -2654,31 +2654,31 @@ inline auto unerase_cast_if(Any const& o) {
 ///
 /// Usage:
 /// * Use the model map as a static customization point.
-/// * Use \c by_val<std::variant<...>> to unify customization points and member
+/// * Use \c use<std::variant<...>> to unify customization points and member
 ///   function-like invocation.
 /// * Use with \ref vany_variant.
 ///
 /// \tparam Value The captured value
 template <typename Value>
-struct by_val {
+struct use {
   template <typename V>
-    requires(!std::same_as<std::decay_t<V>, by_val>)
-  by_val(V&& v) : value_(std::forward<V>(v)) {}
+    requires(!std::same_as<std::decay_t<V>, use>)
+  use(V&& v) : value_(std::forward<V>(v)) {}
   Value value_;
   using value_t = Value;
   operator Value() const { return value_; }
   /// Helper type alias template to trait a model with an \ref any.
   /// See also \ref trait_as.
   template <typename Trait>
-  using as = any<by_val<Value>, Trait>;
+  using as = any<use<Value>, Trait>;
 };
 
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.
-/// See also \ref by_val::as.
+/// See also \ref use::as.
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
-  return any<anyxx::by_val<std::decay_t<T>>, Trait>{std::forward<T>(v)};
+  return any<anyxx::use<std::decay_t<T>>, Trait>{std::forward<T>(v)};
 }
 
 template <typename VTable, typename Concrete>

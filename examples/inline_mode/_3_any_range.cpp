@@ -102,7 +102,7 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<by_val<v_t const&>, forward_range<int, int>> r{v};
+    any<use<v_t const&>, forward_range<int, int>> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
     CHECK(x == 3);
@@ -137,7 +137,7 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<by_val<v_t const&>, forward_range<any_stringable<anyxx::val>,
+    any<use<v_t const&>, forward_range<any_stringable<anyxx::val>,
                                        any_stringable<anyxx::val>>>
         r{v};
     int x = 0;
@@ -183,13 +183,13 @@ TEST_CASE("example 3 self in range") {
     CHECK(*unerase_cast<int>(r) == 6);
   }
   {
-    any_node<by_val<int>> n1{0};
+    any_node<use<int>> n1{0};
     auto r = n1.sum(v);
     CHECK(r == 6);
   }
   {
     any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{v};
-    any_node<by_val<int>> n1{0};
+    any_node<use<int>> n1{0};
     auto result = n1.sum(r);
     CHECK(result == 6);
   }
