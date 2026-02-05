@@ -113,29 +113,47 @@ It shows how to create and use a heterogeneous collection of unrelated objects (
 
 [Here to Docs ...](https://www.alexweb.io/anyxx/)
 
-> [!IMPORTANT]
-> for Microsoft C++, you must enable the C-Preprocessor with this flag:
-> /Zc:preprocessor (see CMakeLists.txt for example)
+### Available on vcpkg:
 
-### Available via vcpkg
+Install in vcpkg root directory:
+```
+vcpkg install anyxx
+```
 
-### Performace compared
-| Benchmark     | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 17.14.14 /O2 /Ob2 | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 |
-|:----------------------------|--------------:|-------:|-------:|
-| **Single dispatch** |   | | |
-| virtual function (reference*) |  100% | 100% | 100% |
-| any++ interface |  **100%** | **100%** | **100%** |
-| any++ open method | **115%** | **200%** | **130%** | 
-| **Double dispatch** |   | |  |
-| std::variant + std::visit (reference*) | 100% | 100% | 100% |
-| hand rolled w. virtual function  | 150% | 150%| 300% |
-| any++ open method | **120%** | **150%** | **300%**(**) |
+In your CMakeLists.txt:
+```cmake
+find_package(anyxx CONFIG REQUIRED)
+target_link_libraries(main PRIVATE bit_factory::anyxx)
+```
 
-- (*) reference:
-  - 100% in different colums do not compare<br>
-  - 100% **Single dispatch** does not compare to 100% **Double dispatch**
-- (**) any++ open method vs std::variant + std::visit with clang:
-  - the measured time with std::variant/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.
+### Useage in CMakeLists.txt:
+```
+FetchContent_Declare(
+    bit_factory::anyxx
+    GIT_REPOSITORY https://github.com/bitfactory-software/anyxx
+    GIT_TAG 0.5.0
+)
+FetchContent_MakeAvailable(anyxx)
+```
+
+
+### Clone the repo:
+```
+git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx
+```
+
+### Runtime Performance compared
+| Benchmark Invocation **Time** | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9<br> 5900X 12-Core Processor (3.70 GHz)<br>MS Visual C++ 18.2.1 /O2 /Ob2 | 12th Gen Intel(R)<br>Core(TM) i12900H (2.50 GHz)<br>clang-cl /O2 /Ob2 | Source | Data from ... |
+|:----------------------------|--------------:|-------:|-------:| ------- :|----:|
+| **Single dispatch**          |              |        |        |          | |
+| virtual function (**reference**) |  1 | 1 | 1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/20_Tree_virtual_function.cpp) | ``BENCHMARK("20_Tree virtual function value") { return expr->value(); };``|
+| any++ interface |  x **1** | x **1** | x **1** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK("21_Tree any value") { return expr->value(); };``|
+| any++ open method ``dispatch``| x **1.5** | x **1.5** | x **1.5** | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp) | ``BENCHMARK("21_Tree any dispatch value") { return expr->value(); };``|
+| **Double dispatch**                          | --------  | -------- | -------- | --------- | --- |
+| hand rolled w. virtual function (**reference**) | 1 | 1 | 1 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30b_Animals_virtual_functions.cpp) | ``BENCHMARK("30b_Animals virtual functions")``|
+| any++ open method ``dispatch`` | x * *1 * *| x * *1 * *| x * *1 * *| [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp) | ``BENCHMARK("31_Animals any dispatch")``|
+| ``std::variant`` + ``std::visit``| x 0.8 | x 0.65 | x 0.35 | [Source](https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp) | ``BENCHMARK("30a_Animals variant visit")``|
+
 
 ### CI Matrix
 | OS \ Compiler | MSVC | Clang | GCC |
@@ -218,20 +236,20 @@ ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)
 
 ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
                                       ayx::virtual_<any_figure<>>)>
-    comapare_edges;
+    compare_edges;
 
 [[nodiscard]] std::partial_ordering operator<=>(any_figure<> const& l,
                                                 any_figure<> const& r) {
-  return comapare_edges(l, r);
+  return compare_edges(l, r);
 }
 
-auto __ = comapare_edges.define<circle, circle>(
+auto __ = compare_edges.define<circle, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::equivalent; });
-auto __ = comapare_edges.define<circle, square>(
+auto __ = compare_edges.define<circle, square>(
     [](auto const&, auto const&) { return std::partial_ordering::less; });
-auto __ = comapare_edges.define<square, square>(
+auto __ = compare_edges.define<square, square>(
     [](auto const&, auto const&) { return std::partial_ordering::equivalent; });
-auto __ = comapare_edges.define<square, circle>(
+auto __ = compare_edges.define<square, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::greater; });
 
 void compare_each(std::stringstream& os,
@@ -269,7 +287,9 @@ Showcase 3 demonstrates how to use the Any++ library to implement open multi-dis
   type, named `any_<first parameter of macro>`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, 
   which is defaulted to the last parameter of the `ANY` macro.
 - The `dispatch<R(Args...)>` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator<=>`) for comparing two `any_figure<>` objects.
-- The dispatch table is populated with custom comparison logic for each pair of types (`circle` vs `circle`, `circle` vs `square`, etc.), returning the appropriate `std::partial_ordering` result.
+- The dispatch table is populated with custom comparison logic for each pair of types (`circle` vs `circle`, `circle` vs `square`, etc.) at static initialization time.
+To do this with as little ceremony as possible, ``anyxx.hpp`` provides a ``__`` macro that simulates the[C++26 placeholder with no name](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2169r4.pdf).
+That trick initializes a static variable with automatic name at each usage site with a dummy value, returned by ``declare`` only for this purpose.
 - The `compare_each` function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.
 
 [Compiler Explorer](https://godbolt.org/z/caTnh9cf1)
@@ -359,9 +379,9 @@ struct square {
 
 struct figure_has_open_dispatch {};
 ANY(figure, (ANY_FN(double, area, (), const)), ayx::val)
-ANY(serializeable, (ANY_FN(void, serialize, (std::ostream&), const)), ayx::val)
+ANY(serializable, (ANY_FN(void, serialize, (std::ostream&), const)), ayx::val)
 
-ayx::factory<any_serializeable, std::string, std::istream&> deserialize;
+ayx::factory<any_serializable, std::string, std::istream&> deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
   std::string type;
@@ -370,7 +390,7 @@ ayx::factory<any_serializeable, std::string, std::istream&> deserialize;
       deserialize.construct<ayx::val>(type, archive));
 }
 
-ANY_MODEL_MAP((circle), serializeable) {
+ANY_MODEL_MAP((circle), serializable) {
   static void serialize(circle const& self, std::ostream& os) {
     os << "circle " << self.radius << " ";
   };
@@ -381,9 +401,9 @@ auto __ = deserialize.register_("circle", [](std::istream& archive) -> circle {
   return c;
 });
 ANY_REGISTER_MODEL(circle, figure);
-ANY_REGISTER_MODEL(circle, serializeable);
+ANY_REGISTER_MODEL(circle, serializable);
 
-ANY_MODEL_MAP((square), serializeable) {
+ANY_MODEL_MAP((square), serializable) {
   static void serialize(square const& self, std::ostream& os) {
     os << "square " << self.edge_length << " ";
   };
@@ -394,7 +414,7 @@ auto __ = deserialize.register_("square", [](std::istream& archive) {
   return s;
 });
 ANY_REGISTER_MODEL(square, figure);
-ANY_REGISTER_MODEL(square, serializeable);
+ANY_REGISTER_MODEL(square, serializable);
 
 void areas(std::stringstream& os,
            std::vector<ayx::any<ayx::val, figure>> const& figures) {
@@ -416,7 +436,7 @@ TEST_CASE("Showcase5") {
   std::stringstream serialized;
   for (auto const& f : figures) {
     serialized << ": ";
-    ayx::borrow_as<any_serializeable<ayx::cref>>(f)->serialize(serialized);
+    ayx::borrow_as<any_serializable<ayx::cref>>(f)->serialize(serialized);
   }
   serialized << "end";
 
@@ -429,8 +449,8 @@ TEST_CASE("Showcase5") {
 ```
 Showcase 5 demonstrates how to use `Any++` to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.
 - Two types, `circle` and `square`, are defined, each with an `area()` method and serializable state (`radius` or `edge_length`).
-- Two traits are declared: `figure` (with an `area()` method) and `serializeable` (with a `serialize(std::ostream&)` method).
-- A factory (`deserialize`) is created to construct type-erased `any_serializeable` objects from a type name and an input stream.
+- Two traits are declared: `figure` (with an `area()` method) and `serializable` (with a `serialize(std::ostream&)` method).
+- A factory (`deserialize`) is created to construct type-erased `any_serializable` objects from a type name and an input stream.
 - Model maps provide custom serialization logic for each type.
 - The `deserialize_any_figure` function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.
 - The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input.
