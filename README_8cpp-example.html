@@ -207,31 +207,49 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">[Here to Docs ...](https:<span class="comment">//www.alexweb.io/anyxx/)</span></div>
 <div class="line"> </div>
-<div class="line">&gt; [!IMPORTANT]</div>
-<div class="line">&gt; <span class="keywordflow">for</span> Microsoft C++, you must enable the C-Preprocessor with <span class="keyword">this</span> flag:</div>
-<div class="line">&gt; /Zc:preprocessor (see CMakeLists.txt <span class="keywordflow">for</span> example)</div>
+<div class="line"><span class="preprocessor">### Available on vcpkg:</span></div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">### Available via vcpkg</span></div>
+<div class="line">Install in vcpkg root directory:</div>
+<div class="line">```</div>
+<div class="line">vcpkg install anyxx</div>
+<div class="line">```</div>
 <div class="line"> </div>
-<div class="line"><span class="preprocessor">### Performace compared</span></div>
-<div class="line">| Benchmark     | 12th Gen Intel(R)&lt;br&gt;Core(TM) i12900H (2.50 GHz)&lt;br&gt;MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9&lt;br&gt; 5900X 12-Core Processor (3.70 GHz)&lt;br&gt;MS Visual C++ 17.14.14 /O2 /Ob2 | 12th Gen Intel(R)&lt;br&gt;Core(TM) i12900H (2.50 GHz)&lt;br&gt;clang-cl /O2 /Ob2 |</div>
-<div class="line">|:----------------------------|--------------:|-------:|-------:|</div>
-<div class="line">| **Single dispatch** |   | | |</div>
-<div class="line">| <span class="keyword">virtual</span> function (reference*) |  100% | 100% | 100% |</div>
-<div class="line">| any++ <span class="keyword">interface </span>|  **100%** | **100%** | **100%** |</div>
-<div class="line">| any++ open method | **115%** | **200%** | **130%** | </div>
-<div class="line">| **Double dispatch** |   | |  |</div>
-<div class="line">| std::variant + std::visit (reference*) | 100% | 100% | 100% |</div>
-<div class="line">| hand rolled w. <span class="keyword">virtual</span> function  | 150% | 150%| 300% |</div>
-<div class="line">| any++ open method | **120%** | **150%** | **300%**(**) |</div>
+<div class="line">In your CMakeLists.txt:</div>
+<div class="line">```cmake</div>
+<div class="line">find_package(anyxx CONFIG REQUIRED)</div>
+<div class="line">target_link_libraries(main PRIVATE bit_factory::anyxx)</div>
+<div class="line">```</div>
 <div class="line"> </div>
-<div class="line">- (*) reference:</div>
-<div class="line">  - 100% in different colums <span class="keywordflow">do</span> not compare&lt;br&gt;</div>
-<div class="line">  - 100% **Single dispatch** does not compare to 100% **Double dispatch**</div>
-<div class="line">- (**) any++ open method vs std::variant + std::visit with clang:</div>
-<div class="line">  - the measured time with std::variant/std::visit multidispatch on clang is 40%(!) from the MS Visual C++ result.</div>
+<div class="line"><span class="preprocessor">### Useage in CMakeLists.txt:</span></div>
+<div class="line">```</div>
+<div class="line">FetchContent_Declare(</div>
+<div class="line">    bit_factory::anyxx</div>
+<div class="line">    GIT_REPOSITORY https:<span class="comment">//github.com/bitfactory-software/anyxx</span></div>
+<div class="line">    GIT_TAG 0.5.0</div>
+<div class="line">)</div>
+<div class="line">FetchContent_MakeAvailable(anyxx)</div>
+<div class="line">```</div>
 <div class="line"> </div>
-<div class="line">### CI Matrix</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">### Clone the repo:</span></div>
+<div class="line">```</div>
+<div class="line">git clone - c core.symlinks = <span class="keyword">true</span> https:<span class="comment">//github.com/bitfactory-software/anyxx</span></div>
+<div class="line">```</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">### Runtime Performance compared</span></div>
+<div class="line">| Benchmark Invocation **Time** | 12th Gen Intel(R)&lt;br&gt;Core(TM) i12900H (2.50 GHz)&lt;br&gt;MS Visual C++ 18.0.1 /O2 /Ob2 | AMD Ryzen 9&lt;br&gt; 5900X 12-Core Processor (3.70 GHz)&lt;br&gt;MS Visual C++ 18.2.1 /O2 /Ob2 | 12th Gen Intel(R)&lt;br&gt;Core(TM) i12900H (2.50 GHz)&lt;br&gt;clang-cl /O2 /Ob2 | Source | Data from ... |</div>
+<div class="line">|:----------------------------|--------------:|-------:|-------:| ------- :|----:|</div>
+<div class="line">| **Single dispatch**          |              |        |        |          | |</div>
+<div class="line">| <span class="keyword">virtual</span> function (**reference**) |  1 | 1 | 1 | [Source](https:<span class="comment">//github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/20_Tree_virtual_function.cpp) | ``BENCHMARK(&quot;20_Tree virtual function value&quot;) { return expr-&gt;value(); };``|</span></div>
+<div class="line">| any++ <span class="keyword">interface </span>|  x **1** | x **1** | x **1** | [Source](https:<span class="comment">//github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any.cpp) | ``BENCHMARK(&quot;21_Tree any value&quot;) { return expr-&gt;value(); };``|</span></div>
+<div class="line">| any++ open method ``dispatch``| x **1.5** | x **1.5** | x **1.5** | [Source](https:<span class="comment">//github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/21_Tree_any_dispatch.cpp.cpp) | ``BENCHMARK(&quot;21_Tree any dispatch value&quot;) { return expr-&gt;value(); };``|</span></div>
+<div class="line">| **Double dispatch**                          | --------  | -------- | -------- | --------- | --- |</div>
+<div class="line">| hand rolled w. <span class="keyword">virtual</span> function (**reference**) | 1 | 1 | 1 | [Source](https:<span class="comment">//github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30b_Animals_virtual_functions.cpp) | ``BENCHMARK(&quot;30b_Animals virtual functions&quot;)``|</span></div>
+<div class="line">| any++ open method ``dispatch`` | x * *1 * *| x * *1 * *| x * *1 * *| [Source](https:<span class="comment">//github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/31_Animals_any_dispatch.cpp) | ``BENCHMARK(&quot;31_Animals any dispatch&quot;)``|</span></div>
+<div class="line">| ``std::variant`` + ``std::visit``| x 0.8 | x 0.65 | x 0.35 | [Source](https:<span class="comment">//github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp) | ``BENCHMARK(&quot;30a_Animals variant visit&quot;)``|</span></div>
+<div class="line"> </div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">### CI Matrix</span></div>
 <div class="line">| OS \ Compiler | MSVC | Clang | GCC |</div>
 <div class="line">|:-----------------:|:------:|:-------:|:-----:|</div>
 <div class="line">| Windows(latest)           | 19   | 21   | - | </div>
@@ -239,24 +257,24 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">| MacOS(latest)           | - | 21   | 14 | </div>
 <div class="line"> </div>
 <div class="line">&lt;a name=<span class="stringliteral">&quot;showcase2&quot;</span>&gt;&lt;/a&gt; </div>
-<div class="line">### Showcase 2: *Any++* with Model Map</div>
+<div class="line"><span class="preprocessor">### Showcase 2: *Any++* with Model Map</span></div>
 <div class="line">```cpp</div>
 <div class="line"><span class="comment">// &lt;!--</span></div>
-<div class="line">#endif</div>
+<div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line">namespace showcase2 {</div>
-<div class="line">#include &lt;bit_factory/anyxx.hpp&gt;</div>
-<div class="line">#include &lt;catch2/catch_test_macros.hpp&gt;</div>
-<div class="line">#include &lt;string&gt;</div>
+<div class="line"><span class="keyword">namespace </span>showcase2 {</div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"> </div>
-<div class="line">struct circle {};</div>
+<div class="line"><span class="keyword">struct </span>circle {};</div>
 <div class="line"><span class="keyword">struct </span>square {</div>
 <div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><a id="_a2" name="_a2"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), drawable) {</div>
+<div class="line"><a id="a2" name="a2"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -265,7 +283,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;<a id="_a3" name="_a3"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;anyxx::val, drawable&gt;</a>&gt; <span class="keyword">const</span>&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;anyxx::val, drawable&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -312,20 +330,20 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</span></div>
 <div class="line"><span class="stringliteral">                                      ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</span></div>
-<div class="line"><span class="stringliteral">    comapare_edges;</span></div>
+<div class="line"><span class="stringliteral">    compare_edges;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(any_figure&lt;&gt; const&amp; l,</span></div>
 <div class="line"><span class="stringliteral">                                                any_figure&lt;&gt; const&amp; r) {</span></div>
-<div class="line"><span class="stringliteral">  return comapare_edges(l, r);</span></div>
+<div class="line"><span class="stringliteral">  return compare_edges(l, r);</span></div>
 <div class="line"><span class="stringliteral">}</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">auto __ = comapare_edges.define&lt;circle, circle&gt;(</span></div>
+<div class="line"><span class="stringliteral">auto __ = compare_edges.define&lt;circle, circle&gt;(</span></div>
 <div class="line"><span class="stringliteral">    [](auto const&amp;, auto const&amp;) { return std::partial_ordering::equivalent; });</span></div>
-<div class="line"><span class="stringliteral">auto __ = comapare_edges.define&lt;circle, square&gt;(</span></div>
+<div class="line"><span class="stringliteral">auto __ = compare_edges.define&lt;circle, square&gt;(</span></div>
 <div class="line"><span class="stringliteral">    [](auto const&amp;, auto const&amp;) { return std::partial_ordering::less; });</span></div>
-<div class="line"><span class="stringliteral">auto __ = comapare_edges.define&lt;square, square&gt;(</span></div>
+<div class="line"><span class="stringliteral">auto __ = compare_edges.define&lt;square, square&gt;(</span></div>
 <div class="line"><span class="stringliteral">    [](auto const&amp;, auto const&amp;) { return std::partial_ordering::equivalent; });</span></div>
-<div class="line"><span class="stringliteral">auto __ = comapare_edges.define&lt;square, circle&gt;(</span></div>
+<div class="line"><span class="stringliteral">auto __ = compare_edges.define&lt;square, circle&gt;(</span></div>
 <div class="line"><span class="stringliteral">    [](auto const&amp;, auto const&amp;) { return std::partial_ordering::greater; });</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">void compare_each(std::stringstream&amp; os,</span></div>
@@ -363,7 +381,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  type, named `any_&lt;first parameter of macro&gt;`, that uses this trait. The generated trait itself has a template parameter for the Proxy type, </span></div>
 <div class="line"><span class="stringliteral">  which is defaulted to the last parameter of the `ANY` macro.</span></div>
 <div class="line"><span class="stringliteral">- The `dispatch&lt;R(Args...)&gt;` mechanism is used to define a type-erased, runtime-resolved binary operator (`operator&lt;=&gt;`) for comparing two `any_figure&lt;&gt;` objects.</span></div>
-<div class="line"><span class="stringliteral">- The dispatch table is populated with custom comparison logic for each pair of types (`circle` vs `circle`, `circle` vs `square`, etc.), returning the appropriate `std::partial_ordering` result.</span></div>
+<div class="line"><span class="stringliteral">- The dispatch table is populated with custom comparison logic for each pair of types (`circle` vs `circle`, `circle` vs `square`, etc.) at static initialization time.</span></div>
+<div class="line"><span class="stringliteral">To do this with as little ceremony as possible, ``anyxx.hpp`` provides a ``__`` macro that simulates the[C++26 placeholder with no name](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2169r4.pdf).</span></div>
+<div class="line"><span class="stringliteral">That trick initializes a static variable with automatic name at each usage site with a dummy value, returned by ``declare`` only for this purpose.</span></div>
 <div class="line"><span class="stringliteral">- The `compare_each` function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">[Compiler Explorer](https://godbolt.org/z/caTnh9cf1)</span></div>
@@ -453,9 +473,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">struct figure_has_open_dispatch {};</span></div>
 <div class="line"><span class="stringliteral">ANY(figure, (ANY_FN(double, area, (), const)), ayx::val)</span></div>
-<div class="line"><span class="stringliteral">ANY(serializeable, (ANY_FN(void, serialize, (std::ostream&amp;), const)), ayx::val)</span></div>
+<div class="line"><span class="stringliteral">ANY(serializable, (ANY_FN(void, serialize, (std::ostream&amp;), const)), ayx::val)</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">ayx::factory&lt;any_serializeable, std::string, std::istream&amp;&gt; deserialize;</span></div>
+<div class="line"><span class="stringliteral">ayx::factory&lt;any_serializable, std::string, std::istream&amp;&gt; deserialize;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</span></div>
 <div class="line"><span class="stringliteral">  std::string type;</span></div>
@@ -464,7 +484,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">      deserialize.construct&lt;ayx::val&gt;(type, archive));</span></div>
 <div class="line"><span class="stringliteral">}</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">ANY_MODEL_MAP((circle), serializeable) {</span></div>
+<div class="line"><span class="stringliteral">ANY_MODEL_MAP((circle), serializable) {</span></div>
 <div class="line"><span class="stringliteral">  static void serialize(circle const&amp; self, std::ostream&amp; os) {</span></div>
 <div class="line"><span class="stringliteral">    os &lt;&lt; &quot;circle &quot; &lt;&lt; self.radius &lt;&lt; &quot; &quot;;</span></div>
 <div class="line"><span class="stringliteral">  };</span></div>
@@ -475,9 +495,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  return c;</span></div>
 <div class="line"><span class="stringliteral">});</span></div>
 <div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(circle, figure);</span></div>
-<div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(circle, serializeable);</span></div>
+<div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(circle, serializable);</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">ANY_MODEL_MAP((square), serializeable) {</span></div>
+<div class="line"><span class="stringliteral">ANY_MODEL_MAP((square), serializable) {</span></div>
 <div class="line"><span class="stringliteral">  static void serialize(square const&amp; self, std::ostream&amp; os) {</span></div>
 <div class="line"><span class="stringliteral">    os &lt;&lt; &quot;square &quot; &lt;&lt; self.edge_length &lt;&lt; &quot; &quot;;</span></div>
 <div class="line"><span class="stringliteral">  };</span></div>
@@ -488,7 +508,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  return s;</span></div>
 <div class="line"><span class="stringliteral">});</span></div>
 <div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(square, figure);</span></div>
-<div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(square, serializeable);</span></div>
+<div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(square, serializable);</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">void areas(std::stringstream&amp; os,</span></div>
 <div class="line"><span class="stringliteral">           std::vector&lt;ayx::any&lt;ayx::val, figure&gt;&gt; const&amp; figures) {</span></div>
@@ -510,7 +530,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  std::stringstream serialized;</span></div>
 <div class="line"><span class="stringliteral">  for (auto const&amp; f : figures) {</span></div>
 <div class="line"><span class="stringliteral">    serialized &lt;&lt; &quot;: &quot;;</span></div>
-<div class="line"><span class="stringliteral">    ayx::borrow_as&lt;any_serializeable&lt;ayx::cref&gt;&gt;(f)-&gt;serialize(serialized);</span></div>
+<div class="line"><span class="stringliteral">    ayx::borrow_as&lt;any_serializable&lt;ayx::cref&gt;&gt;(f)-&gt;serialize(serialized);</span></div>
 <div class="line"><span class="stringliteral">  }</span></div>
 <div class="line"><span class="stringliteral">  serialized &lt;&lt; &quot;end&quot;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
@@ -523,8 +543,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">```</span></div>
 <div class="line"><span class="stringliteral">Showcase 5 demonstrates how to use `Any++` to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</span></div>
 <div class="line"><span class="stringliteral">- Two types, `circle` and `square`, are defined, each with an `area()` method and serializable state (`radius` or `edge_length`).</span></div>
-<div class="line"><span class="stringliteral">- Two traits are declared: `figure` (with an `area()` method) and `serializeable` (with a `serialize(std::ostream&amp;)` method).</span></div>
-<div class="line"><span class="stringliteral">- A factory (`deserialize`) is created to construct type-erased `any_serializeable` objects from a type name and an input stream.</span></div>
+<div class="line"><span class="stringliteral">- Two traits are declared: `figure` (with an `area()` method) and `serializable` (with a `serialize(std::ostream&amp;)` method).</span></div>
+<div class="line"><span class="stringliteral">- A factory (`deserialize`) is created to construct type-erased `any_serializable` objects from a type name and an input stream.</span></div>
 <div class="line"><span class="stringliteral">- Model maps provide custom serialization logic for each type.</span></div>
 <div class="line"><span class="stringliteral">- The `deserialize_any_figure` function reads a type name from the stream, uses the factory to construct the correct type, and cross-casts it to a figure.</span></div>
 <div class="line"><span class="stringliteral">- The test case deserializes a sequence of shapes from a stream, computes their areas, serializes them back, and checks that the serialization matches the original input.</span></div>
@@ -655,7 +675,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">&lt;!--</span></div>
 <div class="line"><span class="stringliteral">#endif</span></div>
 <div class="line"><span class="stringliteral">// --&gt;</span></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2374</div></div>
+<div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:755</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:883</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:526</div></div>

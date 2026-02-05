@@ -1,20 +1,10 @@
 var searchData=
 [
-  ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md11',1,'']]],
-  ['v_5ftable_20instance_1',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
-  ['val_2',['val',['../unionanyxx_1_1val.html',1,'anyxx']]],
-  ['vany_3',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md34',1,'']]],
-  ['vany_5fdispach_4',['VANY_DISPACH',['../group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c',1,'anyxx.hpp']]],
-  ['vany_5fdispach_20macros_5',['VANY_DISPACH macros',['../group__vany__macros.html',1,'']]],
-  ['vany_5fdispach_5fdeclare_6',['VANY_DISPACH_DECLARE',['../group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b',1,'anyxx.hpp']]],
-  ['vany_5fvariant_7',['vany_variant',['../group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80',1,'anyxx']]],
-  ['variant_8',['Any++ : How to &lt;span class=&quot;tt&quot;&gt;trait&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;any&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;virtual&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;static&lt;/span&gt; or &lt;span class=&quot;tt&quot;&gt;variant&lt;/span&gt;?',['../index.html#autotoc_md24',1,'']]],
-  ['vcpkg_9',['Available via vcpkg',['../index.html#autotoc_md26',1,'']]],
-  ['versus_20typed_5fany_10',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]],
-  ['via_20vcpkg_11',['Available via vcpkg',['../index.html#autotoc_md26',1,'']]],
-  ['virtual_20static_20or_20variant_12',['Any++ : How to &lt;span class=&quot;tt&quot;&gt;trait&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;any&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;virtual&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;static&lt;/span&gt; or &lt;span class=&quot;tt&quot;&gt;variant&lt;/span&gt;?',['../index.html#autotoc_md24',1,'']]],
-  ['virtual_5f_13',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
-  ['visiitor_14',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visiitor',['../index.html#autotoc_md31',1,'']]],
-  ['vs_20downcast_15',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
-  ['vs_20dynamic_20cast_16',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]]
+  ['unerase_5fcast_0',['unerase_cast',['../group__casts.html#ga503c7a4639146953d0f21603ef83241e',1,'anyxx']]],
+  ['unerase_5fcast_5fif_1',['unerase_cast_if',['../group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8',1,'anyxx']]],
+  ['unique_2',['unique',['../structanyxx_1_1unique.html',1,'anyxx']]],
+  ['upcast_20vs_20downcast_3',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]],
+  ['usage_4',['usage',['../index.html#autotoc_md25',1,'Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage'],['../index.html#autotoc_md35',1,'Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage']]],
+  ['usage_3a_20vany_5',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md36',1,'']]],
+  ['useage_20in_20cmakelists_20txt_3a_6',['Useage in CMakeLists.txt:',['../index.html#autotoc_md27',1,'']]]
 ];
