@@ -69,8 +69,8 @@ ANY_MODEL_MAP((std::string), example_2b::monoid) {
 namespace example_2b {
 
 template <anyxx::is_any Monoid>
-void test_monoid_traited(Monoid const& m,
-                         std::ranges::forward_range auto const& r);
+void test_monoid_traited(
+    Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>& r);
 
 template <typename P1>
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
@@ -82,8 +82,9 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
 }
 
 template <anyxx::is_any Monoid>
-void test_monoid_traited(Monoid const& m,
-                         std::ranges::forward_range auto const& r) {
+void test_monoid_traited(
+    Monoid const& m,
+    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
   auto id = m.id();
   using type_1 = decltype(m + id + m);
   using type_2 = decltype(m + (m + id));
