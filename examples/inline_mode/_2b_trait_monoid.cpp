@@ -77,7 +77,7 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   test_monoid_traited<typename anyxx::use<P1>::template as<monoid>>(
       anyxx::trait_as<monoid>(p1),
       r | std::views::transform([](const auto& x) {
-        return anyxx::use<P1>::template as<monoid>(anyxx::trait_as<monoid>(x));
+        return typename anyxx::use<P1>::template as<monoid>(anyxx::trait_as<monoid>(x));
       }));
 }
 
