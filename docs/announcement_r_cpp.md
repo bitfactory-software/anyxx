@@ -54,6 +54,9 @@ int main() {
 - Available on vcpkg: `vcpkg install anyxx`
 
 The library is MIT licensed, header-only, and requires C++23.
-Prerelease version! Expect future API changes!
+
+Prerelease version! 
+
+Expect future API changes!
 
 Would love to hear your thoughts and use cases!
