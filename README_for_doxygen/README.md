@@ -483,7 +483,7 @@ TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
 using known_shapes = std::variant<circle, square>;
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<anyxx::use<known_shapes>, drawable>> const&
+          std::vector<anyxx::any<anyxx::using_<known_shapes>, drawable>> const&
               drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
@@ -502,7 +502,7 @@ Showcase 6 demonstrates how to use `Any++` with `std::variant` to enable type-er
 - Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.
 - A `drawable` trait is declared, specifying the required interface (`draw() const -> std::string`).
 - A `known_shapes` type alias is defined as `std::variant<circle, square>`, representing a closed set of possible shapes.
-- The function `draw` takes a vector of type-erased objects (`anyxx::any<anyxx::use<known_shapes>, drawable>`) and calls `draw()` on each, writing the results to a stringstream.
+- The function `draw` takes a vector of type-erased objects (`anyxx::any<anyxx::using_<known_shapes>, drawable>`) and calls `draw()` on each, writing the results to a stringstream.
 - The Catch2 test verifies that drawing a `circle` and a `square` produces the expected output.
 This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
@@ -536,7 +536,7 @@ using known_and_unknown_shapes =
     ayx::make_vany<any_figure, ayx::val, circle, square>;
 static_assert(
     std::same_as<known_and_unknown_shapes,
-                 any_figure<ayx::use<  // see the Any++ logo at the top
+                 any_figure<ayx::using_<  // see the Any++ logo at the top
                      std::variant<any_figure<ayx::val>, circle, square>>>>);
 ANY_MODEL_MAP((std::string), figure) {
   static std::string draw(std::string const& s) { return s; };

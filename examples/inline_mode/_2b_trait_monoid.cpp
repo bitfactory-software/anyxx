@@ -74,10 +74,10 @@ void test_monoid_traited(
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
-  test_monoid_traited<typename anyxx::use<P1>::template as<monoid>>(
+  test_monoid_traited<typename anyxx::using_<P1>::template as<monoid>>(
       anyxx::trait_as<monoid>(p1),
       r | std::views::transform([](const auto& x) {
-        return typename anyxx::use<P1>::template as<monoid>(
+        return typename anyxx::using_<P1>::template as<monoid>(
             anyxx::trait_as<monoid>(x));
       }));
 }
@@ -119,11 +119,11 @@ make_a_range(bool use_list) {
 }  // namespace example_2b
 //
 TEST_CASE("example 2b monoid simple") {
-  example_2b::any_monoid<anyxx::use<int>> x{2};
-  example_2b::any_monoid<anyxx::use<int>> y{x};
-  example_2b::any_monoid<anyxx::use<int>> z = y;
+  example_2b::any_monoid<anyxx::using_<int>> x{2};
+  example_2b::any_monoid<anyxx::using_<int>> y{x};
+  example_2b::any_monoid<anyxx::using_<int>> z = y;
   CHECK(static_cast<int>(z) == 2);
-  example_2b::any_monoid<anyxx::use<int>> a{std::move(x)};
+  example_2b::any_monoid<anyxx::using_<int>> a{std::move(x)};
   CHECK(static_cast<int>(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
@@ -139,8 +139,8 @@ TEST_CASE("example 2b monoid a") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
-  test_monoid<any<use<int>, monoid>>(
-      trait_as<monoid>(1), std::vector<any<use<int>, monoid>>{{2}, {3}});
+  test_monoid<any<using_<int>, monoid>>(
+      trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
 }
 TEST_CASE("example 2b monoid b") {
   using namespace example_2b;
@@ -148,9 +148,9 @@ TEST_CASE("example 2b monoid b") {
   using namespace anyxx;
 
   test_monoid("1"s, std::vector{"2"s, "3"s});
-  test_monoid<use<std::string>::as<monoid>>(
+  test_monoid<using_<std::string>::as<monoid>>(
       trait_as<monoid>("1"s),
-      std::vector<use<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+      std::vector<using_<std::string>::as<monoid>>{{"2"s}, {"3"s}});
 }
 TEST_CASE("example 2b monoid c") {
   using namespace example_2b;
