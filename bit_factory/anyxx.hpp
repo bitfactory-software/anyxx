@@ -2661,10 +2661,11 @@ inline auto unerase_cast_if(Any const& o) {
 /// \tparam Value The captured value
 template <typename Value>
 struct use {
+  use() = default;
   template <typename V>
     requires(!std::same_as<std::decay_t<V>, use>)
   use(V&& v) : value_(std::forward<V>(v)) {}
-  Value value_;
+  Value value_ = {};
   using value_t = Value;
   operator Value() const { return value_; }
   /// Helper type alias template to trait a model with an \ref any.
