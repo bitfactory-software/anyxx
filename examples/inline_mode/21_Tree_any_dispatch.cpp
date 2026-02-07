@@ -11,8 +11,7 @@ using namespace anyxx;
 namespace _21_Tree_TE_interface_dispatch {
 
 struct node_has_open_dispatch {};
-ANY(node, ,shared )
-
+ANY(node, , shared) // val)
 
 struct Plus {
   Plus(any_node<> left, any_node<> right)
@@ -35,10 +34,12 @@ struct Integer {
 //-----------------------------------------------------------------------------
 // open dispatch evaluate, returns int, dispatched via an any_node;
 dispatch<int(virtual_<any_node<>>)> evaluate;
-auto __ = evaluate.define<Plus>(
-    [](auto const& expr) { return evaluate(expr.left_) + evaluate(expr.right_); });
-auto __ = evaluate.define<Times>(
-    [](auto const& expr) { return evaluate(expr.left_) * evaluate(expr.right_); });
+auto __ = evaluate.define<Plus>([](auto const& expr) {
+  return evaluate(expr.left_) + evaluate(expr.right_);
+});
+auto __ = evaluate.define<Times>([](auto const& expr) {
+  return evaluate(expr.left_) * evaluate(expr.right_);
+});
 auto __ = evaluate.define<Integer>([](auto const& expr) { return expr.i; });
 //
 //-----------------------------------------------------------------------------
@@ -74,10 +75,11 @@ namespace _21_Tree_TE_interface_dispatch {
 TEST_CASE("21_Tree any++ open method") {
   using namespace anyxx;
 
-  auto expr = any_node<>{std::make_shared<Times>(
-      std::make_shared<Integer>(2),
-      std::make_shared<Plus>(std::make_shared<Integer>(3),
-                             std::make_shared<Integer>(4)))};
+  auto expr = any_node<>{
+      std::in_place_type<Times>, any_node<>{std::in_place_type<Integer>, 2},
+      any_node<>{std::in_place_type<Plus>,
+                 any_node<>{std::in_place_type<Integer>, 3},
+                 any_node<>{std::in_place_type<Integer>, 4}}};
 
   // REQUIRE(&v_table_instance<node, Times>() == &get_v_table(expr));
   // REQUIRE(v_table_instance<node, Times>().size() >= 3u);

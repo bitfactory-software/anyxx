@@ -146,9 +146,9 @@ TEST_CASE("std emulated function") {
     any<cref, function<std::string(std::string const&), mutable_>> any_f_mref{
         f};
 
-    any<by_val<decltype(f)&>, function<std::string(std::string const&), const_>>
-        any_f_by_val{f};
-    CHECK(any_f_by_val("static C++") == "static C++ world!");
+    any<using_<decltype(f)&>, function<std::string(std::string const&), const_>>
+        any_f_using_{f};
+    CHECK(any_f_using_("static C++") == "static C++ world!");
 
     CHECK(trait_as<function<std::string(std::string const&), const_>>(f)(
               "trait_as") == "trait_as world!");

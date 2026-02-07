@@ -14,9 +14,9 @@ inline bool on_segment(point p, point q, point r) {
 
 enum class orientation_type { collinear, clockwise, counter_clockwise };
 inline orientation_type orientation(point p, point q, point r) {
-  auto by_val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
-  if (by_val == 0) return orientation_type::collinear;
-  return (by_val > 0) ? orientation_type::clockwise
+  auto use = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y);
+  if (use == 0) return orientation_type::collinear;
+  return (use > 0) ? orientation_type::clockwise
                    : orientation_type::counter_clockwise;
 }
 

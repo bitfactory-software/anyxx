@@ -35,7 +35,7 @@ using concrete_value = anyxx::vany_type_trait<vany_value<>>::concrete_variant;
 using any_in_variant = anyxx::vany_type_trait<vany_value<>>::any_in_variant;
 
 static_assert(
-    anyxx::is_proxy<anyxx::by_val<
+    anyxx::is_proxy<anyxx::using_<
         anyxx::vany_variant<any_value, anyxx::shared, bool, int>>>);
 static_assert(
     std::same_as<concrete_value, std::variant<bool, int, double, std::string>>);
@@ -58,7 +58,7 @@ TEST_CASE("example 2ca static_ simple variant") {
   using namespace anyxx;
 
   using any_variant =
-      any_value<by_val<std::variant<bool, int, double, std::string>>>;
+      any_value<using_<std::variant<bool, int, double, std::string>>>;
 
   CHECK(any_variant{true}.to_string() == "true");
   CHECK(any_variant{42}.to_string() == "42");

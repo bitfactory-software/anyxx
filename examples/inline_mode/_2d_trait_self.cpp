@@ -8,8 +8,8 @@ TRAIT_TEMPLATE_(((Base)), has_equal, Base, (),
       (ANY_FN_DEF(bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
-template <typename Box = anyxx::shared, typename Base = anyxx::base_trait>
-using any_has_equal = anyxx::any<Box, has_equal<Base>>;
+template <typename Proxy = anyxx::val, typename Base = anyxx::base_trait>
+using any_has_equal = anyxx::any<Proxy, has_equal<Base>>;
 
 }  // namespace example_2d
 

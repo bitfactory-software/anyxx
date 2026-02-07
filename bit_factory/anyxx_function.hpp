@@ -64,16 +64,16 @@ using f_mutable_mutable = any<mutref, function<int(double), mutable_>>;
 static_assert(std::invocable<f_mutable_mutable, double>);
 
 using f_const_const_val =
-    any<by_val<functor const &>, function<int(double), const_>>;
+    any<using_<functor const &>, function<int(double), const_>>;
 static_assert(std::invocable<f_const_const_val, double>);
 using f_const_mutable_val =
-    any<by_val<functor const &>, function<int(double), mutable_>>;
+    any<using_<functor const &>, function<int(double), mutable_>>;
 static_assert(!std::invocable<f_const_mutable_val, double>);
 using f_mutable_const_val =
-    any<by_val<functor &>, function<int(double), const_>>;
+    any<using_<functor &>, function<int(double), const_>>;
 static_assert(std::invocable<f_mutable_const_val, double>);
 using f_mutable_mutable_val =
-    any<by_val<functor &>, function<int(double), mutable_>>;
+    any<using_<functor &>, function<int(double), mutable_>>;
 static_assert(std::invocable<f_mutable_mutable_val, double>);
 }  // namespace self_test
 
