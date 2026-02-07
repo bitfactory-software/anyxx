@@ -123,12 +123,12 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = anyxx::shared&gt;</div>
 <div class="line"><span class="keyword">using </span>vany_value =</div>
-<div class="line">    <a id="_a2" name="_a2"></a><a class="code hl_typedef" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562">anyxx::make_vany&lt;any_value, Proxy, bool, int, double, std::string&gt;</a>;</div>
+<div class="line">    <a id="_a2" name="_a2"></a><a class="code hl_typedef" href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">anyxx::make_vany&lt;any_value, Proxy, bool, int, double, std::string&gt;</a>;</div>
 <div class="line"><span class="keyword">using </span>concrete_value = anyxx::vany_type_trait&lt;vany_value&lt;&gt;&gt;::concrete_variant;</div>
 <div class="line"><span class="keyword">using </span>any_in_variant = anyxx::vany_type_trait&lt;vany_value&lt;&gt;&gt;::any_in_variant;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">static_assert</span>(</div>
-<div class="line">    <a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a>&lt;<a id="_a3" name="_a3"></a><a class="code hl_struct" href="structanyxx_1_1by__val.html">anyxx::by_val</a>&lt;</div>
+<div class="line">    <a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a>&lt;<a id="_a3" name="_a3"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_</a>&lt;</div>
 <div class="line">        <a id="_a4" name="_a4"></a><a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant&lt;any_value, anyxx::shared, bool, int&gt;</a>&gt;&gt;);</div>
 <div class="line"><span class="keyword">static_assert</span>(</div>
 <div class="line">    std::same_as&lt;concrete_value, std::variant&lt;bool, int, double, std::string&gt;&gt;);</div>
@@ -151,7 +151,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">using </span>any_variant =</div>
-<div class="line">      any_value&lt;by_val&lt;std::variant&lt;bool, int, double, std::string&gt;&gt;&gt;;</div>
+<div class="line">      any_value&lt;using_&lt;std::variant&lt;bool, int, double, std::string&gt;&gt;&gt;;</div>
 <div class="line"> </div>
 <div class="line">  CHECK(any_variant{<span class="keyword">true</span>}.to_string() == <span class="stringliteral">&quot;true&quot;</span>);</div>
 <div class="line">  CHECK(any_variant{42}.to_string() == <span class="stringliteral">&quot;42&quot;</span>);</div>
@@ -315,7 +315,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  CHECK(vvi0 == vvbf);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aanyxx_8hpp_html_abb32933fc2d3ddd4236f3075dd5c1562"><div class="ttname"><a href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; by_val&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1356</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a5b8337d31962b6107d1748ec5dc2ee3b"><div class="ttname"><a href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; using_&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1356</div></div>
 <div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1129</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:883</div></div>
 <div class="ttc" id="agroup__proxies_html_gaf97e4130c5c467557b419eb6e97b8d80"><div class="ttname"><a href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a></div><div class="ttdeci">std::variant&lt; Any&lt; Proxy &gt;, Types... &gt; vany_variant</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1352</div></div>
@@ -323,7 +323,7 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="ttc" id="agroup__trait__macros_html_ga73e339005a697eb20b243d1622873b99"><div class="ttname"><a href="group__trait__macros.html#ga73e339005a697eb20b243d1622873b99">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:735</div></div>
 <div class="ttc" id="agroup__vany__macros_html_ga0a538605bcb4ae50bd736f0802af2c8b"><div class="ttname"><a href="group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b">VANY_DISPACH_DECLARE</a></div><div class="ttdeci">#define VANY_DISPACH_DECLARE(export_, name, vany, signature, static_dispatch)</div><div class="ttdoc">Declare a singleton object for open vany dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3748</div></div>
 <div class="ttc" id="agroup__vany__macros_html_ga93a6d3c140de4e4c95f863b88385a27c"><div class="ttname"><a href="group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c">VANY_DISPACH</a></div><div class="ttdeci">#define VANY_DISPACH(namespace_, name)</div><div class="ttdoc">Define a vany dispatch singleton object in a source file.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3766</div></div>
-<div class="ttc" id="astructanyxx_1_1by__val_html"><div class="ttname"><a href="structanyxx_1_1by__val.html">anyxx::by_val</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:2663</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:2663</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

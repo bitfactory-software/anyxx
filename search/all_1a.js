@@ -6,5 +6,6 @@ var searchData=
   ['upcast_20vs_20downcast_3',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'']]],
   ['usage_4',['usage',['../index.html#autotoc_md27',1,'Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage'],['../index.html#autotoc_md37',1,'Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage']]],
   ['usage_3a_20vany_5',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md38',1,'']]],
-  ['useage_20in_20cmakelists_20txt_3a_6',['Useage in CMakeLists.txt:',['../index.html#autotoc_md29',1,'']]]
+  ['useage_20in_20cmakelists_20txt_3a_6',['Useage in CMakeLists.txt:',['../index.html#autotoc_md29',1,'']]],
+  ['using_5f_7',['using_',['../structanyxx_1_1using__.html',1,'anyxx']]]
 ];

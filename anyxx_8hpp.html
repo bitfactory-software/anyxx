@@ -124,7 +124,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Proxy to manage the captured object as value with small object optimization.  <a href="unionanyxx_1_1val.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E" id="r_anyxx_3A_3Aany_3C_20Proxy_2C_20Trait_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1any.html">anyxx::any&lt; Proxy, Trait &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core class template to control dispatch for external polymorphism.  <a href="classanyxx_1_1any.html#details">More...</a><br /></td></tr>
-<tr class="memitem:anyxx_3A_3Aby_5Fval_3C_20Value_20_3E" id="r_anyxx_3A_3Aby_5Fval_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1by__val.html">anyxx::by_val&lt; Value &gt;</a></td></tr>
+<tr class="memitem:anyxx_3A_3Ausing_5F_3C_20Value_20_3E" id="r_anyxx_3A_3Ausing_5F_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1using__.html">anyxx::using_&lt; Value &gt;</a></td></tr>
 <tr class="memitem:anyxx_3A_3Akey_3C_20Tag_20_3E" id="r_anyxx_3A_3Akey_3C_20Tag_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1key.html">anyxx::key&lt; Tag &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A key type for factory registration.  <a href="structanyxx_1_1key.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E" id="r_anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1factory.html">anyxx::factory&lt; Any, Key, Args &gt;</a></td></tr>
@@ -390,10 +390,10 @@ template&lt;is_proxy Data&gt; </td></tr>
 <tr class="memitem:a26cffc6820013e7206c36a5873ef13b1 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a26cffc6820013e7206c36a5873ef13b1">anyxx::unerased</a></td></tr>
 <tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80" id="r_gaf97e4130c5c467557b419eb6e97b8d80"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
 <tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;</td></tr>
-<tr class="memitem:abb32933fc2d3ddd4236f3075dd5c1562" id="r_abb32933fc2d3ddd4236f3075dd5c1562"><td class="memTemplParams" colspan="2"><a id="abb32933fc2d3ddd4236f3075dd5c1562" name="abb32933fc2d3ddd4236f3075dd5c1562"></a>
+<tr class="memitem:a5b8337d31962b6107d1748ec5dc2ee3b" id="r_a5b8337d31962b6107d1748ec5dc2ee3b"><td class="memTemplParams" colspan="2"><a id="a5b8337d31962b6107d1748ec5dc2ee3b" name="a5b8337d31962b6107d1748ec5dc2ee3b"></a>
 template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
-<tr class="memitem:abb32933fc2d3ddd4236f3075dd5c1562 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::make_vany</b> = Any&lt;<a class="el" href="structanyxx_1_1by__val.html">by_val</a>&lt;<a class="el" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;</td></tr>
-<tr class="memdesc:abb32933fc2d3ddd4236f3075dd5c1562"><td class="mdescLeft">&#160;</td><td class="mdescRight">A factory type to direct get the any for the vany. <br /></td></tr>
+<tr class="memitem:a5b8337d31962b6107d1748ec5dc2ee3b template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::make_vany</b> = Any&lt;<a class="el" href="structanyxx_1_1using__.html">using_</a>&lt;<a class="el" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;</td></tr>
+<tr class="memdesc:a5b8337d31962b6107d1748ec5dc2ee3b"><td class="mdescLeft">&#160;</td><td class="mdescRight">A factory type to direct get the any for the vany. <br /></td></tr>
 <tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add" id="r_a554eb25dc0742eb08d38968bd3ba6add"><td class="memTemplParams" colspan="2"><a id="a554eb25dc0742eb08d38968bd3ba6add" name="a554eb25dc0742eb08d38968bd3ba6add"></a>
 template&lt;voidness Voidness&gt; </td></tr>
 <tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::observer</b> = Voidness</td></tr>
@@ -2864,7 +2864,7 @@ template&lt;typename Trait, typename T&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>A factory function to bind an object as a model to an any with a trait. See also by_val::as. </p>
+<p>A factory function to bind an object as a model to an any with a trait. See also using_::as. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a3">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a8">_2c_trait_any_variant.cpp</a>, and <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>.</dd>
 </dl>
 

@@ -577,7 +577,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">using known_shapes = std::variant&lt;circle, square&gt;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">void draw(std::stringstream&amp; os,</span></div>
-<div class="line"><span class="stringliteral">          std::vector&lt;anyxx::any&lt;anyxx::by_val&lt;known_shapes&gt;, drawable&gt;&gt; const&amp;</span></div>
+<div class="line"><span class="stringliteral">          std::vector&lt;anyxx::any&lt;anyxx::using_&lt;known_shapes&gt;, drawable&gt;&gt; const&amp;</span></div>
 <div class="line"><span class="stringliteral">              drawables) {</span></div>
 <div class="line"><span class="stringliteral">  for (auto const&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; &quot;\n&quot;;</span></div>
 <div class="line"><span class="stringliteral">}</span></div>
@@ -596,7 +596,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">- Two types, `circle` and `square`, are defined, each with a `draw()` method returning a string.</span></div>
 <div class="line"><span class="stringliteral">- A `drawable` trait is declared, specifying the required interface (`draw() const -&gt; std::string`).</span></div>
 <div class="line"><span class="stringliteral">- A `known_shapes` type alias is defined as `std::variant&lt;circle, square&gt;`, representing a closed set of possible shapes.</span></div>
-<div class="line"><span class="stringliteral">- The function `draw` takes a vector of type-erased objects (`anyxx::any&lt;anyxx::by_val&lt;known_shapes&gt;, drawable&gt;`) and calls `draw()` on each, writing the results to a stringstream.</span></div>
+<div class="line"><span class="stringliteral">- The function `draw` takes a vector of type-erased objects (`anyxx::any&lt;anyxx::using_&lt;known_shapes&gt;, drawable&gt;`) and calls `draw()` on each, writing the results to a stringstream.</span></div>
 <div class="line"><span class="stringliteral">- The Catch2 test verifies that drawing a `circle` and a `square` produces the expected output.</span></div>
 <div class="line"><span class="stringliteral">This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.</span></div>
 <div class="line"><span class="stringliteral">Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.</span></div>
@@ -630,7 +630,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">    ayx::make_vany&lt;any_figure, ayx::val, circle, square&gt;;</span></div>
 <div class="line"><span class="stringliteral">static_assert(</span></div>
 <div class="line"><span class="stringliteral">    std::same_as&lt;known_and_unknown_shapes,</span></div>
-<div class="line"><span class="stringliteral">                 any_figure&lt;ayx::by_val&lt;  // see the Any++ logo at the top</span></div>
+<div class="line"><span class="stringliteral">                 any_figure&lt;ayx::using_&lt;  // see the Any++ logo at the top</span></div>
 <div class="line"><span class="stringliteral">                     std::variant&lt;any_figure&lt;ayx::val&gt;, circle, square&gt;&gt;&gt;&gt;);</span></div>
 <div class="line"><span class="stringliteral">ANY_MODEL_MAP((std::string), figure) {</span></div>
 <div class="line"><span class="stringliteral">  static std::string draw(std::string const&amp; s) { return s; };</span></div>

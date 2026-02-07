@@ -846,7 +846,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00943" name="l00943"></a><span class="lineno">  943</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> not_specialized = <span class="keyword">false</span>;</div>
 <div class="line"><a id="l00944" name="l00944"></a><span class="lineno">  944</span>};</div>
 <div class="line"><a id="l00945" name="l00945"></a><span class="lineno">  945</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Value&gt;</div>
-<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span><span class="keyword">struct </span>by_val;</div>
+<div class="line"><a id="l00946" name="l00946"></a><span class="lineno">  946</span><span class="keyword">struct </span>using_;</div>
 <div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span> </div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span><span class="keyword">using </span>const_void = <span class="keywordtype">void</span> <span class="keyword">const</span>*;</div>
 <div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span><span class="keyword">using </span>mutable_void = <span class="keywordtype">void</span>*;</div>
@@ -1195,14 +1195,14 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>}</div>
 <div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span> </div>
 <div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span><span class="comment">// --------------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span><span class="comment">// (un)erased data by_val</span></div>
+<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span><span class="comment">// (un)erased data using_</span></div>
 <div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span> </div>
 <div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span><span class="keyword">static_assert</span>(std::is_const_v&lt;std::remove_reference_t&lt;int const&amp;&gt;&gt;);</div>
 <div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span><span class="keyword">static_assert</span>(!std::is_const_v&lt;std::remove_reference_t&lt;int&amp;&gt;&gt;);</div>
 <div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span><span class="keyword">static_assert</span>(!std::is_const_v&lt;std::remove_reference_t&lt;int&gt;&gt;);</div>
 <div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span> </div>
 <div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
-<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span><span class="keyword">struct </span>proxy_trait&lt;by_val&lt;V&gt;&gt; : basic_proxy_trait&lt;by_val&lt;V&gt;&gt; {</div>
+<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span><span class="keyword">struct </span>proxy_trait&lt;using_&lt;V&gt;&gt; : basic_proxy_trait&lt;using_&lt;V&gt;&gt; {</div>
 <div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>  <span class="keyword">using </span>void_t = std::conditional_t&lt;std::is_const_v&lt;std::remove_reference_t&lt;V&gt;&gt;,</div>
 <div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>                                    const_void, mutable_void&gt;;</div>
 <div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>  <span class="keyword">using </span>static_dispatch_t = V;</div>
@@ -1233,7 +1233,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>  }</div>
 <div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Vx&gt;</div>
 <div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>  <span class="keyword">static</span> <span class="keyword">auto</span> erase(Vx&amp;&amp; v) {</div>
-<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>    <span class="keywordflow">return</span> by_val&lt;V&gt;{std::forward&lt;Vx&gt;(v)};</div>
+<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>    <span class="keywordflow">return</span> using_&lt;V&gt;{std::forward&lt;Vx&gt;(v)};</div>
 <div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>  }</div>
 <div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span>};</div>
 <div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span></div>
@@ -1242,7 +1242,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01352" name="l01352"></a><span class="lineno"><a class="line" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80"> 1352</a></span><span class="keyword">using </span><a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;;</div>
 <div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span></div>
 <div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">typename</span> Any, <a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy</a> Proxy, <span class="keyword">typename</span>... Types&gt;</div>
-<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562"> 1356</a></span><span class="keyword">using </span><a class="code hl_typedef" href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562">make_vany</a> = Any&lt;<a class="code hl_struct" href="structanyxx_1_1by__val.html">by_val</a>&lt;<a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;;</div>
+<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b"> 1356</a></span><span class="keyword">using </span><a class="code hl_typedef" href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">make_vany</a> = Any&lt;<a class="code hl_struct" href="structanyxx_1_1using__.html">using_</a>&lt;<a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;;</div>
 <div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span> </div>
 <div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VanyVariant&gt;</div>
 <div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span><span class="keyword">struct </span>vany_variant_trait {</div>
@@ -1269,8 +1269,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>};</div>
 <div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span> </div>
 <div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">typename</span> Any, is_proxy Proxy, <span class="keyword">typename</span>... Types&gt;</div>
-<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span><span class="keyword">struct </span>proxy_trait&lt;by_val&lt;<a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;</div>
-<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>    : basic_proxy_trait&lt;by_val&lt;vany_variant&lt;Any, Proxy, Types...&gt;&gt;&gt; {</div>
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span><span class="keyword">struct </span>proxy_trait&lt;using_&lt;<a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;&gt;&gt;</div>
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>    : basic_proxy_trait&lt;using_&lt;vany_variant&lt;Any, Proxy, Types...&gt;&gt;&gt; {</div>
 <div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>  <span class="keyword">using </span>vany_variant_t = <a class="code hl_typedef" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">vany_variant</a>&lt;Any, Proxy, Types...&gt;;</div>
 <div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>  <span class="keyword">using </span>void_t = <span class="keyword">typename</span> proxy_trait&lt;Proxy&gt;::void_t;</div>
 <div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span>  <span class="keyword">using </span>static_dispatch_t = vany_variant_t;</div>
@@ -1300,15 +1300,15 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span> </div>
 <div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>  <span class="keyword">static</span> vany_variant_t construct_in_place(V&amp;&amp; v) {</div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>    <span class="keywordflow">return</span> by_val&lt;vany_variant_t&gt;{std::forward&lt;V&gt;(v)};</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>    <span class="keywordflow">return</span> using_&lt;vany_variant_t&gt;{std::forward&lt;V&gt;(v)};</div>
 <div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>  }</div>
 <div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>  <span class="keyword">static</span> <span class="keyword">auto</span> construct_type_in_place([[maybe_unused]] Args&amp;&amp;... args) {</div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>    <span class="keywordflow">return</span> by_val&lt;vany_variant_t&gt;{T{std::forward&lt;Args&gt;(args)...}};</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span>    <span class="keywordflow">return</span> using_&lt;vany_variant_t&gt;{T{std::forward&lt;Args&gt;(args)...}};</div>
 <div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>  }</div>
 <div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Vx&gt;</div>
 <div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>  <span class="keyword">static</span> <span class="keyword">auto</span> erase(Vx&amp;&amp; v) {</div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    <span class="keywordflow">return</span> by_val&lt;vany_variant_t&gt;{std::forward&lt;Vx&gt;(v)};</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    <span class="keywordflow">return</span> using_&lt;vany_variant_t&gt;{std::forward&lt;Vx&gt;(v)};</div>
 <div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>  }</div>
 <div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>};</div>
 <div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span> </div>
@@ -2469,22 +2469,22 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02650" name="l02650"></a><span class="lineno"> 2650</span></div>
 <div class="line"><a id="l02662" name="l02662"></a><span class="lineno"> 2662</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Value&gt;</div>
 <div class="foldopen" id="foldopen02663" data-start="{" data-end="};">
-<div class="line"><a id="l02663" name="l02663"></a><span class="lineno"><a class="line" href="structanyxx_1_1by__val.html"> 2663</a></span><span class="keyword">struct </span>by_val {</div>
+<div class="line"><a id="l02663" name="l02663"></a><span class="lineno"><a class="line" href="structanyxx_1_1using__.html"> 2663</a></span><span class="keyword">struct </span>using_ {</div>
 <div class="line"><a id="l02664" name="l02664"></a><span class="lineno"> 2664</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
-<div class="line"><a id="l02665" name="l02665"></a><span class="lineno"> 2665</span>    <span class="keyword">requires</span>(!std::same_as&lt;std::decay_t&lt;V&gt;, by_val&gt;)</div>
-<div class="line"><a id="l02666" name="l02666"></a><span class="lineno"> 2666</span>  by_val(V&amp;&amp; v) : value_(std::forward&lt;V&gt;(v)) {}</div>
+<div class="line"><a id="l02665" name="l02665"></a><span class="lineno"> 2665</span>    <span class="keyword">requires</span>(!std::same_as&lt;std::decay_t&lt;V&gt;, using_&gt;)</div>
+<div class="line"><a id="l02666" name="l02666"></a><span class="lineno"> 2666</span>  using_(V&amp;&amp; v) : value_(std::forward&lt;V&gt;(v)) {}</div>
 <div class="line"><a id="l02667" name="l02667"></a><span class="lineno"> 2667</span>  Value value_;</div>
 <div class="line"><a id="l02668" name="l02668"></a><span class="lineno"> 2668</span>  <span class="keyword">using </span>value_t = Value;</div>
 <div class="line"><a id="l02669" name="l02669"></a><span class="lineno"> 2669</span>  <span class="keyword">operator</span> Value()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> value_; }</div>
 <div class="line"><a id="l02672" name="l02672"></a><span class="lineno"> 2672</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Trait&gt;</div>
-<div class="line"><a id="l02673" name="l02673"></a><span class="lineno"><a class="line" href="structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561"> 2673</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561">as</a> = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;by_val&lt;Value&gt;</a>, Trait&gt;;</div>
+<div class="line"><a id="l02673" name="l02673"></a><span class="lineno"><a class="line" href="structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed"> 2673</a></span>  <span class="keyword">using </span><a class="code hl_typedef" href="structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed">as</a> = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;using_&lt;Value&gt;</a>, Trait&gt;;</div>
 <div class="line"><a id="l02674" name="l02674"></a><span class="lineno"> 2674</span>};</div>
 </div>
 <div class="line"><a id="l02675" name="l02675"></a><span class="lineno"> 2675</span></div>
 <div class="line"><a id="l02679" name="l02679"></a><span class="lineno"> 2679</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Trait, <span class="keyword">typename</span> T&gt;</div>
 <div class="foldopen" id="foldopen02680" data-start="{" data-end="}">
 <div class="line"><a id="l02680" name="l02680"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c"> 2680</a></span><span class="keyword">auto</span> <a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as</a>(T&amp;&amp; v) {</div>
-<div class="line"><a id="l02681" name="l02681"></a><span class="lineno"> 2681</span>  <span class="keywordflow">return</span> <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;anyxx::by_val&lt;std::decay_t&lt;T&gt;</a>&gt;, Trait&gt;{std::forward&lt;T&gt;(v)};</div>
+<div class="line"><a id="l02681" name="l02681"></a><span class="lineno"> 2681</span>  <span class="keywordflow">return</span> <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;anyxx::using_&lt;std::decay_t&lt;T&gt;</a>&gt;, Trait&gt;{std::forward&lt;T&gt;(v)};</div>
 <div class="line"><a id="l02682" name="l02682"></a><span class="lineno"> 2682</span>}</div>
 </div>
 <div class="line"><a id="l02683" name="l02683"></a><span class="lineno"> 2683</span> </div>
@@ -3619,8 +3619,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03945" name="l03945"></a><span class="lineno"> 3945</span><span class="preprocessor">#endif</span></div>
 <div class="line"><a id="l03946" name="l03946"></a><span class="lineno"> 3946</span></div>
 <div class="line"><a id="l03959" name="l03959"></a><span class="lineno"> 3959</span></div>
+<div class="ttc" id="aanyxx_8hpp_html_a5b8337d31962b6107d1748ec5dc2ee3b"><div class="ttname"><a href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; using_&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1356</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_aa0a344700732ba661e0fb701ef1eba2c"><div class="ttname"><a href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a></div><div class="ttdeci">auto trait_as(T &amp;&amp;v)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2680</div></div>
-<div class="ttc" id="aanyxx_8hpp_html_abb32933fc2d3ddd4236f3075dd5c1562"><div class="ttname"><a href="anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; by_val&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1356</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_ad0e4d3c5ff9f0082cf07ef367b55c87a"><div class="ttname"><a href="anyxx_8hpp.html#ad0e4d3c5ff9f0082cf07ef367b55c87a">anyxx::dispatchs_count</a></div><div class="ttdeci">std::size_t &amp; dispatchs_count()</div><div class="ttdoc">A counter for dispatch tables per v-table type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3219</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2374</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html_a2dee555d6fc08f2449ab24e9d11a97d3"><div class="ttname"><a href="classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3">anyxx::any::any</a></div><div class="ttdeci">any(std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2437</div></div>
@@ -3642,10 +3642,10 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="ttc" id="agroup__proxies_html_gaf97e4130c5c467557b419eb6e97b8d80"><div class="ttname"><a href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a></div><div class="ttdeci">std::variant&lt; Any&lt; Proxy &gt;, Types... &gt; vany_variant</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1352</div></div>
 <div class="ttc" id="astructanyxx_1_1any__v__table_html"><div class="ttname"><a href="structanyxx_1_1any__v__table.html">anyxx::any_v_table</a></div><div class="ttdoc">Basic lifetime functionality.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1002</div></div>
 <div class="ttc" id="astructanyxx_1_1any__v__table_html_a7ac8badd88a2c68c0ffb5eb74a9e2205"><div class="ttname"><a href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">anyxx::any_v_table::any_v_table</a></div><div class="ttdeci">any_v_table(std::in_place_type_t&lt; Concrete &gt; concrete)</div><div class="ttdoc">Type-erasing constructor.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1007</div></div>
-<div class="ttc" id="astructanyxx_1_1by__val_html"><div class="ttname"><a href="structanyxx_1_1by__val.html">anyxx::by_val</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:2663</div></div>
-<div class="ttc" id="astructanyxx_1_1by__val_html_aa0a6c0f3d8d15c53da59cca4995e5561"><div class="ttname"><a href="structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561">anyxx::by_val::as</a></div><div class="ttdeci">any&lt; by_val&lt; Value &gt;, Trait &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2673</div></div>
 <div class="ttc" id="astructanyxx_1_1key_html"><div class="ttname"><a href="structanyxx_1_1key.html">anyxx::key</a></div><div class="ttdoc">A key type for factory registration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3089</div></div>
 <div class="ttc" id="astructanyxx_1_1unique_html"><div class="ttname"><a href="structanyxx_1_1unique.html">anyxx::unique</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:1517</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:2663</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html_a169b9630831d786ba2b2778b879330ed"><div class="ttname"><a href="structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed">anyxx::using_::as</a></div><div class="ttdeci">any&lt; using_&lt; Value &gt;, Trait &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2673</div></div>
 <div class="ttc" id="astructanyxx_1_1virtual___html"><div class="ttname"><a href="structanyxx_1_1virtual__.html">anyxx::virtual_</a></div><div class="ttdoc">A tag to indicate that the corresponding function parameter is an any used for dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3230</div></div>
 <div class="ttc" id="aunionanyxx_1_1val_html"><div class="ttname"><a href="unionanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1755</div></div>
 </div><!-- fragment --></div><!-- contents -->

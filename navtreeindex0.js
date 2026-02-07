@@ -119,11 +119,11 @@ var NAVTREEINDEX0 =
 "pages.html":[],
 "structanyxx_1_1any__v__table.html":[8,0,0,1],
 "structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205":[8,0,0,1,0],
-"structanyxx_1_1by__val.html":[8,0,0,0],
-"structanyxx_1_1by__val.html#aa0a6c0f3d8d15c53da59cca4995e5561":[8,0,0,0,0],
 "structanyxx_1_1key.html":[8,0,0,6],
 "structanyxx_1_1members.html":[8,0,0,8],
 "structanyxx_1_1unique.html":[6,0,0],
+"structanyxx_1_1using__.html":[8,0,0,0],
+"structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed":[8,0,0,0,0],
 "structanyxx_1_1virtual__.html":[8,0,0,9],
 "topics.html":[6],
 "unionanyxx_1_1val.html":[6,0,1]

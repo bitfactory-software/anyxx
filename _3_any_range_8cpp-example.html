@@ -196,7 +196,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;by_val&lt;v_t const&amp;&gt;</a>, forward_range&lt;int, int&gt;&gt; r{v};</div>
+<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;using_&lt;v_t const&amp;&gt;</a>, forward_range&lt;int, int&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) CHECK(i == v[x++]);</div>
 <div class="line">    CHECK(x == 3);</div>
@@ -231,7 +231,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;by_val&lt;v_t const&amp;&gt;</a>, forward_range&lt;any_stringable&lt;anyxx::val&gt;,</div>
+<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;using_&lt;v_t const&amp;&gt;</a>, forward_range&lt;any_stringable&lt;anyxx::val&gt;,</div>
 <div class="line">                                       any_stringable&lt;anyxx::val&gt;&gt;&gt;</div>
 <div class="line">        r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
@@ -277,13 +277,13 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    CHECK(*unerase_cast&lt;int&gt;(r) == 6);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    any_node&lt;by_val&lt;int&gt;&gt; n1{0};</div>
+<div class="line">    any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
 <div class="line">    <span class="keyword">auto</span> r = n1.sum(v);</div>
 <div class="line">    CHECK(r == 6);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
 <div class="line">    any_forward_range&lt;any_node&lt;anyxx::val&gt;, any_node&lt;anyxx::val&gt;, <a id="_a5" name="_a5"></a><a class="code hl_union" href="unionanyxx_1_1val.html">anyxx::val</a>&gt; r{v};</div>
-<div class="line">    any_node&lt;by_val&lt;int&gt;&gt; n1{0};</div>
+<div class="line">    any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
 <div class="line">    <span class="keyword">auto</span> result = n1.sum(r);</div>
 <div class="line">    CHECK(result == 6);</div>
 <div class="line">  }</div>

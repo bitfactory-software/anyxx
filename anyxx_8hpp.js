@@ -2,7 +2,7 @@ var anyxx_8hpp =
 [
     [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", "structanyxx_1_1any__v__table" ],
     [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
-    [ "anyxx::by_val&lt; Value &gt;", "structanyxx_1_1by__val.html", "structanyxx_1_1by__val" ],
+    [ "anyxx::using_&lt; Value &gt;", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
@@ -55,7 +55,7 @@ var anyxx_8hpp =
     [ "VANY_DISPACH", "group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c", null ],
     [ "VANY_DISPACH_DECLARE", "group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b", null ],
     [ "anyxx::cref", "group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf", null ],
-    [ "anyxx::make_vany", "anyxx_8hpp.html#abb32933fc2d3ddd4236f3075dd5c1562", null ],
+    [ "anyxx::make_vany", "anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b", null ],
     [ "anyxx::mutref", "group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2", null ],
     [ "anyxx::shared", "group__proxies.html#ga56505144f855bfd01c879bf63c62f09c", null ],
     [ "anyxx::vany_variant", "group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80", null ],
