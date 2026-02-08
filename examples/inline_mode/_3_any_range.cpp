@@ -22,25 +22,23 @@ anyxx::any_forward_range<int, int, anyxx::val> a_range_value(bool use_list) {
     return std::vector<int>{1, 2, 3};
 }
 
-TRAIT(stringable,
-      (ANY_FN_DEF(std::string, to_string, (), const,
-                            [&x]() { return std::format("{}", x); })))
+TRAIT(stringable, (ANY_FN_DEF(std::string, to_string, (), const,
+                              [&x]() { return std::format("{}", x); })))
 
 template <typename Box>
 using any_stringable = anyxx::any<Box, stringable>;
 
 ANY(node,
-    (ANY_FN_DEF(
-        anyxx::self, sum,
-        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                   anyxx::cref> const &)),
-        const, [&x](auto const &r) {
-      auto s = x;
-      for (auto i : r) {
-        s += i;
-      }
-      return s;
-        })), );
+    (ANY_FN_DEF(anyxx::self, sum,
+                ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                           anyxx::cref> const&)),
+                const, [&x](auto const& r) {
+                  auto s = x;
+                  for (auto i : r) {
+                    s += i;
+                  }
+                  return s;
+                })), );
 
 }  // namespace example_3
 
@@ -117,9 +115,8 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::val>,
-                      any_stringable<anyxx::val>>
-        r{v};
+    any_forward_range<any_stringable<anyxx::val>, any_stringable<anyxx::val>> r{
+        v};
     int x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
     CHECK(x == 3);
@@ -137,8 +134,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<using_<v_t const&>, forward_range<any_stringable<anyxx::val>,
-                                       any_stringable<anyxx::val>>>
+    any<using_<v_t const&>,
+        forward_range<any_stringable<anyxx::val>, any_stringable<anyxx::val>>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -156,9 +153,8 @@ TEST_CASE("example 3 transform unerase") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::val>,
-                      any_stringable<anyxx::val>>
-        r{v};
+    any_forward_range<any_stringable<anyxx::val>, any_stringable<anyxx::val>> r{
+        v};
     int x = 0;
     for (auto i : std::views::transform(
              r, [](any_stringable<anyxx::val> const& v) -> int {
@@ -188,15 +184,34 @@ TEST_CASE("example 3 self in range") {
     CHECK(r == 6);
   }
   {
-    any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{v};
+    any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{
+        v};
     any_node<using_<int>> n1{0};
     auto result = n1.sum(r);
     CHECK(result == 6);
   }
- {
-    any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{v};
+  {
+    any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{
+        v};
     any_node<val> n1{0};
     auto result = n1.sum(r);
     CHECK(*unerase_cast<int>(result) == 6);
   }
+}
+
+TEST_CASE("example 3 static any range of view") {
+  using namespace anyxx;
+  using namespace std::string_literals;
+  using namespace example_3;
+
+  auto v = std::views::iota(0, 3);
+  auto v2 =
+      v | std::views::transform([](auto i) { return static_cast<int>(i); });
+  any_forward_range<using_<int>::as<stringable>, using_<int>::as<stringable>> r{
+      v2};
+  std::string result;
+  for (auto i : r) {
+    result += i.to_string();
+  }
+  CHECK(result == "012"); 
 }

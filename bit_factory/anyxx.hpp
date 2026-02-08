@@ -963,7 +963,8 @@ class meta_data;
 
 template <typename Model>
 constexpr inline std::size_t compute_model_size() {
-  if constexpr (std::is_trivially_copyable_v<Model>) {
+  if constexpr (std::is_trivially_copyable_v<Model> &&
+                sizeof(Model) <= sizeof(mutable_void)) {
     return 0;
   } else {
     return sizeof(Model);
