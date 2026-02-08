@@ -69,7 +69,24 @@ ANY_MODEL_MAP((std::string), example_2b::monoid) {
 namespace example_2b {
 
 template <anyxx::is_any Monoid>
-void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
+void test_monoid_traited(
+    Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>& r);
+template <typename P1>
+  requires(!anyxx::is_any<P1>)
+void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
+  using any_monoid = typename anyxx::using_<P1>::template as<monoid>;
+  test_monoid_traited<any_monoid>(any_monoid{p1}, r);
+}
+template <anyxx::is_any Monoid>
+void test_monoid(
+    Monoid const& m,
+    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+  test_monoid_traited<Monoid>(m, r);
+}
+template <anyxx::is_any Monoid>
+void test_monoid_traited(
+    Monoid const& m,
+    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
   auto id = m.id();
   using type_1 = decltype(m + id + m);
   using type_2 = decltype(m + (m + id));
@@ -106,10 +123,10 @@ TEST_CASE("example 2b monoid simple") {
   CHECK(static_cast<int>(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
-  static_assert(anyxx::moveable_from<decltype(x)::proxy_t,
-                                     decltype(y)::proxy_t>);
-  static_assert(!anyxx::borrowable_from<decltype(x)::proxy_t,
-                                        decltype(y)::proxy_t>);
+  static_assert(
+      anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
+  static_assert(
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
 }
 
 TEST_CASE("example 2b monoid a") {
@@ -117,6 +134,7 @@ TEST_CASE("example 2b monoid a") {
   using namespace std::string_literals;
   using namespace anyxx;
 
+  test_monoid((1), std::vector{2, 3});
   test_monoid<any<using_<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
 }
@@ -125,6 +143,7 @@ TEST_CASE("example 2b monoid b") {
   using namespace std::string_literals;
   using namespace anyxx;
 
+  test_monoid("1"s, std::vector{"2"s, "3"s});
   test_monoid<using_<std::string>::as<monoid>>(
       trait_as<monoid>("1"s),
       std::vector<using_<std::string>::as<monoid>>{{"2"s}, {"3"s}});
