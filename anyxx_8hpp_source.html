@@ -1394,8 +1394,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span>  <span class="keyword">explicit</span> unique(mutable_void p = <span class="keyword">nullptr</span>) : ptr(p) {}</div>
 <div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span>  unique(unique <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
 <div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span>  unique&amp; operator=(unique <span class="keyword">const</span>&amp;) = <span class="keyword">delete</span>;</div>
-<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span>  unique(unique&amp;&amp; other) { std::swap(ptr, other.ptr); }</div>
-<div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span>  unique&amp; operator=(unique&amp;&amp; other) {</div>
+<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span>  unique(unique&amp;&amp; other) <span class="keyword">noexcept</span> { std::swap(ptr, other.ptr); }</div>
+<div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span>  unique&amp; operator=(unique&amp;&amp; other) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span>    assert(!ptr);</div>
 <div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span>    std::swap(ptr, other.ptr);</div>
 <div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
@@ -1586,8 +1586,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01723" name="l01723"></a><span class="lineno"> 1723</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l01724" name="l01724"></a><span class="lineno"> 1724</span>  }</div>
 <div class="line"><a id="l01725" name="l01725"></a><span class="lineno"> 1725</span>  <span class="keyword">explicit</span> heap_data(mutable_void p = <span class="keyword">nullptr</span>) : ptr(p) {}</div>
-<div class="line"><a id="l01726" name="l01726"></a><span class="lineno"> 1726</span>  heap_data(heap_data&amp;&amp; other) { std::swap(ptr, other.ptr); }</div>
-<div class="line"><a id="l01727" name="l01727"></a><span class="lineno"> 1727</span>  heap_data&amp; operator=(heap_data&amp;&amp; other) {</div>
+<div class="line"><a id="l01726" name="l01726"></a><span class="lineno"> 1726</span>  heap_data(heap_data&amp;&amp; other) <span class="keyword">noexcept</span> { std::swap(ptr, other.ptr); }</div>
+<div class="line"><a id="l01727" name="l01727"></a><span class="lineno"> 1727</span>  heap_data&amp; operator=(heap_data&amp;&amp; other) <span class="keyword">noexcept</span> {</div>
 <div class="line"><a id="l01728" name="l01728"></a><span class="lineno"> 1728</span>    assert(!ptr);</div>
 <div class="line"><a id="l01729" name="l01729"></a><span class="lineno"> 1729</span>    std::swap(ptr, other.ptr);</div>
 <div class="line"><a id="l01730" name="l01730"></a><span class="lineno"> 1730</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
