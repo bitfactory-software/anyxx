@@ -507,7 +507,7 @@ Showcase 6 demonstrates how to use `Any++` with `std::variant` to enable type-er
 This example shows how `Any++` can be combined with `std::variant` to provide type-erased, trait-based polymorphism for a known set of types, allowing heterogeneous collections and uniform interface access without inheritance or virtual functions.
 Because the set of types is fixed, this approach can offer better performance than fully dynamic type erasure while still providing flexibility and extensibility through traits.
 
-[Compiler Explorer](https://godbolt.org/z/5EYKa4daK)
+[Compiler Explorer](https://godbolt.org/z/hTT64bv79)
 
 <a name="showcase7"></a> 
 ### Showcase 7: Basic *Any++* open std::variant usage: 'vany'
@@ -573,7 +573,7 @@ to handle a fixed set of types efficiently, but also allow for runtime extension
 
 "vany" is a modern, safer, and extensible ~~variant~~ version of OLEVariant and QVariant.
 
-[Compiler Explorer](https://godbolt.org/z/saWMv3brz)
+[Compiler Explorer](https://godbolt.org/z/dj5eabYdc)
 
 
 If you are still here, you are ready for [more Examples](https://www.alexweb.io/anyxx/examples.html)
