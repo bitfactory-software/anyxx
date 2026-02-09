@@ -40,10 +40,12 @@
 
 #if defined(_MSC_VER) && not defined(__clang__)  // MSVC
 #define LIFETIMEBOUND [[msvc::lifetimebound]]
+#ifndef ANYXX_GODBOLT
 #include <CppCoreCheck/Warnings.h>
 #pragma warning(default : CPPCORECHECK_LIFETIME_WARNINGS)  // Enable
                                                            // lifetimebound
-                                                           // warnings
+#else
+#endif
 #elif defined(__clang__)                                   // Clang
 #define LIFETIMEBOUND [[clang::lifetimebound]]
 #else
