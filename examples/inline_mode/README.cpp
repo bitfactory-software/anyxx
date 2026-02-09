@@ -69,12 +69,12 @@ The combination of static and dynamic dispatch enables
 **Any++** stands on the shoulders of giants. This library draws inspiration from groundbreaking work in C++ type erasure, polymorphism, and design patterns:
 
 - [Andrei Alexandrescu](https://erdani.com/) for [*Modern C++ Design*](https://www.amazon.com/Modern-Design-Generic-Programming-Patterns/dp/0201704315), which laid the foundation for policy-based design and compile-time techniques and showcased reusable components through open (multi-)dispatch
-- [Kevlin Henney](https://twitter.com/KevlinHenney) for [Boost.Any](https://www.boost.org/doc/libs/release/doc/html/any.html), pioneering type-safe value semantics for arbitrary types
-- [Douglas Gregor](https://github.com/dgregor79) for [Boost.Function](https://www.boost.org/doc/libs/release/doc/html/function.html), demonstrating practical type erasure for callable objects
-- [Steven Watanabe](https://github.com/steven-watanabe) for [Boost.TypeErasure](https://www.boost.org/doc/libs/release/doc/html/boost_typeerasure.html), introducing concept-based type erasure with customizable requirements
+- [Kevlin Henney](https://bsky.app/profile/kevlin.bsky.social) for [Boost.Any](https://www.boost.org/doc/libs/release/doc/html/any.html), pioneering type-safe value semantics for arbitrary types
+- [Douglas Gregor for [Boost.Function](https://www.boost.org/doc/libs/release/doc/html/function.html), demonstrating practical type erasure for callable objects
+- Steven Watanabe for [Boost.TypeErasure](https://www.boost.org/doc/libs/release/doc/html/boost_typeerasure.html), introducing concept-based type erasure with customizable requirements
 - [Louis Dionne](https://github.com/ldionne) for [Dyno](https://github.com/ldionne/dyno), exploring runtime polymorphism through modern C++ metaprogramming
 - [Jean-Louis Leroy](https://github.com/jll63) for [YOMM2](https://github.com/jll63/yomm2) and [Boost.OpenMethod](https://www.boost.org/doc/libs/master/libs/openmethod/doc/html/index.html), advancing open multi-methods in C++
-- [Mingxin Wang](https://github.com/mingxwa) for [proxy](https://github.com/microsoft/proxy), bringing modern runtime polymorphism patterns to C++
+- [Mingxin Wang](https://github.com/mingxwa) for [proxy](https://github.com/ngcpp/proxy), bringing modern runtime polymorphism patterns to C++
 
 Their visionary contributions have shaped how we think about abstraction, extensibility, and performance in C++.
 
