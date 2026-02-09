@@ -1520,8 +1520,8 @@ struct unique {
   explicit unique(mutable_void p = nullptr) : ptr(p) {}
   unique(unique const&) = delete;
   unique& operator=(unique const&) = delete;
-  unique(unique&& other) { std::swap(ptr, other.ptr); }
-  unique& operator=(unique&& other) {
+  unique(unique&& other) noexcept { std::swap(ptr, other.ptr); }
+  unique& operator=(unique&& other) noexcept {
     assert(!ptr);
     std::swap(ptr, other.ptr);
     return *this;
@@ -1723,8 +1723,8 @@ struct heap_data {
     return *this;
   }
   explicit heap_data(mutable_void p = nullptr) : ptr(p) {}
-  heap_data(heap_data&& other) { std::swap(ptr, other.ptr); }
-  heap_data& operator=(heap_data&& other) {
+  heap_data(heap_data&& other) noexcept { std::swap(ptr, other.ptr); }
+  heap_data& operator=(heap_data&& other) noexcept {
     assert(!ptr);
     std::swap(ptr, other.ptr);
     return *this;
