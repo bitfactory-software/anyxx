@@ -66,17 +66,11 @@ The combination of static and dynamic dispatch enables
 
 ## Acknowledgments
 
-**Any++** stands on the shoulders of giants. This library draws inspiration from groundbreaking work in C++ type erasure, polymorphism, and design patterns:
+**Any++** draws inspiration from the work of these wizards:
 
-- [Andrei Alexandrescu](https://erdani.com/) for [*Modern C++ Design*](https://www.amazon.com/Modern-Design-Generic-Programming-Patterns/dp/0201704315), which laid the foundation for policy-based design and compile-time techniques and showcased reusable components through open (multi-)dispatch
-- [Kevlin Henney](https://bsky.app/profile/kevlin.bsky.social) for [Boost.Any](https://www.boost.org/doc/libs/release/doc/html/any.html), pioneering type-safe value semantics for arbitrary types
-- [Douglas Gregor for [Boost.Function](https://www.boost.org/doc/libs/release/doc/html/function.html), demonstrating practical type erasure for callable objects
-- Steven Watanabe for [Boost.TypeErasure](https://www.boost.org/doc/libs/release/doc/html/boost_typeerasure.html), introducing concept-based type erasure with customizable requirements
-- [Louis Dionne](https://github.com/ldionne) for [Dyno](https://github.com/ldionne/dyno), exploring runtime polymorphism through modern C++ metaprogramming
-- [Jean-Louis Leroy](https://github.com/jll63) for [YOMM2](https://github.com/jll63/yomm2) and [Boost.OpenMethod](https://www.boost.org/doc/libs/master/libs/openmethod/doc/html/index.html), advancing open multi-methods in C++
-- [Mingxin Wang](https://github.com/mingxwa) for [proxy](https://github.com/ngcpp/proxy), bringing modern runtime polymorphism patterns to C++
-
-Their visionary contributions have shaped how we think about abstraction, extensibility, and performance in C++.
+- [Andrei Alexandrescu](https://erdani.com/), [*Modern C++ Design*](https://www.amazon.com/Modern-Design-Generic-Programming-Patterns/dp/0201704315), and [Jean-Louis Leroy](https://github.com/jll63), [YOMM2](https://github.com/jll63/yomm2) and [Boost.OpenMethod](https://www.boost.org/doc/libs/master/libs/openmethod/doc/html/index.html), advancing open multi-methods in C++
+- [Kevlin Henney](https://bsky.app/profile/kevlin.bsky.social), [Boost.Any](https://www.boost.org/doc/libs/release/doc/html/any.html), and [Douglas Gregor](https://github.com/dgregor79), [Boost.Function](https://www.boost.org/doc/libs/release/doc/html/function.html), demonstrating practical type erasure
+- [Steven Watanabe](https://github.com/steven-watanabe), [Boost.TypeErasure](https://www.boost.org/doc/libs/release/doc/html/boost_typeerasure.html), [Louis Dionne](https://github.com/ldionne), [Dyno](https://github.com/ldionne/dyno), and [Mingxin Wang](https://github.com/mingxwa), [proxy](https://github.com/ngcpp/proxy), easing external runtime polymorphism through modern C++ metaprogramming
 
 **Special thanks go to [Alex](https://github.com/AlexCodesApps) for his lightweight and manageable preprocessor vocabulary shown in [dynamic_interface](https://github.com/AlexCodesApps/dynamic_interface#example).**
 
