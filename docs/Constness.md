@@ -1,6 +1,6 @@
 ### Handling `const` in `Any++` 
 
-| `OP`/`FN_`        | `OP`/`FN` `EXACT`   |  `Jacket` | `Proxy`   |  callable?            |
+| OP/FN_            | OP/FN_ EXACT        |  Jacket   | Proxy     |  callable?            |
 |:-----------------:|:-------------------:|:---------:|:---------:|:---------------------:|
 | `mutable`         | *                   | `const`   | *         | no                    |
 | `mutable`         | `EXACT`             | `mutable` | `mutable` | yes                   |

@@ -15,7 +15,7 @@
 
 #### borrow_as
 
-| v-to\from->| ``cref`` | ``mutref``|``shared`` | ``unique`` | ``value`` | 
+| v-to\from->| cref     | mutref    | shared    | unique     | val       | 
 |:-----------|:--------:|:---------:|:----------|:----------:|:---------:|
 | ``cref``   | yes      | yes       | yes       | yes        | yes	     |
 | ``mutref`` | no       | yes       | no        | yes        | yes	     |
@@ -25,7 +25,7 @@
 
 #### move_to
 
-| v-to\from->| ``cref`` | ``mutref``|``shared`` | ``unique`` | ``value`` | 
+| v-to\from->| cref     | mutref    | shared    | unique     | val       | 
 |:-----------|:--------:|:---------:|:----------|:----------:|:---------:|
 | ``cref``   | yes      | yes       | no        | no         | no	     |
 | ``mutref`` | no       | yes       | no        | no         | yes	     |
@@ -35,7 +35,7 @@
 
 #### clone_from
 
-| v-to\from->| ``cref`` | ``mutref``|``shared`` | ``unique`` | ``value`` | 
+| v-to\from->| cref     | mutref    | shared    | unique     | val       | 
 |:-----------|:--------:|:---------:|:----------|:----------:|:---------:|
 | ``cref``   | no       | no        | no        | no         | no	     |
 | ``mutref`` | no       | no        | no        | no         | no	     |

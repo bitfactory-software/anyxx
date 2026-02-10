@@ -14,7 +14,7 @@ The above defines a trait `trait1` that requires a function `fn1` returning a `s
 The TRAIT macro generates the necessary boilerplate code to manage the trait, including virtual function tables (vtables) for dynamic dispatch.
 
 <details>
-<summary>Show the generated code for our example</summary>
+<summary><b><u>Show the generated code for our example</u></b></summary>
 
 ```cpp
 
