@@ -64,14 +64,6 @@ The combination of static and dynamic dispatch enables
 - a hybrid usage of `std::variant` and **type erasure** to balance performance and coupling.
 - C++0x-like concept maps for static and dynamic customization points and default behavior.
 
-## Acknowledgments
-
-**Any++** draws inspiration from the work of these wizards:
-
-- [Andrei Alexandrescu](https://erdani.com/), [*Modern C++ Design*](https://www.amazon.com/Modern-Design-Generic-Programming-Patterns/dp/0201704315), and [Jean-Louis Leroy](https://github.com/jll63), [YOMM2](https://github.com/jll63/yomm2) and [Boost.OpenMethod](https://www.boost.org/doc/libs/master/libs/openmethod/doc/html/index.html), advancing open multi-methods in C++
-- [Kevlin Henney](https://bsky.app/profile/kevlin.bsky.social), [Boost.Any](https://www.boost.org/doc/libs/release/doc/html/any.html), and Douglas Gregor, [Boost.Function](https://www.boost.org/doc/libs/release/doc/html/function.html), demonstrating practical type erasure
-- Steven Watanabe, [Boost.TypeErasure](https://www.boost.org/doc/libs/release/doc/html/boost_typeerasure.html), [Louis Dionne](https://github.com/ldionne), [Dyno](https://github.com/ldionne/dyno), and [Mingxin Wang](https://github.com/mingxwa), [proxy](https://github.com/ngcpp/proxy), easing external runtime polymorphism through modern C++ metaprogramming
-
 **Special thanks go to [Alex](https://github.com/AlexCodesApps) for his lightweight and manageable preprocessor vocabulary shown in [dynamic_interface](https://github.com/AlexCodesApps/dynamic_interface#example).**
 
 <a name="showcase1"></a> 
