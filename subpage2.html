@@ -91,7 +91,48 @@ $(function(){initNavTree('subpage2.html','',''); });
   <div class="headertitle"><div class="title">Monoid, the "Hello World" of type classes </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"></div></div><!-- contents -->
+<div class="textblock"><blockquote class="doxtable">
+<p>The Monoid is a simple algebraic structure that consists of a set of elements, an associative binary operation, and an identity element.<br  />
+ It is a fundamental concept in abstract algebra and has many applications in computer science, especially in functional programming. </p>
+</blockquote>
+<p>If you have ever heard of the term "type class", you have probably heard of the Monoid as well and you may skip this section.</p>
+<p>But if you are new to the concept of type classes, the Monoid is a great example to start with, because it is simple and easy to understand and because it is inherrent self refernetial, it shows the obstacles an implementation of type has to overcome.</p>
+<p>Lets start with a colloquial definition of the Monoid: When a type wants to be a Monoid,</p><ol type="1">
+<li>it has to provide a way to combine two values of that type that result in an other value of the same type. This operation is called the binary operation.<br  />
+ Often the symbol "&lt;&gt;" is used to denote the binary operation, but we will use the symbol + for simplicity.</li>
+<li>it must have a value that can be used with the binary operation and the result is the other value. This value is called the identity element.</li>
+<li>the binary operation must be associative, which means that the order of operations does not matter.<br  />
+ For example, if we have three values a, b, and c of a Monoid type, then (a + b) + c must be equal to a + (b + c).</li>
+<li>Haskell adds a fourth requirement, which is redundant, the concatenation operation. It states that if we have a list of values of a Monoid type, then we can combine them all using the binary operation and the identity element. For example: if we have a list of values [a, b, c] of a Monoid type, then we can combine them all using the binary operation and the identity element like this: a + b + c + identity. This requirement is redundant because it can be derived from the first three requirements. If we have a binary operation that is associative and has an identity element, then we can combine any number of values using the binary operation and the identity element. It is included in Haskell for convenience and performance reasons that do not matter for our discussion here.</li>
+</ol>
+<p>The Hskell definition of the Monoid type class looks like this: </p><div class="fragment"><div class="line">class Semigroup a =&gt; Monoid a where</div>
+<div class="line">  mempty :: a</div>
+<div class="line">  mempty = mconcat []</div>
+<div class="line"> </div>
+<div class="line">  mappend :: a -&gt; a -&gt; a</div>
+<div class="line">  mappend = (&lt;&gt;)</div>
+<div class="line"> </div>
+<div class="line">  mconcat :: [a] -&gt; a</div>
+<div class="line">  mconcat = foldr mappend mempty</div>
+</div><!-- fragment --><p> We can see that the Monoid type class inherits from the Semigroup type class, which is a type class that only requires the binary operation. This is for our discussion here not relevant, but it is a common pattern in Haskell to have a hierarchy of type classes, where each type class inherits from one or more other type classes. mempty is the identity element, mappend is the binary operation, and mconcat is the concatenation operation. <span class="tt">mapapend</span> requires the binary operation. <span class="tt">mempty</span> and <span class="tt">mconcat</span> have default implementations, witch reference each other. <span class="tt">mconcat</span> is defined in terms of <span class="tt">mappend</span> and <span class="tt">mempty</span>, and <span class="tt">mempty</span> is defined as the result of concatenating an empty list. For example, if a type provides an implementation for mappend and mempty, then it can use the default implementation for mconcat, which is defined in terms of mappend and mempty. This is a powerful feature of type classes, because it allows to define a lot of functionality for a type class, wher a concrete type only has to provide a few implementations to get all the other functionality for free.</p>
+<p>In Rust , the Monoid trait looks like this: </p><div class="fragment"><div class="line">trait Monoid {</div>
+<div class="line">    fn empty() -&gt; Self { Self::concat(vec![]) }</div>
+<div class="line"> </div>
+<div class="line">    // 2. You MUST implement this (the binary operation)</div>
+<div class="line">    fn append(self, other: Self) -&gt; Self;</div>
+<div class="line"> </div>
+<div class="line">    fn concat&lt;I: IntoIterator&lt;Item = Self&gt;&gt;(iter: I) -&gt; Self </div>
+<div class="line">    where </div>
+<div class="line">        Self: Sized </div>
+<div class="line">    {</div>
+<div class="line">        // This relies on empty() as the starting point for the fold</div>
+<div class="line">        iter.into_iter().fold(Self::empty(), Self::append)</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a href="https://godbolt.org/z/rnh9azK9K">See a complete example on Compiler Explorer</a> We can see that the Monoid trait with it's three requirements, which are the same as the Haskell type class. The identity element is provided by the empty() function, the binary operation is provided by the append() function, and the concatenation operation is provided by the concat() function, which has a default implementation that relies on the empty() function as the starting point for the fold. ''IntoIterator'' is a trait that allows to convert a type into an iterator, which is a type that can be used to iterate over a sequence of values. In the case of an self referential type class like the Monoid, you can not use this trait as a type, because it is not object safe.</p>
+<p>How far can we get there with standrd C++23?</p>
+<p>Gracyfully to Steve Downey, we can get pretty far, let's see his approach to <a class="el" href="subpage3.html" title="Concept Maps using C++23 Library Tech, Steve Downey">C++0x Concepts with Concept Maps using C++23 Library Tech</a> in the next chapter. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
