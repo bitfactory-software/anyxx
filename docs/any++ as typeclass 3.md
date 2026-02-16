@@ -162,6 +162,8 @@ But how good is it compared to other C++ compile time customization point techni
 Here we can take look into Barry Revzin proposal "We need a language mechanism for customization points" [P2279R0](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2279r0.html#c0x-concepts) 
 and use his framework for comparing different techniques for compile time customization points.
 
+<img width="736" height="331" alt="image" src="https://github.com/user-attachments/assets/7ed7c557-3378-4e09-a884-ccb3bde54c9f" />
+
 
 
 
