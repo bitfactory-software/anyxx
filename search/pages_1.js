@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['2_3a_20any_20with_20model_20map_0',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md31',1,'']]]
+  ['1_3a_20basic_20any_20usage_0',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md25',1,'']]]
 ];

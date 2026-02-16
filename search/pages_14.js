@@ -1,14 +1,16 @@
 var searchData=
 [
-  ['of_20any_0',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
-  ['of_20the_20generated_20code_1',['Description of the Generated Code',['../md_docs_2Traits__inner__working.html#autotoc_md23',1,'']]],
-  ['of_20traits_20in_20any_2',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
-  ['on_20vcpkg_3a_3',['Available on vcpkg:',['../index.html#autotoc_md26',1,'']]],
-  ['open_20dispatch_20as_20visitor_4',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md33',1,'']]],
-  ['open_20dispatch_20dispatch_5ftable_20dispatch_5ftable_20instance_20multi_20dispatch_20matrix_5',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
-  ['open_20multi_20dispatch_20type_20erased_20binary_20operator_6',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md32',1,'']]],
-  ['open_20std_3a_3avariant_20usage_3a_20vany_7',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md36',1,'']]],
-  ['operator_8',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md32',1,'']]],
-  ['or_20variant_9',['Any++ : How to &lt;span class=&quot;tt&quot;&gt;trait&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;any&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;virtual&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;static&lt;/span&gt; or &lt;span class=&quot;tt&quot;&gt;variant&lt;/span&gt;?',['../index.html#autotoc_md24',1,'']]],
-  ['overview_10',['Overview',['../md_docs_2Proxy__overview.html#autotoc_md2',1,'']]]
+  ['map_0',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md31',1,'']]],
+  ['map_1',['Model map',['../md_docs_2terms__and__definitions.html#autotoc_md10',1,'']]],
+  ['maps_20using_20c_2023_20library_20tech_20steve_20downey_2',['Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
+  ['matrix_3',['CI Matrix',['../index.html#autotoc_md30',1,'']]],
+  ['matrix_4',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
+  ['members_5',['Extension Members',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
+  ['model_6',['Model',['../md_docs_2terms__and__definitions.html#autotoc_md9',1,'']]],
+  ['model_20map_7',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md31',1,'']]],
+  ['model_20map_8',['Model map',['../md_docs_2terms__and__definitions.html#autotoc_md10',1,'']]],
+  ['monoid_20the_20hello_20world_20of_20type_20classes_9',['Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]],
+  ['move_5fto_10',['move_to',['../md_docs_2Proxy__overview.html#autotoc_md5',1,'']]],
+  ['multi_20dispatch_20matrix_11',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
+  ['multi_20dispatch_20type_20erased_20binary_20operator_12',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md32',1,'']]]
 ];

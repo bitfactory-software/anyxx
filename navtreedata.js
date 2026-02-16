@@ -26,6 +26,7 @@ var NAVTREE =
 [
   [ "Any++", "index.html", [
     [ "Any++ : How to <span class=\"tt\">trait</span> <span class=\"tt\">any</span> <span class=\"tt\">virtual</span>, <span class=\"tt\">static</span> or <span class=\"tt\">variant</span>?", "index.html#autotoc_md24", null ],
+    [ "Any++, C++0x Concepts, Rust traits, Haskell type classes", "main.html", "main" ],
     [ "Handling <span class=\"tt\">const</span> in <span class=\"tt\">Any++</span>", "md_docs_2Constness.html", null ],
     [ "<span class=\"tt\">Any++</span> Type Erased <span class=\"tt\">Proxy</span>*s", "md_docs_2Proxy__overview.html", null ],
     [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", null ],
