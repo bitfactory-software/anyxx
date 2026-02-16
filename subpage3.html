@@ -91,7 +91,137 @@ $(function(){initNavTree('subpage3.html','',''); });
   <div class="headertitle"><div class="title">Concept Maps using C++23 Library Tech, Steve Downey </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"></div></div><!-- contents -->
+<div class="textblock"><p>In 2023, Steve Downey gave a <a href="https://www.youtube.com/watch?v=H825py1Jgfk">talk at CppNow</a> about <a href="https://sdowney.org/posts/index.php/2024/05/19/concept-maps-using-c23-library-tech/">Concept Maps using C++23 Library Tech</a>. In this talk, he used the Monoid type class as an example.</p>
+<p>This is fine, because I only need to copy/paste his code and comment on it to contiue our discussion on the topic ;-) To be clear once again, we are here aiming at complie time type checking and default implementations, not at runtime polymorphism, which is the other main focus of Any++!</p>
+<p>So here is his implementation of the Monoid type class: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> M&gt;</div>
+<div class="line"><span class="keyword">concept </span>MonoidRequirements =</div>
+<div class="line">    <span class="keyword">requires</span>(T i) {</div>
+<div class="line">      { i.identity() } -&gt; std::same_as&lt;M&gt;;</div>
+<div class="line">    }</div>
+<div class="line">    ||</div>
+<div class="line">    <span class="keyword">requires</span>(T i, std::ranges::empty_view&lt;M&gt; r1) {</div>
+<div class="line">      { i.concat(r1) } -&gt; std::same_as&lt;M&gt;;</div>
+<div class="line">    };</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> Impl&gt;</div>
+<div class="line">  <span class="keyword">requires</span> MonoidRequirements&lt;</div>
+<div class="line">      Impl,</div>
+<div class="line">      <span class="keyword">typename</span> Impl::value_type&gt;</div>
+<div class="line"><span class="keyword">struct </span>Monoid : <span class="keyword">protected</span> Impl {</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> identity(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; self) {</div>
+<div class="line">    <span class="keywordflow">return</span> self.concat(std::ranges::empty_view&lt;typename Impl::value_type&gt;{});</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Range&gt;</div>
+<div class="line">  <span class="keyword">auto</span> concat(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; self, Range r) {</div>
+<div class="line">    <span class="keywordflow">return</span> std::ranges::fold_right(</div>
+<div class="line">      r, self.identity(),</div>
+<div class="line">      [&amp;](<span class="keyword">auto</span> m1, <span class="keyword">auto</span> m2){return self.op(m1, m2);});</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> op(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; self, <span class="keyword">auto</span> a1, <span class="keyword">auto</span> a2) {</div>
+<div class="line">    <span class="keywordflow">return</span> self.op(a1, a2);</div>
+<div class="line">  }</div>
+<div class="line">};</div>
+</div><!-- fragment --><p> That is the complete implementation of the Monoid type class, and is a good expressin of the indent. Is also real close to the Haskell and Rust implementations, and it is pretty close to the original C++0x proposal for Concept Maps.</p>
+<p>Now let us see, how Steve implemnts the mapping of a concrete type to the Monoid type class.</p>
+<p>He starts with a general case for all types, that have an monoid "plus" operator and a default constructor, which is the identity element for the monoid: </p><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> M&gt;</div>
+<div class="line"><span class="keyword">class </span>Plus {</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">  <span class="keyword">using </span>value_type = M;</div>
+<div class="line">  <span class="keyword">auto</span> identity(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; self) -&gt; M {</div>
+<div class="line">    std::puts(<span class="stringliteral">&quot;Plus::identity()&quot;</span>);</div>
+<div class="line">    <span class="keywordflow">return</span> M{0};</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> op(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; self, <span class="keyword">auto</span> s1, <span class="keyword">auto</span> s2) -&gt; M {</div>
+<div class="line">    std::puts(<span class="stringliteral">&quot;Plus::op()&quot;</span>);</div>
+<div class="line">    <span class="keywordflow">return</span> s1 + s2;</div>
+<div class="line">  }</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> M&gt;</div>
+<div class="line"><span class="keyword">struct </span>PlusMonoidMap : <span class="keyword">public</span> Monoid&lt;Plus&lt;M&gt;&gt; {</div>
+<div class="line">    <span class="keyword">using </span>Plus&lt;M&gt;::identity;</div>
+<div class="line">    <span class="keyword">using </span>Plus&lt;M&gt;::op;</div>
+<div class="line">};</div>
+</div><!-- fragment --><p> This technique leaves an other customization point for the user, which is the choice of the operator and the identity element. If the user wants to use a different operator, or a different identity element, they can simply define a different mapping for their type by specializing the <span class="tt">Plus</span> class for their type. Now he defines the mapping for concrete types. To this end he uses template variables, which are a C++17 feature, to define the mapping for all types he wants to be a Monoid. In this case, he defines the mapping for <span class="tt">int</span>, <span class="tt">long</span> and <span class="tt">char</span>. </p><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">auto</span> monoid_concept_map = std::false_type{};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keyword">inline</span> <span class="keyword">auto</span> monoid_concept_map&lt;int&gt; = PlusMonoidMap&lt;int&gt;{};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keyword">inline</span> <span class="keyword">auto</span> monoid_concept_map&lt;long&gt; = PlusMonoidMap&lt;long&gt;{};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keyword">inline</span> <span class="keyword">auto</span> monoid_concept_map&lt;char&gt; = PlusMonoidMap&lt;char&gt;{};</div>
+</div><!-- fragment --><p> Note the use of <span class="tt">std::false_type</span> as the default value for the mapping, which is a way to indicate that a type has no mapping as <span class="tt">monoid</span>. To show, that instead of the identity element, the concatenation operation could be used to define the mapping, he also defines a mapping for <span class="tt">std::string</span> using the concatenation operation: </p><div class="fragment"><div class="line"><span class="keyword">class </span>StringMonoid {</div>
+<div class="line"><span class="keyword">public</span>:</div>
+<div class="line">  <span class="keyword">using </span>value_type = std::string;</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> op(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp;, <span class="keyword">auto</span> s1, <span class="keyword">auto</span> s2) {</div>
+<div class="line">    std::puts(<span class="stringliteral">&quot;StringMonoid::op()&quot;</span>);</div>
+<div class="line">    <span class="keywordflow">return</span> s1 + s2;</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Range&gt;</div>
+<div class="line">  <span class="keyword">auto</span> concat(<span class="keyword">this</span> <span class="keyword">auto</span>&amp;&amp; self, Range r) {</div>
+<div class="line">    std::puts(<span class="stringliteral">&quot;StringMonoid::concat()&quot;</span>);</div>
+<div class="line">    <span class="keywordflow">return</span> std::ranges::fold_right(</div>
+<div class="line">        r, std::string{}, [&amp;](<span class="keyword">auto</span> m1, <span class="keyword">auto</span> m2) {</div>
+<div class="line">          <span class="keywordflow">return</span> self.op(m1, m2);</div>
+<div class="line">        });</div>
+<div class="line">  }</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">struct </span>StringMonoidMap : <span class="keyword">public</span> Monoid&lt;StringMonoid&gt; {</div>
+<div class="line">    <span class="keyword">using </span>StringMonoid::op;</div>
+<div class="line">    <span class="keyword">using </span>StringMonoid::concat;</div>
+<div class="line">};</div>
+<div class="line"><span class="keyword">template</span>&lt;&gt;</div>
+<div class="line"><span class="keyword">constexpr</span> <span class="keyword">inline</span> <span class="keyword">auto</span> monoid_concept_map&lt;std::string&gt; = StringMonoidMap{};</div>
+</div><!-- fragment --><p> Now we can use the Monoid type class with its maping: </p><div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> P&gt;</div>
+<div class="line"><span class="keywordtype">void</span> testP()</div>
+<div class="line">{</div>
+<div class="line">    <span class="keyword">auto</span> d1 = monoid_concept_map&lt;P&gt;;</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">auto</span> x = d1.identity();</div>
+<div class="line">    assert(P{} == x);</div>
+<div class="line"> </div>
+<div class="line">    <span class="keyword">auto</span> sum = d1.op(x, P{1});</div>
+<div class="line">    assert(P{1} == sum);</div>
+<div class="line"> </div>
+<div class="line">    std::vector&lt;P&gt; v = {1,2,3,4};</div>
+<div class="line">    <span class="keyword">auto</span> k = d1.concat(v);</div>
+<div class="line">    assert(k == 10);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line">   std::cout &lt;&lt; <span class="stringliteral">&quot;\ntest int\n&quot;</span>;</div>
+<div class="line">   testP&lt;int&gt;();</div>
+<div class="line"> </div>
+<div class="line">   std::cout &lt;&lt; <span class="stringliteral">&quot;\ntest long\n&quot;</span>;</div>
+<div class="line">   testP&lt;long&gt;();</div>
+<div class="line"> </div>
+<div class="line">   std::cout &lt;&lt; <span class="stringliteral">&quot;\ntest char\n&quot;</span>;</div>
+<div class="line">   testP&lt;char&gt;();</div>
+<div class="line"> </div>
+<div class="line">   <span class="keyword">auto</span> d2 = monoid_concept_map&lt;std::string&gt;;</div>
+<div class="line"> </div>
+<div class="line">   std::cout &lt;&lt; <span class="stringliteral">&quot;\ntest string\n&quot;</span>;</div>
+<div class="line">   <span class="keyword">auto</span> x2 = d2.identity();</div>
+<div class="line">   assert(std::string{} == x2);</div>
+<div class="line"> </div>
+<div class="line">   <span class="keyword">auto</span> sum2 = d2.op(x2, <span class="stringliteral">&quot;1&quot;</span>);</div>
+<div class="line">   assert(std::string{<span class="stringliteral">&quot;1&quot;</span>} == sum2);</div>
+<div class="line"> </div>
+<div class="line">   std::vector&lt;std::string&gt; vs = {<span class="stringliteral">&quot;1&quot;</span>,<span class="stringliteral">&quot;2&quot;</span>,<span class="stringliteral">&quot;3&quot;</span>,<span class="stringliteral">&quot;4&quot;</span>};</div>
+<div class="line">   <span class="keyword">auto</span> k2 = d2.concat(vs);</div>
+<div class="line">   assert(k2 == std::string{<span class="stringliteral">&quot;1234&quot;</span>});</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a href="https://godbolt.org/z/Yh5rY43Eq">See it on Compiler Explorer</a></p>
+<p>That is a pretty good technique for complie time customization points. But how good is it compared to other C++ compile time customization point techniques, like SFINAE, tag dispatching, or specialization and the original C++0x proposal for Concept Maps? Here we can take look into Barry Revzin proposal "We need a language mechanism for customization points" <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2279r0.html#c0x-concepts">P2279R0</a> and use his framework for comparing different techniques for compile time customization points. </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 <div id="page-nav" class="page-nav-panel">
@@ -105,7 +235,7 @@ $(function(){initNavTree('subpage3.html','',''); });
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a href="main.html">Any++, C++0x Concepts, Rust traits, Haskell type classes</a></li>
+    <li class="navelem"><a href="main.html">Any++, C++0x Concepts, Rust Traits, Haskell Type Classes</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

@@ -11,14 +11,15 @@ var searchData=
   ['trait_20any_20virtual_20static_20or_20variant_8',['Any++ : How to &lt;span class=&quot;tt&quot;&gt;trait&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;any&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;virtual&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;static&lt;/span&gt; or &lt;span class=&quot;tt&quot;&gt;variant&lt;/span&gt;?',['../index.html#autotoc_md24',1,'']]],
   ['trait_20jacket_9',['Trait jacket',['../md_docs_2terms__and__definitions.html#autotoc_md8',1,'']]],
   ['traits_20a_20short_20introduction_10',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
-  ['traits_20haskell_20type_20classes_11',['Any++, C++0x Concepts, Rust traits, Haskell type classes',['../main.html',1,'']]],
+  ['traits_20haskell_20type_20classes_11',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
   ['traits_20in_20any_12',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
   ['txt_3a_13',['Useage in CMakeLists.txt:',['../index.html#autotoc_md27',1,'']]],
   ['type_20class_14',['Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
-  ['type_20classes_15',['type classes',['../main.html',1,'Any++, C++0x Concepts, Rust traits, Haskell type classes'],['../subpage2.html',1,'Monoid, the &quot;Hello World&quot; of type classes']]],
-  ['type_20classes_20rust_20traits_20a_20short_20introduction_16',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
-  ['type_20erased_20binary_20operator_17',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md32',1,'']]],
-  ['type_20erased_20proxy_20s_18',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
-  ['type_20erasure_20to_20type_20class_19',['Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
-  ['typed_5fany_20',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]]
+  ['type_20classes_15',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
+  ['type_20classes_16',['Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]],
+  ['type_20classes_20rust_20traits_20a_20short_20introduction_17',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
+  ['type_20erased_20binary_20operator_18',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md32',1,'']]],
+  ['type_20erased_20proxy_20s_19',['&lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt; Type Erased &lt;span class=&quot;tt&quot;&gt;Proxy&lt;/span&gt;*s',['../md_docs_2Proxy__overview.html',1,'']]],
+  ['type_20erasure_20to_20type_20class_20',['Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
+  ['typed_5fany_21',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md15',1,'']]]
 ];

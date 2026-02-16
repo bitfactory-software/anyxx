@@ -10,7 +10,7 @@ var searchData=
   ['any_7',['any',['../classanyxx_1_1any.html',1,'anyxx::any&lt; Proxy, Trait &gt;'],['../classanyxx_1_1any.html#a440c04e593e924f0518702df4b55cf60',1,'anyxx::any::any(std::in_place_t, V &amp;&amp;v)'],['../classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3',1,'anyxx::any::any(std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)']]],
   ['any_20_3a_20from_20type_20erasure_20to_20type_20class_8',['Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
   ['any_20_3a_20how_20to_20trait_20any_20virtual_20static_20or_20variant_9',['Any++ : How to &lt;span class=&quot;tt&quot;&gt;trait&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;any&lt;/span&gt; &lt;span class=&quot;tt&quot;&gt;virtual&lt;/span&gt;, &lt;span class=&quot;tt&quot;&gt;static&lt;/span&gt; or &lt;span class=&quot;tt&quot;&gt;variant&lt;/span&gt;?',['../index.html#autotoc_md24',1,'']]],
-  ['any_20c_200x_20concepts_20rust_20traits_20haskell_20type_20classes_10',['Any++, C++0x Concepts, Rust traits, Haskell type classes',['../main.html',1,'']]],
+  ['any_20c_200x_20concepts_20rust_20traits_20haskell_20type_20classes_10',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
   ['any_20configuration_20macro_11',['Any++ configuration macro',['../group__anyxx__config.html',1,'']]],
   ['any_20crosscast_20factory_20serialization_12',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md34',1,'']]],
   ['any_20open_20dispatch_20as_20visitor_13',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md33',1,'']]],
