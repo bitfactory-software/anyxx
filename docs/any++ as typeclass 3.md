@@ -164,8 +164,27 @@ and use his framework for comparing different techniques for compile time custom
 
 <img width="736" height="331" alt="image" src="https://github.com/user-attachments/assets/7ed7c557-3378-4e09-a884-ccb3bde54c9f" />
 
+We can fill the chart for Steve's technique like this:
 
+|  | Steve Downey<br> Concept Maps using C++23 Library Tech | Remarks |
+|---|---| ----|
+| Interface visible in code |    ❌ | The map is only visible inside the implemntation of the usage, not at the function signature |
+| Providing default implementation |  ✅ | This is great and expressive. |
+| Explicit opt-in |  ✅ | The user has to explicitly opt-in by defining a mapping for their type. |
+| Diagnose incorrect opt-in | ❌ | This means, that the signature of mapped functions fits exactly to the requirement, to detect &, const& and copy issues. |
+| Easily invoke the customization | 🤷 | You have to instatiate the map for the proper type to get the functionality. |
+| Verify implementation | 🤷 | Needs to be verified with additionally supplied concepts. In our case see ``MonoidRequirements`` |
+| Atomic grouping of functionality | ✅ | The mapping is grouped together in a single struct. |
+| Non-intrusive | ✅ | The user does not have to modify their type to opt-in. |
+| Associated Types | ✅ | You can request associated types by using them in a request clause, see ``Impl::value_type`` above. |
 
+That is impressive, and maybe the highest score of all techniques for compile time customization points without language support.
+
+To be fair, the P2279R0 propsal is from 2021, and Steve's technique is from 2024 and is based on a the C++23 feature "Deducing ``this``".
+
+A fine example, of how new, compareable samll language features support each other to enable new powerfull abstractions.
+
+I feel its slowly time, to \ref subpage4 "bring Any++ into the picture", and show how it can be used to bring some more checkboxes on the bucket list.
 
 
 
