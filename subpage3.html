@@ -221,7 +221,35 @@ $(function(){initNavTree('subpage3.html','',''); });
 <div class="line">}</div>
 </div><!-- fragment --><p> <a href="https://godbolt.org/z/Yh5rY43Eq">See it on Compiler Explorer</a></p>
 <p>That is a pretty good technique for complie time customization points. But how good is it compared to other C++ compile time customization point techniques, like SFINAE, tag dispatching, or specialization and the original C++0x proposal for Concept Maps? Here we can take look into Barry Revzin proposal "We need a language mechanism for customization points" <a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2279r0.html#c0x-concepts">P2279R0</a> and use his framework for comparing different techniques for compile time customization points.</p>
-<p><img src="https://github.com/user-attachments/assets/7ed7c557-3378-4e09-a884-ccb3bde54c9f" alt="image" width="736" height="331" class="inline"/> </p>
+<p><img src="https://github.com/user-attachments/assets/7ed7c557-3378-4e09-a884-ccb3bde54c9f" alt="image" width="736" height="331" class="inline"/></p>
+<p>We can fill the chart for Steve's technique like this:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone"></th><th class="markdownTableHeadNone">Steve Downey<br  />
+ Concept Maps using C++23 Library Tech  </th><th class="markdownTableHeadNone">Remarks  </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Interface visible in code  </td><td class="markdownTableBodyNone">❌  </td><td class="markdownTableBodyNone">The map is only visible inside the implemntation of the usage, not at the function signature  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Providing default implementation  </td><td class="markdownTableBodyNone">✅  </td><td class="markdownTableBodyNone">This is great and expressive.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Explicit opt-in  </td><td class="markdownTableBodyNone">✅  </td><td class="markdownTableBodyNone">The user has to explicitly opt-in by defining a mapping for their type.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Diagnose incorrect opt-in  </td><td class="markdownTableBodyNone">❌  </td><td class="markdownTableBodyNone">This means, that the signature of mapped functions fits exactly to the requirement, to detect &amp;, const&amp; and copy issues.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Easily invoke the customization  </td><td class="markdownTableBodyNone">🤷  </td><td class="markdownTableBodyNone">You have to instatiate the map for the proper type to get the functionality.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Verify implementation  </td><td class="markdownTableBodyNone">🤷  </td><td class="markdownTableBodyNone">Needs to be verified with additionally supplied concepts. In our case see <span class="tt">MonoidRequirements</span>  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Atomic grouping of functionality  </td><td class="markdownTableBodyNone">✅  </td><td class="markdownTableBodyNone">The mapping is grouped together in a single struct.  </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">Non-intrusive  </td><td class="markdownTableBodyNone">✅  </td><td class="markdownTableBodyNone">The user does not have to modify their type to opt-in.  </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">Associated Types  </td><td class="markdownTableBodyNone">✅  </td><td class="markdownTableBodyNone">You can request associated types by using them in a request clause, see <span class="tt">Impl::value_type</span> above.  </td></tr>
+</table>
+<p>That is impressive, and maybe the highest score of all techniques for compile time customization points without language support.</p>
+<p>To be fair, the P2279R0 propsal is from 2021, and Steve's technique is from 2024 and is based on a the C++23 feature "Deducing ``this``".</p>
+<p>A fine example, of how new, compareable samll language features support each other to enable new powerfull abstractions.</p>
+<p>I feel its slowly time, to <a class="el" href="subpage4.html" title="Any++: From Type Erasure to Type Class">bring Any++ into the picture</a>, and show how it can be used to bring some more checkboxes on the bucket list. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
