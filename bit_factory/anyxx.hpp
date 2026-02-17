@@ -46,7 +46,7 @@
                                                            // lifetimebound
 #else
 #endif
-#elif defined(__clang__)                                   // Clang
+#elif defined(__clang__)  // Clang
 #define LIFETIMEBOUND [[clang::lifetimebound]]
 #else
 #define LIFETIMEBOUND
@@ -202,7 +202,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
 #define _detail_ANYXX_FPD_H(l) _detail_ANYXX_FUNCTION_PTR_DECL l
 #define _detail_ANYXX_MEMEBER_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL l
-#define _detail_ANYXX_FN_H(l) _detail_ANYXX_FN l
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
@@ -260,6 +259,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 
+#define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
+#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, ...) \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                 \
+      template_params) static AYXFORCEDINLINE return_type                     \
+  name(__VA_OPT__(, _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__))) {  \
+    return _detail_REMOVE_PARENS(body)(                                       \
+        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
+  };
+
 #define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
 #define _detail_ANYXX_MAP_VARIANT_IMPL(overload, type, name, name_ext,       \
                                        exact_const, const_, trait_body, ...) \
@@ -306,6 +314,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                   \
   };
 
+#define _detail_ANYXX_FN_H(l) _detail_ANYXX_FN l
 #define _detail_ANYXX_FN(overload, type, name, name_ext, exact_const, const_,  \
                          map_body, ...)                                        \
   overload template <typename Self>                                            \
