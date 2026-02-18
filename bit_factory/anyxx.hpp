@@ -165,7 +165,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_V_TABLE_PARAM_LIST_A() _detail_ANYXX_V_TABLE_PARAM_LIST_H
 #define _detail_ANYXX_V_TABLE_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_V_TABLE_PARAM_LIST_H(__VA_ARGS__))
-#define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_ANYXX_MAP_PARAM_LIST_H(b, c, param_type, ...)                  \
   [[maybe_unused]] auto&& c __VA_OPT__(                                        \
@@ -174,7 +173,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_PARAM_LIST_A() _detail_ANYXX_MAP_PARAM_LIST_H
 #define _detail_ANYXX_MAP_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_MAP_PARAM_LIST_H(__VA_ARGS__))
-#define _detail_EXPAND_LIST(...) __VA_ARGS__
 
 #define _detail_ANYXX_EXACT_PARAM_LIST_H(b, c, param_type, ...) \
   [[maybe_unused]] ANYXX_UNPAREN(param_type) c __VA_OPT__(      \
