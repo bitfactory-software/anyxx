@@ -71,8 +71,8 @@ struct PlusMonoidMap : public Monoid<Plus<M>> {
 ```
 This technique leaves an other customization point for the user, which is the choice of the operator and the identity element. 
 If the user wants to use a different operator, or a different identity element, they can simply define a different mapping for their type by specializing the ``Plus`` class for their type.
-Now he defines the mapping for concrete types. To this end he uses template variables, which are a C++17 feature, to define the mapping for all types
-he wants to be a Monoid. In this case, he defines the mapping for ``int``, ``long`` and ``char``.
+Now he defines the mapping for concrete types. To this end he uses template variables, which are a C++14 feature.
+The mapping for ``int``, ``long`` and ``char`` looks like thhis:
 ```cpp
 template<class T> auto monoid_concept_map = std::false_type{};
 
@@ -86,6 +86,8 @@ template<>
 constexpr inline auto monoid_concept_map<char> = PlusMonoidMap<char>{};
 ```
 Note the use of ``std::false_type`` as the default value for the mapping, which is a way to indicate that a type has no mapping as ``monoid``.
+With C++0x Concepts, it was contengious, wether there shold be an explicit or implicit mapping.
+In our case, if we want default mapping for all types that have plus and are default constructable, you could use the PlusMonidMap as the value for the general case.
 To show, that instead of the identity element, the concatenation operation could be used to define the mapping, he also defines a mapping for ``std::string`` using the concatenation operation:
 ```cpp
 class StringMonoid {
@@ -171,7 +173,7 @@ We can fill the chart for Steve's technique like this:
 | Interface visible in code |    ❌ | The map is only visible inside the implemntation of the usage, not at the function signature |
 | Providing default implementation |  ✅ | This is great and expressive. |
 | Explicit opt-in |  ✅ | The user has to explicitly opt-in by defining a mapping for their type. |
-| Diagnose incorrect opt-in | ❌ | This means, that the signature of mapped functions fits exactly to the requirement, to detect &, const& and copy issues. |
+| Diagnose incorrect opt-in | 🤷 | The reqire clause, checks if either ``identity`` or ``concat`` is provided.<br>It is not checked, that the signature of mapped functions fits exactly to the requirement, to detect &, const& and copy issues.(Maybe a minor issue?) |
 | Easily invoke the customization | 🤷 | You have to instatiate the map for the proper type to get the functionality. |
 | Verify implementation | 🤷 | Needs to be verified with additionally supplied concepts. In our case see ``MonoidRequirements`` |
 | Atomic grouping of functionality | ✅ | The mapping is grouped together in a single struct. |
@@ -184,7 +186,7 @@ To be fair, the P2279R0 propsal is from 2021, and Steve's technique is from 2024
 
 A fine example, of how new, compareable samll language features support each other to enable new powerfull abstractions.
 
-I feel its slowly time, to \ref subpage4 "bring Any++ into the picture", and show how it can be used to bring some more checkboxes on the bucket list.
+I feel its slowly time, to \ref subpage4 "bring Any++ into the picture", and check if it brings further improvements.
 
 
 
