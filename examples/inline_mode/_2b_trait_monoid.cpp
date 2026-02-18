@@ -42,7 +42,7 @@ TRAIT_EX(monoid,
                      }),
           ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         (),
+         ,
          (template <typename Box> friend bool operator==(
              anyxx::any<Box, monoid> const& l,
              anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))

@@ -444,6 +444,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
+#define _detail_ANYXX_MAP_STATIC_FUNCTIONS(...)                \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_STATIC_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_MAP_VARIANT_FUNCTIONS(...)                     \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_VARIANT_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
@@ -458,6 +462,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_FNS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_FN_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
+#define _detail_ANYXX_JACKET_STATIC_FNS(...)                      \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_JACKET_STATIC_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
 #define _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n) \
@@ -542,9 +550,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
         static_dispatch_template_params)>;                                     \
                                                                                \
-    _detail_ANYXX_FNS(l)                                                       \
-                                                                               \
-        _detail_REMOVE_PARENS(decoration)                                      \
+    _detail_ANYXX_FNS(l);                                                      \
+    _detail_ANYXX_JACKET_STATIC_FNS(static_fns);                               \
+    _detail_REMOVE_PARENS(decoration);                                         \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
@@ -606,7 +614,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def TRAIT_
 /// \brief TRAIT derived from base.
 /// \ingroup trait_macros
-#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, (), ())
+#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, , ())
 
 /// \def TRAIT
 /// \brief Macro to define the functional behavior for an \ref any.
@@ -654,7 +662,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief TRAIT template with a base TRAIT.(
 /// \ingroup trait_macros
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
-  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, (), ())
+  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, , ())
 
 /// \def TRAIT_TEMPLATE
 /// \brief TRAIT template.
