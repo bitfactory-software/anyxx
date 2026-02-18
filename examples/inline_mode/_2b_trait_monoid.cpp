@@ -47,7 +47,14 @@ TRAIT_EX(monoid,
                      }),
           ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         (ANY_FN_STATIC_DEF((), T, identidy, (), []() { return T{}; })),
+         (ANY_FN_STATIC_DEF((), anyxx::self, identidy, (), []() { return T{}; }),
+          /*ANY_FN_STATIC_DEF((), T, concat, (auto const&),
+                            [](const auto& r) {
+                              return std::ranges::fold_right(
+                                  r, anyxx::using_<T>::as<monoid>{}.identity(), [&](auto m1, auto m2) {
+                                    return self.op(m1, m2);
+                                  });
+                            })*/),
          (template <typename Box> friend bool operator==(
              anyxx::any<Box, monoid> const& l,
              anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))
