@@ -967,8 +967,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// function will NOT go into the v-Table ad is only avalable for the \ref
 /// using_ \ref Proxy.
 /// \ingroup trait_macros
-#define ANY_FN_STATIC_DEF(ret, name, params, const_, ...)    \
-  ANY_FN_(template_params, return_type, name, (__VA_ARGS__), \
+#define ANY_FN_STATIC_DEF(template_params, return_type, name, params, ...) \
+  ANY_FN_(template_params, return_type, name, (__VA_ARGS__),               \
           _detail_EXPAND params)
 
 /// @}
