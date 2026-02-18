@@ -181,8 +181,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_TYPENAME_PARAM_LIST(head, ...) \
   typename _detail_REMOVE_PARENS(head) __VA_OPT__(   \
       _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))
+
+#define _detail_ANYXX_OPTIONAL_TEMPLATE(...) __VA_OPT__(template)
+
 #define _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(...) \
   __VA_OPT__(template <_detail_ANYXX_TYPENAME_PARAM_LIST(__VA_ARGS__)>)
+#define _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(...) \
+  __VA_OPT__(, _detail_ANYXX_TYPENAME_PARAM_LIST(__VA_ARGS__))
 
 #define _detail_ANYXX_TEMPLATE_ARG_H(t) _detail_ANYXX_TEMPLATE_ARG t
 #define _detail_ANYXX_TEMPLATE_ARG(t) , t
@@ -260,13 +265,57 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
-#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, ...) \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                 \
-      template_params) static AYXFORCEDINLINE return_type                     \
-  name(__VA_OPT__(, _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__))) {  \
-    return _detail_REMOVE_PARENS(body)(                                       \
-        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
+#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body,   \
+                                 ...)                                        \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                \
+      template_params) static AYXFORCEDINLINE return_type                    \
+  name(__VA_OPT__(, _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__))) { \
+    return _detail_REMOVE_PARENS(body)(                                      \
+        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
+
+#define _detail_ANYXX_JACKET_STATIC_H(l) _detail_ANYXX_JACKET_STATIC l
+#define _detail_ANYXX_JACKET_STATIC(template_params, return_type, name, body,  \
+                                    ...)                                       \
+  template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(    \
+      _detail_REMOVE_PARENS(template_params))>                                 \
+  AYXFORCEDINLINE return_type name(                                            \
+      [[maybe_unused]] this Self const& self __VA_OPT__(                       \
+          , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__))) {           \
+    static_assert(!Self::dyn);                                                 \
+    using map_t = typename Self::static_dispatch_map_t;                        \
+    return map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(template_params)             \
+        name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(template_params)(__VA_OPT__( \
+            _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
+  };
+
+#define _detail_ANYXX_MAP_TYPE_H(l) _detail_ANYXX_MAP_TYPE l
+#define _detail_ANYXX_MAP_TYPE(template_params, name, erased, default_) \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(_detail_REMOVE_PARENS(     \
+      template_params)) using name = _detail_REMOVE_PARENS(default_);
+
+//_detail_ANYXX_MAP_TYPE(((A), (B)), xyz, void, (std::map<A, B>))
+// ->
+// template <typename A, typename B>
+// using xyz = std::map<A, B>;
+
+#define _detail_ANYXX_JACKET_TYPE_H(l) _detail_ANYXX_JACKET_TYPE l
+#define _detail_ANYXX_JACKET_TYPE(template_params, name, erased, default_)   \
+  template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(  \
+      _detail_REMOVE_PARENS(template_params))>                               \
+  using name = std::conditional_t<                                           \
+      Self::dyn, erased,                                                     \
+      typename Self::static_dispatch_map_t::_detail_ANYXX_OPTIONAL_TEMPLATE( \
+          _detail_REMOVE_PARENS(template_params))                            \
+          name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
+              _detail_REMOVE_PARENS(template_params))>;
+
+//_detail_ANYXX_JACKET_TYPE(((A),(B)), xyz, void, (std::map<A,B>))
+// ->
+// template <typename Self, typename A, typename B>
+// using xyz = std::conditional_t<
+//    Self::dyn, void, typename Self::static_dispatch_map_t::template xyz<A,
+//    B>>;
 
 #define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
 #define _detail_ANYXX_MAP_VARIANT_IMPL(overload, type, name, name_ext,       \
@@ -1517,13 +1566,13 @@ static_assert(is_proxy<cref>);
 // erased data unique
 
 /// Proxy to manage the captured object via std::unique_ptr-like smart pointer
-/// * If you pass a std::unique_ptr to the any constructor, this pointer will be
-/// released and the ownership goes to the unique. NOTE: The \ref any_v_table
-/// will build with the value_type of the std::unique_ptr.
+/// * If you pass a std::unique_ptr to the any constructor, this pointer will
+/// be released and the ownership goes to the unique. NOTE: The \ref
+/// any_v_table will build with the value_type of the std::unique_ptr.
 /// * If you pass an object as second parameter, with the std::in_place tag as
 /// first, this object will be moved to the memory managed by the unique.
-/// * If you pass as first parameter std::in_place_type<...>, the object will be
-/// constructed in place in the allocated memory with the other arguments
+/// * If you pass as first parameter std::in_place_type<...>, the object will
+/// be constructed in place in the allocated memory with the other arguments
 /// forwarded.
 /// \ingroup proxies
 struct unique {
@@ -1603,13 +1652,13 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
 static_assert(is_proxy<unique>);
 
 /// Proxy to manage the captured object via \c std::shared_ptr.
-/// * If you pass a \c std::shared_ptr to the \ref any constructor, this pointer
-/// will be casted to \c <const void*> and used as proxy.
+/// * If you pass a \c std::shared_ptr to the \ref any constructor, this
+/// pointer will be casted to \c <const void*> and used as proxy.
 /// * If you pass an object as second parameter, with the std::in_place tag as
 /// first, this object will be forwarded to std::make_shared with the decayed
 /// type of object.
-/// * If you pass as first parameter std::in_place_type<T>, the other arguments
-/// will be forwarded to std::make_shared<T>(...).
+/// * If you pass as first parameter std::in_place_type<T>, the other
+/// arguments will be forwarded to std::make_shared<T>(...).
 /// \ingroup proxies
 using shared = std::shared_ptr<void const>;
 /// Proxy to manage the captured object via \c std::weak_ptr.
@@ -1756,12 +1805,12 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 
 /// \brief Proxy to manage the captured object as value with small object
 /// optimization
-/// * If you forward an object to any constructor, this object will be forwarded
-/// to the allocated storage.
+/// * If you forward an object to any constructor, this object will be
+/// forwarded to the allocated storage.
 /// * To pass an object as second parameter, with the std::in_place tag as
 /// first, has the same behavior as above
-/// * If you pass as first parameter std::in_place_type<...>, the object will be
-/// constructed in place in the allocated memory with the other arguments
+/// * If you pass as first parameter std::in_place_type<...>, the object will
+/// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
 union val {
@@ -1925,9 +1974,12 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
   //                    any_v_table* v_table) {
   //  assert(v_table);
   //  auto data_ptr =
-  //      visit_value(overloads{[&](heap_data& heap) { return heap.release(); },
-  //                            [&]<bool Trivial>(local_data<Trivial>& local) {
-  //                              return move_construct(v_table, local.data());
+  //      visit_value(overloads{[&](heap_data& heap) { return heap.release();
+  //      },
+  //                            [&]<bool Trivial>(local_data<Trivial>& local)
+  //                            {
+  //                              return move_construct(v_table,
+  //                              local.data());
   //                            }},
   //                  v, v_table->model_size);
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
@@ -2362,9 +2414,9 @@ static_assert(moveable_from<val, val>);
 /// \brief The core class template to control dispatch for external
 /// polymorphism.
 ///
-/// To control the behavior, `any` provides two template parameters: \ref Proxy
-/// and \ref Trait. Imagine this as a combination of a `std::any` and several
-/// `std::function`s.
+/// To control the behavior, `any` provides two template parameters: \ref
+/// Proxy and \ref Trait. Imagine this as a combination of a `std::any` and
+/// several `std::function`s.
 ///
 /// With the Proxy template parameter, you control whether this `any` behaves
 /// like a copying function, a move-only function, a reference function, or if
@@ -2373,13 +2425,14 @@ static_assert(moveable_from<val, val>);
 /// With the Trait template parameter, you specify the member functions of a
 /// captured object which can be invoked on this `any`.
 ///
-/// \tparam Proxy Specifies the lifetime of the captured object. Any++ provides
+/// \tparam Proxy Specifies the lifetime of the captured object. Any++
+/// provides
 /// \ref using_, \ref cref, \ref mutref, \ref shared, \ref weak, \ref unique,
 /// and
 /// \ref value. All Proxy classes must conform to the \ref is_proxy concept.
-/// \tparam Trait Specifies the functionality of this any. A class of this type
-/// is normally provided via a \ref TRAIT or \ref ANY macro. See there for
-/// examples. If the proxy is dynamic (i.e., type erased), the Trait must
+/// \tparam Trait Specifies the functionality of this any. A class of this
+/// type is normally provided via a \ref TRAIT or \ref ANY macro. See there
+/// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
 template <is_proxy Proxy, typename Trait>
@@ -2429,10 +2482,10 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   // cppcheck-suppress-end noExplicitConstructor
   /// Type-erasing constructor. The concrete behavior is controlled by the
   /// proxy. The value `v` will be forwarded to the managed storage.
-  /// \tparam V The type of the object to be forwarded into the managed storage.
-  /// Usually deduced.
-  /// \param std::in_place_t Tag to select in-place construction. (On call site,
-  /// use `std::in_place`.)
+  /// \tparam V The type of the object to be forwarded into the managed
+  /// storage. Usually deduced.
+  /// \param std::in_place_t Tag to select in-place construction. (On call
+  /// site, use `std::in_place`.)
   /// \param v The object to be forwarded into the managed storage.
   template <typename V>
     requires(!is_lifetime_bound<Proxy>)
@@ -2440,10 +2493,12 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
       : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
     v_table_holder_t::template init_v_table<Proxy, V>();
   }
-  /// Type erasing constructor, the concrete behavior is controled by the proxy
-  /// \param std::in_place_type_t<T> Tag to select in-place construction of `T`
-  /// \param args The arguments to construct the object of type T with, will be
-  /// forwarded.
+  /// Type erasing constructor, the concrete behavior is controled by the
+  /// proxy
+  /// \param std::in_place_type_t<T> Tag to select in-place construction of
+  /// `T`
+  /// \param args The arguments to construct the object of type T with, will
+  /// be forwarded.
   template <typename T, typename... Args>
     requires(!is_lifetime_bound<Proxy>)
   any(std::in_place_type_t<T>, Args&&... args)
@@ -2643,16 +2698,16 @@ template <typename U, is_any Any>
 inline auto unchecked_unerase_cast(Any const& o) {
   return unchecked_unerase_cast<U>(get_proxy(o), get_v_table(o));
 }
-/// \brief Safe downcast to an unerased type using runtime information from the
-/// v-Tables.
+/// \brief Safe downcast to an unerased type using runtime information from
+/// the v-Tables.
 /// \ingroup casts
 template <typename U, typename Any>
   requires is_any<Any> && Any::dyn
 inline auto unerase_cast(Any const& o) {
   return unerase_cast<U>(get_proxy(o), get_v_table(o));
 }
-/// \brief Safe downcast to an unerased type using runtime information from the
-/// v-Tables.
+/// \brief Safe downcast to an unerased type using runtime information from
+/// the v-Tables.
 /// \ingroup casts
 template <typename U, typename Any>
   requires is_any<Any> && Any::dyn
@@ -2666,7 +2721,8 @@ inline auto unerase_cast_if(Any const& o) {
 ///
 /// Usage:
 /// * Use the model map as a static customization point.
-/// * Use \c using_<std::variant<...>> to unify customization points and member
+/// * Use \c using_<std::variant<...>> to unify customization points and
+/// member
 ///   function-like invocation.
 /// * Use with \ref vany_variant.
 ///
