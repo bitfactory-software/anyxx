@@ -293,20 +293,21 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 //};
 
 #define _detail_ANYXX_JACKET_STATIC_H(l) _detail_ANYXX_JACKET_STATIC l
-#define _detail_ANYXX_JACKET_STATIC(template_params, return_type, name, body, \
-                                    ...)                                      \
-  template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(   \
-      _detail_REMOVE_PARENS(template_params))>                                \
-  AYXFORCEDINLINE return_type name(                                           \
-      [[maybe_unused]] this Self const& self __VA_OPT__(                      \
-          , _detail_ANYXX_EXACT_PARAM_LIST(a, _sig, __VA_ARGS__))) {          \
-    static_assert(!Self::dyn);                                                \
-    using map_t = typename Self::static_dispatch_map_t;                       \
-    return map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                            \
-        _detail_REMOVE_PARENS(template_params))                               \
-        name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                            \
-            _detail_REMOVE_PARENS(template_params))(__VA_OPT__(               \
-            _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));         \
+#define _detail_ANYXX_JACKET_STATIC(template_params, return_type, name, body,  \
+                                    ...)                                       \
+  template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(    \
+      _detail_REMOVE_PARENS(template_params))>                                 \
+  AYXFORCEDINLINE decltype(auto) name(                                         \
+      [[maybe_unused]] this Self const& self __VA_OPT__(, )                    \
+          __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) { \
+    static_assert(!Self::dyn);                                                 \
+    using map_t =                                                              \
+        typename Self::template static_dispatch_map_t<typename Self::T>;       \
+    return map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                             \
+        _detail_REMOVE_PARENS(template_params))                                \
+        name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                             \
+            _detail_REMOVE_PARENS(template_params))(__VA_OPT__(                \
+            _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
   };
 
 //_detail_ANYXX_JACKET_STATIC(((A), (B)), decltype(auto), forward,
@@ -481,7 +482,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
-    _detail_ANYXX_MAP_FUNCTIONS(l)                                             \
+    _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
+    _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
@@ -2685,6 +2687,11 @@ template <typename Any>
   requires is_any<std::decay_t<Any>> && (!std::decay_t<Any>::dyn)
 inline auto& get_proxy_value(Any&& any) {
   return get_proxy(std::forward<Any>(any)).value_;
+}
+template <typename Any>
+  requires is_any<std::decay_t<Any>> && (!std::decay_t<Any>::dyn)
+inline auto const& get_proxy_value(Any const& any) {
+  return get_proxy(any).value_;
 }
 template <is_any Any>
 inline decltype(auto) move_proxy(Any&& any) {

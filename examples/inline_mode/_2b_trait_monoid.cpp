@@ -16,6 +16,11 @@ namespace anyxx {
 
 namespace example_2b {
 
+// TRAIT_EX(TestTrait,,(ANY_FN_STATIC_DEF((), T, id, (), []() { return T{};
+// })),())
+TRAIT_EX(TestTrait, , (ANY_FN_STATIC_DEF((), T, id, (), []() { return T{}; })),
+         ())
+
 TRAIT_EX(monoid,
          (ANY_FN_DEF(anyxx::self, id, (), const, []() { return T{}; }),
           ANY_OP_DEF(anyxx::self, +, op, (anyxx::self const&), const,
@@ -42,13 +47,28 @@ TRAIT_EX(monoid,
                      }),
           ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         ,
+         (ANY_FN_STATIC_DEF((), T, identidy, (), []() { return T{}; })),
          (template <typename Box> friend bool operator==(
              anyxx::any<Box, monoid> const& l,
              anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))
 
 template <typename Box = anyxx::val>
 using any_monoid = anyxx::any<Box, monoid>;
+
+//(ANY_FN_STATIC_DEF((), T, id, (), []() { return T{}; }),
+// ANY_FN_STATIC_DEF((), T, concat,(auto const&),
+//            [&x](const auto& r) {
+//              std::println("concat-default {}", typeid(T).name());
+//              auto self = anyxx::trait_as<monoid>(x);
+//              return std::ranges::fold_left(
+//                  r | std::views::transform([](auto const& y) {
+//                    return anyxx::trait_as<monoid>(y);
+//                  }),
+//                  self, [&](auto const& m1, auto const& m2) {
+//                    return m1 + m2;
+//                  });
+//            })
+// ),
 
 }  // namespace example_2b
 
@@ -166,6 +186,15 @@ TEST_CASE("example 2b monoid d") {
   using namespace anyxx;
 
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
+}
+
+TEST_CASE("static 1") {
+  using namespace example_2b;
+  using namespace std::string_literals;
+  using namespace anyxx;
+
+  using_<int>::as<TestTrait> t{0};
+  CHECK(t.id() == 0);
 }
 
 #endif
