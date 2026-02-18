@@ -467,7 +467,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_META_FUNCTION(                                                   \
     any_template_params, model_map_template_params, concrete_template_params,  \
     static_dispatch_template_params, variant_model_map_template_params, n,     \
-    BASE, base_template_params, l, decoration)                                 \
+    BASE, base_template_params, l, static_fns, decoration)                     \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
                                                                                \
@@ -566,9 +566,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     ::anyxx::set_is_derived_from<v_table_t>(this);                             \
   };
 
-#define __detail_ANYXX_TRAIT_(t, n, BASE, l, decoration)                       \
+#define __detail_ANYXX_TRAIT_(t, n, BASE, l, static_fns, decoration)           \
   TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
-                      l, decoration)
+                      l, static_fns, decoration)
 
 /// \addtogroup trait_macros TRAIT... and ANY_ macros
 /// \brief Macros to define \ref trait 's and \ref any '
@@ -600,13 +600,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Macro to define the functional behavior for a \ref any, where the
 /// behavior of base is inherited. The decoration are additional functions and
 /// typedefs (in brackets).
-#define TRAIT_EX_(n, BASE, l, decoration) \
-  __detail_ANYXX_TRAIT_(, n, BASE, l, decoration)
+#define TRAIT_EX_(n, BASE, l, static_fns, decoration) \
+  __detail_ANYXX_TRAIT_(, n, BASE, l, static_fns, decoration)
 
 /// \def TRAIT_
 /// \brief TRAIT derived from base.
 /// \ingroup trait_macros
-#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, ())
+#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, (), ())
 
 /// \def TRAIT
 /// \brief Macro to define the functional behavior for an \ref any.
@@ -634,26 +634,27 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
-#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, decoration)     \
+#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns,     \
+                           decoration)                                         \
   TRAIT_META_FUNCTION(                                                         \
       _detail_REMOVE_PARENS(t),                                                \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, base,         \
-      _detail_REMOVE_PARENS(base_template_types), l, decoration)
+      _detail_REMOVE_PARENS(base_template_types), l, static_fns, decoration)
 
 /// \def TRAIT_TEMPLATE_EX
 /// \brief TRAIT template with decoration.
 /// \ingroup trait_macros
-#define TRAIT_TEMPLATE_EX(t, n, l, decoration) \
-  TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, decoration)
+#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, decoration) \
+  TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, static_fns, decoration)
 
 /// \def TRAIT_TEMPLATE_
-/// \brief TRAIT template with a base TRAIT.
+/// \brief TRAIT template with a base TRAIT.(
 /// \ingroup trait_macros
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
-  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, ())
+  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, (), ())
 
 /// \def TRAIT_TEMPLATE
 /// \brief TRAIT template.
@@ -762,8 +763,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief ANY template with a base and decoration.
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
-#define ANY_TEMPLATE_EX(t, n, l, proxy_default, decoration) \
-  TRAIT_TEMPLATE_EX(t, n, l, decoration)                    \
+#define ANY_TEMPLATE_EX(t, n, l, proxy_default, static_fns, decoration) \
+  TRAIT_TEMPLATE_EX(t, n, l, static_fns, decoration)                    \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// @}

@@ -42,6 +42,7 @@ TRAIT_EX(monoid,
                      }),
           ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
+         (),
          (template <typename Box> friend bool operator==(
              anyxx::any<Box, monoid> const& l,
              anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))
@@ -112,7 +113,7 @@ make_a_range(bool use_list) {
     return std::vector<any_monoid<anyxx::val>>{{"2"s}, {"3"s}};
 }
 
-//struct not_mappepd{ int v; };
+// struct not_mappepd{ int v; };
 
 }  // namespace example_2b
 //
@@ -140,7 +141,7 @@ TEST_CASE("example 2b monoid a") {
   test_monoid<any<using_<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
 
-//  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
+  //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
 TEST_CASE("example 2b monoid b") {
   using namespace example_2b;
