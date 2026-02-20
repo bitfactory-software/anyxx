@@ -9,7 +9,7 @@
 
 #ifdef __cpp_lib_ranges_fold
 
-namespace example_monoid {
+namespace algebra {
 
 TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
@@ -51,14 +51,14 @@ TRAIT_EX_(
                        })),
     ())
 
-}  // namespace example_monoid
+}  // namespace algebra
 
 template <>
-struct example_monoid::semigroup_model_map<int>
+struct algebra::semigroup_model_map<int>
     : semigroup_plus_model_map<int> {};
 template <>
-struct example_monoid::monoid_model_map<int>
-    : example_monoid::monoid_default_model_map<int> {
+struct algebra::monoid_model_map<int>
+    : algebra::monoid_default_model_map<int> {
   static auto concat(auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
@@ -70,18 +70,18 @@ struct example_monoid::monoid_model_map<int>
 };
 
 template <>
-struct example_monoid::semigroup_model_map<std::string>
+struct algebra::semigroup_model_map<std::string>
     : semigroup_plus_model_map<std::string> {};
 template <>
-struct example_monoid::monoid_model_map<std::string>
-    : example_monoid::monoid_default_model_map<std::string> {
+struct algebra::monoid_model_map<std::string>
+    : algebra::monoid_default_model_map<std::string> {
   static auto identity() {
     std::println("identy {}", typeid(std::string).name());
     return std::string{};
   };
 };
 
-namespace example_monoid {
+namespace algebra {
 
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
@@ -123,11 +123,11 @@ void test_monoid_traited(
 
 // struct not_mappepd{ int v; };
 
-}  // namespace example_monoid
+}  // namespace algebra
 //
-TEST_CASE("example_monoid simple") {
+TEST_CASE("algebra simple") {
   using namespace anyxx;
-  using namespace example_monoid;
+  using namespace algebra;
   using namespace std::string_literals;
 
   using_<int>::as<monoid> x{2};
@@ -162,8 +162,8 @@ TEST_CASE("example_monoid simple") {
   }
 }
 
-TEST_CASE("example_monoid monoid int") {
-  using namespace example_monoid;
+TEST_CASE("algebra monoid int") {
+  using namespace algebra;
   using namespace std::string_literals;
   using namespace anyxx;
 
@@ -178,7 +178,7 @@ TEST_CASE("example_monoid monoid int") {
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
 // TEST_CASE("example 2b monoid b") {
-//   using namespace example_monoid;
+//   using namespace algebra;
 //   using namespace std::string_literals;
 //   using namespace anyxx;
 //
@@ -188,14 +188,14 @@ TEST_CASE("example_monoid monoid int") {
 //       std::vector<using_<std::string>::as<monoid>>{{"2"s}, {"3"s}});
 // }
 // TEST_CASE("example 2b monoid c") {
-//   using namespace example_monoid;
+//   using namespace algebra;
 //   using namespace std::string_literals;
 //   using namespace anyxx;
 //
 //   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(true));
 // }  // NOLINT
 // TEST_CASE("example 2b monoid d") {
-//   using namespace example_monoid;
+//   using namespace algebra;
 //   using namespace std::string_literals;
 //   using namespace anyxx;
 //
@@ -203,7 +203,7 @@ TEST_CASE("example_monoid monoid int") {
 // }
 //
 // TEST_CASE("static 1") {
-//   using namespace example_monoid;
+//   using namespace algebra;
 //   using namespace std::string_literals;
 //   using namespace anyxx;
 //
@@ -212,7 +212,7 @@ TEST_CASE("example_monoid monoid int") {
 // }
 //
 // TEST_CASE("static 2") {
-//   using namespace example_monoid;
+//   using namespace algebra;
 //   using namespace std::string_literals;
 //   using namespace anyxx;
 //
