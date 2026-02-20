@@ -47,14 +47,16 @@ TRAIT_EX(
                 }),
      ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; }))),
-    (ANY_FN_STATIC_DEF((), auto, identity, (),
+    (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []() {
                          using monoid_t =
                              typename anyxx::using_<T>::template as<monoid>;
                          return monoid_t{T{}}.concat(
                              std::ranges::empty_view<monoid_t>{});
                        }),
-     ANY_FN_STATIC_DEF((), auto, concat, (auto const&),
+     ANY_FN_STATIC_DEF((), anyxx::self, concat,
+                       ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                                  anyxx::cref> const&)),
                        [](const auto& r) {
                          using monoid_t =
                              typename anyxx::using_<T>::template as<monoid>;
@@ -94,8 +96,8 @@ ANY_MODEL_MAP((std::string), example_2b::monoid) {
     return self + r;
   };
   static auto identity() {
-    std::println("identy static {}", typeid(int).name());
-    return anyxx::trait_as<monoid>(std::string{});
+    std::println("identity static {}", typeid(std::string).name());
+    return std::string{};
   };
 };
 
@@ -215,8 +217,8 @@ TEST_CASE("static 2") {
   using namespace anyxx;
 
   using_<int>::as<monoid> im{999};
-  CHECK(im.identity() == 0);
-  CHECK(im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)}) == 3);
+  CHECK(im.identity() == trait_as<monoid>(0));
+  CHECK(im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)}) ==  trait_as<monoid>(3));
 
   using_<std::string>::as<monoid> sm{"XXX"};
   CHECK(sm.identity() == trait_as<monoid>(""s));

@@ -16,35 +16,36 @@ TRAIT_EX(
     (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
      ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; }))),
-    (ANY_FN_STATIC_DEF((), auto, identity, (),
+    (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []() {
                          using monoid_t =
                              typename anyxx::using_<T>::template as<monoid>;
                          return monoid_t{T{}}.concat(
                              std::ranges::empty_view<monoid_t>{});
                        }),
-     ANY_FN_STATIC_DEF((), auto, concat, (auto const&),
+     ANY_FN_STATIC_DEF((), anyxx::self, concat,
+                       ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                                  anyxx::cref> const&)),
                        [](const auto& r) {
                          using monoid_t =
                              typename anyxx::using_<T>::template as<monoid>;
                          auto id = monoid_t{T{}}.identity();
-                         return std::ranges::fold_right(
+                         return std::ranges::fold_left(
                              r, id,
                              [&](monoid_t const& m1, monoid_t const& m2) {
                                return m1.op(m2);
                              });
                        })),
-    (template <typename Box> friend bool operator==(
-        anyxx::any<Box, monoid> const& l, anyxx::any<Box, monoid> const& r) {
-      return l.equal_to(r);
-    }))
+    (template <typename Proxy> friend bool operator==(
+        anyxx::any<Proxy, monoid> const& l,
+        anyxx::any<Proxy, monoid> const& r) { return l.equal_to(r); }))
 
 template <typename V>
 struct plus_mononid_model_map : monoid_default_model_map<V> {
-  static int op(V self, V r) {
+  static auto op(V self, V r) {
     using namespace anyxx;
     std::println("op {}", typeid(V).name());
-    return trait_as<monoid>(self + r);
+    return self + r;
   };
 };
 
@@ -68,7 +69,7 @@ struct example_monoid::monoid_model_map<std::string>
     : example_monoid::plus_mononid_model_map<std::string> {
   static auto identity() {
     std::println("identy {}", typeid(std::string).name());
-    return anyxx::trait_as<monoid>(std::string{});
+    return std::string{};
   };
 };
 
@@ -101,7 +102,7 @@ void test_monoid_traited(
   static_assert(std::same_as<type_1, type_2>);
   static_assert(std::same_as<type_1, Monoid>);
   static_assert(std::same_as<type_2, Monoid>);
-  auto c1 = m + id + m == m + m + id;
+  auto c1 = m.op(id).op(m) == m.op(m).op(id);
   CHECK(c1);
   auto c2 = m.concat(r) ==
             std::ranges::fold_left(
@@ -119,6 +120,8 @@ void test_monoid_traited(
 TEST_CASE("example_monoid simple") {
   using namespace anyxx;
   using namespace example_monoid;
+  using namespace std::string_literals;
+
   using_<int>::as<monoid> x{2};
   using_<int>::as<monoid> y{x};
   using_<int>::as<monoid> z = y;
@@ -131,6 +134,25 @@ TEST_CASE("example_monoid simple") {
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
       !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
+
+  {
+    using_<int>::as<monoid> im{999};
+    CHECK(im.identity() == trait_as<monoid>(0));
+    auto x1 =
+        im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)});
+    auto y2 = trait_as<monoid>(3);
+    CHECK(x1 == y2);
+  }
+  {
+    using_<std::string>::as<monoid> sm{"XXX"};
+    auto i = sm.identity();
+
+    CHECK(sm.identity() == trait_as<monoid>(""s));
+    auto x1 =
+        sm.concat(std::vector{trait_as<monoid>("A"s), trait_as<monoid>("B"s)});
+    auto y2 = trait_as<monoid>("AB"s);
+    CHECK(x1 == y2);
+  }
 }
 
 TEST_CASE("example_monoid monoid int") {
@@ -139,6 +161,10 @@ TEST_CASE("example_monoid monoid int") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
+  test_monoid<any<using_<int>, monoid>>(
+      trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+
+  test_monoid(("1"s), std::vector{"2"s, "3"s});
   test_monoid<any<using_<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
 

@@ -273,9 +273,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
 #define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body,   \
                                  ...)                                        \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(_detail_REMOVE_PARENS(          \
-      template_params)) static AYXFORCEDINLINE return_type                   \
-  name(__VA_OPT__(_detail_ANYXX_EXACT_PARAM_LIST(a, _sig, __VA_ARGS__))) {   \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                \
+      _detail_REMOVE_PARENS(template_params)) static AYXFORCEDINLINE auto    \
+  name(__VA_OPT__(_detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))     \
+      -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                  \
     return _detail_REMOVE_PARENS(body)(                                      \
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
@@ -298,16 +299,22 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(    \
       _detail_REMOVE_PARENS(template_params))>                                 \
   AYXFORCEDINLINE decltype(auto) name(                                         \
-      [[maybe_unused]] this Self const& self __VA_OPT__(, )                    \
+      [[maybe_unused]] this Self&& self __VA_OPT__(, )                         \
           __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) { \
-    static_assert(!Self::dyn);                                                 \
-    using map_t =                                                              \
-        typename Self::template static_dispatch_map_t<typename Self::T>;       \
-    return map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                             \
-        _detail_REMOVE_PARENS(template_params))                                \
-        name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                             \
-            _detail_REMOVE_PARENS(template_params))(__VA_OPT__(                \
-            _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));          \
+    using self_t = std::decay_t<Self>;                                         \
+    static_assert(!self_t::dyn);                                               \
+    using T = typename self_t::T;                                              \
+    using proxy_t = typename self_t::proxy_t;                                  \
+    using map_t = typename self_t::template static_dispatch_map_t<T>;          \
+    using traited_t = typename proxy_t::value_t;                               \
+    return ANYXX_JACKET_RETURN(return_type)::forward(                          \
+        map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \
+            _detail_REMOVE_PARENS(template_params))                            \
+            name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
+                _detail_REMOVE_PARENS(template_params))(                       \
+                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
+                    a, _sig, __VA_ARGS__))),                                   \
+        std::forward<Self>(self));                                             \
   };
 
 //_detail_ANYXX_JACKET_STATIC(((A), (B)), decltype(auto), forward,
@@ -1008,14 +1015,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, model_)
 /// @}
 
-#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)     \
-[]<typename... Args>([[maybe_unused]]Args...) -> ret{ \
-  static_assert(                                      \
-      anyxx::missing_trait_error<T>::not_specialized, \
-      "'" #name                                       \
-      "' is missing in the specialization of this proxy_trait!"); \
-return {};\
-}
+#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)                          \
+  []<typename... Args>([[maybe_unused]] Args...) -> ret {                     \
+    static_assert(anyxx::missing_trait_error<T>::not_specialized,             \
+                  "'" #name                                                   \
+                  "' is missing in the specialization of this proxy_trait!"); \
+    return {};                                                                \
+  }
 
 namespace anyxx {
 
