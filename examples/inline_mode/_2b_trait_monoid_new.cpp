@@ -20,9 +20,17 @@ TRAIT_EX(semigroup,
              anyxx::any<Proxy, semigroup> const& l,
              anyxx::any<Proxy, semigroup> const& r) { return l.equal_to(r); }))
 
+template <typename V>
+struct semigroup_plus_model_map : semigroup_default_model_map<V> {
+  static auto op(V self, V r) {
+    using namespace anyxx;
+    std::println("op {}", typeid(V).name());
+    return self + r;
+  };
+};
+
 TRAIT_EX_(
-    monoid, semigroup,
-    (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)),
+    monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []() {
                          using monoid_t =
@@ -47,20 +55,14 @@ TRAIT_EX_(
         anyxx::any<Proxy, monoid> const& l,
         anyxx::any<Proxy, monoid> const& r) { return l.equal_to(r); }))
 
-template <typename V>
-struct plus_mononid_model_map : monoid_default_model_map<V> {
-  static auto op(V self, V r) {
-    using namespace anyxx;
-    std::println("op {}", typeid(V).name());
-    return self + r;
-  };
-};
-
 }  // namespace example_monoid
 
 template <>
+struct example_monoid::semigroup_model_map<int>
+    : semigroup_plus_model_map<int> {};
+template <>
 struct example_monoid::monoid_model_map<int>
-    : example_monoid::plus_mononid_model_map<int> {
+    : example_monoid::monoid_default_model_map<int> {
   static auto concat(auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
@@ -72,8 +74,11 @@ struct example_monoid::monoid_model_map<int>
 };
 
 template <>
+struct example_monoid::semigroup_model_map<std::string>
+    : semigroup_plus_model_map<std::string> {};
+template <>
 struct example_monoid::monoid_model_map<std::string>
-    : example_monoid::plus_mononid_model_map<std::string> {
+    : example_monoid::monoid_default_model_map<std::string> {
   static auto identity() {
     std::println("identy {}", typeid(std::string).name());
     return std::string{};
