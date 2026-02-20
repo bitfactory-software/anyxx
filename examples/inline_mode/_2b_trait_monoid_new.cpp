@@ -233,6 +233,10 @@ TEST_CASE("algebra group") {
   using namespace anyxx;
   using namespace algebra_test;
 
+  any<type_class<int>, group> tc{};
+  auto g = tc.identity();
+  static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
+
   test_group((1), std::vector{2, 3});
   test_group<any<using_<int>, group>>(
       trait_as<group>(1), std::vector<any<using_<int>, group>>{{2}, {3}});

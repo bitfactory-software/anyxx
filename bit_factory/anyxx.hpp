@@ -1075,6 +1075,15 @@ struct missing_trait_error {
 };
 template <typename Value>
 struct using_;
+template <typename Type>
+struct type_class;
+
+template <typename T>
+struct is_type_class_impl : std::false_type {};
+template <typename T>
+struct is_type_class_impl<type_class<T>> : std::true_type {};
+template <typename T>
+inline constexpr bool is_type_class = is_type_class_impl<T>::value;
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -1432,6 +1441,9 @@ static_assert(std::is_const_v<std::remove_reference_t<int const&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
+/// \defgroup proxies Proxies
+/// \brief Proxies manage the storage in an \ref any
+
 template <typename V>
 struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
@@ -1468,8 +1480,35 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   }
 };
 
-/// \defgroup proxies Proxies
-/// \brief Proxies manage the storage in an \ref any
+template <typename Type>
+struct proxy_trait<type_class<Type>> : basic_proxy_trait<type_class<Type>> {
+  using void_t = const_void;
+  using static_dispatch_t = Type;
+  static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+    static constexpr bool value = true;
+  };
+  static constexpr bool is_owner = false;
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] any_v_table* v_table) {}
+
+  static auto get_proxy_ptr_in([[maybe_unused]] auto& val,
+                               [[maybe_unused]] any_v_table* v_table) {
+    return nullptr;
+  }
+
+  template <typename ConstructedWith>
+  using unerased = ConstructedWith;
+
+  static auto construct_in_place(auto) {}
+  template <typename... Args>
+  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {}
+  template <typename Vx>
+  static auto erase([[maybe_unused]] Vx&& v) {
+    return type_class<Vx>{};
+  }
+};
 
 /// A Proxy for mixing std::variant and type erasure
 /// Use this when some, at compile time, known types are dispatched in a hot
@@ -2513,6 +2552,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   using proxy_trait_t = proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
   using v_table_holder_t = v_table_holder<is_dyn<Proxy>, Trait>;
+  using trait_t = Trait;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
   using any_value_t = any<val, Trait>;
@@ -2825,6 +2865,16 @@ auto trait_as(T&& v) {
   return any<anyxx::using_<std::decay_t<T>>, Trait>{std::forward<T>(v)};
 }
 
+/// Proxy to capture the type class of a concrete type to enable static
+/// dispatch. Has no data member, so it doesn't capture any value and has no
+/// size
+///
+/// \tparam Type The captured type
+template <typename Type>
+struct type_class {
+  using value_t = Type;
+};
+
 template <typename VTable, typename Concrete>
 VTable* v_table_instance() {
   static VTable v_table{std::in_place_type<Concrete>};
@@ -2888,7 +2938,12 @@ template <>
 struct jacket_return<self> {
   template <typename Sig, typename Any>
   static decltype(auto) forward(Sig&& sig, Any const&) {
-    return Any{std::forward<Sig>(sig)};
+    if constexpr (is_type_class<typename Any::proxy_t>) {
+      return any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>{
+          std::forward<Sig>(sig)};
+    } else {
+      return Any{std::forward<Sig>(sig)};
+    }
   }
 };
 template <>
