@@ -39,14 +39,20 @@ TRAIT_EX(
       return l.equal_to(r);
     }))
 
-}  // namespace example_monoid
-
-ANY_MODEL_MAP((int), example_monoid::monoid) {
-  static int op(int self, int r) {
+template <typename V>
+struct plus_mononid_model_map : monoid_default_model_map<V> {
+  static int op(V self, V r) {
     using namespace anyxx;
-    std::println("op {}", typeid(int).name());
+    std::println("op {}", typeid(V).name());
     return trait_as<monoid>(self + r);
   };
+};
+
+}  // namespace example_monoid
+
+template <>
+struct example_monoid::monoid_model_map<int>
+    : example_monoid::plus_mononid_model_map<int> {
   static auto concat(auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
@@ -57,12 +63,9 @@ ANY_MODEL_MAP((int), example_monoid::monoid) {
   };
 };
 
-ANY_MODEL_MAP((std::string), example_monoid::monoid) {
-  static std::string op(std::string const& self, std::string const& r) {
-    using namespace anyxx;
-    std::println("op {}", typeid(std::string).name());
-    return trait_as<monoid>(self + r);
-  };
+template <>
+struct example_monoid::monoid_model_map<std::string>
+    : example_monoid::plus_mononid_model_map<std::string> {
   static auto identity() {
     std::println("identy {}", typeid(std::string).name());
     return anyxx::trait_as<monoid>(std::string{});
@@ -95,9 +98,9 @@ void test_monoid_traited(
   using type_2 = decltype(m.op(m.op(id)));
   std::println("type_1: {}, type_2: {}", typeid(type_1).name(),
                typeid(type_2).name());
-   static_assert(std::same_as<type_1, type_2>);
-   static_assert(std::same_as<type_1, Monoid>);
-   static_assert(std::same_as<type_2, Monoid>);
+  static_assert(std::same_as<type_1, type_2>);
+  static_assert(std::same_as<type_1, Monoid>);
+  static_assert(std::same_as<type_2, Monoid>);
   auto c1 = m + id + m == m + m + id;
   CHECK(c1);
   auto c2 = m.concat(r) ==
