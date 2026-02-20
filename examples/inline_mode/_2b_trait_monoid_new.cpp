@@ -11,20 +11,18 @@
 
 namespace example_monoid {
 
-TRAIT_EX(
-    semigroup,
-    (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
-     ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
-                ([&x](auto const& r) { return x == r; }))),,
-    (template <typename Proxy> friend bool operator==(
-        anyxx::any<Proxy, semigroup> const& l,
-        anyxx::any<Proxy, semigroup> const& r) { return l.equal_to(r); }))
+TRAIT_EX(semigroup,
+         (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
+          ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
+                     ([&x](auto const& r) { return x == r; }))),
+         ,
+         (template <typename Proxy> friend bool operator==(
+             anyxx::any<Proxy, semigroup> const& l,
+             anyxx::any<Proxy, semigroup> const& r) { return l.equal_to(r); }))
 
-TRAIT_EX(
-    monoid,
-    (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
-     ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
-                ([&x](auto const& r) { return x == r; }))),
+TRAIT_EX_(
+    monoid, semigroup,
+    (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)),
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []() {
                          using monoid_t =
@@ -147,8 +145,7 @@ TEST_CASE("example_monoid simple") {
   {
     using_<int>::as<monoid> im{999};
     CHECK(im.identity() == trait_as<monoid>(0));
-    auto x1 =
-        im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)});
+    auto x1 = im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)});
     auto y2 = trait_as<monoid>(3);
     CHECK(x1 == y2);
   }
