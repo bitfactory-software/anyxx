@@ -67,7 +67,8 @@ struct algebra::monoid_model_map<int> : algebra::monoid_default_model_map<int> {
   };
 };
 template <>
-struct algebra::group_model_map<int> : algebra::group_default_model_map<int> {
+struct algebra::group_model_map<int> : algebra::group_default_model_map<int>,
+                                       algebra::monoid_model_map<int> {
   static auto inverse(int self) {
     using namespace anyxx;
     return -self;
@@ -90,8 +91,8 @@ namespace algebra_test {
 using namespace algebra;
 
 template <anyxx::is_any Monoid>
-void test_monoid_traited(
-    Monoid const& m, std::ranges::forward_range auto const& r);
+void test_monoid_traited(Monoid const& m,
+                         std::ranges::forward_range auto const& r);
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
@@ -99,15 +100,12 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
 }
 template <anyxx::is_any Monoid>
-void test_monoid(
-    Monoid const& m,
-    std::ranges::forward_range auto const& r ) {
+void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
   test_monoid_traited<Monoid>(m, r);
 }
 template <anyxx::is_any Monoid>
-void test_monoid_traited(
-    Monoid const& m,
-    std::ranges::forward_range auto const& r) {
+void test_monoid_traited(Monoid const& m,
+                         std::ranges::forward_range auto const& r) {
   auto id = m.identity();
   using type_1 = decltype(m.op(id.op(m)));
   using type_2 = decltype(m.op(m.op(id)));
@@ -186,57 +184,58 @@ TEST_CASE("algebra monoid") {
 }
 
 namespace algebra_test {
+using namespace algebra;
 
-// template <anyxx::is_any Monoid>
-// void test_monoid_traited(
-//     Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>&
-//     r);
-// template <typename P1>
-//   requires(!anyxx::is_any<P1>)
-// void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
-//   using any_monoid = typename anyxx::using_<P1>::template as<monoid>;
-//   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
-// }
-// template <anyxx::is_any Monoid>
-// void test_monoid(
-//     Monoid const& m,
-//     anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
-//   test_monoid_traited<Monoid>(m, r);
-// }
-// template <anyxx::is_any Monoid>
-// void test_monoid_traited(
-//     Monoid const& m,
-//     anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
-//   auto id = m.identity();
-//   using type_1 = decltype(m.op(id.op(m)));
-//   using type_2 = decltype(m.op(m.op(id)));
-//   std::println("type_1: {}, type_2: {}", typeid(type_1).name(),
-//                typeid(type_2).name());
-//   static_assert(std::same_as<type_1, type_2>);
-//   static_assert(std::same_as<type_1, Monoid>);
-//   static_assert(std::same_as<type_2, Monoid>);
-//   auto c1 = m.op(id).op(m) == m.op(m).op(id);
-//   CHECK(c1);
-//   auto c2 = m.concat(r) ==
-//             std::ranges::fold_left(
-//                 r, m.identity(),
-//                 [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
-//                   return m1.op(m2);
-//                 });
-//   CHECK(c2);
-// }
+template <anyxx::is_any Group>
+void test_group_traited(Group const& m,
+                        std::ranges::forward_range auto const& r);
+template <typename P1>
+  requires(!anyxx::is_any<P1>)
+void test_group(P1 const& p1, std::ranges::forward_range auto const& r) {
+  using any_group = typename anyxx::using_<P1>::template as<group>;
+  test_group_traited<any_group>(any_group{p1}, r);
 }
+template <anyxx::is_any Group>
+void test_group(Group const& m, std::ranges::forward_range auto const& r) {
+  test_group_traited<Group>(m, r);
+}
+template <anyxx::is_any Group>
+void test_group_traited(Group const& g,
+                        [[maybe_unused]]std::ranges::forward_range auto const& r) {
+  auto id = g.identity();
+  static_assert(std::same_as<decltype(id), Group>);
+  auto inv = g.inverse();
+  static_assert(std::same_as<decltype(inv), Group>);
+  CHECK(g.op(inv) == id);
+  using type_1 = decltype(g.op(id.op(g)));
+  using type_2 = decltype(g.op(g.op(id)));
+  std::println("type_1: {}, type_2: {}", typeid(type_1).name(),
+               typeid(type_2).name());
+  static_assert(std::same_as<type_1, type_2>);
+  static_assert(std::same_as<type_1, Group>);
+  static_assert(std::same_as<type_2, Group>);
+  auto c1 = g.op(id).op(g) == g.op(g).op(id);
+  CHECK(c1);
+  //auto c2 = g.concat(r) ==
+  //          std::ranges::fold_left(
+  //              r, g.identity(),
+  //              [&](Group const& g1, [[maybe_unused]] Group const& g2) {
+  //                return g1.op(g2);
+  //              });
+  //CHECK(c2);
+
+  //test_monoid_traited(g, r);
+}
+}  // namespace algebra_test
 
 TEST_CASE("algebra group") {
   using namespace algebra;
   using namespace anyxx;
   using namespace algebra_test;
 
-  // test_monoid((1), std::vector{2, 3});
-  // test_monoid<any<using_<int>, monoid>>(
-  //     trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
-
-  //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
+  test_group((1), std::vector{2, 3});
+  test_group<any<using_<int>, group>>(
+      trait_as<group>(1), std::vector<any<using_<int>, group>>{{2}, {3}});
 }
 
 #endif
