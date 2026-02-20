@@ -12,6 +12,15 @@
 namespace example_monoid {
 
 TRAIT_EX(
+    semigroup,
+    (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
+     ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
+                ([&x](auto const& r) { return x == r; }))),,
+    (template <typename Proxy> friend bool operator==(
+        anyxx::any<Proxy, semigroup> const& l,
+        anyxx::any<Proxy, semigroup> const& r) { return l.equal_to(r); }))
+
+TRAIT_EX(
     monoid,
     (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
      ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
