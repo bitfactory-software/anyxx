@@ -2857,6 +2857,11 @@ struct using_ {
   using as = any<using_<Value>, Trait>;
 };
 
+/// A template to get a \ref trait for a type
+/// See also \ref using_::as.
+template <typename Type, typename Trait>
+using use_as = any<using_<Type>, Trait>;
+
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.
 /// See also \ref using_::as.
@@ -2865,7 +2870,7 @@ auto trait_as(T&& v) {
   return any<anyxx::using_<std::decay_t<T>>, Trait>{std::forward<T>(v)};
 }
 
-/// Proxy to capture the type class of a concrete type to enable static
+/// Proxy to capture the type to enable static
 /// dispatch. Has no data member, so it doesn't capture any value and has no
 /// size
 ///
@@ -2874,6 +2879,12 @@ template <typename Type>
 struct type_class {
   using value_t = Type;
 };
+
+/// A object template to get a \ref type_class object for a type as a \ref
+/// trait.
+/// See also \ref using_::as.
+template <typename Type, typename Trait>
+static inline any<type_class<Type>, Trait> static_;
 
 template <typename VTable, typename Concrete>
 VTable* v_table_instance() {
