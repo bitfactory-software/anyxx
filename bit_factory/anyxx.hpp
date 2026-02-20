@@ -1009,7 +1009,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// @}
 
 #define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)     \
-[]<typename... Args>([[maybe_unused]](Args...) -> ret{ \
+[]<typename... Args>([[maybe_unused]]Args...) -> ret{ \
   static_assert(                                      \
       anyxx::missing_trait_error<T>::not_specialized, \
       "'" #name                                       \
