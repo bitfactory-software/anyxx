@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['0x_20concepts_20haskell_20type_20classes_20rust_20traits_20a_20short_20introduction_0',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
-  ['0x_20concepts_20rust_20traits_20haskell_20type_20classes_1',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]]
+  ['1_3a_20basic_20any_20usage_0',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md25',1,'']]]
 ];
