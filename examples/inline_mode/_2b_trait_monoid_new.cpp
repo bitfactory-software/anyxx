@@ -13,12 +13,10 @@ namespace example_monoid {
 
 TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
-          ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
+          ANY_OP_DEF(bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
          ,
-         (template <typename Proxy> friend bool operator==(
-             anyxx::any<Proxy, semigroup> const& l,
-             anyxx::any<Proxy, semigroup> const& r) { return l.equal_to(r); }))
+         ())
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -51,9 +49,7 @@ TRAIT_EX_(
                                return m1.op(m2);
                              });
                        })),
-    (template <typename Proxy> friend bool operator==(
-        anyxx::any<Proxy, monoid> const& l,
-        anyxx::any<Proxy, monoid> const& r) { return l.equal_to(r); }))
+    ())
 
 }  // namespace example_monoid
 
