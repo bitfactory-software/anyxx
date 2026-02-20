@@ -15,8 +15,7 @@ TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
           ANY_OP_DEF(bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         ,
-         ())
+         , ())
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -51,14 +50,13 @@ TRAIT_EX_(
                        })),
     ())
 
+TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , ())
 }  // namespace algebra
 
 template <>
-struct algebra::semigroup_model_map<int>
-    : semigroup_plus_model_map<int> {};
+struct algebra::semigroup_model_map<int> : semigroup_plus_model_map<int> {};
 template <>
-struct algebra::monoid_model_map<int>
-    : algebra::monoid_default_model_map<int> {
+struct algebra::monoid_model_map<int> : algebra::monoid_default_model_map<int> {
   static auto concat(auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
@@ -66,6 +64,13 @@ struct algebra::monoid_model_map<int>
         r, trait_as<monoid>(0),
         [&](using_<int>::as<monoid> const& m1,
             using_<int>::as<monoid> const& m2) { return m1.op(m2); });
+  };
+};
+template <>
+struct algebra::group_model_map<int> : algebra::group_default_model_map<int> {
+  static auto inverse(int self) {
+    using namespace anyxx;
+    return -self;
   };
 };
 
@@ -81,11 +86,12 @@ struct algebra::monoid_model_map<std::string>
   };
 };
 
-namespace algebra {
+namespace algebra_test {
+using namespace algebra;
 
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
-    Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>& r);
+    Monoid const& m, std::ranges::forward_range auto const& r);
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
@@ -95,13 +101,13 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
 template <anyxx::is_any Monoid>
 void test_monoid(
     Monoid const& m,
-    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+    std::ranges::forward_range auto const& r ) {
   test_monoid_traited<Monoid>(m, r);
 }
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
     Monoid const& m,
-    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+    std::ranges::forward_range auto const& r) {
   auto id = m.identity();
   using type_1 = decltype(m.op(id.op(m)));
   using type_2 = decltype(m.op(m.op(id)));
@@ -123,9 +129,9 @@ void test_monoid_traited(
 
 // struct not_mappepd{ int v; };
 
-}  // namespace algebra
+}  // namespace algebra_test
 //
-TEST_CASE("algebra simple") {
+TEST_CASE("algebra basics") {
   using namespace anyxx;
   using namespace algebra;
   using namespace std::string_literals;
@@ -162,8 +168,9 @@ TEST_CASE("algebra simple") {
   }
 }
 
-TEST_CASE("algebra monoid int") {
+TEST_CASE("algebra monoid") {
   using namespace algebra;
+  using namespace algebra_test;
   using namespace std::string_literals;
   using namespace anyxx;
 
@@ -177,55 +184,59 @@ TEST_CASE("algebra monoid int") {
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
-// TEST_CASE("example 2b monoid b") {
-//   using namespace algebra;
-//   using namespace std::string_literals;
-//   using namespace anyxx;
-//
-//   test_monoid("1"s, std::vector{"2"s, "3"s});
-//   test_monoid<using_<std::string>::as<monoid>>(
-//       trait_as<monoid>("1"s),
-//       std::vector<using_<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+
+namespace algebra_test {
+
+// template <anyxx::is_any Monoid>
+// void test_monoid_traited(
+//     Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>&
+//     r);
+// template <typename P1>
+//   requires(!anyxx::is_any<P1>)
+// void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
+//   using any_monoid = typename anyxx::using_<P1>::template as<monoid>;
+//   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
 // }
-// TEST_CASE("example 2b monoid c") {
-//   using namespace algebra;
-//   using namespace std::string_literals;
-//   using namespace anyxx;
-//
-//   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(true));
-// }  // NOLINT
-// TEST_CASE("example 2b monoid d") {
-//   using namespace algebra;
-//   using namespace std::string_literals;
-//   using namespace anyxx;
-//
-//   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
+// template <anyxx::is_any Monoid>
+// void test_monoid(
+//     Monoid const& m,
+//     anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+//   test_monoid_traited<Monoid>(m, r);
 // }
-//
-// TEST_CASE("static 1") {
-//   using namespace algebra;
-//   using namespace std::string_literals;
-//   using namespace anyxx;
-//
-//   using_<int>::as<TestTrait> t{0};
-//   CHECK(t.id() == 0);
+// template <anyxx::is_any Monoid>
+// void test_monoid_traited(
+//     Monoid const& m,
+//     anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+//   auto id = m.identity();
+//   using type_1 = decltype(m.op(id.op(m)));
+//   using type_2 = decltype(m.op(m.op(id)));
+//   std::println("type_1: {}, type_2: {}", typeid(type_1).name(),
+//                typeid(type_2).name());
+//   static_assert(std::same_as<type_1, type_2>);
+//   static_assert(std::same_as<type_1, Monoid>);
+//   static_assert(std::same_as<type_2, Monoid>);
+//   auto c1 = m.op(id).op(m) == m.op(m).op(id);
+//   CHECK(c1);
+//   auto c2 = m.concat(r) ==
+//             std::ranges::fold_left(
+//                 r, m.identity(),
+//                 [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
+//                   return m1.op(m2);
+//                 });
+//   CHECK(c2);
 // }
-//
-// TEST_CASE("static 2") {
-//   using namespace algebra;
-//   using namespace std::string_literals;
-//   using namespace anyxx;
-//
-//   using_<int>::as<monoid> im{999};
-//   CHECK(im.identity() == 0);
-//   CHECK(im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)}) ==
-//   3);
-//
-//   using_<std::string>::as<monoid> sm{"XXX"};
-//   CHECK(sm.identity() == trait_as<monoid>(""s));
-//   CHECK(
-//       sm.concat(std::vector{trait_as<monoid>("A"s), trait_as<monoid>("B"s)})
-//       == trait_as<monoid>("AB"s));
-// }
+}
+
+TEST_CASE("algebra group") {
+  using namespace algebra;
+  using namespace anyxx;
+  using namespace algebra_test;
+
+  // test_monoid((1), std::vector{2, 3});
+  // test_monoid<any<using_<int>, monoid>>(
+  //     trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+
+  //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
+}
 
 #endif
