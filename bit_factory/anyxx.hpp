@@ -271,14 +271,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
-#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body,   \
-                                 ...)                                        \
-  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                \
-      _detail_REMOVE_PARENS(template_params)) static AYXFORCEDINLINE auto    \
-  name(__VA_OPT__(_detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))     \
-      -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                  \
-    return _detail_REMOVE_PARENS(body)(                                      \
-        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, \
+                                 ...)                                      \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                              \
+      _detail_REMOVE_PARENS(template_params)) static AYXFORCEDINLINE auto  \
+  name([[maybe_unused]] auto type_class __VA_OPT__(                        \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
+      -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
+    return _detail_REMOVE_PARENS(body)(type_class __VA_OPT__(              \
+        , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
   };
 
 //_detail_ANYXX_MAP_STATIC(((A), (B)), decltype(auto), forward,
@@ -307,13 +308,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using proxy_t = typename self_t::proxy_t;                                  \
     using map_t = typename self_t::template static_dispatch_map_t<T>;          \
     using traited_t = typename proxy_t::value_t;                               \
+    using trait_t = typename self_t::trait_t;                                  \
     return ANYXX_JACKET_RETURN(return_type)::forward(                          \
         map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \
             _detail_REMOVE_PARENS(template_params))                            \
             name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
                 _detail_REMOVE_PARENS(template_params))(                       \
-                __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
-                    a, _sig, __VA_ARGS__))),                                   \
+                anyxx::type_class_<T, trait_t> __VA_OPT__(                     \
+                    , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(          \
+                          a, _sig, __VA_ARGS__))),                             \
         std::forward<Self>(self));                                             \
   };
 
@@ -2712,9 +2715,15 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     requires(
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
 
-  operator decltype(auto)() const {
+  operator decltype(auto)() const
+
+  {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
-      return proxy_.value_;
+      if constexpr (is_type_class<proxy_t>) {
+        return nullptr;
+      } else {
+        return proxy_.value_;
+      }
     } else {
       return &proxy_;
     }
@@ -2884,7 +2893,7 @@ struct type_class {
 /// trait.
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
-static inline any<type_class<Type>, Trait> static_;
+static inline any<type_class<Type>, Trait> type_class_;
 
 template <typename VTable, typename Concrete>
 VTable* v_table_instance() {
@@ -2949,7 +2958,7 @@ template <>
 struct jacket_return<self> {
   template <typename Sig, typename Any>
   static decltype(auto) forward(Sig&& sig, Any const&) {
-    if constexpr (is_type_class<typename Any::proxy_t>) {
+    if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
       return any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>{
           std::forward<Sig>(sig)};
     } else {
@@ -3996,8 +4005,8 @@ class dispatch_vany {
 /// @{
 
 /// \def ANY_META_CLASS_FWD
-/// \brief Declare access to the meta data for a specific model any. Must be in
-/// global namespace.
+/// \brief Declare access to the meta data for a specific model any. Must be
+/// in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario
 /// \param ... Type of the model
 #define ANY_META_CLASS_FWD(...)
@@ -4112,8 +4121,8 @@ class dispatch_vany {
 /// files.
 ///
 /// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for a
-/// specific any. This dispatch counter is used to assign unique indices to each
-/// dispatch.
+/// specific any. This dispatch counter is used to assign unique indices to
+/// each dispatch.
 ///
 /// ANY_DISPATCH_FOR macros declare/define the dispatch table instance for a
 /// any. This is necessary once for each model class that participates in open
@@ -4122,8 +4131,8 @@ class dispatch_vany {
 ///  @{
 
 /// \def ANY_DISPATCH_COUNT_FWD
-/// \brief Declare access to the dispatch counter for a specific \ref any. Must
-/// be placed in global namespace.
+/// \brief Declare access to the dispatch counter for a specific \ref any.
+/// Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
@@ -4157,10 +4166,10 @@ class dispatch_vany {
 /// \defgroup anyxx_config Any++ configuration macro
 /// \brief Macro to configure Any++ for DLL mode
 ///
-/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In DLL mode,
-/// some static runtime data is not instantiated in the header implicitly via
-/// static inline and must be manually instantiated in a single translation
-/// unit.
+/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In DLL
+/// mode, some static runtime data is not instantiated in the header
+/// implicitly via static inline and must be manually instantiated in a single
+/// translation unit.
 ///
 /// See also \ref ANY_SINGLETON_DECLARE, \ref ANY_SINGLETON, \ref
 /// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref ANY_DISPATCH_COUNT_FWD, \ref

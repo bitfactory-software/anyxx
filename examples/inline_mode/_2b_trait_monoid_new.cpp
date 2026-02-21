@@ -29,17 +29,17 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
 TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []() {
+                       []<typename Type>(Type) {
                          using namespace anyxx;
-                         return anyxx::static_<T, monoid>.concat(
+                         return anyxx::type_class_<T, monoid>.concat(
                              std::ranges::empty_view<use_as<T, monoid>>{});
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       [](const auto& r) {
+                       []<typename Type>(Type, const auto& r) {
                          using namespace anyxx;
-                         auto id = static_<T, monoid>.identity();
+                         auto id = type_class_<T, monoid>.identity();
                          return std::ranges::fold_left(
                              r, id,
                              [&](use_as<T, monoid> const& m1,
@@ -56,7 +56,7 @@ template <>
 struct algebra::semigroup_model_map<int> : semigroup_plus_model_map<int> {};
 template <>
 struct algebra::monoid_model_map<int> : algebra::monoid_default_model_map<int> {
-  static auto concat(auto const& r) {
+  static auto concat(auto, auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
     return std::ranges::fold_left(
@@ -81,7 +81,7 @@ struct algebra::semigroup_model_map<std::string>
 template <>
 struct algebra::monoid_model_map<std::string>
     : algebra::monoid_default_model_map<std::string> {
-  static auto identity() {
+  static auto identity(auto) {
     std::println("identy {}", typeid(std::string).name());
     return std::string{};
   };
@@ -233,9 +233,13 @@ TEST_CASE("algebra group") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto g = static_<int, group>.identity();
+  auto g = type_class_<int, group>.identity();
   static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
 
+  anyxx::any<anyxx::using_<int>, algebra::monoid> m1{0};
+  anyxx::any<anyxx::using_<int>, algebra::monoid> m2{std::move(m1)};
+  anyxx::any<anyxx::using_<int>, algebra::group> g1{0};
+  anyxx::any<anyxx::using_<int>, algebra::group> g2{std::move(g2)};
   test_group((1), std::vector{2, 3});
   test_group<any<using_<int>, group>>(
       trait_as<group>(1), std::vector<any<using_<int>, group>>{{2}, {3}});
