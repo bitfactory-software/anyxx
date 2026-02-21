@@ -3021,19 +3021,11 @@ struct jacket_return<self&> {
   }
 };
 
-TRAIT_EX(
-    translate_sig, ,
-    /*(ANY_FN_STATIC_DEF(
-        (), anyxx::self, v_table_to_map, (),
-        []<typename Trait>(Trait trait) {
-          using namespace anyxx;
-          return trait.concat(
-              std::ranges::empty_view<use_as<T, typename Trait::trait_t>>{});
-        }))*/,
-    (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
-     ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
-     ANY_TYPE(((Model)), map_return, void, (T))),
-    ())
+TRAIT_EX(translate_sig, , ,
+         (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
+          ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
+          ANY_TYPE(((Model)), map_return, void, (T))),
+         ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
@@ -3066,6 +3058,8 @@ using v_table_return = TRAIT_TYPE(v_table_return, Return, translate_sig,
 template <typename Model, typename Param>
 using map_return = TRAIT_TYPE(map_return, Param, translate_sig, Model);
 
+//+++   This metafunctions cannot be expressed as traits, because they would be
+//      recursive. So we need to use template specialization instead.
 template <typename T>
 struct handle_self_ref_return {
   static T operator()() {
@@ -3125,6 +3119,7 @@ struct forward_trait_to_map<Traited, self const&> {
     return get_proxy_value(std::forward<Sig>(sig));
   }
 };
+//---
 
 // --------------------------------------------------------------------------------
 // any customization traits
