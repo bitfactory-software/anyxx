@@ -346,15 +346,16 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 // using xyz = std::map<A, B>;
 
 #define _detail_ANYXX_JACKET_TYPE_H(l) _detail_ANYXX_JACKET_TYPE l
-#define _detail_ANYXX_JACKET_TYPE(template_params, name, erased, default_)   \
-  template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(  \
-      _detail_REMOVE_PARENS(template_params))>                               \
-  using name = std::conditional_t<                                           \
-      Self::dyn, erased,                                                     \
-      typename Self::static_dispatch_map_t::_detail_ANYXX_OPTIONAL_TEMPLATE( \
-          _detail_REMOVE_PARENS(template_params))                            \
-          name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
-              _detail_REMOVE_PARENS(template_params))>;
+#define _detail_ANYXX_JACKET_TYPE(template_params, name, erased, default_)  \
+  template <typename Self _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST( \
+      _detail_REMOVE_PARENS(template_params))>                              \
+  using name = std::conditional_t<                                          \
+      Self::dyn, erased,                                                    \
+      typename Self::template static_dispatch_map_t<typename Self::T>::     \
+          _detail_ANYXX_OPTIONAL_TEMPLATE(                                  \
+              _detail_REMOVE_PARENS(template_params))                       \
+              name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                    \
+                  _detail_REMOVE_PARENS(template_params))>;
 
 //_detail_ANYXX_JACKET_TYPE(((A),(B)), xyz, void, (std::map<A,B>))
 // ->
@@ -3009,7 +3010,10 @@ struct jacket_return<self&> {
   }
 };
 
-TRAIT_EX(translate_sig, , , , ())
+// TRAIT_EX(translate_sig, , , ANY_TYPE(((AnyValue)), v_table_param, void, T),
+// ())
+TRAIT_EX(translate_sig, , , (ANY_TYPE(((AnyValue)), v_table_param, void, (T))),
+         ())
 
 template <typename AnyValue, typename Param>
 struct translate_v_table_param {
