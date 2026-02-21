@@ -1081,7 +1081,6 @@ struct using_;
 template <typename Type>
 struct type_class;
 
-
 using const_void = void const*;
 using mutable_void = void*;
 template <typename V>
@@ -2956,13 +2955,20 @@ struct jacket_return<Param> {
     return std::forward<Sig>(sig);
   }
 };
+static_assert(!is_type_class<val>);
 template <>
 struct jacket_return<self> {
   template <typename Sig, typename Any>
   static decltype(auto) forward(Sig&& sig, Any const&) {
+    using sig_t = std::decay_t<Sig>;
     if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
-      return any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>{
-          std::forward<Sig>(sig)};
+      using target_t =
+          any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>;
+      if constexpr (is_any<sig_t>) {
+          return target_t{get_proxy_value(std::forward<Sig>(sig))};
+      } else {
+        return target_t{std::forward<Sig>(sig)};
+      }
     } else {
       return Any{std::forward<Sig>(sig)};
     }
