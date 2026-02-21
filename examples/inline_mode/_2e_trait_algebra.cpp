@@ -19,12 +19,12 @@ TRAIT_EX(semigroup,
 
 template <typename Model>
 concept is_semigroup_model = requires(Model x) {
-  requires requires(Model const& p0) {
+  requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
     {
       semigroup_model_map<Model>::op(x, p0)
     } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
   };
-  requires requires(Model const& p0) {
+  requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
     { semigroup_model_map<Model>::eq(x, p0) } -> std::convertible_to<bool>;
   };
 };

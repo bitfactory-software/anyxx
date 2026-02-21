@@ -3045,7 +3045,8 @@ struct jacket_return<self&> {
 TRAIT_EX(translate_sig, , ,
          (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
           ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
-          ANY_TYPE(((Model)), map_return, void, (T))),
+          ANY_TYPE(((Model)), map_return, void, (T)),
+          ANY_TYPE(((Model)), concept_arg, void, (T))),
          ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
@@ -3054,6 +3055,8 @@ ANY_MODEL_MAP((self), translate_sig) {
   using v_table_return = AnyValue;
   template <typename Model>
   using map_return = Model;
+  template <typename Model>
+  using concept_arg = Model;
 };
 ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename AnyValue>
@@ -3062,6 +3065,8 @@ ANY_MODEL_MAP((self const&), translate_sig) {
   using v_table_return = int;  // dummy
   template <typename Model>
   using map_return = Model const&;
+  template <typename Model>
+  using concept_arg = Model const&;
 };
 ANY_MODEL_MAP((self&), translate_sig) {
   template <typename AnyValue>
@@ -3070,6 +3075,8 @@ ANY_MODEL_MAP((self&), translate_sig) {
   using v_table_return = int;  // dummy
   template <typename Model>
   using map_return = Model&;
+  template <typename Model>
+  using concept_arg = Model&;
 };
 template <typename AnyValue, typename Param>
 using v_table_param = TRAIT_TYPE(v_table_param, Param, translate_sig, AnyValue);
@@ -3078,6 +3085,8 @@ using v_table_return = TRAIT_TYPE(v_table_return, Return, translate_sig,
                                   AnyValue);
 template <typename Model, typename Param>
 using map_return = TRAIT_TYPE(map_return, Param, translate_sig, Model);
+template <typename Model, typename Param>
+using concept_arg = TRAIT_TYPE(concept_arg, Param, translate_sig, Model);
 
 //+++   This metafunctions cannot be expressed as traits, because they would be
 //      recursive. So we need to use template specialization instead.
