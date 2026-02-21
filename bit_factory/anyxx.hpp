@@ -977,11 +977,22 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_FN_STATIC_DEF
 /// \brief Static TRAIT function, which has a default implementation. This
 /// function will NOT go into the v-Table ad is only avalable for the \ref
-/// using_ \ref Proxy.
+/// using_ und \ref trait_class \ref Proxy.
 /// \ingroup trait_macros
 #define ANY_FN_STATIC_DEF(template_params, return_type, name, params, ...) \
   ANY_FN_(template_params, return_type, name, (__VA_ARGS__),               \
           _detail_EXPAND params)
+
+/// \def ANY_TYPE
+/// \brief Dependent type definition in a TRAIT. This is useful for defining
+/// associated types, e.g. Return typs
+/// using_ \ref Proxy.
+/// \param template_params template parameters for the type definition
+/// \param name name of the type definition
+/// \param erased type to be used in the erased context, to simpliy usage.
+/// \param default_ default type definition. 
+/// \ingroup trait_macros
+#define ANY_TYPE(...) (__VA_ARGS__)
 
 /// @}
 
@@ -2984,6 +2995,8 @@ struct jacket_return<self&> {
     return any;  // "return *this" semantics!
   }
 };
+
+TRAIT_EX(translate_sig, ,,())
 
 template <typename AnyValue, typename Param>
 struct translate_v_table_param {
