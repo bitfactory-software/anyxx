@@ -59,16 +59,14 @@ concept is_any_self_forward_range =
     std::same_as<std::ranges::range_value_t<A>, self>;
 //
 
-template <typename AnyValue, typename AnyForwardRange>
+template <typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
-struct translate_v_table_param<AnyValue, AnyForwardRange const &> {
-  using type =
-      anyxx::any_forward_range<AnyValue, AnyValue,
-                               //      anyxx::any_forward_range<any<val>,
-                               //      any<val>,
+struct translate_sig_model_map<AnyForwardRange const&> : translate_sig_default_model_map<self > {
+  template <typename AnyValue>
+  using v_table_param =  any_forward_range<AnyValue, AnyValue,
                                typename AnyForwardRange::proxy_t> const &;
 };
-//
+
 template <typename Concrete, typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
 struct v_table_to_map<Concrete, AnyForwardRange const &> {

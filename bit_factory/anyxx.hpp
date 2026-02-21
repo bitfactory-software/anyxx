@@ -3021,111 +3021,22 @@ struct jacket_return<self&> {
   }
 };
 
-struct translate_sig;
-template <typename T>
-struct translate_sig_default_model_map {
-  ;
-  ;
-  template <typename AnyValue>
-  using v_table_param = T;
-  ;
-};
-template <typename T>
-struct translate_sig_model_map : translate_sig_default_model_map<T> {};
-template <typename T>
-  requires(anyxx::is_variant<T>)
-struct translate_sig_model_map<T> {
-  template <typename V>
-  using x_model_map = translate_sig_model_map<V>;
-};
-struct translate_sig_has_open_dispatch;
-struct translate_sig_v_table
-    : anyxx::base_trait::v_table_t,
-      anyxx::dispatch_holder<
-          anyxx::is_type_complete<translate_sig_has_open_dispatch>,
-          translate_sig> {
-  using v_table_base_t = typename anyxx::base_trait::v_table_t;
-  using v_table_t = translate_sig_v_table;
-  using any_value_t = anyxx::any<anyxx::val, translate_sig>;
-  static constexpr bool open_dispatch_enabeled =
-      anyxx::is_type_complete<translate_sig_has_open_dispatch>;
-  using own_dispatch_holder_t =
-      typename anyxx::dispatch_holder<open_dispatch_enabeled, translate_sig>;
-  static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(v_table_t) == from
-               ? true
-               : v_table_base_t::static_is_derived_from(from);
-  };
-  ;
-  template <typename Concrete>
-  explicit(false)
-      translate_sig_v_table(std::in_place_type_t<Concrete> concrete);
-};
-struct translate_sig : anyxx::base_trait {
-  using any_value_t = anyxx::any<anyxx::val, translate_sig>;
-  using base_t = anyxx::base_trait;
-  using v_table_base_t = base_t::v_table_t;
-  using v_table_t = translate_sig_v_table;
-  template <typename StaticDispatchType>
-  using static_dispatch_map_t = translate_sig_model_map<StaticDispatchType>;
-  ;
-  ;
-  template <typename Q, typename AnyValue>
-  using v_table_param = std::conditional_t<
-      std::same_as<void, Q>, void,
-      typename static_dispatch_map_t<Q>::template v_table_param<AnyValue>>;
-  ;
-  ;
-};
-template <typename Concrete>
-translate_sig_v_table::translate_sig_v_table(
-    std::in_place_type_t<Concrete> concrete)
-    : v_table_base_t(concrete) {
-  using model_map = translate_sig_model_map<Concrete>;
-  ;
-  ;
-  if constexpr (open_dispatch_enabeled) {
-    own_dispatch_holder_t::set_dispatch_table(
-        ::anyxx::dispatch_table_instance<translate_sig_v_table, Concrete>());
-  }
-  ::anyxx::set_is_derived_from<v_table_t>(this);
-};
-
-static_assert(
-    std::same_as<
-        TRAIT_TYPE(v_table_param, int, translate_sig, any<using_<int>>), int>);
-
+TRAIT_EX(translate_sig, , , (ANY_TYPE(((AnyValue)), v_table_param, void, (T))),
+        ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
 };
-
 ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
 };
-
-static_assert(std::same_as<TRAIT_TYPE(v_table_param, self, translate_sig,
-                                      any<using_<int>>),
-                           any<cref>>);
-static_assert(std::same_as<TRAIT_TYPE(v_table_param, self const&, translate_sig,
-                                      any<using_<int>>),
-                           any<cref>>);
-
-template <typename AnyValue, typename Param>
-struct translate_v_table_param {
-  using type = Param;
-};
-template <typename AnyValue>
-struct translate_v_table_param<AnyValue, self const&> {
-  using type = any<cref>;
-};
-template <typename AnyValue>
-struct translate_v_table_param<AnyValue, self&> {
-  using type = any<mutref>;
+ANY_MODEL_MAP((self&), translate_sig) {
+  template <typename AnyValue>
+  using v_table_param = any<mutref>;
 };
 template <typename AnyValue, typename Param>
-using v_table_param = typename translate_v_table_param<AnyValue, Param>::type;
+using v_table_param = TRAIT_TYPE(v_table_param, Param, translate_sig, AnyValue);
 
 template <typename AnyValue, typename Return>
 struct translate_v_table_return {
