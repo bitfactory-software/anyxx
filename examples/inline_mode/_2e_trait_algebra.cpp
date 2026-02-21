@@ -246,10 +246,12 @@ TEST_CASE("algebra group") {
   auto g = trait_class_<int, group>.identity();
   static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
 
-  anyxx::any<anyxx::using_<int>, algebra::monoid> m1{0};
-  anyxx::any<anyxx::using_<int>, algebra::monoid> m2{std::move(m1)};
-  anyxx::any<anyxx::using_<int>, algebra::group> g1{0};
-  anyxx::any<anyxx::using_<int>, algebra::group> g2{std::move(g2)};
+  {
+    anyxx::any<anyxx::using_<int>, algebra::monoid> m1{0};
+    anyxx::any<anyxx::using_<int>, algebra::monoid> m2{std::move(m1)};
+    anyxx::any<anyxx::using_<int>, algebra::group> g1{0};
+    anyxx::any<anyxx::using_<int>, algebra::group> g2{std::move(g1)};
+  }
   test_group((1), std::vector{2, 3});
   test_group<any<using_<int>, group>>(
       trait_as<group>(1), std::vector<any<using_<int>, group>>{{2}, {3}});

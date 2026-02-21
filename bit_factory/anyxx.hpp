@@ -3085,7 +3085,7 @@ struct handle_self_ref_return<self&> {
 template <typename Concrete, typename T>
 struct v_table_to_map {
   template <typename Sig>
-  static decltype(auto) forward(Sig&& sig) {
+  static Sig&& forward(Sig&& sig) {
     return std::forward<Sig>(sig);
   }
 };
