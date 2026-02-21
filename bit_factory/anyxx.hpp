@@ -3021,11 +3021,19 @@ struct jacket_return<self&> {
   }
 };
 
-TRAIT_EX(translate_sig, , ,
-         (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
-          ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
-          ANY_TYPE(((Model)), map_return, void, (T))),
-         ())
+TRAIT_EX(
+    translate_sig, ,
+    /*(ANY_FN_STATIC_DEF(
+        (), anyxx::self, v_table_to_map, (),
+        []<typename Trait>(Trait trait) {
+          using namespace anyxx;
+          return trait.concat(
+              std::ranges::empty_view<use_as<T, typename Trait::trait_t>>{});
+        }))*/,
+    (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
+     ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
+     ANY_TYPE(((Model)), map_return, void, (T))),
+    ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
@@ -3099,7 +3107,7 @@ struct v_table_to_map<Concrete, self const&> {
 template <typename, typename T>
 struct forward_trait_to_map {
   template <typename Sig>
-  static decltype(auto) forward(Sig&& sig) {
+  static Sig&& forward(Sig&& sig) {
     return std::forward<Sig>(sig);
   }
 };
