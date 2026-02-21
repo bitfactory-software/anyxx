@@ -17,6 +17,12 @@ TRAIT_EX(semigroup,
                      ([&x](auto const& r) { return x == r; }))),
          , , ())
 
+template <typename Model>
+concept is_semigroup_model = requires(Model l, Model r) {
+  { semigroup_model_map<Model>::op(l, r) } -> std::convertible_to<Model>;
+  { semigroup_model_map<Model>::eq(l, r) } -> std::convertible_to<bool>;
+};
+
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
   static auto op(V self, V r) {
@@ -50,7 +56,32 @@ TRAIT_EX_(
                        })),
     , ())
 
+template <typename Model>
+concept is_monoid_model = is_semigroup_model<Model> && requires {
+  requires requires(anyxx::trait<Model, monoid> p1) {
+    {
+      monoid_model_map<Model>::identity(p1)
+    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+  };
+  requires requires(anyxx::trait<Model, monoid> p0,
+                    anyxx::any_forward_range<Model, Model, anyxx::cref> p1) {
+    {
+      monoid_model_map<Model>::concat(p0, p1)
+    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+  };
+};
+
 TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
+
+template <typename Model>
+concept is_group_model = is_monoid_model<Model> && requires {
+  requires requires(Model p1) {
+    {
+      group_model_map<Model>::inverse(p1)
+    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+  };
+};
+
 }  // namespace algebra
 
 template <>
@@ -98,6 +129,8 @@ template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   using namespace anyxx;
+  static_assert(is_semigroup_model<P1>);
+  static_assert(is_monoid_model<P1>);
   test_monoid_traited(trait_as<monoid>(p1), r);
 }
 template <anyxx::is_any Monoid>
@@ -193,6 +226,7 @@ void test_group_traited(Group const& m,
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_group(P1 const& p1, std::ranges::forward_range auto const& r) {
+  static_assert(is_group_model<P1>);
   using any_group = typename anyxx::using_<P1>::template as<group>;
   test_group_traited<any_group>(any_group{p1}, r);
 }
@@ -269,7 +303,7 @@ struct algebra::semigroup_model_map<algebra_test::int_mul>
   static auto op(algebra_test::int_mul self, algebra_test::int_mul r) {
     using namespace anyxx;
     std::println("op {}", typeid(algebra_test::int_mul).name());
-    return self.value * r.value;
+    return algebra_test::int_mul{self.value * r.value};
   };
 };
 template <>

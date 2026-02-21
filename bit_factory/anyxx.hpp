@@ -2926,11 +2926,19 @@ struct trait_class {
   using value_t = Type;
 };
 
+/// Helper type alias template to get a \ref trait_class for a type
+/// dispatch. Has no data member, so it doesn't capture any value and has no
+/// size
+///
+/// \tparam Type The captured type
+template <typename Type, typename Trait>
+using trait = any<trait_class<Type>, Trait>;
+
 /// A object template to get a \ref trait_class object for a type as a \ref
 /// trait.
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
-static inline any<trait_class<Type>, Trait> trait_class_;
+static inline trait<Type, Trait> trait_class_;
 
 template <typename VTable, typename Concrete>
 VTable* v_table_instance() {
