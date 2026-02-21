@@ -18,8 +18,8 @@ namespace example_2b {
 
 // TRAIT_EX(TestTrait,,(ANY_FN_STATIC_DEF((), T, id, (), []() { return T{};
 // })),())
-TRAIT_EX(TestTrait, , (ANY_FN_STATIC_DEF((), T, id, (), [](auto) { return T{}; })),
-         ())
+TRAIT_EX(TestTrait, ,
+         (ANY_FN_STATIC_DEF((), T, id, (), [](auto) { return T{}; })), , ())
 
 TRAIT_EX(
     monoid,
@@ -67,6 +67,7 @@ TRAIT_EX(
                                return m1 + m2;
                              });
                        })),
+    ,
     (template <typename Box> friend bool operator==(
         anyxx::any<Box, monoid> const& l, anyxx::any<Box, monoid> const& r) {
       return l.equal_to(r);
@@ -218,7 +219,8 @@ TEST_CASE("static 2") {
 
   using_<int>::as<monoid> im{999};
   CHECK(im.identity() == trait_as<monoid>(0));
-  CHECK(im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)}) ==  trait_as<monoid>(3));
+  CHECK(im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)}) ==
+        trait_as<monoid>(3));
 
   using_<std::string>::as<monoid> sm{"XXX"};
   CHECK(sm.identity() == trait_as<monoid>(""s));

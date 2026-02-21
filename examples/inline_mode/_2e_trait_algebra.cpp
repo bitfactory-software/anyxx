@@ -15,7 +15,7 @@ TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
           ANY_OP_DEF(bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         , ())
+         , , ())
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -48,9 +48,9 @@ TRAIT_EX_(
                                return m1.op(m2);
                              });
                        })),
-    ())
+    , ())
 
-TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , ())
+TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
 }  // namespace algebra
 
 template <>
