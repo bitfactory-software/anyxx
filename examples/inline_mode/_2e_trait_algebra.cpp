@@ -17,18 +17,22 @@ TRAIT_EX(semigroup,
                      ([&x](auto const& r) { return x == r; }))),
          , , ())
 
+// template <typename Model>
+// concept is_semigroup_model =
+//     requires(Model x, semigroup_model_map<Model> model_map) {
+//       requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
+//         {
+//           model_map.op(x, p0)
+//         } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+//       };
+//       requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
+//         { model_map.eq(x, p0) } ->
+//         std::convertible_to<anyxx::map_return<Model, bool>>;
+//       };
+//     };
+
 template <typename Model>
-concept is_semigroup_model =
-    requires(Model x, semigroup_model_map<Model> model_map) {
-      requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
-        {
-          model_map.op(x, p0)
-        } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
-      };
-      requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
-        { model_map.eq(x, p0) } -> std::convertible_to<bool>;
-      };
-    };
+concept is_semigroup_model = test_is_semigroup<Model>;
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -128,6 +132,12 @@ struct algebra::monoid_model_map<std::string>
 
 namespace algebra_test {
 using namespace algebra;
+
+// TODO we need a possibility to opt out of the default model map for a type,
+// otherwise any type that is used in the test can be mapped to a any model!
+// struct not_mappepd {
+//};
+// static_assert(!is_semigroup_model<not_mappepd>);
 
 template <anyxx::is_any Monoid>
 void test_monoid_traited(Monoid const& m,

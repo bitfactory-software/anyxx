@@ -127,6 +127,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_FORWARD_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
 
+#define _detail_ANYXX_CONCEPT_ARG_LIST_H(b, c, f, ...)              \
+  c __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST_A _detail_PARENS( \
+                     b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_FORWARD_PARAM_LIST_A() _detail_ANYXX_FORWARD_PARAM_LIST_H
+#define _detail_ANYXX_FORWARD_PARAM_LIST(...) \
+  _detail_EXPAND_(_detail_ANYXX_FORWARD_PARAM_LIST_H(__VA_ARGS__))
+
 #define _detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP_H(b, c, param_type, ...)      \
   anyxx::v_table_to_map<Concrete, ANYXX_UNPAREN(param_type)>::                \
       template forward<decltype(c)>(std::forward<decltype(c)>(c)) __VA_OPT__( \
@@ -173,6 +180,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_PARAM_LIST_A() _detail_ANYXX_MAP_PARAM_LIST_H
 #define _detail_ANYXX_MAP_PARAM_LIST(...) \
   _detail_EXPAND_(_detail_ANYXX_MAP_PARAM_LIST_H(__VA_ARGS__))
+
+#define _detail_ANYXX_CONCEPT_PARAM_LIST_H(b, c, param_type, ...)     \
+  [[maybe_unused]] anyxx::concept_arg<T, ANYXX_UNPAREN(param_type)> c \
+  __VA_OPT__(, _detail_ANYXX_CONCEPT_PARAM_LIST_A _detail_PARENS(     \
+                   b, _detail_CONCAT(b, c), __VA_ARGS__))
+#define _detail_ANYXX_CONCEPT_PARAM_LIST_A() _detail_ANYXX_CONCEPT_PARAM_LIST_H
+#define _detail_ANYXX_CONCEPT_PARAM_LIST(...) \
+  _detail_EXPAND_(_detail_ANYXX_CONCEPT_PARAM_LIST_H(__VA_ARGS__))
 
 #define _detail_ANYXX_EXACT_PARAM_LIST_H(b, c, param_type, ...) \
   [[maybe_unused]] ANYXX_UNPAREN(param_type) c __VA_OPT__(      \
@@ -273,12 +288,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_CONCEPT_FN_H(l) _detail_ANYXX_CONCEPT_FN l
 #define _detail_ANYXX_CONCEPT_FN(overload, type, name, name_ext, exact_const, \
                                  const_, trait_body, ...)                     \
-  requires requires() static AYXFORCEDINLINE auto name(                       \
-               [[maybe_unused]] T const_& x __VA_OPT__(                       \
-                   , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))   \
-               -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                 \
-    return _detail_REMOVE_PARENS(trait_body)(                                 \
-        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
+  requires requires(                                                          \
+      __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \
+    {                                                                         \
+      model_map.name(model __VA_OPT__(                                        \
+          , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
+    } -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(type)>>;      \
   };
 
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
@@ -462,6 +477,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                          \
   }
 
+#define _detail_ANYXX_CONCEPT_FUNCTIONS(...)                   \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_CONCEPT_FN_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
@@ -520,7 +539,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                              model_map_template_params)> {};                   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  struct test_is##n {};                                                        \
+  concept test_is_##n = requires(T model, n##_model_map<T> model_map) {        \
+    requires anyxx::is_type_complete<T>;                                       \
+    _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                         \
+  };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
