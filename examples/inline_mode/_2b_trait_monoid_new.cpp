@@ -29,21 +29,21 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
 TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename Type>(Type) {
+                       []<typename Type>(Type type) {
                          using namespace anyxx;
-                         return anyxx::type_class_<T, monoid>.concat(
-                             std::ranges::empty_view<use_as<T, monoid>>{});
+                         return type.concat(
+                             std::ranges::empty_view<use_as<T, typename Type::trait_t>>{});
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       []<typename Type>(Type, const auto& r) {
+                       []<typename Type>(Type type, const auto& r) {
                          using namespace anyxx;
-                         auto id = type_class_<T, monoid>.identity();
+                         auto id = type.identity();
                          return std::ranges::fold_left(
                              r, id,
-                             [&](use_as<T, monoid> const& m1,
-                                 use_as<T, monoid> const& m2) {
+                             [&](use_as<T, typename Type::trait_t> const& m1,
+                                 use_as<T, typename Type::trait_t> const& m2) {
                                return m1.op(m2);
                              });
                        })),
