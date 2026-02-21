@@ -2965,12 +2965,16 @@ struct jacket_return<self> {
       using target_t =
           any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>;
       if constexpr (is_any<sig_t>) {
-          return target_t{get_proxy_value(std::forward<Sig>(sig))};
+        return target_t{get_proxy_value(std::forward<Sig>(sig))};
       } else {
         return target_t{std::forward<Sig>(sig)};
       }
     } else {
-      return Any{std::forward<Sig>(sig)};
+      if constexpr (is_any<sig_t> && !Any::dyn) {
+        return Any{get_proxy_value(sig)};
+      } else {
+        return Any{std::forward<Sig>(sig)};
+      }
     }
   }
 };

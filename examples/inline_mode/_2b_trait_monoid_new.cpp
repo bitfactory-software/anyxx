@@ -28,12 +28,13 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
 
 TRAIT_EX_(
     monoid, semigroup, ,
-    (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename Type>(Type type) {
-                         using namespace anyxx;
-                         return type.concat(
-                             std::ranges::empty_view<use_as<T, typename Type::trait_t>>{});
-                       }),
+    (ANY_FN_STATIC_DEF(
+         (), anyxx::self, identity, (),
+         []<typename Type>(Type type) {
+           using namespace anyxx;
+           return type.concat(
+               std::ranges::empty_view<use_as<T, typename Type::trait_t>>{});
+         }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
@@ -202,6 +203,8 @@ void test_group(Group const& m, std::ranges::forward_range auto const& r) {
 template <anyxx::is_any Group>
 void test_group_traited(
     Group const& g, [[maybe_unused]] std::ranges::forward_range auto const& r) {
+  using namespace anyxx;
+
   auto id = g.identity();
   static_assert(std::same_as<decltype(id), Group>);
   auto inv = g.inverse();
@@ -216,15 +219,17 @@ void test_group_traited(
   static_assert(std::same_as<type_2, Group>);
   auto c1 = g.op(id).op(g) == g.op(g).op(id);
   CHECK(c1);
-  // auto c2 = g.concat(r) ==
-  //           std::ranges::fold_left(
-  //               r, g.identity(),
-  //               [&](Group const& g1, [[maybe_unused]] Group const& g2) {
-  //                 return g1.op(g2);
-  //               });
-  // CHECK(c2);
+  auto g_concat = g.concat(r);
+  static_assert(std::same_as<decltype(g_concat), any<using_<int>, group>>);
+  auto c2 = g_concat ==
+            std::ranges::fold_left(
+                r, g.identity(),
+                [&](Group const& g1, [[maybe_unused]] Group const& g2) {
+                  return g1.op(g2);
+                });
+  CHECK(c2);
 
-  // test_monoid_traited(g, r);
+  test_monoid_traited(g, r);
 }
 }  // namespace algebra_test
 
