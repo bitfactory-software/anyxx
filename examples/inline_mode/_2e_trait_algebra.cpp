@@ -30,21 +30,21 @@ TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF(
          (), anyxx::self, identity, (),
-         []<typename Type>(Type type) {
+         []<typename Trait>(Trait trait) {
            using namespace anyxx;
-           return type.concat(
-               std::ranges::empty_view<use_as<T, typename Type::trait_t>>{});
+           return trait.concat(
+               std::ranges::empty_view<use_as<T, typename Trait::trait_t>>{});
          }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       []<typename Type>(Type type, const auto& r) {
+                       []<typename Trait>(Trait trait, const auto& r) {
                          using namespace anyxx;
-                         auto id = type.identity();
+                         auto id = trait.identity();
                          return std::ranges::fold_left(
                              r, id,
-                             [&](use_as<T, typename Type::trait_t> const& m1,
-                                 use_as<T, typename Type::trait_t> const& m2) {
+                             [&](use_as<T, typename Trait::trait_t> const& m1,
+                                 use_as<T, typename Trait::trait_t> const& m2) {
                                return m1.op(m2);
                              });
                        })),
@@ -221,12 +221,12 @@ void test_group_traited(
   CHECK(c1);
   auto g_concat = g.concat(r);
   static_assert(std::same_as<decltype(g_concat), any<using_<int>, group>>);
-  auto c2 = g_concat ==
-            std::ranges::fold_left(
-                r, g.identity(),
-                [&](Group const& g1, [[maybe_unused]] Group const& g2) {
-                  return g1.op(g2);
-                });
+  auto c2 =
+      g_concat == std::ranges::fold_left(
+                      r, g.identity(),
+                      [&](Group const& g1, [[maybe_unused]] Group const& g2) {
+                        return g1.op(g2);
+                      });
   CHECK(c2);
 
   auto g_concat_inverse = g_concat.inverse();
@@ -242,7 +242,7 @@ TEST_CASE("algebra group") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  auto g = type_class_<int, group>.identity();
+  auto g = trait_class_<int, group>.identity();
   static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
 
   anyxx::any<anyxx::using_<int>, algebra::monoid> m1{0};

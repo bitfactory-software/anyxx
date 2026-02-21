@@ -275,10 +275,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                  ...)                                      \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                              \
       _detail_REMOVE_PARENS(template_params)) static AYXFORCEDINLINE auto  \
-  name([[maybe_unused]] auto type_class __VA_OPT__(                        \
+  name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
       -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
-    return _detail_REMOVE_PARENS(body)(type_class __VA_OPT__(              \
+    return _detail_REMOVE_PARENS(body)(trait_class __VA_OPT__(             \
         , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
   };
 
@@ -314,7 +314,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
             _detail_REMOVE_PARENS(template_params))                            \
             name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
                 _detail_REMOVE_PARENS(template_params))(                       \
-                anyxx::type_class_<T, trait_t> __VA_OPT__(                     \
+                anyxx::trait_class_<T, trait_t> __VA_OPT__(                    \
                     , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(          \
                           a, _sig, __VA_ARGS__))),                             \
         std::forward<Self>(self));                                             \
@@ -1079,7 +1079,7 @@ struct missing_trait_error {
 template <typename Value>
 struct using_;
 template <typename Type>
-struct type_class;
+struct trait_class;
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -1279,7 +1279,7 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
 template <typename T>
 struct is_type_class_impl : std::false_type {};
 template <typename T>
-struct is_type_class_impl<type_class<T>> : std::true_type {};
+struct is_type_class_impl<trait_class<T>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_type_class =
     is_proxy<T> && is_type_class_impl<T>::value;
@@ -1485,7 +1485,7 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
 };
 
 template <typename Type>
-struct proxy_trait<type_class<Type>> : basic_proxy_trait<type_class<Type>> {
+struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
   using void_t = const_void;
   using static_dispatch_t = Type;
   static constexpr bool is_constructibile_from_const = true;
@@ -1510,7 +1510,7 @@ struct proxy_trait<type_class<Type>> : basic_proxy_trait<type_class<Type>> {
   static auto construct_type_in_place([[maybe_unused]] Args&&... args) {}
   template <typename Vx>
   static auto erase([[maybe_unused]] Vx&& v) {
-    return type_class<Vx>{};
+    return trait_class<Vx>{};
   }
 };
 
@@ -2886,15 +2886,15 @@ auto trait_as(T&& v) {
 ///
 /// \tparam Type The captured type
 template <typename Type>
-struct type_class {
+struct trait_class {
   using value_t = Type;
 };
 
-/// A object template to get a \ref type_class object for a type as a \ref
+/// A object template to get a \ref trait_class object for a type as a \ref
 /// trait.
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
-static inline any<type_class<Type>, Trait> type_class_;
+static inline any<trait_class<Type>, Trait> trait_class_;
 
 template <typename VTable, typename Concrete>
 VTable* v_table_instance() {
