@@ -459,6 +459,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_STATIC_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
+#define _detail_ANYXX_MAP_TYPES(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_TYPE_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_MAP_VARIANT_FUNCTIONS(...)                     \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_VARIANT_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
@@ -479,6 +483,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_JACKET_STATIC_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
+#define _detail_ANYXX_JACKET_TYPES(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_JACKET_TYPE_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME(n) \
   _detail_CONCAT(make_, _detail_CONCAT(n, _v_table))
 
@@ -494,6 +502,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   struct n##_default_model_map {                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
+    _detail_ANYXX_MAP_TYPES(typedefs);                                         \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
@@ -564,6 +573,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     _detail_ANYXX_FNS(l);                                                      \
     _detail_ANYXX_JACKET_STATIC_FNS(static_fns);                               \
+    _detail_ANYXX_JACKET_TYPES(typedefs);                                      \
     _detail_REMOVE_PARENS(decoration);                                         \
   };                                                                           \
                                                                                \
