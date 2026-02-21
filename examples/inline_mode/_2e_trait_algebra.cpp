@@ -18,16 +18,17 @@ TRAIT_EX(semigroup,
          , , ())
 
 template <typename Model>
-concept is_semigroup_model = requires(Model x) {
-  requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
-    {
-      semigroup_model_map<Model>::op(x, p0)
-    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
-  };
-  requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
-    { semigroup_model_map<Model>::eq(x, p0) } -> std::convertible_to<bool>;
-  };
-};
+concept is_semigroup_model =
+    requires(Model x, semigroup_model_map<Model> model_map) {
+      requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
+        {
+          model_map.op(x, p0)
+        } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+      };
+      requires requires(anyxx::concept_arg<Model, anyxx::self const&> p0) {
+        { model_map.eq(x, p0) } -> std::convertible_to<bool>;
+      };
+    };
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
