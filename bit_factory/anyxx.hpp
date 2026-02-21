@@ -270,6 +270,16 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
 
+#define _detail_ANYXX_CONCEPT_FN_H(l) _detail_ANYXX_CONCEPT_FN l
+#define _detail_ANYXX_CONCEPT_FN(overload, type, name, name_ext, exact_const,  \
+                               const_, trait_body, ...)                      \
+  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
+      -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
+    return _detail_REMOVE_PARENS(trait_body)(                                \
+        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+  };
+
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
 #define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, \
                                  ...)                                      \
@@ -507,6 +517,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
                              model_map_template_params)> {};                   \
+                                                                               \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  struct test_is##n {};                                                        \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
