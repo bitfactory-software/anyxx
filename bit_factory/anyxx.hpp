@@ -3023,30 +3023,40 @@ struct jacket_return<self&> {
 
 TRAIT_EX(translate_sig, , ,
          (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
-          ANY_TYPE(((AnyValue)), v_table_return, void, (T))),
+          ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
+          ANY_TYPE(((Model)), map_return, void, (T))),
          ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
   template <typename AnyValue>
   using v_table_return = AnyValue;
+  template <typename Model>
+  using map_return = Model;
 };
 ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
   template <typename AnyValue>
-  using v_table_return = int; // dummy
+  using v_table_return = int;  // dummy
+  template <typename Model>
+  using map_return = Model const&;
 };
 ANY_MODEL_MAP((self&), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<mutref>;
   template <typename AnyValue>
-  using v_table_return = int; // dummy
+  using v_table_return = int;  // dummy
+  template <typename Model>
+  using map_return = Model&;
 };
 template <typename AnyValue, typename Param>
 using v_table_param = TRAIT_TYPE(v_table_param, Param, translate_sig, AnyValue);
 template <typename AnyValue, typename Return>
-using v_table_return =  TRAIT_TYPE(v_table_return, Return, translate_sig, AnyValue);
+using v_table_return = TRAIT_TYPE(v_table_return, Return, translate_sig,
+                                  AnyValue);
+template <typename Model, typename Param>
+using map_return = TRAIT_TYPE(map_return, Param, translate_sig, Model);
 
 template <typename T>
 struct handle_self_ref_return {
@@ -3085,21 +3095,6 @@ struct v_table_to_map<Concrete, self const&> {
     return *unerase_cast<Concrete>(sig);
   }
 };
-
-template <typename T, typename Param>
-struct translate_map_return {
-  using type = Param;
-};
-template <typename T>
-struct translate_map_return<T, self> {
-  using type = T;
-};
-template <typename T>
-struct translate_map_return<T, self&> {
-  using type = T&;
-};
-template <typename T, typename Param>
-using map_return = typename translate_map_return<T, Param>::type;
 
 template <typename, typename T>
 struct forward_trait_to_map {
