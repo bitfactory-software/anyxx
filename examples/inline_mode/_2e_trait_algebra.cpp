@@ -234,6 +234,7 @@ void test_group_traited(
   CHECK(id == g_identy);
 
   test_monoid_traited(g, r);
+  test_monoid(g, r);
 }
 }  // namespace algebra_test
 
@@ -252,6 +253,41 @@ TEST_CASE("algebra group") {
   test_group((1), std::vector{2, 3});
   test_group<any<using_<int>, group>>(
       trait_as<group>(1), std::vector<any<using_<int>, group>>{{2}, {3}});
+}
+
+namespace algebra_test {
+struct int_mul {
+  int value = 0;
+  friend auto operator<=>(int_mul const&, int_mul const&) = default;
+};
+}  // namespace algebra_test
+template <>
+struct algebra::semigroup_model_map<algebra_test::int_mul>
+    : algebra::semigroup_default_model_map<algebra_test::int_mul> {
+  static auto op(algebra_test::int_mul self, algebra_test::int_mul r) {
+    using namespace anyxx;
+    std::println("op {}", typeid(algebra_test::int_mul).name());
+    return self.value * r.value;
+  };
+};
+template <>
+struct algebra::monoid_model_map<algebra_test::int_mul>
+    : algebra::monoid_default_model_map<algebra_test::int_mul> {
+  static auto identity(auto) {
+    std::println("identy {}", typeid(algebra_test::int_mul).name());
+    return algebra_test::int_mul{1};
+  };
+};
+
+TEST_CASE("algebra int_mul monoid") {
+  using namespace algebra;
+  using namespace anyxx;
+  using namespace algebra_test;
+
+  auto id = trait_class_<int_mul, monoid>.identity();
+  static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
+
+  test_monoid(int_mul{1}, std::vector{int_mul{2}, int_mul{3}});
 }
 
 #endif
