@@ -1081,12 +1081,6 @@ struct using_;
 template <typename Type>
 struct type_class;
 
-template <typename T>
-struct is_type_class_impl : std::false_type {};
-template <typename T>
-struct is_type_class_impl<type_class<T>> : std::true_type {};
-template <typename T>
-inline constexpr bool is_type_class = is_type_class_impl<T>::value;
 
 using const_void = void const*;
 using mutable_void = void*;
@@ -1282,6 +1276,14 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
   { proxy_trait<E>::clone_from(void_data, v_table) };
   { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
 };
+
+template <typename T>
+struct is_type_class_impl : std::false_type {};
+template <typename T>
+struct is_type_class_impl<type_class<T>> : std::true_type {};
+template <typename T>
+inline constexpr bool is_type_class =
+    is_proxy<T> && is_type_class_impl<T>::value;
 
 using emtpty_trait_v_table = any_v_table;
 struct base_trait {
