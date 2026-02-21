@@ -229,6 +229,10 @@ void test_group_traited(
                 });
   CHECK(c2);
 
+  auto g_concat_inverse = g_concat.inverse();
+  auto g_identy = g_concat_inverse.op(g_concat);
+  CHECK(id == g_identy);
+
   test_monoid_traited(g, r);
 }
 }  // namespace algebra_test
