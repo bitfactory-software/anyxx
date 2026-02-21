@@ -18,9 +18,15 @@ TRAIT_EX(semigroup,
          , , ())
 
 template <typename Model>
-concept is_semigroup_model = requires(Model l, Model r) {
-  { semigroup_model_map<Model>::op(l, r) } -> std::convertible_to<Model>;
-  { semigroup_model_map<Model>::eq(l, r) } -> std::convertible_to<bool>;
+concept is_semigroup_model = requires(Model x) {
+  requires requires(Model const& p0) {
+    {
+      semigroup_model_map<Model>::op(x, p0)
+    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+  };
+  requires requires(Model const& p0) {
+    { semigroup_model_map<Model>::eq(x, p0) } -> std::convertible_to<bool>;
+  };
 };
 
 template <typename V>
