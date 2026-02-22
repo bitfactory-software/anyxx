@@ -303,7 +303,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   requires requires(                                                          \
       __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \
     {                                                                         \
-      model_map.name(trait_class __VA_OPT__(                                   \
+      model_map.name(trait_class __VA_OPT__(                                  \
           , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
     }                                                                         \
     -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(return_type)>>; \
@@ -1386,6 +1386,9 @@ using emtpty_trait_v_table = any_v_table;
 struct base_trait {
   using v_table_t = emtpty_trait_v_table;
 };
+
+template <typename Model>
+concept is_base_trait_model = true;
 
 /// Requirements for a trait type
 template <typename T>
