@@ -629,8 +629,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  concept test_is_##n = requires(T model, anyxx::trait<T, n> trait_class,      \
-                                 n##_model_map<T> model_map) {                 \
+  concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) = requires(           \
+      T model, anyxx::trait<T, n> trait_class, n##_model_map<T> model_map) {   \
     requires anyxx::is_type_complete<T>;                                       \
     _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                         \
         _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                     \

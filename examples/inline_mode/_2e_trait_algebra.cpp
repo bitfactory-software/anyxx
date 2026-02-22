@@ -17,8 +17,8 @@ TRAIT_EX(semigroup,
                      ([&x](auto const& r) { return x == r; }))),
          , , ())
 
-template <typename Model>
-concept is_semigroup_model = test_is_semigroup<Model>;
+//template <typename Model>
+//concept is_semigroup_model = test_is_semigroup<Model>;
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -53,14 +53,14 @@ TRAIT_EX_(
                        })),
     , ())
 
-template <typename Model>
-concept is_monoid_model = is_semigroup_model<Model> && test_is_monoid<Model>;
+//template <typename Model>
+//concept is_monoid_model = is_semigroup_model<Model> && test_is_monoid<Model>;
 
 TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
 
 
-template <typename Model>
-concept is_group_model = is_semigroup_model<Model> && test_is_group<Model>;
+//template <typename Model>
+//concept is_group_model = is_semigroup_model<Model> && test_is_group<Model>;
 
 }  // namespace algebra
 
