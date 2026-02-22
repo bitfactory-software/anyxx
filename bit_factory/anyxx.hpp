@@ -544,12 +544,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                              model_map_template_params)> {};                   \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  concept test_is_##n = requires(T model, n##_model_map<T> model_map) {        \
-    requires anyxx::is_type_complete<T>;                                       \
-    _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                         \
-  };                                                                           \
-                                                                               \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
   struct n##                                                                   \
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
@@ -616,6 +610,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     _detail_ANYXX_JACKET_STATIC_FNS(static_fns);                               \
     _detail_ANYXX_JACKET_TYPES(typedefs);                                      \
     _detail_REMOVE_PARENS(decoration);                                         \
+  };                                                                           \
+                                                                               \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  concept test_is_##n = requires(T model, n##_model_map<T> model_map) {        \
+    requires anyxx::is_type_complete<T>;                                       \
+    _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                         \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
