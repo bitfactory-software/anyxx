@@ -23,15 +23,15 @@ TRAIT_EX(TestTrait, ,
 
 TRAIT_EX(
     monoid,
-    (ANY_FN_DEF(anyxx::self, id, (), const, []() { return T{}; }),
-     ANY_OP_DEF(anyxx::self, +, op, (anyxx::self const&), const,
+    (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
+     ANY_OP_DEF(public, anyxx::self, +, op, (anyxx::self const&), const,
                 [&x](auto const& r) {
                   std::println("op-default {}", typeid(T).name());
                   auto self = anyxx::trait_as<monoid>(x);
                   return self |
                          (std::vector{anyxx::trait_as<monoid>(r)});  // NOLINT
                 }),
-     ANY_OP_DEF(anyxx::self, |, concatX,
+     ANY_OP_DEF(public, anyxx::self, |, concatX,
                 ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                            anyxx::cref> const&)),
                 const,
@@ -45,7 +45,7 @@ TRAIT_EX(
                       self,
                       [&](auto const& m1, auto const& m2) { return m1 + m2; });
                 }),
-     ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
+     ANY_FN_DEF(public, bool, equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; }))),
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        [](auto) {

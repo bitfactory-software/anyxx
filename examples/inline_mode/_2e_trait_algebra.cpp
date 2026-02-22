@@ -13,7 +13,7 @@ namespace algebra {
 
 TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
-          ANY_OP_DEF(bool, ==, eq, (anyxx::self const&), const,
+          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
          , , ())
 

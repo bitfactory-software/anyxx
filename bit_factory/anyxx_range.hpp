@@ -7,7 +7,7 @@ namespace anyxx {
 TRAIT_TEMPLATE_EX_(
     ((Base)), incrementable, Base, (),
     (ANY_OP(anyxx::self &, ++, (), ),
-     ANY_FN_DEF(anyxx::self, post_inc, (), , ([&x]() { return x++; }))),
+     ANY_FN_DEF(public, anyxx::self, post_inc, (), , ([&x]() { return x++; }))),
     , , (template <typename Self> auto operator++(this Self &&self, int) {
       return std::forward<Self>(self).post_inc();
     }))
@@ -31,11 +31,11 @@ TRAIT_TEMPLATE_EX_(
 ANY_TEMPLATE_EX(
     ((ValueType), (Reference)), forward_iterator,
     (ANY_OP(anyxx::self &, ++, (), ),
-     ANY_FN_DEF(anyxx::self, post_inc, (), , ([&x]() { return x++; })),
+     ANY_FN_DEF(public, anyxx::self, post_inc, (), , ([&x]() { return x++; })),
      ANY_OP(Reference, *, (), const),
-     ANY_OP_DEF(bool, ==, equal_to, (anyxx::self const &), const,
+     ANY_OP_DEF(public, bool, ==, equal_to, (anyxx::self const &), const,
                 ([&x](auto const &r) { return x == r; })),
-     ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &), const,
+     ANY_OP_DEF(public, bool, !=, not_equal_to, (anyxx::self const &), const,
                 ([&x](auto const &r) { return x != r; }))),
     anyxx::val, , ,
     (using iterator_category = std::forward_iterator_tag;

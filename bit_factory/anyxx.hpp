@@ -276,8 +276,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_OPTIONAL_TEMPLATE(...) __VA_OPT__(template)
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
-#define _detail_ANYXX_MAP_IMPL(overload, type, name, name_ext, exact_const,  \
-                               const_, trait_body, ...)                      \
+#define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \
+                               exact_const, const_, trait_body, ...)         \
   static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
@@ -286,8 +286,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define _detail_ANYXX_CONCEPT_FN_H(l) _detail_ANYXX_CONCEPT_FN l
-#define _detail_ANYXX_CONCEPT_FN(overload, type, name, name_ext, exact_const, \
-                                 const_, trait_body, ...)                     \
+#define _detail_ANYXX_CONCEPT_FN(access, overload, type, name, name_ext,      \
+                                 exact_const, const_, trait_body, ...)        \
   requires requires(                                                          \
       __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \
     {                                                                         \
@@ -390,54 +390,56 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 //    B>>;
 
 #define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
-#define _detail_ANYXX_MAP_VARIANT_IMPL(overload, type, name, name_ext,       \
-                                       exact_const, const_, trait_body, ...) \
-  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
-      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
-      -> decltype(auto) {                                                    \
-    return std::visit(                                                       \
-        anyxx::overloads{                                                    \
-            [&]<typename V>(V&& v) {                                         \
-              return x_model_map<std::decay_t<V>>::name(                     \
-                  std::forward<V>(v) __VA_OPT__(, )                          \
-                      __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(           \
-                          a, _sig, __VA_ARGS__)));                           \
-            },                                                               \
-            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any) {             \
-              return std::forward<Any>(any).name(__VA_OPT__(                 \
-                  _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
-            }},                                                              \
-        x);                                                                  \
+#define _detail_ANYXX_MAP_VARIANT_IMPL(access, overload, type, name, name_ext, \
+                                       exact_const, const_, trait_body, ...)   \
+  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(    \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \
+      -> decltype(auto) {                                                      \
+    return std::visit(                                                         \
+        anyxx::overloads{                                                      \
+            [&]<typename V>(V&& v) {                                           \
+              return x_model_map<std::decay_t<V>>::name(                       \
+                  std::forward<V>(v) __VA_OPT__(, )                            \
+                      __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(             \
+                          a, _sig, __VA_ARGS__)));                             \
+            },                                                                 \
+            [&]<anyxx::is_any Any>([[maybe_unused]] Any&& any) {               \
+              return std::forward<Any>(any).name(__VA_OPT__(                   \
+                  _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+            }},                                                                \
+        x);                                                                    \
   };
 
-#define _detail_ANYXX_FUNCTION_PTR_DECL(overload, type, name, name_ext,     \
-                                        exact_const, const_, map_body, ...) \
-  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name)(          \
-      void const_* __VA_OPT__(                                              \
+#define _detail_ANYXX_FUNCTION_PTR_DECL(access, overload, type, name,  \
+                                        name_ext, exact_const, const_, \
+                                        map_body, ...)                 \
+  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name)(     \
+      void const_* __VA_OPT__(                                         \
           , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
-#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                           \
-    overload, type, name, name_ext, exact_const, const_, map_body, ...) \
-  name = [](void const_* _vp __VA_OPT__(                                \
-             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__))) \
-      -> anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> {      \
-    if constexpr (std::same_as<anyxx::self&, ANYXX_UNPAREN(type)>) {    \
-      model_map{}.name(                                                 \
-          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
-              __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(       \
-                  a, _sig, __VA_ARGS__)));                              \
-      return anyxx::handle_self_ref_return<ANYXX_UNPAREN(type)>{}();    \
-    } else {                                                            \
-      return model_map{}.name(                                          \
-          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )  \
-              __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(       \
-                  a, _sig, __VA_ARGS__)));                              \
-    }                                                                   \
+#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(access, overload, type, name,  \
+                                             name_ext, exact_const, const_, \
+                                             map_body, ...)                 \
+  name = [](void const_* _vp __VA_OPT__(                                    \
+             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))     \
+      -> anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> {          \
+    if constexpr (std::same_as<anyxx::self&, ANYXX_UNPAREN(type)>) {        \
+      model_map{}.name(                                                     \
+          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
+              __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(           \
+                  a, _sig, __VA_ARGS__)));                                  \
+      return anyxx::handle_self_ref_return<ANYXX_UNPAREN(type)>{}();        \
+    } else {                                                                \
+      return model_map{}.name(                                              \
+          *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )      \
+              __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(           \
+                  a, _sig, __VA_ARGS__)));                                  \
+    }                                                                       \
   };
 
 #define _detail_ANYXX_FN_H(l) _detail_ANYXX_FN l
-#define _detail_ANYXX_FN(overload, type, name, name_ext, exact_const, const_,  \
-                         map_body, ...)                                        \
+#define _detail_ANYXX_FN(access, overload, type, name, name_ext, exact_const,  \
+                         const_, map_body, ...)                                \
   overload template <typename Self>                                            \
   AYXFORCEDINLINE decltype(auto) name_ext(this Self&& self __VA_OPT__(         \
       , ) __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))   \
@@ -841,10 +843,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_FN_(...) (__VA_ARGS__)
 #define ANY_OVERLOAD(name) using base_t::name;
 
-#define __detail_ANYXX_MEMBER_FN(overload, ret, name, name_ext, exact_const, \
-                                 const_, params)                             \
-  ANY_FN_(overload, ret, name, name_ext, exact_const, const_, (x.name_ext),  \
-          _detail_EXPAND params)
+#define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \
+                                 exact_const, const_, params)           \
+  ANY_FN_(access, overload, ret, name, name_ext, exact_const, const_,   \
+          (x.name_ext), _detail_EXPAND params)
 
 /// \addtogroup fn_macros ANY_FN... and ANY_OP macros
 /// \brief Macros to define \ref trait's and \ref any's functions and operators
@@ -882,7 +884,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
 #define ANY_FN_PURE(ret, name, params, const_)            \
-  ANY_FN_(, ret, name, name, false, const_,               \
+  ANY_FN_(public, , ret, name, name, false, const_,       \
           (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
           _detail_EXPAND params)
 
@@ -890,21 +892,22 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
 #define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
-  ANY_FN_(, ret, name, name, true, const_,                \
+  ANY_FN_(public, , ret, name, name, true, const_,        \
           (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
           _detail_EXPAND params)
 
 /// \def ANY_FN_DEF
 /// \brief TRAIT function with default behavior.
 /// \ingroup trait_macros
-#define ANY_FN_DEF(ret, name, params, const_, ...)         \
-  ANY_FN_(, ret, name, name, false, const_, (__VA_ARGS__), \
+#define ANY_FN_DEF(access, ret, name, params, const_, ...)         \
+  ANY_FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 
 /// \def ANY_FN_DEF_EXACT
 /// \brief TRAIT function with default behavior
-#define ANY_FN_DEF_EXACT(ret, name, params, const_, ...) \
-  ANY_FN_(, ret, name, name, true, const_, (__VA_ARGS__), _detail_EXPAND params)
+#define ANY_FN_DEF_EXACT(access, ret, name, params, const_, ...)  \
+  ANY_FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \
+          _detail_EXPAND params)
 
 /// \def ANY_FN
 /// \brief TRAIT function whose default behavior is to call an equally named
@@ -918,14 +921,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// )
 /// \endcode
 #define ANY_FN(ret, name, params, const_) \
-  __detail_ANYXX_MEMBER_FN(, ret, name, name, false, const_, params)
+  __detail_ANYXX_MEMBER_FN(public, , ret, name, name, false, const_, params)
 
 /// \def ANY_FN_EXACT
 /// \brief TRAIT function whose default behavior is to call an equally named
 /// member function of the model
 /// \ingroup trait_macros
 #define ANY_FN_EXACT(ret, name, params, const_) \
-  __detail_ANYXX_MEMBER_FN(, ret, name, name, true, const_, params)
+  __detail_ANYXX_MEMBER_FN(public, , ret, name, name, true, const_, params)
 
 /// \def ANY_FN_OVERLOAD
 /// \brief TRAIT function whose default behavior is to call an equally named
@@ -933,8 +936,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_FN_OVERLOAD(ret, name, params, const_)                             \
-  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, false, const_, \
-                           params)
+  __detail_ANYXX_MEMBER_FN(public, ANY_OVERLOAD(name), ret, name, name, false, \
+                           const_, params)
 
 /// \def ANY_FN_OVERLOAD_EXACT
 /// \brief TRAIT function whose default behavior is to call an equally named
@@ -942,16 +945,17 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_FN_OVERLOAD_EXACT(ret, name, params, const_)                      \
-  __detail_ANYXX_MEMBER_FN(ANY_OVERLOAD(name), ret, name, name, true, const_, \
-                           params)
+  __detail_ANYXX_MEMBER_FN(public, ANY_OVERLOAD(name), ret, name, name, true, \
+                           const_, params)
 
 /// \def ANY_OP_MAP_NAMED
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model and a programmer-chosen name in the map.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_FN(, ret, name, operator op, false, const_, params)
+#define ANY_OP_MAP_NAMED(ret, op, name, params, const_)                     \
+  __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, false, const_, \
+                           params)
 
 /// \def ANY_OP
 /// \brief TRAIT operator with default behavior is to call the related operator
@@ -963,12 +967,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_DEF(ret, op, name, params, const_, ...)            \
-  ANY_FN_(, ret, name, operator op, false, const_, (__VA_ARGS__), \
+#define ANY_OP_DEF(access, ret, op, name, params, const_, ...)            \
+  ANY_FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_) \
-  __detail_ANYXX_MEMBER_FN(, ret, name, operator op, true, const_, params)
+  __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, true, const_, params)
 
 /// \def ANY_OP_DEF
 /// \brief TRAIT operator with default behavior.
@@ -983,8 +987,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_EXACT_DEF(ret, op, name, params, const_, ...)     \
-  ANY_FN_(, ret, name, operator op, true, const_, (__VA_ARGS__), \
+#define ANY_OP_EXACT_DEF(access, ret, op, name, params, const_, ...)     \
+  ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 
 /// \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
