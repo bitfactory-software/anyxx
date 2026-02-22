@@ -297,6 +297,18 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     } -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(type)>>;      \
   };
 
+#define _detail_ANYXX_CONCEPT_STATIC_FN_H(l) _detail_ANYXX_CONCEPT_STATIC_FN l
+#define _detail_ANYXX_CONCEPT_STATIC_FN(template_params, return_type, name,   \
+                                        body, ...)                            \
+  requires requires(                                                          \
+      __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \
+    {                                                                         \
+      model_map.name(trait_class __VA_OPT__(                                   \
+          , _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
+    }                                                                         \
+    -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(return_type)>>; \
+  };
+
 #define _detail_ANYXX_MAP_STATIC_H(l) _detail_ANYXX_MAP_STATIC l
 #define _detail_ANYXX_MAP_STATIC(template_params, return_type, name, body, \
                                  ...)                                      \
@@ -486,6 +498,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_CONCEPT_FN_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
+#define _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(...)                   \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_CONCEPT_STATIC_FN_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_MAP_FUNCTIONS(...)                     \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
@@ -613,9 +629,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  concept test_is_##n = requires(T model, n##_model_map<T> model_map) {        \
+  concept test_is_##n = requires(T model, anyxx::trait<T, n> trait_class,      \
+                                 n##_model_map<T> model_map) {                 \
     requires anyxx::is_type_complete<T>;                                       \
     _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                         \
+        _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                     \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
@@ -1017,9 +1035,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief TRAIT operator with default behavior.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...)      \
-  ANY_FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true, const_, \
-          (__VA_ARGS__), _detail_EXPAND params)
+#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...) \
+  ANY_FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true,    \
+          const_, (__VA_ARGS__), _detail_EXPAND params)
 
 /// \def ANY_FN_STATIC_PURE
 /// \brief Static TRAIT function, which must be provided by the model. This

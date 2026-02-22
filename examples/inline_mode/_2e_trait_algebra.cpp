@@ -67,31 +67,37 @@ TRAIT_EX_(
                        })),
     , ())
 
+//template <typename Model>
+//concept is_monoid_model = is_semigroup_model<Model> && requires {
+//  requires requires(anyxx::trait<Model, monoid> p1) {
+//    {
+//      monoid_model_map<Model>::identity(p1)
+//    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+//  };
+//  requires requires(anyxx::trait<Model, monoid> p0,
+//                    anyxx::any_forward_range<Model, Model, anyxx::cref> p1) {
+//    {
+//      monoid_model_map<Model>::concat(p0, p1)
+//    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+//  };
+//};
+
 template <typename Model>
-concept is_monoid_model = is_semigroup_model<Model> && requires {
-  requires requires(anyxx::trait<Model, monoid> p1) {
-    {
-      monoid_model_map<Model>::identity(p1)
-    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
-  };
-  requires requires(anyxx::trait<Model, monoid> p0,
-                    anyxx::any_forward_range<Model, Model, anyxx::cref> p1) {
-    {
-      monoid_model_map<Model>::concat(p0, p1)
-    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
-  };
-};
+concept is_monoid_model = is_semigroup_model<Model> && test_is_monoid<Model>;
 
 TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
 
+//template <typename Model>
+//concept is_group_model = is_monoid_model<Model> && requires {
+//  requires requires(Model p1) {
+//    {
+//      group_model_map<Model>::inverse(p1)
+//    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
+//  };
+//};
+
 template <typename Model>
-concept is_group_model = is_monoid_model<Model> && requires {
-  requires requires(Model p1) {
-    {
-      group_model_map<Model>::inverse(p1)
-    } -> std::convertible_to<anyxx::map_return<Model, anyxx::self>>;
-  };
-};
+concept is_group_model = is_semigroup_model<Model> && test_is_group<Model>;
 
 }  // namespace algebra
 
