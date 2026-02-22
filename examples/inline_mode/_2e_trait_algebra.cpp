@@ -133,11 +133,8 @@ struct algebra::monoid_model_map<std::string>
 namespace algebra_test {
 using namespace algebra;
 
-// TODO we need a possibility to opt out of the default model map for a type,
-// otherwise any type that is used in the test can be mapped to a any model!
-// struct not_mappepd {
-//};
-// static_assert(!is_semigroup_model<not_mappepd>);
+struct not_mappepd {};
+static_assert(!is_semigroup_model<not_mappepd>);
 
 template <anyxx::is_any Monoid>
 void test_monoid_traited(Monoid const& m,
