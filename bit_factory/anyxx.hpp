@@ -674,7 +674,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                       (T), l, static_fns, typedefs, decoration)
 
 /// \addtogroup trait_macros TRAIT... and ANY_ macros
-/// \brief Macros to define \ref trait 's and \ref any '
+/// \brief Macros to define \ref trait 's and \ref any 's
 ///
 /// Name conventions:
 /// - TRAIT: macro to define the functional behavior of an \ref any
