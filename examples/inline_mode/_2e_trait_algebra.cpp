@@ -15,10 +15,11 @@ TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         , , ())
+         ,  (ANY_TYPE((), value_type, anyxx::undefined, (anyxx::undefined)))
+         , ())
 
-//template <typename Model>
-//concept is_semigroup_model = test_is_semigroup<Model>;
+// template <typename Model>
+// concept is_semigroup_model = test_is_semigroup<Model>;
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -27,6 +28,7 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
     std::println("op {}", typeid(V).name());
     return self + r;
   };
+//  using value_type = V;
 };
 
 TRAIT_EX_(
@@ -53,14 +55,13 @@ TRAIT_EX_(
                        })),
     , ())
 
-//template <typename Model>
-//concept is_monoid_model = is_semigroup_model<Model> && test_is_monoid<Model>;
+// template <typename Model>
+// concept is_monoid_model = is_semigroup_model<Model> && test_is_monoid<Model>;
 
 TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
 
-
-//template <typename Model>
-//concept is_group_model = is_semigroup_model<Model> && test_is_group<Model>;
+// template <typename Model>
+// concept is_group_model = is_semigroup_model<Model> && test_is_group<Model>;
 
 }  // namespace algebra
 
@@ -303,6 +304,7 @@ TEST_CASE("algebra int_mul monoid") {
   using namespace anyxx;
   using namespace algebra_test;
 
+  static_assert(!is_semigroup_model<int_mul>);
   auto id = trait_class_<int_mul, monoid>.identity();
   static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
 
