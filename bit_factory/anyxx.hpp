@@ -623,6 +623,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using static_dispatch_map_t = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(   \
         static_dispatch_template_params)>;                                     \
                                                                                \
+    template <typename M>                                                      \
+    constexpr static bool modeled_by();                                        \
+                                                                               \
     _detail_ANYXX_FNS(l);                                                      \
     _detail_ANYXX_JACKET_STATIC_FNS(static_fns);                               \
     _detail_ANYXX_JACKET_TYPES(typedefs);                                      \
@@ -630,11 +633,21 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };                                                                           \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
-  concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) = requires(           \
-      T model, anyxx::trait<T, n> trait_class, n##_model_map<T> model_map) {   \
-    requires anyxx::is_type_complete<T>;                                       \
-    _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                         \
-        _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                     \
+  concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
+      requires(T model, anyxx::trait<T, n> trait_class,                        \
+               n##_model_map<T> model_map) {                                   \
+        requires anyxx::is_type_complete<T>;                                   \
+        _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                     \
+            _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                 \
+      } &&                                                                     \
+      BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                               \
+          base_template_params)::template modeled_by<T>();                     \
+                                                                               \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
+      any_template_params) template <typename M>                               \
+  constexpr bool n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \
+      any_template_params)::modeled_by() {                                     \
+    return _detail_CONCAT(_detail_CONCAT(is_, n), _model)<M>;                  \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
@@ -1388,6 +1401,10 @@ inline constexpr bool is_type_class =
 using emtpty_trait_v_table = any_v_table;
 struct base_trait {
   using v_table_t = emtpty_trait_v_table;
+  template <typename>
+  static constexpr bool modeled_by() {
+    return true;
+  }
 };
 
 template <typename Model>
