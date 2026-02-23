@@ -905,14 +905,23 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// --- no suffix: function whose default behavior is to call an equally named
 /// member function of the model
 ///
+/// Some FN/OP forms allow an access specifier. This specifier means
+/// - private: this FN/OP must be specified in every model_map. No default
+/// available.
+/// - protected: this FN/OP must be specified in every model_map. A default
+/// implementation is available in ..._default_model_map.
+/// - public: this FN/OP can be specified in every model_map. If it is not
+/// specified there, then the default implementation from ..._default_model_map
+/// is used.
+///
 /// syntax:
 ///
-/// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXCACT]
-///     (return_type, name, (param_list),[_const]
+/// ANY_FN[_OVERLOAD]([_PURE]|[_DEF])[_EXCACT][]
+///     ([access], return_type, name, (param_list),[_const]
 ///     [, default_behavior])
 ///
 /// ANY_OP[_OVERLOAD][_MAP_NAMED]([_DEF]|[_EXACT_DEF]
-///     (return_type, operator [,map_name], (param_list), [_const]
+///     ([access], return_type, operator [,map_name], (param_list), [_const]
 ///     [, default_behavior])
 ///
 ///  @{
