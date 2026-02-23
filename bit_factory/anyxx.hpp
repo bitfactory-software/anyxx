@@ -545,7 +545,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define TRAIT_META_FUNCTION(                                                   \
     any_template_params, model_map_template_params, concrete_template_params,  \
     static_dispatch_template_params, variant_model_map_template_params, n,     \
-    BASE, base_template_params, l, static_fns, typedefs, decoration)           \
+    BASE, base_template_params, base_model_map_template_params, l, static_fns, \
+    typedefs, decoration)                                                      \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
                                                                                \
@@ -657,7 +658,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define __detail_ANYXX_TRAIT_(t, n, BASE, l, static_fns, typedefs, decoration) \
   TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
-                      l, static_fns, typedefs, decoration)
+                      (T), l, static_fns, typedefs, decoration)
 
 /// \addtogroup trait_macros TRAIT... and ANY_ macros
 /// \brief Macros to define \ref trait 's and \ref any '
@@ -731,8 +732,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       __detail_ANYXX_ADD_HEAD((Concrete), _detail_REMOVE_PARENS(t)),           \
       __detail_ANYXX_ADD_HEAD((StaticDispatchType), _detail_REMOVE_PARENS(t)), \
       __detail_ANYXX_ADD_HEAD((V), _detail_REMOVE_PARENS(t)), n, base,         \
-      _detail_REMOVE_PARENS(base_template_types), l, static_fns, typedefs,     \
-      decoration)
+      _detail_REMOVE_PARENS(base_template_types),                              \
+      __detail_ANYXX_ADD_HEAD((T),                                             \
+                              _detail_REMOVE_PARENS(base_template_types)),     \
+      l, static_fns, typedefs, decoration)
 
 /// \def TRAIT_TEMPLATE_EX
 /// \brief TRAIT template with decoration.
