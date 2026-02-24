@@ -19,7 +19,9 @@ namespace example_2b {
 // TRAIT_EX(TestTrait,,(ANY_FN_STATIC_DEF((), T, id, (), []() { return T{};
 // })),())
 TRAIT_EX(TestTrait, ,
-         (ANY_FN_STATIC_DEF((), T, id, (), []<typename Trait>(auto) { return T{}; })), , ())
+         (ANY_FN_STATIC_DEF((), T, id, (),
+                            []<typename Trait>(auto) { return T{}; })),
+         , ())
 
 TRAIT_EX(
     monoid,
@@ -48,22 +50,16 @@ TRAIT_EX(
      ANY_FN_DEF(public, bool, equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; }))),
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename Trait>(auto) {
-                         using monoid_t =
-                             typename anyxx::using_<T>::template as<monoid>;
-                         return monoid_t{T{}}.concat(
-                             std::ranges::empty_view<monoid_t>{});
+                       []<typename Trait>(auto trait) {
+                         return trait.concat(std::ranges::empty_view<Trait>{});
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       []<typename Trait>(auto, const auto& r) {
-                         using monoid_t =
-                             typename anyxx::using_<T>::template as<monoid>;
-                         auto id = monoid_t{T{}}.identity();
+                       []<typename Trait>(auto trait, const auto& r) {
+                         auto id = trait.identity();
                          return std::ranges::fold_right(
-                             r, id,
-                             [&](monoid_t const& m1, monoid_t const& m2) {
+                             r, id, [&](Trait const& m1, Trait const& m2) {
                                return m1 + m2;
                              });
                        })),
