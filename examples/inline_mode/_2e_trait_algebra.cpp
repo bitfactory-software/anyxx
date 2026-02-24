@@ -15,11 +15,7 @@ TRAIT_EX(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         ,  (ANY_TYPE((), value_type, anyxx::undefined, (anyxx::undefined)))
-         , ())
-
-// template <typename Model>
-// concept is_semigroup_model = test_is_semigroup<Model>;
+         , (ANY_TYPE((), value_type, anyxx::undefined, (anyxx::undefined))), ())
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -28,7 +24,8 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
     std::println("op {}", typeid(V).name());
     return self + r;
   };
-//  using value_type = V;
+  using value_type =
+      V;  // just for demonstration, not actually used in the trait
 };
 
 TRAIT_EX_(
@@ -55,13 +52,7 @@ TRAIT_EX_(
                        })),
     , ())
 
-// template <typename Model>
-// concept is_monoid_model = is_semigroup_model<Model> && test_is_monoid<Model>;
-
 TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
-
-// template <typename Model>
-// concept is_group_model = is_semigroup_model<Model> && test_is_group<Model>;
 
 }  // namespace algebra
 
@@ -142,8 +133,6 @@ void test_monoid_traited(Monoid const& m,
                 });
   CHECK(c2);
 }
-
-// struct not_mappepd{ int v; };
 
 }  // namespace algebra_test
 //
@@ -289,6 +278,8 @@ struct algebra::semigroup_model_map<algebra_test::int_mul>
     std::println("op {}", typeid(algebra_test::int_mul).name());
     return algebra_test::int_mul{self.value * r.value};
   };
+  using value_type = algebra_test::int_mul;  // just for demonstration, not
+                                             // actually used in the trait
 };
 template <>
 struct algebra::monoid_model_map<algebra_test::int_mul>
@@ -304,9 +295,9 @@ TEST_CASE("algebra int_mul monoid") {
   using namespace anyxx;
   using namespace algebra_test;
 
-  static_assert(!is_semigroup_model<int_mul>);
   auto id = trait_class_<int_mul, monoid>.identity();
   static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
+  static_assert(!is_group_model<int_mul>);
 
   test_monoid(int_mul{1}, std::vector{int_mul{2}, int_mul{3}});
 }

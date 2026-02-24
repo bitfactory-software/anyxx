@@ -319,12 +319,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define _detail_ANYXX_CONCEPT_TYPE_H(l) _detail_ANYXX_CONCEPT_TYPE l
-#define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_)    \
-  !std::same_as<typename decltype(model_map)::_detail_ANYXX_OPTIONAL_TEMPLATE( \
-                    _detail_REMOVE_PARENS(template_params))                    \
-                    name _detail_ANYXX_DUMMY_INT_PARAM_LIST(                   \
-                        ANYXX_UNPAREN(template_params)) ,                      \
-                anyxx::undefined>;
+#define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_)   \
+  requires !std::same_as<                                                     \
+      typename decltype(model_map)::_detail_ANYXX_OPTIONAL_TEMPLATE(          \
+          _detail_REMOVE_PARENS(template_params)) name                        \
+          _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \
+      anyxx::undefined>;
 
 //_detail_ANYXX_CONCEPT_TYPE_H((), value_type, anyxx::undefined,
 //(anyxx::undefined))
