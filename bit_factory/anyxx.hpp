@@ -338,8 +338,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
       -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
-    return _detail_REMOVE_PARENS(body)(trait_class __VA_OPT__(             \
-        , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
+    return _detail_REMOVE_PARENS(body).                                    \
+    operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
+        trait_class __VA_OPT__(                                            \
+            , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
   };
 
 //_detail_ANYXX_MAP_STATIC(((A), (B)), decltype(auto), forward,

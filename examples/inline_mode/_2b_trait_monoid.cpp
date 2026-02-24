@@ -19,7 +19,7 @@ namespace example_2b {
 // TRAIT_EX(TestTrait,,(ANY_FN_STATIC_DEF((), T, id, (), []() { return T{};
 // })),())
 TRAIT_EX(TestTrait, ,
-         (ANY_FN_STATIC_DEF((), T, id, (), [](auto) { return T{}; })), , ())
+         (ANY_FN_STATIC_DEF((), T, id, (), []<typename Trait>(auto) { return T{}; })), , ())
 
 TRAIT_EX(
     monoid,
@@ -48,7 +48,7 @@ TRAIT_EX(
      ANY_FN_DEF(public, bool, equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; }))),
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       [](auto) {
+                       []<typename Trait>(auto) {
                          using monoid_t =
                              typename anyxx::using_<T>::template as<monoid>;
                          return monoid_t{T{}}.concat(
@@ -57,7 +57,7 @@ TRAIT_EX(
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       [](auto, const auto& r) {
+                       []<typename Trait>(auto, const auto& r) {
                          using monoid_t =
                              typename anyxx::using_<T>::template as<monoid>;
                          auto id = monoid_t{T{}}.identity();
