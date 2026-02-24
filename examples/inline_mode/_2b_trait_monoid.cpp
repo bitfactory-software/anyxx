@@ -16,13 +16,6 @@ namespace anyxx {
 
 namespace example_2b {
 
-// TRAIT_EX(TestTrait,,(ANY_FN_STATIC_DEF((), T, id, (), []() { return T{};
-// })),())
-TRAIT_EX(TestTrait, ,
-         (ANY_FN_STATIC_DEF((), T, id, (),
-                            []<typename Trait>(auto) { return T{}; })),
-         , ())
-
 TRAIT_EX(
     monoid,
     (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
@@ -199,16 +192,7 @@ TEST_CASE("example 2b monoid d") {
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
 }
 
-TEST_CASE("static 1") {
-  using namespace example_2b;
-  using namespace std::string_literals;
-  using namespace anyxx;
-
-  using_<int>::as<TestTrait> t{0};
-  CHECK(t.id() == 0);
-}
-
-TEST_CASE("static 2") {
+TEST_CASE("example 2b monoid static ") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
