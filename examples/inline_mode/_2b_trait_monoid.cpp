@@ -16,47 +16,33 @@ namespace anyxx {
 
 namespace example_2b {
 
-TRAIT_EX(
-    monoid,
-    (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
-     ANY_OP_DEF(public, anyxx::self, +, op, (anyxx::self const&), const,
-                [&x](auto const& r) {
-                  std::println("op-default {}", typeid(T).name());
-                  auto self = anyxx::trait_as<monoid>(x);
-                  return self |
-                         (std::vector{anyxx::trait_as<monoid>(r)});  // NOLINT
-                }),
-     ANY_OP_DEF(public, anyxx::self, |, concatX,
-                ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                           anyxx::cref> const&)),
-                const,
-                [&x](const auto& r) {
-                  std::println("concat-default {}", typeid(T).name());
-                  auto self = anyxx::trait_as<monoid>(x);
-                  return std::ranges::fold_left(
-                      r | std::views::transform([](auto const& y) {
-                        return anyxx::trait_as<monoid>(y);
-                      }),
-                      self,
-                      [&](auto const& m1, auto const& m2) { return m1 + m2; });
-                }),
-     ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                ([&x](auto const& r) { return x == r; }))),
-    (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename Trait>(auto trait) {
-                         return trait.concat(std::ranges::empty_view<Trait>{});
-                       }),
-     ANY_FN_STATIC_DEF((), anyxx::self, concat,
-                       ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                  anyxx::cref> const&)),
-                       []<typename Trait>(auto trait, const auto& r) {
-                         auto id = trait.identity();
-                         return std::ranges::fold_right(
-                             r, id, [&](Trait const& m1, Trait const& m2) {
-                               return m1 + m2;
-                             });
-                       })),
-    , ())
+TRAIT_EX(monoid,
+         (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
+          ANY_OP_DEF(public, anyxx::self, +, op, (anyxx::self const&), const,
+                     [&x](auto const& r) {
+                       std::println("op-default {}", typeid(T).name());
+                       auto self = anyxx::trait_as<monoid>(x);
+                       return self | (std::vector{anyxx::trait_as<monoid>(
+                                         r)});  // NOLINT
+                     }),
+          ANY_OP_DEF(public, anyxx::self, |, concatX,
+                     ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                                anyxx::cref> const&)),
+                     const,
+                     [&x](const auto& r) {
+                       std::println("concat-default {}", typeid(T).name());
+                       auto self = anyxx::trait_as<monoid>(x);
+                       return std::ranges::fold_left(
+                           r | std::views::transform([](auto const& y) {
+                             return anyxx::trait_as<monoid>(y);
+                           }),
+                           self, [&](auto const& m1, auto const& m2) {
+                             return m1 + m2;
+                           });
+                     }),
+          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
+                     ([&x](auto const& r) { return x == r; }))),
+         , , ())
 
 template <typename Box = anyxx::val>
 using any_monoid = anyxx::any<Box, monoid>;
@@ -186,23 +172,6 @@ TEST_CASE("example 2b monoid d") {
   using namespace anyxx;
 
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
-}
-
-TEST_CASE("example 2b monoid static ") {
-  using namespace example_2b;
-  using namespace std::string_literals;
-  using namespace anyxx;
-
-  using_<int>::as<monoid> im{999};
-  CHECK(im.identity() == trait_as<monoid>(0));
-  CHECK(im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)}) ==
-        trait_as<monoid>(3));
-
-  using_<std::string>::as<monoid> sm{"XXX"};
-  CHECK(sm.identity() == trait_as<monoid>(""s));
-  CHECK(
-      sm.concat(std::vector{trait_as<monoid>("A"s), trait_as<monoid>("B"s)}) ==
-      trait_as<monoid>("AB"s));
 }
 
 #endif
