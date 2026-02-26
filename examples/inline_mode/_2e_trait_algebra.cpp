@@ -130,8 +130,17 @@ void test_monoid_traited(Monoid const& m,
   CHECK(c2);
 }
 
+template <class C>
+concept can_call_op = requires(anyxx::any_trait_class<C, monoid> class_,
+    anyxx::using_<C>::template as<monoid> object_) {
+    { class_.op(object_) };
+};
+
+static_assert(!can_call_op<int>);
+
 }  // namespace algebra_test
 //
+
 TEST_CASE("algebra basics") {
   using namespace anyxx;
   using namespace algebra;
@@ -294,6 +303,7 @@ TEST_CASE("algebra int_mul monoid") {
   auto id = trait_class_<int_mul, monoid>.identity();
   static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
   static_assert(!is_group_model<int_mul>);
+  // trait_class_<int_mul, monoid>.op(id); // should not compile, because trait_class_ is not an object. 
 
   test_monoid(int_mul{1}, std::vector{int_mul{2}, int_mul{3}});
 }

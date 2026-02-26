@@ -660,7 +660,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
-      requires(T model, anyxx::trait<T, n> trait_class,                        \
+      requires(T model, anyxx::any_trait_class<T, n> trait_class,              \
                n##_model_map<T> model_map) {                                   \
         requires anyxx::is_type_complete<T>;                                   \
         _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                     \
@@ -1399,6 +1399,7 @@ template <typename Proxy>
 struct basic_proxy_trait {
   inline static constexpr bool is_weak = false;
   inline static constexpr bool is_lifetime_bound = false;
+  inline static constexpr bool is_object = true;
 
   static void move_to(auto& to, [[maybe_unused]] auto, auto&& from,
                       [[maybe_unused]] auto) {
@@ -1429,6 +1430,7 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
   { proxy_trait<E>::clone_from(void_data, v_table) };
   { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
+  { proxy_trait<E>::is_object } -> std::convertible_to<bool>;
 };
 
 template <typename T>
@@ -1506,6 +1508,9 @@ template <typename Proxy>
 concept is_const_data = is_proxy<Proxy> && is_const_void<data_void<Proxy>>;
 
 template <typename Proxy>
+concept is_object_proxy = is_proxy<Proxy> && proxy_trait<Proxy>::is_object;
+
+template <typename Proxy>
 concept is_weak_data = is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
 
 template <typename Proxy>
@@ -1536,7 +1541,8 @@ constexpr inline bool is_const_correct_call_for_proxy_and_self(
 
 template <typename CALL, typename Proxy, bool SelfIsConst, bool Exact>
 concept const_correct_call_for_proxy_and_self =
-    !is_weak_data<Proxy> && voidness<CALL> && is_proxy<Proxy> &&
+    is_object_proxy<Proxy> && !is_weak_data<Proxy> && voidness<CALL> &&
+    is_proxy<Proxy> &&
     is_const_correct_call_for_proxy_and_self(
         is_const_void<CALL>, is_const_data<Proxy>, SelfIsConst, Exact);
 
@@ -1651,6 +1657,7 @@ struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
   using void_t = const_void;
   using static_dispatch_t = Type;
   static constexpr bool is_constructibile_from_const = true;
+  static constexpr bool is_object = false;
   template <typename ConstructedWith>
   struct is_constructibile_from {
     static constexpr bool value = true;
@@ -2348,6 +2355,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
 };
 
 static_assert(is_proxy<val>);
+static_assert(is_object_proxy<val>);
 
 // --------------------------------------------------------------------------------
 // meta data
@@ -3058,13 +3066,13 @@ struct trait_class {
 ///
 /// \tparam Type The captured type
 template <typename Type, typename Trait>
-using trait = any<trait_class<Type>, Trait>;
+using any_trait_class = any<trait_class<Type>, Trait>;
 
 /// A object template to get a \ref trait_class object for a type as a \ref
 /// trait.
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
-static inline trait<Type, Trait> trait_class_;
+static inline any_trait_class<Type, Trait> trait_class_;
 
 template <typename VTable, typename Concrete>
 VTable* v_table_instance() {
