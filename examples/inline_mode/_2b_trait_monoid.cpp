@@ -23,8 +23,6 @@ TRAIT_EX(
                 [&x](auto const& r) {
                   std::println("op-default {}", typeid(T).name());
                   auto self = anyxx::trait_as<monoid>(x);
-                  // return self |
-                  // std::ranges::empty_view<anyxx::using_<T>::as<monoid>>{};
                   return self |
                          (std::vector{anyxx::trait_as<monoid>(r)});  // NOLINT
                 }),
