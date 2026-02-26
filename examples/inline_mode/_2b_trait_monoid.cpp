@@ -23,6 +23,8 @@ TRAIT_EX(
                 [&x](auto const& r) {
                   std::println("op-default {}", typeid(T).name());
                   auto self = anyxx::trait_as<monoid>(x);
+                  // return self |
+                  // std::ranges::empty_view<anyxx::using_<T>::as<monoid>>{};
                   return self |
                          (std::vector{anyxx::trait_as<monoid>(r)});  // NOLINT
                 }),
@@ -40,7 +42,7 @@ TRAIT_EX(
                       self,
                       [&](auto const& m1, auto const& m2) { return m1 + m2; });
                 }),
-     ANY_FN_DEF(public, bool, equal_to, (anyxx::self const&), const,
+     ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; }))),
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []<typename Trait>(auto trait) {
@@ -56,11 +58,7 @@ TRAIT_EX(
                                return m1 + m2;
                              });
                        })),
-    ,
-    (template <typename Box> friend bool operator==(
-        anyxx::any<Box, monoid> const& l, anyxx::any<Box, monoid> const& r) {
-      return l.equal_to(r);
-    }))
+    , ())
 
 template <typename Box = anyxx::val>
 using any_monoid = anyxx::any<Box, monoid>;
