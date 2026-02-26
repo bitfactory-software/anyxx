@@ -18,14 +18,14 @@ namespace example_2b {
 
 TRAIT_EX(monoid,
          (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
-          ANY_OP_DEF(public, anyxx::self, +, op, (anyxx::self const&), const,
+          ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
                      [&x](auto const& r) {
                        std::println("op-default {}", typeid(T).name());
                        auto self = anyxx::trait_as<monoid>(x);
-                       return self | (std::vector{anyxx::trait_as<monoid>(
+                       return self.concat(std::vector{anyxx::trait_as<monoid>(
                                          r)});  // NOLINT
                      }),
-          ANY_OP_DEF(public, anyxx::self, |, concatX,
+          ANY_FN_DEF(public, anyxx::self, concat,
                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                 anyxx::cref> const&)),
                      const,
@@ -37,7 +37,7 @@ TRAIT_EX(monoid,
                              return anyxx::trait_as<monoid>(y);
                            }),
                            self, [&](auto const& m1, auto const& m2) {
-                             return m1 + m2;
+                             return m1.op(m2);
                            });
                      }),
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
@@ -50,14 +50,9 @@ using any_monoid = anyxx::any<Box, monoid>;
 }  // namespace example_2b
 
 ANY_MODEL_MAP((int), example_2b::monoid) {
-  static int concatX(int self, auto const& r) {
+  static int concat(int self, auto const& r) {
     std::println("concat {}", typeid(int).name());
     return std::ranges::fold_left(r, self,
-                                  [&](int m1, int m2) { return m1 + m2; });
-  };
-  static auto concat(auto, auto const& r) {
-    std::println("concat static {}", typeid(int).name());
-    return std::ranges::fold_left(r, 0,
                                   [&](int m1, int m2) { return m1 + m2; });
   };
 };
@@ -66,10 +61,6 @@ ANY_MODEL_MAP((std::string), example_2b::monoid) {
   static std::string op(std::string const& self, std::string const& r) {
     std::println("op {}", typeid(std::string).name());
     return self + r;
-  };
-  static auto identity(auto) {
-    std::println("identity static {}", typeid(std::string).name());
-    return std::string{};
   };
 };
 
@@ -95,16 +86,16 @@ void test_monoid_traited(
     Monoid const& m,
     anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
   auto id = m.id();
-  using type_1 = decltype(m + id + m);
-  using type_2 = decltype(m + (m + id));
+  using type_1 = decltype(m.op(id.op(m)));
+  using type_2 = decltype(m.op(m.op(id)));
   static_assert(std::same_as<type_1, type_2>);
   static_assert(std::same_as<type_1, Monoid>);
-  auto c1 = m + id + m == m + m + id;
+  auto c1 = m.op(id.op(m)) == m.op(m.op(id));
   CHECK(c1);
-  auto c2 = (m | r) ==
+  auto c2 = (m.concat(r)) ==
             std::ranges::fold_left(
                 r, m, [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
-                  return m1 + m2;
+                  return m1.op(m2);
                 });
   CHECK(c2);
 }
