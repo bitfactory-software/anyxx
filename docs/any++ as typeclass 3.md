@@ -161,7 +161,7 @@ int main() {
 
 That is a pretty good technique for complie time customization points.
 But how good is it compared to other C++ compile time customization point techniques, like SFINAE, tag dispatching, or specialization and the original C++0x proposal for Concept Maps?
-Here we can take look into Barry Revzin proposal "We need a language mechanism for customization points" [P2279R0](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2279r0.html#c0x-concepts) 
+Here we can take look into Barry Revzin proposal ["We need a language mechanism for customization points" P2279R0](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2279r0.html#c0x-concepts) 
 and use his framework for comparing different techniques for compile time customization points.
 
 <img width="736" height="331" alt="image" src="https://github.com/user-attachments/assets/7ed7c557-3378-4e09-a884-ccb3bde54c9f" />
@@ -186,7 +186,7 @@ To be fair, the P2279R0 propsal is from 2021, and Steve's technique is from 2024
 
 A fine example, of how new, compareable samll language features support each other to enable new powerfull abstractions.
 
-I feel its slowly time, to \ref subpage4 "bring Any++ into the picture", and check if it brings further improvements.
+I feel its slowly time, to \ref subpage4 "bring Any++ into the picture", and check if there are further improvements.
 
 
 
