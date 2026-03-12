@@ -1,21 +1,24 @@
 \page main Any++, C++0x Concepts, Rust Traits, Haskell Type Classes
 
-This Article shows, how the library Any++ has envolved into a type class system, and how it compares to C++0x Concepts, Rust traits, and Haskell type classes.
+Any++'s traits can not only used for external polymorphism via dynamic type erasure, but also for static dispatch and customization points.
+Just like traits in Rust. 
 
+The more general term for this pattern is type class.
+To illustrate the concept, we will use the "Hello World" of type classes, the "Monoid", as an example.
 
-To illustrate the concept, we will use the "Hello World" of type classes, the "Monoid",
-as an example.
-
-Steve Dovney's work on "Concept Maps using C++23 Library Tech" clears the way for us
-to show how Any++ can close the last usability gaps for Concept Maps and bring us a
-good aproximisation of checked templates in C++23.
-
-We will finish with a look into an onging ISO C++ proposal, which when accepted,
-get us to full checked templates.
+If you need a little primer or an overview to this theme, please refer this sections:
 
 - \subpage subpage1 
 - \subpage subpage2 
 - \subpage subpage3 
+
+
+
+
+
+
+We will finish with a look into an onging ISO C++ proposal, which when accepted,
+get us to full checked templates.
 - \subpage subpage4 
 - \subpage subpage5 
 - \subpage subpage6 

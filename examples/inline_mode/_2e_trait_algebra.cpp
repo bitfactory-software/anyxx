@@ -2,12 +2,9 @@
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx_range.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <list>
 #include <print>
 #include <string>
 #include <vector>
-
-#ifdef __cpp_lib_ranges_fold
 
 namespace algebra {
 
@@ -16,17 +13,6 @@ TRAIT_EX(semigroup,
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
          , (ANY_TYPE((), value_type, anyxx::undefined, (anyxx::undefined))), ())
-
-template <typename V>
-struct semigroup_plus_model_map : semigroup_default_model_map<V> {
-  static auto op(V self, V r) {
-    using namespace anyxx;
-    std::println("op {}", typeid(V).name());
-    return self + r;
-  };
-  using value_type =
-      V;  // just for demonstration, not actually used in the trait
-};
 
 TRAIT_EX_(
     monoid, semigroup, ,
@@ -50,12 +36,21 @@ TRAIT_EX_(
 
 TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
 
-}  // namespace algebra
+template <typename V>
+struct semigroup_plus_model_map : semigroup_default_model_map<V> {
+  static auto op(V self, V r) {
+    using namespace anyxx;
+    std::println("op {}", typeid(V).name());
+    return self + r;
+  };
+  using value_type =
+      V;  // just for demonstration, not actually used in the trait
+};
 
 template <>
-struct algebra::semigroup_model_map<int> : semigroup_plus_model_map<int> {};
+struct semigroup_model_map<int> : semigroup_plus_model_map<int> {};
 template <>
-struct algebra::monoid_model_map<int> : algebra::monoid_default_model_map<int> {
+struct monoid_model_map<int> : monoid_default_model_map<int> {
   static auto concat(auto, auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
@@ -67,8 +62,8 @@ struct algebra::monoid_model_map<int> : algebra::monoid_default_model_map<int> {
   };
 };
 template <>
-struct algebra::group_model_map<int> : algebra::group_default_model_map<int>,
-                                       algebra::monoid_model_map<int> {
+struct group_model_map<int> : group_default_model_map<int>,
+                                       monoid_model_map<int> {
   static auto inverse(int self) {
     using namespace anyxx;
     return -self;
@@ -76,16 +71,18 @@ struct algebra::group_model_map<int> : algebra::group_default_model_map<int>,
 };
 
 template <>
-struct algebra::semigroup_model_map<std::string>
+struct semigroup_model_map<std::string>
     : semigroup_plus_model_map<std::string> {};
 template <>
-struct algebra::monoid_model_map<std::string>
-    : algebra::monoid_default_model_map<std::string> {
+struct monoid_model_map<std::string>
+    : monoid_default_model_map<std::string> {
   static auto identity(auto) {
     std::println("identy {}", typeid(std::string).name());
     return std::string{};
   };
 };
+
+}  // namespace algebra
 
 namespace algebra_test {
 using namespace algebra;
@@ -259,10 +256,10 @@ TEST_CASE("algebra group") {
   static_assert(std::same_as<decltype(g), any<using_<int>, group>>);
 
   {
-    anyxx::any<anyxx::using_<int>, algebra::monoid> m1{0};
-    anyxx::any<anyxx::using_<int>, algebra::monoid> m2{std::move(m1)};
-    anyxx::any<anyxx::using_<int>, algebra::group> g1{0};
-    anyxx::any<anyxx::using_<int>, algebra::group> g2{std::move(g1)};
+    anyxx::any<anyxx::using_<int>, monoid> m1{0};
+    anyxx::any<anyxx::using_<int>, monoid> m2{std::move(m1)};
+    anyxx::any<anyxx::using_<int>, group> g1{0};
+    anyxx::any<anyxx::using_<int>, group> g2{std::move(g1)};
   }
   test_group((1), std::vector{2, 3});
   test_group<any<using_<int>, group>>(
@@ -307,5 +304,3 @@ TEST_CASE("algebra int_mul monoid") {
 
   test_monoid(int_mul{1}, std::vector{int_mul{2}, int_mul{3}});
 }
-
-#endif
