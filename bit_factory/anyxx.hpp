@@ -1035,7 +1035,7 @@ struct observeable_rtti_v_table : observeable_v_table {
           return static_is_derived_from(from);
         }) {}
 
-  ::type_info const& (*get_type_info)() noexcept;
+  std::type_info const& (*get_type_info)() noexcept;
   bool (*is_derived_from_)(const std::type_info&);
 
   static bool static_is_derived_from(const std::type_info& from) {
