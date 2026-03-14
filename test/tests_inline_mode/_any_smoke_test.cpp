@@ -255,6 +255,6 @@ TEST_CASE("dynamic any unique") {
   REQUIRE_THAT(unerased_circle->perimeter(),
                Catch::Matchers::WithinAbs(77.2, 77.3));
 
-  static_assert(borrowable_from<cref, unique>);
+  static_assert(borrowable_from<cref, unique, observeable_v_table>);
   print_any_shape_co(s1);
 }

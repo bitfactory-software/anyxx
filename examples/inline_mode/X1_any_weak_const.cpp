@@ -36,7 +36,7 @@ TEST_CASE("example X1/ weak cppreference") {
   {
     auto any_widget_shared_const =
         any_widget<shared>{std::make_shared<widget_a>()};
-    static_assert(borrowable_from<weak, shared>);
+    static_assert(borrowable_from<weak, shared, any_widget<shared>::v_table_t>);
     any_widget_weak = any_widget_shared_const;
     observe(1);
   }

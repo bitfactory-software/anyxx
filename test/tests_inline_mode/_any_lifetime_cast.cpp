@@ -20,6 +20,7 @@ struct X {
 };
 
 ANY(stringable, (ANY_OP(std::string, (), (), const)), )
+TRAIT_(slick_stringable, observeable_trait, (ANY_OP(std::string, (), (), const)))
 
 }  // namespace
 
@@ -31,6 +32,17 @@ TEST_CASE("any bool operator") {
     any<cref, base_trait> b{i};
     bool not_null = b;
     CHECK(not_null);
+}
+
+TEST_CASE("slick_stringable observeable_v_table") {
+    //auto f = []{return "Hello World";};
+    X f("hallo");
+    any<cref, slick_stringable> a{f};
+    bool is_null = !a;
+    CHECK(!is_null);
+    //bool derived = is_derived_from(typeid(slick_stringable), a);
+    //CHECK(!derived);
+    CHECK(a() == f());
 }
 
 TEST_CASE("any lifetime cast") {
