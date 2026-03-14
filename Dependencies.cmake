@@ -24,9 +24,9 @@ function(anyxx_setup_dependencies)
     cpmaddpackage("gh:catchorg/Catch2@3.8.1")
   endif()
 
-  if(NOT TARGET tools::tools)
-    cpmaddpackage("gh:lefticus/tools#update_build_system")
-  endif()
+  #if(NOT TARGET tools::tools)
+  #  cpmaddpackage("gh:lefticus/tools#update_build_system")
+  #endif()
 
   unset(CMAKE_FOLDER)
 

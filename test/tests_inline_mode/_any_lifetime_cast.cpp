@@ -23,6 +23,16 @@ ANY(stringable, (ANY_OP(std::string, (), (), const)), )
 
 }  // namespace
 
+TEST_CASE("any bool operator") {
+    any<cref, base_trait> a;
+    bool is_null = !a;
+    CHECK(is_null);
+    int i = 0;
+    any<cref, base_trait> b{i};
+    bool not_null = b;
+    CHECK(not_null);
+}
+
 TEST_CASE("any lifetime cast") {
   const any_stringable<shared> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");

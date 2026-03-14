@@ -8,7 +8,6 @@ struct A {
 };
 
 using namespace anyxx;
-using namespace anyxx;
 
 namespace {
 template <typename CONST_OBSERVER, typename TYPED_MUTABLE_STRING_OBSERVER>
@@ -51,8 +50,9 @@ TEST_CASE("data_erase_unerase/unique") {
     REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);
   }
   {
-    auto u1 = erased<unique>(std::make_unique<A>(// NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
-        "hallo"));  
+    auto u1 = erased<unique>(
+        std::make_unique<A>(  // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
+            "hallo"));
     REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");  // NOLINT
   }
 }

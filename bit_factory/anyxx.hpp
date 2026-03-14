@@ -2734,7 +2734,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_;
+  proxy_t proxy_ {};
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2886,9 +2886,20 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     requires(
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
 
-  operator decltype(auto)() const
+  explicit operator bool() const {
+    if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
+      if constexpr (is_type_class<proxy_t>) {
+        return true;
+      } else {
+        return proxy_.value_;
+      }
+    } else {
+      auto p = get_proxy_ptr(*this);
+      return p != nullptr;
+    }
+  }
 
-  {
+  operator decltype(auto)() const {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       if constexpr (is_type_class<proxy_t>) {
         return nullptr;
