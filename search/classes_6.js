@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['unique_0',['unique',['../structanyxx_1_1unique.html',1,'anyxx']]],
-  ['using_5f_1',['using_',['../structanyxx_1_1using__.html',1,'anyxx']]]
+  ['observeable_5frtti_5fv_5ftable_0',['observeable_rtti_v_table',['../structanyxx_1_1observeable__rtti__v__table.html',1,'anyxx']]],
+  ['observeable_5fv_5ftable_1',['observeable_v_table',['../structanyxx_1_1observeable__v__table.html',1,'anyxx']]]
 ];

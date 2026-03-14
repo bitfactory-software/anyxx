@@ -15,13 +15,17 @@ var hierarchy =
     [ "anyxx::any&lt; using_&lt; Value &gt;, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; val &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; val, Trait &gt;", "classanyxx_1_1any.html", null ],
-    [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", null ],
     [ "anyxx::dispatch&lt; R, Args &gt;", "classanyxx_1_1dispatch.html", null ],
     [ "anyxx::dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", null ],
     [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
     [ "anyxx::hook&lt; R, Args &gt;", "classanyxx_1_1hook.html", null ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
+    [ "anyxx::observeable_v_table", "structanyxx_1_1observeable__v__table.html", [
+      [ "anyxx::observeable_rtti_v_table", "structanyxx_1_1observeable__rtti__v__table.html", [
+        [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", null ]
+      ] ]
+    ] ],
     [ "anyxx::unique", "structanyxx_1_1unique.html", null ],
     [ "anyxx::using_&lt; Value &gt;", "structanyxx_1_1using__.html", null ],
     [ "anyxx::val", "unionanyxx_1_1val.html", null ],
