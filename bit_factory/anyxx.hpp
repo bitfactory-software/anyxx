@@ -2387,7 +2387,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_;
+  proxy_t proxy_ {};
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2536,6 +2536,15 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   friend inline To unchecked_downcast_to(From from)
     requires(
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
+
+  explicit operator bool() const {
+    if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
+        return proxy_.value_;
+    } else {
+      auto p = get_proxy_ptr(*this);
+      return p != nullptr;
+    }
+  }
 
   operator decltype(auto)() const {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
