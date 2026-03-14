@@ -157,6 +157,8 @@ requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_
 template&lt;is_any Other&gt; <br />
 requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_dyn&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
 <tr class="memitem:a38240c3b6e4642e8ea739fe61fcb1b02 template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
+<tr class="memitem:ada83581559a4deff6b5e622fff3922a4" id="r_ada83581559a4deff6b5e622fff3922a4"><td class="memItemLeft"><a id="ada83581559a4deff6b5e622fff3922a4" name="ada83581559a4deff6b5e622fff3922a4"></a>
+&#160;</td><td class="memItemRight"><b>operator bool</b> () const</td></tr>
 <tr class="memitem:ad0dcc838d43a4f900710d8374b1e9ff0" id="r_ad0dcc838d43a4f900710d8374b1e9ff0"><td class="memItemLeft"><a id="ad0dcc838d43a4f900710d8374b1e9ff0" name="ad0dcc838d43a4f900710d8374b1e9ff0"></a>
 operator decltype&#160;</td><td class="memItemRight"><b>auto</b> () const</td></tr>
 </table><table class="memberdecls">
@@ -168,7 +170,7 @@ static constexpr bool&#160;</td><td class="memItemRight"><b>dyn</b> = is_dyn&lt;
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
 <tr class="memitem:a61d842d73058d0f6767a607d35fc8d61" id="r_a61d842d73058d0f6767a607d35fc8d61"><td class="memItemLeft"><a id="a61d842d73058d0f6767a607d35fc8d61" name="a61d842d73058d0f6767a607d35fc8d61"></a>
-proxy_t&#160;</td><td class="memItemRight"><b>proxy_</b></td></tr>
+proxy_t&#160;</td><td class="memItemRight"><b>proxy_</b> {}</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
