@@ -25,7 +25,8 @@ TEST_CASE("_interface_cast") {
     REQUIRE(s == "3.140000");
 
     static_assert(borrowable_from<any_get_value_i<cref>::proxy_t,
-                                  any_get_value_i<cref>::proxy_t>);
+                                  any_get_value_i<cref>::proxy_t,
+                                  any_get_value_i<cref>::v_table_t>);
 
     any_get_value_i<cref> i1 =
         *borrow_as<any_get_value_i<cref>>(to_string_i_co);
@@ -39,8 +40,7 @@ TEST_CASE("_interface_cast") {
           std::string(typeid(unused_i_v_table).name()));
   }
   {
-    any_to_string_i<shared> i0{
-        test::component_base::get_to_string_i_sc(3.14)};
+    any_to_string_i<shared> i0{test::component_base::get_to_string_i_sc(3.14)};
     REQUIRE(i0.to_string() == "3.140000");
     std::cout << "shared i0: " << i0.to_string() << "\n";
 
@@ -64,19 +64,18 @@ TEST_CASE("_interface_cast") {
     {
       any_get_value_i<cref> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
-      auto svc =
-          downcast_to<any_set_value_i<cref>>(get_value_i_const_observer);
+      auto svc = downcast_to<any_set_value_i<cref>>(get_value_i_const_observer);
       CHECK(svc);
       // svc->set_value(666); // does not compile!
     }
     {
       any_get_value_i<mutref> get_value_i_const_observer{sv0};
       REQUIRE(get_value_i_const_observer.get_value() == 6.28);
-      auto svc = downcast_to<any_set_value_i<mutref>>(
-          get_value_i_const_observer);
+      auto svc =
+          downcast_to<any_set_value_i<mutref>>(get_value_i_const_observer);
       CHECK(svc);
-      svc->set_value(666); //NOLINT
-      REQUIRE(svc->get_value() == 666);//NOLINT
+      svc->set_value(666);               // NOLINT
+      REQUIRE(svc->get_value() == 666);  // NOLINT
     }
     {
       static_assert(std::derived_from<any_get_value_i<unique>::v_table_t,
@@ -87,8 +86,8 @@ TEST_CASE("_interface_cast") {
       auto svu =
           downcast_to<any_set_value_i<unique>>(std::move(get_value_i_unique));
       CHECK(svu);
-      svu->set_value(1.44);//NOLINT
-      CHECK(svu->get_value() == 1.44);//NOLINT
+      svu->set_value(1.44);             // NOLINT
+      CHECK(svu->get_value() == 1.44);  // NOLINT
     }
   }
   {
@@ -121,7 +120,7 @@ TEST_CASE("_interface_cast") {
     REQUIRE(get_proxy_ptr(i1e));
 #pragma warning(push)
 #pragma warning(disable : 26800)
-    REQUIRE(!get_proxy(i1d));  //NOLINT
+    REQUIRE(!get_proxy(i1d));  // NOLINT
 #pragma warning(pop)
     REQUIRE(i1e.get_value() == 3.14);
   }

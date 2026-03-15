@@ -63,7 +63,7 @@ struct monoid_model_map<int> : monoid_default_model_map<int> {
 };
 template <>
 struct group_model_map<int> : group_default_model_map<int>,
-                                       monoid_model_map<int> {
+                              monoid_model_map<int> {
   static auto inverse(int self) {
     using namespace anyxx;
     return -self;
@@ -74,8 +74,7 @@ template <>
 struct semigroup_model_map<std::string>
     : semigroup_plus_model_map<std::string> {};
 template <>
-struct monoid_model_map<std::string>
-    : monoid_default_model_map<std::string> {
+struct monoid_model_map<std::string> : monoid_default_model_map<std::string> {
   static auto identity(auto) {
     std::println("identy {}", typeid(std::string).name());
     return std::string{};
@@ -129,8 +128,8 @@ void test_monoid_traited(Monoid const& m,
 
 template <class C>
 concept can_call_op = requires(anyxx::any_trait_class<C, monoid> class_,
-    anyxx::using_<C>::template as<monoid> object_) {
-    { class_.op(object_) };
+                               anyxx::using_<C>::template as<monoid> object_) {
+  { class_.op(object_) };
 };
 
 static_assert(!can_call_op<int>);
@@ -154,11 +153,15 @@ TEST_CASE("algebra basics") {
   static_assert(
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
-      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
+                              observeable_v_table>);
 
   {
     using_<int>::as<monoid> im{999};
-    CHECK(im.identity() == trait_as<monoid>(0));
+    static_assert(is_proxy<trait_class<int>>);
+    static_assert(is_any<any<trait_class<int>, monoid>>);
+    bool eq0 = im.identity() == trait_as<monoid>(0);
+    CHECK(eq0);
     auto x1 = im.concat(std::vector{trait_as<monoid>(1), trait_as<monoid>(2)});
     auto y2 = trait_as<monoid>(3);
     CHECK(x1 == y2);
@@ -300,7 +303,8 @@ TEST_CASE("algebra int_mul monoid") {
   auto id = trait_class_<int_mul, monoid>.identity();
   static_assert(std::same_as<decltype(id), any<using_<int_mul>, monoid>>);
   static_assert(!is_group_model<int_mul>);
-  // trait_class_<int_mul, monoid>.op(id); // should not compile, because trait_class_ is not an object. 
+  // trait_class_<int_mul, monoid>.op(id); // should not compile, because
+  // trait_class_ is not an object.
 
   test_monoid(int_mul{1}, std::vector{int_mul{2}, int_mul{3}});
 }

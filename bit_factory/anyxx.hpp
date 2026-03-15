@@ -621,9 +621,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)>;          \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
-      return typeid(v_table_t) == from                                         \
-                 ? true                                                        \
-                 : v_table_base_t::static_is_derived_from(from);               \
+      if constexpr (std::derived_from<v_table_base_t,                          \
+                                      anyxx::observeable_rtti_v_table>) {      \
+        return typeid(v_table_t) == from                                       \
+                   ? true                                                      \
+                   : v_table_base_t::static_is_derived_from(from);             \
+      } else {                                                                 \
+        return false;                                                          \
+      }                                                                        \
     }                                                                          \
                                                                                \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
@@ -1288,16 +1293,69 @@ struct undefined {};
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
 
+/// No lifetime functionality
+/// Base of v-tables for traits without lifetime requirements
+struct observeable_v_table {
+  using v_table_t = observeable_v_table;
+
+  /// Type-erasing constructor
+  template <typename Concrete>
+  explicit observeable_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete) {}
+
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(observeable_v_table) == from;
+  }
+};
+/// No lifetime functionality, but runtime type information
+/// Base of v-tables for traits without lifetime requirements, but downcastable
+struct observeable_rtti_v_table : observeable_v_table {
+  using v_table_t = observeable_rtti_v_table;
+
+  /// Type-erasing constructor
+  template <typename Concrete>
+  explicit observeable_rtti_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : observeable_v_table(concrete),
+        get_type_info(+[]() noexcept -> std::type_info const& {
+          return typeid(Concrete);
+        }),
+        is_derived_from_(+[](const std::type_info& from) {
+          return static_is_derived_from(from);
+        }) {}
+
+  std::type_info const& (*get_type_info)() noexcept;
+  bool (*is_derived_from_)(const std::type_info&);
+
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(observeable_v_table) == from;
+  }
+
+  meta_data* meta_data_ = nullptr;
+};
+
+template <typename VTable>
+void set_is_derived_from(auto v_table) {
+  if constexpr (std::is_base_of_v<observeable_rtti_v_table, VTable>) {
+    v_table->is_derived_from_ = +[](const std::type_info& from) {
+      return VTable::static_is_derived_from(from);
+    };
+  }
+}
+
+///
 /// Basic lifetime functionality
 /** Base of all other v-tables
  */
-struct any_v_table {
+struct any_v_table : observeable_rtti_v_table {
+  using v_table_t = any_v_table;
+  using v_table_base_t = observeable_rtti_v_table;
+
   /// Type-erasing constructor
-  /**
-   */
   template <typename Concrete>
   explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : model_size(compute_model_size<Concrete>()),
+      : observeable_rtti_v_table(concrete),
+        model_size(compute_model_size<Concrete>()),
         allocate(+[] -> mutable_void {
           return std::allocator<Concrete>{}.allocate(1);
         }),
@@ -1330,13 +1388,9 @@ struct any_v_table {
           auto p = static_cast<Concrete*>(data);
           std::destroy_at(p);
           std::allocator<Concrete>{}.deallocate(p, 1);
-        }),
-        get_type_info(+[]() noexcept -> std::type_info const& {
-          return typeid(Concrete);
-        }),
-        is_derived_from_(+[](const std::type_info& from) {
-          return static_is_derived_from(from);
-        }) {}
+        }) {
+    set_is_derived_from<v_table_t>(this);
+  }
 
   std::size_t model_size = 0u;
   mutable_void (*allocate)();
@@ -1344,14 +1398,11 @@ struct any_v_table {
   mutable_void (*move_constructor)(mutable_void placement, mutable_void from);
   void (*destructor)(mutable_void data) noexcept;
   void (*delete_)(mutable_void) noexcept;
-  std::type_info const& (*get_type_info)() noexcept;
-  bool (*is_derived_from_)(const std::type_info&);
-
   static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(any_v_table) == from;
+    return typeid(v_table_t) == from
+               ? true
+               : v_table_base_t::static_is_derived_from(from);
   }
-
-  meta_data* meta_data_ = nullptr;
 };
 
 inline bool is_derived_from(const std::type_info& from,
@@ -1406,13 +1457,13 @@ struct basic_proxy_trait {
     to = std::move(from);
   }
 
-  static void copy_construct_from(Proxy& to, [[maybe_unused]] any_v_table*,
+  static void copy_construct_from(Proxy& to, [[maybe_unused]] void*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
   }
 
   static void destroy([[maybe_unused]] Proxy const& data,
-                      [[maybe_unused]] any_v_table* v_table) {}
+                      [[maybe_unused]] void* v_table) {}
 };
 
 /// Requirements for a proxy type
@@ -1422,11 +1473,14 @@ template <typename E>
 concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
   typename proxy_trait<E>::void_t;
   typename proxy_trait<E>::static_dispatch_t;
+  typename proxy_trait<E>::required_v_table_t;
   { proxy_trait<E>::is_constructibile_from_const } -> std::convertible_to<bool>;
   { proxy_trait<E>::is_owner } -> std::convertible_to<bool>;
-  {
-    proxy_trait<E>::get_proxy_ptr_in(e, v_table)
-  } -> std::convertible_to<typename proxy_trait<E>::void_t>;
+  requires requires(proxy_trait<E>::required_v_table_t* required_v_table) {
+    {
+      proxy_trait<E>::get_proxy_ptr_in(e, required_v_table)
+    } -> std::convertible_to<typename proxy_trait<E>::void_t>;
+  };
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
   { proxy_trait<E>::clone_from(void_data, v_table) };
   { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
@@ -1441,13 +1495,18 @@ template <typename T>
 inline constexpr bool is_type_class =
     is_proxy<T> && is_type_class_impl<T>::value;
 
-using emtpty_trait_v_table = any_v_table;
-struct base_trait {
-  using v_table_t = emtpty_trait_v_table;
+struct observeable_trait {
   template <typename>
   static constexpr bool modeled_by() {
     return true;
   }
+  using v_table_t = observeable_v_table;
+};
+struct observeable_rtti_trait : observeable_trait{
+  using v_table_t = observeable_rtti_v_table;
+};
+struct base_trait : observeable_rtti_trait{
+  using v_table_t = any_v_table;
 };
 
 template <typename Model>
@@ -1455,7 +1514,8 @@ concept is_base_trait_model = true;
 
 /// Requirements for a trait type
 template <typename T>
-concept has_v_table = std::derived_from<typename T::v_table_t, any_v_table>;
+concept has_v_table =
+    std::derived_from<typename T::v_table_t, observeable_v_table>;
 
 template <is_proxy Proxy, typename Trait = base_trait>
 class any;
@@ -1556,13 +1616,15 @@ using unerased =
     proxy_trait<Proxy>::template unerased<std::decay_t<ConstructedWith>>;
 
 template <is_proxy Proxy>
-void const* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
+void const* get_proxy_ptr(
+    Proxy const& vv, typename proxy_trait<Proxy>::required_v_table_t* v_table)
   requires std::same_as<void const*, typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
 }
 template <is_proxy Proxy>
-void* get_proxy_ptr(Proxy const& vv, any_v_table* v_table)
+void* get_proxy_ptr(Proxy const& vv,
+                    typename proxy_trait<Proxy>::required_v_table_t* v_table)
   requires std::same_as<void*, typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
@@ -1578,11 +1640,13 @@ auto unchecked_unerase_cast(void* p) {
 }
 
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table) {
+auto unchecked_unerase_cast(
+    Proxy const& o, typename proxy_trait<Proxy>::required_v_table_t* v_table) {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table)
+auto unchecked_unerase_cast(
+    Proxy const& o, typename proxy_trait<Proxy>::required_v_table_t* v_table)
   requires(!is_const_data<Proxy>)
 {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
@@ -1621,6 +1685,7 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
                                     const_void, mutable_void>;
   using static_dispatch_t = V;
+  using required_v_table_t = observeable_v_table;
   static constexpr bool is_constructibile_from_const = true;
   template <typename ConstructedWith>
   struct is_constructibile_from {
@@ -1634,7 +1699,7 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   }
 
   static auto get_proxy_ptr_in(auto& val,
-                               [[maybe_unused]] any_v_table* v_table) {
+                               [[maybe_unused]] observeable_v_table* v_table) {
     return &val;
   }
 
@@ -1658,6 +1723,7 @@ struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
   using static_dispatch_t = Type;
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_object = false;
+  using required_v_table_t = observeable_v_table;
   template <typename ConstructedWith>
   struct is_constructibile_from {
     static constexpr bool value = true;
@@ -1667,7 +1733,7 @@ struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
                          [[maybe_unused]] any_v_table* v_table) {}
 
   static auto get_proxy_ptr_in([[maybe_unused]] auto& val,
-                               [[maybe_unused]] any_v_table* v_table) {
+                               [[maybe_unused]] void* v_table) {
     return nullptr;
   }
 
@@ -1728,6 +1794,7 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
     : basic_proxy_trait<using_<vany_variant<Any, Proxy, Types...>>> {
   using vany_variant_t = vany_variant<Any, Proxy, Types...>;
   using void_t = typename proxy_trait<Proxy>::void_t;
+  using required_v_table_t = observeable_v_table;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =
       proxy_trait<Proxy>::is_constructibile_from_const;
@@ -1746,7 +1813,7 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
   }
 
   static auto get_proxy_ptr_in(auto& val,
-                               [[maybe_unused]] any_v_table* v_table) {
+                               [[maybe_unused]] observeable_v_table* v_table) {
     return &val;
   }
 
@@ -1785,6 +1852,7 @@ template <voidness Voidness>
 struct observer_trait : basic_proxy_trait<Voidness> {
   using void_t = Voidness;
   using static_dispatch_t = void_t;
+  using required_v_table_t = observeable_v_table;
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
   static constexpr bool is_lifetime_bound = true;
@@ -1802,8 +1870,8 @@ struct observer_trait : basic_proxy_trait<Voidness> {
     to = from;
   }
 
-  static Voidness get_proxy_ptr_in(const auto& ptr,
-                                   [[maybe_unused]] any_v_table* v_table) {
+  static Voidness get_proxy_ptr_in(
+      const auto& ptr, [[maybe_unused]] observeable_v_table* v_table) {
     return ptr;
   }
 
@@ -1877,6 +1945,7 @@ template <>
 struct proxy_trait<unique> : basic_proxy_trait<unique> {
   using void_t = void*;
   using static_dispatch_t = void_t;
+  using required_v_table_t = observeable_v_table;
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -1898,7 +1967,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   }
 
   static void* get_proxy_ptr_in(const auto& ptr,
-                                [[maybe_unused]] any_v_table* v_table) {
+                                [[maybe_unused]] observeable_v_table* v_table) {
     return ptr.ptr;
   }
 
@@ -1953,6 +2022,7 @@ template <>
 struct proxy_trait<shared> : basic_proxy_trait<shared> {
   using void_t = void const*;
   using static_dispatch_t = void_t;
+  using required_v_table_t = observeable_v_table;
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -1975,8 +2045,8 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     to = shared{p, v_table->delete_};
   }
 
-  static void const* get_proxy_ptr_in(const auto& v,
-                                      [[maybe_unused]] any_v_table* v_table) {
+  static void const* get_proxy_ptr_in(
+      const auto& v, [[maybe_unused]] observeable_v_table* v_table) {
     return v.get();
   }
 
@@ -2009,6 +2079,7 @@ template <>
 struct proxy_trait<weak> : basic_proxy_trait<weak> {
   using void_t = void const*;
   using static_dispatch_t = void_t;
+  using required_v_table_t = observeable_v_table;
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -2024,8 +2095,9 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
     return weak{};
   }
 
-  static void const* get_proxy_ptr_in([[maybe_unused]] const auto& ptr,
-                                      [[maybe_unused]] any_v_table* v_table) {
+  static void const* get_proxy_ptr_in(
+      [[maybe_unused]] const auto& ptr,
+      [[maybe_unused]] observeable_v_table* v_table) {
     return nullptr;
   }
 
@@ -2185,6 +2257,7 @@ template <>
 struct proxy_trait<val> : basic_proxy_trait<val> {
   using void_t = void*;
   using static_dispatch_t = void_t;
+  using required_v_table_t = any_v_table;
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -2390,13 +2463,6 @@ struct v_table_holder<false, Trait> {
   static auto release_v_table() { return nullptr; }
 };
 
-template <typename VTable>
-void set_is_derived_from(auto v_table) {
-  v_table->is_derived_from_ = +[](const std::type_info& from) {
-    return VTable::static_is_derived_from(from);
-  };
-}
-
 template <typename Trait>
 struct with_open_dispatch : std::false_type {};
 
@@ -2508,96 +2574,95 @@ bool type_match(any_v_table* v_table) {
 template <is_proxy To, is_proxy From>
 struct borrow_trait;
 
-template <typename To, typename From>
+template <typename To, typename From, typename FromVTable>
 concept borrowable_from =
-    is_proxy<From> && is_proxy<To> && requires(From f, any_v_table* v_table) {
+    is_proxy<From> && is_proxy<To> &&
+    std::derived_from<FromVTable,
+                      typename proxy_trait<To>::required_v_table_t> &&
+    requires(From f, FromVTable* v_table) {
       { borrow_trait<To, From>{}(f, v_table) } -> std::same_as<To>;
     };
 
-template <typename To, typename From>
-  requires borrowable_from<To, From>
-To borrow_as(From const& from, any_v_table* v_table) {
+template <typename To, typename From, typename FromVTable>
+  requires borrowable_from<To, From, FromVTable>
+To borrow_as(From const& from, FromVTable* v_table) {
   return borrow_trait<To, From>{}(from, v_table);
 }
 
 template <is_proxy From>
   requires(!is_const_data<From> && !is_weak_data<From>)
 struct borrow_trait<mutref, From> {
-  auto operator()(const auto& from, any_v_table* v_table) const {
+  auto operator()(const auto& from, auto* v_table) const {
     return mutref{get_proxy_ptr(from, v_table)};
   }
 };
 template <is_proxy From>
   requires(!is_weak_data<From>)
 struct borrow_trait<cref, From> {
-  auto operator()(const auto& from,
-                  [[maybe_unused]] any_v_table* v_table) const {
+  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
     return cref{get_proxy_ptr(from, v_table)};
   }
 };
 template <>
 struct borrow_trait<shared, shared> {
-  auto operator()(const auto& from,
-                  [[maybe_unused]] any_v_table* v_table) const {
+  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
     return from;
   }
 };
 template <>
 struct borrow_trait<weak, weak> {
-  auto operator()(const auto& from,
-                  [[maybe_unused]] any_v_table* v_table) const {
+  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
     return from;
   }
 };
 template <>
 struct borrow_trait<weak, shared> {
-  auto operator()(const auto& from,
-                  [[maybe_unused]] any_v_table* v_table) const {
+  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
     return weak{from};
   }
 };
 
-static_assert(!borrowable_from<mutref, cref>);
-static_assert(borrowable_from<mutref, mutref>);
-static_assert(borrowable_from<mutref, unique>);
-static_assert(!borrowable_from<mutref, shared>);
-static_assert(!borrowable_from<mutref, weak>);
-static_assert(borrowable_from<mutref, val>);
+static_assert(!borrowable_from<mutref, cref, observeable_v_table>);
+static_assert(borrowable_from<mutref, mutref, observeable_v_table>);
+static_assert(borrowable_from<mutref, unique, observeable_v_table>);
+static_assert(!borrowable_from<mutref, shared, observeable_v_table>);
+static_assert(!borrowable_from<mutref, weak, observeable_v_table>);
+static_assert(borrowable_from<mutref, val, any_v_table>);
 
-static_assert(borrowable_from<cref, cref>);
-static_assert(borrowable_from<cref, mutref>);
-static_assert(borrowable_from<cref, unique>);
-static_assert(borrowable_from<cref, shared>);
-static_assert(!borrowable_from<cref, weak>);
-static_assert(borrowable_from<cref, val>);
+static_assert(borrowable_from<cref, cref, observeable_v_table>);
+static_assert(borrowable_from<cref, mutref, observeable_v_table>);
+static_assert(borrowable_from<cref, unique, observeable_v_table>);
+static_assert(borrowable_from<cref, shared, observeable_v_table>);
+static_assert(!borrowable_from<cref, weak, observeable_v_table>);
+static_assert(borrowable_from<cref, val, any_v_table>);
 
-static_assert(!borrowable_from<shared, cref>);
-static_assert(!borrowable_from<shared, mutref>);
-static_assert(!borrowable_from<shared, unique>);
-static_assert(borrowable_from<shared, shared>);
-static_assert(!borrowable_from<shared, weak>);
-static_assert(!borrowable_from<shared, val>);
+static_assert(!borrowable_from<shared, cref, observeable_v_table>);
+static_assert(!borrowable_from<shared, mutref, observeable_v_table>);
+static_assert(!borrowable_from<shared, unique, observeable_v_table>);
+static_assert(borrowable_from<shared, shared, observeable_v_table>);
+static_assert(!borrowable_from<shared, weak, observeable_v_table>);
+static_assert(!borrowable_from<shared, val, any_v_table>);
 
-static_assert(!borrowable_from<weak, cref>);
-static_assert(!borrowable_from<weak, mutref>);
-static_assert(!borrowable_from<weak, unique>);
-static_assert(borrowable_from<weak, shared>);
-static_assert(borrowable_from<weak, weak>);
-static_assert(!borrowable_from<weak, val>);
+static_assert(!borrowable_from<weak, cref, observeable_v_table>);
+static_assert(!borrowable_from<weak, mutref, observeable_v_table>);
+static_assert(!borrowable_from<weak, unique, observeable_v_table>);
+static_assert(borrowable_from<weak, shared, observeable_v_table>);
+static_assert(borrowable_from<weak, weak, observeable_v_table>);
+static_assert(!borrowable_from<weak, val, any_v_table>);
 
-static_assert(!borrowable_from<unique, cref>);
-static_assert(!borrowable_from<unique, mutref>);
-static_assert(!borrowable_from<unique, unique>);
-static_assert(!borrowable_from<unique, shared>);
-static_assert(!borrowable_from<unique, weak>);
-static_assert(!borrowable_from<unique, val>);
+static_assert(!borrowable_from<unique, cref, observeable_v_table>);
+static_assert(!borrowable_from<unique, mutref, observeable_v_table>);
+static_assert(!borrowable_from<unique, unique, observeable_v_table>);
+static_assert(!borrowable_from<unique, shared, observeable_v_table>);
+static_assert(!borrowable_from<unique, weak, observeable_v_table>);
+static_assert(!borrowable_from<unique, val, any_v_table>);
 
-static_assert(!borrowable_from<val, cref>);
-static_assert(!borrowable_from<val, mutref>);
-static_assert(!borrowable_from<val, unique>);
-static_assert(!borrowable_from<val, shared>);
-static_assert(!borrowable_from<val, weak>);
-static_assert(!borrowable_from<val, val>);
+static_assert(!borrowable_from<val, cref, observeable_v_table>);
+static_assert(!borrowable_from<val, mutref, observeable_v_table>);
+static_assert(!borrowable_from<val, unique, observeable_v_table>);
+static_assert(!borrowable_from<val, shared, observeable_v_table>);
+static_assert(!borrowable_from<val, weak, observeable_v_table>);
+static_assert(!borrowable_from<val, val, any_v_table>);
 
 // --------------------------------------------------------------------------------
 // clone erased data
@@ -2734,7 +2799,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_ {};
+  proxy_t proxy_;
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2819,14 +2884,16 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
 
   template <is_any Other>
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
-    requires(borrowable_from<proxy_t, typename Other::proxy_t> &&
+    requires(borrowable_from<proxy_t, typename Other::proxy_t,
+                             typename Other::v_table_t> &&
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
       : v_table_holder_t(other.get_v_table_ptr()),
         proxy_(borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
-    requires(borrowable_from<proxy_t, typename Other::proxy_t> &&
+    requires(borrowable_from<proxy_t, typename Other::proxy_t,
+                             typename Other::v_table_t> &&
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
@@ -2886,7 +2953,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     requires(
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
 
-  explicit operator bool() const {
+explicit operator bool() const {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       if constexpr (is_type_class<proxy_t>) {
         return true;
@@ -2899,7 +2966,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     }
   }
 
-  operator decltype(auto)() const {
+operator decltype(auto)() const {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       if constexpr (is_type_class<proxy_t>) {
         return nullptr;
@@ -2950,22 +3017,27 @@ inline std::type_info const& get_type_info(Any const& any) {
 }
 
 template <is_any Any>
+  requires std::derived_from<typename Any::v_table_t, observeable_rtti_v_table>
 bool is_derived_from(const std::type_info& from, Any const& any) {
   return get_v_table(any)->is_derived_from_(from);
 }
 template <is_any From, is_any Any>
+  requires std::derived_from<typename From::v_table_t,
+                             observeable_rtti_v_table> &&
+           std::derived_from<typename Any::v_table_t, observeable_rtti_v_table>
 bool is_derived_from(Any const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
 
 template <typename To>
-  requires std::derived_from<To, any_v_table>
-auto unchecked_v_table_downcast_to(any_v_table* v_table) {
+  requires(!is_any<To> && std::derived_from<To, observeable_v_table>)
+auto unchecked_v_table_downcast_to(observeable_v_table* v_table) {
   return static_cast<To*>(v_table);
 }
-template <is_any To>
-  requires std::derived_from<typename To::v_table_t, any_v_table>
-auto unchecked_v_table_downcast_to(any_v_table* v_table) {
+template <typename To>
+  requires is_any<To> &&
+           std::derived_from<typename To::v_table_t, observeable_v_table>
+auto unchecked_v_table_downcast_to(observeable_v_table* v_table) {
   return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
 }
 
@@ -3360,10 +3432,10 @@ auto as(typed_any<V, Any> source)
 // --------------------------------------------------------------------------------
 // any borrow, clone, lock, move
 
-template <is_any ToAny, is_proxy FromErasedData>
-  requires borrowable_from<typename ToAny::proxy_t, FromErasedData>
-std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
-                                           any_v_table* from_v_table) {
+template <is_any ToAny, is_proxy FromProxy, typename FromVTable>
+  requires borrowable_from<typename ToAny::proxy_t, FromProxy, FromVTable>
+std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
+                                           FromVTable* from_v_table) {
   using to = typename ToAny::proxy_t;
   return query_v_table<ToAny>(from_v_table).transform([&](auto v_table) {
     return ToAny{borrow_as<to>(from, v_table), v_table};
@@ -3374,7 +3446,8 @@ std::expected<ToAny, cast_error> borrow_as(FromErasedData const& from,
 /// changing the ownership.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
-  requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t>
+  requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t,
+                           typename FromAny::v_table_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   if constexpr (std::same_as<typename ToAny::v_table_t,
                              typename FromAny::v_table_t>) {
