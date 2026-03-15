@@ -1073,7 +1073,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>    to = std::move(from);</div>
 <div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>  }</div>
 <div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span> </div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> copy_construct_from(Proxy&amp; to, [[maybe_unused]] any_v_table*,</div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> copy_construct_from(Proxy&amp; to, [[maybe_unused]] <span class="keywordtype">void</span>*,</div>
 <div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>                                  <span class="keyword">auto</span> <span class="keyword">const</span>&amp; from, [[maybe_unused]] <span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>    to = from;</div>
 <div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>  }</div>
@@ -1234,11 +1234,11 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>}</div>
 <div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span> </div>
 <div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U, is_proxy Proxy&gt;</div>
-<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span><span class="keyword">auto</span> unchecked_unerase_cast(Proxy <span class="keyword">const</span>&amp; o, any_v_table* v_table) {</div>
+<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span><span class="keyword">auto</span> unchecked_unerase_cast(Proxy <span class="keyword">const</span>&amp; o, <span class="keyword">typename</span> proxy_trait&lt;Proxy&gt;::required_v_table_t* v_table) {</div>
 <div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>  <span class="keywordflow">return</span> unchecked_unerase_cast&lt;U&gt;(get_proxy_ptr(o, v_table));</div>
 <div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>}</div>
 <div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U, is_proxy Proxy&gt;</div>
-<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span><span class="keyword">auto</span> unchecked_unerase_cast(Proxy <span class="keyword">const</span>&amp; o, any_v_table* v_table)</div>
+<div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span><span class="keyword">auto</span> unchecked_unerase_cast(Proxy <span class="keyword">const</span>&amp; o, <span class="keyword">typename</span> proxy_trait&lt;Proxy&gt;::required_v_table_t* v_table)</div>
 <div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>  <span class="keyword">requires</span>(!is_const_data&lt;Proxy&gt;)</div>
 <div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>{</div>
 <div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>  <span class="keywordflow">return</span> unchecked_unerase_cast&lt;U&gt;(get_proxy_ptr(o, v_table));</div>
