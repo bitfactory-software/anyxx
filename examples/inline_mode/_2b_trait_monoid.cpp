@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-#ifdef __cpp_lib_ranges_fold
-
 namespace anyxx {
 
 //
@@ -165,4 +163,3 @@ TEST_CASE("example 2b monoid d") {
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
 }
 
-#endif
