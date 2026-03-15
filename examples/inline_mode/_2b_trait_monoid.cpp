@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-#ifdef __cpp_lib_ranges_fold
-
 namespace anyxx {
 
 //
@@ -17,15 +15,15 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX(monoid,
-         (ANY_FN_DEF(anyxx::self, id, (), const, []() { return T{}; }),
-          ANY_OP_DEF(anyxx::self, +, op, (anyxx::self const&), const,
+         (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
+          ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
                      [&x](auto const& r) {
                        std::println("op-default {}", typeid(T).name());
                        auto self = anyxx::trait_as<monoid>(x);
-                       return self | (std::vector{anyxx::trait_as<monoid>(
+                       return self.concat(std::vector{anyxx::trait_as<monoid>(
                                          r)});  // NOLINT
                      }),
-          ANY_OP_DEF(anyxx::self, |, concat,
+          ANY_FN_DEF(public, anyxx::self, concat,
                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                 anyxx::cref> const&)),
                      const,
@@ -37,14 +35,12 @@ TRAIT_EX(monoid,
                              return anyxx::trait_as<monoid>(y);
                            }),
                            self, [&](auto const& m1, auto const& m2) {
-                             return m1 + m2;
+                             return m1.op(m2);
                            });
                      }),
-          ANY_FN_DEF(bool, equal_to, (anyxx::self const&), const,
+          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         (template <typename Box> friend bool operator==(
-             anyxx::any<Box, monoid> const& l,
-             anyxx::any<Box, monoid> const& r) { return l.equal_to(r); }))
+         , , ())
 
 template <typename Box = anyxx::val>
 using any_monoid = anyxx::any<Box, monoid>;
@@ -88,16 +84,16 @@ void test_monoid_traited(
     Monoid const& m,
     anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
   auto id = m.id();
-  using type_1 = decltype(m + id + m);
-  using type_2 = decltype(m + (m + id));
+  using type_1 = decltype(m.op(id.op(m)));
+  using type_2 = decltype(m.op(m.op(id)));
   static_assert(std::same_as<type_1, type_2>);
   static_assert(std::same_as<type_1, Monoid>);
-  auto c1 = m + id + m == m + m + id;
+  auto c1 = m.op(id.op(m)) == m.op(m.op(id));
   CHECK(c1);
-  auto c2 = (m | r) ==
+  auto c2 = (m.concat(r)) ==
             std::ranges::fold_left(
                 r, m, [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
-                  return m1 + m2;
+                  return m1.op(m2);
                 });
   CHECK(c2);
 }
@@ -111,6 +107,8 @@ make_a_range(bool use_list) {
   else
     return std::vector<any_monoid<anyxx::val>>{{"2"s}, {"3"s}};
 }
+
+// struct not_mappepd{ int v; };
 
 }  // namespace example_2b
 //
@@ -137,6 +135,8 @@ TEST_CASE("example 2b monoid a") {
   test_monoid((1), std::vector{2, 3});
   test_monoid<any<using_<int>, monoid>>(
       trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+
+  //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
 TEST_CASE("example 2b monoid b") {
   using namespace example_2b;
@@ -163,4 +163,3 @@ TEST_CASE("example 2b monoid d") {
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
 }
 
-#endif
