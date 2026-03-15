@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['weak_0',['weak',['../group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c',1,'anyxx']]]
+  ['vany_5fvariant_0',['vany_variant',['../group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80',1,'anyxx']]]
 ];

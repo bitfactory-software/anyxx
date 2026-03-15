@@ -100,6 +100,8 @@ Macros</h2></td></tr>
 <tr class="memitem:ga6ad7aa1322abedb9a0ebd5c2fa4ba32e" id="r_ga6ad7aa1322abedb9a0ebd5c2fa4ba32e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga6ad7aa1322abedb9a0ebd5c2fa4ba32e">__ANY_MODEL_MAP</a>(trait_,  t)</td></tr>
 <tr class="memitem:ga33732296f3b86795807ea45f564b1d70" id="r_ga33732296f3b86795807ea45f564b1d70"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga33732296f3b86795807ea45f564b1d70">ANY_TEMPLATE_MODEL_MAP</a>(model_,  trait_,  trait_types)</td></tr>
 <tr class="memdesc:ga33732296f3b86795807ea45f564b1d70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
+<tr class="memitem:gad3cfa256085f8c6dec128b5d538692ac" id="r_gad3cfa256085f8c6dec128b5d538692ac"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gad3cfa256085f8c6dec128b5d538692ac">TRAIT_TYPE</a>(Name,  T,  Trait, ...)</td></tr>
+<tr class="memdesc:gad3cfa256085f8c6dec128b5d538692ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">translates to the type defined in the model map of a trait. This is useful for associated types, e.g. Return types, which are defined via ANY_TYPE in the trait  <br /></td></tr>
 <tr class="memitem:gaa11989a5b380318c70cc1a59a8642384" id="r_gaa11989a5b380318c70cc1a59a8642384"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>(model_,  trait_)</td></tr>
 <tr class="memdesc:gaa11989a5b380318c70cc1a59a8642384"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
 </table>
@@ -201,6 +203,49 @@ Macros</h2></td></tr>
 </dl>
 <p>Must be placed in global namespace, and reachable for the instantiation of the associated v-table. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#a11">_5_any_template.cpp</a>.</dd>
+</dl>
+
+</div>
+</div>
+<a id="gad3cfa256085f8c6dec128b5d538692ac" name="gad3cfa256085f8c6dec128b5d538692ac"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad3cfa256085f8c6dec128b5d538692ac">&#9670;&#160;</a></span>TRAIT_TYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define TRAIT_TYPE</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>Name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>T</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>Trait</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">typename</span> Trait::template Name&lt;T, __VA_ARGS__&gt;</div>
+</div><!-- fragment -->
+<p>translates to the type defined in the model map of a trait. This is useful for associated types, e.g. Return types, which are defined via ANY_TYPE in the trait </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Name</td><td>name of the type definition in the trait </td></tr>
+    <tr><td class="paramname">T</td><td>model type, including template parameters, in brackets </td></tr>
+    <tr><td class="paramname">Trait</td><td>name of the trait, including namespace </td></tr>
+    <tr><td class="paramname">...</td><td>additional template parameters for the type if it is a template itself </td></tr>
+  </table>
+  </dd>
 </dl>
 
 </div>
