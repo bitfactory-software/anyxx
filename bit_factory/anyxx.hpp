@@ -1167,7 +1167,7 @@ struct basic_proxy_trait {
     to = std::move(from);
   }
 
-  static void copy_construct_from(Proxy& to, [[maybe_unused]] any_v_table*,
+  static void copy_construct_from(Proxy& to, [[maybe_unused]] void*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
   }
@@ -1330,11 +1330,11 @@ auto unchecked_unerase_cast(void* p) {
 }
 
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table) {
+auto unchecked_unerase_cast(Proxy const& o, typename proxy_trait<Proxy>::required_v_table_t* v_table) {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, any_v_table* v_table)
+auto unchecked_unerase_cast(Proxy const& o, typename proxy_trait<Proxy>::required_v_table_t* v_table)
   requires(!is_const_data<Proxy>)
 {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
