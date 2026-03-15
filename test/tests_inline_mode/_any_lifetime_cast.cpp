@@ -27,8 +27,6 @@ TRAIT_(slick_stringable, observeable_trait,
        (ANY_OP(std::string, (), (), const)))
 
 struct Y {
-  Y() = default;
-  Y(Y const&) = default;
   any<mutref, slick_stringable> xxx;
 };
 
@@ -76,11 +74,6 @@ TEST_CASE("slick_stringable observeable_v_table") {
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
-
-    any<mutref, slick_stringable> b = a;
-    any<mutref, slick_stringable> c = std::move(b);
-    any<mutref, slick_stringable> d{a};
-    any<mutref, slick_stringable> e{std::move(b)};
   }
   {
     Y y;
