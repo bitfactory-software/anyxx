@@ -338,7 +338,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
       -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
-    return _detail_REMOVE_PARENS(body).                                    \
+    return _detail_REMOVE_PARENS(body).template                            \
     operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
         trait_class __VA_OPT__(                                            \
             , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
@@ -665,8 +665,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
-      requires(T model, anyxx::any_trait_class<T, n> trait_class,              \
-               n##_model_map<T> model_map) {                                   \
+      requires(                                                                \
+          T model,                                                             \
+          anyxx::any_trait_class<T, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(    \
+                                        any_template_params)>                  \
+              trait_class,                                                     \
+          n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(                           \
+              model_map_template_params)>                                      \
+              model_map) {                                                     \
         requires anyxx::is_type_complete<T>;                                   \
         _detail_ANYXX_CONCEPT_FUNCTIONS(l)                                     \
             _detail_ANYXX_CONCEPT_STATIC_FUNCTIONS(static_fns)                 \
@@ -676,10 +682,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
           base_template_params)::template modeled_by<T>();                     \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
-      any_template_params) template <typename M>                               \
+      any_template_params) template <typename T>                               \
   constexpr bool n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \
       any_template_params)::modeled_by() {                                     \
-    return _detail_CONCAT(_detail_CONCAT(is_, n), _model)<M>;                  \
+    return _detail_CONCAT(                                                     \
+        _detail_CONCAT(is_, n),                                                \
+        _model)<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>;       \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
@@ -1502,10 +1510,10 @@ struct observeable_trait {
   }
   using v_table_t = observeable_v_table;
 };
-struct observeable_rtti_trait : observeable_trait{
+struct observeable_rtti_trait : observeable_trait {
   using v_table_t = observeable_rtti_v_table;
 };
-struct base_trait : observeable_rtti_trait{
+struct base_trait : observeable_rtti_trait {
   using v_table_t = any_v_table;
 };
 
@@ -2799,7 +2807,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_;
+  proxy_t proxy_ {};
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2953,7 +2961,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
     requires(
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
 
-explicit operator bool() const {
+  explicit operator bool() const {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       if constexpr (is_type_class<proxy_t>) {
         return true;
@@ -2966,7 +2974,7 @@ explicit operator bool() const {
     }
   }
 
-operator decltype(auto)() const {
+  operator decltype(auto)() const {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       if constexpr (is_type_class<proxy_t>) {
         return nullptr;
