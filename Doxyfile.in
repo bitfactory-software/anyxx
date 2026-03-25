@@ -11,6 +11,6 @@ GENERATE_LATEX = NO
 
 WARN_IF_UNDOCUMENTED = NO
 OUTPUT_DIRECTORY = ./doxygen/
-INPUT = bit_factory/ docs/ ./files_for_doxygen/README.md
+INPUT = bit_factory/ docs/ ./files_for_doxygen/
 EXAMPLE_PATH = examples/inline_mode/
 
