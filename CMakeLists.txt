@@ -129,16 +129,16 @@ include(CPack)
 find_package( Doxygen )
 if(DOXYGEN_FOUND)
   # Because Doxygen can not process symlinked files well, we copy the README.cpp to a separate folder and rename it to README.md
-  add_custom_command(OUTPUT "${PROJECT_SOURCE_DIR}/README_for_doxygen/README.md" 
+  add_custom_command(OUTPUT "${PROJECT_SOURCE_DIR}/files_for_doxygen/README.md" 
     COMMAND ${CMAKE_COMMAND} -E copy
       "${PROJECT_SOURCE_DIR}/examples/inline_mode/README.cpp"
-      "${PROJECT_SOURCE_DIR}/README_for_doxygen/README.md"
+      "${PROJECT_SOURCE_DIR}/files_for_doxygen/README.md"
     DEPENDS "${PROJECT_SOURCE_DIR}/examples/inline_mode/README.cpp"
-    COMMENT "Copying './examples/inline_mode/README.cpp' library to 'README_for_doxygen/README.md'"
+    COMMENT "Copying './examples/inline_mode/README.cpp' library to 'files_for_doxygen/README.md'"
   )
   add_custom_target(copy_readme_cpp 
     ALL
-    DEPENDS "${PROJECT_SOURCE_DIR}/README_for_doxygen/README.md"
+    DEPENDS "${PROJECT_SOURCE_DIR}/files_for_doxygen/README.md"
    )
   doxygen_add_docs( anyxx_doc 
     ALL     

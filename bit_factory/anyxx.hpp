@@ -4470,9 +4470,14 @@ class dispatch_vany {
 
    \example _2d_trait_self.cpp
    Shows self a referntial trait
+   \example _2f_trait_partial_equality.cpp 
+   Trait for partial equality. Walkthrough for advanced trait usage: 
+   - Static and dynamic polymorphism
+   - the model map as a customization points
+   - apply the automatic supplied C++20 concepts
 
 
-   \example _2b_trait_monoid.cpp
+   \example _2b_trait_monoid.cpp 
    A self referntial trait that models a monoid. Show how to use a MODEL_MAP
    that acts simultanious as runtime and complitem customization point
 
