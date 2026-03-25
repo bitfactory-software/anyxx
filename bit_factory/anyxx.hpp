@@ -291,6 +291,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
+    using namespace anyxx;                                                   \
     return _detail_REMOVE_PARENS(trait_body)(                                \
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
   };
@@ -338,6 +339,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
       -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
+    using namespace anyxx;                                                 \
     return _detail_REMOVE_PARENS(body).template                            \
     operator()<anyxx::use_as<T, typename decltype(trait_class)::trait_t>>( \
         trait_class __VA_OPT__(                                            \

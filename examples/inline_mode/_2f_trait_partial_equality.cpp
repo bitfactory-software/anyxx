@@ -7,13 +7,13 @@ namespace lib_2f {
 TRAIT_EX(partial_equality,
          (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
                      [&x](auto const& r) {
-                       return !(anyxx::trait_as<partial_equality>(x) !=
-                                anyxx::trait_as<partial_equality>(r));
+                       return !(trait_as<partial_equality>(x) !=
+                                trait_as<partial_equality>(r));
                      }),
           ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                      [&x](auto const& r) {
-                       return !(anyxx::trait_as<partial_equality>(x) ==
-                                anyxx::trait_as<partial_equality>(r));
+                       return !(trait_as<partial_equality>(x) ==
+                                trait_as<partial_equality>(r));
                      })),
          , , ())
 
