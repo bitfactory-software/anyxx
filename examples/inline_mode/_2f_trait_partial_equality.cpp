@@ -34,10 +34,10 @@ namespace lib_2f {
 // circular dependency, but this allows us to define only one of the
 // two operators in a model map, and the other will be automatically
 // defined.
-// To enforce the interruption of the circular dependency, we use the
-// specify the default definition for == in de default model ma as
+// To enforce the interruption of the circular dependency, we
+// specify the default definition for == in de default model as
 // protected, so it can be only used from a deriving map, as we will se
-// later.
+// later.(*1*)
 // The names for the functions in model map map are "eq" and "ne".
 // These functions are then used to implement the operators == and !=
 // in the external interface of the trait.
@@ -45,8 +45,8 @@ TRAIT_EX(partial_equality,
          (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
                      [&x](auto const& r) {
                        // Because we trait x and r as partial_equality, we will
-                       // use the != operator provided by model map for the type
-                       // of x and r, which will break the circular dependency.
+                       // use the != operator provided by the model map for the
+                       // type of x and r. So the circular is broken.
                        return !(trait_as<partial_equality>(x) !=
                                 trait_as<partial_equality>(r));
                      }),
@@ -125,9 +125,10 @@ struct b_type {
 ANY_MODEL_MAP((app_2f::b_type), lib_2f::partial_equality) {
   // For illustration purposes, we implemet the model in terms of the !=
   // operator.
-  using default_map::eq;  // We want to use the default implementation of eq,
-                          // which is defined 'protected 'in the default_map. So
-                          // we bring it into scope via this using directive.
+  using default_map::eq;  //(*1*) We want to use the default implementation of
+                          // eq, which is defined 'protected 'in the
+                          // default_map. So we bring it into scope via this
+                          // using directive.
   static auto ne(app_2f::b_type self, app_2f::b_type r) {
     return self.name != r.name;
   }
