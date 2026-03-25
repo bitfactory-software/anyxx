@@ -1,6 +1,6 @@
 \page main Any++, C++0x Concepts, Rust Traits, Haskell Type Classes
 
-Any++'s traits can not only used for external polymorphism via dynamic type erasure, but also for static dispatch and customization points.
+Any++'s traits can not only be used for external polymorphism via dynamic type erasure, but also for static dispatch and customization points.
 Just like traits in Rust. 
 
 The more general term for this pattern is type class.
