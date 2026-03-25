@@ -132,10 +132,10 @@ $(function(){initNavTree('_2f_trait_partial_equality_8cpp-example.html','',''); 
 <div class="line"><span class="comment">// circular dependency, but this allows us to define only one of the</span></div>
 <div class="line"><span class="comment">// two operators in a model map, and the other will be automatically</span></div>
 <div class="line"><span class="comment">// defined.</span></div>
-<div class="line"><span class="comment">// To enforce the interruption of the circular dependency, we use the</span></div>
-<div class="line"><span class="comment">// specify the default definition for == in de default model ma as</span></div>
+<div class="line"><span class="comment">// To enforce the interruption of the circular dependency, we</span></div>
+<div class="line"><span class="comment">// specify the default definition for == in de default model as</span></div>
 <div class="line"><span class="comment">// protected, so it can be only used from a deriving map, as we will se</span></div>
-<div class="line"><span class="comment">// later.</span></div>
+<div class="line"><span class="comment">// later.(*1*)</span></div>
 <div class="line"><span class="comment">// The names for the functions in model map map are &quot;eq&quot; and &quot;ne&quot;.</span></div>
 <div class="line"><span class="comment">// These functions are then used to implement the operators == and !=</span></div>
 <div class="line"><span class="comment">// in the external interface of the trait.</span></div>
@@ -143,8 +143,8 @@ $(function(){initNavTree('_2f_trait_partial_equality_8cpp-example.html','',''); 
 <div class="line">         (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">protected</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                     [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                       <span class="comment">// Because we trait x and r as partial_equality, we will</span></div>
-<div class="line">                       <span class="comment">// use the != operator provided by model map for the type</span></div>
-<div class="line">                       <span class="comment">// of x and r, which will break the circular dependency.</span></div>
+<div class="line">                       <span class="comment">// use the != operator provided by the model map for the</span></div>
+<div class="line">                       <span class="comment">// type of x and r. So the circular is broken.</span></div>
 <div class="line">                       <span class="keywordflow">return</span> !(trait_as&lt;partial_equality&gt;(x) !=</div>
 <div class="line">                                trait_as&lt;partial_equality&gt;(r));</div>
 <div class="line">                     }),</div>
@@ -223,9 +223,10 @@ $(function(){initNavTree('_2f_trait_partial_equality_8cpp-example.html','',''); 
 <div class="line"><a id="a3" name="a3"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((app_2f::b_type), lib_2f::partial_equality) {</div>
 <div class="line">  <span class="comment">// For illustration purposes, we implemet the model in terms of the !=</span></div>
 <div class="line">  <span class="comment">// operator.</span></div>
-<div class="line">  <span class="keyword">using </span>default_map::eq;  <span class="comment">// We want to use the default implementation of eq,</span></div>
-<div class="line">                          <span class="comment">// which is defined &#39;protected &#39;in the default_map. So</span></div>
-<div class="line">                          <span class="comment">// we bring it into scope via this using directive.</span></div>
+<div class="line">  <span class="keyword">using </span>default_map::eq;  <span class="comment">//(*1*) We want to use the default implementation of</span></div>
+<div class="line">                          <span class="comment">// eq, which is defined &#39;protected &#39;in the</span></div>
+<div class="line">                          <span class="comment">// default_map. So we bring it into scope via this</span></div>
+<div class="line">                          <span class="comment">// using directive.</span></div>
 <div class="line">  <span class="keyword">static</span> <span class="keyword">auto</span> ne(app_2f::b_type self, app_2f::b_type r) {</div>
 <div class="line">    <span class="keywordflow">return</span> self.name != r.name;</div>
 <div class="line">  }</div>
