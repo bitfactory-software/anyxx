@@ -2,6 +2,7 @@ var examples =
 [
     [ "_1_any_shape.cpp", "_1_any_shape_8cpp-example.html", null ],
     [ "_2d_trait_self.cpp", "_2d_trait_self_8cpp-example.html", null ],
+    [ "_2f_trait_partial_equality.cpp", "_2f_trait_partial_equality_8cpp-example.html", null ],
     [ "_2b_trait_monoid.cpp", "_2b_trait_monoid_8cpp-example.html", null ],
     [ "_2c_trait_any_variant.cpp", "_2c_trait_any_variant_8cpp-example.html", null ],
     [ "_2o_trait_simple.cpp", "_2o_trait_simple_8cpp-example.html", null ],
