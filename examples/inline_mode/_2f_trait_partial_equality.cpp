@@ -1,9 +1,6 @@
-#include <algorithm>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <print>
 #include <string>
-#include <vector>
 
 namespace lib_2f {
 
