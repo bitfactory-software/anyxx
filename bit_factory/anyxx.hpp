@@ -578,6 +578,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
+    using default_map = n##_default_model_map;                                 \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
     _detail_ANYXX_MAP_TYPES(typedefs);                                         \
@@ -2807,7 +2808,7 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_ {};
+  proxy_t proxy_{};
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor

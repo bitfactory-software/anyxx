@@ -5,7 +5,7 @@
 namespace lib_2f {
 
 TRAIT_EX(partial_equality,
-         (ANY_OP_DEF(private, bool, ==, eq, (anyxx::self const&), const,
+         (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
                      [&x](auto const& r) {
                        return !(anyxx::trait_as<partial_equality>(x) !=
                                 anyxx::trait_as<partial_equality>(r));
@@ -24,6 +24,10 @@ template <typename T>
 struct partial_equality_model_map<T> : partial_equality_default_model_map<T> {
   static auto eq(T const& self, T const& r) { return self == r; }
 };
+static_assert(is_partial_equality_model<int>);
+static_assert(is_partial_equality_model<double>);
+static_assert(is_partial_equality_model<bool>);
+static_assert(is_partial_equality_model<std::string>);
 
 template <typename T>
 void test_partial_equality_(
@@ -41,7 +45,6 @@ void test_partial_equality(T const& a, T const& b) {
 
 }  // namespace lib_2f
 
-static_assert(lib_2f::is_partial_equality_model<int>);
 
 namespace app_2f {
 
@@ -49,22 +52,24 @@ struct a_type {
   std::string name;
 };
 
+}  // namespace app_2f
+
+static_assert(!lib_2f::is_partial_equality_model<app_2f::a_type>);
+
+namespace app_2f {
+
 struct b_type {
   std::string name;
 };
 
 }  // namespace app_2f
 
-static_assert(!lib_2f::is_partial_equality_model<app_2f::a_type>);
-
-template <>
-struct lib_2f::partial_equality_model_map<app_2f::b_type>
-    : lib_2f::partial_equality_default_model_map<app_2f::b_type> {
-  static auto eq(app_2f::b_type self, app_2f::b_type r) {
-    return self.name == r.name;
+ANY_MODEL_MAP((app_2f::b_type), lib_2f::partial_equality) {
+  using default_map::eq;
+  static auto ne(app_2f::b_type self, app_2f::b_type r) {
+    return self.name != r.name;
   }
 };
-
 static_assert(lib_2f::is_partial_equality_model<app_2f::b_type>);
 
 TEST_CASE("partial_equality") {
