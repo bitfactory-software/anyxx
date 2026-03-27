@@ -12,6 +12,7 @@ var hierarchy =
     [ "anyxx::any&lt; using_&lt; functor const &amp; &gt;, function&lt; int(double), const_ &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; using_&lt; functor const &amp; &gt;, function&lt; int(double), mutable_ &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; using_&lt; Type &gt;, Trait &gt;", "classanyxx_1_1any.html", null ],
+    [ "anyxx::any&lt; using_&lt; Type &gt;, Trait&lt; Ts... &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; using_&lt; Value &gt;, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; val &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; val, Trait &gt;", "classanyxx_1_1any.html", null ],

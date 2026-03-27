@@ -68,6 +68,7 @@ var anyxx_8hpp =
     [ "anyxx::mutref", "group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2", null ],
     [ "anyxx::shared", "group__proxies.html#ga56505144f855bfd01c879bf63c62f09c", null ],
     [ "anyxx::use_as", "anyxx_8hpp.html#a01e8132b16d45db321d99a076384242b", null ],
+    [ "anyxx::use_as_", "anyxx_8hpp.html#a7f2abb993bc8ac5aa1b5eb53db8ab794", null ],
     [ "anyxx::vany_variant", "group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80", null ],
     [ "anyxx::weak", "group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c", null ],
     [ "anyxx::borrow_as", "group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16", null ],
