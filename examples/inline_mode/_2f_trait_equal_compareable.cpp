@@ -41,6 +41,10 @@ namespace lib_2f {
 // These functions are then used to implement the operators == and !=
 // in the external interface.
 TRAIT(equal_compareable,
+      // anyxx::self is a magic type that represents the type of the object for
+      // which the trait is called. It is used to smooth the differences between
+      // static and dynamic dispatch. In both cases, it will be replaced by the
+      // actual type of the object ref/const qualified as written.
       (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
                   [&x](auto const& r) {
                     // Because we 'trait' x and r 'as' equal_compareable, we can
@@ -144,7 +148,7 @@ TEST_CASE("equal_compareable static") {
   lib_2f::test_equal_compareable(1, 1);
   lib_2f::test_equal_compareable(app_2f::b_type{"A"}, app_2f::b_type{"B"});
 }
-// 2. Dynamic dispatch usage:
+// 2. Dynamic dispatch usage.
 TEST_CASE("equal_compareable dynamic") {
   using any_equal_compareable =
       anyxx::any<anyxx::val, lib_2f::equal_compareable>;
@@ -160,5 +164,15 @@ TEST_CASE("equal_compareable dynamic") {
   };
   for (auto const& [a, b] : v) {
     lib_2f::test_equal_compareable_(a, b);
+  }
+
+  {
+    // This should throw, because the types of a and b are not the same. 
+    // This behaviour is enforced by the \ref anyxx::self keyword type.
+    using namespace anyxx;
+    using namespace lib_2f;
+    any<val, equal_compareable> a{42};
+    any<val, equal_compareable> b{3.14};
+    CHECK_THROWS_AS(a == b, type_mismatch_error);
   }
 }

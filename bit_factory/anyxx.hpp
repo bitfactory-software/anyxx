@@ -634,6 +634,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       }                                                                        \
     }                                                                          \
                                                                                \
+    using T = void;                                                            \
+                                                                               \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
     template <typename Concrete>                                               \
@@ -3131,10 +3133,15 @@ struct using_ {
   using as = any<using_<Value>, Trait>;
 };
 
-/// A template to get a \ref trait for a type
+/// A template to get an \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
 using use_as = any<using_<Type>, Trait>;
+
+/// A template to get an templatetd \ref any trait for a type
+/// See also \ref using_::as.
+template <typename Type, template <typename...> typename Trait, typename... Ts>
+using use_as_ = any<using_<Type>, Trait<Ts...>>;
 
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.
@@ -4470,14 +4477,14 @@ class dispatch_vany {
 
    \example _2d_trait_self.cpp
    Shows self a referntial trait
-   \example _2f_trait_partial_equality.cpp 
-   Trait for partial equality. Walkthrough for advanced trait usage: 
+   \example _2f_trait_partial_equality.cpp
+   Trait for partial equality. Walkthrough for advanced trait usage:
    - Static and dynamic polymorphism
    - the model map as a customization points
    - apply the automatic supplied C++20 concepts
 
 
-   \example _2b_trait_monoid.cpp 
+   \example _2b_trait_monoid.cpp
    A self referntial trait that models a monoid. Show how to use a MODEL_MAP
    that acts simultanious as runtime and complitem customization point
 

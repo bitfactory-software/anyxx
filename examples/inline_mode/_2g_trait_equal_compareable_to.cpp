@@ -1,0 +1,104 @@
+#include <bit_factory/anyxx.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <string>
+
+namespace lib_2f {
+
+TRAIT_TEMPLATE(
+    ((To)), equal_compareable_to,
+    (ANY_OP_DEF(protected, bool, ==, eq,
+                ((anyxx::use_as_<To, equal_compareable_to, T> const&)), const,
+                ([&x](auto const& r) {
+                  return !(trait_as<equal_compareable_to<To>>(x) != r);
+                })),
+     ANY_OP_DEF(public, bool, !=, ne,
+                ((anyxx::use_as_<To, equal_compareable_to, T> const&)), const,
+                ([&x](auto const& r) {
+                  return !(trait_as<equal_compareable_to<To>>(x) == r);
+                }))))
+
+template <typename T, typename To>
+  requires requires(T const& a, To const& b) {
+    { a == b } -> std::convertible_to<bool>;
+  }
+struct equal_compareable_to_model_map<T, To>
+    : equal_compareable_to_default_model_map<T, To> {
+  static auto eq(T const& self,
+                 anyxx::use_as_<To, equal_compareable_to, T> const& r) {
+    return self == static_cast<To const&>(r);
+  }
+};
+
+static_assert(is_equal_compareable_to_model<int, int>);
+
+static_assert(is_equal_compareable_to_model<
+              int, anyxx::use_as_<int, equal_compareable_to, int>>);
+static_assert(is_equal_compareable_to_model<
+              int, anyxx::use_as_<double, equal_compareable_to, int>>);
+static_assert(is_equal_compareable_to_model<
+              double, anyxx::use_as_<int, equal_compareable_to, double>>);
+
+template <typename T1, typename T2>
+void test_equal_compareable_to_(
+    anyxx::any<anyxx::using_<T1>, equal_compareable_to<T2>> const& a,
+    anyxx::any<anyxx::using_<T2>, equal_compareable_to<T1>> const& b) {
+  CHECK((a == b) == (b == a));
+  CHECK((a != b) == (b != a));
+}
+template <typename L, typename R>
+  requires is_equal_compareable_to_model<L, R> &&
+           is_equal_compareable_to_model<R, L>
+void test_equal_compareable_to(L const& a, R const& b) {
+  using namespace anyxx;
+  test_equal_compareable_to_<L, R>(trait_as<equal_compareable_to<R>>(a),
+                                   trait_as<equal_compareable_to<L>>(b));
+}
+
+}  // namespace lib_2f
+
+namespace app_2f {
+
+struct a_type {
+  std::string name_a;
+};
+struct b_type {
+  std::string name_b;
+};
+
+}  // namespace app_2f
+
+ANY_TEMPLATE_MODEL_MAP((app_2f::b_type), lib_2f::equal_compareable_to,
+                       ((app_2f::a_type))) {
+  static auto eq(app_2f::b_type const& self,
+                 anyxx::use_as_<app_2f::a_type, equal_compareable_to,
+                                app_2f::b_type> const& r) {
+    return self.name_b == static_cast<app_2f::a_type const&>(r).name_a;
+  };
+};
+ANY_TEMPLATE_MODEL_MAP((app_2f::a_type), lib_2f::equal_compareable_to,
+                       ((app_2f::b_type))) {
+  static auto eq(app_2f::a_type const& self,
+                 anyxx::use_as_<app_2f::b_type, equal_compareable_to,
+                                app_2f::a_type> const& r) {
+    return self.name_a == static_cast<app_2f::b_type const&>(r).name_b;
+  };
+};
+static_assert(
+    lib_2f::is_equal_compareable_to_model<app_2f::b_type, app_2f::a_type>);
+static_assert(
+    lib_2f::is_equal_compareable_to_model<app_2f::a_type, app_2f::b_type>);
+
+// Now we can use the algorithm defined in the library
+// with static dispatch usage:
+TEST_CASE("equal_compareable_to static") {
+  using namespace anyxx;
+  using namespace lib_2f;
+  auto a = trait_as<equal_compareable_to<int>>(1);
+  auto b = trait_as<equal_compareable_to<int>>(2);
+  auto x = a == b;
+  CHECK(x == false);
+
+  lib_2f::test_equal_compareable_to(1, 1);
+  lib_2f::test_equal_compareable_to(1, 3.14);
+  lib_2f::test_equal_compareable_to(app_2f::a_type{"A"}, app_2f::b_type{"B"});
+}
