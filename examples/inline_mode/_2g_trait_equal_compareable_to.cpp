@@ -93,12 +93,13 @@ static_assert(
 TEST_CASE("equal_compareable_to static") {
   using namespace anyxx;
   using namespace lib_2f;
-  auto a = trait_as<equal_compareable_to<int>>(1);
-  auto b = trait_as<equal_compareable_to<int>>(2);
+  auto a = trait_as<equal_compareable_to<double>>(1);
+  auto b = trait_as<equal_compareable_to<int>>(2.0);
   auto x = a == b;
-  CHECK(x == false);
+  CHECK(x == false);  // simplies case
 
   lib_2f::test_equal_compareable_to(1, 1);
   lib_2f::test_equal_compareable_to(1, 3.14);
-  lib_2f::test_equal_compareable_to(app_2f::a_type{"A"}, app_2f::b_type{"B"});
+  // this next example is possible the reason, why we need concept maps as customization points.
+  lib_2f::test_equal_compareable_to(app_2f::a_type{"A"}, app_2f::b_type{"B"}); 
 }
