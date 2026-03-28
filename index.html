@@ -268,8 +268,6 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="line"><span class="preprocessor">#if !defined(__clang__)  </span><span class="comment">// clang makes no rewrite for our &lt;=&gt; operator :-(</span></div>
-<div class="line">                         <span class="comment">// gcc and msvc do!</span></div>
 <div class="line"><span class="keyword">namespace </span>showcase3 {</div>
 <div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
@@ -331,7 +329,6 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line">        <span class="stringliteral">&quot;circle == circle, circle &lt; square, square &gt; circle, square == square&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line">};  <span class="comment">// namespace showcase3</span></div>
-<div class="line"><span class="preprocessor">#endif  </span><span class="comment">// __clang__</span></div>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
