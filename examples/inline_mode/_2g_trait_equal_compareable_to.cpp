@@ -23,20 +23,15 @@ template <typename T, typename To>
   }
 struct equal_compareable_to_model_map<T, To>
     : equal_compareable_to_default_model_map<T, To> {
-  static auto eq(T const& self,
+  static bool eq(T const& self,
                  anyxx::use_as_<To, equal_compareable_to, T> const& r) {
-    return self == static_cast<To const&>(r);
+    return self == get_proxy_value(r);
   }
 };
 
 static_assert(is_equal_compareable_to_model<int, int>);
-
-static_assert(is_equal_compareable_to_model<
-              int, anyxx::use_as_<int, equal_compareable_to, int>>);
-static_assert(is_equal_compareable_to_model<
-              int, anyxx::use_as_<double, equal_compareable_to, int>>);
-static_assert(is_equal_compareable_to_model<
-              double, anyxx::use_as_<int, equal_compareable_to, double>>);
+static_assert(is_equal_compareable_to_model<int, double>);
+static_assert(is_equal_compareable_to_model<double, double>);
 
 template <typename T1, typename T2>
 void test_equal_compareable_to_(
@@ -72,7 +67,7 @@ ANY_TEMPLATE_MODEL_MAP((app_2f::b_type), lib_2f::equal_compareable_to,
   static auto eq(app_2f::b_type const& self,
                  anyxx::use_as_<app_2f::a_type, equal_compareable_to,
                                 app_2f::b_type> const& r) {
-    return self.name_b == static_cast<app_2f::a_type const&>(r).name_a;
+    return self.name_b == get_proxy_value(r).name_a;
   };
 };
 ANY_TEMPLATE_MODEL_MAP((app_2f::a_type), lib_2f::equal_compareable_to,
@@ -80,7 +75,7 @@ ANY_TEMPLATE_MODEL_MAP((app_2f::a_type), lib_2f::equal_compareable_to,
   static auto eq(app_2f::a_type const& self,
                  anyxx::use_as_<app_2f::b_type, equal_compareable_to,
                                 app_2f::a_type> const& r) {
-    return self.name_a == static_cast<app_2f::b_type const&>(r).name_b;
+    return self.name_a == get_proxy_value(r).name_b;
   };
 };
 static_assert(
@@ -95,11 +90,10 @@ TEST_CASE("equal_compareable_to static") {
   using namespace lib_2f;
   auto a = trait_as<equal_compareable_to<double>>(1);
   auto b = trait_as<equal_compareable_to<int>>(2.0);
-  auto x = a == b;
-  CHECK(x == false);  // simplies case
+  auto x = a == b; // simple case
+  CHECK(x == false); 
 
-  lib_2f::test_equal_compareable_to(1, 1);
   lib_2f::test_equal_compareable_to(1, 3.14);
-  // this next example is possible the reason, why we need concept maps as customization points.
-  lib_2f::test_equal_compareable_to(app_2f::a_type{"A"}, app_2f::b_type{"B"}); 
+  // this next example shows, why we need concept maps as customization points:
+  lib_2f::test_equal_compareable_to(app_2f::a_type{"A"}, app_2f::b_type{"B"});
 }

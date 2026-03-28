@@ -42,7 +42,7 @@ TEST_CASE("any bool operator") {
   CHECK(is_null);
   int i = 0;
   any<cref, base_trait> b{i};
-  bool not_null = b;
+  bool not_null = static_cast<bool>(b);
   CHECK(not_null);
 }
 

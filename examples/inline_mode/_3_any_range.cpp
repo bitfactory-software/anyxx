@@ -181,14 +181,14 @@ TEST_CASE("example 3 self in range") {
   {
     any_node<using_<int>> n1{0};
     auto r = n1.sum(v);
-    CHECK(r == 6);
+    CHECK(get_proxy_value(r) == 6);
   }
   {
     any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{
         v};
     any_node<using_<int>> n1{0};
     auto result = n1.sum(r);
-    CHECK(result == 6);
+    CHECK(get_proxy_value(result) == 6);
   }
   {
     any_forward_range<any_node<anyxx::val>, any_node<anyxx::val>, anyxx::val> r{
@@ -213,5 +213,5 @@ TEST_CASE("example 3 static any range of view") {
   for (auto i : r) {
     result += i.to_string();
   }
-  CHECK(result == "012"); 
+  CHECK(result == "012");
 }

@@ -91,7 +91,7 @@ struct forward_trait_to_map<Traited, AnyForwardRange const &> {
                                      if constexpr (T::dyn) {
                                        return *unerase_cast<Traited>(any);
                                      } else {
-                                       return static_cast<Traited>(any);
+                                       return get_proxy_value(any);
                                      }
                                    } else {
                                      return any;

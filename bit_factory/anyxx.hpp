@@ -2978,18 +2978,6 @@ class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
       return p != nullptr;
     }
   }
-
-  operator decltype(auto)() const {
-    if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
-      if constexpr (is_type_class<proxy_t>) {
-        return nullptr;
-      } else {
-        return proxy_.value_;
-      }
-    } else {
-      return &proxy_;
-    }
-  }
 };
 
 template <is_any Any>

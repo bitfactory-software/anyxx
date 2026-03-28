@@ -20,8 +20,8 @@ TRAIT_EX(monoid,
                      [&x](auto const& r) {
                        std::println("op-default {}", typeid(T).name());
                        auto self = anyxx::trait_as<monoid>(x);
-                       return self.concat(std::vector{anyxx::trait_as<monoid>(
-                                         r)});  // NOLINT
+                       return get_proxy(self.concat(
+                           std::vector{anyxx::trait_as<monoid>(r)}));  // NOLINT
                      }),
           ANY_FN_DEF(public, anyxx::self, concat,
                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
@@ -30,13 +30,13 @@ TRAIT_EX(monoid,
                      [&x](const auto& r) {
                        std::println("concat-default {}", typeid(T).name());
                        auto self = anyxx::trait_as<monoid>(x);
-                       return std::ranges::fold_left(
+                       return get_proxy(std::ranges::fold_left(
                            r | std::views::transform([](auto const& y) {
                              return anyxx::trait_as<monoid>(y);
                            }),
                            self, [&](auto const& m1, auto const& m2) {
                              return m1.op(m2);
-                           });
+                           }));
                      }),
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
@@ -116,15 +116,16 @@ TEST_CASE("example 2b monoid simple") {
   example_2b::any_monoid<anyxx::using_<int>> x{2};
   example_2b::any_monoid<anyxx::using_<int>> y{x};
   example_2b::any_monoid<anyxx::using_<int>> z = y;
-  CHECK(static_cast<int>(z) == 2);
+  CHECK(get_proxy_value(z) == 2);
   example_2b::any_monoid<anyxx::using_<int>> a{std::move(x)};
-  CHECK(static_cast<int>(a) == 2);
+  CHECK(get_proxy_value(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
   static_assert(
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
-      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t, decltype(y)::v_table_t>);
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
+                              decltype(y)::v_table_t>);
 }
 
 TEST_CASE("example 2b monoid a") {
@@ -162,4 +163,3 @@ TEST_CASE("example 2b monoid d") {
 
   test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
 }
-

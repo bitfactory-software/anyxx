@@ -18,17 +18,18 @@ TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
                        []<typename Trait>(auto trait) {
-                         return trait.concat(std::ranges::empty_view<Trait>{});
+                         return get_proxy_value(
+                             trait.concat(std::ranges::empty_view<Trait>{}));
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
                        []<typename Trait>(auto trait, const auto& r) {
                          auto id = trait.identity();
-                         return std::ranges::fold_left(
+                         return get_proxy_value(std::ranges::fold_left(
                              r, id, [&](Trait const& m1, Trait const& m2) {
                                return m1.op(m2);
-                             });
+                             }));
                        })),
     , ())
 
@@ -51,11 +52,11 @@ struct monoid_model_map<int> : monoid_default_model_map<int> {
   static auto concat(auto, auto const& r) {
     using namespace anyxx;
     std::println("concat {}", typeid(int).name());
-    return std::ranges::fold_left(
+    return get_proxy_value(std::ranges::fold_left(
         r, trait_as<monoid>(0),
         [&](use_as<int, monoid> const& m1, use_as<int, monoid> const& m2) {
           return m1.op(m2);
-        });
+        }));
   };
 };
 template <>
@@ -142,9 +143,9 @@ TEST_CASE("algebra basics") {
   using_<int>::as<monoid> x{2};
   using_<int>::as<monoid> y{x};
   using_<int>::as<monoid> z = y;
-  CHECK(static_cast<int>(z) == 2);
+  CHECK(get_proxy_value(z) == 2);
   using_<int>::as<monoid> a{std::move(x)};
-  CHECK(static_cast<int>(a) == 2);
+  CHECK(get_proxy_value(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
   static_assert(

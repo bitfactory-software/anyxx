@@ -5,7 +5,7 @@
 namespace example_2d {
 
 TRAIT_TEMPLATE_(((Base)), has_equal, Base, (),
-      (ANY_FN_DEF(public, bool, is_equal, (anyxx::self const&), const,
+                (ANY_FN_DEF(public, bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
 template <typename Proxy = anyxx::val, typename Base = anyxx::base_trait>
@@ -35,13 +35,13 @@ TEST_CASE("example 2da any_has_equal") {
 namespace example_2d {
 
 TRAIT_(has_plus, has_equal<anyxx::base_trait>,
-      (ANY_FN_DEF(public, anyxx::self, plus, (anyxx::self const&), const,
-                            ([&x](T const& y) {
-                              return anyxx::trait_as<has_plus>(x) +
-                                     anyxx::trait_as<has_plus>(y);
-                            })),
-       ANY_OP_DEF(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
-                        ([&x](T const& y) { return x + y; }))))
+       (ANY_FN_DEF(public, anyxx::self, plus, (anyxx::self const&), const,
+                   ([&x](T const& y) {
+                     return get_proxy_value(trait_as<has_plus>(x) +
+                                            trait_as<has_plus>(y));
+                   })),
+        ANY_OP_DEF(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
+                   ([&x](T const& y) { return x + y; }))))
 
 template <typename Box = anyxx::val>
 using any_has_plus = anyxx::any<Box, has_plus>;

@@ -37,7 +37,7 @@
 [![CI](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)
 [![Static Badge](https://img.shields.io/badge/dos-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)
 
-# Any++ : How to ``trait`` ``any`` ``virtual``, ``static`` or ``variant``?
+#Any++ : How to ``trait`` ``any`` ``virtual``, ``static`` or ``variant``?
 
 <img width="908" height="760" alt="Any++logo-small" src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" />
 
@@ -236,7 +236,7 @@ struct figure_has_open_dispatch {};
 ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)
 
 ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
-                                      ayx::virtual_<any_figure<>>)>
+                                    ayx::virtual_<any_figure<>>)>
     compare_edges;
 
 [[nodiscard]] std::partial_ordering operator<=>(any_figure<> const& l,
@@ -259,12 +259,14 @@ void compare_each(std::stringstream& os,
   for (auto const& l : figures)
     for (auto const& r : figures) {
       os << std::exchange(sep, ", ") << l.name() << " ";
-      if (l == r)
+      if (auto c = l <=> r; c == std::partial_ordering::equivalent)
         os << "==";
-      else if (l < r)
+      else if (c == std::partial_ordering::less)
         os << "<";
-      else
+      else if (c == std::partial_ordering::greater)
         os << ">";
+      else
+        os << "?";
       os << " " << r.name();
     }
 }
