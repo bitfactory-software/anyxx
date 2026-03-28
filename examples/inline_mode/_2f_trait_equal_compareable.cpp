@@ -42,9 +42,9 @@ namespace lib_2f {
 // in the external interface.
 TRAIT(equal_compareable,
       // anyxx::self is a magic type that represents the type of the object for
-      // which the trait is called. It is used to smooth the differences between
-      // static and dynamic dispatch. In both cases, it will be replaced by the
-      // actual type of the object ref/const qualified as written.
+      // whitch the trait is called. It is used to smooth the differences
+      // between static and dynamic dispatch, so the implemention can be written
+      // against the actual type of the object ref/const qualified as specified.
       (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
                   [&x](auto const& r) {
                     // Because we 'trait' x and r 'as' equal_compareable, we can
@@ -167,7 +167,7 @@ TEST_CASE("equal_compareable dynamic") {
   }
 
   {
-    // This should throw, because the types of a and b are not the same. 
+    // This should throw, because the types of a and b are not the same.
     // This behaviour is enforced by the \ref anyxx::self keyword type.
     using namespace anyxx;
     using namespace lib_2f;
