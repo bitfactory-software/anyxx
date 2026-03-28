@@ -40,6 +40,8 @@
 
 #if defined(_MSC_VER) // MSVC
 #define ANYXX_USE_EBO __declspec(empty_bases)
+#else
+#define ANYXX_USE_EBO
 #endif
 #if defined(_MSC_VER) && not defined(__clang__)  // MSVC
 #define LIFETIMEBOUND [[msvc::lifetimebound]]
