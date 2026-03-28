@@ -7,16 +7,16 @@ var searchData=
   ['cast_20vs_20dynamic_20cast_4',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
   ['castability_5',['Lifetime castability',['../md_docs_2Proxy__overview.html#autotoc_md3',1,'']]],
   ['casts_6',['Casts',['../group__casts.html',1,'']]],
-  ['ci_20matrix_7',['CI Matrix',['../index.html#autotoc_md29',1,'']]],
+  ['ci_20matrix_7',['CI Matrix',['../index.html#autotoc_md28',1,'']]],
   ['class_8',['Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
   ['classes_9',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
   ['classes_10',['Monoid, the &quot;Hello World&quot; of type classes',['../subpage2.html',1,'main']]],
   ['classes_20rust_20traits_20a_20short_20introduction_11',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
-  ['clone_20the_20repo_3a_12',['Clone the repo:',['../index.html#autotoc_md27',1,'']]],
+  ['clone_20the_20repo_3a_12',['Clone the repo:',['../index.html#autotoc_md26',1,'']]],
   ['clone_5ffrom_13',['clone_from',['../md_docs_2Proxy__overview.html#autotoc_md6',1,'']]],
   ['clone_5fto_14',['clone_to',['../group__casts.html#gaf2b7730650bc77681cf299e2a6e77157',1,'anyxx']]],
-  ['cmakelists_20txt_3a_15',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
-  ['compared_16',['Runtime Performance compared',['../index.html#autotoc_md28',1,'']]],
+  ['cmakelists_20txt_3a_15',['Useage in CMakeLists.txt:',['../index.html#autotoc_md25',1,'']]],
+  ['compared_16',['Runtime Performance compared',['../index.html#autotoc_md27',1,'']]],
   ['concept_20maps_20using_20c_2023_20library_20tech_20steve_20downey_17',['Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
   ['concepts_20haskell_20type_20classes_20rust_20traits_20a_20short_20introduction_18',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
   ['concepts_20rust_20traits_20haskell_20type_20classes_19',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
@@ -27,5 +27,5 @@ var searchData=
   ['cref_24',['cref',['../group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf',1,'anyxx']]],
   ['crosscast_25',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md19',1,'']]],
   ['crosscast_26',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]],
-  ['crosscast_20factory_20serialization_27',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
+  ['crosscast_20factory_20serialization_27',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md32',1,'']]]
 ];

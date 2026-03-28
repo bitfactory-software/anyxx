@@ -93,8 +93,7 @@ $(function(){initNavTree('index.html','',''); });
 <div class="contents">
 <div class="textblock"><p><a class="anchor" id="md_files__for__doxygen_2README"></a> //                              <a class="el" href="#showcase1" title="showcase1">Hello World!</a> / <a class="el" href="#showcase2" title="showcase2">Model Map</a> / <a class="el" href="#showcase3" title="showcase3">Type Erased Spaceship</a> / <a class="el" href="#showcase4" title="showcase4">Open Dispatch As Visitor</a> / <a class="el" href="#showcase5" title="showcase5">Crosscast + Factory = Serialization</a> / <a class="el" href="#showcase6" title="showcase6">Basic *Any++* std::variant usage</a> / <a class="el" href="#showcase7" title="showcase7">Basic *Any++* open std::variant usage: 'vany'</a></p>
 <p><a href="https://opensource.org/license/mit"><img src="http://img.shields.io/badge/license-MIT-blue.svg" alt="MIT Licence" style="pointer-events: none;" class="inline"/></a> <a href="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml"><img src="https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg" alt="CI" style="pointer-events: none;" class="inline"/></a> <a href="https://www.alexweb.io/anyxx/"><img src="https://img.shields.io/badge/dos-Any%2B%2B-blue" alt="Static Badge" class="inline"/></a></p>
-<h1 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
-Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</h1>
+<p>#Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span class="tt">virtual</span>, <span class="tt">static</span> or <span class="tt">variant</span>?</p>
 <p><img src="https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754" alt="Any++logo-small" width="908" height="760" class="inline"/></p>
 <p><b>Any++</b> enhances the well-known <em>boost::any</em> and <em>std::any</em> with:</p>
 <ul>
@@ -123,7 +122,7 @@ Any++ : How to <span class="tt">trait</span> <span class="tt">any</span> <span c
 </ul>
 <p><b>Special thanks go to <a href="https://github.com/AlexCodesApps">Alex</a> for his lightweight and manageable preprocessor vocabulary shown in <a href="https://github.com/AlexCodesApps/dynamic_interface#example">dynamic_interface</a>.</b></p>
 <p><a class="anchor" id="showcase1"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md23"></a>
 Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -164,12 +163,12 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <p><a href="https://godbolt.org/z/nGjjs9xva">Compiler Explorer</a></p>
 <p><a class="el" href="#showcase2" title="showcase2">Here to more Showcases ...</a></p>
 <p><a href="https://www.alexweb.io/anyxx/">Here to Docs ...</a></p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md24"></a>
 Available on vcpkg:</h3>
 <p>Install in vcpkg root directory: </p><div class="fragment"><div class="line">vcpkg install anyxx</div>
 </div><!-- fragment --><p>In your CMakeLists.txt: </p><div class="fragment"><div class="line">find_package(anyxx CONFIG REQUIRED)</div>
 <div class="line">target_link_libraries(main PRIVATE bit_factory::anyxx)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md25"></a>
 Useage in CMakeLists.txt:</h3>
 <div class="fragment"><div class="line">FetchContent_Declare(</div>
 <div class="line">    bit_factory::anyxx</div>
@@ -177,10 +176,10 @@ Useage in CMakeLists.txt:</h3>
 <div class="line">    GIT_TAG 0.5.0</div>
 <div class="line">)</div>
 <div class="line">FetchContent_MakeAvailable(anyxx)</div>
-</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
+</div><!-- fragment --><h3 class="doxsection"><a class="anchor" id="autotoc_md26"></a>
 Clone the repo:</h3>
 <div class="fragment"><div class="line">git clone - c core.symlinks = true https://github.com/bitfactory-software/anyxx</div>
-</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
+</div><!-- fragment --> <h3 class="doxsection"><a class="anchor" id="autotoc_md27"></a>
 Runtime Performance compared</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -208,7 +207,7 @@ clang-cl /O2 /Ob2  </th><th class="markdownTableHeadRight">Source  </th><th clas
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyLeft"><span class="tt">std::variant</span> + <span class="tt">std::visit</span>  </td><td class="markdownTableBodyRight">x 0.8  </td><td class="markdownTableBodyRight">x 0.65  </td><td class="markdownTableBodyRight">x 0.35  </td><td class="markdownTableBodyRight"><a href="https://github.com/bitfactory-software/anyxx/blob/master/examples/inline_mode/30a_Animals_variant_visit.cpp">Source</a>  </td><td class="markdownTableBodyRight"><span class="tt">BENCHMARK("30a_Animals variant visit")</span>  </td></tr>
 </table>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md28"></a>
 CI Matrix</h3>
 <table class="markdownTable">
 <tr class="markdownTableHead">
@@ -221,7 +220,7 @@ CI Matrix</h3>
 <td class="markdownTableBodyCenter">MacOS(latest)  </td><td class="markdownTableBodyCenter">-  </td><td class="markdownTableBodyCenter">21  </td><td class="markdownTableBodyCenter">14  </td></tr>
 </table>
 <p><a class="anchor" id="showcase2"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md29"></a>
 Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -264,7 +263,7 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 </div><!-- fragment --><p> Showcase 2 demonstrates, how to use <span class="tt">Any++</span>'s "model map" feature to provide custom behavior for unrelated types using traits.</p>
 <p><a href="https://godbolt.org/z/P7rfbzecj">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase3"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md30"></a>
 Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -290,7 +289,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(figure, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), ayx::cref)</div>
 <div class="line"> </div>
 <div class="line">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</div>
-<div class="line">                                      ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</div>
+<div class="line">                                    ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</div>
 <div class="line">    compare_edges;</div>
 <div class="line"> </div>
 <div class="line">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(any_figure&lt;&gt; <span class="keyword">const</span>&amp; l,</div>
@@ -313,12 +312,14 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l : figures)</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r : figures) {</div>
 <div class="line">      os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; l.name() &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
-<div class="line">      <span class="keywordflow">if</span> (l == r)</div>
+<div class="line">      <span class="keywordflow">if</span> (<span class="keyword">auto</span> c = l &lt;=&gt; r; c == std::partial_ordering::equivalent)</div>
 <div class="line">        os &lt;&lt; <span class="stringliteral">&quot;==&quot;</span>;</div>
-<div class="line">      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (l &lt; r)</div>
+<div class="line">      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == std::partial_ordering::less)</div>
 <div class="line">        os &lt;&lt; <span class="stringliteral">&quot;&lt;&quot;</span>;</div>
-<div class="line">      <span class="keywordflow">else</span></div>
+<div class="line">      <span class="keywordflow">else</span> <span class="keywordflow">if</span> (c == std::partial_ordering::greater)</div>
 <div class="line">        os &lt;&lt; <span class="stringliteral">&quot;&gt;&quot;</span>;</div>
+<div class="line">      <span class="keywordflow">else</span></div>
+<div class="line">        os &lt;&lt; <span class="stringliteral">&quot;?&quot;</span>;</div>
 <div class="line">      os &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; r.name();</div>
 <div class="line">    }</div>
 <div class="line">}</div>
@@ -345,7 +346,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 </ul>
 <p><a href="https://godbolt.org/z/caTnh9cf1">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase4"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md31"></a>
 Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -402,7 +403,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 </ul>
 <p><a href="https://godbolt.org/z/c1eWsrdr7">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase5"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
 Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -492,7 +493,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:4330</div></div>
+<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:4318</div></div>
 </div><!-- fragment --><p> Showcase 5 demonstrates how to use <span class="tt">Any++</span> to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with an <span class="tt">area()</span> method and serializable state (<span class="tt">radius</span> or <span class="tt">edge_length</span>).</li>
 <li>Two traits are declared: <span class="tt">figure</span> (with an <span class="tt">area()</span> method) and <span class="tt">serializable</span> (with a <span class="tt">serialize(std::ostream&amp;)</span> method).</li>
@@ -505,7 +506,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <p>This example shows how <span class="tt">Any++</span> enables runtime type selection, safe cross-casting between interfaces, and pluggable serialization logic for unrelated types, all using type-erased objects and open extension points.</p>
 <p><a href="https://godbolt.org/z/4r5o6en94">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase6"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
 Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>
@@ -550,7 +551,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 </ul>
 <p><a href="https://godbolt.org/z/hTT64bv79">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase7"></a> </p>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md34"></a>
 Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="fragment"><div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#endif</span></div>

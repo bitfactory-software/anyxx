@@ -114,8 +114,8 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">                     [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                       std::println(<span class="stringliteral">&quot;op-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
 <div class="line">                       <span class="keyword">auto</span> self = <a id="a2" name="a2"></a>anyxx::trait_as&lt;monoid&gt;(x);</div>
-<div class="line">                       <span class="keywordflow">return</span> self.concat(std::vector{anyxx::trait_as&lt;monoid&gt;(</div>
-<div class="line">                                         r)});  <span class="comment">// NOLINT</span></div>
+<div class="line">                       <span class="keywordflow">return</span> get_proxy(self.concat(</div>
+<div class="line">                           std::vector{anyxx::trait_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
 <div class="line">                     }),</div>
 <div class="line">          <a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, concat,</div>
 <div class="line">                     ((anyxx::any_forward_range&lt;anyxx::self, anyxx::self,</div>
@@ -124,13 +124,13 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">                     [&amp;x](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
 <div class="line">                       std::println(<span class="stringliteral">&quot;concat-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
 <div class="line">                       <span class="keyword">auto</span> self = anyxx::trait_as&lt;monoid&gt;(x);</div>
-<div class="line">                       <span class="keywordflow">return</span> std::ranges::fold_left(</div>
+<div class="line">                       <span class="keywordflow">return</span> get_proxy(std::ranges::fold_left(</div>
 <div class="line">                           r | std::views::transform([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; y) {</div>
 <div class="line">                             <span class="keywordflow">return</span> anyxx::trait_as&lt;monoid&gt;(y);</div>
 <div class="line">                           }),</div>
 <div class="line">                           self, [&amp;](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; m1, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; m2) {</div>
 <div class="line">                             <span class="keywordflow">return</span> m1.op(m2);</div>
-<div class="line">                           });</div>
+<div class="line">                           }));</div>
 <div class="line">                     }),</div>
 <div class="line">          <a id="a4" name="a4"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                     ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }))),</div>
@@ -210,15 +210,16 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  example_2b::any_monoid&lt;anyxx::using_&lt;int&gt;&gt; x{2};</div>
 <div class="line">  example_2b::any_monoid&lt;anyxx::using_&lt;int&gt;&gt; y{x};</div>
 <div class="line">  example_2b::any_monoid&lt;anyxx::using_&lt;int&gt;&gt; z = y;</div>
-<div class="line">  CHECK(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(z) == 2);</div>
+<div class="line">  CHECK(get_proxy_value(z) == 2);</div>
 <div class="line">  example_2b::any_monoid&lt;anyxx::using_&lt;int&gt;&gt; a{std::move(x)};</div>
-<div class="line">  CHECK(<span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(a) == 2);</div>
+<div class="line">  CHECK(get_proxy_value(a) == 2);</div>
 <div class="line">  <span class="keyword">static_assert</span>(anyxx::is_proxy&lt;<span class="keyword">decltype</span>(x)::proxy_t&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(anyxx::is_any&lt;<span class="keyword">decltype</span>(x)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(</div>
 <div class="line">      anyxx::moveable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(</div>
-<div class="line">      !anyxx::borrowable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t, <span class="keyword">decltype</span>(y)::v_table_t&gt;);</div>
+<div class="line">      !anyxx::borrowable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t,</div>
+<div class="line">                              <span class="keyword">decltype</span>(y)::v_table_t&gt;);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2b monoid a&quot;</span>) {</div>
@@ -256,7 +257,6 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  test_monoid&lt;any_monoid&lt;anyxx::val&gt;&gt;(<span class="stringliteral">&quot;1&quot;</span>s, make_a_range(<span class="keyword">false</span>));</div>
 <div class="line">}</div>
-<div class="line"> </div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__fn__macros_html_ga8f8492068e06ea999e2ebf95050e1a57"><div class="ttname"><a href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a></div><div class="ttdeci">#define ANY_OP_DEF(access, ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1061</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1187</div></div>

@@ -131,7 +131,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">[![CI](https:<span class="comment">//github.com/bitfactory-software/anyxx/actions/workflows/ci.yml/badge.svg)](https://github.com/bitfactory-software/anyxx/actions/workflows/ci.yml)</span></div>
 <div class="line">[![Static Badge](https:<span class="comment">//img.shields.io/badge/dos-Any%2B%2B-blue)](https://www.alexweb.io/anyxx/)</span></div>
 <div class="line"> </div>
-<div class="line"># Any++ : How to ``trait`` ``any`` ``<span class="keyword">virtual</span>``, ``<span class="keyword">static</span>`` or ``variant``?</div>
+<div class="line">#Any++ : How to ``trait`` ``any`` ``<span class="keyword">virtual</span>``, ``<span class="keyword">static</span>`` or ``variant``?</div>
 <div class="line"> </div>
 <div class="line">&lt;img width=<span class="stringliteral">&quot;908&quot;</span> height=<span class="stringliteral">&quot;760&quot;</span> alt=<span class="stringliteral">&quot;Any++logo-small&quot;</span> src=<span class="stringliteral">&quot;https://github.com/user-attachments/assets/e4766dd4-7a21-486d-9dd0-8725149e0754&quot;</span> /&gt;</div>
 <div class="line"> </div>
@@ -309,8 +309,6 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">// &lt;!--</span></div>
 <div class="line"><span class="stringliteral">#endif</span></div>
 <div class="line"><span class="stringliteral">// --&gt;</span></div>
-<div class="line"><span class="stringliteral">#if !defined(__clang__)  // clang makes no rewrite for our &lt;=&gt; operator :-(</span></div>
-<div class="line"><span class="stringliteral">                         // gcc and msvc do!</span></div>
 <div class="line"><span class="stringliteral">namespace showcase3 {</span></div>
 <div class="line"><span class="stringliteral">#include &lt;bit_factory/anyxx.hpp&gt;</span></div>
 <div class="line"><span class="stringliteral">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
@@ -330,7 +328,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</span></div>
-<div class="line"><span class="stringliteral">                                      ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</span></div>
+<div class="line"><span class="stringliteral">                                    ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</span></div>
 <div class="line"><span class="stringliteral">    compare_edges;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">[[nodiscard]] std::partial_ordering operator&lt;=&gt;(any_figure&lt;&gt; const&amp; l,</span></div>
@@ -353,12 +351,14 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  for (auto const&amp; l : figures)</span></div>
 <div class="line"><span class="stringliteral">    for (auto const&amp; r : figures) {</span></div>
 <div class="line"><span class="stringliteral">      os &lt;&lt; std::exchange(sep, &quot;, &quot;) &lt;&lt; l.name() &lt;&lt; &quot; &quot;;</span></div>
-<div class="line"><span class="stringliteral">      if (l == r)</span></div>
+<div class="line"><span class="stringliteral">      if (auto c = l &lt;=&gt; r; c == std::partial_ordering::equivalent)</span></div>
 <div class="line"><span class="stringliteral">        os &lt;&lt; &quot;==&quot;;</span></div>
-<div class="line"><span class="stringliteral">      else if (l &lt; r)</span></div>
+<div class="line"><span class="stringliteral">      else if (c == std::partial_ordering::less)</span></div>
 <div class="line"><span class="stringliteral">        os &lt;&lt; &quot;&lt;&quot;;</span></div>
-<div class="line"><span class="stringliteral">      else</span></div>
+<div class="line"><span class="stringliteral">      else if (c == std::partial_ordering::greater)</span></div>
 <div class="line"><span class="stringliteral">        os &lt;&lt; &quot;&gt;&quot;;</span></div>
+<div class="line"><span class="stringliteral">      else</span></div>
+<div class="line"><span class="stringliteral">        os &lt;&lt; &quot;?&quot;;</span></div>
 <div class="line"><span class="stringliteral">      os &lt;&lt; &quot; &quot; &lt;&lt; r.name();</span></div>
 <div class="line"><span class="stringliteral">    }</span></div>
 <div class="line"><span class="stringliteral">}</span></div>
@@ -370,7 +370,6 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">        &quot;circle == circle, circle &lt; square, square &gt; circle, square == square&quot;);</span></div>
 <div class="line"><span class="stringliteral">}</span></div>
 <div class="line"><span class="stringliteral">};  // namespace showcase3</span></div>
-<div class="line"><span class="stringliteral">#endif  // __clang__</span></div>
 <div class="line"><span class="stringliteral">// &lt;!--</span></div>
 <div class="line"><span class="stringliteral">#if 0</span></div>
 <div class="line"><span class="stringliteral">// --&gt;</span></div>
