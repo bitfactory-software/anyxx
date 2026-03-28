@@ -215,8 +215,6 @@ to provide custom behavior for unrelated types using traits.
 // <!--
 #endif
 // -->
-#if !defined(__clang__)  // clang makes no rewrite for our <=> operator :-(
-                         // gcc and msvc do!
 namespace showcase3 {
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -278,7 +276,6 @@ TEST_CASE("Showcase3") {
         "circle == circle, circle < square, square > circle, square == square");
 }
 };  // namespace showcase3
-#endif  // __clang__
 // <!--
 #if 0
 // -->

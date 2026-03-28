@@ -17,14 +17,17 @@ TRAIT_TEMPLATE(
                   return !(trait_as<equal_compareable_to<To>>(x) == r);
                 }))))
 
+template <typename L, typename R>
+using equal_compareable_to_trait =
+    anyxx::any<anyxx::using_<L>, equal_compareable_to<R>>;
+
 template <typename T, typename To>
   requires requires(T const& a, To const& b) {
     { a == b } -> std::convertible_to<bool>;
   }
 struct equal_compareable_to_model_map<T, To>
     : equal_compareable_to_default_model_map<T, To> {
-  static bool eq(T const& self,
-                 anyxx::use_as_<To, equal_compareable_to, T> const& r) {
+  static bool eq(T const& self, equal_compareable_to_trait<To, T> const& r) {
     return self == get_proxy_value(r);
   }
 };
@@ -33,10 +36,9 @@ static_assert(is_equal_compareable_to_model<int, int>);
 static_assert(is_equal_compareable_to_model<int, double>);
 static_assert(is_equal_compareable_to_model<double, double>);
 
-template <typename T1, typename T2>
-void test_equal_compareable_to_(
-    anyxx::any<anyxx::using_<T1>, equal_compareable_to<T2>> const& a,
-    anyxx::any<anyxx::using_<T2>, equal_compareable_to<T1>> const& b) {
+template <typename L, typename R>
+void test_equal_compareable_to_(equal_compareable_to_trait<L, R> const& a,
+                                equal_compareable_to_trait<R, L> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
 }
@@ -90,8 +92,8 @@ TEST_CASE("equal_compareable_to static") {
   using namespace lib_2f;
   auto a = trait_as<equal_compareable_to<double>>(1);
   auto b = trait_as<equal_compareable_to<int>>(2.0);
-  auto x = a == b; // simple case
-  CHECK(x == false); 
+  auto x = a == b;  // simple case
+  CHECK(x == false);
 
   lib_2f::test_equal_compareable_to(1, 3.14);
   // this next example shows, why we need concept maps as customization points:
