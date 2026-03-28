@@ -38,6 +38,9 @@
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
+#if defined(_MSC_VER) // MSVC
+#define ANYXX_USE_EBO __declspec(empty_bases)
+#endif
 #if defined(_MSC_VER) && not defined(__clang__)  // MSVC
 #define LIFETIMEBOUND [[msvc::lifetimebound]]
 #ifndef ANYXX_GODBOLT
@@ -2798,7 +2801,7 @@ static_assert(moveable_from<val, val>);
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
 template <is_proxy Proxy, typename Trait>
-class any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
+class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
  public:
   using proxy_t = Proxy;
   using proxy_trait_t = proxy_trait<proxy_t>;
