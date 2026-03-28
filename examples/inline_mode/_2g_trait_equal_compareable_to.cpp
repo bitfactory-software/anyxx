@@ -90,8 +90,8 @@ static_assert(
 static_assert(
     lib_2f::is_equal_compareable_to_model<app_2f::a_type, app_2f::b_type>);
 
-static std::vector<int> test_data =
-    std::ranges::iota_view(0, 1000000) | std::ranges::to<std::vector>();
+static std::vector<int> test_data{std::from_range,
+                                  std::ranges::iota_view(0, 1000000)};
 
 bool native_find(double x) {
   return std::ranges::find_if(test_data, [&](int i) { return x == i; }) !=
