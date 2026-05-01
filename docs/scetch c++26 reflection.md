@@ -31,7 +31,7 @@ To coincide with the GCC16 release and its excellent reflection implementation, 
 ```C++
 template <typename Self>
 struct stringable{
-    [[=default_{}]]
+    [[=default_{}]] // that says: when not specialized, call self.as_string() 
     static std::string as_string(Self const& self);
 };
 
