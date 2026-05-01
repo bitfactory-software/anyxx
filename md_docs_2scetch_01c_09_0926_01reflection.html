@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: scetch c++26 reflection</title>
+<title>Any++: External Polymorphism in C++26</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -88,10 +88,27 @@ $(function(){initNavTree('md_docs_2scetch_01c_09_0926_01reflection.html','','');
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">scetch c++26 reflection </div></div>
+  <div class="headertitle"><div class="title">External Polymorphism in C++26 </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt;</div>
+<div class="textblock"><p><a class="anchor" id="autotoc_md7"></a></p>
+<p>While developing our Type Erasure library <a href="https://github.com/bitfactory-software/anyxx">Any++</a> for C++23, I had to resort to a preprocessor-based EDSL to eliminate the boilerplate.</p>
+<p>While studying the "C++26 Reflection Proposals," I was constantly searching for a way to replace this preprocessor programming.</p>
+<p>Implementing Type Erasure requires three components:</p>
+<ul>
+<li>A "V-Table" for indirecting function calls.</li>
+<li>A "Facade" for the ergonomic connection between the data and the "V-Table."</li>
+<li>An "Adapter" to connect the functions of the "V-Table" to the specific type.</li>
+</ul>
+<p>It suffices to describe one of these components. The other two will then be generated automatically.</p>
+<p>One way to do this with C++26 is to code the default adapter and generate the V-table and facade.</p>
+<p>C++26 allows you to generate a class using <span class="tt">define_aggregate</span>.</p>
+<p>The key is that the class can only contain data members.</p>
+<p>However, since a data member can have an <span class="tt">operator()</span>, member functions can also be simulated this way.</p>
+<p>These data members can be specified so that they don't occupy any memory. This allows you to access the enclosing class in the <span class="tt">operator()</span> and use the information it manages (the V-table and the data reference).</p>
+<p>Interestingly, this method also enables static dispatch with an elegant interface.</p>
+<p>To coincide with the GCC16 release and its excellent reflection implementation, I've sketched out such an API:</p>
+<div class="fragment"><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt;</div>
 <div class="line"><span class="keyword">struct </span>stringable{</div>
 <div class="line">    [[=default_{}]]</div>
 <div class="line">    <span class="keyword">static</span> std::string as_string(Self <span class="keyword">const</span>&amp; self);</div>
@@ -135,10 +152,12 @@ $(function(){initNavTree('md_docs_2scetch_01c_09_0926_01reflection.html','','');
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">int</span> main(<span class="keywordtype">int</span> argc, <span class="keywordtype">char</span> *argv[]) {</div>
 <div class="line"> </div>
+<div class="line">    <span class="comment">// static dispatch</span></div>
 <div class="line">    <span class="keyword">auto</span> a1 = trait_as&lt;int, stringable&gt;{{42}};</div>
 <div class="line">    <span class="keyword">auto</span> z_from_self = a1.as_string();</div>
 <div class="line">    std::println(<span class="stringliteral">&quot;z_from_trait = {}&quot;</span>, z_from_self);</div>
 <div class="line"> </div>
+<div class="line">    <span class="comment">// dynamic dispatch, reference semantics only</span></div>
 <div class="line">    <span class="keywordtype">int</span> i = 4711;</div>
 <div class="line">    <span class="keyword">auto</span> dyn_stringable = dyn&lt;stringable&gt;{i};</div>
 <div class="line">    <span class="keyword">auto</span> z_from_dyn_stringable = dyn_stringable.as_string();</div>
@@ -149,7 +168,11 @@ $(function(){initNavTree('md_docs_2scetch_01c_09_0926_01reflection.html','','');
 <div class="line">    boo a_boo{<span class="keyword">true</span>};</div>
 <div class="line">    print({dyn&lt;stringable&gt;{i}, dyn&lt;stringable&gt;{s}, dyn&lt;stringable&gt;{a_foo}, dyn&lt;stringable&gt;{a_boo}});</div>
 <div class="line">}</div>
-</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- fragment --><p> <a href="https://godbolt.org/z/vbMbq9dcP">Compiler Explorer</a></p>
+<p>This is, of course, just a rough outline. The real value of a type erasure library lies in providing additional runtime capabilities (downcast, crosscast), lifetime mechanisms (shared, unique, value, etc.), and constant correctness.</p>
+<p>Any++ provides all of this. As soon as Clang and MSVC also offer reflection, I will implement the presentated technique there.</p>
+<p>For now, I have to thank the wizards who created this technical marvel: "C++ compile-time reflection"! </p>
+</div></div><!-- contents -->
 </div><!-- PageDoc -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -28,7 +28,7 @@ var NAVTREE =
     [ "Any++, C++0x Concepts, Rust Traits, Haskell Type Classes", "main.html", "main" ],
     [ "Handling <span class=\"tt\">const</span> in <span class=\"tt\">Any++</span>", "md_docs_2Constness.html", null ],
     [ "<span class=\"tt\">Any++</span> Type Erased <span class=\"tt\">Proxy</span>*s", "md_docs_2Proxy__overview.html", null ],
-    [ "scetch c++26 reflection", "md_docs_2scetch_01c_09_0926_01reflection.html", null ],
+    [ "External Polymorphism in C++26", "md_docs_2scetch_01c_09_0926_01reflection.html", null ],
     [ "Terms and Definitions in Context of <span class=\"tt\">Any++</span>", "md_docs_2terms__and__definitions.html", null ],
     [ "The Inner Working Of <span class=\"tt\">Traits</span> In <span class=\"tt\">Any++</span>", "md_docs_2Traits__inner__working.html", null ],
     [ "Topics", "topics.html", "topics" ],
