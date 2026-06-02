@@ -38,7 +38,7 @@
 #pragma GCC diagnostic ignored "-Wunused-local-typedefs"
 #endif
 
-#if defined(_MSC_VER) // MSVC
+#if defined(_MSC_VER)  // MSVC
 #define ANYXX_USE_EBO __declspec(empty_bases)
 #else
 #define ANYXX_USE_EBO
@@ -2803,7 +2803,8 @@ static_assert(moveable_from<val, val>);
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
 template <is_proxy Proxy, typename Trait>
-class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>, public Trait {
+class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
+                          public Trait {
  public:
   using proxy_t = Proxy;
   using proxy_trait_t = proxy_trait<proxy_t>;
@@ -4478,8 +4479,16 @@ class dispatch_vany {
 
 
    \example _2b_trait_monoid.cpp
-   A self referntial trait that models a monoid. Show how to use a MODEL_MAP
-   that acts simultanious as runtime and complitem customization point
+   A self referntial trait that models a variant of a monoid.
+   Show how to use a MODEL_MAP that acts simultanious as runtime and complitem
+   customization point.
+
+   \example _2f_trait_equal_comparable.cpp
+   A step by step walkthrough for implementing a trait that models equality
+   comparability for various types.
+
+   \example _2e_trait_algebra.cpp
+   A hierarchy of traits for the algebraic structures semigroup, monoid and group.
 
    \example _2c_trait_any_variant.cpp
 
