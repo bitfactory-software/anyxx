@@ -154,10 +154,8 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  };</div>
 <div class="line">};</div>
 <div class="line"><span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><span class="keyword">struct </span>group_model_map&lt;int&gt; : group_default_model_map&lt;int&gt;,</div>
-<div class="line">                              monoid_model_map&lt;int&gt; {</div>
+<div class="line"><span class="keyword">struct </span>group_model_map&lt;int&gt; : monoid_model_map&lt;int&gt; {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keyword">auto</span> inverse(<span class="keywordtype">int</span> self) {</div>
-<div class="line">    <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">    <span class="keywordflow">return</span> -self;</div>
 <div class="line">  };</div>
 <div class="line">};</div>
