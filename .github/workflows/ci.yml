@@ -61,7 +61,7 @@ jobs:
 
           - os: windows-latest
             compiler: msvc
-            generator: "Visual Studio 18 2026"
+            # generator: "Visual Studio 18 2026"
             build_type: Release
             packaging_maintainer_mode: Off
             package_generator: ZIP
