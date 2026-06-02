@@ -60,10 +60,8 @@ struct monoid_model_map<int> : monoid_default_model_map<int> {
   };
 };
 template <>
-struct group_model_map<int> : group_default_model_map<int>,
-                              monoid_model_map<int> {
+struct group_model_map<int> : monoid_model_map<int> {
   static auto inverse(int self) {
-    using namespace anyxx;
     return -self;
   };
 };
