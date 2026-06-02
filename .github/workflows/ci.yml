@@ -96,7 +96,7 @@ jobs:
           compiler: ${{ matrix.compiler }}
           vcvarsall: ${{ contains(matrix.os, 'windows' )}}
 
-          cmake: 4.4.3
+          cmake: 4.3.3
           ninja: true
           vcpkg: false
           ccache: true
