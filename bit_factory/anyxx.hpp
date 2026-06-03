@@ -1472,6 +1472,9 @@ struct basic_proxy_trait {
   inline static constexpr bool is_lifetime_bound = false;
   inline static constexpr bool is_object = true;
 
+  template <typename Rep>
+  using proxy_impl = Proxy;
+
   static void move_to(auto& to, [[maybe_unused]] auto, auto&& from,
                       [[maybe_unused]] auto) {
     to = std::move(from);
@@ -1708,6 +1711,8 @@ static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
 template <typename V>
 struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
+  template <typename Rep>
+  using proxy_impl = using_<Rep>;
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
                                     const_void, mutable_void>;
   using static_dispatch_t = V;
@@ -2823,13 +2828,13 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using T = proxy_trait_t::static_dispatch_t;
   using model_map_t = typename trait_t::template static_dispatch_map_t<T>;
   using Rep = typename model_map_t::Rep;
-  static_assert(std::same_as<T, Rep>);
+  using proxy_impl_t = typename proxy_trait_t::template proxy_impl<Rep>;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_{};
+  proxy_impl_t proxy_{};
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
