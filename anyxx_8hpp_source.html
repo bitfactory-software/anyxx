@@ -463,7 +463,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="preprocessor">    using T = typename self_t::T;                                              \</span></div>
 <div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span><span class="preprocessor">    using proxy_t = typename self_t::proxy_t;                                  \</span></div>
 <div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span><span class="preprocessor">    using map_t = typename self_t::template static_dispatch_map_t&lt;T&gt;;          \</span></div>
-<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">    using traited_t = typename proxy_t::value_t;                               \</span></div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">    using traited_t = T;                                                       \</span></div>
 <div class="line"><a id="l00380" name="l00380"></a><span class="lineno">  380</span><span class="preprocessor">    using trait_t = typename self_t::trait_t;                                  \</span></div>
 <div class="line"><a id="l00381" name="l00381"></a><span class="lineno">  381</span><span class="preprocessor">    return ANYXX_JACKET_RETURN(return_type)::forward(                          \</span></div>
 <div class="line"><a id="l00382" name="l00382"></a><span class="lineno">  382</span><span class="preprocessor">        map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \</span></div>
@@ -583,7 +583,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00496" name="l00496"></a><span class="lineno">  496</span><span class="preprocessor">    using proxy_t = typename self_t::proxy_t;                                  \</span></div>
 <div class="line"><a id="l00497" name="l00497"></a><span class="lineno">  497</span><span class="preprocessor">                                                                               \</span></div>
 <div class="line"><a id="l00498" name="l00498"></a><span class="lineno">  498</span><span class="preprocessor">    if constexpr (!self_t::dyn) {                                              \</span></div>
-<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span><span class="preprocessor">      using traited_t = typename proxy_t::value_t;                             \</span></div>
+<div class="line"><a id="l00499" name="l00499"></a><span class="lineno">  499</span><span class="preprocessor">      using traited_t = T;                                                     \</span></div>
 <div class="line"><a id="l00500" name="l00500"></a><span class="lineno">  500</span><span class="preprocessor">      if constexpr (std::same_as&lt;void, ANYXX_UNPAREN(type)&gt;) {                 \</span></div>
 <div class="line"><a id="l00501" name="l00501"></a><span class="lineno">  501</span><span class="preprocessor">        return static_dispatch_map_t&lt;T&gt;::name(                                 \</span></div>
 <div class="line"><a id="l00502" name="l00502"></a><span class="lineno">  502</span><span class="preprocessor">            get_proxy_value(self) __VA_OPT__(, )                               \</span></div>

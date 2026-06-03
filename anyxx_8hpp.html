@@ -1916,7 +1916,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">  <span class="keyword">using </span>T = <span class="keyword">typename</span> self_t::T;                                              \</div>
 <div class="line">  <span class="keyword">using </span>proxy_t = <span class="keyword">typename</span> self_t::proxy_t;                                  \</div>
 <div class="line">  <span class="keyword">using </span>map_t = <span class="keyword">typename</span> self_t::template static_dispatch_map_t&lt;T&gt;;          \</div>
-<div class="line">  <span class="keyword">using </span>traited_t = <span class="keyword">typename</span> proxy_t::value_t;                               \</div>
+<div class="line">  <span class="keyword">using </span>traited_t = T;                                                       \</div>
 <div class="line">  <span class="keyword">using </span>trait_t = <span class="keyword">typename</span> self_t::trait_t;                                  \</div>
 <div class="line">  <span class="keywordflow">return</span> ANYXX_JACKET_RETURN(return_type)::forward(                          \</div>
 <div class="line">      map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \</div>
