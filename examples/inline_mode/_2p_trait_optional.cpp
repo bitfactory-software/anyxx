@@ -5,7 +5,7 @@
 namespace _2p {
 
 TRAIT(nullable,
-      (ANY_FN_DEF(public, bool, has_value, (), const, [x]() { return true; }),
+      (ANY_FN_DEF(public, bool, has_value, (), const, []() { return true; }),
        ANY_FN_DEF(public, T, get_value, (), const, [x]() { return x; })))
 
 }

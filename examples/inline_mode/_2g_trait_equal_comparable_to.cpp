@@ -21,10 +21,6 @@ TRAIT_TEMPLATE(
 template <typename L, typename R>
 using trait_as_equal_comparable_to =
     anyxx::any<anyxx::using_<L>, equal_comparable_to<R>>;
-// no memory overhead, because of the EBO and there is no vtable, because the
-// trait using uses static dispatch only.
-static_assert(sizeof(lib_2f::trait_as_equal_comparable_to<int, double>) ==
-              sizeof(int));
 
 template <typename T, typename To>
   requires requires(T const& a, To const& b) {
@@ -37,13 +33,16 @@ struct equal_comparable_to_model_map<T, To>
   }
 };
 
+// no memory overhead, because of the EBO and there is no vtable, because the
+// trait uses static dispatch only.
+static_assert(sizeof(trait_as_equal_comparable_to<int, double>) == sizeof(int));
 static_assert(is_equal_comparable_to_model<int, int>);
 static_assert(is_equal_comparable_to_model<int, double>);
 static_assert(is_equal_comparable_to_model<double, double>);
 
 template <typename L, typename R>
 void test_equal_comparable_to_(trait_as_equal_comparable_to<L, R> const& a,
-                                trait_as_equal_comparable_to<R, L> const& b) {
+                               trait_as_equal_comparable_to<R, L> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
 }
@@ -53,7 +52,7 @@ template <typename L, typename R>
 void test_equal_comparable_to(L const& a, R const& b) {
   using namespace anyxx;
   test_equal_comparable_to_<L, R>(trait_as<equal_comparable_to<R>>(a),
-                                   trait_as<equal_comparable_to<L>>(b));
+                                  trait_as<equal_comparable_to<L>>(b));
 }
 
 }  // namespace lib_2f
@@ -67,24 +66,37 @@ struct b_type {
   std::string name_b;
 };
 
+bool eq_impl(app_2f::b_type const& self,
+             anyxx::use_as_<app_2f::a_type, lib_2f::equal_comparable_to,
+                            app_2f::b_type> const& r);
 }  // namespace app_2f
 
 ANY_TEMPLATE_MODEL_MAP((app_2f::b_type), lib_2f::equal_comparable_to,
                        ((app_2f::a_type))) {
-  static auto eq(app_2f::b_type const& self,
-                 anyxx::use_as_<app_2f::a_type, equal_comparable_to,
-                                app_2f::b_type> const& r) {
-    return self.name_b == get_proxy_value(r).name_a;
+  static bool eq(
+      app_2f::b_type const& self,
+      anyxx::use_as_<app_2f::a_type, equal_comparable_to, app_2f::b_type> const&
+          r) {
+    return app_2f::eq_impl(self, r);
   };
 };
 ANY_TEMPLATE_MODEL_MAP((app_2f::a_type), lib_2f::equal_comparable_to,
                        ((app_2f::b_type))) {
-  static auto eq(app_2f::a_type const& self,
-                 anyxx::use_as_<app_2f::b_type, equal_comparable_to,
-                                app_2f::a_type> const& r) {
+  static bool eq(
+      app_2f::a_type const& self,
+      anyxx::use_as_<app_2f::b_type, equal_comparable_to, app_2f::a_type> const&
+          r) {
     return self.name_a == get_proxy_value(r).name_b;
   };
 };
+namespace app_2f {
+inline bool eq_impl(app_2f::b_type const& self,
+                    anyxx::use_as_<app_2f::a_type, lib_2f::equal_comparable_to,
+                                   app_2f::b_type> const& r) {
+  return self.name_b == get_proxy_value(r).name_a;
+};
+}  // namespace app_2f
+
 static_assert(
     lib_2f::is_equal_comparable_to_model<app_2f::b_type, app_2f::a_type>);
 static_assert(

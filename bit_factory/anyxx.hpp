@@ -290,15 +290,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_OPTIONAL_TEMPLATE(...) __VA_OPT__(template)
 
 #define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l
-#define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \
-                               exact_const, const_, trait_body, ...)         \
-  access:                                                                    \
-  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
-      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
-      -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
-    using namespace anyxx;                                                   \
-    return _detail_REMOVE_PARENS(trait_body)(                                \
-        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))); \
+#define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,        \
+                               exact_const, const_, trait_body, ...)          \
+  access:                                                                     \
+  static AYXFORCEDINLINE auto name([[maybe_unused]] Rep const_& x __VA_OPT__( \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                \
+      -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                          \
+    using namespace anyxx;                                                    \
+    return _detail_REMOVE_PARENS(trait_body)(                                 \
+        __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
   };
 
 #define _detail_ANYXX_CONCEPT_FN_H(l) _detail_ANYXX_CONCEPT_FN l
@@ -586,6 +586,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
     using default_map = n##_default_model_map;                                 \
+    using Rep = T;                                                             \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
     _detail_ANYXX_MAP_TYPES(typedefs);                                         \
@@ -598,6 +599,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     requires(anyxx::is_variant<T>)                                             \
   struct n##                                                                   \
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
+    using Rep = T;                                                             \
     template <typename V>                                                      \
     using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
         variant_model_map_template_params)>;                                   \
@@ -1523,7 +1525,13 @@ struct observeable_trait {
 struct observeable_rtti_trait : observeable_trait {
   using v_table_t = observeable_rtti_v_table;
 };
+template <typename T = nullptr_t>
+struct no_model_map {
+  using Rep = T;
+};
 struct base_trait : observeable_rtti_trait {
+  template <typename StaticDispatchType>
+  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
   using v_table_t = any_v_table;
 };
 
@@ -2813,6 +2821,9 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using trait_t = Trait;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
+  using model_map_t = typename trait_t::template static_dispatch_map_t<T>;
+  using Rep = typename model_map_t::Rep;
+  static_assert(std::same_as<T, Rep>);
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
   static_assert(!dyn || has_v_table<Trait>);
@@ -4488,7 +4499,8 @@ class dispatch_vany {
    comparability for various types.
 
    \example _2e_trait_algebra.cpp
-   A hierarchy of traits for the algebraic structures semigroup, monoid and group.
+   A hierarchy of traits for the algebraic structures semigroup, monoid and
+   group.
 
    \example _2c_trait_any_variant.cpp
 
