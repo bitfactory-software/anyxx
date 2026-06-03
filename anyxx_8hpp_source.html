@@ -1333,7 +1333,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>  <span class="keywordflow">if</span> (!type_match&lt;U&gt;(v_table)) <span class="keywordflow">throw</span> type_mismatch_error(<span class="stringliteral">&quot;type mismatch&quot;</span>);</div>
 <div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span>}</div>
 <div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span> </div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Data&gt;</div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy&gt;</div>
 <div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span><span class="keyword">struct </span>proxy_trait;</div>
 <div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span> </div>
 <div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy&gt;</div>
@@ -1395,7 +1395,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span><span class="keyword">struct </span>observeable_rtti_trait : observeable_trait {</div>
 <div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span>  <span class="keyword">using </span>v_table_t = observeable_rtti_v_table;</div>
 <div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span>};</div>
-<div class="line"><a id="l01528" name="l01528"></a><span class="lineno"> 1528</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = <span class="keywordtype">nullptr</span>_t&gt;</div>
+<div class="line"><a id="l01528" name="l01528"></a><span class="lineno"> 1528</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = std::<span class="keywordtype">nullptr</span>_t&gt;</div>
 <div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span><span class="keyword">struct </span>no_model_map {</div>
 <div class="line"><a id="l01530" name="l01530"></a><span class="lineno"> 1530</span>  <span class="keyword">using </span>Rep = T;</div>
 <div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span>};</div>
