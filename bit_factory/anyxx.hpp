@@ -376,7 +376,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using T = typename self_t::T;                                              \
     using proxy_t = typename self_t::proxy_t;                                  \
     using map_t = typename self_t::template static_dispatch_map_t<T>;          \
-    using traited_t = typename proxy_t::value_t;                               \
+    using traited_t = T;                                                       \
     using trait_t = typename self_t::trait_t;                                  \
     return ANYXX_JACKET_RETURN(return_type)::forward(                          \
         map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \
@@ -496,7 +496,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using proxy_t = typename self_t::proxy_t;                                  \
                                                                                \
     if constexpr (!self_t::dyn) {                                              \
-      using traited_t = typename proxy_t::value_t;                             \
+      using traited_t = T;                                                     \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>::name(                                 \
             get_proxy_value(self) __VA_OPT__(, )                               \
