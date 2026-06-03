@@ -582,11 +582,16 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     typedefs, decoration)                                                      \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  struct n##_default_rep;                                                      \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
     using default_map = n##_default_model_map;                                 \
-    using Rep = T;                                                             \
+    using Rep =                                                                \
+        anyxx::default_rep<T, n##_default_rep<_detail_ANYXX_TEMPLATE_ARGS(     \
+                                  model_map_template_params)>>;                \
+                                                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
     _detail_ANYXX_MAP_TYPES(typedefs);                                         \
@@ -1214,6 +1219,9 @@ struct is_type_complete_impl<
 template <typename T>
 constexpr static inline bool is_type_complete = is_type_complete_impl<T>::value;
 
+template <typename T, typename Rep>
+using default_rep = std::conditional_t<is_type_complete<Rep>, Rep, T>;
+
 template <class... Ts>
 struct overloads : Ts... {
   using Ts::operator()...;
@@ -1485,7 +1493,7 @@ struct basic_proxy_trait {
     to = from;
   }
 
-  static void destroy([[maybe_unused]] Proxy const& data,
+  static void destroy([[maybe_unused]] auto const& data,
                       [[maybe_unused]] void* v_table) {}
 };
 
@@ -2844,9 +2852,9 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, Proxy> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
-             (!is_lifetime_bound<Proxy>)
+             (!is_lifetime_bound<proxy_impl_t>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
@@ -2857,12 +2865,12 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <typename ConstructedWith>
   explicit(false)
       any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
-    requires constructibile_for<ConstructedWith, Proxy> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
-             (is_lifetime_bound<Proxy>)
+             (is_lifetime_bound<proxy_impl_t>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
-    v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
+    v_table_holder_t::template init_v_table<proxy_impl_t, ConstructedWith>();
   }
   // cppcheck-suppress-end noExplicitConstructor
   /// Type-erasing constructor. The concrete behavior is controlled by the
@@ -2875,8 +2883,8 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <typename V>
     requires(!is_lifetime_bound<Proxy>)
   any(std::in_place_t, V&& v)
-      : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
-    v_table_holder_t::template init_v_table<Proxy, V>();
+      : proxy_(proxy_trait<proxy_impl_t>::construct_in_place(std::forward<V>(v))) {
+    v_table_holder_t::template init_v_table<proxy_impl_t, V>();
   }
   /// Type erasing constructor, the concrete behavior is controled by the
   /// proxy
@@ -2889,7 +2897,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   any(std::in_place_type_t<T>, Args&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {
-    v_table_holder_t::template init_v_table<Proxy, T>();
+    v_table_holder_t::template init_v_table<proxy_impl_t, T>();
   }
 
   any() = default;
@@ -3131,6 +3139,7 @@ inline auto unerase_cast_if(Any const& o) {
 /// \tparam Value The captured value
 template <typename Value>
 struct using_ {
+  using_() = default;
   template <typename V>
     requires(!std::same_as<std::decay_t<V>, using_>)
   using_(V&& v) : value_(std::forward<V>(v)) {}
