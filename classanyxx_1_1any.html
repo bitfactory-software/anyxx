@@ -127,12 +127,12 @@ template&lt;typename Box&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a104f1a86d9d5e541d635e81a2e10d828" id="r_a104f1a86d9d5e541d635e81a2e10d828"><td class="memTemplParams" colspan="2">template&lt;typename ConstructedWith&gt; <br />
-requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (!is_lifetime_bound&lt;Proxy&gt;)</td></tr>
-<tr class="memitem:a104f1a86d9d5e541d635e81a2e10d828 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a104f1a86d9d5e541d635e81a2e10d828">explicit</a> (false) any(ConstructedWith &amp;&amp;const ructed_with)</td></tr>
-<tr class="memitem:a60dc90fabfa83f104ff9074f908e4c55" id="r_a60dc90fabfa83f104ff9074f908e4c55"><td class="memTemplParams" colspan="2">template&lt;typename ConstructedWith&gt; <br />
-requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (is_lifetime_bound&lt;Proxy&gt;)</td></tr>
-<tr class="memitem:a60dc90fabfa83f104ff9074f908e4c55 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a60dc90fabfa83f104ff9074f908e4c55">explicit</a> (false) any(ConstructedWith &amp;&amp;const ructed_with LIFETIMEBOUND)</td></tr>
+<tr class="memitem:a759cc821d48aac64b68261769263ef0d" id="r_a759cc821d48aac64b68261769263ef0d"><td class="memTemplParams" colspan="2">template&lt;typename ConstructedWith&gt; <br />
+requires constructibile_for&lt;ConstructedWith, proxy_impl_t&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (!is_lifetime_bound&lt;proxy_impl_t&gt;)</td></tr>
+<tr class="memitem:a759cc821d48aac64b68261769263ef0d template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a759cc821d48aac64b68261769263ef0d">explicit</a> (false) any(ConstructedWith &amp;&amp;const ructed_with)</td></tr>
+<tr class="memitem:a676e41523a0c3958dd5c23d1eef2c44d" id="r_a676e41523a0c3958dd5c23d1eef2c44d"><td class="memTemplParams" colspan="2">template&lt;typename ConstructedWith&gt; <br />
+requires constructibile_for&lt;ConstructedWith, proxy_impl_t&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (is_lifetime_bound&lt;proxy_impl_t&gt;)</td></tr>
+<tr class="memitem:a676e41523a0c3958dd5c23d1eef2c44d template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a676e41523a0c3958dd5c23d1eef2c44d">explicit</a> (false) any(ConstructedWith &amp;&amp;const ructed_with LIFETIMEBOUND)</td></tr>
 <tr class="memitem:a440c04e593e924f0518702df4b55cf60" id="r_a440c04e593e924f0518702df4b55cf60"><td class="memTemplParams" colspan="2">template&lt;typename V&gt; </td></tr>
 <tr class="memitem:a440c04e593e924f0518702df4b55cf60 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a440c04e593e924f0518702df4b55cf60">any</a> (std::in_place_t, V &amp;&amp;v)</td></tr>
 <tr class="memitem:a2dee555d6fc08f2449ab24e9d11a97d3" id="r_a2dee555d6fc08f2449ab24e9d11a97d3"><td class="memTemplParams" colspan="2">template&lt;typename T, typename... Args&gt; </td></tr>
@@ -303,8 +303,8 @@ template&lt;typename T, typename... Args&gt; </div>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a60dc90fabfa83f104ff9074f908e4c55" name="a60dc90fabfa83f104ff9074f908e4c55"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a60dc90fabfa83f104ff9074f908e4c55">&#9670;&#160;</a></span>explicit() <span class="overload">[1/2]</span></h2>
+<a id="a676e41523a0c3958dd5c23d1eef2c44d" name="a676e41523a0c3958dd5c23d1eef2c44d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a676e41523a0c3958dd5c23d1eef2c44d">&#9670;&#160;</a></span>explicit() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -312,7 +312,7 @@ template&lt;typename T, typename... Args&gt; </div>
 template&lt;is_proxy Proxy, typename Trait&gt; </div>
 <div class="memtemplate">
 template&lt;typename ConstructedWith&gt; <br />
-requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (is_lifetime_bound&lt;Proxy&gt;)</div>
+requires constructibile_for&lt;ConstructedWith, proxy_impl_t&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (is_lifetime_bound&lt;proxy_impl_t&gt;)</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -334,8 +334,8 @@ requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same
 
 </div>
 </div>
-<a id="a104f1a86d9d5e541d635e81a2e10d828" name="a104f1a86d9d5e541d635e81a2e10d828"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a104f1a86d9d5e541d635e81a2e10d828">&#9670;&#160;</a></span>explicit() <span class="overload">[2/2]</span></h2>
+<a id="a759cc821d48aac64b68261769263ef0d" name="a759cc821d48aac64b68261769263ef0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a759cc821d48aac64b68261769263ef0d">&#9670;&#160;</a></span>explicit() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -343,7 +343,7 @@ requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same
 template&lt;is_proxy Proxy, typename Trait&gt; </div>
 <div class="memtemplate">
 template&lt;typename ConstructedWith&gt; <br />
-requires constructibile_for&lt;ConstructedWith, Proxy&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (!is_lifetime_bound&lt;Proxy&gt;)</div>
+requires constructibile_for&lt;ConstructedWith, proxy_impl_t&gt; &amp;&amp; (!std::same_as&lt;any, std::decay_t&lt;ConstructedWith&gt;&gt;) &amp;&amp; (!is_lifetime_bound&lt;proxy_impl_t&gt;)</div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
