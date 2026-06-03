@@ -117,6 +117,8 @@ using&#160;</td><td class="memItemRight"><b>T</b> = proxy_trait_t::static_dispat
 using&#160;</td><td class="memItemRight"><b>model_map_t</b> = typename trait_t::template static_dispatch_map_t&lt;T&gt;</td></tr>
 <tr class="memitem:a3f3ed5354eb3ea26c726c7e1bd821e00" id="r_a3f3ed5354eb3ea26c726c7e1bd821e00"><td class="memItemLeft"><a id="a3f3ed5354eb3ea26c726c7e1bd821e00" name="a3f3ed5354eb3ea26c726c7e1bd821e00"></a>
 using&#160;</td><td class="memItemRight"><b>Rep</b> = typename model_map_t::Rep</td></tr>
+<tr class="memitem:a0be7efd95c1ac6ed836295a3b95661ac" id="r_a0be7efd95c1ac6ed836295a3b95661ac"><td class="memItemLeft"><a id="a0be7efd95c1ac6ed836295a3b95661ac" name="a0be7efd95c1ac6ed836295a3b95661ac"></a>
+using&#160;</td><td class="memItemRight"><b>proxy_impl_t</b> = typename proxy_trait_t::template proxy_impl&lt;Rep&gt;</td></tr>
 <tr class="memitem:a7ac9c34392167cb991f869de19e23cf6" id="r_a7ac9c34392167cb991f869de19e23cf6"><td class="memItemLeft"><a id="a7ac9c34392167cb991f869de19e23cf6" name="a7ac9c34392167cb991f869de19e23cf6"></a>
 using&#160;</td><td class="memItemRight"><b>any_value_t</b> = any&lt;<a class="el" href="unionanyxx_1_1val.html">val</a>, Trait&gt;</td></tr>
 <tr class="memitem:a889c6acc43ffb8760b32b6eadf9e85b3" id="r_a889c6acc43ffb8760b32b6eadf9e85b3"><td class="memTemplParams" colspan="2"><a id="a889c6acc43ffb8760b32b6eadf9e85b3" name="a889c6acc43ffb8760b32b6eadf9e85b3"></a>
@@ -173,8 +175,8 @@ static constexpr bool&#160;</td><td class="memItemRight"><b>dyn</b> = is_dyn&lt;
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>
-<tr class="memitem:a61d842d73058d0f6767a607d35fc8d61" id="r_a61d842d73058d0f6767a607d35fc8d61"><td class="memItemLeft"><a id="a61d842d73058d0f6767a607d35fc8d61" name="a61d842d73058d0f6767a607d35fc8d61"></a>
-proxy_t&#160;</td><td class="memItemRight"><b>proxy_</b> {}</td></tr>
+<tr class="memitem:a18c4d492896c5a4d8d74c7930ff1c6d5" id="r_a18c4d492896c5a4d8d74c7930ff1c6d5"><td class="memItemLeft"><a id="a18c4d492896c5a4d8d74c7930ff1c6d5" name="a18c4d492896c5a4d8d74c7930ff1c6d5"></a>
+proxy_impl_t&#160;</td><td class="memItemRight"><b>proxy_</b> {}</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-friends" class="groupheader"><a id="friends" name="friends"></a>
 Friends</h2></td></tr>
