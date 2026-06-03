@@ -1463,7 +1463,7 @@ void check_type_match(any_v_table* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
-template <typename Data>
+template <typename Proxy>
 struct proxy_trait;
 
 template <typename Proxy>
@@ -1525,7 +1525,7 @@ struct observeable_trait {
 struct observeable_rtti_trait : observeable_trait {
   using v_table_t = observeable_rtti_v_table;
 };
-template <typename T = nullptr_t>
+template <typename T = std::nullptr_t>
 struct no_model_map {
   using Rep = T;
 };
