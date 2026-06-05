@@ -293,8 +293,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \
                                exact_const, const_, trait_body, ...)         \
   access:                                                                    \
-  AYXFORCEDINLINE auto name([[maybe_unused]] rep_type const_& x __VA_OPT__(  \
-      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
+  template <typename MapType>                                                \
+  AYXFORCEDINLINE auto name(                                                 \
+      [[maybe_unused]] this MapType const& model_map,                        \
+      [[maybe_unused]] rep_type const_& x __VA_OPT__(                        \
+          , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))           \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
     using namespace anyxx;                                                   \
     return _detail_REMOVE_PARENS(trait_body)(                                \
