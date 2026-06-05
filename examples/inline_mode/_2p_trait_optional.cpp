@@ -19,8 +19,10 @@ struct nullable_default_rep : std::variant<std::monostate, T> {
 };
 TRAIT(nullable, (ANY_FN_DEF(public, bool, has_value, (), const,
                             [x]() { return std::holds_alternative<T>(x); }),
-                 ANY_FN_DEF(public, T, get_value, (), const,
-                            [x]() { return std::get<T>(x); })))
+                 ANY_FN_DEF_EXACT(public, T const&, get_value, (), const,
+                                  [&x]() -> T const& { return std::get<T>(x); }),
+                 ANY_FN_DEF_EXACT(public, T&, get_value, (), ,
+                                  [&x]() -> T& { return std::get<T>(x); })))
 
 template <typename T>
 using optional = anyxx::using_<T>::template as<nullable>;
@@ -45,7 +47,7 @@ class foo {
    public:
     int i = 0;
   };
-  voo* operator->() { return v_.get(); }
+  decltype(auto) operator->(this auto&& self) { return self.v_.get(); }
   int i = 0;
   explicit foo(int i) : v_(std::make_shared<voo>(i)) {}
 
@@ -63,7 +65,7 @@ class foo {
 ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
   using rep_type = _2p_app::foo;
   static bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
-  static _2p_app::foo get_value(_2p_app::foo const& x) { return x; };
+  static auto& get_value(auto&& x) { return x; };
 };
 
 TEST_CASE("_2p test optional 2") {
