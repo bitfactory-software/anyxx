@@ -6,6 +6,7 @@ var examples =
     [ "_2b_trait_monoid.cpp", "_2b_trait_monoid_8cpp-example.html", null ],
     [ "_2f_trait_equal_comparable.cpp", "_2f_trait_equal_comparable_8cpp-example.html", null ],
     [ "_2e_trait_algebra.cpp", "_2e_trait_algebra_8cpp-example.html", null ],
+    [ "_2p_trait_optional.cpp", "_2p_trait_optional_8cpp-example.html", null ],
     [ "_2c_trait_any_variant.cpp", "_2c_trait_any_variant_8cpp-example.html", null ],
     [ "_2o_trait_simple.cpp", "_2o_trait_simple_8cpp-example.html", null ],
     [ "_3_any_range.cpp", "_3_any_range_8cpp-example.html", null ],
