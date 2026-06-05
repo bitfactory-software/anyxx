@@ -380,7 +380,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">#define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,        \</span></div>
 <div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">                               exact_const, const_, trait_body, ...)          \</span></div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">  access:                                                                     \</span></div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">  static AYXFORCEDINLINE auto name([[maybe_unused]] Rep const_&amp; x __VA_OPT__( \</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">  static AYXFORCEDINLINE auto name([[maybe_unused]] rep_type const_&amp; x __VA_OPT__( \</span></div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                \</span></div>
 <div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="preprocessor">      -&gt; anyxx::map_return&lt;T, ANYXX_UNPAREN(type)&gt; {                          \</span></div>
 <div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span><span class="preprocessor">    using namespace anyxx;                                                    \</span></div>
@@ -675,7 +675,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00588" name="l00588"></a><span class="lineno">  588</span><span class="preprocessor">  template &lt;_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)&gt;      \</span></div>
 <div class="line"><a id="l00589" name="l00589"></a><span class="lineno">  589</span><span class="preprocessor">  struct n##_default_model_map {                                               \</span></div>
 <div class="line"><a id="l00590" name="l00590"></a><span class="lineno">  590</span><span class="preprocessor">    using default_map = n##_default_model_map;                                 \</span></div>
-<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span><span class="preprocessor">    using Rep =                                                                \</span></div>
+<div class="line"><a id="l00591" name="l00591"></a><span class="lineno">  591</span><span class="preprocessor">    using rep_type =                                                                \</span></div>
 <div class="line"><a id="l00592" name="l00592"></a><span class="lineno">  592</span><span class="preprocessor">        anyxx::default_rep&lt;T, n##_default_rep&lt;_detail_ANYXX_TEMPLATE_ARGS(     \</span></div>
 <div class="line"><a id="l00593" name="l00593"></a><span class="lineno">  593</span><span class="preprocessor">                                  model_map_template_params)&gt;&gt;;                \</span></div>
 <div class="line"><a id="l00594" name="l00594"></a><span class="lineno">  594</span><span class="preprocessor">                                                                               \</span></div>
@@ -691,7 +691,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00604" name="l00604"></a><span class="lineno">  604</span><span class="preprocessor">    requires(anyxx::is_variant&lt;T&gt;)                                             \</span></div>
 <div class="line"><a id="l00605" name="l00605"></a><span class="lineno">  605</span><span class="preprocessor">  struct n##                                                                   \</span></div>
 <div class="line"><a id="l00606" name="l00606"></a><span class="lineno">  606</span><span class="preprocessor">      _model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)&gt; {     \</span></div>
-<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span><span class="preprocessor">    using Rep = T;                                                             \</span></div>
+<div class="line"><a id="l00607" name="l00607"></a><span class="lineno">  607</span><span class="preprocessor">    using rep_type = T;                                                             \</span></div>
 <div class="line"><a id="l00608" name="l00608"></a><span class="lineno">  608</span><span class="preprocessor">    template &lt;typename V&gt;                                                      \</span></div>
 <div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span><span class="preprocessor">    using x_model_map = n##_model_map&lt;_detail_ANYXX_TEMPLATE_ARGS(             \</span></div>
 <div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span><span class="preprocessor">        variant_model_map_template_params)&gt;;                                   \</span></div>
@@ -1408,7 +1408,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span>};</div>
 <div class="line"><a id="l01539" name="l01539"></a><span class="lineno"> 1539</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = std::<span class="keywordtype">nullptr</span>_t&gt;</div>
 <div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span><span class="keyword">struct </span>no_model_map {</div>
-<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span>  <span class="keyword">using </span>Rep = T;</div>
+<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span>  <span class="keyword">using </span>rep_type = T;</div>
 <div class="line"><a id="l01542" name="l01542"></a><span class="lineno"> 1542</span>};</div>
 <div class="line"><a id="l01543" name="l01543"></a><span class="lineno"> 1543</span><span class="keyword">struct </span>base_trait : observeable_rtti_trait {</div>
 <div class="line"><a id="l01544" name="l01544"></a><span class="lineno"> 1544</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> StaticDispatchType&gt;</div>
@@ -2634,8 +2634,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02835" name="l02835"></a><span class="lineno"> 2835</span>  <span class="keyword">using </span>v_table_t = <span class="keyword">typename</span> v_table_holder_t::v_table_t;</div>
 <div class="line"><a id="l02836" name="l02836"></a><span class="lineno"> 2836</span>  <span class="keyword">using </span>T = proxy_trait_t::static_dispatch_t;</div>
 <div class="line"><a id="l02837" name="l02837"></a><span class="lineno"> 2837</span>  <span class="keyword">using </span>model_map_t = <span class="keyword">typename</span> trait_t::template static_dispatch_map_t&lt;T&gt;;</div>
-<div class="line"><a id="l02838" name="l02838"></a><span class="lineno"> 2838</span>  <span class="keyword">using </span>Rep = <span class="keyword">typename</span> model_map_t::Rep;</div>
-<div class="line"><a id="l02839" name="l02839"></a><span class="lineno"> 2839</span>  <span class="keyword">using </span>proxy_impl_t = <span class="keyword">typename</span> proxy_trait_t::template proxy_impl&lt;Rep&gt;;</div>
+<div class="line"><a id="l02838" name="l02838"></a><span class="lineno"> 2838</span>  <span class="keyword">using </span>rep_type = <span class="keyword">typename</span> model_map_t::rep_type;</div>
+<div class="line"><a id="l02839" name="l02839"></a><span class="lineno"> 2839</span>  <span class="keyword">using </span>proxy_impl_t = <span class="keyword">typename</span> proxy_trait_t::template proxy_impl&lt;rep_type&gt;;</div>
 <div class="line"><a id="l02840" name="l02840"></a><span class="lineno"> 2840</span>  <span class="keyword">using </span>any_value_t = any&lt;val, Trait&gt;;</div>
 <div class="line"><a id="l02841" name="l02841"></a><span class="lineno"> 2841</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> dyn = <a class="code hl_concept" href="conceptanyxx_1_1is__dyn.html">is_dyn&lt;Proxy&gt;</a>;</div>
 <div class="line"><a id="l02842" name="l02842"></a><span class="lineno"> 2842</span>  <span class="keyword">static_assert</span>(!dyn || <a class="code hl_concept" href="conceptanyxx_1_1has__v__table.html">has_v_table&lt;Trait&gt;</a>);</div>
