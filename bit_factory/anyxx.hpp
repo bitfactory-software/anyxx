@@ -4516,6 +4516,9 @@ class dispatch_vany {
    A hierarchy of traits for the algebraic structures semigroup, monoid and
    group.
 
+   \example _2p_trait_optional.cpp
+   An optional as a customizable trait.
+
    \example _2c_trait_any_variant.cpp
 
    \example _2o_trait_simple.cpp
