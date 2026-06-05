@@ -293,9 +293,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \
                                exact_const, const_, trait_body, ...)         \
   access:                                                                    \
-  static AYXFORCEDINLINE auto name(                                          \
-      [[maybe_unused]] rep_type const_& x __VA_OPT__(                        \
-          , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))           \
+  AYXFORCEDINLINE auto name([[maybe_unused]] rep_type const_& x __VA_OPT__(  \
+      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
     using namespace anyxx;                                                   \
     return _detail_REMOVE_PARENS(trait_body)(                                \
@@ -341,7 +340,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                  ...)                                      \
  public:                                                                   \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                              \
-      _detail_REMOVE_PARENS(template_params)) static AYXFORCEDINLINE auto  \
+      _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto         \
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
       -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
@@ -380,9 +379,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using traited_t = T;                                                       \
     using trait_t = typename self_t::trait_t;                                  \
     return ANYXX_JACKET_RETURN(return_type)::forward(                          \
-        map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \
-            _detail_REMOVE_PARENS(template_params))                            \
-            name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
+        map_t _detail_ANYXX_OPTIONAL_TEMPLATE(                                 \
+            _detail_REMOVE_PARENS(template_params)){}                          \
+            .name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                        \
                 _detail_REMOVE_PARENS(template_params))(                       \
                 anyxx::trait_class_<T, trait_t> __VA_OPT__(                    \
                     , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(          \
@@ -437,13 +436,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
 #define _detail_ANYXX_MAP_VARIANT_IMPL(access, overload, type, name, name_ext, \
                                        exact_const, const_, trait_body, ...)   \
-  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(    \
+  AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(           \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \
       -> decltype(auto) {                                                      \
     return std::visit(                                                         \
         anyxx::overloads{                                                      \
             [&]<typename V>(V&& v) {                                           \
-              return x_model_map<std::decay_t<V>>::name(                       \
+              return x_model_map<std::decay_t<V>>{}.name(                      \
                   std::forward<V>(v) __VA_OPT__(, )                            \
                       __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(             \
                           a, _sig, __VA_ARGS__)));                             \
@@ -500,13 +499,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     if constexpr (!self_t::dyn) {                                              \
       using traited_t = T;                                                     \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
-        return static_dispatch_map_t<T>::name(                                 \
+        return static_dispatch_map_t<T>{}.name(                                \
             get_proxy_value(self) __VA_OPT__(, )                               \
                 __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
                     a, _sig, __VA_ARGS__)));                                   \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
-            static_dispatch_map_t<T>::name(                                    \
+            static_dispatch_map_t<T>{}.name(                                   \
                 get_proxy_value(self) __VA_OPT__(, )                           \
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__))),                               \
