@@ -293,10 +293,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \
                                exact_const, const_, trait_body, ...)         \
   access:                                                                    \
-  template <typename MapType>                                                \
+  template <typename Map>                                                    \
   AYXFORCEDINLINE auto name(                                                 \
-      [[maybe_unused]] this MapType const& model_map,                        \
-      [[maybe_unused]] rep_type const_& x __VA_OPT__(                        \
+      [[maybe_unused]] this Map const& map,                                  \
+      [[maybe_unused]] auto const_& x __VA_OPT__(                            \
           , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))           \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
     using namespace anyxx;                                                   \
@@ -1093,12 +1093,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
                          const_)
 
-/// \def ANY_OP_EXACT_DEF
+/// \def ANY_OP_DEF_EXACT
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_EXACT_DEF(access, ret, op, name, params, const_, ...)     \
+#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...)     \
   ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 

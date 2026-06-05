@@ -17,12 +17,17 @@ template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
 };
-TRAIT(nullable, (ANY_FN_DEF(public, bool, has_value, (), const,
-                            [x]() { return std::holds_alternative<T>(x); }),
-                 ANY_FN_DEF_EXACT(public, T const&, get_value, (), const,
-                                  [&x]() -> T const& { return std::get<T>(x); }),
-                 ANY_FN_DEF_EXACT(public, T&, get_value, (), ,
-                                  [&x]() -> T& { return std::get<T>(x); })))
+TRAIT(nullable,
+      (ANY_FN_DEF(public, bool, has_value, (), const,
+                  [x]() { return std::holds_alternative<T>(x); }),
+       ANY_FN_DEF_EXACT(public, T const&, get_value, (), const,
+                        [&x]() -> T const& { return std::get<T>(x); }),
+       ANY_FN_DEF_EXACT(public, T&, get_value, (), ,
+                        [&x]() -> T& { return std::get<T>(x); }),
+       ANY_OP_DEF_EXACT(public, T const&, ->, arrow_const, (), const,
+                        [&x]() -> T const& { return Map{}.get_value(x); }),
+       ANY_OP_DEF_EXACT(public, T&, ->, arrow, (), ,
+                        [&x]() -> T& { return Map{}.get_value(x); })))
 
 template <typename T>
 using optional = anyxx::using_<T>::template as<nullable>;
@@ -64,8 +69,8 @@ class foo {
 // accordingly. We use this indriection
 ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
   using rep_type = _2p_app::foo;
-  static bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
-  static auto& get_value(auto&& x) { return x; };
+  bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
+  auto& get_value(auto&& x) { return x; };
 };
 
 TEST_CASE("_2p test optional 2") {
@@ -76,6 +81,7 @@ TEST_CASE("_2p test optional 2") {
   optional<foo> a1{foo{42}};
   CHECK(a1.has_value());
   CHECK(a1.get_value()->i == 42);
+  CHECK(a1->i == 42);
 
   optional<foo> a2;
   CHECK(!a2.has_value());
