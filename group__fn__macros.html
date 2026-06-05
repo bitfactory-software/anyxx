@@ -113,8 +113,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga8f8492068e06ea999e2ebf95050e1a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
 <tr class="memitem:ga31d722491c45e2315823f0eb3ebe541c" id="r_ga31d722491c45e2315823f0eb3ebe541c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
 <tr class="memitem:ga7d46ca8afdfbcc0c3103f0dedb9710d5" id="r_ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga7d46ca8afdfbcc0c3103f0dedb9710d5">ANY_OP_EXACT</a>(ret,  op,  params,  const_)</td></tr>
-<tr class="memitem:ga52ada18b51c6cc6f0b995a169db7dbe7" id="r_ga52ada18b51c6cc6f0b995a169db7dbe7"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga52ada18b51c6cc6f0b995a169db7dbe7">ANY_OP_EXACT_DEF</a>(access,  ret,  op,  name,  params,  const_, ...)</td></tr>
-<tr class="memdesc:ga52ada18b51c6cc6f0b995a169db7dbe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
+<tr class="memitem:gaa7be4e1bc61d70d65fe70586a0684b2d" id="r_gaa7be4e1bc61d70d65fe70586a0684b2d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(access,  ret,  op,  name,  params,  const_, ...)</td></tr>
+<tr class="memdesc:gaa7be4e1bc61d70d65fe70586a0684b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:gabc1702b86750b11ed590d64e42d151e3" id="r_gabc1702b86750b11ed590d64e42d151e3"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
 <tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer-chosen name in the map.  <br /></td></tr>
 <tr class="memitem:gad1214e29f913c519ecf9f4b1e9934fa8" id="r_gad1214e29f913c519ecf9f4b1e9934fa8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gad1214e29f913c519ecf9f4b1e9934fa8">ANY_OP_EXACT_OVERLOAD</a>(ret,  op,  params,  const_)</td></tr>
@@ -391,47 +391,14 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="ga7d46ca8afdfbcc0c3103f0dedb9710d5" name="ga7d46ca8afdfbcc0c3103f0dedb9710d5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7d46ca8afdfbcc0c3103f0dedb9710d5">&#9670;&#160;</a></span>ANY_OP_EXACT</h2>
+<a id="gaa7be4e1bc61d70d65fe70586a0684b2d" name="gaa7be4e1bc61d70d65fe70586a0684b2d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaa7be4e1bc61d70d65fe70586a0684b2d">&#9670;&#160;</a></span>ANY_OP_DEF_EXACT</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ANY_OP_EXACT</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \</div>
-<div class="line">                       const_)</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="ga52ada18b51c6cc6f0b995a169db7dbe7" name="ga52ada18b51c6cc6f0b995a169db7dbe7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga52ada18b51c6cc6f0b995a169db7dbe7">&#9670;&#160;</a></span>ANY_OP_EXACT_DEF</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ANY_OP_EXACT_DEF</td>
+          <td class="memname">#define ANY_OP_DEF_EXACT</td>
           <td>(</td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>access</em></span>, </td>
         </tr>
@@ -472,7 +439,42 @@ Macros</h2></td></tr>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior is to call the related operator of the model. </p>
 <p>Use if in a base TRAIT exists an equally named FN. </p>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2p_trait_optional_8cpp-example.html#a3">_2p_trait_optional.cpp</a>.</dd>
+</dl>
 
+</div>
+</div>
+<a id="ga7d46ca8afdfbcc0c3103f0dedb9710d5" name="ga7d46ca8afdfbcc0c3103f0dedb9710d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7d46ca8afdfbcc0c3103f0dedb9710d5">&#9670;&#160;</a></span>ANY_OP_EXACT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OP_EXACT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>ret</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>op</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>params</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>const_</em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \</div>
+<div class="line">                       const_)</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a id="ga31d722491c45e2315823f0eb3ebe541c" name="ga31d722491c45e2315823f0eb3ebe541c"></a>

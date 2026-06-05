@@ -61,7 +61,7 @@ var searchData=
   ['any_5fop_58',['ANY_OP',['../group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce',1,'anyxx.hpp']]],
   ['any_5fop_20macros_59',['ANY_FN... and ANY_OP macros',['../group__fn__macros.html',1,'']]],
   ['any_5fop_5fdef_60',['ANY_OP_DEF',['../group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57',1,'anyxx.hpp']]],
-  ['any_5fop_5fexact_5fdef_61',['ANY_OP_EXACT_DEF',['../group__fn__macros.html#ga52ada18b51c6cc6f0b995a169db7dbe7',1,'anyxx.hpp']]],
+  ['any_5fop_5fdef_5fexact_61',['ANY_OP_DEF_EXACT',['../group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d',1,'anyxx.hpp']]],
   ['any_5fop_5fexact_5foverload_62',['ANY_OP_EXACT_OVERLOAD',['../group__fn__macros.html#gad1214e29f913c519ecf9f4b1e9934fa8',1,'anyxx.hpp']]],
   ['any_5fop_5fexact_5foverload_5fdef_63',['ANY_OP_EXACT_OVERLOAD_DEF',['../group__fn__macros.html#ga57104d1926dddc9ec88dacdb59d80fb7',1,'anyxx.hpp']]],
   ['any_5fop_5fexact_5foverload_5fmap_5fnamed_64',['ANY_OP_EXACT_OVERLOAD_MAP_NAMED',['../group__fn__macros.html#gabc1702b86750b11ed590d64e42d151e3',1,'anyxx.hpp']]],

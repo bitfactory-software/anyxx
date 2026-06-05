@@ -353,8 +353,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga8f8492068e06ea999e2ebf95050e1a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior.  <br /></td></tr>
 <tr class="memitem:ga31d722491c45e2315823f0eb3ebe541c" id="r_ga31d722491c45e2315823f0eb3ebe541c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#ga31d722491c45e2315823f0eb3ebe541c">ANY_OP_EXACT_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
 <tr class="memitem:ga7d46ca8afdfbcc0c3103f0dedb9710d5" id="r_ga7d46ca8afdfbcc0c3103f0dedb9710d5"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#ga7d46ca8afdfbcc0c3103f0dedb9710d5">ANY_OP_EXACT</a>(ret,  op,  params,  const_)</td></tr>
-<tr class="memitem:ga52ada18b51c6cc6f0b995a169db7dbe7" id="r_ga52ada18b51c6cc6f0b995a169db7dbe7"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#ga52ada18b51c6cc6f0b995a169db7dbe7">ANY_OP_EXACT_DEF</a>(access,  ret,  op,  name,  params,  const_, ...)</td></tr>
-<tr class="memdesc:ga52ada18b51c6cc6f0b995a169db7dbe7"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
+<tr class="memitem:gaa7be4e1bc61d70d65fe70586a0684b2d" id="r_gaa7be4e1bc61d70d65fe70586a0684b2d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(access,  ret,  op,  name,  params,  const_, ...)</td></tr>
+<tr class="memdesc:gaa7be4e1bc61d70d65fe70586a0684b2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior is to call the related operator of the model.  <br /></td></tr>
 <tr class="memitem:gabc1702b86750b11ed590d64e42d151e3" id="r_gabc1702b86750b11ed590d64e42d151e3"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#gabc1702b86750b11ed590d64e42d151e3">ANY_OP_EXACT_OVERLOAD_MAP_NAMED</a>(ret,  op,  name,  params,  const_)</td></tr>
 <tr class="memdesc:gabc1702b86750b11ed590d64e42d151e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT operator with default behavior and a programmer-chosen name in the map.  <br /></td></tr>
 <tr class="memitem:gad1214e29f913c519ecf9f4b1e9934fa8" id="r_gad1214e29f913c519ecf9f4b1e9934fa8"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__fn__macros.html#gad1214e29f913c519ecf9f4b1e9934fa8">ANY_OP_EXACT_OVERLOAD</a>(ret,  op,  params,  const_)</td></tr>
@@ -2211,10 +2211,10 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">access:                                                                    \</div>
-<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> MapType&gt;                                                \</div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Map&gt;                                                    \</div>
 <div class="line">AYXFORCEDINLINE <span class="keyword">auto</span> name(                                                 \</div>
-<div class="line">    [[maybe_unused]] <span class="keyword">this</span> MapType <span class="keyword">const</span>&amp; model_map,                        \</div>
-<div class="line">    [[maybe_unused]] rep_type const_&amp; x __VA_OPT__(                        \</div>
+<div class="line">    [[maybe_unused]] <span class="keyword">this</span> Map <span class="keyword">const</span>&amp; map,                                  \</div>
+<div class="line">    [[maybe_unused]] <span class="keyword">auto</span> const_&amp; x __VA_OPT__(                            \</div>
 <div class="line">        , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))           \</div>
 <div class="line">    -&gt; anyxx::map_return&lt;T, ANYXX_UNPAREN(type)&gt; {                         \</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;                                                   \</div>
