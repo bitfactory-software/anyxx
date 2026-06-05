@@ -121,6 +121,10 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">       <a id="a3" name="a3"></a><a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, -&gt;, arrow_const, (), <span class="keyword">const</span>,</div>
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T&amp;, -&gt;, arrow, (), ,</div>
+<div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, *, deref_const, (), <span class="keyword">const</span>,</div>
+<div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T&amp;, *, deref, (), ,</div>
 <div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); })))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
@@ -134,6 +138,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  optional&lt;int&gt; i1{42};</div>
 <div class="line">  CHECK(i1.has_value());</div>
 <div class="line">  CHECK(i1.get_value() == 42);</div>
+<div class="line">  CHECK(*i1 == 42);</div>
 <div class="line"> </div>
 <div class="line">  optional&lt;int&gt; i2;</div>
 <div class="line">  CHECK(!i2.has_value());</div>
@@ -147,7 +152,6 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordtype">int</span> i = 0;</div>
 <div class="line">  };</div>
 <div class="line">  <span class="keyword">decltype</span>(<span class="keyword">auto</span>) operator-&gt;(this <span class="keyword">auto</span>&amp;&amp; self) { <span class="keywordflow">return</span> self.v_.get(); }</div>
-<div class="line">  <span class="keywordtype">int</span> i = 0;</div>
 <div class="line">  <span class="keyword">explicit</span> foo(<span class="keywordtype">int</span> i) : v_(std::make_shared&lt;voo&gt;(i)) {}</div>
 <div class="line"> </div>
 <div class="line"> <span class="keyword">private</span>:</div>
@@ -164,7 +168,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((_2p_app::foo), _2p_lib::nullable) {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = _2p_app::foo;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.v_ != <span class="keyword">nullptr</span>; };</div>
-<div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> x; };</div>
+<div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> std::forward&lt;decltype(x)&gt;(x); };</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;_2p test optional 2&quot;</span>) {</div>
@@ -173,9 +177,12 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>_2p_app;</div>
 <div class="line"> </div>
 <div class="line">  optional&lt;foo&gt; a1{foo{42}};</div>
+<div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(a1) ==</div>
+<div class="line">                <span class="keyword">sizeof</span>(foo));  <span class="comment">// &lt; that is the point of this example!</span></div>
 <div class="line">  CHECK(a1.has_value());</div>
 <div class="line">  CHECK(a1.get_value()-&gt;i == 42);</div>
 <div class="line">  CHECK(a1-&gt;i == 42);</div>
+<div class="line">  CHECK((*a1)-&gt;i == 42);</div>
 <div class="line"> </div>
 <div class="line">  optional&lt;foo&gt; a2;</div>
 <div class="line">  CHECK(!a2.has_value());</div>
