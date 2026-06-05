@@ -41,7 +41,7 @@ class A {
 };
 }  // namespace _2p_app
 ANY_MODEL_MAP((_2p_app::A), _2p_lib::nullable) {
-  using Rep = _2p_app::A;
+  using rep_type = _2p_app::A;
   static bool has_value(_2p_app::A const& x) { return x.i != 0; };
   static _2p_app::A get_value(_2p_app::A const& x) { return x; };
 };
