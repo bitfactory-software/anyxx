@@ -27,6 +27,10 @@ TRAIT(nullable,
        ANY_OP_DEF_EXACT(public, T const&, ->, arrow_const, (), const,
                         [&x]() -> T const& { return Map{}.get_value(x); }),
        ANY_OP_DEF_EXACT(public, T&, ->, arrow, (), ,
+                        [&x]() -> T& { return Map{}.get_value(x); }),
+       ANY_OP_DEF_EXACT(public, T const&, *, deref_const, (), const,
+                        [&x]() -> T const& { return Map{}.get_value(x); }),
+       ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
                         [&x]() -> T& { return Map{}.get_value(x); })))
 
 template <typename T>
@@ -40,6 +44,7 @@ TEST_CASE("_2p test optional 1") {
   optional<int> i1{42};
   CHECK(i1.has_value());
   CHECK(i1.get_value() == 42);
+  CHECK(*i1 == 42);
 
   optional<int> i2;
   CHECK(!i2.has_value());
@@ -53,7 +58,6 @@ class foo {
     int i = 0;
   };
   decltype(auto) operator->(this auto&& self) { return self.v_.get(); }
-  int i = 0;
   explicit foo(int i) : v_(std::make_shared<voo>(i)) {}
 
  private:
@@ -70,7 +74,7 @@ class foo {
 ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
   using rep_type = _2p_app::foo;
   bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
-  auto& get_value(auto&& x) { return x; };
+  auto& get_value(auto&& x) { return std::forward<decltype(x)>(x); };
 };
 
 TEST_CASE("_2p test optional 2") {
@@ -79,9 +83,12 @@ TEST_CASE("_2p test optional 2") {
   using namespace _2p_app;
 
   optional<foo> a1{foo{42}};
+  static_assert(sizeof(a1) ==
+                sizeof(foo));  // < that is the point of this example!
   CHECK(a1.has_value());
   CHECK(a1.get_value()->i == 42);
   CHECK(a1->i == 42);
+  CHECK((*a1)->i == 42);
 
   optional<foo> a2;
   CHECK(!a2.has_value());
