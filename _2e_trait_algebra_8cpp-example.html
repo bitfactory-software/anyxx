@@ -111,17 +111,17 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__trait__macros.html#ga1da6a8b287f2c814199686dcf6197c49">TRAIT_EX_</a>(</div>
 <div class="line">    monoid, semigroup, ,</div>
 <div class="line">    (<a id="a6" name="a6"></a><a class="code hl_define" href="group__trait__macros.html#ga37c1b03383baa5fcf21fd17cb09449b8">ANY_FN_STATIC_DEF</a>((), anyxx::self, identity, (),</div>
-<div class="line">                       []&lt;<span class="keyword">typename</span> Trait&gt;(<span class="keyword">auto</span> trait) {</div>
+<div class="line">                       []&lt;<span class="keyword">typename</span> M&gt;(<span class="keyword">auto</span>  class_) {</div>
 <div class="line">                         <span class="keywordflow">return</span> get_proxy_value(</div>
-<div class="line">                             trait.concat(std::ranges::empty_view&lt;Trait&gt;{}));</div>
+<div class="line">                             class_.concat(std::ranges::empty_view&lt;M&gt;{}));</div>
 <div class="line">                       }),</div>
 <div class="line">     <a class="code hl_define" href="group__trait__macros.html#ga37c1b03383baa5fcf21fd17cb09449b8">ANY_FN_STATIC_DEF</a>((), anyxx::self, concat,</div>
 <div class="line">                       ((anyxx::any_forward_range&lt;anyxx::self, anyxx::self,</div>
 <div class="line">                                                  <a id="_a7" name="_a7"></a><a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp;)),</div>
-<div class="line">                       []&lt;<span class="keyword">typename</span> Trait&gt;(<span class="keyword">auto</span> trait, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
-<div class="line">                         <span class="keyword">auto</span> <span class="keywordtype">id</span> = trait.identity();</div>
+<div class="line">                       []&lt;<span class="keyword">typename</span> M&gt;(<span class="keyword">auto</span> class_, <span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
+<div class="line">                         <span class="keyword">auto</span> <span class="keywordtype">id</span> = class_.identity();</div>
 <div class="line">                         <span class="keywordflow">return</span> get_proxy_value(std::ranges::fold_left(</div>
-<div class="line">                             r, <span class="keywordtype">id</span>, [&amp;](Trait <span class="keyword">const</span>&amp; m1, Trait <span class="keyword">const</span>&amp; m2) {</div>
+<div class="line">                             r, <span class="keywordtype">id</span>, [&amp;](M <span class="keyword">const</span>&amp; m1, M <span class="keyword">const</span>&amp; m2) {</div>
 <div class="line">                               <span class="keywordflow">return</span> m1.op(m2);</div>
 <div class="line">                             }));</div>
 <div class="line">                       })),</div>
