@@ -8,11 +8,10 @@
 
 namespace algebra {
 
-TRAIT_EX(semigroup,
+TRAIT(semigroup,
          (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                     ([&x](auto const& r) { return x == r; }))),
-         , (ANY_TYPE((), value_type, anyxx::undefined, (anyxx::undefined))), ())
+                     ([&x](auto const& r) { return x == r; }))))
 
 TRAIT_EX_(
     monoid, semigroup, ,
@@ -33,7 +32,7 @@ TRAIT_EX_(
                        })),
     , ())
 
-TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
+TRAIT_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)))
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -41,8 +40,6 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
     std::println("op {}", typeid(V).name());
     return self + r;
   };
-  using value_type =
-      V;  // just for demonstration, not actually used in the trait
 };
 
 template <>
@@ -279,8 +276,6 @@ struct algebra::semigroup_model_map<algebra_test::int_mul>
     std::println("op {}", typeid(algebra_test::int_mul).name());
     return algebra_test::int_mul{self.value * r.value};
   };
-  using value_type = algebra_test::int_mul;  // just for demonstration, not
-                                             // actually used in the trait
 };
 template <>
 struct algebra::monoid_model_map<algebra_test::int_mul>
