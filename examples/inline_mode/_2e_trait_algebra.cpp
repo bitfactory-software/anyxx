@@ -17,17 +17,17 @@ TRAIT_EX(semigroup,
 TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename Trait>(auto trait) {
+                       []<typename M>(auto  class_) {
                          return get_proxy_value(
-                             trait.concat(std::ranges::empty_view<Trait>{}));
+                             class_.concat(std::ranges::empty_view<M>{}));
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       []<typename Trait>(auto trait, const auto& r) {
-                         auto id = trait.identity();
+                       []<typename M>(auto class_, const auto& r) {
+                         auto id = class_.identity();
                          return get_proxy_value(std::ranges::fold_left(
-                             r, id, [&](Trait const& m1, Trait const& m2) {
+                             r, id, [&](M const& m1, M const& m2) {
                                return m1.op(m2);
                              }));
                        })),
