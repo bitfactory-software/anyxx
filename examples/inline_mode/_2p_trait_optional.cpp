@@ -10,8 +10,8 @@ namespace _2p_lib {
 // this type is used as the representation;
 // This type must be constructible from the type 'T' being modeled.
 // If 'trait-name'_default_rep is default constructible, then the any using this
-// trait is default constructible.
-// In this example this models the 'no value' state.
+// trait  is default constructible.
+// In our case is this effect used to models the 'no value' state.
 // 'has_value' and 'get_value' are implemented in terms of the variant.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
@@ -69,8 +69,8 @@ class foo {
 }  // namespace _2p_app
 // class foo has an internal state for 'no value'(v_ == nullptr), so we can
 // directly use it as the representation of the nullable trait. This is done be
-// seting rep_type to 'foo' and providing the has_value and get_value functions
-// accordingly. We use this indriection
+// seting 'rep_type' to 'foo' and providing the 'has_value' and 'get_value' functions
+// accordingly.
 ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
   using rep_type = _2p_app::foo;
   bool has_value(_2p_app::foo const& x) { return x.v_ != nullptr; };
