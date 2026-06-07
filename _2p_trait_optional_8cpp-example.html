@@ -104,8 +104,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// this type is used as the representation;</span></div>
 <div class="line"><span class="comment">// This type must be constructible from the type &#39;T&#39; being modeled.</span></div>
 <div class="line"><span class="comment">// If &#39;trait-name&#39;_default_rep is default constructible, then the any using this</span></div>
-<div class="line"><span class="comment">// trait is default constructible.</span></div>
-<div class="line"><span class="comment">// In this example this models the &#39;no value&#39; state.</span></div>
+<div class="line"><span class="comment">// trait  is default constructible.</span></div>
+<div class="line"><span class="comment">// In our case is this effect used to models the &#39;no value&#39; state.</span></div>
 <div class="line"><span class="comment">// &#39;has_value&#39; and &#39;get_value&#39; are implemented in terms of the variant.</span></div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><span class="keyword">struct </span>nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
@@ -163,8 +163,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">}  <span class="comment">// namespace _2p_app</span></div>
 <div class="line"><span class="comment">// class foo has an internal state for &#39;no value&#39;(v_ == nullptr), so we can</span></div>
 <div class="line"><span class="comment">// directly use it as the representation of the nullable trait. This is done be</span></div>
-<div class="line"><span class="comment">// seting rep_type to &#39;foo&#39; and providing the has_value and get_value functions</span></div>
-<div class="line"><span class="comment">// accordingly. We use this indriection</span></div>
+<div class="line"><span class="comment">// seting &#39;rep_type&#39; to &#39;foo&#39; and providing the &#39;has_value&#39; and &#39;get_value&#39; functions</span></div>
+<div class="line"><span class="comment">// accordingly.</span></div>
 <div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((_2p_app::foo), _2p_lib::nullable) {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = _2p_app::foo;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.v_ != <span class="keyword">nullptr</span>; };</div>
