@@ -176,7 +176,7 @@ function(anyxx_package_project)
     "${_multiValueArgs};DEPENDENCIES;PRIVATE_DEPENDENCIES")
 
   # download ycm
-  FetchContent_Populate(_ycm URL https://github.com/robotology/ycm/archive/refs/tags/v0.13.0.zip)
+  FetchContent_Populate(_ycm URL https://github.com/robotology/ycm/archive/refs/tags/v0.18.4.zip)
   FetchContent_GetProperties(_ycm)
   include("${_ycm_SOURCE_DIR}/modules/InstallBasicPackageFiles.cmake")
 
