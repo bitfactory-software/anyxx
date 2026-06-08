@@ -86,7 +86,7 @@ TEST_CASE("_2p test optional 2") {
   static_assert(sizeof(a1) ==
                 sizeof(foo));  // < that is the point of this example!
   CHECK(a1.has_value());
-  CHECK(a1.get_^^value()->i == 42);
+  CHECK(a1.get_value()->i == 42);
   CHECK(a1->i == 42);
   CHECK((*a1)->i == 42);
 
