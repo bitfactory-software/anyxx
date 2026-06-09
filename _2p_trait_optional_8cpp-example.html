@@ -98,6 +98,15 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>_2p_lib {</div>
 <div class="line"> </div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(equal_comparable,</div>
+<div class="line">      (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }),</div>
+<div class="line">       <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                    <span class="keywordflow">return</span> !(trait_as&lt;equal_comparable&gt;(x) ==</div>
+<div class="line">                             trait_as&lt;equal_comparable&gt;(r));</div>
+<div class="line">                  })))</div>
+<div class="line"> </div>
 <div class="line"><span class="comment">// An optional as a customizable trait.</span></div>
 <div class="line"><span class="comment">// It is default represented as a variant of the value type and a</span></div>
 <div class="line"><span class="comment">// monostate. When there is a class template called &#39;trait-name&#39;_default_rep,</span></div>
@@ -110,25 +119,35 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><span class="keyword">struct </span>nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
 <div class="line">  <span class="keyword">using </span>std::variant&lt;std::monostate, T&gt;::variant;</div>
+<div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(nullable_default_rep <span class="keyword">const</span>&amp; x,</div>
+<div class="line">                         nullable_default_rep <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">    <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(x) &amp;&amp; std::holds_alternative&lt;T&gt;(r) &amp;&amp;</div>
+<div class="line">               std::get&lt;T&gt;(x) == std::get&lt;T&gt;(r) ||</div>
+<div class="line">           std::holds_alternative&lt;std::monostate&gt;(x) &amp;&amp;</div>
+<div class="line">               std::holds_alternative&lt;std::monostate&gt;(r);</div>
+<div class="line">  }</div>
 <div class="line">};</div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(nullable,</div>
-<div class="line">      (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, has_value, (), <span class="keyword">const</span>,</div>
+<div class="line"> </div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(nullable,</div>
+<div class="line">      (<a id="a2" name="a2"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, has_value, (), <span class="keyword">const</span>,</div>
 <div class="line">                  [x]() { <span class="keywordflow">return</span> std::holds_alternative&lt;T&gt;(x); }),</div>
-<div class="line">       <a id="a2" name="a2"></a><a class="code hl_define" href="group__fn__macros.html#ga14b2b6c072b4b7b88536ef43db2d35ed">ANY_FN_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, get_value, (), <span class="keyword">const</span>,</div>
+<div class="line">       <a id="a3" name="a3"></a><a class="code hl_define" href="group__fn__macros.html#ga14b2b6c072b4b7b88536ef43db2d35ed">ANY_FN_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, get_value, (), <span class="keyword">const</span>,</div>
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
 <div class="line">       <a class="code hl_define" href="group__fn__macros.html#ga14b2b6c072b4b7b88536ef43db2d35ed">ANY_FN_DEF_EXACT</a>(<span class="keyword">public</span>, T&amp;, get_value, (), ,</div>
 <div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> std::get&lt;T&gt;(x); }),</div>
-<div class="line">       <a id="a3" name="a3"></a><a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, -&gt;, arrow_const, (), <span class="keyword">const</span>,</div>
+<div class="line">       <a id="a4" name="a4"></a><a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, -&gt;, arrow_const, (), <span class="keyword">const</span>,</div>
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T&amp;, -&gt;, arrow, (), ,</div>
 <div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T <span class="keyword">const</span>&amp;, *, deref_const, (), <span class="keyword">const</span>,</div>
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T&amp;, *, deref, (), ,</div>
-<div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); })))</div>
+<div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
+<div class="line">       <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; })))</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keyword">using </span>optional = <a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;T&gt;::template</a> as&lt;nullable&gt;;</div>
+<div class="line"><span class="keyword">using </span>optional = <a id="_a5" name="_a5"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;T&gt;::template</a> as&lt;nullable&gt;;</div>
 <div class="line">}  <span class="comment">// namespace _2p_lib</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;_2p test optional 1&quot;</span>) {</div>
@@ -139,9 +158,13 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  CHECK(i1.has_value());</div>
 <div class="line">  CHECK(i1.get_value() == 42);</div>
 <div class="line">  CHECK(*i1 == 42);</div>
+<div class="line">  CHECK((i1 == optional&lt;int&gt;{42}));</div>
+<div class="line">  CHECK((i1 != optional&lt;int&gt;{43}));</div>
+<div class="line">  CHECK((i1 != optional&lt;int&gt;{}));</div>
 <div class="line"> </div>
 <div class="line">  optional&lt;int&gt; i2;</div>
 <div class="line">  CHECK(!i2.has_value());</div>
+<div class="line">  CHECK((i2 == optional&lt;int&gt;{}));</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>_2p_app {</div>
@@ -153,6 +176,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  };</div>
 <div class="line">  <span class="keyword">decltype</span>(<span class="keyword">auto</span>) operator-&gt;(this <span class="keyword">auto</span>&amp;&amp; self) { <span class="keywordflow">return</span> self.v_.get(); }</div>
 <div class="line">  <span class="keyword">explicit</span> foo(<span class="keywordtype">int</span> i) : v_(std::make_shared&lt;voo&gt;(i)) {}</div>
+<div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(foo <span class="keyword">const</span>&amp; self, foo <span class="keyword">const</span>&amp; r) = <span class="keywordflow">default</span>;</div>
 <div class="line"> </div>
 <div class="line"> <span class="keyword">private</span>:</div>
 <div class="line">  foo() = <span class="keywordflow">default</span>;</div>
@@ -163,13 +187,24 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">}  <span class="comment">// namespace _2p_app</span></div>
 <div class="line"><span class="comment">// class foo has an internal state for &#39;no value&#39;(v_ == nullptr), so we can</span></div>
 <div class="line"><span class="comment">// directly use it as the representation of the nullable trait. This is done be</span></div>
-<div class="line"><span class="comment">// seting &#39;rep_type&#39; to &#39;foo&#39; and providing the &#39;has_value&#39; and &#39;get_value&#39; functions</span></div>
-<div class="line"><span class="comment">// accordingly.</span></div>
-<div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((_2p_app::foo), _2p_lib::nullable) {</div>
+<div class="line"><span class="comment">// seting &#39;rep_type&#39; to &#39;foo&#39; and providing the &#39;has_value&#39; and &#39;get_value&#39;</span></div>
+<div class="line"><span class="comment">// functions accordingly.</span></div>
+<div class="line"><a id="a6" name="a6"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((_2p_app::foo), _2p_lib::nullable) {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = _2p_app::foo;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(_2p_app::foo <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.v_ != <span class="keyword">nullptr</span>; };</div>
 <div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> std::forward&lt;decltype(x)&gt;(x); };</div>
 <div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>{</div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><span class="keywordtype">bool</span> fun(anyxx::any&lt;anyxx::using_&lt;T&gt;, _2p_lib::equal_comparable&gt; <span class="keyword">const</span>&amp; l,</div>
+<div class="line">         anyxx::any&lt;anyxx::using_&lt;T&gt;, _2p_lib::equal_comparable&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">  <span class="keywordflow">return</span> r == l;</div>
+<div class="line">}</div>
+<div class="line"><span class="keyword">static_assert</span>(</div>
+<div class="line">    _2p_lib::is_equal_comparable_model&lt;</div>
+<div class="line">        anyxx::any&lt;anyxx::using_&lt;_2p_app::foo&gt;, _2p_lib::equal_comparable&gt;&gt;);</div>
+<div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;_2p test optional 2&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
@@ -178,17 +213,25 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">  optional&lt;foo&gt; a1{foo{42}};</div>
 <div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(a1) ==</div>
-<div class="line">                <span class="keyword">sizeof</span>(foo));  <span class="comment">// &lt; that is the point of this example!</span></div>
+<div class="line">                <span class="keyword">sizeof</span>(foo));  <span class="comment">// &lt;- that is the point of this example!</span></div>
 <div class="line">  CHECK(a1.has_value());</div>
 <div class="line">  CHECK(a1.get_value()-&gt;i == 42);</div>
 <div class="line">  CHECK(a1-&gt;i == 42);</div>
 <div class="line">  CHECK((*a1)-&gt;i == 42);</div>
+<div class="line">  <span class="keyword">auto</span> a1x = a1;</div>
+<div class="line">  CHECK(a1 == a1x);</div>
+<div class="line">  CHECK(fun&lt;optional&lt;foo&gt;&gt;(a1, a1x));</div>
+<div class="line">  CHECK(a1 != optional&lt;foo&gt;{42});</div>
+<div class="line">  CHECK(a1 != optional&lt;foo&gt;{43});</div>
+<div class="line">  CHECK(a1 != optional&lt;foo&gt;{});</div>
 <div class="line"> </div>
 <div class="line">  optional&lt;foo&gt; a2;</div>
 <div class="line">  CHECK(!a2.has_value());</div>
+<div class="line">  CHECK(a2 == optional&lt;foo&gt;{});</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__fn__macros_html_ga14b2b6c072b4b7b88536ef43db2d35ed"><div class="ttname"><a href="group__fn__macros.html#ga14b2b6c072b4b7b88536ef43db2d35ed">ANY_FN_DEF_EXACT</a></div><div class="ttdeci">#define ANY_FN_DEF_EXACT(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1018</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga8f8492068e06ea999e2ebf95050e1a57"><div class="ttname"><a href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a></div><div class="ttdeci">#define ANY_OP_DEF(access, ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1080</div></div>
 <div class="ttc" id="agroup__fn__macros_html_gaa7be4e1bc61d70d65fe70586a0684b2d"><div class="ttname"><a href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a></div><div class="ttdeci">#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior is to call the related operator of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1101</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1206</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:788</div></div>
