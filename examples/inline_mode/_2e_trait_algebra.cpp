@@ -8,10 +8,19 @@
 
 namespace algebra {
 
-TRAIT(semigroup,
-         (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
-          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                     ([&x](auto const& r) { return x == r; }))))
+TRAIT(equal_comparable,
+      (ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
+                  [&x](auto const& r) {
+                    return x == r;
+                  }),
+       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
+                  [&x](auto const& r) {
+                    return !(trait_as<equal_comparable>(x) ==
+                             trait_as<equal_comparable>(r));
+                  })))
+
+TRAIT_(semigroup, equal_comparable,
+         (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
 
 TRAIT_EX_(
     monoid, semigroup, ,
