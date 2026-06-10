@@ -15,6 +15,6 @@ var searchData=
   ['dispatchs_5fcount_12',['dispatchs_count',['../anyxx_8hpp.html#ad0e4d3c5ff9f0082cf07ef367b55c87a',1,'anyxx']]],
   ['downcast_13',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
   ['downcast_5fto_14',['downcast_to',['../group__casts.html#gadd0bed70326711f39e2efc190d006590',1,'anyxx']]],
-  ['downey_15',['Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
+  ['downey_15',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
   ['dynamic_20cast_16',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
 ];

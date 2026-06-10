@@ -10,7 +10,7 @@ var searchData=
   ['use_5fas_7',['use_as',['../anyxx_8hpp.html#a01e8132b16d45db321d99a076384242b',1,'anyxx']]],
   ['use_5fas_5f_8',['use_as_',['../anyxx_8hpp.html#a7f2abb993bc8ac5aa1b5eb53db8ab794',1,'anyxx']]],
   ['useage_20in_20cmakelists_20txt_3a_9',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
-  ['using_20c_2023_20library_20tech_20steve_20downey_10',['Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
+  ['using_20c_2023_20library_20tech_20steve_20downey_10',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
   ['using_5f_11',['using_',['../structanyxx_1_1using__.html',1,'anyxx']]],
   ['using_5f_3c_20rep_20_3e_12',['using_&lt; Rep &gt;',['../structanyxx_1_1using__.html',1,'anyxx']]]
 ];

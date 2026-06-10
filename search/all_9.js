@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['a_20short_20introduction_0',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
+  ['a_20short_20introduction_0',['Chapter 1: C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
   ['and_20any_5f_20macros_1',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
   ['and_20any_5fop_20macros_2',['ANY_FN... and ANY_OP macros',['../group__fn__macros.html',1,'']]],
   ['and_20conclusions_3',['Further directions and conclusions',['../subpage5.html',1,'main']]],
@@ -8,7 +8,7 @@ var searchData=
   ['any_5',['ANY',['../group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22',1,'anyxx.hpp']]],
   ['any_6',['Any',['../index.html',1,'Any++'],['../md_docs_2Constness.html',1,'Handling &lt;tt&gt;const&lt;/tt&gt; in &lt;tt&gt;Any++&lt;/tt&gt;'],['../md_docs_2terms__and__definitions.html',1,'Terms and Definitions in Context of &lt;tt&gt;Any++&lt;/tt&gt;'],['../md_docs_2Traits__inner__working.html',1,'The Inner Working Of &lt;tt&gt;Traits&lt;/tt&gt; In &lt;tt&gt;Any++&lt;/tt&gt;']]],
   ['any_7',['any',['../classanyxx_1_1any.html',1,'anyxx::any&lt; Proxy, Trait &gt;'],['../classanyxx_1_1any.html#a440c04e593e924f0518702df4b55cf60',1,'anyxx::any::any(std::in_place_t, V &amp;&amp;v)'],['../classanyxx_1_1any.html#a2dee555d6fc08f2449ab24e9d11a97d3',1,'anyxx::any::any(std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)']]],
-  ['any_20_3a_20from_20type_20erasure_20to_20type_20class_8',['Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
+  ['any_20_3a_20from_20type_20erasure_20to_20type_20class_8',['Chapter 4: Any++: From Type Erasure to Type Class',['../subpage4.html',1,'main']]],
   ['any_20c_200x_20concepts_20rust_20traits_20haskell_20type_20classes_9',['Any++, C++0x Concepts, Rust Traits, Haskell Type Classes',['../main.html',1,'']]],
   ['any_20configuration_20macro_10',['Any++ configuration macro',['../group__anyxx__config.html',1,'']]],
   ['any_20crosscast_20factory_20serialization_11',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]],

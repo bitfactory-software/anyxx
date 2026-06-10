@@ -8,7 +8,7 @@ var searchData=
   ['inner_20working_20of_20traits_20in_20any_5',['The Inner Working Of &lt;span class=&quot;tt&quot;&gt;Traits&lt;/span&gt; In &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Traits__inner__working.html',1,'']]],
   ['instance_6',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
   ['instance_20multi_20dispatch_20matrix_7',['open dispatch, dispatch_table, dispatch_table instance, multi dispatch matrix',['../md_docs_2terms__and__definitions.html#autotoc_md14',1,'']]],
-  ['introduction_8',['C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
+  ['introduction_8',['Chapter 1: C++0x Concepts, Haskell type classes, Rust traits, a short introduction',['../subpage1.html',1,'main']]],
   ['is_5fdyn_9',['is_dyn',['../conceptanyxx_1_1is__dyn.html',1,'anyxx']]],
   ['is_5fproxy_10',['is_proxy',['../conceptanyxx_1_1is__proxy.html',1,'anyxx']]]
 ];
