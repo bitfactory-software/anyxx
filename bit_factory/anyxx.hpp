@@ -293,8 +293,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \
                                exact_const, const_, trait_body, ...)         \
   access:                                                                    \
-  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(  \
-      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))               \
+  template <typename Map>                                                    \
+  AYXFORCEDINLINE auto name(                                                 \
+      [[maybe_unused]] this Map const& map,                                  \
+      [[maybe_unused]] auto const_& x __VA_OPT__(                            \
+          , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))           \
       -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                         \
     using namespace anyxx;                                                   \
     return _detail_REMOVE_PARENS(trait_body)(                                \
@@ -340,7 +343,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                  ...)                                      \
  public:                                                                   \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                              \
-      _detail_REMOVE_PARENS(template_params)) static AYXFORCEDINLINE auto  \
+      _detail_REMOVE_PARENS(template_params)) AYXFORCEDINLINE auto         \
   name([[maybe_unused]] auto trait_class __VA_OPT__(                       \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))             \
       -> anyxx::map_return<T, ANYXX_UNPAREN(return_type)> {                \
@@ -376,12 +379,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using T = typename self_t::T;                                              \
     using proxy_t = typename self_t::proxy_t;                                  \
     using map_t = typename self_t::template static_dispatch_map_t<T>;          \
-    using traited_t = typename proxy_t::value_t;                               \
+    using traited_t = typename self_t::rep_type;                               \
     using trait_t = typename self_t::trait_t;                                  \
     return ANYXX_JACKET_RETURN(return_type)::forward(                          \
-        map_t::_detail_ANYXX_OPTIONAL_TEMPLATE(                                \
-            _detail_REMOVE_PARENS(template_params))                            \
-            name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                         \
+        map_t _detail_ANYXX_OPTIONAL_TEMPLATE(                                 \
+            _detail_REMOVE_PARENS(template_params)){}                          \
+            .name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                        \
                 _detail_REMOVE_PARENS(template_params))(                       \
                 anyxx::trait_class_<T, trait_t> __VA_OPT__(                    \
                     , _detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(          \
@@ -436,13 +439,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l
 #define _detail_ANYXX_MAP_VARIANT_IMPL(access, overload, type, name, name_ext, \
                                        exact_const, const_, trait_body, ...)   \
-  static AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(    \
+  AYXFORCEDINLINE auto name([[maybe_unused]] T const_& x __VA_OPT__(           \
       , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \
       -> decltype(auto) {                                                      \
     return std::visit(                                                         \
         anyxx::overloads{                                                      \
             [&]<typename V>(V&& v) {                                           \
-              return x_model_map<std::decay_t<V>>::name(                       \
+              return x_model_map<std::decay_t<V>>{}.name(                      \
                   std::forward<V>(v) __VA_OPT__(, )                            \
                       __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(             \
                           a, _sig, __VA_ARGS__)));                             \
@@ -454,18 +457,19 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         x);                                                                    \
   };
 
-#define _detail_ANYXX_FUNCTION_PTR_DECL(access, overload, type, name,  \
-                                        name_ext, exact_const, const_, \
-                                        map_body, ...)                 \
-  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name)(     \
-      void const_* __VA_OPT__(                                         \
+#define _detail_ANYXX_FUNCTION_PTR_DECL(access, overload, type, name,      \
+                                        name_ext, exact_const, const_,     \
+                                        map_body, ...)                     \
+  anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> (*name##const_)( \
+      void const_* __VA_OPT__(                                             \
           , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));
 
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(access, overload, type, name,  \
                                              name_ext, exact_const, const_, \
                                              map_body, ...)                 \
-  name = [](void const_* _vp __VA_OPT__(                                    \
-             , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))     \
+  name##const_ =                                                            \
+      [](void const_* _vp __VA_OPT__(                                       \
+          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))        \
       -> anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> {          \
     if constexpr (std::same_as<anyxx::self&, ANYXX_UNPAREN(type)>) {        \
       model_map{}.name(                                                     \
@@ -496,15 +500,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using proxy_t = typename self_t::proxy_t;                                  \
                                                                                \
     if constexpr (!self_t::dyn) {                                              \
-      using traited_t = typename proxy_t::value_t;                             \
+      using traited_t = typename self_t::rep_type;                             \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
-        return static_dispatch_map_t<T>::name(                                 \
+        return static_dispatch_map_t<T>{}.name(                                \
             get_proxy_value(self) __VA_OPT__(, )                               \
                 __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP(     \
                     a, _sig, __VA_ARGS__)));                                   \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
-            static_dispatch_map_t<T>::name(                                    \
+            static_dispatch_map_t<T>{}.name(                                   \
                 get_proxy_value(self) __VA_OPT__(, )                           \
                     __VA_OPT__(_detail_ANYXX_FORWARD_JACKET_PARAM_LIST_TO_MAP( \
                         a, _sig, __VA_ARGS__))),                               \
@@ -512,12 +516,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       }                                                                        \
     } else {                                                                   \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
-        return get_v_table(self)->name(anyxx::get_proxy_ptr(self) __VA_OPT__(  \
-            , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));        \
+        return get_v_table(self)->name##const_(                                \
+            anyxx::get_proxy_ptr(self) __VA_OPT__(                             \
+                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
-            get_v_table(self)->name(anyxx::get_proxy_ptr(self) __VA_OPT__(     \
-                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__))),    \
+            get_v_table(self)->name##const_(                                   \
+                anyxx::get_proxy_ptr(self)                                     \
+                    __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(             \
+                                     a, _sig, __VA_ARGS__))),                  \
             std::forward<Self>(self));                                         \
       }                                                                        \
     }                                                                          \
@@ -582,10 +589,16 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     typedefs, decoration)                                                      \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  struct n##_default_rep;                                                      \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
     using default_map = n##_default_model_map;                                 \
+    using rep_type =                                                           \
+        anyxx::default_rep<T, n##_default_rep<_detail_ANYXX_TEMPLATE_ARGS(     \
+                                  model_map_template_params)>>;                \
+                                                                               \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
     _detail_ANYXX_MAP_TYPES(typedefs);                                         \
@@ -598,6 +611,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     requires(anyxx::is_variant<T>)                                             \
   struct n##                                                                   \
       _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
+    using rep_type = T;                                                        \
     template <typename V>                                                      \
     using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
         variant_model_map_template_params)>;                                   \
@@ -639,7 +653,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       }                                                                        \
     }                                                                          \
                                                                                \
-    using T = void;                                                            \
+    using T = char;                                                            \
                                                                                \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
                                                                                \
@@ -1079,12 +1093,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   ANY_OP_EXACT_MAP_NAMED(ret, op, _detail_CONCAT(__op__, __COUNTER__), params, \
                          const_)
 
-/// \def ANY_OP_EXACT_DEF
+/// \def ANY_OP_DEF_EXACT
 /// \brief TRAIT operator with default behavior is to call the related operator
 /// of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_EXACT_DEF(access, ret, op, name, params, const_, ...)     \
+#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...)     \
   ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
           _detail_EXPAND params)
 
@@ -1211,6 +1225,9 @@ struct is_type_complete_impl<
     : std::true_type {};
 template <typename T>
 constexpr static inline bool is_type_complete = is_type_complete_impl<T>::value;
+
+template <typename T, typename Rep>
+using default_rep = std::conditional_t<is_type_complete<Rep>, Rep, T>;
 
 template <class... Ts>
 struct overloads : Ts... {
@@ -1461,7 +1478,7 @@ void check_type_match(any_v_table* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
-template <typename Data>
+template <typename Proxy>
 struct proxy_trait;
 
 template <typename Proxy>
@@ -1469,6 +1486,9 @@ struct basic_proxy_trait {
   inline static constexpr bool is_weak = false;
   inline static constexpr bool is_lifetime_bound = false;
   inline static constexpr bool is_object = true;
+
+  template <typename Rep>
+  using proxy_impl = Proxy;
 
   static void move_to(auto& to, [[maybe_unused]] auto, auto&& from,
                       [[maybe_unused]] auto) {
@@ -1480,7 +1500,7 @@ struct basic_proxy_trait {
     to = from;
   }
 
-  static void destroy([[maybe_unused]] Proxy const& data,
+  static void destroy([[maybe_unused]] auto const& data,
                       [[maybe_unused]] void* v_table) {}
 };
 
@@ -1523,7 +1543,13 @@ struct observeable_trait {
 struct observeable_rtti_trait : observeable_trait {
   using v_table_t = observeable_rtti_v_table;
 };
+template <typename T = std::nullptr_t>
+struct no_model_map {
+  using rep_type = T;
+};
 struct base_trait : observeable_rtti_trait {
+  template <typename StaticDispatchType>
+  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
   using v_table_t = any_v_table;
 };
 
@@ -1700,6 +1726,8 @@ static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
 template <typename V>
 struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
+  template <typename Rep>
+  using proxy_impl = using_<Rep>;
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
                                     const_void, mutable_void>;
   using static_dispatch_t = V;
@@ -2813,12 +2841,15 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using trait_t = Trait;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
+  using model_map_t = typename trait_t::template static_dispatch_map_t<T>;
+  using rep_type = typename model_map_t::rep_type;
+  using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
   static_assert(!dyn || has_v_table<Trait>);
 
  protected:
-  proxy_t proxy_{};
+  proxy_impl_t proxy_{};
 
  public:
   // cppcheck-suppress-begin noExplicitConstructor
@@ -2828,9 +2859,9 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, Proxy> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
-             (!is_lifetime_bound<Proxy>)
+             (!is_lifetime_bound<proxy_impl_t>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
     v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
@@ -2841,12 +2872,12 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <typename ConstructedWith>
   explicit(false)
       any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
-    requires constructibile_for<ConstructedWith, Proxy> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
-             (is_lifetime_bound<Proxy>)
+             (is_lifetime_bound<proxy_impl_t>)
       : proxy_(
             erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {
-    v_table_holder_t::template init_v_table<Proxy, ConstructedWith>();
+    v_table_holder_t::template init_v_table<proxy_impl_t, ConstructedWith>();
   }
   // cppcheck-suppress-end noExplicitConstructor
   /// Type-erasing constructor. The concrete behavior is controlled by the
@@ -2859,8 +2890,9 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <typename V>
     requires(!is_lifetime_bound<Proxy>)
   any(std::in_place_t, V&& v)
-      : proxy_(proxy_trait<Proxy>::construct_in_place(std::forward<V>(v))) {
-    v_table_holder_t::template init_v_table<Proxy, V>();
+      : proxy_(
+            proxy_trait<proxy_impl_t>::construct_in_place(std::forward<V>(v))) {
+    v_table_holder_t::template init_v_table<proxy_impl_t, V>();
   }
   /// Type erasing constructor, the concrete behavior is controled by the
   /// proxy
@@ -2873,7 +2905,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   any(std::in_place_type_t<T>, Args&&... args)
       : proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<Args>(args)...)) {
-    v_table_holder_t::template init_v_table<Proxy, T>();
+    v_table_holder_t::template init_v_table<proxy_impl_t, T>();
   }
 
   any() = default;
@@ -3115,6 +3147,7 @@ inline auto unerase_cast_if(Any const& o) {
 /// \tparam Value The captured value
 template <typename Value>
 struct using_ {
+  using_() = default;
   template <typename V>
     requires(!std::same_as<std::decay_t<V>, using_>)
   using_(V&& v) : value_(std::forward<V>(v)) {}
@@ -4488,7 +4521,11 @@ class dispatch_vany {
    comparability for various types.
 
    \example _2e_trait_algebra.cpp
-   A hierarchy of traits for the algebraic structures semigroup, monoid and group.
+   A hierarchy of traits for the algebraic structures semigroup, monoid and
+   group.
+
+   \example _2p_trait_optional.cpp
+   An optional as a customizable trait.
 
    \example _2c_trait_any_variant.cpp
 

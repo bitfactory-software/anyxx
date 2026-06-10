@@ -8,32 +8,40 @@
 
 namespace algebra {
 
-TRAIT_EX(semigroup,
-         (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const),
-          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                     ([&x](auto const& r) { return x == r; }))),
-         , (ANY_TYPE((), value_type, anyxx::undefined, (anyxx::undefined))), ())
+TRAIT(equal_comparable,
+      (ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
+                  [&x](auto const& r) {
+                    return x == r;
+                  }),
+       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
+                  [&x](auto const& r) {
+                    return !(trait_as<equal_comparable>(x) ==
+                             trait_as<equal_comparable>(r));
+                  })))
+
+TRAIT_(semigroup, equal_comparable,
+         (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
 
 TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename Trait>(auto trait) {
+                       []<typename M>(auto  class_) {
                          return get_proxy_value(
-                             trait.concat(std::ranges::empty_view<Trait>{}));
+                             class_.concat(std::ranges::empty_view<M>{}));
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
                        ((anyxx::any_forward_range<anyxx::self, anyxx::self,
                                                   anyxx::cref> const&)),
-                       []<typename Trait>(auto trait, const auto& r) {
-                         auto id = trait.identity();
+                       []<typename M>(auto class_, const auto& r) {
+                         auto id = class_.identity();
                          return get_proxy_value(std::ranges::fold_left(
-                             r, id, [&](Trait const& m1, Trait const& m2) {
+                             r, id, [&](M const& m1, M const& m2) {
                                return m1.op(m2);
                              }));
                        })),
     , ())
 
-TRAIT_EX_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)), , , ())
+TRAIT_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)))
 
 template <typename V>
 struct semigroup_plus_model_map : semigroup_default_model_map<V> {
@@ -41,8 +49,6 @@ struct semigroup_plus_model_map : semigroup_default_model_map<V> {
     std::println("op {}", typeid(V).name());
     return self + r;
   };
-  using value_type =
-      V;  // just for demonstration, not actually used in the trait
 };
 
 template <>
@@ -279,8 +285,6 @@ struct algebra::semigroup_model_map<algebra_test::int_mul>
     std::println("op {}", typeid(algebra_test::int_mul).name());
     return algebra_test::int_mul{self.value * r.value};
   };
-  using value_type = algebra_test::int_mul;  // just for demonstration, not
-                                             // actually used in the trait
 };
 template <>
 struct algebra::monoid_model_map<algebra_test::int_mul>
