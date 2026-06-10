@@ -118,8 +118,9 @@ TEST_CASE("_2p test optional 2") {
   using namespace _2p_app;
 
   optional<foo> a1{foo{42}};
-  static_assert(sizeof(a1) ==
-                sizeof(foo));  // <- that is the point of this example!
+  //+++ the point of this example: no overhead for 'empty' indicator!
+  static_assert(sizeof(a1) == sizeof(foo));
+  //---
   CHECK(a1.has_value());
   CHECK(a1.get_value()->i == 42);
   CHECK(a1->i == 42);
