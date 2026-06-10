@@ -212,8 +212,9 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>_2p_app;</div>
 <div class="line"> </div>
 <div class="line">  optional&lt;foo&gt; a1{foo{42}};</div>
-<div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(a1) ==</div>
-<div class="line">                <span class="keyword">sizeof</span>(foo));  <span class="comment">// &lt;- that is the point of this example!</span></div>
+<div class="line">  <span class="comment">//+++ the point of this example: no overhead for &#39;empty&#39; indicator!</span></div>
+<div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(a1) == <span class="keyword">sizeof</span>(foo));</div>
+<div class="line">  <span class="comment">//---</span></div>
 <div class="line">  CHECK(a1.has_value());</div>
 <div class="line">  CHECK(a1.get_value()-&gt;i == 42);</div>
 <div class="line">  CHECK(a1-&gt;i == 42);</div>
