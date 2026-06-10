@@ -1,4 +1,4 @@
-\page subpage3 Concept Maps using C++23 Library Tech, Steve Downey
+\page subpage3 Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey
 
 In 2023, Steve Downey gave a [talk at CppNow](https://www.youtube.com/watch?v=H825py1Jgfk) 
 about [Concept Maps using C++23 Library Tech](https://sdowney.org/posts/index.php/2024/05/19/concept-maps-using-c23-library-tech/). 

@@ -48,6 +48,6 @@ TEST_CASE("example 2a stringable") {
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   CHECK(print(42) == "42\n");
-  //  static_assert(!is_print_callable<int>);
+  static_assert(!is_print_callable<int>);
   // print(42);  // remove comment to see the compilation error!
 }

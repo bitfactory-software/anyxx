@@ -49,9 +49,9 @@ TRAIT(equal_comparable,
                   [&x](auto const& r) {
                     // Because we 'trait' x and r 'as' equal_comparable, we can
                     // use the != operator of the external interface. This
-                    // operater calls internally the function provided by the
-                    // model map for the type of x and r. So the circular is
-                    // broken.
+                    // operator is 'protected' in the default model, so it can
+                    // only be used from a deriving map, as we will see later.
+                    // This ensures that the circular dependency is broken.
                     return !(trait_as<equal_comparable>(x) !=
                              trait_as<equal_comparable>(r));
                   }),
@@ -89,7 +89,7 @@ static_assert(is_equal_comparable_model<std::string>);
 // can be used both for static AND dynamic dispatch!
 template <anyxx::is_proxy Proxy>
 void test_equal_comparable_(anyxx::any<Proxy, equal_comparable> const& a,
-                             anyxx::any<Proxy, equal_comparable> const& b) {
+                            anyxx::any<Proxy, equal_comparable> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
 }
@@ -150,8 +150,7 @@ TEST_CASE("equal_comparable static") {
 }
 // 2. Dynamic dispatch usage.
 TEST_CASE("equal_comparable dynamic") {
-  using any_equal_comparable =
-      anyxx::any<anyxx::val, lib_2f::equal_comparable>;
+  using any_equal_comparable = anyxx::any<anyxx::val, lib_2f::equal_comparable>;
   std::vector<std::pair<any_equal_comparable, any_equal_comparable>> v{
       {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
       {app_2f::b_type{"A"}, app_2f::b_type{"B"}},

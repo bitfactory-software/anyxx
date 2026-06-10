@@ -1,4 +1,4 @@
-\page subpage1 C++0x Concepts, Haskell type classes, Rust traits, a short introduction
+\page subpage1 Chapter 1: C++0x Concepts, Haskell type classes, Rust traits, a short introduction
 
 In 2009 the Standard Committee has been working on C++0x Concepts for a long time, and they are finally getting close to a release.
 The goal was ambitious: To add a new language feature that allows to check template type parameters we "normal" function arguments.

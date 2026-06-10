@@ -1,4 +1,4 @@
-\page subpage2 Monoid, the "Hello World" of type classes
+\page subpage2 Chapter 2: Monoid, the "Hello World" of type classes
 
 > The Monoid is a simple algebraic structure that consists of a set of elements, an associative binary operation, and an identity element.<br>
 It is a fundamental concept in abstract algebra and has many applications in computer science, especially in functional programming.
