@@ -19,7 +19,7 @@ TRAIT(equal_comparable,
 // This type must be constructible from the type 'T' being modeled.
 // If 'trait-name'_default_rep is default constructible, then the any using this
 // trait  is default constructible.
-// In our case is this effect used to models the 'no value' state.
+// In our case is this effect used to model the 'no value' state.
 // 'has_value' and 'get_value' are implemented in terms of the variant.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
@@ -43,8 +43,7 @@ TRAIT(nullable,
                         [&x]() -> T const& { return Map{}.get_value(x); }),
        ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
                         [&x]() -> T& { return Map{}.get_value(x); }),
-       ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) { return x == r; })))
+       ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
 using optional = anyxx::using_<T>::template as<nullable>;
