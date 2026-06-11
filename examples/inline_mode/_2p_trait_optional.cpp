@@ -5,8 +5,7 @@
 namespace _2p_lib {
 
 TRAIT(equal_comparable,
-      (ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) { return x == r; }),
+      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                   [&x](auto const& r) {
                     return !(trait_as<equal_comparable>(x) ==

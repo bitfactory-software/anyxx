@@ -9,10 +9,7 @@
 namespace algebra {
 
 TRAIT(equal_comparable,
-      (ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    return x == r;
-                  }),
+      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                   [&x](auto const& r) {
                     return !(trait_as<equal_comparable>(x) ==
@@ -20,12 +17,12 @@ TRAIT(equal_comparable,
                   })))
 
 TRAIT_(semigroup, equal_comparable,
-         (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
+       (ANY_FN_PURE(anyxx::self, op, (anyxx::self const&), const)))
 
 TRAIT_EX_(
     monoid, semigroup, ,
     (ANY_FN_STATIC_DEF((), anyxx::self, identity, (),
-                       []<typename M>(auto  class_) {
+                       []<typename M>(auto class_) {
                          return get_proxy_value(
                              class_.concat(std::ranges::empty_view<M>{}));
                        }),
@@ -67,9 +64,7 @@ struct monoid_model_map<int> : monoid_default_model_map<int> {
 };
 template <>
 struct group_model_map<int> : monoid_model_map<int> {
-  static auto inverse(int self) {
-    return -self;
-  };
+  static auto inverse(int self) { return -self; };
 };
 
 template <>
