@@ -26,10 +26,11 @@ struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
   friend bool operator==(nullable_default_rep const& x,
                          nullable_default_rep const& r) {
-    return std::holds_alternative<T>(x) && std::holds_alternative<T>(r) &&
-               std::get<T>(x) == std::get<T>(r) ||
-           std::holds_alternative<std::monostate>(x) &&
-               std::holds_alternative<std::monostate>(r);
+    return std::visit(
+        anyxx::overloads{
+            []<typename T>(T const& l, T const& r) { return l == r; },
+            [](auto const&, auto const&) { return false; }},
+        x, r);
   }
 };
 
