@@ -273,7 +273,7 @@ Macros</h2></td></tr>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
 <div class="line">)</div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1046</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1047</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:910</div></div>
 </div><!-- fragment --><p> is equivalent to: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(example,</div>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
@@ -515,7 +515,8 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">ANY_FN_(<span class="keyword">private</span>, , ret, name, name, <span class="keyword">false</span>, const_,      \</div>
 <div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</div>
-<div class="line">        ignore_mapf_concept_with_always_false, x.name, _detail_EXPAND params)</div>
+<div class="line">        ignore_mapf_concept_with_always_false, x.name,  \</div>
+<div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT function, which must be provided by the model. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2e_trait_algebra_8cpp-example.html#a3">_2e_trait_algebra.cpp</a>.</dd>
@@ -671,7 +672,7 @@ Macros</h2></td></tr>
 <div class="line">    any_template_params_with_defaults)&gt;                                   \</div>
 <div class="line"><span class="keyword">using </span>any_##n = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \</div>
 <div class="line">                                      pure_template_params)&gt;;</div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2872</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2875</div></div>
 </div><!-- fragment -->
 </div>
 </div>
