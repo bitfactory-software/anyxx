@@ -99,9 +99,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">namespace </span>_2p_lib {</div>
 <div class="line"> </div>
 <div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(equal_comparable,</div>
-<div class="line">      (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }),</div>
-<div class="line">       <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">      (ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
+<div class="line">       <a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, ne, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                    <span class="keywordflow">return</span> !(trait_as&lt;equal_comparable&gt;(x) ==</div>
 <div class="line">                             trait_as&lt;equal_comparable&gt;(r));</div>
@@ -116,8 +115,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// trait  is default constructible.</span></div>
 <div class="line"><span class="comment">// In our case is this effect used to models the &#39;no value&#39; state.</span></div>
 <div class="line"><span class="comment">// &#39;has_value&#39; and &#39;get_value&#39; are implemented in terms of the variant.</span></div>
-<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keyword">struct </span>nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
+<div class="line">template &lt;typename T&gt;</div>
+<div class="line"><span class="keyword">struct</span> nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
 <div class="line">  <span class="keyword">using </span>std::variant&lt;std::monostate, T&gt;::variant;</div>
 <div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(nullable_default_rep <span class="keyword">const</span>&amp; x,</div>
 <div class="line">                         nullable_default_rep <span class="keyword">const</span>&amp; r) {</div>
