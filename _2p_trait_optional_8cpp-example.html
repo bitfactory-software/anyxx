@@ -113,7 +113,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// This type must be constructible from the type &#39;T&#39; being modeled.</span></div>
 <div class="line"><span class="comment">// If &#39;trait-name&#39;_default_rep is default constructible, then the any using this</span></div>
 <div class="line"><span class="comment">// trait  is default constructible.</span></div>
-<div class="line"><span class="comment">// In our case is this effect used to models the &#39;no value&#39; state.</span></div>
+<div class="line"><span class="comment">// In our case is this effect used to model the &#39;no value&#39; state.</span></div>
 <div class="line"><span class="comment">// &#39;has_value&#39; and &#39;get_value&#39; are implemented in terms of the variant.</span></div>
 <div class="line">template &lt;typename T&gt;</div>
 <div class="line"><span class="keyword">struct</span> nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
@@ -137,11 +137,10 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">                        [&amp;x]() -&gt; T <span class="keyword">const</span>&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
 <div class="line">       <a class="code hl_define" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d">ANY_OP_DEF_EXACT</a>(<span class="keyword">public</span>, T&amp;, *, deref, (), ,</div>
 <div class="line">                        [&amp;x]() -&gt; T&amp; { <span class="keywordflow">return</span> Map{}.get_value(x); }),</div>
-<div class="line">       <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line">                  [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; })))</div>
+<div class="line">       ANY_OP_MAP_NAMED_FRIEND(<span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><span class="keyword">using </span>optional = <a id="_a5" name="_a5"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;T&gt;::template</a> as&lt;nullable&gt;;</div>
+<div class="line">template &lt;typename T&gt;</div>
+<div class="line"><span class="keyword">using</span> optional = <a id="_a5" name="_a5"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;T&gt;::template</a> as&lt;nullable&gt;;</div>
 <div class="line">}  <span class="comment">// namespace _2p_lib</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;_2p test optional 1&quot;</span>) {</div>
