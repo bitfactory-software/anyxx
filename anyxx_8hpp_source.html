@@ -378,7 +378,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span> </div>
 <div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">#define _detail_ANYXX_MAP_LIMP_H(l) _detail_ANYXX_MAP_IMPL l</span></div>
 <div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">#define _detail_ANYXX_MAP_IMPL(access, overload, type, name, name_ext,       \</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">                               exact_const, const_, trait_body, ...)         \</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">                               exact_const, const_, trait_body, mapf_concept, ...)         \</span></div>
 <div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">  access:                                                                    \</span></div>
 <div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">  template &lt;typename Map&gt;                                                    \</span></div>
 <div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">  AYXFORCEDINLINE auto name(                                                 \</span></div>
@@ -393,7 +393,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00306" name="l00306"></a><span class="lineno">  306</span> </div>
 <div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="preprocessor">#define _detail_ANYXX_CONCEPT_FN_H(l) _detail_ANYXX_CONCEPT_FN l</span></div>
 <div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="preprocessor">#define _detail_ANYXX_CONCEPT_FN(access, overload, type, name, name_ext,      \</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="preprocessor">                                 exact_const, const_, trait_body, ...)        \</span></div>
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="preprocessor">                                 exact_const, const_, trait_body, mapf_concept, ...)        \</span></div>
 <div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="preprocessor">  requires requires(                                                          \</span></div>
 <div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="preprocessor">      __VA_OPT__(_detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) { \</span></div>
 <div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="preprocessor">    {                                                                         \</span></div>
@@ -525,7 +525,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span> </div>
 <div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span><span class="preprocessor">#define _detail_ANYXX_MAP_VARIANT_LIMP_H(l) _detail_ANYXX_MAP_VARIANT_IMPL l</span></div>
 <div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span><span class="preprocessor">#define _detail_ANYXX_MAP_VARIANT_IMPL(access, overload, type, name, name_ext, \</span></div>
-<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">                                       exact_const, const_, trait_body, ...)   \</span></div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">                                       exact_const, const_, trait_body, mapf_concept, ...)   \</span></div>
 <div class="line"><a id="l00442" name="l00442"></a><span class="lineno">  442</span><span class="preprocessor">  AYXFORCEDINLINE auto name([[maybe_unused]] T const_&amp; x __VA_OPT__(           \</span></div>
 <div class="line"><a id="l00443" name="l00443"></a><span class="lineno">  443</span><span class="preprocessor">      , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))                 \</span></div>
 <div class="line"><a id="l00444" name="l00444"></a><span class="lineno">  444</span><span class="preprocessor">      -&gt; decltype(auto) {                                                      \</span></div>
@@ -546,14 +546,14 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00459" name="l00459"></a><span class="lineno">  459</span> </div>
 <div class="line"><a id="l00460" name="l00460"></a><span class="lineno">  460</span><span class="preprocessor">#define _detail_ANYXX_FUNCTION_PTR_DECL(access, overload, type, name,      \</span></div>
 <div class="line"><a id="l00461" name="l00461"></a><span class="lineno">  461</span><span class="preprocessor">                                        name_ext, exact_const, const_,     \</span></div>
-<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span><span class="preprocessor">                                        map_body, ...)                     \</span></div>
+<div class="line"><a id="l00462" name="l00462"></a><span class="lineno">  462</span><span class="preprocessor">                                        map_body, mapf_concept, ...)                     \</span></div>
 <div class="line"><a id="l00463" name="l00463"></a><span class="lineno">  463</span><span class="preprocessor">  anyxx::v_table_return&lt;any_value_t, ANYXX_UNPAREN(type)&gt; (*name##const_)( \</span></div>
 <div class="line"><a id="l00464" name="l00464"></a><span class="lineno">  464</span><span class="preprocessor">      void const_* __VA_OPT__(                                             \</span></div>
 <div class="line"><a id="l00465" name="l00465"></a><span class="lineno">  465</span><span class="preprocessor">          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)));</span></div>
 <div class="line"><a id="l00466" name="l00466"></a><span class="lineno">  466</span> </div>
 <div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span><span class="preprocessor">#define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(access, overload, type, name,  \</span></div>
 <div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span><span class="preprocessor">                                             name_ext, exact_const, const_, \</span></div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="preprocessor">                                             map_body, ...)                 \</span></div>
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="preprocessor">                                             map_body, mapf_concept, ...)                 \</span></div>
 <div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">  name##const_ =                                                            \</span></div>
 <div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="preprocessor">      [](void const_* _vp __VA_OPT__(                                       \</span></div>
 <div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="preprocessor">          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))        \</span></div>
@@ -574,7 +574,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00487" name="l00487"></a><span class="lineno">  487</span> </div>
 <div class="line"><a id="l00488" name="l00488"></a><span class="lineno">  488</span><span class="preprocessor">#define _detail_ANYXX_FN_H(l) _detail_ANYXX_FN l</span></div>
 <div class="line"><a id="l00489" name="l00489"></a><span class="lineno">  489</span><span class="preprocessor">#define _detail_ANYXX_FN(access, overload, type, name, name_ext, exact_const,  \</span></div>
-<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span><span class="preprocessor">                         const_, map_body, ...)                                \</span></div>
+<div class="line"><a id="l00490" name="l00490"></a><span class="lineno">  490</span><span class="preprocessor">                         const_, map_body, mapf_concept, ...)                                \</span></div>
 <div class="line"><a id="l00491" name="l00491"></a><span class="lineno">  491</span><span class="preprocessor">  overload template &lt;typename Self&gt;                                            \</span></div>
 <div class="line"><a id="l00492" name="l00492"></a><span class="lineno">  492</span><span class="preprocessor">  AYXFORCEDINLINE decltype(auto) name_ext(this Self&amp;&amp; self __VA_OPT__(         \</span></div>
 <div class="line"><a id="l00493" name="l00493"></a><span class="lineno">  493</span><span class="preprocessor">      , ) __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__)))   \</span></div>
@@ -940,32 +940,32 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00947" name="l00947"></a><span class="lineno">  947</span><span class="preprocessor">#define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \</span></div>
 <div class="line"><a id="l00948" name="l00948"></a><span class="lineno">  948</span><span class="preprocessor">                                 exact_const, const_, params)           \</span></div>
 <div class="line"><a id="l00949" name="l00949"></a><span class="lineno">  949</span><span class="preprocessor">  ANY_FN_(access, overload, ret, name, name_ext, exact_const, const_,   \</span></div>
-<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span><span class="preprocessor">          (x.name_ext), _detail_EXPAND params)</span></div>
+<div class="line"><a id="l00950" name="l00950"></a><span class="lineno">  950</span><span class="preprocessor">          (x.name_ext), true, _detail_EXPAND params)</span></div>
 <div class="line"><a id="l00951" name="l00951"></a><span class="lineno">  951</span></div>
 <div class="line"><a id="l00992" name="l00992"></a><span class="lineno">  992</span></div>
 <div class="foldopen" id="foldopen00996" data-start="" data-end="">
 <div class="line"><a id="l00996" name="l00996"></a><span class="lineno"><a class="line" href="group__trait__macros.html#ga7e35457fd2b7d0297132511962941a88">  996</a></span><span class="preprocessor">#define ANY_FN_PURE(ret, name, params, const_)            \</span></div>
 <div class="line"><a id="l00997" name="l00997"></a><span class="lineno">  997</span><span class="preprocessor">  ANY_FN_(private, , ret, name, name, false, const_,      \</span></div>
-<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span><span class="preprocessor">          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</span></div>
+<div class="line"><a id="l00998" name="l00998"></a><span class="lineno">  998</span><span class="preprocessor">          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), false, \</span></div>
 <div class="line"><a id="l00999" name="l00999"></a><span class="lineno">  999</span><span class="preprocessor">          _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01000" name="l01000"></a><span class="lineno"> 1000</span></div>
 <div class="foldopen" id="foldopen01004" data-start="" data-end="">
 <div class="line"><a id="l01004" name="l01004"></a><span class="lineno"><a class="line" href="group__trait__macros.html#gaef791af6302ddc20f90905f6d611cd70"> 1004</a></span><span class="preprocessor">#define ANY_FN_PURE_EXACT(ret, name, params, const_)      \</span></div>
 <div class="line"><a id="l01005" name="l01005"></a><span class="lineno"> 1005</span><span class="preprocessor">  ANY_FN_(private, , ret, name, name, true, const_,       \</span></div>
-<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span><span class="preprocessor">          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</span></div>
+<div class="line"><a id="l01006" name="l01006"></a><span class="lineno"> 1006</span><span class="preprocessor">          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), false, \</span></div>
 <div class="line"><a id="l01007" name="l01007"></a><span class="lineno"> 1007</span><span class="preprocessor">          _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01008" name="l01008"></a><span class="lineno"> 1008</span></div>
 <div class="foldopen" id="foldopen01012" data-start="" data-end="">
 <div class="line"><a id="l01012" name="l01012"></a><span class="lineno"><a class="line" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5"> 1012</a></span><span class="preprocessor">#define ANY_FN_DEF(access, ret, name, params, const_, ...)         \</span></div>
-<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span><span class="preprocessor">  ANY_FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \</span></div>
+<div class="line"><a id="l01013" name="l01013"></a><span class="lineno"> 1013</span><span class="preprocessor">  ANY_FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), true, \</span></div>
 <div class="line"><a id="l01014" name="l01014"></a><span class="lineno"> 1014</span><span class="preprocessor">          _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01015" name="l01015"></a><span class="lineno"> 1015</span></div>
 <div class="foldopen" id="foldopen01018" data-start="" data-end="">
 <div class="line"><a id="l01018" name="l01018"></a><span class="lineno"><a class="line" href="group__fn__macros.html#ga14b2b6c072b4b7b88536ef43db2d35ed"> 1018</a></span><span class="preprocessor">#define ANY_FN_DEF_EXACT(access, ret, name, params, const_, ...)  \</span></div>
-<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span><span class="preprocessor">  ANY_FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \</span></div>
+<div class="line"><a id="l01019" name="l01019"></a><span class="lineno"> 1019</span><span class="preprocessor">  ANY_FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), true, \</span></div>
 <div class="line"><a id="l01020" name="l01020"></a><span class="lineno"> 1020</span><span class="preprocessor">          _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01021" name="l01021"></a><span class="lineno"> 1021</span></div>
@@ -1004,7 +1004,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span></div>
 <div class="foldopen" id="foldopen01080" data-start="" data-end="">
 <div class="line"><a id="l01080" name="l01080"></a><span class="lineno"><a class="line" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57"> 1080</a></span><span class="preprocessor">#define ANY_OP_DEF(access, ret, op, name, params, const_, ...)            \</span></div>
-<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span><span class="preprocessor">  ANY_FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \</span></div>
+<div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span><span class="preprocessor">  ANY_FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), true, \</span></div>
 <div class="line"><a id="l01082" name="l01082"></a><span class="lineno"> 1082</span><span class="preprocessor">          _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01083" name="l01083"></a><span class="lineno"> 1083</span> </div>
@@ -1018,7 +1018,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01095" name="l01095"></a><span class="lineno"> 1095</span></div>
 <div class="foldopen" id="foldopen01101" data-start="" data-end="">
 <div class="line"><a id="l01101" name="l01101"></a><span class="lineno"><a class="line" href="group__fn__macros.html#gaa7be4e1bc61d70d65fe70586a0684b2d"> 1101</a></span><span class="preprocessor">#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...)     \</span></div>
-<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span><span class="preprocessor">  ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \</span></div>
+<div class="line"><a id="l01102" name="l01102"></a><span class="lineno"> 1102</span><span class="preprocessor">  ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), true, \</span></div>
 <div class="line"><a id="l01103" name="l01103"></a><span class="lineno"> 1103</span><span class="preprocessor">          _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01104" name="l01104"></a><span class="lineno"> 1104</span></div>
@@ -1037,7 +1037,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="foldopen" id="foldopen01127" data-start="" data-end="">
 <div class="line"><a id="l01127" name="l01127"></a><span class="lineno"><a class="line" href="group__fn__macros.html#ga57104d1926dddc9ec88dacdb59d80fb7"> 1127</a></span><span class="preprocessor">#define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...) \</span></div>
 <div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span><span class="preprocessor">  ANY_FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true,    \</span></div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span><span class="preprocessor">          const_, (__VA_ARGS__), _detail_EXPAND params)</span></div>
+<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span><span class="preprocessor">          const_, (__VA_ARGS__), true, _detail_EXPAND params)</span></div>
 </div>
 <div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span></div>
 <div class="foldopen" id="foldopen01136" data-start="" data-end="">

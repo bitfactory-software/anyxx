@@ -440,7 +440,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, name, <span class="keyword">false</span>, const_, (__VA_ARGS__), \</div>
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, name, <span class="keyword">false</span>, const_, (__VA_ARGS__), <span class="keyword">true</span>, \</div>
 <div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT function with default behavior. </p>
@@ -514,7 +514,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">ANY_FN_(<span class="keyword">private</span>, , ret, name, name, <span class="keyword">false</span>, const_,      \</div>
-<div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</div>
+<div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), <span class="keyword">false</span>, \</div>
 <div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT function, which must be provided by the model. </p>
@@ -552,7 +552,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">ANY_FN_(<span class="keyword">private</span>, , ret, name, name, <span class="keyword">true</span>, const_,       \</div>
-<div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \</div>
+<div class="line">        (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), <span class="keyword">false</span>, \</div>
 <div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT function, which must be provided by the model. </p>

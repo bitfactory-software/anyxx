@@ -222,7 +222,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, name, <span class="keyword">true</span>, const_, (__VA_ARGS__), \</div>
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, name, <span class="keyword">true</span>, const_, (__VA_ARGS__), <span class="keyword">true</span>, \</div>
 <div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT function with default behavior. </p>
@@ -381,7 +381,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, <span class="keyword">operator</span> op, <span class="keyword">false</span>, const_, (__VA_ARGS__), \</div>
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, <span class="keyword">operator</span> op, <span class="keyword">false</span>, const_, (__VA_ARGS__), <span class="keyword">true</span>, \</div>
 <div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior. </p>
@@ -434,7 +434,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>, const_, (__VA_ARGS__), \</div>
+<b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, , ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>, const_, (__VA_ARGS__), <span class="keyword">true</span>, \</div>
 <div class="line">        _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior is to call the related operator of the model. </p>
@@ -596,7 +596,7 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">ANY_FN_(access, ANY_OVERLOAD(<span class="keyword">operator</span> op), ret, name, <span class="keyword">operator</span> op, <span class="keyword">true</span>,    \</div>
-<div class="line">        const_, (__VA_ARGS__), _detail_EXPAND params)</div>
+<div class="line">        const_, (__VA_ARGS__), <span class="keyword">true</span>, _detail_EXPAND params)</div>
 </div><!-- fragment -->
 <p>TRAIT operator with default behavior. </p>
 <p>Use if in a base TRAIT exists an equally named FN. </p>
