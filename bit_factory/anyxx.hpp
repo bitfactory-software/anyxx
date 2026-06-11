@@ -299,7 +299,15 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       [[maybe_unused]] this Map const& map,                                   \
       [[maybe_unused]] auto const_& x __VA_OPT__(                             \
           , _detail_ANYXX_MAP_PARAM_LIST_H(a, _sig, __VA_ARGS__)))            \
-      -> anyxx::map_return<T, ANYXX_UNPAREN(type)> {                          \
+      -> anyxx::map_return<T, ANYXX_UNPAREN(type)>                            \
+    requires(anyxx::mapf_concept(requires(T const_ x __VA_OPT__(              \
+        , _detail_ANYXX_CONCEPT_PARAM_LIST_H(a, sig_, __VA_ARGS__))) {        \
+      {                                                                       \
+        x.name_ext(__VA_OPT__(                                                \
+            _detail_ANYXX_CONCEPT_ARG_LIST_H(a, sig_, __VA_ARGS__)))          \
+      } -> std::convertible_to<anyxx::map_return<T, ANYXX_UNPAREN(type)>>;    \
+    }))                                                                       \
+  {                                                                           \
     using namespace anyxx;                                                    \
     return _detail_REMOVE_PARENS(trait_body)(                                 \
         __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));  \
@@ -950,7 +958,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define __detail_ANYXX_MEMBER_FN(access, overload, ret, name, name_ext, \
                                  exact_const, const_, params)           \
   ANY_FN_(access, overload, ret, name, name_ext, exact_const, const_,   \
-          (x.name_ext), true, _detail_EXPAND params)
+          (x.name_ext), use_mapf_concept, _detail_EXPAND params)
 
 /// \addtogroup fn_macros ANY_FN... and ANY_OP macros
 /// \brief Macros to define \ref trait's and \ref any's functions and operators
@@ -996,31 +1004,31 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_FN_PURE
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define ANY_FN_PURE(ret, name, params, const_)                   \
-  ANY_FN_(private, , ret, name, name, false, const_,             \
-          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), false, \
-          _detail_EXPAND params)
+#define ANY_FN_PURE(ret, name, params, const_)            \
+  ANY_FN_(private, , ret, name, name, false, const_,      \
+          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
+          ignore_mapf_concept_with_always_false, _detail_EXPAND params)
 
 /// \def ANY_FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define ANY_FN_PURE_EXACT(ret, name, params, const_)             \
-  ANY_FN_(private, , ret, name, name, true, const_,              \
-          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), false, \
-          _detail_EXPAND params)
+#define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
+  ANY_FN_(private, , ret, name, name, true, const_,       \
+          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
+          ignore_mapf_concept_with_always_false, _detail_EXPAND params)
 
 /// \def ANY_FN_DEF
 /// \brief TRAIT function with default behavior.
 /// \ingroup trait_macros
-#define ANY_FN_DEF(access, ret, name, params, const_, ...)               \
-  ANY_FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), true, \
-          _detail_EXPAND params)
+#define ANY_FN_DEF(access, ret, name, params, const_, ...)         \
+  ANY_FN_(access, , ret, name, name, false, const_, (__VA_ARGS__), \
+          ignore_mapf_concept_with_always_true, _detail_EXPAND params)
 
 /// \def ANY_FN_DEF_EXACT
 /// \brief TRAIT function with default behavior
-#define ANY_FN_DEF_EXACT(access, ret, name, params, const_, ...)        \
-  ANY_FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), true, \
-          _detail_EXPAND params)
+#define ANY_FN_DEF_EXACT(access, ret, name, params, const_, ...)  \
+  ANY_FN_(access, , ret, name, name, true, const_, (__VA_ARGS__), \
+          ignore_mapf_concept_with_always_true, _detail_EXPAND params)
 
 /// \def ANY_FN
 /// \brief TRAIT function whose default behavior is to call an equally named
@@ -1082,7 +1090,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_DEF(access, ret, op, name, params, const_, ...)            \
   ANY_FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
-          true, _detail_EXPAND params)
+          ignore_mapf_concept_with_always_true, _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)              \
   __detail_ANYXX_MEMBER_FN(public, , ret, name, operator op, true, const_, \
@@ -1101,9 +1109,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// of the model.
 ///
 /// Use if in a base TRAIT exists an equally named FN.
-#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...)           \
-  ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), true, \
-          _detail_EXPAND params)
+#define ANY_OP_DEF_EXACT(access, ret, op, name, params, const_, ...)     \
+  ANY_FN_(access, , ret, name, operator op, true, const_, (__VA_ARGS__), \
+          ignore_mapf_concept_with_always_true, _detail_EXPAND params)
 
 /// \def ANY_OP_EXACT_OVERLOAD_MAP_NAMED
 /// \brief TRAIT operator with default behavior and a programmer-chosen name
@@ -1129,7 +1137,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...) \
   ANY_FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true,    \
-          const_, (__VA_ARGS__), true, _detail_EXPAND params)
+          const_, (__VA_ARGS__), ignore_mapf_concept_with_always_true,        \
+          _detail_EXPAND params)
 
 /// \def ANY_FN_STATIC_PURE
 /// \brief Static TRAIT function, which must be provided by the model. This
@@ -1243,6 +1252,14 @@ template <typename... Args>
 struct is_variant_impl<std::variant<Args...>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_variant = is_variant_impl<T>::value;
+
+inline constexpr bool ignore_mapf_concept_with_always_false(bool) {
+  return false;
+}
+inline constexpr bool ignore_mapf_concept_with_always_true(bool) {
+  return true;
+}
+inline constexpr bool use_mapf_concept(bool b) { return b; }
 
 #ifdef ANY_DLL_MODE
 constexpr bool is_in_dll_mode = true;
