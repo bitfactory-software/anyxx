@@ -23,15 +23,9 @@ TRAIT(equal_comparable,
 // 'has_value' and 'get_value' are implemented in terms of the variant.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
-  using std::variant<std::monostate, T>::variant;
-  friend bool operator==(nullable_default_rep const& x,
-                         nullable_default_rep const& r) {
-    return std::visit(
-        anyxx::overloads{
-            []<typename T>(T const& l, T const& r) { return l == r; },
-            [](auto const&, auto const&) { return false; }},
-        x, r);
-  }
+  using variant_t = std::variant<std::monostate, T>;
+  using variant_t::variant;
+  friend bool operator==(nullable_default_rep const& x,nullable_default_rep const& r) = default;
 };
 
 TRAIT(nullable,
