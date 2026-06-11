@@ -1008,7 +1008,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_FN_PURE(ret, name, params, const_)            \
   ANY_FN_(private, , ret, name, name, false, const_,      \
           (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
-          ignore_mapf_concept_with_always_false, x.name, _detail_EXPAND params)
+          ignore_mapf_concept_with_always_false, x.name,  \
+          _detail_EXPAND params)
 
 /// \def ANY_FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
@@ -1089,7 +1090,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Use if in a base TRAIT exists an equally named FN, or you want to provide a
 /// specific name for the operator in the map to have an defined name for
 /// overriding in derived TRAITs.
-#define ANY_FRIEND_OP_MAP_NAMED(ret, op, name, params, const_)
+#define ANY_OP_MAP_NAMED_FRIEND(ret, op, name, params, const_)     \
+  ANY_FN_(public, , ret, name, operator op, false, const_, (x op), \
+          use_mapf_concept, x op, _detail_EXPAND params)
 
 /// \def ANY_OP
 /// \brief TRAIT operator with default behavior is to call the related operator
@@ -1103,7 +1106,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Use if in a base TRAIT exists an equally named FN.
 #define ANY_OP_DEF(access, ret, op, name, params, const_, ...)            \
   ANY_FN_(access, , ret, name, operator op, false, const_, (__VA_ARGS__), \
-          ignore_mapf_concept_with_always_true, x. operator op,              \
+          ignore_mapf_concept_with_always_true, x.operator op,            \
           _detail_EXPAND params)
 
 #define ANY_OP_EXACT_MAP_NAMED(ret, op, name, params, const_)              \
@@ -1153,7 +1156,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_OP_EXACT_OVERLOAD_DEF(access, ret, op, name, params, const_, ...) \
   ANY_FN_(access, ANY_OVERLOAD(operator op), ret, name, operator op, true,    \
           const_, (__VA_ARGS__), ignore_mapf_concept_with_always_true,        \
-          x. operator op, _detail_EXPAND params)
+          x.operator op, _detail_EXPAND params)
 
 /// \def ANY_FN_STATIC_PURE
 /// \brief Static TRAIT function, which must be provided by the model. This

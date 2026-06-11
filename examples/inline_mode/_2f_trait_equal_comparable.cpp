@@ -1,4 +1,4 @@
-// Walkthrough to implement c++ 0x concept_maps with ``Any++`` for static AND
+// Walkthrough to implement c++ 0x concept_map with ``Any++`` for static AND
 // dynmaic polymorhism
 //
 // In C++20, concepts and concept maps provide a powerful way to define
@@ -29,14 +29,6 @@
 // defined.
 namespace lib_2f {
 
-// Our default implementations reference each other, this creates a
-// circular dependency, but this allows us to define only one of the
-// two operators in a model map, and the other will be automatically
-// defined.
-// To enforce the interruption of the circular dependency, we
-// specify the default definition for == in de default model as
-// protected, so it can be only used from a deriving map, as we will se
-// later.(*1*)
 // The names for the functions in the model map map are "eq" and "ne".
 // These functions are then used to implement the operators == and !=
 // in the external interface.
@@ -45,36 +37,16 @@ TRAIT(equal_comparable,
       // whitch the trait is called. It is used to smooth the differences
       // between static and dynamic dispatch, so the implemention can be written
       // against the actual type of the object ref/const qualified as specified.
-      (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    // Because we 'trait' x and r 'as' equal_comparable, we can
-                    // use the != operator of the external interface. This
-                    // operator is 'protected' in the default model, so it can
-                    // only be used from a deriving map, as we will see later.
-                    // This ensures that the circular dependency is broken.
-                    return !(trait_as<equal_comparable>(x) !=
-                             trait_as<equal_comparable>(r));
-                  }),
+      // If the mapped type provies already an operator, ANY_OP_MAP_NAMED_FRIEND
+      // use it as the default implementation.
+      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
+       // We can use the == operator of the external interface to
+       // provide a default implementation for the != operator.
        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                   [&x](auto const& r) {
-                    // Same as above, but for the != operator with the ==
-                    // operator.
                     return !(trait_as<equal_comparable>(x) ==
                              trait_as<equal_comparable>(r));
                   })))
-
-// Here we define the model map for all types that provide already operator==.
-// Any++ guarantees that 'T' is 'decayed'.
-template <typename T>
-  requires requires(T const& a, T const& b) {
-    { a == b } -> std::convertible_to<bool>;
-  }
-struct equal_comparable_model_map<T> : equal_comparable_default_model_map<T> {
-  static auto eq(T const& self, T const& r) { return self == r; }
-  // Because we derive from equal_comparable_default_model_map, the default
-  // implementation of !=, 'ne' is available and will use the provided
-  // operator== via the ne function above.
-};
 
 // TRAIT automatically defines the is_equal_comparable_model concept.
 // Here we use this concept to check that some basic types model the trait:
@@ -92,6 +64,8 @@ void test_equal_comparable_(anyxx::any<Proxy, equal_comparable> const& a,
                             anyxx::any<Proxy, equal_comparable> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
+  CHECK((a == b) != (b != a));
+  CHECK((a != b) != (b == a));
 }
 
 // This is a convenience wrapper for the test algorithm above in the static
@@ -130,15 +104,9 @@ struct b_type {
 // ... but for which we provide a model map, so the provided concept is
 // satisfied:
 ANY_MODEL_MAP((app_2f::b_type), lib_2f::equal_comparable) {
-  // For illustration purposes, we implemet the model in terms of the !=
-  // operator.
-  using default_map::eq;  //(*1*) We want to use the default implementation of
-                          // eq, which is defined 'protected 'in the
-                          // default_map. So we bring it into scope via this
-                          // using directive.
-  static auto ne(app_2f::b_type const& self, app_2f::b_type const& r) {
-    return self.name != r.name;
-  }
+  static auto eq(app_2f::b_type const& self, app_2f::b_type const& r) {
+    return self.name == r.name;
+  };
 };
 static_assert(lib_2f::is_equal_comparable_model<app_2f::b_type>);
 
