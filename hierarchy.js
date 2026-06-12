@@ -4,6 +4,7 @@ var hierarchy =
     [ "anyxx::any&lt; Box, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; cref, function&lt; int(double), const_ &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; cref, function&lt; int(double), mutable_ &gt; &gt;", "classanyxx_1_1any.html", null ],
+    [ "anyxx::any&lt; mutref &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; mutref, function&lt; int(double), const_ &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; mutref, function&lt; int(double), mutable_ &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; trait_class&lt; Type &gt;, Trait &gt;", "classanyxx_1_1any.html", null ],
