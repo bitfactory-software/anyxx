@@ -3367,6 +3367,27 @@ ANY_MODEL_MAP((self&), translate_sig) {
   template <typename Model>
   using concept_arg = Model&;
 };
+template <typename T>
+struct is_use_as__impl : std::false_type {};
+template <typename T, template <typename...> typename Trait,
+          typename... TraitArgs>
+struct is_use_as__impl<any<using_<T>, Trait<TraitArgs...>>> : std::true_type {};
+template <typename T>
+inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
+
+template <typename T>
+  requires is_use_as_<T>
+struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
+  template <typename AnyValue>
+  using v_table_param = any<mutref>;
+  template <typename AnyValue>
+  using v_table_return = int;  // dummy
+  template <typename Model>
+  using map_return = T;
+  template <typename Model>
+  using concept_arg = typename std::decay_t<T>::rep_type;
+};
+
 template <typename AnyValue, typename Param>
 using v_table_param = TRAIT_TYPE(v_table_param, Param, translate_sig, AnyValue);
 template <typename AnyValue, typename Return>
@@ -3436,6 +3457,14 @@ template <typename Traited>
 struct forward_trait_to_map<Traited, self const&> {
   template <typename Sig>
   static Traited const& forward(Sig&& sig) {
+    return get_proxy_value(std::forward<Sig>(sig));
+  }
+};
+template <typename Traited, typename T>
+  requires is_use_as_<T>
+struct forward_trait_to_map<Traited, T const&> {
+  template <typename Sig>
+  static decltype(auto) forward(Sig&& sig) {
     return get_proxy_value(std::forward<Sig>(sig));
   }
 };

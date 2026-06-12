@@ -7,31 +7,18 @@ namespace lib_2f {
 
 TRAIT_TEMPLATE(
     ((To)), equal_comparable_to,
-    (ANY_OP_DEF(protected, bool, ==, eq,
-                ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const,
-                ([&x](auto const& r) {
-                  return !(trait_as<equal_comparable_to<To>>(x) != r);
-                })),
+    (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq,
+                ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const),
      ANY_OP_DEF(public, bool, !=, ne,
                 ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const,
                 ([&x](auto const& r) {
-                  return !(trait_as<equal_comparable_to<To>>(x) == r);
+                  return !(trait_as<equal_comparable_to<To>>(x) ==
+                           trait_as<equal_comparable_to<T>>(r));
                 }))))
 
 template <typename L, typename R>
 using trait_as_equal_comparable_to =
     anyxx::any<anyxx::using_<L>, equal_comparable_to<R>>;
-
-template <typename T, typename To>
-  requires requires(T const& a, To const& b) {
-    { a == b } -> std::convertible_to<bool>;
-  }
-struct equal_comparable_to_model_map<T, To>
-    : equal_comparable_to_default_model_map<T, To> {
-  static bool eq(T const& self, trait_as_equal_comparable_to<To, T> const& r) {
-    return self == get_proxy_value(r);
-  }
-};
 
 // no memory overhead, because of the EBO and there is no vtable, because the
 // trait uses static dispatch only.
