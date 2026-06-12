@@ -21,6 +21,7 @@ TRAIT(equal_comparable,
 // trait  is default constructible.
 // In our case is this effect used to model the 'no value' state.
 // 'has_value' and 'get_value' are implemented in terms of the variant.
+// Operator * and -> are implemented in terms if the (eventually derived) _object_map.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
