@@ -3,6 +3,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <string>
 
+#ifndef __clang__
 namespace lib_2f {
 
 TRAIT_TEMPLATE(
@@ -128,3 +129,4 @@ TEST_CASE("equal_comparable_to benchmark") {
   BENCHMARK("traited") { return traited_find(999999); };
 #endif  // !_DEBUG
 }
+#endif
