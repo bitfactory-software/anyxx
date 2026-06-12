@@ -115,7 +115,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// trait  is default constructible.</span></div>
 <div class="line"><span class="comment">// In our case is this effect used to model the &#39;no value&#39; state.</span></div>
 <div class="line"><span class="comment">// &#39;has_value&#39; and &#39;get_value&#39; are implemented in terms of the variant.</span></div>
-<div class="line"><span class="comment">// Operator * and -&gt; are implemented in terms if the (eventually derived) _object_map.</span></div>
+<div class="line"><span class="comment">// Operator * and -&gt; are implemented in terms if the (eventually derived)</span></div>
+<div class="line"><span class="comment">// _object_map.</span></div>
 <div class="line">template &lt;typename T&gt;</div>
 <div class="line"><span class="keyword">struct</span> nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
 <div class="line">  <span class="keyword">using </span>std::variant&lt;std::monostate, T&gt;::variant;</div>
