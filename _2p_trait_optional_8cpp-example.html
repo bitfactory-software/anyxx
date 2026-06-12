@@ -117,9 +117,9 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="comment">// &#39;has_value&#39; and &#39;get_value&#39; are implemented in terms of the variant.</span></div>
 <div class="line">template &lt;typename T&gt;</div>
 <div class="line"><span class="keyword">struct</span> nullable_default_rep : std::variant&lt;std::monostate, T&gt; {</div>
-<div class="line">  <span class="keyword">using </span>variant_t = std::variant&lt;std::monostate, T&gt;;</div>
-<div class="line">  <span class="keyword">using </span>variant_t::variant;</div>
-<div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(nullable_default_rep <span class="keyword">const</span>&amp; x,nullable_default_rep <span class="keyword">const</span>&amp; r) = <span class="keywordflow">default</span>;</div>
+<div class="line">  <span class="keyword">using </span>std::variant&lt;std::monostate, T&gt;::variant;</div>
+<div class="line">  <span class="keyword">friend</span> <span class="keywordtype">bool</span> operator==(nullable_default_rep <span class="keyword">const</span>&amp; x,</div>
+<div class="line">                         nullable_default_rep <span class="keyword">const</span>&amp; r) = <span class="keywordflow">default</span>;</div>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(nullable,</div>
