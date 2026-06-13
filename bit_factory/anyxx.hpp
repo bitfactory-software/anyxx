@@ -1403,7 +1403,9 @@ struct observeable_rtti_v_table : observeable_v_table {
   bool (*is_derived_from_)(const std::type_info&);
 
   static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(observeable_rtti_v_table) == from;
+    return typeid(observeable_rtti_v_table) == from
+               ? true
+               : observeable_v_table::static_is_derived_from(from);
   }
 
   meta_data* meta_data_ = nullptr;
@@ -2886,7 +2888,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
-  //static_assert(!dyn || has_v_table<Trait>); has issues in clang...
+  // static_assert(!dyn || has_v_table<Trait>); has issues in clang...
 
  protected:
   proxy_impl_t proxy_{};
