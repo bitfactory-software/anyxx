@@ -1403,7 +1403,7 @@ struct observeable_rtti_v_table : observeable_v_table {
   bool (*is_derived_from_)(const std::type_info&);
 
   static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(observeable_v_table) == from;
+    return typeid(observeable_rtti_v_table) == from;
   }
 
   meta_data* meta_data_ = nullptr;
