@@ -2676,7 +2676,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02886" name="l02886"></a><span class="lineno"> 2886</span>  <span class="keyword">using </span>proxy_impl_t = <span class="keyword">typename</span> proxy_trait_t::template proxy_impl&lt;rep_type&gt;;</div>
 <div class="line"><a id="l02887" name="l02887"></a><span class="lineno"> 2887</span>  <span class="keyword">using </span>any_value_t = any&lt;val, Trait&gt;;</div>
 <div class="line"><a id="l02888" name="l02888"></a><span class="lineno"> 2888</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> dyn = <a class="code hl_concept" href="conceptanyxx_1_1is__dyn.html">is_dyn&lt;Proxy&gt;</a>;</div>
-<div class="line"><a id="l02889" name="l02889"></a><span class="lineno"> 2889</span>  <span class="keyword">static_assert</span>(!dyn || <a class="code hl_concept" href="conceptanyxx_1_1has__v__table.html">has_v_table&lt;Trait&gt;</a>);</div>
+<div class="line"><a id="l02889" name="l02889"></a><span class="lineno"> 2889</span>  <span class="comment">//static_assert(!dyn || has_v_table&lt;Trait&gt;); has issues in clang...</span></div>
 <div class="line"><a id="l02890" name="l02890"></a><span class="lineno"> 2890</span> </div>
 <div class="line"><a id="l02891" name="l02891"></a><span class="lineno"> 2891</span> <span class="keyword">protected</span>:</div>
 <div class="line"><a id="l02892" name="l02892"></a><span class="lineno"> 2892</span>  proxy_impl_t proxy_{};</div>
