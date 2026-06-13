@@ -2206,7 +2206,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02394" name="l02394"></a><span class="lineno"> 2394</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> move_to(val&amp; to, [[maybe_unused]] <span class="keyword">auto</span> v_table_to,</div>
 <div class="line"><a id="l02395" name="l02395"></a><span class="lineno"> 2395</span>                      val&amp;&amp; from,</div>
 <div class="line"><a id="l02396" name="l02396"></a><span class="lineno"> 2396</span>                      [[maybe_unused]] is_v_table <span class="keyword">auto</span>* v_table_from) {</div>
-<div class="line"><a id="l02397" name="l02397"></a><span class="lineno"> 2397</span>    <span class="keywordflow">if</span> (!v_table_from &amp;&amp; !v_table_to) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l02397" name="l02397"></a><span class="lineno"> 2397</span>    <span class="keywordflow">if</span> (v_table_from == <span class="keyword">nullptr</span> &amp;&amp; v_table_to == <span class="keyword">nullptr</span>) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l02398" name="l02398"></a><span class="lineno"> 2398</span>    visit_value(</div>
 <div class="line"><a id="l02399" name="l02399"></a><span class="lineno"> 2399</span>        overloads{</div>
 <div class="line"><a id="l02400" name="l02400"></a><span class="lineno"> 2400</span>            [&amp;](heap_data&amp; t, heap_data&amp; f) {</div>
