@@ -1382,6 +1382,9 @@ struct observeable_v_table {
     return typeid(observeable_v_table) == from;
   }
 };
+template <typename VTable>
+concept is_v_table = std::derived_from<VTable, observeable_v_table>;
+
 /// No lifetime functionality, but runtime type information
 /// Base of v-tables for traits without lifetime requirements, but downcastable
 struct observeable_rtti_v_table : observeable_v_table {
@@ -1483,40 +1486,54 @@ struct any_v_table : observeable_rtti_v_table {
 };
 
 inline bool is_derived_from(const std::type_info& from,
-                            any_v_table const* v_table) {
+                            observeable_rtti_v_table const* v_table) {
   return v_table->is_derived_from_(from);
 }
 
-inline std::size_t model_size(any_v_table* v_table) {
+inline std::size_t model_size(std::nullptr_t) { return 0u; }
+inline std::size_t model_size(is_v_table auto* v_table) {
   return v_table ? v_table->model_size : 0u;
 }
-inline mutable_void copy_construct_at(any_v_table* v_table,
+inline mutable_void copy_construct_at(is_v_table auto* v_table,
                                       mutable_void placement, const_void from) {
   return v_table->copy_constructor(placement, from);
 }
-inline mutable_void copy_construct(any_v_table* v_table, const_void from) {
+inline mutable_void copy_construct(is_v_table auto* v_table, const_void from) {
   return copy_construct_at(v_table, v_table->allocate(), from);
 }
-inline mutable_void move_construct_at(any_v_table* v_table,
+inline mutable_void move_construct_at(is_v_table auto* v_table,
                                       mutable_void placement,
                                       mutable_void from) {
   return v_table->move_constructor(placement, from);
 }
-inline mutable_void move_construct(any_v_table* v_table, mutable_void from) {
+inline mutable_void move_construct(is_v_table auto* v_table,
+                                   mutable_void from) {
   return move_construct_at(v_table, v_table->allocate(), from);
 }
-inline void delete_(any_v_table* v_table, mutable_void& data) noexcept {
+template <typename T>
+inline void delete_(T v_table, mutable_void& data) noexcept {
   if (!data) return;
-  assert(v_table);
-  v_table->delete_(data);
-  data = nullptr;
+  if constexpr (!std::same_as<T, std::nullptr_t>) {
+    assert(v_table);
+    v_table->delete_(data);
+    data = nullptr;
+  }
 }  // NOLINT
+template <typename T>
+inline void destruct(T v_table, mutable_void data) noexcept {
+  if (!data) return;
+  if constexpr (!std::same_as<T, std::nullptr_t>) {
+    assert(v_table);
+    v_table->destructor(data);
+    data = nullptr;
+  }
+}
 
 template <typename U>
-bool type_match(any_v_table* v_table);
+bool type_match(observeable_rtti_v_table* v_table);
 
 template <typename U>
-void check_type_match(any_v_table* v_table) {
+void check_type_match(observeable_rtti_v_table* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
@@ -1742,17 +1759,17 @@ auto unchecked_unerase_cast(
 }
 
 template <typename U, is_proxy Proxy>
-auto unerase_cast(Proxy const& o, any_v_table* v_table) {
+auto unerase_cast(Proxy const& o, is_v_table auto* v_table) {
   check_type_match<U>(v_table);
   return unchecked_unerase_cast<U>(o, v_table);
 }
 template <typename U, is_proxy Proxy>
-U const* unerase_cast_if(Proxy const& o, any_v_table* v_table) {
+U const* unerase_cast_if(Proxy const& o, is_v_table auto* v_table) {
   if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
   return nullptr;
 }
 template <typename U, is_proxy Proxy>
-U* unerase_cast_if(Proxy const& o, any_v_table* v_table)
+U* unerase_cast_if(Proxy const& o, is_v_table auto* v_table)
   requires(!is_const_data<Proxy>)
 {
   if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
@@ -1785,7 +1802,7 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   };
   static constexpr bool is_owner = true;
   static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] is_v_table auto* v_table) {
     return void_t{};
   }
 
@@ -1821,10 +1838,10 @@ struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
   };
   static constexpr bool is_owner = false;
   static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] any_v_table* v_table) {}
+                         [[maybe_unused]] is_v_table auto* v_table) {}
 
   static auto get_proxy_ptr_in([[maybe_unused]] auto& val,
-                               [[maybe_unused]] void* v_table) {
+                               [[maybe_unused]] is_v_table auto* v_table) {
     return nullptr;
   }
 
@@ -1899,12 +1916,12 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
       proxy_trait<Proxy>::is_weak;  // cppcheck-suppress
                                     // duplInheritedMember
   static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] is_v_table auto* v_table) {
     return void_t{};
   }
 
   static auto get_proxy_ptr_in(auto& val,
-                               [[maybe_unused]] observeable_v_table* v_table) {
+                               [[maybe_unused]] is_v_table auto* v_table) {
     return &val;
   }
 
@@ -1953,7 +1970,7 @@ struct observer_trait : basic_proxy_trait<Voidness> {
   };
   static constexpr bool is_owner = false;
   static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] is_v_table auto* v_table) {
     return void_t{};
   }
   static void move_to(Voidness& to, [[maybe_unused]] auto, Voidness from,
@@ -1961,8 +1978,8 @@ struct observer_trait : basic_proxy_trait<Voidness> {
     to = from;
   }
 
-  static Voidness get_proxy_ptr_in(
-      const auto& ptr, [[maybe_unused]] observeable_v_table* v_table) {
+  static Voidness get_proxy_ptr_in(const auto& ptr,
+                                   [[maybe_unused]] is_v_table auto* v_table) {
     return ptr;
   }
 
@@ -2046,11 +2063,11 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   };
   static constexpr bool is_owner = true;
   static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] is_v_table auto* v_table) {
     return unique{copy_construct(v_table, data_ptr)};
   }
-  static void move_to(unique& to, any_v_table* v_table_to, unique&& from,
-                      [[maybe_unused]] any_v_table* v_table_from) {
+  static void move_to(unique& to, auto v_table_to, unique&& from,
+                      [[maybe_unused]] is_v_table auto* v_table_from) {
     mutable_void old = nullptr;
     std::swap(to.ptr, old);
     std::swap(to.ptr, from.ptr);
@@ -2058,11 +2075,11 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   }
 
   static void* get_proxy_ptr_in(const auto& ptr,
-                                [[maybe_unused]] observeable_v_table* v_table) {
+                                [[maybe_unused]] is_v_table auto* v_table) {
     return ptr.ptr;
   }
 
-  static void destroy(unique& u, any_v_table* v_table) {
+  static void destroy(unique& u, is_v_table auto* v_table) {
     assert(v_table || !u.ptr);
     if (v_table) delete_(v_table, u.ptr);
   }
@@ -2122,22 +2139,22 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto clone_from(const_void data_ptr, any_v_table* v_table) {
+  static auto clone_from(const_void data_ptr, is_v_table auto* v_table) {
     return shared{copy_construct(v_table, data_ptr), v_table->delete_};
   }
-  static void move_to(shared& to, [[maybe_unused]] any_v_table* v_table_to,
+  static void move_to(shared& to, [[maybe_unused]] auto v_table_to,
                       shared&& from, [[maybe_unused]] auto) {
     to = std::move(from);
   }
-  static void move_to(shared& to, [[maybe_unused]] any_v_table* v_table_to,
-                      unique from, any_v_table* v_table) {
+  static void move_to(shared& to, [[maybe_unused]] auto v_table_to, unique from,
+                      is_v_table auto* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
     to = shared{p, v_table->delete_};
   }
 
   static void const* get_proxy_ptr_in(
-      const auto& v, [[maybe_unused]] observeable_v_table* v_table) {
+      const auto& v, [[maybe_unused]] is_v_table auto* v_table) {
     return v.get();
   }
 
@@ -2182,13 +2199,13 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
   static constexpr bool is_weak =  // NOLINT([duplInheritedMember)
       true;                        // cppcheck-suppress duplInheritedMember
   static auto clone_from([[maybe_unused]] const_void data_ptr,  // NOLINT
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] is_v_table auto* v_table) {
     return weak{};
   }
 
   static void const* get_proxy_ptr_in(
       [[maybe_unused]] const auto& ptr,
-      [[maybe_unused]] observeable_v_table* v_table) {
+      [[maybe_unused]] is_v_table auto* v_table) {
     return nullptr;
   }
 
@@ -2358,7 +2375,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
   };
   static constexpr bool is_owner = true;
   static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] any_v_table* v_table) {
+                         [[maybe_unused]] is_v_table auto* v_table) {
     assert(v_table);
     anyxx::val v;
     visit_value(overloads{[&](heap_data& heap) {
@@ -2374,8 +2391,9 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
     return v;
   }
 
-  static void move_to(val& to, [[maybe_unused]] any_v_table* v_table_to,
-                      val&& from, [[maybe_unused]] any_v_table* v_table_from) {
+  static void move_to(val& to, [[maybe_unused]] auto v_table_to,
+                      val&& from,
+                      [[maybe_unused]] is_v_table auto* v_table_from) {
     if (!v_table_from && !v_table_to) return;
     visit_value(
         overloads{
@@ -2394,15 +2412,15 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
               to.trivial = std::move(f);
             },
             [&](local_data<false>& t, heap_data& f) {
-              if (v_table_to) v_table_to->destructor(t.data());
+              destruct(v_table_to, t.data());
               to.heap.ptr = f.release();
             },
             [&](local_data<false>& t, local_data<false>& f) {
-              if (v_table_to) v_table_to->destructor(t.data());
+              destruct(v_table_to, t.data());
               v_table_from->move_constructor(t.data(), f.data());
             },
             [&](local_data<false>& t, local_data<true>& f) {
-              if (v_table_to) v_table_to->destructor(t.data());
+              destruct(v_table_to, t.data());
               to.trivial = std::move(f);
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
@@ -2417,8 +2435,8 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
         to, model_size(v_table_to), from, v_table_from->model_size);
   }
   // TODO implement move from unique
-  // static void move_to(unique& to, any_v_table* to_v_table, val&& v,
-  //                    any_v_table* v_table) {
+  // static void move_to(unique& to, is_v_table auto* to_v_table, val&& v,
+  //                    is_v_table auto* v_table) {
   //  assert(v_table);
   //  auto data_ptr =
   //      visit_value(overloads{[&](heap_data& heap) { return heap.release();
@@ -2432,8 +2450,8 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
-  static void copy_construct_from(val& to, any_v_table* to_v_table,
-                                  val const& from, any_v_table* from_v_table) {
+  static void copy_construct_from(val& to, auto to_v_table, val const& from,
+                                  is_v_table auto* from_v_table) {
     if (!from_v_table) return;
     visit_value(
         overloads{
@@ -2452,15 +2470,15 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
               to.trivial = f;
             },
             [&](local_data<false>& t, heap_data const& f) {
-              if (to_v_table) to_v_table->destructor(t.data());
+              destruct(to_v_table, t.data());
               to.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&](local_data<false>& t, local_data<false> const& f) {
-              if (to_v_table) to_v_table->destructor(t.data());
+              destruct(to_v_table, t.data());
               from_v_table->copy_constructor(t.data(), f.data());
             },
             [&](local_data<false>& t, local_data<true> const& f) {
-              if (to_v_table) to_v_table->destructor(t.data());
+              destruct(to_v_table, t.data());
               to.trivial = f;
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data const& f) {
@@ -2474,7 +2492,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  static void destroy(val& v, any_v_table* v_table) {
+  static void destroy(val& v, is_v_table auto* v_table) {
     visit_value(overloads{[&](heap_data& heap) {
                             assert(v_table || !heap.ptr);
                             if (v_table) delete_(v_table, heap.ptr);
@@ -2487,7 +2505,8 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
   }
 
   template <typename V>
-  static void* get_proxy_ptr_in(V&& v, [[maybe_unused]] any_v_table* v_table) {
+  static void* get_proxy_ptr_in(V&& v,
+                                [[maybe_unused]] is_v_table auto* v_table) {
     if (!v_table) return nullptr;
     auto model_size = v_table->model_size;
     return visit_value(
@@ -2614,7 +2633,7 @@ struct cast_error {
 
 class meta_data {
   const std::type_info& type_info_;
-  std::vector<any_v_table*> i_table_;
+  std::vector<observeable_rtti_v_table*> i_table_;
 
  public:
   template <typename CLASS>
@@ -2626,14 +2645,14 @@ class meta_data {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  std::expected<any_v_table*, cast_error> get_v_table(
+  std::expected<observeable_rtti_v_table*, cast_error> get_v_table(
       std::type_info const& typeid_) const {
     auto const& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
-  auto register_v_table(any_v_table* v_table) {
+  auto register_v_table(observeable_rtti_v_table* v_table) {
     v_table->meta_data_ = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
@@ -2655,7 +2674,7 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(any_v_table* v_table) {
+bool type_match(observeable_rtti_v_table* v_table) {
   return v_table->get_type_info() == typeid(std::decay_t<U>);
 }
 
