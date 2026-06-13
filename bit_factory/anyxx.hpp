@@ -2394,7 +2394,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
   static void move_to(val& to, [[maybe_unused]] auto v_table_to,
                       val&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
-    if (!v_table_from && !v_table_to) return;
+    if (v_table_from == nullptr && v_table_to == nullptr) return;
     visit_value(
         overloads{
             [&](heap_data& t, heap_data& f) {
