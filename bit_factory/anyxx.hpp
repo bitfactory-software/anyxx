@@ -1575,23 +1575,26 @@ template <typename T>
 inline constexpr bool is_type_class =
     is_proxy<T> && is_type_class_impl<T>::value;
 
+template <typename T = std::nullptr_t>
+struct no_model_map {
+  using rep_type = T;
+};
+
 struct observeable_trait {
   template <typename>
   static constexpr bool modeled_by() {
     return true;
   }
+
+  template <typename StaticDispatchType>
+  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
+
   using v_table_t = observeable_v_table;
 };
 struct observeable_rtti_trait : observeable_trait {
   using v_table_t = observeable_rtti_v_table;
 };
-template <typename T = std::nullptr_t>
-struct no_model_map {
-  using rep_type = T;
-};
 struct base_trait : observeable_rtti_trait {
-  template <typename StaticDispatchType>
-  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
   using v_table_t = any_v_table;
 };
 
