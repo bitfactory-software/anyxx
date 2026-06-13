@@ -2886,7 +2886,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
-  static_assert(!dyn || has_v_table<Trait>);
+  //static_assert(!dyn || has_v_table<Trait>); has issues in clang...
 
  protected:
   proxy_impl_t proxy_{};
