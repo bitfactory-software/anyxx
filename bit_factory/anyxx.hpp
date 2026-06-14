@@ -2729,7 +2729,7 @@ concept proxy_borrowable_from =
 
 template <typename To, typename From, typename FromVTable>
   requires proxy_borrowable_from<To, From, FromVTable>
-To borrow_as(From const& from, FromVTable* v_table) {
+To borrow_proxy_as(From const& from, FromVTable* v_table) {
   return borrow_trait<To, From>{}(from, v_table);
 }
 
@@ -3037,7 +3037,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
       : v_table_holder_t(other.get_v_table_ptr()),
-        proxy_(borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
+        proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
     requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
@@ -3046,7 +3046,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
-    proxy_ = borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr());
+    proxy_ = borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr());
     return *this;
   }
 
@@ -3604,7 +3604,7 @@ std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
                                            FromVTable* from_v_table) {
   using to = typename ToAny::proxy_t;
   return query_v_table<ToAny>(from_v_table).transform([&](auto v_table) {
-    return ToAny{borrow_as<to>(from, v_table), v_table};
+    return ToAny{borrow_proxy_as<to>(from, v_table), v_table};
   });
 }
 
