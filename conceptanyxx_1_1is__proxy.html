@@ -101,23 +101,23 @@ $(function(){initNavTree('conceptanyxx_1_1is__proxy.html','',''); });
 <div class="line"><span class="keyword">concept </span><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy</a> = <span class="keyword">requires</span>(E e) {</div>
 <div class="line">  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::void_t;</div>
 <div class="line">  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::static_dispatch_t;</div>
-<div class="line">  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::required_v_table_t;</div>
 <div class="line">  { proxy_trait&lt;E&gt;::is_constructibile_from_const } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line">  { proxy_trait&lt;E&gt;::is_owner } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line">  <span class="keyword">requires</span> <span class="keyword">requires</span>(proxy_trait&lt;E&gt;::required_v_table_t* required_v_table) {</div>
-<div class="line">    {</div>
-<div class="line">      proxy_trait&lt;E&gt;::get_proxy_ptr_in(e, required_v_table)</div>
-<div class="line">    } -&gt; std::convertible_to&lt;typename proxy_trait&lt;E&gt;::void_t&gt;;</div>
-<div class="line">  };</div>
 <div class="line">  { proxy_trait&lt;E&gt;::is_weak } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">  { proxy_trait&lt;E&gt;::is_lifetime_bound } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">  { proxy_trait&lt;E&gt;::is_object } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line">  <span class="comment">// illustartêd:,</span></div>
+<div class="line">  <span class="comment">// requires requires(v_table* required_v_table) {</span></div>
+<div class="line">  <span class="comment">//   {</span></div>
+<div class="line">  <span class="comment">//     proxy_trait&lt;E&gt;::get_proxy_ptr_in(e, required_v_table)</span></div>
+<div class="line">  <span class="comment">//   } -&gt; std::convertible_to&lt;typename proxy_trait&lt;E&gt;::void_t&gt;;</span></div>
+<div class="line">  <span class="comment">// };</span></div>
 <div class="line">  <span class="comment">// requires !proxy_trait&lt;E&gt;::is_owner ||</span></div>
 <div class="line">  <span class="comment">//              requires(mutable_void from_data, a _v_table* v_table) {</span></div>
 <div class="line">  <span class="comment">//                {</span></div>
 <div class="line">  <span class="comment">//                  proxy_trait&lt;E&gt;::clone_from(from_data, v_table)</span></div>
 <div class="line">  <span class="comment">//                };</span></div>
 <div class="line">  <span class="comment">//              };</span></div>
-<div class="line">  { proxy_trait&lt;E&gt;::is_lifetime_bound } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line">  { proxy_trait&lt;E&gt;::is_object } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line">}</div>
 <div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1604</div></div>
 </div><!-- fragment --><a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
