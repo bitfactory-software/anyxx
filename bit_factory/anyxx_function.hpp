@@ -13,11 +13,11 @@ struct mutable_ : constness {
 };
 
 template <typename Constness, typename R, typename... Args>
-struct function_v_table : any_v_table {
+struct function_v_table : base_trait_v_table {
   R (*f_)(typename Constness::type, Args...);
   template <typename Concrete>
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : any_v_table(concrete) {
+      : base_trait_v_table(concrete) {
     f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
       return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
                          std::forward<Args>(args)...);

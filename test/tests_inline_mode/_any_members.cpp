@@ -30,8 +30,8 @@ TEST_CASE("open object 1") {
   {
     test_object const& const_test_object = a_test_object;
     auto r1 = const_test_object.get(test_member);
-    REQUIRE(r);
-    std::cout << typeid(*r).name() << "\n";
+    REQUIRE(r1);
+    std::cout << typeid(*r1).name() << "\n";
     REQUIRE(*r1 == "hello world");
     static_assert(std::same_as<decltype(r1), std::string const*>);
     REQUIRE((*const_test_object.get(test_member)) == "hello world");

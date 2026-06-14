@@ -208,7 +208,7 @@ TEST_CASE("val lifetime small object") {
       CHECK((*unerase_cast<Y>(*v2))() == 42);
     }
     CHECK(Y::tracker_ == 0);
-    X::tracker_ = 0;
+    Y::tracker_ = 0;
   }
 }
 
@@ -302,8 +302,8 @@ TEST_CASE("v-table lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
-      any_v_table v_table_x(std::in_place_type<X>);
-      auto ptr = v_table_x.allocate();
+      base_trait_v_table v_table_x(std::in_place_type<X>);
+      auto ptr = v_table_x.allocate(nullptr);
       CHECK(X::tracker_ == 0);
       X* x_ptr = nullptr;
       {
@@ -316,15 +316,15 @@ TEST_CASE("v-table lifetime") {
       CHECK(x_ptr == ptr);
       CHECK(X::tracker_ == 1);
       CHECK((*x_ptr)() == "hallo");
-      v_table_x.delete_(ptr);
+      v_table_x.delete_(nullptr, ptr);
       CHECK(X::tracker_ == 0);
     }
   }
   CHECK(X::tracker_ == 0);
   {
     CHECK(X::move_constructed_ == 0);
-    any_v_table v_table_x(std::in_place_type<X>);
-    auto ptr = v_table_x.allocate();
+    base_trait_v_table v_table_x(std::in_place_type<X>);
+    auto ptr = v_table_x.allocate(nullptr);
     CHECK(X::tracker_ == 0);
     X* x_ptr = nullptr;
     {
@@ -340,7 +340,7 @@ TEST_CASE("v-table lifetime") {
     CHECK(x_ptr == ptr);
     CHECK(X::tracker_ == 1);
     CHECK((*x_ptr)() == "hallo");
-    v_table_x.delete_(ptr);
+    v_table_x.delete_(nullptr, ptr);
     CHECK(X::tracker_ == 0);
     CHECK(X::move_constructed_ == 1);
   }
@@ -351,8 +351,8 @@ TEST_CASE("v-table lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
-      any_v_table v_table_x(std::in_place_type<Y>);
-      auto ptr = v_table_x.allocate();
+      base_trait_v_table v_table_x(std::in_place_type<Y>);
+      auto ptr = v_table_x.allocate(nullptr);
       CHECK(Y::tracker_ == 0);
       Y* x_ptr = nullptr;
       {
@@ -365,15 +365,15 @@ TEST_CASE("v-table lifetime small object") {
       CHECK(x_ptr == ptr);
       CHECK(Y::tracker_ == 1);
       CHECK((*x_ptr)() == 42);
-      v_table_x.delete_(ptr);
+      v_table_x.delete_(nullptr, ptr);
       CHECK(Y::tracker_ == 0);
     }
   }
   CHECK(Y::tracker_ == 0);
   {
     CHECK(Y::move_constructed_ == 0);
-    any_v_table v_table_x(std::in_place_type<Y>);
-    auto ptr = v_table_x.allocate();
+    base_trait_v_table v_table_x(std::in_place_type<Y>);
+    auto ptr = v_table_x.allocate(nullptr);
     CHECK(Y::tracker_ == 0);
     Y* x_ptr = nullptr;
     {
@@ -389,7 +389,7 @@ TEST_CASE("v-table lifetime small object") {
     CHECK(x_ptr == ptr);
     CHECK(Y::tracker_ == 1);
     CHECK((*x_ptr)() == 42);
-    v_table_x.delete_(ptr);
+    v_table_x.delete_(nullptr, ptr);
     CHECK(Y::tracker_ == 0);
     CHECK(Y::move_constructed_ == 1);
   }
