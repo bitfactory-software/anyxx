@@ -3616,13 +3616,12 @@ template <is_any ToAny, is_any FromAny>
                                  typename FromAny::proxy_t,
                                  typename FromAny::v_table_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
-  if constexpr (std::same_as<typename ToAny::v_table_t,
-                             typename FromAny::v_table_t>) {
+  if constexpr (std::derived_from<typename FromAny::v_table_t,
+                             typename ToAny::v_table_t>) {
     return {ToAny{from}};
   } else if constexpr (std::derived_from<typename ToAny::v_table_t,
                                          typename FromAny::v_table_t>) {
-    if (auto to = downcast_to<ToAny>(from)) return *to;
-    return borrow_as<ToAny>(get_proxy(from), get_v_table(from));
+    return *downcast_to<ToAny>(from);
   } else {
     return borrow_as<ToAny>(get_proxy(from), get_v_table(from));
   }
