@@ -218,8 +218,8 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">static_assert</span>(</div>
 <div class="line">      anyxx::moveable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(</div>
-<div class="line">      !anyxx::borrowable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t,</div>
-<div class="line">                              <span class="keyword">decltype</span>(y)::v_table_t&gt;);</div>
+<div class="line">      !anyxx::proxy_borrowable_from&lt;<span class="keyword">decltype</span>(x)::proxy_t, <span class="keyword">decltype</span>(y)::proxy_t,</div>
+<div class="line">                                    <span class="keyword">decltype</span>(y)::v_table_t&gt;);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 2b monoid a&quot;</span>) {</div>
