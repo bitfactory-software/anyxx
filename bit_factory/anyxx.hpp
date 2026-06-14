@@ -1613,12 +1613,12 @@ concept is_proxy = requires(E e) {
     } -> std::convertible_to<typename proxy_trait<E>::void_t>;
   };
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
-  //requires !proxy_trait<E>::is_owner ||
-  //             requires(mutable_void from_data, a _v_table* v_table) {
-  //               {
-  //                 proxy_trait<E>::clone_from(from_data, v_table)
-  //               };
-  //             };
+  // requires !proxy_trait<E>::is_owner ||
+  //              requires(mutable_void from_data, a _v_table* v_table) {
+  //                {
+  //                  proxy_trait<E>::clone_from(from_data, v_table)
+  //                };
+  //              };
   { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
   { proxy_trait<E>::is_object } -> std::convertible_to<bool>;
 };
@@ -1761,15 +1761,13 @@ using unerased =
     proxy_trait<Proxy>::template unerased<std::decay_t<ConstructedWith>>;
 
 template <is_proxy Proxy>
-void const* get_proxy_ptr(
-    Proxy const& vv, typename proxy_trait<Proxy>::required_v_table_t* v_table)
+void const* get_proxy_ptr(Proxy const& vv, auto v_table)
   requires std::same_as<void const*, typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
 }
 template <is_proxy Proxy>
-void* get_proxy_ptr(Proxy const& vv,
-                    typename proxy_trait<Proxy>::required_v_table_t* v_table)
+void* get_proxy_ptr(Proxy const& vv, auto v_table)
   requires std::same_as<void*, typename proxy_trait<Proxy>::void_t>
 {
   return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
@@ -1785,13 +1783,11 @@ auto unchecked_unerase_cast(void* p) {
 }
 
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(
-    Proxy const& o, typename proxy_trait<Proxy>::required_v_table_t* v_table) {
+auto unchecked_unerase_cast(Proxy const& o, auto v_table) {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
 }
 template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(
-    Proxy const& o, typename proxy_trait<Proxy>::required_v_table_t* v_table)
+auto unchecked_unerase_cast(Proxy const& o, auto v_table)
   requires(!is_const_data<Proxy>)
 {
   return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
