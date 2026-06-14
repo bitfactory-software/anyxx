@@ -1258,108 +1258,108 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>        }),</div>
 <div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>        is_derived_from_(+[](<span class="keyword">const</span> std::type_info&amp; from) {</div>
 <div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>          <span class="keywordflow">return</span> static_is_derived_from(from);</div>
-<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>        }) {}</div>
+<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>        }),</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>        model_size(compute_model_size&lt;Concrete&gt;()) {}</div>
 </div>
-<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span> </div>
-<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>  std::type_info <span class="keyword">const</span>&amp; (*get_type_info)() <span class="keyword">noexcept</span>;</div>
-<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>  bool (*is_derived_from_)(<span class="keyword">const</span> std::type_info&amp;);</div>
-<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span> </div>
-<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> static_is_derived_from(<span class="keyword">const</span> std::type_info&amp; from) {</div>
-<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>    <span class="keywordflow">return</span> <span class="keyword">typeid</span>(<a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a>) == from</div>
-<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>               ? <span class="keyword">true</span></div>
-<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>               : <a class="code hl_function" href="structanyxx_1_1observeable__v__table.html#a349e872cd4255afe2af4521e069aa09e">observeable_v_table</a>::static_is_derived_from(from);</div>
-<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>  }</div>
-<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span> </div>
-<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>  meta_data* meta_data_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span>};</div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span> </div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>  std::type_info <span class="keyword">const</span>&amp; (*get_type_info)() <span class="keyword">noexcept</span>;</div>
+<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>  bool (*is_derived_from_)(<span class="keyword">const</span> std::type_info&amp;);</div>
+<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>  std::size_t model_size = 0u;</div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span> </div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>  <span class="keyword">static</span> <span class="keywordtype">bool</span> static_is_derived_from(<span class="keyword">const</span> std::type_info&amp; from) {</div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span>    <span class="keywordflow">return</span> <span class="keyword">typeid</span>(<a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a>) == from</div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>               ? <span class="keyword">true</span></div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>               : <a class="code hl_function" href="structanyxx_1_1observeable__v__table.html#a349e872cd4255afe2af4521e069aa09e">observeable_v_table</a>::static_is_derived_from(from);</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>  }</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span> </div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span>  meta_data* meta_data_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span>};</div>
 </div>
-<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span> </div>
-<div class="line"><a id="l01417" name="l01417"></a><span class="lineno"> 1417</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span><span class="keywordtype">void</span> set_is_derived_from(<span class="keyword">auto</span> v_table) {</div>
-<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_base_of_v&lt;observeable_rtti_v_table, VTable&gt;) {</div>
-<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span>    v_table-&gt;is_derived_from_ = +[](<span class="keyword">const</span> std::type_info&amp; from) {</div>
-<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>      <span class="keywordflow">return</span> VTable::static_is_derived_from(from);</div>
-<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    };</div>
-<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>  }</div>
-<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>}</div>
-<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span> </div>
-<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span><span class="keyword">concept </span>is_allocate_v_table = <span class="keyword">requires</span>(VTable* v_table) {</div>
-<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span>  { v_table-&gt;allocate() } -&gt; std::same_as&lt;mutable_void&gt;;</div>
-<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span>};</div>
-<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span><span class="keyword">concept </span>is_copy_constructor_v_table =</div>
-<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span>    <span class="keyword">requires</span>(VTable* v_table, mutable_void placement, const_void from) {</div>
-<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span>      {</div>
-<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>        v_table-&gt;copy_constructor(placement, from)</div>
-<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>      } -&gt; std::same_as&lt;mutable_void&gt;;</div>
-<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>    };</div>
-<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span><span class="keyword">concept </span>is_move_constructor_v_table =</div>
-<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span>    <span class="keyword">requires</span>(VTable* v_table, mutable_void placement, mutable_void from) {</div>
-<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span>      {</div>
-<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>        v_table-&gt;move_constructor(placement, from)</div>
-<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>      } -&gt; std::same_as&lt;mutable_void&gt;;</div>
-<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>    };</div>
-<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span><span class="keyword">concept </span>is_destructor_v_table =</div>
-<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span>    <span class="keyword">requires</span>(VTable* v_table, mutable_void placement) {</div>
-<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span>      { v_table-&gt;destructor(placement) } -&gt; std::same_as&lt;void&gt;;</div>
-<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>    };</div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span><span class="keyword">concept </span>is_delete_v_table = <span class="keyword">requires</span>(VTable* v_table, mutable_void placement) {</div>
-<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>  { v_table-&gt;delete_(placement) } -&gt; std::same_as&lt;void&gt;;</div>
-<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>};</div>
-<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span></div>
-<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span></div>
-<div class="foldopen" id="foldopen01458" data-start="{" data-end="};">
-<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"><a class="line" href="structanyxx_1_1any__v__table.html"> 1458</a></span><span class="keyword">struct </span><a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a> : <a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a> {</div>
-<div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span>  <span class="keyword">using </span>v_table_t = <a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a>;</div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>  <span class="keyword">using </span>v_table_base_t = <a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a>;</div>
-<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span></div>
-<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
-<div class="foldopen" id="foldopen01464" data-start="{" data-end="}">
-<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"><a class="line" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205"> 1464</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a>([[maybe_unused]] std::in_place_type_t&lt;Concrete&gt; concrete)</div>
-<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>      : <a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a>(concrete),</div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>        model_size(compute_model_size&lt;Concrete&gt;()),</div>
-<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>        allocate(+[] -&gt; mutable_void {</div>
-<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>          return std::allocator&lt;Concrete&gt;{}.allocate(1);</div>
-<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>        }),</div>
-<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>        copy_constructor(+[]([[maybe_unused]] mutable_void placement,</div>
-<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>                             [[maybe_unused]] const_void from) -&gt; mutable_void {</div>
-<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>          <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_copy_constructible_v&lt;Concrete&gt;) {</div>
-<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>            <span class="keywordflow">return</span> std::construct_at&lt;Concrete&gt;(</div>
-<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>                <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(placement),</div>
-<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>                *<span class="keyword">static_cast&lt;</span>Concrete const*<span class="keyword">&gt;</span>(from));</div>
-<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>          } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>          };</div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>        }),</div>
-<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>        move_constructor(</div>
-<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>            +[]([[maybe_unused]] mutable_void placement,</div>
-<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>                [[maybe_unused]] mutable_void from) -&gt; mutable_void {</div>
-<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>              <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_move_constructible_v&lt;Concrete&gt;) {</div>
-<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>                <span class="keywordflow">return</span> std::construct_at&lt;Concrete&gt;(</div>
-<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>                    <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(placement),</div>
-<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>                    std::move(*<span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(from)));</div>
-<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>              } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>                <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>              };</div>
-<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span>            }),</div>
-<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>        destructor(+[](mutable_void data) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>          std::destroy_at(<span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(data));</div>
-<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>        }),</div>
-<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>        delete_(+[](mutable_void data) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
-<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>          <span class="keywordflow">if</span> (!data) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>          <span class="keyword">auto</span> p = <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(data);</div>
-<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>          std::destroy_at(p);</div>
-<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>          std::allocator&lt;Concrete&gt;{}.deallocate(p, 1);</div>
-<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span>        }) {</div>
-<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>    set_is_derived_from&lt;v_table_t&gt;(<span class="keyword">this</span>);</div>
-<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>  }</div>
+<div class="line"><a id="l01418" name="l01418"></a><span class="lineno"> 1418</span> </div>
+<div class="line"><a id="l01419" name="l01419"></a><span class="lineno"> 1419</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01420" name="l01420"></a><span class="lineno"> 1420</span><span class="keywordtype">void</span> set_is_derived_from(<span class="keyword">auto</span> v_table) {</div>
+<div class="line"><a id="l01421" name="l01421"></a><span class="lineno"> 1421</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_base_of_v&lt;observeable_rtti_v_table, VTable&gt;) {</div>
+<div class="line"><a id="l01422" name="l01422"></a><span class="lineno"> 1422</span>    v_table-&gt;is_derived_from_ = +[](<span class="keyword">const</span> std::type_info&amp; from) {</div>
+<div class="line"><a id="l01423" name="l01423"></a><span class="lineno"> 1423</span>      <span class="keywordflow">return</span> VTable::static_is_derived_from(from);</div>
+<div class="line"><a id="l01424" name="l01424"></a><span class="lineno"> 1424</span>    };</div>
+<div class="line"><a id="l01425" name="l01425"></a><span class="lineno"> 1425</span>  }</div>
+<div class="line"><a id="l01426" name="l01426"></a><span class="lineno"> 1426</span>}</div>
+<div class="line"><a id="l01427" name="l01427"></a><span class="lineno"> 1427</span> </div>
+<div class="line"><a id="l01428" name="l01428"></a><span class="lineno"> 1428</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01429" name="l01429"></a><span class="lineno"> 1429</span><span class="keyword">concept </span>is_allocate_v_table = <span class="keyword">requires</span>(VTable* v_table) {</div>
+<div class="line"><a id="l01430" name="l01430"></a><span class="lineno"> 1430</span>  { v_table-&gt;allocate() } -&gt; std::same_as&lt;mutable_void&gt;;</div>
+<div class="line"><a id="l01431" name="l01431"></a><span class="lineno"> 1431</span>};</div>
+<div class="line"><a id="l01432" name="l01432"></a><span class="lineno"> 1432</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01433" name="l01433"></a><span class="lineno"> 1433</span><span class="keyword">concept </span>is_copy_constructor_v_table =</div>
+<div class="line"><a id="l01434" name="l01434"></a><span class="lineno"> 1434</span>    <span class="keyword">requires</span>(VTable* v_table, mutable_void placement, const_void from) {</div>
+<div class="line"><a id="l01435" name="l01435"></a><span class="lineno"> 1435</span>      {</div>
+<div class="line"><a id="l01436" name="l01436"></a><span class="lineno"> 1436</span>        v_table-&gt;copy_constructor(placement, from)</div>
+<div class="line"><a id="l01437" name="l01437"></a><span class="lineno"> 1437</span>      } -&gt; std::same_as&lt;mutable_void&gt;;</div>
+<div class="line"><a id="l01438" name="l01438"></a><span class="lineno"> 1438</span>    };</div>
+<div class="line"><a id="l01439" name="l01439"></a><span class="lineno"> 1439</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01440" name="l01440"></a><span class="lineno"> 1440</span><span class="keyword">concept </span>is_move_constructor_v_table =</div>
+<div class="line"><a id="l01441" name="l01441"></a><span class="lineno"> 1441</span>    <span class="keyword">requires</span>(VTable* v_table, mutable_void placement, mutable_void from) {</div>
+<div class="line"><a id="l01442" name="l01442"></a><span class="lineno"> 1442</span>      {</div>
+<div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span>        v_table-&gt;move_constructor(placement, from)</div>
+<div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span>      } -&gt; std::same_as&lt;mutable_void&gt;;</div>
+<div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span>    };</div>
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span><span class="keyword">concept </span>is_destructor_v_table =</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>    <span class="keyword">requires</span>(VTable* v_table, mutable_void placement) {</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>      { v_table-&gt;destructor(placement) } -&gt; std::same_as&lt;void&gt;;</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>    };</div>
+<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span><span class="keyword">concept </span>is_delete_v_table = <span class="keyword">requires</span>(VTable* v_table, mutable_void placement) {</div>
+<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>  { v_table-&gt;delete_(placement) } -&gt; std::same_as&lt;void&gt;;</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>};</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span></div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span></div>
+<div class="foldopen" id="foldopen01460" data-start="{" data-end="};">
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"><a class="line" href="structanyxx_1_1any__v__table.html"> 1460</a></span><span class="keyword">struct </span><a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a> : <a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a> {</div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>  <span class="keyword">using </span>v_table_t = <a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a>;</div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>  <span class="keyword">using </span>v_table_base_t = <a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a>;</div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span></div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
+<div class="foldopen" id="foldopen01466" data-start="{" data-end="}">
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"><a class="line" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205"> 1466</a></span>  <span class="keyword">explicit</span> <a class="code hl_function" href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">any_v_table</a>([[maybe_unused]] std::in_place_type_t&lt;Concrete&gt; concrete)</div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>      : <a class="code hl_function" href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">observeable_rtti_v_table</a>(concrete),</div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>        allocate(+[] -&gt; mutable_void {</div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>          return std::allocator&lt;Concrete&gt;{}.allocate(1);</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>        }),</div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>        copy_constructor(+[]([[maybe_unused]] mutable_void placement,</div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span>                             [[maybe_unused]] const_void from) -&gt; mutable_void {</div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>          <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_copy_constructible_v&lt;Concrete&gt;) {</div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>            <span class="keywordflow">return</span> std::construct_at&lt;Concrete&gt;(</div>
+<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>                <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(placement),</div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>                *<span class="keyword">static_cast&lt;</span>Concrete const*<span class="keyword">&gt;</span>(from));</div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span>          } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>            <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>          };</div>
+<div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>        }),</div>
+<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span>        move_constructor(</div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>            +[]([[maybe_unused]] mutable_void placement,</div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>                [[maybe_unused]] mutable_void from) -&gt; mutable_void {</div>
+<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>              <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_move_constructible_v&lt;Concrete&gt;) {</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>                <span class="keywordflow">return</span> std::construct_at&lt;Concrete&gt;(</div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>                    <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(placement),</div>
+<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>                    std::move(*<span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(from)));</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>              } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>                <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span>              };</div>
+<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>            }),</div>
+<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>        destructor(+[](mutable_void data) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>          std::destroy_at(<span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(data));</div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>        }),</div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>        delete_(+[](mutable_void data) <span class="keyword">noexcept</span> -&gt; <span class="keywordtype">void</span> {</div>
+<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>          <span class="keywordflow">if</span> (!data) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>          <span class="keyword">auto</span> p = <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(data);</div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>          std::destroy_at(p);</div>
+<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span>          std::allocator&lt;Concrete&gt;{}.deallocate(p, 1);</div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>        }) {</div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>    set_is_derived_from&lt;v_table_t&gt;(<span class="keyword">this</span>);</div>
+<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span>  }</div>
 </div>
-<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span> </div>
-<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>  std::size_t model_size = 0u;</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span> </div>
 <div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>  mutable_void (*allocate)();</div>
 <div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>  mutable_void (*copy_constructor)(mutable_void placement, const_void from);</div>
 <div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>  mutable_void (*move_constructor)(mutable_void placement, mutable_void from);</div>
@@ -4242,7 +4242,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="ttc" id="agroup__proxies_html_gaf97e4130c5c467557b419eb6e97b8d80"><div class="ttname"><a href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a></div><div class="ttdeci">std::variant&lt; Any&lt; Proxy &gt;, Types... &gt; vany_variant</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1897</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gaa72161eca09c10eb70cebf00d40b21d0"><div class="ttname"><a href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a></div><div class="ttdeci">#define ANY_TYPE(...)</div><div class="ttdoc">Dependent type definition in a TRAIT. This is useful for defining associated types,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1190</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae6aebc8db498e6ac66bb2d3011f91c1c"><div class="ttname"><a href="group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n,...)</div><div class="ttdoc">TRAIT with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:808</div></div>
-<div class="ttc" id="astructanyxx_1_1any__v__table_html_a7ac8badd88a2c68c0ffb5eb74a9e2205"><div class="ttname"><a href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">anyxx::any_v_table::any_v_table</a></div><div class="ttdeci">any_v_table(std::in_place_type_t&lt; Concrete &gt; concrete)</div><div class="ttdoc">Type-erasing constructor.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1464</div></div>
+<div class="ttc" id="astructanyxx_1_1any__v__table_html_a7ac8badd88a2c68c0ffb5eb74a9e2205"><div class="ttname"><a href="structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205">anyxx::any_v_table::any_v_table</a></div><div class="ttdeci">any_v_table(std::in_place_type_t&lt; Concrete &gt; concrete)</div><div class="ttdoc">Type-erasing constructor.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1466</div></div>
 <div class="ttc" id="astructanyxx_1_1key_html"><div class="ttname"><a href="structanyxx_1_1key.html">anyxx::key</a></div><div class="ttdoc">A key type for factory registration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3646</div></div>
 <div class="ttc" id="astructanyxx_1_1observeable__rtti__v__table_html_a739d7eb76e5bb9dd105c866e4f8ece23"><div class="ttname"><a href="structanyxx_1_1observeable__rtti__v__table.html#a739d7eb76e5bb9dd105c866e4f8ece23">anyxx::observeable_rtti_v_table::observeable_rtti_v_table</a></div><div class="ttdeci">observeable_rtti_v_table(std::in_place_type_t&lt; Concrete &gt; concrete)</div><div class="ttdoc">Type-erasing constructor.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1395</div></div>
 <div class="ttc" id="astructanyxx_1_1observeable__v__table_html"><div class="ttname"><a href="structanyxx_1_1observeable__v__table.html">anyxx::observeable_v_table</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:1373</div></div>
