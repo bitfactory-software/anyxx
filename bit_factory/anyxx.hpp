@@ -2719,7 +2719,7 @@ template <is_proxy To, is_proxy From>
 struct borrow_trait;
 
 template <typename To, typename From, typename FromVTable>
-concept borrowable_from =
+concept proxy_borrowable_from =
     is_proxy<From> && is_proxy<To> &&
     std::derived_from<FromVTable,
                       typename proxy_trait<To>::required_v_table_t> &&
@@ -2728,7 +2728,7 @@ concept borrowable_from =
     };
 
 template <typename To, typename From, typename FromVTable>
-  requires borrowable_from<To, From, FromVTable>
+  requires proxy_borrowable_from<To, From, FromVTable>
 To borrow_as(From const& from, FromVTable* v_table) {
   return borrow_trait<To, From>{}(from, v_table);
 }
@@ -2766,47 +2766,47 @@ struct borrow_trait<weak, shared> {
   }
 };
 
-static_assert(!borrowable_from<mutref, cref, observeable_v_table>);
-static_assert(borrowable_from<mutref, mutref, observeable_v_table>);
-static_assert(borrowable_from<mutref, unique, observeable_v_table>);
-static_assert(!borrowable_from<mutref, shared, observeable_v_table>);
-static_assert(!borrowable_from<mutref, weak, observeable_v_table>);
-static_assert(borrowable_from<mutref, val, any_v_table>);
+static_assert(!proxy_borrowable_from<mutref, cref, observeable_v_table>);
+static_assert(proxy_borrowable_from<mutref, mutref, observeable_v_table>);
+static_assert(proxy_borrowable_from<mutref, unique, observeable_v_table>);
+static_assert(!proxy_borrowable_from<mutref, shared, observeable_v_table>);
+static_assert(!proxy_borrowable_from<mutref, weak, observeable_v_table>);
+static_assert(proxy_borrowable_from<mutref, val, any_v_table>);
 
-static_assert(borrowable_from<cref, cref, observeable_v_table>);
-static_assert(borrowable_from<cref, mutref, observeable_v_table>);
-static_assert(borrowable_from<cref, unique, observeable_v_table>);
-static_assert(borrowable_from<cref, shared, observeable_v_table>);
-static_assert(!borrowable_from<cref, weak, observeable_v_table>);
-static_assert(borrowable_from<cref, val, any_v_table>);
+static_assert(proxy_borrowable_from<cref, cref, observeable_v_table>);
+static_assert(proxy_borrowable_from<cref, mutref, observeable_v_table>);
+static_assert(proxy_borrowable_from<cref, unique, observeable_v_table>);
+static_assert(proxy_borrowable_from<cref, shared, observeable_v_table>);
+static_assert(!proxy_borrowable_from<cref, weak, observeable_v_table>);
+static_assert(proxy_borrowable_from<cref, val, any_v_table>);
 
-static_assert(!borrowable_from<shared, cref, observeable_v_table>);
-static_assert(!borrowable_from<shared, mutref, observeable_v_table>);
-static_assert(!borrowable_from<shared, unique, observeable_v_table>);
-static_assert(borrowable_from<shared, shared, observeable_v_table>);
-static_assert(!borrowable_from<shared, weak, observeable_v_table>);
-static_assert(!borrowable_from<shared, val, any_v_table>);
+static_assert(!proxy_borrowable_from<shared, cref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<shared, mutref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<shared, unique, observeable_v_table>);
+static_assert(proxy_borrowable_from<shared, shared, observeable_v_table>);
+static_assert(!proxy_borrowable_from<shared, weak, observeable_v_table>);
+static_assert(!proxy_borrowable_from<shared, val, any_v_table>);
 
-static_assert(!borrowable_from<weak, cref, observeable_v_table>);
-static_assert(!borrowable_from<weak, mutref, observeable_v_table>);
-static_assert(!borrowable_from<weak, unique, observeable_v_table>);
-static_assert(borrowable_from<weak, shared, observeable_v_table>);
-static_assert(borrowable_from<weak, weak, observeable_v_table>);
-static_assert(!borrowable_from<weak, val, any_v_table>);
+static_assert(!proxy_borrowable_from<weak, cref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<weak, mutref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<weak, unique, observeable_v_table>);
+static_assert(proxy_borrowable_from<weak, shared, observeable_v_table>);
+static_assert(proxy_borrowable_from<weak, weak, observeable_v_table>);
+static_assert(!proxy_borrowable_from<weak, val, any_v_table>);
 
-static_assert(!borrowable_from<unique, cref, observeable_v_table>);
-static_assert(!borrowable_from<unique, mutref, observeable_v_table>);
-static_assert(!borrowable_from<unique, unique, observeable_v_table>);
-static_assert(!borrowable_from<unique, shared, observeable_v_table>);
-static_assert(!borrowable_from<unique, weak, observeable_v_table>);
-static_assert(!borrowable_from<unique, val, any_v_table>);
+static_assert(!proxy_borrowable_from<unique, cref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<unique, mutref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<unique, unique, observeable_v_table>);
+static_assert(!proxy_borrowable_from<unique, shared, observeable_v_table>);
+static_assert(!proxy_borrowable_from<unique, weak, observeable_v_table>);
+static_assert(!proxy_borrowable_from<unique, val, any_v_table>);
 
-static_assert(!borrowable_from<val, cref, observeable_v_table>);
-static_assert(!borrowable_from<val, mutref, observeable_v_table>);
-static_assert(!borrowable_from<val, unique, observeable_v_table>);
-static_assert(!borrowable_from<val, shared, observeable_v_table>);
-static_assert(!borrowable_from<val, weak, observeable_v_table>);
-static_assert(!borrowable_from<val, val, any_v_table>);
+static_assert(!proxy_borrowable_from<val, cref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val, mutref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val, unique, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val, shared, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val, weak, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val, val, any_v_table>);
 
 // --------------------------------------------------------------------------------
 // clone erased data
@@ -3032,16 +3032,16 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
 
   template <is_any Other>
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
-    requires(borrowable_from<proxy_t, typename Other::proxy_t,
-                             typename Other::v_table_t> &&
+    requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
+                                   typename Other::v_table_t> &&
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
       : v_table_holder_t(other.get_v_table_ptr()),
         proxy_(borrow_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
-    requires(borrowable_from<proxy_t, typename Other::proxy_t,
-                             typename Other::v_table_t> &&
+    requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
+                                   typename Other::v_table_t> &&
              (!is_dyn<Proxy> ||
               std::derived_from<typename Other::v_table_t, v_table_t>))
   {
@@ -3599,7 +3599,7 @@ auto as(typed_any<V, Any> source)
 // any borrow, clone, lock, move
 
 template <is_any ToAny, is_proxy FromProxy, typename FromVTable>
-  requires borrowable_from<typename ToAny::proxy_t, FromProxy, FromVTable>
+  requires proxy_borrowable_from<typename ToAny::proxy_t, FromProxy, FromVTable>
 std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
                                            FromVTable* from_v_table) {
   using to = typename ToAny::proxy_t;
@@ -3612,8 +3612,9 @@ std::expected<ToAny, cast_error> borrow_as(FromProxy const& from,
 /// changing the ownership.
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
-  requires borrowable_from<typename ToAny::proxy_t, typename FromAny::proxy_t,
-                           typename FromAny::v_table_t>
+  requires proxy_borrowable_from<typename ToAny::proxy_t,
+                                 typename FromAny::proxy_t,
+                                 typename FromAny::v_table_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   if constexpr (std::same_as<typename ToAny::v_table_t,
                              typename FromAny::v_table_t>) {

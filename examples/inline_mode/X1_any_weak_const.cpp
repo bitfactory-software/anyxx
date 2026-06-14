@@ -9,7 +9,7 @@ using namespace anyxx;
 namespace {
 
 struct widget_a {
-  [[nodiscard]]std::string get() const { return "widget_a"; }
+  [[nodiscard]] std::string get() const { return "widget_a"; }
 };
 
 ANY(widget, (ANY_FN(std::string, get, (), const)), )
@@ -36,7 +36,8 @@ TEST_CASE("example X1/ weak cppreference") {
   {
     auto any_widget_shared_const =
         any_widget<shared>{std::make_shared<widget_a>()};
-    static_assert(borrowable_from<weak, shared, any_widget<shared>::v_table_t>);
+    static_assert(
+        proxy_borrowable_from<weak, shared, any_widget<shared>::v_table_t>);
     any_widget_weak = any_widget_shared_const;
     observe(1);
   }
@@ -52,12 +53,11 @@ static std::map<int, any_widget<weak>> cache;  // out of function for CHECK
 static std::mutex cache_mutex;
 any_widget<shared> make_widget(int id) {
   std::lock_guard hold{cache_mutex};
-  return *lock(cache[id]).or_else(
-      [&] -> std::optional<any_widget<shared>> {
-        auto s = load_widget(id);
-        cache[id] = s;
-        return s;
-      });
+  return *lock(cache[id]).or_else([&] -> std::optional<any_widget<shared>> {
+    auto s = load_widget(id);
+    cache[id] = s;
+    return s;
+  });
 }
 }  // namespace
 
