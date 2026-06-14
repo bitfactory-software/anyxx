@@ -1424,12 +1424,9 @@ void set_is_derived_from(auto v_table) {
 }
 
 template <typename VTable>
-concept is_allocate_v_table =
-    requires(VTable* v_table) {
-      {
-        v_table->allocate()
-      } -> std::same_as<mutable_void>;
-    };
+concept is_allocate_v_table = requires(VTable* v_table) {
+  { v_table->allocate() } -> std::same_as<mutable_void>;
+};
 template <typename VTable>
 concept is_copy_constructor_v_table =
     requires(VTable* v_table, mutable_void placement, const_void from) {
@@ -1447,18 +1444,12 @@ concept is_move_constructor_v_table =
 template <typename VTable>
 concept is_destructor_v_table =
     requires(VTable* v_table, mutable_void placement) {
-      {
-        v_table->destructor(placement)
-      } -> std::same_as<void>;
+      { v_table->destructor(placement) } -> std::same_as<void>;
     };
 template <typename VTable>
-concept is_delete_v_table =
-    requires(VTable* v_table, mutable_void placement) {
-      {
-        v_table->delete_(placement)
-      } -> std::same_as<void>;
-    };
-
+concept is_delete_v_table = requires(VTable* v_table, mutable_void placement) {
+  { v_table->delete_(placement) } -> std::same_as<void>;
+};
 
 ///
 /// Basic lifetime functionality
@@ -1527,7 +1518,7 @@ static_assert(is_copy_constructor_v_table<any_v_table>);
 static_assert(is_move_constructor_v_table<any_v_table>);
 static_assert(is_destructor_v_table<any_v_table>);
 static_assert(is_delete_v_table<any_v_table>);
-        
+
 inline bool is_derived_from(const std::type_info& from,
                             observeable_rtti_v_table const* v_table) {
   return v_table->is_derived_from_(from);
@@ -1610,7 +1601,7 @@ struct basic_proxy_trait {
 /**
  */
 template <typename E>
-concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
+concept is_proxy = requires(E e) {
   typename proxy_trait<E>::void_t;
   typename proxy_trait<E>::static_dispatch_t;
   typename proxy_trait<E>::required_v_table_t;
@@ -1622,7 +1613,12 @@ concept is_proxy = requires(E e, mutable_void void_data, any_v_table* v_table) {
     } -> std::convertible_to<typename proxy_trait<E>::void_t>;
   };
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
-  { proxy_trait<E>::clone_from(void_data, v_table) };
+  //requires !proxy_trait<E>::is_owner ||
+  //             requires(mutable_void from_data, a _v_table* v_table) {
+  //               {
+  //                 proxy_trait<E>::clone_from(from_data, v_table)
+  //               };
+  //             };
   { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
   { proxy_trait<E>::is_object } -> std::convertible_to<bool>;
 };
