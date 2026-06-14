@@ -15,7 +15,7 @@ var hierarchy =
     [ "anyxx::any&lt; using_&lt; Type &gt;, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; using_&lt; Type &gt;, Trait&lt; Ts... &gt; &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; using_&lt; Value &gt;, Trait &gt;", "classanyxx_1_1any.html", null ],
-    [ "anyxx::any&lt; val &gt;", "classanyxx_1_1any.html", null ],
+    [ "anyxx::any&lt; val, base_trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::any&lt; val, Trait &gt;", "classanyxx_1_1any.html", null ],
     [ "anyxx::dispatch&lt; R, Args &gt;", "classanyxx_1_1dispatch.html", null ],
     [ "anyxx::dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", null ],
@@ -24,9 +24,7 @@ var hierarchy =
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
     [ "anyxx::observeable_v_table", "structanyxx_1_1observeable__v__table.html", [
-      [ "anyxx::observeable_rtti_v_table", "structanyxx_1_1observeable__rtti__v__table.html", [
-        [ "anyxx::any_v_table", "structanyxx_1_1any__v__table.html", null ]
-      ] ]
+      [ "anyxx::observeable_rtti_v_table", "structanyxx_1_1observeable__rtti__v__table.html", null ]
     ] ],
     [ "anyxx::trait_class&lt; Type &gt;", "structanyxx_1_1trait__class.html", null ],
     [ "anyxx::undefined", "structanyxx_1_1undefined.html", null ],

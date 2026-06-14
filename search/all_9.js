@@ -34,7 +34,7 @@ var searchData=
   ['any_3c_20using_5f_3c_20type_20_3e_2c_20trait_20_3e_31',['any&lt; using_&lt; Type &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20using_5f_3c_20type_20_3e_2c_20trait_3c_20ts_2e_2e_2e_20_3e_20_3e_32',['any&lt; using_&lt; Type &gt;, Trait&lt; Ts... &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20using_5f_3c_20value_20_3e_2c_20trait_20_3e_33',['any&lt; using_&lt; Value &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20val_20_3e_34',['any&lt; val &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20val_2c_20base_5ftrait_20_3e_34',['any&lt; val, base_trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20val_2c_20trait_20_3e_35',['any&lt; val, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_5f_36',['ANY_',['../group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b',1,'anyxx.hpp']]],
   ['any_5f_20macros_37',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],
@@ -77,9 +77,8 @@ var searchData=
   ['any_5ftemplate_5fmodel_5fmap_74',['ANY_TEMPLATE_MODEL_MAP',['../group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70',1,'anyxx.hpp']]],
   ['any_5ftrait_5fclass_75',['any_trait_class',['../anyxx_8hpp.html#a7877777bc17611e04318fe1b318c9c19',1,'anyxx']]],
   ['any_5ftype_76',['ANY_TYPE',['../group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0',1,'anyxx.hpp']]],
-  ['any_5fv_5ftable_77',['any_v_table',['../structanyxx_1_1any__v__table.html',1,'anyxx::any_v_table'],['../structanyxx_1_1any__v__table.html#a7ac8badd88a2c68c0ffb5eb74a9e2205',1,'anyxx::any_v_table::any_v_table()']]],
-  ['anyxx_2ehpp_78',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
-  ['as_79',['as',['../structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed',1,'anyxx::using_']]],
-  ['as_20visitor_80',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['available_20on_20vcpkg_3a_81',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
+  ['anyxx_2ehpp_77',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
+  ['as_78',['as',['../structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed',1,'anyxx::using_']]],
+  ['as_20visitor_79',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['available_20on_20vcpkg_3a_80',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
 ];
