@@ -1400,10 +1400,12 @@ struct observeable_rtti_v_table : observeable_v_table {
         }),
         is_derived_from_(+[](const std::type_info& from) {
           return static_is_derived_from(from);
-        }) {}
+        }),
+        model_size(compute_model_size<Concrete>()) {}
 
   std::type_info const& (*get_type_info)() noexcept;
   bool (*is_derived_from_)(const std::type_info&);
+  std::size_t model_size = 0u;
 
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(observeable_rtti_v_table) == from
@@ -1463,7 +1465,6 @@ struct any_v_table : observeable_rtti_v_table {
   template <typename Concrete>
   explicit any_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
       : observeable_rtti_v_table(concrete),
-        model_size(compute_model_size<Concrete>()),
         allocate(+[] -> mutable_void {
           return std::allocator<Concrete>{}.allocate(1);
         }),
@@ -1500,7 +1501,6 @@ struct any_v_table : observeable_rtti_v_table {
     set_is_derived_from<v_table_t>(this);
   }
 
-  std::size_t model_size = 0u;
   mutable_void (*allocate)();
   mutable_void (*copy_constructor)(mutable_void placement, const_void from);
   mutable_void (*move_constructor)(mutable_void placement, mutable_void from);
