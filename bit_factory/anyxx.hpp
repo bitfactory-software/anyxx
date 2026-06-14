@@ -1604,23 +1604,23 @@ template <typename E>
 concept is_proxy = requires(E e) {
   typename proxy_trait<E>::void_t;
   typename proxy_trait<E>::static_dispatch_t;
-  typename proxy_trait<E>::required_v_table_t;
   { proxy_trait<E>::is_constructibile_from_const } -> std::convertible_to<bool>;
   { proxy_trait<E>::is_owner } -> std::convertible_to<bool>;
-  requires requires(proxy_trait<E>::required_v_table_t* required_v_table) {
-    {
-      proxy_trait<E>::get_proxy_ptr_in(e, required_v_table)
-    } -> std::convertible_to<typename proxy_trait<E>::void_t>;
-  };
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
+  { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
+  { proxy_trait<E>::is_object } -> std::convertible_to<bool>;
+  // illustartêd:,
+  // requires requires(v_table* required_v_table) {
+  //   {
+  //     proxy_trait<E>::get_proxy_ptr_in(e, required_v_table)
+  //   } -> std::convertible_to<typename proxy_trait<E>::void_t>;
+  // };
   // requires !proxy_trait<E>::is_owner ||
   //              requires(mutable_void from_data, a _v_table* v_table) {
   //                {
   //                  proxy_trait<E>::clone_from(from_data, v_table)
   //                };
   //              };
-  { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
-  { proxy_trait<E>::is_object } -> std::convertible_to<bool>;
 };
 
 template <typename T>
@@ -1828,7 +1828,6 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
                                     const_void, mutable_void>;
   using static_dispatch_t = V;
-  using required_v_table_t = observeable_v_table;
   static constexpr bool is_constructibile_from_const = true;
   template <typename ConstructedWith>
   struct is_constructibile_from {
@@ -1866,7 +1865,6 @@ struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
   using static_dispatch_t = Type;
   static constexpr bool is_constructibile_from_const = true;
   static constexpr bool is_object = false;
-  using required_v_table_t = observeable_v_table;
   template <typename ConstructedWith>
   struct is_constructibile_from {
     static constexpr bool value = true;
@@ -1937,7 +1935,6 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
     : basic_proxy_trait<using_<vany_variant<Any, Proxy, Types...>>> {
   using vany_variant_t = vany_variant<Any, Proxy, Types...>;
   using void_t = typename proxy_trait<Proxy>::void_t;
-  using required_v_table_t = observeable_v_table;
   using static_dispatch_t = vany_variant_t;
   static constexpr bool is_constructibile_from_const =
       proxy_trait<Proxy>::is_constructibile_from_const;
@@ -1995,7 +1992,6 @@ template <voidness Voidness>
 struct observer_trait : basic_proxy_trait<Voidness> {
   using void_t = Voidness;
   using static_dispatch_t = void_t;
-  using required_v_table_t = observeable_v_table;
   static constexpr bool is_const = is_const_void<void_t>;
   static constexpr bool is_constructibile_from_const = is_const;
   static constexpr bool is_lifetime_bound = true;
@@ -2088,7 +2084,6 @@ template <>
 struct proxy_trait<unique> : basic_proxy_trait<unique> {
   using void_t = void*;
   using static_dispatch_t = void_t;
-  using required_v_table_t = observeable_v_table;
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -2165,7 +2160,6 @@ template <>
 struct proxy_trait<shared> : basic_proxy_trait<shared> {
   using void_t = void const*;
   using static_dispatch_t = void_t;
-  using required_v_table_t = observeable_v_table;
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -2222,7 +2216,6 @@ template <>
 struct proxy_trait<weak> : basic_proxy_trait<weak> {
   using void_t = void const*;
   using static_dispatch_t = void_t;
-  using required_v_table_t = observeable_v_table;
   template <typename V>
   using typed_t = const std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -2400,7 +2393,6 @@ template <>
 struct proxy_trait<val> : basic_proxy_trait<val> {
   using void_t = void*;
   using static_dispatch_t = void_t;
-  using required_v_table_t = any_v_table;
   template <typename V>
   using typed_t = std::decay_t<V>;
   static constexpr bool is_constructibile_from_const = true;
@@ -2720,10 +2712,7 @@ struct borrow_trait;
 
 template <typename To, typename From, typename FromVTable>
 concept proxy_borrowable_from =
-    is_proxy<From> && is_proxy<To> &&
-    std::derived_from<FromVTable,
-                      typename proxy_trait<To>::required_v_table_t> &&
-    requires(From f, FromVTable* v_table) {
+    is_proxy<From> && is_proxy<To> && requires(From f, FromVTable* v_table) {
       { borrow_trait<To, From>{}(f, v_table) } -> std::same_as<To>;
     };
 
@@ -3617,7 +3606,7 @@ template <is_any ToAny, is_any FromAny>
                                  typename FromAny::v_table_t>
 std::expected<ToAny, cast_error> borrow_as(FromAny const& from) {
   if constexpr (std::derived_from<typename FromAny::v_table_t,
-                             typename ToAny::v_table_t>) {
+                                  typename ToAny::v_table_t>) {
     return {ToAny{from}};
   } else if constexpr (std::derived_from<typename ToAny::v_table_t,
                                          typename FromAny::v_table_t>) {
