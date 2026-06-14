@@ -2541,7 +2541,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02729" name="l02729"></a><span class="lineno"> 2729</span> </div>
 <div class="line"><a id="l02730" name="l02730"></a><span class="lineno"> 2730</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From, <span class="keyword">typename</span> FromVTable&gt;</div>
 <div class="line"><a id="l02731" name="l02731"></a><span class="lineno"> 2731</span>  <span class="keyword">requires</span> proxy_borrowable_from&lt;To, From, FromVTable&gt;</div>
-<div class="line"><a id="l02732" name="l02732"></a><span class="lineno"> 2732</span>To borrow_as(From <span class="keyword">const</span>&amp; from, FromVTable* v_table) {</div>
+<div class="line"><a id="l02732" name="l02732"></a><span class="lineno"> 2732</span>To borrow_proxy_as(From <span class="keyword">const</span>&amp; from, FromVTable* v_table) {</div>
 <div class="line"><a id="l02733" name="l02733"></a><span class="lineno"> 2733</span>  <span class="keywordflow">return</span> borrow_trait&lt;To, From&gt;{}(from, v_table);</div>
 <div class="line"><a id="l02734" name="l02734"></a><span class="lineno"> 2734</span>}</div>
 <div class="line"><a id="l02735" name="l02735"></a><span class="lineno"> 2735</span> </div>
@@ -2816,7 +2816,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03037" name="l03037"></a><span class="lineno"> 3037</span>             (!is_dyn&lt;Proxy&gt; ||</div>
 <div class="line"><a id="l03038" name="l03038"></a><span class="lineno"> 3038</span>              std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</div>
 <div class="line"><a id="l03039" name="l03039"></a><span class="lineno"> 3039</span>      : v_table_holder_t(other.get_v_table_ptr()),</div>
-<div class="line"><a id="l03040" name="l03040"></a><span class="lineno"> 3040</span>        proxy_(borrow_as&lt;Proxy&gt;(other.proxy_, other.get_v_table_ptr())) {}</div>
+<div class="line"><a id="l03040" name="l03040"></a><span class="lineno"> 3040</span>        proxy_(borrow_proxy_as&lt;Proxy&gt;(other.proxy_, other.get_v_table_ptr())) {}</div>
 <div class="line"><a id="l03041" name="l03041"></a><span class="lineno"> 3041</span>  <span class="keyword">template</span> &lt;is_any Other&gt;</div>
 <div class="line"><a id="l03042" name="l03042"></a><span class="lineno"> 3042</span>  any&amp; operator=(Other <span class="keyword">const</span>&amp; other)</div>
 <div class="line"><a id="l03043" name="l03043"></a><span class="lineno"> 3043</span>    <span class="keyword">requires</span>(proxy_borrowable_from&lt;proxy_t, <span class="keyword">typename</span> Other::proxy_t,</div>
@@ -2825,7 +2825,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03046" name="l03046"></a><span class="lineno"> 3046</span>              std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</div>
 <div class="line"><a id="l03047" name="l03047"></a><span class="lineno"> 3047</span>  {</div>
 <div class="line"><a id="l03048" name="l03048"></a><span class="lineno"> 3048</span>    v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());</div>
-<div class="line"><a id="l03049" name="l03049"></a><span class="lineno"> 3049</span>    proxy_ = borrow_as&lt;Proxy&gt;(other.proxy_, other.get_v_table_ptr());</div>
+<div class="line"><a id="l03049" name="l03049"></a><span class="lineno"> 3049</span>    proxy_ = borrow_proxy_as&lt;Proxy&gt;(other.proxy_, other.get_v_table_ptr());</div>
 <div class="line"><a id="l03050" name="l03050"></a><span class="lineno"> 3050</span>    <span class="keywordflow">return</span> *<span class="keyword">this</span>;</div>
 <div class="line"><a id="l03051" name="l03051"></a><span class="lineno"> 3051</span>  }</div>
 <div class="line"><a id="l03052" name="l03052"></a><span class="lineno"> 3052</span> </div>
@@ -3349,7 +3349,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03604" name="l03604"></a><span class="lineno"> 3604</span>                                           FromVTable* from_v_table) {</div>
 <div class="line"><a id="l03605" name="l03605"></a><span class="lineno"> 3605</span>  <span class="keyword">using </span>to = <span class="keyword">typename</span> ToAny::proxy_t;</div>
 <div class="line"><a id="l03606" name="l03606"></a><span class="lineno"> 3606</span>  <span class="keywordflow">return</span> query_v_table&lt;ToAny&gt;(from_v_table).transform([&amp;](<span class="keyword">auto</span> v_table) {</div>
-<div class="line"><a id="l03607" name="l03607"></a><span class="lineno"> 3607</span>    <span class="keywordflow">return</span> ToAny{borrow_as&lt;to&gt;(from, v_table), v_table};</div>
+<div class="line"><a id="l03607" name="l03607"></a><span class="lineno"> 3607</span>    <span class="keywordflow">return</span> ToAny{borrow_proxy_as&lt;to&gt;(from, v_table), v_table};</div>
 <div class="line"><a id="l03608" name="l03608"></a><span class="lineno"> 3608</span>  });</div>
 <div class="line"><a id="l03609" name="l03609"></a><span class="lineno"> 3609</span>}</div>
 <div class="line"><a id="l03610" name="l03610"></a><span class="lineno"> 3610</span></div>
