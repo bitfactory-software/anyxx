@@ -110,12 +110,12 @@ $(function(){initNavTree('conceptanyxx_1_1is__proxy.html','',''); });
 <div class="line">    } -&gt; std::convertible_to&lt;typename proxy_trait&lt;E&gt;::void_t&gt;;</div>
 <div class="line">  };</div>
 <div class="line">  { proxy_trait&lt;E&gt;::is_weak } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line">  <span class="comment">//requires !proxy_trait&lt;E&gt;::is_owner ||</span></div>
-<div class="line">  <span class="comment">//             requires(mutable_void from_data, a _v_table* v_table) {</span></div>
-<div class="line">  <span class="comment">//               {</span></div>
-<div class="line">  <span class="comment">//                 proxy_trait&lt;E&gt;::clone_from(from_data, v_table)</span></div>
-<div class="line">  <span class="comment">//               };</span></div>
-<div class="line">  <span class="comment">//             };</span></div>
+<div class="line">  <span class="comment">// requires !proxy_trait&lt;E&gt;::is_owner ||</span></div>
+<div class="line">  <span class="comment">//              requires(mutable_void from_data, a _v_table* v_table) {</span></div>
+<div class="line">  <span class="comment">//                {</span></div>
+<div class="line">  <span class="comment">//                  proxy_trait&lt;E&gt;::clone_from(from_data, v_table)</span></div>
+<div class="line">  <span class="comment">//                };</span></div>
+<div class="line">  <span class="comment">//              };</span></div>
 <div class="line">  { proxy_trait&lt;E&gt;::is_lifetime_bound } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line">  { proxy_trait&lt;E&gt;::is_object } -&gt; std::convertible_to&lt;bool&gt;;</div>
 <div class="line">}</div>

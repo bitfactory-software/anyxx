@@ -526,27 +526,27 @@ constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_const_correct_cal
 <tr class="memitem:a255ef796b4b603d1058e4e6914ebb171" id="r_a255ef796b4b603d1058e4e6914ebb171"><td class="memTemplParams" colspan="2"><a id="a255ef796b4b603d1058e4e6914ebb171" name="a255ef796b4b603d1058e4e6914ebb171"></a>
 template&lt;is_proxy Proxy, typename From&gt; </td></tr>
 <tr class="memitem:a255ef796b4b603d1058e4e6914ebb171 template"><td class="memItemLeft">Proxy&#160;</td><td class="memItemRight"><b>anyxx::erased</b> (From &amp;&amp;from)</td></tr>
-<tr class="memitem:a140eb7ae517a37344225eb3e71e23ec7" id="r_a140eb7ae517a37344225eb3e71e23ec7"><td class="memTemplParams" colspan="2"><a id="a140eb7ae517a37344225eb3e71e23ec7" name="a140eb7ae517a37344225eb3e71e23ec7"></a>
+<tr class="memitem:a4c6876c85ae0d4c5b52352b5fc7d6f63" id="r_a4c6876c85ae0d4c5b52352b5fc7d6f63"><td class="memTemplParams" colspan="2"><a id="a4c6876c85ae0d4c5b52352b5fc7d6f63" name="a4c6876c85ae0d4c5b52352b5fc7d6f63"></a>
 template&lt;is_proxy Proxy&gt; <br />
 requires std::same_as&lt;void const*, typename proxy_trait&lt;Proxy&gt;::void_t&gt;</td></tr>
-<tr class="memitem:a140eb7ae517a37344225eb3e71e23ec7 template"><td class="memItemLeft">void const *&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy const &amp;vv, typename proxy_trait&lt; Proxy &gt;::required_v_table_t *v_table)</td></tr>
-<tr class="memitem:aafa31f1a7417b6a4fb167b27b175930d" id="r_aafa31f1a7417b6a4fb167b27b175930d"><td class="memTemplParams" colspan="2"><a id="aafa31f1a7417b6a4fb167b27b175930d" name="aafa31f1a7417b6a4fb167b27b175930d"></a>
+<tr class="memitem:a4c6876c85ae0d4c5b52352b5fc7d6f63 template"><td class="memItemLeft">void const *&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy const &amp;vv, auto v_table)</td></tr>
+<tr class="memitem:a6e69a60e50829f96627fd90b3e7900d9" id="r_a6e69a60e50829f96627fd90b3e7900d9"><td class="memTemplParams" colspan="2"><a id="a6e69a60e50829f96627fd90b3e7900d9" name="a6e69a60e50829f96627fd90b3e7900d9"></a>
 template&lt;is_proxy Proxy&gt; <br />
 requires std::same_as&lt;void*, typename proxy_trait&lt;Proxy&gt;::void_t&gt;</td></tr>
-<tr class="memitem:aafa31f1a7417b6a4fb167b27b175930d template"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy const &amp;vv, typename proxy_trait&lt; Proxy &gt;::required_v_table_t *v_table)</td></tr>
+<tr class="memitem:a6e69a60e50829f96627fd90b3e7900d9 template"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy const &amp;vv, auto v_table)</td></tr>
 <tr class="memitem:a2c4e8b2775cdd9a89f754a74809e57c0" id="r_a2c4e8b2775cdd9a89f754a74809e57c0"><td class="memTemplParams" colspan="2"><a id="a2c4e8b2775cdd9a89f754a74809e57c0" name="a2c4e8b2775cdd9a89f754a74809e57c0"></a>
 template&lt;typename U&gt; </td></tr>
 <tr class="memitem:a2c4e8b2775cdd9a89f754a74809e57c0 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (void const *p)</td></tr>
 <tr class="memitem:a4405af6d09f9c244a9355bad312514ac" id="r_a4405af6d09f9c244a9355bad312514ac"><td class="memTemplParams" colspan="2"><a id="a4405af6d09f9c244a9355bad312514ac" name="a4405af6d09f9c244a9355bad312514ac"></a>
 template&lt;typename U&gt; </td></tr>
 <tr class="memitem:a4405af6d09f9c244a9355bad312514ac template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (void *p)</td></tr>
-<tr class="memitem:a3622f21223736540a9b2794c8bd05646" id="r_a3622f21223736540a9b2794c8bd05646"><td class="memTemplParams" colspan="2"><a id="a3622f21223736540a9b2794c8bd05646" name="a3622f21223736540a9b2794c8bd05646"></a>
+<tr class="memitem:a879cf28d8bb088cdbdcdf04605e0b735" id="r_a879cf28d8bb088cdbdcdf04605e0b735"><td class="memTemplParams" colspan="2"><a id="a879cf28d8bb088cdbdcdf04605e0b735" name="a879cf28d8bb088cdbdcdf04605e0b735"></a>
 template&lt;typename U, is_proxy Proxy&gt; </td></tr>
-<tr class="memitem:a3622f21223736540a9b2794c8bd05646 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (Proxy const &amp;o, typename proxy_trait&lt; Proxy &gt;::required_v_table_t *v_table)</td></tr>
-<tr class="memitem:a506a4f5c1af03dcf45fa1b85869109fc" id="r_a506a4f5c1af03dcf45fa1b85869109fc"><td class="memTemplParams" colspan="2"><a id="a506a4f5c1af03dcf45fa1b85869109fc" name="a506a4f5c1af03dcf45fa1b85869109fc"></a>
+<tr class="memitem:a879cf28d8bb088cdbdcdf04605e0b735 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (Proxy const &amp;o, auto v_table)</td></tr>
+<tr class="memitem:a5c9e72af3ecb72ff2f9e083020e877ad" id="r_a5c9e72af3ecb72ff2f9e083020e877ad"><td class="memTemplParams" colspan="2"><a id="a5c9e72af3ecb72ff2f9e083020e877ad" name="a5c9e72af3ecb72ff2f9e083020e877ad"></a>
 template&lt;typename U, is_proxy Proxy&gt; <br />
 requires (!is_const_data&lt;Proxy&gt;)</td></tr>
-<tr class="memitem:a506a4f5c1af03dcf45fa1b85869109fc template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (Proxy const &amp;o, typename proxy_trait&lt; Proxy &gt;::required_v_table_t *v_table)</td></tr>
+<tr class="memitem:a5c9e72af3ecb72ff2f9e083020e877ad template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (Proxy const &amp;o, auto v_table)</td></tr>
 <tr class="memitem:ab9c3d716f02b5bb174af0903a54e1376" id="r_ab9c3d716f02b5bb174af0903a54e1376"><td class="memTemplParams" colspan="2"><a id="ab9c3d716f02b5bb174af0903a54e1376" name="ab9c3d716f02b5bb174af0903a54e1376"></a>
 template&lt;typename U, is_proxy Proxy&gt; </td></tr>
 <tr class="memitem:ab9c3d716f02b5bb174af0903a54e1376 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast</b> (Proxy const &amp;o, is_v_table auto *v_table)</td></tr>
@@ -2420,8 +2420,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3267</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3288</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3263</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3284</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4025,7 +4025,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;cref&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2936</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2932</div></div>
 </div><!-- fragment -->
 </div>
 </div>
