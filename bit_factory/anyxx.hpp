@@ -1423,6 +1423,43 @@ void set_is_derived_from(auto v_table) {
   }
 }
 
+template <typename VTable>
+concept is_allocate_v_table =
+    requires(VTable* v_table) {
+      {
+        v_table->allocate()
+      } -> std::same_as<mutable_void>;
+    };
+template <typename VTable>
+concept is_copy_constructor_v_table =
+    requires(VTable* v_table, mutable_void placement, const_void from) {
+      {
+        v_table->copy_constructor(placement, from)
+      } -> std::same_as<mutable_void>;
+    };
+template <typename VTable>
+concept is_move_constructor_v_table =
+    requires(VTable* v_table, mutable_void placement, mutable_void from) {
+      {
+        v_table->move_constructor(placement, from)
+      } -> std::same_as<mutable_void>;
+    };
+template <typename VTable>
+concept is_destructor_v_table =
+    requires(VTable* v_table, mutable_void placement) {
+      {
+        v_table->destructor(placement)
+      } -> std::same_as<void>;
+    };
+template <typename VTable>
+concept is_delete_v_table =
+    requires(VTable* v_table, mutable_void placement) {
+      {
+        v_table->delete_(placement)
+      } -> std::same_as<void>;
+    };
+
+
 ///
 /// Basic lifetime functionality
 /** Base of all other v-tables
@@ -1485,6 +1522,12 @@ struct any_v_table : observeable_rtti_v_table {
   }
 };
 
+static_assert(is_allocate_v_table<any_v_table>);
+static_assert(is_copy_constructor_v_table<any_v_table>);
+static_assert(is_move_constructor_v_table<any_v_table>);
+static_assert(is_destructor_v_table<any_v_table>);
+static_assert(is_delete_v_table<any_v_table>);
+        
 inline bool is_derived_from(const std::type_info& from,
                             observeable_rtti_v_table const* v_table) {
   return v_table->is_derived_from_(from);
@@ -2391,8 +2434,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
     return v;
   }
 
-  static void move_to(val& to, [[maybe_unused]] auto v_table_to,
-                      val&& from,
+  static void move_to(val& to, [[maybe_unused]] auto v_table_to, val&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     visit_value(
@@ -2822,8 +2864,7 @@ inline static bool constexpr can_move_to_from<To, From> = true;
 
 template <is_proxy To, is_proxy From>
   requires moveable_from<To, std::decay_t<From>>
-void move_to(To& to, auto to_v_table, From&& from,
-             auto from_v_table) {
+void move_to(To& to, auto to_v_table, From&& from, auto from_v_table) {
   return proxy_trait<From>::move_to(to, to_v_table, std::move(from),
                                     from_v_table);
 }
