@@ -2785,7 +2785,7 @@ concept cloneable_to = is_proxy<To> && proxy_trait<To>::is_owner;
 
 template <is_proxy To, is_proxy From>
   requires cloneable_to<To>
-To clone_to(From const& from, any_v_table* v_table) {
+To clone_to(From const& from, auto v_table) {
   return proxy_trait<To>::clone_from(get_proxy_ptr(from, v_table), v_table);
 }
 
@@ -2822,8 +2822,8 @@ inline static bool constexpr can_move_to_from<To, From> = true;
 
 template <is_proxy To, is_proxy From>
   requires moveable_from<To, std::decay_t<From>>
-void move_to(To& to, any_v_table* to_v_table, From&& from,
-             any_v_table* from_v_table) {
+void move_to(To& to, auto to_v_table, From&& from,
+             auto from_v_table) {
   return proxy_trait<From>::move_to(to, to_v_table, std::move(from),
                                     from_v_table);
 }
@@ -3287,18 +3287,13 @@ struct dispatch_holder<true, Trait> {
 };
 
 template <is_any ToAny>
-auto query_v_table(any_v_table* from)
+auto query_v_table(observeable_rtti_v_table* from)
     -> std::expected<typename ToAny::v_table_t*, anyxx::cast_error> {
   using v_table_t = typename ToAny::v_table_t;
   if (from->is_derived_from_(typeid(v_table_t)))
     return static_cast<v_table_t*>(from);
   return from->meta_data_->get_v_table(typeid(v_table_t))
       .transform([](auto v_table) { return static_cast<v_table_t*>(v_table); });
-}
-
-template <typename ToAny>
-auto query_v_table(any_v_table* from) {
-  return find_v_table<ToAny>(*from->meta_data_);
 }
 
 // --------------------------------------------------------------------------------
