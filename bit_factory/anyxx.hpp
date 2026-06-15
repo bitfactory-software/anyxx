@@ -1458,9 +1458,10 @@ void set_is_derived_from(auto v_table) {
   }
 }
 
+using allocate_t = mutable_void (*)();
 template <typename VTable>
-concept is_allocate_v_table = requires(VTable* v_table, mutable_void dummy) {
-  { v_table->allocate(dummy) } -> std::same_as<mutable_void>;
+concept is_allocate_v_table = requires(VTable* v_table) {
+  { v_table->allocate } -> std::convertible_to<allocate_t>;
 };
 template <typename VTable>
 concept is_copy_constructor_v_table =
@@ -1503,7 +1504,7 @@ inline mutable_void copy_construct_at(is_v_table auto* v_table,
   return v_table->copy_constructor(nullptr, placement, from);
 }
 inline mutable_void copy_construct(is_v_table auto* v_table, const_void from) {
-  return copy_construct_at(v_table, v_table->allocate(nullptr), from);
+  return copy_construct_at(v_table, v_table->allocate(), from);
 }
 inline mutable_void move_construct_at(is_v_table auto* v_table,
                                       mutable_void placement,
@@ -1512,7 +1513,7 @@ inline mutable_void move_construct_at(is_v_table auto* v_table,
 }
 inline mutable_void move_construct(is_v_table auto* v_table,
                                    mutable_void from) {
-  return move_construct_at(v_table, v_table->allocate(nullptr), from);
+  return move_construct_at(v_table, v_table->allocate(), from);
 }
 template <typename T>
 inline void delete_(T v_table, mutable_void& data) noexcept {
@@ -3533,7 +3534,6 @@ ToAny move_to(FromAny&& from) {
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
-using allocate_t = mutable_void (*)(mutable_void);
 
 TRAIT_EX_(base_trait, observeable_rtti_trait,
           (ANY_FN_DEF(public, mutable_void, copy_constructor,
@@ -3574,7 +3574,7 @@ TRAIT_EX_(base_trait, observeable_rtti_trait,
           , ,
           (ANY_V_TABLE_DATA(
               allocate_t, allocate,
-              +[](mutable_void) -> mutable_void {
+              +[]() -> mutable_void {
                 return std::allocator<Concrete>{}.allocate(1);
               })),
           ());
