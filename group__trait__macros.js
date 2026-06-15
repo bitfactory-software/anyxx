@@ -16,10 +16,10 @@ var group__trait__macros =
     [ "ANY_TYPE", "group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0", null ],
     [ "TRAIT", "group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9", null ],
     [ "TRAIT_", "group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b", null ],
-    [ "TRAIT_EX", "group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c", null ],
-    [ "TRAIT_EX_", "group__trait__macros.html#ga1da6a8b287f2c814199686dcf6197c49", null ],
+    [ "TRAIT_EX", "group__trait__macros.html#ga2c3698db4bcfb33022a0161d4bbba023", null ],
+    [ "TRAIT_EX_", "group__trait__macros.html#gade6711771425f1b9a231fe819691ce04", null ],
     [ "TRAIT_TEMPLATE", "group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae", null ],
     [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ],
-    [ "TRAIT_TEMPLATE_EX", "group__trait__macros.html#ga61f2a900fad19f45ce6fcfa6e70ff5a7", null ],
-    [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga71d1ce45ae9da2f7af00c9f21718eb6c", null ]
+    [ "TRAIT_TEMPLATE_EX", "group__trait__macros.html#ga0184c21c57a127c79c7b8f5cd008afaf", null ],
+    [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92", null ]
 ];

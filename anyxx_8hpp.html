@@ -286,21 +286,21 @@ Macros</h2></td></tr>
 <tr class="memitem:a134fc1da79a55d2f51d058d6f6ce5d7b" id="r_a134fc1da79a55d2f51d058d6f6ce5d7b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a134fc1da79a55d2f51d058d6f6ce5d7b">_detail_ANYXX_JACKET_STATIC_FNS</a>(...)</td></tr>
 <tr class="memitem:a975c7d97aa9ba797d2f83d55d492c500" id="r_a975c7d97aa9ba797d2f83d55d492c500"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a975c7d97aa9ba797d2f83d55d492c500">_detail_ANYXX_JACKET_TYPES</a>(...)</td></tr>
 <tr class="memitem:a43c24ef4445d0b656174f1dc7997b283" id="r_a43c24ef4445d0b656174f1dc7997b283"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a43c24ef4445d0b656174f1dc7997b283">_detail_ANYXX_MAKE_V_TABLE_FUNCTION_NAME</a>(n)</td></tr>
-<tr class="memitem:ad9b8ad7e92d631c770a3d5c63c1a156c" id="r_ad9b8ad7e92d631c770a3d5c63c1a156c"><td class="memItemLeft"><a id="ad9b8ad7e92d631c770a3d5c63c1a156c" name="ad9b8ad7e92d631c770a3d5c63c1a156c"></a>
-#define&#160;</td><td class="memItemRight"><b>TRAIT_META_FUNCTION</b>( any_template_params,  model_map_template_params,  concrete_template_params,  static_dispatch_template_params,  variant_model_map_template_params,  n,  BASE,  base_template_params,  base_model_map_template_params,  l,  static_fns,  typedefs,  decoration)</td></tr>
-<tr class="memitem:a201abfa615a6517678e1e766a05fd66f" id="r_a201abfa615a6517678e1e766a05fd66f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a201abfa615a6517678e1e766a05fd66f">__detail_ANYXX_TRAIT_</a>(t,  n,  BASE,  l,  static_fns,  typedefs,  decoration)</td></tr>
-<tr class="memitem:ga1da6a8b287f2c814199686dcf6197c49" id="r_ga1da6a8b287f2c814199686dcf6197c49"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga1da6a8b287f2c814199686dcf6197c49">TRAIT_EX_</a>(n,  BASE,  l,  static_fns,  typedefs,  decoration)</td></tr>
-<tr class="memdesc:ga1da6a8b287f2c814199686dcf6197c49"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base with decoration. Macro to define the functional behavior for a any, where the behavior of base is inherited. The decoration are additional functions and typedefs (in brackets).  <br /></td></tr>
+<tr class="memitem:a5ad5c10b20b102830a5a6d966c386b4a" id="r_a5ad5c10b20b102830a5a6d966c386b4a"><td class="memItemLeft"><a id="a5ad5c10b20b102830a5a6d966c386b4a" name="a5ad5c10b20b102830a5a6d966c386b4a"></a>
+#define&#160;</td><td class="memItemRight"><b>TRAIT_META_FUNCTION</b>( any_template_params,  model_map_template_params,  concrete_template_params,  static_dispatch_template_params,  variant_model_map_template_params,  n,  BASE,  base_template_params,  base_model_map_template_params,  l,  static_fns,  typedefs,  v_table_data,  decoration)</td></tr>
+<tr class="memitem:ac6eced76c116c58021bbfebcd977257b" id="r_ac6eced76c116c58021bbfebcd977257b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ac6eced76c116c58021bbfebcd977257b">__detail_ANYXX_TRAIT_</a>(t,  n,  BASE,  l,  static_fns,  typedefs,  v_table_data,  decoration)</td></tr>
+<tr class="memitem:gade6711771425f1b9a231fe819691ce04" id="r_gade6711771425f1b9a231fe819691ce04"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(n,  BASE,  l,  static_fns,  typedefs,  v_table_data,  decoration)</td></tr>
+<tr class="memdesc:gade6711771425f1b9a231fe819691ce04"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base with decoration. Macro to define the functional behavior for a any, where the behavior of base is inherited. The decoration are additional functions and typedefs (in brackets).  <br /></td></tr>
 <tr class="memitem:gadf5ede586c04f0c23d0b46a60e1d241b" id="r_gadf5ede586c04f0c23d0b46a60e1d241b"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n,  BASE,  l)</td></tr>
 <tr class="memdesc:gadf5ede586c04f0c23d0b46a60e1d241b"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT derived from base.  <br /></td></tr>
 <tr class="memitem:gae0cb5618c6b82d8f6a7eaf36143647a9" id="r_gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(n,  fns)</td></tr>
 <tr class="memdesc:gae0cb5618c6b82d8f6a7eaf36143647a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Macro to define the functional behavior for an any.  <br /></td></tr>
-<tr class="memitem:gae6aebc8db498e6ac66bb2d3011f91c1c" id="r_gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gae6aebc8db498e6ac66bb2d3011f91c1c">TRAIT_EX</a>(n, ...)</td></tr>
-<tr class="memdesc:gae6aebc8db498e6ac66bb2d3011f91c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT with decoration.  <br /></td></tr>
-<tr class="memitem:ga71d1ce45ae9da2f7af00c9f21718eb6c" id="r_ga71d1ce45ae9da2f7af00c9f21718eb6c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga71d1ce45ae9da2f7af00c9f21718eb6c">TRAIT_TEMPLATE_EX_</a>(t,  n,  base,  base_template_types,  l,  static_fns,  typedefs,  decoration)</td></tr>
-<tr class="memdesc:ga71d1ce45ae9da2f7af00c9f21718eb6c"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with base and decoration.  <br /></td></tr>
-<tr class="memitem:ga61f2a900fad19f45ce6fcfa6e70ff5a7" id="r_ga61f2a900fad19f45ce6fcfa6e70ff5a7"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga61f2a900fad19f45ce6fcfa6e70ff5a7">TRAIT_TEMPLATE_EX</a>(t,  n,  l,  static_fns,  typedefs,  decoration)</td></tr>
-<tr class="memdesc:ga61f2a900fad19f45ce6fcfa6e70ff5a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with decoration.  <br /></td></tr>
+<tr class="memitem:ga2c3698db4bcfb33022a0161d4bbba023" id="r_ga2c3698db4bcfb33022a0161d4bbba023"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga2c3698db4bcfb33022a0161d4bbba023">TRAIT_EX</a>(n,  l,  static_fns,  typedefs,  v_table_data,  decoration)</td></tr>
+<tr class="memdesc:ga2c3698db4bcfb33022a0161d4bbba023"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT with decoration.  <br /></td></tr>
+<tr class="memitem:ga2276d8473f4f6f96f955b84b045fdb92" id="r_ga2276d8473f4f6f96f955b84b045fdb92"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a>(t,  n,  base,  base_template_types,  l,  static_fns,  typedefs,  v_table_data,  decoration)</td></tr>
+<tr class="memdesc:ga2276d8473f4f6f96f955b84b045fdb92"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with base and decoration.  <br /></td></tr>
+<tr class="memitem:ga0184c21c57a127c79c7b8f5cd008afaf" id="r_ga0184c21c57a127c79c7b8f5cd008afaf"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga0184c21c57a127c79c7b8f5cd008afaf">TRAIT_TEMPLATE_EX</a>(t,  n,  l,  static_fns,  typedefs,  v_table_data,  decoration)</td></tr>
+<tr class="memdesc:ga0184c21c57a127c79c7b8f5cd008afaf"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with decoration.  <br /></td></tr>
 <tr class="memitem:ga9ec9a5f2d475d1ddf481df8385fce4a1" id="r_ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t,  n,  base,  base_template_types,  l)</td></tr>
 <tr class="memdesc:ga9ec9a5f2d475d1ddf481df8385fce4a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">TRAIT template with a base TRAIT.(.  <br /></td></tr>
 <tr class="memitem:gad2f206b96947eeba0d7f5cee72b33cae" id="r_gad2f206b96947eeba0d7f5cee72b33cae"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(t,  n,  l)</td></tr>
@@ -654,8 +654,8 @@ template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memitem:a2623320e7c1ede03ba79926eee9f4fe6" id="r_a2623320e7c1ede03ba79926eee9f4fe6"><td class="memTemplParams" colspan="2"><a id="a2623320e7c1ede03ba79926eee9f4fe6" name="a2623320e7c1ede03ba79926eee9f4fe6"></a>
 template&lt;is_any ToAny&gt; </td></tr>
 <tr class="memitem:a2623320e7c1ede03ba79926eee9f4fe6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::query_v_table</b> (<a class="el" href="structanyxx_1_1observeable__rtti__v__table.html">observeable_rtti_v_table</a> *from) -&gt; std::expected&lt; typename ToAny::v_table_t *, anyxx::cast_error &gt;</td></tr>
-<tr class="memitem:a983cf9eb2d005ae4c716c0336447061d" id="r_a983cf9eb2d005ae4c716c0336447061d"><td class="memItemLeft"><a id="a983cf9eb2d005ae4c716c0336447061d" name="a983cf9eb2d005ae4c716c0336447061d"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (translate_sig, observeable_trait,,,(<a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((AnyValue)), v_table_param, void,(T)), <a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((AnyValue)), v_table_return, void,(T)), <a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((Model)), map_return, void,(T)), <a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((Model)), concept_arg, void,(T))),()) ANY_MODEL_MAP((self)</td></tr>
+<tr class="memitem:a9d117277a8e3e05072cf88fc8a90d99e" id="r_a9d117277a8e3e05072cf88fc8a90d99e"><td class="memItemLeft"><a id="a9d117277a8e3e05072cf88fc8a90d99e" name="a9d117277a8e3e05072cf88fc8a90d99e"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (translate_sig, observeable_trait,,,(<a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((AnyValue)), v_table_param, void,(T)), <a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((AnyValue)), v_table_return, void,(T)), <a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((Model)), map_return, void,(T)), <a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((Model)), concept_arg, void,(T))),,()) ANY_MODEL_MAP((self)</td></tr>
 <tr class="memitem:a1f84810b6d20ec7f177eede956112b85" id="r_a1f84810b6d20ec7f177eede956112b85"><td class="memItemLeft"><a id="a1f84810b6d20ec7f177eede956112b85" name="a1f84810b6d20ec7f177eede956112b85"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::ANY_MODEL_MAP</b> ((self const &amp;), translate_sig)</td></tr>
 <tr class="memitem:ac01595d421197e97bf8522e27e8f6d46" id="r_ac01595d421197e97bf8522e27e8f6d46"><td class="memItemLeft"><a id="ac01595d421197e97bf8522e27e8f6d46" name="ac01595d421197e97bf8522e27e8f6d46"></a>
@@ -859,8 +859,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="a201abfa615a6517678e1e766a05fd66f" name="a201abfa615a6517678e1e766a05fd66f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a201abfa615a6517678e1e766a05fd66f">&#9670;&#160;</a></span>__detail_ANYXX_TRAIT_</h2>
+<a id="ac6eced76c116c58021bbfebcd977257b" name="ac6eced76c116c58021bbfebcd977257b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6eced76c116c58021bbfebcd977257b">&#9670;&#160;</a></span>__detail_ANYXX_TRAIT_</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -898,12 +898,17 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>v_table_data</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
           <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>decoration</em></span>&#160;)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line">TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \</div>
-<div class="line">                    (T), l, static_fns, typedefs, decoration)</div>
+<div class="line">                    (T), l, static_fns, typedefs, v_table_data, decoration)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -1234,7 +1239,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
 <div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
 <div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1366</div></div>
+<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1371</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2420,8 +2425,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3102</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3123</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3107</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3128</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4007,7 +4012,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1541</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1546</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4025,7 +4030,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;cref&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2771</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2776</div></div>
 </div><!-- fragment -->
 </div>
 </div>
