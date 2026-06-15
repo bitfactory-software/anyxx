@@ -270,6 +270,8 @@ Macros</h2></td></tr>
 <tr class="memitem:abdc47d24a33ebb50f860564b8267e265" id="r_abdc47d24a33ebb50f860564b8267e265"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#abdc47d24a33ebb50f860564b8267e265">_detail_ANYXX_MAP_VARIANT_IMPL</a>(access,  overload,  type,  name,  name_ext,  exact_const,  const_,  trait_body,  mapf_concept,  mapf_concept_lhs, ...)</td></tr>
 <tr class="memitem:a217a5f1d3e6dd0d3debbbed6c6eb78b0" id="r_a217a5f1d3e6dd0d3debbbed6c6eb78b0"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a217a5f1d3e6dd0d3debbbed6c6eb78b0">_detail_ANYXX_FUNCTION_PTR_DECL</a>( access,  overload,  type,  name,  name_ext,  exact_const,  const_,  map_body,  mapf_concept,  mapf_concept_lhs, ...)</td></tr>
 <tr class="memitem:a9973240de697f9505a0cee658d0df0cd" id="r_a9973240de697f9505a0cee658d0df0cd"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a9973240de697f9505a0cee658d0df0cd">_detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL</a>( access,  overload,  type,  name,  name_ext,  exact_const,  const_,  map_body,  mapf_concept,  mapf_concept_lhs, ...)</td></tr>
+<tr class="memitem:aa009831c165e51b52b05c368d10d2c5f" id="r_aa009831c165e51b52b05c368d10d2c5f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aa009831c165e51b52b05c368d10d2c5f">_detail_ANYXX_V_TABLE_DATA_DECL</a>(type,  name, ...)</td></tr>
+<tr class="memitem:a7197834924150c90588a011f5153230f" id="r_a7197834924150c90588a011f5153230f"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a7197834924150c90588a011f5153230f">_detail_ANYXX_V_TABLE_DATA_INIT</a>(type,  name, ...)</td></tr>
 <tr class="memitem:a507ebd1ac610d64e0df94cad5142e5ee" id="r_a507ebd1ac610d64e0df94cad5142e5ee"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a507ebd1ac610d64e0df94cad5142e5ee">_detail_ANYXX_FN_H</a>(l)</td></tr>
 <tr class="memitem:aa01b38cd142c0d07b9202d7d2b2d37d5" id="r_aa01b38cd142c0d07b9202d7d2b2d37d5"><td class="memItemLeft"><a id="aa01b38cd142c0d07b9202d7d2b2d37d5" name="aa01b38cd142c0d07b9202d7d2b2d37d5"></a>
 #define&#160;</td><td class="memItemRight"><b>_detail_ANYXX_FN</b>(access,  overload,  type,  name,  name_ext,  exact_const,  const_,  map_body,  mapf_concept,  mapf_concept_lhs,  ...)</td></tr>
@@ -366,6 +368,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga37c1b03383baa5fcf21fd17cb09449b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static TRAIT function, which has a default implementation. This function will NOT go into the v-Table ad is only avalable for the using_ und trait_class Proxy.  <br /></td></tr>
 <tr class="memitem:gaa72161eca09c10eb70cebf00d40b21d0" id="r_gaa72161eca09c10eb70cebf00d40b21d0"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(...)</td></tr>
 <tr class="memdesc:gaa72161eca09c10eb70cebf00d40b21d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dependent type definition in a TRAIT. This is useful for defining associated types, e.g. Return typs using_ Proxy.  <br /></td></tr>
+<tr class="memitem:gac0a03326e8e38ea3ee7d42b80552e634" id="r_gac0a03326e8e38ea3ee7d42b80552e634"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(type,  name, ...)</td></tr>
+<tr class="memdesc:gac0a03326e8e38ea3ee7d42b80552e634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped type, a types size or for open dispatch tables.  <br /></td></tr>
 <tr class="memitem:ga6ad7aa1322abedb9a0ebd5c2fa4ba32e" id="r_ga6ad7aa1322abedb9a0ebd5c2fa4ba32e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga6ad7aa1322abedb9a0ebd5c2fa4ba32e">__ANY_MODEL_MAP</a>(trait_,  t)</td></tr>
 <tr class="memitem:ga33732296f3b86795807ea45f564b1d70" id="r_ga33732296f3b86795807ea45f564b1d70"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70">ANY_TEMPLATE_MODEL_MAP</a>(model_,  trait_,  trait_types)</td></tr>
 <tr class="memdesc:ga33732296f3b86795807ea45f564b1d70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
@@ -1239,7 +1243,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
 <div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
 <div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1371</div></div>
+<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1387</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2425,8 +2429,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3107</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3128</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3123</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3144</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3022,6 +3026,60 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><span class="keyword">typename</span> _detail_REMOVE_PARENS(head) __VA_OPT__(   \</div>
 <div class="line">    _detail_foreach_macro(_detail_ANYXX_TYPENAME_PARAM_H, __VA_ARGS__))</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="aa009831c165e51b52b05c368d10d2c5f" name="aa009831c165e51b52b05c368d10d2c5f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa009831c165e51b52b05c368d10d2c5f">&#9670;&#160;</a></span>_detail_ANYXX_V_TABLE_DATA_DECL</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _detail_ANYXX_V_TABLE_DATA_DECL</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">type name;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a7197834924150c90588a011f5153230f" name="a7197834924150c90588a011f5153230f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7197834924150c90588a011f5153230f">&#9670;&#160;</a></span>_detail_ANYXX_V_TABLE_DATA_INIT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define _detail_ANYXX_V_TABLE_DATA_INIT</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">name = __VA_ARGS__;</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4012,7 +4070,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1546</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1562</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4030,7 +4088,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;cref&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2776</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2792</div></div>
 </div><!-- fragment -->
 </div>
 </div>

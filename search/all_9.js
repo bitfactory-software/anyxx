@@ -77,8 +77,9 @@ var searchData=
   ['any_5ftemplate_5fmodel_5fmap_74',['ANY_TEMPLATE_MODEL_MAP',['../group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70',1,'anyxx.hpp']]],
   ['any_5ftrait_5fclass_75',['any_trait_class',['../anyxx_8hpp.html#a7877777bc17611e04318fe1b318c9c19',1,'anyxx']]],
   ['any_5ftype_76',['ANY_TYPE',['../group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0',1,'anyxx.hpp']]],
-  ['anyxx_2ehpp_77',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
-  ['as_78',['as',['../structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed',1,'anyxx::using_']]],
-  ['as_20visitor_79',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['available_20on_20vcpkg_3a_80',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
+  ['any_5fv_5ftable_5fdata_77',['ANY_V_TABLE_DATA',['../group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634',1,'anyxx.hpp']]],
+  ['anyxx_2ehpp_78',['anyxx.hpp',['../anyxx_8hpp.html',1,'']]],
+  ['as_79',['as',['../structanyxx_1_1using__.html#a169b9630831d786ba2b2778b879330ed',1,'anyxx::using_']]],
+  ['as_20visitor_80',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['available_20on_20vcpkg_3a_81',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]]
 ];

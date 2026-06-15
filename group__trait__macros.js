@@ -14,6 +14,7 @@ var group__trait__macros =
     [ "ANY_TEMPLATE_", "group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a", null ],
     [ "ANY_TEMPLATE_EX_", "group__trait__macros.html#gae8358d6ce5723e6034308a27184df811", null ],
     [ "ANY_TYPE", "group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0", null ],
+    [ "ANY_V_TABLE_DATA", "group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634", null ],
     [ "TRAIT", "group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9", null ],
     [ "TRAIT_", "group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b", null ],
     [ "TRAIT_EX", "group__trait__macros.html#ga2c3698db4bcfb33022a0161d4bbba023", null ],

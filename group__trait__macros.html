@@ -146,6 +146,8 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga37c1b03383baa5fcf21fd17cb09449b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static TRAIT function, which has a default implementation. This function will NOT go into the v-Table ad is only avalable for the using_ und trait_class Proxy.  <br /></td></tr>
 <tr class="memitem:gaa72161eca09c10eb70cebf00d40b21d0" id="r_gaa72161eca09c10eb70cebf00d40b21d0"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(...)</td></tr>
 <tr class="memdesc:gaa72161eca09c10eb70cebf00d40b21d0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dependent type definition in a TRAIT. This is useful for defining associated types, e.g. Return typs using_ Proxy.  <br /></td></tr>
+<tr class="memitem:gac0a03326e8e38ea3ee7d42b80552e634" id="r_gac0a03326e8e38ea3ee7d42b80552e634"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(type,  name, ...)</td></tr>
+<tr class="memdesc:gac0a03326e8e38ea3ee7d42b80552e634"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped type, a types size or for open dispatch tables.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Macros to define trait 's and any 's. </p>
@@ -266,15 +268,15 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(n, l)          \</div>
 <div class="line">__detail_ANYXX_ANY_EX_(n, __VA_ARGS__)</div>
-<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:802</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:806</div></div>
 </div><!-- fragment -->
 <p>Simple ANY macro. </p>
 <p>The ANY macro uses TRAIT macros to define the functional behavior of an any. Additionally, it defines the proxy to be used (default_proxy). The default proxy is val. Example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(example_any,</div>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
 <div class="line">)</div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1052</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:915</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1056</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:919</div></div>
 </div><!-- fragment --><p> is equivalent to: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(example,</div>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
@@ -317,7 +319,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(n, BASE, l)                    \</div>
 <div class="line">__detail_ANYXX_ANY_EX_(n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:790</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:794</div></div>
 </div><!-- fragment -->
 <p>ANY with a baseSee <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_1_any_shape_8cpp-example.html#a2">_1_any_shape.cpp</a>.</dd>
@@ -355,7 +357,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga2c3698db4bcfb33022a0161d4bbba023">TRAIT_EX</a>(n, l, decoration)                    \</div>
 <div class="line">__detail_ANYXX_ANY_EX_(n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga2c3698db4bcfb33022a0161d4bbba023"><div class="ttname"><a href="#ga2c3698db4bcfb33022a0161d4bbba023">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:810</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga2c3698db4bcfb33022a0161d4bbba023"><div class="ttname"><a href="#ga2c3698db4bcfb33022a0161d4bbba023">TRAIT_EX</a></div><div class="ttdeci">#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:814</div></div>
 </div><!-- fragment -->
 <p>ANY with decorationSee <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
 
@@ -396,7 +398,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(n, BASE, l, decoration)                    \</div>
 <div class="line">__detail_ANYXX_ANY_EX_(n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_gade6711771425f1b9a231fe819691ce04"><div class="ttname"><a href="#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:783</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gade6711771425f1b9a231fe819691ce04"><div class="ttname"><a href="#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:787</div></div>
 </div><!-- fragment -->
 <p>ANY with a base and decorationSee <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
 
@@ -672,7 +674,7 @@ Macros</h2></td></tr>
 <div class="line">    any_template_params_with_defaults)&gt;                                   \</div>
 <div class="line"><span class="keyword">using </span>any_##n = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \</div>
 <div class="line">                                      pure_template_params)&gt;;</div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2776</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2792</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -706,7 +708,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a>(t, n, l)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_gad2f206b96947eeba0d7f5cee72b33cae"><div class="ttname"><a href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a></div><div class="ttdeci">#define TRAIT_TEMPLATE(t, n, l)</div><div class="ttdoc">TRAIT template.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:850</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gad2f206b96947eeba0d7f5cee72b33cae"><div class="ttname"><a href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a></div><div class="ttdeci">#define TRAIT_TEMPLATE(t, n, l)</div><div class="ttdoc">TRAIT template.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:854</div></div>
 </div><!-- fragment -->
 <p>ANY template.See <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a7">_5_any_template.cpp</a>.</dd>
@@ -754,7 +756,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t, n, BASE, bt, l)                    \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.(.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:844</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga9ec9a5f2d475d1ddf481df8385fce4a1"><div class="ttname"><a href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_(t, n, base, base_template_types, l)</div><div class="ttdoc">TRAIT template with a base TRAIT.(.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:848</div></div>
 </div><!-- fragment -->
 <p>ANY template with a base.See <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
 
@@ -805,7 +807,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga0184c21c57a127c79c7b8f5cd008afaf">TRAIT_TEMPLATE_EX</a>(t, n, l, static_fns, typedefs, , decoration)      \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga0184c21c57a127c79c7b8f5cd008afaf"><div class="ttname"><a href="#ga0184c21c57a127c79c7b8f5cd008afaf">TRAIT_TEMPLATE_EX</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT template with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:836</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga0184c21c57a127c79c7b8f5cd008afaf"><div class="ttname"><a href="#ga0184c21c57a127c79c7b8f5cd008afaf">TRAIT_TEMPLATE_EX</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT template with decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:840</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -854,7 +856,7 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a>(t, n, BASE, bt, l, , decoration)                  \</div>
 <div class="line">__detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)</div>
-<div class="ttc" id="agroup__trait__macros_html_ga2276d8473f4f6f96f955b84b045fdb92"><div class="ttname"><a href="#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT template with base and decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:820</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga2276d8473f4f6f96f955b84b045fdb92"><div class="ttname"><a href="#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT template with base and decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:824</div></div>
 </div><!-- fragment -->
 <p>ANY template with a base and decoration.See <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
 
@@ -883,6 +885,43 @@ Macros</h2></td></tr>
     <tr><td class="paramname">name</td><td>name of the type definition </td></tr>
     <tr><td class="paramname">erased</td><td>type to be used in the erased context, to simpliy usage. </td></tr>
     <tr><td class="paramname">default_</td><td>default type definition. Used undefined to request specification in the model_map </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gac0a03326e8e38ea3ee7d42b80552e634" name="gac0a03326e8e38ea3ee7d42b80552e634"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gac0a03326e8e38ea3ee7d42b80552e634">&#9670;&#160;</a></span>ANY_V_TABLE_DATA</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_V_TABLE_DATA</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>type</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">(type, name, __VA_ARGS__)</div>
+</div><!-- fragment -->
+<p>Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped type, a types size or for open dispatch tables. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">type</td><td>type of the data member </td></tr>
+    <tr><td class="paramname">name</td><td>name of the data member </td></tr>
+    <tr><td class="paramname">erased</td><td>initializer for the data member. The erased type available as 'Concrete'. </td></tr>
   </table>
   </dd>
 </dl>
