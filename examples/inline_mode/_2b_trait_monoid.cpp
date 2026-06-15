@@ -40,7 +40,7 @@ TRAIT_EX(monoid,
                      }),
           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
                      ([&x](auto const& r) { return x == r; }))),
-         , , ())
+         , , , ())
 
 template <typename Box = anyxx::val>
 using any_monoid = anyxx::any<Box, monoid>;

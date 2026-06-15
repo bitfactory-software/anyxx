@@ -36,7 +36,7 @@ TRAIT_EX_(
                                return m1.op(m2);
                              }));
                        })),
-    , ())
+    , , ())
 
 TRAIT_(group, monoid, (ANY_FN_PURE(anyxx::self, inverse, (), const)))
 

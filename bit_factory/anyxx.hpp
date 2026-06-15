@@ -598,7 +598,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     any_template_params, model_map_template_params, concrete_template_params,  \
     static_dispatch_template_params, variant_model_map_template_params, n,     \
     BASE, base_template_params, base_model_map_template_params, l, static_fns, \
-    typedefs, decoration)                                                      \
+    typedefs, v_table_data, decoration)                                        \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
@@ -745,9 +745,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     ::anyxx::set_is_derived_from<v_table_t>(this);                             \
   };
 
-#define __detail_ANYXX_TRAIT_(t, n, BASE, l, static_fns, typedefs, decoration) \
+#define __detail_ANYXX_TRAIT_(t, n, BASE, l, static_fns, typedefs,             \
+                              v_table_data, decoration)                        \
   TRAIT_META_FUNCTION(, (T), (Concrete), (StaticDispatchType), (V), n, BASE, , \
-                      (T), l, static_fns, typedefs, decoration)
+                      (T), l, static_fns, typedefs, v_table_data, decoration)
 
 /// \addtogroup trait_macros TRAIT... and ANY_ macros
 /// \brief Macros to define \ref trait 's and \ref any 's
@@ -779,13 +780,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Macro to define the functional behavior for a \ref any, where the
 /// behavior of base is inherited. The decoration are additional functions and
 /// typedefs (in brackets).
-#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, decoration) \
-  __detail_ANYXX_TRAIT_(, n, BASE, l, static_fns, typedefs, decoration)
+#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration) \
+  __detail_ANYXX_TRAIT_(, n, BASE, l, static_fns, typedefs, v_table_data,     \
+                        decoration)
 
 /// \def TRAIT_
 /// \brief TRAIT derived from base.
 /// \ingroup trait_macros
-#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, , , ())
+#define TRAIT_(n, BASE, l) TRAIT_EX_(n, BASE, l, , , , ())
 
 /// \def TRAIT
 /// \brief Macro to define the functional behavior for an \ref any.
@@ -805,7 +807,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
-#define TRAIT_EX(n, ...) TRAIT_EX_(n, anyxx::base_trait, __VA_ARGS__)
+#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)   \
+  TRAIT_EX_(n, anyxx::base_trait, l, static_fns, typedefs, v_table_data, \
+            decoration)
 
 /// \def TRAIT_TEMPLATE_EX_
 /// \brief TRAIT template with base and decoration.
@@ -814,7 +818,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
 #define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns,     \
-                           typedefs, decoration)                               \
+                           typedefs, v_table_data, decoration)                 \
   TRAIT_META_FUNCTION(                                                         \
       _detail_REMOVE_PARENS(t),                                                \
       __detail_ANYXX_ADD_HEAD((T), _detail_REMOVE_PARENS(t)),                  \
@@ -824,20 +828,21 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       _detail_REMOVE_PARENS(base_template_types),                              \
       __detail_ANYXX_ADD_HEAD((T),                                             \
                               _detail_REMOVE_PARENS(base_template_types)),     \
-      l, static_fns, typedefs, decoration)
+      l, static_fns, typedefs, v_table_data, decoration)
 
 /// \def TRAIT_TEMPLATE_EX
 /// \brief TRAIT template with decoration.
 /// \ingroup trait_macros
-#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, decoration)       \
+#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data,     \
+                          decoration)                                      \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::base_trait, (), l, static_fns, typedefs, \
-                     decoration)
+                     v_table_data, decoration)
 
 /// \def TRAIT_TEMPLATE_
 /// \brief TRAIT template with a base TRAIT.(
 /// \ingroup trait_macros
 #define TRAIT_TEMPLATE_(t, n, base, base_template_types, l) \
-  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, , , ())
+  TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, , , , ())
 
 /// \def TRAIT_TEMPLATE
 /// \brief TRAIT template.
@@ -923,7 +928,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
 #define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
-  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, decoration)                    \
+  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, , decoration)                  \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// \def ANY_TEMPLATE_
@@ -948,7 +953,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// See \ref ANY for explanation
 #define ANY_TEMPLATE_EX(t, n, l, proxy_default, static_fns, typedefs, \
                         decoration)                                   \
-  TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, decoration)        \
+  TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, , decoration)      \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// @}
@@ -3227,7 +3232,7 @@ TRAIT_EX_(translate_sig, observeable_trait, , ,
            ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
            ANY_TYPE(((Model)), map_return, void, (T)),
            ANY_TYPE(((Model)), concept_arg, void, (T))),
-          ())
+          , ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
   using v_table_param = any<cref>;
