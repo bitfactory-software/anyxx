@@ -496,6 +496,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     }                                                                      \
   };
 
+#define _detail_ANYXX_V_TABLE_DATA_DECL(type, name, ...) type name;
+
+#define _detail_ANYXX_V_TABLE_DATA_INIT(type, name, ...) name = __VA_ARGS__;
+
 #define _detail_ANYXX_FN_H(l) _detail_ANYXX_FN l
 #define _detail_ANYXX_FN(access, overload, type, name, name_ext, exact_const,  \
                          const_, map_body, mapf_concept, mapf_concept_lhs,     \
@@ -1193,6 +1197,18 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// specification in the model_map
 /// \ingroup trait_macros
 #define ANY_TYPE(...) (__VA_ARGS__)
+
+/// \def ANY_V_TABLE_DATA
+/// \brief Add a data member to the v-table of a TRAIT. This is useful for
+/// meta data, e.g. typeid of wrapped type, a types size or for open dispatch
+/// tables.
+///
+/// \param type type of the data member
+/// \param name name of the data member
+/// \param erased initializer for the data member. The erased type available as
+/// 'Concrete'.
+/// \ingroup trait_macros
+#define ANY_V_TABLE_DATA(type, name, ...) (type, name, __VA_ARGS__)
 
 /// @}
 
