@@ -1470,23 +1470,23 @@ concept is_copy_constructor_v_table =
              const_void from) {
       { v_table->copy_constructor } -> std::convertible_to<copy_constructor_t>;
     };
+using move_constructor_t = mutable_void (*)(mutable_void, mutable_void);
 template <typename VTable>
 concept is_move_constructor_v_table =
-    requires(VTable* v_table, mutable_void dummy, mutable_void placement,
-             mutable_void from) {
-      {
-        v_table->move_constructor(dummy, placement, from)
-      } -> std::same_as<mutable_void>;
+    requires(VTable* v_table, mutable_void placement, mutable_void from) {
+      { v_table->move_constructor } -> std::convertible_to<move_constructor_t>;
     };
+using destructor_t = void (*)(mutable_void);
 template <typename VTable>
 concept is_destructor_v_table =
     requires(VTable* v_table, mutable_void dummy, mutable_void placement) {
-      { v_table->destructor(dummy, placement) } -> std::same_as<void>;
+      { v_table->destructor } -> std::convertible_to<destructor_t>;
     };
+using delete_t = void (*)(mutable_void);
 template <typename VTable>
 concept is_delete_v_table =
     requires(VTable* v_table, mutable_void dummy, mutable_void placement) {
-      { v_table->delete_(dummy, placement) } -> std::same_as<void>;
+      { v_table->delete_ } -> std::convertible_to<delete_t>;
     };
 
 inline bool is_derived_from(const std::type_info& from,
@@ -1508,7 +1508,7 @@ inline mutable_void copy_construct(is_v_table auto* v_table, const_void from) {
 inline mutable_void move_construct_at(is_v_table auto* v_table,
                                       mutable_void placement,
                                       mutable_void from) {
-  return v_table->move_constructor(nullptr, placement, from);
+  return v_table->move_constructor(placement, from);
 }
 inline mutable_void move_construct(is_v_table auto* v_table,
                                    mutable_void from) {
@@ -1519,7 +1519,7 @@ inline void delete_(T v_table, mutable_void& data) noexcept {
   if (!data) return;
   if constexpr (!std::same_as<T, std::nullptr_t>) {
     assert(v_table);
-    v_table->delete_(nullptr, data);
+    v_table->delete_(data);
     data = nullptr;
   }
 }  // NOLINT
@@ -1528,7 +1528,7 @@ inline void destruct(T v_table, mutable_void data) noexcept {
   if (!data) return;
   if constexpr (!std::same_as<T, std::nullptr_t>) {
     assert(v_table);
-    v_table->destructor(nullptr, data);
+    v_table->destructor(data);
     data = nullptr;
   }
 }
@@ -2138,7 +2138,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
   static constexpr bool is_owner = true;
   static auto clone_from(const_void data_ptr, is_v_table auto* v_table) {
     return shared{copy_construct(v_table, data_ptr),
-                  [v_table](auto p) { v_table->delete_(nullptr, p); }};
+                  [v_table](auto p) { v_table->delete_(p); }};
   }
   static void move_to(shared& to, [[maybe_unused]] auto v_table_to,
                       shared&& from, [[maybe_unused]] auto) {
@@ -2148,7 +2148,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
                       is_v_table auto* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
-    to = shared{p, [v_table](auto p) { v_table->delete_(nullptr, p); }};
+    to = shared{p, [v_table](auto p) { v_table->delete_(p); }};
   }
 
   static void const* get_proxy_ptr_in(
@@ -2400,8 +2400,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&](heap_data& t, local_data<false>& f) {
               delete_(v_table_to, t.ptr);
-              v_table_from->move_constructor(nullptr, to.local.data(),
-                                             f.data());
+              v_table_from->move_constructor(to.local.data(), f.data());
             },
             [&](heap_data& t, local_data<true>& f) {
               delete_(v_table_to, t.ptr);
@@ -2413,7 +2412,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&](local_data<false>& t, local_data<false>& f) {
               destruct(v_table_to, t.data());
-              v_table_from->move_constructor(nullptr, t.data(), f.data());
+              v_table_from->move_constructor(t.data(), f.data());
             },
             [&](local_data<false>& t, local_data<true>& f) {
               destruct(v_table_to, t.data());
@@ -2423,8 +2422,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
               to.heap.ptr = f.release();
             },
             [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
-              v_table_from->move_constructor(nullptr, to.local.data(),
-                                             f.data());
+              v_table_from->move_constructor(to.local.data(), f.data());
             },
             [&](local_data<true>& t, local_data<true>& f) {
               t = std::move(f);
@@ -2495,8 +2493,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
                             if (v_table) delete_(v_table, heap.ptr);
                           },
                           [&](local_data<false>& local) {
-                            if (v_table)
-                              v_table->destructor(nullptr, local.data());
+                            if (v_table) v_table->destructor(local.data());
                           },
                           [&]([[maybe_unused]] local_data<true>& local) {}},
                 v, model_size(v_table));
@@ -3532,31 +3529,7 @@ ToAny move_to(FromAny&& from) {
 }
 
 TRAIT_EX_(
-    base_trait, observeable_rtti_trait,
-    (ANY_FN_DEF(public, mutable_void, move_constructor,
-                (mutable_void, mutable_void), ,
-                []([[maybe_unused]] mutable_void placement,
-                   [[maybe_unused]] mutable_void from) -> mutable_void {
-                  if constexpr (std::is_move_constructible_v<T>) {
-                    return std::construct_at<T>(
-                        static_cast<T*>(placement),
-                        std::move(*static_cast<T*>(from)));
-                  } else {
-                    return nullptr;
-                  };
-                }),
-     ANY_FN_DEF(public, void, destructor, (mutable_void), ,
-                [](mutable_void data) {
-                  std::destroy_at(static_cast<T*>(data));
-                }),
-     ANY_FN_DEF(public, void, delete_, (mutable_void), ,
-                [](mutable_void data) {
-                  if (!data) return;
-                  auto p = static_cast<T*>(data);
-                  std::destroy_at(p);
-                  std::allocator<T>{}.deallocate(p, 1);
-                })),
-    , ,
+    base_trait, observeable_rtti_trait, , , ,
     (ANY_V_TABLE_DATA(
          allocate_t, allocate,
          +[]() -> mutable_void {
@@ -3572,6 +3545,28 @@ TRAIT_EX_(
                         } else {
                           return nullptr;
                         };
+                      }),
+     ANY_V_TABLE_DATA(move_constructor_t, move_constructor,
+                      []([[maybe_unused]] mutable_void placement,
+                         [[maybe_unused]] mutable_void from) -> mutable_void {
+                        if constexpr (std::is_move_constructible_v<Concrete>) {
+                          return std::construct_at<Concrete>(
+                              static_cast<Concrete*>(placement),
+                              std::move(*static_cast<Concrete*>(from)));
+                        } else {
+                          return nullptr;
+                        };
+                      }),
+     ANY_V_TABLE_DATA(destructor_t, destructor,
+                      [](mutable_void data) {
+                        std::destroy_at(static_cast<Concrete*>(data));
+                      }),
+     ANY_V_TABLE_DATA(delete_t, delete_,
+                      [](mutable_void data) {
+                        if (!data) return;
+                        auto p = static_cast<Concrete*>(data);
+                        std::destroy_at(p);
+                        std::allocator<Concrete>{}.deallocate(p, 1);
                       })),
     ());
 

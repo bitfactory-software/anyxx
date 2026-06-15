@@ -316,7 +316,7 @@ TEST_CASE("v-table lifetime") {
       CHECK(x_ptr == ptr);
       CHECK(X::tracker_ == 1);
       CHECK((*x_ptr)() == "hallo");
-      v_table_x.delete_(nullptr, ptr);
+      v_table_x.delete_(ptr);
       CHECK(X::tracker_ == 0);
     }
   }
@@ -340,7 +340,7 @@ TEST_CASE("v-table lifetime") {
     CHECK(x_ptr == ptr);
     CHECK(X::tracker_ == 1);
     CHECK((*x_ptr)() == "hallo");
-    v_table_x.delete_(nullptr, ptr);
+    v_table_x.delete_(ptr);
     CHECK(X::tracker_ == 0);
     CHECK(X::move_constructed_ == 1);
   }
@@ -365,7 +365,7 @@ TEST_CASE("v-table lifetime small object") {
       CHECK(x_ptr == ptr);
       CHECK(Y::tracker_ == 1);
       CHECK((*x_ptr)() == 42);
-      v_table_x.delete_(nullptr, ptr);
+      v_table_x.delete_(ptr);
       CHECK(Y::tracker_ == 0);
     }
   }
@@ -389,7 +389,7 @@ TEST_CASE("v-table lifetime small object") {
     CHECK(x_ptr == ptr);
     CHECK(Y::tracker_ == 1);
     CHECK((*x_ptr)() == 42);
-    v_table_x.delete_(nullptr, ptr);
+    v_table_x.delete_(ptr);
     CHECK(Y::tracker_ == 0);
     CHECK(Y::move_constructed_ == 1);
   }
