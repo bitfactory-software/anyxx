@@ -242,6 +242,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_LEAD_COMMA_H(...) __VA_OPT__(, )
 #define _detail_ANYXX_FPD_H(l) _detail_ANYXX_FUNCTION_PTR_DECL l
 #define _detail_ANYXX_MEMEBER_LIMP_H(l) _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL l
+#define _detail_ANYXX_V_TABLE_DATA_DECL_H(l) _detail_ANYXX_V_TABLE_DATA_DECL l
+#define _detail_ANYXX_V_TABLE_DATA_INIT_H(l) \
+  name _detail_ANYXX_V_TABLE_DATA_INIT l
 
 #define _detail_LEAD_COMMA_H_E(l) _detail_LEAD_COMMA_H l
 
@@ -582,6 +585,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MEMEBER_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
 
+#define _detail_ANYXX_V_TABLE_DATA_DECLS(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_V_TABLE_DATA_DECL_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__));
+
+#define _detail_ANYXX_V_TABLE_DATA_INITS(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_V_TABLE_DATA_INIT_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__));
+
 #define _detail_ANYXX_FNS(...)                         \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_FN_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
@@ -672,6 +683,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using T = char;                                                            \
                                                                                \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
+    _detail_ANYXX_V_TABLE_DATA_DECLS(v_table_data);                            \
                                                                                \
     template <typename Concrete>                                               \
     explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete);      \
@@ -740,6 +752,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(concrete_template_params)>;  \
                                                                                \
     _detail_ANYXX_V_TABLE_LAMBDAS(l);                                          \
+    _detail_ANYXX_V_TABLE_DATA_INITS(v_table_data);                            \
                                                                                \
     if constexpr (open_dispatch_enabeled) {                                    \
       own_dispatch_holder_t::set_dispatch_table(                               \
