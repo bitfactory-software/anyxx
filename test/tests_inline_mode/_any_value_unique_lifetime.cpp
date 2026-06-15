@@ -303,7 +303,7 @@ TEST_CASE("v-table lifetime") {
     CHECK(X::tracker_ == 0);
     {
       base_trait_v_table v_table_x(std::in_place_type<X>);
-      auto ptr = v_table_x.allocate(nullptr);
+      auto ptr = v_table_x.allocate();
       CHECK(X::tracker_ == 0);
       X* x_ptr = nullptr;
       {
@@ -324,7 +324,7 @@ TEST_CASE("v-table lifetime") {
   {
     CHECK(X::move_constructed_ == 0);
     base_trait_v_table v_table_x(std::in_place_type<X>);
-    auto ptr = v_table_x.allocate(nullptr);
+    auto ptr = v_table_x.allocate();
     CHECK(X::tracker_ == 0);
     X* x_ptr = nullptr;
     {
@@ -352,7 +352,7 @@ TEST_CASE("v-table lifetime small object") {
     CHECK(Y::tracker_ == 0);
     {
       base_trait_v_table v_table_x(std::in_place_type<Y>);
-      auto ptr = v_table_x.allocate(nullptr);
+      auto ptr = v_table_x.allocate();
       CHECK(Y::tracker_ == 0);
       Y* x_ptr = nullptr;
       {
@@ -373,7 +373,7 @@ TEST_CASE("v-table lifetime small object") {
   {
     CHECK(Y::move_constructed_ == 0);
     base_trait_v_table v_table_x(std::in_place_type<Y>);
-    auto ptr = v_table_x.allocate(nullptr);
+    auto ptr = v_table_x.allocate();
     CHECK(Y::tracker_ == 0);
     Y* x_ptr = nullptr;
     {

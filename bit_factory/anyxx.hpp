@@ -1463,13 +1463,12 @@ template <typename VTable>
 concept is_allocate_v_table = requires(VTable* v_table) {
   { v_table->allocate } -> std::convertible_to<allocate_t>;
 };
+using copy_constructor_t = mutable_void (*)(mutable_void, const_void);
 template <typename VTable>
 concept is_copy_constructor_v_table =
     requires(VTable* v_table, mutable_void dummy, mutable_void placement,
              const_void from) {
-      {
-        v_table->copy_constructor(dummy, placement, from)
-      } -> std::same_as<mutable_void>;
+      { v_table->copy_constructor } -> std::convertible_to<copy_constructor_t>;
     };
 template <typename VTable>
 concept is_move_constructor_v_table =
@@ -1501,7 +1500,7 @@ inline std::size_t model_size(is_v_table auto* v_table) {
 }
 inline mutable_void copy_construct_at(is_v_table auto* v_table,
                                       mutable_void placement, const_void from) {
-  return v_table->copy_constructor(nullptr, placement, from);
+  return v_table->copy_constructor(placement, from);
 }
 inline mutable_void copy_construct(is_v_table auto* v_table, const_void from) {
   return copy_construct_at(v_table, v_table->allocate(), from);
@@ -2461,8 +2460,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&](heap_data& t, local_data<false> const& f) {
               delete_(to_v_table, t.ptr);
-              from_v_table->copy_constructor(nullptr, to.local.data(),
-                                             f.data());
+              from_v_table->copy_constructor(to.local.data(), f.data());
             },
             [&](heap_data& t, local_data<true> const& f) {
               delete_(to_v_table, t.ptr);
@@ -2474,7 +2472,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&](local_data<false>& t, local_data<false> const& f) {
               destruct(to_v_table, t.data());
-              from_v_table->copy_constructor(nullptr, t.data(), f.data());
+              from_v_table->copy_constructor(t.data(), f.data());
             },
             [&](local_data<false>& t, local_data<true> const& f) {
               destruct(to_v_table, t.data());
@@ -2485,8 +2483,7 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&]([[maybe_unused]] local_data<true>& t,
                 local_data<false> const& f) {
-              from_v_table->copy_constructor(nullptr, to.local.data(),
-                                             f.data());
+              from_v_table->copy_constructor(to.local.data(), f.data());
             },
             [&](local_data<true>& t, local_data<true> const& f) { t = f; }},
         to, model_size(to_v_table), from, from_v_table->model_size);
@@ -3534,50 +3531,49 @@ ToAny move_to(FromAny&& from) {
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
-
-TRAIT_EX_(base_trait, observeable_rtti_trait,
-          (ANY_FN_DEF(public, mutable_void, copy_constructor,
-                      (mutable_void, const_void), ,
+TRAIT_EX_(
+    base_trait, observeable_rtti_trait,
+    (ANY_FN_DEF(public, mutable_void, move_constructor,
+                (mutable_void, mutable_void), ,
+                []([[maybe_unused]] mutable_void placement,
+                   [[maybe_unused]] mutable_void from) -> mutable_void {
+                  if constexpr (std::is_move_constructible_v<T>) {
+                    return std::construct_at<T>(
+                        static_cast<T*>(placement),
+                        std::move(*static_cast<T*>(from)));
+                  } else {
+                    return nullptr;
+                  };
+                }),
+     ANY_FN_DEF(public, void, destructor, (mutable_void), ,
+                [](mutable_void data) {
+                  std::destroy_at(static_cast<T*>(data));
+                }),
+     ANY_FN_DEF(public, void, delete_, (mutable_void), ,
+                [](mutable_void data) {
+                  if (!data) return;
+                  auto p = static_cast<T*>(data);
+                  std::destroy_at(p);
+                  std::allocator<T>{}.deallocate(p, 1);
+                })),
+    , ,
+    (ANY_V_TABLE_DATA(
+         allocate_t, allocate,
+         +[]() -> mutable_void {
+           return std::allocator<Concrete>{}.allocate(1);
+         }),
+     ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,
                       []([[maybe_unused]] mutable_void placement,
                          [[maybe_unused]] const_void from) -> mutable_void {
-                        if constexpr (std::is_copy_constructible_v<T>) {
-                          return std::construct_at<T>(
-                              static_cast<T*>(placement),
-                              *static_cast<T const*>(from));
+                        if constexpr (std::is_copy_constructible_v<Concrete>) {
+                          return std::construct_at<Concrete>(
+                              static_cast<Concrete*>(placement),
+                              *static_cast<Concrete const*>(from));
                         } else {
                           return nullptr;
                         };
-                      }),
-           ANY_FN_DEF(public, mutable_void, move_constructor,
-                      (mutable_void, mutable_void), ,
-                      []([[maybe_unused]] mutable_void placement,
-                         [[maybe_unused]] mutable_void from) -> mutable_void {
-                        if constexpr (std::is_move_constructible_v<T>) {
-                          return std::construct_at<T>(
-                              static_cast<T*>(placement),
-                              std::move(*static_cast<T*>(from)));
-                        } else {
-                          return nullptr;
-                        };
-                      }),
-           ANY_FN_DEF(public, void, destructor, (mutable_void), ,
-                      [](mutable_void data) {
-                        std::destroy_at(static_cast<T*>(data));
-                      }),
-           ANY_FN_DEF(public, void, delete_, (mutable_void), ,
-                      [](mutable_void data) {
-                        if (!data) return;
-                        auto p = static_cast<T*>(data);
-                        std::destroy_at(p);
-                        std::allocator<T>{}.deallocate(p, 1);
                       })),
-          , ,
-          (ANY_V_TABLE_DATA(
-              allocate_t, allocate,
-              +[]() -> mutable_void {
-                return std::allocator<Concrete>{}.allocate(1);
-              })),
-          ());
+    ());
 
 // --------------------------------------------------------------------------------
 // hook
