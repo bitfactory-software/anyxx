@@ -77,7 +77,7 @@ var anyxx_8hpp =
     [ "anyxx::lock", "group__casts.html#gae988a6a809ee2910690366e1e4c7ae67", null ],
     [ "anyxx::move_to", "group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946", null ],
     [ "anyxx::trait_as", "anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c", null ],
-    [ "anyxx::TRAIT_EX_", "anyxx_8hpp.html#ab05bcf622ad97065eaecbe87fd6d9bc4", null ],
+    [ "anyxx::TRAIT_EX_", "anyxx_8hpp.html#a147e0898d26ee7772ba06d190f29d8fd", null ],
     [ "anyxx::unerase_cast", "group__casts.html#ga503c7a4639146953d0f21603ef83241e", null ],
     [ "anyxx::unerase_cast_if", "group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8", null ]
 ];

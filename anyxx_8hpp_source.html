@@ -3223,7 +3223,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03492" name="l03492"></a><span class="lineno"> 3492</span>}</div>
 </div>
 <div class="line"><a id="l03493" name="l03493"></a><span class="lineno"> 3493</span></div>
-<div class="line"><a id="l03496" name="l03496"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#ab05bcf622ad97065eaecbe87fd6d9bc4"> 3496</a></span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(observeable_rtti_trait, observeable, , , ,</div>
+<div class="line"><a id="l03496" name="l03496"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#a147e0898d26ee7772ba06d190f29d8fd"> 3496</a></span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(dynamic_castable, observeable, , , ,</div>
 <div class="line"><a id="l03497" name="l03497"></a><span class="lineno"> 3497</span>          (<a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(std::type_info <span class="keyword">const</span>*, type_info_,</div>
 <div class="line"><a id="l03498" name="l03498"></a><span class="lineno"> 3498</span>                            &amp;<span class="keyword">typeid</span>(Concrete)),</div>
 <div class="line"><a id="l03499" name="l03499"></a><span class="lineno"> 3499</span>           <a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(</div>
@@ -3235,7 +3235,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03505" name="l03505"></a><span class="lineno"> 3505</span>          ());</div>
 <div class="line"><a id="l03506" name="l03506"></a><span class="lineno"> 3506</span> </div>
 <div class="line"><a id="l03507" name="l03507"></a><span class="lineno"> 3507</span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(</div>
-<div class="line"><a id="l03508" name="l03508"></a><span class="lineno"> 3508</span>    base_trait, observeable_rtti_trait, , , ,</div>
+<div class="line"><a id="l03508" name="l03508"></a><span class="lineno"> 3508</span>    base_trait, dynamic_castable, , , ,</div>
 <div class="line"><a id="l03509" name="l03509"></a><span class="lineno"> 3509</span>    (<a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(</div>
 <div class="line"><a id="l03510" name="l03510"></a><span class="lineno"> 3510</span>         allocate_t, allocate,</div>
 <div class="line"><a id="l03511" name="l03511"></a><span class="lineno"> 3511</span>         +[]() -&gt; mutable_void {</div>
@@ -3280,7 +3280,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03550" name="l03550"></a><span class="lineno"> 3550</span> </div>
 <div class="line"><a id="l03551" name="l03551"></a><span class="lineno"> 3551</span><span class="keyword">class </span>meta_data {</div>
 <div class="line"><a id="l03552" name="l03552"></a><span class="lineno"> 3552</span>  <span class="keyword">const</span> std::type_info&amp; type_info_;</div>
-<div class="line"><a id="l03553" name="l03553"></a><span class="lineno"> 3553</span>  std::vector&lt;observeable_rtti_trait::v_table_t*&gt; i_table_;</div>
+<div class="line"><a id="l03553" name="l03553"></a><span class="lineno"> 3553</span>  std::vector&lt;dynamic_castable::v_table_t*&gt; i_table_;</div>
 <div class="line"><a id="l03554" name="l03554"></a><span class="lineno"> 3554</span> </div>
 <div class="line"><a id="l03555" name="l03555"></a><span class="lineno"> 3555</span> <span class="keyword">public</span>:</div>
 <div class="line"><a id="l03556" name="l03556"></a><span class="lineno"> 3556</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> CLASS&gt;</div>
@@ -3292,14 +3292,14 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03562" name="l03562"></a><span class="lineno"> 3562</span>  <span class="keyword">auto</span>&amp; get_i_table() { <span class="keywordflow">return</span> i_table_; }</div>
 <div class="line"><a id="l03563" name="l03563"></a><span class="lineno"> 3563</span>  <span class="keyword">auto</span>&amp; get_i_table()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> i_table_; }</div>
 <div class="line"><a id="l03564" name="l03564"></a><span class="lineno"> 3564</span> </div>
-<div class="line"><a id="l03565" name="l03565"></a><span class="lineno"> 3565</span>  std::expected&lt;observeable_rtti_trait::v_table_t*, cast_error&gt; get_v_table(</div>
+<div class="line"><a id="l03565" name="l03565"></a><span class="lineno"> 3565</span>  std::expected&lt;dynamic_castable::v_table_t*, cast_error&gt; get_v_table(</div>
 <div class="line"><a id="l03566" name="l03566"></a><span class="lineno"> 3566</span>      std::type_info <span class="keyword">const</span>&amp; typeid_)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l03567" name="l03567"></a><span class="lineno"> 3567</span>    <span class="keyword">auto</span> <span class="keyword">const</span>&amp; i_table = get_i_table();</div>
 <div class="line"><a id="l03568" name="l03568"></a><span class="lineno"> 3568</span>    <span class="keywordflow">for</span> (<span class="keyword">auto</span> v_table : i_table)</div>
 <div class="line"><a id="l03569" name="l03569"></a><span class="lineno"> 3569</span>      <span class="keywordflow">if</span> (is_derived_from(typeid_, v_table)) <span class="keywordflow">return</span> v_table;</div>
 <div class="line"><a id="l03570" name="l03570"></a><span class="lineno"> 3570</span>    <span class="keywordflow">return</span> std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});</div>
 <div class="line"><a id="l03571" name="l03571"></a><span class="lineno"> 3571</span>  }</div>
-<div class="line"><a id="l03572" name="l03572"></a><span class="lineno"> 3572</span>  <span class="keyword">auto</span> register_v_table(observeable_rtti_trait::v_table_t* v_table) {</div>
+<div class="line"><a id="l03572" name="l03572"></a><span class="lineno"> 3572</span>  <span class="keyword">auto</span> register_v_table(dynamic_castable::v_table_t* v_table) {</div>
 <div class="line"><a id="l03573" name="l03573"></a><span class="lineno"> 3573</span>    v_table-&gt;meta_data_ = <span class="keyword">this</span>;</div>
 <div class="line"><a id="l03574" name="l03574"></a><span class="lineno"> 3574</span>    <span class="keywordflow">if</span> (std::ranges::find(get_i_table(), v_table) == get_i_table().end())</div>
 <div class="line"><a id="l03575" name="l03575"></a><span class="lineno"> 3575</span>      i_table_.push_back(v_table);</div>
