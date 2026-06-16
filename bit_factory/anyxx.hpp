@@ -669,7 +669,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)>;          \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
-      if constexpr (anyxx::is_derived_from_v_table<v_table_base_t>) {          \
+      if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
         return typeid(v_table_t) == from                                       \
                    ? true                                                      \
                    : v_table_base_t::static_is_derived_from(from);             \
@@ -1424,26 +1424,18 @@ concept is_delete_v_table =
       { v_table->delete_ } -> std::convertible_to<delete_t>;
     };
 
-template <typename VTable>
-concept is_get_type_info_v_table = requires(VTable* v_table) {
-  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
-};
-
-using is_derived_from_t = bool (*)(const std::type_info&);
-template <typename VTable>
-concept is_derived_from_v_table = requires(VTable* v_table) {
-  { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
-};
-
 using model_size_t = std::size_t;
 template <typename VTable>
 concept is_model_size_v_table = requires(VTable* v_table) {
   { v_table->model_size } -> std::convertible_to<model_size_t>;
 };
 
+using is_derived_from_t = bool (*)(const std::type_info&);
 template <typename VTable>
-concept is_dynamic_castable_v_table =
-    is_derived_from_v_table<VTable> && is_get_type_info_v_table<VTable>;
+concept is_dynamic_castable_v_table = requires(VTable* v_table) {
+  { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
+  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
+};
 
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
@@ -1471,7 +1463,7 @@ concept is_v_table = std::derived_from<VTable, observeable_v_table>;
 
 template <typename VTable>
 void set_is_derived_from(auto v_table) {
-  if constexpr (anyxx::is_derived_from_v_table<VTable>) {
+  if constexpr (anyxx::is_dynamic_castable_v_table<VTable>) {
     v_table->is_derived_from_ = +[](const std::type_info& from) {
       return VTable::static_is_derived_from(from);
     };
@@ -1479,7 +1471,7 @@ void set_is_derived_from(auto v_table) {
 }
 
 inline bool is_derived_from(const std::type_info& from,
-                            is_derived_from_v_table auto* v_table) {
+                            is_dynamic_castable_v_table auto* v_table) {
   return v_table->is_derived_from_(from);
 }
 
@@ -1524,10 +1516,10 @@ inline void destruct(T v_table, mutable_void data) noexcept {
 }
 
 template <typename U>
-bool type_match(is_derived_from_v_table auto* v_table);
+bool type_match(is_dynamic_castable_v_table auto* v_table);
 
 template <typename U>
-void check_type_match(is_derived_from_v_table auto* v_table) {
+void check_type_match(is_dynamic_castable_v_table auto* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
@@ -2637,7 +2629,7 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(is_derived_from_v_table auto* v_table) {
+bool type_match(is_dynamic_castable_v_table auto* v_table) {
   return *v_table->type_info_ == typeid(std::decay_t<U>);
 }
 
@@ -2997,13 +2989,13 @@ inline std::type_info const& get_type_info(Any const& any) {
 }
 
 template <is_any Any>
-  requires is_derived_from_v_table<typename Any::v_table_t>
+  requires is_dynamic_castable_v_table<typename Any::v_table_t>
 bool is_derived_from(const std::type_info& from, Any const& any) {
   return get_v_table(any)->is_derived_from_(from);
 }
 template <is_any From, is_any Any>
-  requires is_derived_from_v_table<typename From::v_table_t> &&
-           is_derived_from_v_table<typename Any::v_table_t>
+  requires is_dynamic_castable_v_table<typename From::v_table_t> &&
+           is_dynamic_castable_v_table<typename Any::v_table_t>
 bool is_derived_from(Any const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
