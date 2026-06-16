@@ -669,8 +669,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)>;          \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
-      if constexpr (std::derived_from<v_table_base_t,                          \
-                                      anyxx::observeable_rtti_v_table>) {      \
+      if constexpr (anyxx::is_derived_from_v_table<v_table_base_t>) {          \
         return typeid(v_table_t) == from                                       \
                    ? true                                                      \
                    : v_table_base_t::static_is_derived_from(from);             \
@@ -1394,6 +1393,55 @@ dispatch_table_t* dispatch_table_instance() {
 }
 #endif
 
+using allocate_t = mutable_void (*)();
+template <typename VTable>
+concept is_allocate_v_table = requires(VTable* v_table) {
+  { v_table->allocate } -> std::convertible_to<allocate_t>;
+};
+using copy_constructor_t = mutable_void (*)(mutable_void, const_void);
+template <typename VTable>
+concept is_copy_constructor_v_table =
+    requires(VTable* v_table, mutable_void dummy, mutable_void placement,
+             const_void from) {
+      { v_table->copy_constructor } -> std::convertible_to<copy_constructor_t>;
+    };
+using move_constructor_t = mutable_void (*)(mutable_void, mutable_void);
+template <typename VTable>
+concept is_move_constructor_v_table =
+    requires(VTable* v_table, mutable_void placement, mutable_void from) {
+      { v_table->move_constructor } -> std::convertible_to<move_constructor_t>;
+    };
+using destructor_t = void (*)(mutable_void);
+template <typename VTable>
+concept is_destructor_v_table =
+    requires(VTable* v_table, mutable_void dummy, mutable_void placement) {
+      { v_table->destructor } -> std::convertible_to<destructor_t>;
+    };
+using delete_t = void (*)(mutable_void);
+template <typename VTable>
+concept is_delete_v_table =
+    requires(VTable* v_table, mutable_void dummy, mutable_void placement) {
+      { v_table->delete_ } -> std::convertible_to<delete_t>;
+    };
+
+using get_type_info_t = std::type_info const& (*)() noexcept;
+template <typename VTable>
+concept is_get_type_info_v_table = requires(VTable* v_table) {
+  { v_table->get_type_info } -> std::convertible_to<get_type_info_t>;
+};
+
+using is_derived_from_t = bool (*)(const std::type_info&);
+template <typename VTable>
+concept is_derived_from_v_table = requires(VTable* v_table) {
+  { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
+};
+
+using model_size_t = std::size_t;
+template <typename VTable>
+concept is_model_size_v_table = requires(VTable* v_table) {
+  { v_table->model_size } -> std::convertible_to<model_size_t>;
+};
+
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
 struct undefined {};
@@ -1451,84 +1499,35 @@ struct observeable_rtti_v_table : observeable_v_table {
 
 template <typename VTable>
 void set_is_derived_from(auto v_table) {
-  if constexpr (std::is_base_of_v<observeable_rtti_v_table, VTable>) {
+  if constexpr (anyxx::is_derived_from_v_table<VTable>) {
     v_table->is_derived_from_ = +[](const std::type_info& from) {
       return VTable::static_is_derived_from(from);
     };
   }
 }
 
-using allocate_t = mutable_void (*)();
-template <typename VTable>
-concept is_allocate_v_table = requires(VTable* v_table) {
-  { v_table->allocate } -> std::convertible_to<allocate_t>;
-};
-using copy_constructor_t = mutable_void (*)(mutable_void, const_void);
-template <typename VTable>
-concept is_copy_constructor_v_table =
-    requires(VTable* v_table, mutable_void dummy, mutable_void placement,
-             const_void from) {
-      { v_table->copy_constructor } -> std::convertible_to<copy_constructor_t>;
-    };
-using move_constructor_t = mutable_void (*)(mutable_void, mutable_void);
-template <typename VTable>
-concept is_move_constructor_v_table =
-    requires(VTable* v_table, mutable_void placement, mutable_void from) {
-      { v_table->move_constructor } -> std::convertible_to<move_constructor_t>;
-    };
-using destructor_t = void (*)(mutable_void);
-template <typename VTable>
-concept is_destructor_v_table =
-    requires(VTable* v_table, mutable_void dummy, mutable_void placement) {
-      { v_table->destructor } -> std::convertible_to<destructor_t>;
-    };
-using delete_t = void (*)(mutable_void);
-template <typename VTable>
-concept is_delete_v_table =
-    requires(VTable* v_table, mutable_void dummy, mutable_void placement) {
-      { v_table->delete_ } -> std::convertible_to<delete_t>;
-    };
-
-using get_type_info_t = std::type_info const& (*)() noexcept;
-template <typename VTable>
-concept is_get_type_info_v_table = requires(VTable* v_table) {
-  { v_table->get_type_info } -> std::convertible_to<get_type_info_t>;
-};
-
-using is_derived_from_t = bool (*)(const std::type_info&);
-template <typename VTable>
-concept is_is_derived_from_v_table = requires(VTable* v_table) {
-  { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
-};
-
-using model_size_t = std::size_t;
-template <typename VTable>
-concept is_model_size_v_table = requires(VTable* v_table) {
-  { v_table->model_size } -> std::convertible_to<model_size_t>;
-};
-
 inline bool is_derived_from(const std::type_info& from,
-                            observeable_rtti_v_table const* v_table) {
+                            is_derived_from_v_table auto* v_table) {
   return v_table->is_derived_from_(from);
 }
 
 inline std::size_t model_size(std::nullptr_t) { return 0u; }
-inline std::size_t model_size(is_v_table auto* v_table) {
+inline std::size_t model_size(is_model_size_v_table auto* v_table) {
   return v_table ? v_table->model_size : 0u;
 }
-inline mutable_void copy_construct_at(is_v_table auto* v_table,
+inline mutable_void copy_construct_at(is_copy_constructor_v_table auto* v_table,
                                       mutable_void placement, const_void from) {
   return v_table->copy_constructor(placement, from);
 }
-inline mutable_void copy_construct(is_v_table auto* v_table, const_void from) {
+inline mutable_void copy_construct(is_copy_constructor_v_table auto* v_table, const_void from) {
   return copy_construct_at(v_table, v_table->allocate(), from);
 }
-inline mutable_void move_construct_at(is_v_table auto* v_table,
+inline mutable_void move_construct_at(is_move_constructor_v_table auto* v_table,
                                       mutable_void placement,
                                       mutable_void from) {
   return v_table->move_constructor(placement, from);
 }
-inline mutable_void move_construct(is_v_table auto* v_table,
+inline mutable_void move_construct(is_move_constructor_v_table auto* v_table,
                                    mutable_void from) {
   return move_construct_at(v_table, v_table->allocate(), from);
 }
@@ -1552,10 +1551,10 @@ inline void destruct(T v_table, mutable_void data) noexcept {
 }
 
 template <typename U>
-bool type_match(observeable_rtti_v_table* v_table);
+bool type_match(is_derived_from_v_table auto* v_table);
 
 template <typename U>
-void check_type_match(observeable_rtti_v_table* v_table) {
+void check_type_match(is_derived_from_v_table auto* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
@@ -2703,7 +2702,7 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(observeable_rtti_v_table* v_table) {
+bool type_match(is_derived_from_v_table auto* v_table) {
   return v_table->get_type_info() == typeid(std::decay_t<U>);
 }
 
@@ -3063,14 +3062,13 @@ inline std::type_info const& get_type_info(Any const& any) {
 }
 
 template <is_any Any>
-  requires std::derived_from<typename Any::v_table_t, observeable_rtti_v_table>
+  requires is_derived_from_v_table<typename Any::v_table_t>
 bool is_derived_from(const std::type_info& from, Any const& any) {
   return get_v_table(any)->is_derived_from_(from);
 }
 template <is_any From, is_any Any>
-  requires std::derived_from<typename From::v_table_t,
-                             observeable_rtti_v_table> &&
-           std::derived_from<typename Any::v_table_t, observeable_rtti_v_table>
+  requires is_derived_from_v_table<typename From::v_table_t> &&
+           is_derived_from_v_table<typename Any::v_table_t      >
 bool is_derived_from(Any const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
