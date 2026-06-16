@@ -226,8 +226,6 @@ Macros</h2></td></tr>
 <tr class="memitem:a4c4bdb59b89eb173e2d1e25008aa563e" id="r_a4c4bdb59b89eb173e2d1e25008aa563e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a4c4bdb59b89eb173e2d1e25008aa563e">_detail_ANYXX_TEMPLATE_ARGS1</a>(head, ...)</td></tr>
 <tr class="memitem:a9444e742125b8ea1ff23ceffa687d2c6" id="r_a9444e742125b8ea1ff23ceffa687d2c6"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a9444e742125b8ea1ff23ceffa687d2c6">_detail_ANYXX_TEMPLATE_ARGS</a>(...)</td></tr>
 <tr class="memitem:adb712c1517530fdfd3873dda2cadbaeb" id="r_adb712c1517530fdfd3873dda2cadbaeb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#adb712c1517530fdfd3873dda2cadbaeb">_detail_ANYXX_OPTIONAL_TEMPLATE_ARGS</a>(...)</td></tr>
-<tr class="memitem:aba34f3cb39e9bf8f8bc048cdba489e8c" id="r_aba34f3cb39e9bf8f8bc048cdba489e8c"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#aba34f3cb39e9bf8f8bc048cdba489e8c">_detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H</a>(...)</td></tr>
-<tr class="memitem:a2fd197d357f1214d025e262af3fc0e14" id="r_a2fd197d357f1214d025e262af3fc0e14"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2fd197d357f1214d025e262af3fc0e14">_detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS</a>(t)</td></tr>
 <tr class="memitem:ace234c8104e33aca5740b05ce93fd62e" id="r_ace234c8104e33aca5740b05ce93fd62e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ace234c8104e33aca5740b05ce93fd62e">_detail_LEAD_COMMA_H</a>(...)</td></tr>
 <tr class="memitem:a8a84a69b92d705528ad92503553627bb" id="r_a8a84a69b92d705528ad92503553627bb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a8a84a69b92d705528ad92503553627bb">_detail_ANYXX_FPD_H</a>(l)</td></tr>
 <tr class="memitem:a303e799ce10c64a2a4495ba8c947cadb" id="r_a303e799ce10c64a2a4495ba8c947cadb"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a303e799ce10c64a2a4495ba8c947cadb">_detail_ANYXX_MEMEBER_LIMP_H</a>(l)</td></tr>
@@ -1261,7 +1259,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
 <div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
 <div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1448</div></div>
+<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1443</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2447,8 +2445,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3105</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3126</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3100</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3121</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3281,42 +3279,6 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">                                      ANYXX_UNPAREN(param_type)&gt; c \</div>
 <div class="line">__VA_OPT__(, _detail_ANYXX_V_TABLE_PARAM_LIST_A _detail_PARENS(    \</div>
 <div class="line">                 b, _detail_CONCAT(b, c), __VA_ARGS__))</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a2fd197d357f1214d025e262af3fc0e14" name="a2fd197d357f1214d025e262af3fc0e14"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2fd197d357f1214d025e262af3fc0e14">&#9670;&#160;</a></span>_detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>t</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">_detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H t</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="aba34f3cb39e9bf8f8bc048cdba489e8c" name="aba34f3cb39e9bf8f8bc048cdba489e8c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba34f3cb39e9bf8f8bc048cdba489e8c">&#9670;&#160;</a></span>_detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define _detail_ANYXX_V_TABLE_TEMPLATE_FORMAL_ARGS_H</td>
-          <td>(</td>
-          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...</td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">__VA_OPT__(&lt;_detail_ANYXX_TEMPLATE_ARGS(__VA_ARGS__), anyxx::dyn&gt;)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4194,7 +4156,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1567</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1562</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4212,7 +4174,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;cref&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2771</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2766</div></div>
 </div><!-- fragment -->
 </div>
 </div>
