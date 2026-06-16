@@ -3508,19 +3508,19 @@ ToAny move_to(FromAny&& from) {
 
 /// No lifetime functionality, but runtime type information
 /// Base of v-tables for traits without lifetime requirements, but downcastable
-TRAIT_EX_(
-    observeable_rtti_trait, observeable_trait, , , ,
-    (ANY_V_TABLE_DATA(
-         get_type_info_t, get_type_info,
-         +[]() noexcept -> std::type_info const& { return typeid(Concrete); }),
-     ANY_V_TABLE_DATA(
-         is_derived_from_t, is_derived_from_,
-         +[](const std::type_info& from) {
-           return static_is_derived_from(from);
-         }),
-     ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>()),
-     ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
-    ());
+TRAIT_EX_(observeable_rtti_trait, observeable_trait, , , ,
+          (ANY_V_TABLE_DATA(
+               get_type_info_t, get_type_info,
+               +[]() noexcept -> std::type_info const& {
+                 return typeid(Concrete);
+               }),
+           ANY_V_TABLE_DATA(
+               is_derived_from_t, is_derived_from_,
+               +[](const std::type_info& from) {
+                 return static_is_derived_from(from);
+               }),
+           ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
+          ());
 
 TRAIT_EX_(
     base_trait, observeable_rtti_trait, , , ,
@@ -3561,7 +3561,9 @@ TRAIT_EX_(
                         auto p = static_cast<Concrete*>(data);
                         std::destroy_at(p);
                         std::allocator<Concrete>{}.deallocate(p, 1);
-                      })),
+                      }),
+     ANY_V_TABLE_DATA(model_size_t, model_size,
+                      compute_model_size<Concrete>())),
     ());
 
 class meta_data {
