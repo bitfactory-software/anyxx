@@ -1470,37 +1470,6 @@ struct observeable_v_table {
 template <typename VTable>
 concept is_v_table = std::derived_from<VTable, observeable_v_table>;
 
-/// No lifetime functionality, but runtime type information
-/// Base of v-tables for traits without lifetime requirements, but downcastable
-struct observeable_rtti_v_table : observeable_v_table {
-  using v_table_t = observeable_rtti_v_table;
-
-  /// Type-erasing constructor
-  template <typename Concrete>
-  explicit observeable_rtti_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : observeable_v_table(concrete),
-        get_type_info(+[]() noexcept -> std::type_info const& {
-          return typeid(Concrete);
-        }),
-        is_derived_from_(+[](const std::type_info& from) {
-          return static_is_derived_from(from);
-        }),
-        model_size(compute_model_size<Concrete>()) {}
-
-  std::type_info const& (*get_type_info)() noexcept;
-  bool (*is_derived_from_)(const std::type_info&);
-  std::size_t model_size = 0u;
-
-  static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(observeable_rtti_v_table) == from
-               ? true
-               : observeable_v_table::static_is_derived_from(from);
-  }
-
-  meta_data* meta_data_ = nullptr;
-};
-
 template <typename VTable>
 void set_is_derived_from(auto v_table) {
   if constexpr (anyxx::is_derived_from_v_table<VTable>) {
@@ -1643,9 +1612,6 @@ struct observeable_trait {
   using static_dispatch_map_t = no_model_map<StaticDispatchType>;
 
   using v_table_t = observeable_v_table;
-};
-struct observeable_rtti_trait : observeable_trait {
-  using v_table_t = observeable_rtti_v_table;
 };
 
 // template <typename Model>
@@ -2664,41 +2630,6 @@ struct cast_error {
   std::type_info const &to, &from;
 };
 
-class meta_data {
-  const std::type_info& type_info_;
-  std::vector<observeable_rtti_v_table*> i_table_;
-
- public:
-  template <typename CLASS>
-  explicit constexpr meta_data(std::in_place_type_t<CLASS>)
-      : type_info_(typeid(CLASS)) {}
-
-  constexpr const std::type_info& get_type_info() const { return type_info_; }
-
-  auto& get_i_table() { return i_table_; }
-  auto& get_i_table() const { return i_table_; }
-
-  std::expected<observeable_rtti_v_table*, cast_error> get_v_table(
-      std::type_info const& typeid_) const {
-    auto const& i_table = get_i_table();
-    for (auto v_table : i_table)
-      if (is_derived_from(typeid_, v_table)) return v_table;
-    return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
-  }
-  auto register_v_table(observeable_rtti_v_table* v_table) {
-    v_table->meta_data_ = this;
-    if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
-      i_table_.push_back(v_table);
-    return v_table;
-  }
-};
-
-template <typename TYPE>
-auto& runtime_implementation() {
-  static meta_data meta_data_{std::in_place_type<TYPE>};
-  return meta_data_;
-}
-
 template <typename VTable, typename Concrete>
 auto bind_v_table_to_meta_data() {
   auto v_table = v_table_instance<VTable, Concrete>();
@@ -3575,6 +3506,41 @@ ToAny move_to(FromAny&& from) {
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
+/// No lifetime functionality, but runtime type information
+/// Base of v-tables for traits without lifetime requirements, but downcastable
+struct observeable_rtti_v_table : observeable_v_table {
+  using v_table_t = observeable_rtti_v_table;
+
+  /// Type-erasing constructor
+  template <typename Concrete>
+  explicit observeable_rtti_v_table(
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+      : observeable_v_table(concrete),
+        get_type_info(+[]() noexcept -> std::type_info const& {
+          return typeid(Concrete);
+        }),
+        is_derived_from_(+[](const std::type_info& from) {
+          return static_is_derived_from(from);
+        }),
+        model_size(compute_model_size<Concrete>()) {}
+
+  std::type_info const& (*get_type_info)() noexcept;
+  bool (*is_derived_from_)(const std::type_info&);
+  std::size_t model_size = 0u;
+
+  static bool static_is_derived_from(const std::type_info& from) {
+    return typeid(observeable_rtti_v_table) == from
+               ? true
+               : observeable_v_table::static_is_derived_from(from);
+  }
+
+  meta_data* meta_data_ = nullptr;
+};
+
+struct observeable_rtti_trait : observeable_trait {
+  using v_table_t = observeable_rtti_v_table;
+};
+
 TRAIT_EX_(
     base_trait, observeable_rtti_trait, , , ,
     (ANY_V_TABLE_DATA(
@@ -3616,6 +3582,43 @@ TRAIT_EX_(
                         std::allocator<Concrete>{}.deallocate(p, 1);
                       })),
     ());
+
+
+class meta_data {
+  const std::type_info& type_info_;
+  std::vector<observeable_rtti_v_table*> i_table_;
+
+ public:
+  template <typename CLASS>
+  explicit constexpr meta_data(std::in_place_type_t<CLASS>)
+      : type_info_(typeid(CLASS)) {}
+
+  constexpr const std::type_info& get_type_info() const { return type_info_; }
+
+  auto& get_i_table() { return i_table_; }
+  auto& get_i_table() const { return i_table_; }
+
+  std::expected<observeable_rtti_v_table*, cast_error> get_v_table(
+      std::type_info const& typeid_) const {
+    auto const& i_table = get_i_table();
+    for (auto v_table : i_table)
+      if (is_derived_from(typeid_, v_table)) return v_table;
+    return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
+  }
+  auto register_v_table(observeable_rtti_v_table* v_table) {
+    v_table->meta_data_ = this;
+    if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
+      i_table_.push_back(v_table);
+    return v_table;
+  }
+};
+
+template <typename TYPE>
+auto& runtime_implementation() {
+  static meta_data meta_data_{std::in_place_type<TYPE>};
+  return meta_data_;
+}
+
 
 // --------------------------------------------------------------------------------
 // hook
