@@ -1489,6 +1489,27 @@ concept is_delete_v_table =
       { v_table->delete_ } -> std::convertible_to<delete_t>;
     };
 
+using get_type_info_t = std::type_info const& (*)() noexcept;
+template <typename VTable>
+concept is_get_type_info_v_table =
+    requires(VTable * v_table) {
+        { v_table->get_type_info } -> std::convertible_to<get_type_info_t>;
+};
+
+using is_derived_from_t = bool (*)(const std::type_info&);
+template <typename VTable>
+concept is_is_derived_from_v_table =
+    requires(VTable * v_table) {
+        { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
+};
+
+using model_size_t = std::size_t;
+template <typename VTable>
+concept is_model_size_v_table =
+    requires(VTable * v_table) {
+        { v_table->model_size } -> std::convertible_to<model_size_t>;
+};
+
 inline bool is_derived_from(const std::type_info& from,
                             observeable_rtti_v_table const* v_table) {
   return v_table->is_derived_from_(from);
