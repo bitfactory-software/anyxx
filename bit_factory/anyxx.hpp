@@ -3505,7 +3505,18 @@ TRAIT_EX_(dynamic_castable, observeable, , , ,
           ());
 
 TRAIT_EX_(
-    base_trait, dynamic_castable, , , ,
+    dynamic_deletable, dynamic_castable, , , ,
+     (ANY_V_TABLE_DATA(delete_t, delete_,
+                      [](mutable_void data) {
+                        if (!data) return;
+                        auto p = static_cast<Concrete*>(data);
+                        std::destroy_at(p);
+                        std::allocator<Concrete>{}.deallocate(p, 1);
+                      })),
+    ());
+
+TRAIT_EX_(
+    base_trait, dynamic_deletable, , , ,
     (ANY_V_TABLE_DATA(
          allocate_t, allocate,
          +[]() -> mutable_void {
@@ -3536,13 +3547,6 @@ TRAIT_EX_(
      ANY_V_TABLE_DATA(destructor_t, destructor,
                       [](mutable_void data) {
                         std::destroy_at(static_cast<Concrete*>(data));
-                      }),
-     ANY_V_TABLE_DATA(delete_t, delete_,
-                      [](mutable_void data) {
-                        if (!data) return;
-                        auto p = static_cast<Concrete*>(data);
-                        std::destroy_at(p);
-                        std::allocator<Concrete>{}.deallocate(p, 1);
                       }),
      ANY_V_TABLE_DATA(model_size_t, model_size,
                       compute_model_size<Concrete>())),
