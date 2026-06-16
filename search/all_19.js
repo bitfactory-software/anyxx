@@ -13,7 +13,7 @@ var searchData=
   ['trait_5fas_10',['trait_as',['../anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c',1,'anyxx']]],
   ['trait_5fclass_11',['trait_class',['../structanyxx_1_1trait__class.html',1,'anyxx']]],
   ['trait_5fex_12',['TRAIT_EX',['../group__trait__macros.html#ga2c3698db4bcfb33022a0161d4bbba023',1,'anyxx.hpp']]],
-  ['trait_5fex_5f_13',['TRAIT_EX_',['../group__trait__macros.html#gade6711771425f1b9a231fe819691ce04',1,'anyxx.hpp']]],
+  ['trait_5fex_5f_13',['TRAIT_EX_',['../group__trait__macros.html#gade6711771425f1b9a231fe819691ce04',1,'TRAIT_EX_:&#160;anyxx.hpp'],['../anyxx_8hpp.html#a30644db14d0fb6d4ab6638ff3f8c069b',1,'anyxx::TRAIT_EX_()']]],
   ['trait_5ftemplate_14',['TRAIT_TEMPLATE',['../group__trait__macros.html#gad2f206b96947eeba0d7f5cee72b33cae',1,'anyxx.hpp']]],
   ['trait_5ftemplate_5f_15',['TRAIT_TEMPLATE_',['../group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1',1,'anyxx.hpp']]],
   ['trait_5ftemplate_5fex_16',['TRAIT_TEMPLATE_EX',['../group__trait__macros.html#ga0184c21c57a127c79c7b8f5cd008afaf',1,'anyxx.hpp']]],

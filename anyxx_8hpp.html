@@ -127,7 +127,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core class template to control dispatch for external polymorphism.  <a href="classanyxx_1_1any.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Ausing_5F_3C_20Value_20_3E" id="r_anyxx_3A_3Ausing_5F_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1using__.html">anyxx::using_&lt; Value &gt;</a></td></tr>
 <tr class="memitem:anyxx_3A_3Atrait_5Fclass_3C_20Type_20_3E" id="r_anyxx_3A_3Atrait_5Fclass_3C_20Type_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1trait__class.html">anyxx::trait_class&lt; Type &gt;</a></td></tr>
-<tr class="memitem:anyxx_3A_3Aobserveable_5Frtti_5Fv_5Ftable" id="r_anyxx_3A_3Aobserveable_5Frtti_5Fv_5Ftable"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1observeable__rtti__v__table.html">anyxx::observeable_rtti_v_table</a></td></tr>
 <tr class="memitem:anyxx_3A_3Akey_3C_20Tag_20_3E" id="r_anyxx_3A_3Akey_3C_20Tag_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1key.html">anyxx::key&lt; Tag &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A key type for factory registration.  <a href="structanyxx_1_1key.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E" id="r_anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1factory.html">anyxx::factory&lt; Any, Key, Args &gt;</a></td></tr>
@@ -710,6 +709,7 @@ template&lt;is_any FromAny&gt; </td></tr>
 template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 <tr class="memitem:ga0ad81aaf23ab3d32a02a12cec57c0946 template"><td class="memItemLeft">ToAny&#160;</td><td class="memItemRight"><b>anyxx::move_to</b> (FromAny &amp;&amp;from)</td></tr>
 <tr class="memdesc:ga0ad81aaf23ab3d32a02a12cec57c0946"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move ownership to another <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. Uses runtime information to crosscast, if necessary. <br /></td></tr>
+<tr class="memitem:a30644db14d0fb6d4ab6638ff3f8c069b" id="r_a30644db14d0fb6d4ab6638ff3f8c069b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a30644db14d0fb6d4ab6638ff3f8c069b">anyxx::TRAIT_EX_</a> (observeable_rtti_trait, observeable_trait,,,,(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(get_type_info_t, get_type_info,+[]() noexcept -&gt; std::type_info const &amp;{ return typeid(Concrete);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(is_derived_from_t, is_derived_from_,+[](const std::type_info &amp;from) { return static_is_derived_from(from);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(model_size_t, model_size, compute_model_size&lt; Concrete &gt;()), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(meta_data *, meta_data_, nullptr)),())</td></tr>
 <tr class="memitem:a8b26f905b176ca800a33b0cb6aca450d" id="r_a8b26f905b176ca800a33b0cb6aca450d"><td class="memItemLeft"><a id="a8b26f905b176ca800a33b0cb6aca450d" name="a8b26f905b176ca800a33b0cb6aca450d"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (base_trait, observeable_rtti_trait,,,,(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(allocate_t, allocate,+[]() -&gt; mutable_void { return std::allocator&lt; Concrete &gt;{}.allocate(1);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(copy_constructor_t, copy_constructor, []([[maybe_unused]] mutable_void placement, [[maybe_unused]] const_void from) -&gt; mutable_void { if constexpr(std::is_copy_constructible_v&lt; Concrete &gt;) { return std::construct_at&lt; Concrete &gt;(static_cast&lt; Concrete * &gt;(placement), *static_cast&lt; Concrete const * &gt;(from));} else { return nullptr;};}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(move_constructor_t, move_constructor, []([[maybe_unused]] mutable_void placement, [[maybe_unused]] mutable_void from) -&gt; mutable_void { if constexpr(std::is_move_constructible_v&lt; Concrete &gt;) { return std::construct_at&lt; Concrete &gt;(static_cast&lt; Concrete * &gt;(placement), std::move(*static_cast&lt; Concrete * &gt;(from)));} else { return nullptr;};}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(destructor_t, destructor, [](mutable_void data) { std::destroy_at(static_cast&lt; Concrete * &gt;(data));}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(delete_t, delete_, [](mutable_void data) { if(!data) return;auto p=static_cast&lt; Concrete * &gt;(data);std::destroy_at(p);std::allocator&lt; Concrete &gt;{}.deallocate(p, 1);})),())</td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258" id="r_aab26c23ca7cd37963cf41554460ca258"><td class="memTemplParams" colspan="2"><a id="aab26c23ca7cd37963cf41554460ca258" name="aab26c23ca7cd37963cf41554460ca258"></a>
@@ -4111,6 +4111,38 @@ template&lt;typename Trait, typename T&gt; </div>
 <p>A factory function to bind an object as a model to an any with a trait. See also using_::as. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a8">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>, and <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a7">_2e_trait_algebra.cpp</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="a30644db14d0fb6d4ab6638ff3f8c069b" name="a30644db14d0fb6d4ab6638ff3f8c069b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30644db14d0fb6d4ab6638ff3f8c069b">&#9670;&#160;</a></span>TRAIT_EX_()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">anyxx::TRAIT_EX_ </td>
+          <td>(</td>
+          <td class="paramtype">observeable_rtti_trait</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">observeable_trait</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(get_type_info_t, get_type_info,+[]() noexcept -&gt; std::type_info const &amp;{ return typeid(Concrete);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(is_derived_from_t, is_derived_from_,+[](const std::type_info &amp;from) { return static_is_derived_from(from);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(model_size_t, model_size, compute_model_size&lt; Concrete &gt;()), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(meta_data *, meta_data_, nullptr))</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">()</td>          <td class="paramname"><span class="paramname"><em></em></span>&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>No lifetime functionality, but runtime type information Base of v-tables for traits without lifetime requirements, but downcastable </p>
 
 </div>
 </div>

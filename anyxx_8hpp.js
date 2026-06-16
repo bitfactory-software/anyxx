@@ -5,7 +5,6 @@ var anyxx_8hpp =
     [ "anyxx::any&lt; Proxy, Trait &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::using_&lt; Value &gt;", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
     [ "anyxx::trait_class&lt; Type &gt;", "structanyxx_1_1trait__class.html", null ],
-    [ "anyxx::observeable_rtti_v_table", "structanyxx_1_1observeable__rtti__v__table.html", "structanyxx_1_1observeable__rtti__v__table" ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
@@ -78,6 +77,7 @@ var anyxx_8hpp =
     [ "anyxx::lock", "group__casts.html#gae988a6a809ee2910690366e1e4c7ae67", null ],
     [ "anyxx::move_to", "group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946", null ],
     [ "anyxx::trait_as", "anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c", null ],
+    [ "anyxx::TRAIT_EX_", "anyxx_8hpp.html#a30644db14d0fb6d4ab6638ff3f8c069b", null ],
     [ "anyxx::unerase_cast", "group__casts.html#ga503c7a4639146953d0f21603ef83241e", null ],
     [ "anyxx::unerase_cast_if", "group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8", null ]
 ];
