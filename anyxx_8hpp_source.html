@@ -1292,149 +1292,149 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01443" name="l01443"></a><span class="lineno"> 1443</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
 <div class="line"><a id="l01444" name="l01444"></a><span class="lineno"> 1444</span><span class="keyword">concept </span>is_v_table = std::derived_from&lt;VTable, observeable_v_table&gt;;</div>
 <div class="line"><a id="l01445" name="l01445"></a><span class="lineno"> 1445</span> </div>
-<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span><span class="keywordtype">void</span> set_is_derived_from(<span class="keyword">auto</span> v_table) {</div>
-<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (anyxx::is_dynamic_castable_v_table&lt;VTable&gt;) {</div>
-<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>    v_table-&gt;is_derived_from_ = +[](<span class="keyword">const</span> std::type_info&amp; from) {</div>
-<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span>      <span class="keywordflow">return</span> VTable::static_is_derived_from(from);</div>
-<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span>    };</div>
-<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>  }</div>
-<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>}</div>
-<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span> </div>
-<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span><span class="keyword">inline</span> <span class="keywordtype">bool</span> is_derived_from(<span class="keyword">const</span> std::type_info&amp; from,</div>
-<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span>                            is_dynamic_castable_v_table <span class="keyword">auto</span>* v_table) {</div>
-<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>  <span class="keywordflow">return</span> v_table-&gt;is_derived_from_(from);</div>
-<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>}</div>
+<div class="line"><a id="l01446" name="l01446"></a><span class="lineno"> 1446</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = std::<span class="keywordtype">nullptr</span>_t&gt;</div>
+<div class="line"><a id="l01447" name="l01447"></a><span class="lineno"> 1447</span><span class="keyword">struct </span>no_model_map {</div>
+<div class="line"><a id="l01448" name="l01448"></a><span class="lineno"> 1448</span>  <span class="keyword">using </span>rep_type = T;</div>
+<div class="line"><a id="l01449" name="l01449"></a><span class="lineno"> 1449</span>};</div>
+<div class="line"><a id="l01450" name="l01450"></a><span class="lineno"> 1450</span> </div>
+<div class="line"><a id="l01451" name="l01451"></a><span class="lineno"> 1451</span><span class="keyword">struct </span>observeable {</div>
+<div class="line"><a id="l01452" name="l01452"></a><span class="lineno"> 1452</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
+<div class="line"><a id="l01453" name="l01453"></a><span class="lineno"> 1453</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> modeled_by() {</div>
+<div class="line"><a id="l01454" name="l01454"></a><span class="lineno"> 1454</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01455" name="l01455"></a><span class="lineno"> 1455</span>  }</div>
+<div class="line"><a id="l01456" name="l01456"></a><span class="lineno"> 1456</span> </div>
+<div class="line"><a id="l01457" name="l01457"></a><span class="lineno"> 1457</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> StaticDispatchType&gt;</div>
+<div class="line"><a id="l01458" name="l01458"></a><span class="lineno"> 1458</span>  <span class="keyword">using </span>static_dispatch_map_t = no_model_map&lt;StaticDispatchType&gt;;</div>
 <div class="line"><a id="l01459" name="l01459"></a><span class="lineno"> 1459</span> </div>
-<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span><span class="keyword">inline</span> std::size_t model_size(std::nullptr_t) { <span class="keywordflow">return</span> 0u; }</div>
-<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span><span class="keyword">inline</span> std::size_t model_size(is_model_size_v_table <span class="keyword">auto</span>* v_table) {</div>
-<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span>  <span class="keywordflow">return</span> v_table ? v_table-&gt;model_size : 0u;</div>
-<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span>}</div>
-<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span><span class="keyword">inline</span> mutable_void copy_construct_at(is_copy_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
-<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>                                      mutable_void placement, const_void from) {</div>
-<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>  <span class="keywordflow">return</span> v_table-&gt;copy_constructor(placement, from);</div>
-<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>}</div>
-<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span><span class="keyword">inline</span> mutable_void copy_construct(is_copy_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
-<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>                                   const_void from) {</div>
-<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>  <span class="keywordflow">return</span> copy_construct_at(v_table, v_table-&gt;allocate(), from);</div>
-<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span>}</div>
-<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span><span class="keyword">inline</span> mutable_void move_construct_at(is_move_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
-<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>                                      mutable_void placement,</div>
-<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>                                      mutable_void from) {</div>
-<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>  <span class="keywordflow">return</span> v_table-&gt;move_constructor(placement, from);</div>
-<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span>}</div>
-<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span><span class="keyword">inline</span> mutable_void move_construct(is_move_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
-<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span>                                   mutable_void from) {</div>
-<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>  <span class="keywordflow">return</span> move_construct_at(v_table, v_table-&gt;allocate(), from);</div>
+<div class="line"><a id="l01460" name="l01460"></a><span class="lineno"> 1460</span>  <span class="keyword">using </span>v_table_t = observeable_v_table;</div>
+<div class="line"><a id="l01461" name="l01461"></a><span class="lineno"> 1461</span>};</div>
+<div class="line"><a id="l01462" name="l01462"></a><span class="lineno"> 1462</span> </div>
+<div class="line"><a id="l01463" name="l01463"></a><span class="lineno"> 1463</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01464" name="l01464"></a><span class="lineno"> 1464</span><span class="keywordtype">void</span> set_is_derived_from(<span class="keyword">auto</span> v_table) {</div>
+<div class="line"><a id="l01465" name="l01465"></a><span class="lineno"> 1465</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (anyxx::is_dynamic_castable_v_table&lt;VTable&gt;) {</div>
+<div class="line"><a id="l01466" name="l01466"></a><span class="lineno"> 1466</span>    v_table-&gt;is_derived_from_ = +[](<span class="keyword">const</span> std::type_info&amp; from) {</div>
+<div class="line"><a id="l01467" name="l01467"></a><span class="lineno"> 1467</span>      <span class="keywordflow">return</span> VTable::static_is_derived_from(from);</div>
+<div class="line"><a id="l01468" name="l01468"></a><span class="lineno"> 1468</span>    };</div>
+<div class="line"><a id="l01469" name="l01469"></a><span class="lineno"> 1469</span>  }</div>
+<div class="line"><a id="l01470" name="l01470"></a><span class="lineno"> 1470</span>}</div>
+<div class="line"><a id="l01471" name="l01471"></a><span class="lineno"> 1471</span> </div>
+<div class="line"><a id="l01472" name="l01472"></a><span class="lineno"> 1472</span><span class="keyword">inline</span> <span class="keywordtype">bool</span> is_derived_from(<span class="keyword">const</span> std::type_info&amp; from,</div>
+<div class="line"><a id="l01473" name="l01473"></a><span class="lineno"> 1473</span>                            is_dynamic_castable_v_table <span class="keyword">auto</span>* v_table) {</div>
+<div class="line"><a id="l01474" name="l01474"></a><span class="lineno"> 1474</span>  <span class="keywordflow">return</span> v_table-&gt;is_derived_from_(from);</div>
+<div class="line"><a id="l01475" name="l01475"></a><span class="lineno"> 1475</span>}</div>
+<div class="line"><a id="l01476" name="l01476"></a><span class="lineno"> 1476</span> </div>
+<div class="line"><a id="l01477" name="l01477"></a><span class="lineno"> 1477</span><span class="keyword">inline</span> std::size_t model_size(std::nullptr_t) { <span class="keywordflow">return</span> 0u; }</div>
+<div class="line"><a id="l01478" name="l01478"></a><span class="lineno"> 1478</span><span class="keyword">inline</span> std::size_t model_size(is_model_size_v_table <span class="keyword">auto</span>* v_table) {</div>
+<div class="line"><a id="l01479" name="l01479"></a><span class="lineno"> 1479</span>  <span class="keywordflow">return</span> v_table ? v_table-&gt;model_size : 0u;</div>
 <div class="line"><a id="l01480" name="l01480"></a><span class="lineno"> 1480</span>}</div>
-<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span><span class="keyword">inline</span> <span class="keywordtype">void</span> delete_(T v_table, mutable_void&amp; data) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>  <span class="keywordflow">if</span> (!data) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::same_as&lt;T, std::nullptr_t&gt;) {</div>
-<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span>    assert(v_table);</div>
-<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>    v_table-&gt;delete_(data);</div>
-<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>    data = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>  }</div>
-<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span>}  <span class="comment">// NOLINT</span></div>
-<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span><span class="keyword">inline</span> <span class="keywordtype">void</span> destruct(T v_table, mutable_void data) <span class="keyword">noexcept</span> {</div>
-<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>  <span class="keywordflow">if</span> (!data) <span class="keywordflow">return</span>;</div>
-<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::same_as&lt;T, std::nullptr_t&gt;) {</div>
-<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span>    assert(v_table);</div>
-<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>    v_table-&gt;destructor(data);</div>
-<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>    data = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>  }</div>
-<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span>}</div>
-<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span> </div>
-<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</div>
-<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span><span class="keywordtype">bool</span> type_match(is_dynamic_castable_v_table <span class="keyword">auto</span>* v_table);</div>
-<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span> </div>
-<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</div>
-<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span><span class="keywordtype">void</span> check_type_match(is_dynamic_castable_v_table <span class="keyword">auto</span>* v_table) {</div>
-<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>  <span class="keywordflow">if</span> (!type_match&lt;U&gt;(v_table)) <span class="keywordflow">throw</span> type_mismatch_error(<span class="stringliteral">&quot;type mismatch&quot;</span>);</div>
-<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>}</div>
-<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span> </div>
-<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy&gt;</div>
-<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span><span class="keyword">struct </span>proxy_trait;</div>
-<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span> </div>
-<div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy&gt;</div>
-<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span><span class="keyword">struct </span>basic_proxy_trait {</div>
-<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_weak = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_lifetime_bound = <span class="keyword">false</span>;</div>
-<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_object = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01481" name="l01481"></a><span class="lineno"> 1481</span><span class="keyword">inline</span> mutable_void copy_construct_at(is_copy_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
+<div class="line"><a id="l01482" name="l01482"></a><span class="lineno"> 1482</span>                                      mutable_void placement, const_void from) {</div>
+<div class="line"><a id="l01483" name="l01483"></a><span class="lineno"> 1483</span>  <span class="keywordflow">return</span> v_table-&gt;copy_constructor(placement, from);</div>
+<div class="line"><a id="l01484" name="l01484"></a><span class="lineno"> 1484</span>}</div>
+<div class="line"><a id="l01485" name="l01485"></a><span class="lineno"> 1485</span><span class="keyword">inline</span> mutable_void copy_construct(is_copy_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
+<div class="line"><a id="l01486" name="l01486"></a><span class="lineno"> 1486</span>                                   const_void from) {</div>
+<div class="line"><a id="l01487" name="l01487"></a><span class="lineno"> 1487</span>  <span class="keywordflow">return</span> copy_construct_at(v_table, v_table-&gt;allocate(), from);</div>
+<div class="line"><a id="l01488" name="l01488"></a><span class="lineno"> 1488</span>}</div>
+<div class="line"><a id="l01489" name="l01489"></a><span class="lineno"> 1489</span><span class="keyword">inline</span> mutable_void move_construct_at(is_move_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
+<div class="line"><a id="l01490" name="l01490"></a><span class="lineno"> 1490</span>                                      mutable_void placement,</div>
+<div class="line"><a id="l01491" name="l01491"></a><span class="lineno"> 1491</span>                                      mutable_void from) {</div>
+<div class="line"><a id="l01492" name="l01492"></a><span class="lineno"> 1492</span>  <span class="keywordflow">return</span> v_table-&gt;move_constructor(placement, from);</div>
+<div class="line"><a id="l01493" name="l01493"></a><span class="lineno"> 1493</span>}</div>
+<div class="line"><a id="l01494" name="l01494"></a><span class="lineno"> 1494</span><span class="keyword">inline</span> mutable_void move_construct(is_move_constructor_v_table <span class="keyword">auto</span>* v_table,</div>
+<div class="line"><a id="l01495" name="l01495"></a><span class="lineno"> 1495</span>                                   mutable_void from) {</div>
+<div class="line"><a id="l01496" name="l01496"></a><span class="lineno"> 1496</span>  <span class="keywordflow">return</span> move_construct_at(v_table, v_table-&gt;allocate(), from);</div>
+<div class="line"><a id="l01497" name="l01497"></a><span class="lineno"> 1497</span>}</div>
+<div class="line"><a id="l01498" name="l01498"></a><span class="lineno"> 1498</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l01499" name="l01499"></a><span class="lineno"> 1499</span><span class="keyword">inline</span> <span class="keywordtype">void</span> delete_(T v_table, mutable_void&amp; data) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l01500" name="l01500"></a><span class="lineno"> 1500</span>  <span class="keywordflow">if</span> (!data) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l01501" name="l01501"></a><span class="lineno"> 1501</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::same_as&lt;T, std::nullptr_t&gt;) {</div>
+<div class="line"><a id="l01502" name="l01502"></a><span class="lineno"> 1502</span>    assert(v_table);</div>
+<div class="line"><a id="l01503" name="l01503"></a><span class="lineno"> 1503</span>    v_table-&gt;delete_(data);</div>
+<div class="line"><a id="l01504" name="l01504"></a><span class="lineno"> 1504</span>    data = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l01505" name="l01505"></a><span class="lineno"> 1505</span>  }</div>
+<div class="line"><a id="l01506" name="l01506"></a><span class="lineno"> 1506</span>}  <span class="comment">// NOLINT</span></div>
+<div class="line"><a id="l01507" name="l01507"></a><span class="lineno"> 1507</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l01508" name="l01508"></a><span class="lineno"> 1508</span><span class="keyword">inline</span> <span class="keywordtype">void</span> destruct(T v_table, mutable_void data) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a id="l01509" name="l01509"></a><span class="lineno"> 1509</span>  <span class="keywordflow">if</span> (!data) <span class="keywordflow">return</span>;</div>
+<div class="line"><a id="l01510" name="l01510"></a><span class="lineno"> 1510</span>  <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (!std::same_as&lt;T, std::nullptr_t&gt;) {</div>
+<div class="line"><a id="l01511" name="l01511"></a><span class="lineno"> 1511</span>    assert(v_table);</div>
+<div class="line"><a id="l01512" name="l01512"></a><span class="lineno"> 1512</span>    v_table-&gt;destructor(data);</div>
+<div class="line"><a id="l01513" name="l01513"></a><span class="lineno"> 1513</span>    data = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l01514" name="l01514"></a><span class="lineno"> 1514</span>  }</div>
+<div class="line"><a id="l01515" name="l01515"></a><span class="lineno"> 1515</span>}</div>
 <div class="line"><a id="l01516" name="l01516"></a><span class="lineno"> 1516</span> </div>
-<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
-<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_compatible_with_v_table() {</div>
-<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span>  }</div>
-<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span> </div>
-<div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Rep&gt;</div>
-<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span>  <span class="keyword">using </span>proxy_impl = Proxy;</div>
+<div class="line"><a id="l01517" name="l01517"></a><span class="lineno"> 1517</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</div>
+<div class="line"><a id="l01518" name="l01518"></a><span class="lineno"> 1518</span><span class="keywordtype">bool</span> type_match(is_dynamic_castable_v_table <span class="keyword">auto</span>* v_table);</div>
+<div class="line"><a id="l01519" name="l01519"></a><span class="lineno"> 1519</span> </div>
+<div class="line"><a id="l01520" name="l01520"></a><span class="lineno"> 1520</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> U&gt;</div>
+<div class="line"><a id="l01521" name="l01521"></a><span class="lineno"> 1521</span><span class="keywordtype">void</span> check_type_match(is_dynamic_castable_v_table <span class="keyword">auto</span>* v_table) {</div>
+<div class="line"><a id="l01522" name="l01522"></a><span class="lineno"> 1522</span>  <span class="keywordflow">if</span> (!type_match&lt;U&gt;(v_table)) <span class="keywordflow">throw</span> type_mismatch_error(<span class="stringliteral">&quot;type mismatch&quot;</span>);</div>
+<div class="line"><a id="l01523" name="l01523"></a><span class="lineno"> 1523</span>}</div>
 <div class="line"><a id="l01524" name="l01524"></a><span class="lineno"> 1524</span> </div>
-<div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> move_to(<span class="keyword">auto</span>&amp; to, [[maybe_unused]] <span class="keyword">auto</span>, <span class="keyword">auto</span>&amp;&amp; from,</div>
-<div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span>                      [[maybe_unused]] <span class="keyword">auto</span>) {</div>
-<div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span>    to = std::move(from);</div>
-<div class="line"><a id="l01528" name="l01528"></a><span class="lineno"> 1528</span>  }</div>
-<div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span> </div>
-<div class="line"><a id="l01530" name="l01530"></a><span class="lineno"> 1530</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> copy_construct_from(Proxy&amp; to, [[maybe_unused]] <span class="keywordtype">void</span>*,</div>
-<div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span>                                  <span class="keyword">auto</span> <span class="keyword">const</span>&amp; from, [[maybe_unused]] <span class="keyword">auto</span>) {</div>
-<div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>    to = from;</div>
-<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span>  }</div>
-<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span> </div>
-<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> destroy([[maybe_unused]] <span class="keyword">auto</span> <span class="keyword">const</span>&amp; data,</div>
-<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>                      [[maybe_unused]] <span class="keywordtype">void</span>* v_table) {}</div>
-<div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span>};</div>
-<div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span></div>
-<div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span></div>
-<div class="line"><a id="l01542" name="l01542"></a><span class="lineno"> 1542</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> E&gt;</div>
-<div class="foldopen" id="foldopen01543" data-start="{" data-end="}">
-<div class="line"><a id="l01543" name="l01543"></a><span class="lineno"><a class="line" href="conceptanyxx_1_1is__proxy.html"> 1543</a></span><span class="keyword">concept </span><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy</a> = <span class="keyword">requires</span>(E e) {</div>
-<div class="line"><a id="l01544" name="l01544"></a><span class="lineno"> 1544</span>  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::void_t;</div>
-<div class="line"><a id="l01545" name="l01545"></a><span class="lineno"> 1545</span>  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::static_dispatch_t;</div>
-<div class="line"><a id="l01546" name="l01546"></a><span class="lineno"> 1546</span>  { proxy_trait&lt;E&gt;::is_constructibile_from_const } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line"><a id="l01547" name="l01547"></a><span class="lineno"> 1547</span>  { proxy_trait&lt;E&gt;::is_owner } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line"><a id="l01548" name="l01548"></a><span class="lineno"> 1548</span>  { proxy_trait&lt;E&gt;::is_weak } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line"><a id="l01549" name="l01549"></a><span class="lineno"> 1549</span>  { proxy_trait&lt;E&gt;::is_lifetime_bound } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line"><a id="l01550" name="l01550"></a><span class="lineno"> 1550</span>  { proxy_trait&lt;E&gt;::is_object } -&gt; std::convertible_to&lt;bool&gt;;</div>
-<div class="line"><a id="l01551" name="l01551"></a><span class="lineno"> 1551</span>  <span class="comment">// illustartêd:,</span></div>
-<div class="line"><a id="l01552" name="l01552"></a><span class="lineno"> 1552</span>  <span class="comment">// requires requires(v_table* required_v_table) {</span></div>
-<div class="line"><a id="l01553" name="l01553"></a><span class="lineno"> 1553</span>  <span class="comment">//   {</span></div>
-<div class="line"><a id="l01554" name="l01554"></a><span class="lineno"> 1554</span>  <span class="comment">//     proxy_trait&lt;E&gt;::get_proxy_ptr_in(e, required_v_table)</span></div>
-<div class="line"><a id="l01555" name="l01555"></a><span class="lineno"> 1555</span>  <span class="comment">//   } -&gt; std::convertible_to&lt;typename proxy_trait&lt;E&gt;::void_t&gt;;</span></div>
-<div class="line"><a id="l01556" name="l01556"></a><span class="lineno"> 1556</span>  <span class="comment">// };</span></div>
-<div class="line"><a id="l01557" name="l01557"></a><span class="lineno"> 1557</span>  <span class="comment">// requires !proxy_trait&lt;E&gt;::is_owner ||</span></div>
-<div class="line"><a id="l01558" name="l01558"></a><span class="lineno"> 1558</span>  <span class="comment">//              requires(mutable_void from_data, a _v_table* v_table) {</span></div>
-<div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span>  <span class="comment">//                {</span></div>
-<div class="line"><a id="l01560" name="l01560"></a><span class="lineno"> 1560</span>  <span class="comment">//                  proxy_trait&lt;E&gt;::clone_from(from_data, v_table)</span></div>
-<div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span>  <span class="comment">//                };</span></div>
-<div class="line"><a id="l01562" name="l01562"></a><span class="lineno"> 1562</span>  <span class="comment">//              };</span></div>
-<div class="line"><a id="l01563" name="l01563"></a><span class="lineno"> 1563</span>};</div>
+<div class="line"><a id="l01525" name="l01525"></a><span class="lineno"> 1525</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy&gt;</div>
+<div class="line"><a id="l01526" name="l01526"></a><span class="lineno"> 1526</span><span class="keyword">struct </span>proxy_trait;</div>
+<div class="line"><a id="l01527" name="l01527"></a><span class="lineno"> 1527</span> </div>
+<div class="line"><a id="l01528" name="l01528"></a><span class="lineno"> 1528</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy&gt;</div>
+<div class="line"><a id="l01529" name="l01529"></a><span class="lineno"> 1529</span><span class="keyword">struct </span>basic_proxy_trait {</div>
+<div class="line"><a id="l01530" name="l01530"></a><span class="lineno"> 1530</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_weak = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01531" name="l01531"></a><span class="lineno"> 1531</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_lifetime_bound = <span class="keyword">false</span>;</div>
+<div class="line"><a id="l01532" name="l01532"></a><span class="lineno"> 1532</span>  <span class="keyword">inline</span> <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_object = <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01533" name="l01533"></a><span class="lineno"> 1533</span> </div>
+<div class="line"><a id="l01534" name="l01534"></a><span class="lineno"> 1534</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> VTable&gt;</div>
+<div class="line"><a id="l01535" name="l01535"></a><span class="lineno"> 1535</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_compatible_with_v_table() {</div>
+<div class="line"><a id="l01536" name="l01536"></a><span class="lineno"> 1536</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a id="l01537" name="l01537"></a><span class="lineno"> 1537</span>  }</div>
+<div class="line"><a id="l01538" name="l01538"></a><span class="lineno"> 1538</span> </div>
+<div class="line"><a id="l01539" name="l01539"></a><span class="lineno"> 1539</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Rep&gt;</div>
+<div class="line"><a id="l01540" name="l01540"></a><span class="lineno"> 1540</span>  <span class="keyword">using </span>proxy_impl = Proxy;</div>
+<div class="line"><a id="l01541" name="l01541"></a><span class="lineno"> 1541</span> </div>
+<div class="line"><a id="l01542" name="l01542"></a><span class="lineno"> 1542</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> move_to(<span class="keyword">auto</span>&amp; to, [[maybe_unused]] <span class="keyword">auto</span>, <span class="keyword">auto</span>&amp;&amp; from,</div>
+<div class="line"><a id="l01543" name="l01543"></a><span class="lineno"> 1543</span>                      [[maybe_unused]] <span class="keyword">auto</span>) {</div>
+<div class="line"><a id="l01544" name="l01544"></a><span class="lineno"> 1544</span>    to = std::move(from);</div>
+<div class="line"><a id="l01545" name="l01545"></a><span class="lineno"> 1545</span>  }</div>
+<div class="line"><a id="l01546" name="l01546"></a><span class="lineno"> 1546</span> </div>
+<div class="line"><a id="l01547" name="l01547"></a><span class="lineno"> 1547</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> copy_construct_from(Proxy&amp; to, [[maybe_unused]] <span class="keywordtype">void</span>*,</div>
+<div class="line"><a id="l01548" name="l01548"></a><span class="lineno"> 1548</span>                                  <span class="keyword">auto</span> <span class="keyword">const</span>&amp; from, [[maybe_unused]] <span class="keyword">auto</span>) {</div>
+<div class="line"><a id="l01549" name="l01549"></a><span class="lineno"> 1549</span>    to = from;</div>
+<div class="line"><a id="l01550" name="l01550"></a><span class="lineno"> 1550</span>  }</div>
+<div class="line"><a id="l01551" name="l01551"></a><span class="lineno"> 1551</span> </div>
+<div class="line"><a id="l01552" name="l01552"></a><span class="lineno"> 1552</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> destroy([[maybe_unused]] <span class="keyword">auto</span> <span class="keyword">const</span>&amp; data,</div>
+<div class="line"><a id="l01553" name="l01553"></a><span class="lineno"> 1553</span>                      [[maybe_unused]] <span class="keywordtype">void</span>* v_table) {}</div>
+<div class="line"><a id="l01554" name="l01554"></a><span class="lineno"> 1554</span>};</div>
+<div class="line"><a id="l01555" name="l01555"></a><span class="lineno"> 1555</span></div>
+<div class="line"><a id="l01557" name="l01557"></a><span class="lineno"> 1557</span></div>
+<div class="line"><a id="l01559" name="l01559"></a><span class="lineno"> 1559</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> E&gt;</div>
+<div class="foldopen" id="foldopen01560" data-start="{" data-end="}">
+<div class="line"><a id="l01560" name="l01560"></a><span class="lineno"><a class="line" href="conceptanyxx_1_1is__proxy.html"> 1560</a></span><span class="keyword">concept </span><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy</a> = <span class="keyword">requires</span>(E e) {</div>
+<div class="line"><a id="l01561" name="l01561"></a><span class="lineno"> 1561</span>  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::void_t;</div>
+<div class="line"><a id="l01562" name="l01562"></a><span class="lineno"> 1562</span>  <span class="keyword">typename</span> proxy_trait&lt;E&gt;::static_dispatch_t;</div>
+<div class="line"><a id="l01563" name="l01563"></a><span class="lineno"> 1563</span>  { proxy_trait&lt;E&gt;::is_constructibile_from_const } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a id="l01564" name="l01564"></a><span class="lineno"> 1564</span>  { proxy_trait&lt;E&gt;::is_owner } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a id="l01565" name="l01565"></a><span class="lineno"> 1565</span>  { proxy_trait&lt;E&gt;::is_weak } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a id="l01566" name="l01566"></a><span class="lineno"> 1566</span>  { proxy_trait&lt;E&gt;::is_lifetime_bound } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a id="l01567" name="l01567"></a><span class="lineno"> 1567</span>  { proxy_trait&lt;E&gt;::is_object } -&gt; std::convertible_to&lt;bool&gt;;</div>
+<div class="line"><a id="l01568" name="l01568"></a><span class="lineno"> 1568</span>  <span class="comment">// illustartêd:,</span></div>
+<div class="line"><a id="l01569" name="l01569"></a><span class="lineno"> 1569</span>  <span class="comment">// requires requires(v_table* required_v_table) {</span></div>
+<div class="line"><a id="l01570" name="l01570"></a><span class="lineno"> 1570</span>  <span class="comment">//   {</span></div>
+<div class="line"><a id="l01571" name="l01571"></a><span class="lineno"> 1571</span>  <span class="comment">//     proxy_trait&lt;E&gt;::get_proxy_ptr_in(e, required_v_table)</span></div>
+<div class="line"><a id="l01572" name="l01572"></a><span class="lineno"> 1572</span>  <span class="comment">//   } -&gt; std::convertible_to&lt;typename proxy_trait&lt;E&gt;::void_t&gt;;</span></div>
+<div class="line"><a id="l01573" name="l01573"></a><span class="lineno"> 1573</span>  <span class="comment">// };</span></div>
+<div class="line"><a id="l01574" name="l01574"></a><span class="lineno"> 1574</span>  <span class="comment">// requires !proxy_trait&lt;E&gt;::is_owner ||</span></div>
+<div class="line"><a id="l01575" name="l01575"></a><span class="lineno"> 1575</span>  <span class="comment">//              requires(mutable_void from_data, a _v_table* v_table) {</span></div>
+<div class="line"><a id="l01576" name="l01576"></a><span class="lineno"> 1576</span>  <span class="comment">//                {</span></div>
+<div class="line"><a id="l01577" name="l01577"></a><span class="lineno"> 1577</span>  <span class="comment">//                  proxy_trait&lt;E&gt;::clone_from(from_data, v_table)</span></div>
+<div class="line"><a id="l01578" name="l01578"></a><span class="lineno"> 1578</span>  <span class="comment">//                };</span></div>
+<div class="line"><a id="l01579" name="l01579"></a><span class="lineno"> 1579</span>  <span class="comment">//              };</span></div>
+<div class="line"><a id="l01580" name="l01580"></a><span class="lineno"> 1580</span>};</div>
 </div>
-<div class="line"><a id="l01564" name="l01564"></a><span class="lineno"> 1564</span> </div>
-<div class="line"><a id="l01565" name="l01565"></a><span class="lineno"> 1565</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l01566" name="l01566"></a><span class="lineno"> 1566</span><span class="keyword">struct </span>is_type_class_impl : std::false_type {};</div>
-<div class="line"><a id="l01567" name="l01567"></a><span class="lineno"> 1567</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l01568" name="l01568"></a><span class="lineno"> 1568</span><span class="keyword">struct </span>is_type_class_impl&lt;trait_class&lt;T&gt;&gt; : std::true_type {};</div>
-<div class="line"><a id="l01569" name="l01569"></a><span class="lineno"> 1569</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a id="l01570" name="l01570"></a><span class="lineno"> 1570</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_type_class =</div>
-<div class="line"><a id="l01571" name="l01571"></a><span class="lineno"> 1571</span>    <a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value;</div>
-<div class="line"><a id="l01572" name="l01572"></a><span class="lineno"> 1572</span> </div>
-<div class="line"><a id="l01573" name="l01573"></a><span class="lineno"> 1573</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T = std::<span class="keywordtype">nullptr</span>_t&gt;</div>
-<div class="line"><a id="l01574" name="l01574"></a><span class="lineno"> 1574</span><span class="keyword">struct </span>no_model_map {</div>
-<div class="line"><a id="l01575" name="l01575"></a><span class="lineno"> 1575</span>  <span class="keyword">using </span>rep_type = T;</div>
-<div class="line"><a id="l01576" name="l01576"></a><span class="lineno"> 1576</span>};</div>
-<div class="line"><a id="l01577" name="l01577"></a><span class="lineno"> 1577</span> </div>
-<div class="line"><a id="l01578" name="l01578"></a><span class="lineno"> 1578</span><span class="keyword">struct </span>observeable_trait {</div>
-<div class="line"><a id="l01579" name="l01579"></a><span class="lineno"> 1579</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt;</div>
-<div class="line"><a id="l01580" name="l01580"></a><span class="lineno"> 1580</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> modeled_by() {</div>
-<div class="line"><a id="l01581" name="l01581"></a><span class="lineno"> 1581</span>    <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a id="l01582" name="l01582"></a><span class="lineno"> 1582</span>  }</div>
-<div class="line"><a id="l01583" name="l01583"></a><span class="lineno"> 1583</span> </div>
-<div class="line"><a id="l01584" name="l01584"></a><span class="lineno"> 1584</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> StaticDispatchType&gt;</div>
-<div class="line"><a id="l01585" name="l01585"></a><span class="lineno"> 1585</span>  <span class="keyword">using </span>static_dispatch_map_t = no_model_map&lt;StaticDispatchType&gt;;</div>
-<div class="line"><a id="l01586" name="l01586"></a><span class="lineno"> 1586</span> </div>
-<div class="line"><a id="l01587" name="l01587"></a><span class="lineno"> 1587</span>  <span class="keyword">using </span>v_table_t = observeable_v_table;</div>
-<div class="line"><a id="l01588" name="l01588"></a><span class="lineno"> 1588</span>};</div>
+<div class="line"><a id="l01581" name="l01581"></a><span class="lineno"> 1581</span> </div>
+<div class="line"><a id="l01582" name="l01582"></a><span class="lineno"> 1582</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l01583" name="l01583"></a><span class="lineno"> 1583</span><span class="keyword">struct </span>is_type_class_impl : std::false_type {};</div>
+<div class="line"><a id="l01584" name="l01584"></a><span class="lineno"> 1584</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l01585" name="l01585"></a><span class="lineno"> 1585</span><span class="keyword">struct </span>is_type_class_impl&lt;trait_class&lt;T&gt;&gt; : std::true_type {};</div>
+<div class="line"><a id="l01586" name="l01586"></a><span class="lineno"> 1586</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l01587" name="l01587"></a><span class="lineno"> 1587</span><span class="keyword">inline</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> is_type_class =</div>
+<div class="line"><a id="l01588" name="l01588"></a><span class="lineno"> 1588</span>    <a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value;</div>
 <div class="line"><a id="l01589" name="l01589"></a><span class="lineno"> 1589</span> </div>
 <div class="line"><a id="l01590" name="l01590"></a><span class="lineno"> 1590</span><span class="comment">// template &lt;typename Model&gt;</span></div>
 <div class="line"><a id="l01591" name="l01591"></a><span class="lineno"> 1591</span><span class="comment">// concept is_base_trait_model = true;</span></div>
@@ -2947,7 +2947,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03213" name="l03213"></a><span class="lineno"> 3213</span>  }</div>
 <div class="line"><a id="l03214" name="l03214"></a><span class="lineno"> 3214</span>};</div>
 <div class="line"><a id="l03215" name="l03215"></a><span class="lineno"> 3215</span> </div>
-<div class="line"><a id="l03216" name="l03216"></a><span class="lineno"> 3216</span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(translate_sig, observeable_trait, , ,</div>
+<div class="line"><a id="l03216" name="l03216"></a><span class="lineno"> 3216</span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(translate_sig, observeable, , ,</div>
 <div class="line"><a id="l03217" name="l03217"></a><span class="lineno"> 3217</span>          (<a class="code hl_define" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((AnyValue)), v_table_param, <span class="keywordtype">void</span>, (T)),</div>
 <div class="line"><a id="l03218" name="l03218"></a><span class="lineno"> 3218</span>           <a class="code hl_define" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((AnyValue)), v_table_return, <span class="keywordtype">void</span>, (T)),</div>
 <div class="line"><a id="l03219" name="l03219"></a><span class="lineno"> 3219</span>           <a class="code hl_define" href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a>(((Model)), map_return, <span class="keywordtype">void</span>, (T)),</div>
@@ -3223,7 +3223,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03492" name="l03492"></a><span class="lineno"> 3492</span>}</div>
 </div>
 <div class="line"><a id="l03493" name="l03493"></a><span class="lineno"> 3493</span></div>
-<div class="line"><a id="l03496" name="l03496"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#add91122a1f3765d36fba5b840e776f5e"> 3496</a></span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(observeable_rtti_trait, observeable_trait, , , ,</div>
+<div class="line"><a id="l03496" name="l03496"></a><span class="lineno"><a class="line" href="anyxx_8hpp.html#ab05bcf622ad97065eaecbe87fd6d9bc4"> 3496</a></span><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(observeable_rtti_trait, observeable, , , ,</div>
 <div class="line"><a id="l03497" name="l03497"></a><span class="lineno"> 3497</span>          (<a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(std::type_info <span class="keyword">const</span>*, type_info_,</div>
 <div class="line"><a id="l03498" name="l03498"></a><span class="lineno"> 3498</span>                            &amp;<span class="keyword">typeid</span>(Concrete)),</div>
 <div class="line"><a id="l03499" name="l03499"></a><span class="lineno"> 3499</span>           <a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(</div>
@@ -4229,8 +4229,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l04692" name="l04692"></a><span class="lineno"> 4692</span><span class="keyword">static_assert</span>(is_destructor_v_table&lt;base_trait_v_table&gt;);</div>
 <div class="line"><a id="l04693" name="l04693"></a><span class="lineno"> 4693</span><span class="keyword">static_assert</span>(is_delete_v_table&lt;base_trait_v_table&gt;);</div>
 <div class="line"><a id="l04694" name="l04694"></a><span class="lineno"> 4694</span> </div>
-<div class="line"><a id="l04695" name="l04695"></a><span class="lineno"> 4695</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;cref, observeable_trait&gt;);</div>
-<div class="line"><a id="l04696" name="l04696"></a><span class="lineno"> 4696</span><span class="keyword">static_assert</span>(!is_proxy_compatible_with_trait&lt;val, observeable_trait&gt;);</div>
+<div class="line"><a id="l04695" name="l04695"></a><span class="lineno"> 4695</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;cref, observeable&gt;);</div>
+<div class="line"><a id="l04696" name="l04696"></a><span class="lineno"> 4696</span><span class="keyword">static_assert</span>(!is_proxy_compatible_with_trait&lt;val, observeable&gt;);</div>
 <div class="line"><a id="l04697" name="l04697"></a><span class="lineno"> 4697</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;val, base_trait&gt;);</div>
 <div class="line"><a id="l04698" name="l04698"></a><span class="lineno"> 4698</span> </div>
 <div class="line"><a id="l04699" name="l04699"></a><span class="lineno"> 4699</span>}  <span class="comment">// namespace anyxx</span></div>
@@ -4250,7 +4250,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="ttc" id="aclassanyxx_1_1hook_html"><div class="ttname"><a href="classanyxx_1_1hook.html">anyxx::hook</a></div><div class="ttdoc">A class template to implement a hook/callback chain.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3591</div></div>
 <div class="ttc" id="aconceptanyxx_1_1has__v__table_html"><div class="ttname"><a href="conceptanyxx_1_1has__v__table.html">anyxx::has_v_table</a></div><div class="ttdoc">Requirements for a trait type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1595</div></div>
 <div class="ttc" id="aconceptanyxx_1_1is__dyn_html"><div class="ttname"><a href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a></div><div class="ttdoc">Requirements for a dynamic (i.e., type-erased) Proxy.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1604</div></div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1543</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1560</div></div>
 <div class="ttc" id="agroup__casts_html_gadd0bed70326711f39e2efc190d006590"><div class="ttname"><a href="group__casts.html#gadd0bed70326711f39e2efc190d006590">anyxx::downcast_to</a></div><div class="ttdeci">std::optional&lt; To &gt; downcast_to(From from)</div><div class="ttdoc">Safe downcast to a derived trait using runtime information from the v-Tables.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3022</div></div>
 <div class="ttc" id="agroup__casts_html_gae988a6a809ee2910690366e1e4c7ae67"><div class="ttname"><a href="group__casts.html#gae988a6a809ee2910690366e1e4c7ae67">anyxx::lock</a></div><div class="ttdeci">auto lock(FromAny const &amp;from_interface)</div><div class="ttdoc">Lock a shared any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3475</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1262</div></div>
