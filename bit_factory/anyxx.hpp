@@ -1491,23 +1491,20 @@ concept is_delete_v_table =
 
 using get_type_info_t = std::type_info const& (*)() noexcept;
 template <typename VTable>
-concept is_get_type_info_v_table =
-    requires(VTable * v_table) {
-        { v_table->get_type_info } -> std::convertible_to<get_type_info_t>;
+concept is_get_type_info_v_table = requires(VTable* v_table) {
+  { v_table->get_type_info } -> std::convertible_to<get_type_info_t>;
 };
 
 using is_derived_from_t = bool (*)(const std::type_info&);
 template <typename VTable>
-concept is_is_derived_from_v_table =
-    requires(VTable * v_table) {
-        { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
+concept is_is_derived_from_v_table = requires(VTable* v_table) {
+  { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
 };
 
 using model_size_t = std::size_t;
 template <typename VTable>
-concept is_model_size_v_table =
-    requires(VTable * v_table) {
-        { v_table->model_size } -> std::convertible_to<model_size_t>;
+concept is_model_size_v_table = requires(VTable* v_table) {
+  { v_table->model_size } -> std::convertible_to<model_size_t>;
 };
 
 inline bool is_derived_from(const std::type_info& from,
@@ -1570,6 +1567,11 @@ struct basic_proxy_trait {
   inline static constexpr bool is_weak = false;
   inline static constexpr bool is_lifetime_bound = false;
   inline static constexpr bool is_object = true;
+
+  template <typename VTable>
+  static constexpr bool is_compatible_with_v_table() {
+    return true;
+  }
 
   template <typename Rep>
   using proxy_impl = Proxy;
@@ -2080,6 +2082,10 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   struct is_constructibile_from {
     static constexpr bool value = false;
   };
+  template <typename VTable>
+  static constexpr bool is_compatible_with_v_table() {
+    return is_delete_v_table<VTable>;
+  }
   static constexpr bool is_owner = true;
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
@@ -2098,7 +2104,7 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     return ptr.ptr;
   }
 
-  static void destroy(unique& u, is_v_table auto* v_table) {
+  static void destroy(unique& u, is_delete_v_table auto* v_table) {
     assert(v_table || !u.ptr);
     if (v_table) delete_(v_table, u.ptr);
   }
@@ -2157,7 +2163,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static auto clone_from(const_void data_ptr, is_v_table auto* v_table) {
+  static auto clone_from(const_void data_ptr, is_delete_v_table auto* v_table) {
     return shared{copy_construct(v_table, data_ptr),
                   [v_table](auto p) { v_table->delete_(p); }};
   }
@@ -2166,7 +2172,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     to = std::move(from);
   }
   static void move_to(shared& to, [[maybe_unused]] auto v_table_to, unique from,
-                      is_v_table auto* v_table) {
+                      is_delete_v_table auto* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
     to = shared{p, [v_table](auto p) { v_table->delete_(p); }};
@@ -2391,6 +2397,13 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
+  template <typename VTable>
+  static constexpr bool is_compatible_with_v_table() {
+    return is_allocate_v_table<VTable> && is_copy_constructor_v_table<VTable> &&
+           is_move_constructor_v_table<VTable> &&
+           is_destructor_v_table<VTable> && is_delete_v_table<VTable>;
+  }
+
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
     assert(v_table);
@@ -2791,6 +2804,12 @@ void move_to(To& to, auto to_v_table, From&& from, auto from_v_table) {
                                     from_v_table);
 }
 
+template <typename Proxy, typename Trait>
+concept is_proxy_compatible_with_trait =
+    is_proxy<Proxy> && has_v_table<Trait> &&
+    proxy_trait<Proxy>::template is_compatible_with_v_table<
+        typename Trait::v_table_t>();
+
 /// \brief The core class template to control dispatch for external
 /// polymorphism.
 ///
@@ -2831,6 +2850,9 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
+  //static_assert(is_proxy_compatible_with_trait<Proxy, Trait>,
+  //              "If the proxy is dynamic, the trait must provide a v-table "
+  //              "compatible with the proxy.");
   // static_assert(!dyn || has_v_table<Trait>); has issues in clang...
 
  protected:
@@ -4699,4 +4721,9 @@ static_assert(is_copy_constructor_v_table<base_trait_v_table>);
 static_assert(is_move_constructor_v_table<base_trait_v_table>);
 static_assert(is_destructor_v_table<base_trait_v_table>);
 static_assert(is_delete_v_table<base_trait_v_table>);
+
+static_assert(is_proxy_compatible_with_trait<cref, observeable_trait>);
+static_assert(!is_proxy_compatible_with_trait<val, observeable_trait>);
+static_assert(is_proxy_compatible_with_trait<val, base_trait>);
+
 }  // namespace anyxx
