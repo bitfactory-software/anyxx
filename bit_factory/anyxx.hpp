@@ -1443,6 +1443,23 @@ struct observeable_v_table {
 template <typename VTable>
 concept is_v_table = std::derived_from<VTable, observeable_v_table>;
 
+template <typename T = std::nullptr_t>
+struct no_model_map {
+  using rep_type = T;
+};
+
+struct observeable {
+  template <typename>
+  static constexpr bool modeled_by() {
+    return true;
+  }
+
+  template <typename StaticDispatchType>
+  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
+
+  using v_table_t = observeable_v_table;
+};
+
 template <typename VTable>
 void set_is_derived_from(auto v_table) {
   if constexpr (anyxx::is_dynamic_castable_v_table<VTable>) {
@@ -1569,23 +1586,6 @@ struct is_type_class_impl<trait_class<T>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_type_class =
     is_proxy<T> && is_type_class_impl<T>::value;
-
-template <typename T = std::nullptr_t>
-struct no_model_map {
-  using rep_type = T;
-};
-
-struct observeable_trait {
-  template <typename>
-  static constexpr bool modeled_by() {
-    return true;
-  }
-
-  template <typename StaticDispatchType>
-  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
-
-  using v_table_t = observeable_v_table;
-};
 
 // template <typename Model>
 // concept is_base_trait_model = true;
@@ -3213,7 +3213,7 @@ struct jacket_return<self&> {
   }
 };
 
-TRAIT_EX_(translate_sig, observeable_trait, , ,
+TRAIT_EX_(translate_sig, observeable, , ,
           (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
            ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
            ANY_TYPE(((Model)), map_return, void, (T)),
@@ -3493,7 +3493,7 @@ ToAny move_to(FromAny&& from) {
 
 /// No lifetime functionality, but runtime type information
 /// Base of v-tables for traits without lifetime requirements, but downcastable
-TRAIT_EX_(observeable_rtti_trait, observeable_trait, , , ,
+TRAIT_EX_(observeable_rtti_trait, observeable, , , ,
           (ANY_V_TABLE_DATA(std::type_info const*, type_info_,
                             &typeid(Concrete)),
            ANY_V_TABLE_DATA(
@@ -4692,8 +4692,8 @@ static_assert(is_move_constructor_v_table<base_trait_v_table>);
 static_assert(is_destructor_v_table<base_trait_v_table>);
 static_assert(is_delete_v_table<base_trait_v_table>);
 
-static_assert(is_proxy_compatible_with_trait<cref, observeable_trait>);
-static_assert(!is_proxy_compatible_with_trait<val, observeable_trait>);
+static_assert(is_proxy_compatible_with_trait<cref, observeable>);
+static_assert(!is_proxy_compatible_with_trait<val, observeable>);
 static_assert(is_proxy_compatible_with_trait<val, base_trait>);
 
 }  // namespace anyxx

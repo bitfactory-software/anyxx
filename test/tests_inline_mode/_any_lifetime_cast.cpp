@@ -23,16 +23,13 @@ struct X {
 };
 
 ANY(stringable, (ANY_OP(std::string, (), (), const)), )
-TRAIT_(slick_stringable, observeable_trait,
-       (ANY_OP(std::string, (), (), const)))
+TRAIT_(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
 
 struct Y {
   any<mutref, slick_stringable> xxx;
 };
 
-std::string func(any<cref, slick_stringable> x){
-    return x();
-}
+std::string func(any<cref, slick_stringable> x) { return x(); }
 
 }  // namespace
 
