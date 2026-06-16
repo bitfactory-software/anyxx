@@ -1442,6 +1442,10 @@ concept is_model_size_v_table = requires(VTable* v_table) {
   { v_table->model_size } -> std::convertible_to<model_size_t>;
 };
 
+template <typename VTable>
+concept is_dynamic_castable_v_table =
+    is_derived_from_v_table<VTable> && is_get_type_info_v_table<VTable>;
+
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
 struct undefined {};
@@ -1519,7 +1523,8 @@ inline mutable_void copy_construct_at(is_copy_constructor_v_table auto* v_table,
                                       mutable_void placement, const_void from) {
   return v_table->copy_constructor(placement, from);
 }
-inline mutable_void copy_construct(is_copy_constructor_v_table auto* v_table, const_void from) {
+inline mutable_void copy_construct(is_copy_constructor_v_table auto* v_table,
+                                   const_void from) {
   return copy_construct_at(v_table, v_table->allocate(), from);
 }
 inline mutable_void move_construct_at(is_move_constructor_v_table auto* v_table,
@@ -2849,10 +2854,10 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
   using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
-  //static_assert(is_proxy_compatible_with_trait<Proxy, Trait>,
-  //              "If the proxy is dynamic, the trait must provide a v-table "
-  //              "compatible with the proxy.");
-  // static_assert(!dyn || has_v_table<Trait>); has issues in clang...
+  // static_assert(is_proxy_compatible_with_trait<Proxy, Trait>,
+  //               "If the proxy is dynamic, the trait must provide a v-table "
+  //               "compatible with the proxy.");
+  //  static_assert(!dyn || has_v_table<Trait>); has issues in clang...
 
  protected:
   proxy_impl_t proxy_{};
@@ -3068,7 +3073,7 @@ bool is_derived_from(const std::type_info& from, Any const& any) {
 }
 template <is_any From, is_any Any>
   requires is_derived_from_v_table<typename From::v_table_t> &&
-           is_derived_from_v_table<typename Any::v_table_t      >
+           is_derived_from_v_table<typename Any::v_table_t>
 bool is_derived_from(Any const& any) {
   return is_derived_from(typeid(typename From::v_table_t), any);
 }
@@ -3228,11 +3233,12 @@ struct dispatch_holder<true, Trait> {
 };
 
 template <is_any ToAny>
-auto query_v_table(observeable_rtti_v_table* from)
+  requires is_dynamic_castable_v_table<typename ToAny::v_table_t>
+auto query_v_table(is_dynamic_castable_v_table auto* from)
     -> std::expected<typename ToAny::v_table_t*, anyxx::cast_error> {
   using v_table_t = typename ToAny::v_table_t;
   if (from->is_derived_from_(typeid(v_table_t)))
-    return static_cast<v_table_t*>(from);
+    return reinterpret_cast<v_table_t*>(from);
   return from->meta_data_->get_v_table(typeid(v_table_t))
       .transform([](auto v_table) { return static_cast<v_table_t*>(v_table); });
 }
