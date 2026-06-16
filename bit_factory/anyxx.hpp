@@ -3493,7 +3493,7 @@ ToAny move_to(FromAny&& from) {
 
 /// No lifetime functionality, but runtime type information
 /// Base of v-tables for traits without lifetime requirements, but downcastable
-TRAIT_EX_(observeable_rtti_trait, observeable, , , ,
+TRAIT_EX_(dynamic_castable, observeable, , , ,
           (ANY_V_TABLE_DATA(std::type_info const*, type_info_,
                             &typeid(Concrete)),
            ANY_V_TABLE_DATA(
@@ -3505,7 +3505,7 @@ TRAIT_EX_(observeable_rtti_trait, observeable, , , ,
           ());
 
 TRAIT_EX_(
-    base_trait, observeable_rtti_trait, , , ,
+    base_trait, dynamic_castable, , , ,
     (ANY_V_TABLE_DATA(
          allocate_t, allocate,
          +[]() -> mutable_void {
@@ -3550,7 +3550,7 @@ TRAIT_EX_(
 
 class meta_data {
   const std::type_info& type_info_;
-  std::vector<observeable_rtti_trait::v_table_t*> i_table_;
+  std::vector<dynamic_castable::v_table_t*> i_table_;
 
  public:
   template <typename CLASS>
@@ -3562,14 +3562,14 @@ class meta_data {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  std::expected<observeable_rtti_trait::v_table_t*, cast_error> get_v_table(
+  std::expected<dynamic_castable::v_table_t*, cast_error> get_v_table(
       std::type_info const& typeid_) const {
     auto const& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
-  auto register_v_table(observeable_rtti_trait::v_table_t* v_table) {
+  auto register_v_table(dynamic_castable::v_table_t* v_table) {
     v_table->meta_data_ = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
