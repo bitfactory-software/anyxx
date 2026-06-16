@@ -3516,7 +3516,7 @@ TRAIT_EX_(
     ());
 
 TRAIT_EX_(
-    base_trait, dynamic_deletable, , , ,
+    dynamic_copyable, dynamic_deletable, , , ,
     (ANY_V_TABLE_DATA(
          allocate_t, allocate,
          +[]() -> mutable_void {
@@ -3532,8 +3532,12 @@ TRAIT_EX_(
                         } else {
                           return nullptr;
                         };
-                      }),
-     ANY_V_TABLE_DATA(move_constructor_t, move_constructor,
+                      })),
+    ());
+
+TRAIT_EX_(
+    base_trait, dynamic_copyable, , , ,
+    (ANY_V_TABLE_DATA(move_constructor_t, move_constructor,
                       []([[maybe_unused]] mutable_void placement,
                          [[maybe_unused]] mutable_void from) -> mutable_void {
                         if constexpr (std::is_move_constructible_v<Concrete>) {
