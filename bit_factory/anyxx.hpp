@@ -1020,19 +1020,19 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def ANY_FN_PURE
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define ANY_FN_PURE(ret, name, params, const_)            \
-  ANY_FN_(private, , ret, name, name, false, const_,      \
-          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
-          ignore_mapf_concept_with_always_false, x.name,  \
+#define ANY_FN_PURE(ret, name, params, const_)           \
+  ANY_FN_(private, , ret, name, name, false, const_,     \
+          (_detail_ANYXX_FN_EMPTY(name, ret)),           \
+          ignore_mapf_concept_with_always_false, x.name, \
           _detail_EXPAND params)
 
 /// \def ANY_FN_PURE_EXACT
 /// \brief TRAIT function, which must be provided by the model.
 /// \ingroup trait_macros
-#define ANY_FN_PURE_EXACT(ret, name, params, const_)      \
-  ANY_FN_(private, , ret, name, name, true, const_,       \
-          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)), \
-          ignore_mapf_concept_with_always_false, x.name,  \
+#define ANY_FN_PURE_EXACT(ret, name, params, const_)     \
+  ANY_FN_(private, , ret, name, name, true, const_,      \
+          (_detail_ANYXX_FN_EMPTY(name, ret)),           \
+          ignore_mapf_concept_with_always_false, x.name, \
           _detail_EXPAND params)
 
 /// \def ANY_FN_DEF
@@ -1180,8 +1180,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \ingroup trait_macros
 #define ANY_FN_STATIC_PURE(template_params, return_type, name, params, ...) \
   ANY_FN_(template_params, return_type, name,                               \
-          (_detail_ANYXX_TRAIT_ERROR_MESSAGE(name, return_type)),           \
-          _detail_EXPAND params)
+          (_detail_ANYXX_FN_EMPTY(name, return_type)), _detail_EXPAND params)
 
 /// \def ANY_FN_STATIC_DEF
 /// \brief Static TRAIT function, which has a default implementation. This
@@ -1263,13 +1262,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define ANY_MODEL_MAP(model_, trait_) __ANY_MODEL_MAP(trait_, model_)
 /// @}
 
-#define _detail_ANYXX_TRAIT_ERROR_MESSAGE(name, ret)                          \
-  []<typename... Args>([[maybe_unused]] Args...) -> ret {                     \
-    static_assert(anyxx::missing_trait_error<T>::not_specialized,             \
-                  "'" #name                                                   \
-                  "' is missing in the specialization of this proxy_trait!"); \
-    return {};                                                                \
-  }
+#define _detail_ANYXX_FN_EMPTY(name, ret) \
+  []<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; }
 
 namespace anyxx {
 
@@ -1321,10 +1315,6 @@ class type_mismatch_error : public error {
   using error::error;
 };
 
-template <typename T>
-struct missing_trait_error {
-  static constexpr bool not_specialized = false;
-};
 template <typename Value>
 struct using_;
 template <typename Type>
@@ -3163,7 +3153,7 @@ auto query_v_table(FromVTable* from)
       return std::unexpected(
           anyxx::cast_error{typeid(v_table_t), *from->type_info_});
     }
-  } else{
+  } else {
     return std::unexpected(
         anyxx::cast_error{typeid(v_table_t), *from->type_info_});
   }
