@@ -34,11 +34,11 @@ std::string func(any<cref, slick_stringable> x) { return x(); }
 }  // namespace
 
 TEST_CASE("any bool operator") {
-  any<cref, base_trait> a;
+  any<cref, dynamic_value> a;
   bool is_null = !a;
   CHECK(is_null);
   int i = 0;
-  any<cref, base_trait> b{i};
+  any<cref, dynamic_value> b{i};
   bool not_null = static_cast<bool>(b);
   CHECK(not_null);
 }

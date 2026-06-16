@@ -14,7 +14,7 @@ TRAIT_TEMPLATE_EX_(
 
 // target for 0.9.1: this works!
 // ANY_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator,
-//                  incrementable<anyxx::base_trait>, (),
+//                  incrementable<anyxx::dynamic_value>, (),
 //                  (ANY_OP(Reference, *, (), const),
 //                   ANY_OP_DEF(bool, ==, equal_to, (anyxx::self const &),
 //                   const,
