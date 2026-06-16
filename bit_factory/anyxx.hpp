@@ -1424,10 +1424,9 @@ concept is_delete_v_table =
       { v_table->delete_ } -> std::convertible_to<delete_t>;
     };
 
-using get_type_info_t = std::type_info const& (*)() noexcept;
 template <typename VTable>
 concept is_get_type_info_v_table = requires(VTable* v_table) {
-  { v_table->get_type_info } -> std::convertible_to<get_type_info_t>;
+  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
 };
 
 using is_derived_from_t = bool (*)(const std::type_info&);
@@ -2639,7 +2638,7 @@ auto bind_v_table_to_meta_data() {
 
 template <typename U>
 bool type_match(is_derived_from_v_table auto* v_table) {
-  return v_table->get_type_info() == typeid(std::decay_t<U>);
+  return *v_table->type_info_ == typeid(std::decay_t<U>);
 }
 
 // --------------------------------------------------------------------------------
@@ -2994,7 +2993,7 @@ inline const auto& get_meta_data(Any const& any) {
 
 template <is_any Any>
 inline std::type_info const& get_type_info(Any const& any) {
-  return get_v_table(any)->get_type_info();
+  return *get_v_table(any)->type_info_;
 }
 
 template <is_any Any>
@@ -3509,11 +3508,8 @@ ToAny move_to(FromAny&& from) {
 /// No lifetime functionality, but runtime type information
 /// Base of v-tables for traits without lifetime requirements, but downcastable
 TRAIT_EX_(observeable_rtti_trait, observeable_trait, , , ,
-          (ANY_V_TABLE_DATA(
-               get_type_info_t, get_type_info,
-               +[]() noexcept -> std::type_info const& {
-                 return typeid(Concrete);
-               }),
+          (ANY_V_TABLE_DATA(std::type_info const*, type_info_,
+                            &typeid(Concrete)),
            ANY_V_TABLE_DATA(
                is_derived_from_t, is_derived_from_,
                +[](const std::type_info& from) {
