@@ -3522,31 +3522,6 @@ TRAIT_EX_(
      ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
     ());
 
-//  /// Type-erasing constructor
-//  template <typename Concrete>
-//  explicit observeable_rtti_v_table(
-//      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-//      : observeable_v_table(concrete),
-//        get_type_info(+[]() noexcept -> std::type_info const& {
-//          return typeid(Concrete);
-//        }),
-//        is_derived_from_(+[](const std::type_info& from) {
-//          return static_is_derived_from(from);
-//        }),
-//        model_size(compute_model_size<Concrete>()) {}
-//
-//  std::type_info const& (*get_type_info)() noexcept;
-//  bool (*is_derived_from_)(const std::type_info&);
-//  std::size_t model_size = 0u;
-//
-//  static bool static_is_derived_from(const std::type_info& from) {
-//    return typeid(observeable_rtti_v_table) == from
-//               ? true
-//               : observeable_v_table::static_is_derived_from(from);
-//  }
-//
-//  meta_data* meta_data_ = nullptr;
-//};
 
 // struct observeable_rtti_trait : observeable_trait {
 //   using v_table_t = observeable_rtti_v_table;
