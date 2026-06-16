@@ -817,7 +817,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
-#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)   \
+#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)      \
   TRAIT_EX_(n, anyxx::dynamic_value, l, static_fns, typedefs, v_table_data, \
             decoration)
 
@@ -843,8 +843,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def TRAIT_TEMPLATE_EX
 /// \brief TRAIT template with decoration.
 /// \ingroup trait_macros
-#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data,     \
-                          decoration)                                      \
+#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data,        \
+                          decoration)                                         \
   TRAIT_TEMPLATE_EX_(t, n, anyxx::dynamic_value, (), l, static_fns, typedefs, \
                      v_table_data, decoration)
 
@@ -857,7 +857,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def TRAIT_TEMPLATE
 /// \brief TRAIT template.
 /// \ingroup trait_macros
-#define TRAIT_TEMPLATE(t, n, l) TRAIT_TEMPLATE_(t, n, anyxx::dynamic_value, (), l)
+#define TRAIT_TEMPLATE(t, n, l) \
+  TRAIT_TEMPLATE_(t, n, anyxx::dynamic_value, (), l)
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
@@ -3491,8 +3492,6 @@ ToAny move_to(FromAny&& from) {
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
-/// No lifetime functionality, but runtime type information
-/// Base of v-tables for traits without lifetime requirements, but downcastable
 TRAIT_EX_(dynamic_castable, observeable, , , ,
           (ANY_V_TABLE_DATA(std::type_info const*, type_info_,
                             &typeid(Concrete)),
@@ -3504,16 +3503,15 @@ TRAIT_EX_(dynamic_castable, observeable, , , ,
            ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
           ());
 
-TRAIT_EX_(
-    dynamic_deletable, dynamic_castable, , , ,
-     (ANY_V_TABLE_DATA(delete_t, delete_,
-                      [](mutable_void data) {
-                        if (!data) return;
-                        auto p = static_cast<Concrete*>(data);
-                        std::destroy_at(p);
-                        std::allocator<Concrete>{}.deallocate(p, 1);
-                      })),
-    ());
+TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
+          (ANY_V_TABLE_DATA(delete_t, delete_,
+                            [](mutable_void data) {
+                              if (!data) return;
+                              auto p = static_cast<Concrete*>(data);
+                              std::destroy_at(p);
+                              std::allocator<Concrete>{}.deallocate(p, 1);
+                            })),
+          ());
 
 TRAIT_EX_(
     dynamic_copyable, dynamic_deletable, , , ,
@@ -3691,25 +3689,21 @@ template <typename T>
 concept is_key = is_key_impl<T>::value;
 
 /// \brief A class template to implement a factory for \ref any objects.
-template <template <typename...> typename Any, typename Key, typename... Args>
+template <template <typename...> typename Any, is_proxy Proxy, typename Key,
+          typename... Args>
+  requires proxy_trait<Proxy>::is_owner
 class factory {
-  using unique_constructor_t = std::function<Any<unique>(Args...)>;
-  using shared_const_constructor_t = std::function<Any<shared>(Args...)>;
-  using val_constructor_t = std::function<Any<val>(Args...)>;
-  std::map<Key, unique_constructor_t> unique_factory_map_;
-  std::map<Key, shared_const_constructor_t> shared_factory_map_;
-  std::map<Key, val_constructor_t> val_factory_map_;
+  using constructor_t = std::function<Any<Proxy>(Args...)>;
+  std::map<Key, constructor_t> factory_map_;
 
-  template <is_proxy Proxy>
-  auto register_impl(auto& map, Key key, auto const& construct) {
-    map[key] = [construct](Args... args) -> Any<Proxy> {
+  auto register_impl(Key key, auto const& construct) {
+    factory_map_[key] = [construct](Args... args) -> Any<Proxy> {
       return Any<Proxy>{std::in_place, construct(std::forward<Args>(args)...)};
     };
-  };
+  }
 
-  template <is_proxy Proxy>
-  auto construct_impl(auto const& map, Key key, Args... args) {
-    if (auto found = map.find(key); found != map.end())
+  auto construct_impl(Key key, Args... args) {
+    if (auto found = factory_map_.find(key); found != factory_map_.end())
       return found->second(std::forward<Args>(args)...);
     if constexpr (std::same_as<Key, std::string>) {
       throw unkonwn_factory_key_error{key};
@@ -3722,25 +3716,11 @@ class factory {
 
  public:
   auto register_(Key const& key, auto const& construct) {
-    register_impl<unique>(unique_factory_map_, key, construct);
-    register_impl<shared>(shared_factory_map_, key, construct);
-    register_impl<val>(val_factory_map_, key, construct);
+    register_impl(key, construct);
     return nullptr;
   }
-  template <is_proxy Proxy>
   auto construct(auto key, Args&&... args) {
-    if constexpr (std::same_as<Proxy, unique>) {
-      return construct_impl<Proxy>(unique_factory_map_, key,
-                                   std::forward<Args>(args)...);
-    } else if constexpr (std::same_as<Proxy, shared>) {
-      static_assert(std::same_as<Proxy, shared>);
-      return construct_impl<Proxy>(shared_factory_map_, key,
-                                   std::forward<Args>(args)...);
-    } else {
-      static_assert(std::same_as<Proxy, val>);
-      return construct_impl<Proxy>(val_factory_map_, key,
-                                   std::forward<Args>(args)...);
-    }
+    return construct_impl(key, std::forward<Args>(args)...);
   }
 };
 

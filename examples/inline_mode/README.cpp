@@ -381,13 +381,13 @@ struct figure_has_open_dispatch {};
 ANY(figure, (ANY_FN(double, area, (), const)), ayx::val)
 ANY(serializable, (ANY_FN(void, serialize, (std::ostream&), const)), ayx::val)
 
-ayx::factory<any_serializable, std::string, std::istream&> deserialize;
+ayx::factory<any_serializable, ayx::val, std::string, std::istream&> deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
   std::string type;
   archive >> type;
   return ayx::move_to<any_figure<>>(
-      deserialize.construct<ayx::val>(type, archive));
+      deserialize.construct(type, archive));
 }
 
 ANY_MODEL_MAP((circle), serializable) {
