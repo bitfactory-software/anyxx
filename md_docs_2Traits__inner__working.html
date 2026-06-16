@@ -139,10 +139,10 @@ $(function(){initNavTree('md_docs_2Traits__inner__working.html','',''); });
 <div class="line"><span class="keyword">struct </span>trait1_has_open_dispatch;</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>trait1_v_table</div>
-<div class="line">    : anyxx::base_trait::v_table_t,</div>
+<div class="line">    : anyxx::dynamic_value::v_table_t,</div>
 <div class="line">      anyxx::dispatch_holder&lt;anyxx::is_type_complete&lt;trait1_has_open_dispatch&gt;,</div>
 <div class="line">                             trait1&gt; {</div>
-<div class="line">  <span class="keyword">using </span>v_table_base_t = <span class="keyword">typename</span> anyxx::base_trait::v_table_t;</div>
+<div class="line">  <span class="keyword">using </span>v_table_base_t = <span class="keyword">typename</span> anyxx::dynamic_value::v_table_t;</div>
 <div class="line">  <span class="keyword">using </span>v_table_t = trait1_v_table;</div>
 <div class="line">  <span class="keyword">using </span>any_value_t = anyxx::any&lt;anyxx::val, trait1&gt;;</div>
 <div class="line">  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keywordtype">bool</span> open_dispatch_enabeled =</div>
@@ -159,9 +159,9 @@ $(function(){initNavTree('md_docs_2Traits__inner__working.html','',''); });
 <div class="line">  <span class="keyword">explicit</span>(<span class="keyword">false</span>) trait1_v_table(std::in_place_type_t&lt;Concrete&gt; concrete);</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">struct </span>trait1 : anyxx::base_trait {</div>
+<div class="line"><span class="keyword">struct </span>trait1 : anyxx::dynamic_value {</div>
 <div class="line">  <span class="keyword">using </span>any_value_t = anyxx::any&lt;anyxx::val, trait1&gt;;</div>
-<div class="line">  <span class="keyword">using </span>base_t = anyxx::base_trait;</div>
+<div class="line">  <span class="keyword">using </span>base_t = anyxx::dynamic_value;</div>
 <div class="line">  <span class="keyword">using </span>v_table_base_t = base_t::v_table_t;</div>
 <div class="line">  <span class="keyword">using </span>v_table_t = trait1_v_table;</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> StaticDispatchType&gt;</div>

@@ -34,7 +34,7 @@ var searchData=
   ['any_3c_20using_5f_3c_20type_20_3e_2c_20trait_20_3e_31',['any&lt; using_&lt; Type &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20using_5f_3c_20type_20_3e_2c_20trait_3c_20ts_2e_2e_2e_20_3e_20_3e_32',['any&lt; using_&lt; Type &gt;, Trait&lt; Ts... &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20using_5f_3c_20value_20_3e_2c_20trait_20_3e_33',['any&lt; using_&lt; Value &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20val_2c_20base_5ftrait_20_3e_34',['any&lt; val, base_trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20val_2c_20dynamic_5fvalue_20_3e_34',['any&lt; val, dynamic_value &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20val_2c_20trait_20_3e_35',['any&lt; val, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_5f_36',['ANY_',['../group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b',1,'anyxx.hpp']]],
   ['any_5f_20macros_37',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]],

@@ -106,11 +106,11 @@ $(function(){initNavTree('anyxx__function_8hpp_source.html','',''); });
 <div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>};</div>
 <div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">struct </span>function_v_table : base_trait_v_table {</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">struct </span>function_v_table : dynamic_value_v_table {</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>  R (*f_)(<span class="keyword">typename</span> Constness::type, Args...);</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete&gt;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>  function_v_table([[maybe_unused]] std::in_place_type_t&lt;Concrete&gt; concrete)</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      : base_trait_v_table(concrete) {</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>      : dynamic_value_v_table(concrete) {</div>
 <div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    f_ = +[](<span class="keyword">typename</span> Constness::type self_ptr, Args... args) -&gt; R {</div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>      <span class="keywordflow">return</span> std::invoke(*unchecked_unerase_cast&lt;Concrete&gt;(self_ptr),</div>
 <div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>                         std::forward&lt;Args&gt;(args)...);</div>
@@ -121,7 +121,7 @@ $(function(){initNavTree('anyxx__function_8hpp_source.html','',''); });
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">struct </span>function;</div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">struct </span>function&lt;R(Args...), Constness&gt; : base_trait {</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">struct </span>function&lt;R(Args...), Constness&gt; : dynamic_value {</div>
 <div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">using </span>v_table_t = function_v_table&lt;Constness, R, Args...&gt;;</div>
 <div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt;</div>
 <div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">auto</span> operator()(<span class="keyword">this</span> Self &amp;&amp;self, Args... args) -&gt; R</div>

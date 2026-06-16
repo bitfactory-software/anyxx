@@ -15,6 +15,6 @@ var searchData=
   ['any_3c_20using_5f_3c_20type_20_3e_2c_20trait_20_3e_12',['any&lt; using_&lt; Type &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20using_5f_3c_20type_20_3e_2c_20trait_3c_20ts_2e_2e_2e_20_3e_20_3e_13',['any&lt; using_&lt; Type &gt;, Trait&lt; Ts... &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20using_5f_3c_20value_20_3e_2c_20trait_20_3e_14',['any&lt; using_&lt; Value &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20val_2c_20base_5ftrait_20_3e_15',['any&lt; val, base_trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20val_2c_20dynamic_5fvalue_20_3e_15',['any&lt; val, dynamic_value &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20val_2c_20trait_20_3e_16',['any&lt; val, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]]
 ];
