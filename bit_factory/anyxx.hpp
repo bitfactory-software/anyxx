@@ -1321,15 +1321,6 @@ class type_mismatch_error : public error {
   using error::error;
 };
 
-struct member_dispatch {};
-struct dyn : member_dispatch {};
-struct static_ : member_dispatch {};
-
-template <typename Dispatch>
-concept is_member_dispatch = std::derived_from<Dispatch, member_dispatch>;
-static_assert(is_member_dispatch<dyn>);
-static_assert(is_member_dispatch<static_>);
-
 template <typename T>
 struct missing_trait_error {
   static constexpr bool not_specialized = false;
