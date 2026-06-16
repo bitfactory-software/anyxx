@@ -3508,38 +3508,49 @@ ToAny move_to(FromAny&& from) {
 
 /// No lifetime functionality, but runtime type information
 /// Base of v-tables for traits without lifetime requirements, but downcastable
-struct observeable_rtti_v_table : observeable_v_table {
-  using v_table_t = observeable_rtti_v_table;
+TRAIT_EX_(
+    observeable_rtti_trait, observeable_trait, , , ,
+    (ANY_V_TABLE_DATA(
+         get_type_info_t, get_type_info,
+         +[]() noexcept -> std::type_info const& { return typeid(Concrete); }),
+     ANY_V_TABLE_DATA(
+         is_derived_from_t, is_derived_from_,
+         +[](const std::type_info& from) {
+           return static_is_derived_from(from);
+         }),
+     ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>()),
+     ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
+    ());
 
-  /// Type-erasing constructor
-  template <typename Concrete>
-  explicit observeable_rtti_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : observeable_v_table(concrete),
-        get_type_info(+[]() noexcept -> std::type_info const& {
-          return typeid(Concrete);
-        }),
-        is_derived_from_(+[](const std::type_info& from) {
-          return static_is_derived_from(from);
-        }),
-        model_size(compute_model_size<Concrete>()) {}
+//  /// Type-erasing constructor
+//  template <typename Concrete>
+//  explicit observeable_rtti_v_table(
+//      [[maybe_unused]] std::in_place_type_t<Concrete> concrete)
+//      : observeable_v_table(concrete),
+//        get_type_info(+[]() noexcept -> std::type_info const& {
+//          return typeid(Concrete);
+//        }),
+//        is_derived_from_(+[](const std::type_info& from) {
+//          return static_is_derived_from(from);
+//        }),
+//        model_size(compute_model_size<Concrete>()) {}
+//
+//  std::type_info const& (*get_type_info)() noexcept;
+//  bool (*is_derived_from_)(const std::type_info&);
+//  std::size_t model_size = 0u;
+//
+//  static bool static_is_derived_from(const std::type_info& from) {
+//    return typeid(observeable_rtti_v_table) == from
+//               ? true
+//               : observeable_v_table::static_is_derived_from(from);
+//  }
+//
+//  meta_data* meta_data_ = nullptr;
+//};
 
-  std::type_info const& (*get_type_info)() noexcept;
-  bool (*is_derived_from_)(const std::type_info&);
-  std::size_t model_size = 0u;
-
-  static bool static_is_derived_from(const std::type_info& from) {
-    return typeid(observeable_rtti_v_table) == from
-               ? true
-               : observeable_v_table::static_is_derived_from(from);
-  }
-
-  meta_data* meta_data_ = nullptr;
-};
-
-struct observeable_rtti_trait : observeable_trait {
-  using v_table_t = observeable_rtti_v_table;
-};
+// struct observeable_rtti_trait : observeable_trait {
+//   using v_table_t = observeable_rtti_v_table;
+// };
 
 TRAIT_EX_(
     base_trait, observeable_rtti_trait, , , ,
@@ -3583,10 +3594,9 @@ TRAIT_EX_(
                       })),
     ());
 
-
 class meta_data {
   const std::type_info& type_info_;
-  std::vector<observeable_rtti_v_table*> i_table_;
+  std::vector<observeable_rtti_trait::v_table_t*> i_table_;
 
  public:
   template <typename CLASS>
@@ -3598,14 +3608,14 @@ class meta_data {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  std::expected<observeable_rtti_v_table*, cast_error> get_v_table(
+  std::expected<observeable_rtti_trait::v_table_t*, cast_error> get_v_table(
       std::type_info const& typeid_) const {
     auto const& i_table = get_i_table();
     for (auto v_table : i_table)
       if (is_derived_from(typeid_, v_table)) return v_table;
     return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
   }
-  auto register_v_table(observeable_rtti_v_table* v_table) {
+  auto register_v_table(observeable_rtti_trait::v_table_t* v_table) {
     v_table->meta_data_ = this;
     if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
       i_table_.push_back(v_table);
@@ -3618,7 +3628,6 @@ auto& runtime_implementation() {
   static meta_data meta_data_{std::in_place_type<TYPE>};
   return meta_data_;
 }
-
 
 // --------------------------------------------------------------------------------
 // hook
