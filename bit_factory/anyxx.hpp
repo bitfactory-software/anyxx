@@ -3522,11 +3522,6 @@ TRAIT_EX_(
      ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
     ());
 
-
-// struct observeable_rtti_trait : observeable_trait {
-//   using v_table_t = observeable_rtti_v_table;
-// };
-
 TRAIT_EX_(
     base_trait, observeable_rtti_trait, , , ,
     (ANY_V_TABLE_DATA(
