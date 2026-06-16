@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: anyxx::factory&lt; Any, Key, Args &gt; Class Template Reference</title>
+<title>Any++: anyxx::factory&lt; Any, Proxy, Key, Args &gt; Class Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -88,7 +88,7 @@ $(function(){initNavTree('classanyxx_1_1factory.html','','classanyxx_1_1factory-
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">anyxx::factory&lt; Any, Key, Args &gt; Class Template Reference</div></div>
+  <div class="headertitle"><div class="title">anyxx::factory&lt; Any, Proxy, Key, Args &gt; Class Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -99,15 +99,15 @@ $(function(){initNavTree('classanyxx_1_1factory.html','','classanyxx_1_1factory-
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a1bf6072ff68b8afdb2f0929af0ebfebd" id="r_a1bf6072ff68b8afdb2f0929af0ebfebd"><td class="memItemLeft"><a id="a1bf6072ff68b8afdb2f0929af0ebfebd" name="a1bf6072ff68b8afdb2f0929af0ebfebd"></a>
+<tr class="memitem:a558c39f737851628f3661f1efd065ec0" id="r_a558c39f737851628f3661f1efd065ec0"><td class="memItemLeft"><a id="a558c39f737851628f3661f1efd065ec0" name="a558c39f737851628f3661f1efd065ec0"></a>
 auto&#160;</td><td class="memItemRight"><b>register_</b> (Key const &amp;<a class="el" href="structanyxx_1_1key.html">key</a>, auto const &amp;construct)</td></tr>
-<tr class="memitem:a43a21116b05e6f5691446c5d046fa41e" id="r_a43a21116b05e6f5691446c5d046fa41e"><td class="memTemplParams" colspan="2"><a id="a43a21116b05e6f5691446c5d046fa41e" name="a43a21116b05e6f5691446c5d046fa41e"></a>
-template&lt;is_proxy Proxy&gt; </td></tr>
-<tr class="memitem:a43a21116b05e6f5691446c5d046fa41e template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>construct</b> (auto <a class="el" href="structanyxx_1_1key.html">key</a>, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a4ec2cf6635294fea01f6e69e50355324" id="r_a4ec2cf6635294fea01f6e69e50355324"><td class="memItemLeft"><a id="a4ec2cf6635294fea01f6e69e50355324" name="a4ec2cf6635294fea01f6e69e50355324"></a>
+auto&#160;</td><td class="memItemRight"><b>construct</b> (auto <a class="el" href="structanyxx_1_1key.html">key</a>, Args &amp;&amp;... args)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename... &gt; typename Any, typename Key, typename... Args&gt;<br />
-class anyxx::factory&lt; Any, Key, Args &gt;</div><p>A class template to implement a factory for <a class="el" href="classanyxx_1_1any.html" title="any">any</a> objects. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;template&lt; typename... &gt; typename Any, is_proxy Proxy, typename Key, typename... Args&gt;<br />
+requires proxy_trait&lt;Proxy&gt;::is_owner<br />
+class anyxx::factory&lt; Any, Proxy, Key, Args &gt;</div><p>A class template to implement a factory for <a class="el" href="classanyxx_1_1any.html" title="any">any</a> objects. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_borrow_as_8cpp-example.html#_a4">21_Tree_any_borrow_as.cpp</a>.</dd>
 </dl>
 </div><hr/>The documentation for this class was generated from the following file:<ul>
