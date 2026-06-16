@@ -1437,6 +1437,12 @@ concept is_dynamic_castable_v_table = requires(VTable* v_table) {
   { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
 };
 
+using is_derived_from_t = bool (*)(const std::type_info&);
+template <typename VTable>
+concept is_meta_data_v_table = requires(VTable* v_table) {
+  { v_table->meta_data_ } -> std::convertible_to<meta_data*>;
+};
+
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
 struct undefined {};
@@ -2979,6 +2985,7 @@ inline auto get_proxy_ptr(Any const& any) {
 }
 
 template <is_any Any>
+  requires is_meta_data_v_table<typename Any::v_table_t>
 inline const auto& get_meta_data(Any const& any) {
   return *get_v_table(any)->meta_data_;
 }
@@ -3154,15 +3161,26 @@ struct dispatch_holder<true, Trait> {
   dispatch_table_t* dispatch_table = nullptr;
 };
 
-template <is_any ToAny>
+template <is_any ToAny, is_dynamic_castable_v_table FromVTable>
   requires is_dynamic_castable_v_table<typename ToAny::v_table_t>
-auto query_v_table(is_dynamic_castable_v_table auto* from)
+auto query_v_table(FromVTable* from)
     -> std::expected<typename ToAny::v_table_t*, anyxx::cast_error> {
   using v_table_t = typename ToAny::v_table_t;
   if (from->is_derived_from_(typeid(v_table_t)))
     return reinterpret_cast<v_table_t*>(from);
-  return from->meta_data_->get_v_table(typeid(v_table_t))
-      .transform([](auto v_table) { return static_cast<v_table_t*>(v_table); });
+  if constexpr (is_meta_data_v_table<FromVTable>) {
+    if (auto meta_data = from->meta_data_; meta_data) {
+      return meta_data->get_v_table(typeid(v_table_t))
+          .transform(
+              [](auto v_table) { return static_cast<v_table_t*>(v_table); });
+    } else {
+      return std::unexpected(
+          anyxx::cast_error{typeid(v_table_t), *from->type_info_});
+    }
+  } else{
+    return std::unexpected(
+        anyxx::cast_error{typeid(v_table_t), *from->type_info_});
+  }
 }
 
 // --------------------------------------------------------------------------------
