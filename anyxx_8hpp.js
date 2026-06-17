@@ -46,7 +46,7 @@ var anyxx_8hpp =
     [ "ANY_SINGLETON_DECLARE", "group__singleton__macros.html#ga3f285810c0716bfa028b613342d910d1", null ],
     [ "ANY_TEMPLATE", "group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb", null ],
     [ "ANY_TEMPLATE_", "group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a", null ],
-    [ "ANY_TEMPLATE_EX_", "group__trait__macros.html#gae8358d6ce5723e6034308a27184df811", null ],
+    [ "ANY_TEMPLATE_EX_", "group__trait__macros.html#ga4864e9cac32366f8e52777de415fb0ee", null ],
     [ "ANY_TEMPLATE_MODEL_MAP", "group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70", null ],
     [ "ANY_TYPE", "group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0", null ],
     [ "ANY_V_TABLE_DATA", "group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634", null ],

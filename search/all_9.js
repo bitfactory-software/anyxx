@@ -72,7 +72,7 @@ var searchData=
   ['any_5fsingleton_5fdeclare_69',['ANY_SINGLETON_DECLARE',['../group__singleton__macros.html#ga3f285810c0716bfa028b613342d910d1',1,'anyxx.hpp']]],
   ['any_5ftemplate_70',['ANY_TEMPLATE',['../group__trait__macros.html#ga428ec0337c0d297d504f3c0d8f06a2bb',1,'anyxx.hpp']]],
   ['any_5ftemplate_5f_71',['ANY_TEMPLATE_',['../group__trait__macros.html#ga5efc06aca9d1e9f50d8c2b0896a0e99a',1,'anyxx.hpp']]],
-  ['any_5ftemplate_5fex_5f_72',['ANY_TEMPLATE_EX_',['../group__trait__macros.html#gae8358d6ce5723e6034308a27184df811',1,'anyxx.hpp']]],
+  ['any_5ftemplate_5fex_5f_72',['ANY_TEMPLATE_EX_',['../group__trait__macros.html#ga4864e9cac32366f8e52777de415fb0ee',1,'anyxx.hpp']]],
   ['any_5ftemplate_5fmodel_5fmap_73',['ANY_TEMPLATE_MODEL_MAP',['../group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70',1,'anyxx.hpp']]],
   ['any_5ftrait_5fclass_74',['any_trait_class',['../anyxx_8hpp.html#a7877777bc17611e04318fe1b318c9c19',1,'anyxx']]],
   ['any_5ftype_75',['ANY_TYPE',['../group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0',1,'anyxx.hpp']]],
