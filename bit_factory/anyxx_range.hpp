@@ -28,8 +28,8 @@ TRAIT_TEMPLATE_EX_(
 //                   using value_type = ValueType; using reference =
 //                   Reference;))
 
-ANY_TEMPLATE_EX(
-    ((ValueType), (Reference)), forward_iterator,
+ANY_TEMPLATE_EX_(
+    ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP(anyxx::self&, ++, (), ),
      ANY_FN_DEF(public, anyxx::self, post_inc, (), , ([&x]() { return x++; })),
      ANY_OP(Reference, *, (), const),
@@ -37,7 +37,7 @@ ANY_TEMPLATE_EX(
                 ([&x](auto const& r) { return x == r; })),
      ANY_OP_DEF(public, bool, !=, not_equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x != r; }))),
-    anyxx::val, , ,
+    anyxx::val, , , ,
     (using iterator_category = std::forward_iterator_tag;
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
      using reference = Reference;
@@ -45,8 +45,8 @@ ANY_TEMPLATE_EX(
        return std::forward<Self>(self).post_inc();
      }))
 
-TRAIT_TEMPLATE(
-    ((ValueType), (Reference)), forward_range,
+TRAIT_TEMPLATE_(
+    ((ValueType), (Reference)), forward_range, dynamic_value, (),
     (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),
      ANY_FN((any_forward_iterator<ValueType, Reference>), end, (), const)))
 

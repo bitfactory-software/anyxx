@@ -32,21 +32,21 @@ namespace lib_2f {
 // The names for the functions in the model map map are "eq" and "ne".
 // These functions are then used to implement the operators == and !=
 // in the external interface.
-TRAIT(equal_comparable,
-      // anyxx::self is a magic type that represents the type of the object for
-      // whitch the trait is called. It is used to smooth the differences
-      // between static and dynamic dispatch, so the implemention can be written
-      // against the actual type of the object ref/const qualified as specified.
-      // If the mapped type provies already an operator, ANY_OP_MAP_NAMED_FRIEND
-      // use it as the default implementation.
-      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
-       // We can use the == operator of the external interface to
-       // provide a default implementation for the != operator.
-       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    return !(trait_as<equal_comparable>(x) ==
-                             trait_as<equal_comparable>(r));
-                  })))
+TRAIT_(equal_comparable, anyxx::dynamic_value,
+       // anyxx::self is a magic type that represents the type of the object for
+       // whitch the trait is called. It is used to smooth the differences
+       // between static and dynamic dispatch, so the implemention can be
+       // written against the actual type of the object ref/const qualified as
+       // specified. If the mapped type provies already an operator,
+       // ANY_OP_MAP_NAMED_FRIEND use it as the default implementation.
+       (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
+        // We can use the == operator of the external interface to
+        // provide a default implementation for the != operator.
+        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
+                   [&x](auto const& r) {
+                     return !(trait_as<equal_comparable>(x) ==
+                              trait_as<equal_comparable>(r));
+                   })))
 
 // TRAIT automatically defines the is_equal_comparable_model concept.
 // Here we use this concept to check that some basic types model the trait:

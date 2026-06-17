@@ -18,7 +18,7 @@ struct custom {
 };
 
 struct value_has_open_dispatch {};
-ANY(value,
+ANY_(value, anyxx::dynamic_value,
     (ANY_FN_DEF(public, std::string, to_string, (), const,
                           [&x]() { return std::format("{}", x); }),
      ANY_FN_DEF(public, void, from_string, (std::string_view), ,

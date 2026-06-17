@@ -84,7 +84,7 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
+TRAIT_(drawable, anyxx::dynamic_value, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
           std::vector<anyxx::any<anyxx::val, drawable>> const& drawables) {
@@ -179,7 +179,7 @@ struct square {
   [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
 };
 
-TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
+TRAIT_(drawable, anyxx::dynamic_value, (ANY_FN(std::string, draw, (), const)))
 
 ANY_MODEL_MAP((circle), drawable) {
   static std::string draw(circle const&) { return "Silent greetings"; };
@@ -231,7 +231,8 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)
+ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, name, (), const)),
+     ayx::cref)
 
 ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
                                     ayx::virtual_<any_figure<>>)>
@@ -316,7 +317,8 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY(figure, (ANY_FN(std::string, name, (), const)), ayx::cref)
+ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, name, (), const)),
+     ayx::cref)
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
 
@@ -378,16 +380,17 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY(figure, (ANY_FN(double, area, (), const)), ayx::val)
-ANY(serializable, (ANY_FN(void, serialize, (std::ostream&), const)), ayx::val)
+ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val)
+ANY_(serializable, ayx::dynamic_value,
+    (ANY_FN(void, serialize, (std::ostream&), const)), ayx::ref)
 
-ayx::factory<any_serializable, ayx::val, std::string, std::istream&> deserialize;
+ayx::factory<any_serializable, ayx::val, std::string, std::istream&>
+    deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
   std::string type;
   archive >> type;
-  return ayx::move_to<any_figure<>>(
-      deserialize.construct(type, archive));
+  return ayx::move_to<any_figure<>>(deserialize.construct(type, archive));
 }
 
 ANY_MODEL_MAP((circle), serializable) {
@@ -531,7 +534,8 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-ANY(figure, (ANY_FN(std::string, draw, (), const)), ayx::val)
+ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, draw, (), const)),
+     ayx::val)
 
 using known_and_unknown_shapes =
     ayx::make_vany<any_figure, ayx::val, circle, square>;

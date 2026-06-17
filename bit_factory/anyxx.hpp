@@ -809,7 +809,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///   (ANY_FN(std::string, const_fn, (double, std::string const&), const))
 /// )
 /// \endcode
-#define TRAIT(n, fns) TRAIT_(n, anyxx::dynamic_value, fns)
+#define TRAIT(n, fns) TRAIT_(n, anyxx::dynamic_copyable, fns)
 
 /// \def TRAIT_EX
 /// \brief TRAIT with decoration.
@@ -817,8 +817,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///
 /// Macro to define the functional behavior for a \ref any, with decorations.
 /// Decorations are additional functions and typedefs (in brackets).
-#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)      \
-  TRAIT_EX_(n, anyxx::dynamic_value, l, static_fns, typedefs, v_table_data, \
+#define TRAIT_EX(n, l, static_fns, typedefs, v_table_data, decoration)         \
+  TRAIT_EX_(n, anyxx::dynamic_copyable, l, static_fns, typedefs, v_table_data, \
             decoration)
 
 /// \def TRAIT_TEMPLATE_EX_
@@ -843,10 +843,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \def TRAIT_TEMPLATE_EX
 /// \brief TRAIT template with decoration.
 /// \ingroup trait_macros
-#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data,        \
-                          decoration)                                         \
-  TRAIT_TEMPLATE_EX_(t, n, anyxx::dynamic_value, (), l, static_fns, typedefs, \
-                     v_table_data, decoration)
+#define TRAIT_TEMPLATE_EX(t, n, l, static_fns, typedefs, v_table_data, \
+                          decoration)                                  \
+  TRAIT_TEMPLATE_EX_(t, n, anyxx::dynamic_copyable, (), l, static_fns, \
+                     typedefs, v_table_data, decoration)
 
 /// \def TRAIT_TEMPLATE_
 /// \brief TRAIT template with a base TRAIT.(
@@ -858,7 +858,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief TRAIT template.
 /// \ingroup trait_macros
 #define TRAIT_TEMPLATE(t, n, l) \
-  TRAIT_TEMPLATE_(t, n, anyxx::dynamic_value, (), l)
+  TRAIT_TEMPLATE_(t, n, anyxx::dynamic_copyable, (), l)
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
@@ -938,8 +938,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \brief ANY template with a base.
 /// \ingroup trait_macros
 /// See \ref ANY for explanation
-#define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, decoration) \
-  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, , decoration)                  \
+#define ANY_TEMPLATE_EX_(t, n, BASE, bt, l, proxy_default, static_fns,      \
+                         typedefs, v_table_data, decoration)                \
+  TRAIT_TEMPLATE_EX_(t, n, BASE, bt, l, static_fns, typedefs, v_table_data, \
+                     decoration)                                            \
   __detail_ANYXX_ANY_TEMPLATE_CMF(t, n, proxy_default)
 
 /// \def ANY_TEMPLATE_

@@ -14,7 +14,7 @@ namespace anyxx {
 
 namespace example_2b {
 
-TRAIT_EX(monoid,
+TRAIT_EX_(monoid, anyxx::dynamic_value,
          (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
           ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
                      [&x](auto const& r) {

@@ -11,19 +11,20 @@
 
 namespace {
 struct creature_has_open_dispatch {};
-ANY(creature, (ANY_FN(std::type_info const*, name, (), const)), )
+ANY_(creature, anyxx::dynamic_value,
+     (ANY_FN(std::type_info const*, name, (), const)), )
 }  // namespace
 
 namespace {
 
 struct cat {
-   [[nodiscard]]auto name() const { return &typeid(*this); }
+  [[nodiscard]] auto name() const { return &typeid(*this); }
 };
 struct dog {
-   [[nodiscard]]auto name() const { return &typeid(*this); }
+  [[nodiscard]] auto name() const { return &typeid(*this); }
 };
 struct man {
-   [[nodiscard]]auto name() const { return &typeid(*this); }
+  [[nodiscard]] auto name() const { return &typeid(*this); }
 };
 auto encounter = anyxx::dispatch<encounter_result(
     anyxx::virtual_<any_creature<anyxx::cref>>,

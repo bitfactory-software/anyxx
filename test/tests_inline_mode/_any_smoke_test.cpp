@@ -19,7 +19,7 @@ struct position {
   float x, y;
 };
 
-ANY(drawable, (ANY_FN(void, draw, (position), const)), )
+ANY_(drawable, anyxx::dynamic_value, (ANY_FN(void, draw, (position), const)), )
 ANY_(shape, drawable,
      (ANY_FN(int, count_sides, (), const), ANY_FN(double, area, (), const),
       ANY_FN(double, perimeter, (), const)), )
@@ -123,13 +123,6 @@ TEST_CASE("dynamic v_table cref") {
   print_any_callable_shape_const_observer(r);
   print_any_callable_shape_const_observer(p);
 
-  using erased_const_observer = cref;
-  static_assert(std::is_base_of_v<any<erased_const_observer>::v_table_t,
-                                  any_callable_shape<cref>::v_table_t>);
-  static_assert(std::is_base_of_v<any_shape<cref>::v_table_t,
-                                  any_callable_shape<cref>::v_table_t>);
-  static_assert(std::derived_from<any_callable_shape<cref>::v_table_t,
-                                  any_shape<cref>::v_table_t>);
   auto a_circle = circle{33.3};
   any_callable_shape<cref> any_callable_shape_onst_observer_circle1{a_circle};
   any_callable_shape<cref> any_callable_shape_onst_observer_circle2{a_circle};

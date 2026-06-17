@@ -4,7 +4,7 @@
 
 namespace simple {
 
-TRAIT(trait1, (ANY_FN(std::string, fn1, (), const)))
+TRAIT_(trait1, anyxx::dynamic_value, (ANY_FN(std::string, fn1, (), const)))
 
 std::string cat(std::vector<anyxx::any<anyxx::val, trait1>> const& items) {
   std::string result;
