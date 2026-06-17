@@ -6,12 +6,16 @@ using namespace anyxx;
 
 namespace {
 
-struct test_base_i_has_open_dispatch {};
-struct test_derived_i_has_open_dispatch {};
+TRAIT_EX(test_base_i, (ANY_FN(std::string, to_string, (), const)), , ,
+         (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::shared>
+using any_test_base_i = anyxx::any<Proxy, test_base_i>;
 
-ANY(test_base_i, (ANY_FN(std::string, to_string, (), const)), )
-ANY_(test_derived_i, test_base_i,
-     (ANY_FN(void, from_string, (std::string const&), )), )
+TRAIT_EX_(test_derived_i, test_base_i,
+          (ANY_FN(void, from_string, (std::string const&), )), , ,
+          (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::shared>
+using any_test_derived_i = anyxx::any<Proxy, test_derived_i>;
 
 struct x_t {
   std::string s_;
@@ -42,19 +46,17 @@ auto __ =
       expr.s_ = std::string{"otherwise "} + s;
     });
 
-auto base_table =
-    dispatch_table_instance<test_base_i_v_table, x_t>();
-auto derived_table =
-    dispatch_table_instance<test_derived_i_v_table, x_t>();
+auto base_table = dispatch_table_instance<test_base_i_v_table, x_t>();
+auto derived_table = dispatch_table_instance<test_derived_i_v_table, x_t>();
 
 TEST_CASE("dispatch") {
   CHECK(base_table->size() == 1);
   CHECK(derived_table->size() == 1);
 
-  CHECK(anyxx::v_table_instance<test_base_i_v_table, x_t>()
-            ->own_dispatch_holder_t::dispatch_table);
-  CHECK(anyxx::v_table_instance<test_derived_i_v_table, x_t>()
-            ->own_dispatch_holder_t::dispatch_table);
+  CHECK(anyxx::v_table_instance<test_base_i_v_table, x_t>()->dispatch_table);
+  CHECK(anyxx::v_table_instance<test_derived_i_v_table, x_t>()->dispatch_table);
+  CHECK(anyxx::v_table_instance<test_base_i_v_table, x_t>()->dispatch_table !=
+        anyxx::v_table_instance<test_derived_i_v_table, x_t>()->dispatch_table);
 
   x_t x{"hallo"};
   test_derived_i_mo i{x};

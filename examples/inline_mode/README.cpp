@@ -230,9 +230,11 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, name, (), const)),
-     ayx::cref)
+TRAIT_EX_(figure, anyxx::dynamic_value,
+          (ANY_FN(std::string, name, (), const)), , ,
+          (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::val>
+using any_figure = anyxx::any<Proxy, figure>;
 
 ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
                                     ayx::virtual_<any_figure<>>)>
@@ -316,9 +318,11 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, name, (), const)),
-     ayx::cref)
+TRAIT_EX_(figure, anyxx::dynamic_value,
+          (ANY_FN(std::string, name, (), const)), , ,
+          (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::val>
+using any_figure = anyxx::any<Proxy, figure>;
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
 

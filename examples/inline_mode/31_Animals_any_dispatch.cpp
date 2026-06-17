@@ -10,9 +10,11 @@
 #include "double_dispatch_result.hpp"
 
 namespace {
-struct creature_has_open_dispatch {};
-ANY_(creature, anyxx::dynamic_value,
-     (ANY_FN(std::type_info const*, name, (), const)), )
+TRAIT_EX_(creature, anyxx::dynamic_value,
+          (ANY_FN(std::type_info const*, name, (), const)), , ,
+          (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::val>
+using any_creature = anyxx::any<Proxy, creature>;
 }  // namespace
 
 namespace {

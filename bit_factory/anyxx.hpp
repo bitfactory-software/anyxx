@@ -644,10 +644,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
       any_template_params) struct n##_v_table                                  \
       : BASE                                                                   \
-        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params)::v_table_t, \
-        anyxx::dispatch_holder<anyxx::is_type_complete<n##_has_open_dispatch>, \
-                               n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
-                                   any_template_params)> {                     \
+        _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                                  \
+            base_template_params)::v_table_t {                                 \
     using v_table_base_t = typename BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
         base_template_params)::v_table_t;                                      \
                                                                                \
@@ -656,12 +654,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using any_value_t =                                                        \
         anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
                                    any_template_params)>;                      \
-                                                                               \
-    static constexpr bool open_dispatch_enabeled =                             \
-        anyxx::is_type_complete<n##_has_open_dispatch>;                        \
-    using own_dispatch_holder_t = typename anyxx::dispatch_holder<             \
-        open_dispatch_enabeled,                                                \
-        n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)>;          \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -746,12 +738,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     _detail_ANYXX_V_TABLE_LAMBDAS(l);                                          \
     _detail_ANYXX_V_TABLE_DATA_INITS(v_table_data);                            \
-                                                                               \
-    if constexpr (open_dispatch_enabeled) {                                    \
-      own_dispatch_holder_t::set_dispatch_table(                               \
-          ::anyxx::dispatch_table_instance<n##_v_table, Concrete>());          \
-    }                                                                          \
-                                                                               \
     ::anyxx::set_is_derived_from<v_table_t>(this);                             \
   };
 
@@ -1350,27 +1336,6 @@ constexpr inline std::size_t compute_model_size() {
 }
 
 struct any_v_table;
-
-template <bool HasDispatch, typename Trait>
-struct dispatch_holder;
-using dispatch_table_function_t = void (*)();
-using dispatch_table_dispatch_index_t = std::size_t;
-using dispatch_table_entry_t = unsigned long long;
-using dispatch_table_t = std::vector<dispatch_table_entry_t>;
-template <typename AnyVTable, typename Class>
-dispatch_table_t* dispatch_table_instance_implementation() {
-  static dispatch_table_t dispatch_table;
-  return &dispatch_table;
-}
-#ifdef ANY_DLL_MODE
-template <typename AnyVTable, typename Class>
-dispatch_table_t* dispatch_table_instance();
-#else
-template <typename AnyVTable, typename Class>
-dispatch_table_t* dispatch_table_instance() {
-  return dispatch_table_instance_implementation<AnyVTable, Class>();
-}
-#endif
 
 using allocate_t = mutable_void (*)();
 template <typename VTable>
@@ -2576,35 +2541,6 @@ struct v_table_holder<true, Trait> {
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
-void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
-  if (table->size() <= index) table->resize(index + 1);
-  auto& entry = table->at(index);
-  entry = reinterpret_cast<unsigned long long>(fp);
-}
-inline dispatch_table_function_t get_function(dispatch_table_t* table,
-                                              std::size_t index) {
-  if (table->size() <= index) return {};
-  return reinterpret_cast<dispatch_table_function_t>(table->at(index));
-}
-
-inline dispatch_table_dispatch_index_t get_multi_dispatch_index_at(
-    dispatch_table_t* table, std::size_t index) {
-  if (table->size() <= index) return {};
-  if (auto const entry = table->at(index))
-    return static_cast<dispatch_table_dispatch_index_t>(entry);
-  else
-    return {};
-}
-inline void set_multi_dispatch_index_at(
-    dispatch_table_t* table, std::size_t index_multi_dispatch,
-    dispatch_table_dispatch_index_t
-        dispatch_index_of_class_in_dispatch_matrix) {
-  if (table->size() <= index_multi_dispatch)
-    table->resize(index_multi_dispatch + 1);
-  auto& entry = table->at(index_multi_dispatch);
-  entry = dispatch_index_of_class_in_dispatch_matrix;
-}
-
 struct cast_error {
   std::type_info const &to, &from;
 };
@@ -3128,18 +3064,61 @@ VTable* v_table_instance() {
   return &v_table;
 }
 
-template <typename I>
-concept has_open_dispatch_enabeled =
-    is_any<I> && I::v_table_t::open_dispatch_enabeled;
+using dispatch_table_function_t = void (*)();
+using dispatch_table_dispatch_index_t = std::size_t;
+using dispatch_table_entry_t = unsigned long long;
+using dispatch_table_t = std::vector<dispatch_table_entry_t>;
+template <typename AnyVTable, typename Class>
+dispatch_table_t* dispatch_table_instance_implementation() {
+  static dispatch_table_t dispatch_table;
+  return &dispatch_table;
+}
+#ifdef ANY_DLL_MODE
+template <typename AnyVTable, typename Class>
+dispatch_table_t* dispatch_table_instance();
+#else
+template <typename AnyVTable, typename Class>
+dispatch_table_t* dispatch_table_instance() {
+  return dispatch_table_instance_implementation<AnyVTable, Class>();
+}
+#endif
 
-template <typename Trait>
-struct dispatch_holder<false, Trait> {
-  static void set_dispatch_table([[maybe_unused]] dispatch_table_t* t) {}
-};
-template <typename Trait>
-struct dispatch_holder<true, Trait> {
-  void set_dispatch_table(dispatch_table_t* t) { dispatch_table = t; }
-  dispatch_table_t* dispatch_table = nullptr;
+#define ANY_OPEN_DISPATCH                                    \
+  ANY_V_TABLE_DATA(anyxx::dispatch_table_t*, dispatch_table, \
+                   anyxx::dispatch_table_instance<v_table_t, Concrete>())
+
+void insert_function(dispatch_table_t* table, std::size_t index, auto fp) {
+  if (table->size() <= index) table->resize(index + 1);
+  auto& entry = table->at(index);
+  entry = reinterpret_cast<unsigned long long>(fp);
+}
+inline dispatch_table_function_t get_function(dispatch_table_t* table,
+                                              std::size_t index) {
+  if (table->size() <= index) return {};
+  return reinterpret_cast<dispatch_table_function_t>(table->at(index));
+}
+
+inline dispatch_table_dispatch_index_t get_multi_dispatch_index_at(
+    dispatch_table_t* table, std::size_t index) {
+  if (table->size() <= index) return {};
+  if (auto const entry = table->at(index))
+    return static_cast<dispatch_table_dispatch_index_t>(entry);
+  else
+    return {};
+}
+inline void set_multi_dispatch_index_at(
+    dispatch_table_t* table, std::size_t index_multi_dispatch,
+    dispatch_table_dispatch_index_t
+        dispatch_index_of_class_in_dispatch_matrix) {
+  if (table->size() <= index_multi_dispatch)
+    table->resize(index_multi_dispatch + 1);
+  auto& entry = table->at(index_multi_dispatch);
+  entry = dispatch_index_of_class_in_dispatch_matrix;
+}
+
+template <typename VTable>
+concept is_open_dispatch_v_table = requires(VTable* v_table) {
+  { v_table->dispatch_table } -> std::convertible_to<dispatch_table_t*>;
 };
 
 template <is_any ToAny, is_dynamic_castable_v_table FromVTable>
@@ -3804,6 +3783,7 @@ std::size_t& dispatchs_count() {
 ///
 /// \tparam Any The \ref any used for dispatch
 template <is_any Any>
+requires (Any::dyn && is_open_dispatch_v_table<typename Any::v_table_t>)
 struct virtual_ {
   using type = Any;
 };
