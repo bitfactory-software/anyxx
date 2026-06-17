@@ -324,9 +324,11 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  [[nodiscard]] std::string name() const { return &quot;square&quot;; }</span></div>
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">struct figure_has_open_dispatch {};</span></div>
-<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, name, (), const)),</span></div>
-<div class="line"><span class="stringliteral">     ayx::cref)</span></div>
+<div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_value,</span></div>
+<div class="line"><span class="stringliteral">          (ANY_FN(std::string, name, (), const)), , ,</span></div>
+<div class="line"><span class="stringliteral">          (ANY_OPEN_DISPATCH), ())</span></div>
+<div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&gt;</span></div>
+<div class="line"><span class="stringliteral">using any_figure = anyxx::any&lt;Proxy, figure&gt;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</span></div>
 <div class="line"><span class="stringliteral">                                    ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt;</span></div>
@@ -410,9 +412,11 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  [[nodiscard]] std::string name() const { return &quot;square&quot;; }</span></div>
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">struct figure_has_open_dispatch {};</span></div>
-<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, name, (), const)),</span></div>
-<div class="line"><span class="stringliteral">     ayx::cref)</span></div>
+<div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_value,</span></div>
+<div class="line"><span class="stringliteral">          (ANY_FN(std::string, name, (), const)), , ,</span></div>
+<div class="line"><span class="stringliteral">          (ANY_OPEN_DISPATCH), ())</span></div>
+<div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&gt;</span></div>
+<div class="line"><span class="stringliteral">using any_figure = anyxx::any&lt;Proxy, figure&gt;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::dispatch&lt;std::string(ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt; latin, italian;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
@@ -680,9 +684,9 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">#endif</span></div>
 <div class="line"><span class="stringliteral">// --&gt;</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1065</div></div>
-<div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1265</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:800</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1051</div></div>
+<div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1251</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:786</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

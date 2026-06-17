@@ -104,6 +104,7 @@ using&#160;</td><td class="memItemRight"><b>type</b> = Any</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;is_any Any&gt;<br />
+requires (Any::dyn &amp;&amp; is_open_dispatch_v_table&lt;typename Any::v_table_t&gt;)<br />
 struct anyxx::virtual_&lt; Any &gt;</div><p>A tag to indicate that the corresponding function parameter is an <a class="el" href="classanyxx_1_1any.html" title="any">any</a> used for dispatch. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -111,7 +112,7 @@ struct anyxx::virtual_&lt; Any &gt;</div><p>A tag to indicate that the correspon
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_dispatch_8cpp-example.html#_a3">21_Tree_any_dispatch.cpp</a>, and <a class="el" href="31_Animals_any_dispatch_8cpp-example.html#_a3">31_Animals_any_dispatch.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_dispatch_8cpp-example.html#_a3">21_Tree_any_dispatch.cpp</a>, and <a class="el" href="31_Animals_any_dispatch_8cpp-example.html#_a4">31_Animals_any_dispatch.cpp</a>.</dd>
 </dl>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>

@@ -379,6 +379,7 @@ Macros</h2></td></tr>
 <tr class="memitem:gaa11989a5b380318c70cc1a59a8642384" id="r_gaa11989a5b380318c70cc1a59a8642384"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>(model_,  trait_)</td></tr>
 <tr class="memdesc:gaa11989a5b380318c70cc1a59a8642384"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
 <tr class="memitem:a2946d301c9f28d40e12cf0f194e2775d" id="r_a2946d301c9f28d40e12cf0f194e2775d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2946d301c9f28d40e12cf0f194e2775d">_detail_ANYXX_FN_EMPTY</a>(name,  ret)</td></tr>
+<tr class="memitem:acc6827da68c9299fc794f918c166d2a0" id="r_acc6827da68c9299fc794f918c166d2a0"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#acc6827da68c9299fc794f918c166d2a0">ANY_OPEN_DISPATCH</a></td></tr>
 <tr class="memitem:a80f63e2eae17faf21d5aeb83ce2c35df" id="r_a80f63e2eae17faf21d5aeb83ce2c35df"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a80f63e2eae17faf21d5aeb83ce2c35df">ANY_MERGE_</a>(a,  b)</td></tr>
 <tr class="memitem:af980da0c3ea4edfd7deff01d15f2ac91" id="r_af980da0c3ea4edfd7deff01d15f2ac91"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#af980da0c3ea4edfd7deff01d15f2ac91">ANY_LABEL_</a>(a)</td></tr>
 <tr class="memitem:a34dc537c220041efce83e21e4324258c" id="r_a34dc537c220041efce83e21e4324258c"><td class="memItemLeft"><a id="a34dc537c220041efce83e21e4324258c" name="a34dc537c220041efce83e21e4324258c"></a>
@@ -428,14 +429,6 @@ template&lt;typename T, typename Rep&gt; </td></tr>
 using&#160;</td><td class="memItemRight"><b>anyxx::const_void</b> = void const*</td></tr>
 <tr class="memitem:a7692ab101191bd14fa60eb89197956f3" id="r_a7692ab101191bd14fa60eb89197956f3"><td class="memItemLeft"><a id="a7692ab101191bd14fa60eb89197956f3" name="a7692ab101191bd14fa60eb89197956f3"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::mutable_void</b> = void*</td></tr>
-<tr class="memitem:a8bbf3a5ecbebb69c8e2fbb9e43aa8668" id="r_a8bbf3a5ecbebb69c8e2fbb9e43aa8668"><td class="memItemLeft"><a id="a8bbf3a5ecbebb69c8e2fbb9e43aa8668" name="a8bbf3a5ecbebb69c8e2fbb9e43aa8668"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_function_t</b> = void (*)()</td></tr>
-<tr class="memitem:af1b2210c46c777f7206059caa46d91d0" id="r_af1b2210c46c777f7206059caa46d91d0"><td class="memItemLeft"><a id="af1b2210c46c777f7206059caa46d91d0" name="af1b2210c46c777f7206059caa46d91d0"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_dispatch_index_t</b> = std::size_t</td></tr>
-<tr class="memitem:a83a2b7bac51acfd5d127ff6e442251f6" id="r_a83a2b7bac51acfd5d127ff6e442251f6"><td class="memItemLeft"><a id="a83a2b7bac51acfd5d127ff6e442251f6" name="a83a2b7bac51acfd5d127ff6e442251f6"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_entry_t</b> = unsigned long long</td></tr>
-<tr class="memitem:a69b08d8d8e1f89924568217cddbfcd6d" id="r_a69b08d8d8e1f89924568217cddbfcd6d"><td class="memItemLeft"><a id="a69b08d8d8e1f89924568217cddbfcd6d" name="a69b08d8d8e1f89924568217cddbfcd6d"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_t</b> = std::vector&lt;dispatch_table_entry_t&gt;</td></tr>
 <tr class="memitem:a04088b852e3a2d150ce935f87c80c412" id="r_a04088b852e3a2d150ce935f87c80c412"><td class="memItemLeft"><a id="a04088b852e3a2d150ce935f87c80c412" name="a04088b852e3a2d150ce935f87c80c412"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::allocate_t</b> = mutable_void (*)()</td></tr>
 <tr class="memitem:ac0a3b525ba12272ee6c9ec5dc2664e65" id="r_ac0a3b525ba12272ee6c9ec5dc2664e65"><td class="memItemLeft"><a id="ac0a3b525ba12272ee6c9ec5dc2664e65" name="ac0a3b525ba12272ee6c9ec5dc2664e65"></a>
@@ -474,6 +467,14 @@ template&lt;voidness Voidness&gt; </td></tr>
 <tr class="memitem:a7f2abb993bc8ac5aa1b5eb53db8ab794 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a7f2abb993bc8ac5aa1b5eb53db8ab794">anyxx::use_as_</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;<a class="el" href="structanyxx_1_1using__.html">using_</a>&lt;Type&gt;, Trait&lt;Ts...&gt;&gt;</td></tr>
 <tr class="memitem:a7877777bc17611e04318fe1b318c9c19" id="r_a7877777bc17611e04318fe1b318c9c19"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
 <tr class="memitem:a7877777bc17611e04318fe1b318c9c19 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a7877777bc17611e04318fe1b318c9c19">anyxx::any_trait_class</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;<a class="el" href="structanyxx_1_1trait__class.html">trait_class</a>&lt;Type&gt;, Trait&gt;</td></tr>
+<tr class="memitem:a8bbf3a5ecbebb69c8e2fbb9e43aa8668" id="r_a8bbf3a5ecbebb69c8e2fbb9e43aa8668"><td class="memItemLeft"><a id="a8bbf3a5ecbebb69c8e2fbb9e43aa8668" name="a8bbf3a5ecbebb69c8e2fbb9e43aa8668"></a>
+using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_function_t</b> = void (*)()</td></tr>
+<tr class="memitem:af1b2210c46c777f7206059caa46d91d0" id="r_af1b2210c46c777f7206059caa46d91d0"><td class="memItemLeft"><a id="af1b2210c46c777f7206059caa46d91d0" name="af1b2210c46c777f7206059caa46d91d0"></a>
+using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_dispatch_index_t</b> = std::size_t</td></tr>
+<tr class="memitem:a83a2b7bac51acfd5d127ff6e442251f6" id="r_a83a2b7bac51acfd5d127ff6e442251f6"><td class="memItemLeft"><a id="a83a2b7bac51acfd5d127ff6e442251f6" name="a83a2b7bac51acfd5d127ff6e442251f6"></a>
+using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_entry_t</b> = unsigned long long</td></tr>
+<tr class="memitem:a69b08d8d8e1f89924568217cddbfcd6d" id="r_a69b08d8d8e1f89924568217cddbfcd6d"><td class="memItemLeft"><a id="a69b08d8d8e1f89924568217cddbfcd6d" name="a69b08d8d8e1f89924568217cddbfcd6d"></a>
+using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_t</b> = std::vector&lt;dispatch_table_entry_t&gt;</td></tr>
 <tr class="memitem:aab0dded90c1d46648f673c62bbc994ce" id="r_aab0dded90c1d46648f673c62bbc994ce"><td class="memTemplParams" colspan="2"><a id="aab0dded90c1d46648f673c62bbc994ce" name="aab0dded90c1d46648f673c62bbc994ce"></a>
 template&lt;typename AnyValue&gt; </td></tr>
 <tr class="memitem:aab0dded90c1d46648f673c62bbc994ce template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_return</b> = AnyValue</td></tr>
@@ -500,12 +501,6 @@ void&#160;</td><td class="memItemRight"><b>anyxx::dummy</b> ()</td></tr>
 <tr class="memitem:aedbd1018286dbb31291d8c9a7eba3881" id="r_aedbd1018286dbb31291d8c9a7eba3881"><td class="memTemplParams" colspan="2"><a id="aedbd1018286dbb31291d8c9a7eba3881" name="aedbd1018286dbb31291d8c9a7eba3881"></a>
 template&lt;typename Model&gt; </td></tr>
 <tr class="memitem:aedbd1018286dbb31291d8c9a7eba3881 template"><td class="memItemLeft">constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::compute_model_size</b> ()</td></tr>
-<tr class="memitem:a9f6c325609ae457472868b67551fdf06" id="r_a9f6c325609ae457472868b67551fdf06"><td class="memTemplParams" colspan="2"><a id="a9f6c325609ae457472868b67551fdf06" name="a9f6c325609ae457472868b67551fdf06"></a>
-template&lt;typename AnyVTable, typename Class&gt; </td></tr>
-<tr class="memitem:a9f6c325609ae457472868b67551fdf06 template"><td class="memItemLeft">dispatch_table_t *&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_instance_implementation</b> ()</td></tr>
-<tr class="memitem:a2dfc434f87c6bc3289d915cb9177ef69" id="r_a2dfc434f87c6bc3289d915cb9177ef69"><td class="memTemplParams" colspan="2"><a id="a2dfc434f87c6bc3289d915cb9177ef69" name="a2dfc434f87c6bc3289d915cb9177ef69"></a>
-template&lt;typename AnyVTable, typename Class&gt; </td></tr>
-<tr class="memitem:a2dfc434f87c6bc3289d915cb9177ef69 template"><td class="memItemLeft">dispatch_table_t *&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_instance</b> ()</td></tr>
 <tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60" id="r_a9d9ca1a9aa463aa620c1dfb58dda2c60"><td class="memTemplParams" colspan="2"><a id="a9d9ca1a9aa463aa620c1dfb58dda2c60" name="a9d9ca1a9aa463aa620c1dfb58dda2c60"></a>
 template&lt;typename VTable, typename Concrete&gt; </td></tr>
 <tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60 template"><td class="memItemLeft">VTable *&#160;</td><td class="memItemRight"><b>anyxx::v_table_instance</b> ()</td></tr>
@@ -592,14 +587,6 @@ template&lt;typename TYPE&gt; </td></tr>
 <tr class="memitem:a32cdb4d9efa7cee6a30bd4f7feb09024" id="r_a32cdb4d9efa7cee6a30bd4f7feb09024"><td class="memTemplParams" colspan="2"><a id="a32cdb4d9efa7cee6a30bd4f7feb09024" name="a32cdb4d9efa7cee6a30bd4f7feb09024"></a>
 template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a32cdb4d9efa7cee6a30bd4f7feb09024 template"><td class="memItemLeft">meta_data &amp;&#160;</td><td class="memItemRight"><b>anyxx::get_meta_data</b> ()</td></tr>
-<tr class="memitem:a63c9937ef16b42f35b10dba3e8b9b5ac" id="r_a63c9937ef16b42f35b10dba3e8b9b5ac"><td class="memItemLeft"><a id="a63c9937ef16b42f35b10dba3e8b9b5ac" name="a63c9937ef16b42f35b10dba3e8b9b5ac"></a>
-void&#160;</td><td class="memItemRight"><b>anyxx::insert_function</b> (dispatch_table_t *table, std::size_t index, auto fp)</td></tr>
-<tr class="memitem:aa6140214ad89884c424b0b13126dce80" id="r_aa6140214ad89884c424b0b13126dce80"><td class="memItemLeft"><a id="aa6140214ad89884c424b0b13126dce80" name="aa6140214ad89884c424b0b13126dce80"></a>
-dispatch_table_function_t&#160;</td><td class="memItemRight"><b>anyxx::get_function</b> (dispatch_table_t *table, std::size_t index)</td></tr>
-<tr class="memitem:abfaaab8bdce54fe55121d8b7eeaa1791" id="r_abfaaab8bdce54fe55121d8b7eeaa1791"><td class="memItemLeft"><a id="abfaaab8bdce54fe55121d8b7eeaa1791" name="abfaaab8bdce54fe55121d8b7eeaa1791"></a>
-dispatch_table_dispatch_index_t&#160;</td><td class="memItemRight"><b>anyxx::get_multi_dispatch_index_at</b> (dispatch_table_t *table, std::size_t index)</td></tr>
-<tr class="memitem:a9588c842cb05a6cf4a1cd1fb1a47831d" id="r_a9588c842cb05a6cf4a1cd1fb1a47831d"><td class="memItemLeft"><a id="a9588c842cb05a6cf4a1cd1fb1a47831d" name="a9588c842cb05a6cf4a1cd1fb1a47831d"></a>
-void&#160;</td><td class="memItemRight"><b>anyxx::set_multi_dispatch_index_at</b> (dispatch_table_t *table, std::size_t index_multi_dispatch, dispatch_table_dispatch_index_t dispatch_index_of_class_in_dispatch_matrix)</td></tr>
 <tr class="memitem:aab243e28ae1ec0abbc49057a5d0af1e6" id="r_aab243e28ae1ec0abbc49057a5d0af1e6"><td class="memTemplParams" colspan="2"><a id="aab243e28ae1ec0abbc49057a5d0af1e6" name="aab243e28ae1ec0abbc49057a5d0af1e6"></a>
 template&lt;typename VTable, typename Concrete&gt; </td></tr>
 <tr class="memitem:aab243e28ae1ec0abbc49057a5d0af1e6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::bind_v_table_to_meta_data</b> ()</td></tr>
@@ -670,6 +657,20 @@ template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memdesc:ga9ba68fb72727630cbb77b5104a93d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to an unerased type using runtime information from the v-Tables. <br /></td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c" id="r_aa0a344700732ba661e0fb701ef1eba2c"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a> (T &amp;&amp;v)</td></tr>
+<tr class="memitem:a9f6c325609ae457472868b67551fdf06" id="r_a9f6c325609ae457472868b67551fdf06"><td class="memTemplParams" colspan="2"><a id="a9f6c325609ae457472868b67551fdf06" name="a9f6c325609ae457472868b67551fdf06"></a>
+template&lt;typename AnyVTable, typename Class&gt; </td></tr>
+<tr class="memitem:a9f6c325609ae457472868b67551fdf06 template"><td class="memItemLeft">dispatch_table_t *&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_instance_implementation</b> ()</td></tr>
+<tr class="memitem:a2dfc434f87c6bc3289d915cb9177ef69" id="r_a2dfc434f87c6bc3289d915cb9177ef69"><td class="memTemplParams" colspan="2"><a id="a2dfc434f87c6bc3289d915cb9177ef69" name="a2dfc434f87c6bc3289d915cb9177ef69"></a>
+template&lt;typename AnyVTable, typename Class&gt; </td></tr>
+<tr class="memitem:a2dfc434f87c6bc3289d915cb9177ef69 template"><td class="memItemLeft">dispatch_table_t *&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_instance</b> ()</td></tr>
+<tr class="memitem:a63c9937ef16b42f35b10dba3e8b9b5ac" id="r_a63c9937ef16b42f35b10dba3e8b9b5ac"><td class="memItemLeft"><a id="a63c9937ef16b42f35b10dba3e8b9b5ac" name="a63c9937ef16b42f35b10dba3e8b9b5ac"></a>
+void&#160;</td><td class="memItemRight"><b>anyxx::insert_function</b> (dispatch_table_t *table, std::size_t index, auto fp)</td></tr>
+<tr class="memitem:aa6140214ad89884c424b0b13126dce80" id="r_aa6140214ad89884c424b0b13126dce80"><td class="memItemLeft"><a id="aa6140214ad89884c424b0b13126dce80" name="aa6140214ad89884c424b0b13126dce80"></a>
+dispatch_table_function_t&#160;</td><td class="memItemRight"><b>anyxx::get_function</b> (dispatch_table_t *table, std::size_t index)</td></tr>
+<tr class="memitem:abfaaab8bdce54fe55121d8b7eeaa1791" id="r_abfaaab8bdce54fe55121d8b7eeaa1791"><td class="memItemLeft"><a id="abfaaab8bdce54fe55121d8b7eeaa1791" name="abfaaab8bdce54fe55121d8b7eeaa1791"></a>
+dispatch_table_dispatch_index_t&#160;</td><td class="memItemRight"><b>anyxx::get_multi_dispatch_index_at</b> (dispatch_table_t *table, std::size_t index)</td></tr>
+<tr class="memitem:a9588c842cb05a6cf4a1cd1fb1a47831d" id="r_a9588c842cb05a6cf4a1cd1fb1a47831d"><td class="memItemLeft"><a id="a9588c842cb05a6cf4a1cd1fb1a47831d" name="a9588c842cb05a6cf4a1cd1fb1a47831d"></a>
+void&#160;</td><td class="memItemRight"><b>anyxx::set_multi_dispatch_index_at</b> (dispatch_table_t *table, std::size_t index_multi_dispatch, dispatch_table_dispatch_index_t dispatch_index_of_class_in_dispatch_matrix)</td></tr>
 <tr class="memitem:a75fb9c6aa7c1aea3470919e33151e4b8" id="r_a75fb9c6aa7c1aea3470919e33151e4b8"><td class="memTemplParams" colspan="2"><a id="a75fb9c6aa7c1aea3470919e33151e4b8" name="a75fb9c6aa7c1aea3470919e33151e4b8"></a>
 template&lt;is_any ToAny, is_dynamic_castable_v_table FromVTable&gt; </td></tr>
 <tr class="memitem:a75fb9c6aa7c1aea3470919e33151e4b8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::query_v_table</b> (FromVTable *from) -&gt; std::expected&lt; typename ToAny::v_table_t *, anyxx::cast_error &gt;</td></tr>
@@ -1264,7 +1265,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
 <div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
 <div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1427</div></div>
+<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1392</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2472,8 +2473,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3086</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3107</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a01e8132b16d45db321d99a076384242b"><div class="ttname"><a href="#a01e8132b16d45db321d99a076384242b">anyxx::use_as</a></div><div class="ttdeci">any&lt; using_&lt; Type &gt;, Trait &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3022</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3043</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3855,6 +3856,23 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="acc6827da68c9299fc794f918c166d2a0" name="acc6827da68c9299fc794f918c166d2a0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc6827da68c9299fc794f918c166d2a0">&#9670;&#160;</a></span>ANY_OPEN_DISPATCH</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ANY_OPEN_DISPATCH</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(anyxx::dispatch_table_t*, dispatch_table, \</div>
+<div class="line">                 anyxx::dispatch_table_instance&lt;v_table_t, Concrete&gt;())</div>
+<div class="ttc" id="agroup__trait__macros_html_gac0a03326e8e38ea3ee7d42b80552e634"><div class="ttname"><a href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a></div><div class="ttdeci">#define ANY_V_TABLE_DATA(type, name,...)</div><div class="ttdoc">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped typ...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1205</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="aaaf71064e12bba82d01833cc710b7007" name="aaaf71064e12bba82d01833cc710b7007"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aaaf71064e12bba82d01833cc710b7007">&#9670;&#160;</a></span>ANY_OVERLOAD</h2>
 
@@ -4069,7 +4087,7 @@ template&lt;typename Trait, typename T&gt; </div>
       </table>
 </div><div class="memdoc">
 <p>A factory function to bind an object as a model to an any with a trait. See also using_::as. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a8">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>, and <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a7">_2e_trait_algebra.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a9">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>, and <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a7">_2e_trait_algebra.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -4124,7 +4142,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1563</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1528</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4142,7 +4160,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;cref, dynamic_copyable&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2753</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2689</div></div>
 </div><!-- fragment -->
 </div>
 </div>
