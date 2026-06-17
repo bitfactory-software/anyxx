@@ -72,7 +72,7 @@ TEST_CASE("example 2cb static_ any variant") {
   using namespace anyxx;
 
   static_assert(
-      constructibile_for<any_value<shared>, vany_value<>::proxy_t>);
+      constructibile_for<any_value<shared>, vany_value<>::proxy_t, value>);
   vany_value<> vv_custom_43 =
       any_value<shared>{std::in_place_type<custom>, "43"};
   vany_value<> vv_custom_42 = {

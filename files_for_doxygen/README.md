@@ -382,7 +382,7 @@ struct square {
 struct figure_has_open_dispatch {};
 ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val)
 ANY_(serializable, ayx::dynamic_value,
-    (ANY_FN(void, serialize, (std::ostream&), const)), ayx::ref)
+    (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
 
 ayx::factory<any_serializable, ayx::val, std::string, std::istream&>
     deserialize;

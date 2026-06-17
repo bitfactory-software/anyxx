@@ -40,7 +40,7 @@ COMPONENT_BASE_EXPORT any_to_string_i<anyxx::shared> get_to_string_i_sc(
     double v);
 COMPONENT_BASE_EXPORT any_to_string_i<anyxx::unique> get_to_string_i_u(
     double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared> sc_X(double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique> u_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared, anyxx::dynamic_value> sc_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique, anyxx::dynamic_value> u_X(double v);
 
 }  // namespace test::component_base

@@ -1598,8 +1598,11 @@ template <typename T>
 concept has_v_table =
     std::derived_from<typename T::v_table_t, observeable_v_table>;
 
+struct dynamic_castable;
+struct dynamic_deletable;
+struct dynamic_copyable;
 struct dynamic_value;
-template <is_proxy Proxy, typename Trait = dynamic_value>
+template <is_proxy Proxy, typename Trait>
 class any;
 
 /// Requirements for a dynamic (i.e., type-erased) Proxy
@@ -1635,11 +1638,11 @@ concept erased_constructibile_for =
      (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
       proxy_trait<Proxy>::is_constructibile_from_const));
 
-template <typename ConstructedWith, typename Proxy>
+template <typename ConstructedWith, typename Proxy, typename Trait>
 concept constructibile_for =
     (proxy_trait<Proxy>::template is_constructibile_from<
         ConstructedWith>::value) ||
-    (erased_constructibile_for<ConstructedWith, Proxy, any<Proxy>> &&
+    (erased_constructibile_for<ConstructedWith, Proxy, any<Proxy, Trait>> &&
      !is_proxy_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
@@ -2776,7 +2779,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   /// \ref value.
   template <typename ConstructedWith>
   explicit(false) any(ConstructedWith&& constructed_with)  // NOLINT
-    requires constructibile_for<ConstructedWith, proxy_impl_t> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t, trait_t> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
              (!is_lifetime_bound<proxy_impl_t>)
       : proxy_(
@@ -2789,7 +2792,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <typename ConstructedWith>
   explicit(false)
       any(ConstructedWith&& constructed_with LIFETIMEBOUND)  // NOLINT
-    requires constructibile_for<ConstructedWith, proxy_impl_t> &&
+    requires constructibile_for<ConstructedWith, proxy_impl_t, trait_t> &&
              (!std::same_as<any, std::decay_t<ConstructedWith>>) &&
              (is_lifetime_bound<proxy_impl_t>)
       : proxy_(
@@ -3223,7 +3226,7 @@ TRAIT_EX_(translate_sig, observeable, , ,
           , ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
-  using v_table_param = any<cref>;
+  using v_table_param = any<cref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = AnyValue;
   template <typename Model>
@@ -3233,7 +3236,7 @@ ANY_MODEL_MAP((self), translate_sig) {
 };
 ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename AnyValue>
-  using v_table_param = any<cref>;
+  using v_table_param = any<cref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -3243,7 +3246,7 @@ ANY_MODEL_MAP((self const&), translate_sig) {
 };
 ANY_MODEL_MAP((self&), translate_sig) {
   template <typename AnyValue>
-  using v_table_param = any<mutref>;
+  using v_table_param = any<mutref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -3263,7 +3266,7 @@ template <typename T>
   requires is_use_as_<T>
 struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
   template <typename AnyValue>
-  using v_table_param = any<mutref>;
+  using v_table_param = any<mutref, dynamic_copyable>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
