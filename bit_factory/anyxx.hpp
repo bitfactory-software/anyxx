@@ -2757,7 +2757,6 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   using model_map_t = typename trait_t::template static_dispatch_map_t<T>;
   using rep_type = typename model_map_t::rep_type;
   using proxy_impl_t = typename proxy_trait_t::template proxy_impl<rep_type>;
-  using any_value_t = any<val, Trait>;
   static constexpr bool dyn = is_dyn<Proxy>;
   // static_assert(is_proxy_compatible_with_trait<Proxy, Trait>,
   //               "If the proxy is dynamic, the trait must provide a v-table "
