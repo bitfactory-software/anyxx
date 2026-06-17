@@ -23,7 +23,7 @@ var searchData=
   ['any_3c_20box_2c_20trait_20_3e_20',['any&lt; Box, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20cref_2c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_20_3e_21',['any&lt; cref, function&lt; int(double), const_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20cref_2c_20function_3c_20int_28double_29_2c_20mutable_5f_20_3e_20_3e_22',['any&lt; cref, function&lt; int(double), mutable_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20mutref_20_3e_23',['any&lt; mutref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20mutref_2c_20dynamic_5fcopyable_20_3e_23',['any&lt; mutref, dynamic_copyable &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20mutref_2c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_20_3e_24',['any&lt; mutref, function&lt; int(double), const_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20mutref_2c_20function_3c_20int_28double_29_2c_20mutable_5f_20_3e_20_3e_25',['any&lt; mutref, function&lt; int(double), mutable_ &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20trait_5fclass_3c_20type_20_3e_2c_20trait_20_3e_26',['any&lt; trait_class&lt; Type &gt;, Trait &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
