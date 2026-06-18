@@ -82,7 +82,7 @@ TEST_CASE("slick_stringable observeable_v_table") {
 TEST_CASE("any lifetime cast") {
   const any_stringable<shared> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
-  REQUIRE(is_derived_from<any<dynamic_copyable, shared>>(sc));
+  REQUIRE(is_derived_from<any<dynamic_copyable>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);

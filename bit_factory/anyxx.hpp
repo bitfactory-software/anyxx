@@ -1336,8 +1336,6 @@ constexpr inline std::size_t compute_model_size() {
   }
 }
 
-struct any_v_table;
-
 using allocate_t = mutable_void (*)();
 template <typename VTable>
 concept is_allocate_v_table = requires(VTable* v_table) {
@@ -1395,6 +1393,18 @@ struct undefined {};
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
 
+
+template <voidness Voidness>
+using observer = Voidness;
+/// Proxy to capture the dispatch target type erased by const reference
+/// An any with such a proxy is lifetime bound to the object referenced!
+/// \ingroup proxies
+using cref = observer<const_void>;
+/// Proxy to capture the dispatch target type erased by mutable reference
+/// An any with such a proxy is lifetime bound to the object referenced!
+/// \ingroup proxies
+using mutref = observer<mutable_void>;
+
 /// No lifetime functionality
 /// Base of v-tables for traits without lifetime requirements
 struct observeable_v_table {
@@ -1422,6 +1432,8 @@ struct observeable {
   static constexpr bool modeled_by() {
     return true;
   }
+
+  using default_proxy_t = cref;
 
   template <typename StaticDispatchType>
   using static_dispatch_map_t = no_model_map<StaticDispatchType>;
@@ -1568,7 +1580,7 @@ struct dynamic_castable;
 struct dynamic_deletable;
 struct dynamic_copyable;
 struct dynamic_value;
-template <typename Trait, is_proxy Proxy>
+template <typename Trait, is_proxy Proxy = typename Trait::default_proxy_t>
 class any;
 
 /// Requirements for a dynamic (i.e., type-erased) Proxy
@@ -1883,16 +1895,6 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
 // --------------------------------------------------------------------------------
 // erased data observer
 
-template <voidness Voidness>
-using observer = Voidness;
-/// Proxy to capture the dispatch target type erased by const reference
-/// An any with such a proxy is lifetime bound to the object referenced!
-/// \ingroup proxies
-using cref = observer<const_void>;
-/// Proxy to capture the dispatch target type erased by mutable reference
-/// An any with such a proxy is lifetime bound to the object referenced!
-/// \ingroup proxies
-using mutref = observer<mutable_void>;
 
 template <voidness Voidness>
 struct observer_trait : basic_proxy_trait<Voidness> {
@@ -3495,7 +3497,8 @@ TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
                               std::destroy_at(p);
                               std::allocator<Concrete>{}.deallocate(p, 1);
                             })),
-          ());
+          (using default_proxy_t = shared;    
+          ));
 
 TRAIT_EX_(
     dynamic_copyable, dynamic_deletable, , , ,
@@ -3536,7 +3539,8 @@ TRAIT_EX_(
                       }),
      ANY_V_TABLE_DATA(model_size_t, model_size,
                       compute_model_size<Concrete>())),
-    ());
+    (using default_proxy_t = val;
+    ));
 
 class meta_data {
   const std::type_info& type_info_;
@@ -3726,7 +3730,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<dynamic_value, val>;
+  using any_value_t = any<dynamic_value>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
