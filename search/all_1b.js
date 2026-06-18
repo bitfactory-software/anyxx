@@ -2,7 +2,7 @@ var searchData=
 [
   ['v_5ftable_0',['v_table',['../md_docs_2terms__and__definitions.html#autotoc_md12',1,'']]],
   ['v_5ftable_20instance_1',['v_table instance',['../md_docs_2terms__and__definitions.html#autotoc_md13',1,'']]],
-  ['val_2',['val',['../unionanyxx_1_1val.html',1,'anyxx']]],
+  ['val_2',['val',['../structanyxx_1_1val.html',1,'anyxx']]],
   ['vany_3',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md35',1,'']]],
   ['vany_5fdispach_4',['VANY_DISPACH',['../group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c',1,'anyxx.hpp']]],
   ['vany_5fdispach_20macros_5',['VANY_DISPACH macros',['../group__vany__macros.html',1,'']]],

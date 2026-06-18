@@ -133,6 +133,7 @@ var NAVTREEINDEX0 =
 "structanyxx_1_1unique.html":[6,0,0],
 "structanyxx_1_1using__.html":[8,0,0,0],
 "structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3":[8,0,0,0,0],
+"structanyxx_1_1val.html":[6,0,1],
 "structanyxx_1_1virtual__.html":[8,0,0,11],
 "subpage1.html":[0,0],
 "subpage2.html":[0,1],
@@ -140,6 +141,5 @@ var NAVTREEINDEX0 =
 "subpage4.html":[0,3],
 "subpage5.html":[0,4],
 "subpage6.html":[0,5],
-"topics.html":[6],
-"unionanyxx_1_1val.html":[6,0,1]
+"topics.html":[6]
 };
