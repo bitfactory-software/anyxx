@@ -2324,7 +2324,6 @@ struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>>
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static constexpr bool is_default_constructible = nullable     ;
 
   template <typename VTable>
   static constexpr bool is_compatible_with_v_table() {
