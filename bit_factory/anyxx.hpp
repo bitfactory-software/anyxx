@@ -2839,8 +2839,8 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
     v_table_holder_t::set_v_table_ptr(other.release_v_table());
     return *this;
   }
-  template <typename Proxy>
-  using type_for = any<Trait, Proxy>;
+  template <typename OtherProxy>
+  using type_for = any<Trait, OtherProxy>;
 
   template <is_any Friend>
   friend inline auto& get_proxy(Friend const& any);
