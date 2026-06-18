@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: anyxx::val Struct Reference</title>
+<title>Any++: anyxx::basic_val&lt; nullabale &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structanyxx_1_1val.html','','structanyxx_1_1val-members'); });
+$(function(){initNavTree('structanyxx_1_1basic__val.html','','structanyxx_1_1basic__val-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,7 +88,7 @@ $(function(){initNavTree('structanyxx_1_1val.html','','structanyxx_1_1val-member
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">anyxx::val Struct Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
+  <div class="headertitle"><div class="title">anyxx::basic_val&lt; nullabale &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -99,25 +99,24 @@ $(function(){initNavTree('structanyxx_1_1val.html','','structanyxx_1_1val-member
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a67977fb34e8cd3df097465e7eb425b7f" id="r_a67977fb34e8cd3df097465e7eb425b7f"><td class="memItemLeft"><a id="a67977fb34e8cd3df097465e7eb425b7f" name="a67977fb34e8cd3df097465e7eb425b7f"></a>
-&#160;</td><td class="memItemRight"><b>val</b> (mutable_void ptr=0)</td></tr>
-<tr class="memitem:afd48621b747202b9173e94b053649ba1" id="r_afd48621b747202b9173e94b053649ba1"><td class="memItemLeft"><a id="afd48621b747202b9173e94b053649ba1" name="afd48621b747202b9173e94b053649ba1"></a>
-val &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (val const &amp;other) noexcept</td></tr>
+<tr class="memitem:a96d06e5b10c7656731ef323c6d2cf09f" id="r_a96d06e5b10c7656731ef323c6d2cf09f"><td class="memItemLeft"><a id="a96d06e5b10c7656731ef323c6d2cf09f" name="a96d06e5b10c7656731ef323c6d2cf09f"></a>
+&#160;</td><td class="memItemRight"><b>basic_val</b> (mutable_void ptr=0)</td></tr>
+<tr class="memitem:ad7830955e17d6629ac104b8b1c8571f7" id="r_ad7830955e17d6629ac104b8b1c8571f7"><td class="memItemLeft"><a id="ad7830955e17d6629ac104b8b1c8571f7" name="ad7830955e17d6629ac104b8b1c8571f7"></a>
+basic_val &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (basic_val const &amp;other) noexcept</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ab306c942a75898fb9dfaf30152f686c9" id="r_ab306c942a75898fb9dfaf30152f686c9"><td class="memItemLeft"><a id="ab306c942a75898fb9dfaf30152f686c9" name="ab306c942a75898fb9dfaf30152f686c9"></a>
-union anyxx::val::data_union&#160;</td><td class="memItemRight"><b>data</b></td></tr>
+<tr class="memitem:ac93062ab98cd3e199e534761e9c4ab4e" id="r_ac93062ab98cd3e199e534761e9c4ab4e"><td class="memItemLeft"><a id="ac93062ab98cd3e199e534761e9c4ab4e" name="ac93062ab98cd3e199e534761e9c4ab4e"></a>
+union anyxx::basic_val::data_union&#160;</td><td class="memItemRight"><b>data</b></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Proxy to manage the captured object as value with small object optimization. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;bool nullabale&gt;<br />
+struct anyxx::basic_val&lt; nullabale &gt;</div><p>Proxy to manage the captured object as value with small object optimization. </p>
 <ul>
 <li>If you forward an object to any constructor, this object will be forwarded to the allocated storage.</li>
 <li>To pass an object as second parameter, with the std::in_place tag as first, has the same behavior as above</li>
 <li>If you pass as first parameter std::in_place_type&lt;...&gt;, the object will be constructed in place in the allocated memory with the other arguments forwarded </li>
 </ul>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_3_any_range_8cpp-example.html#_a6">_3_any_range.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
-</dl>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>
 </ul>
@@ -134,7 +133,7 @@ union anyxx::val::data_union&#160;</td><td class="memItemRight"><b>data</b></td>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1val.html">val</a></li>
+    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1basic__val.html">basic_val</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>
