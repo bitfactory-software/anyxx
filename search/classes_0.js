@@ -2,7 +2,7 @@ var searchData=
 [
   ['any_0',['any',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20dynamic_5fcopyable_2c_20mutref_20_3e_1',['any&lt; dynamic_copyable, mutref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20dynamic_5fvalue_2c_20val_20_3e_2',['any&lt; dynamic_value, val &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20dynamic_5fvalue_20_3e_2',['any&lt; dynamic_value &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_2c_20cref_20_3e_3',['any&lt; function&lt; int(double), const_ &gt;, cref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_2c_20mutref_20_3e_4',['any&lt; function&lt; int(double), const_ &gt;, mutref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_2c_20using_5f_3c_20functor_20_26_20_3e_20_3e_5',['any&lt; function&lt; int(double), const_ &gt;, using_&lt; functor &amp; &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
