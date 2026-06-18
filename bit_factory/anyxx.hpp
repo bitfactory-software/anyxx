@@ -1393,7 +1393,6 @@ struct undefined {};
 template <typename VTable, typename Concrete>
 VTable* v_table_instance();
 
-
 template <voidness Voidness>
 using observer = Voidness;
 /// Proxy to capture the dispatch target type erased by const reference
@@ -1895,7 +1894,6 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
 // --------------------------------------------------------------------------------
 // erased data observer
 
-
 template <voidness Voidness>
 struct observer_trait : basic_proxy_trait<Voidness> {
   using void_t = Voidness;
@@ -2217,28 +2215,35 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 /// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
-union val {
-  val(mutable_void ptr = 0) : heap{ptr} {}
-  val([[maybe_unused]] val const& other) noexcept { trivial = other.trivial; }
+struct val {
+  union data_union {
+    data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
+    data_union(data_union const& other) noexcept { trivial = other.trivial; }
+    heap_data heap;
+    local_data<false> local;
+    local_data<true> trivial;
+  } data;
+
+  val(mutable_void ptr = 0) : data{ptr} {}
   val& operator=([[maybe_unused]] val const& other) noexcept {
-    trivial = other.trivial;
+    data.trivial = other.data.trivial;
     return *this;
   }
   ~val() {}
-  heap_data heap;
-  local_data<false> local;
-  local_data<true> trivial;
 };
 
 template <typename V>
 auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
   if (size > sizeof(mutable_void)) {
-    return std::forward<decltype(visitor)>(visitor)(std::forward<V>(v).heap);
+    return std::forward<decltype(visitor)>(visitor)(
+        std::forward<V>(v).data.heap);
   } else if (size > 0) {
-    return std::forward<decltype(visitor)>(visitor)(std::forward<V>(v).local);
+    return std::forward<decltype(visitor)>(visitor)(
+        std::forward<V>(v).data.local);
   }
   assert(size == 0);
-  return std::forward<decltype(visitor)>(visitor)(std::forward<V>(v).trivial);
+  return std::forward<decltype(visitor)>(visitor)(
+      std::forward<V>(v).data.trivial);
 };
 
 template <typename V2>
@@ -2247,37 +2252,37 @@ auto visit_value(auto&& visitor, val& v1, std::size_t size1, V2&& v2,
   if (size1 > sizeof(mutable_void)) {
     if (size2 > sizeof(mutable_void)) {
       return std::forward<decltype(visitor)>(visitor)(
-          v1.heap, std::forward<V2>(v2).heap);
+          v1.data.heap, std::forward<V2>(v2).data.heap);
     } else if (size2 > 0) {
       return std::forward<decltype(visitor)>(visitor)(
-          v1.heap, std::forward<V2>(v2).local);
+          v1.data.heap, std::forward<V2>(v2).data.local);
     }
     assert(size2 == 0);
     return std::forward<decltype(visitor)>(visitor)(
-        v1.heap, std::forward<V2>(v2).trivial);
+        v1.data.heap, std::forward<V2>(v2).data.trivial);
   } else if (size1 > 0) {
     if (size2 > sizeof(mutable_void)) {
       return std::forward<decltype(visitor)>(visitor)(
-          v1.local, std::forward<V2>(v2).heap);
+          v1.data.local, std::forward<V2>(v2).data.heap);
     } else if (size2 > 0) {
       return std::forward<decltype(visitor)>(visitor)(
-          v1.local, std::forward<V2>(v2).local);
+          v1.data.local, std::forward<V2>(v2).data.local);
     }
     assert(size2 == 0);
     return std::forward<decltype(visitor)>(visitor)(
-        v1.local, std::forward<V2>(v2).trivial);
+        v1.data.local, std::forward<V2>(v2).data.trivial);
   }
   assert(size1 == 0);
   if (size2 > sizeof(mutable_void)) {
-    return std::forward<decltype(visitor)>(visitor)(v1.trivial,
-                                                    std::forward<V2>(v2).heap);
+    return std::forward<decltype(visitor)>(visitor)(
+        v1.data.trivial, std::forward<V2>(v2).data.heap);
   } else if (size2 > 0) {
-    return std::forward<decltype(visitor)>(visitor)(v1.trivial,
-                                                    std::forward<V2>(v2).local);
+    return std::forward<decltype(visitor)>(visitor)(
+        v1.data.trivial, std::forward<V2>(v2).data.local);
   }
   assert(size2 == 0);
-  return std::forward<decltype(visitor)>(visitor)(v1.trivial,
-                                                  std::forward<V2>(v2).trivial);
+  return std::forward<decltype(visitor)>(visitor)(
+      v1.data.trivial, std::forward<V2>(v2).data.trivial);
 };
 
 template <typename T, typename... Args>
@@ -2287,7 +2292,8 @@ auto make_local_value(Args&&... args) {
   constexpr bool is_trivial = std::is_trivial_v<T>;
   using local_data_type = local_data<is_trivial>;
   val v;
-  auto location = static_cast<T*>(static_cast<mutable_void>(v.local.data()));
+  auto location =
+      static_cast<T*>(static_cast<mutable_void>(v.data.local.data()));
   std::construct_at<T>(location, std::forward<Args>(args)...);
   return v;
 }
@@ -2351,29 +2357,29 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&](heap_data& t, local_data<false>& f) {
               delete_(v_table_to, t.ptr);
-              v_table_from->move_constructor(to.local.data(), f.data());
+              v_table_from->move_constructor(to.data.local.data(), f.data());
             },
             [&](heap_data& t, local_data<true>& f) {
               delete_(v_table_to, t.ptr);
-              to.trivial = std::move(f);
+              to.data.trivial = std::move(f);
             },
             [&](local_data<false>& t, heap_data& f) {
               destruct(v_table_to, t.data());
-              to.heap.ptr = f.release();
+              to.data.heap.ptr = f.release();
             },
             [&](local_data<false>& t, local_data<false>& f) {
               destruct(v_table_to, t.data());
-              v_table_from->move_constructor(t.data(), f.data());
+              v_table_from->move_constructor(to.data.local.data(), f.data());
             },
             [&](local_data<false>& t, local_data<true>& f) {
               destruct(v_table_to, t.data());
-              to.trivial = std::move(f);
+              to.data.trivial = std::move(f);
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
-              to.heap.ptr = f.release();
+              to.data.heap.ptr = f.release();
             },
             [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
-              v_table_from->move_constructor(to.local.data(), f.data());
+              v_table_from->move_constructor(to.data.local.data(), f.data());
             },
             [&](local_data<true>& t, local_data<true>& f) {
               t = std::move(f);
@@ -2409,30 +2415,30 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
             },
             [&](heap_data& t, local_data<false> const& f) {
               delete_(to_v_table, t.ptr);
-              from_v_table->copy_constructor(to.local.data(), f.data());
+              from_v_table->copy_constructor(to.data.local.data(), f.data());
             },
             [&](heap_data& t, local_data<true> const& f) {
               delete_(to_v_table, t.ptr);
-              to.trivial = f;
+              to.data.trivial = f;
             },
             [&](local_data<false>& t, heap_data const& f) {
               destruct(to_v_table, t.data());
-              to.heap.ptr = copy_construct(from_v_table, f.ptr);
+              to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&](local_data<false>& t, local_data<false> const& f) {
               destruct(to_v_table, t.data());
-              from_v_table->copy_constructor(t.data(), f.data());
+              from_v_table->copy_constructor(to.data.local.data(), f.data());
             },
             [&](local_data<false>& t, local_data<true> const& f) {
               destruct(to_v_table, t.data());
-              to.trivial = f;
+              to.data.trivial = f;
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data const& f) {
-              to.heap.ptr = copy_construct(from_v_table, f.ptr);
+              to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&]([[maybe_unused]] local_data<true>& t,
                 local_data<false> const& f) {
-              from_v_table->copy_constructor(to.local.data(), f.data());
+              from_v_table->copy_constructor(to.data.local.data(), f.data());
             },
             [&](local_data<true>& t, local_data<true> const& f) { t = f; }},
         to, model_size(to_v_table), from, from_v_table->model_size);
@@ -3497,8 +3503,7 @@ TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
                               std::destroy_at(p);
                               std::allocator<Concrete>{}.deallocate(p, 1);
                             })),
-          (using default_proxy_t = shared;    
-          ));
+          (using default_proxy_t = shared;));
 
 TRAIT_EX_(
     dynamic_copyable, dynamic_deletable, , , ,
@@ -3539,8 +3544,7 @@ TRAIT_EX_(
                       }),
      ANY_V_TABLE_DATA(model_size_t, model_size,
                       compute_model_size<Concrete>())),
-    (using default_proxy_t = val;
-    ));
+    (using default_proxy_t = val;));
 
 class meta_data {
   const std::type_info& type_info_;
