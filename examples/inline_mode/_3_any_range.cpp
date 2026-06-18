@@ -26,8 +26,8 @@ TRAIT_(stringable, anyxx::dynamic_value,
        (ANY_FN_DEF(public, std::string, to_string, (), const,
                    [&x]() { return std::format("{}", x); })))
 
-template <typename Box>
-using any_stringable = anyxx::any<Box, stringable>;
+template <typename Proxy>
+using any_stringable = anyxx::any<stringable, Proxy>;
 
 ANY_(node, anyxx::dynamic_value,
     (ANY_FN_DEF(public, anyxx::self, sum,
@@ -101,7 +101,7 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<using_<v_t const&>, forward_range<int, int>> r{v};
+    any<forward_range<int, int>, using_<v_t const&>> r{v};
     int x = 0;
     for (auto i : r) CHECK(i == v[x++]);
     CHECK(x == 3);
@@ -135,8 +135,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any<using_<v_t const&>,
-        forward_range<any_stringable<anyxx::val>, any_stringable<anyxx::val>>>
+    anyxx::any<anyxx::forward_range<any_stringable<anyxx::val>, any_stringable<anyxx::val>>,
+               anyxx::using_<v_t const&>>
         r{v};
     int x = 0;
     for (auto i : r) {

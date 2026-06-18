@@ -64,7 +64,7 @@ TRAIT_EX(shape,
           ANY_FN(architecture::size, size, (), const)),
          , , (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_shape = anyxx::any<Proxy, shape>;
+using any_shape = anyxx::any<shape, Proxy>;
 
 }  // namespace whole_picture::architecture
 

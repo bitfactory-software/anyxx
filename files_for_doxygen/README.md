@@ -87,7 +87,7 @@ struct square {
 TRAIT_(drawable, anyxx::dynamic_value, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<anyxx::val, drawable>> const& drawables) {
+          std::vector<anyxx::any<drawable, anyxx::val>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -190,7 +190,7 @@ ANY_MODEL_MAP((square), drawable) {
 };
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<anyxx::val, drawable>> const& drawables) {
+          std::vector<anyxx::any<drawable, anyxx::val>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -234,7 +234,7 @@ TRAIT_EX_(figure, anyxx::dynamic_value,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::val>
-using any_figure = anyxx::any<Proxy, figure>;
+using any_figure = anyxx::any<figure, Proxy>;
 
 ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
                                     ayx::virtual_<any_figure<>>)>
@@ -255,7 +255,7 @@ auto __ = compare_edges.define<square, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::greater; });
 
 void compare_each(std::stringstream& os,
-                  std::vector<ayx::any<ayx::val, figure>> const& figures) {
+                  std::vector<ayx::any<figure, ayx::val>> const& figures) {
   std::string sep;
   for (auto const& l : figures)
     for (auto const& r : figures) {
@@ -322,7 +322,7 @@ TRAIT_EX_(figure, anyxx::dynamic_value,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::val>
-using any_figure = anyxx::any<Proxy, figure>;
+using any_figure = anyxx::any<figure, Proxy>;
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
 
@@ -332,7 +332,7 @@ auto __ = italian.define<circle>([](auto const&) { return "cerchio"; });
 auto __ = italian.define<square>([](auto const&) { return "quadrato"; });
 
 void translate(std::stringstream& os,
-               std::vector<ayx::any<ayx::val, figure>> const& figures) {
+               std::vector<ayx::any<figure, ayx::val>> const& figures) {
   std::string sep;
   for (auto const& f : figures)
     os << std::exchange(sep, "; ") << f.name() << ": latin = " << latin(f)
@@ -424,7 +424,7 @@ ANY_REGISTER_MODEL(square, figure);
 ANY_REGISTER_MODEL(square, serializable);
 
 void areas(std::stringstream& os,
-           std::vector<ayx::any<ayx::val, figure>> const& figures) {
+           std::vector<ayx::any<figure, ayx::val>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
@@ -491,7 +491,7 @@ TRAIT(drawable, (ANY_FN(std::string, draw, (), const)))
 using known_shapes = std::variant<circle, square>;
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<anyxx::using_<known_shapes>, drawable>> const&
+          std::vector<anyxx::any<drawable, anyxx::using_<known_shapes>>> const&
               drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }

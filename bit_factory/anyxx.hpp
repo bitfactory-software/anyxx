@@ -651,9 +651,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using v_table_t = n##_v_table;                                             \
                                                                                \
-    using any_value_t =                                                        \
-        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
-                                   any_template_params)>;                      \
+    using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
+                                       any_template_params),                   \
+                                   anyxx::val>;                                \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -677,9 +677,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
       : BASE                                                                   \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
-    using any_value_t =                                                        \
-        anyxx::any<anyxx::val, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(         \
-                                   any_template_params)>;                      \
+    using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
+                                       any_template_params),                   \
+                                   anyxx::val>;                                \
                                                                                \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
@@ -848,13 +848,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 ////////////////////////////////////////////////////////////////////////////////
 // cppcheck-suppress-macro performance-unnecessary-value-param
-#define ANY_META_FUNCTION(pure_template_params,                             \
-                          any_template_params_with_defaults, n)             \
-                                                                            \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                              \
-      any_template_params_with_defaults)>                                   \
-  using any_##n = anyxx::any<Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \
-                                        pure_template_params)>;
+#define ANY_META_FUNCTION(pure_template_params,                                \
+                          any_template_params_with_defaults, n)                \
+                                                                               \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \
+      any_template_params_with_defaults)>                                      \
+  using any_##n =                                                              \
+      anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(pure_template_params), \
+                 Proxy>;
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -1567,7 +1568,7 @@ struct dynamic_castable;
 struct dynamic_deletable;
 struct dynamic_copyable;
 struct dynamic_value;
-template <is_proxy Proxy, typename Trait>
+template <typename Trait, is_proxy Proxy>
 class any;
 
 /// Requirements for a dynamic (i.e., type-erased) Proxy
@@ -1607,7 +1608,7 @@ template <typename ConstructedWith, typename Proxy, typename Trait>
 concept constructibile_for =
     (proxy_trait<Proxy>::template is_constructibile_from<
         ConstructedWith>::value) ||
-    (erased_constructibile_for<ConstructedWith, Proxy, any<Proxy, Trait>> &&
+    (erased_constructibile_for<ConstructedWith, Proxy, any<Trait, Proxy>> &&
      !is_proxy_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
@@ -2684,7 +2685,7 @@ concept is_proxy_compatible_with_trait =
 /// for examples. If the proxy is dynamic (i.e., type erased), the Trait must
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
-template <is_proxy Proxy, typename Trait>
+template <typename Trait, is_proxy Proxy>
 class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
                           public Trait {
  public:
@@ -2836,8 +2837,8 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
     v_table_holder_t::set_v_table_ptr(other.release_v_table());
     return *this;
   }
-  template <typename Box>
-  using type_for = any<Box, Trait>;
+  template <typename Proxy>
+  using type_for = any<Trait, Proxy>;
 
   template <is_any Friend>
   friend inline auto& get_proxy(Friend const& any);
@@ -2848,7 +2849,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend const& any);
 
-  template <is_proxy Other, typename OtherTrait>
+  template <typename OtherTrait, is_proxy Other>
   friend class any;
 
   template <typename Friend>
@@ -3013,25 +3014,25 @@ struct using_ {
   /// Helper type alias template to trait a model with an \ref any.
   /// See also \ref trait_as.
   template <typename Trait>
-  using as = any<using_<Value>, Trait>;
+  using as = any<Trait, using_<Value>>;
 };
 
 /// A template to get an \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
-using use_as = any<using_<Type>, Trait>;
+using use_as = any<Trait, using_<Type>>;
 
 /// A template to get an templatetd \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
-using use_as_ = any<using_<Type>, Trait<Ts...>>;
+using use_as_ = any<Trait<Ts...>, using_<Type>>;
 
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.
 /// See also \ref using_::as.
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
-  return any<anyxx::using_<std::decay_t<T>>, Trait>{std::forward<T>(v)};
+  return any<Trait, using_<std::decay_t<T>>>{std::forward<T>(v)};
 }
 
 /// Proxy to capture the type to enable static
@@ -3050,7 +3051,7 @@ struct trait_class {
 ///
 /// \tparam Type The captured type
 template <typename Type, typename Trait>
-using any_trait_class = any<trait_class<Type>, Trait>;
+using any_trait_class = any<Trait, trait_class<Type>>;
 
 /// A object template to get a \ref trait_class object for a type as a \ref
 /// trait.
@@ -3175,7 +3176,7 @@ struct jacket_return<self> {
     using sig_t = std::decay_t<Sig>;
     if constexpr (is_type_class<typename std::decay_t<Any>::proxy_t>) {
       using target_t =
-          any<using_<typename Any::proxy_t::value_t>, typename Any::trait_t>;
+          any<typename Any::trait_t, using_<typename Any::proxy_t::value_t>>;
       if constexpr (is_any<sig_t>) {
         return target_t{get_proxy_value(std::forward<Sig>(sig))};
       } else {
@@ -3205,7 +3206,7 @@ TRAIT_EX_(translate_sig, observeable, , ,
           , ())
 ANY_MODEL_MAP((self), translate_sig) {
   template <typename AnyValue>
-  using v_table_param = any<cref, dynamic_copyable>;
+  using v_table_param = any<dynamic_copyable, cref>;
   template <typename AnyValue>
   using v_table_return = AnyValue;
   template <typename Model>
@@ -3215,7 +3216,7 @@ ANY_MODEL_MAP((self), translate_sig) {
 };
 ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename AnyValue>
-  using v_table_param = any<cref, dynamic_copyable>;
+  using v_table_param = any<dynamic_copyable, cref>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -3225,7 +3226,7 @@ ANY_MODEL_MAP((self const&), translate_sig) {
 };
 ANY_MODEL_MAP((self&), translate_sig) {
   template <typename AnyValue>
-  using v_table_param = any<mutref, dynamic_copyable>;
+  using v_table_param = any<dynamic_copyable, mutref>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -3237,7 +3238,7 @@ template <typename T>
 struct is_use_as__impl : std::false_type {};
 template <typename T, template <typename...> typename Trait,
           typename... TraitArgs>
-struct is_use_as__impl<any<using_<T>, Trait<TraitArgs...>>> : std::true_type {};
+struct is_use_as__impl<any<Trait<TraitArgs...>, using_<T>>> : std::true_type {};
 template <typename T>
 inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 
@@ -3245,7 +3246,7 @@ template <typename T>
   requires is_use_as_<T>
 struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
   template <typename AnyValue>
-  using v_table_param = any<mutref, dynamic_copyable>;
+  using v_table_param = any<dynamic_copyable, mutref>;
   template <typename AnyValue>
   using v_table_return = int;  // dummy
   template <typename Model>
@@ -3725,7 +3726,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<val, dynamic_value>;
+  using any_value_t = any<dynamic_value, val>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
@@ -3783,7 +3784,7 @@ std::size_t& dispatchs_count() {
 ///
 /// \tparam Any The \ref any used for dispatch
 template <is_any Any>
-requires (Any::dyn && is_open_dispatch_v_table<typename Any::v_table_t>)
+  requires(Any::dyn && is_open_dispatch_v_table<typename Any::v_table_t>)
 struct virtual_ {
   using type = Any;
 };

@@ -42,8 +42,8 @@ TRAIT_EX_(monoid, anyxx::dynamic_value,
                      ([&x](auto const& r) { return x == r; }))),
          , , , ())
 
-template <typename Box = anyxx::val>
-using any_monoid = anyxx::any<Box, monoid>;
+template <typename Proxy = anyxx::val>
+using any_monoid = anyxx::any<monoid, Proxy>;
 
 }  // namespace example_2b
 
@@ -134,8 +134,8 @@ TEST_CASE("example 2b monoid a") {
   using namespace anyxx;
 
   test_monoid((1), std::vector{2, 3});
-  test_monoid<any<using_<int>, monoid>>(
-      trait_as<monoid>(1), std::vector<any<using_<int>, monoid>>{{2}, {3}});
+  test_monoid<any<monoid, using_<int>>>(
+      trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }

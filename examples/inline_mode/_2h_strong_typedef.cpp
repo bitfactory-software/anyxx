@@ -75,7 +75,7 @@ struct strong_typedef_trait_model_map<T, Tag>
 };
 
 template <typename T, typename Tag>
-using strong_typedef = any<using_<T>, strong_typedef_trait<Tag>>;
+using strong_typedef = anyxx::any<anyxx::strong_typedef_trait<Tag>, anyxx::using_<T>>;
 
 }  // namespace anyxx
 

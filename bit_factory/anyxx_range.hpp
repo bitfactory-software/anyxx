@@ -50,8 +50,8 @@ TRAIT_TEMPLATE_(
     (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),
      ANY_FN((any_forward_iterator<ValueType, Reference>), end, (), const)))
 
-template <typename ValueType, typename Reference, typename Box = anyxx::cref>
-using any_forward_range = any<Box, forward_range<ValueType, Reference>>;
+template <typename ValueType, typename Reference, typename Proxy = anyxx::cref>
+using any_forward_range = any<forward_range<ValueType, Reference>, Proxy>;
 
 template <typename A>
 concept is_any_self_forward_range =

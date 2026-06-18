@@ -28,7 +28,7 @@ TRAIT_EX_(value, anyxx::dynamic_value,
                       })),
           , , (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::shared>
-using any_value = anyxx::any<Proxy, value>;
+using any_value = anyxx::any<value, Proxy>;
 
 template <typename Proxy = anyxx::shared>
 using vany_value =

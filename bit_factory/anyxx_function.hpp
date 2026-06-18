@@ -54,26 +54,26 @@ namespace self_test {
 struct functor {
   int operator()(double) const;
 };
-using f_const_const = any<cref, function<int(double), const_>>;
+using f_const_const = any<function<int(double), const_>, cref>;
 static_assert(std::invocable<f_const_const, double>);
-using f_const_mutable = any<cref, function<int(double), mutable_>>;
+using f_const_mutable = any<function<int(double), mutable_>, cref>;
 static_assert(!std::invocable<f_const_mutable, double>);
-using f_mutable_const = any<mutref, function<int(double), const_>>;
+using f_mutable_const = any<function<int(double), const_>, mutref>;
 static_assert(std::invocable<f_mutable_const, double>);
-using f_mutable_mutable = any<mutref, function<int(double), mutable_>>;
+using f_mutable_mutable = any<function<int(double), mutable_>, mutref>;
 static_assert(std::invocable<f_mutable_mutable, double>);
 
 using f_const_const_val =
-    any<using_<functor const &>, function<int(double), const_>>;
+    any<function<int(double), const_>, using_<functor const&>>;
 static_assert(std::invocable<f_const_const_val, double>);
 using f_const_mutable_val =
-    any<using_<functor const &>, function<int(double), mutable_>>;
+    any<function<int(double), mutable_>, using_<functor const&>>;
 static_assert(!std::invocable<f_const_mutable_val, double>);
 using f_mutable_const_val =
-    any<using_<functor &>, function<int(double), const_>>;
+    any<function<int(double), const_>, using_<functor &>>;
 static_assert(std::invocable<f_mutable_const_val, double>);
 using f_mutable_mutable_val =
-    any<using_<functor &>, function<int(double), mutable_>>;
+    any<function<int(double), mutable_>, using_<functor &>>;
 static_assert(std::invocable<f_mutable_mutable_val, double>);
 }  // namespace self_test
 

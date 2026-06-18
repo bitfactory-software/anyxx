@@ -98,13 +98,13 @@ ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
 
 namespace {
 template <typename T>
-bool fun(anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& l,
-         anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& r) {
+bool fun(anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& l,
+         anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& r) {
   return r == l;
 }
 static_assert(
     _2p_lib::is_equal_comparable_model<
-        anyxx::any<anyxx::using_<_2p_app::foo>, _2p_lib::equal_comparable>>);
+        anyxx::any<_2p_lib::equal_comparable, anyxx::using_<_2p_app::foo>>>);
 }  // namespace
 
 TEST_CASE("_2p test optional 2") {

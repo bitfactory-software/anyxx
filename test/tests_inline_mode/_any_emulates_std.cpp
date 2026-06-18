@@ -141,12 +141,12 @@ TEST_CASE("std emulated function") {
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<cref, function<std::string(std::string const&), const_>> any_f_cref{f};
+    any<function<std::string(std::string const&), const_>, cref> any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any<cref, function<std::string(std::string const&), mutable_>> any_f_mref{
+    any<function<std::string(std::string const&), mutable_>, cref> any_f_mref{
         f};
 
-    any<using_<decltype(f)&>, function<std::string(std::string const&), const_>>
+    any<function<std::string(std::string const&), const_>, using_<decltype(f)&>>
         any_f_using_{f};
     CHECK(any_f_using_("static C++") == "static C++ world!");
 

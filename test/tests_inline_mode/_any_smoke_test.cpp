@@ -150,9 +150,9 @@ TEST_CASE("dynamic v_table cref") {
 
   //    any< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  [[maybe_unused]] anyxx::any<cref, dynamic_value> base_shape =
+  [[maybe_unused]] anyxx::any<dynamic_value, cref> base_shape =
       any_callable_shape_onst_observer_circle1;
-  [[maybe_unused]] anyxx::any<cref, dynamic_value> base_shapeX =
+  [[maybe_unused]] anyxx::any<dynamic_value, cref> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<cref>>(base_shape));
