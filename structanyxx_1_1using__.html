@@ -98,8 +98,8 @@ $(function(){initNavTree('structanyxx_1_1using__.html','','structanyxx_1_1using_
 Public Types</h2></td></tr>
 <tr class="memitem:a85f0979df0fc3c1b2ff317a27efb4052" id="r_a85f0979df0fc3c1b2ff317a27efb4052"><td class="memItemLeft"><a id="a85f0979df0fc3c1b2ff317a27efb4052" name="a85f0979df0fc3c1b2ff317a27efb4052"></a>
 using&#160;</td><td class="memItemRight"><b>value_t</b> = Value</td></tr>
-<tr class="memitem:a169b9630831d786ba2b2778b879330ed" id="r_a169b9630831d786ba2b2778b879330ed"><td class="memTemplParams" colspan="2">template&lt;typename Trait&gt; </td></tr>
-<tr class="memitem:a169b9630831d786ba2b2778b879330ed template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a169b9630831d786ba2b2778b879330ed">as</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;using_&lt;Value&gt;, Trait&gt;</td></tr>
+<tr class="memitem:a0bf065d75a9a6d95e728ef80516a1ca3" id="r_a0bf065d75a9a6d95e728ef80516a1ca3"><td class="memTemplParams" colspan="2">template&lt;typename Trait&gt; </td></tr>
+<tr class="memitem:a0bf065d75a9a6d95e728ef80516a1ca3 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a0bf065d75a9a6d95e728ef80516a1ca3">as</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, using_&lt;Value&gt;&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -128,11 +128,11 @@ struct anyxx::using_&lt; Value &gt;</div><p>Proxy to capture the dispatch target
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2c_trait_any_variant_8cpp-example.html#_a4">_2c_trait_any_variant.cpp</a>, and <a class="el" href="_2p_trait_optional_8cpp-example.html#_a5">_2p_trait_optional.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2c_trait_any_variant_8cpp-example.html#_a4">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2p_trait_optional_8cpp-example.html#_a5">_2p_trait_optional.cpp</a>, and <a class="el" href="_3_any_range_8cpp-example.html#_a5">_3_any_range.cpp</a>.</dd>
 </dl>
 </div><a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
-<a id="a169b9630831d786ba2b2778b879330ed" name="a169b9630831d786ba2b2778b879330ed"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a169b9630831d786ba2b2778b879330ed">&#9670;&#160;</a></span>as</h2>
+<a id="a0bf065d75a9a6d95e728ef80516a1ca3" name="a0bf065d75a9a6d95e728ef80516a1ca3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0bf065d75a9a6d95e728ef80516a1ca3">&#9670;&#160;</a></span>as</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -142,12 +142,12 @@ template&lt;typename Value&gt; </div>
 template&lt;typename Trait&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="structanyxx_1_1using__.html">anyxx::using_</a>&lt; Value &gt;::as = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;using_&lt;Value&gt;, Trait&gt;</td>
+          <td class="memname">using <a class="el" href="structanyxx_1_1using__.html">anyxx::using_</a>&lt; Value &gt;::as = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, using_&lt;Value&gt;&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 <p>Helper type alias template to trait a model with an <a class="el" href="classanyxx_1_1any.html" title="any">any</a>. See also <a class="el" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c" title="trait_as">trait_as</a>. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2e_trait_algebra_8cpp-example.html#_a10">_2e_trait_algebra.cpp</a>, and <a class="el" href="_3_any_range_8cpp-example.html#_a6">_3_any_range.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2e_trait_algebra_8cpp-example.html#_a10">_2e_trait_algebra.cpp</a>, and <a class="el" href="_3_any_range_8cpp-example.html#_a7">_3_any_range.cpp</a>.</dd>
 </dl>
 
 </div>

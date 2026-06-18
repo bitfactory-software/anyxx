@@ -275,8 +275,8 @@ Macros</h2></td></tr>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
 <div class="line">)</div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1051</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:912</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1052</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga47a5ba38b03d55fa5f63979281028d22"><div class="ttname"><a href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a></div><div class="ttdeci">#define ANY(n, l,...)</div><div class="ttdoc">Simple ANY macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:913</div></div>
 </div><!-- fragment --><p> is equivalent to: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(example,</div>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
@@ -668,12 +668,13 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">                                                                          \</div>
-<div class="line"><span class="keyword">template</span> &lt;_detail_ANYXX_TYPENAME_PARAM_LIST(                              \</div>
-<div class="line">    any_template_params_with_defaults)&gt;                                   \</div>
-<div class="line"><span class="keyword">using </span>any_##n = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;Proxy, n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS( \</div>
-<div class="line">                                      pure_template_params)&gt;;</div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2689</div></div>
+<b>Value:</b><div class="fragment"><div class="line">                                                                             \</div>
+<div class="line"><span class="keyword">template</span> &lt;_detail_ANYXX_TYPENAME_PARAM_LIST(                                 \</div>
+<div class="line">    any_template_params_with_defaults)&gt;                                      \</div>
+<div class="line"><span class="keyword">using </span>any_##n =                                                              \</div>
+<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(pure_template_params), \</div>
+<div class="line">               Proxy&gt;;</div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2690</div></div>
 </div><!-- fragment -->
 </div>
 </div>
