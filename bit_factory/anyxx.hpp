@@ -2215,7 +2215,8 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 /// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
-struct val {
+template <bool nullabale>
+struct basic_val {
   union data_union {
     data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
     data_union(data_union const& other) noexcept { trivial = other.trivial; }
@@ -2224,13 +2225,16 @@ struct val {
     local_data<true> trivial;
   } data;
 
-  val(mutable_void ptr = 0) : data{ptr} {}
-  val& operator=([[maybe_unused]] val const& other) noexcept {
+  basic_val(mutable_void ptr = 0) : data{ptr} {}
+  basic_val& operator=([[maybe_unused]] basic_val const& other) noexcept {
     data.trivial = other.data.trivial;
     return *this;
   }
-  ~val() {}
+  ~basic_val() {}
 };
+
+using val = basic_val<false>;
+using nullable_val = basic_val<true>;
 
 template <typename V>
 auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
@@ -2308,8 +2312,8 @@ auto make_value(Args&&... args) {
   }
 }
 
-template <>
-struct proxy_trait<val> : basic_proxy_trait<val> {
+template <bool nullable>
+struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>> {
   using void_t = void*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -2320,6 +2324,8 @@ struct proxy_trait<val> : basic_proxy_trait<val> {
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
+  static constexpr bool is_default_constructible = nullable     ;
+
   template <typename VTable>
   static constexpr bool is_compatible_with_v_table() {
     return is_allocate_v_table<VTable> && is_copy_constructor_v_table<VTable> &&
