@@ -100,4 +100,6 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
   }
 };
 
+static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
+
 }  // namespace anyxx
