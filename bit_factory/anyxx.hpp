@@ -2376,7 +2376,6 @@ struct proxy_trait<basic_val<Nullable>>
     return v;
   }
 
-  template <typename Nullable>
   static void move_to(basic_val<Nullable>& to, [[maybe_unused]] auto v_table_to,
                       basic_val<Nullable>&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
@@ -2436,7 +2435,6 @@ struct proxy_trait<basic_val<Nullable>>
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
-  template <typename Nullable>
   static void copy_construct_from(basic_val<Nullable>& to, auto to_v_table,
                                   basic_val<Nullable> const& from,
                                   is_v_table auto* from_v_table) {
@@ -2480,7 +2478,6 @@ struct proxy_trait<basic_val<Nullable>>
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  template <typename Nullable>
   static void destroy(basic_val<Nullable>& v, is_v_table auto* v_table) {
     visit_value(overloads{[&](heap_data& heap) {
                             assert(v_table || !heap.ptr);
