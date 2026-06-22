@@ -612,6 +612,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n;    \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_rep;                                                      \
+  struct n##_is_nullable;                                                      \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
@@ -651,9 +652,14 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using v_table_t = n##_v_table;                                             \
                                                                                \
+    using val_nullable =                                                       \
+        std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
+                           std::true_type,                                     \
+                           typename v_table_base_t::val_nullable>;             \
+                                                                               \
     using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
                                        any_template_params),                   \
-                                   anyxx::val>;                                \
+                                   anyxx::basic_val<val_nullable>>;            \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -677,12 +683,16 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
       : BASE                                                                   \
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
-    using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
-                                       any_template_params),                   \
-                                   anyxx::val>;                                \
-                                                                               \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
+                                                                               \
+    using val_nullable =                                                       \
+        std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
+                           std::true_type, typename base_t::val_nullable>;     \
+                                                                               \
+    using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
+                                       any_template_params),                   \
+                                   anyxx::basic_val<val_nullable>>;            \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -1409,6 +1419,8 @@ using mutref = observer<mutable_void>;
 struct observeable_v_table {
   using v_table_t = observeable_v_table;
 
+  using val_nullable = std::false_type;
+
   /// Type-erasing constructor
   template <typename Concrete>
   explicit observeable_v_table(
@@ -1438,6 +1450,7 @@ struct observeable {
   using static_dispatch_map_t = no_model_map<StaticDispatchType>;
 
   using v_table_t = observeable_v_table;
+  using val_nullable = typename v_table_t::val_nullable;
 };
 
 template <typename VTable>
@@ -1510,6 +1523,7 @@ struct basic_proxy_trait {
   inline static constexpr bool is_weak = false;
   inline static constexpr bool is_lifetime_bound = false;
   inline static constexpr bool is_object = true;
+  inline static constexpr bool allow_any_default_constructibile = false;
 
   template <typename VTable>
   static constexpr bool is_compatible_with_v_table() {
@@ -1545,7 +1559,11 @@ concept is_proxy = requires(E e) {
   { proxy_trait<E>::is_weak } -> std::convertible_to<bool>;
   { proxy_trait<E>::is_lifetime_bound } -> std::convertible_to<bool>;
   { proxy_trait<E>::is_object } -> std::convertible_to<bool>;
-  // illustartêd:,
+  {
+    proxy_trait<E>::allow_any_default_constructibile
+  } -> std::convertible_to<bool>;
+
+  // illustrated:
   // requires requires(v_table* required_v_table) {
   //   {
   //     proxy_trait<E>::get_proxy_ptr_in(e, required_v_table)
@@ -1740,6 +1758,8 @@ static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
 template <typename V>
 struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
+  static constexpr bool allow_any_default_constructibile = true;
+
   template <typename Rep>
   using proxy_impl = using_<Rep>;
   using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
@@ -1787,6 +1807,8 @@ struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
     static constexpr bool value = true;
   };
   static constexpr bool is_owner = false;
+  static constexpr bool allow_any_default_constructibile = true;
+
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {}
 
@@ -2137,6 +2159,8 @@ struct proxy_trait<weak> : basic_proxy_trait<weak> {
   static constexpr bool is_owner = false;
   static constexpr bool is_weak =  // NOLINT([duplInheritedMember)
       true;                        // cppcheck-suppress duplInheritedMember
+  static constexpr bool allow_any_default_constructibile = true;
+
   static auto clone_from([[maybe_unused]] const_void data_ptr,  // NOLINT
                          [[maybe_unused]] is_v_table auto* v_table) {
     return weak{};
@@ -2215,7 +2239,7 @@ struct local_data : std::array<std::byte, sizeof(mutable_void)> {
 /// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
-template <bool nullabale>
+template <typename Nullable>
 struct basic_val {
   union data_union {
     data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
@@ -2233,8 +2257,8 @@ struct basic_val {
   ~basic_val() {}
 };
 
-using val = basic_val<false>;
-using nullable_val = basic_val<true>;
+using val = basic_val<std::false_type>;
+using nullable_val = basic_val<std::true_type>;
 
 template <typename V>
 auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
@@ -2250,8 +2274,8 @@ auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
       std::forward<V>(v).data.trivial);
 };
 
-template <typename V2>
-auto visit_value(auto&& visitor, val& v1, std::size_t size1, V2&& v2,
+template <typename Nullable, typename V2>
+auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1, V2&& v2,
                  std::size_t size2) -> decltype(auto) {
   if (size1 > sizeof(mutable_void)) {
     if (size2 > sizeof(mutable_void)) {
@@ -2289,31 +2313,32 @@ auto visit_value(auto&& visitor, val& v1, std::size_t size1, V2&& v2,
       v1.data.trivial, std::forward<V2>(v2).data.trivial);
 };
 
-template <typename T, typename... Args>
+template <typename Nullable, typename T, typename... Args>
 auto make_local_value(Args&&... args) {
   static_assert(alignof(T) <= alignof(mutable_void));
   static_assert(sizeof(T) <= sizeof(mutable_void));
   constexpr bool is_trivial = std::is_trivial_v<T>;
   using local_data_type = local_data<is_trivial>;
-  val v;
+  basic_val<Nullable> v;
   auto location =
       static_cast<T*>(static_cast<mutable_void>(v.data.local.data()));
   std::construct_at<T>(location, std::forward<Args>(args)...);
   return v;
 }
 
-template <typename T, typename... Args>
+template <typename Nullable, typename T, typename... Args>
 auto make_value(Args&&... args) {
   static_assert(alignof(T) <= alignof(mutable_void));
   if constexpr (sizeof(T) <= sizeof(mutable_void)) {
-    return make_local_value<T>(std::forward<Args>(args)...);
+    return make_local_value<Nullable, T>(std::forward<Args>(args)...);
   } else {
-    return val{new T(std::forward<Args>(args)...)};
+    return basic_val<Nullable>{new T(std::forward<Args>(args)...)};
   }
 }
 
-template <bool nullable>
-struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>> {
+template <typename Nullable>
+struct proxy_trait<basic_val<Nullable>>
+    : basic_proxy_trait<basic_val<Nullable>> {
   using void_t = void*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -2324,6 +2349,8 @@ struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>>
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
+  static constexpr bool allow_any_default_constructibile =
+      true;  // Nullable::value;
 
   template <typename VTable>
   static constexpr bool is_compatible_with_v_table() {
@@ -2349,7 +2376,9 @@ struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>>
     return v;
   }
 
-  static void move_to(val& to, [[maybe_unused]] auto v_table_to, val&& from,
+  template <typename Nullable>
+  static void move_to(basic_val<Nullable>& to, [[maybe_unused]] auto v_table_to,
+                      basic_val<Nullable>&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     visit_value(
@@ -2407,7 +2436,9 @@ struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>>
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
-  static void copy_construct_from(val& to, auto to_v_table, val const& from,
+  template <typename Nullable>
+  static void copy_construct_from(basic_val<Nullable>& to, auto to_v_table,
+                                  basic_val<Nullable> const& from,
                                   is_v_table auto* from_v_table) {
     if (!from_v_table) return;
     visit_value(
@@ -2449,7 +2480,8 @@ struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>>
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  static void destroy(val& v, is_v_table auto* v_table) {
+  template <typename Nullable>
+  static void destroy(basic_val<Nullable>& v, is_v_table auto* v_table) {
     visit_value(overloads{[&](heap_data& heap) {
                             assert(v_table || !heap.ptr);
                             if (v_table) delete_(v_table, heap.ptr);
@@ -2481,15 +2513,15 @@ struct proxy_trait<basic_val<nullable>> : basic_proxy_trait<basic_val<nullable>>
 
   template <typename V>
   static auto construct_in_place(V&& v) {
-    return make_value<V>(std::forward<V>(v));
+    return make_value<Nullable, V>(std::forward<V>(v));
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place(Args&&... args) {
-    return make_value<T>(std::forward<Args>(args)...);
+    return make_value<Nullable, T>(std::forward<Args>(args)...);
   }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
-    return make_value<std::decay_t<ConstructedWith>>(
+    return make_value<Nullable, std::decay_t<ConstructedWith>>(
         std::forward<ConstructedWith>(v));
   }
 };
@@ -2722,6 +2754,10 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   proxy_impl_t proxy_{};
 
  public:
+  any()
+    requires proxy_trait_t::allow_any_default_constructibile
+  {}
+
   // cppcheck-suppress-begin noExplicitConstructor
   /// Type-erasing constructor for lifetime owning proxies. The concrete
   /// behavior is controlled by the proxy via its corresponding \ref
@@ -2778,7 +2814,6 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
     v_table_holder_t::template init_v_table<proxy_impl_t, T>();
   }
 
-  any() = default;
   ~any() {
     proxy_trait_t::destroy(proxy_, v_table_holder_t::get_v_table_ptr());
   }
@@ -2850,8 +2885,6 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
     v_table_holder_t::set_v_table_ptr(other.release_v_table());
     return *this;
   }
-  template <typename OtherProxy>
-  using type_for = any<Trait, OtherProxy>;
 
   template <is_any Friend>
   friend inline auto& get_proxy(Friend const& any);
@@ -2874,7 +2907,9 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
     requires(
         std::derived_from<typename To::v_table_t, typename From::v_table_t>);
 
-  explicit operator bool() const {
+  explicit operator bool() const
+    requires proxy_trait_t::allow_any_default_constructibile
+  {
     if constexpr (!voidness<typename proxy_trait_t::static_dispatch_t>) {
       if constexpr (is_type_class<proxy_t>) {
         return true;
@@ -3471,12 +3506,11 @@ std::expected<ToAny, cast_error> clone_to(FromAny const& from) {
 template <is_any FromAny>
   requires std::same_as<typename FromAny::proxy_t, weak>
 auto lock(FromAny const& from_interface) {
-  using to_interface_t = FromAny::template type_for<shared>;
-  static_assert(is_any<to_interface_t>);
-  using return_t = std::optional<to_interface_t>;
+  using to_any_t = any<typename FromAny::trait_t, shared>;
+  static_assert(is_any<to_any_t>);
+  using return_t = std::optional<to_any_t>;
   if (auto locked = get_proxy(from_interface).lock())
-    return return_t{
-        to_interface_t{std::move(locked), get_v_table(from_interface)}};
+    return return_t{to_any_t{std::move(locked), get_v_table(from_interface)}};
   return return_t{};
 }
 
@@ -3740,7 +3774,7 @@ template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
   using any_value_t = any<dynamic_value>;
-  std::vector<any_value_t> table_;
+  std::vector<std::optional<any_value_t>> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
     using value_t = typename Member::value_t;
@@ -3751,13 +3785,13 @@ struct members {
   typename Member::value_t const* get(Member member) const {
     const auto& val = table_[member.index];
     if (!val) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(val);
+    return unchecked_unerase_cast<typename Member::value_t>(*val);
   }
   template <typename Member>
   typename Member::value_t* get(Member member) {
     auto& val = table_[member.index];
     if (!val) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(val);
+    return unchecked_unerase_cast<typename Member::value_t>(*val);
   }
   template <typename Member>
   typename Member::value_t& operator[](Member member) {

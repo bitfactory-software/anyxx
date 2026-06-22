@@ -131,18 +131,6 @@ TEST_CASE("dynamic v_table cref") {
   [[maybe_unused]] cref o2 = o1;
 
   {
-    using any_drawable_const_observer = any_drawable<cref>;
-    any_drawable_const_observer sb1;
-    any_drawable_const_observer sb2{c};
-    sb1 = sb2;
-  }
-  {
-    using any_drawable_mutable_observer = any_drawable<mutref>;
-    any_drawable_mutable_observer sb1;
-    any_drawable_mutable_observer sb2{c};
-    sb1 = sb2;
-  }
-  {
     using any_drawable_mutable_observer = any_drawable<mutref>;
     any_drawable_mutable_observer sb1{c};
     any_drawable_mutable_observer sb2{std::move(sb1)};

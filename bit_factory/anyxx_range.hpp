@@ -28,7 +28,8 @@ TRAIT_TEMPLATE_EX_(
 //                   using value_type = ValueType; using reference =
 //                   Reference;))
 
-ANY_TEMPLATE_EX_(
+struct forward_iterator_is_nullable {};
+TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP(anyxx::self&, ++, (), ),
      ANY_FN_DEF(public, anyxx::self, post_inc, (), , ([&x]() { return x++; })),
@@ -37,13 +38,16 @@ ANY_TEMPLATE_EX_(
                 ([&x](auto const& r) { return x == r; })),
      ANY_OP_DEF(public, bool, !=, not_equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x != r; }))),
-    anyxx::val, , , ,
+    , , ,
     (using iterator_category = std::forward_iterator_tag;
      using difference_type = std::ptrdiff_t; using value_type = ValueType;
      using reference = Reference;
      template <typename Self> auto operator++(this Self&& self, int) {
        return std::forward<Self>(self).post_inc();
      }))
+
+template <typename ValueType, typename Reference, typename Proxy = nullable_val>
+using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 
 TRAIT_TEMPLATE_(
     ((ValueType), (Reference)), forward_range, dynamic_value, (),
@@ -100,6 +104,10 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
   }
 };
 
+
+static_assert(any_forward_iterator<self, self>::v_table_t::val_nullable::value == true);
+static_assert(std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t, any<forward_iterator<self,self>, nullable_val>>);
+static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 
 }  // namespace anyxx

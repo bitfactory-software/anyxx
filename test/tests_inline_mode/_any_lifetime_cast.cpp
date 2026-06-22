@@ -33,30 +33,18 @@ std::string func(any<slick_stringable, cref> x) { return x(); }
 
 }  // namespace
 
-TEST_CASE("any bool operator") {
-  any<dynamic_value, cref> a;
-  bool is_null = !a;
-  CHECK(is_null);
-  int i = 0;
-  any<dynamic_value, cref> b{i};
-  bool not_null = static_cast<bool>(b);
-  CHECK(not_null);
-}
-
 TEST_CASE("slick_stringable observeable_v_table") {
   {
     X f("hallo");
-    any<slick_stringable, cref> a{f};
-    bool is_null = !a;
-    CHECK(!is_null);
+    any<slick_stringable> a{f};
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
 
-    any<slick_stringable, cref> b = a;
-    any<slick_stringable, cref> c = std::move(b);
-    any<slick_stringable, cref> d{a};
-    any<slick_stringable, cref> e{std::move(d)};
+    any<slick_stringable> b = a;
+    any<slick_stringable> c = std::move(b);
+    any<slick_stringable> d{a};
+    any<slick_stringable> e{std::move(d)};
     auto eq = a() == func(e);
     a = e;
     CHECK(eq);
@@ -66,16 +54,13 @@ TEST_CASE("slick_stringable observeable_v_table") {
   {
     X f("hallo");
     const any<slick_stringable, mutref> a{f};
-    bool is_null = !a;
-    CHECK(!is_null);
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
   }
   {
-    Y y;
     X f("hallo");
-    y.xxx = any<slick_stringable, mutref>{f};
+    Y y{.xxx = any<slick_stringable, mutref>{f}};
   }
 }
 
