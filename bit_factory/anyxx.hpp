@@ -3773,8 +3773,8 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<dynamic_value>;
-  std::vector<std::optional<any_value_t>> table_;
+  using any_value_t = any<dynamic_value, nullable_val>;
+  std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
     using value_t = typename Member::value_t;
@@ -3785,13 +3785,13 @@ struct members {
   typename Member::value_t const* get(Member member) const {
     const auto& val = table_[member.index];
     if (!val) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(*val);
+    return unchecked_unerase_cast<typename Member::value_t>(val);
   }
   template <typename Member>
   typename Member::value_t* get(Member member) {
     auto& val = table_[member.index];
     if (!val) return {};
-    return unchecked_unerase_cast<typename Member::value_t>(*val);
+    return unchecked_unerase_cast<typename Member::value_t>(val);
   }
   template <typename Member>
   typename Member::value_t& operator[](Member member) {
