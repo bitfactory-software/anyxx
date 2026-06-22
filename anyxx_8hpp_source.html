@@ -3506,8 +3506,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="foldopen" id="foldopen03774" data-start="{" data-end="};">
 <div class="line"><a id="l03774" name="l03774"></a><span class="lineno"><a class="line" href="structanyxx_1_1members.html"> 3774</a></span><span class="keyword">struct </span>members {</div>
 <div class="line"><a id="l03775" name="l03775"></a><span class="lineno"> 3775</span>  members() : table_(members_count&lt;InObject&gt;()) {}</div>
-<div class="line"><a id="l03776" name="l03776"></a><span class="lineno"> 3776</span>  <span class="keyword">using </span>any_value_t = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;dynamic_value&gt;</a>;</div>
-<div class="line"><a id="l03777" name="l03777"></a><span class="lineno"> 3777</span>  std::vector&lt;std::optional&lt;any_value_t&gt;&gt; table_;</div>
+<div class="line"><a id="l03776" name="l03776"></a><span class="lineno"> 3776</span>  <span class="keyword">using </span>any_value_t = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;dynamic_value, nullable_val&gt;</a>;</div>
+<div class="line"><a id="l03777" name="l03777"></a><span class="lineno"> 3777</span>  std::vector&lt;any_value_t&gt; table_;</div>
 <div class="line"><a id="l03778" name="l03778"></a><span class="lineno"> 3778</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Member, <span class="keyword">typename</span> Arg&gt;</div>
 <div class="line"><a id="l03779" name="l03779"></a><span class="lineno"> 3779</span>  <span class="keywordtype">void</span> set(Member member, Arg&amp;&amp; arg) {</div>
 <div class="line"><a id="l03780" name="l03780"></a><span class="lineno"> 3780</span>    <span class="keyword">using </span>value_t = <span class="keyword">typename</span> Member::value_t;</div>
@@ -3518,13 +3518,13 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03785" name="l03785"></a><span class="lineno"> 3785</span>  <span class="keyword">typename</span> Member::value_t <span class="keyword">const</span>* get(Member member)<span class="keyword"> const </span>{</div>
 <div class="line"><a id="l03786" name="l03786"></a><span class="lineno"> 3786</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; val = table_[member.index];</div>
 <div class="line"><a id="l03787" name="l03787"></a><span class="lineno"> 3787</span>    <span class="keywordflow">if</span> (!val) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l03788" name="l03788"></a><span class="lineno"> 3788</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(*val);</div>
+<div class="line"><a id="l03788" name="l03788"></a><span class="lineno"> 3788</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(val);</div>
 <div class="line"><a id="l03789" name="l03789"></a><span class="lineno"> 3789</span>  }</div>
 <div class="line"><a id="l03790" name="l03790"></a><span class="lineno"> 3790</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Member&gt;</div>
 <div class="line"><a id="l03791" name="l03791"></a><span class="lineno"> 3791</span>  <span class="keyword">typename</span> Member::value_t* get(Member member) {</div>
 <div class="line"><a id="l03792" name="l03792"></a><span class="lineno"> 3792</span>    <span class="keyword">auto</span>&amp; val = table_[member.index];</div>
 <div class="line"><a id="l03793" name="l03793"></a><span class="lineno"> 3793</span>    <span class="keywordflow">if</span> (!val) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l03794" name="l03794"></a><span class="lineno"> 3794</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(*val);</div>
+<div class="line"><a id="l03794" name="l03794"></a><span class="lineno"> 3794</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(val);</div>
 <div class="line"><a id="l03795" name="l03795"></a><span class="lineno"> 3795</span>  }</div>
 <div class="line"><a id="l03796" name="l03796"></a><span class="lineno"> 3796</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Member&gt;</div>
 <div class="line"><a id="l03797" name="l03797"></a><span class="lineno"> 3797</span>  <span class="keyword">typename</span> Member::value_t&amp; operator[](Member member) {</div>
