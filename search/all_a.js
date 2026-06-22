@@ -4,8 +4,8 @@ var searchData=
   ['basic_20any_20std_3a_3avariant_20usage_1',['Showcase 6: Basic &lt;em&gt;Any++&lt;/em&gt; std::variant usage',['../index.html#autotoc_md34',1,'']]],
   ['basic_20any_20usage_2',['Showcase 1: Basic &lt;em&gt;Any++&lt;/em&gt; usage',['../index.html#autotoc_md24',1,'']]],
   ['basic_5fval_3',['basic_val',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
-  ['basic_5fval_3c_20false_20_3e_4',['basic_val&lt; false &gt;',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
-  ['basic_5fval_3c_20true_20_3e_5',['basic_val&lt; true &gt;',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
+  ['basic_5fval_3c_20std_3a_3afalse_5ftype_20_3e_4',['basic_val&lt; std::false_type &gt;',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
+  ['basic_5fval_3c_20std_3a_3atrue_5ftype_20_3e_5',['basic_val&lt; std::true_type &gt;',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
   ['binary_20operator_6',['Showcase 3: &lt;em&gt;Any++&lt;/em&gt; Open Multi Dispatch, (Type Erased Binary Operator)',['../index.html#autotoc_md31',1,'']]],
   ['borrow_5fas_7',['borrow_as',['../group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16',1,'anyxx::borrow_as()'],['../md_docs_2Proxy__overview.html#autotoc_md4',1,'borrow_as']]]
 ];

@@ -119,9 +119,6 @@ using&#160;</td><td class="memItemRight"><b>model_map_t</b> = typename trait_t::
 using&#160;</td><td class="memItemRight"><b>rep_type</b> = typename model_map_t::rep_type</td></tr>
 <tr class="memitem:a305b11281b83663884eb198ef0dbcb36" id="r_a305b11281b83663884eb198ef0dbcb36"><td class="memItemLeft"><a id="a305b11281b83663884eb198ef0dbcb36" name="a305b11281b83663884eb198ef0dbcb36"></a>
 using&#160;</td><td class="memItemRight"><b>proxy_impl_t</b> = typename proxy_trait_t::template proxy_impl&lt;rep_type&gt;</td></tr>
-<tr class="memitem:ae02c199bfde494d07245c16af8c576df" id="r_ae02c199bfde494d07245c16af8c576df"><td class="memTemplParams" colspan="2"><a id="ae02c199bfde494d07245c16af8c576df" name="ae02c199bfde494d07245c16af8c576df"></a>
-template&lt;typename OtherProxy&gt; </td></tr>
-<tr class="memitem:ae02c199bfde494d07245c16af8c576df template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>type_for</b> = any&lt;Trait, OtherProxy&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -163,7 +160,7 @@ requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_
 template&lt;is_any Other&gt; <br />
 requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_dyn&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
 <tr class="memitem:a8a5c3dc36c83dbf7b548241bceacf427 template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
-<tr class="memitem:a32739d90e9296e90a16ab14999d00aca" id="r_a32739d90e9296e90a16ab14999d00aca"><td class="memItemLeft"><a id="a32739d90e9296e90a16ab14999d00aca" name="a32739d90e9296e90a16ab14999d00aca"></a>
+<tr class="memitem:abdb7a5852dce0df7f228fbddda06db58" id="r_abdb7a5852dce0df7f228fbddda06db58"><td class="memItemLeft"><a id="abdb7a5852dce0df7f228fbddda06db58" name="abdb7a5852dce0df7f228fbddda06db58"></a>
 &#160;</td><td class="memItemRight"><b>operator bool</b> () const</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
