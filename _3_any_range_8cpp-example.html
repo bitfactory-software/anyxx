@@ -302,6 +302,11 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">auto</span> v = std::views::iota(0, 3);</div>
 <div class="line">  <span class="keyword">auto</span> v2 =</div>
 <div class="line">      v | std::views::transform([](<span class="keyword">auto</span> i) { <span class="keywordflow">return</span> <span class="keyword">static_cast&lt;</span><span class="keywordtype">int</span><span class="keyword">&gt;</span>(i); });</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_move_constructible_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_move_assignable_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_assignable_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
+<div class="line">  <span class="comment">//static_assert(std::is_trivial_v&lt;decltype(v2)&gt;);</span></div>
 <div class="line">  any_forward_range&lt;using_&lt;int&gt;::as&lt;stringable&gt;, <a id="_a6" name="_a6"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt; r{</div>
 <div class="line">      v2};</div>
 <div class="line">  std::string result;</div>
@@ -311,13 +316,13 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  CHECK(result == <span class="stringliteral">&quot;012&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2744</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2752</div></div>
 <div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1401</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><div class="ttname"><a href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a></div><div class="ttdeci">#define ANY_(n, BASE, l, proxy_default)</div><div class="ttdoc">ANY with a baseSee ANY for explanation.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:896</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:796</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gaf19a15e6c5658db6712181244843ceb5"><div class="ttname"><a href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1041</div></div>
-<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3063</div></div>
-<div class="ttc" id="astructanyxx_1_1using___html_a0bf065d75a9a6d95e728ef80516a1ca3"><div class="ttname"><a href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_::as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Value &gt; &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3074</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3071</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html_a0bf065d75a9a6d95e728ef80516a1ca3"><div class="ttname"><a href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_::as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Value &gt; &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3082</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
