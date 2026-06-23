@@ -1336,16 +1336,6 @@ concept is_const_void = is_const_void_<Voidness>::value;
 
 class meta_data;
 
-template <typename Model>
-constexpr inline std::size_t compute_model_size() {
-  if constexpr (std::is_trivially_copyable_v<Model> &&
-                sizeof(Model) <= sizeof(mutable_void)) {
-    return 0;
-  } else {
-    return sizeof(Model);
-  }
-}
-
 using allocate_t = mutable_void (*)();
 template <typename VTable>
 concept is_allocate_v_table = requires(VTable* v_table) {
@@ -2201,6 +2191,18 @@ static_assert(is_proxy<weak>);
 // --------------------------------------------------------------------------------
 // erased data basic_val
 
+constexpr std::size_t small_object_size = 2 * sizeof(mutable_void);
+
+template <typename Model>
+constexpr inline std::size_t compute_model_size() {
+  if constexpr (std::is_trivially_copyable_v<Model> &&
+                sizeof(Model) <= small_object_size) {
+    return 0;
+  } else {
+    return sizeof(Model);
+  }
+}
+
 struct heap_data {
   mutable_void ptr = nullptr;
   heap_data(heap_data const&) {}  // NOLINT(missingMemberCopy)
@@ -2225,7 +2227,7 @@ struct heap_data {
 };
 
 template <bool Trivial>
-struct local_data : std::array<std::byte, sizeof(mutable_void)> {
+struct local_data : std::array<std::byte, small_object_size> {
   static constexpr inline bool is_trivial = Trivial;
 };
 
@@ -2264,7 +2266,7 @@ using nullable_val = basic_val<std::true_type>;
 
 template <typename V>
 auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
-  if (size > sizeof(mutable_void)) {
+  if (size > small_object_size) {
     return std::forward<decltype(visitor)>(visitor)(
         std::forward<V>(v).data.heap);
   } else if (size > 0) {
@@ -2279,8 +2281,8 @@ auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
 template <typename Nullable, typename V2>
 auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
                  V2&& v2, std::size_t size2) -> decltype(auto) {
-  if (size1 > sizeof(mutable_void)) {
-    if (size2 > sizeof(mutable_void)) {
+  if (size1 > small_object_size) {
+    if (size2 > small_object_size) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.heap, std::forward<V2>(v2).data.heap);
     } else if (size2 > 0) {
@@ -2291,7 +2293,7 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.heap, std::forward<V2>(v2).data.trivial);
   } else if (size1 > 0) {
-    if (size2 > sizeof(mutable_void)) {
+    if (size2 > small_object_size) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.local, std::forward<V2>(v2).data.heap);
     } else if (size2 > 0) {
@@ -2303,7 +2305,7 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
         v1.data.local, std::forward<V2>(v2).data.trivial);
   }
   assert(size1 == 0);
-  if (size2 > sizeof(mutable_void)) {
+  if (size2 > small_object_size) {
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.trivial, std::forward<V2>(v2).data.heap);
   } else if (size2 > 0) {
@@ -2318,7 +2320,7 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
 template <typename Nullable, typename T, typename... Args>
 auto make_local_value(Args&&... args) {
   static_assert(alignof(T) <= alignof(mutable_void));
-  static_assert(sizeof(T) <= sizeof(mutable_void));
+  static_assert(sizeof(T) <= small_object_size);
   constexpr bool is_trivial = std::is_trivial_v<T>;
   using local_data_type = local_data<is_trivial>;
   basic_val<Nullable> v;
@@ -2331,7 +2333,7 @@ auto make_local_value(Args&&... args) {
 template <typename Nullable, typename T, typename... Args>
 auto make_value(Args&&... args) {
   static_assert(alignof(T) <= alignof(mutable_void));
-  if constexpr (sizeof(T) <= sizeof(mutable_void)) {
+  if constexpr (sizeof(T) <= small_object_size) {
     return make_local_value<Nullable, T>(std::forward<Args>(args)...);
   } else {
     return basic_val<Nullable>{new T(std::forward<Args>(args)...)};
