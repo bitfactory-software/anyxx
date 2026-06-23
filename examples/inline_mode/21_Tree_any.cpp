@@ -11,9 +11,13 @@ using namespace anyxx;
 
 namespace {
 
-ANY(node, (ANY_FN(int, value, (), const),
+ANY_(node, dynamic_value, (ANY_FN(int, value, (), const),
              ANY_FN(std::string, as_forth, (), const),
-             ANY_FN(std::string, as_lisp, (), const)), shared) //val)
+             ANY_FN(std::string, as_lisp, (), const)), val) //val)
+
+//ANY(node, (ANY_FN(int, value, (), const),
+//             ANY_FN(std::string, as_forth, (), const),
+//             ANY_FN(std::string, as_lisp, (), const)), shared) //val)
 
 struct Plus {
   Plus(any_node<> left, any_node<> right)
@@ -66,7 +70,8 @@ TEST_CASE("21_Tree_any") {
       make_node<Integer>(2),
       make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));
 
-  REQUIRE(expr.value() == 14);
+  auto v = expr.value();
+  REQUIRE(v == 14);
   std::stringstream out;
   out << expr.as_forth() << " = " << expr.as_lisp() << " = " << expr.value();
   REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");

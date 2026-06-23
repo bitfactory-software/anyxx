@@ -2199,7 +2199,7 @@ static_assert(is_proxy<shared>);
 static_assert(is_proxy<weak>);
 
 // --------------------------------------------------------------------------------
-// erased data val
+// erased data basic_val
 
 struct heap_data {
   mutable_void ptr = nullptr;
@@ -2248,9 +2248,11 @@ struct basic_val {
     local_data<false> local;
     local_data<true> trivial;
   } data;
+  mutable_void ptr_ = nullptr;
 
-  basic_val(mutable_void ptr = 0) : data{ptr} {}
+  basic_val(mutable_void ptr = 0) : data{ptr}, ptr_{ptr} {}
   basic_val& operator=([[maybe_unused]] basic_val const& other) noexcept {
+    // only to satisfy compiler, is not called!
     data.trivial = other.data.trivial;
     return *this;
   }
@@ -2275,8 +2277,8 @@ auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
 };
 
 template <typename Nullable, typename V2>
-auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1, V2&& v2,
-                 std::size_t size2) -> decltype(auto) {
+auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
+                 V2&& v2, std::size_t size2) -> decltype(auto) {
   if (size1 > sizeof(mutable_void)) {
     if (size2 > sizeof(mutable_void)) {
       return std::forward<decltype(visitor)>(visitor)(
@@ -2322,7 +2324,7 @@ auto make_local_value(Args&&... args) {
   basic_val<Nullable> v;
   auto location =
       static_cast<T*>(static_cast<mutable_void>(v.data.local.data()));
-  std::construct_at<T>(location, std::forward<Args>(args)...);
+  v.ptr_ = std::construct_at<T>(location, std::forward<Args>(args)...);
   return v;
 }
 
@@ -2362,17 +2364,17 @@ struct proxy_trait<basic_val<Nullable>>
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
     assert(v_table);
-    anyxx::val v;
-    visit_value(overloads{[&](heap_data& heap) {
-                            heap.ptr = copy_construct(v_table, data_ptr);
-                          },
-                          [&]<bool Trivial>(local_data<Trivial>& local) {
-                            copy_construct_at(
-                                v_table,
-                                static_cast<mutable_void>(local.data()),
-                                data_ptr);
-                          }},
-                v, v_table->model_size);
+    basic_val<Nullable> v;
+    v.ptr_ = visit_value(
+        overloads{[&](heap_data& heap) {
+                    return heap.ptr = copy_construct(v_table, data_ptr);
+                  },
+                  [&]<bool Trivial>(local_data<Trivial>& local) {
+                    auto local_data = static_cast<mutable_void>(local.data());
+                    copy_construct_at(v_table, local_data, data_ptr);
+                    return local_data;
+                  }},
+        v, v_table->model_size);
     return v;
   }
 
@@ -2380,44 +2382,52 @@ struct proxy_trait<basic_val<Nullable>>
                       basic_val<Nullable>&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
-    visit_value(
+    to.ptr_ = visit_value(
         overloads{
             [&](heap_data& t, heap_data& f) {
               heap_data old;
               std::swap(t, old);
               std::swap(t, f);
               delete_(v_table_to, old.ptr);
+              return t.ptr;
             },
             [&](heap_data& t, local_data<false>& f) {
               delete_(v_table_to, t.ptr);
-              v_table_from->move_constructor(to.data.local.data(), f.data());
+              return v_table_from->move_constructor(to.data.local.data(),
+                                                    f.data());
             },
             [&](heap_data& t, local_data<true>& f) {
               delete_(v_table_to, t.ptr);
               to.data.trivial = std::move(f);
+              return (mutable_void)&to.data.trivial;
             },
             [&](local_data<false>& t, heap_data& f) {
               destruct(v_table_to, t.data());
-              to.data.heap.ptr = f.release();
+              return to.data.heap.ptr = f.release();
             },
             [&](local_data<false>& t, local_data<false>& f) {
               destruct(v_table_to, t.data());
-              v_table_from->move_constructor(to.data.local.data(), f.data());
+              return v_table_from->move_constructor(to.data.local.data(),
+                                                    f.data());
             },
             [&](local_data<false>& t, local_data<true>& f) {
               destruct(v_table_to, t.data());
               to.data.trivial = std::move(f);
+              return (mutable_void)&to.data.trivial;
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
-              to.data.heap.ptr = f.release();
+              return to.data.heap.ptr = f.release();
             },
             [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
-              v_table_from->move_constructor(to.data.local.data(), f.data());
+              return v_table_from->move_constructor(to.data.local.data(),
+                                                    f.data());
             },
             [&](local_data<true>& t, local_data<true>& f) {
               t = std::move(f);
+              return (mutable_void)&t;
             }},
         to, model_size(v_table_to), from, v_table_from->model_size);
+    from.ptr_ = nullptr;
   }
   // TODO implement move from unique
   // static void move_to(unique& to, is_v_table auto* to_v_table, val&& v,
@@ -2439,42 +2449,51 @@ struct proxy_trait<basic_val<Nullable>>
                                   basic_val<Nullable> const& from,
                                   is_v_table auto* from_v_table) {
     if (!from_v_table) return;
-    visit_value(
+    to.ptr_ = visit_value(
         overloads{
             [&](heap_data& to_data, heap_data const& from_data) {
               delete_(to_v_table, to_data.ptr);
               to_data.ptr = nullptr;
               if (from_data.ptr)
                 to_data.ptr = copy_construct(from_v_table, from_data.ptr);
+              return to_data.ptr;
             },
             [&](heap_data& t, local_data<false> const& f) {
               delete_(to_v_table, t.ptr);
-              from_v_table->copy_constructor(to.data.local.data(), f.data());
+              return from_v_table->copy_constructor(to.data.local.data(),
+                                                    f.data());
             },
             [&](heap_data& t, local_data<true> const& f) {
               delete_(to_v_table, t.ptr);
               to.data.trivial = f;
+              return (mutable_void)&to.data.trivial;
             },
             [&](local_data<false>& t, heap_data const& f) {
               destruct(to_v_table, t.data());
-              to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
+              return to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&](local_data<false>& t, local_data<false> const& f) {
               destruct(to_v_table, t.data());
-              from_v_table->copy_constructor(to.data.local.data(), f.data());
+              return from_v_table->copy_constructor(to.data.local.data(),
+                                                    f.data());
             },
             [&](local_data<false>& t, local_data<true> const& f) {
               destruct(to_v_table, t.data());
               to.data.trivial = f;
+              return (mutable_void)&to.data.trivial;
             },
             [&]([[maybe_unused]] local_data<true>& t, heap_data const& f) {
-              to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
+              return to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
             [&]([[maybe_unused]] local_data<true>& t,
                 local_data<false> const& f) {
-              from_v_table->copy_constructor(to.data.local.data(), f.data());
+              return from_v_table->copy_constructor(to.data.local.data(),
+                                                    f.data());
             },
-            [&](local_data<true>& t, local_data<true> const& f) { t = f; }},
+            [&](local_data<true>& t, local_data<true> const& f) {
+              t = f;
+              return (mutable_void)&t;
+            }},
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
@@ -2493,16 +2512,7 @@ struct proxy_trait<basic_val<Nullable>>
   template <typename V>
   static void* get_proxy_ptr_in(V&& v,
                                 [[maybe_unused]] is_v_table auto* v_table) {
-    if (!v_table) return nullptr;
-    auto model_size = v_table->model_size;
-    return visit_value(
-        overloads{[&](heap_data const& heap) { return heap.ptr; },
-                  [&]<bool Trivial>(
-                      local_data<Trivial> const& local) -> mutable_void {
-                    return static_cast<mutable_void>(
-                        const_cast<std::byte*>(local.data()));
-                  }},
-        std::forward<V>(v), model_size);
+    return v.ptr_;
   }
 
   template <typename ConstructedWith>
