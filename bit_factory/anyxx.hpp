@@ -2253,9 +2253,17 @@ struct basic_val {
   mutable_void ptr_ = nullptr;
 
   basic_val(mutable_void ptr = 0) : data{ptr}, ptr_{ptr} {}
+  basic_val(basic_val&& other) {
+    if (other.data.heap.ptr == other.ptr_) {
+      ptr_ = other.ptr_;
+      data.heap = std::move(other.data.heap);
+    } else {
+      ptr_ = &data.local;
+      data.local = other.data.local;
+    }
+  }
+  basic_val([[maybe_unused]] basic_val const& other) {}
   basic_val& operator=([[maybe_unused]] basic_val const& other) noexcept {
-    // only to satisfy compiler, is not called!
-    data.trivial = other.data.trivial;
     return *this;
   }
   ~basic_val() {}

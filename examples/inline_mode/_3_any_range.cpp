@@ -208,6 +208,11 @@ TEST_CASE("example 3 static any range of view") {
   auto v = std::views::iota(0, 3);
   auto v2 =
       v | std::views::transform([](auto i) { return static_cast<int>(i); });
+  static_assert(std::is_trivially_move_constructible_v<decltype(v2)>);
+  static_assert(std::is_trivially_move_assignable_v<decltype(v2)>);
+  static_assert(std::is_trivially_copy_constructible_v<decltype(v2)>);
+  static_assert(std::is_trivially_copy_assignable_v<decltype(v2)>);
+  //static_assert(std::is_trivial_v<decltype(v2)>);
   any_forward_range<using_<int>::as<stringable>, using_<int>::as<stringable>> r{
       v2};
   std::string result;

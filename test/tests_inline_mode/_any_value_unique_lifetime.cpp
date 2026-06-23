@@ -67,6 +67,11 @@ static_assert(sizeof(X) > sizeof(mutable_void));
 using Y = XX<int>;
 static_assert(sizeof(Y) <= sizeof(mutable_void));
 static_assert(std::is_trivial_v<int>);
+static_assert(!std::is_trivial_v<Y>);
+static_assert(!std::is_trivially_move_constructible_v<Y>);
+static_assert(!std::is_trivially_move_assignable_v<Y>);
+static_assert(!std::is_trivially_copy_constructible_v<Y>);
+static_assert(!std::is_trivially_copy_assignable_v<Y>);
 static_assert(sizeof(int) <= sizeof(mutable_void));
 
 }  // namespace
