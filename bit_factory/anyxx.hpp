@@ -1336,16 +1336,6 @@ concept is_const_void = is_const_void_<Voidness>::value;
 
 class meta_data;
 
-template <typename Model>
-constexpr inline std::size_t compute_model_size() {
-  if constexpr (std::is_trivially_copyable_v<Model> &&
-                sizeof(Model) <= sizeof(mutable_void)) {
-    return 0;
-  } else {
-    return sizeof(Model);
-  }
-}
-
 using allocate_t = mutable_void (*)();
 template <typename VTable>
 concept is_allocate_v_table = requires(VTable* v_table) {
@@ -2253,7 +2243,6 @@ struct basic_val {
   basic_val(mutable_void ptr = 0) : data{ptr}, ptr_{ptr} {}
   basic_val& operator=([[maybe_unused]] basic_val const& other) noexcept {
     // only to satisfy compiler, is not called!
-    data.trivial = other.data.trivial;
     return *this;
   }
   ~basic_val() {}
@@ -3588,8 +3577,7 @@ TRAIT_EX_(
                       [](mutable_void data) {
                         std::destroy_at(static_cast<Concrete*>(data));
                       }),
-     ANY_V_TABLE_DATA(model_size_t, model_size,
-                      compute_model_size<Concrete>())),
+     ANY_V_TABLE_DATA(model_size_t, model_size, sizeof(Concrete))),
     (using default_proxy_t = val;));
 
 class meta_data {
