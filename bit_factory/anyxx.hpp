@@ -2255,18 +2255,20 @@ struct basic_val {
   } data;
   mutable_void ptr_ = nullptr;
 
-  basic_val(mutable_void ptr = 0) : data{ptr}, ptr_{ptr} {}
-  basic_val(basic_val&& other) {
-    if (other.data.heap.ptr == other.ptr_) {
-      ptr_ = other.ptr_;
-      data.heap = std::move(other.data.heap);
+  basic_val() : data{nullptr}, ptr_{nullptr} {}
+  ~basic_val() {}
+
+  template <typename T, typename... Args>
+  basic_val(std::in_place_type_t<T>, Args&&... args) {
+    static_assert(alignof(T) <= alignof(mutable_void));
+    if constexpr (sizeof(T) <= small_object_size) {
+      auto location =
+          static_cast<T*>(static_cast<mutable_void>(data.local.data()));
+      ptr_ = std::construct_at<T>(location, std::forward<Args>(args)...);
     } else {
-      ptr_ = &data.local;
-      data.local = other.data.local;
+      ptr_ = data.heap.ptr = new T(std::forward<Args>(args)...);
     }
   }
-
-  ~basic_val() {}
 };
 
 using val = basic_val<std::false_type>;
@@ -2324,29 +2326,6 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
   return std::forward<decltype(visitor)>(visitor)(
       v1.data.trivial, std::forward<V2>(v2).data.trivial);
 };
-
-template <typename Nullable, typename T, typename... Args>
-auto make_local_value(Args&&... args) {
-  static_assert(alignof(T) <= alignof(mutable_void));
-  static_assert(sizeof(T) <= small_object_size);
-  constexpr bool is_trivial = std::is_trivial_v<T>;
-  using local_data_type = local_data<is_trivial>;
-  basic_val<Nullable> v;
-  auto location =
-      static_cast<T*>(static_cast<mutable_void>(v.data.local.data()));
-  v.ptr_ = std::construct_at<T>(location, std::forward<Args>(args)...);
-  return v;
-}
-
-template <typename Nullable, typename T, typename... Args>
-auto make_value(Args&&... args) {
-  static_assert(alignof(T) <= alignof(mutable_void));
-  if constexpr (sizeof(T) <= small_object_size) {
-    return make_local_value<Nullable, T>(std::forward<Args>(args)...);
-  } else {
-    return basic_val<Nullable>{new T(std::forward<Args>(args)...)};
-  }
-}
 
 template <typename Nullable>
 struct proxy_trait<basic_val<Nullable>>
@@ -2530,15 +2509,18 @@ struct proxy_trait<basic_val<Nullable>>
 
   template <typename V>
   static auto construct_in_place(V&& v) {
-    return make_value<Nullable, V>(std::forward<V>(v));
+    return basic_val<Nullable>(std::in_place_type<std::decay_t<V>>,
+                               std::forward<V>(v));
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place(Args&&... args) {
-    return make_value<Nullable, T>(std::forward<Args>(args)...);
+    return basic_val<Nullable>(std::in_place_type<T>,
+                               std::forward<Args>(args)...);
   }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
-    return make_value<Nullable, std::decay_t<ConstructedWith>>(
+    return basic_val<Nullable>(
+        std::in_place_type<std::decay_t<ConstructedWith>>,
         std::forward<ConstructedWith>(v));
   }
 };
