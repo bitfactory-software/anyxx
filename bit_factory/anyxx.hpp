@@ -1528,6 +1528,7 @@ struct basic_proxy_trait {
     to = std::move(from);
   }
 
+  inline static constexpr bool can_copy_construct_from = true;
   static void copy_construct_from(Proxy& to, [[maybe_unused]] void*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
@@ -2026,6 +2027,8 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     delete_(v_table_to, old);
   }
 
+  inline static constexpr bool can_copy_construct_from = false;
+
   static void* get_proxy_ptr_in(const auto& ptr,
                                 [[maybe_unused]] is_v_table auto* v_table) {
     return ptr.ptr;
@@ -2262,7 +2265,7 @@ struct basic_val {
       data.local = other.data.local;
     }
   }
-  basic_val([[maybe_unused]] basic_val const& other) {}
+
   basic_val& operator=([[maybe_unused]] basic_val const& other) noexcept {
     return *this;
   }
@@ -2836,16 +2839,16 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   }
 
   any(const any& other)
-    requires(dyn && std::copyable<proxy_t>)
+    requires(dyn && proxy_trait_t::can_copy_construct_from)
       : v_table_holder_t(other.get_v_table_ptr()) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                        other.get_v_table_ptr());
   }
   any(const any& other)
-    requires(!dyn && std::copyable<proxy_t>)
+    requires(!dyn && proxy_trait_t::can_copy_construct_from)
       : v_table_holder_t(other.get_v_table_ptr()), proxy_(other.proxy_) {}
   any& operator=(any const& other)
-    requires std::copyable<proxy_t>
+    requires(proxy_trait_t::can_copy_construct_from)
   {
     if (this == &other) return *this;
     auto const v_table_ptr = v_table_holder_t::get_v_table_ptr();
