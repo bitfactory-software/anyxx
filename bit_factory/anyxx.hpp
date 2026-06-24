@@ -2266,9 +2266,6 @@ struct basic_val {
     }
   }
 
-  basic_val& operator=([[maybe_unused]] basic_val const& other) noexcept {
-    return *this;
-  }
   ~basic_val() {}
 };
 
