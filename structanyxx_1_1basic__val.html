@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: anyxx::basic_val&lt; Nullable &gt; Struct Template Reference</title>
+<title>Any++: anyxx::basic_val&lt; Nullable, SmallObjectSize &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -88,7 +88,7 @@ $(function(){initNavTree('structanyxx_1_1basic__val.html','','structanyxx_1_1bas
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">anyxx::basic_val&lt; Nullable &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
+  <div class="headertitle"><div class="title">anyxx::basic_val&lt; Nullable, SmallObjectSize &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -99,20 +99,20 @@ $(function(){initNavTree('structanyxx_1_1basic__val.html','','structanyxx_1_1bas
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5204dc71d13e9763d662d63813f14e56" id="r_a5204dc71d13e9763d662d63813f14e56"><td class="memTemplParams" colspan="2"><a id="a5204dc71d13e9763d662d63813f14e56" name="a5204dc71d13e9763d662d63813f14e56"></a>
+<tr class="memitem:a4c52e90caa8c2075f7a4c838631c2e48" id="r_a4c52e90caa8c2075f7a4c838631c2e48"><td class="memTemplParams" colspan="2"><a id="a4c52e90caa8c2075f7a4c838631c2e48" name="a4c52e90caa8c2075f7a4c838631c2e48"></a>
 template&lt;typename T, typename... Args&gt; </td></tr>
-<tr class="memitem:a5204dc71d13e9763d662d63813f14e56 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>basic_val</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a4c52e90caa8c2075f7a4c838631c2e48 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>basic_val</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a0f94607a03e19dba0d51cc9b4bbfd0c9" id="r_a0f94607a03e19dba0d51cc9b4bbfd0c9"><td class="memItemLeft"><a id="a0f94607a03e19dba0d51cc9b4bbfd0c9" name="a0f94607a03e19dba0d51cc9b4bbfd0c9"></a>
+<tr class="memitem:a8c36a586c0a1465f537d2f3bf31dc9a1" id="r_a8c36a586c0a1465f537d2f3bf31dc9a1"><td class="memItemLeft"><a id="a8c36a586c0a1465f537d2f3bf31dc9a1" name="a8c36a586c0a1465f537d2f3bf31dc9a1"></a>
 union anyxx::basic_val::data_union&#160;</td><td class="memItemRight"><b>data</b></td></tr>
-<tr class="memitem:a890faf748b9913057b00089d0b6ed14b" id="r_a890faf748b9913057b00089d0b6ed14b"><td class="memItemLeft"><a id="a890faf748b9913057b00089d0b6ed14b" name="a890faf748b9913057b00089d0b6ed14b"></a>
+<tr class="memitem:af70e8f7127b3c16cb25519003406f95b" id="r_af70e8f7127b3c16cb25519003406f95b"><td class="memItemLeft"><a id="af70e8f7127b3c16cb25519003406f95b" name="af70e8f7127b3c16cb25519003406f95b"></a>
 mutable_void&#160;</td><td class="memItemRight"><b>ptr_</b> = nullptr</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Nullable&gt;<br />
-struct anyxx::basic_val&lt; Nullable &gt;</div><p>Proxy to manage the captured object as value with small object optimization. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Nullable, std::size_t SmallObjectSize = small_object_size&gt;<br />
+struct anyxx::basic_val&lt; Nullable, SmallObjectSize &gt;</div><p>Proxy to manage the captured object as value with small object optimization. </p>
 <ul>
 <li>If you forward an object to any constructor, this object will be forwarded to the allocated storage.</li>
 <li>To pass an object as second parameter, with the std::in_place tag as first, has the same behavior as above</li>
