@@ -19,6 +19,7 @@ struct XX {
   static inline int copy_assigned_ = 0;
   static inline int move_assigned_ = 0;
   XX(T s = "") : s_(std::move(s)) {
+    interior_ptr_ = &s_;
     std::println("X({})", s_);
     ++tracker_;
     std::println("X::tracker_ {})", tracker_);
@@ -29,6 +30,7 @@ struct XX {
     std::println("X::tracker_ {})", tracker_);
   }
   XX(XX const& x) : s_(x.s_) {
+    interior_ptr_ = &s_;
     std::println("X(X const& {})", s_);
     ++tracker_;
     ++copy_constructed_;
@@ -36,6 +38,7 @@ struct XX {
     std::println("X::tracker_ {})", tracker_);
   }
   XX(XX&& x) : s_(std::move(x.s_)) {  // NOLINT
+    interior_ptr_ = &s_;
     std::println("X(X&& {})", s_);
     x.moved_ = true;
     ++move_constructed_;
@@ -57,22 +60,26 @@ struct XX {
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
+  T* interior_ptr_ = nullptr;
   T s_;
   bool moved_ = false;
-  [[nodiscard]] T operator()() const { return s_; }
+  [[nodiscard]] T operator()() const {
+    CHECK(interior_ptr_ == &s_);
+    return s_;
+  }
 };
 
 using X = XX<>;
-static_assert(sizeof(X) > sizeof(mutable_void));
+static_assert(sizeof(X) > anyxx::small_object_size);
 using Y = XX<int>;
-static_assert(sizeof(Y) <= sizeof(mutable_void));
+static_assert(sizeof(Y) <= anyxx::small_object_size);
 static_assert(std::is_trivial_v<int>);
 static_assert(!std::is_trivial_v<Y>);
 static_assert(!std::is_trivially_move_constructible_v<Y>);
 static_assert(!std::is_trivially_move_assignable_v<Y>);
 static_assert(!std::is_trivially_copy_constructible_v<Y>);
 static_assert(!std::is_trivially_copy_assignable_v<Y>);
-static_assert(sizeof(int) <= sizeof(mutable_void));
+static_assert(sizeof(int) <= anyxx::small_object_size);
 
 }  // namespace
 
