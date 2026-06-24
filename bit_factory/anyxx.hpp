@@ -2242,7 +2242,7 @@ struct local_data : std::array<std::byte, small_object_size> {
 /// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
-template <typename Nullable>
+template <typename Nullable, std::size_t SmallObjectSize = small_object_size>
 struct basic_val {
   union data_union {
     data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
@@ -2259,7 +2259,7 @@ struct basic_val {
   template <typename T, typename... Args>
   basic_val(std::in_place_type_t<T>, Args&&... args) {
     static_assert(alignof(T) <= alignof(mutable_void));
-    if constexpr (sizeof(T) <= small_object_size) {
+    if constexpr (sizeof(T) <= SmallObjectSize) {
       auto location =
           static_cast<T*>(static_cast<mutable_void>(data.local.data()));
       ptr_ = std::construct_at<T>(location, std::forward<Args>(args)...);
@@ -2272,9 +2272,9 @@ struct basic_val {
 using val = basic_val<std::false_type>;
 using nullable_val = basic_val<std::true_type>;
 
-template <typename V>
+template <std::size_t SmallObjectSize, typename V>
 auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
-  if (size.size > small_object_size) {
+  if (size.size > SmallObjectSize) {
     return std::forward<decltype(visitor)>(visitor)(
         std::forward<V>(v).data.heap);
   } else if (!size.trivial) {
@@ -2286,11 +2286,12 @@ auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
       std::forward<V>(v).data.trivial);
 };
 
-template <typename Nullable, typename V2>
-auto visit_value(auto&& visitor, basic_val<Nullable>& v1, model_size_t size1,
-                 V2&& v2, model_size_t size2) -> decltype(auto) {
-  if (size1.size > small_object_size) {
-    if (size2.size > small_object_size) {
+template <typename Nullable, std::size_t SmallObjectSize, typename V2>
+auto visit_value(auto&& visitor, basic_val<Nullable, SmallObjectSize>& v1,
+                 model_size_t size1, V2&& v2, model_size_t size2)
+    -> decltype(auto) {
+  if (size1.size > SmallObjectSize) {
+    if (size2.size > SmallObjectSize) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.heap, std::forward<V2>(v2).data.heap);
     } else if (!size2.trivial) {
@@ -2301,7 +2302,7 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, model_size_t size1,
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.heap, std::forward<V2>(v2).data.trivial);
   } else if (!size1.trivial) {
-    if (size2.size > small_object_size) {
+    if (size2.size > SmallObjectSize) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.local, std::forward<V2>(v2).data.heap);
     } else if (!size2.trivial) {
@@ -2313,7 +2314,7 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, model_size_t size1,
         v1.data.local, std::forward<V2>(v2).data.trivial);
   }
   assert(size1.trivial);
-  if (size2.size > small_object_size) {
+  if (size2.size > SmallObjectSize) {
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.trivial, std::forward<V2>(v2).data.heap);
   } else if (!size2.trivial) {
@@ -2325,9 +2326,9 @@ auto visit_value(auto&& visitor, basic_val<Nullable>& v1, model_size_t size1,
       v1.data.trivial, std::forward<V2>(v2).data.trivial);
 };
 
-template <typename Nullable>
-struct proxy_trait<basic_val<Nullable>>
-    : basic_proxy_trait<basic_val<Nullable>> {
+template <typename Nullable, std::size_t SmallObjectSize>
+struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
+    : basic_proxy_trait<basic_val<Nullable, SmallObjectSize>> {
   using void_t = void*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -2351,8 +2352,8 @@ struct proxy_trait<basic_val<Nullable>>
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
     assert(v_table);
-    basic_val<Nullable> v;
-    v.ptr_ = visit_value(
+    basic_val<Nullable, SmallObjectSize> v;
+    v.ptr_ = visit_value<SmallObjectSize>(
         overloads{[&](heap_data& heap) {
                     return heap.ptr = copy_construct(v_table, data_ptr);
                   },
@@ -2365,8 +2366,9 @@ struct proxy_trait<basic_val<Nullable>>
     return v;
   }
 
-  static void move_to(basic_val<Nullable>& to, [[maybe_unused]] auto v_table_to,
-                      basic_val<Nullable>&& from,
+  static void move_to(basic_val<Nullable, SmallObjectSize>& to,
+                      [[maybe_unused]] auto v_table_to,
+                      basic_val<Nullable, SmallObjectSize>&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     to.ptr_ = visit_value(
@@ -2432,9 +2434,10 @@ struct proxy_trait<basic_val<Nullable>>
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
-  static void copy_construct_from(basic_val<Nullable>& to, auto to_v_table,
-                                  basic_val<Nullable> const& from,
-                                  is_v_table auto* from_v_table) {
+  static void copy_construct_from(
+      basic_val<Nullable, SmallObjectSize>& to, auto to_v_table,
+      basic_val<Nullable, SmallObjectSize> const& from,
+      is_v_table auto* from_v_table) {
     if (!from_v_table) return;
     to.ptr_ = visit_value(
         overloads{
@@ -2484,16 +2487,18 @@ struct proxy_trait<basic_val<Nullable>>
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  static void destroy(basic_val<Nullable>& v, is_v_table auto* v_table) {
-    visit_value(overloads{[&](heap_data& heap) {
-                            assert(v_table || !heap.ptr);
-                            if (v_table) delete_(v_table, heap.ptr);
-                          },
-                          [&](local_data<false>& local) {
-                            if (v_table) v_table->destructor(local.data());
-                          },
-                          [&]([[maybe_unused]] local_data<true>& local) {}},
-                v, model_size(v_table));
+  static void destroy(basic_val<Nullable, SmallObjectSize>& v,
+                      is_v_table auto* v_table) {
+    visit_value<SmallObjectSize>(
+        overloads{[&](heap_data& heap) {
+                    assert(v_table || !heap.ptr);
+                    if (v_table) delete_(v_table, heap.ptr);
+                  },
+                  [&](local_data<false>& local) {
+                    if (v_table) v_table->destructor(local.data());
+                  },
+                  [&]([[maybe_unused]] local_data<true>& local) {}},
+        v, model_size(v_table));
   }
 
   template <typename V>
@@ -2507,17 +2512,17 @@ struct proxy_trait<basic_val<Nullable>>
 
   template <typename V>
   static auto construct_in_place(V&& v) {
-    return basic_val<Nullable>(std::in_place_type<std::decay_t<V>>,
-                               std::forward<V>(v));
+    return basic_val<Nullable, SmallObjectSize>(
+        std::in_place_type<std::decay_t<V>>, std::forward<V>(v));
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place(Args&&... args) {
-    return basic_val<Nullable>(std::in_place_type<T>,
-                               std::forward<Args>(args)...);
+    return basic_val<Nullable, SmallObjectSize>(std::in_place_type<T>,
+                                                std::forward<Args>(args)...);
   }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
-    return basic_val<Nullable>(
+    return basic_val<Nullable, SmallObjectSize>(
         std::in_place_type<std::decay_t<ConstructedWith>>,
         std::forward<ConstructedWith>(v));
   }
