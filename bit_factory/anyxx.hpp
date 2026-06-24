@@ -1367,7 +1367,10 @@ concept is_delete_v_table =
       { v_table->delete_ } -> std::convertible_to<delete_t>;
     };
 
-using model_size_t = std::size_t;
+struct model_size_t {
+  std::size_t size;
+  bool trivial;
+};
 template <typename VTable>
 concept is_model_size_v_table = requires(VTable* v_table) {
   { v_table->model_size } -> std::convertible_to<model_size_t>;
@@ -1457,9 +1460,9 @@ inline bool is_derived_from(const std::type_info& from,
   return v_table->is_derived_from_(from);
 }
 
-inline std::size_t model_size(std::nullptr_t) { return 0u; }
-inline std::size_t model_size(is_model_size_v_table auto* v_table) {
-  return v_table ? v_table->model_size : 0u;
+inline model_size_t model_size(std::nullptr_t) { return {0, true}; }
+inline model_size_t model_size(is_model_size_v_table auto* v_table) {
+  return v_table ? v_table->model_size : model_size_t{0, true};
 }
 inline mutable_void copy_construct_at(is_copy_constructor_v_table auto* v_table,
                                       mutable_void placement, const_void from) {
@@ -2197,13 +2200,8 @@ static_assert(is_proxy<weak>);
 constexpr std::size_t small_object_size = 2 * sizeof(mutable_void);
 
 template <typename Model>
-constexpr inline std::size_t compute_model_size() {
-  if constexpr (std::is_trivially_copyable_v<Model> &&
-                sizeof(Model) <= small_object_size) {
-    return 0;
-  } else {
-    return sizeof(Model);
-  }
+constexpr inline model_size_t compute_model_size() {
+  return {.size = sizeof(Model), .trivial = std::is_trivial_v<Model>};
 }
 
 struct heap_data {
@@ -2275,54 +2273,54 @@ using val = basic_val<std::false_type>;
 using nullable_val = basic_val<std::true_type>;
 
 template <typename V>
-auto visit_value(auto&& visitor, V&& v, std::size_t size) -> decltype(auto) {
-  if (size > small_object_size) {
+auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
+  if (size.size > small_object_size) {
     return std::forward<decltype(visitor)>(visitor)(
         std::forward<V>(v).data.heap);
-  } else if (size > 0) {
+  } else if (!size.trivial) {
     return std::forward<decltype(visitor)>(visitor)(
         std::forward<V>(v).data.local);
   }
-  assert(size == 0);
+  assert(size.trivial);
   return std::forward<decltype(visitor)>(visitor)(
       std::forward<V>(v).data.trivial);
 };
 
 template <typename Nullable, typename V2>
-auto visit_value(auto&& visitor, basic_val<Nullable>& v1, std::size_t size1,
-                 V2&& v2, std::size_t size2) -> decltype(auto) {
-  if (size1 > small_object_size) {
-    if (size2 > small_object_size) {
+auto visit_value(auto&& visitor, basic_val<Nullable>& v1, model_size_t size1,
+                 V2&& v2, model_size_t size2) -> decltype(auto) {
+  if (size1.size > small_object_size) {
+    if (size2.size > small_object_size) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.heap, std::forward<V2>(v2).data.heap);
-    } else if (size2 > 0) {
+    } else if (!size2.trivial) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.heap, std::forward<V2>(v2).data.local);
     }
-    assert(size2 == 0);
+    assert(size2.trivial);
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.heap, std::forward<V2>(v2).data.trivial);
-  } else if (size1 > 0) {
-    if (size2 > small_object_size) {
+  } else if (!size1.trivial) {
+    if (size2.size > small_object_size) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.local, std::forward<V2>(v2).data.heap);
-    } else if (size2 > 0) {
+    } else if (!size2.trivial) {
       return std::forward<decltype(visitor)>(visitor)(
           v1.data.local, std::forward<V2>(v2).data.local);
     }
-    assert(size2 == 0);
+    assert(size2.trivial);
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.local, std::forward<V2>(v2).data.trivial);
   }
-  assert(size1 == 0);
-  if (size2 > small_object_size) {
+  assert(size1.trivial);
+  if (size2.size > small_object_size) {
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.trivial, std::forward<V2>(v2).data.heap);
-  } else if (size2 > 0) {
+  } else if (!size2.trivial) {
     return std::forward<decltype(visitor)>(visitor)(
         v1.data.trivial, std::forward<V2>(v2).data.local);
   }
-  assert(size2 == 0);
+  assert(size2.trivial);
   return std::forward<decltype(visitor)>(visitor)(
       v1.data.trivial, std::forward<V2>(v2).data.trivial);
 };
