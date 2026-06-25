@@ -22,7 +22,7 @@ TRAIT_TEMPLATE_EX_(
 //                   ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &),
 //                              const, ([&x](auto const &r) { return x != r;
 //                              }))),
-//                  anyxx::val,
+//                  anyxx::val<>,
 //                  (using iterator_category = std::forward_iterator_tag;
 //                   using difference_type = std::ptrdiff_t;
 //                   using value_type = ValueType; using reference =

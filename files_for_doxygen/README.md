@@ -87,7 +87,7 @@ struct square {
 TRAIT_(drawable, anyxx::dynamic_value, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::val>> const& drawables) {
+          std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -190,7 +190,7 @@ ANY_MODEL_MAP((square), drawable) {
 };
 
 void draw(std::stringstream& os,
-          std::vector<anyxx::any<drawable, anyxx::val>> const& drawables) {
+          std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
   for (auto const& drawable : drawables) os << drawable.draw() << "\n";
 }
 
@@ -233,7 +233,7 @@ struct square {
 TRAIT_EX_(figure, anyxx::dynamic_value,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val>
+template <typename Proxy = anyxx::val<>>
 using any_figure = anyxx::any<figure, Proxy>;
 
 ayx::dispatch<std::partial_ordering(ayx::virtual_<any_figure<>>,
@@ -255,7 +255,7 @@ auto __ = compare_edges.define<square, circle>(
     [](auto const&, auto const&) { return std::partial_ordering::greater; });
 
 void compare_each(std::stringstream& os,
-                  std::vector<ayx::any<figure, ayx::val>> const& figures) {
+                  std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
   std::string sep;
   for (auto const& l : figures)
     for (auto const& r : figures) {
@@ -321,7 +321,7 @@ struct square {
 TRAIT_EX_(figure, anyxx::dynamic_value,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val>
+template <typename Proxy = anyxx::val<>>
 using any_figure = anyxx::any<figure, Proxy>;
 
 ayx::dispatch<std::string(ayx::virtual_<any_figure<>>)> latin, italian;
@@ -332,7 +332,7 @@ auto __ = italian.define<circle>([](auto const&) { return "cerchio"; });
 auto __ = italian.define<square>([](auto const&) { return "quadrato"; });
 
 void translate(std::stringstream& os,
-               std::vector<ayx::any<figure, ayx::val>> const& figures) {
+               std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
   std::string sep;
   for (auto const& f : figures)
     os << std::exchange(sep, "; ") << f.name() << ": latin = " << latin(f)
@@ -384,11 +384,11 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val)
+ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val<>)
 ANY_(serializable, ayx::dynamic_value,
     (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
 
-ayx::factory<any_serializable, ayx::val, std::string, std::istream&>
+ayx::factory<any_serializable, ayx::val<>, std::string, std::istream&>
     deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {
@@ -424,7 +424,7 @@ ANY_REGISTER_MODEL(square, figure);
 ANY_REGISTER_MODEL(square, serializable);
 
 void areas(std::stringstream& os,
-           std::vector<ayx::any<figure, ayx::val>> const& figures) {
+           std::vector<ayx::any<figure, ayx::val<>>> const& figures) {
   std::string sep;
   for (auto const& f : figures) os << std::exchange(sep, ", ") << f.area();
 }
@@ -539,14 +539,14 @@ struct square {
 };
 
 ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, draw, (), const)),
-     ayx::val)
+     ayx::val<>)
 
 using known_and_unknown_shapes =
-    ayx::make_vany<any_figure, ayx::val, circle, square>;
+    ayx::make_vany<any_figure, ayx::val<>, circle, square>;
 static_assert(
     std::same_as<known_and_unknown_shapes,
                  any_figure<ayx::using_<  // see the Any++ logo at the top
-                     std::variant<any_figure<ayx::val>, circle, square>>>>);
+                     std::variant<any_figure<ayx::val<>>, circle, square>>>>);
 ANY_MODEL_MAP((std::string), figure) {
   static std::string draw(std::string const& s) { return s; };
 };
@@ -572,7 +572,7 @@ heterogeneous collections. Let us call them "vany" (variant-any).
 - A `figure` trait is declared, specifying the required interface (`draw() const -> std::string`).
 - The type alias `known_and_unknown_shapes` is created using `anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:
   - All known types (`circle`, `square`)
-  - An open-ended type-erased fallback (`any_figure<ayx::val>`)
+  - An open-ended type-erased fallback (`any_figure<ayx::val<>>`)
 - A model map is provided for `std::string`, allowing strings to be handled as figures.
 - So the vector passed to `draw` can seamlessly contain both known types (like `circle` and `square`) and dynamically extended types (like `std::string`), all accessed through the same trait-based interface. 
 

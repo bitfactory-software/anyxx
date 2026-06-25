@@ -42,7 +42,7 @@ TRAIT_EX_(monoid, anyxx::dynamic_value,
                      ([&x](auto const& r) { return x == r; }))),
          , , , ())
 
-template <typename Proxy = anyxx::val>
+template <typename Proxy = anyxx::val<>>
 using any_monoid = anyxx::any<monoid, Proxy>;
 
 }  // namespace example_2b
@@ -98,14 +98,14 @@ void test_monoid_traited(
   CHECK(c2);
 }
 
-anyxx::any_forward_range<any_monoid<anyxx::val>, any_monoid<anyxx::val>,
-                         anyxx::val>
+anyxx::any_forward_range<any_monoid<anyxx::val<>>, any_monoid<anyxx::val<>>,
+                         anyxx::val<>>
 make_a_range(bool use_list) {
   using namespace std::string_literals;
   if (use_list)
-    return std::list<any_monoid<anyxx::val>>{{"2"s}, {"3"s}};
+    return std::list<any_monoid<anyxx::val<>>>{{"2"s}, {"3"s}};
   else
-    return std::vector<any_monoid<anyxx::val>>{{"2"s}, {"3"s}};
+    return std::vector<any_monoid<anyxx::val<>>>{{"2"s}, {"3"s}};
 }
 
 // struct not_mappepd{ int v; };
@@ -154,12 +154,12 @@ TEST_CASE("example 2b monoid c") {
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(true));
+  test_monoid<any_monoid<anyxx::val<>>>("1"s, make_a_range(true));
 }  // NOLINT
 TEST_CASE("example 2b monoid d") {
   using namespace example_2b;
   using namespace std::string_literals;
   using namespace anyxx;
 
-  test_monoid<any_monoid<anyxx::val>>("1"s, make_a_range(false));
+  test_monoid<any_monoid<anyxx::val<>>>("1"s, make_a_range(false));
 }

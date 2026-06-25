@@ -8,7 +8,7 @@ TRAIT_TEMPLATE_(((Base)), has_equal, Base, (),
                 (ANY_FN_DEF(public, bool, is_equal, (anyxx::self const&), const,
                             [&x](T const& y) { return x == y; })))
 
-template <typename Proxy = anyxx::val, typename Base = anyxx::dynamic_value>
+template <typename Proxy = anyxx::val<>, typename Base = anyxx::dynamic_value>
 using any_has_equal = anyxx::any<has_equal<Base>, Proxy>;
 
 }  // namespace example_2d
@@ -43,7 +43,7 @@ TRAIT_(has_plus, has_equal<anyxx::dynamic_value>,
         ANY_OP_DEF(public, anyxx::self, +, plus_op, (anyxx::self const&), const,
                    ([&x](T const& y) { return x + y; }))))
 
-template <typename Proxy = anyxx::val>
+template <typename Proxy = anyxx::val<>>
 using any_has_plus = anyxx::any<has_plus, Proxy>;
 
 }  // namespace example_2d

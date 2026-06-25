@@ -13,7 +13,7 @@ namespace {
 TRAIT_EX_(creature, anyxx::dynamic_value,
           (ANY_FN(std::type_info const*, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
-template <typename Proxy = anyxx::val>
+template <typename Proxy = anyxx::val<>>
 using any_creature = anyxx::any<creature, Proxy>;
 }  // namespace
 
@@ -61,7 +61,7 @@ auto __ = encounter.define<any_creature<anyxx::cref>, man>(
       return {l.name(), encounter_action::nestle_to, r.name()};
     });
 
-using creatures_t = std::vector<any_creature<anyxx::val>>;
+using creatures_t = std::vector<any_creature<anyxx::val<>>>;
 auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);

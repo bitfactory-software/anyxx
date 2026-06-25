@@ -13,18 +13,18 @@ struct X {
 namespace {
 
 TRAIT(stringable, (ANY_FN(std::string, to_string, (), const)))
-template <typename Proxy = val>
+template <typename Proxy = val<>>
 using any_to_string = any<stringable, Proxy>;
 
 TRAIT_TEMPLATE(((KEY), (VALUE)), map,
                (ANY_FN_EXACT(VALUE const&, at, (KEY const&), const),
                 ANY_FN(std::size_t, size, (), const)))
-template <typename Key, typename Value, typename Proxy = val>
+template <typename Key, typename Value, typename Proxy = val<>>
 using any_map = any<map<Key, Value>, Proxy>;
 
 TRAIT_TEMPLATE_(((KEY), (VALUE)), mutable_map, map, ((KEY), (VALUE)),
                (ANY_FN_EXACT(VALUE&, at, (KEY const&), ), ))
-template <typename Key, typename Value, typename Proxy = val>
+template <typename Key, typename Value, typename Proxy = val<>>
 using any_mutable_map = any<mutable_map<Key, Value>, Proxy>;
 
 ANY_TEMPLATE(((KEY), (VALUE)), recursive_map,

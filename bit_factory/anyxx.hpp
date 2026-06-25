@@ -659,7 +659,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
                                        any_template_params),                   \
-                                   anyxx::basic_val<val_nullable>>;            \
+                                   anyxx::val<val_nullable>>;                  \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -692,7 +692,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
                                        any_template_params),                   \
-                                   anyxx::basic_val<val_nullable>>;            \
+                                   anyxx::val<val_nullable>>;                  \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -903,7 +903,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \ingroup trait_macros
 /// The ANY macro uses TRAIT macros to define the functional behavior of an \ref
 /// any. Additionally, it defines the proxy to be used (default_proxy). The
-/// default proxy is val. Example:
+/// default proxy is val<>. Example:
 /// \code
 /// ANY(example_any,
 ///   (ANY_FN(void, example_fn_const, (double, std::string const&), const),
@@ -917,7 +917,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 ///    ANY_FN(int, example_fn_mutable, (int), ))
 /// )
 ///
-/// template <typename Proxy = anyxx::val<>>
+/// template <typename Proxy = anyxx::val<><>>
 /// using any_example = anyxx::any<Proxy, example>;
 /// \endcode
 #define ANY(n, l, ...) \
@@ -1773,7 +1773,7 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
 
   static auto get_proxy_ptr_in(auto& val,
                                [[maybe_unused]] observeable_v_table* v_table) {
-    return &val;
+    return val;
   }
 
   template <typename ConstructedWith>
@@ -1887,7 +1887,7 @@ struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
 
   static auto get_proxy_ptr_in(auto& val,
                                [[maybe_unused]] is_v_table auto* v_table) {
-    return &val;
+    return val;
   }
 
   template <typename ConstructedWith>
@@ -2195,7 +2195,7 @@ static_assert(is_proxy<shared>);
 static_assert(is_proxy<weak>);
 
 // --------------------------------------------------------------------------------
-// erased data basic_val
+// erased data val
 
 constexpr std::size_t small_object_size = 2 * sizeof(mutable_void);
 
@@ -2242,8 +2242,9 @@ struct local_data : std::array<std::byte, small_object_size> {
 /// be constructed in place in the allocated memory with the other arguments
 /// forwarded
 /// \ingroup proxies
-template <typename Nullable, std::size_t SmallObjectSize = small_object_size>
-struct basic_val {
+template <typename Nullable = std::false_type,
+          std::size_t SmallObjectSize = small_object_size>
+struct val {
   union data_union {
     data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
     data_union(data_union const& other) noexcept { trivial = other.trivial; }
@@ -2253,11 +2254,11 @@ struct basic_val {
   } data;
   mutable_void ptr_ = nullptr;
 
-  basic_val() : data{nullptr}, ptr_{nullptr} {}
-  ~basic_val() {}
+  val() : data{nullptr}, ptr_{nullptr} {}
+  ~val() {}
 
   template <typename T, typename... Args>
-  basic_val(std::in_place_type_t<T>, Args&&... args) {
+  val(std::in_place_type_t<T>, Args&&... args) {
     static_assert(alignof(T) <= alignof(mutable_void));
     if constexpr (sizeof(T) <= SmallObjectSize) {
       auto location =
@@ -2269,8 +2270,7 @@ struct basic_val {
   }
 };
 
-using val = basic_val<std::false_type>;
-using nullable_val = basic_val<std::true_type>;
+using nullable_val = val<std::true_type>;
 
 template <std::size_t SmallObjectSize, typename V>
 auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
@@ -2287,7 +2287,7 @@ auto visit_value(auto&& visitor, V&& v, model_size_t size) -> decltype(auto) {
 };
 
 template <typename Nullable, std::size_t SmallObjectSize, typename V2>
-auto visit_value(auto&& visitor, basic_val<Nullable, SmallObjectSize>& v1,
+auto visit_value(auto&& visitor, val<Nullable, SmallObjectSize>& v1,
                  model_size_t size1, V2&& v2, model_size_t size2)
     -> decltype(auto) {
   if (size1.size > SmallObjectSize) {
@@ -2327,8 +2327,8 @@ auto visit_value(auto&& visitor, basic_val<Nullable, SmallObjectSize>& v1,
 };
 
 template <typename Nullable, std::size_t SmallObjectSize>
-struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
-    : basic_proxy_trait<basic_val<Nullable, SmallObjectSize>> {
+struct proxy_trait<val<Nullable, SmallObjectSize>>
+    : basic_proxy_trait<val<Nullable, SmallObjectSize>> {
   using void_t = void*;
   using static_dispatch_t = void_t;
   template <typename V>
@@ -2352,7 +2352,7 @@ struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
   static auto clone_from([[maybe_unused]] const_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
     assert(v_table);
-    basic_val<Nullable, SmallObjectSize> v;
+    val<Nullable, SmallObjectSize> v;
     v.ptr_ = visit_value<SmallObjectSize>(
         overloads{[&](heap_data& heap) {
                     return heap.ptr = copy_construct(v_table, data_ptr);
@@ -2366,9 +2366,9 @@ struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
     return v;
   }
 
-  static void move_to(basic_val<Nullable, SmallObjectSize>& to,
+  static void move_to(val<Nullable, SmallObjectSize>& to,
                       [[maybe_unused]] auto v_table_to,
-                      basic_val<Nullable, SmallObjectSize>&& from,
+                      val<Nullable, SmallObjectSize>&& from,
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     to.ptr_ = visit_value(
@@ -2419,7 +2419,7 @@ struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
     from.ptr_ = nullptr;
   }
   // TODO implement move from unique
-  // static void move_to(unique& to, is_v_table auto* to_v_table, val&& v,
+  // static void move_to(unique& to, is_v_table auto* to_v_table, val<>&& v,
   //                    is_v_table auto* v_table) {
   //  assert(v_table);
   //  auto data_ptr =
@@ -2434,10 +2434,10 @@ struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
-  static void copy_construct_from(
-      basic_val<Nullable, SmallObjectSize>& to, auto to_v_table,
-      basic_val<Nullable, SmallObjectSize> const& from,
-      is_v_table auto* from_v_table) {
+  static void copy_construct_from(val<Nullable, SmallObjectSize>& to,
+                                  auto to_v_table,
+                                  val<Nullable, SmallObjectSize> const& from,
+                                  is_v_table auto* from_v_table) {
     if (!from_v_table) return;
     to.ptr_ = visit_value(
         overloads{
@@ -2487,7 +2487,7 @@ struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
-  static void destroy(basic_val<Nullable, SmallObjectSize>& v,
+  static void destroy(val<Nullable, SmallObjectSize>& v,
                       is_v_table auto* v_table) {
     visit_value<SmallObjectSize>(
         overloads{[&](heap_data& heap) {
@@ -2512,24 +2512,24 @@ struct proxy_trait<basic_val<Nullable, SmallObjectSize>>
 
   template <typename V>
   static auto construct_in_place(V&& v) {
-    return basic_val<Nullable, SmallObjectSize>(
-        std::in_place_type<std::decay_t<V>>, std::forward<V>(v));
+    return val<Nullable, SmallObjectSize>(std::in_place_type<std::decay_t<V>>,
+                                          std::forward<V>(v));
   }
   template <typename T, typename... Args>
   static auto construct_type_in_place(Args&&... args) {
-    return basic_val<Nullable, SmallObjectSize>(std::in_place_type<T>,
-                                                std::forward<Args>(args)...);
+    return val<Nullable, SmallObjectSize>(std::in_place_type<T>,
+                                          std::forward<Args>(args)...);
   }
   template <typename ConstructedWith>
   static auto erase(ConstructedWith&& v) {
-    return basic_val<Nullable, SmallObjectSize>(
+    return val<Nullable, SmallObjectSize>(
         std::in_place_type<std::decay_t<ConstructedWith>>,
         std::forward<ConstructedWith>(v));
   }
 };
 
-static_assert(is_proxy<val>);
-static_assert(is_object_proxy<val>);
+static_assert(is_proxy<val<>>);
+static_assert(is_object_proxy<val<>>);
 
 // --------------------------------------------------------------------------------
 // meta data
@@ -3218,7 +3218,7 @@ struct jacket_return<Param> {
     return std::forward<Sig>(sig);
   }
 };
-static_assert(!is_type_class<val>);
+static_assert(!is_type_class<val<>>);
 template <>
 struct jacket_return<self> {
   template <typename Sig, typename Any>
@@ -3585,7 +3585,7 @@ TRAIT_EX_(
                       }),
      ANY_V_TABLE_DATA(model_size_t, model_size,
                       compute_model_size<Concrete>())),
-    (using default_proxy_t = val;));
+    (using default_proxy_t = val<>;));
 
 class meta_data {
   const std::type_info& type_info_;
@@ -4622,91 +4622,91 @@ static_assert(proxy_borrowable_from<mutref, mutref, observeable_v_table>);
 static_assert(proxy_borrowable_from<mutref, unique, observeable_v_table>);
 static_assert(!proxy_borrowable_from<mutref, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<mutref, weak, observeable_v_table>);
-static_assert(proxy_borrowable_from<mutref, val, dynamic_value_v_table>);
+static_assert(proxy_borrowable_from<mutref, val<>, dynamic_value_v_table>);
 
 static_assert(proxy_borrowable_from<cref, cref, observeable_v_table>);
 static_assert(proxy_borrowable_from<cref, mutref, observeable_v_table>);
 static_assert(proxy_borrowable_from<cref, unique, observeable_v_table>);
 static_assert(proxy_borrowable_from<cref, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<cref, weak, observeable_v_table>);
-static_assert(proxy_borrowable_from<cref, val, dynamic_value_v_table>);
+static_assert(proxy_borrowable_from<cref, val<>, dynamic_value_v_table>);
 
 static_assert(!proxy_borrowable_from<shared, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<shared, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<shared, unique, observeable_v_table>);
 static_assert(proxy_borrowable_from<shared, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<shared, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<shared, val, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<shared, val<>, dynamic_value_v_table>);
 
 static_assert(!proxy_borrowable_from<weak, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<weak, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<weak, unique, observeable_v_table>);
 static_assert(proxy_borrowable_from<weak, shared, observeable_v_table>);
 static_assert(proxy_borrowable_from<weak, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<weak, val, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<weak, val<>, dynamic_value_v_table>);
 
 static_assert(!proxy_borrowable_from<unique, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, unique, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<unique, val, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<unique, val<>, dynamic_value_v_table>);
 
-static_assert(!proxy_borrowable_from<val, cref, observeable_v_table>);
-static_assert(!proxy_borrowable_from<val, mutref, observeable_v_table>);
-static_assert(!proxy_borrowable_from<val, unique, observeable_v_table>);
-static_assert(!proxy_borrowable_from<val, shared, observeable_v_table>);
-static_assert(!proxy_borrowable_from<val, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<val, val, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<val<>, cref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val<>, mutref, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val<>, unique, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val<>, shared, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val<>, weak, observeable_v_table>);
+static_assert(!proxy_borrowable_from<val<>, val<>, dynamic_value_v_table>);
 
 static_assert(!cloneable_to<mutref>);
 static_assert(!cloneable_to<cref>);
 static_assert(cloneable_to<shared>);
 static_assert(!cloneable_to<weak>);
 static_assert(cloneable_to<unique>);
-static_assert(cloneable_to<val>);
+static_assert(cloneable_to<val<>>);
 
 static_assert(!moveable_from<mutref, cref>);
 static_assert(moveable_from<mutref, mutref>);
 static_assert(!moveable_from<mutref, unique>);
 static_assert(!moveable_from<mutref, shared>);
 static_assert(!moveable_from<mutref, weak>);
-static_assert(!moveable_from<mutref, val>);
+static_assert(!moveable_from<mutref, val<>>);
 
 static_assert(moveable_from<cref, cref>);
 static_assert(moveable_from<cref, mutref>);
 static_assert(!moveable_from<cref, unique>);
 static_assert(!moveable_from<cref, shared>);
 static_assert(!moveable_from<cref, weak>);
-static_assert(!moveable_from<cref, val>);
+static_assert(!moveable_from<cref, val<>>);
 
 static_assert(!moveable_from<shared, cref>);
 static_assert(!moveable_from<shared, mutref>);
 static_assert(moveable_from<shared, unique>);
 static_assert(moveable_from<shared, shared>);
 static_assert(!moveable_from<shared, weak>);
-static_assert(!moveable_from<shared, val>);
+static_assert(!moveable_from<shared, val<>>);
 
 static_assert(!moveable_from<weak, cref>);
 static_assert(!moveable_from<weak, mutref>);
 static_assert(!moveable_from<weak, unique>);
 static_assert(moveable_from<weak, shared>);
 static_assert(moveable_from<weak, weak>);
-static_assert(!moveable_from<weak, val>);
+static_assert(!moveable_from<weak, val<>>);
 
 static_assert(!moveable_from<unique, cref>);
 static_assert(!moveable_from<unique, mutref>);
 static_assert(moveable_from<unique, unique>);
 static_assert(!moveable_from<unique, shared>);
 static_assert(!moveable_from<unique, weak>);
-static_assert(!moveable_from<unique, val>);
+static_assert(!moveable_from<unique, val<>>);
 
-static_assert(!moveable_from<val, cref>);
-static_assert(!moveable_from<val, mutref>);
-static_assert(!moveable_from<val, unique>);
-static_assert(!moveable_from<val, shared>);
-static_assert(!moveable_from<val, weak>);
-static_assert(moveable_from<val, val>);
+static_assert(!moveable_from<val<>, cref>);
+static_assert(!moveable_from<val<>, mutref>);
+static_assert(!moveable_from<val<>, unique>);
+static_assert(!moveable_from<val<>, shared>);
+static_assert(!moveable_from<val<>, weak>);
+static_assert(moveable_from<val<>, val<>>);
 
 static_assert(is_allocate_v_table<dynamic_value_v_table>);
 static_assert(is_copy_constructor_v_table<dynamic_value_v_table>);
@@ -4715,7 +4715,7 @@ static_assert(is_destructor_v_table<dynamic_value_v_table>);
 static_assert(is_delete_v_table<dynamic_value_v_table>);
 
 static_assert(is_proxy_compatible_with_trait<cref, observeable>);
-static_assert(!is_proxy_compatible_with_trait<val, observeable>);
-static_assert(is_proxy_compatible_with_trait<val, dynamic_value>);
+static_assert(!is_proxy_compatible_with_trait<val<>, observeable>);
+static_assert(is_proxy_compatible_with_trait<val<>, dynamic_value>);
 
 }  // namespace anyxx

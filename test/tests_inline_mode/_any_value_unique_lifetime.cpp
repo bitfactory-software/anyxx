@@ -83,7 +83,7 @@ static_assert(sizeof(int) <= anyxx::small_object_size);
 
 }  // namespace
 
-TEST_CASE("val lifetime") {
+TEST_CASE("val<> lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
@@ -153,7 +153,7 @@ TEST_CASE("val lifetime") {
   }
 }
 
-TEST_CASE("val lifetime small object") {
+TEST_CASE("val<> lifetime small object") {
   {
     CHECK(Y::tracker_ == 0);
     {
@@ -407,7 +407,7 @@ TEST_CASE("v-table lifetime small object") {
   }
 }
 
-TEST_CASE("val lifetime trivial/small/big object") {
+TEST_CASE("val<> lifetime trivial/small/big object") {
   {
     CHECK(Y::tracker_ == 0);
     CHECK(X::tracker_ == 0);

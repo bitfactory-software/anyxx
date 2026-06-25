@@ -118,7 +118,7 @@ TEST_CASE("equal_comparable static") {
 }
 // 2. Dynamic dispatch usage.
 TEST_CASE("equal_comparable dynamic") {
-  using any_equal_comparable = anyxx::any<lib_2f::equal_comparable, anyxx::val>;
+  using any_equal_comparable = anyxx::any<lib_2f::equal_comparable, anyxx::val<>>;
   std::vector<std::pair<any_equal_comparable, any_equal_comparable>> v{
       {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
       {app_2f::b_type{"A"}, app_2f::b_type{"B"}},
@@ -138,8 +138,8 @@ TEST_CASE("equal_comparable dynamic") {
     // This behaviour is enforced by the \ref anyxx::self keyword type.
     using namespace anyxx;
     using namespace lib_2f;
-    any<equal_comparable, val> a{42};
-    any<equal_comparable, val> b{3.14};
+    any<equal_comparable, val<>> a{42};
+    any<equal_comparable, val<>> b{3.14};
     CHECK_THROWS_AS(a == b, type_mismatch_error);
   }
 }
