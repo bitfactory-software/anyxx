@@ -100,7 +100,7 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(trait1, anyxx::dynamic_value, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, fn1, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line">std::string cat(std::vector&lt;<a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;trait1, anyxx::val&gt;</a>&gt; <span class="keyword">const</span>&amp; items) {</div>
+<div class="line">std::string cat(std::vector&lt;<a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;trait1, <a id="_a3" name="_a3"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt;&gt; <span class="keyword">const</span>&amp; items) {</div>
 <div class="line">  std::string result;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; item : items) {</div>
 <div class="line">    result += item.fn1();</div>
@@ -119,7 +119,7 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace simple</span></div>
 <div class="line"> </div>
-<div class="line"><a id="a3" name="a3"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((simple::model2), simple::trait1) {</div>
+<div class="line"><a id="a4" name="a4"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((simple::model2), simple::trait1) {</div>
 <div class="line">  <span class="keyword">static</span> std::string fn1(simple::model2 <span class="keyword">const</span>&amp; m) {</div>
 <div class="line">    <span class="keywordflow">return</span> std::to_string(m.x);</div>
 <div class="line">  };</div>
@@ -129,9 +129,9 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">using namespace </span>simple;</div>
 <div class="line"> </div>
-<div class="line">  <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;trait1, val&gt;</a> test1{model1{<span class="stringliteral">&quot;model1&quot;</span>}};</div>
+<div class="line">  <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;trait1, val&lt;&gt;</a>&gt; test1{model1{<span class="stringliteral">&quot;model1&quot;</span>}};</div>
 <div class="line">  CHECK(test1.fn1() == <span class="stringliteral">&quot;model1&quot;</span>);</div>
-<div class="line">  <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;trait1, val&gt;</a> test2{model2{42}};</div>
+<div class="line">  <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;trait1, val&lt;&gt;</a>&gt; test2{model2{42}};</div>
 <div class="line">  CHECK(test2.fn1() == <span class="stringliteral">&quot;42&quot;</span>);</div>
 <div class="line"> </div>
 <div class="line">  CHECK(cat({test1, test2}) == <span class="stringliteral">&quot;model142&quot;</span>);</div>
@@ -141,6 +141,7 @@ $(function(){initNavTree('_2o_trait_simple_8cpp-example.html','',''); });
 <div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1062</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1262</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:796</div></div>
+<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2247</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.16.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Any++: anyxx::basic_val&lt; Nullable, SmallObjectSize &gt; Struct Template Reference</title>
+<title>Any++: anyxx::val&lt; Nullable, SmallObjectSize &gt; Struct Template Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -62,7 +62,7 @@ $(function() {
   </div>
 </div>
 <script type="text/javascript">
-$(function(){initNavTree('structanyxx_1_1basic__val.html','','structanyxx_1_1basic__val-members'); });
+$(function(){initNavTree('structanyxx_1_1val.html','','structanyxx_1_1val-members'); });
 </script>
 <div id="container">
 <div id="doc-content">
@@ -88,7 +88,7 @@ $(function(){initNavTree('structanyxx_1_1basic__val.html','','structanyxx_1_1bas
 </div>
 
 <div class="header">
-  <div class="headertitle"><div class="title">anyxx::basic_val&lt; Nullable, SmallObjectSize &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
+  <div class="headertitle"><div class="title">anyxx::val&lt; Nullable, SmallObjectSize &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__proxies.html">Proxies</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -99,25 +99,27 @@ $(function(){initNavTree('structanyxx_1_1basic__val.html','','structanyxx_1_1bas
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a4c52e90caa8c2075f7a4c838631c2e48" id="r_a4c52e90caa8c2075f7a4c838631c2e48"><td class="memTemplParams" colspan="2"><a id="a4c52e90caa8c2075f7a4c838631c2e48" name="a4c52e90caa8c2075f7a4c838631c2e48"></a>
+<tr class="memitem:ab50a72585d0ab8453e30e5369603ca88" id="r_ab50a72585d0ab8453e30e5369603ca88"><td class="memTemplParams" colspan="2"><a id="ab50a72585d0ab8453e30e5369603ca88" name="ab50a72585d0ab8453e30e5369603ca88"></a>
 template&lt;typename T, typename... Args&gt; </td></tr>
-<tr class="memitem:a4c52e90caa8c2075f7a4c838631c2e48 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>basic_val</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:ab50a72585d0ab8453e30e5369603ca88 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>val</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a8c36a586c0a1465f537d2f3bf31dc9a1" id="r_a8c36a586c0a1465f537d2f3bf31dc9a1"><td class="memItemLeft"><a id="a8c36a586c0a1465f537d2f3bf31dc9a1" name="a8c36a586c0a1465f537d2f3bf31dc9a1"></a>
-union anyxx::basic_val::data_union&#160;</td><td class="memItemRight"><b>data</b></td></tr>
-<tr class="memitem:af70e8f7127b3c16cb25519003406f95b" id="r_af70e8f7127b3c16cb25519003406f95b"><td class="memItemLeft"><a id="af70e8f7127b3c16cb25519003406f95b" name="af70e8f7127b3c16cb25519003406f95b"></a>
+<tr class="memitem:a3f09627d16f66ae197f483d42a32ec79" id="r_a3f09627d16f66ae197f483d42a32ec79"><td class="memItemLeft"><a id="a3f09627d16f66ae197f483d42a32ec79" name="a3f09627d16f66ae197f483d42a32ec79"></a>
+union anyxx::val::data_union&#160;</td><td class="memItemRight"><b>data</b></td></tr>
+<tr class="memitem:a6e608032dcbd744cca09298e2ece1a06" id="r_a6e608032dcbd744cca09298e2ece1a06"><td class="memItemLeft"><a id="a6e608032dcbd744cca09298e2ece1a06" name="a6e608032dcbd744cca09298e2ece1a06"></a>
 mutable_void&#160;</td><td class="memItemRight"><b>ptr_</b> = nullptr</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename Nullable, std::size_t SmallObjectSize = small_object_size&gt;<br />
-struct anyxx::basic_val&lt; Nullable, SmallObjectSize &gt;</div><p>Proxy to manage the captured object as value with small object optimization. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename Nullable = std::false_type, std::size_t SmallObjectSize = small_object_size&gt;<br />
+struct anyxx::val&lt; Nullable, SmallObjectSize &gt;</div><p>Proxy to manage the captured object as value with small object optimization. </p>
 <ul>
 <li>If you forward an object to any constructor, this object will be forwarded to the allocated storage.</li>
 <li>To pass an object as second parameter, with the std::in_place tag as first, has the same behavior as above</li>
 <li>If you pass as first parameter std::in_place_type&lt;...&gt;, the object will be constructed in place in the allocated memory with the other arguments forwarded </li>
 </ul>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_8cpp-example.html#_a2">21_Tree_any.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a2">_2d_trait_self.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#_a3">_2o_trait_simple.cpp</a>, <a class="el" href="_3_any_range_8cpp-example.html#_a6">_3_any_range.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a2">_5_any_template.cpp</a>.</dd>
+</dl>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>bit_factory/<a class="el" href="anyxx_8hpp_source.html">anyxx.hpp</a></li>
 </ul>
@@ -134,7 +136,7 @@ struct anyxx::basic_val&lt; Nullable, SmallObjectSize &gt;</div><p>Proxy to mana
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1basic__val.html">basic_val</a></li>
+    <li class="navelem"><b>anyxx</b></li><li class="navelem"><a href="structanyxx_1_1val.html">val</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.16.1 </li>
   </ul>
 </div>

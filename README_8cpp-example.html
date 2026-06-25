@@ -181,7 +181,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_value, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&gt;&gt; const&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; const&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -284,7 +284,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -327,7 +327,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_value,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_FN(std::string, name, (), const)), , ,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_OPEN_DISPATCH), ())</span></div>
-<div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&gt;</span></div>
+<div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</span></div>
 <div class="line"><span class="stringliteral">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</span></div>
@@ -349,7 +349,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">    [](auto const&amp;, auto const&amp;) { return std::partial_ordering::greater; });</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">void compare_each(std::stringstream&amp; os,</span></div>
-<div class="line"><span class="stringliteral">                  std::vector&lt;ayx::any&lt;figure, ayx::val&gt;&gt; const&amp; figures) {</span></div>
+<div class="line"><span class="stringliteral">                  std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; const&amp; figures) {</span></div>
 <div class="line"><span class="stringliteral">  std::string sep;</span></div>
 <div class="line"><span class="stringliteral">  for (auto const&amp; l : figures)</span></div>
 <div class="line"><span class="stringliteral">    for (auto const&amp; r : figures) {</span></div>
@@ -415,7 +415,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_value,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_FN(std::string, name, (), const)), , ,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_OPEN_DISPATCH), ())</span></div>
-<div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&gt;</span></div>
+<div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</span></div>
 <div class="line"><span class="stringliteral">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::dispatch&lt;std::string(ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt; latin, italian;</span></div>
@@ -426,7 +426,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">auto __ = italian.define&lt;square&gt;([](auto const&amp;) { return &quot;quadrato&quot;; });</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">void translate(std::stringstream&amp; os,</span></div>
-<div class="line"><span class="stringliteral">               std::vector&lt;ayx::any&lt;figure, ayx::val&gt;&gt; const&amp; figures) {</span></div>
+<div class="line"><span class="stringliteral">               std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; const&amp; figures) {</span></div>
 <div class="line"><span class="stringliteral">  std::string sep;</span></div>
 <div class="line"><span class="stringliteral">  for (auto const&amp; f : figures)</span></div>
 <div class="line"><span class="stringliteral">    os &lt;&lt; std::exchange(sep, &quot;; &quot;) &lt;&lt; f.name() &lt;&lt; &quot;: latin = &quot; &lt;&lt; latin(f)</span></div>
@@ -478,11 +478,11 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">struct figure_has_open_dispatch {};</span></div>
-<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val)</span></div>
+<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val&lt;&gt;)</span></div>
 <div class="line"><span class="stringliteral">ANY_(serializable, ayx::dynamic_value,</span></div>
 <div class="line"><span class="stringliteral">    (ANY_FN(void, serialize, (std::ostream&amp;), const)), ayx::cref)</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">ayx::factory&lt;any_serializable, ayx::val, std::string, std::istream&amp;&gt;</span></div>
+<div class="line"><span class="stringliteral">ayx::factory&lt;any_serializable, ayx::val&lt;&gt;, std::string, std::istream&amp;&gt;</span></div>
 <div class="line"><span class="stringliteral">    deserialize;</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</span></div>
@@ -518,7 +518,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">ANY_REGISTER_MODEL(square, serializable);</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">void areas(std::stringstream&amp; os,</span></div>
-<div class="line"><span class="stringliteral">           std::vector&lt;ayx::any&lt;figure, ayx::val&gt;&gt; const&amp; figures) {</span></div>
+<div class="line"><span class="stringliteral">           std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; const&amp; figures) {</span></div>
 <div class="line"><span class="stringliteral">  std::string sep;</span></div>
 <div class="line"><span class="stringliteral">  for (auto const&amp; f : figures) os &lt;&lt; std::exchange(sep, &quot;, &quot;) &lt;&lt; f.area();</span></div>
 <div class="line"><span class="stringliteral">}</span></div>
@@ -633,14 +633,14 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, draw, (), const)),</span></div>
-<div class="line"><span class="stringliteral">     ayx::val)</span></div>
+<div class="line"><span class="stringliteral">     ayx::val&lt;&gt;)</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">using known_and_unknown_shapes =</span></div>
-<div class="line"><span class="stringliteral">    ayx::make_vany&lt;any_figure, ayx::val, circle, square&gt;;</span></div>
+<div class="line"><span class="stringliteral">    ayx::make_vany&lt;any_figure, ayx::val&lt;&gt;, circle, square&gt;;</span></div>
 <div class="line"><span class="stringliteral">static_assert(</span></div>
 <div class="line"><span class="stringliteral">    std::same_as&lt;known_and_unknown_shapes,</span></div>
 <div class="line"><span class="stringliteral">                 any_figure&lt;ayx::using_&lt;  // see the Any++ logo at the top</span></div>
-<div class="line"><span class="stringliteral">                     std::variant&lt;any_figure&lt;ayx::val&gt;, circle, square&gt;&gt;&gt;&gt;);</span></div>
+<div class="line"><span class="stringliteral">                     std::variant&lt;any_figure&lt;ayx::val&lt;&gt;&gt;, circle, square&gt;&gt;&gt;&gt;);</span></div>
 <div class="line"><span class="stringliteral">ANY_MODEL_MAP((std::string), figure) {</span></div>
 <div class="line"><span class="stringliteral">  static std::string draw(std::string const&amp; s) { return s; };</span></div>
 <div class="line"><span class="stringliteral">};</span></div>
@@ -666,7 +666,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">- A `figure` trait is declared, specifying the required interface (`draw() const -&gt; std::string`).</span></div>
 <div class="line"><span class="stringliteral">- The type alias `known_and_unknown_shapes` is created using `anyxx::make_vany`, which produces a type-erased wrapper over a `std::variant` containing:</span></div>
 <div class="line"><span class="stringliteral">  - All known types (`circle`, `square`)</span></div>
-<div class="line"><span class="stringliteral">  - An open-ended type-erased fallback (`any_figure&lt;ayx::val&gt;`)</span></div>
+<div class="line"><span class="stringliteral">  - An open-ended type-erased fallback (`any_figure&lt;ayx::val&lt;&gt;&gt;`)</span></div>
 <div class="line"><span class="stringliteral">- A model map is provided for `std::string`, allowing strings to be handled as figures.</span></div>
 <div class="line"><span class="stringliteral">- So the vector passed to `draw` can seamlessly contain both known types (like `circle` and `square`) and dynamically extended types (like `std::string`), all accessed through the same trait-based interface. </span></div>
 <div class="line"><span class="stringliteral"></span> </div>

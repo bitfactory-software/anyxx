@@ -746,7 +746,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00659" name="l00659"></a><span class="lineno">  659</span><span class="preprocessor">                                                                               \</span></div>
 <div class="line"><a id="l00660" name="l00660"></a><span class="lineno">  660</span><span class="preprocessor">    using any_value_t = anyxx::any&lt;n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \</span></div>
 <div class="line"><a id="l00661" name="l00661"></a><span class="lineno">  661</span><span class="preprocessor">                                       any_template_params),                   \</span></div>
-<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span><span class="preprocessor">                                   anyxx::basic_val&lt;val_nullable&gt;&gt;;            \</span></div>
+<div class="line"><a id="l00662" name="l00662"></a><span class="lineno">  662</span><span class="preprocessor">                                   anyxx::val&lt;val_nullable&gt;&gt;;                  \</span></div>
 <div class="line"><a id="l00663" name="l00663"></a><span class="lineno">  663</span><span class="preprocessor">                                                                               \</span></div>
 <div class="line"><a id="l00664" name="l00664"></a><span class="lineno">  664</span><span class="preprocessor">    static bool static_is_derived_from(const std::type_info&amp; from) {           \</span></div>
 <div class="line"><a id="l00665" name="l00665"></a><span class="lineno">  665</span><span class="preprocessor">      if constexpr (anyxx::is_dynamic_castable_v_table&lt;v_table_base_t&gt;) {      \</span></div>
@@ -779,7 +779,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00692" name="l00692"></a><span class="lineno">  692</span><span class="preprocessor">                                                                               \</span></div>
 <div class="line"><a id="l00693" name="l00693"></a><span class="lineno">  693</span><span class="preprocessor">    using any_value_t = anyxx::any&lt;n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \</span></div>
 <div class="line"><a id="l00694" name="l00694"></a><span class="lineno">  694</span><span class="preprocessor">                                       any_template_params),                   \</span></div>
-<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span><span class="preprocessor">                                   anyxx::basic_val&lt;val_nullable&gt;&gt;;            \</span></div>
+<div class="line"><a id="l00695" name="l00695"></a><span class="lineno">  695</span><span class="preprocessor">                                   anyxx::val&lt;val_nullable&gt;&gt;;                  \</span></div>
 <div class="line"><a id="l00696" name="l00696"></a><span class="lineno">  696</span><span class="preprocessor">                                                                               \</span></div>
 <div class="line"><a id="l00697" name="l00697"></a><span class="lineno">  697</span><span class="preprocessor">    using v_table_base_t = base_t::v_table_t;                                  \</span></div>
 <div class="line"><a id="l00698" name="l00698"></a><span class="lineno">  698</span><span class="preprocessor">    using v_table_t =                                                          \</span></div>
@@ -1612,7 +1612,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01773" name="l01773"></a><span class="lineno"> 1773</span> </div>
 <div class="line"><a id="l01774" name="l01774"></a><span class="lineno"> 1774</span>  <span class="keyword">static</span> <span class="keyword">auto</span> get_proxy_ptr_in(<span class="keyword">auto</span>&amp; val,</div>
 <div class="line"><a id="l01775" name="l01775"></a><span class="lineno"> 1775</span>                               [[maybe_unused]] observeable_v_table* v_table) {</div>
-<div class="line"><a id="l01776" name="l01776"></a><span class="lineno"> 1776</span>    <span class="keywordflow">return</span> &amp;val;</div>
+<div class="line"><a id="l01776" name="l01776"></a><span class="lineno"> 1776</span>    <span class="keywordflow">return</span> val;</div>
 <div class="line"><a id="l01777" name="l01777"></a><span class="lineno"> 1777</span>  }</div>
 <div class="line"><a id="l01778" name="l01778"></a><span class="lineno"> 1778</span> </div>
 <div class="line"><a id="l01779" name="l01779"></a><span class="lineno"> 1779</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstructedWith&gt;</div>
@@ -1716,7 +1716,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01887" name="l01887"></a><span class="lineno"> 1887</span> </div>
 <div class="line"><a id="l01888" name="l01888"></a><span class="lineno"> 1888</span>  <span class="keyword">static</span> <span class="keyword">auto</span> get_proxy_ptr_in(<span class="keyword">auto</span>&amp; val,</div>
 <div class="line"><a id="l01889" name="l01889"></a><span class="lineno"> 1889</span>                               [[maybe_unused]] is_v_table <span class="keyword">auto</span>* v_table) {</div>
-<div class="line"><a id="l01890" name="l01890"></a><span class="lineno"> 1890</span>    <span class="keywordflow">return</span> &amp;val;</div>
+<div class="line"><a id="l01890" name="l01890"></a><span class="lineno"> 1890</span>    <span class="keywordflow">return</span> val;</div>
 <div class="line"><a id="l01891" name="l01891"></a><span class="lineno"> 1891</span>  }</div>
 <div class="line"><a id="l01892" name="l01892"></a><span class="lineno"> 1892</span> </div>
 <div class="line"><a id="l01893" name="l01893"></a><span class="lineno"> 1893</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstructedWith&gt;</div>
@@ -2004,7 +2004,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02195" name="l02195"></a><span class="lineno"> 2195</span><span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;weak&gt;</a>);</div>
 <div class="line"><a id="l02196" name="l02196"></a><span class="lineno"> 2196</span> </div>
 <div class="line"><a id="l02197" name="l02197"></a><span class="lineno"> 2197</span><span class="comment">// --------------------------------------------------------------------------------</span></div>
-<div class="line"><a id="l02198" name="l02198"></a><span class="lineno"> 2198</span><span class="comment">// erased data basic_val</span></div>
+<div class="line"><a id="l02198" name="l02198"></a><span class="lineno"> 2198</span><span class="comment">// erased data val</span></div>
 <div class="line"><a id="l02199" name="l02199"></a><span class="lineno"> 2199</span> </div>
 <div class="line"><a id="l02200" name="l02200"></a><span class="lineno"> 2200</span><span class="keyword">constexpr</span> std::size_t small_object_size = 2 * <span class="keyword">sizeof</span>(mutable_void);</div>
 <div class="line"><a id="l02201" name="l02201"></a><span class="lineno"> 2201</span> </div>
@@ -2041,37 +2041,37 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02232" name="l02232"></a><span class="lineno"> 2232</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">inline</span> <span class="keywordtype">bool</span> is_trivial = Trivial;</div>
 <div class="line"><a id="l02233" name="l02233"></a><span class="lineno"> 2233</span>};</div>
 <div class="line"><a id="l02234" name="l02234"></a><span class="lineno"> 2234</span></div>
-<div class="line"><a id="l02245" name="l02245"></a><span class="lineno"> 2245</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Nullable, std::<span class="keywordtype">size_t</span> SmallObjectSize = small_<span class="keywordtype">object</span>_size&gt;</div>
-<div class="foldopen" id="foldopen02246" data-start="{" data-end="};">
-<div class="line"><a id="l02246" name="l02246"></a><span class="lineno"><a class="line" href="structanyxx_1_1basic__val.html"> 2246</a></span><span class="keyword">struct </span>basic_val {</div>
-<div class="line"><a id="l02247" name="l02247"></a><span class="lineno"> 2247</span>  <span class="keyword">union </span>data_union {</div>
-<div class="line"><a id="l02248" name="l02248"></a><span class="lineno"> 2248</span>    data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}</div>
-<div class="line"><a id="l02249" name="l02249"></a><span class="lineno"> 2249</span>    data_union(data_union <span class="keyword">const</span>&amp; other) <span class="keyword">noexcept</span> { trivial = other.trivial; }</div>
-<div class="line"><a id="l02250" name="l02250"></a><span class="lineno"> 2250</span>    heap_data heap;</div>
-<div class="line"><a id="l02251" name="l02251"></a><span class="lineno"> 2251</span>    local_data&lt;false&gt; local;</div>
-<div class="line"><a id="l02252" name="l02252"></a><span class="lineno"> 2252</span>    local_data&lt;true&gt; trivial;</div>
-<div class="line"><a id="l02253" name="l02253"></a><span class="lineno"> 2253</span>  } data;</div>
-<div class="line"><a id="l02254" name="l02254"></a><span class="lineno"> 2254</span>  mutable_void ptr_ = <span class="keyword">nullptr</span>;</div>
-<div class="line"><a id="l02255" name="l02255"></a><span class="lineno"> 2255</span> </div>
-<div class="line"><a id="l02256" name="l02256"></a><span class="lineno"> 2256</span>  basic_val() : data{<span class="keyword">nullptr</span>}, ptr_{<span class="keyword">nullptr</span>} {}</div>
-<div class="line"><a id="l02257" name="l02257"></a><span class="lineno"> 2257</span>  ~basic_val() {}</div>
-<div class="line"><a id="l02258" name="l02258"></a><span class="lineno"> 2258</span> </div>
-<div class="line"><a id="l02259" name="l02259"></a><span class="lineno"> 2259</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l02260" name="l02260"></a><span class="lineno"> 2260</span>  basic_val(std::in_place_type_t&lt;T&gt;, Args&amp;&amp;... args) {</div>
-<div class="line"><a id="l02261" name="l02261"></a><span class="lineno"> 2261</span>    <span class="keyword">static_assert</span>(<span class="keyword">alignof</span>(T) &lt;= <span class="keyword">alignof</span>(mutable_void));</div>
-<div class="line"><a id="l02262" name="l02262"></a><span class="lineno"> 2262</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">sizeof</span>(T) &lt;= SmallObjectSize) {</div>
-<div class="line"><a id="l02263" name="l02263"></a><span class="lineno"> 2263</span>      <span class="keyword">auto</span> location =</div>
-<div class="line"><a id="l02264" name="l02264"></a><span class="lineno"> 2264</span>          <span class="keyword">static_cast&lt;</span>T*<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>mutable_void<span class="keyword">&gt;</span>(data.local.data()));</div>
-<div class="line"><a id="l02265" name="l02265"></a><span class="lineno"> 2265</span>      ptr_ = std::construct_at&lt;T&gt;(location, std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l02266" name="l02266"></a><span class="lineno"> 2266</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l02267" name="l02267"></a><span class="lineno"> 2267</span>      ptr_ = data.heap.ptr = <span class="keyword">new</span> T(std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l02268" name="l02268"></a><span class="lineno"> 2268</span>    }</div>
-<div class="line"><a id="l02269" name="l02269"></a><span class="lineno"> 2269</span>  }</div>
-<div class="line"><a id="l02270" name="l02270"></a><span class="lineno"> 2270</span>};</div>
+<div class="line"><a id="l02245" name="l02245"></a><span class="lineno"> 2245</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Nullable = std::false_type,</div>
+<div class="line"><a id="l02246" name="l02246"></a><span class="lineno"> 2246</span>          std::size_t SmallObjectSize = small_object_size&gt;</div>
+<div class="foldopen" id="foldopen02247" data-start="{" data-end="};">
+<div class="line"><a id="l02247" name="l02247"></a><span class="lineno"><a class="line" href="structanyxx_1_1val.html"> 2247</a></span><span class="keyword">struct </span>val {</div>
+<div class="line"><a id="l02248" name="l02248"></a><span class="lineno"> 2248</span>  <span class="keyword">union </span>data_union {</div>
+<div class="line"><a id="l02249" name="l02249"></a><span class="lineno"> 2249</span>    data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}</div>
+<div class="line"><a id="l02250" name="l02250"></a><span class="lineno"> 2250</span>    data_union(data_union <span class="keyword">const</span>&amp; other) <span class="keyword">noexcept</span> { trivial = other.trivial; }</div>
+<div class="line"><a id="l02251" name="l02251"></a><span class="lineno"> 2251</span>    heap_data heap;</div>
+<div class="line"><a id="l02252" name="l02252"></a><span class="lineno"> 2252</span>    local_data&lt;false&gt; local;</div>
+<div class="line"><a id="l02253" name="l02253"></a><span class="lineno"> 2253</span>    local_data&lt;true&gt; trivial;</div>
+<div class="line"><a id="l02254" name="l02254"></a><span class="lineno"> 2254</span>  } data;</div>
+<div class="line"><a id="l02255" name="l02255"></a><span class="lineno"> 2255</span>  mutable_void ptr_ = <span class="keyword">nullptr</span>;</div>
+<div class="line"><a id="l02256" name="l02256"></a><span class="lineno"> 2256</span> </div>
+<div class="line"><a id="l02257" name="l02257"></a><span class="lineno"> 2257</span>  val() : data{<span class="keyword">nullptr</span>}, ptr_{<span class="keyword">nullptr</span>} {}</div>
+<div class="line"><a id="l02258" name="l02258"></a><span class="lineno"> 2258</span>  ~val() {}</div>
+<div class="line"><a id="l02259" name="l02259"></a><span class="lineno"> 2259</span> </div>
+<div class="line"><a id="l02260" name="l02260"></a><span class="lineno"> 2260</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l02261" name="l02261"></a><span class="lineno"> 2261</span>  val(std::in_place_type_t&lt;T&gt;, Args&amp;&amp;... args) {</div>
+<div class="line"><a id="l02262" name="l02262"></a><span class="lineno"> 2262</span>    <span class="keyword">static_assert</span>(<span class="keyword">alignof</span>(T) &lt;= <span class="keyword">alignof</span>(mutable_void));</div>
+<div class="line"><a id="l02263" name="l02263"></a><span class="lineno"> 2263</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (<span class="keyword">sizeof</span>(T) &lt;= SmallObjectSize) {</div>
+<div class="line"><a id="l02264" name="l02264"></a><span class="lineno"> 2264</span>      <span class="keyword">auto</span> location =</div>
+<div class="line"><a id="l02265" name="l02265"></a><span class="lineno"> 2265</span>          <span class="keyword">static_cast&lt;</span>T*<span class="keyword">&gt;</span>(<span class="keyword">static_cast&lt;</span>mutable_void<span class="keyword">&gt;</span>(data.local.data()));</div>
+<div class="line"><a id="l02266" name="l02266"></a><span class="lineno"> 2266</span>      ptr_ = std::construct_at&lt;T&gt;(location, std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l02267" name="l02267"></a><span class="lineno"> 2267</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l02268" name="l02268"></a><span class="lineno"> 2268</span>      ptr_ = data.heap.ptr = <span class="keyword">new</span> T(std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l02269" name="l02269"></a><span class="lineno"> 2269</span>    }</div>
+<div class="line"><a id="l02270" name="l02270"></a><span class="lineno"> 2270</span>  }</div>
+<div class="line"><a id="l02271" name="l02271"></a><span class="lineno"> 2271</span>};</div>
 </div>
-<div class="line"><a id="l02271" name="l02271"></a><span class="lineno"> 2271</span> </div>
-<div class="line"><a id="l02272" name="l02272"></a><span class="lineno"> 2272</span><span class="keyword">using </span>val = <a class="code hl_struct" href="structanyxx_1_1basic__val.html">basic_val&lt;std::false_type&gt;</a>;</div>
-<div class="line"><a id="l02273" name="l02273"></a><span class="lineno"> 2273</span><span class="keyword">using </span>nullable_val = <a class="code hl_struct" href="structanyxx_1_1basic__val.html">basic_val&lt;std::true_type&gt;</a>;</div>
+<div class="line"><a id="l02272" name="l02272"></a><span class="lineno"> 2272</span> </div>
+<div class="line"><a id="l02273" name="l02273"></a><span class="lineno"> 2273</span><span class="keyword">using </span>nullable_val = <a class="code hl_struct" href="structanyxx_1_1val.html">val&lt;std::true_type&gt;</a>;</div>
 <div class="line"><a id="l02274" name="l02274"></a><span class="lineno"> 2274</span> </div>
 <div class="line"><a id="l02275" name="l02275"></a><span class="lineno"> 2275</span><span class="keyword">template</span> &lt;std::<span class="keywordtype">size_t</span> SmallObjectSize, <span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l02276" name="l02276"></a><span class="lineno"> 2276</span><span class="keyword">auto</span> visit_value(<span class="keyword">auto</span>&amp;&amp; visitor, V&amp;&amp; v, model_size_t size) -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
@@ -2088,7 +2088,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02287" name="l02287"></a><span class="lineno"> 2287</span>};</div>
 <div class="line"><a id="l02288" name="l02288"></a><span class="lineno"> 2288</span> </div>
 <div class="line"><a id="l02289" name="l02289"></a><span class="lineno"> 2289</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Nullable, std::<span class="keywordtype">size_t</span> SmallObjectSize, <span class="keyword">typename</span> V2&gt;</div>
-<div class="line"><a id="l02290" name="l02290"></a><span class="lineno"> 2290</span><span class="keyword">auto</span> visit_value(<span class="keyword">auto</span>&amp;&amp; visitor, <a class="code hl_struct" href="structanyxx_1_1basic__val.html">basic_val&lt;Nullable, SmallObjectSize&gt;</a>&amp; v1,</div>
+<div class="line"><a id="l02290" name="l02290"></a><span class="lineno"> 2290</span><span class="keyword">auto</span> visit_value(<span class="keyword">auto</span>&amp;&amp; visitor, <a class="code hl_struct" href="structanyxx_1_1val.html">val&lt;Nullable, SmallObjectSize&gt;</a>&amp; v1,</div>
 <div class="line"><a id="l02291" name="l02291"></a><span class="lineno"> 2291</span>                 model_size_t size1, V2&amp;&amp; v2, model_size_t size2)</div>
 <div class="line"><a id="l02292" name="l02292"></a><span class="lineno"> 2292</span>    -&gt; <span class="keyword">decltype</span>(<span class="keyword">auto</span>) {</div>
 <div class="line"><a id="l02293" name="l02293"></a><span class="lineno"> 2293</span>  <span class="keywordflow">if</span> (size1.size &gt; SmallObjectSize) {</div>
@@ -2128,8 +2128,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02327" name="l02327"></a><span class="lineno"> 2327</span>};</div>
 <div class="line"><a id="l02328" name="l02328"></a><span class="lineno"> 2328</span> </div>
 <div class="line"><a id="l02329" name="l02329"></a><span class="lineno"> 2329</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Nullable, std::<span class="keywordtype">size_t</span> SmallObjectSize&gt;</div>
-<div class="line"><a id="l02330" name="l02330"></a><span class="lineno"> 2330</span><span class="keyword">struct </span>proxy_trait&lt;<a class="code hl_struct" href="structanyxx_1_1basic__val.html">basic_val</a>&lt;Nullable, SmallObjectSize&gt;&gt;</div>
-<div class="line"><a id="l02331" name="l02331"></a><span class="lineno"> 2331</span>    : basic_proxy_trait&lt;basic_val&lt;Nullable, SmallObjectSize&gt;&gt; {</div>
+<div class="line"><a id="l02330" name="l02330"></a><span class="lineno"> 2330</span><span class="keyword">struct </span>proxy_trait&lt;<a class="code hl_struct" href="structanyxx_1_1val.html">val</a>&lt;Nullable, SmallObjectSize&gt;&gt;</div>
+<div class="line"><a id="l02331" name="l02331"></a><span class="lineno"> 2331</span>    : basic_proxy_trait&lt;val&lt;Nullable, SmallObjectSize&gt;&gt; {</div>
 <div class="line"><a id="l02332" name="l02332"></a><span class="lineno"> 2332</span>  <span class="keyword">using </span>void_t = <span class="keywordtype">void</span>*;</div>
 <div class="line"><a id="l02333" name="l02333"></a><span class="lineno"> 2333</span>  <span class="keyword">using </span>static_dispatch_t = void_t;</div>
 <div class="line"><a id="l02334" name="l02334"></a><span class="lineno"> 2334</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
@@ -2153,7 +2153,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02352" name="l02352"></a><span class="lineno"> 2352</span>  <span class="keyword">static</span> <span class="keyword">auto</span> clone_from([[maybe_unused]] const_void data_ptr,</div>
 <div class="line"><a id="l02353" name="l02353"></a><span class="lineno"> 2353</span>                         [[maybe_unused]] is_v_table <span class="keyword">auto</span>* v_table) {</div>
 <div class="line"><a id="l02354" name="l02354"></a><span class="lineno"> 2354</span>    assert(v_table);</div>
-<div class="line"><a id="l02355" name="l02355"></a><span class="lineno"> 2355</span>    basic_val&lt;Nullable, SmallObjectSize&gt; v;</div>
+<div class="line"><a id="l02355" name="l02355"></a><span class="lineno"> 2355</span>    val&lt;Nullable, SmallObjectSize&gt; v;</div>
 <div class="line"><a id="l02356" name="l02356"></a><span class="lineno"> 2356</span>    v.ptr_ = visit_value&lt;SmallObjectSize&gt;(</div>
 <div class="line"><a id="l02357" name="l02357"></a><span class="lineno"> 2357</span>        overloads{[&amp;](heap_data&amp; heap) {</div>
 <div class="line"><a id="l02358" name="l02358"></a><span class="lineno"> 2358</span>                    <span class="keywordflow">return</span> heap.ptr = copy_construct(v_table, data_ptr);</div>
@@ -2167,9 +2167,9 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02366" name="l02366"></a><span class="lineno"> 2366</span>    <span class="keywordflow">return</span> v;</div>
 <div class="line"><a id="l02367" name="l02367"></a><span class="lineno"> 2367</span>  }</div>
 <div class="line"><a id="l02368" name="l02368"></a><span class="lineno"> 2368</span> </div>
-<div class="line"><a id="l02369" name="l02369"></a><span class="lineno"> 2369</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> move_to(basic_val&lt;Nullable, SmallObjectSize&gt;&amp; to,</div>
+<div class="line"><a id="l02369" name="l02369"></a><span class="lineno"> 2369</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> move_to(val&lt;Nullable, SmallObjectSize&gt;&amp; to,</div>
 <div class="line"><a id="l02370" name="l02370"></a><span class="lineno"> 2370</span>                      [[maybe_unused]] <span class="keyword">auto</span> v_table_to,</div>
-<div class="line"><a id="l02371" name="l02371"></a><span class="lineno"> 2371</span>                      basic_val&lt;Nullable, SmallObjectSize&gt;&amp;&amp; from,</div>
+<div class="line"><a id="l02371" name="l02371"></a><span class="lineno"> 2371</span>                      val&lt;Nullable, SmallObjectSize&gt;&amp;&amp; from,</div>
 <div class="line"><a id="l02372" name="l02372"></a><span class="lineno"> 2372</span>                      [[maybe_unused]] is_v_table <span class="keyword">auto</span>* v_table_from) {</div>
 <div class="line"><a id="l02373" name="l02373"></a><span class="lineno"> 2373</span>    <span class="keywordflow">if</span> (v_table_from == <span class="keyword">nullptr</span> &amp;&amp; v_table_to == <span class="keyword">nullptr</span>) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l02374" name="l02374"></a><span class="lineno"> 2374</span>    to.ptr_ = visit_value(</div>
@@ -2220,7 +2220,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02419" name="l02419"></a><span class="lineno"> 2419</span>    from.ptr_ = <span class="keyword">nullptr</span>;</div>
 <div class="line"><a id="l02420" name="l02420"></a><span class="lineno"> 2420</span>  }</div>
 <div class="line"><a id="l02421" name="l02421"></a><span class="lineno"> 2421</span>  <span class="comment">// TODO implement move from unique</span></div>
-<div class="line"><a id="l02422" name="l02422"></a><span class="lineno"> 2422</span>  <span class="comment">// static void move_to(unique&amp; to, is_v_table auto* to_v_table, val&amp;&amp; v,</span></div>
+<div class="line"><a id="l02422" name="l02422"></a><span class="lineno"> 2422</span>  <span class="comment">// static void move_to(unique&amp; to, is_v_table auto* to_v_table, val&lt;&gt;&amp;&amp; v,</span></div>
 <div class="line"><a id="l02423" name="l02423"></a><span class="lineno"> 2423</span>  <span class="comment">//                    is_v_table auto* v_table) {</span></div>
 <div class="line"><a id="l02424" name="l02424"></a><span class="lineno"> 2424</span>  <span class="comment">//  assert(v_table);</span></div>
 <div class="line"><a id="l02425" name="l02425"></a><span class="lineno"> 2425</span>  <span class="comment">//  auto data_ptr =</span></div>
@@ -2235,10 +2235,10 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02434" name="l02434"></a><span class="lineno"> 2434</span>  <span class="comment">//  proxy_trait&lt;unique&gt;::move_to(to, to_v_table, unique{data_ptr}, v_table);</span></div>
 <div class="line"><a id="l02435" name="l02435"></a><span class="lineno"> 2435</span>  <span class="comment">//}</span></div>
 <div class="line"><a id="l02436" name="l02436"></a><span class="lineno"> 2436</span> </div>
-<div class="line"><a id="l02437" name="l02437"></a><span class="lineno"> 2437</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> copy_construct_from(</div>
-<div class="line"><a id="l02438" name="l02438"></a><span class="lineno"> 2438</span>      basic_val&lt;Nullable, SmallObjectSize&gt;&amp; to, <span class="keyword">auto</span> to_v_table,</div>
-<div class="line"><a id="l02439" name="l02439"></a><span class="lineno"> 2439</span>      basic_val&lt;Nullable, SmallObjectSize&gt; <span class="keyword">const</span>&amp; from,</div>
-<div class="line"><a id="l02440" name="l02440"></a><span class="lineno"> 2440</span>      is_v_table <span class="keyword">auto</span>* from_v_table) {</div>
+<div class="line"><a id="l02437" name="l02437"></a><span class="lineno"> 2437</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> copy_construct_from(val&lt;Nullable, SmallObjectSize&gt;&amp; to,</div>
+<div class="line"><a id="l02438" name="l02438"></a><span class="lineno"> 2438</span>                                  <span class="keyword">auto</span> to_v_table,</div>
+<div class="line"><a id="l02439" name="l02439"></a><span class="lineno"> 2439</span>                                  val&lt;Nullable, SmallObjectSize&gt; <span class="keyword">const</span>&amp; from,</div>
+<div class="line"><a id="l02440" name="l02440"></a><span class="lineno"> 2440</span>                                  is_v_table <span class="keyword">auto</span>* from_v_table) {</div>
 <div class="line"><a id="l02441" name="l02441"></a><span class="lineno"> 2441</span>    <span class="keywordflow">if</span> (!from_v_table) <span class="keywordflow">return</span>;</div>
 <div class="line"><a id="l02442" name="l02442"></a><span class="lineno"> 2442</span>    to.ptr_ = visit_value(</div>
 <div class="line"><a id="l02443" name="l02443"></a><span class="lineno"> 2443</span>        overloads{</div>
@@ -2288,7 +2288,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02487" name="l02487"></a><span class="lineno"> 2487</span>        to, model_size(to_v_table), from, from_v_table-&gt;model_size);</div>
 <div class="line"><a id="l02488" name="l02488"></a><span class="lineno"> 2488</span>  }</div>
 <div class="line"><a id="l02489" name="l02489"></a><span class="lineno"> 2489</span> </div>
-<div class="line"><a id="l02490" name="l02490"></a><span class="lineno"> 2490</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> destroy(basic_val&lt;Nullable, SmallObjectSize&gt;&amp; v,</div>
+<div class="line"><a id="l02490" name="l02490"></a><span class="lineno"> 2490</span>  <span class="keyword">static</span> <span class="keywordtype">void</span> destroy(val&lt;Nullable, SmallObjectSize&gt;&amp; v,</div>
 <div class="line"><a id="l02491" name="l02491"></a><span class="lineno"> 2491</span>                      is_v_table <span class="keyword">auto</span>* v_table) {</div>
 <div class="line"><a id="l02492" name="l02492"></a><span class="lineno"> 2492</span>    visit_value&lt;SmallObjectSize&gt;(</div>
 <div class="line"><a id="l02493" name="l02493"></a><span class="lineno"> 2493</span>        overloads{[&amp;](heap_data&amp; heap) {</div>
@@ -2313,24 +2313,24 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02512" name="l02512"></a><span class="lineno"> 2512</span> </div>
 <div class="line"><a id="l02513" name="l02513"></a><span class="lineno"> 2513</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> V&gt;</div>
 <div class="line"><a id="l02514" name="l02514"></a><span class="lineno"> 2514</span>  <span class="keyword">static</span> <span class="keyword">auto</span> construct_in_place(V&amp;&amp; v) {</div>
-<div class="line"><a id="l02515" name="l02515"></a><span class="lineno"> 2515</span>    <span class="keywordflow">return</span> basic_val&lt;Nullable, SmallObjectSize&gt;(</div>
-<div class="line"><a id="l02516" name="l02516"></a><span class="lineno"> 2516</span>        std::in_place_type&lt;std::decay_t&lt;V&gt;&gt;, std::forward&lt;V&gt;(v));</div>
+<div class="line"><a id="l02515" name="l02515"></a><span class="lineno"> 2515</span>    <span class="keywordflow">return</span> val&lt;Nullable, SmallObjectSize&gt;(std::in_place_type&lt;std::decay_t&lt;V&gt;&gt;,</div>
+<div class="line"><a id="l02516" name="l02516"></a><span class="lineno"> 2516</span>                                          std::forward&lt;V&gt;(v));</div>
 <div class="line"><a id="l02517" name="l02517"></a><span class="lineno"> 2517</span>  }</div>
 <div class="line"><a id="l02518" name="l02518"></a><span class="lineno"> 2518</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span>... Args&gt;</div>
 <div class="line"><a id="l02519" name="l02519"></a><span class="lineno"> 2519</span>  <span class="keyword">static</span> <span class="keyword">auto</span> construct_type_in_place(Args&amp;&amp;... args) {</div>
-<div class="line"><a id="l02520" name="l02520"></a><span class="lineno"> 2520</span>    <span class="keywordflow">return</span> basic_val&lt;Nullable, SmallObjectSize&gt;(std::in_place_type&lt;T&gt;,</div>
-<div class="line"><a id="l02521" name="l02521"></a><span class="lineno"> 2521</span>                                                std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l02520" name="l02520"></a><span class="lineno"> 2520</span>    <span class="keywordflow">return</span> val&lt;Nullable, SmallObjectSize&gt;(std::in_place_type&lt;T&gt;,</div>
+<div class="line"><a id="l02521" name="l02521"></a><span class="lineno"> 2521</span>                                          std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l02522" name="l02522"></a><span class="lineno"> 2522</span>  }</div>
 <div class="line"><a id="l02523" name="l02523"></a><span class="lineno"> 2523</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ConstructedWith&gt;</div>
 <div class="line"><a id="l02524" name="l02524"></a><span class="lineno"> 2524</span>  <span class="keyword">static</span> <span class="keyword">auto</span> erase(ConstructedWith&amp;&amp; v) {</div>
-<div class="line"><a id="l02525" name="l02525"></a><span class="lineno"> 2525</span>    <span class="keywordflow">return</span> basic_val&lt;Nullable, SmallObjectSize&gt;(</div>
+<div class="line"><a id="l02525" name="l02525"></a><span class="lineno"> 2525</span>    <span class="keywordflow">return</span> val&lt;Nullable, SmallObjectSize&gt;(</div>
 <div class="line"><a id="l02526" name="l02526"></a><span class="lineno"> 2526</span>        std::in_place_type&lt;std::decay_t&lt;ConstructedWith&gt;&gt;,</div>
 <div class="line"><a id="l02527" name="l02527"></a><span class="lineno"> 2527</span>        std::forward&lt;ConstructedWith&gt;(v));</div>
 <div class="line"><a id="l02528" name="l02528"></a><span class="lineno"> 2528</span>  }</div>
 <div class="line"><a id="l02529" name="l02529"></a><span class="lineno"> 2529</span>};</div>
 <div class="line"><a id="l02530" name="l02530"></a><span class="lineno"> 2530</span> </div>
-<div class="line"><a id="l02531" name="l02531"></a><span class="lineno"> 2531</span><span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;val&gt;</a>);</div>
-<div class="line"><a id="l02532" name="l02532"></a><span class="lineno"> 2532</span><span class="keyword">static_assert</span>(is_object_proxy&lt;val&gt;);</div>
+<div class="line"><a id="l02531" name="l02531"></a><span class="lineno"> 2531</span><span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;val&lt;&gt;</a>&gt;);</div>
+<div class="line"><a id="l02532" name="l02532"></a><span class="lineno"> 2532</span><span class="keyword">static_assert</span>(is_object_proxy&lt;val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l02533" name="l02533"></a><span class="lineno"> 2533</span> </div>
 <div class="line"><a id="l02534" name="l02534"></a><span class="lineno"> 2534</span><span class="comment">// --------------------------------------------------------------------------------</span></div>
 <div class="line"><a id="l02535" name="l02535"></a><span class="lineno"> 2535</span><span class="comment">// meta data</span></div>
@@ -2952,7 +2952,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03218" name="l03218"></a><span class="lineno"> 3218</span>    <span class="keywordflow">return</span> std::forward&lt;Sig&gt;(sig);</div>
 <div class="line"><a id="l03219" name="l03219"></a><span class="lineno"> 3219</span>  }</div>
 <div class="line"><a id="l03220" name="l03220"></a><span class="lineno"> 3220</span>};</div>
-<div class="line"><a id="l03221" name="l03221"></a><span class="lineno"> 3221</span><span class="keyword">static_assert</span>(!is_type_class&lt;val&gt;);</div>
+<div class="line"><a id="l03221" name="l03221"></a><span class="lineno"> 3221</span><span class="keyword">static_assert</span>(!is_type_class&lt;val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l03222" name="l03222"></a><span class="lineno"> 3222</span><span class="keyword">template</span> &lt;&gt;</div>
 <div class="line"><a id="l03223" name="l03223"></a><span class="lineno"> 3223</span><span class="keyword">struct </span>jacket_return&lt;self&gt; {</div>
 <div class="line"><a id="l03224" name="l03224"></a><span class="lineno"> 3224</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Sig, <span class="keyword">typename</span> Any&gt;</div>
@@ -3317,7 +3317,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03585" name="l03585"></a><span class="lineno"> 3585</span>                      }),</div>
 <div class="line"><a id="l03586" name="l03586"></a><span class="lineno"> 3586</span>     <a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(model_size_t, model_size,</div>
 <div class="line"><a id="l03587" name="l03587"></a><span class="lineno"> 3587</span>                      compute_model_size&lt;Concrete&gt;())),</div>
-<div class="line"><a id="l03588" name="l03588"></a><span class="lineno"> 3588</span>    (<span class="keyword">using </span>default_proxy_t = val;));</div>
+<div class="line"><a id="l03588" name="l03588"></a><span class="lineno"> 3588</span>    (<span class="keyword">using </span>default_proxy_t = <a class="code hl_struct" href="structanyxx_1_1val.html">val&lt;&gt;</a>;));</div>
 <div class="line"><a id="l03589" name="l03589"></a><span class="lineno"> 3589</span> </div>
 <div class="line"><a id="l03590" name="l03590"></a><span class="lineno"> 3590</span><span class="keyword">class </span>meta_data {</div>
 <div class="line"><a id="l03591" name="l03591"></a><span class="lineno"> 3591</span>  <span class="keyword">const</span> std::type_info&amp; type_info_;</div>
@@ -3518,20 +3518,20 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03785" name="l03785"></a><span class="lineno"> 3785</span>  }</div>
 <div class="line"><a id="l03786" name="l03786"></a><span class="lineno"> 3786</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Member&gt;</div>
 <div class="line"><a id="l03787" name="l03787"></a><span class="lineno"> 3787</span>  <span class="keyword">typename</span> Member::value_t <span class="keyword">const</span>* get(Member member)<span class="keyword"> const </span>{</div>
-<div class="line"><a id="l03788" name="l03788"></a><span class="lineno"> 3788</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; val = table_[member.index];</div>
-<div class="line"><a id="l03789" name="l03789"></a><span class="lineno"> 3789</span>    <span class="keywordflow">if</span> (!val) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l03790" name="l03790"></a><span class="lineno"> 3790</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(val);</div>
+<div class="line"><a id="l03788" name="l03788"></a><span class="lineno"> 3788</span>    <span class="keyword">const</span> <span class="keyword">auto</span>&amp; <a class="code hl_struct" href="structanyxx_1_1val.html">val</a> = table_[member.index];</div>
+<div class="line"><a id="l03789" name="l03789"></a><span class="lineno"> 3789</span>    <span class="keywordflow">if</span> (!<a class="code hl_struct" href="structanyxx_1_1val.html">val</a>) <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l03790" name="l03790"></a><span class="lineno"> 3790</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(<a class="code hl_struct" href="structanyxx_1_1val.html">val</a>);</div>
 <div class="line"><a id="l03791" name="l03791"></a><span class="lineno"> 3791</span>  }</div>
 <div class="line"><a id="l03792" name="l03792"></a><span class="lineno"> 3792</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Member&gt;</div>
 <div class="line"><a id="l03793" name="l03793"></a><span class="lineno"> 3793</span>  <span class="keyword">typename</span> Member::value_t* get(Member member) {</div>
-<div class="line"><a id="l03794" name="l03794"></a><span class="lineno"> 3794</span>    <span class="keyword">auto</span>&amp; val = table_[member.index];</div>
-<div class="line"><a id="l03795" name="l03795"></a><span class="lineno"> 3795</span>    <span class="keywordflow">if</span> (!val) <span class="keywordflow">return</span> {};</div>
-<div class="line"><a id="l03796" name="l03796"></a><span class="lineno"> 3796</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(val);</div>
+<div class="line"><a id="l03794" name="l03794"></a><span class="lineno"> 3794</span>    <span class="keyword">auto</span>&amp; <a class="code hl_struct" href="structanyxx_1_1val.html">val</a> = table_[member.index];</div>
+<div class="line"><a id="l03795" name="l03795"></a><span class="lineno"> 3795</span>    <span class="keywordflow">if</span> (!<a class="code hl_struct" href="structanyxx_1_1val.html">val</a>) <span class="keywordflow">return</span> {};</div>
+<div class="line"><a id="l03796" name="l03796"></a><span class="lineno"> 3796</span>    <span class="keywordflow">return</span> unchecked_unerase_cast&lt;typename Member::value_t&gt;(<a class="code hl_struct" href="structanyxx_1_1val.html">val</a>);</div>
 <div class="line"><a id="l03797" name="l03797"></a><span class="lineno"> 3797</span>  }</div>
 <div class="line"><a id="l03798" name="l03798"></a><span class="lineno"> 3798</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Member&gt;</div>
 <div class="line"><a id="l03799" name="l03799"></a><span class="lineno"> 3799</span>  <span class="keyword">typename</span> Member::value_t&amp; operator[](Member member) {</div>
-<div class="line"><a id="l03800" name="l03800"></a><span class="lineno"> 3800</span>    <span class="keywordflow">if</span> (<span class="keyword">auto</span> val = get(member)) {</div>
-<div class="line"><a id="l03801" name="l03801"></a><span class="lineno"> 3801</span>      <span class="keywordflow">return</span> *val;</div>
+<div class="line"><a id="l03800" name="l03800"></a><span class="lineno"> 3800</span>    <span class="keywordflow">if</span> (<span class="keyword">auto</span> <a class="code hl_struct" href="structanyxx_1_1val.html">val</a> = get(member)) {</div>
+<div class="line"><a id="l03801" name="l03801"></a><span class="lineno"> 3801</span>      <span class="keywordflow">return</span> *<a class="code hl_struct" href="structanyxx_1_1val.html">val</a>;</div>
 <div class="line"><a id="l03802" name="l03802"></a><span class="lineno"> 3802</span>    }</div>
 <div class="line"><a id="l03803" name="l03803"></a><span class="lineno"> 3803</span>    <span class="keyword">using </span>value_t = <span class="keyword">typename</span> Member::value_t;</div>
 <div class="line"><a id="l03804" name="l03804"></a><span class="lineno"> 3804</span>    set(member, value_t());</div>
@@ -4161,91 +4161,91 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l04622" name="l04622"></a><span class="lineno"> 4622</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, unique, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04623" name="l04623"></a><span class="lineno"> 4623</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, shared, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04624" name="l04624"></a><span class="lineno"> 4624</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04625" name="l04625"></a><span class="lineno"> 4625</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, val, dynamic_value_v_table&gt;);</div>
+<div class="line"><a id="l04625" name="l04625"></a><span class="lineno"> 4625</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, val&lt;&gt;, dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04626" name="l04626"></a><span class="lineno"> 4626</span> </div>
 <div class="line"><a id="l04627" name="l04627"></a><span class="lineno"> 4627</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, cref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04628" name="l04628"></a><span class="lineno"> 4628</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, mutref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04629" name="l04629"></a><span class="lineno"> 4629</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, unique, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04630" name="l04630"></a><span class="lineno"> 4630</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, shared, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04631" name="l04631"></a><span class="lineno"> 4631</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;cref, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04632" name="l04632"></a><span class="lineno"> 4632</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, val, dynamic_value_v_table&gt;);</div>
+<div class="line"><a id="l04632" name="l04632"></a><span class="lineno"> 4632</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, val&lt;&gt;, dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04633" name="l04633"></a><span class="lineno"> 4633</span> </div>
 <div class="line"><a id="l04634" name="l04634"></a><span class="lineno"> 4634</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, cref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04635" name="l04635"></a><span class="lineno"> 4635</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, mutref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04636" name="l04636"></a><span class="lineno"> 4636</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, unique, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04637" name="l04637"></a><span class="lineno"> 4637</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;shared, shared, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04638" name="l04638"></a><span class="lineno"> 4638</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04639" name="l04639"></a><span class="lineno"> 4639</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, val, dynamic_value_v_table&gt;);</div>
+<div class="line"><a id="l04639" name="l04639"></a><span class="lineno"> 4639</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, val&lt;&gt;, dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04640" name="l04640"></a><span class="lineno"> 4640</span> </div>
 <div class="line"><a id="l04641" name="l04641"></a><span class="lineno"> 4641</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, cref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04642" name="l04642"></a><span class="lineno"> 4642</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, mutref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04643" name="l04643"></a><span class="lineno"> 4643</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, unique, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04644" name="l04644"></a><span class="lineno"> 4644</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, shared, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04645" name="l04645"></a><span class="lineno"> 4645</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04646" name="l04646"></a><span class="lineno"> 4646</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, val, dynamic_value_v_table&gt;);</div>
+<div class="line"><a id="l04646" name="l04646"></a><span class="lineno"> 4646</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, val&lt;&gt;, dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04647" name="l04647"></a><span class="lineno"> 4647</span> </div>
 <div class="line"><a id="l04648" name="l04648"></a><span class="lineno"> 4648</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, cref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04649" name="l04649"></a><span class="lineno"> 4649</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, mutref, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04650" name="l04650"></a><span class="lineno"> 4650</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, unique, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04651" name="l04651"></a><span class="lineno"> 4651</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, shared, observeable_v_table&gt;);</div>
 <div class="line"><a id="l04652" name="l04652"></a><span class="lineno"> 4652</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04653" name="l04653"></a><span class="lineno"> 4653</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, val, dynamic_value_v_table&gt;);</div>
+<div class="line"><a id="l04653" name="l04653"></a><span class="lineno"> 4653</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, val&lt;&gt;, dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04654" name="l04654"></a><span class="lineno"> 4654</span> </div>
-<div class="line"><a id="l04655" name="l04655"></a><span class="lineno"> 4655</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04656" name="l04656"></a><span class="lineno"> 4656</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04657" name="l04657"></a><span class="lineno"> 4657</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04658" name="l04658"></a><span class="lineno"> 4658</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04659" name="l04659"></a><span class="lineno"> 4659</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l04660" name="l04660"></a><span class="lineno"> 4660</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val, val, dynamic_value_v_table&gt;);</div>
+<div class="line"><a id="l04655" name="l04655"></a><span class="lineno"> 4655</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l04656" name="l04656"></a><span class="lineno"> 4656</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l04657" name="l04657"></a><span class="lineno"> 4657</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l04658" name="l04658"></a><span class="lineno"> 4658</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l04659" name="l04659"></a><span class="lineno"> 4659</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">weak</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l04660" name="l04660"></a><span class="lineno"> 4660</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, val&lt;&gt;, dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04661" name="l04661"></a><span class="lineno"> 4661</span> </div>
 <div class="line"><a id="l04662" name="l04662"></a><span class="lineno"> 4662</span><span class="keyword">static_assert</span>(!cloneable_to&lt;mutref&gt;);</div>
 <div class="line"><a id="l04663" name="l04663"></a><span class="lineno"> 4663</span><span class="keyword">static_assert</span>(!cloneable_to&lt;cref&gt;);</div>
 <div class="line"><a id="l04664" name="l04664"></a><span class="lineno"> 4664</span><span class="keyword">static_assert</span>(cloneable_to&lt;shared&gt;);</div>
 <div class="line"><a id="l04665" name="l04665"></a><span class="lineno"> 4665</span><span class="keyword">static_assert</span>(!cloneable_to&lt;weak&gt;);</div>
 <div class="line"><a id="l04666" name="l04666"></a><span class="lineno"> 4666</span><span class="keyword">static_assert</span>(cloneable_to&lt;unique&gt;);</div>
-<div class="line"><a id="l04667" name="l04667"></a><span class="lineno"> 4667</span><span class="keyword">static_assert</span>(cloneable_to&lt;val&gt;);</div>
+<div class="line"><a id="l04667" name="l04667"></a><span class="lineno"> 4667</span><span class="keyword">static_assert</span>(cloneable_to&lt;val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04668" name="l04668"></a><span class="lineno"> 4668</span> </div>
 <div class="line"><a id="l04669" name="l04669"></a><span class="lineno"> 4669</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, cref&gt;);</div>
 <div class="line"><a id="l04670" name="l04670"></a><span class="lineno"> 4670</span><span class="keyword">static_assert</span>(moveable_from&lt;mutref, mutref&gt;);</div>
 <div class="line"><a id="l04671" name="l04671"></a><span class="lineno"> 4671</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, unique&gt;);</div>
 <div class="line"><a id="l04672" name="l04672"></a><span class="lineno"> 4672</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, shared&gt;);</div>
 <div class="line"><a id="l04673" name="l04673"></a><span class="lineno"> 4673</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, weak&gt;);</div>
-<div class="line"><a id="l04674" name="l04674"></a><span class="lineno"> 4674</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, val&gt;);</div>
+<div class="line"><a id="l04674" name="l04674"></a><span class="lineno"> 4674</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04675" name="l04675"></a><span class="lineno"> 4675</span> </div>
 <div class="line"><a id="l04676" name="l04676"></a><span class="lineno"> 4676</span><span class="keyword">static_assert</span>(moveable_from&lt;cref, cref&gt;);</div>
 <div class="line"><a id="l04677" name="l04677"></a><span class="lineno"> 4677</span><span class="keyword">static_assert</span>(moveable_from&lt;cref, mutref&gt;);</div>
 <div class="line"><a id="l04678" name="l04678"></a><span class="lineno"> 4678</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, unique&gt;);</div>
 <div class="line"><a id="l04679" name="l04679"></a><span class="lineno"> 4679</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, shared&gt;);</div>
 <div class="line"><a id="l04680" name="l04680"></a><span class="lineno"> 4680</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, weak&gt;);</div>
-<div class="line"><a id="l04681" name="l04681"></a><span class="lineno"> 4681</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, val&gt;);</div>
+<div class="line"><a id="l04681" name="l04681"></a><span class="lineno"> 4681</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04682" name="l04682"></a><span class="lineno"> 4682</span> </div>
 <div class="line"><a id="l04683" name="l04683"></a><span class="lineno"> 4683</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, cref&gt;);</div>
 <div class="line"><a id="l04684" name="l04684"></a><span class="lineno"> 4684</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, mutref&gt;);</div>
 <div class="line"><a id="l04685" name="l04685"></a><span class="lineno"> 4685</span><span class="keyword">static_assert</span>(moveable_from&lt;shared, unique&gt;);</div>
 <div class="line"><a id="l04686" name="l04686"></a><span class="lineno"> 4686</span><span class="keyword">static_assert</span>(moveable_from&lt;shared, shared&gt;);</div>
 <div class="line"><a id="l04687" name="l04687"></a><span class="lineno"> 4687</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, weak&gt;);</div>
-<div class="line"><a id="l04688" name="l04688"></a><span class="lineno"> 4688</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, val&gt;);</div>
+<div class="line"><a id="l04688" name="l04688"></a><span class="lineno"> 4688</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04689" name="l04689"></a><span class="lineno"> 4689</span> </div>
 <div class="line"><a id="l04690" name="l04690"></a><span class="lineno"> 4690</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, cref&gt;);</div>
 <div class="line"><a id="l04691" name="l04691"></a><span class="lineno"> 4691</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, mutref&gt;);</div>
 <div class="line"><a id="l04692" name="l04692"></a><span class="lineno"> 4692</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, unique&gt;);</div>
 <div class="line"><a id="l04693" name="l04693"></a><span class="lineno"> 4693</span><span class="keyword">static_assert</span>(moveable_from&lt;weak, shared&gt;);</div>
 <div class="line"><a id="l04694" name="l04694"></a><span class="lineno"> 4694</span><span class="keyword">static_assert</span>(moveable_from&lt;weak, weak&gt;);</div>
-<div class="line"><a id="l04695" name="l04695"></a><span class="lineno"> 4695</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, val&gt;);</div>
+<div class="line"><a id="l04695" name="l04695"></a><span class="lineno"> 4695</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04696" name="l04696"></a><span class="lineno"> 4696</span> </div>
 <div class="line"><a id="l04697" name="l04697"></a><span class="lineno"> 4697</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, cref&gt;);</div>
 <div class="line"><a id="l04698" name="l04698"></a><span class="lineno"> 4698</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, mutref&gt;);</div>
 <div class="line"><a id="l04699" name="l04699"></a><span class="lineno"> 4699</span><span class="keyword">static_assert</span>(moveable_from&lt;unique, unique&gt;);</div>
 <div class="line"><a id="l04700" name="l04700"></a><span class="lineno"> 4700</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, shared&gt;);</div>
 <div class="line"><a id="l04701" name="l04701"></a><span class="lineno"> 4701</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, weak&gt;);</div>
-<div class="line"><a id="l04702" name="l04702"></a><span class="lineno"> 4702</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, val&gt;);</div>
+<div class="line"><a id="l04702" name="l04702"></a><span class="lineno"> 4702</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04703" name="l04703"></a><span class="lineno"> 4703</span> </div>
-<div class="line"><a id="l04704" name="l04704"></a><span class="lineno"> 4704</span><span class="keyword">static_assert</span>(!moveable_from&lt;val, cref&gt;);</div>
-<div class="line"><a id="l04705" name="l04705"></a><span class="lineno"> 4705</span><span class="keyword">static_assert</span>(!moveable_from&lt;val, mutref&gt;);</div>
-<div class="line"><a id="l04706" name="l04706"></a><span class="lineno"> 4706</span><span class="keyword">static_assert</span>(!moveable_from&lt;val, unique&gt;);</div>
-<div class="line"><a id="l04707" name="l04707"></a><span class="lineno"> 4707</span><span class="keyword">static_assert</span>(!moveable_from&lt;val, shared&gt;);</div>
-<div class="line"><a id="l04708" name="l04708"></a><span class="lineno"> 4708</span><span class="keyword">static_assert</span>(!moveable_from&lt;val, weak&gt;);</div>
-<div class="line"><a id="l04709" name="l04709"></a><span class="lineno"> 4709</span><span class="keyword">static_assert</span>(moveable_from&lt;val, val&gt;);</div>
+<div class="line"><a id="l04704" name="l04704"></a><span class="lineno"> 4704</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;);</div>
+<div class="line"><a id="l04705" name="l04705"></a><span class="lineno"> 4705</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>&gt;);</div>
+<div class="line"><a id="l04706" name="l04706"></a><span class="lineno"> 4706</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, unique&gt;);</div>
+<div class="line"><a id="l04707" name="l04707"></a><span class="lineno"> 4707</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>&gt;);</div>
+<div class="line"><a id="l04708" name="l04708"></a><span class="lineno"> 4708</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">weak</a>&gt;);</div>
+<div class="line"><a id="l04709" name="l04709"></a><span class="lineno"> 4709</span><span class="keyword">static_assert</span>(moveable_from&lt;val&lt;&gt;, val&lt;&gt;&gt;);</div>
 <div class="line"><a id="l04710" name="l04710"></a><span class="lineno"> 4710</span> </div>
 <div class="line"><a id="l04711" name="l04711"></a><span class="lineno"> 4711</span><span class="keyword">static_assert</span>(is_allocate_v_table&lt;dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04712" name="l04712"></a><span class="lineno"> 4712</span><span class="keyword">static_assert</span>(is_copy_constructor_v_table&lt;dynamic_value_v_table&gt;);</div>
@@ -4254,8 +4254,8 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l04715" name="l04715"></a><span class="lineno"> 4715</span><span class="keyword">static_assert</span>(is_delete_v_table&lt;dynamic_value_v_table&gt;);</div>
 <div class="line"><a id="l04716" name="l04716"></a><span class="lineno"> 4716</span> </div>
 <div class="line"><a id="l04717" name="l04717"></a><span class="lineno"> 4717</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;cref, observeable&gt;);</div>
-<div class="line"><a id="l04718" name="l04718"></a><span class="lineno"> 4718</span><span class="keyword">static_assert</span>(!is_proxy_compatible_with_trait&lt;val, observeable&gt;);</div>
-<div class="line"><a id="l04719" name="l04719"></a><span class="lineno"> 4719</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;val, dynamic_value&gt;);</div>
+<div class="line"><a id="l04718" name="l04718"></a><span class="lineno"> 4718</span><span class="keyword">static_assert</span>(!is_proxy_compatible_with_trait&lt;val&lt;&gt;, observeable&gt;);</div>
+<div class="line"><a id="l04719" name="l04719"></a><span class="lineno"> 4719</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;val&lt;&gt;, dynamic_value&gt;);</div>
 <div class="line"><a id="l04720" name="l04720"></a><span class="lineno"> 4720</span> </div>
 <div class="line"><a id="l04721" name="l04721"></a><span class="lineno"> 4721</span>}  <span class="comment">// namespace anyxx</span></div>
 <div class="ttc" id="aanyxx_8hpp_html_a41a5f0115a3c735c76b8e40c6043993d"><div class="ttname"><a href="anyxx_8hpp.html#a41a5f0115a3c735c76b8e40c6043993d">anyxx::any_trait_class</a></div><div class="ttdeci">any&lt; Trait, trait_class&lt; Type &gt; &gt; any_trait_class</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3104</div></div>
@@ -4287,7 +4287,6 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="ttc" id="agroup__trait__macros_html_gaa72161eca09c10eb70cebf00d40b21d0"><div class="ttname"><a href="group__trait__macros.html#gaa72161eca09c10eb70cebf00d40b21d0">ANY_TYPE</a></div><div class="ttdeci">#define ANY_TYPE(...)</div><div class="ttdoc">Dependent type definition in a TRAIT. This is useful for defining associated types,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1204</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gac0a03326e8e38ea3ee7d42b80552e634"><div class="ttname"><a href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a></div><div class="ttdeci">#define ANY_V_TABLE_DATA(type, name,...)</div><div class="ttdoc">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped typ...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1216</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gade6711771425f1b9a231fe819691ce04"><div class="ttname"><a href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:789</div></div>
-<div class="ttc" id="astructanyxx_1_1basic__val_html"><div class="ttname"><a href="structanyxx_1_1basic__val.html">anyxx::basic_val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2246</div></div>
 <div class="ttc" id="astructanyxx_1_1key_html"><div class="ttname"><a href="structanyxx_1_1key.html">anyxx::key</a></div><div class="ttdoc">A key type for factory registration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3713</div></div>
 <div class="ttc" id="astructanyxx_1_1observeable__v__table_html"><div class="ttname"><a href="structanyxx_1_1observeable__v__table.html">anyxx::observeable_v_table</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:1412</div></div>
 <div class="ttc" id="astructanyxx_1_1observeable__v__table_html_a349e872cd4255afe2af4521e069aa09e"><div class="ttname"><a href="structanyxx_1_1observeable__v__table.html#a349e872cd4255afe2af4521e069aa09e">anyxx::observeable_v_table::observeable_v_table</a></div><div class="ttdeci">observeable_v_table(std::in_place_type_t&lt; Concrete &gt; concrete)</div><div class="ttdoc">Type-erasing constructor.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1419</div></div>
@@ -4296,6 +4295,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="ttc" id="astructanyxx_1_1unique_html"><div class="ttname"><a href="structanyxx_1_1unique.html">anyxx::unique</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:1990</div></div>
 <div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3056</div></div>
 <div class="ttc" id="astructanyxx_1_1using___html_a0bf065d75a9a6d95e728ef80516a1ca3"><div class="ttname"><a href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt; Rep &gt;::as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Rep &gt; &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3067</div></div>
+<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2247</div></div>
 <div class="ttc" id="astructanyxx_1_1virtual___html"><div class="ttname"><a href="structanyxx_1_1virtual__.html">anyxx::virtual_</a></div><div class="ttdoc">A tag to indicate that the corresponding function parameter is an any used for dispatch.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3837</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

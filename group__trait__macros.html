@@ -271,7 +271,7 @@ Macros</h2></td></tr>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:808</div></div>
 </div><!-- fragment -->
 <p>Simple ANY macro. </p>
-<p>The ANY macro uses TRAIT macros to define the functional behavior of an any. Additionally, it defines the proxy to be used (default_proxy). The default proxy is val. Example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(example_any,</div>
+<p>The ANY macro uses TRAIT macros to define the functional behavior of an any. Additionally, it defines the proxy to be used (default_proxy). The default proxy is val&lt;&gt;. Example: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#ga47a5ba38b03d55fa5f63979281028d22">ANY</a>(example_any,</div>
 <div class="line">  (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, example_fn_const, (<span class="keywordtype">double</span>, std::string <span class="keyword">const</span>&amp;), <span class="keyword">const</span>),</div>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
 <div class="line">)</div>
@@ -282,7 +282,7 @@ Macros</h2></td></tr>
 <div class="line">   <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, example_fn_mutable, (<span class="keywordtype">int</span>), ))</div>
 <div class="line">)</div>
 <div class="line"> </div>
-<div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
+<div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&lt;&gt;&gt;</div>
 <div class="line">using any_example = anyxx::any&lt;Proxy, example&gt;;</div>
 </div><!-- fragment --> <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_borrow_as_8cpp-example.html#a0">21_Tree_any_borrow_as.cpp</a>, <a class="el" href="X1_any_weak_const_8cpp-example.html#a0">X1_any_weak_const.cpp</a>, and <a class="el" href="_1_any_shape_8cpp-example.html#a0">_1_any_shape.cpp</a>.</dd>
 </dl>
@@ -482,7 +482,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line">__detail_ANYXX_MEMBER_FN(<span class="keyword">public</span>, , ret, name, name, <span class="keyword">true</span>, const_, params)</div>
 </div><!-- fragment -->
 <p>TRAIT function whose default behavior is to call an equally named member function of the model. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a4">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a5">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -711,7 +711,7 @@ Macros</h2></td></tr>
 <div class="ttc" id="agroup__trait__macros_html_gad2f206b96947eeba0d7f5cee72b33cae"><div class="ttname"><a href="#gad2f206b96947eeba0d7f5cee72b33cae">TRAIT_TEMPLATE</a></div><div class="ttdeci">#define TRAIT_TEMPLATE(t, n, l)</div><div class="ttdoc">TRAIT template.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:856</div></div>
 </div><!-- fragment -->
 <p>ANY template.See <a class="el" href="#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> for explanation. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a6">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a7">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -999,7 +999,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(n, BASE, l, , , , ())</div>
 </div><!-- fragment -->
 <p>TRAIT derived from base. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="README_8cpp-example.html#a0">README.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#a4">_2d_trait_self.cpp</a>, <a class="el" href="_2e_trait_algebra_8cpp-example.html#a2">_2e_trait_algebra.cpp</a>, <a class="el" href="_2f_trait_equal_comparable_8cpp-example.html#a0">_2f_trait_equal_comparable.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>, and <a class="el" href="_3_any_range_8cpp-example.html#a0">_3_any_range.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="README_8cpp-example.html#a0">README.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#a5">_2d_trait_self.cpp</a>, <a class="el" href="_2e_trait_algebra_8cpp-example.html#a2">_2e_trait_algebra.cpp</a>, <a class="el" href="_2f_trait_equal_comparable_8cpp-example.html#a0">_2f_trait_equal_comparable.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#a0">_2o_trait_simple.cpp</a>, and <a class="el" href="_3_any_range_8cpp-example.html#a0">_3_any_range.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -1130,7 +1130,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga9ec9a5f2d475d1ddf481df8385fce4a1">TRAIT_TEMPLATE_</a>(t, n, anyxx::dynamic_copyable, (), l)</div>
 </div><!-- fragment -->
 <p>TRAIT template. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_5_any_template_8cpp-example.html#_a4">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>
@@ -1171,7 +1171,7 @@ Macros</h2></td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a>(t, n, base, base_template_types, l, , , , ())</div>
 </div><!-- fragment -->
 <p>TRAIT template with a base TRAIT.(. </p>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a0">_2d_trait_self.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a5">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2d_trait_self_8cpp-example.html#a0">_2d_trait_self.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a6">_5_any_template.cpp</a>.</dd>
 </dl>
 
 </div>

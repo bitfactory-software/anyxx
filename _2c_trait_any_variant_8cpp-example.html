@@ -175,14 +175,14 @@ $(function(){initNavTree('_2c_trait_any_variant_8cpp-example.html','',''); });
 <div class="line">  CHECK(vv_custom_42.to_string() == <span class="stringliteral">&quot;{42}&quot;</span>);</div>
 <div class="line">  CHECK(vv_custom_43.to_string() == <span class="stringliteral">&quot;{43}&quot;</span>);</div>
 <div class="line"> </div>
-<div class="line">  vany_value&lt;anyxx::val&gt; b{<span class="keyword">true</span>};</div>
+<div class="line">  vany_value&lt;anyxx::val&lt;&gt;&gt; b{<span class="keyword">true</span>};</div>
 <div class="line">  <span class="keyword">static_assert</span>(<a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy&lt;vany_value&lt;&gt;::proxy_t</a>&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(!anyxx::is_const_data&lt;vany_value&lt;&gt;::proxy_t&gt;);</div>
-<div class="line">  <span class="keyword">static_assert</span>(!anyxx::is_const_data&lt;vany_value&lt;anyxx::val&gt;::proxy_t&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(!anyxx::is_const_data&lt;vany_value&lt;anyxx::val&lt;&gt;&gt;::proxy_t&gt;);</div>
 <div class="line">  b.from_string(<span class="stringliteral">&quot;false&quot;</span>);</div>
 <div class="line">  CHECK(b.to_string() == <span class="stringliteral">&quot;false&quot;</span>);</div>
-<div class="line">  vany_value&lt;anyxx::val&gt; vv_custom_FS{</div>
-<div class="line">      any_value&lt;anyxx::val&gt;{std::in_place_type&lt;custom&gt;}};</div>
+<div class="line">  vany_value&lt;anyxx::val&lt;&gt;&gt; vv_custom_FS{</div>
+<div class="line">      any_value&lt;anyxx::val&lt;&gt;&gt;{std::in_place_type&lt;custom&gt;}};</div>
 <div class="line">  vv_custom_FS.from_string(<span class="stringliteral">&quot;{43}&quot;</span>);</div>
 <div class="line">  CHECK(vv_custom_FS.to_string() == <span class="stringliteral">&quot;{43}&quot;</span>);</div>
 <div class="line">}</div>

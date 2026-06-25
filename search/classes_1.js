@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['basic_5fval_0',['basic_val',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
-  ['basic_5fval_3c_20std_3a_3afalse_5ftype_20_3e_1',['basic_val&lt; std::false_type &gt;',['../structanyxx_1_1basic__val.html',1,'anyxx']]],
-  ['basic_5fval_3c_20std_3a_3atrue_5ftype_20_3e_2',['basic_val&lt; std::true_type &gt;',['../structanyxx_1_1basic__val.html',1,'anyxx']]]
+  ['dispatch_0',['dispatch',['../classanyxx_1_1dispatch.html',1,'anyxx']]],
+  ['dispatch_3c_20r_28args_2e_2e_2e_29_3e_1',['dispatch&lt; R(Args...)&gt;',['../classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html',1,'anyxx']]]
 ];

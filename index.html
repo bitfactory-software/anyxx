@@ -142,7 +142,7 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_value, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&gt;&gt; const&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; const&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -246,7 +246,7 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> draw(std::stringstream&amp; os,</div>
-<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
+<div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; drawables) {</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; drawable : drawables) os &lt;&lt; drawable.draw() &lt;&lt; <span class="stringliteral">&quot;\n&quot;</span>;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -286,7 +286,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(figure, anyxx::dynamic_value,</div>
 <div class="line">          (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
-<div class="line">template &lt;typename Proxy = anyxx::val&gt;</div>
+<div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</div>
 <div class="line"> </div>
 <div class="line">ayx::dispatch&lt;std::partial_ordering(ayx::virtual_&lt;any_figure&lt;&gt;&gt;,</div>
@@ -308,7 +308,7 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line">    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;, <span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> std::partial_ordering::greater; });</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> compare_each(std::stringstream&amp; os,</div>
-<div class="line">                  std::vector&lt;ayx::any&lt;figure, ayx::val&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">                  std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; l : figures)</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r : figures) {</div>
@@ -368,7 +368,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(figure, anyxx::dynamic_value,</div>
 <div class="line">          (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
-<div class="line">template &lt;typename Proxy = anyxx::val&gt;</div>
+<div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</div>
 <div class="line"> </div>
 <div class="line">ayx::dispatch&lt;std::<span class="keywordtype">string</span>(ayx::virtual_&lt;any_figure&lt;&gt;&gt;)&gt; latin, italian;</div>
@@ -379,7 +379,7 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 <div class="line"><span class="keyword">auto</span> __ = italian.define&lt;square&gt;([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;quadrato&quot;</span>; });</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> translate(std::stringstream&amp; os,</div>
-<div class="line">               std::vector&lt;ayx::any&lt;figure, ayx::val&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">               std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures)</div>
 <div class="line">    os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;; &quot;</span>) &lt;&lt; f.name() &lt;&lt; <span class="stringliteral">&quot;: latin = &quot;</span> &lt;&lt; latin(f)</div>
@@ -428,11 +428,11 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_value, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val)</div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_value, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val&lt;&gt;)</div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(serializable, ayx::dynamic_value,</div>
 <div class="line">    (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
 <div class="line"> </div>
-<div class="line">ayx::factory&lt;any_serializable, ayx::val, std::string, std::istream&amp;&gt;</div>
+<div class="line">ayx::factory&lt;any_serializable, ayx::val&lt;&gt;, std::string, std::istream&amp;&gt;</div>
 <div class="line">    deserialize;</div>
 <div class="line"> </div>
 <div class="line">[[nodiscard]] any_figure&lt;&gt; deserialize_any_figure(std::istream&amp; archive) {</div>
@@ -468,7 +468,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(square, serializable);</div>
 <div class="line"> </div>
 <div class="line"><span class="keywordtype">void</span> areas(std::stringstream&amp; os,</div>
-<div class="line">           std::vector&lt;ayx::any&lt;figure, ayx::val&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
+<div class="line">           std::vector&lt;ayx::any&lt;figure, ayx::val&lt;&gt;&gt;&gt; <span class="keyword">const</span>&amp; figures) {</div>
 <div class="line">  std::string sep;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> <span class="keyword">const</span>&amp; f : figures) os &lt;&lt; std::exchange(sep, <span class="stringliteral">&quot;, &quot;</span>) &lt;&lt; f.area();</div>
 <div class="line">}</div>
@@ -578,14 +578,14 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_value, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)),</div>
-<div class="line">     ayx::val)</div>
+<div class="line">     ayx::val&lt;&gt;)</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using </span>known_and_unknown_shapes =</div>
-<div class="line">    ayx::make_vany&lt;any_figure, ayx::val, circle, square&gt;;</div>
+<div class="line">    ayx::make_vany&lt;any_figure, ayx::val&lt;&gt;, circle, square&gt;;</div>
 <div class="line"><span class="keyword">static_assert</span>(</div>
 <div class="line">    std::same_as&lt;known_and_unknown_shapes,</div>
 <div class="line">                 any_figure&lt;ayx::using_&lt;  <span class="comment">// see the Any++ logo at the top</span></div>
-<div class="line">                     std::variant&lt;any_figure&lt;ayx::val&gt;, circle, square&gt;&gt;&gt;&gt;);</div>
+<div class="line">                     std::variant&lt;any_figure&lt;ayx::val&lt;&gt;&gt;, circle, square&gt;&gt;&gt;&gt;);</div>
 <div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((std::string), figure) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>
@@ -609,7 +609,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
 <li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt"><a class="el" href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b" title="A factory type to direct get the any for the vany.">anyxx::make_vany</a></span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
 <li>All known types (<span class="tt">circle</span>, <span class="tt">square</span>)</li>
-<li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&gt;</span>)</li>
+<li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&lt;&gt;&gt;</span>)</li>
 </ul>
 </li>
 <li>A model map is provided for <span class="tt">std::string</span>, allowing strings to be handled as figures.</li>
