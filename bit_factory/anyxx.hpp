@@ -613,6 +613,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_rep;                                                      \
   struct n##_is_nullable;                                                      \
+  struct n##_val_size;                                                         \
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
@@ -657,9 +658,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                            std::true_type,                                     \
                            typename v_table_base_t::val_nullable>;             \
                                                                                \
+    static constexpr std::size_t val_proxy_size =                              \
+        anyxx::compute_val_proxy_size<n##_val_size>(                           \
+            v_table_base_t::val_proxy_size);                                   \
+                                                                               \
     using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
                                        any_template_params),                   \
-                                   anyxx::val<val_nullable>>;                  \
+                                   anyxx::val<val_nullable, val_proxy_size>>;  \
                                                                                \
     static bool static_is_derived_from(const std::type_info& from) {           \
       if constexpr (anyxx::is_dynamic_castable_v_table<v_table_base_t>) {      \
@@ -690,9 +695,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
                            std::true_type, typename base_t::val_nullable>;     \
                                                                                \
+    static constexpr std::size_t val_proxy_size =                              \
+        anyxx::compute_val_proxy_size<n##_val_size>(base_t::val_proxy_size);   \
+                                                                               \
     using any_value_t = anyxx::any<n _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(     \
                                        any_template_params),                   \
-                                   anyxx::val<val_nullable>>;                  \
+                                   anyxx::val<val_nullable, val_proxy_size>>;  \
                                                                                \
     using v_table_base_t = base_t::v_table_t;                                  \
     using v_table_t =                                                          \
@@ -1336,6 +1344,17 @@ concept is_const_void = is_const_void_<Voidness>::value;
 
 class meta_data;
 
+constexpr std::size_t small_object_size = 4 * sizeof(mutable_void);
+
+template <typename T>
+constexpr std::size_t compute_val_proxy_size(std::size_t default_size) {
+  if constexpr (anyxx::is_type_complete<T>) {
+    return T::value;
+  } else {
+    return default_size;
+  };
+}
+
 using allocate_t = mutable_void (*)();
 template <typename VTable>
 concept is_allocate_v_table = requires(VTable* v_table) {
@@ -1413,6 +1432,7 @@ struct observeable_v_table {
   using v_table_t = observeable_v_table;
 
   using val_nullable = std::false_type;
+  static constexpr std::size_t val_proxy_size = small_object_size;
 
   /// Type-erasing constructor
   template <typename Concrete>
@@ -1444,6 +1464,7 @@ struct observeable {
 
   using v_table_t = observeable_v_table;
   using val_nullable = typename v_table_t::val_nullable;
+  static constexpr std::size_t val_proxy_size = v_table_t::val_proxy_size;
 };
 
 template <typename VTable>
@@ -1496,7 +1517,6 @@ inline void destruct(T v_table, mutable_void data) noexcept {
   if constexpr (!std::same_as<T, std::nullptr_t>) {
     assert(v_table);
     v_table->destructor(data);
-    data = nullptr;
   }
 }
 
@@ -2197,8 +2217,6 @@ static_assert(is_proxy<weak>);
 // --------------------------------------------------------------------------------
 // erased data val
 
-constexpr std::size_t small_object_size = 2 * sizeof(mutable_void);
-
 template <typename Model>
 constexpr inline model_size_t compute_model_size() {
   return {.size = sizeof(Model), .trivial = std::is_trivial_v<Model>};
@@ -2227,8 +2245,8 @@ struct heap_data {
   friend void swap(heap_data& l, heap_data& r) noexcept { std::swap(l, r); }
 };
 
-template <bool Trivial>
-struct local_data : std::array<std::byte, small_object_size> {
+template <bool Trivial, std::size_t SmallObjectSize>
+struct local_data : std::array<std::byte, SmallObjectSize> {
   static constexpr inline bool is_trivial = Trivial;
 };
 
@@ -2249,8 +2267,8 @@ struct val {
     data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
     data_union(data_union const& other) noexcept { trivial = other.trivial; }
     heap_data heap;
-    local_data<false> local;
-    local_data<true> trivial;
+    local_data<false, SmallObjectSize> local;
+    local_data<true, SmallObjectSize> trivial;
   } data;
   mutable_void ptr_ = nullptr;
 
@@ -2354,14 +2372,15 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
     assert(v_table);
     val<Nullable, SmallObjectSize> v;
     v.ptr_ = visit_value<SmallObjectSize>(
-        overloads{[&](heap_data& heap) {
-                    return heap.ptr = copy_construct(v_table, data_ptr);
-                  },
-                  [&]<bool Trivial>(local_data<Trivial>& local) {
-                    auto local_data = static_cast<mutable_void>(local.data());
-                    copy_construct_at(v_table, local_data, data_ptr);
-                    return local_data;
-                  }},
+        overloads{
+            [&](heap_data& heap) {
+              return heap.ptr = copy_construct(v_table, data_ptr);
+            },
+            [&]<bool Trivial>(local_data<Trivial, SmallObjectSize>& local) {
+              auto local_data = static_cast<mutable_void>(local.data());
+              copy_construct_at(v_table, local_data, data_ptr);
+              return local_data;
+            }},
         v, v_table->model_size);
     return v;
   }
@@ -2372,49 +2391,51 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     to.ptr_ = visit_value(
-        overloads{
-            [&](heap_data& t, heap_data& f) {
-              heap_data old;
-              std::swap(t, old);
-              std::swap(t, f);
-              delete_(v_table_to, old.ptr);
-              return t.ptr;
-            },
-            [&](heap_data& t, local_data<false>& f) {
-              delete_(v_table_to, t.ptr);
-              return v_table_from->move_constructor(to.data.local.data(),
-                                                    f.data());
-            },
-            [&](heap_data& t, local_data<true>& f) {
-              delete_(v_table_to, t.ptr);
-              to.data.trivial = std::move(f);
-              return (mutable_void)&to.data.trivial;
-            },
-            [&](local_data<false>& t, heap_data& f) {
-              destruct(v_table_to, t.data());
-              return to.data.heap.ptr = f.release();
-            },
-            [&](local_data<false>& t, local_data<false>& f) {
-              destruct(v_table_to, t.data());
-              return v_table_from->move_constructor(to.data.local.data(),
-                                                    f.data());
-            },
-            [&](local_data<false>& t, local_data<true>& f) {
-              destruct(v_table_to, t.data());
-              to.data.trivial = std::move(f);
-              return (mutable_void)&to.data.trivial;
-            },
-            [&]([[maybe_unused]] local_data<true>& t, heap_data& f) {
-              return to.data.heap.ptr = f.release();
-            },
-            [&]([[maybe_unused]] local_data<true>& t, local_data<false>& f) {
-              return v_table_from->move_constructor(to.data.local.data(),
-                                                    f.data());
-            },
-            [&](local_data<true>& t, local_data<true>& f) {
-              t = std::move(f);
-              return (mutable_void)&t;
-            }},
+        overloads{[&](heap_data& t, heap_data& f) {
+                    heap_data old;
+                    std::swap(t, old);
+                    std::swap(t, f);
+                    delete_(v_table_to, old.ptr);
+                    return t.ptr;
+                  },
+                  [&](heap_data& t, local_data<false, SmallObjectSize>& f) {
+                    delete_(v_table_to, t.ptr);
+                    return v_table_from->move_constructor(to.data.local.data(),
+                                                          f.data());
+                  },
+                  [&](heap_data& t, local_data<true, SmallObjectSize>& f) {
+                    delete_(v_table_to, t.ptr);
+                    to.data.trivial = std::move(f);
+                    return (mutable_void)&to.data.trivial;
+                  },
+                  [&](local_data<false, SmallObjectSize>& t, heap_data& f) {
+                    destruct(v_table_to, t.data());
+                    return to.data.heap.ptr = f.release();
+                  },
+                  [&](local_data<false, SmallObjectSize>& t,
+                      local_data<false, SmallObjectSize>& f) {
+                    destruct(v_table_to, t.data());
+                    return v_table_from->move_constructor(to.data.local.data(),
+                                                          f.data());
+                  },
+                  [&](local_data<false, SmallObjectSize>& t,
+                      local_data<true, SmallObjectSize>& f) {
+                    destruct(v_table_to, t.data());
+                    to.data.trivial = std::move(f);
+                    return (mutable_void)&to.data.trivial;
+                  },
+                  [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                      heap_data& f) { return to.data.heap.ptr = f.release(); },
+                  [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                      local_data<false, SmallObjectSize>& f) {
+                    return v_table_from->move_constructor(to.data.local.data(),
+                                                          f.data());
+                  },
+                  [&](local_data<true, SmallObjectSize>& t,
+                      local_data<true, SmallObjectSize>& f) {
+                    t = std::move(f);
+                    return (mutable_void)&t;
+                  }},
         to, model_size(v_table_to), from, v_table_from->model_size);
     from.ptr_ = nullptr;
   }
@@ -2448,39 +2469,43 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
                 to_data.ptr = copy_construct(from_v_table, from_data.ptr);
               return to_data.ptr;
             },
-            [&](heap_data& t, local_data<false> const& f) {
+            [&](heap_data& t, local_data<false, SmallObjectSize> const& f) {
               delete_(to_v_table, t.ptr);
               return from_v_table->copy_constructor(to.data.local.data(),
                                                     f.data());
             },
-            [&](heap_data& t, local_data<true> const& f) {
+            [&](heap_data& t, local_data<true, SmallObjectSize> const& f) {
               delete_(to_v_table, t.ptr);
               to.data.trivial = f;
               return (mutable_void)&to.data.trivial;
             },
-            [&](local_data<false>& t, heap_data const& f) {
+            [&](local_data<false, SmallObjectSize>& t, heap_data const& f) {
               destruct(to_v_table, t.data());
               return to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
-            [&](local_data<false>& t, local_data<false> const& f) {
+            [&](local_data<false, SmallObjectSize>& t,
+                local_data<false, SmallObjectSize> const& f) {
               destruct(to_v_table, t.data());
               return from_v_table->copy_constructor(to.data.local.data(),
                                                     f.data());
             },
-            [&](local_data<false>& t, local_data<true> const& f) {
+            [&](local_data<false, SmallObjectSize>& t,
+                local_data<true, SmallObjectSize> const& f) {
               destruct(to_v_table, t.data());
               to.data.trivial = f;
               return (mutable_void)&to.data.trivial;
             },
-            [&]([[maybe_unused]] local_data<true>& t, heap_data const& f) {
+            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                heap_data const& f) {
               return to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
             },
-            [&]([[maybe_unused]] local_data<true>& t,
-                local_data<false> const& f) {
+            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                local_data<false, SmallObjectSize> const& f) {
               return from_v_table->copy_constructor(to.data.local.data(),
                                                     f.data());
             },
-            [&](local_data<true>& t, local_data<true> const& f) {
+            [&](local_data<true, SmallObjectSize>& t,
+                local_data<true, SmallObjectSize> const& f) {
               t = f;
               return (mutable_void)&t;
             }},
@@ -2490,14 +2515,15 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
   static void destroy(val<Nullable, SmallObjectSize>& v,
                       is_v_table auto* v_table) {
     visit_value<SmallObjectSize>(
-        overloads{[&](heap_data& heap) {
-                    assert(v_table || !heap.ptr);
-                    if (v_table) delete_(v_table, heap.ptr);
-                  },
-                  [&](local_data<false>& local) {
-                    if (v_table) v_table->destructor(local.data());
-                  },
-                  [&]([[maybe_unused]] local_data<true>& local) {}},
+        overloads{
+            [&](heap_data& heap) {
+              assert(v_table || !heap.ptr);
+              if (v_table) delete_(v_table, heap.ptr);
+            },
+            [&](local_data<false, SmallObjectSize>& local) {
+              if (v_table) destruct(v_table, local.data());
+            },
+            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& local) {}},
         v, model_size(v_table));
   }
 
