@@ -15,35 +15,34 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX_(monoid, anyxx::dynamic_value,
-          (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
-           ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
-                      [&x](auto const& r) {
-                        std::println("op-default {}", typeid(T).name());
-                        auto self = anyxx::trait_as<monoid>(x);
-                        return get_proxy(self.concat(std::vector{
-                            anyxx::trait_as<monoid>(r)}));  // NOLINT
-                      }),
-           ANY_FN_DEF(public, anyxx::self, concat,
-                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                 anyxx::cref> const&)),
-                      const,
-                      [&x](const auto& r) {
-                        std::println("concat-default {}", typeid(T).name());
-                        auto self = anyxx::trait_as<monoid>(x);
-                        return get_proxy(std::ranges::fold_left(
-                            r | std::views::transform([](auto const& y) {
-                              return anyxx::trait_as<monoid>(y);
-                            }),
-                            self, [&](auto const& m1, auto const& m2) {
-                              return m1.op(m2);
-                            }));
-                      }),
-           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                      ([&x](auto const& r) { return x == r; }))),
-          , , , ())
+         (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
+          ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
+                     [&x](auto const& r) {
+                       std::println("op-default {}", typeid(T).name());
+                       auto self = anyxx::trait_as<monoid>(x);
+                       return get_proxy(self.concat(
+                           std::vector{anyxx::trait_as<monoid>(r)}));  // NOLINT
+                     }),
+          ANY_FN_DEF(public, anyxx::self, concat,
+                     ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                                anyxx::cref> const&)),
+                     const,
+                     [&x](const auto& r) {
+                       std::println("concat-default {}", typeid(T).name());
+                       auto self = anyxx::trait_as<monoid>(x);
+                       return get_proxy(std::ranges::fold_left(
+                           r | std::views::transform([](auto const& y) {
+                             return anyxx::trait_as<monoid>(y);
+                           }),
+                           self, [&](auto const& m1, auto const& m2) {
+                             return m1.op(m2);
+                           }));
+                     }),
+          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
+                     ([&x](auto const& r) { return x == r; }))),
+         , , , ())
 
-template <typename Proxy =
-              anyxx::val<std::false_type, sizeof(anyxx::small_object_size * 2)>>
+template <typename Proxy = anyxx::val<>>
 using any_monoid = anyxx::any<monoid, Proxy>;
 
 }  // namespace example_2b
@@ -51,11 +50,8 @@ using any_monoid = anyxx::any<monoid, Proxy>;
 ANY_MODEL_MAP((int), example_2b::monoid) {
   static int concat(int self, auto const& r) {
     std::println("concat {}", typeid(int).name());
-    for( auto const rr: r )
-        std::println("{}", rr);
-    return self;
-    //return std::ranges::fold_left(r, self,
-    //                              [&](int m1, int m2) { return m1 + m2; });
+    return std::ranges::fold_left(r, self,
+                                  [&](int m1, int m2) { return m1 + m2; });
   };
 };
 
@@ -94,11 +90,6 @@ void test_monoid_traited(
   static_assert(std::same_as<type_1, Monoid>);
   auto c1 = m.op(id.op(m)) == m.op(m.op(id));
   CHECK(c1);
-  auto a = (m.concat(r));
-  auto b = std::ranges::fold_left(
-      r, m, [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
-        return m1.op(m2);
-      });
   auto c2 = (m.concat(r)) ==
             std::ranges::fold_left(
                 r, m, [&](Monoid const& m1, [[maybe_unused]] Monoid const& m2) {
