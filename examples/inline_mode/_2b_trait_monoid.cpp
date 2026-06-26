@@ -15,32 +15,32 @@ namespace anyxx {
 namespace example_2b {
 
 TRAIT_EX_(monoid, anyxx::dynamic_value,
-         (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
-          ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
-                     [&x](auto const& r) {
-                       std::println("op-default {}", typeid(T).name());
-                       auto self = anyxx::trait_as<monoid>(x);
-                       return get_proxy(self.concat(
-                           std::vector{anyxx::trait_as<monoid>(r)}));  // NOLINT
-                     }),
-          ANY_FN_DEF(public, anyxx::self, concat,
-                     ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                anyxx::cref> const&)),
-                     const,
-                     [&x](const auto& r) {
-                       std::println("concat-default {}", typeid(T).name());
-                       auto self = anyxx::trait_as<monoid>(x);
-                       return get_proxy(std::ranges::fold_left(
-                           r | std::views::transform([](auto const& y) {
-                             return anyxx::trait_as<monoid>(y);
-                           }),
-                           self, [&](auto const& m1, auto const& m2) {
-                             return m1.op(m2);
-                           }));
-                     }),
-          ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                     ([&x](auto const& r) { return x == r; }))),
-         , , , ())
+          (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
+           ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
+                      [&x](auto const& r) {
+                        std::println("op-default {}", typeid(T).name());
+                        auto self = anyxx::trait_as<monoid>(x);
+                        return get_proxy(self.concat(std::vector{
+                            anyxx::trait_as<monoid>(r)}));  // NOLINT
+                      }),
+           ANY_FN_DEF(public, anyxx::self, concat,
+                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                                 anyxx::cref> const&)),
+                      const,
+                      [&x](const auto& r) {
+                        std::println("concat-default {}", typeid(T).name());
+                        auto self = anyxx::trait_as<monoid>(x);
+                        return get_proxy(std::ranges::fold_left(
+                            r | std::views::transform([](auto const& y) {
+                              return anyxx::trait_as<monoid>(y);
+                            }),
+                            self, [&](auto const& m1, auto const& m2) {
+                              return m1.op(m2);
+                            }));
+                      }),
+           ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
+                      ([&x](auto const& r) { return x == r; }))),
+          , , , ())
 
 template <typename Proxy = anyxx::val<>>
 using any_monoid = anyxx::any<monoid, Proxy>;

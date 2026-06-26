@@ -28,7 +28,13 @@ TRAIT_TEMPLATE_EX_(
 //                   using value_type = ValueType; using reference =
 //                   Reference;))
 
+inline static constexpr std::size_t iterator_val_proxy_size =
+    small_object_size * 2u;
+
 struct forward_iterator_is_nullable {};
+struct forward_iterator_val_size {
+  static constexpr std::size_t value = iterator_val_proxy_size;
+};
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP(anyxx::self&, ++, (), ),
@@ -46,7 +52,8 @@ TRAIT_TEMPLATE_EX_(
        return std::forward<Self>(self).post_inc();
      }))
 
-template <typename ValueType, typename Reference, typename Proxy = nullable_val>
+template <typename ValueType, typename Reference,
+          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 
 TRAIT_TEMPLATE_(
@@ -104,9 +111,12 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
   }
 };
 
-
-static_assert(any_forward_iterator<self, self>::v_table_t::val_nullable::value == true);
-static_assert(std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t, any<forward_iterator<self,self>, nullable_val>>);
+static_assert(
+    any_forward_iterator<self, self>::v_table_t::val_nullable::value == true);
+static_assert(
+    std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
+                 any<forward_iterator<self, self>,
+                     val<std::true_type, iterator_val_proxy_size>>>);
 static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 

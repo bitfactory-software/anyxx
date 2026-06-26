@@ -30,18 +30,34 @@ template <typename Proxy>
 using any_stringable = anyxx::any<stringable, Proxy>;
 
 ANY_(node, anyxx::dynamic_value,
-    (ANY_FN_DEF(public, anyxx::self, sum,
-                ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                           anyxx::cref> const&)),
-                const, [&x](auto const& r) {
-                  auto s = x;
-                  for (auto i : r) {
-                    s += i;
-                  }
-                  return s;
-                })), );
+     (ANY_FN_DEF(public, anyxx::self, sum,
+                 ((anyxx::any_forward_range<anyxx::self, anyxx::self,
+                                            anyxx::cref> const&)),
+                 const, [&x](auto const& r) {
+                   auto s = x;
+                   for (auto i : r) {
+                     s += i;
+                   }
+                   return s;
+                 })), );
 
 }  // namespace example_3
+
+TEST_CASE("example3 simple lifetime") {
+  using namespace anyxx;
+  using namespace std::string_literals;
+  using namespace example_3;
+
+  using v_t = std::vector<int>;
+  {
+    v_t v0{};
+    std::array<int, 100> a0{};
+    any_forward_range<int, int> r0{v0};
+    {
+      r0.begin();
+    }
+  }
+}
 
 TEST_CASE(
     "example 3 any_forward_iterator (concrete value_type, erased iterator)") {
@@ -50,6 +66,15 @@ TEST_CASE(
   using namespace example_3;
 
   using v_t = std::vector<int>;
+  {
+    v_t v0{};
+    any_forward_range<int, int> r0{v0};
+    {
+      any_forward_iterator<int, int> b{r0.begin()};
+      any_forward_iterator<int, int> e{r0.end()};
+      CHECK(b == e);
+    }
+  }
   using it = v_t::iterator;
   {
     v_t v;
@@ -63,18 +88,22 @@ TEST_CASE(
   }
   {
     v_t v{1, 2, 3};
-    any_forward_iterator<int, int> b{v.begin()};
-    any_forward_iterator<int, int> e{v.end()};
-    CHECK(b != e);
-    CHECK(!(b == e));
-    int x = 0;
-    for (auto i = b; i != e; ++i) {
-      CHECK(*i == v[x++]);
+    {
+      any_forward_iterator<int, int> b{v.begin()};
+      any_forward_iterator<int, int> e{v.end()};
+      CHECK(b != e);
+      CHECK(!(b == e));
+      int x = 0;
+      for (auto i = b; i != e; ++i) {
+        CHECK(*i == v[x++]);
+      }
+      CHECK(x == 3);
     }
-    CHECK(x == 3);
     any_forward_range<int, int> r{v};
-    x = 0;
-    for (auto i : r) CHECK(i == v[x++]);
+    int x = 0;
+    for (auto i : r) {
+      CHECK(i == v[x++]);
+    }
     CHECK(x == 3);
   }
   {
@@ -116,8 +145,9 @@ TEST_CASE("example 3 any_forward_iterator (any value_type, erased iterator)") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::val<>>, any_stringable<anyxx::val<>>> r{
-        v};
+    any_forward_range<any_stringable<anyxx::val<>>,
+                      any_stringable<anyxx::val<>>>
+        r{v};
     int x = 0;
     for (auto i : r) CHECK(i.to_string() == std::to_string(v[x++]));
     CHECK(x == 3);
@@ -135,7 +165,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    anyxx::any<anyxx::forward_range<any_stringable<anyxx::val<>>, any_stringable<anyxx::val<>>>,
+    anyxx::any<anyxx::forward_range<any_stringable<anyxx::val<>>,
+                                    any_stringable<anyxx::val<>>>,
                anyxx::using_<v_t const&>>
         r{v};
     int x = 0;
@@ -154,8 +185,9 @@ TEST_CASE("example 3 transform unerase") {
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::val<>>, any_stringable<anyxx::val<>>> r{
-        v};
+    any_forward_range<any_stringable<anyxx::val<>>,
+                      any_stringable<anyxx::val<>>>
+        r{v};
     int x = 0;
     for (auto i : std::views::transform(
              r, [](any_stringable<anyxx::val<>> const& v) -> int {
@@ -185,15 +217,17 @@ TEST_CASE("example 3 self in range") {
     CHECK(get_proxy_value(r) == 6);
   }
   {
-    any_forward_range<any_node<anyxx::val<>>, any_node<anyxx::val<>>, anyxx::val<>> r{
-        v};
+    any_forward_range<any_node<anyxx::val<>>, any_node<anyxx::val<>>,
+                      anyxx::val<>>
+        r{v};
     any_node<using_<int>> n1{0};
     auto result = n1.sum(r);
     CHECK(get_proxy_value(result) == 6);
   }
   {
-    any_forward_range<any_node<anyxx::val<>>, any_node<anyxx::val<>>, anyxx::val<>> r{
-        v};
+    any_forward_range<any_node<anyxx::val<>>, any_node<anyxx::val<>>,
+                      anyxx::val<>>
+        r{v};
     any_node<val<>> n1{0};
     auto result = n1.sum(r);
     CHECK(*unerase_cast<int>(result) == 6);
@@ -212,8 +246,7 @@ TEST_CASE("example 3 static any range of view") {
   static_assert(std::is_trivially_move_assignable_v<decltype(v2)>);
   static_assert(std::is_trivially_copy_constructible_v<decltype(v2)>);
   static_assert(std::is_trivially_copy_assignable_v<decltype(v2)>);
-  static_assert(sizeof(v2)<=anyxx::small_object_size);
-  //static_assert(std::is_trivial_v<decltype(v2)>);
+  static_assert(sizeof(v2) <= anyxx::small_object_size);
   any_forward_range<using_<int>::as<stringable>, using_<int>::as<stringable>> r{
       v2};
   std::string result;
