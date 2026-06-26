@@ -3331,7 +3331,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l03599" name="l03599"></a><span class="lineno"> 3599</span>  <span class="keyword">static_assert</span>(std::is_move_constructible_v&lt;Concrete&gt;);</div>
 <div class="line"><a id="l03600" name="l03600"></a><span class="lineno"> 3600</span>  <span class="keyword">auto</span> typed_placement = <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(placement);</div>
 <div class="line"><a id="l03601" name="l03601"></a><span class="lineno"> 3601</span>  <span class="keyword">auto</span> typed_from = <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(from);</div>
-<div class="line"><a id="l03602" name="l03602"></a><span class="lineno"> 3602</span>  <span class="keyword">auto</span> constructed =</div>
+<div class="line"><a id="l03602" name="l03602"></a><span class="lineno"> 3602</span>  [[maybe_unused]] <span class="keyword">auto</span> constructed =</div>
 <div class="line"><a id="l03603" name="l03603"></a><span class="lineno"> 3603</span>      std::construct_at&lt;Concrete&gt;(typed_placement, std::move(*typed_from));</div>
 <div class="line"><a id="l03604" name="l03604"></a><span class="lineno"> 3604</span>  assert(placement == constructed);</div>
 <div class="line"><a id="l03605" name="l03605"></a><span class="lineno"> 3605</span>  std::destroy_at(typed_from);</div>
