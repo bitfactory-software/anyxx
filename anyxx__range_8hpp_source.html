@@ -121,97 +121,108 @@ $(function(){initNavTree('anyxx__range_8hpp_source.html','',''); });
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="comment">//                   using value_type = ValueType; using reference =</span></div>
 <div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="comment">//                   Reference;))</span></div>
 <div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>struct forward_iterator_is_nullable {};</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><a class="code hl_define" href="group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a>(</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    ((ValueType), (Reference)), forward_iterator, dynamic_value, (),</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    (<a class="code hl_define" href="group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(anyxx::self&amp;, ++, (), ),</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>     <a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, post_inc, (), , ([&amp;x]() { <span class="keywordflow">return</span> x++; })),</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>     <a class="code hl_define" href="group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(Reference, *, (), <span class="keyword">const</span>),</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>     <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, equal_to, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>                ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; })),</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>     <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, not_equal_to, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>                ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x != r; }))),</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    , , ,</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    (<span class="keyword">using</span> iterator_category = std::forward_iterator_tag;</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>     <span class="keyword">using </span>difference_type = std::ptrdiff_t; <span class="keyword">using </span>value_type = ValueType;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>     <span class="keyword">using </span>reference = Reference;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt; <span class="keyword">auto</span> operator++(<span class="keyword">this</span> Self&amp;&amp; self, <span class="keywordtype">int</span>) {</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>       <span class="keywordflow">return</span> std::forward&lt;Self&gt;(self).post_inc();</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>     }))</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span> </div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>template &lt;typename ValueType, typename Reference, typename Proxy = nullable_val&gt;</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>using any_forward_iterator = <a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;forward_iterator&lt;ValueType, Reference&gt;, Proxy&gt;;</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span> </div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>TRAIT_TEMPLATE_(</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    ((ValueType), (Reference)), forward_range, dynamic_value, (),</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>((any_forward_iterator&lt;ValueType, Reference&gt;), begin, (), const),</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>     <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>((any_forward_iterator&lt;ValueType, Reference&gt;), end, (), const)))</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>template &lt;typename ValueType, typename Reference, typename Proxy = anyxx::<a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>using any_forward_range = <a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;forward_range&lt;ValueType, Reference&gt;, Proxy&gt;;</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span> </div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>template &lt;typename A&gt;</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>concept is_any_self_forward_range =</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    is_any&lt;A&gt; &amp;&amp; std::ranges::forward_range&lt;A&gt; &amp;&amp;</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    std::same_as&lt;std::ranges::range_value_t&lt;A&gt;, self&gt;;</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span><span class="comment">//</span></div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>template &lt;typename AnyForwardRange&gt;</div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>  requires is_any_self_forward_range&lt;AnyForwardRange&gt;</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>struct translate_sig_model_map&lt;AnyForwardRange const&amp;&gt;</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    : translate_sig_default_model_map&lt;self&gt; {</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>  <span class="keyword">using </span>v_table_param =</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>      any_forward_range&lt;AnyValue, AnyValue,</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>                        <span class="keyword">typename</span> AnyForwardRange::proxy_t&gt; <span class="keyword">const</span>&amp;;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Model&gt;</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>  <span class="keyword">using </span>concept_arg = anyxx::any_forward_range&lt;Model, Model, anyxx::cref&gt;;</div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>};</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span> </div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete, <span class="keyword">typename</span> AnyForwardRange&gt;</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>  <span class="keyword">requires</span> is_any_self_forward_range&lt;AnyForwardRange&gt;</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">struct </span>v_table_to_map&lt;Concrete, AnyForwardRange const&amp;&gt; {</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">static</span> <span class="keyword">auto</span> forward(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; any_range) {</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>    <span class="keywordflow">return</span> std::views::transform(any_range, [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>) {</div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>      <span class="keywordflow">return</span> *unerase_cast&lt;Concrete&gt;(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>);</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>    });</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span>  }</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>};</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="comment">//</span></div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Traited, <span class="keyword">typename</span> AnyForwardRange&gt;</div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>  <span class="keyword">requires</span> is_any_self_forward_range&lt;AnyForwardRange&gt;</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span><span class="keyword">struct </span>forward_trait_to_map&lt;Traited, AnyForwardRange const&amp;&gt; {</div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>  <span class="keyword">static</span> <span class="keyword">auto</span> forward(<span class="keyword">auto</span> any_range) {</div>
-<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>    <span class="keywordflow">return</span> std::views::transform(any_range,</div>
-<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>                                 []&lt;<span class="keyword">typename</span> T&gt;(T <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>) -&gt; Traited {</div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>                                   <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (is_any&lt;T&gt;) {</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>                                     <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (T::dyn) {</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>                                       <span class="keywordflow">return</span> *unerase_cast&lt;Traited&gt;(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>);</div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>                                     } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>                                       <span class="keywordflow">return</span> get_proxy_value(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>);</div>
-<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>                                     }</div>
-<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                                   } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                                     <span class="keywordflow">return</span> <a class="code hl_class" href="classanyxx_1_1any.html">any</a>;</div>
-<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                                   }</div>
-<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                                 });</div>
-<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>  }</div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>};</div>
-<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span> </div>
-<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span><span class="keyword">static_assert</span>(any_forward_iterator&lt;self, self&gt;::v_table_t::val_nullable::value == <span class="keyword">true</span>);</div>
-<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span><span class="keyword">static_assert</span>(std::same_as&lt;any_forward_iterator&lt;self, self&gt;::v_table_t::any_value_t, <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;forward_iterator&lt;self,self&gt;</a>, nullable_val&gt;&gt;);</div>
-<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span><span class="keyword">static_assert</span>(std::forward_iterator&lt;any_forward_iterator&lt;self, self&gt;&gt;);</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span><span class="keyword">static_assert</span>(std::ranges::forward_range&lt;any_forward_range&lt;self, self&gt;&gt;);</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>inline static constexpr std::<span class="keywordtype">size_t</span> iterator_val_proxy_size =</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    small_object_size * 2u;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>struct forward_iterator_is_nullable {};</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span><span class="keyword">struct </span>forward_iterator_val_size {</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>  <span class="keyword">static</span> <span class="keyword">constexpr</span> std::size_t value = iterator_val_proxy_size;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><a class="code hl_define" href="group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a>(</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    ((ValueType), (Reference)), forward_iterator, dynamic_value, (),</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    (<a class="code hl_define" href="group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(anyxx::self&amp;, ++, (), ),</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>     <a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, post_inc, (), , ([&amp;x]() { <span class="keywordflow">return</span> x++; })),</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>     <a class="code hl_define" href="group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a>(Reference, *, (), <span class="keyword">const</span>),</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>     <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, equal_to, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>                ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; })),</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>     <a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, !=, not_equal_to, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>                ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x != r; }))),</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    , , ,</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    (<span class="keyword">using</span> iterator_category = std::forward_iterator_tag;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>     <span class="keyword">using </span>difference_type = std::ptrdiff_t; <span class="keyword">using </span>value_type = ValueType;</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>     <span class="keyword">using </span>reference = Reference;</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt; <span class="keyword">auto</span> operator++(<span class="keyword">this</span> Self&amp;&amp; self, <span class="keywordtype">int</span>) {</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>       <span class="keywordflow">return</span> std::forward&lt;Self&gt;(self).post_inc();</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>     }))</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span> </div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>template &lt;typename ValueType, typename Reference,</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>          typename Proxy = <a class="code hl_struct" href="structanyxx_1_1val.html">val</a>&lt;std::true_type, iterator_val_proxy_size&gt;&gt;</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>using any_forward_iterator = <a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;forward_iterator&lt;ValueType, Reference&gt;, Proxy&gt;;</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span> </div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>TRAIT_TEMPLATE_(</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>    ((ValueType), (Reference)), forward_range, dynamic_value, (),</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>((any_forward_iterator&lt;ValueType, Reference&gt;), begin, (), const),</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>     <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>((any_forward_iterator&lt;ValueType, Reference&gt;), end, (), const)))</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>template &lt;typename ValueType, typename Reference, typename Proxy = anyxx::<a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>using any_forward_range = <a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;forward_range&lt;ValueType, Reference&gt;, Proxy&gt;;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>template &lt;typename A&gt;</div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span>concept is_any_self_forward_range =</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    is_any&lt;A&gt; &amp;&amp; std::ranges::forward_range&lt;A&gt; &amp;&amp;</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>    std::same_as&lt;std::ranges::range_value_t&lt;A&gt;, self&gt;;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="comment">//</span></div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span> </div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span>template &lt;typename AnyForwardRange&gt;</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span>  requires is_any_self_forward_range&lt;AnyForwardRange&gt;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span>struct translate_sig_model_map&lt;AnyForwardRange const&amp;&gt;</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    : translate_sig_default_model_map&lt;self&gt; {</div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>  <span class="keyword">using </span>v_table_param =</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span>      any_forward_range&lt;AnyValue, AnyValue,</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>                        <span class="keyword">typename</span> AnyForwardRange::proxy_t&gt; <span class="keyword">const</span>&amp;;</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Model&gt;</div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span>  <span class="keyword">using </span>concept_arg = anyxx::any_forward_range&lt;Model, Model, anyxx::cref&gt;;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span>};</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span> </div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Concrete, <span class="keyword">typename</span> AnyForwardRange&gt;</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span>  <span class="keyword">requires</span> is_any_self_forward_range&lt;AnyForwardRange&gt;</div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span><span class="keyword">struct </span>v_table_to_map&lt;Concrete, AnyForwardRange const&amp;&gt; {</div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>  <span class="keyword">static</span> <span class="keyword">auto</span> forward(<span class="keyword">auto</span> <span class="keyword">const</span>&amp; any_range) {</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keywordflow">return</span> std::views::transform(any_range, [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>) {</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>      <span class="keywordflow">return</span> *unerase_cast&lt;Concrete&gt;(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>);</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span>    });</div>
+<div class="line"><a id="l00092" name="l00092"></a><span class="lineno">   92</span>  }</div>
+<div class="line"><a id="l00093" name="l00093"></a><span class="lineno">   93</span>};</div>
+<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span><span class="comment">//</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Traited, <span class="keyword">typename</span> AnyForwardRange&gt;</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>  <span class="keyword">requires</span> is_any_self_forward_range&lt;AnyForwardRange&gt;</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="keyword">struct </span>forward_trait_to_map&lt;Traited, AnyForwardRange const&amp;&gt; {</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span>  <span class="keyword">static</span> <span class="keyword">auto</span> forward(<span class="keyword">auto</span> any_range) {</div>
+<div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    <span class="keywordflow">return</span> std::views::transform(any_range,</div>
+<div class="line"><a id="l00100" name="l00100"></a><span class="lineno">  100</span>                                 []&lt;<span class="keyword">typename</span> T&gt;(T <span class="keyword">const</span>&amp; <a class="code hl_class" href="classanyxx_1_1any.html">any</a>) -&gt; Traited {</div>
+<div class="line"><a id="l00101" name="l00101"></a><span class="lineno">  101</span>                                   <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (is_any&lt;T&gt;) {</div>
+<div class="line"><a id="l00102" name="l00102"></a><span class="lineno">  102</span>                                     <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (T::dyn) {</div>
+<div class="line"><a id="l00103" name="l00103"></a><span class="lineno">  103</span>                                       <span class="keywordflow">return</span> *unerase_cast&lt;Traited&gt;(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>);</div>
+<div class="line"><a id="l00104" name="l00104"></a><span class="lineno">  104</span>                                     } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>                                       <span class="keywordflow">return</span> get_proxy_value(<a class="code hl_class" href="classanyxx_1_1any.html">any</a>);</div>
+<div class="line"><a id="l00106" name="l00106"></a><span class="lineno">  106</span>                                     }</div>
+<div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span>                                   } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span>                                     <span class="keywordflow">return</span> <a class="code hl_class" href="classanyxx_1_1any.html">any</a>;</div>
+<div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>                                   }</div>
+<div class="line"><a id="l00110" name="l00110"></a><span class="lineno">  110</span>                                 });</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>  }</div>
+<div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>};</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span><span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span>    any_forward_iterator&lt;self, self&gt;::v_table_t::val_nullable::value == <span class="keyword">true</span>);</div>
+<div class="line"><a id="l00116" name="l00116"></a><span class="lineno">  116</span><span class="keyword">static_assert</span>(</div>
+<div class="line"><a id="l00117" name="l00117"></a><span class="lineno">  117</span>    std::same_as&lt;any_forward_iterator&lt;self, self&gt;::v_table_t::any_value_t,</div>
+<div class="line"><a id="l00118" name="l00118"></a><span class="lineno">  118</span>                 <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;forward_iterator&lt;self, self&gt;</a>,</div>
+<div class="line"><a id="l00119" name="l00119"></a><span class="lineno">  119</span>                     <a class="code hl_struct" href="structanyxx_1_1val.html">val&lt;std::true_type, iterator_val_proxy_size&gt;</a>&gt;&gt;);</div>
+<div class="line"><a id="l00120" name="l00120"></a><span class="lineno">  120</span><span class="keyword">static_assert</span>(std::forward_iterator&lt;any_forward_iterator&lt;self, self&gt;&gt;);</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="keyword">static_assert</span>(std::ranges::forward_range&lt;any_forward_range&lt;self, self&gt;&gt;);</div>
+<div class="line"><a id="l00122" name="l00122"></a><span class="lineno">  122</span> </div>
+<div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>}  <span class="comment">// namespace anyxx</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2737</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga13ac2582b41ea1a73ddb22d6a2acb4ce"><div class="ttname"><a href="group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a></div><div class="ttdeci">#define ANY_OP(ret, op, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior is to call the related operator of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1115</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1062</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga8f8492068e06ea999e2ebf95050e1a57"><div class="ttname"><a href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a></div><div class="ttdeci">#define ANY_OP_DEF(access, ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1122</div></div>
-<div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1404</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga2276d8473f4f6f96f955b84b045fdb92"><div class="ttname"><a href="group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT template with base and decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:826</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gaf19a15e6c5658db6712181244843ceb5"><div class="ttname"><a href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1041</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2764</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga13ac2582b41ea1a73ddb22d6a2acb4ce"><div class="ttname"><a href="group__fn__macros.html#ga13ac2582b41ea1a73ddb22d6a2acb4ce">ANY_OP</a></div><div class="ttdeci">#define ANY_OP(ret, op, params, const_)</div><div class="ttdoc">TRAIT operator with default behavior is to call the related operator of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1123</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1070</div></div>
+<div class="ttc" id="agroup__fn__macros_html_ga8f8492068e06ea999e2ebf95050e1a57"><div class="ttname"><a href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a></div><div class="ttdeci">#define ANY_OP_DEF(access, ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1130</div></div>
+<div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1423</div></div>
+<div class="ttc" id="agroup__trait__macros_html_ga2276d8473f4f6f96f955b84b045fdb92"><div class="ttname"><a href="group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92">TRAIT_TEMPLATE_EX_</a></div><div class="ttdeci">#define TRAIT_TEMPLATE_EX_(t, n, base, base_template_types, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT template with base and decoration.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:834</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gaf19a15e6c5658db6712181244843ceb5"><div class="ttname"><a href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1049</div></div>
+<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2265</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -498,6 +498,9 @@ constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::ignore_mapf_concept_
 constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::use_mapf_concept</b> (bool b)</td></tr>
 <tr class="memitem:a0b48ee9890c928b98208baa8216aff2b" id="r_a0b48ee9890c928b98208baa8216aff2b"><td class="memItemLeft"><a id="a0b48ee9890c928b98208baa8216aff2b" name="a0b48ee9890c928b98208baa8216aff2b"></a>
 void&#160;</td><td class="memItemRight"><b>anyxx::dummy</b> ()</td></tr>
+<tr class="memitem:a695fba58c2869d89e6d47df77a06265b" id="r_a695fba58c2869d89e6d47df77a06265b"><td class="memTemplParams" colspan="2"><a id="a695fba58c2869d89e6d47df77a06265b" name="a695fba58c2869d89e6d47df77a06265b"></a>
+template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a695fba58c2869d89e6d47df77a06265b template"><td class="memItemLeft">constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::compute_val_proxy_size</b> (std::size_t default_size)</td></tr>
 <tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60" id="r_a9d9ca1a9aa463aa620c1dfb58dda2c60"><td class="memTemplParams" colspan="2"><a id="a9d9ca1a9aa463aa620c1dfb58dda2c60" name="a9d9ca1a9aa463aa620c1dfb58dda2c60"></a>
 template&lt;typename VTable, typename Concrete&gt; </td></tr>
 <tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60 template"><td class="memItemLeft">VTable *&#160;</td><td class="memItemRight"><b>anyxx::v_table_instance</b> ()</td></tr>
@@ -706,8 +709,11 @@ template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_deletable, dynamic_castable,,,,(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(delete_t, delete_, [](mutable_void data) { if(!data) return;auto p=static_cast&lt; Concrete * &gt;(data);std::destroy_at(p);std::allocator&lt; Concrete &gt;{}.deallocate(p, 1);})),(using default_proxy_t=<a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>;))</td></tr>
 <tr class="memitem:a587d53b0a52d1f367331523b65c63dfd" id="r_a587d53b0a52d1f367331523b65c63dfd"><td class="memItemLeft"><a id="a587d53b0a52d1f367331523b65c63dfd" name="a587d53b0a52d1f367331523b65c63dfd"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_copyable, dynamic_deletable,,,,(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(allocate_t, allocate,+[]() -&gt; mutable_void { return std::allocator&lt; Concrete &gt;{}.allocate(1);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(copy_constructor_t, copy_constructor, []([[maybe_unused]] mutable_void placement, [[maybe_unused]] const_void from) -&gt; mutable_void { if constexpr(std::is_copy_constructible_v&lt; Concrete &gt;) { return std::construct_at&lt; Concrete &gt;(static_cast&lt; Concrete * &gt;(placement), *static_cast&lt; Concrete const * &gt;(from));} else { return nullptr;};})),())</td></tr>
-<tr class="memitem:a3b6bb9b05ba56a53ea13d90459ec0e2c" id="r_a3b6bb9b05ba56a53ea13d90459ec0e2c"><td class="memItemLeft"><a id="a3b6bb9b05ba56a53ea13d90459ec0e2c" name="a3b6bb9b05ba56a53ea13d90459ec0e2c"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_value, dynamic_copyable,,,,(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(move_constructor_t, move_constructor, []([[maybe_unused]] mutable_void placement, [[maybe_unused]] mutable_void from) -&gt; mutable_void { if constexpr(std::is_move_constructible_v&lt; Concrete &gt;) { return std::construct_at&lt; Concrete &gt;(static_cast&lt; Concrete * &gt;(placement), std::move(*static_cast&lt; Concrete * &gt;(from)));} else { return nullptr;};}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(destructor_t, destructor, [](mutable_void data) { std::destroy_at(static_cast&lt; Concrete * &gt;(data));}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(model_size_t, model_size, compute_model_size&lt; Concrete &gt;())),(using default_proxy_t=<a class="el" href="structanyxx_1_1val.html">val</a>&lt;&gt;;))</td></tr>
+<tr class="memitem:a635d420429d93cb3592ab4a7d7e87584" id="r_a635d420429d93cb3592ab4a7d7e87584"><td class="memTemplParams" colspan="2"><a id="a635d420429d93cb3592ab4a7d7e87584" name="a635d420429d93cb3592ab4a7d7e87584"></a>
+template&lt;typename Concrete&gt; </td></tr>
+<tr class="memitem:a635d420429d93cb3592ab4a7d7e87584 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_move_constructor</b> (mutable_void placement, mutable_void from)</td></tr>
+<tr class="memitem:aebbfb82e279863c0ac23e99b1208ff46" id="r_aebbfb82e279863c0ac23e99b1208ff46"><td class="memItemLeft"><a id="aebbfb82e279863c0ac23e99b1208ff46" name="aebbfb82e279863c0ac23e99b1208ff46"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_value, dynamic_copyable,,,,(<a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(move_constructor_t, move_constructor, []([[maybe_unused]] mutable_void placement, [[maybe_unused]] mutable_void from) -&gt; mutable_void { return invoke_move_constructor&lt; Concrete &gt;(placement, from);}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(destructor_t, destructor, [](mutable_void data) { std::destroy_at(static_cast&lt; Concrete * &gt;(data));}), <a class="el" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(model_size_t, model_size, compute_model_size&lt; Concrete &gt;())),(using default_proxy_t=<a class="el" href="structanyxx_1_1val.html">val</a>&lt;&gt;;))</td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258" id="r_aab26c23ca7cd37963cf41554460ca258"><td class="memTemplParams" colspan="2"><a id="aab26c23ca7cd37963cf41554460ca258" name="aab26c23ca7cd37963cf41554460ca258"></a>
 template&lt;typename InObject&gt; </td></tr>
 <tr class="memitem:aab26c23ca7cd37963cf41554460ca258 template"><td class="memItemLeft">std::size_t &amp;&#160;</td><td class="memItemRight"><b>anyxx::members_count</b> ()</td></tr>
@@ -738,10 +744,10 @@ template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a72fc7748e9c8f1e5c8e4b291700cb1ee template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_variant</b> = is_variant_impl&lt;T&gt;::value</td></tr>
 <tr class="memitem:a4d13fc3b5aa8f62a1915fc8b8e1cde11" id="r_a4d13fc3b5aa8f62a1915fc8b8e1cde11"><td class="memItemLeft"><a id="a4d13fc3b5aa8f62a1915fc8b8e1cde11" name="a4d13fc3b5aa8f62a1915fc8b8e1cde11"></a>
 constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_in_dll_mode</b> = false</td></tr>
+<tr class="memitem:a1ce436fa64f930b3ab7d445393f0bcce" id="r_a1ce436fa64f930b3ab7d445393f0bcce"><td class="memItemLeft"><a id="a1ce436fa64f930b3ab7d445393f0bcce" name="a1ce436fa64f930b3ab7d445393f0bcce"></a>
+constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::small_object_size</b> = 4 * sizeof(mutable_void)</td></tr>
 <tr class="memitem:a43537c56546174292a269765ab88268c" id="r_a43537c56546174292a269765ab88268c"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a43537c56546174292a269765ab88268c template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><a class="el" href="#a43537c56546174292a269765ab88268c">anyxx::is_type_class</a></td></tr>
-<tr class="memitem:a1ce436fa64f930b3ab7d445393f0bcce" id="r_a1ce436fa64f930b3ab7d445393f0bcce"><td class="memItemLeft"><a id="a1ce436fa64f930b3ab7d445393f0bcce" name="a1ce436fa64f930b3ab7d445393f0bcce"></a>
-constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::small_object_size</b> = 2 * sizeof(mutable_void)</td></tr>
 <tr class="memitem:a81e31d857ed19860064711ad2d7aa3f4" id="r_a81e31d857ed19860064711ad2d7aa3f4"><td class="memItemLeft"><a id="a81e31d857ed19860064711ad2d7aa3f4" name="a81e31d857ed19860064711ad2d7aa3f4"></a>
 template&lt;&gt; </td></tr>
 <tr class="memitem:a81e31d857ed19860064711ad2d7aa3f4 template"><td class="memItemLeft">bool constexpr&#160;</td><td class="memItemRight"><b>anyxx::can_move_to_from&lt; shared, unique &gt;</b> = true</td></tr>
@@ -1261,7 +1267,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
 <div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
 <div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1394</div></div>
+<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1413</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2469,8 +2475,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3073</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3094</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3100</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3121</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3865,7 +3871,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(anyxx::dispatch_table_t*, dispatch_table, \</div>
 <div class="line">                 anyxx::dispatch_table_instance&lt;v_table_t, Concrete&gt;())</div>
-<div class="ttc" id="agroup__trait__macros_html_gac0a03326e8e38ea3ee7d42b80552e634"><div class="ttname"><a href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a></div><div class="ttdeci">#define ANY_V_TABLE_DATA(type, name,...)</div><div class="ttdoc">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped typ...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1216</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gac0a03326e8e38ea3ee7d42b80552e634"><div class="ttname"><a href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a></div><div class="ttdeci">#define ANY_V_TABLE_DATA(type, name,...)</div><div class="ttdoc">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped typ...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1224</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4138,7 +4144,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1548</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1568</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4156,7 +4162,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;dynamic_copyable, cref&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2737</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2764</div></div>
 </div><!-- fragment -->
 </div>
 </div>
