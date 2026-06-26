@@ -29,7 +29,7 @@ TRAIT_TEMPLATE_EX_(
 //                   Reference;))
 
 inline static constexpr std::size_t iterator_val_proxy_size =
-    small_object_size;// * 2u;
+    small_object_size * 2u;
 
 struct forward_iterator_is_nullable {};
 struct forward_iterator_val_size {

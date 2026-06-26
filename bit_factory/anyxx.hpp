@@ -2279,6 +2279,7 @@ struct val {
   val(std::in_place_type_t<T>, Args&&... args) {
     static_assert(alignof(T) <= alignof(mutable_void));
     if constexpr (sizeof(T) <= SmallObjectSize) {
+      data.local = {};
       auto location =
           static_cast<T*>(static_cast<mutable_void>(data.local.data()));
       ptr_ = std::construct_at<T>(location, std::forward<Args>(args)...);
@@ -3592,26 +3593,33 @@ TRAIT_EX_(
                       })),
     ());
 
-TRAIT_EX_(
-    dynamic_value, dynamic_copyable, , , ,
-    (ANY_V_TABLE_DATA(move_constructor_t, move_constructor,
-                      []([[maybe_unused]] mutable_void placement,
-                         [[maybe_unused]] mutable_void from) -> mutable_void {
-                        if constexpr (std::is_move_constructible_v<Concrete>) {
-                          return std::construct_at<Concrete>(
-                              static_cast<Concrete*>(placement),
-                              std::move(*static_cast<Concrete*>(from)));
-                        } else {
-                          return nullptr;
-                        };
-                      }),
-     ANY_V_TABLE_DATA(destructor_t, destructor,
-                      [](mutable_void data) {
-                        std::destroy_at(static_cast<Concrete*>(data));
-                      }),
-     ANY_V_TABLE_DATA(model_size_t, model_size,
-                      compute_model_size<Concrete>())),
-    (using default_proxy_t = val<>;));
+template <typename Concrete>
+mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
+                                     [[maybe_unused]] mutable_void from) {
+  static_assert(std::is_move_constructible_v<Concrete>);
+  auto typed_placement = static_cast<Concrete*>(placement);
+  auto typed_from = static_cast<Concrete*>(from);
+  auto constructed =
+      std::construct_at<Concrete>(typed_placement, std::move(*typed_from));
+  assert(placement == constructed);
+  std::destroy_at(typed_from);
+  return placement;
+};
+
+TRAIT_EX_(dynamic_value, dynamic_copyable, , , ,
+          (ANY_V_TABLE_DATA(
+               move_constructor_t, move_constructor,
+               []([[maybe_unused]] mutable_void placement,
+                  [[maybe_unused]] mutable_void from) -> mutable_void {
+                 return invoke_move_constructor<Concrete>(placement, from);
+               }),
+           ANY_V_TABLE_DATA(destructor_t, destructor,
+                            [](mutable_void data) {
+                              std::destroy_at(static_cast<Concrete*>(data));
+                            }),
+           ANY_V_TABLE_DATA(model_size_t, model_size,
+                            compute_model_size<Concrete>())),
+          (using default_proxy_t = val<>;));
 
 class meta_data {
   const std::type_info& type_info_;
