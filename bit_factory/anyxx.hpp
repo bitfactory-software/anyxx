@@ -3599,7 +3599,7 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
   static_assert(std::is_move_constructible_v<Concrete>);
   auto typed_placement = static_cast<Concrete*>(placement);
   auto typed_from = static_cast<Concrete*>(from);
-  auto constructed =
+  [[maybe_unused]] auto constructed =
       std::construct_at<Concrete>(typed_placement, std::move(*typed_from));
   assert(placement == constructed);
   std::destroy_at(typed_from);
