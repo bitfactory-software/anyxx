@@ -1,4 +1,5 @@
 #include <bit_factory/anyxx.hpp>
+#include <bit_factory/anyxx_range.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <string>
@@ -7,8 +8,9 @@ namespace lib_2f {
 
 TRAIT_TEMPLATE(
     ((To)), equal_comparable_to,
-    (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq,
-                ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const),
+    (ANY_OP_MAP_NAMED_FRIEND(
+         bool, ==, eq, ((anyxx::use_as_<To, equal_comparable_to, T> const&)),
+         const),
      ANY_OP_DEF(public, bool, !=, ne,
                 ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const,
                 ([&x](auto const& r) {
@@ -20,7 +22,7 @@ template <typename L, typename R>
 using trait_as_equal_comparable_to =
     anyxx::any<equal_comparable_to<R>, anyxx::using_<L>>;
 
-// no memory overhead, because of the EBO and there is no vtable, because the
+// no memory overhead because EBO and there is no vtable: The
 // trait uses static dispatch only.
 static_assert(sizeof(trait_as_equal_comparable_to<int, double>) == sizeof(int));
 static_assert(is_equal_comparable_to_model<int, int>);
@@ -28,8 +30,10 @@ static_assert(is_equal_comparable_to_model<int, double>);
 static_assert(is_equal_comparable_to_model<double, double>);
 
 template <typename L, typename R>
-void test_equal_comparable_to_(trait_as_equal_comparable_to<L, R> const& a,
-                               trait_as_equal_comparable_to<R, L> const& b) {
+  requires is_equal_comparable_to_model<L, R> &&
+           is_equal_comparable_to_model<R, L>
+void test_equal_comparable_to(trait_as_equal_comparable_to<L, R> const& a,
+                              trait_as_equal_comparable_to<R, L> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
 }
@@ -38,8 +42,21 @@ template <typename L, typename R>
            is_equal_comparable_to_model<R, L>
 void test_equal_comparable_to(L const& a, R const& b) {
   using namespace anyxx;
-  test_equal_comparable_to_<L, R>(trait_as<equal_comparable_to<R>>(a),
-                                  trait_as<equal_comparable_to<L>>(b));
+  test_equal_comparable_to<L, R>(trait_as<equal_comparable_to<R>>(a),
+                                 trait_as<equal_comparable_to<L>>(b));
+}
+
+template <typename L, typename Range>
+  requires is_equal_comparable_to_model<L, std::ranges::range_value_t<Range>> &&
+           is_equal_comparable_to_model<std::ranges::range_value_t<Range>, L> &&
+           std::ranges::forward_range<Range>
+void test_equal_comparable_to_range(L const& a, Range const& r) {
+  using namespace anyxx;
+  using R = std::ranges::range_value_t<Range>;
+  auto a_traited = trait_as<equal_comparable_to<R>>(a);
+  auto r_traited = trait_range_as<equal_comparable_to<L>>(r);
+  CHECK(*std::ranges::begin(r_traited) == a_traited);
+  CHECK(a_traited == *std::ranges::begin(r_traited));
 }
 
 }  // namespace lib_2f
@@ -117,6 +134,9 @@ TEST_CASE("equal_comparable_to static") {
   lib_2f::test_equal_comparable_to(1, 3.14);
   // this next example shows, why we need concept maps as customization points:
   lib_2f::test_equal_comparable_to(app_2f::a_type{"A"}, app_2f::b_type{"B"});
+
+  lib_2f::test_equal_comparable_to_range(app_2f::a_type{"A"},
+                                         std::vector<app_2f::b_type>{{"A"}});
 }
 
 TEST_CASE("equal_comparable_to benchmark") {

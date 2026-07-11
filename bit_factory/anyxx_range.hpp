@@ -120,4 +120,10 @@ static_assert(
 static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 
+template <typename Trait, typename R>
+auto trait_range_as(R&& r) {
+  return r | std::views::transform(
+                 [&](auto const& x) { return trait_as<Trait>(x); });
+}
+
 }  // namespace anyxx
