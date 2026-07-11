@@ -113,7 +113,8 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   using namespace anyxx;
   static_assert(is_semigroup_model<P1>);
   static_assert(is_monoid_model<P1>);
-  test_monoid(trait_as<monoid>(p1), r);
+  any<monoid, using_<P1>> m{p1}; 
+  test_monoid(m, r);
 }
 
 template <class C>
@@ -177,6 +178,9 @@ TEST_CASE("algebra monoid") {
   test_monoid((1), std::vector{2, 3});
   test_monoid<any<monoid, using_<int>>>(
       trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
+  test_monoid((1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
+  test_monoid<any<monoid, using_<int>>>(
+      trait_as<monoid>(1), std::vector{2, 3});
 
   test_monoid(("1"s), std::vector{"2"s, "3"s});
   test_monoid<any<monoid, using_<std::string>>>(
