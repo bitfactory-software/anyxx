@@ -87,23 +87,7 @@ struct not_mappepd {};
 static_assert(!is_semigroup_model<not_mappepd>);
 
 template <anyxx::is_any Monoid>
-void test_monoid_traited(Monoid const& m,
-                         std::ranges::forward_range auto const& r);
-template <typename P1>
-  requires(!anyxx::is_any<P1>)
-void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
-  using namespace anyxx;
-  static_assert(is_semigroup_model<P1>);
-  static_assert(is_monoid_model<P1>);
-  test_monoid_traited(trait_as<monoid>(p1), r);
-}
-template <anyxx::is_any Monoid>
 void test_monoid(Monoid const& m, std::ranges::forward_range auto const& r) {
-  test_monoid_traited<Monoid>(m, r);
-}
-template <anyxx::is_any Monoid>
-void test_monoid_traited(Monoid const& m,
-                         std::ranges::forward_range auto const& r) {
   auto id = m.identity();
   using type_1 = decltype(m.op(id.op(m)));
   using type_2 = decltype(m.op(m.op(id)));
@@ -121,6 +105,15 @@ void test_monoid_traited(Monoid const& m,
                   return m1.op(m2);
                 });
   CHECK(c2);
+}
+
+template <typename P1>
+  requires(!anyxx::is_any<P1>)
+void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
+  using namespace anyxx;
+  static_assert(is_semigroup_model<P1>);
+  static_assert(is_monoid_model<P1>);
+  test_monoid(trait_as<monoid>(p1), r);
 }
 
 template <class C>
@@ -242,7 +235,6 @@ void test_group_traited(
   auto g_identy = g_concat_inverse.op(g_concat);
   CHECK(id == g_identy);
 
-  test_monoid_traited(g, r);
   test_monoid(g, r);
 }
 }  // namespace algebra_test
