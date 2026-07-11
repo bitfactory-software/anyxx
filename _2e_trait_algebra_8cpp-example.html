@@ -207,7 +207,8 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line">  <span class="keyword">static_assert</span>(is_semigroup_model&lt;P1&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(is_monoid_model&lt;P1&gt;);</div>
-<div class="line">  test_monoid(trait_as&lt;monoid&gt;(p1), r);</div>
+<div class="line">  any&lt;monoid, using_&lt;P1&gt;&gt; m{p1}; </div>
+<div class="line">  test_monoid(m, r);</div>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> C&gt;</div>
@@ -271,6 +272,9 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  test_monoid((1), std::vector{2, 3});</div>
 <div class="line">  test_monoid&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;(</div>
 <div class="line">      <a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as&lt;monoid&gt;</a>(1), std::vector&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;{{2}, {3}});</div>
+<div class="line">  test_monoid((1), std::vector&lt;<a id="_a12" name="_a12"></a><a class="code hl_class" href="classanyxx_1_1any.html">any</a>&lt;monoid, <a id="_a13" name="_a13"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;int&gt;</a>&gt;&gt;{{2}, {3}});</div>
+<div class="line">  test_monoid&lt;any&lt;monoid, using_&lt;int&gt;&gt;&gt;(</div>
+<div class="line">      <a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as&lt;monoid&gt;</a>(1), std::vector{2, 3});</div>
 <div class="line"> </div>
 <div class="line">  test_monoid((<span class="stringliteral">&quot;1&quot;</span>s), std::vector{<span class="stringliteral">&quot;2&quot;</span>s, <span class="stringliteral">&quot;3&quot;</span>s});</div>
 <div class="line">  test_monoid&lt;any&lt;monoid, using_&lt;std::string&gt;&gt;&gt;(</div>
@@ -339,7 +343,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using namespace </span>algebra_test;</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> g = trait_class_&lt;int, group&gt;.identity();</div>
-<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(g), <a id="_a12" name="_a12"></a><a class="code hl_class" href="classanyxx_1_1any.html">any&lt;group, using_&lt;int&gt;</a>&gt;&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::same_as&lt;<span class="keyword">decltype</span>(g), <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;group, using_&lt;int&gt;</a>&gt;&gt;);</div>
 <div class="line"> </div>
 <div class="line">  {</div>
 <div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;monoid, using_&lt;int&gt;</a>&gt; m1{0};</div>
@@ -402,6 +406,7 @@ $(function(){initNavTree('_2e_trait_algebra_8cpp-example.html','',''); });
 <div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:804</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:816</div></div>
 <div class="ttc" id="astructanyxx_1_1observeable__v__table_html"><div class="ttname"><a href="structanyxx_1_1observeable__v__table.html">anyxx::observeable_v_table</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:1431</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3083</div></div>
 <div class="ttc" id="astructanyxx_1_1using___html_a0bf065d75a9a6d95e728ef80516a1ca3"><div class="ttname"><a href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_::as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Value &gt; &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3094</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
