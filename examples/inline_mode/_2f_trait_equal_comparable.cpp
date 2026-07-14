@@ -43,10 +43,7 @@ TRAIT_(equal_comparable, anyxx::dynamic_value,
         // We can use the == operator of the external interface to
         // provide a default implementation for the != operator.
         ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                   [&x](auto const& r) {
-                     return !(trait_as<equal_comparable>(x) ==
-                              trait_as<equal_comparable>(r));
-                   })))
+                   [&x](auto const& r) { return !Map{}.eq(x, r); })))
 
 // TRAIT automatically defines the is_equal_comparable_model concept.
 // Here we use this concept to check that some basic types model the trait:
@@ -118,7 +115,8 @@ TEST_CASE("equal_comparable static") {
 }
 // 2. Dynamic dispatch usage.
 TEST_CASE("equal_comparable dynamic") {
-  using any_equal_comparable = anyxx::any<lib_2f::equal_comparable, anyxx::val<>>;
+  using any_equal_comparable =
+      anyxx::any<lib_2f::equal_comparable, anyxx::val<>>;
   std::vector<std::pair<any_equal_comparable, any_equal_comparable>> v{
       {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
       {app_2f::b_type{"A"}, app_2f::b_type{"B"}},
