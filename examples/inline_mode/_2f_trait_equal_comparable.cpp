@@ -72,7 +72,7 @@ void test_equal_comparable_(anyxx::any<equal_comparable, Proxy> const& a,
 template <is_equal_comparable_model T>
 void test_equal_comparable(T const& a, T const& b) {
   using namespace anyxx;
-  test_equal_comparable_<anyxx::using_<T>>(a, b);
+  test_equal_comparable_<using_<T>>(a, b);
 }
 
 }  // namespace lib_2f
