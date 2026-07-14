@@ -4,6 +4,7 @@ var anyxx_8hpp =
     [ "anyxx::observeable_v_table", "structanyxx_1_1observeable__v__table.html", "structanyxx_1_1observeable__v__table" ],
     [ "anyxx::any&lt; Trait, Proxy &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::using_&lt; Value &gt;", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
+    [ "anyxx::using_cref&lt; Value &gt;", "structanyxx_1_1using__cref.html", "structanyxx_1_1using__cref" ],
     [ "anyxx::trait_class&lt; Type &gt;", "structanyxx_1_1trait__class.html", null ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
     [ "anyxx::factory&lt; Any, Proxy, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
@@ -68,6 +69,8 @@ var anyxx_8hpp =
     [ "anyxx::shared", "group__proxies.html#ga56505144f855bfd01c879bf63c62f09c", null ],
     [ "anyxx::use_as", "anyxx_8hpp.html#a92917959a2ef4d14ddf6e22473220820", null ],
     [ "anyxx::use_as_", "anyxx_8hpp.html#aaa85b7012fceca3593ab029de12dd61c", null ],
+    [ "anyxx::use_as_cref", "anyxx_8hpp.html#a83407b9419ab07b50701cc802fa04551", null ],
+    [ "anyxx::use_as_cref_", "anyxx_8hpp.html#a2e85dd054654528100674b1615b37aa8", null ],
     [ "anyxx::vany_variant", "group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80", null ],
     [ "anyxx::weak", "group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c", null ],
     [ "anyxx::borrow_as", "group__casts.html#ga57a33d0becfcd08748cf97fd2b51aa16", null ],
@@ -77,6 +80,7 @@ var anyxx_8hpp =
     [ "anyxx::lock", "group__casts.html#gae988a6a809ee2910690366e1e4c7ae67", null ],
     [ "anyxx::move_to", "group__casts.html#ga0ad81aaf23ab3d32a02a12cec57c0946", null ],
     [ "anyxx::trait_as", "anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c", null ],
+    [ "anyxx::trait_as_cref", "anyxx_8hpp.html#abd61608594394c90276eec4d088a9430", null ],
     [ "anyxx::unerase_cast", "group__casts.html#ga503c7a4639146953d0f21603ef83241e", null ],
     [ "anyxx::unerase_cast_if", "group__casts.html#ga9ba68fb72727630cbb77b5104a93d2b8", null ]
 ];

@@ -14,5 +14,8 @@ var searchData=
   ['any_3c_20trait_2c_20trait_5fclass_3c_20type_20_3e_20_3e_11',['any&lt; Trait, trait_class&lt; Type &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20trait_2c_20using_5f_3c_20type_20_3e_20_3e_12',['any&lt; Trait, using_&lt; Type &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20trait_2c_20using_5f_3c_20value_20_3e_20_3e_13',['any&lt; Trait, using_&lt; Value &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20trait_3c_20ts_2e_2e_2e_20_3e_2c_20using_5f_3c_20type_20_3e_20_3e_14',['any&lt; Trait&lt; Ts... &gt;, using_&lt; Type &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]]
+  ['any_3c_20trait_2c_20using_5fcref_3c_20type_20_3e_20_3e_14',['any&lt; Trait, using_cref&lt; Type &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20trait_2c_20using_5fcref_3c_20value_20_3e_20_3e_15',['any&lt; Trait, using_cref&lt; Value &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20trait_3c_20ts_2e_2e_2e_20_3e_2c_20using_5f_3c_20type_20_3e_20_3e_16',['any&lt; Trait&lt; Ts... &gt;, using_&lt; Type &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20trait_3c_20ts_2e_2e_2e_20_3e_2c_20using_5fcref_3c_20type_20_3e_20_3e_17',['any&lt; Trait&lt; Ts... &gt;, using_cref&lt; Type &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]]
 ];

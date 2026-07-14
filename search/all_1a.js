@@ -9,8 +9,12 @@ var searchData=
   ['usage_3a_20vany_6',['Showcase 7: Basic &lt;em&gt;Any++&lt;/em&gt; open std::variant usage: &apos;vany&apos;',['../index.html#autotoc_md35',1,'']]],
   ['use_5fas_7',['use_as',['../anyxx_8hpp.html#a92917959a2ef4d14ddf6e22473220820',1,'anyxx']]],
   ['use_5fas_5f_8',['use_as_',['../anyxx_8hpp.html#aaa85b7012fceca3593ab029de12dd61c',1,'anyxx']]],
-  ['useage_20in_20cmakelists_20txt_3a_9',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
-  ['using_20c_2023_20library_20tech_20steve_20downey_10',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
-  ['using_5f_11',['using_',['../structanyxx_1_1using__.html',1,'anyxx']]],
-  ['using_5f_3c_20rep_20_3e_12',['using_&lt; Rep &gt;',['../structanyxx_1_1using__.html',1,'anyxx']]]
+  ['use_5fas_5fcref_9',['use_as_cref',['../anyxx_8hpp.html#a83407b9419ab07b50701cc802fa04551',1,'anyxx']]],
+  ['use_5fas_5fcref_5f_10',['use_as_cref_',['../anyxx_8hpp.html#a2e85dd054654528100674b1615b37aa8',1,'anyxx']]],
+  ['useage_20in_20cmakelists_20txt_3a_11',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
+  ['using_20c_2023_20library_20tech_20steve_20downey_12',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
+  ['using_5f_13',['using_',['../structanyxx_1_1using__.html',1,'anyxx']]],
+  ['using_5f_3c_20rep_20_3e_14',['using_&lt; Rep &gt;',['../structanyxx_1_1using__.html',1,'anyxx']]],
+  ['using_5fcref_15',['using_cref',['../structanyxx_1_1using__cref.html',1,'anyxx']]],
+  ['using_5fcref_3c_20rep_20_3e_16',['using_cref&lt; Rep &gt;',['../structanyxx_1_1using__cref.html',1,'anyxx']]]
 ];

@@ -2,6 +2,7 @@ var annotated_dup =
 [
     [ "anyxx", null, [
       [ "using_", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
+      [ "using_cref", "structanyxx_1_1using__cref.html", "structanyxx_1_1using__cref" ],
       [ "trait_class", "structanyxx_1_1trait__class.html", null ],
       [ "undefined", "structanyxx_1_1undefined.html", null ],
       [ "observeable_v_table", "structanyxx_1_1observeable__v__table.html", "structanyxx_1_1observeable__v__table" ],

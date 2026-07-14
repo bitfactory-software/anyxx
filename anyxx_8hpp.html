@@ -126,6 +126,7 @@ Classes</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Aany_3C_20Trait_2C_20Proxy_20_3E" id="r_anyxx_3A_3Aany_3C_20Trait_2C_20Proxy_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1any.html">anyxx::any&lt; Trait, Proxy &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The core class template to control dispatch for external polymorphism.  <a href="classanyxx_1_1any.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Ausing_5F_3C_20Value_20_3E" id="r_anyxx_3A_3Ausing_5F_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1using__.html">anyxx::using_&lt; Value &gt;</a></td></tr>
+<tr class="memitem:anyxx_3A_3Ausing_5Fcref_3C_20Value_20_3E" id="r_anyxx_3A_3Ausing_5Fcref_3C_20Value_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1using__cref.html">anyxx::using_cref&lt; Value &gt;</a></td></tr>
 <tr class="memitem:anyxx_3A_3Atrait_5Fclass_3C_20Type_20_3E" id="r_anyxx_3A_3Atrait_5Fclass_3C_20Type_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1trait__class.html">anyxx::trait_class&lt; Type &gt;</a></td></tr>
 <tr class="memitem:anyxx_3A_3Akey_3C_20Tag_20_3E" id="r_anyxx_3A_3Akey_3C_20Tag_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1key.html">anyxx::key&lt; Tag &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A key type for factory registration.  <a href="structanyxx_1_1key.html#details">More...</a><br /></td></tr>
@@ -463,8 +464,12 @@ template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename...
 using&#160;</td><td class="memItemRight"><b>anyxx::nullable_val</b> = <a class="el" href="structanyxx_1_1val.html">val</a>&lt;std::true_type&gt;</td></tr>
 <tr class="memitem:a92917959a2ef4d14ddf6e22473220820" id="r_a92917959a2ef4d14ddf6e22473220820"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
 <tr class="memitem:a92917959a2ef4d14ddf6e22473220820 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, <a class="el" href="structanyxx_1_1using__.html">using_</a>&lt;Type&gt;&gt;</td></tr>
+<tr class="memitem:a83407b9419ab07b50701cc802fa04551" id="r_a83407b9419ab07b50701cc802fa04551"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
+<tr class="memitem:a83407b9419ab07b50701cc802fa04551 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a83407b9419ab07b50701cc802fa04551">anyxx::use_as_cref</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, <a class="el" href="structanyxx_1_1using__cref.html">using_cref</a>&lt;Type&gt;&gt;</td></tr>
 <tr class="memitem:aaa85b7012fceca3593ab029de12dd61c" id="r_aaa85b7012fceca3593ab029de12dd61c"><td class="memTemplParams" colspan="2">template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </td></tr>
 <tr class="memitem:aaa85b7012fceca3593ab029de12dd61c template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aaa85b7012fceca3593ab029de12dd61c">anyxx::use_as_</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait&lt;Ts...&gt;, <a class="el" href="structanyxx_1_1using__.html">using_</a>&lt;Type&gt;&gt;</td></tr>
+<tr class="memitem:a2e85dd054654528100674b1615b37aa8" id="r_a2e85dd054654528100674b1615b37aa8"><td class="memTemplParams" colspan="2">template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </td></tr>
+<tr class="memitem:a2e85dd054654528100674b1615b37aa8 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a2e85dd054654528100674b1615b37aa8">anyxx::use_as_cref_</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait&lt;Ts...&gt;, <a class="el" href="structanyxx_1_1using__cref.html">using_cref</a>&lt;Type&gt;&gt;</td></tr>
 <tr class="memitem:a41a5f0115a3c735c76b8e40c6043993d" id="r_a41a5f0115a3c735c76b8e40c6043993d"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
 <tr class="memitem:a41a5f0115a3c735c76b8e40c6043993d template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a41a5f0115a3c735c76b8e40c6043993d">anyxx::any_trait_class</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, <a class="el" href="structanyxx_1_1trait__class.html">trait_class</a>&lt;Type&gt;&gt;</td></tr>
 <tr class="memitem:a8bbf3a5ecbebb69c8e2fbb9e43aa8668" id="r_a8bbf3a5ecbebb69c8e2fbb9e43aa8668"><td class="memItemLeft"><a id="a8bbf3a5ecbebb69c8e2fbb9e43aa8668" name="a8bbf3a5ecbebb69c8e2fbb9e43aa8668"></a>
@@ -654,6 +659,8 @@ template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memdesc:ga9ba68fb72727630cbb77b5104a93d2b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to an unerased type using runtime information from the v-Tables. <br /></td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c" id="r_aa0a344700732ba661e0fb701ef1eba2c"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a> (T &amp;&amp;v)</td></tr>
+<tr class="memitem:abd61608594394c90276eec4d088a9430" id="r_abd61608594394c90276eec4d088a9430"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
+<tr class="memitem:abd61608594394c90276eec4d088a9430 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#abd61608594394c90276eec4d088a9430">anyxx::trait_as_cref</a> (T const &amp;v)</td></tr>
 <tr class="memitem:a9f6c325609ae457472868b67551fdf06" id="r_a9f6c325609ae457472868b67551fdf06"><td class="memTemplParams" colspan="2"><a id="a9f6c325609ae457472868b67551fdf06" name="a9f6c325609ae457472868b67551fdf06"></a>
 template&lt;typename AnyVTable, typename Class&gt; </td></tr>
 <tr class="memitem:a9f6c325609ae457472868b67551fdf06 template"><td class="memItemLeft">dispatch_table_t *&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_instance_implementation</b> ()</td></tr>
@@ -1267,7 +1274,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
 <div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
 <div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1412</div></div>
+<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1414</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2475,8 +2482,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3099</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3120</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3162</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3201</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4071,6 +4078,40 @@ template&lt;typename Type, template&lt; typename... &gt; typename Trait, typenam
 
 </div>
 </div>
+<a id="a83407b9419ab07b50701cc802fa04551" name="a83407b9419ab07b50701cc802fa04551"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83407b9419ab07b50701cc802fa04551">&#9670;&#160;</a></span>use_as_cref</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type, typename Trait&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a83407b9419ab07b50701cc802fa04551">anyxx::use_as_cref</a> = any&lt;Trait, using_cref&lt;Type&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A template to get an any trait for a type See also using_cref::as. </p>
+
+</div>
+</div>
+<a id="a2e85dd054654528100674b1615b37aa8" name="a2e85dd054654528100674b1615b37aa8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e85dd054654528100674b1615b37aa8">&#9670;&#160;</a></span>use_as_cref_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Type, template&lt; typename... &gt; typename Trait, typename... Ts&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#a2e85dd054654528100674b1615b37aa8">anyxx::use_as_cref_</a> = any&lt;Trait&lt;Ts...&gt;, using_cref&lt;Type&gt;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A template to get an templatetd any trait for a type See also using_cref::as. </p>
+
+</div>
+</div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
 <a id="aa0a344700732ba661e0fb701ef1eba2c" name="aa0a344700732ba661e0fb701ef1eba2c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa0a344700732ba661e0fb701ef1eba2c">&#9670;&#160;</a></span>trait_as()</h2>
@@ -4091,6 +4132,26 @@ template&lt;typename Trait, typename T&gt; </div>
 <p>A factory function to bind an object as a model to an any with a trait. See also using_::as. </p>
 <dl class="section examples"><dt>Examples</dt><dd><a class="el" href="_2b_trait_monoid_8cpp-example.html#a2">_2b_trait_monoid.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#a9">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a4">_2d_trait_self.cpp</a>, and <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a7">_2e_trait_algebra.cpp</a>.</dd>
 </dl>
+
+</div>
+</div>
+<a id="abd61608594394c90276eec4d088a9430" name="abd61608594394c90276eec4d088a9430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd61608594394c90276eec4d088a9430">&#9670;&#160;</a></span>trait_as_cref()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Trait, typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto anyxx::trait_as_cref </td>
+          <td>(</td>
+          <td class="paramtype">T const &amp;</td>          <td class="paramname"><span class="paramname"><em>v</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>A factory function to bind a const&amp; as a model to an any with a trait. See also using_cref::as. </p>
 
 </div>
 </div>
@@ -4144,7 +4205,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1567</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1569</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4162,7 +4223,7 @@ template&lt;typename T&gt; </div>
 <b>Initial value:</b><div class="fragment"><div class="line">{</div>
 <div class="line">  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> AnyValue&gt;</div>
 <div class="line">  <span class="keyword">using </span>v_table_param = <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;dynamic_copyable, cref&gt;</a></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2763</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2805</div></div>
 </div><!-- fragment -->
 </div>
 </div>
