@@ -1324,6 +1324,8 @@ class type_mismatch_error : public error {
 
 template <typename Value>
 struct using_;
+template <typename Value>
+struct using_cref;
 template <typename Type>
 struct trait_class;
 
@@ -1806,6 +1808,46 @@ struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
   template <typename Vx>
   static auto erase(Vx&& v) {
     return using_<V>{std::forward<Vx>(v)};
+  }
+};
+
+template <typename V>
+struct proxy_trait<using_cref<V>> : basic_proxy_trait<using_cref<V>> {
+  static constexpr bool allow_any_default_constructibile = true;
+
+  template <typename Rep>
+  using proxy_impl = using_cref<Rep>;
+  using void_t = std::conditional_t<std::is_const_v<std::remove_reference_t<V>>,
+                                    const_void, mutable_void>;
+  using static_dispatch_t = V;
+  static constexpr bool is_constructibile_from_const = true;
+  template <typename ConstructedWith>
+  struct is_constructibile_from {
+    static constexpr bool value = std::is_constructible_v<
+        V, ConstructedWith>;  // && !is_any<ConstructedWith>;
+  };
+  static constexpr bool is_owner = true;
+  static auto clone_from([[maybe_unused]] const_void data_ptr,
+                         [[maybe_unused]] is_v_table auto* v_table) {
+    return void_t{};
+  }
+
+  static auto get_proxy_ptr_in(auto& val,
+                               [[maybe_unused]] observeable_v_table* v_table) {
+    return val;
+  }
+
+  template <typename ConstructedWith>
+  using unerased = ConstructedWith;
+
+  static auto construct_in_place(V&& v) { return std::move(v); }
+  template <typename... Args>
+  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
+    return V{std::forward<Args>(args)...};
+  }
+  template <typename Vx>
+  static auto erase(Vx&& v) {
+    return using_cref<V>{std::forward<Vx>(v)};
   }
 };
 
@@ -3072,8 +3114,7 @@ inline auto unerase_cast_if(Any const& o) {
 ///
 /// Usage:
 /// * Use the model map as a static customization point.
-/// * Use \c using_<std::variant<...>> to unify customization points and
-/// member
+/// * Use \c using_<std::variant<...>> to unify customization points and member
 ///   function-like invocation.
 /// * Use with \ref vany_variant.
 ///
@@ -3093,15 +3134,47 @@ struct using_ {
   using as = any<Trait, using_<Value>>;
 };
 
+/// Proxy to capture the dispatch target concrete via const& to enable static
+/// dispatch A simple wrapper class over an object. Use \c '&' and \c 'const &'
+/// to capture by reference.
+///
+/// Usage:
+/// * Use the model map as a static customization point.
+///
+/// \tparam Value The captured value
+template <typename Value>
+struct using_cref {
+  using_cref() = delete;
+  template <typename V>
+    requires(!std::same_as<std::decay_t<V>, using_cref>)
+  using_cref(V const& v) : value_(v) {}
+  Value const& value_;
+  operator Value const&() const { return value_; }
+  /// Helper type alias template to trait a model with an \ref any.
+  /// See also \ref trait_as.
+  template <typename Trait>
+  using as = any<Trait, using_cref<Value>>;
+};
+
 /// A template to get an \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
 using use_as = any<Trait, using_<Type>>;
 
+/// A template to get an \ref any trait for a type
+/// See also \ref using_cref::as.
+template <typename Type, typename Trait>
+using use_as_cref = any<Trait, using_cref<Type>>;
+
 /// A template to get an templatetd \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, template <typename...> typename Trait, typename... Ts>
 using use_as_ = any<Trait<Ts...>, using_<Type>>;
+
+/// A template to get an templatetd \ref any trait for a type
+/// See also \ref using_cref::as.
+template <typename Type, template <typename...> typename Trait, typename... Ts>
+using use_as_cref_ = any<Trait<Ts...>, using_cref<Type>>;
 
 /// A factory function to bind an object as a model to an \ref any with a \ref
 /// trait.
@@ -3109,6 +3182,14 @@ using use_as_ = any<Trait<Ts...>, using_<Type>>;
 template <typename Trait, typename T>
 auto trait_as(T&& v) {
   return any<Trait, using_<std::decay_t<T>>>{std::forward<T>(v)};
+}
+
+/// A factory function to bind a const& as a model to an \ref any with a \ref
+/// trait.
+/// See also \ref using_cref::as.
+template <typename Trait, typename T>
+auto trait_as_cref(T const& v) {
+  return any<Trait, using_cref<std::decay_t<T>>>{v};
 }
 
 /// Proxy to capture the type to enable static
