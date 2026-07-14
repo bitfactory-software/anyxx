@@ -13,10 +13,7 @@ TRAIT_TEMPLATE(
          const),
      ANY_OP_DEF(public, bool, !=, ne,
                 ((anyxx::use_as_<To, equal_comparable_to, T> const&)), const,
-                ([&x](auto const& r) {
-                  return !(trait_as<equal_comparable_to<To>>(x) ==
-                           trait_as<equal_comparable_to<T>>(r));
-                }))))
+                ([&x](auto const& r) { return !Map{}.eq(x, r); }))))
 
 template <typename L, typename R>
 using trait_as_equal_comparable_to =
