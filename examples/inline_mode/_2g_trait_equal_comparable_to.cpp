@@ -70,34 +70,24 @@ struct b_type {
   std::string name_b;
 };
 
-bool eq_impl(app_2f::b_type const& self,
-             anyxx::use_as_<app_2f::a_type, lib_2f::equal_comparable_to,
-                            app_2f::b_type> const& r);
+bool eq_impl(app_2f::b_type const& b, app_2f::a_type const& a);
 }  // namespace app_2f
 
 ANY_TEMPLATE_MODEL_MAP((app_2f::b_type), lib_2f::equal_comparable_to,
                        ((app_2f::a_type))) {
-  static bool eq(
-      app_2f::b_type const& self,
-      anyxx::use_as_<app_2f::a_type, equal_comparable_to, app_2f::b_type> const&
-          r) {
-    return app_2f::eq_impl(self, r);
+  static bool eq(app_2f::b_type const& self, app_2f::a_type const& r) {
+    return eq_impl(self, r);
   };
 };
 ANY_TEMPLATE_MODEL_MAP((app_2f::a_type), lib_2f::equal_comparable_to,
                        ((app_2f::b_type))) {
-  static bool eq(
-      app_2f::a_type const& self,
-      anyxx::use_as_<app_2f::b_type, equal_comparable_to, app_2f::a_type> const&
-          r) {
-    return self.name_a == get_proxy_value(r).name_b;
+  static bool eq(app_2f::a_type const& self, app_2f::b_type const& r) {
+    return eq_impl(r, self);
   };
 };
 namespace app_2f {
-inline bool eq_impl(app_2f::b_type const& self,
-                    anyxx::use_as_<app_2f::a_type, lib_2f::equal_comparable_to,
-                                   app_2f::b_type> const& r) {
-  return self.name_b == get_proxy_value(r).name_a;
+inline bool eq_impl(app_2f::b_type const& self, app_2f::a_type const& r) {
+  return self.name_b == r.name_a;
 };
 }  // namespace app_2f
 
