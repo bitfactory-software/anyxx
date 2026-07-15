@@ -66,9 +66,7 @@ template <typename T>
 struct nullable_model_map<T&> : nullable_default_model_map<T const&> {
   using rep_type = reference_wrapper<T>;
   bool has_value(rep_type const& x) { return x.get() != nullptr; };
-  auto& get_value(auto&& x) { 
-      return *(std::forward<decltype(x)>(x)).get(); 
-  };
+  auto& get_value(auto&& x) { return *(std::forward<decltype(x)>(x)).get(); };
 };
 }  // namespace _2p_lib
 
@@ -164,7 +162,8 @@ TEST_CASE("_2p test optional 3") {
   //---
   CHECK(a1.has_value());
   CHECK(a1.get_value() == 42);
-  static_assert(std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
+  static_assert(
+      std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
 
   CHECK(*a1 == 42);
   auto a1x = a1;
@@ -194,7 +193,8 @@ TEST_CASE("_2p test optional 4") {
   CHECK(a1.get_value() == 41);
   a1.get_value() = 42;
   CHECK(v == 42);
-  static_assert(!std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
+  static_assert(
+      !std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
 
   CHECK(*a1 == 42);
   auto a1x = a1;
