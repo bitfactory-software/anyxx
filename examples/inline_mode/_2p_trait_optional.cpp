@@ -63,10 +63,12 @@ struct reference_wrapper {
 };
 
 template <typename T>
-struct nullable_model_map<T const&> : nullable_default_model_map<T const&> {
-  using rep_type = reference_wrapper<T const>;
+struct nullable_model_map<T&> : nullable_default_model_map<T const&> {
+  using rep_type = reference_wrapper<T>;
   bool has_value(rep_type const& x) { return x.get() != nullptr; };
-  T const& get_value(rep_type const& x) { return *x.get(); };
+  auto& get_value(auto&& x) { 
+      return *(std::forward<decltype(x)>(x)).get(); 
+  };
 };
 }  // namespace _2p_lib
 
@@ -162,6 +164,8 @@ TEST_CASE("_2p test optional 3") {
   //---
   CHECK(a1.has_value());
   CHECK(a1.get_value() == 42);
+  static_assert(std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
+
   CHECK(*a1 == 42);
   auto a1x = a1;
   CHECK(a1 == a1x);
@@ -175,4 +179,34 @@ TEST_CASE("_2p test optional 3") {
   optional<int const&> a2;
   CHECK(!a2.has_value());
   CHECK(a2 == optional<int const&>{});
+}
+
+TEST_CASE("_2p test optional 4") {
+  using namespace anyxx;
+  using namespace _2p_lib;
+
+  int v = 41;
+  optional<int&> a1{v};
+  //+++ the point of this example: no overhead for 'empty' indicator!
+  static_assert(sizeof(a1) == sizeof(int*));
+  //---
+  CHECK(a1.has_value());
+  CHECK(a1.get_value() == 41);
+  a1.get_value() = 42;
+  CHECK(v == 42);
+  static_assert(!std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
+
+  CHECK(*a1 == 42);
+  auto a1x = a1;
+  CHECK(a1 == a1x);
+  CHECK(fun<optional<int&>>(a1, a1x));
+  int v1 = 42;
+  CHECK(a1 == optional<int&>{v1});
+  int v2 = 43;
+  CHECK(a1 != optional<int&>{v2});
+  CHECK(a1 != optional<int&>{});
+
+  optional<int&> a2;
+  CHECK(!a2.has_value());
+  CHECK(a2 == optional<int&>{});
 }
