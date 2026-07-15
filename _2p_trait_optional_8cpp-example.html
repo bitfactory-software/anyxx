@@ -160,9 +160,7 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">struct </span>nullable_model_map&lt;T&amp;&gt; : nullable_default_model_map&lt;T const&amp;&gt; {</div>
 <div class="line">  <span class="keyword">using </span>rep_type = reference_wrapper&lt;T&gt;;</div>
 <div class="line">  <span class="keywordtype">bool</span> has_value(rep_type <span class="keyword">const</span>&amp; x) { <span class="keywordflow">return</span> x.get() != <span class="keyword">nullptr</span>; };</div>
-<div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { </div>
-<div class="line">      <span class="keywordflow">return</span> *(std::forward&lt;decltype(x)&gt;(x)).get(); </div>
-<div class="line">  };</div>
+<div class="line">  <span class="keyword">auto</span>&amp; get_value(<span class="keyword">auto</span>&amp;&amp; x) { <span class="keywordflow">return</span> *(std::forward&lt;decltype(x)&gt;(x)).get(); };</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace _2p_lib</span></div>
 <div class="line"> </div>
@@ -258,7 +256,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  <span class="comment">//---</span></div>
 <div class="line">  CHECK(a1.has_value());</div>
 <div class="line">  CHECK(a1.get_value() == 42);</div>
-<div class="line">  <span class="keyword">static_assert</span>(std::is_const_v&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(a1.get_value())&gt;&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(</div>
+<div class="line">      std::is_const_v&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(a1.get_value())&gt;&gt;);</div>
 <div class="line"> </div>
 <div class="line">  CHECK(*a1 == 42);</div>
 <div class="line">  <span class="keyword">auto</span> a1x = a1;</div>
@@ -288,7 +287,8 @@ $(function(){initNavTree('_2p_trait_optional_8cpp-example.html','',''); });
 <div class="line">  CHECK(a1.get_value() == 41);</div>
 <div class="line">  a1.get_value() = 42;</div>
 <div class="line">  CHECK(v == 42);</div>
-<div class="line">  <span class="keyword">static_assert</span>(!std::is_const_v&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(a1.get_value())&gt;&gt;);</div>
+<div class="line">  <span class="keyword">static_assert</span>(</div>
+<div class="line">      !std::is_const_v&lt;std::remove_reference_t&lt;<span class="keyword">decltype</span>(a1.get_value())&gt;&gt;);</div>
 <div class="line"> </div>
 <div class="line">  CHECK(*a1 == 42);</div>
 <div class="line">  <span class="keyword">auto</span> a1x = a1;</div>
