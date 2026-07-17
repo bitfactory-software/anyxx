@@ -2401,8 +2401,7 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
     static constexpr bool value = false;
   };
   static constexpr bool is_owner = true;
-  static constexpr bool allow_any_default_constructibile =
-      true;  // Nullable::value;
+  static constexpr bool allow_any_default_constructibile = Nullable::value;
 
   template <typename VTable>
   static constexpr bool is_compatible_with_v_table() {
