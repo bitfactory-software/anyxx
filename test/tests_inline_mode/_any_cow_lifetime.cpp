@@ -36,11 +36,17 @@ struct cow {
   };
   holder_base* holder_ = nullptr;
 
-  static holder_base* holder_from_data_ptr(mutable_void data_ptr) {
-    return static_cast<cow::holder<>*>(static_cast<mutable_void>(
-        static_cast<std::byte*>(data_ptr) - offsetof(cow::holder<>, value_)));
+  inline static size_t constexpr offset_of_value() {
+    cow::holder<> object{};
+    return size_t(&(object.value_)) - size_t(&object);
   }
-  static [[nodiscard]] void* data_ptr_from_holder(holder_base* holder) {
+
+  [[nodiscard]] static holder_base* holder_from_data_ptr(
+      mutable_void data_ptr) {
+    return static_cast<cow::holder<>*>(static_cast<mutable_void>(
+        static_cast<std::byte*>(data_ptr) - offset_of_value()));
+  }
+  [[nodiscard]] static void* data_ptr_from_holder(holder_base* holder) {
     return &static_cast<cow::holder<>*>(holder)->value_;
   }
   [[nodiscard]] void* data_ptr() const { return data_ptr_from_holder(holder_); }
@@ -77,11 +83,11 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
            is_destructor_v_table<VTable> && is_model_size_v_table<VTable>;
   }
 
-  static auto clone_from([[maybe_unused]] mutable_void data_ptr,
+  static cow clone_from([[maybe_unused]] mutable_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
-    cow clone{cow::holder_from_data_ptr(data_ptr)};
-    clone.holder_->count_.fetch_add(1, std::memory_order_relaxed);
-    return clone;
+    auto clone = cow::holder_from_data_ptr(data_ptr);
+    clone->count_.fetch_add(1, std::memory_order_relaxed);
+    return {clone};
   }
   static void move_to(cow& to, [[maybe_unused]] nullptr_t v_table_to,
                       cow&& from, [[maybe_unused]] auto v_table_from) {
@@ -100,7 +106,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     to.holder_->count_.fetch_add(1, std::memory_order_relaxed);
   }
   static void destroy(cow& v, auto v_table) {
-    if (v.holder_ && v_table &&
+    if (v.holder_ && v_table != nullptr &&
         (v.holder_->count_.fetch_sub(1, std::memory_order_release) == 1)) {
       destruct(v_table, v.data_ptr());
       delete v.holder_;

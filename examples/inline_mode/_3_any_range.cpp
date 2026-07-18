@@ -51,7 +51,6 @@ TEST_CASE("example3 simple lifetime") {
   using v_t = std::vector<int>;
   {
     v_t v0{};
-    std::array<int, 100> a0{};
     any_forward_range<int, int> r0{v0};
     {
       r0.begin();
