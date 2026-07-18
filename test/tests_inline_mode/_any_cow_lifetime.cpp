@@ -25,7 +25,7 @@ struct cow {
   };
   template <typename T = void*>
   struct holder : holder_base {
-    alignas(nullptr_t) T value_;
+    alignas(std::nullptr_t) T value_;
 
     holder() noexcept(std::is_nothrow_constructible_v<T>) = default;
 
@@ -89,7 +89,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     clone->count_.fetch_add(1, std::memory_order_relaxed);
     return {clone};
   }
-  static void move_to(cow& to, [[maybe_unused]] nullptr_t v_table_to,
+  static void move_to(cow& to, [[maybe_unused]] std::nullptr_t v_table_to,
                       cow&& from, [[maybe_unused]] auto v_table_from) {
     to.holder_ = std::exchange(from.holder_, nullptr);
   }
