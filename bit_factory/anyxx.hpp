@@ -530,12 +530,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     } else {                                                                   \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return get_v_table(self)->name##const_(                                \
-            anyxx::get_proxy_ptr(self) __VA_OPT__(                             \
-                , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \
+            anyxx::get_proxy_ptr(std::forward<self_t const_&>(self))           \
+                __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig,         \
+                                                              __VA_ARGS__)));  \
       } else {                                                                 \
         return ANYXX_JACKET_RETURN(type)::forward(                             \
             get_v_table(self)->name##const_(                                   \
-                anyxx::get_proxy_ptr(self)                                     \
+                anyxx::get_proxy_ptr(std::forward<self_t const_&>(self))       \
                     __VA_OPT__(, _detail_ANYXX_FORWARD_PARAM_LIST(             \
                                      a, _sig, __VA_ARGS__))),                  \
             std::forward<Self>(self));                                         \
