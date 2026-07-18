@@ -618,7 +618,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_default_model_map {                                               \
     using default_map = n##_default_model_map;                                 \
-    using rep_type = T;                                                         \
+    using rep_type = T;                                                        \
                                                                                \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
@@ -1722,6 +1722,10 @@ template <is_proxy Proxy>
 void* get_proxy_ptr(Proxy const& vv, auto v_table)
   requires std::same_as<void*, typename proxy_trait<Proxy>::void_t>
 {
+  return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
+}
+template <is_proxy Proxy>
+auto get_proxy_ptr(Proxy& vv, auto v_table) {
   return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
 }
 
@@ -2964,7 +2968,7 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <is_any Friend>
   friend inline decltype(auto) move_proxy(Friend&& any);
   template <is_any Friend>
-  friend inline auto get_proxy_ptr(Friend const& any);
+  friend inline auto get_proxy_ptr(Friend&& any);
 
   template <typename OtherTrait, is_proxy Other>
   friend class any;
@@ -3017,8 +3021,8 @@ inline decltype(auto) move_proxy(Any&& any) {
   return std::move(any.proxy_);
 }
 template <is_any Any>
-inline auto get_proxy_ptr(Any const& any) {
-  return get_proxy_ptr(get_proxy(any), get_v_table(any));
+inline auto get_proxy_ptr(Any&& any) {
+  return get_proxy_ptr(get_proxy(std::forward<Any>(any)), get_v_table(any));
 }
 
 template <is_any Any>
