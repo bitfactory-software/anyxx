@@ -74,10 +74,23 @@ struct reference_impl<void*, Reference> {
   using type = Reference;
 };
 
+template <typename T>
+concept has_post_increment = requires(T x) {
+  { x++ } -> std::same_as<T>;
+};
+
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_FN_DEF(public, anyxx::self, post_increment, (), , ([&x]() { return x++; })),
+     ANY_FN_DEF(public, anyxx::self, post_increment, (), , ([&x]() {
+                  if constexpr (has_post_increment<T>) {
+                    return x++;
+                  } else {
+                    auto r = x;
+                    ++x;
+                    return r;
+                  }
+                })),
      ANY_OP_MAP_NAMED(Reference, *, op_dereference, (), const),
      ANY_OP_DEF(public, bool, ==, equal, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; })),
@@ -88,14 +101,11 @@ TRAIT_TEMPLATE_EX_(
               (iterator_category_impl<T>::type)),
      ANY_TYPE((), difference_type, std::ptrdiff_t,
               (difference_type_impl<T>::type)),
-     ANY_TYPE((), value_type, ValueType,
-              (value_type_impl<T, ValueType>::type)),
-     ANY_TYPE((), reference, Reference,
-              (reference_impl<T, Reference>::type))),
-    ,
-    (template <typename Self> auto operator++(this Self&& self, int) {
-       return std::forward<Self>(self).post_increment();
-     }))
+     ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
+     ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
+    , (template <typename Self> auto operator++(this Self&& self, int) {
+      return std::forward<Self>(self).post_increment();
+    }))
 
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
