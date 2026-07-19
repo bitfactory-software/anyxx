@@ -84,7 +84,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
   }
 
   static cow clone_from([[maybe_unused]] mutable_void data_ptr,
-                         [[maybe_unused]] is_v_table auto* v_table) {
+                        [[maybe_unused]] is_v_table auto* v_table) {
     auto clone = cow::holder_from_data_ptr(data_ptr);
     clone->count_.fetch_add(1, std::memory_order_relaxed);
     return {clone};
@@ -122,8 +122,9 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     if (!v.unique()) {
       auto holder_size =
           sizeof(cow::holder<>) - sizeof(void*) + model_size(v_table).size;
-      auto holder = static_cast<cow::holder_base*>(::operator new(holder_size));
-      holder = new (holder) cow::holder_base;
+      auto holder =
+          new (static_cast<cow::holder_base*>(::operator new(holder_size)))
+              cow::holder_base;
       copy_construct_at(v_table, cow::data_ptr_from_holder(holder),
                         cow::data_ptr_from_holder(v.holder_));
       destroy(v, v_table);
