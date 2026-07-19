@@ -102,6 +102,7 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga33732296f3b86795807ea45f564b1d70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
 <tr class="memitem:gad3cfa256085f8c6dec128b5d538692ac" id="r_gad3cfa256085f8c6dec128b5d538692ac"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gad3cfa256085f8c6dec128b5d538692ac">TRAIT_TYPE</a>(Name,  T,  Trait, ...)</td></tr>
 <tr class="memdesc:gad3cfa256085f8c6dec128b5d538692ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">translates to the type defined in the model map of a trait. This is useful for associated types, e.g. Return types, which are defined via ANY_TYPE in the trait  <br /></td></tr>
+<tr class="memitem:ga2e1ad13b4a8394a8887658be7cd12ffd" id="r_ga2e1ad13b4a8394a8887658be7cd12ffd"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#ga2e1ad13b4a8394a8887658be7cd12ffd">DEDUCED_TYPE</a>(Name,  Any, ...)</td></tr>
 <tr class="memitem:gaa11989a5b380318c70cc1a59a8642384" id="r_gaa11989a5b380318c70cc1a59a8642384"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>(model_,  trait_)</td></tr>
 <tr class="memdesc:gaa11989a5b380318c70cc1a59a8642384"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
 </table>
@@ -207,6 +208,34 @@ Macros</h2></td></tr>
 
 </div>
 </div>
+<a id="ga2e1ad13b4a8394a8887658be7cd12ffd" name="ga2e1ad13b4a8394a8887658be7cd12ffd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga2e1ad13b4a8394a8887658be7cd12ffd">&#9670;&#160;</a></span>DEDUCED_TYPE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define DEDUCED_TYPE</td>
+          <td>(</td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>Name</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em>Any</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"></td>          <td class="paramname"><span class="paramname"><em></em></span>...&#160;)</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#gad3cfa256085f8c6dec128b5d538692ac">TRAIT_TYPE</a>(Name, Any::T, Any, __VA_ARGS__)</div>
+<div class="ttc" id="agroup__model__map__macros_html_gad3cfa256085f8c6dec128b5d538692ac"><div class="ttname"><a href="#gad3cfa256085f8c6dec128b5d538692ac">TRAIT_TYPE</a></div><div class="ttdeci">#define TRAIT_TYPE(Name, T, Trait,...)</div><div class="ttdoc">translates to the type defined in the model map of a trait. This is useful for associated types,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1264</div></div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="gad3cfa256085f8c6dec128b5d538692ac" name="gad3cfa256085f8c6dec128b5d538692ac"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gad3cfa256085f8c6dec128b5d538692ac">&#9670;&#160;</a></span>TRAIT_TYPE</h2>
 
@@ -235,7 +264,7 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">typename</span> Trait::template Name&lt;T, __VA_ARGS__&gt;</div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">typename</span> Trait::template Name&lt;T __VA_OPT__(, ) __VA_ARGS__&gt;</div>
 </div><!-- fragment -->
 <p>translates to the type defined in the model map of a trait. This is useful for associated types, e.g. Return types, which are defined via ANY_TYPE in the trait </p>
 <dl class="params"><dt>Parameters</dt><dd>
