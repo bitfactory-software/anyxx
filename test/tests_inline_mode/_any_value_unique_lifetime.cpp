@@ -60,6 +60,8 @@ struct XX {
     std::println("X::tracker_ {})", tracker_);
     return *this;
   }
+  T const& get() const { return s_; }
+  void set(T const& value) { s_ = value; }
   T* interior_ptr_ = nullptr;
   T s_;
   bool moved_ = false;
@@ -80,6 +82,10 @@ static_assert(!std::is_trivially_move_assignable_v<Y>);
 static_assert(!std::is_trivially_copy_constructible_v<Y>);
 static_assert(!std::is_trivially_copy_assignable_v<Y>);
 static_assert(sizeof(int) <= anyxx::small_object_size);
+
+TRAIT_(getset, anyxx::dynamic_value,
+       (ANY_FN(std::string const&, get, (), const),
+        ANY_FN(void, set, (std::string const&), )))
 
 }  // namespace
 
@@ -103,15 +109,15 @@ TEST_CASE("val<> lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_proxy_ptr(u) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr_const(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_proxy_ptr(u2) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr_const(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<dynamic_value>>(std::move(u3));
-      CHECK(get_proxy_ptr(u3) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr_const(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -124,13 +130,13 @@ TEST_CASE("val<> lifetime") {
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = v;
-      CHECK(X::tracker_ == 2);
-      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
+      CHECK(X::tracker_ == 1);
+      CHECK(get_proxy_ptr_const(v2) == get_proxy_ptr_const(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(v2))() == "hallo");
       v2 = X{"world!"};
       CHECK(X::tracker_ == 2);
-      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(v2))() == "world!");
     }
@@ -143,8 +149,8 @@ TEST_CASE("val<> lifetime") {
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto v2 = clone_to<any<dynamic_value>>(v);
-      CHECK(X::tracker_ == 2);
-      CHECK(get_proxy_ptr(*v2) != get_proxy_ptr(v));
+      CHECK(X::tracker_ == 1);
+      CHECK(get_proxy_ptr_const(*v2) == get_proxy_ptr_const(v));
       CHECK((*unerase_cast<X>(v))() == "hallo");
       CHECK((*unerase_cast<X>(*v2))() == "hallo");
     }
@@ -196,12 +202,12 @@ TEST_CASE("val<> lifetime small object") {
       CHECK(Y::tracker_ == 1);
       auto v2 = v;
       CHECK(Y::tracker_ == 2);
-      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(v2))() == 42);
       v2 = Y{100};
       CHECK(Y::tracker_ == 2);
-      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(v2))() == 100);
     }
@@ -215,7 +221,7 @@ TEST_CASE("val<> lifetime small object") {
       CHECK(Y::tracker_ == 1);
       auto v2 = clone_to<any<dynamic_value>>(v);
       CHECK(Y::tracker_ == 2);
-      CHECK(get_proxy_ptr(*v2) != get_proxy_ptr(v));
+      CHECK(get_proxy_ptr_const(*v2) != get_proxy_ptr_const(v));
       CHECK((*unerase_cast<Y>(v))() == 42);
       CHECK((*unerase_cast<Y>(*v2))() == 42);
     }
@@ -253,11 +259,11 @@ TEST_CASE("value lifetime trivial object") {
       any<dynamic_value> v{std::in_place_type<int>, 42};
       CHECK((*unerase_cast<int>(v)) == 42);
       auto v2 = v;
-      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(v2)) == 42);
       v2 = int{100};
-      CHECK(get_proxy_ptr(v2) != get_proxy_ptr(v));
+      CHECK(get_proxy_ptr_const(v2) != get_proxy_ptr_const(v));
       CHECK((*unerase_cast<int>(v)) == 42);
       CHECK((*unerase_cast<int>(v2)) == 100);
     }
@@ -293,15 +299,15 @@ TEST_CASE("unique lifetime") {
       CHECK((*unerase_cast<X>(u2))() == "world");
       CHECK(X::tracker_ == 2);
       u2 = std::move(u);
-      CHECK(get_proxy_ptr(u) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr_const(u) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u2))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u3 = std::move(u2);
-      CHECK(get_proxy_ptr(u2) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr_const(u2) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u3))() == "hallo");
       CHECK(X::tracker_ == 1);
       auto u4 = move_to<any<dynamic_deletable, unique>>(std::move(u3));
-      CHECK(get_proxy_ptr(u3) == nullptr);  // NOLINT
+      CHECK(get_proxy_ptr_const(u3) == nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(u4))() == "hallo");
       CHECK(X::tracker_ == 1);
     }
@@ -436,7 +442,7 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
       CHECK(get_v_table(v2) != nullptr);  // NOLINT
       CHECK((*unerase_cast<X>(v1))() == "hello");
       CHECK(Y::tracker_ == 0);
-      CHECK(X::tracker_ == 2);
+      CHECK(X::tracker_ == 1);
       any<dynamic_value> v3{std::in_place_type<int>, 42};
       v1 = v3;
       CHECK(Y::tracker_ == 0);
@@ -587,7 +593,7 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
     CHECK(get_v_table(v1) != nullptr);
     CHECK(get_v_table(v2) != nullptr);
     CHECK(Y::tracker_ == 0);
-    CHECK(X::tracker_ == 2);
+    CHECK(X::tracker_ == 1);
   }
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
@@ -610,4 +616,20 @@ TEST_CASE("val<> lifetime trivial/small/big object") {
   }
   CHECK(Y::tracker_ == 0);
   CHECK(X::tracker_ == 0);
+}
+
+TEST_CASE("val<> lifetime get/set cow") {
+  any<getset> v2{std::in_place_type<X>, "hello"};
+  CHECK(v2.get() == "hello");
+  CHECK(X::tracker_ == 1);
+  auto v1 = v2;
+  CHECK(X::tracker_ == 1);
+  CHECK(v1.get() == "hello");
+  CHECK(v2.get() == "hello");
+  v1.set("world");
+  CHECK(X::tracker_ == 2);
+  CHECK(v1.get() == "world");
+  CHECK(v2.get() == "hello");
+  CHECK(get_v_table(v1) != nullptr);
+  CHECK(get_v_table(v2) != nullptr);
 }

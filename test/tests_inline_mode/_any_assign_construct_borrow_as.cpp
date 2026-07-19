@@ -137,11 +137,11 @@ TEST_CASE("assign construct borrow_as") {
                                         from_t::v_table_t>);
     auto vv1 = from_t{s1};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
+    CHECK(get_proxy_ptr_const(vv1) == get_proxy_ptr_const(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
+    CHECK(get_proxy_ptr_const(vv3) == get_proxy_ptr_const(vv1));
     to_t vv4{vv1};
-    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
+    CHECK(get_proxy_ptr_const(vv4) == get_proxy_ptr_const(vv1));
   }
   {
     using from_t = any<dynamic_value>;
@@ -150,10 +150,10 @@ TEST_CASE("assign construct borrow_as") {
                                         from_t::v_table_t>);
     auto vv1 = from_t{s1};
     auto vv2 = borrow_as<to_t>(vv1);
-    CHECK(get_proxy_ptr(vv1) == get_proxy_ptr(*vv2));
+    CHECK(get_proxy_ptr_const(vv1) == get_proxy_ptr_const(*vv2));
     to_t vv3 = vv1;
-    CHECK(get_proxy_ptr(vv3) == get_proxy_ptr(vv1));
+    CHECK(get_proxy_ptr_const(vv3) == get_proxy_ptr_const(vv1));
     to_t vv4{vv1};
-    CHECK(get_proxy_ptr(vv4) == get_proxy_ptr(vv1));
+    CHECK(get_proxy_ptr_const(vv4) == get_proxy_ptr_const(vv1));
   }
 }

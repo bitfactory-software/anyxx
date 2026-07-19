@@ -2353,12 +2353,15 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     destroy(to, v_table_to);
     move_to(to, nullptr, std::move(from), nullptr);
   }
+  static void assign(cow& to, cow const& from) {
+    to.holder_ = from.holder_;
+    to.holder_->count_.fetch_add(1, std::memory_order_relaxed);
+  }
   static void copy_construct_from(
       cow& to, [[maybe_unused]] auto v_table_to, cow const& from,
       [[maybe_unused]] is_v_table auto* v_table_from) {
     destroy(to, v_table_to);
-    to.holder_ = from.holder_;
-    to.holder_->count_.fetch_add(1, std::memory_order_relaxed);
+    assign(to, from);
   }
   static void destroy(cow& v, auto v_table) {
     if (v.holder_ && v_table != nullptr &&
@@ -2409,7 +2412,6 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
 static_assert(is_proxy<cow>);
 static_assert(is_object_proxy<cow>);
 
-
 // --------------------------------------------------------------------------------
 // erased data val
 
@@ -2417,29 +2419,6 @@ template <typename Model>
 constexpr inline model_size_t compute_model_size() {
   return {.size = sizeof(Model), .trivial = std::is_trivial_v<Model>};
 }
-
-struct heap_data {
-  mutable_void ptr = nullptr;
-  heap_data(heap_data const&) {}  // NOLINT(missingMemberCopy)
-  heap_data& operator=(heap_data const&) {
-    assert(!ptr);
-    return *this;
-  }
-  explicit heap_data(mutable_void p = nullptr) : ptr(p) {}
-  heap_data(heap_data&& other) noexcept { std::swap(ptr, other.ptr); }
-  heap_data& operator=(heap_data&& other) noexcept {
-    assert(!ptr);
-    std::swap(ptr, other.ptr);
-    return *this;
-  };
-  ~heap_data() = default;
-  mutable_void release() noexcept {
-    mutable_void p = ptr;
-    ptr = nullptr;
-    return p;
-  }
-  friend void swap(heap_data& l, heap_data& r) noexcept { std::swap(l, r); }
-};
 
 template <bool Trivial, std::size_t SmallObjectSize>
 struct local_data : std::array<std::byte, SmallObjectSize> {
@@ -2460,9 +2439,18 @@ template <typename Nullable = std::false_type,
           std::size_t SmallObjectSize = small_object_size>
 struct val {
   union data_union {
-    data_union(mutable_void ptr = 0) : heap(heap_data{ptr}) {}
+    data_union(cow::holder_base* cow_holder) : heap(cow{cow_holder}) {}
+    template <typename T, typename... Args>
+    data_union(std::in_place_type_t<T>, Args&&... args) {
+      local = {};
+      auto location = static_cast<T*>(static_cast<mutable_void>(local.data()));
+      std::construct_at<T>(location, std::forward<Args>(args)...);
+    }
     data_union(data_union const& other) noexcept { trivial = other.trivial; }
-    heap_data heap;
+    ~data_union() {
+      // do nothing, the destruction  is done by the proxy_trait<val>::destroy
+    }
+    cow heap;
     local_data<false, SmallObjectSize> local;
     local_data<true, SmallObjectSize> trivial;
   } data;
@@ -2472,16 +2460,16 @@ struct val {
   ~val() {}
 
   template <typename T, typename... Args>
-  val(std::in_place_type_t<T>, Args&&... args) {
-    static_assert(alignof(T) <= alignof(mutable_void));
-    if constexpr (sizeof(T) <= SmallObjectSize) {
-      data.local = {};
-      auto location =
-          static_cast<T*>(static_cast<mutable_void>(data.local.data()));
-      ptr_ = std::construct_at<T>(location, std::forward<Args>(args)...);
-    } else {
-      ptr_ = data.heap.ptr = new T(std::forward<Args>(args)...);
-    }
+  val(std::in_place_type_t<T> t, Args&&... args)
+    requires(sizeof(T) <= SmallObjectSize)
+      : data(t, std::forward<Args>(args)...) {
+    ptr_ = data.local.data();
+  }
+  template <typename T, typename... Args>
+  val(std::in_place_type_t<T>, Args&&... args)
+    requires(sizeof(T) > SmallObjectSize)
+      : data{new cow::holder<T>(std::forward<Args>(args)...)} {
+    ptr_ = data.heap.data_ptr();
   }
 };
 
@@ -2558,19 +2546,19 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
 
   template <typename VTable>
   static constexpr bool is_compatible_with_v_table() {
-    return is_allocate_v_table<VTable> && is_copy_constructor_v_table<VTable> &&
-           is_move_constructor_v_table<VTable> &&
-           is_destructor_v_table<VTable> && is_delete_v_table<VTable>;
+    return is_copy_constructor_v_table<VTable> &&
+           is_move_constructor_v_table<VTable> && is_destructor_v_table<VTable>;
   }
 
-  static auto clone_from([[maybe_unused]] const_void data_ptr,
+  static auto clone_from([[maybe_unused]] mutable_void data_ptr,
                          [[maybe_unused]] is_v_table auto* v_table) {
     assert(v_table);
     val<Nullable, SmallObjectSize> v;
     v.ptr_ = visit_value<SmallObjectSize>(
         overloads{
-            [&](heap_data& heap) {
-              return heap.ptr = copy_construct(v_table, data_ptr);
+            [&](cow& heap) {
+              heap = proxy_trait<cow>::clone_from(data_ptr, v_table);
+              return heap.data_ptr();
             },
             [&]<bool Trivial>(local_data<Trivial, SmallObjectSize>& local) {
               auto local_data = static_cast<mutable_void>(local.data());
@@ -2587,51 +2575,55 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
                       [[maybe_unused]] is_v_table auto* v_table_from) {
     if (v_table_from == nullptr && v_table_to == nullptr) return;
     to.ptr_ = visit_value(
-        overloads{[&](heap_data& t, heap_data& f) {
-                    heap_data old;
-                    std::swap(t, old);
-                    std::swap(t, f);
-                    delete_(v_table_to, old.ptr);
-                    return t.ptr;
-                  },
-                  [&](heap_data& t, local_data<false, SmallObjectSize>& f) {
-                    delete_(v_table_to, t.ptr);
-                    return v_table_from->move_constructor(to.data.local.data(),
-                                                          f.data());
-                  },
-                  [&](heap_data& t, local_data<true, SmallObjectSize>& f) {
-                    delete_(v_table_to, t.ptr);
-                    to.data.trivial = std::move(f);
-                    return (mutable_void)&to.data.trivial;
-                  },
-                  [&](local_data<false, SmallObjectSize>& t, heap_data& f) {
-                    destruct(v_table_to, t.data());
-                    return to.data.heap.ptr = f.release();
-                  },
-                  [&](local_data<false, SmallObjectSize>& t,
-                      local_data<false, SmallObjectSize>& f) {
-                    destruct(v_table_to, t.data());
-                    return v_table_from->move_constructor(to.data.local.data(),
-                                                          f.data());
-                  },
-                  [&](local_data<false, SmallObjectSize>& t,
-                      local_data<true, SmallObjectSize>& f) {
-                    destruct(v_table_to, t.data());
-                    to.data.trivial = std::move(f);
-                    return (mutable_void)&to.data.trivial;
-                  },
-                  [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
-                      heap_data& f) { return to.data.heap.ptr = f.release(); },
-                  [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
-                      local_data<false, SmallObjectSize>& f) {
-                    return v_table_from->move_constructor(to.data.local.data(),
-                                                          f.data());
-                  },
-                  [&](local_data<true, SmallObjectSize>& t,
-                      local_data<true, SmallObjectSize>& f) {
-                    t = std::move(f);
-                    return (mutable_void)&t;
-                  }},
+        overloads{
+            [&](cow& t, cow& f) {
+              proxy_trait<cow>::move_to(t, v_table_to, std::move(f),
+                                        v_table_from);
+              return t.data_ptr();
+            },
+            [&](cow& t, local_data<false, SmallObjectSize>& f) {
+              proxy_trait<cow>::destroy(t, v_table_to);
+              return v_table_from->move_constructor(to.data.local.data(),
+                                                    f.data());
+            },
+            [&](cow& t, local_data<true, SmallObjectSize>& f) {
+              proxy_trait<cow>::destroy(t, v_table_to);
+              to.data.trivial = std::move(f);
+              return (mutable_void)&to.data.trivial;
+            },
+            [&](local_data<false, SmallObjectSize>& t, cow& f) {
+              destruct(v_table_to, t.data());
+              proxy_trait<cow>::move_to(to.data.heap, nullptr, std::move(f),
+                                        nullptr);
+              return to.data.heap.data_ptr();
+            },
+            [&](local_data<false, SmallObjectSize>& t,
+                local_data<false, SmallObjectSize>& f) {
+              destruct(v_table_to, t.data());
+              return v_table_from->move_constructor(to.data.local.data(),
+                                                    f.data());
+            },
+            [&](local_data<false, SmallObjectSize>& t,
+                local_data<true, SmallObjectSize>& f) {
+              destruct(v_table_to, t.data());
+              to.data.trivial = std::move(f);
+              return (mutable_void)&to.data.trivial;
+            },
+            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t, cow& f) {
+              proxy_trait<cow>::move_to(to.data.heap, nullptr, std::move(f),
+                                        nullptr);
+              return to.data.heap.data_ptr();
+            },
+            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                local_data<false, SmallObjectSize>& f) {
+              return v_table_from->move_constructor(to.data.local.data(),
+                                                    f.data());
+            },
+            [&](local_data<true, SmallObjectSize>& t,
+                local_data<true, SmallObjectSize>& f) {
+              t = std::move(f);
+              return (mutable_void)&t;
+            }},
         to, model_size(v_table_to), from, v_table_from->model_size);
     from.ptr_ = nullptr;
   }
@@ -2657,54 +2649,53 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
                                   is_v_table auto* from_v_table) {
     if (!from_v_table) return;
     to.ptr_ = visit_value(
-        overloads{
-            [&](heap_data& to_data, heap_data const& from_data) {
-              delete_(to_v_table, to_data.ptr);
-              to_data.ptr = nullptr;
-              if (from_data.ptr)
-                to_data.ptr = copy_construct(from_v_table, from_data.ptr);
-              return to_data.ptr;
-            },
-            [&](heap_data& t, local_data<false, SmallObjectSize> const& f) {
-              delete_(to_v_table, t.ptr);
-              return from_v_table->copy_constructor(to.data.local.data(),
-                                                    f.data());
-            },
-            [&](heap_data& t, local_data<true, SmallObjectSize> const& f) {
-              delete_(to_v_table, t.ptr);
-              to.data.trivial = f;
-              return (mutable_void)&to.data.trivial;
-            },
-            [&](local_data<false, SmallObjectSize>& t, heap_data const& f) {
-              destruct(to_v_table, t.data());
-              return to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
-            },
-            [&](local_data<false, SmallObjectSize>& t,
-                local_data<false, SmallObjectSize> const& f) {
-              destruct(to_v_table, t.data());
-              return from_v_table->copy_constructor(to.data.local.data(),
-                                                    f.data());
-            },
-            [&](local_data<false, SmallObjectSize>& t,
-                local_data<true, SmallObjectSize> const& f) {
-              destruct(to_v_table, t.data());
-              to.data.trivial = f;
-              return (mutable_void)&to.data.trivial;
-            },
-            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
-                heap_data const& f) {
-              return to.data.heap.ptr = copy_construct(from_v_table, f.ptr);
-            },
-            [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
-                local_data<false, SmallObjectSize> const& f) {
-              return from_v_table->copy_constructor(to.data.local.data(),
-                                                    f.data());
-            },
-            [&](local_data<true, SmallObjectSize>& t,
-                local_data<true, SmallObjectSize> const& f) {
-              t = f;
-              return (mutable_void)&t;
-            }},
+        overloads{[&](cow& t, cow const& from_data) {
+                    proxy_trait<cow>::copy_construct_from(
+                        t, to_v_table, from_data, from_v_table);
+                    return t.data_ptr();
+                  },
+                  [&](cow& t, local_data<false, SmallObjectSize> const& f) {
+                    proxy_trait<cow>::destroy(t, to_v_table);
+                    return from_v_table->copy_constructor(to.data.local.data(),
+                                                          f.data());
+                  },
+                  [&](cow& t, local_data<true, SmallObjectSize> const& f) {
+                    proxy_trait<cow>::destroy(t, to_v_table);
+                    to.data.trivial = f;
+                    return (mutable_void)&to.data.trivial;
+                  },
+                  [&](local_data<false, SmallObjectSize>& t, cow const& f) {
+                    destruct(to_v_table, t.data());
+                    proxy_trait<cow>::assign(to.data.heap, f);
+                    return to.data.heap.data_ptr();
+                  },
+                  [&](local_data<false, SmallObjectSize>& t,
+                      local_data<false, SmallObjectSize> const& f) {
+                    destruct(to_v_table, t.data());
+                    return from_v_table->copy_constructor(to.data.local.data(),
+                                                          f.data());
+                  },
+                  [&](local_data<false, SmallObjectSize>& t,
+                      local_data<true, SmallObjectSize> const& f) {
+                    destruct(to_v_table, t.data());
+                    to.data.trivial = f;
+                    return (mutable_void)&to.data.trivial;
+                  },
+                  [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                      cow const& f) {
+                    proxy_trait<cow>::assign(to.data.heap, f);
+                    return to.data.heap.data_ptr();
+                  },
+                  [&]([[maybe_unused]] local_data<true, SmallObjectSize>& t,
+                      local_data<false, SmallObjectSize> const& f) {
+                    return from_v_table->copy_constructor(to.data.local.data(),
+                                                          f.data());
+                  },
+                  [&](local_data<true, SmallObjectSize>& t,
+                      local_data<true, SmallObjectSize> const& f) {
+                    t = f;
+                    return (mutable_void)&t;
+                  }},
         to, model_size(to_v_table), from, from_v_table->model_size);
   }
 
@@ -2712,9 +2703,8 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
                       is_v_table auto* v_table) {
     visit_value<SmallObjectSize>(
         overloads{
-            [&](heap_data& heap) {
-              assert(v_table || !heap.ptr);
-              if (v_table) delete_(v_table, heap.ptr);
+            [&](cow& heap) {
+              if (v_table) proxy_trait<cow>::destroy(heap, v_table);
             },
             [&](local_data<false, SmallObjectSize>& local) {
               if (v_table) destruct(v_table, local.data());
@@ -2723,10 +2713,22 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
         v, model_size(v_table));
   }
 
-  template <typename V>
-  static void* get_proxy_ptr_in(V&& v,
+  static void* get_proxy_ptr_in(val<Nullable, SmallObjectSize> const& v,
                                 [[maybe_unused]] is_v_table auto* v_table) {
     return v.ptr_;
+  }
+  static void* get_proxy_ptr_in(val<Nullable, SmallObjectSize>& v,
+                                is_v_table auto* v_table) {
+    return visit_value<SmallObjectSize>(
+        overloads{
+            [&](cow& heap) {
+              return v.ptr_ = proxy_trait<cow>::get_proxy_ptr_in(heap, v_table);
+            },
+            [&]<bool Trivial>(
+                [[maybe_unused]] local_data<Trivial, SmallObjectSize>& local) {
+              return v.ptr_;
+            }},
+        v, model_size(v_table));
   }
 
   template <typename ConstructedWith>
@@ -3117,7 +3119,10 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   template <is_any Friend>
   friend inline decltype(auto) move_proxy(Friend&& any);
   template <is_any Friend>
+  friend inline auto get_proxy_ptr_const(Friend const& any);
+  template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend&& any);
+
 
   template <typename OtherTrait, is_proxy Other>
   friend class any;
@@ -3168,6 +3173,10 @@ inline auto const& get_proxy_value(Any const& any) {
 template <is_any Any>
 inline decltype(auto) move_proxy(Any&& any) {
   return std::move(any.proxy_);
+}
+template <is_any Any>
+inline auto get_proxy_ptr_const(Any const& any) {
+  return get_proxy_ptr(get_proxy(any), get_v_table(any));
 }
 template <is_any Any>
 inline auto get_proxy_ptr(Any&& any) {
