@@ -99,9 +99,14 @@ $(function(){initNavTree('structanyxx_1_1val.html','','structanyxx_1_1val-member
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:ab50a72585d0ab8453e30e5369603ca88" id="r_ab50a72585d0ab8453e30e5369603ca88"><td class="memTemplParams" colspan="2"><a id="ab50a72585d0ab8453e30e5369603ca88" name="ab50a72585d0ab8453e30e5369603ca88"></a>
-template&lt;typename T, typename... Args&gt; </td></tr>
-<tr class="memitem:ab50a72585d0ab8453e30e5369603ca88 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>val</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:ac111d49ad7778070847fa00bcad29d26" id="r_ac111d49ad7778070847fa00bcad29d26"><td class="memTemplParams" colspan="2"><a id="ac111d49ad7778070847fa00bcad29d26" name="ac111d49ad7778070847fa00bcad29d26"></a>
+template&lt;typename T, typename... Args&gt; <br />
+requires (sizeof(T) &lt;= SmallObjectSize)</td></tr>
+<tr class="memitem:ac111d49ad7778070847fa00bcad29d26 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>val</b> (std::in_place_type_t&lt; T &gt; t, Args &amp;&amp;... args)</td></tr>
+<tr class="memitem:a968017ffcbf8f195ab02bb52e8ff2413" id="r_a968017ffcbf8f195ab02bb52e8ff2413"><td class="memTemplParams" colspan="2"><a id="a968017ffcbf8f195ab02bb52e8ff2413" name="a968017ffcbf8f195ab02bb52e8ff2413"></a>
+template&lt;typename T, typename... Args&gt; <br />
+requires (sizeof(T) &gt; SmallObjectSize)</td></tr>
+<tr class="memitem:a968017ffcbf8f195ab02bb52e8ff2413 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>val</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-attribs" class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
