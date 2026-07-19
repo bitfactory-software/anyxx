@@ -8,6 +8,7 @@ var annotated_dup =
       [ "observeable_v_table", "structanyxx_1_1observeable__v__table.html", "structanyxx_1_1observeable__v__table" ],
       [ "any", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
       [ "unique", "structanyxx_1_1unique.html", null ],
+      [ "cow", "structanyxx_1_1cow.html", null ],
       [ "val", "structanyxx_1_1val.html", null ],
       [ "hook", "classanyxx_1_1hook.html", null ],
       [ "key", "structanyxx_1_1key.html", null ],

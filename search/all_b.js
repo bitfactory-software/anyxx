@@ -29,8 +29,9 @@ var searchData=
   ['configuration_20macro_26',['Any++ configuration macro',['../group__anyxx__config.html',1,'']]],
   ['const_20in_20any_27',['Handling &lt;span class=&quot;tt&quot;&gt;const&lt;/span&gt; in &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2Constness.html',1,'']]],
   ['context_20of_20any_28',['Terms and Definitions in Context of &lt;span class=&quot;tt&quot;&gt;Any++&lt;/span&gt;',['../md_docs_2terms__and__definitions.html',1,'']]],
-  ['cref_29',['cref',['../group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf',1,'anyxx']]],
-  ['crosscast_30',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
-  ['crosscast_31',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]],
-  ['crosscast_20factory_20serialization_32',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
+  ['cow_29',['cow',['../structanyxx_1_1cow.html',1,'anyxx']]],
+  ['cref_30',['cref',['../group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf',1,'anyxx']]],
+  ['crosscast_31',['Crosscast',['../md_docs_2terms__and__definitions.html#autotoc_md20',1,'']]],
+  ['crosscast_32',['ANY_META_CLASS macros for crosscast',['../group__meta__class__macros.html',1,'']]],
+  ['crosscast_20factory_20serialization_33',['Showcase 5: &lt;em&gt;Any++&lt;/em&gt; Crosscast + Factory = Serialization',['../index.html#autotoc_md33',1,'']]]
 ];

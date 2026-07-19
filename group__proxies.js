@@ -1,6 +1,7 @@
 var group__proxies =
 [
     [ "anyxx::unique", "structanyxx_1_1unique.html", null ],
+    [ "anyxx::cow", "structanyxx_1_1cow.html", null ],
     [ "anyxx::val&lt; Nullable, SmallObjectSize &gt;", "structanyxx_1_1val.html", null ],
     [ "anyxx::cref", "group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf", null ],
     [ "anyxx::mutref", "group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2", null ],
