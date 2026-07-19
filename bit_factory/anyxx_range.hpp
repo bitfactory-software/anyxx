@@ -76,12 +76,12 @@ struct reference_impl<void*, Reference> {
 
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
-    (ANY_OP(anyxx::self&, ++, (), ),
-     ANY_FN_DEF(public, anyxx::self, post_inc, (), , ([&x]() { return x++; })),
-     ANY_OP(Reference, *, (), const),
-     ANY_OP_DEF(public, bool, ==, equal_to, (anyxx::self const&), const,
+    (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
+     ANY_FN_DEF(public, anyxx::self, post_increment, (), , ([&x]() { return x++; })),
+     ANY_OP_MAP_NAMED(Reference, *, op_dereference, (), const),
+     ANY_OP_DEF(public, bool, ==, equal, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; })),
-     ANY_OP_DEF(public, bool, !=, not_equal_to, (anyxx::self const&), const,
+     ANY_OP_DEF(public, bool, !=, inequal, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x != r; }))),
     ,
     (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
@@ -94,7 +94,7 @@ TRAIT_TEMPLATE_EX_(
               (reference_impl<T, Reference>::type))),
     ,
     (template <typename Self> auto operator++(this Self&& self, int) {
-       return std::forward<Self>(self).post_inc();
+       return std::forward<Self>(self).post_increment();
      }))
 
 template <typename ValueType, typename Reference,
