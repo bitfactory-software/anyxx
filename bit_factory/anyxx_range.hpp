@@ -35,6 +35,45 @@ struct forward_iterator_is_nullable {};
 struct forward_iterator_val_size {
   static constexpr std::size_t value = iterator_val_proxy_size;
 };
+
+template <typename I>
+struct iterator_category_impl {
+  using type = typename std::iterator_traits<I>::iterator_category;
+};
+template <>
+struct iterator_category_impl<void*> {
+  using type = std::forward_iterator_tag;
+};
+template <typename I>
+struct difference_type_impl {
+  using type = typename std::iterator_traits<I>::difference_type;
+};
+template <>
+struct difference_type_impl<void*> {
+  using type = std::ptrdiff_t;
+};
+struct deduce_type {};
+template <typename I, typename ValueType>
+struct value_type_impl {
+  using type = std::conditional_t<std::same_as<ValueType, deduce_type>,
+                                  typename std::iterator_traits<I>::value_type,
+                                  ValueType>;
+};
+template <typename ValueType>
+struct value_type_impl<void*, ValueType> {
+  using type = ValueType;
+};
+template <typename I, typename Reference>
+struct reference_impl {
+  using type = std::conditional_t<std::same_as<Reference, deduce_type>,
+                                  typename std::iterator_traits<I>::reference,
+                                  Reference>;
+};
+template <typename Reference>
+struct reference_impl<void*, Reference> {
+  using type = Reference;
+};
+
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP(anyxx::self&, ++, (), ),
@@ -44,11 +83,17 @@ TRAIT_TEMPLATE_EX_(
                 ([&x](auto const& r) { return x == r; })),
      ANY_OP_DEF(public, bool, !=, not_equal_to, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x != r; }))),
-    , , ,
-    (using iterator_category = std::forward_iterator_tag;
-     using difference_type = std::ptrdiff_t; using value_type = ValueType;
-     using reference = Reference;
-     template <typename Self> auto operator++(this Self&& self, int) {
+    ,
+    (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
+              (iterator_category_impl<T>::type)),
+     ANY_TYPE((), difference_type, std::ptrdiff_t,
+              (difference_type_impl<T>::type)),
+     ANY_TYPE((), value_type, ValueType,
+              (value_type_impl<T, ValueType>::type)),
+     ANY_TYPE((), reference, Reference,
+              (reference_impl<T, Reference>::type))),
+    ,
+    (template <typename Self> auto operator++(this Self&& self, int) {
        return std::forward<Self>(self).post_inc();
      }))
 
@@ -56,6 +101,24 @@ template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 
+}  // namespace anyxx
+
+namespace std {
+
+template <typename Value, typename Reference, typename Proxy>
+struct iterator_traits<
+    anyxx::any<anyxx::forward_iterator<Value, Reference>, Proxy>> {
+  using from_type =
+      anyxx::any<anyxx::forward_iterator<Value, Reference>, Proxy>;
+  using difference_type = DEDUCED_TYPE(difference_type, from_type);
+  using value_type = Value;
+  using pointer = void;
+  using reference = Reference;
+  using iterator_category = DEDUCED_TYPE(iterator_category, from_type);
+};
+}  // namespace std
+
+namespace anyxx {
 TRAIT_TEMPLATE_(
     ((ValueType), (Reference)), forward_range, dynamic_value, (),
     (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),

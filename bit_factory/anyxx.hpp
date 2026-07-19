@@ -431,7 +431,8 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   template <typename Q _detail_ANYXX_OPTIONAL_MORE_TYPENAMES_PARAM_LIST(   \
       _detail_REMOVE_PARENS(template_params))>                             \
   using name = std::conditional_t<                                         \
-      std::same_as<void, Q>, erased,                                       \
+      std::same_as<void, std::remove_const_t<std::remove_pointer_t<Q>>>,   \
+      erased,                                                              \
       typename static_dispatch_map_t<Q>::_detail_ANYXX_OPTIONAL_TEMPLATE(  \
           _detail_REMOVE_PARENS(template_params))                          \
           name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \
@@ -1261,7 +1262,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 /// \param ... additional template parameters for the type if it is a template
 /// itself
 #define TRAIT_TYPE(Name, T, Trait, ...) \
-  typename Trait::template Name<T, __VA_ARGS__>
+  typename Trait::template Name<T __VA_OPT__(, ) __VA_ARGS__>
+
+#define DEDUCED_TYPE(Name, Any, ...) \
+  TRAIT_TYPE(Name, Any::T, Any, __VA_ARGS__)
 
 /// \def ANY_MODEL_MAP
 /// \brief ANY_MODEL_MAP macro

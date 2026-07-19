@@ -6,7 +6,7 @@
 
 namespace example_3 {
 
-anyxx::any_forward_range<int, int> a_range(bool use_list) {
+anyxx::any_forward_range<int, int const&> a_range(bool use_list) {
   static std::vector<int> v = {1, 2, 3};
   static std::list<int> l = {4, 5, 6};
   if (use_list)
@@ -15,7 +15,8 @@ anyxx::any_forward_range<int, int> a_range(bool use_list) {
     return v;
 }
 
-anyxx::any_forward_range<int, int, anyxx::val<>> a_range_value(bool use_list) {
+anyxx::any_forward_range<int, int const&, anyxx::val<>> a_range_value(
+    bool use_list) {
   if (use_list)
     return std::list<int>{4, 5, 6};
   else
@@ -254,3 +255,53 @@ TEST_CASE("example 3 static any range of view") {
   }
   CHECK(result == "012");
 }
+
+// iterator adapter like boost::iterator_adaptor based on anyxx::forward_iterator
+// Work in progress!!!
+// 
+//namespace {
+//struct node_base {
+//  node_base() : m_next(0) {}
+//  // Each node manages all of its tail nodes
+//  virtual ~node_base() { delete m_next; }
+//  // Access the rest of the list
+//  node_base* next() const { return m_next; }
+//  // print to the stream
+//  virtual void print(std::ostream& s) const = 0;
+//  // double the value
+//  virtual void double_me() = 0;
+//  void append(node_base* p) {
+//    if (m_next)
+//      m_next->append(p);
+//    else
+//      m_next = p;
+//  }
+//
+// private:
+//  node_base* m_next;
+//};
+//
+//template <class T>
+//struct node : node_base {
+//  node(T x) : m_value(x) {}
+//  void print(std::ostream& s) const { s << this->m_value; }
+//  void double_me() { m_value += m_value; }
+//
+// private:
+//  T m_value;
+//};
+//
+//}  // namespace
+//
+//namespace anyxx {
+//template <typename I>
+//struct iterator_model_map : anyxx::forward_iterator_default_model_map<I> {
+//
+//};
+//
+//template <typename T>
+//struct forward_iterator_model_map<node<T>*>
+//    : anyxx::forward_iterator_default_model_map {
+//
+//};
+//}  // namespace anyxx
