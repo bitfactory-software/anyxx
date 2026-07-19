@@ -123,7 +123,7 @@ struct iterator_traits<
   using difference_type = DEDUCED_TYPE(difference_type, from_type);
   using value_type = Value;
   using pointer = void;
-  using reference = Reference;
+  using reference = DEDUCED_TYPE(reference, from_type);
   using iterator_category = DEDUCED_TYPE(iterator_category, from_type);
 };
 }  // namespace std

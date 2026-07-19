@@ -1,6 +1,8 @@
+#include <algorithm>
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/anyxx_range.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <iostream>
 #include <list>
 #include <print>
 
@@ -256,9 +258,9 @@ TEST_CASE("example 3 static any range of view") {
   CHECK(result == "012");
 }
 
-// iterator adapter like boost::iterator_adaptor based on anyxx::forward_iterator
-// Work in progress!!!
-// 
+// iterator adapter like boost::iterator_adaptor based on
+// anyxx::forward_iterator Work in progress!!!
+//
 //namespace {
 //struct node_base {
 //  node_base() : m_next(0) {}
@@ -294,14 +296,38 @@ TEST_CASE("example 3 static any range of view") {
 //}  // namespace
 //
 //namespace anyxx {
-//template <typename I>
-//struct iterator_model_map : anyxx::forward_iterator_default_model_map<I> {
-//
-//};
-//
-//template <typename T>
-//struct forward_iterator_model_map<node<T>*>
-//    : anyxx::forward_iterator_default_model_map {
-//
+//template <typename V>
+//struct forward_iterator_model_map<node<V>*, deduce_type, deduce_type>
+//    : anyxx::forward_iterator_default_model_map<node<V>*, deduce_type,
+//                                                deduce_type> {
+//  node<V>* op_pre_increment(node<V>*& x) const { return x->next(); }
 //};
 //}  // namespace anyxx
+//
+//TEST_CASE("example 3 iterator adaptor ") {
+//  std::unique_ptr<node<int>> nodes(new node<int>(42));
+//  nodes->append(new node<std::string>(" is greater than "));
+//  nodes->append(new node<int>(13));
+//
+//  using node_iterator = anyxx::using_<node<int>*>::as<
+//      anyxx::forward_iterator<anyxx::deduce_type, anyxx::deduce_type>>;
+//  using node_const_iterator = anyxx::using_<node<int> const*>::as<
+//      anyxx::forward_iterator<anyxx::deduce_type, anyxx::deduce_type>>;
+//  // Check interoperability
+//  // assert(node_iterator(nodes.get()) == node_const_iterator(nodes.get()));
+//  // assert(node_const_iterator(nodes.get()) == node_iterator(nodes.get()));
+//
+//  // assert(node_iterator(nodes.get()) != node_const_iterator());
+//  // assert(node_const_iterator(nodes.get()) != node_iterator());
+//
+//  std::copy(node_iterator(nodes.get()), node_iterator(),
+//            std::ostream_iterator<node_base>(std::cout, " "));
+//  std::cout << std::endl;
+//
+//  std::for_each(node_iterator(nodes.get()), node_iterator(),
+//                [](auto& node) { node.double_me(); });
+//
+//  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),
+//            std::ostream_iterator<node_base>(std::cout, "/"));
+//  std::cout << std::endl;
+//}
