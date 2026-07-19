@@ -92,9 +92,11 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 </div><!--header-->
 <div class="contents">
 <p>Type erased range example</p>
-<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;algorithm&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;<a class="code" href="anyxx_8hpp.html">bit_factory/anyxx.hpp</a>&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;bit_factory/anyxx_range.hpp&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;catch2/catch_test_macros.hpp&gt;</span></div>
+<div class="line"><span class="preprocessor">#include &lt;iostream&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;list&gt;</span></div>
 <div class="line"><span class="preprocessor">#include &lt;print&gt;</span></div>
 <div class="line"> </div>
@@ -350,9 +352,9 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  CHECK(result == <span class="stringliteral">&quot;012&quot;</span>);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="comment">// iterator adapter like boost::iterator_adaptor based on anyxx::forward_iterator</span></div>
-<div class="line"><span class="comment">// Work in progress!!!</span></div>
-<div class="line"><span class="comment">// </span></div>
+<div class="line"><span class="comment">// iterator adapter like boost::iterator_adaptor based on</span></div>
+<div class="line"><span class="comment">// anyxx::forward_iterator Work in progress!!!</span></div>
+<div class="line"><span class="comment">//</span></div>
 <div class="line"><span class="comment">//namespace {</span></div>
 <div class="line"><span class="comment">//struct node_base {</span></div>
 <div class="line"><span class="comment">//  node_base() : m_next(0) {}</span></div>
@@ -388,17 +390,41 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"><span class="comment">//}  // namespace</span></div>
 <div class="line"><span class="comment">//</span></div>
 <div class="line"><span class="comment">//namespace anyxx {</span></div>
-<div class="line"><span class="comment">//template &lt;typename I&gt;</span></div>
-<div class="line"><span class="comment">//struct iterator_model_map : anyxx::forward_iterator_default_model_map&lt;I&gt; {</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//};</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//template &lt;typename T&gt;</span></div>
-<div class="line"><span class="comment">//struct forward_iterator_model_map&lt;node&lt;T&gt;*&gt;</span></div>
-<div class="line"><span class="comment">//    : anyxx::forward_iterator_default_model_map {</span></div>
-<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//template &lt;typename V&gt;</span></div>
+<div class="line"><span class="comment">//struct forward_iterator_model_map&lt;node&lt;V&gt;*, deduce_type, deduce_type&gt;</span></div>
+<div class="line"><span class="comment">//    : anyxx::forward_iterator_default_model_map&lt;node&lt;V&gt;*, deduce_type,</span></div>
+<div class="line"><span class="comment">//                                                deduce_type&gt; {</span></div>
+<div class="line"><span class="comment">//  node&lt;V&gt;* op_pre_increment(node&lt;V&gt;*&amp; x) const { return x-&gt;next(); }</span></div>
 <div class="line"><span class="comment">//};</span></div>
 <div class="line"><span class="comment">//}  // namespace anyxx</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//TEST_CASE(&quot;example 3 iterator adaptor &quot;) {</span></div>
+<div class="line"><span class="comment">//  std::unique_ptr&lt;node&lt;int&gt;&gt; nodes(new node&lt;int&gt;(42));</span></div>
+<div class="line"><span class="comment">//  nodes-&gt;append(new node&lt;std::string&gt;(&quot; is greater than &quot;));</span></div>
+<div class="line"><span class="comment">//  nodes-&gt;append(new node&lt;int&gt;(13));</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  using node_iterator = anyxx::using_&lt;node&lt;int&gt;*&gt;::as&lt;</span></div>
+<div class="line"><span class="comment">//      anyxx::forward_iterator&lt;anyxx::deduce_type, anyxx::deduce_type&gt;&gt;;</span></div>
+<div class="line"><span class="comment">//  using node_const_iterator = anyxx::using_&lt;node&lt;int&gt; const*&gt;::as&lt;</span></div>
+<div class="line"><span class="comment">//      anyxx::forward_iterator&lt;anyxx::deduce_type, anyxx::deduce_type&gt;&gt;;</span></div>
+<div class="line"><span class="comment">//  // Check interoperability</span></div>
+<div class="line"><span class="comment">//  // assert(node_iterator(nodes.get()) == node_const_iterator(nodes.get()));</span></div>
+<div class="line"><span class="comment">//  // assert(node_const_iterator(nodes.get()) == node_iterator(nodes.get()));</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  // assert(node_iterator(nodes.get()) != node_const_iterator());</span></div>
+<div class="line"><span class="comment">//  // assert(node_const_iterator(nodes.get()) != node_iterator());</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  std::copy(node_iterator(nodes.get()), node_iterator(),</span></div>
+<div class="line"><span class="comment">//            std::ostream_iterator&lt;node_base&gt;(std::cout, &quot; &quot;));</span></div>
+<div class="line"><span class="comment">//  std::cout &lt;&lt; std::endl;</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  std::for_each(node_iterator(nodes.get()), node_iterator(),</span></div>
+<div class="line"><span class="comment">//                [](auto&amp; node) { node.double_me(); });</span></div>
+<div class="line"><span class="comment">//</span></div>
+<div class="line"><span class="comment">//  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),</span></div>
+<div class="line"><span class="comment">//            std::ostream_iterator&lt;node_base&gt;(std::cout, &quot;/&quot;));</span></div>
+<div class="line"><span class="comment">//  std::cout &lt;&lt; std::endl;</span></div>
+<div class="line"><span class="comment">//}</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2965</div></div>
 <div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1428</div></div>
