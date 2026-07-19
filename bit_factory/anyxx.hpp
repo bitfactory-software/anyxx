@@ -1361,10 +1361,6 @@ constexpr std::size_t compute_val_proxy_size(std::size_t default_size) {
 }
 
 using allocate_t = mutable_void (*)();
-template <typename VTable>
-concept is_allocate_v_table = requires(VTable* v_table) {
-  { v_table->allocate } -> std::convertible_to<allocate_t>;
-};
 using copy_constructor_t = mutable_void (*)(mutable_void, const_void);
 template <typename VTable>
 concept is_copy_constructor_v_table =
@@ -1486,6 +1482,9 @@ inline bool is_derived_from(const std::type_info& from,
   return v_table->is_derived_from_(from);
 }
 
+inline mutable_void allocate(is_model_size_v_table auto* v_table) {
+  return ::operator new(v_table->model_size.size);
+}
 inline model_size_t model_size(std::nullptr_t) { return {0, true}; }
 inline model_size_t model_size(is_model_size_v_table auto* v_table) {
   return v_table ? v_table->model_size : model_size_t{0, true};
@@ -1496,7 +1495,7 @@ inline mutable_void copy_construct_at(is_copy_constructor_v_table auto* v_table,
 }
 inline mutable_void copy_construct(is_copy_constructor_v_table auto* v_table,
                                    const_void from) {
-  return copy_construct_at(v_table, v_table->allocate(), from);
+  return copy_construct_at(v_table, allocate(v_table), from);
 }
 inline mutable_void move_construct_at(is_move_constructor_v_table auto* v_table,
                                       mutable_void placement,
@@ -1505,7 +1504,7 @@ inline mutable_void move_construct_at(is_move_constructor_v_table auto* v_table,
 }
 inline mutable_void move_construct(is_move_constructor_v_table auto* v_table,
                                    mutable_void from) {
-  return move_construct_at(v_table, v_table->allocate(), from);
+  return move_construct_at(v_table, allocate(v_table), from);
 }
 template <typename T>
 inline void delete_(T v_table, mutable_void& data) noexcept {
@@ -3809,20 +3808,13 @@ TRAIT_EX_(dynamic_castable, observeable, , , ,
 TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
           (ANY_V_TABLE_DATA(delete_t, delete_,
                             [](mutable_void data) {
-                              if (!data) return;
-                              auto p = static_cast<Concrete*>(data);
-                              std::destroy_at(p);
-                              std::allocator<Concrete>{}.deallocate(p, 1);
+                              if (data) delete static_cast<Concrete*>(data);
                             })),
           (using default_proxy_t = shared;));
 
 TRAIT_EX_(
     dynamic_copyable, dynamic_deletable, , , ,
-    (ANY_V_TABLE_DATA(
-         allocate_t, allocate,
-         +[]() -> mutable_void {
-           return std::allocator<Concrete>{}.allocate(1);
-         }),
+    (ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>()),
      ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,
                       []([[maybe_unused]] mutable_void placement,
                          [[maybe_unused]] const_void from) -> mutable_void {
@@ -3859,9 +3851,7 @@ TRAIT_EX_(dynamic_value, dynamic_copyable, , , ,
            ANY_V_TABLE_DATA(destructor_t, destructor,
                             [](mutable_void data) {
                               std::destroy_at(static_cast<Concrete*>(data));
-                            }),
-           ANY_V_TABLE_DATA(model_size_t, model_size,
-                            compute_model_size<Concrete>())),
+                            })),
           (using default_proxy_t = val<>;));
 
 class meta_data {
@@ -4985,7 +4975,7 @@ static_assert(!moveable_from<val<>, shared>);
 static_assert(!moveable_from<val<>, weak>);
 static_assert(moveable_from<val<>, val<>>);
 
-static_assert(is_allocate_v_table<dynamic_value_v_table>);
+static_assert(is_model_size_v_table<dynamic_value_v_table>);
 static_assert(is_copy_constructor_v_table<dynamic_value_v_table>);
 static_assert(is_move_constructor_v_table<dynamic_value_v_table>);
 static_assert(is_destructor_v_table<dynamic_value_v_table>);
