@@ -7,6 +7,7 @@
     /Zc:preprocessor (see CMakeLists.txt for example)
 */
 
+#include <atomic>
 #include <cassert>
 #include <concepts>
 #include <cstddef>
@@ -3122,7 +3123,6 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   friend inline auto get_proxy_ptr_const(Friend const& any);
   template <is_any Friend>
   friend inline auto get_proxy_ptr(Friend&& any);
-
 
   template <typename OtherTrait, is_proxy Other>
   friend class any;
