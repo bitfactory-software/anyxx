@@ -381,9 +381,6 @@ Macros</h2></td></tr>
 <tr class="memitem:ga6ad7aa1322abedb9a0ebd5c2fa4ba32e" id="r_ga6ad7aa1322abedb9a0ebd5c2fa4ba32e"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga6ad7aa1322abedb9a0ebd5c2fa4ba32e">__ANY_MODEL_MAP</a>(trait_,  t)</td></tr>
 <tr class="memitem:ga33732296f3b86795807ea45f564b1d70" id="r_ga33732296f3b86795807ea45f564b1d70"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga33732296f3b86795807ea45f564b1d70">ANY_TEMPLATE_MODEL_MAP</a>(model_,  trait_,  trait_types)</td></tr>
 <tr class="memdesc:ga33732296f3b86795807ea45f564b1d70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_TEMPLATE_MODEL_MAP macro.  <br /></td></tr>
-<tr class="memitem:gad3cfa256085f8c6dec128b5d538692ac" id="r_gad3cfa256085f8c6dec128b5d538692ac"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#gad3cfa256085f8c6dec128b5d538692ac">TRAIT_TYPE</a>(Name,  T,  Trait, ...)</td></tr>
-<tr class="memdesc:gad3cfa256085f8c6dec128b5d538692ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">translates to the type defined in the model map of a trait. This is useful for associated types, e.g. Return types, which are defined via ANY_TYPE in the trait  <br /></td></tr>
-<tr class="memitem:ga2e1ad13b4a8394a8887658be7cd12ffd" id="r_ga2e1ad13b4a8394a8887658be7cd12ffd"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#ga2e1ad13b4a8394a8887658be7cd12ffd">DEDUCED_TYPE</a>(Name,  Any, ...)</td></tr>
 <tr class="memitem:gaa11989a5b380318c70cc1a59a8642384" id="r_gaa11989a5b380318c70cc1a59a8642384"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>(model_,  trait_)</td></tr>
 <tr class="memdesc:gaa11989a5b380318c70cc1a59a8642384"><td class="mdescLeft">&#160;</td><td class="mdescRight">ANY_MODEL_MAP macro.  <br /></td></tr>
 <tr class="memitem:a2946d301c9f28d40e12cf0f194e2775d" id="r_a2946d301c9f28d40e12cf0f194e2775d"><td class="memItemLeft">#define&#160;</td><td class="memItemRight"><a class="el" href="#a2946d301c9f28d40e12cf0f194e2775d">_detail_ANYXX_FN_EMPTY</a>(name,  ret)</td></tr>
@@ -469,6 +466,19 @@ template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename...
 <tr class="memitem:ga7170135ae5d6f21abb97fb1fb1649f0c" id="r_ga7170135ae5d6f21abb97fb1fb1649f0c"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">anyxx::weak</a> = std::weak_ptr&lt;void const&gt;</td></tr>
 <tr class="memitem:a533268eaf0ea159eddeef975f7286c18" id="r_a533268eaf0ea159eddeef975f7286c18"><td class="memItemLeft"><a id="a533268eaf0ea159eddeef975f7286c18" name="a533268eaf0ea159eddeef975f7286c18"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::nullable_val</b> = <a class="el" href="structanyxx_1_1val.html">val</a>&lt;std::true_type&gt;</td></tr>
+<tr class="memitem:aec5473f1849561491cbfe887f2a12270" id="r_aec5473f1849561491cbfe887f2a12270"><td class="memTemplParams" colspan="2"><a id="aec5473f1849561491cbfe887f2a12270" name="aec5473f1849561491cbfe887f2a12270"></a>
+template&lt;typename Proxy&gt; </td></tr>
+<tr class="memitem:aec5473f1849561491cbfe887f2a12270 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::static_dispatch_t</b> = typename proxy_trait&lt;Proxy&gt;::static_dispatch_t</td></tr>
+<tr class="memitem:a280c14413f3939d9a8a1dbb3e9f5d5af" id="r_a280c14413f3939d9a8a1dbb3e9f5d5af"><td class="memTemplParams" colspan="2">template&lt;typename Proxy, typename Trait&gt; </td></tr>
+<tr class="memitem:a280c14413f3939d9a8a1dbb3e9f5d5af template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a280c14413f3939d9a8a1dbb3e9f5d5af">anyxx::proxy_model_map_t</a></td></tr>
+<tr class="memitem:abaae2b5143325572d5a47e8c496f59c1" id="r_abaae2b5143325572d5a47e8c496f59c1"><td class="memTemplParams" colspan="2">template&lt;typename Proxy, typename Trait&gt; </td></tr>
+<tr class="memitem:abaae2b5143325572d5a47e8c496f59c1 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#abaae2b5143325572d5a47e8c496f59c1">anyxx::proxy_deduced_type_t</a></td></tr>
+<tr class="memitem:a121320b29994d588b3b08ec04e2feeb3" id="r_a121320b29994d588b3b08ec04e2feeb3"><td class="memTemplParams" colspan="2"><a id="a121320b29994d588b3b08ec04e2feeb3" name="a121320b29994d588b3b08ec04e2feeb3"></a>
+template&lt;typename Trait&gt; </td></tr>
+<tr class="memitem:a121320b29994d588b3b08ec04e2feeb3 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_t</b> = typename Trait ::v_table_t</td></tr>
+<tr class="memitem:a24cf93bd12362e92ab379a1b0336b8e2" id="r_a24cf93bd12362e92ab379a1b0336b8e2"><td class="memTemplParams" colspan="2"><a id="a24cf93bd12362e92ab379a1b0336b8e2" name="a24cf93bd12362e92ab379a1b0336b8e2"></a>
+template&lt;typename Trait&gt; </td></tr>
+<tr class="memitem:a24cf93bd12362e92ab379a1b0336b8e2 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_deduced_type_t</b> = typename v_table_t&lt;Trait&gt;::deduced_type</td></tr>
 <tr class="memitem:a92917959a2ef4d14ddf6e22473220820" id="r_a92917959a2ef4d14ddf6e22473220820"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
 <tr class="memitem:a92917959a2ef4d14ddf6e22473220820 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a> = <a class="el" href="classanyxx_1_1any.html">any</a>&lt;Trait, <a class="el" href="structanyxx_1_1using__.html">using_</a>&lt;Type&gt;&gt;</td></tr>
 <tr class="memitem:a83407b9419ab07b50701cc802fa04551" id="r_a83407b9419ab07b50701cc802fa04551"><td class="memTemplParams" colspan="2">template&lt;typename Type, typename Trait&gt; </td></tr>
@@ -487,12 +497,10 @@ using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_dispatch_index
 using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_entry_t</b> = unsigned long long</td></tr>
 <tr class="memitem:a69b08d8d8e1f89924568217cddbfcd6d" id="r_a69b08d8d8e1f89924568217cddbfcd6d"><td class="memItemLeft"><a id="a69b08d8d8e1f89924568217cddbfcd6d" name="a69b08d8d8e1f89924568217cddbfcd6d"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_t</b> = std::vector&lt;dispatch_table_entry_t&gt;</td></tr>
-<tr class="memitem:ac12adf707f63b9379d49d6d988ce5835" id="r_ac12adf707f63b9379d49d6d988ce5835"><td class="memTemplParams" colspan="2"><a id="ac12adf707f63b9379d49d6d988ce5835" name="ac12adf707f63b9379d49d6d988ce5835"></a>
-template&lt;typename AnyValue, typename Param&gt; </td></tr>
-<tr class="memitem:ac12adf707f63b9379d49d6d988ce5835 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_param</b> = translate_sig_map&lt;Param&gt;::template v_table_param&lt;AnyValue&gt;</td></tr>
-<tr class="memitem:a1cdcabede73ee19a457c2d8895e16b1b" id="r_a1cdcabede73ee19a457c2d8895e16b1b"><td class="memTemplParams" colspan="2"><a id="a1cdcabede73ee19a457c2d8895e16b1b" name="a1cdcabede73ee19a457c2d8895e16b1b"></a>
-template&lt;typename AnyValue, typename Return&gt; </td></tr>
-<tr class="memitem:a1cdcabede73ee19a457c2d8895e16b1b template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::v_table_return</b> = translate_sig_map&lt;Return&gt;::template v_table_return&lt;AnyValue&gt;</td></tr>
+<tr class="memitem:a0948b1d7e5622e60576d26510b568ff4" id="r_a0948b1d7e5622e60576d26510b568ff4"><td class="memTemplParams" colspan="2">template&lt;typename AnyValue, typename Param&gt; </td></tr>
+<tr class="memitem:a0948b1d7e5622e60576d26510b568ff4 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a0948b1d7e5622e60576d26510b568ff4">anyxx::v_table_param</a></td></tr>
+<tr class="memitem:afcf89ad7feead5ca31f56788619800bc" id="r_afcf89ad7feead5ca31f56788619800bc"><td class="memTemplParams" colspan="2">template&lt;typename AnyValue, typename Return&gt; </td></tr>
+<tr class="memitem:afcf89ad7feead5ca31f56788619800bc template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#afcf89ad7feead5ca31f56788619800bc">anyxx::v_table_return</a></td></tr>
 <tr class="memitem:afaa22b9dd5a3e091b08415a23947c3fd" id="r_afaa22b9dd5a3e091b08415a23947c3fd"><td class="memTemplParams" colspan="2"><a id="afaa22b9dd5a3e091b08415a23947c3fd" name="afaa22b9dd5a3e091b08415a23947c3fd"></a>
 template&lt;typename Model, typename Param&gt; </td></tr>
 <tr class="memitem:afaa22b9dd5a3e091b08415a23947c3fd template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::map_return</b> = translate_sig_map&lt;Param&gt;::template map_return&lt;Model&gt;</td></tr>
@@ -1277,12 +1285,12 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">requires</span> !std::same_as&lt;                                                     \</div>
-<div class="line">    <span class="keyword">typename</span> <span class="keyword">decltype</span>(model_map)::_detail_ANYXX_OPTIONAL_TEMPLATE(          \</div>
-<div class="line">        _detail_REMOVE_PARENS(template_params)) name                        \</div>
-<div class="line">        _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \</div>
-<div class="line">    <a class="code hl_struct" href="structanyxx_1_1undefined.html">anyxx::undefined</a>&gt;;</div>
-<div class="ttc" id="astructanyxx_1_1undefined_html"><div class="ttname"><a href="structanyxx_1_1undefined.html">anyxx::undefined</a></div><div class="ttdoc">Use this type to indicate, that the ANY_TYPE must be specified in the model map.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1429</div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keyword">requires</span> !std::same_as&lt;<span class="keyword">typename</span> <span class="keyword">decltype</span>(model_map)::deduced_type::       \</div>
+<div class="line">                           _detail_ANYXX_OPTIONAL_TEMPLATE(               \</div>
+<div class="line">                               _detail_REMOVE_PARENS(template_params))    \</div>
+<div class="line">                               name _detail_ANYXX_DUMMY_INT_PARAM_LIST(   \</div>
+<div class="line">                                   ANYXX_UNPAREN(template_params)),       \</div>
+<div class="line">                       anyxx::undefined&gt;;</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2109,10 +2117,11 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line"><span class="keyword">using </span>name = std::conditional_t&lt;                                         \</div>
 <div class="line">    std::same_as&lt;void, std::remove_const_t&lt;std::remove_pointer_t&lt;Q&gt;&gt;&gt;,   \</div>
 <div class="line">    erased,                                                              \</div>
-<div class="line">    <span class="keyword">typename</span> static_dispatch_map_t&lt;Q&gt;::_detail_ANYXX_OPTIONAL_TEMPLATE(  \</div>
-<div class="line">        _detail_REMOVE_PARENS(template_params))                          \</div>
-<div class="line">        name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \</div>
-<div class="line">            _detail_REMOVE_PARENS(template_params))&gt;;</div>
+<div class="line">    <span class="keyword">typename</span> static_dispatch_map_t&lt;Q&gt;::deduced_type::                    \</div>
+<div class="line">        _detail_ANYXX_OPTIONAL_TEMPLATE(                                 \</div>
+<div class="line">            _detail_REMOVE_PARENS(template_params))                      \</div>
+<div class="line">            name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                   \</div>
+<div class="line">                _detail_REMOVE_PARENS(template_params))&gt;;</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -2491,8 +2500,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3339</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3378</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3352</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3391</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3958,7 +3967,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 </div><div class="memdoc">
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(anyxx::dispatch_table_t*, dispatch_table, \</div>
 <div class="line">                 anyxx::dispatch_table_instance&lt;v_table_t, Concrete&gt;())</div>
-<div class="ttc" id="agroup__trait__macros_html_gac0a03326e8e38ea3ee7d42b80552e634"><div class="ttname"><a href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a></div><div class="ttdeci">#define ANY_V_TABLE_DATA(type, name,...)</div><div class="ttdoc">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped typ...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1239</div></div>
+<div class="ttc" id="agroup__trait__macros_html_gac0a03326e8e38ea3ee7d42b80552e634"><div class="ttname"><a href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a></div><div class="ttdeci">#define ANY_V_TABLE_DATA(type, name,...)</div><div class="ttdoc">Add a data member to the v-table of a TRAIT. This is useful for meta data, e.g. typeid of wrapped typ...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1249</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4104,6 +4113,42 @@ template&lt;typename Type, typename Trait&gt; </div>
 
 </div>
 </div>
+<a id="abaae2b5143325572d5a47e8c496f59c1" name="abaae2b5143325572d5a47e8c496f59c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abaae2b5143325572d5a47e8c496f59c1">&#9670;&#160;</a></span>proxy_deduced_type_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Proxy, typename Trait&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using anyxx::proxy_deduced_type_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line"><span class="keyword">typename</span> proxy_model_map_t&lt;Proxy, Trait&gt;::deduced_type</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a280c14413f3939d9a8a1dbb3e9f5d5af" name="a280c14413f3939d9a8a1dbb3e9f5d5af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a280c14413f3939d9a8a1dbb3e9f5d5af">&#9670;&#160;</a></span>proxy_model_map_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Proxy, typename Trait&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using anyxx::proxy_model_map_t</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line"><span class="keyword">typename</span> Trait::template model_map&lt;static_dispatch_t&lt;Proxy&gt;&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a26cffc6820013e7206c36a5873ef13b1" name="a26cffc6820013e7206c36a5873ef13b1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a26cffc6820013e7206c36a5873ef13b1">&#9670;&#160;</a></span>unerased</h2>
 
@@ -4190,6 +4235,42 @@ template&lt;typename Type, template&lt; typename... &gt; typename Trait, typenam
 </div><div class="memdoc">
 <p>A template to get an templatetd any trait for a type See also using_cref::as. </p>
 
+</div>
+</div>
+<a id="a0948b1d7e5622e60576d26510b568ff4" name="a0948b1d7e5622e60576d26510b568ff4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0948b1d7e5622e60576d26510b568ff4">&#9670;&#160;</a></span>v_table_param</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AnyValue, typename Param&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using anyxx::v_table_param</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">translate_sig_map&lt;Param&gt;::template v_table_param&lt;AnyValue&gt;</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="afcf89ad7feead5ca31f56788619800bc" name="afcf89ad7feead5ca31f56788619800bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afcf89ad7feead5ca31f56788619800bc">&#9670;&#160;</a></span>v_table_return</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename AnyValue, typename Return&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using anyxx::v_table_return</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line"> </div>
+<div class="line">translate_sig_map&lt;Return&gt;::template v_table_return&lt;AnyValue&gt;</div>
+</div><!-- fragment -->
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
@@ -4285,7 +4366,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1587</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1584</div></div>
 </div><!-- fragment -->
 </div>
 </div>

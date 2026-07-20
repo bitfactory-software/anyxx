@@ -59,7 +59,6 @@ var anyxx_8hpp =
     [ "TRAIT_TEMPLATE_", "group__trait__macros.html#ga9ec9a5f2d475d1ddf481df8385fce4a1", null ],
     [ "TRAIT_TEMPLATE_EX", "group__trait__macros.html#ga0184c21c57a127c79c7b8f5cd008afaf", null ],
     [ "TRAIT_TEMPLATE_EX_", "group__trait__macros.html#ga2276d8473f4f6f96f955b84b045fdb92", null ],
-    [ "TRAIT_TYPE", "group__model__map__macros.html#gad3cfa256085f8c6dec128b5d538692ac", null ],
     [ "VANY_DISPACH", "group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c", null ],
     [ "VANY_DISPACH_DECLARE", "group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b", null ],
     [ "anyxx::any_trait_class", "anyxx_8hpp.html#a41a5f0115a3c735c76b8e40c6043993d", null ],
