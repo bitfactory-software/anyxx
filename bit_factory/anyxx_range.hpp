@@ -145,8 +145,8 @@ concept is_any_self_forward_range =
 
 template <typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
-struct translate_sig_model_map<AnyForwardRange const&>
-    : translate_sig_default_model_map<self> {
+struct translate_sig_map<AnyForwardRange const&>
+    : translate_sig_map<self> {
   template <typename AnyValue>
   using v_table_param =
       any_forward_range<AnyValue, AnyValue,

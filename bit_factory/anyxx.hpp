@@ -3532,13 +3532,19 @@ struct jacket_return<self&> {
   }
 };
 
-TRAIT_EX_(translate_sig, observeable, , ,
-          (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
-           ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
-           ANY_TYPE(((Model)), map_return, void, (T)),
-           ANY_TYPE(((Model)), concept_arg, void, (T))),
-          , ())
-ANY_MODEL_MAP((self), translate_sig) {
+template<typename T>
+struct translate_sig_map {
+    template <typename AnyValue>
+  using v_table_param = T;
+    template <typename AnyValue>
+  using v_table_return = T;
+    template <typename AnyValue>
+  using map_return = T;
+    template <typename AnyValue>
+  using concept_arg = T;
+  };
+template<>
+struct translate_sig_map<self> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, cref>;
   template <typename AnyValue>
@@ -3548,7 +3554,8 @@ ANY_MODEL_MAP((self), translate_sig) {
   template <typename Model>
   using concept_arg = Model;
 };
-ANY_MODEL_MAP((self const&), translate_sig) {
+template<>
+struct translate_sig_map<self const&> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, cref>;
   template <typename AnyValue>
@@ -3558,7 +3565,8 @@ ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename Model>
   using concept_arg = Model const&;
 };
-ANY_MODEL_MAP((self&), translate_sig) {
+template <>
+struct translate_sig_map<self&> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, mutref>;
   template <typename AnyValue>
@@ -3578,7 +3586,7 @@ inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 
 template <typename T>
   requires is_use_as_<T>
-struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
+struct translate_sig_map<T> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, mutref>;
   template <typename AnyValue>
@@ -3590,14 +3598,13 @@ struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
 };
 
 template <typename AnyValue, typename Param>
-using v_table_param = TRAIT_TYPE(v_table_param, Param, translate_sig, AnyValue);
+using v_table_param = translate_sig_map<Param>::template v_table_param<AnyValue>;
 template <typename AnyValue, typename Return>
-using v_table_return = TRAIT_TYPE(v_table_return, Return, translate_sig,
-                                  AnyValue);
+using v_table_return = translate_sig_map<Return>::template v_table_return<AnyValue>;
 template <typename Model, typename Param>
-using map_return = TRAIT_TYPE(map_return, Param, translate_sig, Model);
+using map_return = translate_sig_map<Param>::template map_return<Model>;
 template <typename Model, typename Param>
-using concept_arg = TRAIT_TYPE(concept_arg, Param, translate_sig, Model);
+using concept_arg = translate_sig_map<Param>::template concept_arg<Model>;
 
 //+++   This metafunctions cannot be expressed as traits, because they would
 // be
