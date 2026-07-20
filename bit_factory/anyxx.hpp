@@ -421,6 +421,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(_detail_REMOVE_PARENS(     \
       template_params)) using name = _detail_REMOVE_PARENS(default_);
 
+#define _detail_ANYXX_V_TABLE_TYPE_H(l) _detail_ANYXX_V_TABLE_TYPE l
+#define _detail_ANYXX_V_TABLE_TYPE(template_params, name, erased, default_) \
+ public:                                                                    \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                               \
+      _detail_REMOVE_PARENS(template_params)) using name = erased;
+
 //_detail_ANYXX_MAP_TYPE(((A), (B)), xyz, void, (std::map<A, B>))
 // ->
 // template <typename A, typename B>
@@ -574,6 +580,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_VARIANT_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
+#define _detail_ANYXX_V_TABLE_TYPES(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_V_TABLE_TYPE_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_V_TABLE_FUNCTION_PTRS(...)        \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_FPD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
@@ -623,9 +633,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using default_map = n##_default_model_map;                                 \
     using rep_type = T;                                                        \
                                                                                \
+    _detail_ANYXX_MAP_TYPES(typedefs);                                         \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
-    _detail_ANYXX_MAP_TYPES(typedefs);                                         \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
@@ -683,6 +693,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using T = char;                                                            \
                                                                                \
+    _detail_ANYXX_V_TABLE_TYPES(typedefs);                                     \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
     _detail_ANYXX_V_TABLE_DATA_DECLS(v_table_data);                            \
                                                                                \
