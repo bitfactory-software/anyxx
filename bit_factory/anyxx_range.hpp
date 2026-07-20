@@ -4,30 +4,6 @@
 
 namespace anyxx {
 
-TRAIT_TEMPLATE_EX_(
-    ((Base)), incrementable, Base, (),
-    (ANY_OP(anyxx::self&, ++, (), ),
-     ANY_FN_DEF(public, anyxx::self, post_inc, (), , ([&x]() { return x++; }))),
-    , , , (template <typename Self> auto operator++(this Self&& self, int) {
-      return std::forward<Self>(self).post_inc();
-    }))
-
-// target for 0.9.1: this works!
-// ANY_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator,
-//                  incrementable<anyxx::dynamic_value>, (),
-//                  (ANY_OP(Reference, *, (), const),
-//                   ANY_OP_DEF(bool, ==, equal_to, (anyxx::self const &),
-//                   const,
-//                              ([&x](auto const &r) { return x == r; })),
-//                   ANY_OP_DEF(bool, !=, not_equal_to, (anyxx::self const &),
-//                              const, ([&x](auto const &r) { return x != r;
-//                              }))),
-//                  anyxx::val<>,
-//                  (using iterator_category = std::forward_iterator_tag;
-//                   using difference_type = std::ptrdiff_t;
-//                   using value_type = ValueType; using reference =
-//                   Reference;))
-
 inline static constexpr std::size_t iterator_val_proxy_size =
     small_object_size * 2u;
 
@@ -79,18 +55,22 @@ concept has_post_increment = requires(T x) {
   { x++ } -> std::same_as<T>;
 };
 
+template <typename T>
+auto post_increment_def = [](T& self) -> T {
+  if constexpr (has_post_increment<T>) {
+    return self++;
+  } else {
+    auto r = self;
+    ++self;
+    return r;
+  }
+};
+
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_FN_DEF(public, anyxx::self, post_increment, (), , ([&x]() {
-                  if constexpr (has_post_increment<T>) {
-                    return x++;
-                  } else {
-                    auto r = x;
-                    ++x;
-                    return r;
-                  }
-                })),
+     ANY_FN_DEF(public, anyxx::self, post_increment, (), ,
+                std::bind(post_increment_def<T>, x)),
      ANY_OP_MAP_NAMED(Reference, *, op_dereference, (), const),
      ANY_OP_DEF(public, bool, ==, equal, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; })),
@@ -127,8 +107,7 @@ concept is_any_self_forward_range =
 
 template <typename AnyForwardRange>
   requires is_any_self_forward_range<AnyForwardRange>
-struct translate_sig_map<AnyForwardRange const&>
-    : translate_sig_map<self> {
+struct translate_sig_map<AnyForwardRange const&> : translate_sig_map<self> {
   template <typename AnyValue>
   using v_table_param =
       any_forward_range<AnyValue, AnyValue,
