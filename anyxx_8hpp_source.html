@@ -2637,9 +2637,9 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02835" name="l02835"></a><span class="lineno"> 2835</span>  <span class="comment">// cppcheck-suppress-begin [functionConst, functionStatic]</span></div>
 <div class="line"><a id="l02836" name="l02836"></a><span class="lineno"> 2836</span>  <span class="keyword">auto</span> get_v_table_ptr()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> v_table_; }</div>
 <div class="line"><a id="l02837" name="l02837"></a><span class="lineno"> 2837</span>  <span class="comment">// cppcheck-suppress-end [functionConst, functionStatic]</span></div>
-<div class="line"><a id="l02838" name="l02838"></a><span class="lineno"> 2838</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy, <span class="keyword">typename</span> Concrete&gt;</div>
+<div class="line"><a id="l02838" name="l02838"></a><span class="lineno"> 2838</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> ProxyImpl, <span class="keyword">typename</span> Concrete&gt;</div>
 <div class="line"><a id="l02839" name="l02839"></a><span class="lineno"> 2839</span>  <span class="keywordtype">void</span> init_v_table() {</div>
-<div class="line"><a id="l02840" name="l02840"></a><span class="lineno"> 2840</span>    v_table_ = v_table_instance&lt;v_table_t, anyxx::unerased&lt;Proxy, Concrete&gt;&gt;();</div>
+<div class="line"><a id="l02840" name="l02840"></a><span class="lineno"> 2840</span>    v_table_ = v_table_instance&lt;v_table_t, anyxx::unerased&lt;ProxyImpl, Concrete&gt;&gt;();</div>
 <div class="line"><a id="l02841" name="l02841"></a><span class="lineno"> 2841</span>  }</div>
 <div class="line"><a id="l02842" name="l02842"></a><span class="lineno"> 2842</span>  <span class="keyword">auto</span> release_v_table() { <span class="keywordflow">return</span> std::exchange(v_table_, <span class="keyword">nullptr</span>); }</div>
 <div class="line"><a id="l02843" name="l02843"></a><span class="lineno"> 2843</span>};</div>
