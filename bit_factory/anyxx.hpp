@@ -521,6 +521,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using self_t = std::decay_t<Self>;                                         \
     using T = typename self_t::T;                                              \
     using proxy_t = typename self_t::proxy_t;                                  \
+    using deduced_type = typename self_t::deduced_type;                        \
                                                                                \
     if constexpr (!self_t::dyn) {                                              \
       using traited_t = typename self_t::rep_type;                             \
@@ -744,7 +745,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     _detail_REMOVE_PARENS(decoration);                                         \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params),      \
+            typename deduced_type = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS( \
+                model_map_template_params)>::deduced_type>                     \
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
       requires(                                                                \
           T model,                                                             \
@@ -2837,7 +2840,8 @@ struct v_table_holder<Proxy, Trait> : v_table_deduced_type_t<Trait> {
   // cppcheck-suppress-end [functionConst, functionStatic]
   template <typename ProxyImpl, typename Concrete>
   void init_v_table() {
-    v_table_ = v_table_instance<v_table_t, anyxx::unerased<ProxyImpl, Concrete>>();
+    v_table_ =
+        v_table_instance<v_table_t, anyxx::unerased<ProxyImpl, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
