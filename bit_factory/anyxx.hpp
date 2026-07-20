@@ -336,12 +336,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define _detail_ANYXX_CONCEPT_TYPE_H(l) _detail_ANYXX_CONCEPT_TYPE l
-#define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_)   \
-  requires !std::same_as<                                                     \
-      typename decltype(model_map)::_detail_ANYXX_OPTIONAL_TEMPLATE(          \
-          _detail_REMOVE_PARENS(template_params)) name                        \
-          _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \
-      anyxx::undefined>;
+#define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_) \
+  requires !std::same_as<typename decltype(model_map)::deduced_type::       \
+                             _detail_ANYXX_OPTIONAL_TEMPLATE(               \
+                                 _detail_REMOVE_PARENS(template_params))    \
+                                 name _detail_ANYXX_DUMMY_INT_PARAM_LIST(   \
+                                     ANYXX_UNPAREN(template_params)),       \
+                         anyxx::undefined>;
 
 //_detail_ANYXX_CONCEPT_TYPE_H((), value_type, anyxx::undefined,
 //(anyxx::undefined))
@@ -439,10 +440,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   using name = std::conditional_t<                                         \
       std::same_as<void, std::remove_const_t<std::remove_pointer_t<Q>>>,   \
       erased,                                                              \
-      typename static_dispatch_map_t<Q>::_detail_ANYXX_OPTIONAL_TEMPLATE(  \
-          _detail_REMOVE_PARENS(template_params))                          \
-          name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \
-              _detail_REMOVE_PARENS(template_params))>;
+      typename static_dispatch_map_t<Q>::deduced_type::                    \
+          _detail_ANYXX_OPTIONAL_TEMPLATE(                                 \
+              _detail_REMOVE_PARENS(template_params))                      \
+              name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                   \
+                  _detail_REMOVE_PARENS(template_params))>;
 
 //_detail_ANYXX_JACKET_TYPE(((A),(B)), xyz, void, (std::map<A,B>))
 // ->
@@ -633,7 +635,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using default_map = n##_default_model_map;                                 \
     using rep_type = T;                                                        \
                                                                                \
-    _detail_ANYXX_MAP_TYPES(typedefs);                                         \
+    struct deduced_type {                                                      \
+      _detail_ANYXX_MAP_TYPES(typedefs);                                       \
+    };                                                                         \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
   };                                                                           \
@@ -647,8 +651,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
-  struct n##                                                                   \
-      _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
+  struct n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> \
+      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(                     \
+            model_map_template_params)> {                                      \
     using rep_type = T;                                                        \
     template <typename V>                                                      \
     using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
@@ -693,7 +698,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using T = char;                                                            \
                                                                                \
-    _detail_ANYXX_V_TABLE_TYPES(typedefs);                                     \
+    struct deduced_type {                                                      \
+      _detail_ANYXX_V_TABLE_TYPES(typedefs);                                   \
+    };                                                                         \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
     _detail_ANYXX_V_TABLE_DATA_DECLS(v_table_data);                            \
                                                                                \
@@ -706,6 +713,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
+                                                                               \
+    template <typename T>                                                      \
+    using model_map =                                                          \
+        n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>; \
                                                                                \
     using val_nullable =                                                       \
         std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
@@ -730,7 +741,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     _detail_ANYXX_FNS(l);                                                      \
     _detail_ANYXX_JACKET_STATIC_FNS(static_fns);                               \
-    _detail_ANYXX_JACKET_TYPES(typedefs);                                      \
     _detail_REMOVE_PARENS(decoration);                                         \
   };                                                                           \
                                                                                \
@@ -1263,21 +1273,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(          \
                               model_, _detail_REMOVE_PARENS(trait_types)))
 
-/// \def TRAIT_TYPE
-/// \brief translates to the type defined in the model map of a trait. This is
-/// useful for associated types, e.g. Return types, which are defined via
-/// ANY_TYPE in the trait
-/// \param Name name of the type definition in the trait
-/// \param T model type, including template parameters, in brackets
-/// \param Trait name of the trait, including namespace
-/// \param ... additional template parameters for the type if it is a template
-/// itself
-#define TRAIT_TYPE(Name, T, Trait, ...) \
-  typename Trait::template Name<T __VA_OPT__(, ) __VA_ARGS__>
-
-#define DEDUCED_TYPE(Name, Any, ...) \
-  TRAIT_TYPE(Name, typename Any::T, Any, __VA_ARGS__)
-
 /// \def ANY_MODEL_MAP
 /// \brief ANY_MODEL_MAP macro
 /// \param class_ name of the model, including namespace, in brackets
@@ -1446,6 +1441,8 @@ using mutref = observer<mutable_void>;
 /// Base of v-tables for traits without lifetime requirements
 struct observeable_v_table {
   using v_table_t = observeable_v_table;
+
+  struct deduced_type {};
 
   using val_nullable = std::false_type;
   static constexpr std::size_t val_proxy_size = small_object_size;
@@ -2788,10 +2785,29 @@ meta_data& get_meta_data() {
 }
 #endif
 
-template <bool dynamic, typename Trait>
-struct v_table_holder;
+template <typename Proxy>
+using static_dispatch_t = typename proxy_trait<Proxy>::static_dispatch_t;
+
+template <typename Proxy, typename Trait>
+using proxy_model_map_t =
+    typename Trait::template model_map<static_dispatch_t<Proxy>>;
+
+template <typename Proxy, typename Trait>
+using proxy_deduced_type_t =
+    typename proxy_model_map_t<Proxy, Trait>::deduced_type;
+
 template <typename Trait>
-struct v_table_holder<false, Trait> {
+using v_table_t = typename Trait ::v_table_t;
+
+template <typename Trait>
+using v_table_deduced_type_t = typename v_table_t<Trait>::deduced_type;
+
+template <typename Proxy, typename Trait>
+struct v_table_holder;
+
+template <typename Proxy, typename Trait>
+  requires(!is_dyn<Proxy>)
+struct v_table_holder<Proxy, Trait> : proxy_deduced_type_t<Proxy, Trait> {
   struct v_table_t {};
 
   v_table_holder() = default;
@@ -2803,11 +2819,9 @@ struct v_table_holder<false, Trait> {
   static auto release_v_table() { return nullptr; }
 };
 
-template <typename Trait>
-struct with_open_dispatch : std::false_type {};
-
-template <typename Trait>
-struct v_table_holder<true, Trait> {
+template <typename Proxy, typename Trait>
+  requires is_dyn<Proxy>
+struct v_table_holder<Proxy, Trait> : v_table_deduced_type_t<Trait> {
  public:
   using v_table_t = Trait::v_table_t;
 
@@ -2972,13 +2986,12 @@ concept is_proxy_compatible_with_trait =
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
 template <typename Trait, is_proxy Proxy>
-class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
-                          public Trait {
+class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
  public:
   using proxy_t = Proxy;
   using proxy_trait_t = proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
-  using v_table_holder_t = v_table_holder<is_dyn<Proxy>, Trait>;
+  using v_table_holder_t = v_table_holder<Proxy, Trait>;
   using trait_t = Trait;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
@@ -3532,18 +3545,18 @@ struct jacket_return<self&> {
   }
 };
 
-template<typename T>
+template <typename T>
 struct translate_sig_map {
-    template <typename AnyValue>
+  template <typename AnyValue>
   using v_table_param = T;
-    template <typename AnyValue>
+  template <typename AnyValue>
   using v_table_return = T;
-    template <typename AnyValue>
+  template <typename AnyValue>
   using map_return = T;
-    template <typename AnyValue>
+  template <typename AnyValue>
   using concept_arg = T;
-  };
-template<>
+};
+template <>
 struct translate_sig_map<self> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, cref>;
@@ -3554,7 +3567,7 @@ struct translate_sig_map<self> {
   template <typename Model>
   using concept_arg = Model;
 };
-template<>
+template <>
 struct translate_sig_map<self const&> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, cref>;
@@ -3598,9 +3611,11 @@ struct translate_sig_map<T> {
 };
 
 template <typename AnyValue, typename Param>
-using v_table_param = translate_sig_map<Param>::template v_table_param<AnyValue>;
+using v_table_param =
+    translate_sig_map<Param>::template v_table_param<AnyValue>;
 template <typename AnyValue, typename Return>
-using v_table_return = translate_sig_map<Return>::template v_table_return<AnyValue>;
+using v_table_return =
+    translate_sig_map<Return>::template v_table_return<AnyValue>;
 template <typename Model, typename Param>
 using map_return = translate_sig_map<Param>::template map_return<Model>;
 template <typename Model, typename Param>

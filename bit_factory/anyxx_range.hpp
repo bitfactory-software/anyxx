@@ -111,24 +111,6 @@ template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 
-}  // namespace anyxx
-
-namespace std {
-
-template <typename Value, typename Reference, typename Proxy>
-struct iterator_traits<
-    anyxx::any<anyxx::forward_iterator<Value, Reference>, Proxy>> {
-  using from_type =
-      anyxx::any<anyxx::forward_iterator<Value, Reference>, Proxy>;
-  using difference_type = DEDUCED_TYPE(difference_type, from_type);
-  using value_type = Value;
-  using pointer = void;
-  using reference = DEDUCED_TYPE(reference, from_type);
-  using iterator_category = DEDUCED_TYPE(iterator_category, from_type);
-};
-}  // namespace std
-
-namespace anyxx {
 TRAIT_TEMPLATE_(
     ((ValueType), (Reference)), forward_range, dynamic_value, (),
     (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),
