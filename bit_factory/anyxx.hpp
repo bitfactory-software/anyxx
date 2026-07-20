@@ -2835,9 +2835,9 @@ struct v_table_holder<Proxy, Trait> : v_table_deduced_type_t<Trait> {
   // cppcheck-suppress-begin [functionConst, functionStatic]
   auto get_v_table_ptr() const { return v_table_; }
   // cppcheck-suppress-end [functionConst, functionStatic]
-  template <typename Proxy, typename Concrete>
+  template <typename ProxyImpl, typename Concrete>
   void init_v_table() {
-    v_table_ = v_table_instance<v_table_t, anyxx::unerased<Proxy, Concrete>>();
+    v_table_ = v_table_instance<v_table_t, anyxx::unerased<ProxyImpl, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
