@@ -1265,7 +1265,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   typename Trait::template Name<T __VA_OPT__(, ) __VA_ARGS__>
 
 #define DEDUCED_TYPE(Name, Any, ...) \
-  TRAIT_TYPE(Name, Any::T, Any, __VA_ARGS__)
+  TRAIT_TYPE(Name, typename Any::T, Any, __VA_ARGS__)
 
 /// \def ANY_MODEL_MAP
 /// \brief ANY_MODEL_MAP macro
