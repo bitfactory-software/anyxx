@@ -64,9 +64,7 @@ namespace example_2b {
 
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
-    Monoid const& m,
-    anyxx::any_range<anyxx::any_forward_iterator<Monoid, Monoid>, anyxx::cref>&
-        r);
+    Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>& r);
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
@@ -74,16 +72,15 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
 }
 template <anyxx::is_any Monoid>
-void test_monoid(Monoid const& m,
-                 anyxx::any_range<anyxx::any_forward_iterator<Monoid, Monoid>,
-                                  anyxx::cref> const& r) {
+void test_monoid(
+    Monoid const& m,
+    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
   test_monoid_traited<Monoid>(m, r);
 }
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
     Monoid const& m,
-    anyxx::any_range<anyxx::any_forward_iterator<Monoid, Monoid>,
-                     anyxx::cref> const& r) {
+    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
   auto id = m.id();
   using type_1 = decltype(m.op(id.op(m)));
   using type_2 = decltype(m.op(m.op(id)));
@@ -99,10 +96,8 @@ void test_monoid_traited(
   CHECK(c2);
 }
 
-anyxx::any_range<anyxx::any_forward_iterator<any_monoid<anyxx::val<>>,
-                                             any_monoid<anyxx::val<>>>,
-                 anyxx::val<>>
-make_a_range(bool use_list) {
+anyxx::any_forward_range<any_monoid<>, any_monoid<>, anyxx::val<>> make_a_range(
+    bool use_list) {
   using namespace std::string_literals;
   if (use_list)
     return std::list<any_monoid<anyxx::val<>>>{{"2"s}, {"3"s}};
