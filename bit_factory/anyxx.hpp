@@ -3700,7 +3700,7 @@ struct forward_trait_to_map<Traited, T const&> {
 // --------------------------------------------------------------------------------
 // any customization traits
 
-template <is_proxy Proxy = shared>
+template <is_proxy Proxy = val<>>
 struct default_proxy {
   using type = Proxy;
 };
