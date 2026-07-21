@@ -118,10 +118,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">                            anyxx::trait_as&lt;monoid&gt;(r)}));  <span class="comment">// NOLINT</span></div>
 <div class="line">                      }),</div>
 <div class="line">           <a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, concat,</div>
-<div class="line">                      ((anyxx::any_forward_range&lt;</div>
-<div class="line">                          anyxx::any_forward_iterator&lt;anyxx::self, anyxx::self&gt;,</div>
-<div class="line">                          <a id="a3" name="a3"></a><a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp;)),</div>
-<div class="line">                      <span class="keyword">const</span>,</div>
+<div class="line">                      (anyxx::any_self_forward_range <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                      [&amp;x](<span class="keyword">const</span> <span class="keyword">auto</span>&amp; r) {</div>
 <div class="line">                        std::println(<span class="stringliteral">&quot;concat-default {}&quot;</span>, <span class="keyword">typeid</span>(T).name());</div>
 <div class="line">                        <span class="keyword">auto</span> self = anyxx::trait_as&lt;monoid&gt;(x);</div>
@@ -133,7 +130,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">                              <span class="keywordflow">return</span> m1.op(m2);</div>
 <div class="line">                            }));</div>
 <div class="line">                      }),</div>
-<div class="line">           <a id="a4" name="a4"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
+<div class="line">           <a id="a3" name="a3"></a><a class="code hl_define" href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, ==, eq, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                      ([&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) { <span class="keywordflow">return</span> x == r; }))),</div>
 <div class="line">          , , , ())</div>
 <div class="line"> </div>
@@ -142,7 +139,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2b</span></div>
 <div class="line"> </div>
-<div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((<span class="keywordtype">int</span>), example_2b::monoid) {</div>
+<div class="line"><a id="a4" name="a4"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((<span class="keywordtype">int</span>), example_2b::monoid) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">int</span> concat(<span class="keywordtype">int</span> self, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">    std::println(<span class="stringliteral">&quot;concat {}&quot;</span>, <span class="keyword">typeid</span>(<span class="keywordtype">int</span>).name());</div>
 <div class="line">    <span class="keywordflow">return</span> std::ranges::fold_left(r, self,</div>
@@ -162,8 +159,8 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid_traited(</div>
 <div class="line">    Monoid <span class="keyword">const</span>&amp; m,</div>
-<div class="line">    anyxx::any_forward_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
-<div class="line">                             <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt;&amp; r);</div>
+<div class="line">    anyxx::any_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;, <a id="a5" name="a5"></a><a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt;&amp;</div>
+<div class="line">        r);</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> P1&gt;</div>
 <div class="line">  <span class="keyword">requires</span>(!anyxx::is_any&lt;P1&gt;)</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid(P1 <span class="keyword">const</span>&amp; p1, std::ranges::forward_range <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
@@ -171,17 +168,16 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  test_monoid_traited&lt;any_monoid&gt;(any_monoid{p1}, r);</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
-<div class="line"><span class="keywordtype">void</span> test_monoid(</div>
-<div class="line">    Monoid <span class="keyword">const</span>&amp; m,</div>
-<div class="line">    anyxx::any_forward_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
-<div class="line">                             <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line"><span class="keywordtype">void</span> test_monoid(Monoid <span class="keyword">const</span>&amp; m,</div>
+<div class="line">                 anyxx::any_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
+<div class="line">                                  <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  test_monoid_traited&lt;Monoid&gt;(m, r);</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid_traited(</div>
 <div class="line">    Monoid <span class="keyword">const</span>&amp; m,</div>
-<div class="line">    anyxx::any_forward_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
-<div class="line">                             <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">    anyxx::any_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
+<div class="line">                     <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  <span class="keyword">auto</span> <span class="keywordtype">id</span> = m.id();</div>
 <div class="line">  <span class="keyword">using </span>type_1 = <span class="keyword">decltype</span>(m.op(<span class="keywordtype">id</span>.op(m)));</div>
 <div class="line">  <span class="keyword">using </span>type_2 = <span class="keyword">decltype</span>(m.op(m.op(<span class="keywordtype">id</span>)));</div>
@@ -197,9 +193,9 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  CHECK(c2);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">anyxx::any_forward_range&lt;anyxx::any_forward_iterator&lt;any_monoid&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                                                     any_monoid&lt;anyxx::val&lt;&gt;&gt;&gt;,</div>
-<div class="line">                         anyxx::val&lt;&gt;&gt;</div>
+<div class="line">anyxx::any_range&lt;anyxx::any_forward_iterator&lt;any_monoid&lt;anyxx::val&lt;&gt;&gt;,</div>
+<div class="line">                                             any_monoid&lt;anyxx::val&lt;&gt;&gt;&gt;,</div>
+<div class="line">                 anyxx::val&lt;&gt;&gt;</div>
 <div class="line">make_a_range(<span class="keywordtype">bool</span> use_list) {</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  <span class="keywordflow">if</span> (use_list)</div>
