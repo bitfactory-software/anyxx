@@ -302,24 +302,25 @@ struct node : node_base {
 
 namespace anyxx {
 template <typename ValueType, typename Reference>
-struct forward_iterator_model_map<node_base*, ValueType, Reference,
-                                  std::forward_iterator_tag>
-    : anyxx::forward_iterator_default_model_map<
-          node_base*, ValueType, Reference, std::forward_iterator_tag> {
+struct forward_iterator_model_map<node_base*, ValueType, Reference>
+    : anyxx::forward_iterator_default_model_map<node_base*, ValueType,
+                                                Reference> {
   node_base* op_pre_increment(node_base*& x) const { return x = x->next(); }
 };
 }  // namespace anyxx
+
+namespace {
+using node_iterator = anyxx::using_<node_base*>::as<
+    anyxx::forward_iterator<node_base*, node_base&>>;
+using node_const_iterator = anyxx::using_<node_base*>::as<
+    anyxx::forward_iterator<node_base const*, const node_base&>>;
+}  // namespace
 
 TEST_CASE("example 3 iterator adaptor ") {
   std::unique_ptr<node<int>> nodes(new node<int>(42));
   nodes->append(new node<std::string>("is greater than:"));
   nodes->append(new node<int>(13));
 
-  using node_iterator = anyxx::using_<node_base*>::as<anyxx::forward_iterator<
-      node_base*, node_base&, std::forward_iterator_tag>>;
-  using node_const_iterator =
-      anyxx::using_<node_base*>::as<anyxx::forward_iterator<
-          node_base const*, const node_base&, std::forward_iterator_tag>>;
   std::stringstream out1;
   std::copy(node_iterator(nodes.get()), node_iterator(),
             std::ostream_iterator<node_base>(out1, " "));
