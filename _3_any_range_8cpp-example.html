@@ -354,77 +354,77 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="comment">// iterator adapter like boost::iterator_adaptor based on</span></div>
 <div class="line"><span class="comment">// anyxx::forward_iterator Work in progress!!!</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//namespace {</span></div>
-<div class="line"><span class="comment">//struct node_base {</span></div>
-<div class="line"><span class="comment">//  node_base() : m_next(0) {}</span></div>
-<div class="line"><span class="comment">//  // Each node manages all of its tail nodes</span></div>
-<div class="line"><span class="comment">//  virtual ~node_base() { delete m_next; }</span></div>
-<div class="line"><span class="comment">//  // Access the rest of the list</span></div>
-<div class="line"><span class="comment">//  node_base* next() const { return m_next; }</span></div>
-<div class="line"><span class="comment">//  // print to the stream</span></div>
-<div class="line"><span class="comment">//  virtual void print(std::ostream&amp; s) const = 0;</span></div>
-<div class="line"><span class="comment">//  // double the value</span></div>
-<div class="line"><span class="comment">//  virtual void double_me() = 0;</span></div>
-<div class="line"><span class="comment">//  void append(node_base* p) {</span></div>
-<div class="line"><span class="comment">//    if (m_next)</span></div>
-<div class="line"><span class="comment">//      m_next-&gt;append(p);</span></div>
-<div class="line"><span class="comment">//    else</span></div>
-<div class="line"><span class="comment">//      m_next = p;</span></div>
-<div class="line"><span class="comment">//  }</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">// private:</span></div>
-<div class="line"><span class="comment">//  node_base* m_next;</span></div>
-<div class="line"><span class="comment">//};</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//template &lt;class T&gt;</span></div>
-<div class="line"><span class="comment">//struct node : node_base {</span></div>
-<div class="line"><span class="comment">//  node(T x) : m_value(x) {}</span></div>
-<div class="line"><span class="comment">//  void print(std::ostream&amp; s) const { s &lt;&lt; this-&gt;m_value; }</span></div>
-<div class="line"><span class="comment">//  void double_me() { m_value += m_value; }</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">// private:</span></div>
-<div class="line"><span class="comment">//  T m_value;</span></div>
-<div class="line"><span class="comment">//};</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//}  // namespace</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//namespace anyxx {</span></div>
-<div class="line"><span class="comment">//template &lt;typename V&gt;</span></div>
-<div class="line"><span class="comment">//struct forward_iterator_model_map&lt;node&lt;V&gt;*, deduce_type, deduce_type&gt;</span></div>
-<div class="line"><span class="comment">//    : anyxx::forward_iterator_default_model_map&lt;node&lt;V&gt;*, deduce_type,</span></div>
-<div class="line"><span class="comment">//                                                deduce_type&gt; {</span></div>
-<div class="line"><span class="comment">//  node&lt;V&gt;* op_pre_increment(node&lt;V&gt;*&amp; x) const { return x-&gt;next(); }</span></div>
-<div class="line"><span class="comment">//};</span></div>
-<div class="line"><span class="comment">//}  // namespace anyxx</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//TEST_CASE(&quot;example 3 iterator adaptor &quot;) {</span></div>
-<div class="line"><span class="comment">//  std::unique_ptr&lt;node&lt;int&gt;&gt; nodes(new node&lt;int&gt;(42));</span></div>
-<div class="line"><span class="comment">//  nodes-&gt;append(new node&lt;std::string&gt;(&quot; is greater than &quot;));</span></div>
-<div class="line"><span class="comment">//  nodes-&gt;append(new node&lt;int&gt;(13));</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//  using node_iterator = anyxx::using_&lt;node&lt;int&gt;*&gt;::as&lt;</span></div>
-<div class="line"><span class="comment">//      anyxx::forward_iterator&lt;anyxx::deduce_type, anyxx::deduce_type&gt;&gt;;</span></div>
-<div class="line"><span class="comment">//  using node_const_iterator = anyxx::using_&lt;node&lt;int&gt; const*&gt;::as&lt;</span></div>
-<div class="line"><span class="comment">//      anyxx::forward_iterator&lt;anyxx::deduce_type, anyxx::deduce_type&gt;&gt;;</span></div>
-<div class="line"><span class="comment">//  // Check interoperability</span></div>
-<div class="line"><span class="comment">//  // assert(node_iterator(nodes.get()) == node_const_iterator(nodes.get()));</span></div>
-<div class="line"><span class="comment">//  // assert(node_const_iterator(nodes.get()) == node_iterator(nodes.get()));</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//  // assert(node_iterator(nodes.get()) != node_const_iterator());</span></div>
-<div class="line"><span class="comment">//  // assert(node_const_iterator(nodes.get()) != node_iterator());</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//  std::copy(node_iterator(nodes.get()), node_iterator(),</span></div>
-<div class="line"><span class="comment">//            std::ostream_iterator&lt;node_base&gt;(std::cout, &quot; &quot;));</span></div>
-<div class="line"><span class="comment">//  std::cout &lt;&lt; std::endl;</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//  std::for_each(node_iterator(nodes.get()), node_iterator(),</span></div>
-<div class="line"><span class="comment">//                [](auto&amp; node) { node.double_me(); });</span></div>
-<div class="line"><span class="comment">//</span></div>
-<div class="line"><span class="comment">//  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),</span></div>
-<div class="line"><span class="comment">//            std::ostream_iterator&lt;node_base&gt;(std::cout, &quot;/&quot;));</span></div>
-<div class="line"><span class="comment">//  std::cout &lt;&lt; std::endl;</span></div>
-<div class="line"><span class="comment">//}</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>{</div>
+<div class="line"><span class="keyword">struct </span>node_base {</div>
+<div class="line">  node_base() : m_next(0) {}</div>
+<div class="line">  <span class="comment">// Each node manages all of its tail nodes</span></div>
+<div class="line">  <span class="keyword">virtual</span> ~node_base() { <span class="keyword">delete</span> m_next; }</div>
+<div class="line">  <span class="comment">// Access the rest of the list</span></div>
+<div class="line">  node_base* next()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> m_next; }</div>
+<div class="line">  <span class="comment">// print to the stream</span></div>
+<div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> print(std::ostream&amp; s) <span class="keyword">const</span> = 0;</div>
+<div class="line">  <span class="comment">// double the value</span></div>
+<div class="line">  <span class="keyword">virtual</span> <span class="keywordtype">void</span> double_me() = 0;</div>
+<div class="line">  <span class="keywordtype">void</span> append(node_base* p) {</div>
+<div class="line">    <span class="keywordflow">if</span> (m_next)</div>
+<div class="line">      m_next-&gt;append(p);</div>
+<div class="line">    <span class="keywordflow">else</span></div>
+<div class="line">      m_next = p;</div>
+<div class="line">  }</div>
+<div class="line"> </div>
+<div class="line"> <span class="keyword">private</span>:</div>
+<div class="line">  node_base* m_next;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">inline</span> std::ostream&amp; operator&lt;&lt;(std::ostream&amp; s, node_base <span class="keyword">const</span>&amp; n) {</div>
+<div class="line">  n.print(s);</div>
+<div class="line">  <span class="keywordflow">return</span> s;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
+<div class="line"><span class="keyword">struct </span>node : node_base {</div>
+<div class="line">  node(T x) : m_value(x) {}</div>
+<div class="line">  <span class="keywordtype">void</span> print(std::ostream&amp; s)<span class="keyword"> const </span>{ s &lt;&lt; this-&gt;m_value; }</div>
+<div class="line">  <span class="keywordtype">void</span> double_me() { m_value += m_value; }</div>
+<div class="line"> </div>
+<div class="line"> <span class="keyword">private</span>:</div>
+<div class="line">  T m_value;</div>
+<div class="line">};</div>
+<div class="line"> </div>
+<div class="line">}  <span class="comment">// namespace</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>anyxx {</div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ValueType, <span class="keyword">typename</span> Reference&gt;</div>
+<div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference,</div>
+<div class="line">                                  std::forward_iterator_tag&gt;</div>
+<div class="line">    : anyxx::forward_iterator_default_model_map&lt;</div>
+<div class="line">          node_base*, ValueType, Reference, std::forward_iterator_tag&gt; {</div>
+<div class="line">  node_base* op_pre_increment(node_base*&amp; x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> x = x-&gt;next(); }</div>
+<div class="line">};</div>
+<div class="line">}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"> </div>
+<div class="line">TEST_CASE(<span class="stringliteral">&quot;example 3 iterator adaptor &quot;</span>) {</div>
+<div class="line">  std::unique_ptr&lt;node&lt;int&gt;&gt; nodes(<span class="keyword">new</span> node&lt;int&gt;(42));</div>
+<div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;std::string&gt;(<span class="stringliteral">&quot;is greater than:&quot;</span>));</div>
+<div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;int&gt;(13));</div>
+<div class="line"> </div>
+<div class="line">  <span class="keyword">using </span>node_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;anyxx::forward_iterator&lt;</div>
+<div class="line">      node_base*, node_base&amp;, std::forward_iterator_tag&gt;&gt;;</div>
+<div class="line">  <span class="keyword">using </span>node_const_iterator =</div>
+<div class="line">      <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;anyxx::forward_iterator&lt;</div>
+<div class="line">          node_base <span class="keyword">const</span>*, <span class="keyword">const</span> node_base&amp;, std::forward_iterator_tag&gt;&gt;;</div>
+<div class="line">  std::stringstream out1;</div>
+<div class="line">  std::copy(node_iterator(nodes.get()), node_iterator(),</div>
+<div class="line">            std::ostream_iterator&lt;node_base&gt;(out1, <span class="stringliteral">&quot; &quot;</span>));</div>
+<div class="line">  CHECK(out1.str() == <span class="stringliteral">&quot;42 is greater than: 13 &quot;</span>);</div>
+<div class="line">  std::for_each(node_iterator(nodes.get()), node_iterator(),</div>
+<div class="line">                [](<span class="keyword">auto</span>&amp; node) { node.double_me(); });</div>
+<div class="line">  std::stringstream out2;</div>
+<div class="line">  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),</div>
+<div class="line">            std::ostream_iterator&lt;node_base&gt;(out2, <span class="stringliteral">&quot;/&quot;</span>));</div>
+<div class="line">  CHECK(out2.str() == <span class="stringliteral">&quot;84/is greater than:is greater than:/26/&quot;</span>);</div>
+<div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2993</div></div>
 <div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1437</div></div>
