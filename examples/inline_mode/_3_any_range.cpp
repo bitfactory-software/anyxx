@@ -260,74 +260,74 @@ TEST_CASE("example 3 static any range of view") {
 
 // iterator adapter like boost::iterator_adaptor based on
 // anyxx::forward_iterator Work in progress!!!
-//
-//namespace {
-//struct node_base {
-//  node_base() : m_next(0) {}
-//  // Each node manages all of its tail nodes
-//  virtual ~node_base() { delete m_next; }
-//  // Access the rest of the list
-//  node_base* next() const { return m_next; }
-//  // print to the stream
-//  virtual void print(std::ostream& s) const = 0;
-//  // double the value
-//  virtual void double_me() = 0;
-//  void append(node_base* p) {
-//    if (m_next)
-//      m_next->append(p);
-//    else
-//      m_next = p;
-//  }
-//
-// private:
-//  node_base* m_next;
-//};
-//
-//template <class T>
-//struct node : node_base {
-//  node(T x) : m_value(x) {}
-//  void print(std::ostream& s) const { s << this->m_value; }
-//  void double_me() { m_value += m_value; }
-//
-// private:
-//  T m_value;
-//};
-//
-//}  // namespace
-//
-//namespace anyxx {
-//template <typename V>
-//struct forward_iterator_model_map<node<V>*, deduce_type, deduce_type>
-//    : anyxx::forward_iterator_default_model_map<node<V>*, deduce_type,
-//                                                deduce_type> {
-//  node<V>* op_pre_increment(node<V>*& x) const { return x->next(); }
-//};
-//}  // namespace anyxx
-//
-//TEST_CASE("example 3 iterator adaptor ") {
-//  std::unique_ptr<node<int>> nodes(new node<int>(42));
-//  nodes->append(new node<std::string>(" is greater than "));
-//  nodes->append(new node<int>(13));
-//
-//  using node_iterator = anyxx::using_<node<int>*>::as<
-//      anyxx::forward_iterator<anyxx::deduce_type, anyxx::deduce_type>>;
-//  using node_const_iterator = anyxx::using_<node<int> const*>::as<
-//      anyxx::forward_iterator<anyxx::deduce_type, anyxx::deduce_type>>;
-//  // Check interoperability
-//  // assert(node_iterator(nodes.get()) == node_const_iterator(nodes.get()));
-//  // assert(node_const_iterator(nodes.get()) == node_iterator(nodes.get()));
-//
-//  // assert(node_iterator(nodes.get()) != node_const_iterator());
-//  // assert(node_const_iterator(nodes.get()) != node_iterator());
-//
-//  std::copy(node_iterator(nodes.get()), node_iterator(),
-//            std::ostream_iterator<node_base>(std::cout, " "));
-//  std::cout << std::endl;
-//
-//  std::for_each(node_iterator(nodes.get()), node_iterator(),
-//                [](auto& node) { node.double_me(); });
-//
-//  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),
-//            std::ostream_iterator<node_base>(std::cout, "/"));
-//  std::cout << std::endl;
-//}
+
+namespace {
+struct node_base {
+  node_base() : m_next(0) {}
+  // Each node manages all of its tail nodes
+  virtual ~node_base() { delete m_next; }
+  // Access the rest of the list
+  node_base* next() const { return m_next; }
+  // print to the stream
+  virtual void print(std::ostream& s) const = 0;
+  // double the value
+  virtual void double_me() = 0;
+  void append(node_base* p) {
+    if (m_next)
+      m_next->append(p);
+    else
+      m_next = p;
+  }
+
+ private:
+  node_base* m_next;
+};
+
+inline std::ostream& operator<<(std::ostream& s, node_base const& n) {
+  n.print(s);
+  return s;
+}
+
+template <class T>
+struct node : node_base {
+  node(T x) : m_value(x) {}
+  void print(std::ostream& s) const { s << this->m_value; }
+  void double_me() { m_value += m_value; }
+
+ private:
+  T m_value;
+};
+
+}  // namespace
+
+namespace anyxx {
+template <typename ValueType, typename Reference>
+struct forward_iterator_model_map<node_base*, ValueType, Reference,
+                                  std::forward_iterator_tag>
+    : anyxx::forward_iterator_default_model_map<
+          node_base*, ValueType, Reference, std::forward_iterator_tag> {
+  node_base* op_pre_increment(node_base*& x) const { return x = x->next(); }
+};
+}  // namespace anyxx
+
+TEST_CASE("example 3 iterator adaptor ") {
+  std::unique_ptr<node<int>> nodes(new node<int>(42));
+  nodes->append(new node<std::string>("is greater than:"));
+  nodes->append(new node<int>(13));
+
+  using node_iterator = anyxx::using_<node_base*>::as<anyxx::forward_iterator<
+      node_base*, node_base&, std::forward_iterator_tag>>;
+  using node_const_iterator =
+      anyxx::using_<node_base*>::as<anyxx::forward_iterator<
+          node_base const*, const node_base&, std::forward_iterator_tag>>;
+  std::stringstream out1;
+  std::copy(node_iterator(nodes.get()), node_iterator(),
+            std::ostream_iterator<node_base>(out1, " "));
+  CHECK(out1.str() == "42 is greater than: 13 ");
+  std::for_each(node_iterator(nodes.get()), node_iterator(),
+                [](auto& node) { node.double_me(); });
+  std::stringstream out2;
+  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),
+            std::ostream_iterator<node_base>(out2, "/"));
+  CHECK(out2.str() == "84/is greater than:is greater than:/26/");
+}

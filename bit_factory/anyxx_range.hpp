@@ -12,12 +12,16 @@ struct forward_iterator_val_size {
   static constexpr std::size_t value = iterator_val_proxy_size;
 };
 
-template <typename I>
+struct deduce_type {};
+
+template <typename I, typename IteratorCategory>
 struct iterator_category_impl {
-  using type = typename std::iterator_traits<I>::iterator_category;
+  using type = std::conditional_t<std::same_as<IteratorCategory, deduce_type>,
+                                  typename std::iterator_traits<I>::value_type,
+                                  IteratorCategory>;
 };
-template <>
-struct iterator_category_impl<void*> {
+template <typename IteratorCategory>
+struct iterator_category_impl<void*, IteratorCategory> {
   using type = std::forward_iterator_tag;
 };
 template <typename I>
@@ -28,7 +32,6 @@ template <>
 struct difference_type_impl<void*> {
   using type = std::ptrdiff_t;
 };
-struct deduce_type {};
 template <typename I, typename ValueType>
 struct value_type_impl {
   using type = std::conditional_t<std::same_as<ValueType, deduce_type>,
@@ -67,19 +70,20 @@ auto post_increment_def = [](T& self) -> T {
 };
 
 TRAIT_TEMPLATE_EX_(
-    ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
+    ((ValueType), (Reference), (IteratorCategory)), forward_iterator,
+    dynamic_value, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
      ANY_FN_DEF(public, anyxx::self, post_increment, (), ,
                 std::bind(post_increment_def<T>, x)),
-     ANY_OP_MAP_NAMED(typename deduced_type::reference, *, op_dereference, (),
-                      const),
+     ANY_OP_DEF(public, typename deduced_type::reference, *, op_dereference, (), const,
+                ([&x]() -> typename deduced_type::reference { return *x; })),
      ANY_OP_DEF(public, bool, ==, equal, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x == r; })),
      ANY_OP_DEF(public, bool, !=, inequal, (anyxx::self const&), const,
                 ([&x](auto const& r) { return x != r; }))),
     ,
-    (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
-              (iterator_category_impl<T>::type)),
+    (ANY_TYPE((), iterator_category, IteratorCategory,
+              (iterator_category_impl<T, IteratorCategory>::type)),
      ANY_TYPE((), difference_type, std::ptrdiff_t,
               (difference_type_impl<T>::type)),
      ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
@@ -89,13 +93,18 @@ TRAIT_TEMPLATE_EX_(
     }))
 
 template <typename ValueType, typename Reference,
+          typename IteratorCategory = std::forward_iterator_tag,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
-using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
+using any_forward_iterator =
+    any<forward_iterator<ValueType, Reference, IteratorCategory>, Proxy>;
 
-TRAIT_TEMPLATE_(
-    ((ValueType), (Reference)), forward_range, dynamic_value, (),
-    (ANY_FN((any_forward_iterator<ValueType, Reference>), begin, (), const),
-     ANY_FN((any_forward_iterator<ValueType, Reference>), end, (), const)))
+TRAIT_TEMPLATE_(((ValueType), (Reference)), forward_range, dynamic_value, (),
+                (ANY_FN((any_forward_iterator<ValueType, Reference,
+                                              std::forward_iterator_tag>),
+                        begin, (), const),
+                 ANY_FN((any_forward_iterator<ValueType, Reference,
+                                              std::forward_iterator_tag>),
+                        end, (), const)))
 
 template <typename ValueType, typename Reference, typename Proxy = anyxx::cref>
 using any_forward_range = any<forward_range<ValueType, Reference>, Proxy>;
@@ -146,13 +155,15 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
   }
 };
 
+static_assert(any_forward_iterator<self, self, std::forward_iterator_tag>::
+                  v_table_t::val_nullable::value == true);
 static_assert(
-    any_forward_iterator<self, self>::v_table_t::val_nullable::value == true);
-static_assert(
-    std::same_as<any_forward_iterator<self, self>::v_table_t::any_value_t,
-                 any<forward_iterator<self, self>,
+    std::same_as<any_forward_iterator<self, self, std::forward_iterator_tag>::
+                     v_table_t::any_value_t,
+                 any<forward_iterator<self, self, std::forward_iterator_tag>,
                      val<std::true_type, iterator_val_proxy_size>>>);
-static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
+static_assert(std::forward_iterator<
+              any_forward_iterator<self, self, std::forward_iterator_tag>>);
 static_assert(std::ranges::forward_range<any_forward_range<self, self>>);
 
 template <typename Trait, typename R>
