@@ -396,24 +396,25 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>anyxx {</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ValueType, <span class="keyword">typename</span> Reference&gt;</div>
-<div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference,</div>
-<div class="line">                                  std::forward_iterator_tag&gt;</div>
-<div class="line">    : anyxx::forward_iterator_default_model_map&lt;</div>
-<div class="line">          node_base*, ValueType, Reference, std::forward_iterator_tag&gt; {</div>
+<div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference&gt;</div>
+<div class="line">    : anyxx::forward_iterator_default_model_map&lt;node_base*, ValueType,</div>
+<div class="line">                                                Reference&gt; {</div>
 <div class="line">  node_base* op_pre_increment(node_base*&amp; x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> x = x-&gt;next(); }</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">namespace </span>{</div>
+<div class="line"><span class="keyword">using </span>node_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;</div>
+<div class="line">    anyxx::forward_iterator&lt;node_base*, node_base&amp;&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_const_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;</div>
+<div class="line">    anyxx::forward_iterator&lt;node_base const*, const node_base&amp;&gt;&gt;;</div>
+<div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 3 iterator adaptor &quot;</span>) {</div>
 <div class="line">  std::unique_ptr&lt;node&lt;int&gt;&gt; nodes(<span class="keyword">new</span> node&lt;int&gt;(42));</div>
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;std::string&gt;(<span class="stringliteral">&quot;is greater than:&quot;</span>));</div>
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;int&gt;(13));</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">using </span>node_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;anyxx::forward_iterator&lt;</div>
-<div class="line">      node_base*, node_base&amp;, std::forward_iterator_tag&gt;&gt;;</div>
-<div class="line">  <span class="keyword">using </span>node_const_iterator =</div>
-<div class="line">      <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;anyxx::forward_iterator&lt;</div>
-<div class="line">          node_base <span class="keyword">const</span>*, <span class="keyword">const</span> node_base&amp;, std::forward_iterator_tag&gt;&gt;;</div>
 <div class="line">  std::stringstream out1;</div>
 <div class="line">  std::copy(node_iterator(nodes.get()), node_iterator(),</div>
 <div class="line">            std::ostream_iterator&lt;node_base&gt;(out1, <span class="stringliteral">&quot; &quot;</span>));</div>
