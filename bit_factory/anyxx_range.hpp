@@ -94,14 +94,14 @@ template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 
-TRAIT_TEMPLATE_(((AnyIterator)), forward_range, dynamic_value, (),
+TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_value, (),
                 (ANY_FN(AnyIterator, begin, (), const),
                  ANY_FN(AnyIterator, end, (), const)))
 
 template <typename AnyIterator, typename Proxy = anyxx::cref>
-using any_forward_range = any<forward_range<AnyIterator>, Proxy>;
+using any_range = any<range<AnyIterator>, Proxy>;
 
-using any_self_forward_range = any_forward_range<any_forward_iterator<self, self>>;
+using any_self_forward_range = any_range<any_forward_iterator<self, self>>;
 template <typename A>
 concept is_any_self_forward_range =
     is_any<A> && std::ranges::forward_range<A> &&
@@ -113,11 +113,11 @@ template <typename AnyForwardRange>
 struct translate_sig_map<AnyForwardRange const&> : translate_sig_map<self> {
   template <typename AnyValue>
   using v_table_param =
-      any_forward_range<any_forward_iterator<AnyValue, AnyValue>,
+      any_range<any_forward_iterator<AnyValue, AnyValue>,
                         typename AnyForwardRange::proxy_t> const&;
   template <typename Model>
   using concept_arg =
-      anyxx::any_forward_range<anyxx::any_forward_iterator<Model, Model>,
+      anyxx::any_range<anyxx::any_forward_iterator<Model, Model>,
                                anyxx::cref>;
 };
 
@@ -158,7 +158,7 @@ static_assert(
                      val<std::true_type, iterator_val_proxy_size>>>);
 static_assert(std::forward_iterator<any_forward_iterator<self, self>>);
 static_assert(std::ranges::forward_range<
-              any_forward_range<any_forward_iterator<self, self>>>);
+              any_range<any_forward_iterator<self, self>>>);
 
 template <typename Trait, typename R>
 auto trait_range_as(R&& r) {
