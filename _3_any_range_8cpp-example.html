@@ -102,8 +102,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>example_3 {</div>
 <div class="line"> </div>
-<div class="line">anyxx::any_range&lt;anyxx::any_forward_iterator&lt;int, int const&amp;&gt;&gt; a_range(</div>
-<div class="line">    <span class="keywordtype">bool</span> use_list) {</div>
+<div class="line">anyxx::any_forward_range&lt;int, int const&amp;&gt; a_range(<span class="keywordtype">bool</span> use_list) {</div>
 <div class="line">  <span class="keyword">static</span> std::vector&lt;int&gt; v = {1, 2, 3};</div>
 <div class="line">  <span class="keyword">static</span> std::list&lt;int&gt; l = {4, 5, 6};</div>
 <div class="line">  <span class="keywordflow">if</span> (use_list)</div>
@@ -112,21 +111,20 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordflow">return</span> v;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">anyxx::any_range&lt;anyxx::any_forward_iterator&lt;int, int const&amp;&gt;,</div>
-<div class="line">                         <a id="_a0" name="_a0"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt;</div>
-<div class="line">a_range_value(<span class="keywordtype">bool</span> use_list) {</div>
+<div class="line">anyxx::any_forward_range&lt;int, int const&amp;, anyxx::val&lt;&gt;&gt; a_range_value(</div>
+<div class="line">    <span class="keywordtype">bool</span> use_list) {</div>
 <div class="line">  <span class="keywordflow">if</span> (use_list)</div>
 <div class="line">    <span class="keywordflow">return</span> std::list&lt;int&gt;{4, 5, 6};</div>
 <div class="line">  <span class="keywordflow">else</span></div>
 <div class="line">    <span class="keywordflow">return</span> std::vector&lt;int&gt;{1, 2, 3};</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(stringable, anyxx::dynamic_value,</div>
-<div class="line">       (<a id="a2" name="a2"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(stringable, anyxx::dynamic_value,</div>
+<div class="line">       (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
 <div class="line">                   [&amp;x]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, x); })))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy&gt;</div>
-<div class="line"><span class="keyword">using</span> any_stringable = <a id="_a3" name="_a3"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;stringable, Proxy&gt;</a>;</div>
+<div class="line"><span class="keyword">using</span> any_stringable = <a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;stringable, Proxy&gt;</a>;</div>
 <div class="line"> </div>
 <div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(node, anyxx::dynamic_value,</div>
 <div class="line">       (<a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, sum,</div>
@@ -151,7 +149,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v0{};</div>
-<div class="line">    any_range&lt;any_forward_iterator&lt;int, int&gt;&gt; r0{v0};</div>
+<div class="line">    any_forward_range&lt;int, int&gt; r0{v0};</div>
 <div class="line">    {</div>
 <div class="line">      r0.begin();</div>
 <div class="line">    }</div>
@@ -167,7 +165,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v0{};</div>
-<div class="line">    any_range&lt;anyxx::any_forward_iterator&lt;int, int&gt;&gt; r0{v0};</div>
+<div class="line">    any_forward_range&lt;int&gt; r0{v0};</div>
 <div class="line">    {</div>
 <div class="line">      any_forward_iterator&lt;int, int&gt; b{r0.begin()};</div>
 <div class="line">      any_forward_iterator&lt;int, int&gt; e{r0.end()};</div>
@@ -229,7 +227,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;range&lt;any_forward_iterator&lt;int, int&gt;</a>&gt;, <a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;v_t const&amp;&gt;</a>&gt; r{v};</div>
+<div class="line">    any_forward_range&lt;int, int, using_&lt;v_t const&amp;&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) CHECK(i == v[x++]);</div>
 <div class="line">    CHECK(x == 3);</div>
@@ -244,9 +242,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    any_range&lt;any_forward_iterator&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                                           any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;&gt;</div>
-<div class="line">        r{v};</div>
+<div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) CHECK(i.to_string() == std::to_string(v[x++]));</div>
 <div class="line">    CHECK(x == 3);</div>
@@ -264,9 +260,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;anyxx::range&lt;any_forward_iterator&lt;</div>
-<div class="line">                   any_stringable&lt;anyxx::val&lt;&gt;&gt;, any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;&gt;,</div>
-<div class="line">               <a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;v_t const&amp;&gt;</a>&gt;</div>
+<div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
+<div class="line">                      any_stringable&lt;anyxx::val&lt;&gt;&gt;, <a id="_a3" name="_a3"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;v_t const&amp;&gt;</a>&gt;</div>
 <div class="line">        r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
@@ -284,12 +279,10 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    any_range&lt;any_forward_iterator&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                                           any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;&gt;</div>
-<div class="line">        r{v};</div>
+<div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : std::views::transform(</div>
-<div class="line">             r, [](any_stringable&lt;<a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; v) -&gt; <span class="keywordtype">int</span> {</div>
+<div class="line">             r, [](any_stringable&lt;<a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; v) -&gt; <span class="keywordtype">int</span> {</div>
 <div class="line">               <span class="keywordflow">return</span> *anyxx::unerase_cast&lt;int&gt;(v);</div>
 <div class="line">             })) {</div>
 <div class="line">      std::println(<span class="stringliteral">&quot;{}&quot;</span>, i);</div>
@@ -316,9 +309,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    CHECK(get_proxy_value(r) == 6);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    any_range&lt;any_forward_iterator&lt;any_node&lt;&gt;, any_node&lt;&gt;&gt;,</div>
-<div class="line">                      <a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt;</div>
-<div class="line">        r{v};</div>
+<div class="line">    any_forward_range&lt;any_node&lt;&gt;, any_node&lt;&gt;, <a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; r{v};</div>
 <div class="line">    {</div>
 <div class="line">      any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
 <div class="line">      <span class="keyword">auto</span> result = n1.sum(r);</div>
@@ -345,9 +336,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_assignable_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(v2) &lt;= anyxx::small_object_size);</div>
-<div class="line">  any_range&lt;any_forward_iterator&lt;using_&lt;int&gt;::as&lt;stringable&gt;,</div>
-<div class="line">                                         <a id="_a5" name="_a5"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt;&gt;</div>
-<div class="line">      r{v2};</div>
+<div class="line">  any_forward_range&lt;using_&lt;int&gt;::as&lt;stringable&gt;, <a id="_a5" name="_a5"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt; r{</div>
+<div class="line">      v2};</div>
 <div class="line">  std::string result;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
 <div class="line">    result += i.to_string();</div>
@@ -356,8 +346,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line"><span class="comment">// iterator adapter like boost::iterator_adaptor based on</span></div>
-<div class="line"><span class="comment">// anyxx::forward_iterator Work in progress!!!</span></div>
-<div class="line"> </div>
+<div class="line"><span class="comment">// anyxx::forward_iterator</span></div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"><span class="keyword">struct </span>node_base {</div>
 <div class="line">  node_base() : m_next(0) {}</div>
@@ -394,39 +383,51 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> <span class="keyword">private</span>:</div>
 <div class="line">  T m_value;</div>
 <div class="line">};</div>
-<div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>anyxx {</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> ValueType, <span class="keyword">typename</span> Reference&gt;</div>
 <div class="line"><span class="keyword">struct </span>forward_iterator_model_map&lt;node_base*, ValueType, Reference&gt;</div>
-<div class="line">    : anyxx::forward_iterator_default_model_map&lt;node_base*, ValueType,</div>
-<div class="line">                                                Reference&gt; {</div>
+<div class="line">    : forward_iterator_default_model_map&lt;node_base*, ValueType, Reference&gt; {</div>
 <div class="line">  node_base* op_pre_increment(node_base*&amp; x)<span class="keyword"> const </span>{ <span class="keywordflow">return</span> x = x-&gt;next(); }</div>
+<div class="line">};</div>
+<div class="line">}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"><span class="keyword">namespace </span>{</div>
+<div class="line"><span class="keyword">using </span>node_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;</div>
+<div class="line">    anyxx::forward_iterator&lt;node_base, node_base&amp;&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_const_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;</div>
+<div class="line">    anyxx::forward_iterator&lt;node_base const, const node_base&amp;&gt;&gt;;</div>
+<div class="line">}  <span class="comment">// namespace</span></div>
+<div class="line"><span class="keyword">namespace </span>anyxx {</div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Node, <span class="keyword">typename</span> Iterator&gt;</div>
+<div class="line">  <span class="keyword">requires</span> std::derived_from&lt;Node, node_base&gt;</div>
+<div class="line"><span class="keyword">struct </span>range_model_map&lt;Node*, Iterator&gt;</div>
+<div class="line">    : range_default_model_map&lt;node_base*, Iterator&gt; {</div>
+<div class="line">  node_base* begin(Node* node) { <span class="keywordflow">return</span> node; }</div>
+<div class="line">  node_base* end(Node*) { <span class="keywordflow">return</span> <span class="keyword">nullptr</span>; }</div>
 <div class="line">};</div>
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
-<div class="line"><span class="keyword">using </span>node_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;</div>
-<div class="line">    anyxx::forward_iterator&lt;node_base*, node_base&amp;&gt;&gt;;</div>
-<div class="line"><span class="keyword">using </span>node_const_iterator = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;</div>
-<div class="line">    anyxx::forward_iterator&lt;node_base const*, const node_base&amp;&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_range = anyxx::any_forward_range&lt;node_base, node_base&amp;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_const_range = anyxx::any_forward_range&lt;node_base, node_base const&amp;&gt;;</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 3 iterator adaptor &quot;</span>) {</div>
+<div class="line">  <span class="keyword">static_assert</span>(std::ranges::input_range&lt;node_range&gt;);</div>
 <div class="line">  std::unique_ptr&lt;node&lt;int&gt;&gt; nodes(<span class="keyword">new</span> node&lt;int&gt;(42));</div>
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;std::string&gt;(<span class="stringliteral">&quot;is greater than:&quot;</span>));</div>
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;int&gt;(13));</div>
 <div class="line"> </div>
+<div class="line">  <span class="keyword">auto</span> r = node_range(nodes.get());</div>
 <div class="line">  std::stringstream out1;</div>
-<div class="line">  std::copy(node_iterator(nodes.get()), node_iterator(),</div>
-<div class="line">            std::ostream_iterator&lt;node_base&gt;(out1, <span class="stringliteral">&quot; &quot;</span>));</div>
+<div class="line">  std::ranges::copy(r, std::ostream_iterator&lt;node_base&gt;(out1, <span class="stringliteral">&quot; &quot;</span>));</div>
 <div class="line">  CHECK(out1.str() == <span class="stringliteral">&quot;42 is greater than: 13 &quot;</span>);</div>
 <div class="line">  std::for_each(node_iterator(nodes.get()), node_iterator(),</div>
 <div class="line">                [](<span class="keyword">auto</span>&amp; node) { node.double_me(); });</div>
 <div class="line">  std::stringstream out2;</div>
-<div class="line">  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),</div>
-<div class="line">            std::ostream_iterator&lt;node_base&gt;(out2, <span class="stringliteral">&quot;/&quot;</span>));</div>
+<div class="line">  <span class="keyword">auto</span> cr = node_const_range(nodes.get());</div>
+<div class="line">  std::ranges::copy(cr, std::ostream_iterator&lt;node_base&gt;(out2, <span class="stringliteral">&quot;/&quot;</span>));</div>
 <div class="line">  CHECK(out2.str() == <span class="stringliteral">&quot;84/is greater than:is greater than:/26/&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>

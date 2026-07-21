@@ -158,9 +158,7 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid_traited(</div>
-<div class="line">    Monoid <span class="keyword">const</span>&amp; m,</div>
-<div class="line">    anyxx::any_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;, <a id="a5" name="a5"></a><a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt;&amp;</div>
-<div class="line">        r);</div>
+<div class="line">    Monoid <span class="keyword">const</span>&amp; m, anyxx::any_forward_range&lt;Monoid, Monoid, anyxx::cref&gt;&amp; r);</div>
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> P1&gt;</div>
 <div class="line">  <span class="keyword">requires</span>(!anyxx::is_any&lt;P1&gt;)</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid(P1 <span class="keyword">const</span>&amp; p1, std::ranges::forward_range <span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
@@ -168,16 +166,15 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  test_monoid_traited&lt;any_monoid&gt;(any_monoid{p1}, r);</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
-<div class="line"><span class="keywordtype">void</span> test_monoid(Monoid <span class="keyword">const</span>&amp; m,</div>
-<div class="line">                 anyxx::any_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
-<div class="line">                                  <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line"><span class="keywordtype">void</span> test_monoid(</div>
+<div class="line">    Monoid <span class="keyword">const</span>&amp; m,</div>
+<div class="line">    anyxx::any_forward_range&lt;Monoid, Monoid, anyxx::cref&gt; <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  test_monoid_traited&lt;Monoid&gt;(m, r);</div>
 <div class="line">}</div>
 <div class="line"><span class="keyword">template</span> &lt;anyxx::is_any Mono<span class="keywordtype">id</span>&gt;</div>
 <div class="line"><span class="keywordtype">void</span> test_monoid_traited(</div>
 <div class="line">    Monoid <span class="keyword">const</span>&amp; m,</div>
-<div class="line">    anyxx::any_range&lt;anyxx::any_forward_iterator&lt;Monoid, Monoid&gt;,</div>
-<div class="line">                     <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">    anyxx::any_forward_range&lt;Monoid, Monoid, anyxx::cref&gt; <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">  <span class="keyword">auto</span> <span class="keywordtype">id</span> = m.id();</div>
 <div class="line">  <span class="keyword">using </span>type_1 = <span class="keyword">decltype</span>(m.op(<span class="keywordtype">id</span>.op(m)));</div>
 <div class="line">  <span class="keyword">using </span>type_2 = <span class="keyword">decltype</span>(m.op(m.op(<span class="keywordtype">id</span>)));</div>
@@ -193,10 +190,8 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="line">  CHECK(c2);</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">anyxx::any_range&lt;anyxx::any_forward_iterator&lt;any_monoid&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                                             any_monoid&lt;anyxx::val&lt;&gt;&gt;&gt;,</div>
-<div class="line">                 anyxx::val&lt;&gt;&gt;</div>
-<div class="line">make_a_range(<span class="keywordtype">bool</span> use_list) {</div>
+<div class="line">anyxx::any_forward_range&lt;any_monoid&lt;&gt;, any_monoid&lt;&gt;, anyxx::val&lt;&gt;&gt; make_a_range(</div>
+<div class="line">    <span class="keywordtype">bool</span> use_list) {</div>
 <div class="line">  <span class="keyword">using namespace </span>std::string_literals;</div>
 <div class="line">  <span class="keywordflow">if</span> (use_list)</div>
 <div class="line">    <span class="keywordflow">return</span> std::list&lt;any_monoid&lt;anyxx::val&lt;&gt;&gt;&gt;{{<span class="stringliteral">&quot;2&quot;</span>s}, {<span class="stringliteral">&quot;3&quot;</span>s}};</div>
@@ -262,7 +257,6 @@ $(function(){initNavTree('_2b_trait_monoid_8cpp-example.html','',''); });
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__fn__macros_html_ga8f8492068e06ea999e2ebf95050e1a57"><div class="ttname"><a href="group__fn__macros.html#ga8f8492068e06ea999e2ebf95050e1a57">ANY_OP_DEF</a></div><div class="ttdeci">#define ANY_OP_DEF(access, ret, op, name, params, const_,...)</div><div class="ttdoc">TRAIT operator with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1159</div></div>
 <div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1286</div></div>
-<div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1437</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gade6711771425f1b9a231fe819691ce04"><div class="ttname"><a href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:826</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gaf19a15e6c5658db6712181244843ceb5"><div class="ttname"><a href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1078</div></div>
 </div><!-- fragment --> </div><!-- contents -->
