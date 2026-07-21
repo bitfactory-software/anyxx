@@ -419,14 +419,15 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;std::string&gt;(<span class="stringliteral">&quot;is greater than:&quot;</span>));</div>
 <div class="line">  nodes-&gt;append(<span class="keyword">new</span> node&lt;int&gt;(13));</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">auto</span> r = node_range(nodes.get());</div>
+<div class="line">  <span class="keyword">auto</span> n = nodes.get();</div>
+<div class="line">  <span class="keyword">auto</span> r = node_range(n);</div>
 <div class="line">  std::stringstream out1;</div>
 <div class="line">  std::ranges::copy(r, std::ostream_iterator&lt;node_base&gt;(out1, <span class="stringliteral">&quot; &quot;</span>));</div>
 <div class="line">  CHECK(out1.str() == <span class="stringliteral">&quot;42 is greater than: 13 &quot;</span>);</div>
-<div class="line">  std::for_each(node_iterator(nodes.get()), node_iterator(),</div>
+<div class="line">  std::for_each(node_iterator(n), node_iterator(),</div>
 <div class="line">                [](<span class="keyword">auto</span>&amp; node) { node.double_me(); });</div>
 <div class="line">  std::stringstream out2;</div>
-<div class="line">  <span class="keyword">auto</span> cr = node_const_range(nodes.get());</div>
+<div class="line">  <span class="keyword">auto</span> cr = node_const_range(n);</div>
 <div class="line">  std::ranges::copy(cr, std::ostream_iterator&lt;node_base&gt;(out2, <span class="stringliteral">&quot;/&quot;</span>));</div>
 <div class="line">  CHECK(out2.str() == <span class="stringliteral">&quot;84/is greater than:is greater than:/26/&quot;</span>);</div>
 <div class="line">}</div>
