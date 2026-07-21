@@ -166,7 +166,8 @@ TEST_CASE(
   using v_t = std::vector<int>;
   {
     v_t v{1, 2, 3};
-    any_forward_range<any_stringable<anyxx::val<>>, any_stringable<anyxx::val<>>, using_<v_t const&>>
+    any_forward_range<any_stringable<anyxx::val<>>,
+                      any_stringable<anyxx::val<>>, using_<v_t const&>>
         r{v};
     int x = 0;
     for (auto i : r) {
@@ -241,8 +242,8 @@ TEST_CASE("example 3 static any range of view") {
   static_assert(std::is_trivially_copy_constructible_v<decltype(v2)>);
   static_assert(std::is_trivially_copy_assignable_v<decltype(v2)>);
   static_assert(sizeof(v2) <= anyxx::small_object_size);
-  any_forward_range<using_<int>::as<stringable>, using_<int>::as<stringable>>
-      r{v2};
+  any_forward_range<using_<int>::as<stringable>, using_<int>::as<stringable>> r{
+      v2};
   std::string result;
   for (auto i : r) {
     result += i.to_string();
@@ -288,38 +289,50 @@ struct node : node_base {
  private:
   T m_value;
 };
-
 }  // namespace
 
 namespace anyxx {
 template <typename ValueType, typename Reference>
 struct forward_iterator_model_map<node_base*, ValueType, Reference>
-    : anyxx::forward_iterator_default_model_map<node_base*, ValueType,
-                                                Reference> {
+    : forward_iterator_default_model_map<node_base*, ValueType, Reference> {
   node_base* op_pre_increment(node_base*& x) const { return x = x->next(); }
+};
+}  // namespace anyxx
+namespace {
+using node_iterator = anyxx::using_<node_base*>::as<
+    anyxx::forward_iterator<node_base, node_base&>>;
+using node_const_iterator = anyxx::using_<node_base*>::as<
+    anyxx::forward_iterator<node_base const, const node_base&>>;
+}  // namespace
+namespace anyxx {
+template <typename Node, typename Iterator>
+  requires std::derived_from<Node, node_base>
+struct range_model_map<Node*, Iterator>
+    : range_default_model_map<node_base*, Iterator> {
+  node_base* begin(Node* node) { return node; }
+  node_base* end(Node*) { return nullptr; }
 };
 }  // namespace anyxx
 
 namespace {
-using node_iterator = anyxx::using_<node_base*>::as<
-    anyxx::forward_iterator<node_base*, node_base&>>;
-using node_const_iterator = anyxx::using_<node_base*>::as<
-    anyxx::forward_iterator<node_base const*, const node_base&>>;
+using node_range = anyxx::any_forward_range<node_base, node_base&>;
+using node_const_range = anyxx::any_forward_range<node_base, node_base const&>;
 }  // namespace
 
 TEST_CASE("example 3 iterator adaptor ") {
+  static_assert(std::ranges::input_range<node_range>);
   std::unique_ptr<node<int>> nodes(new node<int>(42));
   nodes->append(new node<std::string>("is greater than:"));
   nodes->append(new node<int>(13));
 
+  auto r = node_range(nodes.get());
   std::stringstream out1;
-  std::copy(node_iterator(nodes.get()), node_iterator(),
-            std::ostream_iterator<node_base>(out1, " "));
+  std::ranges::copy(r, std::ostream_iterator<node_base>(out1, " "));
   CHECK(out1.str() == "42 is greater than: 13 ");
   std::for_each(node_iterator(nodes.get()), node_iterator(),
                 [](auto& node) { node.double_me(); });
   std::stringstream out2;
-  std::copy(node_const_iterator(nodes.get()), node_const_iterator(),
-            std::ostream_iterator<node_base>(out2, "/"));
+  auto cr = node_const_range(nodes.get());
+  std::ranges::copy(cr, std::ostream_iterator<node_base>(out2, "/"));
   CHECK(out2.str() == "84/is greater than:is greater than:/26/");
 }
