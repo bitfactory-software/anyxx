@@ -24,8 +24,9 @@ TRAIT_EX_(monoid, anyxx::dynamic_value,
                             anyxx::trait_as<monoid>(r)}));  // NOLINT
                       }),
            ANY_FN_DEF(public, anyxx::self, concat,
-                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                 anyxx::cref> const&)),
+                      ((anyxx::any_forward_range<
+                          anyxx::any_forward_iterator<anyxx::self, anyxx::self>,
+                          anyxx::cref> const&)),
                       const,
                       [&x](const auto& r) {
                         std::println("concat-default {}", typeid(T).name());
@@ -66,7 +67,9 @@ namespace example_2b {
 
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
-    Monoid const& m, anyxx::any_forward_range<Monoid, Monoid, anyxx::cref>& r);
+    Monoid const& m,
+    anyxx::any_forward_range<anyxx::any_forward_iterator<Monoid, Monoid>,
+                             anyxx::cref>& r);
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
@@ -76,13 +79,15 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
 template <anyxx::is_any Monoid>
 void test_monoid(
     Monoid const& m,
-    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+    anyxx::any_forward_range<anyxx::any_forward_iterator<Monoid, Monoid>,
+                             anyxx::cref> const& r) {
   test_monoid_traited<Monoid>(m, r);
 }
 template <anyxx::is_any Monoid>
 void test_monoid_traited(
     Monoid const& m,
-    anyxx::any_forward_range<Monoid, Monoid, anyxx::cref> const& r) {
+    anyxx::any_forward_range<anyxx::any_forward_iterator<Monoid, Monoid>,
+                             anyxx::cref> const& r) {
   auto id = m.id();
   using type_1 = decltype(m.op(id.op(m)));
   using type_2 = decltype(m.op(m.op(id)));
@@ -98,7 +103,8 @@ void test_monoid_traited(
   CHECK(c2);
 }
 
-anyxx::any_forward_range<any_monoid<anyxx::val<>>, any_monoid<anyxx::val<>>,
+anyxx::any_forward_range<anyxx::any_forward_iterator<any_monoid<anyxx::val<>>,
+                                                     any_monoid<anyxx::val<>>>,
                          anyxx::val<>>
 make_a_range(bool use_list) {
   using namespace std::string_literals;
