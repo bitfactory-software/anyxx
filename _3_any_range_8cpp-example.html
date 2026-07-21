@@ -102,7 +102,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>example_3 {</div>
 <div class="line"> </div>
-<div class="line">anyxx::any_forward_range&lt;int, int const&amp;&gt; a_range(<span class="keywordtype">bool</span> use_list) {</div>
+<div class="line">anyxx::any_forward_range&lt;anyxx::any_forward_iterator&lt;int, int const&amp;&gt;&gt; a_range(</div>
+<div class="line">    <span class="keywordtype">bool</span> use_list) {</div>
 <div class="line">  <span class="keyword">static</span> std::vector&lt;int&gt; v = {1, 2, 3};</div>
 <div class="line">  <span class="keyword">static</span> std::list&lt;int&gt; l = {4, 5, 6};</div>
 <div class="line">  <span class="keywordflow">if</span> (use_list)</div>
@@ -111,32 +112,34 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordflow">return</span> v;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line">anyxx::any_forward_range&lt;int, int const&amp;, anyxx::val&lt;&gt;&gt; a_range_value(</div>
-<div class="line">    <span class="keywordtype">bool</span> use_list) {</div>
+<div class="line">anyxx::any_forward_range&lt;anyxx::any_forward_iterator&lt;int, int const&amp;&gt;,</div>
+<div class="line">                         <a id="_a0" name="_a0"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt;</div>
+<div class="line">a_range_value(<span class="keywordtype">bool</span> use_list) {</div>
 <div class="line">  <span class="keywordflow">if</span> (use_list)</div>
 <div class="line">    <span class="keywordflow">return</span> std::list&lt;int&gt;{4, 5, 6};</div>
 <div class="line">  <span class="keywordflow">else</span></div>
 <div class="line">    <span class="keywordflow">return</span> std::vector&lt;int&gt;{1, 2, 3};</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(stringable, anyxx::dynamic_value,</div>
-<div class="line">       (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
+<div class="line"><a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(stringable, anyxx::dynamic_value,</div>
+<div class="line">       (<a id="a2" name="a2"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
 <div class="line">                   [&amp;x]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, x); })))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy&gt;</div>
-<div class="line"><span class="keyword">using</span> any_stringable = <a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;stringable, Proxy&gt;</a>;</div>
+<div class="line"><span class="keyword">using</span> any_stringable = <a id="_a3" name="_a3"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;stringable, Proxy&gt;</a>;</div>
 <div class="line"> </div>
-<div class="line"><a id="a3" name="a3"></a><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(node, anyxx::dynamic_value,</div>
-<div class="line">     (<a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, sum,</div>
-<div class="line">                 ((anyxx::any_forward_range&lt;anyxx::self, anyxx::self,</div>
-<div class="line">                                            <a id="_a4" name="_a4"></a><a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a>&gt; <span class="keyword">const</span>&amp;)),</div>
-<div class="line">                 <span class="keyword">const</span>, [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
-<div class="line">                   <span class="keyword">auto</span> s = x;</div>
-<div class="line">                   <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
-<div class="line">                     s += i;</div>
-<div class="line">                   }</div>
-<div class="line">                   <span class="keywordflow">return</span> s;</div>
-<div class="line">                 })), );</div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(node, anyxx::dynamic_value,</div>
+<div class="line">       (<a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, sum,</div>
+<div class="line">                   ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)), <span class="keyword">const</span>,</div>
+<div class="line">                   [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
+<div class="line">                     <span class="keyword">auto</span> s = x;</div>
+<div class="line">                     <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
+<div class="line">                       s += i;</div>
+<div class="line">                     }</div>
+<div class="line">                     <span class="keywordflow">return</span> s;</div>
+<div class="line">                   })));</div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = anyxx::val&lt;&gt;&gt;</div>
+<div class="line"><span class="keyword">using </span>any_node = <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;node, Proxy&gt;</a>;</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_3</span></div>
 <div class="line"> </div>
@@ -148,7 +151,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v0{};</div>
-<div class="line">    any_forward_range&lt;int, int&gt; r0{v0};</div>
+<div class="line">    any_forward_range&lt;any_forward_iterator&lt;int, int&gt;&gt; r0{v0};</div>
 <div class="line">    {</div>
 <div class="line">      r0.begin();</div>
 <div class="line">    }</div>
@@ -164,7 +167,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v0{};</div>
-<div class="line">    any_forward_range&lt;int, int&gt; r0{v0};</div>
+<div class="line">    any_forward_range&lt;anyxx::any_forward_iterator&lt;int, int&gt;&gt; r0{v0};</div>
 <div class="line">    {</div>
 <div class="line">      any_forward_iterator&lt;int, int&gt; b{r0.begin()};</div>
 <div class="line">      any_forward_iterator&lt;int, int&gt; e{r0.end()};</div>
@@ -195,7 +198,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">      }</div>
 <div class="line">      CHECK(x == 3);</div>
 <div class="line">    }</div>
-<div class="line">    any_forward_range&lt;int, int&gt; r{v};</div>
+<div class="line">    any_forward_range&lt;any_forward_iterator&lt;int, int&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
 <div class="line">      CHECK(i == v[x++]);</div>
@@ -226,7 +229,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;forward_range&lt;int, int&gt;</a>, <a id="_a5" name="_a5"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;v_t const&amp;&gt;</a>&gt; r{v};</div>
+<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">any&lt;forward_range&lt;any_forward_iterator&lt;int, int&gt;</a>&gt;, <a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;v_t const&amp;&gt;</a>&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) CHECK(i == v[x++]);</div>
 <div class="line">    CHECK(x == 3);</div>
@@ -241,8 +244,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                      any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;</div>
+<div class="line">    any_forward_range&lt;any_forward_iterator&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
+<div class="line">                                           any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;&gt;</div>
 <div class="line">        r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) CHECK(i.to_string() == std::to_string(v[x++]));</div>
@@ -261,8 +264,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;anyxx::forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;</a>&gt;,</div>
-<div class="line">                                    any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;,</div>
+<div class="line">    <a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;anyxx::forward_range&lt;any_forward_iterator&lt;</div>
+<div class="line">                   any_stringable&lt;anyxx::val&lt;&gt;&gt;, any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;&gt;,</div>
 <div class="line">               <a class="code hl_struct" href="structanyxx_1_1using__.html">anyxx::using_&lt;v_t const&amp;&gt;</a>&gt;</div>
 <div class="line">        r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
@@ -281,12 +284,12 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">using </span>v_t = std::vector&lt;int&gt;;</div>
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
-<div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                      any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;</div>
+<div class="line">    any_forward_range&lt;any_forward_iterator&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
+<div class="line">                                           any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt;&gt;</div>
 <div class="line">        r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : std::views::transform(</div>
-<div class="line">             r, [](any_stringable&lt;<a id="_a6" name="_a6"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; v) -&gt; <span class="keywordtype">int</span> {</div>
+<div class="line">             r, [](any_stringable&lt;<a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; v) -&gt; <span class="keywordtype">int</span> {</div>
 <div class="line">               <span class="keywordflow">return</span> *anyxx::unerase_cast&lt;int&gt;(v);</div>
 <div class="line">             })) {</div>
 <div class="line">      std::println(<span class="stringliteral">&quot;{}&quot;</span>, i);</div>
@@ -313,20 +316,19 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    CHECK(get_proxy_value(r) == 6);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    any_forward_range&lt;any_node&lt;anyxx::val&lt;&gt;&gt;, any_node&lt;anyxx::val&lt;&gt;&gt;,</div>
+<div class="line">    any_forward_range&lt;any_forward_iterator&lt;any_node&lt;&gt;, any_node&lt;&gt;&gt;,</div>
 <div class="line">                      <a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt;</div>
 <div class="line">        r{v};</div>
-<div class="line">    any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
-<div class="line">    <span class="keyword">auto</span> result = n1.sum(r);</div>
-<div class="line">    CHECK(get_proxy_value(result) == 6);</div>
-<div class="line">  }</div>
-<div class="line">  {</div>
-<div class="line">    any_forward_range&lt;any_node&lt;anyxx::val&lt;&gt;&gt;, any_node&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                      <a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt;</div>
-<div class="line">        r{v};</div>
-<div class="line">    any_node&lt;val&lt;&gt;&gt; n1{0};</div>
-<div class="line">    <span class="keyword">auto</span> result = n1.sum(r);</div>
-<div class="line">    CHECK(*unerase_cast&lt;int&gt;(result) == 6);</div>
+<div class="line">    {</div>
+<div class="line">      any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
+<div class="line">      <span class="keyword">auto</span> result = n1.sum(r);</div>
+<div class="line">      CHECK(get_proxy_value(result) == 6);</div>
+<div class="line">    }</div>
+<div class="line">    {</div>
+<div class="line">      any_node&lt;&gt; n1{0};</div>
+<div class="line">      <span class="keyword">auto</span> result = n1.sum(r);</div>
+<div class="line">      CHECK(*unerase_cast&lt;int&gt;(result) == 6);</div>
+<div class="line">    }</div>
 <div class="line">  }</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -343,8 +345,9 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_assignable_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(v2) &lt;= anyxx::small_object_size);</div>
-<div class="line">  any_forward_range&lt;using_&lt;int&gt;::as&lt;stringable&gt;, <a id="_a7" name="_a7"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt; r{</div>
-<div class="line">      v2};</div>
+<div class="line">  any_forward_range&lt;any_forward_iterator&lt;using_&lt;int&gt;::as&lt;stringable&gt;,</div>
+<div class="line">                                         <a id="_a5" name="_a5"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt;&gt;</div>
+<div class="line">      r{v2};</div>
 <div class="line">  std::string result;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
 <div class="line">    result += i.to_string();</div>
@@ -428,8 +431,6 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2993</div></div>
-<div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1437</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><div class="ttname"><a href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a></div><div class="ttdeci">#define ANY_(n, BASE, l, proxy_default)</div><div class="ttdoc">ANY with a baseSee ANY for explanation.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:933</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:833</div></div>
 <div class="ttc" id="agroup__trait__macros_html_gaf19a15e6c5658db6712181244843ceb5"><div class="ttname"><a href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1078</div></div>
 <div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3317</div></div>
