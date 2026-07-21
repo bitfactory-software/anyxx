@@ -325,14 +325,15 @@ TEST_CASE("example 3 iterator adaptor ") {
   nodes->append(new node<std::string>("is greater than:"));
   nodes->append(new node<int>(13));
 
-  auto r = node_range(nodes.get());
+  auto n = nodes.get();
+  auto r = node_range(n);
   std::stringstream out1;
   std::ranges::copy(r, std::ostream_iterator<node_base>(out1, " "));
   CHECK(out1.str() == "42 is greater than: 13 ");
-  std::for_each(node_iterator(nodes.get()), node_iterator(),
+  std::for_each(node_iterator(n), node_iterator(),
                 [](auto& node) { node.double_me(); });
   std::stringstream out2;
-  auto cr = node_const_range(nodes.get());
+  auto cr = node_const_range(n);
   std::ranges::copy(cr, std::ostream_iterator<node_base>(out2, "/"));
   CHECK(out2.str() == "84/is greater than:is greater than:/26/");
 }
