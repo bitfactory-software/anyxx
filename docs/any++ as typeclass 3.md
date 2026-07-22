@@ -1,11 +1,11 @@
-\page subpage3 Concept Maps using C++23 Library Tech, Steve Downey
+\page subpage3 Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey
 
 In 2023, Steve Downey gave a [talk at CppNow](https://www.youtube.com/watch?v=H825py1Jgfk) 
 about [Concept Maps using C++23 Library Tech](https://sdowney.org/posts/index.php/2024/05/19/concept-maps-using-c23-library-tech/). 
 In this talk, he used the Monoid type class as an example.
 
-This is fine, because I only need to copy/paste his code and comment on it to contiue our discussion on the topic ;-)
-To be clear once again, we are here aiming at complie time type checking and default implementations, not at runtime polymorphism, which is the other main focus of Any++!
+This is fine, because I only need to copy/paste his code and comment on it to continue our discussion on the topic ;-)
+To be clear once again, we are here aiming at compile time type checking and default implementations, not at runtime polymorphism, which is the other main focus of Any++!
 
 So here is his implementation of the Monoid type class:
 ```cpp
@@ -41,10 +41,10 @@ struct Monoid : protected Impl {
   }
 };
 ```
-That is the complete implementation of the Monoid type class, and is a good expressin of the indent.
-Is also real close to the Haskell and Rust implementations, and it is pretty close to the original C++0x proposal for Concept Maps.
+That is the complete implementation of the Monoid type class, and is a good expression of the intent.
+It is also real close to the Haskell and Rust implementations, and it is pretty close to the original C++0x proposal for Concept Maps.
 
-Now let us see, how Steve implemnts the mapping of a concrete type to the Monoid type class.
+Now let us see, how Steve implements the mapping of a concrete type to the Monoid type class.
 
 He starts with a general case for all types, that have an monoid "plus" operator and a default constructor, which is the identity element for the monoid:
 ```cpp
@@ -69,10 +69,10 @@ struct PlusMonoidMap : public Monoid<Plus<M>> {
     using Plus<M>::op;
 };
 ```
-This technique leaves an other customization point for the user, which is the choice of the operator and the identity element. 
+This technique leaves another customization point for the user, which is the choice of the operator and the identity element.
 If the user wants to use a different operator, or a different identity element, they can simply define a different mapping for their type by specializing the ``Plus`` class for their type.
 Now he defines the mapping for concrete types. To this end he uses template variables, which are a C++14 feature.
-The mapping for ``int``, ``long`` and ``char`` looks like thhis:
+The mapping for ``int``, ``long`` and ``char`` looks like this:
 ```cpp
 template<class T> auto monoid_concept_map = std::false_type{};
 
@@ -86,8 +86,8 @@ template<>
 constexpr inline auto monoid_concept_map<char> = PlusMonoidMap<char>{};
 ```
 Note the use of ``std::false_type`` as the default value for the mapping, which is a way to indicate that a type has no mapping as ``monoid``.
-With C++0x Concepts, it was contengious, wether there shold be an explicit or implicit mapping.
-In our case, if we want default mapping for all types that have plus and are default constructable, you could use the PlusMonidMap as the value for the general case.
+With C++0x Concepts, it was contentious, whether there should be an explicit or implicit mapping.
+In our case, if we want default mapping for all types that have plus and are default constructable, you could use the PlusMonoidMap as the value for the general case.
 To show, that instead of the identity element, the concatenation operation could be used to define the mapping, he also defines a mapping for ``std::string`` using the concatenation operation:
 ```cpp
 class StringMonoid {
@@ -115,7 +115,7 @@ struct StringMonoidMap : public Monoid<StringMonoid> {
 template<>
 constexpr inline auto monoid_concept_map<std::string> = StringMonoidMap{};
 ```
-Now we can use the Monoid type class with its maping: 
+Now we can use the Monoid type class with its mapping:
 ```cpp
 template<typename P>
 void testP()
@@ -159,7 +159,7 @@ int main() {
 ```
 [See it on Compiler Explorer](https://godbolt.org/z/Yh5rY43Eq)
 
-That is a pretty good technique for complie time customization points.
+That is a pretty good technique for compile time customization points.
 But how good is it compared to other C++ compile time customization point techniques, like SFINAE, tag dispatching, or specialization and the original C++0x proposal for Concept Maps?
 Here we can take look into Barry Revzin proposal ["We need a language mechanism for customization points" P2279R0](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p2279r0.html#c0x-concepts) 
 and use his framework for comparing different techniques for compile time customization points.
@@ -170,11 +170,11 @@ We can fill the chart for Steve's technique like this:
 
 |  | Steve Downey<br> Concept Maps using C++23 Library Tech | Remarks |
 |---|---| ----|
-| Interface visible in code |    ❌ | The map is only visible inside the implemntation of the usage, not at the function signature |
+| Interface visible in code |    ❌ | The map is only visible inside the implementation of the usage, not at the function signature |
 | Providing default implementation |  ✅ | This is great and expressive. |
 | Explicit opt-in |  ✅ | The user has to explicitly opt-in by defining a mapping for their type. |
-| Diagnose incorrect opt-in | 🤷 | The reqire clause, checks if either ``identity`` or ``concat`` is provided.<br>It is not checked, that the signature of mapped functions fits exactly to the requirement, to detect &, const& and copy issues.(Maybe a minor issue?) |
-| Easily invoke the customization | 🤷 | You have to instatiate the map for the proper type to get the functionality. |
+| Diagnose incorrect opt-in | 🤷 | The require clause checks if either ``identity`` or ``concat`` is provided.<br>It is not checked, that the signature of mapped functions fits exactly to the requirement, to detect &, const& and copy issues.(Maybe a minor issue?) |
+| Easily invoke the customization | 🤷 | You have to instantiate the map for the proper type to get the functionality. |
 | Verify implementation | 🤷 | Needs to be verified with additionally supplied concepts. In our case see ``MonoidRequirements`` |
 | Atomic grouping of functionality | ✅ | The mapping is grouped together in a single struct. |
 | Non-intrusive | ✅ | The user does not have to modify their type to opt-in. |
@@ -182,11 +182,11 @@ We can fill the chart for Steve's technique like this:
 
 That is impressive, and maybe the highest score of all techniques for compile time customization points without language support.
 
-To be fair, the P2279R0 propsal is from 2021, and Steve's technique is from 2024 and is based on a the C++23 feature "Deducing ``this``".
+To be fair, the P2279R0 proposal is from 2021, and Steve's technique is from 2024 and is based on the C++23 feature "Deducing ``this``".
 
-A fine example, of how new, compareable samll language features support each other to enable new powerfull abstractions.
+A fine example of how new, comparable small language features support each other to enable new powerful abstractions.
 
-I feel its slowly time, to \ref subpage4 "bring Any++ into the picture", and check if there are further improvements.
+I feel it's slowly time to \ref subpage4 "bring Any++ into the picture" and check if there are further improvements.
 
 
 

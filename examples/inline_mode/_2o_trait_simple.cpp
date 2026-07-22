@@ -4,9 +4,9 @@
 
 namespace simple {
 
-TRAIT(trait1, (ANY_FN(std::string, fn1, (), const)))
+TRAIT_(trait1, anyxx::dynamic_value, (ANY_FN(std::string, fn1, (), const)))
 
-std::string cat(std::vector<anyxx::any<anyxx::val, trait1>> const& items) {
+std::string cat(std::vector<anyxx::any<trait1, anyxx::val<>>> const& items) {
   std::string result;
   for (auto const& item : items) {
     result += item.fn1();
@@ -35,9 +35,9 @@ TEST_CASE("any via concept simple") {
   using namespace anyxx;
   using namespace simple;
 
-  any<val, trait1> test1{model1{"model1"}};
+  any<trait1, val<>> test1{model1{"model1"}};
   CHECK(test1.fn1() == "model1");
-  any<val, trait1> test2{model2{42}};
+  any<trait1, val<>> test2{model2{42}};
   CHECK(test2.fn1() == "42");
 
   CHECK(cat({test1, test2}) == "model142");

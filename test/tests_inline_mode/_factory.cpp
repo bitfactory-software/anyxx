@@ -16,7 +16,7 @@ class asteroid {};
 
 class spaceship {};
 
-ANY_SINGLETON_DECLARE(, thing_factory, factory<any_thing, std::string>);
+ANY_SINGLETON_DECLARE(, thing_factory, factory<any_thing, unique, std::string>);
 
 auto __ = thing_factory.register_("asteroid", []() { return asteroid{}; });
 auto __ = thing_factory.register_("spaceship", []() { return spaceship{}; });
@@ -27,10 +27,10 @@ namespace {
 namespace example {
 
 TEST_CASE("factory1") {
-  auto asteroid_thing = thing_factory.construct<unique>("asteroid");
+  auto asteroid_thing = thing_factory.construct("asteroid");
   CHECK(unerase_cast<asteroid>(asteroid_thing) != nullptr);
   CHECK(get_type_info(asteroid_thing) == typeid(asteroid));
-  auto spaceship_thing = thing_factory.construct<unique>("spaceship");
+  auto spaceship_thing = thing_factory.construct("spaceship");
   CHECK(unerase_cast<spaceship>(spaceship_thing) != nullptr);
   CHECK(get_type_info(spaceship_thing) == typeid(spaceship));
 }
@@ -41,7 +41,7 @@ TEST_CASE("factory2") {
   while (archive) {
     std::string key;
     archive >> key;
-    if (!key.empty()) things.emplace_back(thing_factory.construct<unique>(key));
+    if (!key.empty()) things.emplace_back(thing_factory.construct(key));
   }
   CHECK(get_type_info(things[0]) == typeid(asteroid));
   CHECK(get_type_info(things[1]) == typeid(spaceship));
@@ -53,7 +53,7 @@ ANY(stringable,
     )
 
 ANY_SINGLETON_DECLARE(, any_stringable_factory,
-                      factory<any_stringable, std::string>);
+                      factory<any_stringable, unique, std::string>);
 
 auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
@@ -75,11 +75,11 @@ ANY_SINGLETON_DECLARE(, factory_test_key, factory_test_key_kind)
 ANY_SINGLETON_DECLARE(, factory_test_negative_key, factory_test_key_kind)
 
 TEST_CASE("factory3") {
-  factory<any_stringable, factory_test_key_kind> f;
+  factory<any_stringable, unique, factory_test_key_kind> f;
   f.register_(factory_test_key, []() { return 42; });
-  auto a1 = f.construct<unique>(factory_test_key);
+  auto a1 = f.construct(factory_test_key);
   CHECK(a1.to_string() == "42");
-  CHECK_THROWS_AS(f.construct<unique>(factory_test_negative_key),
+  CHECK_THROWS_AS(f.construct(factory_test_negative_key),
                   unkonwn_factory_key_error);
 }
 

@@ -10,20 +10,23 @@
 #include "double_dispatch_result.hpp"
 
 namespace {
-struct creature_has_open_dispatch {};
-ANY(creature, (ANY_FN(std::type_info const*, name, (), const)), )
+TRAIT_EX_(creature, anyxx::dynamic_value,
+          (ANY_FN(std::type_info const*, name, (), const)), , ,
+          (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::val<>>
+using any_creature = anyxx::any<creature, Proxy>;
 }  // namespace
 
 namespace {
 
 struct cat {
-   [[nodiscard]]auto name() const { return &typeid(*this); }
+  [[nodiscard]] auto name() const { return &typeid(*this); }
 };
 struct dog {
-   [[nodiscard]]auto name() const { return &typeid(*this); }
+  [[nodiscard]] auto name() const { return &typeid(*this); }
 };
 struct man {
-   [[nodiscard]]auto name() const { return &typeid(*this); }
+  [[nodiscard]] auto name() const { return &typeid(*this); }
 };
 auto encounter = anyxx::dispatch<encounter_result(
     anyxx::virtual_<any_creature<anyxx::cref>>,
@@ -58,7 +61,7 @@ auto __ = encounter.define<any_creature<anyxx::cref>, man>(
       return {l.name(), encounter_action::nestle_to, r.name()};
     });
 
-using creatures_t = std::vector<any_creature<anyxx::val>>;
+using creatures_t = std::vector<any_creature<anyxx::val<>>>;
 auto apply_encounters(creatures_t const& creatures) {
   std::vector<encounter_result> result;
   result.reserve(9);

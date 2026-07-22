@@ -11,8 +11,11 @@ using namespace anyxx;
 using namespace std::literals;
 
 namespace {
-struct thing_has_open_dispatch {};
-ANY(thing, (ANY_FN(std::string, name, (), const)), )
+TRAIT_EX(thing, (ANY_FN(std::string, name, (), const)), , , (ANY_OPEN_DISPATCH),
+         ())
+template <typename Proxy = anyxx::shared>
+using any_thing = anyxx::any<thing, Proxy>;
+
 }  // namespace
 
 namespace {}  // namespace
@@ -31,30 +34,8 @@ struct Spaceship {
 
 }  // namespace
 
-// auto __ = collide.define<any_thing<cref>,
-// any_thing<cref>>(
-//     [](auto a, auto s) { return "(*, *) default"; });
-// auto __ =
-//    collide.define<Asteroid, Spaceship>([](auto a, auto s) { return "a->s";
-//    });
-// auto __ =
-//    collide.define<Asteroid, Asteroid>([](auto a, auto s) { return "a->a"; });
-// auto __ =
-//    collide.define<Spaceship, Spaceship>([](auto a, auto s) { return "s->s";
-//    });
-// auto __ =
-//    collide.define<Spaceship, Asteroid>([](auto a, auto s) { return "s->a";
-//    });
-
-// great time to use the spaceship operator...
-// std::string operator<=>(any_thing<cref> const& l,
-//                        any_thing<cref> const& r) {
-//  return collide(l, r);
-//}
-
 TEST_CASE("multi_dispatch 1") {
-  dispatch<std::string(virtual_<any_thing<cref>>,
-                       virtual_<any_thing<cref>>)>
+  dispatch<std::string(virtual_<any_thing<cref>>, virtual_<any_thing<cref>>)>
       collide;
 
   collide.define<Asteroid, Spaceship>(
@@ -74,31 +55,24 @@ TEST_CASE("multi_dispatch 1") {
         return l.name() + "->" + r.name();
       });
 
-  CHECK(v_table_instance<thing_v_table, Asteroid>()
-            ->own_dispatch_holder_t::dispatch_table->size() == 3);
-  CHECK(v_table_instance<thing_v_table, Spaceship>()
-            ->own_dispatch_holder_t::dispatch_table->size() == 3);
+  CHECK(v_table_instance<thing_v_table, Asteroid>()->dispatch_table->size() ==
+        3);
+  CHECK(v_table_instance<thing_v_table, Spaceship>()->dispatch_table->size() ==
+        3);
 
   Asteroid asteroid;
   Spaceship spaceship;
 
-  any_thing<cref> thing_asteroid{asteroid},
-      thing_spaceship{spaceship};
+  any_thing<cref> thing_asteroid{asteroid}, thing_spaceship{spaceship};
 
   CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid->Spaceship");
   CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
   CHECK(collide(thing_spaceship, thing_spaceship) == "Spaceship->Spaceship");
   CHECK(collide(thing_spaceship, thing_asteroid) == "Spaceship->Asteroid");
-
-  // CHECK((thing_asteroid <=> thing_spaceship) == "(*, *) default");  //
-  // a->s"); CHECK((thing_asteroid <=> thing_asteroid) == "a->a");
-  // CHECK((thing_spaceship <=> thing_spaceship) == "s->s");
-  // CHECK((thing_spaceship <=> thing_asteroid) == "s->a");
 }
 
 TEST_CASE("multi_dispatch 2") {
-  dispatch<std::string(virtual_<any_thing<cref>>,
-                       virtual_<any_thing<cref>>)>
+  dispatch<std::string(virtual_<any_thing<cref>>, virtual_<any_thing<cref>>)>
       collide;
 
   collide.define<Asteroid, any_thing<cref>>(
@@ -121,8 +95,7 @@ TEST_CASE("multi_dispatch 2") {
   Asteroid asteroid;
   Spaceship spaceship;
 
-  any_thing<cref> thing_asteroid{asteroid},
-      thing_spaceship{spaceship};
+  any_thing<cref> thing_asteroid{asteroid}, thing_spaceship{spaceship};
 
   CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid:A->*Spaceship");
   CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
@@ -131,8 +104,7 @@ TEST_CASE("multi_dispatch 2") {
 }
 
 TEST_CASE("multi_dispatch 3") {
-  dispatch<std::string(virtual_<any_thing<cref>>,
-                       virtual_<any_thing<cref>>)>
+  dispatch<std::string(virtual_<any_thing<cref>>, virtual_<any_thing<cref>>)>
       collide;
 
   collide.define<Asteroid, any_thing<cref>>(
@@ -155,8 +127,7 @@ TEST_CASE("multi_dispatch 3") {
   Asteroid asteroid;
   Spaceship spaceship;
 
-  any_thing<cref> thing_asteroid{asteroid},
-      thing_spaceship{spaceship};
+  any_thing<cref> thing_asteroid{asteroid}, thing_spaceship{spaceship};
 
   CHECK(collide(thing_asteroid, thing_spaceship) == "Asteroid:A->*Spaceship");
   CHECK(collide(thing_asteroid, thing_asteroid) == "Asteroid->Asteroid");
@@ -165,8 +136,7 @@ TEST_CASE("multi_dispatch 3") {
 }
 
 TEST_CASE("multi_dispatch 4") {
-  dispatch<std::string(virtual_<any_thing<cref>>,
-                       virtual_<any_thing<cref>>)>
+  dispatch<std::string(virtual_<any_thing<cref>>, virtual_<any_thing<cref>>)>
       collide;
 
   collide.define<Asteroid, Asteroid>(
@@ -183,8 +153,7 @@ TEST_CASE("multi_dispatch 4") {
   Asteroid asteroid;
   Spaceship spaceship;
 
-  any_thing<cref> thing_asteroid{asteroid},
-      thing_spaceship{spaceship};
+  any_thing<cref> thing_asteroid{asteroid}, thing_spaceship{spaceship};
 
   CHECK(collide(thing_asteroid, thing_spaceship).contains("Asteroid"));
   CHECK(collide(thing_asteroid, thing_asteroid) == "a->a");
@@ -199,33 +168,7 @@ TEST_CASE("multi_dispatch 4") {
 namespace {
 ANY(Dummy, , )
 
-template <typename... ARGS>
-struct have_open_dispatch_enabeled {
-  static constexpr bool value = true;
-};
-template <is_any ANY, typename... ARGS>
-  requires has_open_dispatch_enabeled<ANY>
-struct have_open_dispatch_enabeled<virtual_<ANY>, ARGS...>
-    : have_open_dispatch_enabeled<ARGS...> {};
-template <is_any ANY, typename... ARGS>
-  requires(!has_open_dispatch_enabeled<ANY>)
-struct have_open_dispatch_enabeled<virtual_<ANY>, ARGS...> {
-  static constexpr bool value = false;
-};
-static_assert(!has_open_dispatch_enabeled<any_Dummy<cref>>);
-static_assert(has_open_dispatch_enabeled<any_thing<cref>>);
-
-static_assert(
-    !have_open_dispatch_enabeled<virtual_<any_Dummy<cref>>,
-                                 virtual_<any_Dummy<cref>>>::value);
-static_assert(
-    !have_open_dispatch_enabeled<virtual_<any_Dummy<cref>>,
-                                 virtual_<any_thing<cref>>>::value);
-static_assert(
-    !have_open_dispatch_enabeled<virtual_<any_thing<cref>>,
-                                 virtual_<any_Dummy<cref>>>::value);
-static_assert(
-    have_open_dispatch_enabeled<virtual_<any_thing<cref>>,
-                                virtual_<any_thing<cref>>>::value);
+static_assert(!is_open_dispatch_v_table<Dummy::v_table_t>);
+static_assert(is_open_dispatch_v_table<thing::v_table_t>);
 
 }  // namespace

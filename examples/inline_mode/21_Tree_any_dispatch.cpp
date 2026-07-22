@@ -10,8 +10,9 @@ using namespace anyxx;
 
 namespace _21_Tree_TE_interface_dispatch {
 
-struct node_has_open_dispatch {};
-ANY(node, , shared) // val)
+TRAIT_EX(node, , , , (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::shared>
+using any_node = anyxx::any<node, Proxy>;
 
 struct Plus {
   Plus(any_node<> left, any_node<> right)

@@ -1,4 +1,4 @@
-// Walkthrough to implement c++ 0x concept_maps with ``Any++`` for static AND
+// Walkthrough to implement c++ 0x concept_map with ``Any++`` for static AND
 // dynmaic polymorhism
 //
 // In C++20, concepts and concept maps provide a powerful way to define
@@ -29,52 +29,21 @@
 // defined.
 namespace lib_2f {
 
-// Our default implementations reference each other, this creates a
-// circular dependency, but this allows us to define only one of the
-// two operators in a model map, and the other will be automatically
-// defined.
-// To enforce the interruption of the circular dependency, we
-// specify the default definition for == in de default model as
-// protected, so it can be only used from a deriving map, as we will se
-// later.(*1*)
 // The names for the functions in the model map map are "eq" and "ne".
 // These functions are then used to implement the operators == and !=
 // in the external interface.
-TRAIT(equal_comparable,
-      // anyxx::self is a magic type that represents the type of the object for
-      // whitch the trait is called. It is used to smooth the differences
-      // between static and dynamic dispatch, so the implemention can be written
-      // against the actual type of the object ref/const qualified as specified.
-      (ANY_OP_DEF(protected, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    // Because we 'trait' x and r 'as' equal_comparable, we can
-                    // use the != operator of the external interface. This
-                    // operater calls internally the function provided by the
-                    // model map for the type of x and r. So the circular is
-                    // broken.
-                    return !(trait_as<equal_comparable>(x) !=
-                             trait_as<equal_comparable>(r));
-                  }),
-       ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
-                  [&x](auto const& r) {
-                    // Same as above, but for the != operator with the ==
-                    // operator.
-                    return !(trait_as<equal_comparable>(x) ==
-                             trait_as<equal_comparable>(r));
-                  })))
-
-// Here we define the model map for all types that provide already operator==.
-// Any++ guarantees that 'T' is 'decayed'.
-template <typename T>
-  requires requires(T const& a, T const& b) {
-    { a == b } -> std::convertible_to<bool>;
-  }
-struct equal_comparable_model_map<T> : equal_comparable_default_model_map<T> {
-  static auto eq(T const& self, T const& r) { return self == r; }
-  // Because we derive from equal_comparable_default_model_map, the default
-  // implementation of !=, 'ne' is available and will use the provided
-  // operator== via the ne function above.
-};
+TRAIT_(equal_comparable, anyxx::dynamic_value,
+       // anyxx::self is a magic type that represents the type of the object for
+       // whitch the trait is called. It is used to smooth the differences
+       // between static and dynamic dispatch, so the implemention can be
+       // written against the actual type of the object ref/const qualified as
+       // specified. If the mapped type provies already an operator,
+       // ANY_OP_MAP_NAMED_FRIEND use it as the default implementation.
+       (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
+        // We can use the == operator of the external interface to
+        // provide a default implementation for the != operator.
+        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
+                   [&x](auto const& r) { return !Map{}.eq(x, r); })))
 
 // TRAIT automatically defines the is_equal_comparable_model concept.
 // Here we use this concept to check that some basic types model the trait:
@@ -88,10 +57,12 @@ static_assert(is_equal_comparable_model<std::string>);
 // Because the Proxy type of the trait is a template parameter, this algorithm
 // can be used both for static AND dynamic dispatch!
 template <anyxx::is_proxy Proxy>
-void test_equal_comparable_(anyxx::any<Proxy, equal_comparable> const& a,
-                             anyxx::any<Proxy, equal_comparable> const& b) {
+void test_equal_comparable_(anyxx::any<equal_comparable, Proxy> const& a,
+                            anyxx::any<equal_comparable, Proxy> const& b) {
   CHECK((a == b) == (b == a));
   CHECK((a != b) == (b != a));
+  CHECK((a == b) != (b != a));
+  CHECK((a != b) != (b == a));
 }
 
 // This is a convenience wrapper for the test algorithm above in the static
@@ -101,7 +72,7 @@ void test_equal_comparable_(anyxx::any<Proxy, equal_comparable> const& a,
 template <is_equal_comparable_model T>
 void test_equal_comparable(T const& a, T const& b) {
   using namespace anyxx;
-  test_equal_comparable_<anyxx::using_<T>>(a, b);
+  test_equal_comparable_<using_cref<T>>(a, b);
 }
 
 }  // namespace lib_2f
@@ -130,15 +101,9 @@ struct b_type {
 // ... but for which we provide a model map, so the provided concept is
 // satisfied:
 ANY_MODEL_MAP((app_2f::b_type), lib_2f::equal_comparable) {
-  // For illustration purposes, we implemet the model in terms of the !=
-  // operator.
-  using default_map::eq;  //(*1*) We want to use the default implementation of
-                          // eq, which is defined 'protected 'in the
-                          // default_map. So we bring it into scope via this
-                          // using directive.
-  static auto ne(app_2f::b_type const& self, app_2f::b_type const& r) {
-    return self.name != r.name;
-  }
+  static auto eq(app_2f::b_type const& self, app_2f::b_type const& r) {
+    return self.name == r.name;
+  };
 };
 static_assert(lib_2f::is_equal_comparable_model<app_2f::b_type>);
 
@@ -151,7 +116,7 @@ TEST_CASE("equal_comparable static") {
 // 2. Dynamic dispatch usage.
 TEST_CASE("equal_comparable dynamic") {
   using any_equal_comparable =
-      anyxx::any<anyxx::val, lib_2f::equal_comparable>;
+      anyxx::any<lib_2f::equal_comparable, anyxx::val<>>;
   std::vector<std::pair<any_equal_comparable, any_equal_comparable>> v{
       {app_2f::b_type{"A"}, app_2f::b_type{"A"}},
       {app_2f::b_type{"A"}, app_2f::b_type{"B"}},
@@ -171,8 +136,8 @@ TEST_CASE("equal_comparable dynamic") {
     // This behaviour is enforced by the \ref anyxx::self keyword type.
     using namespace anyxx;
     using namespace lib_2f;
-    any<val, equal_comparable> a{42};
-    any<val, equal_comparable> b{3.14};
+    any<equal_comparable, val<>> a{42};
+    any<equal_comparable, val<>> b{3.14};
     CHECK_THROWS_AS(a == b, type_mismatch_error);
   }
 }

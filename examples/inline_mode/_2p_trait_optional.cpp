@@ -5,8 +5,7 @@
 namespace _2p_lib {
 
 TRAIT(equal_comparable,
-      (ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) { return x == r; }),
+      (ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const),
        ANY_OP_DEF(public, bool, !=, ne, (anyxx::self const&), const,
                   [&x](auto const& r) {
                     return !(trait_as<equal_comparable>(x) ==
@@ -20,18 +19,15 @@ TRAIT(equal_comparable,
 // This type must be constructible from the type 'T' being modeled.
 // If 'trait-name'_default_rep is default constructible, then the any using this
 // trait  is default constructible.
-// In our case is this effect used to models the 'no value' state.
+// In our case is this effect used to model the 'no value' state.
 // 'has_value' and 'get_value' are implemented in terms of the variant.
+// Operator * and -> are implemented in terms if the (eventually derived)
+// _object_map.
 template <typename T>
 struct nullable_default_rep : std::variant<std::monostate, T> {
   using std::variant<std::monostate, T>::variant;
   friend bool operator==(nullable_default_rep const& x,
-                         nullable_default_rep const& r) {
-    return std::holds_alternative<T>(x) && std::holds_alternative<T>(r) &&
-               std::get<T>(x) == std::get<T>(r) ||
-           std::holds_alternative<std::monostate>(x) &&
-               std::holds_alternative<std::monostate>(r);
-  }
+                         nullable_default_rep const& r) = default;
 };
 
 TRAIT(nullable,
@@ -49,11 +45,29 @@ TRAIT(nullable,
                         [&x]() -> T const& { return Map{}.get_value(x); }),
        ANY_OP_DEF_EXACT(public, T&, *, deref, (), ,
                         [&x]() -> T& { return Map{}.get_value(x); }),
-       ANY_OP_DEF(public, bool, ==, eq, (anyxx::self const&), const,
-                  [&x](auto const& r) { return x == r; })))
+       ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
 using optional = anyxx::using_<T>::template as<nullable>;
+
+template <typename T>
+struct reference_wrapper {
+  T* ptr = nullptr;
+  reference_wrapper() = default;
+  reference_wrapper(T& ref) : ptr(&ref) {}
+  auto get() const { return ptr; }
+  friend bool operator==(reference_wrapper const& lhs,
+                         reference_wrapper const& rhs) {
+    return (lhs.ptr == rhs.ptr) || (lhs.ptr && rhs.ptr && *lhs.ptr == *rhs.ptr);
+  }
+};
+
+template <typename T>
+struct nullable_model_map<T&> : nullable_default_model_map<T const&> {
+  using rep_type = reference_wrapper<T>;
+  bool has_value(rep_type const& x) { return x.get() != nullptr; };
+  auto& get_value(auto&& x) { return *(std::forward<decltype(x)>(x)).get(); };
+};
 }  // namespace _2p_lib
 
 TEST_CASE("_2p test optional 1") {
@@ -103,13 +117,13 @@ ANY_MODEL_MAP((_2p_app::foo), _2p_lib::nullable) {
 
 namespace {
 template <typename T>
-bool fun(anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& l,
-         anyxx::any<anyxx::using_<T>, _2p_lib::equal_comparable> const& r) {
+bool fun(anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& l,
+         anyxx::any<_2p_lib::equal_comparable, anyxx::using_<T>> const& r) {
   return r == l;
 }
 static_assert(
     _2p_lib::is_equal_comparable_model<
-        anyxx::any<anyxx::using_<_2p_app::foo>, _2p_lib::equal_comparable>>);
+        anyxx::any<_2p_lib::equal_comparable, anyxx::using_<_2p_app::foo>>>);
 }  // namespace
 
 TEST_CASE("_2p test optional 2") {
@@ -135,4 +149,64 @@ TEST_CASE("_2p test optional 2") {
   optional<foo> a2;
   CHECK(!a2.has_value());
   CHECK(a2 == optional<foo>{});
+}
+
+TEST_CASE("_2p test optional 3") {
+  using namespace anyxx;
+  using namespace _2p_lib;
+
+  int v = 42;
+  optional<int const&> a1{v};
+  //+++ the point of this example: no overhead for 'empty' indicator!
+  static_assert(sizeof(a1) == sizeof(int*));
+  //---
+  CHECK(a1.has_value());
+  CHECK(a1.get_value() == 42);
+  static_assert(
+      std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
+
+  CHECK(*a1 == 42);
+  auto a1x = a1;
+  CHECK(a1 == a1x);
+  CHECK(fun<optional<int const&>>(a1, a1x));
+  int v1 = 42;
+  CHECK(a1 == optional<int const&>{v1});
+  int v2 = 43;
+  CHECK(a1 != optional<int const&>{v2});
+  CHECK(a1 != optional<int const&>{});
+
+  optional<int const&> a2;
+  CHECK(!a2.has_value());
+  CHECK(a2 == optional<int const&>{});
+}
+
+TEST_CASE("_2p test optional 4") {
+  using namespace anyxx;
+  using namespace _2p_lib;
+
+  int v = 41;
+  optional<int&> a1{v};
+  //+++ the point of this example: no overhead for 'empty' indicator!
+  static_assert(sizeof(a1) == sizeof(int*));
+  //---
+  CHECK(a1.has_value());
+  CHECK(a1.get_value() == 41);
+  a1.get_value() = 42;
+  CHECK(v == 42);
+  static_assert(
+      !std::is_const_v<std::remove_reference_t<decltype(a1.get_value())>>);
+
+  CHECK(*a1 == 42);
+  auto a1x = a1;
+  CHECK(a1 == a1x);
+  CHECK(fun<optional<int&>>(a1, a1x));
+  int v1 = 42;
+  CHECK(a1 == optional<int&>{v1});
+  int v2 = 43;
+  CHECK(a1 != optional<int&>{v2});
+  CHECK(a1 != optional<int&>{});
+
+  optional<int&> a2;
+  CHECK(!a2.has_value());
+  CHECK(a2 == optional<int&>{});
 }

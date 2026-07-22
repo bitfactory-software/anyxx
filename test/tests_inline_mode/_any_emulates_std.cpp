@@ -12,8 +12,8 @@
 using namespace anyxx;
 
 namespace {
-ANY(string_to_string, (ANY_OP(std::string, (), (std::string const&), const)), )
-ANY(string_to_string_mutable,
+ANY_(string_to_string, anyxx::dynamic_value, (ANY_OP(std::string, (), (std::string const&), const)), )
+ANY_(string_to_string_mutable, anyxx::dynamic_value,
     (ANY_OP(std::string, (), (), const),
      ANY_OP(std::string, (), (std::string const&), )), )
 
@@ -64,7 +64,7 @@ TEST_CASE("std emulated function") {
     REQUIRE(f(" world") == "hallo world");
   }
   {
-    any_string_to_string<val> f{pure_functor_with_context("hallo")};
+    any_string_to_string<val<>> f{pure_functor_with_context("hallo")};
     REQUIRE(f(" world") == "hallo world");
   }
   {
@@ -72,7 +72,7 @@ TEST_CASE("std emulated function") {
     REQUIRE(f("hello world") == "hello world");
   }
   {
-    any_string_to_string<val> f{pure_functor_t{}};
+    any_string_to_string<val<>> f{pure_functor_t{}};
     REQUIRE(f("hello world") == "hello world");
   }
   {
@@ -97,7 +97,7 @@ TEST_CASE("std emulated function") {
     // world"}}; CHECK(fc2() == "hallo world"); // access of member is invalid
   }
   {
-    any_string_to_string_mutable<val> fc2{functor_t{"hallo world"}};
+    any_string_to_string_mutable<val<>> fc2{functor_t{"hallo world"}};
     CHECK(fc2() == "hallo world");
   }
   {
@@ -141,12 +141,12 @@ TEST_CASE("std emulated function") {
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<cref, function<std::string(std::string const&), const_>> any_f_cref{f};
+    any<function<std::string(std::string const&), const_>, cref> any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any<cref, function<std::string(std::string const&), mutable_>> any_f_mref{
+    any<function<std::string(std::string const&), mutable_>, cref> any_f_mref{
         f};
 
-    any<using_<decltype(f)&>, function<std::string(std::string const&), const_>>
+    any<function<std::string(std::string const&), const_>, using_<decltype(f)&>>
         any_f_using_{f};
     CHECK(any_f_using_("static C++") == "static C++ world!");
 

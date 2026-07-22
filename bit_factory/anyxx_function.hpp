@@ -13,11 +13,11 @@ struct mutable_ : constness {
 };
 
 template <typename Constness, typename R, typename... Args>
-struct function_v_table : any_v_table {
+struct function_v_table : dynamic_value_v_table {
   R (*f_)(typename Constness::type, Args...);
   template <typename Concrete>
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : any_v_table(concrete) {
+      : dynamic_value_v_table(concrete) {
     f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
       return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
                          std::forward<Args>(args)...);
@@ -28,7 +28,7 @@ struct function_v_table : any_v_table {
 template <typename Constness, typename R, typename... Args>
 struct function;
 template <typename Constness, typename R, typename... Args>
-struct function<R(Args...), Constness> : base_trait {
+struct function<R(Args...), Constness> : dynamic_value {
   using v_table_t = function_v_table<Constness, R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R
@@ -54,26 +54,26 @@ namespace self_test {
 struct functor {
   int operator()(double) const;
 };
-using f_const_const = any<cref, function<int(double), const_>>;
+using f_const_const = any<function<int(double), const_>, cref>;
 static_assert(std::invocable<f_const_const, double>);
-using f_const_mutable = any<cref, function<int(double), mutable_>>;
+using f_const_mutable = any<function<int(double), mutable_>, cref>;
 static_assert(!std::invocable<f_const_mutable, double>);
-using f_mutable_const = any<mutref, function<int(double), const_>>;
+using f_mutable_const = any<function<int(double), const_>, mutref>;
 static_assert(std::invocable<f_mutable_const, double>);
-using f_mutable_mutable = any<mutref, function<int(double), mutable_>>;
+using f_mutable_mutable = any<function<int(double), mutable_>, mutref>;
 static_assert(std::invocable<f_mutable_mutable, double>);
 
 using f_const_const_val =
-    any<using_<functor const &>, function<int(double), const_>>;
+    any<function<int(double), const_>, using_<functor const&>>;
 static_assert(std::invocable<f_const_const_val, double>);
 using f_const_mutable_val =
-    any<using_<functor const &>, function<int(double), mutable_>>;
+    any<function<int(double), mutable_>, using_<functor const&>>;
 static_assert(!std::invocable<f_const_mutable_val, double>);
 using f_mutable_const_val =
-    any<using_<functor &>, function<int(double), const_>>;
+    any<function<int(double), const_>, using_<functor &>>;
 static_assert(std::invocable<f_mutable_const_val, double>);
 using f_mutable_mutable_val =
-    any<using_<functor &>, function<int(double), mutable_>>;
+    any<function<int(double), mutable_>, using_<functor &>>;
 static_assert(std::invocable<f_mutable_mutable_val, double>);
 }  // namespace self_test
 

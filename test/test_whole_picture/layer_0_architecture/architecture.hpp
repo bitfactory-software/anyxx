@@ -58,10 +58,13 @@ ANY(surface, (ANY_FN(void, write, (point, char), )), )
 using mutable_observed_surface = any_surface<anyxx::mutref>;
 using unique_surface = any_surface<anyxx::unique>;
 
-struct shape_has_open_dispatch {};
-ANY(shape, (ANY_FN(void, draw, (mutable_observed_surface), const),
-            ANY_FN(architecture::point, top_left, (), const),
-            ANY_FN(architecture::size, size, (), const)), )
+TRAIT_EX(shape,
+         (ANY_FN(void, draw, (mutable_observed_surface), const),
+          ANY_FN(architecture::point, top_left, (), const),
+          ANY_FN(architecture::size, size, (), const)),
+         , , (ANY_OPEN_DISPATCH), ())
+template <typename Proxy = anyxx::shared>
+using any_shape = anyxx::any<shape, Proxy>;
 
 }  // namespace whole_picture::architecture
 

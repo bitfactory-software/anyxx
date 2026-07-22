@@ -26,7 +26,7 @@ ANY_MODEL_MAP((double), example_2a::stringable) {
 namespace example_2a {
 
 template <typename V>
-std::string print_(anyxx::any<anyxx::using_<V>, stringable> const& s) {
+std::string print_(anyxx::any<stringable, anyxx::using_<V>> const& s) {
   return s.to_string() + "\n";
 }
 template <typename V>
@@ -48,6 +48,6 @@ TEST_CASE("example 2a stringable") {
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   CHECK(print(42) == "42\n");
-  //  static_assert(!is_print_callable<int>);
+  static_assert(!is_print_callable<int>);
   // print(42);  // remove comment to see the compilation error!
 }

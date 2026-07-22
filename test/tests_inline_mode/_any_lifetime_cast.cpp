@@ -23,43 +23,28 @@ struct X {
 };
 
 ANY(stringable, (ANY_OP(std::string, (), (), const)), )
-TRAIT_(slick_stringable, observeable_trait,
-       (ANY_OP(std::string, (), (), const)))
+TRAIT_(slick_stringable, observeable, (ANY_OP(std::string, (), (), const)))
 
 struct Y {
-  any<mutref, slick_stringable> xxx;
+  any<slick_stringable, mutref> xxx;
 };
 
-std::string func(any<cref, slick_stringable> x){
-    return x();
-}
+std::string func(any<slick_stringable, cref> x) { return x(); }
 
 }  // namespace
-
-TEST_CASE("any bool operator") {
-  any<cref, base_trait> a;
-  bool is_null = !a;
-  CHECK(is_null);
-  int i = 0;
-  any<cref, base_trait> b{i};
-  bool not_null = static_cast<bool>(b);
-  CHECK(not_null);
-}
 
 TEST_CASE("slick_stringable observeable_v_table") {
   {
     X f("hallo");
-    any<cref, slick_stringable> a{f};
-    bool is_null = !a;
-    CHECK(!is_null);
+    any<slick_stringable> a{f};
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
 
-    any<cref, slick_stringable> b = a;
-    any<cref, slick_stringable> c = std::move(b);
-    any<cref, slick_stringable> d{a};
-    any<cref, slick_stringable> e{std::move(d)};
+    any<slick_stringable> b = a;
+    any<slick_stringable> c = std::move(b);
+    any<slick_stringable> d{a};
+    any<slick_stringable> e{std::move(d)};
     auto eq = a() == func(e);
     a = e;
     CHECK(eq);
@@ -68,24 +53,21 @@ TEST_CASE("slick_stringable observeable_v_table") {
   }
   {
     X f("hallo");
-    const any<mutref, slick_stringable> a{f};
-    bool is_null = !a;
-    CHECK(!is_null);
+    const any<slick_stringable, mutref> a{f};
     // bool derived = is_derived_from(typeid(slick_stringable), a);
     // CHECK(!derived);
     CHECK(a() == f());
   }
   {
-    Y y;
     X f("hallo");
-    y.xxx = any<mutref, slick_stringable>{f};
+    Y y{.xxx = any<slick_stringable, mutref>{f}};
   }
 }
 
 TEST_CASE("any lifetime cast") {
   const any_stringable<shared> sc{std::make_shared<X>("hallo")};
   REQUIRE(sc() == "hallo");
-  REQUIRE(is_derived_from<any<shared>>(sc));
+  REQUIRE(is_derived_from<any<dynamic_copyable>>(sc));
 
   static_assert(
       std::same_as<std::decay_t<std::remove_pointer_t<void const*>>, void>);
@@ -110,14 +92,15 @@ TEST_CASE("any lifetime cast") {
   REQUIRE(co() == "hallo");
   static_assert(std::same_as<any_stringable<cref>::v_table_t,
                              any_stringable<shared>::v_table_t>);
-  REQUIRE(is_derived_from<any<cref>>(co));
+  REQUIRE(is_derived_from<any<dynamic_copyable, cref>>(co));
 
   any_stringable<unique> u{std::make_unique<X>("hallo")};  // NOLINT
   REQUIRE(u() == "hallo");
   static_assert(!is_typed_any<any_stringable<unique>>);
   static_assert(is_any<any_stringable<unique>>);
-  static_assert(!constructibile_for<any_stringable<unique>,
-                                    any_stringable<mutref>::proxy_t>);
+  static_assert(
+      !constructibile_for<any_stringable<unique>,
+                          any_stringable<mutref>::proxy_t, stringable>);
   static_assert(std::derived_from<any_stringable<mutref>::v_table_t,
                                   any_stringable<unique>::v_table_t>);
   any_stringable<mutref> mo{u};

@@ -43,41 +43,48 @@ TEST_CASE("data_erase_unerase/observer") {
 TEST_CASE("data_erase_unerase/unique") {
   {
     auto u1 = erased<unique>(std::make_unique<int>(1));
-    REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);  // NOLINT
+    REQUIRE(*unchecked_unerase_cast<int>(u1, (observeable_v_table*)nullptr) ==
+            1);  // NOLINT
   }
   {
     const auto u1 = erased<unique>(std::make_unique<int>(1));  // NOLINT
-    REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1, (observeable_v_table*)nullptr) ==
+            1);
   }
   {
     auto u1 = erased<unique>(
         std::make_unique<A>(  // NOLINT(clang-analyzer-cplusplus.NewDeleteLeaks)
             "hallo"));
-    REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");  // NOLINT
+    REQUIRE(unchecked_unerase_cast<A>(u1, (observeable_v_table*)nullptr)->s ==
+            "hallo");  // NOLINT
   }
 }
 TEST_CASE("data_erase_unerase/shared") {
   {
     auto u1 = erased<shared>(std::make_shared<int>(1));
-    REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1, (observeable_v_table*)nullptr) ==
+            1);
   }
   {
     const auto u1 = erased<shared>(std::make_shared<int>(1));
-    REQUIRE(*unchecked_unerase_cast<int>(u1, nullptr) == 1);
+    REQUIRE(*unchecked_unerase_cast<int>(u1, (observeable_v_table*)nullptr) ==
+            1);
   }
   {
     auto u1 = erased<shared>(std::make_shared<A>("hallo"));
-    REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(u1, (observeable_v_table*)nullptr)->s ==
+            "hallo");
   }
   {
     auto x = std::make_shared<A const>("hallo");
     auto sc = erased<shared>(x);
-    REQUIRE(unchecked_unerase_cast<A>(sc, nullptr)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(sc, (observeable_v_table*)nullptr)->s ==
+            "hallo");
   }
   {
     auto x = std::make_shared<A>("hallo");
     auto sc = erased<shared>(x);
-    REQUIRE(unchecked_unerase_cast<A>(sc, nullptr)->s == "hallo");
+    REQUIRE(unchecked_unerase_cast<A>(sc, (observeable_v_table*)nullptr)->s == "hallo");
   }
 }
 TEST_CASE("data_erase_unerase/shared_const_ptr") {
@@ -86,8 +93,9 @@ TEST_CASE("data_erase_unerase/shared_const_ptr") {
     REQUIRE(ptr->s == "hallo");
     shared sp1 = proxy_trait<shared>::erase(ptr);
     auto u1 = erased<shared>(ptr);
-    [[maybe_unused]] A const* a = unchecked_unerase_cast<A>(u1, nullptr);
-    REQUIRE(unchecked_unerase_cast<A>(u1, nullptr)->s == "hallo");
+    [[maybe_unused]] A const* a =
+        unchecked_unerase_cast<A>(u1, (observeable_v_table*)nullptr);
+    REQUIRE(unchecked_unerase_cast<A>(u1, (observeable_v_table*)nullptr)->s == "hallo");
   }
 }
 TEST_CASE("data_erase_unerase/unique_ptr") {
@@ -95,19 +103,19 @@ TEST_CASE("data_erase_unerase/unique_ptr") {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
     unique up1 = proxy_trait<unique>::erase(std::move(ptr));
-    A* a = unchecked_unerase_cast<A>(up1, nullptr);
+    A* a = unchecked_unerase_cast<A>(up1, (observeable_v_table*)nullptr);
     REQUIRE(a->s == "hallo");
   }
   {
     auto u1 = erased<unique>(std::make_unique<A>("hallo"));
-    A* a = unchecked_unerase_cast<A>(u1, nullptr);
+    A* a = unchecked_unerase_cast<A>(u1, (observeable_v_table*)nullptr);
     REQUIRE(a->s == "hallo");
   }
   {
     auto ptr = std::make_unique<A>("hallo");
     REQUIRE(ptr->s == "hallo");
     auto u1 = erased<unique>(std::move(ptr));
-    A* a = unchecked_unerase_cast<A>(u1, nullptr);
+    A* a = unchecked_unerase_cast<A>(u1, (observeable_v_table*)nullptr);
     REQUIRE(a->s == "hallo");
   }
 }

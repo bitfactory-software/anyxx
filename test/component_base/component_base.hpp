@@ -29,7 +29,8 @@ struct X;
 
 namespace test::component_base {
 
-ANY(to_string_i, (ANY_FN(std::string, to_string, (), const)), )
+ANY_(to_string_i, anyxx::dynamic_deletable,
+     (ANY_FN(std::string, to_string, (), const)), )
 ANY(get_value_i, (ANY_FN(double, get_value, (), const)), )
 ANY_(set_value_i, get_value_i, (ANY_FN(void, set_value, (double), )), )
 
@@ -37,9 +38,9 @@ COMPONENT_BASE_EXPORT
 any_to_string_i<anyxx::cref> get_to_string_i_co();
 COMPONENT_BASE_EXPORT any_to_string_i<anyxx::shared> get_to_string_i_sc(
     double v);
-COMPONENT_BASE_EXPORT any_to_string_i<anyxx::unique> get_to_string_i_u(double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::shared> sc_X(double v);
-COMPONENT_BASE_EXPORT anyxx::any<anyxx::unique> u_X(double v);
+COMPONENT_BASE_EXPORT any_to_string_i<anyxx::unique> get_to_string_i_u(
+    double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::dynamic_value, anyxx::shared> sc_X(double v);
+COMPONENT_BASE_EXPORT anyxx::any<anyxx::dynamic_value, anyxx::unique> u_X(double v);
 
 }  // namespace test::component_base
-
