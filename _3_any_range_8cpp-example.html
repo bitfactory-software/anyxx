@@ -409,8 +409,9 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">}  <span class="comment">// namespace anyxx</span></div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
-<div class="line"><span class="keyword">using </span>node_range = anyxx::any_forward_range&lt;node_base, node_base&amp;&gt;;</div>
-<div class="line"><span class="keyword">using </span>node_const_range = anyxx::any_forward_range&lt;node_base, node_base const&amp;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_range = <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;anyxx::range&lt;node_iterator&gt;&gt;;</div>
+<div class="line"><span class="keyword">using </span>node_const_range =</div>
+<div class="line">    <a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_&lt;node_base*&gt;::as</a>&lt;anyxx::range&lt;node_const_iterator&gt;&gt;;</div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;example 3 iterator adaptor &quot;</span>) {</div>
