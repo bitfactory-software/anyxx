@@ -315,8 +315,9 @@ struct range_model_map<Node*, Iterator>
 }  // namespace anyxx
 
 namespace {
-using node_range = anyxx::any_forward_range<node_base, node_base&>;
-using node_const_range = anyxx::any_forward_range<node_base, node_base const&>;
+using node_range = anyxx::using_<node_base*>::as<anyxx::range<node_iterator>>;
+using node_const_range =
+    anyxx::using_<node_base*>::as<anyxx::range<node_const_iterator>>;
 }  // namespace
 
 TEST_CASE("example 3 iterator adaptor ") {
