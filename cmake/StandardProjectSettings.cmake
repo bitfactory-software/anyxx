@@ -32,7 +32,7 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     add_compile_options($<$<COMPILE_LANGUAGE:C>:-fdiagnostics-color=always>
                         $<$<COMPILE_LANGUAGE:CXX>:-fdiagnostics-color=always>)
   else()
-    add_compile_options(-fdiagnostics-color=always)
+    add_compile_options(-fdiagnostics-color=always -freflection)
   endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND MSVC_VERSION GREATER 1900)
   add_compile_options(/diagnostics:column)

@@ -66,9 +66,9 @@ auto make_node(ARGS&&... args) {
 TEST_CASE("21_Tree_any") {
   using namespace anyxx;
 
-  auto expr = any_node<>(make_node<Times>(
+  auto expr = make_node<Times>(
       make_node<Integer>(2),
-      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4))));
+      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4)));
 
   auto v = expr.value();
   REQUIRE(v == 14);

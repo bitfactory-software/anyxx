@@ -1,0 +1,242 @@
+#include <meta>
+#include <utility>
+#include <vector>
+#include <array>
+#include <string>
+#include <print>
+
+#include <catch2/catch_test_macros.hpp>
+
+struct default_t{};
+constexpr static inline default_t defaulted = {};
+
+template <std::meta::info m, typename V, typename R, typename... Args>
+R default_impl(void* self, Args&&... args){
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto mc : define_static_array(members_of(^^ V, ctx))) {
+        if constexpr(has_identifier(mc) && !is_static_member(mc) && is_function(mc) &&
+            identifier_of(mc) == identifier_of(m)) {
+            return static_cast<V*>(self)->[:mc:](std::forward<Args>(args)...);
+        }
+    }
+}
+
+template<typename V, std::meta::info Target>
+struct trait_facade_call {
+    template <typename... Args>
+    auto operator()(Args&&... args) const {
+        const V* pvalue = reinterpret_cast<const V*>(this);
+        return[:Target:](*pvalue, std::forward<Args>(args)...);
+    }
+};
+
+template <std::meta::info ...Ms>
+struct outer {
+    struct inner;
+    consteval {
+        define_aggregate(^^inner, { Ms... });
+    }
+};
+template <std::meta::info ...Ms>
+using to_struct = outer<Ms...>::inner;
+
+template<typename V> struct using_{ V value; };
+
+template<template <typename> typename Trait, typename V>
+consteval std::meta::info make_trait_facade(){
+    std::vector<std::meta::info> calls;
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(^^ Trait<V>, ctx))) {
+        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)){
+            using trait_facade_call_t = trait_facade_call<V, m>;
+            constexpr std::meta::info wrapped_meta = ^^trait_facade_call_t;
+            auto dms = std::meta::data_member_spec(wrapped_meta, { .name = identifier_of(m), .no_unique_address = true });
+            calls.push_back(reflect_constant(dms));
+        }
+    }
+    return substitute(^^to_struct, calls);
+};
+
+template<typename V, template<typename> typename Trait>
+class trait_as : public [:make_trait_facade<Trait, V>() :] {
+    V value_;
+public:
+    trait_as(V const& value) : value_(value) {}
+};
+
+template <typename R, typename... Args>
+using v_table_fptr_type = R(*)(void*, Args...);
+
+consteval std::meta::info make_v_table_fptr_type(const std::meta::info f){
+    std::vector<std::meta::info> types;
+    types.push_back(return_type_of(f));
+    auto i = 0;
+    for(auto p : parameters_of(f)) {
+        ++i;
+        if(i > 1) {
+            auto type = type_of(p);
+            types.push_back(type);
+        }
+    }
+    return substitute(^^v_table_fptr_type, types);
+}
+
+template<template <typename> typename Trait>
+consteval std::meta::info make_v_table_type(){
+    std::vector<std::meta::info> fptrs;
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(^^ Trait<void*>, ctx))) {
+        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)){
+            auto ft = make_v_table_fptr_type(m);
+            auto dms = std::meta::data_member_spec(ft, { .name = identifier_of(m), .no_unique_address = true });
+            fptrs.push_back(reflect_constant(dms));
+        }
+    }
+    return substitute(^^to_struct, fptrs);
+};
+
+template <typename VTable, auto... Functions>
+inline auto v_table_instance = VTable{ Functions... };
+
+template <bool default_, std::meta::info m, typename V, typename R, typename... Args>
+R vfimpl(void* self, Args&&... args){
+    if constexpr(default_) {
+        return default_impl<m, V, R>(self, std::forward<Args>(args)...);
+    } else {
+        return[:m:](*static_cast<V*>(self), std::forward<Args>(args)...);
+    }
+}
+
+template <typename V>
+consteval std::meta::info make_vfimpl(std::meta::info f){
+    std::vector<std::meta::info> types;
+    bool use_default = annotations_of_with_type(f, ^^ default_t).size() > 0;
+    types.push_back(std::meta::reflect_constant(use_default));
+    types.push_back(reflect_constant(f));
+    types.push_back(^^V);
+    types.push_back(return_type_of(f));
+    auto i = 0;
+    for(auto p : parameters_of(f)) {
+        ++i;
+        if(i > 1) {
+            auto type = type_of(p);
+            types.push_back(type);
+        }
+    }
+    return substitute(^^vfimpl, types);
+}
+
+template<template <typename> typename Trait, typename V>
+consteval std::meta::info make_v_table_instance(){
+    std::vector<std::meta::info> types;
+    types.push_back(make_v_table_type<Trait>());
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(^^ Trait<V>, ctx))) {
+        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)){
+            types.push_back(make_vfimpl<V>(m));
+        }
+    }
+    return substitute(^^v_table_instance, types);
+};
+
+template<template <typename> typename Trait>
+struct dyn_base {
+    [:make_v_table_type<Trait>() :] const& v_table;
+    void* self = nullptr;
+    template <typename V>
+        requires (!std::derived_from<V, dyn_base>)
+    dyn_base(V& v) : v_table([:make_v_table_instance<Trait, V>() :]), self(&v) {}
+};
+
+template<template <typename> typename Trait, std::meta::info vf> struct dyn_facade_call {
+    template <typename... Args>
+    auto operator()(Args&&... args) const {
+        auto base = reinterpret_cast<dyn_base<Trait>const*>(this);
+        auto v_table = base->v_table;
+        auto self = base->self;
+        return v_table.[:vf:](self, std::forward<Args>(args)...);
+    }
+};
+
+template<template <typename> typename Trait>
+consteval std::meta::info make_dyn_facade(){
+    constexpr auto v_table_t_info = make_v_table_type<Trait>();
+
+    std::vector<std::meta::info> calls;
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(v_table_t_info, ctx))) {
+        if constexpr(has_identifier(m)){
+            using dyn_facade_call_t = dyn_facade_call<Trait, m>;
+            constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
+            auto dms = std::meta::data_member_spec(call_meta, { .name = identifier_of(m), .no_unique_address = true });
+            calls.push_back(reflect_constant(dms));
+        }
+    }
+    return substitute(^^to_struct, calls);
+};
+
+template<template <typename> typename Trait> struct dyn :
+    dyn_base<Trait>,
+    [:make_dyn_facade<Trait>() :] {
+    using dyn_base<Trait>::dyn_base;
+};
+
+template <typename Self, bool base = true>
+struct stringable{
+    [[=defaulted]] static std::string as_string(Self const& self);
+};
+
+void print(std::vector<dyn<stringable>> const& things){
+    for(auto& thing : things){
+        std::println("{}", thing.as_string());
+    }
+}
+
+template <>
+struct stringable<int>{
+    static std::string as_string(int const& self) {
+        return std::to_string(self);
+    }
+};
+
+template <>
+struct stringable<std::string>{
+    static std::string as_string(std::string const& self) {
+        return self;
+    }
+};
+
+struct foo{ double f; };
+template <>
+struct stringable<foo>{
+    static std::string as_string(foo const& self){
+        return "foo: " + std::to_string(self.f);
+    }
+};
+
+struct boo {
+    bool b = false;
+    std::string as_string(){
+        return std::string{ "boo? " } + (b ? "T" : "F");
+    }
+};
+// Only to show how to delegate to the default adapter:
+template <>
+struct stringable<boo, false> : stringable<boo, true>{};
+
+TEST_CASE("refelction hello world") {
+
+    auto a1 = trait_as<int, stringable>{ 42 };
+    auto z_from_self = a1.as_string();
+    std::println("z_from_trait = {}", z_from_self);
+
+    int i = 4711;
+    auto dyn_stringable = dyn<stringable>{ i };
+    auto z_from_dyn_stringable = dyn_stringable.as_string();
+    std::println("z_from_dyn_stringable = {}", z_from_dyn_stringable);
+
+    std::string s = "hello world";
+    foo a_foo{ 3.14 };
+    boo a_boo{ true };
+    print({ dyn<stringable>{i}, dyn<stringable>{s}, dyn<stringable>{a_foo}, dyn<stringable>{a_boo} });
+}

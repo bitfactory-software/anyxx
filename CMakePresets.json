@@ -46,6 +46,7 @@
       "description": "Unix-like OS settings for gcc and clang toolchains",
       "hidden": true,
       "inherits": "conf-common",
+      "cmakeExecutable": "/usr/bin/cmake",
       "condition": {
         "type": "inList",
         "string": "${hostSystemName}",
@@ -60,7 +61,7 @@
         }
       },
       "cacheVariables": {
-        "CMAKE_CXX_FLAGS": "-fexceptions -frtt"
+        "CMAKE_CXX_FLAGS": "-fexceptions -frtti"
       }
     },
     {

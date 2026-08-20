@@ -2180,7 +2180,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
                       is_delete_v_table auto* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
-    to = shared{p, [v_table](auto p) { v_table->delete_(p); }};
+    to = shared{p, [v_table](auto x) { v_table->delete_(x); }};
   }
 
   static void const* get_proxy_ptr_in(
@@ -2314,7 +2314,7 @@ struct cow {
     return holder_->count_.load(std::memory_order_acquire) == 1;
   }
 
-  cow(holder_base* holder = nullptr) : holder_(holder) {}
+  cow(holder_base* h = nullptr) : holder_(h) {}
   template <typename T, typename... Args>
   cow(std::in_place_type_t<T>, Args&&... args)
       : holder_(new holder<T>(std::forward<Args>(args)...)) {}
