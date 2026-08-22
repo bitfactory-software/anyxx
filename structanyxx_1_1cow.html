@@ -103,13 +103,19 @@ Public Member Functions</h2></td></tr>
 void *&#160;</td><td class="memItemRight"><b>data_ptr</b> () const</td></tr>
 <tr class="memitem:a1687ee38e97d21bd40b53ad8052a3922" id="r_a1687ee38e97d21bd40b53ad8052a3922"><td class="memItemLeft"><a id="a1687ee38e97d21bd40b53ad8052a3922" name="a1687ee38e97d21bd40b53ad8052a3922"></a>
 auto&#160;</td><td class="memItemRight"><b>unique</b> () const noexcept -&gt; bool</td></tr>
-<tr class="memitem:af01c4fc42c9c9cef90a9a4dcdb88d289" id="r_af01c4fc42c9c9cef90a9a4dcdb88d289"><td class="memItemLeft"><a id="af01c4fc42c9c9cef90a9a4dcdb88d289" name="af01c4fc42c9c9cef90a9a4dcdb88d289"></a>
-&#160;</td><td class="memItemRight"><b>cow</b> (holder_base *holder=nullptr)</td></tr>
+<tr class="memitem:aaf02a0adbbe48c8c86979a4c4fb68bb5" id="r_aaf02a0adbbe48c8c86979a4c4fb68bb5"><td class="memItemLeft"><a id="aaf02a0adbbe48c8c86979a4c4fb68bb5" name="aaf02a0adbbe48c8c86979a4c4fb68bb5"></a>
+&#160;</td><td class="memItemRight"><b>cow</b> (holder_base *h=nullptr)</td></tr>
 <tr class="memitem:aad8732bed4694f6caf80af89ad325994" id="r_aad8732bed4694f6caf80af89ad325994"><td class="memTemplParams" colspan="2"><a id="aad8732bed4694f6caf80af89ad325994" name="aad8732bed4694f6caf80af89ad325994"></a>
 template&lt;typename T, typename... Args&gt; </td></tr>
 <tr class="memitem:aad8732bed4694f6caf80af89ad325994 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>cow</b> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
 <tr class="memitem:a5c8fe3f6737f3d578f10d9a523f115d3" id="r_a5c8fe3f6737f3d578f10d9a523f115d3"><td class="memItemLeft"><a id="a5c8fe3f6737f3d578f10d9a523f115d3" name="a5c8fe3f6737f3d578f10d9a523f115d3"></a>
 &#160;</td><td class="memItemRight"><b>cow</b> (cow const &amp;)</td></tr>
+<tr class="memitem:a85e0ee29f60acd90b700124567584c79" id="r_a85e0ee29f60acd90b700124567584c79"><td class="memItemLeft"><a id="a85e0ee29f60acd90b700124567584c79" name="a85e0ee29f60acd90b700124567584c79"></a>
+cow &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (cow const &amp;)</td></tr>
+<tr class="memitem:a66fdc5a1be941196ba6977fa09c7a95c" id="r_a66fdc5a1be941196ba6977fa09c7a95c"><td class="memItemLeft"><a id="a66fdc5a1be941196ba6977fa09c7a95c" name="a66fdc5a1be941196ba6977fa09c7a95c"></a>
+cow &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (cow &amp;&amp;)</td></tr>
+<tr class="memitem:a01f450406b3161215f5c46bee0ccebc4" id="r_a01f450406b3161215f5c46bee0ccebc4"><td class="memItemLeft"><a id="a01f450406b3161215f5c46bee0ccebc4" name="a01f450406b3161215f5c46bee0ccebc4"></a>
+void&#160;</td><td class="memItemRight"><b>emplace</b> (cow &amp;&amp;other)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
