@@ -162,6 +162,22 @@ requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_
 <tr class="memitem:a8a5c3dc36c83dbf7b548241bceacf427 template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
 <tr class="memitem:abdb7a5852dce0df7f228fbddda06db58" id="r_abdb7a5852dce0df7f228fbddda06db58"><td class="memItemLeft"><a id="abdb7a5852dce0df7f228fbddda06db58" name="abdb7a5852dce0df7f228fbddda06db58"></a>
 &#160;</td><td class="memItemRight"><b>operator bool</b> () const</td></tr>
+<tr class="memitem:abe105e3941b924f44802008a8fed0044" id="r_abe105e3941b924f44802008a8fed0044"><td class="memTemplParams" colspan="2"><a id="abe105e3941b924f44802008a8fed0044" name="abe105e3941b924f44802008a8fed0044"></a>
+template&lt;typename Self&gt; <br />
+requires (dyn &amp;&amp; requires(v_table_t v_table, void* vp) { { v_table.op_pre_increment(vp) }; }) or (!dyn &amp;&amp; requires(model_map_t model_map, T v) { { model_map.op_pre_increment(v) }; })</td></tr>
+<tr class="memitem:abe105e3941b924f44802008a8fed0044 template"><td class="memItemLeft">Self&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;self, int)</td></tr>
+<tr class="memitem:a883b0389e3de477906ba65b00c936d4a" id="r_a883b0389e3de477906ba65b00c936d4a"><td class="memTemplParams" colspan="2"><a id="a883b0389e3de477906ba65b00c936d4a" name="a883b0389e3de477906ba65b00c936d4a"></a>
+template&lt;typename Self&gt; <br />
+requires dyn (v_table_t v_table, void* vp)</td></tr>
+<tr class="memitem:a883b0389e3de477906ba65b00c936d4a template"><td class="memItemLeft">Self &amp;&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;&amp;self) &amp;&amp;</td></tr>
+<tr class="memitem:a4e9f987d9f7d6a85fe4ea4ee8435830c" id="r_a4e9f987d9f7d6a85fe4ea4ee8435830c"><td class="memItemLeft"><a id="a4e9f987d9f7d6a85fe4ea4ee8435830c" name="a4e9f987d9f7d6a85fe4ea4ee8435830c"></a>
+return&#160;</td><td class="memItemRight"><b>std::forward</b> (self)</td></tr>
+<tr class="memitem:a3f86b3204b4594df8996c5951f924c07" id="r_a3f86b3204b4594df8996c5951f924c07"><td class="memTemplParams" colspan="2"><a id="a3f86b3204b4594df8996c5951f924c07" name="a3f86b3204b4594df8996c5951f924c07"></a>
+template&lt;typename Self&gt; <br />
+requires !dyn (model_map_t model_map, T v)</td></tr>
+<tr class="memitem:a3f86b3204b4594df8996c5951f924c07 template"><td class="memItemLeft">Self &amp;&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;&amp;self) &amp;&amp;</td></tr>
+<tr class="memitem:a4e9f987d9f7d6a85fe4ea4ee8435830c" id="r_a4e9f987d9f7d6a85fe4ea4ee8435830c"><td class="memItemLeft"><a id="a4e9f987d9f7d6a85fe4ea4ee8435830c" name="a4e9f987d9f7d6a85fe4ea4ee8435830c"></a>
+return&#160;</td><td class="memItemRight"><b>std::forward</b> (self)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
