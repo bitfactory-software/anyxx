@@ -1422,6 +1422,14 @@ concept is_meta_data_v_table = requires(VTable* v_table) {
   { v_table->meta_data_ } -> std::convertible_to<meta_data*>;
 };
 
+template <typename M, typename V>
+concept is_op_pre_increment_model_map =
+    requires(M model_map, V v) { model_map.op_pre_increment(v); };
+
+template <typename VTable>
+concept is_op_pre_increment_v_table =
+    requires(VTable* v_table, mutable_void x) { v_table->op_pre_increment(x); };
+
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
 struct undefined {};
@@ -3184,14 +3192,9 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
 
   template <typename Self>
   Self operator++(this Self& self, int)
-    requires(dyn &&
-             requires(v_table_t v_table, void* vp) {
-               { v_table.op_pre_increment(vp) };
-             }) or
-            (!dyn &&
-             requires(model_map_t model_map, T v) {
-               { model_map.op_pre_increment(v) };
-             })
+    requires(dyn && is_op_pre_increment_v_table<v_table_t>) ||
+            (!dyn && is_op_pre_increment_model_map<model_map_t, T>)
+
   {
     auto r = self;
     ++(self);
@@ -3200,24 +3203,20 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
 
   template <typename Self>
   Self& operator++(this Self&& self)
-    requires dyn && requires(v_table_t v_table, void* vp) {
-      v_table.op_pre_increment(vp);
-    }
+    requires dyn && is_op_pre_increment_v_table<v_table_t>
   {
-    get_v_table(self)->op_pre_increment(get_proxy_ptr(std::forward<Self>(self)));
+    get_v_table(self)->op_pre_increment(
+        get_proxy_ptr(std::forward<Self>(self)));
     return std::forward<Self>(self);
   }
 
   template <typename Self>
   Self& operator++(this Self&& self)
-    requires !dyn && requires(model_map_t model_map, T v) {
-      model_map.op_pre_increment(v);
-    }
+    requires(!dyn && is_op_pre_increment_model_map<model_map_t, T>)
   {
     model_map_t{}.op_pre_increment(get_proxy_value(std::forward<Self>(self)));
     return std::forward<Self>(self);
   }
-
 };
 
 template <is_any Any>
