@@ -210,24 +210,3 @@ TEST_CASE("dynamic any shared") {
   print_any_callable_shape_const_observer(*r);
   print_any_callable_shape_const_observer(*p);
 }
-
-namespace {
-void print_any_shape_co(any_shape<cref> const& s) {
-  s.draw(position{.x = 1, .y = 2});
-}
-
-}  // namespace
-TEST_CASE("dynamic any unique") {
-  auto c = std::make_unique<circle>(12.3);
-
-  using shape_unique = any_shape<unique>;
-  shape_unique s1{std::move(c)};
-
-  REQUIRE_THAT(s1.perimeter(), Catch::Matchers::WithinAbs(77.2, 77.3));
-  auto unerased_circle = unerase_cast<circle const>(s1);
-  REQUIRE_THAT(unerased_circle->perimeter(),
-               Catch::Matchers::WithinAbs(77.2, 77.3));
-
-  static_assert(proxy_borrowable_from<cref, unique, observeable_v_table>);
-  print_any_shape_co(s1);
-}

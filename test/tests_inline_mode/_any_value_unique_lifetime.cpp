@@ -283,6 +283,16 @@ TEST_CASE("unique lifetime") {
   {
     CHECK(X::tracker_ == 0);
     {
+      auto c = std::make_unique<X>("hallo");
+      any<dynamic_deletable, unique> u{std::move(c)};
+      CHECK((*unerase_cast<X>(u))() == "hallo");
+      CHECK(X::tracker_ == 1);
+    }
+    CHECK(X::tracker_ == 0);
+  }
+  {
+    CHECK(X::tracker_ == 0);
+    {
       any<dynamic_deletable, unique> u{std::make_unique<X>("hallo")};
       CHECK((*unerase_cast<X>(u))() == "hallo");
       CHECK(X::tracker_ == 1);
@@ -334,7 +344,8 @@ TEST_CASE("v-table lifetime") {
       CHECK(x_ptr == ptr);
       CHECK(X::tracker_ == 1);
       CHECK((*x_ptr)() == "hallo");
-      v_table_x.delete_(ptr);
+      v_table_x.destructor(ptr);
+      delete ptr;
       CHECK(X::tracker_ == 0);
     }
   }
@@ -358,7 +369,8 @@ TEST_CASE("v-table lifetime") {
     CHECK(x_ptr == ptr);
     CHECK(X::tracker_ == 1);
     CHECK((*x_ptr)() == "hallo");
-    v_table_x.delete_(ptr);
+    v_table_x.destructor(ptr);
+    delete ptr;
     CHECK(X::tracker_ == 0);
     CHECK(X::move_constructed_ == 1);
   }
@@ -383,7 +395,8 @@ TEST_CASE("v-table lifetime small object") {
       CHECK(x_ptr == ptr);
       CHECK(Y::tracker_ == 1);
       CHECK((*x_ptr)() == 42);
-      v_table_x.delete_(ptr);
+      v_table_x.destructor(ptr);
+      delete ptr;
       CHECK(Y::tracker_ == 0);
     }
   }
@@ -407,7 +420,8 @@ TEST_CASE("v-table lifetime small object") {
     CHECK(x_ptr == ptr);
     CHECK(Y::tracker_ == 1);
     CHECK((*x_ptr)() == 42);
-    v_table_x.delete_(ptr);
+    v_table_x.destructor(ptr);
+    delete ptr;
     CHECK(Y::tracker_ == 0);
     CHECK(Y::move_constructed_ == 1);
   }

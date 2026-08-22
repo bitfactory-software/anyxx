@@ -16,6 +16,9 @@ ANY_(string_to_string, anyxx::dynamic_value, (ANY_OP(std::string, (), (std::stri
 ANY_(string_to_string_mutable, anyxx::dynamic_value,
     (ANY_OP(std::string, (), (), const),
      ANY_OP(std::string, (), (std::string const&), )), )
+ANY_(string_to_string_deletable, anyxx::dynamic_deletable,
+    (ANY_OP(std::string, (), (), const),
+     ANY_OP(std::string, (), (std::string const&), )), )
 
 }  // namespace
 
@@ -115,20 +118,20 @@ TEST_CASE("std emulated function") {
     functor_t::tracker_ = 0;
     {
       {
-        any_string_to_string_mutable<unique> f{std::make_unique<functor_t>()};
+        any_string_to_string_deletable<unique> f{std::make_unique<functor_t>()};
         REQUIRE(functor_t::tracker_ == 1);
         REQUIRE(f("hello") == "");
         REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello");
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
-    any_string_to_string_mutable<unique> f{
+    any_string_to_string_deletable<unique> f{
         std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
-    static_assert(!std::assignable_from<any_string_to_string_mutable<unique>,
-                                        any_string_to_string_mutable<unique>>);
-    any_string_to_string_mutable<unique> f2{std::move(f)};
+    static_assert(!std::assignable_from<any_string_to_string_deletable<unique>,
+                                        any_string_to_string_deletable<unique>>);
+    any_string_to_string_deletable<unique> f2{std::move(f)};
     REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");

@@ -3889,20 +3889,28 @@ TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
                             })),
           (using default_proxy_t = shared;));
 
+#define ANY_MODEL_SIZE ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
+#define ANY_COPY_CONSTRUCTOR \
+     ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor, \
+                      []([[maybe_unused]] mutable_void placement, \
+                         [[maybe_unused]] const_void from) -> mutable_void { \
+                        if constexpr (std::is_copy_constructible_v<Concrete>) { \
+                          return std::construct_at<Concrete>( \
+                              static_cast<Concrete*>(placement), \
+                              *static_cast<Concrete const*>(from));  \
+                        } else {  \
+                          return nullptr;  \
+                        };  \
+                      }) \
+
 TRAIT_EX_(
-    dynamic_copyable, dynamic_deletable, , , ,
-    (ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>()),
-     ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,
-                      []([[maybe_unused]] mutable_void placement,
-                         [[maybe_unused]] const_void from) -> mutable_void {
-                        if constexpr (std::is_copy_constructible_v<Concrete>) {
-                          return std::construct_at<Concrete>(
-                              static_cast<Concrete*>(placement),
-                              *static_cast<Concrete const*>(from));
-                        } else {
-                          return nullptr;
-                        };
-                      })),
+    dynamic_smart_ptr, dynamic_deletable, , , ,
+    (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR),
+    ());
+
+TRAIT_EX_(
+    dynamic_copyable, dynamic_castable, , , ,
+    (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR),
     ());
 
 template <typename Concrete>
@@ -5056,7 +5064,7 @@ static_assert(is_model_size_v_table<dynamic_value_v_table>);
 static_assert(is_copy_constructor_v_table<dynamic_value_v_table>);
 static_assert(is_move_constructor_v_table<dynamic_value_v_table>);
 static_assert(is_destructor_v_table<dynamic_value_v_table>);
-static_assert(is_delete_v_table<dynamic_value_v_table>);
+static_assert(is_delete_v_table<dynamic_deletable_v_table>);
 
 static_assert(is_proxy_compatible_with_trait<cref, observeable>);
 static_assert(!is_proxy_compatible_with_trait<val<>, observeable>);
