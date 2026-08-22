@@ -204,7 +204,7 @@ TEST_CASE("Showcase2") {
 #if 0
 // -->
 ```
-Showcase 2 demonstrates, how to use `Any++`'s "model map" feature 
+Showcase 2 demonstrates, how to use the `Any++` "model map" feature 
 to provide custom behavior for unrelated types using traits.
 
 [Compiler Explorer](https://godbolt.org/z/P7rfbzecj)
