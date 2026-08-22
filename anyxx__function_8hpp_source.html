@@ -118,69 +118,68 @@ $(function(){initNavTree('anyxx__function_8hpp_source.html','',''); });
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>  }</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>};</div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span> </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> Lifetime, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">struct </span>function;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> Lifetime, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span><span class="keyword">struct </span>function&lt;R(Args...), Constness, Lifetime&gt; : Lifetime {</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>  <span class="keyword">using </span>v_table_t = function_v_table&lt;Constness, Lifetime, R, Args...&gt;;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">auto</span> operator()(<span class="keyword">this</span> Self&amp;&amp; self, Args... args) -&gt; R</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keyword">requires</span>(const_correct_call_for_proxy_and_self&lt;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>             <span class="keyword">typename</span> Constness::type, <span class="keyword">typename</span> std::decay_t&lt;Self&gt;::proxy_t,</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>             std::is_const_v&lt;std::remove_reference_t&lt;Self&gt;&gt;,</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>             <span class="keyword">false</span> <span class="comment">/*exact const*/</span>&gt;)</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>  {</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    <span class="keyword">using </span>self_t = std::decay_t&lt;Self&gt;;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (self_t::dyn) {</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>      <span class="keywordflow">return</span> get_v_table(self)-&gt;f_(get_proxy_ptr(self),</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>                                   std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    } <span class="keywordflow">else</span> {</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>      <span class="keyword">using </span>T =</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>          <span class="keyword">typename</span> proxy_trait&lt;typename self_t::proxy_t&gt;::static_dispatch_t;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>      <span class="keywordflow">return</span> std::invoke(get_proxy_value(std::forward&lt;Self&gt;(self)),</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>                         std::forward&lt;Args&gt;(args)...);</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>    }</div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>  }</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt;</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  <span class="keyword">struct </span>proxy_for_lifetime {</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">using </span>type = val&lt;&gt;;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>  };</div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>  <span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>  <span class="keyword">struct </span>proxy_for_lifetime&lt;observeable, const_&gt; {</div>
-<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    <span class="keyword">using </span>type = <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>;</div>
-<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>  };</div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>  <span class="keyword">template</span> &lt;&gt;</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>  <span class="keyword">struct </span>proxy_for_lifetime&lt;observeable, mutable_&gt; {</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    <span class="keyword">using </span>type = <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>;</div>
-<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>  };</div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  <span class="keyword">using </span>default_proxy_t =</div>
-<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>      <span class="keyword">typename</span> proxy_for_lifetime&lt;Lifetime, Constness&gt;::type;</div>
-<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>};</div>
-<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span><span class="keyword">namespace </span>self_test {</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">struct </span>functor {</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>  <span class="keywordtype">int</span> operator()(<span class="keywordtype">double</span>) <span class="keyword">const</span>;</div>
-<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>};</div>
-<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span><span class="keyword">using </span>f_cref = any&lt;function&lt;int(<span class="keywordtype">double</span>), const_, observeable&gt;&gt;;</div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keyword">static_assert</span>(std::invocable&lt;f_cref, double&gt;);</div>
-<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">using </span>f_mutref = any&lt;function&lt;int(<span class="keywordtype">double</span>), mutable_, observeable&gt;&gt;;</div>
-<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">static_assert</span>(std::invocable&lt;f_mutref, double&gt;);</div>
-<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span><span class="keyword">using </span>f_movable_const_val =</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span>    any&lt;function&lt;int(<span class="keywordtype">double</span>), const_, moveable&gt;&gt;;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span><span class="keyword">struct </span>function_proxy_for_lifetime {</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>  <span class="keyword">using </span>type = val&lt;&gt;;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>};</div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span><span class="keyword">struct </span>function_proxy_for_lifetime&lt;observeable, const_&gt; {</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>  <span class="keyword">using </span>type = <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span><span class="keyword">template</span> &lt;&gt;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span><span class="keyword">struct </span>function_proxy_for_lifetime&lt;observeable, mutable_&gt; {</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>  <span class="keyword">using </span>type = <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>};</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> Lifetime, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span><span class="keyword">struct </span>function;</div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Constness, <span class="keyword">typename</span> Lifetime, <span class="keyword">typename</span> R, <span class="keyword">typename</span>... Args&gt;</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span><span class="keyword">struct </span>function&lt;R(Args...), Constness, Lifetime&gt; : Lifetime {</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>  <span class="keyword">using </span>v_table_t = function_v_table&lt;Constness, Lifetime, R, Args...&gt;;</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>  <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self&gt;</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>  <span class="keyword">auto</span> operator()(<span class="keyword">this</span> Self&amp;&amp; self, Args... args) -&gt; R</div>
+<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>    <span class="keyword">requires</span>(const_correct_call_for_proxy_and_self&lt;</div>
+<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span>             <span class="keyword">typename</span> Constness::type, <span class="keyword">typename</span> std::decay_t&lt;Self&gt;::proxy_t,</div>
+<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>             std::is_const_v&lt;std::remove_reference_t&lt;Self&gt;&gt;,</div>
+<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>             <span class="keyword">false</span> <span class="comment">/*exact const*/</span>&gt;)</div>
+<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  {</div>
+<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">using </span>self_t = std::decay_t&lt;Self&gt;;</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (self_t::dyn) {</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keywordflow">return</span> get_v_table(self)-&gt;f_(get_proxy_ptr(self),</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                   std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    } <span class="keywordflow">else</span> {</div>
+<div class="line"><a id="l00058" name="l00058"></a><span class="lineno">   58</span>      <span class="keyword">using </span>T =</div>
+<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>          <span class="keyword">typename</span> proxy_trait&lt;typename self_t::proxy_t&gt;::static_dispatch_t;</div>
+<div class="line"><a id="l00060" name="l00060"></a><span class="lineno">   60</span>      <span class="keywordflow">return</span> std::invoke(get_proxy_value(std::forward&lt;Self&gt;(self)),</div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>                         std::forward&lt;Args&gt;(args)...);</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno">   62</span>    }</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>  }</div>
+<div class="line"><a id="l00064" name="l00064"></a><span class="lineno">   64</span>  <span class="keyword">using </span>default_proxy_t =</div>
+<div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span>      <span class="keyword">typename</span> function_proxy_for_lifetime&lt;Lifetime, Constness&gt;::type;</div>
+<div class="line"><a id="l00066" name="l00066"></a><span class="lineno">   66</span>};</div>
+<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span> </div>
+<div class="line"><a id="l00068" name="l00068"></a><span class="lineno">   68</span><span class="keyword">namespace </span>self_test {</div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span><span class="keyword">struct </span>functor {</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno">   70</span>  <span class="keywordtype">int</span> operator()(<span class="keywordtype">double</span>) <span class="keyword">const</span>;</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span><span class="keyword">using </span>f_cref = any&lt;function&lt;int(<span class="keywordtype">double</span>), const_, observeable&gt;&gt;;</div>
+<div class="line"><a id="l00073" name="l00073"></a><span class="lineno">   73</span><span class="keyword">static_assert</span>(std::invocable&lt;f_cref, double&gt;);</div>
+<div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span><span class="keyword">using </span>f_mutref = any&lt;function&lt;int(<span class="keywordtype">double</span>), mutable_, observeable&gt;&gt;;</div>
+<div class="line"><a id="l00075" name="l00075"></a><span class="lineno">   75</span><span class="keyword">static_assert</span>(std::invocable&lt;f_mutref, double&gt;);</div>
+<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span> </div>
+<div class="line"><a id="l00077" name="l00077"></a><span class="lineno">   77</span><span class="keyword">using </span>f_movable_const_val = any&lt;function&lt;int(<span class="keywordtype">double</span>), const_, moveable&gt;&gt;;</div>
 <div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span><span class="keyword">static_assert</span>(std::invocable&lt;f_movable_const_val, double&gt;);</div>
-<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">using </span>f_movable_mutable_val =</div>
-<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span>    any&lt;function&lt;int(<span class="keywordtype">double</span>), mutable_, moveable&gt;&gt;;</div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span><span class="keyword">static_assert</span>(std::invocable&lt;f_movable_mutable_val, double&gt;);</div>
-<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span> </div>
-<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">using </span>f_const_val = any&lt;function&lt;int(<span class="keywordtype">double</span>), const_, copyable&gt;&gt;;</div>
-<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">static_assert</span>(std::invocable&lt;f_const_val, double&gt;);</div>
-<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">using </span>f_mutable_val = any&lt;function&lt;int(<span class="keywordtype">double</span>), mutable_, copyable&gt;&gt;;</div>
-<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span><span class="keyword">static_assert</span>(std::invocable&lt;f_mutable_val, double&gt;);</div>
-<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span> </div>
-<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span>}  <span class="comment">// namespace self_test</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span> </div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span>}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno">   79</span><span class="keyword">using </span>f_movable_mutable_val = any&lt;function&lt;int(<span class="keywordtype">double</span>), mutable_, moveable&gt;&gt;;</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span><span class="keyword">static_assert</span>(std::invocable&lt;f_movable_mutable_val, double&gt;);</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span> </div>
+<div class="line"><a id="l00082" name="l00082"></a><span class="lineno">   82</span><span class="keyword">using </span>f_const_val = any&lt;function&lt;int(<span class="keywordtype">double</span>), const_, copyable&gt;&gt;;</div>
+<div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span><span class="keyword">static_assert</span>(std::invocable&lt;f_const_val, double&gt;);</div>
+<div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span><span class="keyword">using </span>f_mutable_val = any&lt;function&lt;int(<span class="keywordtype">double</span>), mutable_, copyable&gt;&gt;;</div>
+<div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span><span class="keyword">static_assert</span>(std::invocable&lt;f_mutable_val, double&gt;);</div>
+<div class="line"><a id="l00086" name="l00086"></a><span class="lineno">   86</span> </div>
+<div class="line"><a id="l00087" name="l00087"></a><span class="lineno">   87</span>}  <span class="comment">// namespace self_test</span></div>
+<div class="line"><a id="l00088" name="l00088"></a><span class="lineno">   88</span> </div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}  <span class="comment">// namespace anyxx</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__proxies_html_ga13249a9ab9228bed2d13f8be41984cbf"><div class="ttname"><a href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">anyxx::cref</a></div><div class="ttdeci">observer&lt; const_void &gt; cref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1449</div></div>
 <div class="ttc" id="agroup__proxies_html_ga56d1fe32eadd3e57d34611a42fc845a2"><div class="ttname"><a href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">anyxx::mutref</a></div><div class="ttdeci">observer&lt; mutable_void &gt; mutref</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1453</div></div>
