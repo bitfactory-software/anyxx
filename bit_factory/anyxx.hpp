@@ -2222,7 +2222,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
                       is_delete_v_table auto* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
-    to = shared{p, [v_table](auto p) { v_table->delete_(p); }};
+    to = shared{p, [v_table](auto px) { v_table->delete_(px); }};
   }
 
   static void const* get_proxy_ptr_in(

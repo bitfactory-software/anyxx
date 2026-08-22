@@ -25,6 +25,19 @@ struct function_v_table : Lifetime::v_table_t {
   }
 };
 
+template <typename, typename>
+struct function_proxy_for_lifetime {
+  using type = val<>;
+};
+template <>
+struct function_proxy_for_lifetime<observeable, const_> {
+  using type = cref;
+};
+template <>
+struct function_proxy_for_lifetime<observeable, mutable_> {
+  using type = mutref;
+};
+
 template <typename Constness, typename Lifetime, typename R, typename... Args>
 struct function;
 template <typename Constness, typename Lifetime, typename R, typename... Args>
@@ -48,20 +61,8 @@ struct function<R(Args...), Constness, Lifetime> : Lifetime {
                          std::forward<Args>(args)...);
     }
   }
-  template <typename, typename>
-  struct proxy_for_lifetime {
-    using type = val<>;
-  };
-  template <>
-  struct proxy_for_lifetime<observeable, const_> {
-    using type = cref;
-  };
-  template <>
-  struct proxy_for_lifetime<observeable, mutable_> {
-    using type = mutref;
-  };
   using default_proxy_t =
-      typename proxy_for_lifetime<Lifetime, Constness>::type;
+      typename function_proxy_for_lifetime<Lifetime, Constness>::type;
 };
 
 namespace self_test {
@@ -73,11 +74,9 @@ static_assert(std::invocable<f_cref, double>);
 using f_mutref = any<function<int(double), mutable_, observeable>>;
 static_assert(std::invocable<f_mutref, double>);
 
-using f_movable_const_val =
-    any<function<int(double), const_, moveable>>;
+using f_movable_const_val = any<function<int(double), const_, moveable>>;
 static_assert(std::invocable<f_movable_const_val, double>);
-using f_movable_mutable_val =
-    any<function<int(double), mutable_, moveable>>;
+using f_movable_mutable_val = any<function<int(double), mutable_, moveable>>;
 static_assert(std::invocable<f_movable_mutable_val, double>);
 
 using f_const_val = any<function<int(double), const_, copyable>>;
