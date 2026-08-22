@@ -563,12 +563,12 @@ template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a86a16d743abae4ffd97857bdf2be90a1" id="r_a86a16d743abae4ffd97857bdf2be90a1"><td class="memTemplParams" colspan="2"><a id="a86a16d743abae4ffd97857bdf2be90a1" name="a86a16d743abae4ffd97857bdf2be90a1"></a>
 template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a86a16d743abae4ffd97857bdf2be90a1 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::destruct</b> (T v_table, mutable_void data) noexcept</td></tr>
-<tr class="memitem:ae134345dbc8a681f85239e7afa8bb11e" id="r_ae134345dbc8a681f85239e7afa8bb11e"><td class="memTemplParams" colspan="2"><a id="ae134345dbc8a681f85239e7afa8bb11e" name="ae134345dbc8a681f85239e7afa8bb11e"></a>
+<tr class="memitem:a58fedd0e4389e077eda4b2f7e993d6d5" id="r_a58fedd0e4389e077eda4b2f7e993d6d5"><td class="memTemplParams" colspan="2"><a id="a58fedd0e4389e077eda4b2f7e993d6d5" name="a58fedd0e4389e077eda4b2f7e993d6d5"></a>
 template&lt;typename U&gt; </td></tr>
-<tr class="memitem:ae134345dbc8a681f85239e7afa8bb11e template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><b>anyxx::type_match</b> (is_dynamic_castable_v_table auto *v_table)</td></tr>
-<tr class="memitem:afc73931401cdfea32b4871ba734cefe0" id="r_afc73931401cdfea32b4871ba734cefe0"><td class="memTemplParams" colspan="2"><a id="afc73931401cdfea32b4871ba734cefe0" name="afc73931401cdfea32b4871ba734cefe0"></a>
+<tr class="memitem:a58fedd0e4389e077eda4b2f7e993d6d5 template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><b>anyxx::type_match</b> (is_type_info_v_table auto *v_table)</td></tr>
+<tr class="memitem:a606d95567f81b2f4bb4a3d347c57ee30" id="r_a606d95567f81b2f4bb4a3d347c57ee30"><td class="memTemplParams" colspan="2"><a id="a606d95567f81b2f4bb4a3d347c57ee30" name="a606d95567f81b2f4bb4a3d347c57ee30"></a>
 template&lt;typename U&gt; </td></tr>
-<tr class="memitem:afc73931401cdfea32b4871ba734cefe0 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::check_type_match</b> (is_dynamic_castable_v_table auto *v_table)</td></tr>
+<tr class="memitem:a606d95567f81b2f4bb4a3d347c57ee30 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::check_type_match</b> (is_type_info_v_table auto *v_table)</td></tr>
 <tr class="memitem:a44ae4ba72a85a764ac7ae56c5d7ee383" id="r_a44ae4ba72a85a764ac7ae56c5d7ee383"><td class="memItemLeft"><a id="a44ae4ba72a85a764ac7ae56c5d7ee383" name="a44ae4ba72a85a764ac7ae56c5d7ee383"></a>
 constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_const_correct_call_for_proxy_and_self</b> (bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact)</td></tr>
 <tr class="memitem:a255ef796b4b603d1058e4e6914ebb171" id="r_a255ef796b4b603d1058e4e6914ebb171"><td class="memTemplParams" colspan="2"><a id="a255ef796b4b603d1058e4e6914ebb171" name="a255ef796b4b603d1058e4e6914ebb171"></a>
@@ -744,8 +744,18 @@ template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 <tr class="memitem:a635d420429d93cb3592ab4a7d7e87584" id="r_a635d420429d93cb3592ab4a7d7e87584"><td class="memTemplParams" colspan="2"><a id="a635d420429d93cb3592ab4a7d7e87584" name="a635d420429d93cb3592ab4a7d7e87584"></a>
 template&lt;typename Concrete&gt; </td></tr>
 <tr class="memitem:a635d420429d93cb3592ab4a7d7e87584 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_move_constructor</b> (mutable_void placement, mutable_void from)</td></tr>
-<tr class="memitem:a527fb106aef3ec9e587a340ee86a8589" id="r_a527fb106aef3ec9e587a340ee86a8589"><td class="memItemLeft"><a id="a527fb106aef3ec9e587a340ee86a8589" name="a527fb106aef3ec9e587a340ee86a8589"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_castable, observeable,,,,(ANY_CLASS_TYPE_INFO, ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST),())</td></tr>
+<tr class="memitem:a08248e6de5ef3a3bd64ecb7ea9b4e57f" id="r_a08248e6de5ef3a3bd64ecb7ea9b4e57f"><td class="memItemLeft"><a id="a08248e6de5ef3a3bd64ecb7ea9b4e57f" name="a08248e6de5ef3a3bd64ecb7ea9b4e57f"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (moveable, observeable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=<a class="el" href="structanyxx_1_1val.html">val</a>&lt;&gt;;))</td></tr>
+<tr class="memitem:abe7fb25099a5d3418edcfcda6f4e04de" id="r_abe7fb25099a5d3418edcfcda6f4e04de"><td class="memItemLeft"><a id="abe7fb25099a5d3418edcfcda6f4e04de" name="abe7fb25099a5d3418edcfcda6f4e04de"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (copyable, moveable,,,,(ANY_COPY_CONSTRUCTOR),())</td></tr>
+<tr class="memitem:a3ca4e89e132c52af5e462aacddcf9104" id="r_a3ca4e89e132c52af5e462aacddcf9104"><td class="memItemLeft"><a id="a3ca4e89e132c52af5e462aacddcf9104" name="a3ca4e89e132c52af5e462aacddcf9104"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (save_observable, observeable,,,,(ANY_CLASS_TYPE_INFO),())</td></tr>
+<tr class="memitem:ac82eb516d8a2a7d61057e2718dcb66ea" id="r_ac82eb516d8a2a7d61057e2718dcb66ea"><td class="memItemLeft"><a id="ac82eb516d8a2a7d61057e2718dcb66ea" name="ac82eb516d8a2a7d61057e2718dcb66ea"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (save_moveable, save_observable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=<a class="el" href="structanyxx_1_1val.html">val</a>&lt;&gt;;))</td></tr>
+<tr class="memitem:a6c4714d9ca71bd36418fcccb4e9165e2" id="r_a6c4714d9ca71bd36418fcccb4e9165e2"><td class="memItemLeft"><a id="a6c4714d9ca71bd36418fcccb4e9165e2" name="a6c4714d9ca71bd36418fcccb4e9165e2"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (save_copyable, save_moveable,,,,(ANY_COPY_CONSTRUCTOR),())</td></tr>
+<tr class="memitem:a141cdc18d5e8a99ad3cedda7418309b2" id="r_a141cdc18d5e8a99ad3cedda7418309b2"><td class="memItemLeft"><a id="a141cdc18d5e8a99ad3cedda7418309b2" name="a141cdc18d5e8a99ad3cedda7418309b2"></a>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_castable, save_observable,,,,(ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST),())</td></tr>
 <tr class="memitem:a3eb05cd657f0334d8c6b1350d3f322e4" id="r_a3eb05cd657f0334d8c6b1350d3f322e4"><td class="memItemLeft"><a id="a3eb05cd657f0334d8c6b1350d3f322e4" name="a3eb05cd657f0334d8c6b1350d3f322e4"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_deletable, dynamic_castable,,,,(ANY_HAS_DELETE),(using default_proxy_t=<a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>;))</td></tr>
 <tr class="memitem:a72bcf80656f8e5a5b99c6d90b862116f" id="r_a72bcf80656f8e5a5b99c6d90b862116f"><td class="memItemLeft"><a id="a72bcf80656f8e5a5b99c6d90b862116f" name="a72bcf80656f8e5a5b99c6d90b862116f"></a>
@@ -2516,8 +2526,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3425</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3464</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3430</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3469</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4479,7 +4489,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1607</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1611</div></div>
 </div><!-- fragment -->
 </div>
 </div>
