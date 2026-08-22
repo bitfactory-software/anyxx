@@ -22,7 +22,7 @@ var searchData=
   ['any_20with_20model_20map_19',['Showcase 2: &lt;em&gt;Any++&lt;/em&gt; with Model Map',['../index.html#autotoc_md30',1,'']]],
   ['any_3c_20dynamic_5fcopyable_2c_20cref_20_3e_20',['any&lt; dynamic_copyable, cref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20dynamic_5fcopyable_2c_20mutref_20_3e_21',['any&lt; dynamic_copyable, mutref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
-  ['any_3c_20dynamic_5fvalue_2c_20nullable_5fval_20_3e_22',['any&lt; dynamic_value, nullable_val &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
+  ['any_3c_20dynamic_5fcopyable_2c_20nullable_5fval_20_3e_22',['any&lt; dynamic_copyable, nullable_val &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_2c_20cref_20_3e_23',['any&lt; function&lt; int(double), const_ &gt;, cref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_2c_20mutref_20_3e_24',['any&lt; function&lt; int(double), const_ &gt;, mutref &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],
   ['any_3c_20function_3c_20int_28double_29_2c_20const_5f_20_3e_2c_20using_5f_3c_20functor_20_26_20_3e_20_3e_25',['any&lt; function&lt; int(double), const_ &gt;, using_&lt; functor &amp; &gt; &gt;',['../classanyxx_1_1any.html',1,'anyxx']]],

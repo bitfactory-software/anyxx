@@ -178,7 +178,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string draw() const { return <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_value, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_copyable, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
 <div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; const&amp; drawables) {</div>
@@ -273,7 +273,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_value, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line"><a id="a2" name="a2"></a><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
@@ -324,7 +324,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  [[nodiscard]] std::string name() const { return &quot;square&quot;; }</span></div>
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_value,</span></div>
+<div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_copyable,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_FN(std::string, name, (), const)), , ,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_OPEN_DISPATCH), ())</span></div>
 <div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</span></div>
@@ -412,7 +412,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  [[nodiscard]] std::string name() const { return &quot;square&quot;; }</span></div>
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_value,</span></div>
+<div class="line"><span class="stringliteral">TRAIT_EX_(figure, anyxx::dynamic_copyable,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_FN(std::string, name, (), const)), , ,</span></div>
 <div class="line"><span class="stringliteral">          (ANY_OPEN_DISPATCH), ())</span></div>
 <div class="line"><span class="stringliteral">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</span></div>
@@ -478,8 +478,8 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">struct figure_has_open_dispatch {};</span></div>
-<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val&lt;&gt;)</span></div>
-<div class="line"><span class="stringliteral">ANY_(serializable, ayx::dynamic_value,</span></div>
+<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)), ayx::val&lt;&gt;)</span></div>
+<div class="line"><span class="stringliteral">ANY_(serializable, ayx::dynamic_copyable,</span></div>
 <div class="line"><span class="stringliteral">    (ANY_FN(void, serialize, (std::ostream&amp;), const)), ayx::cref)</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">ayx::factory&lt;any_serializable, ayx::val&lt;&gt;, std::string, std::istream&amp;&gt;</span></div>
@@ -632,7 +632,7 @@ $(function(){initNavTree('README_8cpp-example.html','',''); });
 <div class="line"><span class="stringliteral">  [[nodiscard]] std::string draw() const { return &quot;World&quot;; }</span></div>
 <div class="line"><span class="stringliteral">};</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
-<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, draw, (), const)),</span></div>
+<div class="line"><span class="stringliteral">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)),</span></div>
 <div class="line"><span class="stringliteral">     ayx::val&lt;&gt;)</span></div>
 <div class="line"><span class="stringliteral"></span> </div>
 <div class="line"><span class="stringliteral">using known_and_unknown_shapes =</span></div>

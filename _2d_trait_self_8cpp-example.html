@@ -102,7 +102,7 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">                (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, <span class="keywordtype">bool</span>, is_equal, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                            [&amp;x](T <span class="keyword">const</span>&amp; y) { <span class="keywordflow">return</span> x == y; })))</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = <a id="_a2" name="_a2"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>, <span class="keyword">typename</span> Base = anyxx::dynamic_value&gt;</div>
+<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Proxy = <a id="_a2" name="_a2"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>, <span class="keyword">typename</span> Base = anyxx::dynamic_copyable&gt;</div>
 <div class="line"><span class="keyword">using</span> any_has_equal = <a id="_a3" name="_a3"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any</a>&lt;has_equal&lt;Base&gt;, Proxy&gt;;</div>
 <div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace example_2d</span></div>
@@ -119,8 +119,8 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line">    CHECK(!b.is_equal(a));</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    <span class="keyword">auto</span> a = <a id="_a4" name="_a4"></a><a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as&lt;has_equal&lt;dynamic_value&gt;</a>&gt;(<span class="stringliteral">&quot;a&quot;</span>s);</div>
-<div class="line">    <span class="keyword">auto</span> b = <a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as&lt;has_equal&lt;dynamic_value&gt;</a>&gt;(<span class="stringliteral">&quot;b&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> a = <a id="_a4" name="_a4"></a><a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as&lt;has_equal&lt;dynamic_copyable&gt;</a>&gt;(<span class="stringliteral">&quot;a&quot;</span>s);</div>
+<div class="line">    <span class="keyword">auto</span> b = <a class="code hl_function" href="anyxx_8hpp.html#aa0a344700732ba661e0fb701ef1eba2c">trait_as&lt;has_equal&lt;dynamic_copyable&gt;</a>&gt;(<span class="stringliteral">&quot;b&quot;</span>s);</div>
 <div class="line">    CHECK(a.is_equal(a));</div>
 <div class="line">    CHECK(!b.is_equal(a));</div>
 <div class="line">  }</div>
@@ -128,7 +128,7 @@ $(function(){initNavTree('_2d_trait_self_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>example_2d {</div>
 <div class="line"> </div>
-<div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(has_plus, has_equal&lt;anyxx::dynamic_value&gt;,</div>
+<div class="line"><a id="a5" name="a5"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(has_plus, has_equal&lt;anyxx::dynamic_copyable&gt;,</div>
 <div class="line">       (<a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, plus, (anyxx::self <span class="keyword">const</span>&amp;), <span class="keyword">const</span>,</div>
 <div class="line">                   ([&amp;x](T <span class="keyword">const</span>&amp; y) {</div>
 <div class="line">                     <span class="keywordflow">return</span> get_proxy_value(trait_as&lt;has_plus&gt;(x) +</div>
