@@ -377,8 +377,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> T&gt;</div>
 <div class="line"><span class="keyword">struct </span>node : node_base {</div>
 <div class="line">  node(T x) : m_value(x) {}</div>
-<div class="line">  <span class="keywordtype">void</span> print(std::ostream&amp; s)<span class="keyword"> const </span>{ s &lt;&lt; this-&gt;m_value; }</div>
-<div class="line">  <span class="keywordtype">void</span> double_me() { m_value += m_value; }</div>
+<div class="line">  <span class="keywordtype">void</span> print(std::ostream&amp; s)<span class="keyword"> const override </span>{ s &lt;&lt; this-&gt;m_value; }</div>
+<div class="line">  <span class="keywordtype">void</span> double_me()<span class="keyword"> override </span>{ m_value += m_value; }</div>
 <div class="line"> </div>
 <div class="line"> <span class="keyword">private</span>:</div>
 <div class="line">  T m_value;</div>
