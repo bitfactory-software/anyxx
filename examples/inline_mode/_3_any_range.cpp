@@ -188,8 +188,8 @@ TEST_CASE("example 3 transform unerase") {
     any_forward_range<any_stringable<anyxx::val<>>> r{v};
     int x = 0;
     for (auto i : std::views::transform(
-             r, [](any_stringable<anyxx::val<>> const& v) -> int {
-               return *anyxx::unerase_cast<int>(v);
+             r, [](any_stringable<anyxx::val<>> const& vv) -> int {
+               return *anyxx::unerase_cast<int>(vv);
              })) {
       std::println("{}", i);
       CHECK(i == ++x);
