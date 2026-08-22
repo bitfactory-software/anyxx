@@ -282,8 +282,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : std::views::transform(</div>
-<div class="line">             r, [](any_stringable&lt;<a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; v) -&gt; <span class="keywordtype">int</span> {</div>
-<div class="line">               <span class="keywordflow">return</span> *anyxx::unerase_cast&lt;int&gt;(v);</div>
+<div class="line">             r, [](any_stringable&lt;<a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; vv) -&gt; <span class="keywordtype">int</span> {</div>
+<div class="line">               <span class="keywordflow">return</span> *anyxx::unerase_cast&lt;int&gt;(vv);</div>
 <div class="line">             })) {</div>
 <div class="line">      std::println(<span class="stringliteral">&quot;{}&quot;</span>, i);</div>
 <div class="line">      CHECK(i == ++x);</div>

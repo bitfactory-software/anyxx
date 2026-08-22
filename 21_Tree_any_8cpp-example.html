@@ -105,13 +105,10 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line"> </div>
 <div class="line"><span class="keyword">namespace </span>{</div>
 <div class="line"> </div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(node, dynamic_copyable, (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>),</div>
-<div class="line">             <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, as_forth, (), <span class="keyword">const</span>),</div>
-<div class="line">             <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, as_lisp, (), <span class="keyword">const</span>)), <a id="_a2" name="_a2"></a><a class="code hl_struct" href="structanyxx_1_1val.html">val&lt;&gt;</a>)</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">//ANY(node, (ANY_FN(int, value, (), const),</span></div>
-<div class="line"><span class="comment">//             ANY_FN(std::string, as_forth, (), const),</span></div>
-<div class="line"><span class="comment">//             ANY_FN(std::string, as_lisp, (), const)), shared)</span></div>
+<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(node, dynamic_copyable,</div>
+<div class="line">     (<a id="a1" name="a1"></a><a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">int</span>, value, (), <span class="keyword">const</span>), <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, as_forth, (), <span class="keyword">const</span>),</div>
+<div class="line">      <a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, as_lisp, (), <span class="keyword">const</span>)),</div>
+<div class="line">     <a id="_a2" name="_a2"></a><a class="code hl_struct" href="structanyxx_1_1cow.html">cow</a>)</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>Plus {</div>
 <div class="line">  Plus(any_node&lt;&gt; left, any_node&lt;&gt; right)</div>
@@ -150,19 +147,12 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="line">  <span class="keywordtype">int</span> int_;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> NODE, <span class="keyword">typename</span>... ARGS&gt;</div>
-<div class="line"><span class="keyword">auto</span> make_node(ARGS&amp;&amp;... args) {</div>
-<div class="line">  <span class="keywordflow">return</span> any_node&lt;&gt;{std::in_place_type&lt;NODE&gt;, std::forward&lt;ARGS&gt;(args)...};</div>
-<div class="line">}</div>
-<div class="line"> </div>
 <div class="line">}  <span class="comment">// namespace</span></div>
 <div class="line"> </div>
 <div class="line">TEST_CASE(<span class="stringliteral">&quot;21_Tree_any&quot;</span>) {</div>
 <div class="line">  <span class="keyword">using namespace </span>anyxx;</div>
 <div class="line"> </div>
-<div class="line">  <span class="keyword">auto</span> expr = any_node&lt;&gt;(make_node&lt;Times&gt;(</div>
-<div class="line">      make_node&lt;Integer&gt;(2),</div>
-<div class="line">      make_node&lt;Plus&gt;(make_node&lt;Integer&gt;(3), make_node&lt;Integer&gt;(4))));</div>
+<div class="line">  <span class="keyword">auto</span> expr = any_node&lt;&gt;{Times{Integer(2), Plus{Integer(3), Integer(4)}}};</div>
 <div class="line"> </div>
 <div class="line">  <span class="keyword">auto</span> v = expr.value();</div>
 <div class="line">  REQUIRE(v == 14);</div>
@@ -180,7 +170,7 @@ $(function(){initNavTree('21_Tree_any_8cpp-example.html','',''); });
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
 <div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1099</div></div>
 <div class="ttc" id="agroup__trait__macros_html_ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><div class="ttname"><a href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a></div><div class="ttdeci">#define ANY_(n, BASE, l, proxy_default)</div><div class="ttdoc">ANY with a baseSee ANY for explanation.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:933</div></div>
-<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2503</div></div>
+<div class="ttc" id="astructanyxx_1_1cow_html"><div class="ttname"><a href="structanyxx_1_1cow.html">anyxx::cow</a></div><div class="ttdoc">Proxy to manage the captured object as value via copy-on-write.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2323</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
