@@ -3871,48 +3871,6 @@ ToAny move_to(FromAny&& from) {
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
-TRAIT_EX_(dynamic_castable, observeable, , , ,
-          (ANY_V_TABLE_DATA(std::type_info const*, type_info_,
-                            &typeid(Concrete)),
-           ANY_V_TABLE_DATA(
-               is_derived_from_t, is_derived_from_,
-               +[](const std::type_info& from) {
-                 return static_is_derived_from(from);
-               }),
-           ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
-          ());
-
-TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
-          (ANY_V_TABLE_DATA(delete_t, delete_,
-                            [](mutable_void data) {
-                              if (data) delete static_cast<Concrete*>(data);
-                            })),
-          (using default_proxy_t = shared;));
-
-#define ANY_MODEL_SIZE ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
-#define ANY_COPY_CONSTRUCTOR \
-     ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor, \
-                      []([[maybe_unused]] mutable_void placement, \
-                         [[maybe_unused]] const_void from) -> mutable_void { \
-                        if constexpr (std::is_copy_constructible_v<Concrete>) { \
-                          return std::construct_at<Concrete>( \
-                              static_cast<Concrete*>(placement), \
-                              *static_cast<Concrete const*>(from));  \
-                        } else {  \
-                          return nullptr;  \
-                        };  \
-                      }) \
-
-TRAIT_EX_(
-    dynamic_smart_ptr, dynamic_deletable, , , ,
-    (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR),
-    ());
-
-TRAIT_EX_(
-    dynamic_copyable, dynamic_castable, , , ,
-    (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR),
-    ());
-
 template <typename Concrete>
 mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
                                      [[maybe_unused]] mutable_void from) {
@@ -3926,17 +3884,61 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
   return placement;
 };
 
+#define ANY_CLASS_TYPE_INFO \
+  ANY_V_TABLE_DATA(std::type_info const*, type_info_, &typeid(Concrete))
+#define ANY_CAN_TYPE_SAVE_DOWNCAST                                           \
+  ANY_V_TABLE_DATA(                                                          \
+      is_derived_from_t, is_derived_from_, +[](const std::type_info& from) { \
+        return static_is_derived_from(from);                                 \
+      })
+#define ANY_CAN_TYPE_SAVE_CROSSCAST \
+  ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)
+#define ANY_MODEL_SIZE \
+  ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
+#define ANY_COPY_CONSTRUCTOR                                                 \
+  ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,                     \
+                   []([[maybe_unused]] mutable_void placement,               \
+                      [[maybe_unused]] const_void from) -> mutable_void {    \
+                     if constexpr (std::is_copy_constructible_v<Concrete>) { \
+                       return std::construct_at<Concrete>(                   \
+                           static_cast<Concrete*>(placement),                \
+                           *static_cast<Concrete const*>(from));             \
+                     } else {                                                \
+                       return nullptr;                                       \
+                     };                                                      \
+                   })
+#define ANY_HAS_DELETE                                        \
+  ANY_V_TABLE_DATA(delete_t, delete_, [](mutable_void data) { \
+    if (data) delete static_cast<Concrete*>(data);            \
+  })
+#define ANY_MOVE_CONSTRUCTOR                                                \
+  ANY_V_TABLE_DATA(move_constructor_t, move_constructor,                    \
+                   []([[maybe_unused]] mutable_void placement,              \
+                      [[maybe_unused]] mutable_void from) -> mutable_void { \
+                     return invoke_move_constructor<Concrete>(placement,    \
+                                                              from);        \
+                   })
+#define ANY_DESTRUCTOR                                               \
+  ANY_V_TABLE_DATA(destructor_t, destructor, [](mutable_void data) { \
+    std::destroy_at(static_cast<Concrete*>(data));                   \
+  })
+
+TRAIT_EX_(dynamic_castable, observeable, , , ,
+          (ANY_CLASS_TYPE_INFO, ANY_CAN_TYPE_SAVE_DOWNCAST,
+           ANY_CAN_TYPE_SAVE_CROSSCAST),
+          ());
+
+TRAIT_EX_(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
+          (using default_proxy_t = shared;));
+
+TRAIT_EX_(dynamic_smart_ptr, dynamic_deletable, , , ,
+          (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
+
+TRAIT_EX_(dynamic_copyable, dynamic_castable, , , ,
+          (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
+
 TRAIT_EX_(dynamic_value, dynamic_copyable, , , ,
-          (ANY_V_TABLE_DATA(
-               move_constructor_t, move_constructor,
-               []([[maybe_unused]] mutable_void placement,
-                  [[maybe_unused]] mutable_void from) -> mutable_void {
-                 return invoke_move_constructor<Concrete>(placement, from);
-               }),
-           ANY_V_TABLE_DATA(destructor_t, destructor,
-                            [](mutable_void data) {
-                              std::destroy_at(static_cast<Concrete*>(data));
-                            })),
+          (ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
 
 class meta_data {
@@ -4073,7 +4075,8 @@ struct is_key_impl<key<T>> : std::true_type {};
 template <typename T>
 concept is_key = is_key_impl<T>::value;
 
-/// \brief A class template to implement a factory for \ref any objects.
+/// \brief A class template to implement a factory for \ref any
+/// objects.
 template <template <typename...> typename Any, is_proxy Proxy, typename Key,
           typename... Args>
   requires proxy_trait<Proxy>::is_owner
@@ -4180,7 +4183,8 @@ std::size_t& dispatchs_count() {
 }
 #endif
 
-/// \brief A tag to indicate that the corresponding function parameter is an
+/// \brief A tag to indicate that the corresponding function
+/// parameter is an
 /// \ref any used for dispatch.
 ///
 /// \tparam Any The \ref any used for dispatch
@@ -4232,9 +4236,9 @@ struct ensure_function_ptr_from_functor_t {
       : striped_virtuals<FUNCTOR, Args...> {};
 
   template <typename... Args>
-  static auto instance(
-      auto functor)  // if functor is a templated operator() from a
-                     // stateless function object, instantiate it now!;
+  static auto instance(auto functor)  // if functor is a templated operator()
+                                      // from a stateless function object,
+                                      // instantiate it now!;
   {
     using functor_t = decltype(functor);
     if constexpr (std::is_pointer_v<functor_t>) {
@@ -4345,8 +4349,8 @@ struct dispatch_matrix<DispatchMatrix, virtual_<Any>, Args...> {
       typename dispatch_matrix<std::vector<DispatchMatrix>, Args...>::type;
 };
 
-/// \brief Open dispatch method. Solves the expression problem. See \ref
-/// dispatch_sig "dispatch<R(Args...)>" for details.
+/// \brief Open dispatch method. Solves the expression problem. See
+/// \ref dispatch_sig "dispatch<R(Args...)>" for details.
 ///
 /// \tparam R Return type.
 /// \tparam ...Args Parameter types. The parameters for open dispatch
@@ -4356,22 +4360,23 @@ class dispatch;
 /// \anchor dispatch_sig
 /// \brief Open dispatch method. Solves the expression problem.
 /// \tparam R The return type.
-/// \tparam Args The parameter types. The signature of the dispatch is
-/// R(Args...).
+/// \tparam Args The parameter types. The signature of the dispatch
+/// is R(Args...).
 ///
-/// The open dispatch is managed via a singleton object of this class.
+/// The open dispatch is managed via a singleton object of this
+/// class.
 ///
-/// To declare and define a singleton, use the \ref ANY_SINGLETON and \ref
-/// ANY_SINGLETON_DECLARE macros.
+/// To declare and define a singleton, use the \ref ANY_SINGLETON and
+/// \ref ANY_SINGLETON_DECLARE macros.
 ///
-/// Each trait of the \ref any tagged as virtual must have open dispatch
-/// enabled. To enable open dispatch, declare a struct named
+/// Each trait of the \ref any tagged as virtual must have open
+/// dispatch enabled. To enable open dispatch, declare a struct named
 /// 'trait_name'_has_open_dispatch.
 /// \code
 /// struct node_has_open_dispatch {};
 /// ANY(node<>, , )
-/// // open dispatch evaluate, returns int, dispatched via an any_node;
-/// dispatch<int(virtual_<any_node<>>)> evaluate;
+/// // open dispatch evaluate, returns int, dispatched via an
+/// any_node; dispatch<int(virtual_<any_node<>>)> evaluate;
 /// \endcode
 /// Examples are listed here: \ref dispatch
 template <typename R, typename... Args>
@@ -4503,12 +4508,13 @@ class dispatch<R(Args...)> {
   dispatch_access<dispatch_kind, 0, Args...> dispatch_access_;
 
  public:
-  /// \brief Register a dispatch target for the model provided in the type
-  /// parameter.
-  /// \tparam Classes The models for which the dispatch target is registered.
+  /// \brief Register a dispatch target for the model provided in the
+  /// type parameter.
+  /// \tparam Classes The models for which the dispatch target is
+  /// registered.
   /// \param f The dispatch target.
-  /// \return Dummy value, useful for initializing an auto unnamed variable at
-  /// (static) namespace scope.
+  /// \return Dummy value, useful for initializing an auto unnamed
+  /// variable at (static) namespace scope.
   template <typename... Classes>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
@@ -4516,8 +4522,10 @@ class dispatch<R(Args...)> {
     return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
   };
   /// \brief Invoke the dispatch.
-  /// \tparam ActualArgs The deduced argument types for the dispatch call.
-  /// \param actual_args Arguments fulfilling the signature of this dispatch.
+  /// \tparam ActualArgs The deduced argument types for the dispatch
+  /// call.
+  /// \param actual_args Arguments fulfilling the signature of this
+  /// dispatch.
   /// \return The result of the dispatched function call.
   ///
   /// The called function is determined by the \ref any objects
@@ -4655,12 +4663,12 @@ class dispatch_vany {
 #define __ ANY_UNIQUE_NAME_
 
 /// \addtogroup singleton_macros ANY_SINGLETON macros
-/// \brief Macros to reduce boilerplate for declaring/defining static runtime
-/// data.
+/// \brief Macros to reduce boilerplate for declaring/defining static
+/// runtime data.
 ///
-/// To enable some dynamic functionality (crosscast, open dispatch) there
-/// must be some static data holding information to perform these operations.
-/// Extra care must be taken in a DLL scenario.
+/// To enable some dynamic functionality (crosscast, open dispatch)
+/// there must be some static data holding information to perform
+/// these operations. Extra care must be taken in a DLL scenario.
 ///
 /// To reduce boilerplate code, Any++ supplies these macros.
 ///  @{
@@ -4670,8 +4678,8 @@ class dispatch_vany {
 /// \param name Name of the singleton.
 /// \param __VA_ARGS__ Type of the singleton object.
 ///
-/// This macro should reside inside the namespace you wish the singleton to
-/// reside. See also \ref ANY_SINGLETON.
+/// This macro should reside inside the namespace you wish the
+/// singleton to reside. See also \ref ANY_SINGLETON.
 #define ANY_SINGLETON_DECLARE(export_, name, ...) \
   using name##_t = __VA_ARGS__;                   \
   export_ extern name##_t& get_##name();          \
@@ -4691,8 +4699,9 @@ class dispatch_vany {
 ///  @}
 
 /// \addtogroup vany_macros VANY_DISPACH macros
-/// \brief Macros to reduce boilerplate for declaring/defining open dispatch
-/// with \ref vany_variant. Only neccessary for DLL scenarios
+/// \brief Macros to reduce boilerplate for declaring/defining open
+/// dispatch with \ref vany_variant. Only neccessary for DLL
+/// scenarios
 ///  @{
 
 /// \brief Declare a singleton object for open \ref vany dispatch.
@@ -4700,7 +4709,8 @@ class dispatch_vany {
 /// \param name Name of the dispatch.
 /// \param vany Type of \ref vany.
 /// \param signature Signature of the \ref dispatch.
-/// \param static_dispatch Static constexpr visitor for the non-any members of
+/// \param static_dispatch Static constexpr visitor for the non-any
+/// members of
 ///        the \ref vany.
 ///
 /// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
@@ -4717,7 +4727,8 @@ class dispatch_vany {
       anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
                            name##_static_dispatch>)
 
-/// \brief Define a \ref vany dispatch singleton object in a source file.
+/// \brief Define a \ref vany dispatch singleton object in a source
+/// file.
 /// \param namespace_ The namespace for the singleton.
 /// \param name Name of the singleton.
 ///
@@ -4740,19 +4751,19 @@ class dispatch_vany {
 #else
 
 /// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast
-/// \brief Macros to define static runtime type data for a \ref model. Only
-/// neccessary for DLL \b and crosscast scenarios.
+/// \brief Macros to define static runtime type data for a \ref
+/// model. Only neccessary for DLL \b and crosscast scenarios.
 /// @{
 
 /// \def ANY_META_CLASS_FWD
-/// \brief Declare access to the meta data for a specific model any. Must be
-/// in global namespace.
+/// \brief Declare access to the meta data for a specific model any.
+/// Must be in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario
 /// \param ... Type of the model
 #define ANY_META_CLASS_FWD(...)
 /// \def ANY_META_CLASS
-/// \brief Define the meta data for a specific model any. Must be in global
-/// namespace.
+/// \brief Define the meta data for a specific model any. Must be in
+/// global namespace.
 /// \param ... Type of the model
 #define ANY_META_CLASS(...)
 
@@ -4763,8 +4774,8 @@ class dispatch_vany {
   ANY_META_CLASS(__VA_ARGS__)
 
 /// \def ANY_REGISTER_MODEL
-/// \brief Register a model class for a specific any interface. Must be in
-/// global namespace.
+/// \brief Register a model class for a specific any interface. Must
+/// be in global namespace.
 /// \param class_ The model class with fully qualified name. Must be
 /// parenthesized
 /// \param interface_ Name of the \ref any (without any_ prefix).
@@ -4853,47 +4864,47 @@ class dispatch_vany {
 #else
 
 /// \addtogroup dispatch_macros DISPATCH_ macros
-/// \brief Macros to define static runtime data for open dispatch. Only
-/// neccessary for DLL scenarios.
+/// \brief Macros to define static runtime data for open dispatch.
+/// Only neccessary for DLL scenarios.
 ///
 /// Name conventions:
-/// _FWD: macro to declare the function signature only. To be used in header
-/// files.
+/// _FWD: macro to declare the function signature only. To be used in
+/// header files.
 ///
-/// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for a
-/// specific any. This dispatch counter is used to assign unique indices to
-/// each dispatch.
+/// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for
+/// a specific any. This dispatch counter is used to assign unique
+/// indices to each dispatch.
 ///
-/// ANY_DISPATCH_FOR macros declare/define the dispatch table instance for a
-/// any. This is necessary once for each model class that participates in open
-/// dispatch.
+/// ANY_DISPATCH_FOR macros declare/define the dispatch table
+/// instance for a any. This is necessary once for each model class
+/// that participates in open dispatch.
 ///
 ///  @{
 
 /// \def ANY_DISPATCH_COUNT_FWD
-/// \brief Declare access to the dispatch counter for a specific \ref any.
-/// Must be placed in global namespace.
+/// \brief Declare access to the dispatch counter for a specific \ref
+/// any. Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT_FWD(...)
 /// \def ANY_DISPATCH_COUNT
-/// \brief Define the dispatch counter for a specific \ref any. Must be placed
-/// in global namespace.
+/// \brief Define the dispatch counter for a specific \ref any. Must
+/// be placed in global namespace.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT(...)
 /// \def ANY_DISPATCH_FOR_FWD
-/// \brief Declare access to the dispatch table instance function for a
-/// model. Must be placed in global namespace.
+/// \brief Declare access to the dispatch table instance function for
+/// a model. Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param class_ The model class with fully qualified name.
 /// \param interface_namespace_ Namespace of the \ref any.
 /// \param interface_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_FOR_FWD(...)
 /// \def ANY_DISPATCH_FOR
-/// \brief Define the dispatch table instance function for a model. Must be
-/// placed in global namespace
+/// \brief Define the dispatch table instance function for a model.
+/// Must be placed in global namespace
 /// \param class_ The model class with fully qualified name.
 /// \param interface_namespace_ Namespace of the \ref any.
 /// \param interface_ Name of the \ref any (without any_ prefix).
@@ -4906,14 +4917,15 @@ class dispatch_vany {
 /// \defgroup anyxx_config Any++ configuration macro
 /// \brief Macro to configure Any++ for DLL mode
 ///
-/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In DLL
-/// mode, some static runtime data is not instantiated in the header
-/// implicitly via static inline and must be manually instantiated in a single
-/// translation unit.
+/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In
+/// DLL mode, some static runtime data is not instantiated in the
+/// header implicitly via static inline and must be manually
+/// instantiated in a single translation unit.
 ///
 /// See also \ref ANY_SINGLETON_DECLARE, \ref ANY_SINGLETON, \ref
-/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref ANY_DISPATCH_COUNT_FWD, \ref
-/// ANY_DISPATCH_COUNT, \ref ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
+/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref
+/// ANY_DISPATCH_COUNT_FWD, \ref ANY_DISPATCH_COUNT, \ref
+/// ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
 /// ANY_META_CLASS_FWD, \ref ANY_META_CLASS.
 
 /**
@@ -4930,16 +4942,16 @@ class dispatch_vany {
 
    \example _2b_trait_monoid.cpp
    A self referntial trait that models a variant of a monoid.
-   Show how to use a MODEL_MAP that acts simultanious as runtime and complitem
-   customization point.
+   Show how to use a MODEL_MAP that acts simultanious as runtime and
+   complitem customization point.
 
    \example _2f_trait_equal_comparable.cpp
-   A step by step walkthrough for implementing a trait that models equality
-   comparability for various types.
+   A step by step walkthrough for implementing a trait that models
+   equality comparability for various types.
 
    \example _2e_trait_algebra.cpp
-   A hierarchy of traits for the algebraic structures semigroup, monoid and
-   group.
+   A hierarchy of traits for the algebraic structures semigroup,
+   monoid and group.
 
    \example _2p_trait_optional.cpp
    An optional as a customizable trait.
