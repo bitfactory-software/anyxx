@@ -283,8 +283,8 @@ inline std::ostream& operator<<(std::ostream& s, node_base const& n) {
 template <class T>
 struct node : node_base {
   node(T x) : m_value(x) {}
-  void print(std::ostream& s) const { s << this->m_value; }
-  void double_me() { m_value += m_value; }
+  void print(std::ostream& s) const override { s << this->m_value; }
+  void double_me() override { m_value += m_value; }
 
  private:
   T m_value;
