@@ -25,12 +25,6 @@ struct function_v_table : Lifetime::v_table_t {
   }
 };
 
-TRAIT_EX_(moveable, observeable, , , ,
-          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
-          (using default_proxy_t = val<>;));
-
-TRAIT_EX_(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
-
 template <typename Constness, typename Lifetime, typename R, typename... Args>
 struct function;
 template <typename Constness, typename Lifetime, typename R, typename... Args>

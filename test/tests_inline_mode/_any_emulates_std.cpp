@@ -197,3 +197,15 @@ TEST_CASE("std emulated function") {
     // auto f3 = f2; // does not compile as expected, because f2 is move-only
   }
 }
+
+TEST_CASE("std emulated any") {
+  using any = anyxx::any<anyxx::save_copyable>;
+  {
+    auto a1 = any(std::string{"hallo"});
+    CHECK(*unerase_cast<std::string>(a1) == "hallo");
+    a1 = 3;
+    CHECK(*unerase_cast<int>(a1) == 3);
+    CHECK(unerase_cast_if<std::string>(a1) == nullptr);
+    CHECK(get_type_info(a1) == typeid(int));
+  }
+}

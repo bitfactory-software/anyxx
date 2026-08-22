@@ -1409,11 +1409,15 @@ concept is_model_size_v_table = requires(VTable* v_table) {
   { v_table->model_size } -> std::convertible_to<model_size_t>;
 };
 
+template <typename VTable>
+concept is_type_info_v_table = requires(VTable* v_table) {
+  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
+};
+
 using is_derived_from_t = bool (*)(const std::type_info&);
 template <typename VTable>
 concept is_dynamic_castable_v_table = requires(VTable* v_table) {
   { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
-  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
 };
 
 using is_derived_from_t = bool (*)(const std::type_info&);
@@ -1557,10 +1561,10 @@ inline void destruct(T v_table, mutable_void data) noexcept {
 }
 
 template <typename U>
-bool type_match(is_dynamic_castable_v_table auto* v_table);
+bool type_match(is_type_info_v_table auto* v_table);
 
 template <typename U>
-void check_type_match(is_dynamic_castable_v_table auto* v_table) {
+void check_type_match(is_type_info_v_table auto* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
@@ -2899,7 +2903,7 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(is_dynamic_castable_v_table auto* v_table) {
+bool type_match(is_type_info_v_table auto* v_table) {
   return *v_table->type_info_ == typeid(std::decay_t<U>);
 }
 
@@ -3290,6 +3294,7 @@ inline const auto& get_meta_data(Any const& any) {
 }
 
 template <is_any Any>
+  requires is_type_info_v_table<typename Any::v_table_t>
 inline std::type_info const& get_type_info(Any const& any) {
   return *get_v_table(any)->type_info_;
 }
@@ -3956,8 +3961,22 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
     std::destroy_at(static_cast<Concrete*>(data));                   \
   })
 
-TRAIT_EX_(dynamic_castable, observeable, , , ,
-          (ANY_CLASS_TYPE_INFO, ANY_CAN_TYPE_SAVE_DOWNCAST,
+TRAIT_EX_(moveable, observeable, , , ,
+          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+          (using default_proxy_t = val<>;));
+
+TRAIT_EX_(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+
+TRAIT_EX_(save_observable, observeable, , , , (ANY_CLASS_TYPE_INFO), ());
+
+TRAIT_EX_(save_moveable, save_observable, , , ,
+          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+          (using default_proxy_t = val<>;));
+
+TRAIT_EX_(save_copyable, save_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+
+TRAIT_EX_(dynamic_castable, save_observable, , , ,
+          (ANY_CAN_TYPE_SAVE_DOWNCAST,
            ANY_CAN_TYPE_SAVE_CROSSCAST),
           ());
 
