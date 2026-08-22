@@ -32,7 +32,7 @@ namespace lib_2f {
 // The names for the functions in the model map map are "eq" and "ne".
 // These functions are then used to implement the operators == and !=
 // in the external interface.
-TRAIT_(equal_comparable, anyxx::dynamic_value,
+TRAIT_(equal_comparable, anyxx::dynamic_copyable,
        // anyxx::self is a magic type that represents the type of the object for
        // whitch the trait is called. It is used to smooth the differences
        // between static and dynamic dispatch, so the implemention can be

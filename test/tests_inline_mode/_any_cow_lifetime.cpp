@@ -76,7 +76,7 @@ struct XX {
 };
 using X = XX<>;
 
-TRAIT_(getset, anyxx::dynamic_value,
+TRAIT_(getset, anyxx::dynamic_copyable,
        (ANY_FN(std::string const&, get, (), const),
         ANY_FN(void, set, (std::string const&), )))
 

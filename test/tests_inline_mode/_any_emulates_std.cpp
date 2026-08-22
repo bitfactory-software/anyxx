@@ -12,8 +12,8 @@
 using namespace anyxx;
 
 namespace {
-ANY_(string_to_string, anyxx::dynamic_value, (ANY_OP(std::string, (), (std::string const&), const)), )
-ANY_(string_to_string_mutable, anyxx::dynamic_value,
+ANY_(string_to_string, anyxx::dynamic_copyable, (ANY_OP(std::string, (), (std::string const&), const)), )
+ANY_(string_to_string_mutable, anyxx::dynamic_copyable,
     (ANY_OP(std::string, (), (), const),
      ANY_OP(std::string, (), (std::string const&), )), )
 ANY_(string_to_string_deletable, anyxx::dynamic_deletable,

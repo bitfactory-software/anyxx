@@ -70,7 +70,7 @@ auto post_increment_def = [](T& self) -> T {
 };
 
 TRAIT_TEMPLATE_EX_(
-    ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
+    ((ValueType), (Reference)), forward_iterator, dynamic_copyable, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
      ANY_OP_DEF(public, typename deduced_type::reference, *, op_dereference, (),
                 const,
@@ -91,7 +91,7 @@ template <typename ValueType, typename Reference,
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
 static_assert(std::forward_iterator<any_forward_iterator<int,int>>);
 
-TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_value, (),
+TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
                 (ANY_FN(AnyIterator, begin, (), const),
                  ANY_FN(AnyIterator, end, (), const)))
 

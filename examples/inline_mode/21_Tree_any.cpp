@@ -11,7 +11,7 @@ using namespace anyxx;
 
 namespace {
 
-ANY_(node, dynamic_value, (ANY_FN(int, value, (), const),
+ANY_(node, dynamic_copyable, (ANY_FN(int, value, (), const),
              ANY_FN(std::string, as_forth, (), const),
              ANY_FN(std::string, as_lisp, (), const)), val<>)
 

@@ -131,8 +131,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr(*lock(vv4)) == get_proxy_ptr(vv1));
   }
   {
-    using from_t = any<dynamic_value>;
-    using to_t = any<dynamic_value, cref>;
+    using from_t = any<dynamic_copyable>;
+    using to_t = any<dynamic_copyable, cref>;
     static_assert(proxy_borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{s1};
@@ -144,8 +144,8 @@ TEST_CASE("assign construct borrow_as") {
     CHECK(get_proxy_ptr_const(vv4) == get_proxy_ptr_const(vv1));
   }
   {
-    using from_t = any<dynamic_value>;
-    using to_t = any<dynamic_value, mutref>;
+    using from_t = any<dynamic_copyable>;
+    using to_t = any<dynamic_copyable, mutref>;
     static_assert(proxy_borrowable_from<to_t::proxy_t, from_t::proxy_t,
                                         from_t::v_table_t>);
     auto vv1 = from_t{s1};

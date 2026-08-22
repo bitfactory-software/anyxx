@@ -25,14 +25,14 @@ anyxx::any_forward_range<int, int const&, anyxx::val<>> a_range_value(
     return std::vector<int>{1, 2, 3};
 }
 
-TRAIT_(stringable, anyxx::dynamic_value,
+TRAIT_(stringable, anyxx::dynamic_copyable,
        (ANY_FN_DEF(public, std::string, to_string, (), const,
                    [&x]() { return std::format("{}", x); })))
 
 template <typename Proxy>
 using any_stringable = anyxx::any<stringable, Proxy>;
 
-TRAIT_(node, anyxx::dynamic_value,
+TRAIT_(node, anyxx::dynamic_copyable,
        (ANY_FN_DEF(public, anyxx::self, sum,
                    ((anyxx::any_self_forward_range const&)), const,
                    [&x](auto const& r) {

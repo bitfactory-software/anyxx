@@ -13,11 +13,11 @@ struct mutable_ : constness {
 };
 
 template <typename Constness, typename R, typename... Args>
-struct function_v_table : dynamic_value_v_table {
+struct function_v_table : dynamic_copyable_v_table {
   R (*f_)(typename Constness::type, Args...);
   template <typename Concrete>
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : dynamic_value_v_table(concrete) {
+      : dynamic_copyable_v_table(concrete) {
     f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
       return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
                          std::forward<Args>(args)...);
@@ -28,7 +28,7 @@ struct function_v_table : dynamic_value_v_table {
 template <typename Constness, typename R, typename... Args>
 struct function;
 template <typename Constness, typename R, typename... Args>
-struct function<R(Args...), Constness> : dynamic_value {
+struct function<R(Args...), Constness> : dynamic_copyable {
   using v_table_t = function_v_table<Constness, R, Args...>;
   template <typename Self>
   auto operator()(this Self &&self, Args... args) -> R
