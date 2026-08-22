@@ -2356,11 +2356,18 @@ struct cow {
     return holder_->count_.load(std::memory_order_acquire) == 1;
   }
 
-  cow(holder_base* holder = nullptr) : holder_(holder) {}
+  cow(holder_base* h = nullptr) : holder_(h) {}
   template <typename T, typename... Args>
   cow(std::in_place_type_t<T>, Args&&... args)
       : holder_(new holder<T>(std::forward<Args>(args)...)) {}
-  cow(cow const&) {}
+  cow(cow const&) : holder_(nullptr) {}
+  cow& operator=(cow const&) { return *this; }
+  cow& operator=(cow&&) { return *this; }
+  void emplace(cow&& other) {
+    assert(holder_ == nullptr);
+    holder_ = other.holder_;
+    other.holder_ = nullptr;
+  }
   ~cow() {}
 };
 
@@ -2613,7 +2620,7 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
     v.ptr_ = visit_value<SmallObjectSize>(
         overloads{
             [&](cow& heap) {
-              heap = proxy_trait<cow>::clone_from(data_ptr, v_table);
+              heap.emplace(proxy_trait<cow>::clone_from(data_ptr, v_table));
               return heap.data_ptr();
             },
             [&]<bool Trivial>(local_data<Trivial, SmallObjectSize>& local) {
@@ -3976,9 +3983,7 @@ TRAIT_EX_(save_moveable, save_observable, , , ,
 TRAIT_EX_(save_copyable, save_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 TRAIT_EX_(dynamic_castable, save_observable, , , ,
-          (ANY_CAN_TYPE_SAVE_DOWNCAST,
-           ANY_CAN_TYPE_SAVE_CROSSCAST),
-          ());
+          (ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST), ());
 
 TRAIT_EX_(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
           (using default_proxy_t = shared;));
