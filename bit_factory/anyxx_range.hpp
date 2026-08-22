@@ -72,8 +72,6 @@ auto post_increment_def = [](T& self) -> T {
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_value, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_FN_DEF(public, anyxx::self, post_increment, (), ,
-                std::bind(post_increment_def<T>, x)),
      ANY_OP_DEF(public, typename deduced_type::reference, *, op_dereference, (),
                 const,
                 ([&x]() -> typename deduced_type::reference { return *x; })),
@@ -86,13 +84,12 @@ TRAIT_TEMPLATE_EX_(
               (difference_type_impl<T>::type)),
      ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
      ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
-    , (template <typename Self> auto operator++(this Self&& self, int) {
-      return std::forward<Self>(self).post_increment();
-    }))
+    , ())
 
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
+static_assert(std::forward_iterator<any_forward_iterator<int,int>>);
 
 TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_value, (),
                 (ANY_FN(AnyIterator, begin, (), const),

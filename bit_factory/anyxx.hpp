@@ -3181,6 +3181,43 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
       return p != nullptr;
     }
   }
+
+  template <typename Self>
+  Self operator++(this Self& self, int)
+    requires(dyn &&
+             requires(v_table_t v_table, void* vp) {
+               { v_table.op_pre_increment(vp) };
+             }) or
+            (!dyn &&
+             requires(model_map_t model_map, T v) {
+               { model_map.op_pre_increment(v) };
+             })
+  {
+    auto r = self;
+    ++(self);
+    return r;
+  }
+
+  template <typename Self>
+  Self& operator++(this Self&& self)
+    requires dyn && requires(v_table_t v_table, void* vp) {
+      v_table.op_pre_increment(vp);
+    }
+  {
+    get_v_table(self)->op_pre_increment(get_proxy_ptr(std::forward<Self>(self)));
+    return std::forward<Self>(self);
+  }
+
+  template <typename Self>
+  Self& operator++(this Self&& self)
+    requires !dyn && requires(model_map_t model_map, T v) {
+      model_map.op_pre_increment(v);
+    }
+  {
+    model_map_t{}.op_pre_increment(get_proxy_value(std::forward<Self>(self)));
+    return std::forward<Self>(self);
+  }
+
 };
 
 template <is_any Any>
