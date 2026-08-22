@@ -1578,7 +1578,10 @@ struct basic_proxy_trait {
     to = std::move(from);
   }
 
-  inline static constexpr bool can_copy_construct_from = true;
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return true;
+  }
   static void copy_construct_from(Proxy& to, [[maybe_unused]] void*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
@@ -1617,6 +1620,10 @@ concept is_proxy = requires(E e) {
   //                };
   //              };
 };
+
+template <typename ProxyTrait, typename VTable>
+concept can_copy_construct_from =
+    ProxyTrait::template can_copy_construct_from<VTable>();
 
 template <typename T>
 struct is_type_class_impl : std::false_type {};
@@ -2121,7 +2128,10 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     delete_(v_table_to, old);
   }
 
-  inline static constexpr bool can_copy_construct_from = false;
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return false;
+  }
 
   static void* get_proxy_ptr_in(const auto& ptr,
                                 [[maybe_unused]] is_v_table auto* v_table) {
@@ -2379,6 +2389,10 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
   static void assign(cow& to, cow const& from) {
     to.holder_ = from.holder_;
     to.holder_->count_.fetch_add(1, std::memory_order_relaxed);
+  }
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return is_copy_constructor_v_table<VTable>;
   }
   static void copy_construct_from(
       cow& to, [[maybe_unused]] auto v_table_to, cow const& from,
@@ -2666,6 +2680,10 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return is_copy_constructor_v_table<VTable>;
+  }
   static void copy_construct_from(val<Nullable, SmallObjectSize>& to,
                                   auto to_v_table,
                                   val<Nullable, SmallObjectSize> const& from,
@@ -3085,16 +3103,16 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   }
 
   any(const any& other)
-    requires(dyn && proxy_trait_t::can_copy_construct_from)
+    requires(dyn && can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                        other.get_v_table_ptr());
   }
   any(const any& other)
-    requires(!dyn && proxy_trait_t::can_copy_construct_from)
+    requires(!dyn && can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()), proxy_(other.proxy_) {}
   any& operator=(any const& other)
-    requires(proxy_trait_t::can_copy_construct_from)
+    requires(can_copy_construct_from<proxy_trait_t, v_table_t>)
   {
     if (this == &other) return *this;
     auto const v_table_ptr = v_table_holder_t::get_v_table_ptr();
@@ -3938,9 +3956,7 @@ TRAIT_EX_(dynamic_moveable, dynamic_castable, , , ,
           (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
 
-TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , ,
-          (ANY_COPY_CONSTRUCTOR), ());
-
+TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 class meta_data {
   const std::type_info& type_info_;

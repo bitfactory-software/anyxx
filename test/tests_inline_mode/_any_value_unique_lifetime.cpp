@@ -647,3 +647,14 @@ TEST_CASE("val<> lifetime get/set cow") {
   CHECK(get_v_table(v1) != nullptr);
   CHECK(get_v_table(v2) != nullptr);
 }
+
+TEST_CASE("val<> lifetime moveable") {
+  any<dynamic_moveable> v2{std::in_place_type<X>, "hello"};
+  CHECK(unerase_cast<X>(v2)->s_ == "hello");
+  CHECK(X::tracker_ == 1);
+  static_assert(std::is_move_assignable_v<decltype(v2)>);
+  static_assert(!std::is_copy_assignable_v<decltype(v2)>);
+  // auto v3 = v2; does not compile, as expected
+  auto v1 = std::move(v2);
+  CHECK(unerase_cast<X>(v1)->s_ == "hello");
+}
