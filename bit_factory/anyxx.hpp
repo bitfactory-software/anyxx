@@ -1508,6 +1508,15 @@ inline bool is_derived_from(const std::type_info& from,
 inline mutable_void allocate(is_model_size_v_table auto* v_table) {
   return ::operator new(v_table->model_size.size);
 }
+template <typename T>
+inline void deallocate(T v_table, mutable_void data) {
+  if (!data) return;
+  if constexpr (!std::same_as<T, std::nullptr_t>) {
+    assert(v_table);
+    ::operator delete(data, v_table->model_size.size);
+  }
+}
+
 inline model_size_t model_size(std::nullptr_t) { return {0, true}; }
 inline model_size_t model_size(is_model_size_v_table auto* v_table) {
   return v_table ? v_table->model_size : model_size_t{0, true};
@@ -1643,7 +1652,7 @@ concept has_v_table =
 
 struct dynamic_castable;
 struct dynamic_deletable;
-struct dynamic_copyable;
+struct dynamic_moveable;
 struct dynamic_copyable;
 template <typename Trait, is_proxy Proxy = typename Trait::default_proxy_t>
 class any;
@@ -2404,7 +2413,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     if (v.holder_ && v_table != nullptr &&
         (v.holder_->count_.fetch_sub(1, std::memory_order_release) == 1)) {
       destruct(v_table, v.data_ptr());
-      delete v.holder_;
+      deallocate(v_table, v.holder_);
     }
     v.holder_ = nullptr;
   }
@@ -2413,17 +2422,23 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
                                 [[maybe_unused]] is_v_table auto* v_table) {
     return v.data_ptr();
   }
-  static void* get_proxy_ptr_in(cow& v, is_v_table auto* v_table) {
+  template <typename VTable>
+    requires is_v_table<VTable>
+  static void* get_proxy_ptr_in(cow& v, VTable* v_table) {
     if (!v.unique()) {
-      auto holder_size =
-          sizeof(cow::holder<>) - sizeof(void*) + model_size(v_table).size;
-      auto holder =
-          new (static_cast<cow::holder_base*>(::operator new(holder_size)))
-              cow::holder_base;
-      copy_construct_at(v_table, cow::data_ptr_from_holder(holder),
-                        cow::data_ptr_from_holder(v.holder_));
-      destroy(v, v_table);
-      v.holder_ = holder;
+      if constexpr (is_copy_constructor_v_table<VTable>) {
+        auto holder_size =
+            sizeof(cow::holder<>) - sizeof(void*) + model_size(v_table).size;
+        auto holder =
+            new (static_cast<cow::holder_base*>(::operator new(holder_size)))
+                cow::holder_base;
+        copy_construct_at(v_table, cow::data_ptr_from_holder(holder),
+                          cow::data_ptr_from_holder(v.holder_));
+        destroy(v, v_table);
+        v.holder_ = holder;
+      } else {
+        assert(false && "FATAL: movable only v-table.");
+      }
     }
     return v.data_ptr();
   }

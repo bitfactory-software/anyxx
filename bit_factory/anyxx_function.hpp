@@ -12,12 +12,12 @@ struct mutable_ : constness {
   using type = mutable_void;
 };
 
-template <typename Constness, typename R, typename... Args>
-struct function_v_table : dynamic_copyable_v_table {
+template <typename Constness, typename Lifetime, typename R, typename... Args>
+struct function_v_table : Lifetime::v_table_t {
   R (*f_)(typename Constness::type, Args...);
   template <typename Concrete>
   function_v_table([[maybe_unused]] std::in_place_type_t<Concrete> concrete)
-      : dynamic_copyable_v_table(concrete) {
+      : Lifetime::v_table_t(concrete) {
     f_ = +[](typename Constness::type self_ptr, Args... args) -> R {
       return std::invoke(*unchecked_unerase_cast<Concrete>(self_ptr),
                          std::forward<Args>(args)...);
@@ -25,13 +25,19 @@ struct function_v_table : dynamic_copyable_v_table {
   }
 };
 
-template <typename Constness, typename R, typename... Args>
+TRAIT_EX_(moveable, observeable, , , ,
+          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+          (using default_proxy_t = val<>;));
+
+TRAIT_EX_(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+
+template <typename Constness, typename Lifetime, typename R, typename... Args>
 struct function;
-template <typename Constness, typename R, typename... Args>
-struct function<R(Args...), Constness> : dynamic_copyable {
-  using v_table_t = function_v_table<Constness, R, Args...>;
+template <typename Constness, typename Lifetime, typename R, typename... Args>
+struct function<R(Args...), Constness, Lifetime> : Lifetime {
+  using v_table_t = function_v_table<Constness, Lifetime, R, Args...>;
   template <typename Self>
-  auto operator()(this Self &&self, Args... args) -> R
+  auto operator()(this Self&& self, Args... args) -> R
     requires(const_correct_call_for_proxy_and_self<
              typename Constness::type, typename std::decay_t<Self>::proxy_t,
              std::is_const_v<std::remove_reference_t<Self>>,
@@ -48,33 +54,43 @@ struct function<R(Args...), Constness> : dynamic_copyable {
                          std::forward<Args>(args)...);
     }
   }
+  template <typename, typename>
+  struct proxy_for_lifetime {
+    using type = val<>;
+  };
+  template <>
+  struct proxy_for_lifetime<observeable, const_> {
+    using type = cref;
+  };
+  template <>
+  struct proxy_for_lifetime<observeable, mutable_> {
+    using type = mutref;
+  };
+  using default_proxy_t =
+      typename proxy_for_lifetime<Lifetime, Constness>::type;
 };
 
 namespace self_test {
 struct functor {
   int operator()(double) const;
 };
-using f_const_const = any<function<int(double), const_>, cref>;
-static_assert(std::invocable<f_const_const, double>);
-using f_const_mutable = any<function<int(double), mutable_>, cref>;
-static_assert(!std::invocable<f_const_mutable, double>);
-using f_mutable_const = any<function<int(double), const_>, mutref>;
-static_assert(std::invocable<f_mutable_const, double>);
-using f_mutable_mutable = any<function<int(double), mutable_>, mutref>;
-static_assert(std::invocable<f_mutable_mutable, double>);
+using f_cref = any<function<int(double), const_, observeable>>;
+static_assert(std::invocable<f_cref, double>);
+using f_mutref = any<function<int(double), mutable_, observeable>>;
+static_assert(std::invocable<f_mutref, double>);
 
-using f_const_const_val =
-    any<function<int(double), const_>, using_<functor const&>>;
-static_assert(std::invocable<f_const_const_val, double>);
-using f_const_mutable_val =
-    any<function<int(double), mutable_>, using_<functor const&>>;
-static_assert(!std::invocable<f_const_mutable_val, double>);
-using f_mutable_const_val =
-    any<function<int(double), const_>, using_<functor &>>;
-static_assert(std::invocable<f_mutable_const_val, double>);
-using f_mutable_mutable_val =
-    any<function<int(double), mutable_>, using_<functor &>>;
-static_assert(std::invocable<f_mutable_mutable_val, double>);
+using f_movable_const_val =
+    any<function<int(double), const_, moveable>>;
+static_assert(std::invocable<f_movable_const_val, double>);
+using f_movable_mutable_val =
+    any<function<int(double), mutable_, moveable>>;
+static_assert(std::invocable<f_movable_mutable_val, double>);
+
+using f_const_val = any<function<int(double), const_, copyable>>;
+static_assert(std::invocable<f_const_val, double>);
+using f_mutable_val = any<function<int(double), mutable_, copyable>>;
+static_assert(std::invocable<f_mutable_val, double>);
+
 }  // namespace self_test
 
 }  // namespace anyxx
