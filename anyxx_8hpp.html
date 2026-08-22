@@ -542,6 +542,9 @@ template&lt;typename VTable&gt; </td></tr>
 bool&#160;</td><td class="memItemRight"><b>anyxx::is_derived_from</b> (const std::type_info &amp;from, is_dynamic_castable_v_table auto *v_table)</td></tr>
 <tr class="memitem:a65bb0ecaa4282e5fdd467e541a7d0d78" id="r_a65bb0ecaa4282e5fdd467e541a7d0d78"><td class="memItemLeft"><a id="a65bb0ecaa4282e5fdd467e541a7d0d78" name="a65bb0ecaa4282e5fdd467e541a7d0d78"></a>
 mutable_void&#160;</td><td class="memItemRight"><b>anyxx::allocate</b> (is_model_size_v_table auto *v_table)</td></tr>
+<tr class="memitem:a6a22dc2abf6a84b47256dfbc9e0ccfb6" id="r_a6a22dc2abf6a84b47256dfbc9e0ccfb6"><td class="memTemplParams" colspan="2"><a id="a6a22dc2abf6a84b47256dfbc9e0ccfb6" name="a6a22dc2abf6a84b47256dfbc9e0ccfb6"></a>
+template&lt;typename T&gt; </td></tr>
+<tr class="memitem:a6a22dc2abf6a84b47256dfbc9e0ccfb6 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::deallocate</b> (T v_table, mutable_void data)</td></tr>
 <tr class="memitem:ac4c54ed17ff3b70e76121ecdb7eb6d42" id="r_ac4c54ed17ff3b70e76121ecdb7eb6d42"><td class="memItemLeft"><a id="ac4c54ed17ff3b70e76121ecdb7eb6d42" name="ac4c54ed17ff3b70e76121ecdb7eb6d42"></a>
 model_size_t&#160;</td><td class="memItemRight"><b>anyxx::model_size</b> (std::nullptr_t)</td></tr>
 <tr class="memitem:af0ce3d38da7099f55827557279611dff" id="r_af0ce3d38da7099f55827557279611dff"><td class="memItemLeft"><a id="af0ce3d38da7099f55827557279611dff" name="af0ce3d38da7099f55827557279611dff"></a>
@@ -2513,8 +2516,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3410</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3449</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3425</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3464</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -4476,7 +4479,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1598</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1607</div></div>
 </div><!-- fragment -->
 </div>
 </div>
