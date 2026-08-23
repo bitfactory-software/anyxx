@@ -40,8 +40,6 @@ struct outer {
 template <std::meta::info ...Ms>
 using to_struct = outer<Ms...>::inner;
 
-template<typename V> struct using_{ V value; };
-
 template<template <typename> typename Trait, typename V>
 consteval std::meta::info make_trait_facade(){
     std::vector<std::meta::info> calls;
