@@ -336,12 +336,13 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };
 
 #define _detail_ANYXX_CONCEPT_TYPE_H(l) _detail_ANYXX_CONCEPT_TYPE l
-#define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_)   \
-  requires !std::same_as<                                                     \
-      typename decltype(model_map)::_detail_ANYXX_OPTIONAL_TEMPLATE(          \
-          _detail_REMOVE_PARENS(template_params)) name                        \
-          _detail_ANYXX_DUMMY_INT_PARAM_LIST(ANYXX_UNPAREN(template_params)), \
-      anyxx::undefined>;
+#define _detail_ANYXX_CONCEPT_TYPE(template_params, name, erased, default_) \
+  requires !std::same_as<typename decltype(model_map)::deduced_type::       \
+                             _detail_ANYXX_OPTIONAL_TEMPLATE(               \
+                                 _detail_REMOVE_PARENS(template_params))    \
+                                 name _detail_ANYXX_DUMMY_INT_PARAM_LIST(   \
+                                     ANYXX_UNPAREN(template_params)),       \
+                         anyxx::undefined>;
 
 //_detail_ANYXX_CONCEPT_TYPE_H((), value_type, anyxx::undefined,
 //(anyxx::undefined))
@@ -421,6 +422,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(_detail_REMOVE_PARENS(     \
       template_params)) using name = _detail_REMOVE_PARENS(default_);
 
+#define _detail_ANYXX_V_TABLE_TYPE_H(l) _detail_ANYXX_V_TABLE_TYPE l
+#define _detail_ANYXX_V_TABLE_TYPE(template_params, name, erased, default_) \
+ public:                                                                    \
+  _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                               \
+      _detail_REMOVE_PARENS(template_params)) using name = erased;
+
 //_detail_ANYXX_MAP_TYPE(((A), (B)), xyz, void, (std::map<A, B>))
 // ->
 // template <typename A, typename B>
@@ -433,10 +440,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   using name = std::conditional_t<                                         \
       std::same_as<void, std::remove_const_t<std::remove_pointer_t<Q>>>,   \
       erased,                                                              \
-      typename static_dispatch_map_t<Q>::_detail_ANYXX_OPTIONAL_TEMPLATE(  \
-          _detail_REMOVE_PARENS(template_params))                          \
-          name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                       \
-              _detail_REMOVE_PARENS(template_params))>;
+      typename static_dispatch_map_t<Q>::deduced_type::                    \
+          _detail_ANYXX_OPTIONAL_TEMPLATE(                                 \
+              _detail_REMOVE_PARENS(template_params))                      \
+              name _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                   \
+                  _detail_REMOVE_PARENS(template_params))>;
 
 //_detail_ANYXX_JACKET_TYPE(((A),(B)), xyz, void, (std::map<A,B>))
 // ->
@@ -513,6 +521,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using self_t = std::decay_t<Self>;                                         \
     using T = typename self_t::T;                                              \
     using proxy_t = typename self_t::proxy_t;                                  \
+    using deduced_type = typename self_t::deduced_type;                        \
                                                                                \
     if constexpr (!self_t::dyn) {                                              \
       using traited_t = typename self_t::rep_type;                             \
@@ -574,6 +583,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_MAP_VARIANT_LIMP_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__))
 
+#define _detail_ANYXX_V_TABLE_TYPES(...)                         \
+  __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_V_TABLE_TYPE_H, \
+                                   _detail_EXPAND_LIST __VA_ARGS__))
+
 #define _detail_ANYXX_V_TABLE_FUNCTION_PTRS(...)        \
   __VA_OPT__(_detail_foreach_macro(_detail_ANYXX_FPD_H, \
                                    _detail_EXPAND_LIST __VA_ARGS__));
@@ -623,9 +636,11 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using default_map = n##_default_model_map;                                 \
     using rep_type = T;                                                        \
                                                                                \
+    struct deduced_type {                                                      \
+      _detail_ANYXX_MAP_TYPES(typedefs);                                       \
+    };                                                                         \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
     _detail_ANYXX_MAP_STATIC_FUNCTIONS(static_fns);                            \
-    _detail_ANYXX_MAP_TYPES(typedefs);                                         \
   };                                                                           \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
   struct n##_model_map : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(    \
@@ -637,8 +652,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
   template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
     requires(anyxx::is_variant<T>)                                             \
-  struct n##                                                                   \
-      _model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> {     \
+  struct n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)> \
+      : n##_default_model_map<_detail_ANYXX_TEMPLATE_ARGS(                     \
+            model_map_template_params)> {                                      \
     using rep_type = T;                                                        \
     template <typename V>                                                      \
     using x_model_map = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(             \
@@ -683,6 +699,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using T = char;                                                            \
                                                                                \
+    struct deduced_type {                                                      \
+      _detail_ANYXX_V_TABLE_TYPES(typedefs);                                   \
+    };                                                                         \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
     _detail_ANYXX_V_TABLE_DATA_DECLS(v_table_data);                            \
                                                                                \
@@ -695,6 +714,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
         _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params) {           \
     using base_t =                                                             \
         BASE _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(base_template_params);       \
+                                                                               \
+    template <typename T>                                                      \
+    using model_map =                                                          \
+        n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(model_map_template_params)>; \
                                                                                \
     using val_nullable =                                                       \
         std::conditional_t<anyxx::is_type_complete<n##_is_nullable>,           \
@@ -719,11 +742,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     _detail_ANYXX_FNS(l);                                                      \
     _detail_ANYXX_JACKET_STATIC_FNS(static_fns);                               \
-    _detail_ANYXX_JACKET_TYPES(typedefs);                                      \
     _detail_REMOVE_PARENS(decoration);                                         \
   };                                                                           \
                                                                                \
-  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params)>      \
+  template <_detail_ANYXX_TYPENAME_PARAM_LIST(model_map_template_params),      \
+            typename deduced_type = n##_model_map<_detail_ANYXX_TEMPLATE_ARGS( \
+                model_map_template_params)>::deduced_type>                     \
   concept _detail_CONCAT(_detail_CONCAT(is_, n), _model) =                     \
       requires(                                                                \
           T model,                                                             \
@@ -1252,21 +1276,6 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   __ANY_MODEL_MAP(trait_, __detail_ANYXX_ADD_HEAD(          \
                               model_, _detail_REMOVE_PARENS(trait_types)))
 
-/// \def TRAIT_TYPE
-/// \brief translates to the type defined in the model map of a trait. This is
-/// useful for associated types, e.g. Return types, which are defined via
-/// ANY_TYPE in the trait
-/// \param Name name of the type definition in the trait
-/// \param T model type, including template parameters, in brackets
-/// \param Trait name of the trait, including namespace
-/// \param ... additional template parameters for the type if it is a template
-/// itself
-#define TRAIT_TYPE(Name, T, Trait, ...) \
-  typename Trait::template Name<T __VA_OPT__(, ) __VA_ARGS__>
-
-#define DEDUCED_TYPE(Name, Any, ...) \
-  TRAIT_TYPE(Name, typename Any::T, Any, __VA_ARGS__)
-
 /// \def ANY_MODEL_MAP
 /// \brief ANY_MODEL_MAP macro
 /// \param class_ name of the model, including namespace, in brackets
@@ -1400,11 +1409,15 @@ concept is_model_size_v_table = requires(VTable* v_table) {
   { v_table->model_size } -> std::convertible_to<model_size_t>;
 };
 
+template <typename VTable>
+concept is_type_info_v_table = requires(VTable* v_table) {
+  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
+};
+
 using is_derived_from_t = bool (*)(const std::type_info&);
 template <typename VTable>
 concept is_dynamic_castable_v_table = requires(VTable* v_table) {
   { v_table->is_derived_from_ } -> std::convertible_to<is_derived_from_t>;
-  { v_table->type_info_ } -> std::convertible_to<std::type_info const*>;
 };
 
 using is_derived_from_t = bool (*)(const std::type_info&);
@@ -1412,6 +1425,14 @@ template <typename VTable>
 concept is_meta_data_v_table = requires(VTable* v_table) {
   { v_table->meta_data_ } -> std::convertible_to<meta_data*>;
 };
+
+template <typename M, typename V>
+concept is_op_pre_increment_model_map =
+    requires(M model_map, V v) { model_map.op_pre_increment(v); };
+
+template <typename VTable>
+concept is_op_pre_increment_v_table =
+    requires(VTable* v_table, mutable_void x) { v_table->op_pre_increment(x); };
 
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
@@ -1435,6 +1456,8 @@ using mutref = observer<mutable_void>;
 /// Base of v-tables for traits without lifetime requirements
 struct observeable_v_table {
   using v_table_t = observeable_v_table;
+
+  struct deduced_type {};
 
   using val_nullable = std::false_type;
   static constexpr std::size_t val_proxy_size = small_object_size;
@@ -1489,6 +1512,15 @@ inline bool is_derived_from(const std::type_info& from,
 inline mutable_void allocate(is_model_size_v_table auto* v_table) {
   return ::operator new(v_table->model_size.size);
 }
+template <typename T>
+inline void deallocate(T v_table, mutable_void data) {
+  if (!data) return;
+  if constexpr (!std::same_as<T, std::nullptr_t>) {
+    assert(v_table);
+    ::operator delete(data, v_table->model_size.size);
+  }
+}
+
 inline model_size_t model_size(std::nullptr_t) { return {0, true}; }
 inline model_size_t model_size(is_model_size_v_table auto* v_table) {
   return v_table ? v_table->model_size : model_size_t{0, true};
@@ -1529,10 +1561,10 @@ inline void destruct(T v_table, mutable_void data) noexcept {
 }
 
 template <typename U>
-bool type_match(is_dynamic_castable_v_table auto* v_table);
+bool type_match(is_type_info_v_table auto* v_table);
 
 template <typename U>
-void check_type_match(is_dynamic_castable_v_table auto* v_table) {
+void check_type_match(is_type_info_v_table auto* v_table) {
   if (!type_match<U>(v_table)) throw type_mismatch_error("type mismatch");
 }
 
@@ -1559,7 +1591,10 @@ struct basic_proxy_trait {
     to = std::move(from);
   }
 
-  inline static constexpr bool can_copy_construct_from = true;
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return true;
+  }
   static void copy_construct_from(Proxy& to, [[maybe_unused]] void*,
                                   auto const& from, [[maybe_unused]] auto) {
     to = from;
@@ -1599,6 +1634,10 @@ concept is_proxy = requires(E e) {
   //              };
 };
 
+template <typename ProxyTrait, typename VTable>
+concept can_copy_construct_from =
+    ProxyTrait::template can_copy_construct_from<VTable>();
+
 template <typename T>
 struct is_type_class_impl : std::false_type {};
 template <typename T>
@@ -1617,8 +1656,8 @@ concept has_v_table =
 
 struct dynamic_castable;
 struct dynamic_deletable;
+struct dynamic_moveable;
 struct dynamic_copyable;
-struct dynamic_value;
 template <typename Trait, is_proxy Proxy = typename Trait::default_proxy_t>
 class any;
 
@@ -2102,7 +2141,10 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     delete_(v_table_to, old);
   }
 
-  inline static constexpr bool can_copy_construct_from = false;
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return false;
+  }
 
   static void* get_proxy_ptr_in(const auto& ptr,
                                 [[maybe_unused]] is_v_table auto* v_table) {
@@ -2180,7 +2222,7 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
                       is_delete_v_table auto* v_table) {
     mutable_void p = nullptr;
     std::swap(from.ptr, p);
-    to = shared{p, [v_table](auto x) { v_table->delete_(x); }};
+    to = shared{p, [v_table](auto px) { v_table->delete_(px); }};
   }
 
   static void const* get_proxy_ptr_in(
@@ -2318,7 +2360,14 @@ struct cow {
   template <typename T, typename... Args>
   cow(std::in_place_type_t<T>, Args&&... args)
       : holder_(new holder<T>(std::forward<Args>(args)...)) {}
-  cow(cow const&) {}
+  cow(cow const&) : holder_(nullptr) {}
+  cow& operator=(cow const&) { return *this; }
+  cow& operator=(cow&&) { return *this; }
+  void emplace(cow&& other) {
+    assert(holder_ == nullptr);
+    holder_ = other.holder_;
+    other.holder_ = nullptr;
+  }
   ~cow() {}
 };
 
@@ -2361,6 +2410,10 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     to.holder_ = from.holder_;
     to.holder_->count_.fetch_add(1, std::memory_order_relaxed);
   }
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return is_copy_constructor_v_table<VTable>;
+  }
   static void copy_construct_from(
       cow& to, [[maybe_unused]] auto v_table_to, cow const& from,
       [[maybe_unused]] is_v_table auto* v_table_from) {
@@ -2371,7 +2424,7 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
     if (v.holder_ && v_table != nullptr &&
         (v.holder_->count_.fetch_sub(1, std::memory_order_release) == 1)) {
       destruct(v_table, v.data_ptr());
-      delete v.holder_;
+      deallocate(v_table, v.holder_);
     }
     v.holder_ = nullptr;
   }
@@ -2380,17 +2433,23 @@ struct proxy_trait<cow> : basic_proxy_trait<cow> {
                                 [[maybe_unused]] is_v_table auto* v_table) {
     return v.data_ptr();
   }
-  static void* get_proxy_ptr_in(cow& v, is_v_table auto* v_table) {
+  template <typename VTable>
+    requires is_v_table<VTable>
+  static void* get_proxy_ptr_in(cow& v, VTable* v_table) {
     if (!v.unique()) {
-      auto holder_size =
-          sizeof(cow::holder<>) - sizeof(void*) + model_size(v_table).size;
-      auto holder =
-          new (static_cast<cow::holder_base*>(::operator new(holder_size)))
-              cow::holder_base;
-      copy_construct_at(v_table, cow::data_ptr_from_holder(holder),
-                        cow::data_ptr_from_holder(v.holder_));
-      destroy(v, v_table);
-      v.holder_ = holder;
+      if constexpr (is_copy_constructor_v_table<VTable>) {
+        auto holder_size =
+            sizeof(cow::holder<>) - sizeof(void*) + model_size(v_table).size;
+        auto holder =
+            new (static_cast<cow::holder_base*>(::operator new(holder_size)))
+                cow::holder_base;
+        copy_construct_at(v_table, cow::data_ptr_from_holder(holder),
+                          cow::data_ptr_from_holder(v.holder_));
+        destroy(v, v_table);
+        v.holder_ = holder;
+      } else {
+        assert(false && "FATAL: movable only v-table.");
+      }
     }
     return v.data_ptr();
   }
@@ -2561,7 +2620,7 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
     v.ptr_ = visit_value<SmallObjectSize>(
         overloads{
             [&](cow& heap) {
-              heap = proxy_trait<cow>::clone_from(data_ptr, v_table);
+              heap.emplace(proxy_trait<cow>::clone_from(data_ptr, v_table));
               return heap.data_ptr();
             },
             [&]<bool Trivial>(local_data<Trivial, SmallObjectSize>& local) {
@@ -2647,6 +2706,10 @@ struct proxy_trait<val<Nullable, SmallObjectSize>>
   //  proxy_trait<unique>::move_to(to, to_v_table, unique{data_ptr}, v_table);
   //}
 
+  template <typename VTable>
+  inline static constexpr bool can_copy_construct_from() {
+    return is_copy_constructor_v_table<VTable>;
+  }
   static void copy_construct_from(val<Nullable, SmallObjectSize>& to,
                                   auto to_v_table,
                                   val<Nullable, SmallObjectSize> const& from,
@@ -2777,10 +2840,29 @@ meta_data& get_meta_data() {
 }
 #endif
 
-template <bool dynamic, typename Trait>
-struct v_table_holder;
+template <typename Proxy>
+using static_dispatch_t = typename proxy_trait<Proxy>::static_dispatch_t;
+
+template <typename Proxy, typename Trait>
+using proxy_model_map_t =
+    typename Trait::template model_map<static_dispatch_t<Proxy>>;
+
+template <typename Proxy, typename Trait>
+using proxy_deduced_type_t =
+    typename proxy_model_map_t<Proxy, Trait>::deduced_type;
+
 template <typename Trait>
-struct v_table_holder<false, Trait> {
+using v_table_t = typename Trait ::v_table_t;
+
+template <typename Trait>
+using v_table_deduced_type_t = typename v_table_t<Trait>::deduced_type;
+
+template <typename Proxy, typename Trait>
+struct v_table_holder;
+
+template <typename Proxy, typename Trait>
+  requires(!is_dyn<Proxy>)
+struct v_table_holder<Proxy, Trait> : proxy_deduced_type_t<Proxy, Trait> {
   struct v_table_t {};
 
   v_table_holder() = default;
@@ -2792,11 +2874,9 @@ struct v_table_holder<false, Trait> {
   static auto release_v_table() { return nullptr; }
 };
 
-template <typename Trait>
-struct with_open_dispatch : std::false_type {};
-
-template <typename Trait>
-struct v_table_holder<true, Trait> {
+template <typename Proxy, typename Trait>
+  requires is_dyn<Proxy>
+struct v_table_holder<Proxy, Trait> : v_table_deduced_type_t<Trait> {
  public:
   using v_table_t = Trait::v_table_t;
 
@@ -2810,9 +2890,10 @@ struct v_table_holder<true, Trait> {
   // cppcheck-suppress-begin [functionConst, functionStatic]
   auto get_v_table_ptr() const { return v_table_; }
   // cppcheck-suppress-end [functionConst, functionStatic]
-  template <typename Proxy, typename Concrete>
+  template <typename ProxyImpl, typename Concrete>
   void init_v_table() {
-    v_table_ = v_table_instance<v_table_t, anyxx::unerased<Proxy, Concrete>>();
+    v_table_ =
+        v_table_instance<v_table_t, anyxx::unerased<ProxyImpl, Concrete>>();
   }
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
@@ -2829,7 +2910,7 @@ auto bind_v_table_to_meta_data() {
 }
 
 template <typename U>
-bool type_match(is_dynamic_castable_v_table auto* v_table) {
+bool type_match(is_type_info_v_table auto* v_table) {
   return *v_table->type_info_ == typeid(std::decay_t<U>);
 }
 
@@ -2961,13 +3042,12 @@ concept is_proxy_compatible_with_trait =
 /// conform to the \ref has_v_table concept (that means: must provide a
 /// v-Table).
 template <typename Trait, is_proxy Proxy>
-class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
-                          public Trait {
+class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
  public:
   using proxy_t = Proxy;
   using proxy_trait_t = proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
-  using v_table_holder_t = v_table_holder<is_dyn<Proxy>, Trait>;
+  using v_table_holder_t = v_table_holder<Proxy, Trait>;
   using trait_t = Trait;
   using v_table_t = typename v_table_holder_t::v_table_t;
   using T = proxy_trait_t::static_dispatch_t;
@@ -3049,16 +3129,16 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
   }
 
   any(const any& other)
-    requires(dyn && proxy_trait_t::can_copy_construct_from)
+    requires(dyn && can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                        other.get_v_table_ptr());
   }
   any(const any& other)
-    requires(!dyn && proxy_trait_t::can_copy_construct_from)
+    requires(!dyn && can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_holder_t(other.get_v_table_ptr()), proxy_(other.proxy_) {}
   any& operator=(any const& other)
-    requires(proxy_trait_t::can_copy_construct_from)
+    requires(can_copy_construct_from<proxy_trait_t, v_table_t>)
   {
     if (this == &other) return *this;
     auto const v_table_ptr = v_table_holder_t::get_v_table_ptr();
@@ -3153,6 +3233,34 @@ class ANYXX_USE_EBO any : public v_table_holder<is_dyn<Proxy>, Trait>,
       return p != nullptr;
     }
   }
+
+  template <typename Self>
+  Self operator++(this Self& self, int)
+    requires(dyn && is_op_pre_increment_v_table<v_table_t>) ||
+            (!dyn && is_op_pre_increment_model_map<model_map_t, T>)
+
+  {
+    auto r = self;
+    ++(self);
+    return r;
+  }
+
+  template <typename Self>
+  Self& operator++(this Self&& self)
+    requires dyn && is_op_pre_increment_v_table<v_table_t>
+  {
+    get_v_table(self)->op_pre_increment(
+        get_proxy_ptr(std::forward<Self>(self)));
+    return std::forward<Self>(self);
+  }
+
+  template <typename Self>
+  Self& operator++(this Self&& self)
+    requires(!dyn && is_op_pre_increment_model_map<model_map_t, T>)
+  {
+    model_map_t{}.op_pre_increment(get_proxy_value(std::forward<Self>(self)));
+    return std::forward<Self>(self);
+  }
 };
 
 template <is_any Any>
@@ -3193,6 +3301,7 @@ inline const auto& get_meta_data(Any const& any) {
 }
 
 template <is_any Any>
+  requires is_type_info_v_table<typename Any::v_table_t>
 inline std::type_info const& get_type_info(Any const& any) {
   return *get_v_table(any)->type_info_;
 }
@@ -3521,13 +3630,19 @@ struct jacket_return<self&> {
   }
 };
 
-TRAIT_EX_(translate_sig, observeable, , ,
-          (ANY_TYPE(((AnyValue)), v_table_param, void, (T)),
-           ANY_TYPE(((AnyValue)), v_table_return, void, (T)),
-           ANY_TYPE(((Model)), map_return, void, (T)),
-           ANY_TYPE(((Model)), concept_arg, void, (T))),
-          , ())
-ANY_MODEL_MAP((self), translate_sig) {
+template <typename T>
+struct translate_sig_map {
+  template <typename AnyValue>
+  using v_table_param = T;
+  template <typename AnyValue>
+  using v_table_return = T;
+  template <typename AnyValue>
+  using map_return = T;
+  template <typename AnyValue>
+  using concept_arg = T;
+};
+template <>
+struct translate_sig_map<self> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, cref>;
   template <typename AnyValue>
@@ -3537,7 +3652,8 @@ ANY_MODEL_MAP((self), translate_sig) {
   template <typename Model>
   using concept_arg = Model;
 };
-ANY_MODEL_MAP((self const&), translate_sig) {
+template <>
+struct translate_sig_map<self const&> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, cref>;
   template <typename AnyValue>
@@ -3547,7 +3663,8 @@ ANY_MODEL_MAP((self const&), translate_sig) {
   template <typename Model>
   using concept_arg = Model const&;
 };
-ANY_MODEL_MAP((self&), translate_sig) {
+template <>
+struct translate_sig_map<self&> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, mutref>;
   template <typename AnyValue>
@@ -3567,7 +3684,7 @@ inline constexpr bool is_use_as_ = is_use_as__impl<std::decay_t<T>>::value;
 
 template <typename T>
   requires is_use_as_<T>
-struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
+struct translate_sig_map<T> {
   template <typename AnyValue>
   using v_table_param = any<dynamic_copyable, mutref>;
   template <typename AnyValue>
@@ -3579,14 +3696,15 @@ struct translate_sig_model_map<T> : translate_sig_default_model_map<T> {
 };
 
 template <typename AnyValue, typename Param>
-using v_table_param = TRAIT_TYPE(v_table_param, Param, translate_sig, AnyValue);
+using v_table_param =
+    translate_sig_map<Param>::template v_table_param<AnyValue>;
 template <typename AnyValue, typename Return>
-using v_table_return = TRAIT_TYPE(v_table_return, Return, translate_sig,
-                                  AnyValue);
+using v_table_return =
+    translate_sig_map<Return>::template v_table_return<AnyValue>;
 template <typename Model, typename Param>
-using map_return = TRAIT_TYPE(map_return, Param, translate_sig, Model);
+using map_return = translate_sig_map<Param>::template map_return<Model>;
 template <typename Model, typename Param>
-using concept_arg = TRAIT_TYPE(concept_arg, Param, translate_sig, Model);
+using concept_arg = translate_sig_map<Param>::template concept_arg<Model>;
 
 //+++   This metafunctions cannot be expressed as traits, because they would
 // be
@@ -3663,7 +3781,7 @@ struct forward_trait_to_map<Traited, T const&> {
 // --------------------------------------------------------------------------------
 // any customization traits
 
-template <is_proxy Proxy = shared>
+template <is_proxy Proxy = val<>>
 struct default_proxy {
   using type = Proxy;
 };
@@ -3798,40 +3916,6 @@ ToAny move_to(FromAny&& from) {
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
-TRAIT_EX_(dynamic_castable, observeable, , , ,
-          (ANY_V_TABLE_DATA(std::type_info const*, type_info_,
-                            &typeid(Concrete)),
-           ANY_V_TABLE_DATA(
-               is_derived_from_t, is_derived_from_,
-               +[](const std::type_info& from) {
-                 return static_is_derived_from(from);
-               }),
-           ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)),
-          ());
-
-TRAIT_EX_(dynamic_deletable, dynamic_castable, , , ,
-          (ANY_V_TABLE_DATA(delete_t, delete_,
-                            [](mutable_void data) {
-                              if (data) delete static_cast<Concrete*>(data);
-                            })),
-          (using default_proxy_t = shared;));
-
-TRAIT_EX_(
-    dynamic_copyable, dynamic_deletable, , , ,
-    (ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>()),
-     ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,
-                      []([[maybe_unused]] mutable_void placement,
-                         [[maybe_unused]] const_void from) -> mutable_void {
-                        if constexpr (std::is_copy_constructible_v<Concrete>) {
-                          return std::construct_at<Concrete>(
-                              static_cast<Concrete*>(placement),
-                              *static_cast<Concrete const*>(from));
-                        } else {
-                          return nullptr;
-                        };
-                      })),
-    ());
-
 template <typename Concrete>
 mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
                                      [[maybe_unused]] mutable_void from) {
@@ -3845,18 +3929,73 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
   return placement;
 };
 
-TRAIT_EX_(dynamic_value, dynamic_copyable, , , ,
-          (ANY_V_TABLE_DATA(
-               move_constructor_t, move_constructor,
-               []([[maybe_unused]] mutable_void placement,
-                  [[maybe_unused]] mutable_void from) -> mutable_void {
-                 return invoke_move_constructor<Concrete>(placement, from);
-               }),
-           ANY_V_TABLE_DATA(destructor_t, destructor,
-                            [](mutable_void data) {
-                              std::destroy_at(static_cast<Concrete*>(data));
-                            })),
+#define ANY_CLASS_TYPE_INFO \
+  ANY_V_TABLE_DATA(std::type_info const*, type_info_, &typeid(Concrete))
+#define ANY_CAN_TYPE_SAVE_DOWNCAST                                           \
+  ANY_V_TABLE_DATA(                                                          \
+      is_derived_from_t, is_derived_from_, +[](const std::type_info& from) { \
+        return static_is_derived_from(from);                                 \
+      })
+#define ANY_CAN_TYPE_SAVE_CROSSCAST \
+  ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)
+#define ANY_MODEL_SIZE \
+  ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
+#define ANY_COPY_CONSTRUCTOR                                                 \
+  ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,                     \
+                   []([[maybe_unused]] mutable_void placement,               \
+                      [[maybe_unused]] const_void from) -> mutable_void {    \
+                     if constexpr (std::is_copy_constructible_v<Concrete>) { \
+                       return std::construct_at<Concrete>(                   \
+                           static_cast<Concrete*>(placement),                \
+                           *static_cast<Concrete const*>(from));             \
+                     } else {                                                \
+                       return nullptr;                                       \
+                     };                                                      \
+                   })
+#define ANY_HAS_DELETE                                        \
+  ANY_V_TABLE_DATA(delete_t, delete_, [](mutable_void data) { \
+    if (data) delete static_cast<Concrete*>(data);            \
+  })
+#define ANY_MOVE_CONSTRUCTOR                                                \
+  ANY_V_TABLE_DATA(move_constructor_t, move_constructor,                    \
+                   []([[maybe_unused]] mutable_void placement,              \
+                      [[maybe_unused]] mutable_void from) -> mutable_void { \
+                     return invoke_move_constructor<Concrete>(placement,    \
+                                                              from);        \
+                   })
+#define ANY_DESTRUCTOR                                               \
+  ANY_V_TABLE_DATA(destructor_t, destructor, [](mutable_void data) { \
+    std::destroy_at(static_cast<Concrete*>(data));                   \
+  })
+
+TRAIT_EX_(moveable, observeable, , , ,
+          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
+
+TRAIT_EX_(copyable, moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+
+TRAIT_EX_(save_observable, observeable, , , , (ANY_CLASS_TYPE_INFO), ());
+
+TRAIT_EX_(save_moveable, save_observable, , , ,
+          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+          (using default_proxy_t = val<>;));
+
+TRAIT_EX_(save_copyable, save_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
+
+TRAIT_EX_(dynamic_castable, save_observable, , , ,
+          (ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST), ());
+
+TRAIT_EX_(dynamic_deletable, dynamic_castable, , , , (ANY_HAS_DELETE),
+          (using default_proxy_t = shared;));
+
+TRAIT_EX_(dynamic_smart_ptr, dynamic_deletable, , , ,
+          (ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR), ());
+
+TRAIT_EX_(dynamic_moveable, dynamic_castable, , , ,
+          (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
+          (using default_proxy_t = val<>;));
+
+TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 class meta_data {
   const std::type_info& type_info_;
@@ -3992,7 +4131,8 @@ struct is_key_impl<key<T>> : std::true_type {};
 template <typename T>
 concept is_key = is_key_impl<T>::value;
 
-/// \brief A class template to implement a factory for \ref any objects.
+/// \brief A class template to implement a factory for \ref any
+/// objects.
 template <template <typename...> typename Any, is_proxy Proxy, typename Key,
           typename... Args>
   requires proxy_trait<Proxy>::is_owner
@@ -4046,7 +4186,7 @@ std::size_t& members_count() {
 template <typename InObject>
 struct members {
   members() : table_(members_count<InObject>()) {}
-  using any_value_t = any<dynamic_value, nullable_val>;
+  using any_value_t = any<dynamic_copyable, nullable_val>;
   std::vector<any_value_t> table_;
   template <typename Member, typename Arg>
   void set(Member member, Arg&& arg) {
@@ -4099,7 +4239,8 @@ std::size_t& dispatchs_count() {
 }
 #endif
 
-/// \brief A tag to indicate that the corresponding function parameter is an
+/// \brief A tag to indicate that the corresponding function
+/// parameter is an
 /// \ref any used for dispatch.
 ///
 /// \tparam Any The \ref any used for dispatch
@@ -4151,9 +4292,9 @@ struct ensure_function_ptr_from_functor_t {
       : striped_virtuals<FUNCTOR, Args...> {};
 
   template <typename... Args>
-  static auto instance(
-      auto functor)  // if functor is a templated operator() from a
-                     // stateless function object, instantiate it now!;
+  static auto instance(auto functor)  // if functor is a templated operator()
+                                      // from a stateless function object,
+                                      // instantiate it now!;
   {
     using functor_t = decltype(functor);
     if constexpr (std::is_pointer_v<functor_t>) {
@@ -4264,8 +4405,8 @@ struct dispatch_matrix<DispatchMatrix, virtual_<Any>, Args...> {
       typename dispatch_matrix<std::vector<DispatchMatrix>, Args...>::type;
 };
 
-/// \brief Open dispatch method. Solves the expression problem. See \ref
-/// dispatch_sig "dispatch<R(Args...)>" for details.
+/// \brief Open dispatch method. Solves the expression problem. See
+/// \ref dispatch_sig "dispatch<R(Args...)>" for details.
 ///
 /// \tparam R Return type.
 /// \tparam ...Args Parameter types. The parameters for open dispatch
@@ -4275,22 +4416,23 @@ class dispatch;
 /// \anchor dispatch_sig
 /// \brief Open dispatch method. Solves the expression problem.
 /// \tparam R The return type.
-/// \tparam Args The parameter types. The signature of the dispatch is
-/// R(Args...).
+/// \tparam Args The parameter types. The signature of the dispatch
+/// is R(Args...).
 ///
-/// The open dispatch is managed via a singleton object of this class.
+/// The open dispatch is managed via a singleton object of this
+/// class.
 ///
-/// To declare and define a singleton, use the \ref ANY_SINGLETON and \ref
-/// ANY_SINGLETON_DECLARE macros.
+/// To declare and define a singleton, use the \ref ANY_SINGLETON and
+/// \ref ANY_SINGLETON_DECLARE macros.
 ///
-/// Each trait of the \ref any tagged as virtual must have open dispatch
-/// enabled. To enable open dispatch, declare a struct named
+/// Each trait of the \ref any tagged as virtual must have open
+/// dispatch enabled. To enable open dispatch, declare a struct named
 /// 'trait_name'_has_open_dispatch.
 /// \code
 /// struct node_has_open_dispatch {};
 /// ANY(node<>, , )
-/// // open dispatch evaluate, returns int, dispatched via an any_node;
-/// dispatch<int(virtual_<any_node<>>)> evaluate;
+/// // open dispatch evaluate, returns int, dispatched via an
+/// any_node; dispatch<int(virtual_<any_node<>>)> evaluate;
 /// \endcode
 /// Examples are listed here: \ref dispatch
 template <typename R, typename... Args>
@@ -4422,12 +4564,13 @@ class dispatch<R(Args...)> {
   dispatch_access<dispatch_kind, 0, Args...> dispatch_access_;
 
  public:
-  /// \brief Register a dispatch target for the model provided in the type
-  /// parameter.
-  /// \tparam Classes The models for which the dispatch target is registered.
+  /// \brief Register a dispatch target for the model provided in the
+  /// type parameter.
+  /// \tparam Classes The models for which the dispatch target is
+  /// registered.
   /// \param f The dispatch target.
-  /// \return Dummy value, useful for initializing an auto unnamed variable at
-  /// (static) namespace scope.
+  /// \return Dummy value, useful for initializing an auto unnamed
+  /// variable at (static) namespace scope.
   template <typename... Classes>
   auto define(auto f) {
     auto fp = ensure_function_ptr_from_functor_t<
@@ -4435,8 +4578,10 @@ class dispatch<R(Args...)> {
     return dispatch_access_.template define<Classes...>(fp, dispatch_matrix_);
   };
   /// \brief Invoke the dispatch.
-  /// \tparam ActualArgs The deduced argument types for the dispatch call.
-  /// \param actual_args Arguments fulfilling the signature of this dispatch.
+  /// \tparam ActualArgs The deduced argument types for the dispatch
+  /// call.
+  /// \param actual_args Arguments fulfilling the signature of this
+  /// dispatch.
   /// \return The result of the dispatched function call.
   ///
   /// The called function is determined by the \ref any objects
@@ -4574,12 +4719,12 @@ class dispatch_vany {
 #define __ ANY_UNIQUE_NAME_
 
 /// \addtogroup singleton_macros ANY_SINGLETON macros
-/// \brief Macros to reduce boilerplate for declaring/defining static runtime
-/// data.
+/// \brief Macros to reduce boilerplate for declaring/defining static
+/// runtime data.
 ///
-/// To enable some dynamic functionality (crosscast, open dispatch) there
-/// must be some static data holding information to perform these operations.
-/// Extra care must be taken in a DLL scenario.
+/// To enable some dynamic functionality (crosscast, open dispatch)
+/// there must be some static data holding information to perform
+/// these operations. Extra care must be taken in a DLL scenario.
 ///
 /// To reduce boilerplate code, Any++ supplies these macros.
 ///  @{
@@ -4589,8 +4734,8 @@ class dispatch_vany {
 /// \param name Name of the singleton.
 /// \param __VA_ARGS__ Type of the singleton object.
 ///
-/// This macro should reside inside the namespace you wish the singleton to
-/// reside. See also \ref ANY_SINGLETON.
+/// This macro should reside inside the namespace you wish the
+/// singleton to reside. See also \ref ANY_SINGLETON.
 #define ANY_SINGLETON_DECLARE(export_, name, ...) \
   using name##_t = __VA_ARGS__;                   \
   export_ extern name##_t& get_##name();          \
@@ -4610,8 +4755,9 @@ class dispatch_vany {
 ///  @}
 
 /// \addtogroup vany_macros VANY_DISPACH macros
-/// \brief Macros to reduce boilerplate for declaring/defining open dispatch
-/// with \ref vany_variant. Only neccessary for DLL scenarios
+/// \brief Macros to reduce boilerplate for declaring/defining open
+/// dispatch with \ref vany_variant. Only neccessary for DLL
+/// scenarios
 ///  @{
 
 /// \brief Declare a singleton object for open \ref vany dispatch.
@@ -4619,7 +4765,8 @@ class dispatch_vany {
 /// \param name Name of the dispatch.
 /// \param vany Type of \ref vany.
 /// \param signature Signature of the \ref dispatch.
-/// \param static_dispatch Static constexpr visitor for the non-any members of
+/// \param static_dispatch Static constexpr visitor for the non-any
+/// members of
 ///        the \ref vany.
 ///
 /// See also \ref VANY_DISPACH, \ref ANY_SINGLETON_DECLARE.
@@ -4636,7 +4783,8 @@ class dispatch_vany {
       anyxx::dispatch_vany<name##_vany, name##_dynamic_dispatch,              \
                            name##_static_dispatch>)
 
-/// \brief Define a \ref vany dispatch singleton object in a source file.
+/// \brief Define a \ref vany dispatch singleton object in a source
+/// file.
 /// \param namespace_ The namespace for the singleton.
 /// \param name Name of the singleton.
 ///
@@ -4659,19 +4807,19 @@ class dispatch_vany {
 #else
 
 /// \addtogroup meta_class_macros ANY_META_CLASS macros for crosscast
-/// \brief Macros to define static runtime type data for a \ref model. Only
-/// neccessary for DLL \b and crosscast scenarios.
+/// \brief Macros to define static runtime type data for a \ref
+/// model. Only neccessary for DLL \b and crosscast scenarios.
 /// @{
 
 /// \def ANY_META_CLASS_FWD
-/// \brief Declare access to the meta data for a specific model any. Must be
-/// in global namespace.
+/// \brief Declare access to the meta data for a specific model any.
+/// Must be in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario
 /// \param ... Type of the model
 #define ANY_META_CLASS_FWD(...)
 /// \def ANY_META_CLASS
-/// \brief Define the meta data for a specific model any. Must be in global
-/// namespace.
+/// \brief Define the meta data for a specific model any. Must be in
+/// global namespace.
 /// \param ... Type of the model
 #define ANY_META_CLASS(...)
 
@@ -4682,8 +4830,8 @@ class dispatch_vany {
   ANY_META_CLASS(__VA_ARGS__)
 
 /// \def ANY_REGISTER_MODEL
-/// \brief Register a model class for a specific any interface. Must be in
-/// global namespace.
+/// \brief Register a model class for a specific any interface. Must
+/// be in global namespace.
 /// \param class_ The model class with fully qualified name. Must be
 /// parenthesized
 /// \param interface_ Name of the \ref any (without any_ prefix).
@@ -4772,47 +4920,47 @@ class dispatch_vany {
 #else
 
 /// \addtogroup dispatch_macros DISPATCH_ macros
-/// \brief Macros to define static runtime data for open dispatch. Only
-/// neccessary for DLL scenarios.
+/// \brief Macros to define static runtime data for open dispatch.
+/// Only neccessary for DLL scenarios.
 ///
 /// Name conventions:
-/// _FWD: macro to declare the function signature only. To be used in header
-/// files.
+/// _FWD: macro to declare the function signature only. To be used in
+/// header files.
 ///
-/// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for a
-/// specific any. This dispatch counter is used to assign unique indices to
-/// each dispatch.
+/// ANY_DISPATCH_COUNT macros declare/define the dispatch counter for
+/// a specific any. This dispatch counter is used to assign unique
+/// indices to each dispatch.
 ///
-/// ANY_DISPATCH_FOR macros declare/define the dispatch table instance for a
-/// any. This is necessary once for each model class that participates in open
-/// dispatch.
+/// ANY_DISPATCH_FOR macros declare/define the dispatch table
+/// instance for a any. This is necessary once for each model class
+/// that participates in open dispatch.
 ///
 ///  @{
 
 /// \def ANY_DISPATCH_COUNT_FWD
-/// \brief Declare access to the dispatch counter for a specific \ref any.
-/// Must be placed in global namespace.
+/// \brief Declare access to the dispatch counter for a specific \ref
+/// any. Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT_FWD(...)
 /// \def ANY_DISPATCH_COUNT
-/// \brief Define the dispatch counter for a specific \ref any. Must be placed
-/// in global namespace.
+/// \brief Define the dispatch counter for a specific \ref any. Must
+/// be placed in global namespace.
 /// \param ns_ Namespace of the \ref any.
 /// \param any_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_COUNT(...)
 /// \def ANY_DISPATCH_FOR_FWD
-/// \brief Declare access to the dispatch table instance function for a
-/// model. Must be placed in global namespace.
+/// \brief Declare access to the dispatch table instance function for
+/// a model. Must be placed in global namespace.
 /// \param export_ To supply an export macro in a DLL scenario.
 /// \param class_ The model class with fully qualified name.
 /// \param interface_namespace_ Namespace of the \ref any.
 /// \param interface_ Name of the \ref any (without any_ prefix).
 #define ANY_DISPATCH_FOR_FWD(...)
 /// \def ANY_DISPATCH_FOR
-/// \brief Define the dispatch table instance function for a model. Must be
-/// placed in global namespace
+/// \brief Define the dispatch table instance function for a model.
+/// Must be placed in global namespace
 /// \param class_ The model class with fully qualified name.
 /// \param interface_namespace_ Namespace of the \ref any.
 /// \param interface_ Name of the \ref any (without any_ prefix).
@@ -4825,14 +4973,15 @@ class dispatch_vany {
 /// \defgroup anyxx_config Any++ configuration macro
 /// \brief Macro to configure Any++ for DLL mode
 ///
-/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In DLL
-/// mode, some static runtime data is not instantiated in the header
-/// implicitly via static inline and must be manually instantiated in a single
-/// translation unit.
+/// If ANY_DLL_MODE is #defined, Any++ is configured for DLL mode. In
+/// DLL mode, some static runtime data is not instantiated in the
+/// header implicitly via static inline and must be manually
+/// instantiated in a single translation unit.
 ///
 /// See also \ref ANY_SINGLETON_DECLARE, \ref ANY_SINGLETON, \ref
-/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref ANY_DISPATCH_COUNT_FWD, \ref
-/// ANY_DISPATCH_COUNT, \ref ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
+/// ANY_META_CLASS_FWD, \ref ANY_META_CLASS, \ref
+/// ANY_DISPATCH_COUNT_FWD, \ref ANY_DISPATCH_COUNT, \ref
+/// ANY_DISPATCH_FOR_FWD, \ref ANY_DISPATCH_FOR, \ref
 /// ANY_META_CLASS_FWD, \ref ANY_META_CLASS.
 
 /**
@@ -4849,16 +4998,16 @@ class dispatch_vany {
 
    \example _2b_trait_monoid.cpp
    A self referntial trait that models a variant of a monoid.
-   Show how to use a MODEL_MAP that acts simultanious as runtime and complitem
-   customization point.
+   Show how to use a MODEL_MAP that acts simultanious as runtime and
+   complitem customization point.
 
    \example _2f_trait_equal_comparable.cpp
-   A step by step walkthrough for implementing a trait that models equality
-   comparability for various types.
+   A step by step walkthrough for implementing a trait that models
+   equality comparability for various types.
 
    \example _2e_trait_algebra.cpp
-   A hierarchy of traits for the algebraic structures semigroup, monoid and
-   group.
+   A hierarchy of traits for the algebraic structures semigroup,
+   monoid and group.
 
    \example _2p_trait_optional.cpp
    An optional as a customizable trait.
@@ -4893,42 +5042,42 @@ static_assert(proxy_borrowable_from<mutref, mutref, observeable_v_table>);
 static_assert(proxy_borrowable_from<mutref, unique, observeable_v_table>);
 static_assert(!proxy_borrowable_from<mutref, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<mutref, weak, observeable_v_table>);
-static_assert(proxy_borrowable_from<mutref, val<>, dynamic_value_v_table>);
+static_assert(proxy_borrowable_from<mutref, val<>, dynamic_copyable_v_table>);
 
 static_assert(proxy_borrowable_from<cref, cref, observeable_v_table>);
 static_assert(proxy_borrowable_from<cref, mutref, observeable_v_table>);
 static_assert(proxy_borrowable_from<cref, unique, observeable_v_table>);
 static_assert(proxy_borrowable_from<cref, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<cref, weak, observeable_v_table>);
-static_assert(proxy_borrowable_from<cref, val<>, dynamic_value_v_table>);
+static_assert(proxy_borrowable_from<cref, val<>, dynamic_copyable_v_table>);
 
 static_assert(!proxy_borrowable_from<shared, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<shared, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<shared, unique, observeable_v_table>);
 static_assert(proxy_borrowable_from<shared, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<shared, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<shared, val<>, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<shared, val<>, dynamic_copyable_v_table>);
 
 static_assert(!proxy_borrowable_from<weak, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<weak, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<weak, unique, observeable_v_table>);
 static_assert(proxy_borrowable_from<weak, shared, observeable_v_table>);
 static_assert(proxy_borrowable_from<weak, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<weak, val<>, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<weak, val<>, dynamic_copyable_v_table>);
 
 static_assert(!proxy_borrowable_from<unique, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, unique, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<unique, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<unique, val<>, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<unique, val<>, dynamic_copyable_v_table>);
 
 static_assert(!proxy_borrowable_from<val<>, cref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<val<>, mutref, observeable_v_table>);
 static_assert(!proxy_borrowable_from<val<>, unique, observeable_v_table>);
 static_assert(!proxy_borrowable_from<val<>, shared, observeable_v_table>);
 static_assert(!proxy_borrowable_from<val<>, weak, observeable_v_table>);
-static_assert(!proxy_borrowable_from<val<>, val<>, dynamic_value_v_table>);
+static_assert(!proxy_borrowable_from<val<>, val<>, dynamic_copyable_v_table>);
 
 static_assert(!cloneable_to<mutref>);
 static_assert(!cloneable_to<cref>);
@@ -4979,14 +5128,14 @@ static_assert(!moveable_from<val<>, shared>);
 static_assert(!moveable_from<val<>, weak>);
 static_assert(moveable_from<val<>, val<>>);
 
-static_assert(is_model_size_v_table<dynamic_value_v_table>);
-static_assert(is_copy_constructor_v_table<dynamic_value_v_table>);
-static_assert(is_move_constructor_v_table<dynamic_value_v_table>);
-static_assert(is_destructor_v_table<dynamic_value_v_table>);
-static_assert(is_delete_v_table<dynamic_value_v_table>);
+static_assert(is_model_size_v_table<dynamic_copyable_v_table>);
+static_assert(is_copy_constructor_v_table<dynamic_copyable_v_table>);
+static_assert(is_move_constructor_v_table<dynamic_copyable_v_table>);
+static_assert(is_destructor_v_table<dynamic_copyable_v_table>);
+static_assert(is_delete_v_table<dynamic_deletable_v_table>);
 
 static_assert(is_proxy_compatible_with_trait<cref, observeable>);
 static_assert(!is_proxy_compatible_with_trait<val<>, observeable>);
-static_assert(is_proxy_compatible_with_trait<val<>, dynamic_value>);
+static_assert(is_proxy_compatible_with_trait<val<>, dynamic_copyable>);
 
 }  // namespace anyxx

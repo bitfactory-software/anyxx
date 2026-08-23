@@ -14,7 +14,7 @@ namespace anyxx {
 
 namespace example_2b {
 
-TRAIT_EX_(monoid, anyxx::dynamic_value,
+TRAIT_EX_(monoid, anyxx::dynamic_copyable,
           (ANY_FN_DEF(public, anyxx::self, id, (), const, []() { return T{}; }),
            ANY_FN_DEF(public, anyxx::self, op, (anyxx::self const&), const,
                       [&x](auto const& r) {
@@ -24,9 +24,7 @@ TRAIT_EX_(monoid, anyxx::dynamic_value,
                             anyxx::trait_as<monoid>(r)}));  // NOLINT
                       }),
            ANY_FN_DEF(public, anyxx::self, concat,
-                      ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                 anyxx::cref> const&)),
-                      const,
+                      (anyxx::any_self_forward_range const&), const,
                       [&x](const auto& r) {
                         std::println("concat-default {}", typeid(T).name());
                         auto self = anyxx::trait_as<monoid>(x);
@@ -98,9 +96,8 @@ void test_monoid_traited(
   CHECK(c2);
 }
 
-anyxx::any_forward_range<any_monoid<anyxx::val<>>, any_monoid<anyxx::val<>>,
-                         anyxx::val<>>
-make_a_range(bool use_list) {
+anyxx::any_forward_range<any_monoid<>, any_monoid<>, anyxx::val<>> make_a_range(
+    bool use_list) {
   using namespace std::string_literals;
   if (use_list)
     return std::list<any_monoid<anyxx::val<>>>{{"2"s}, {"3"s}};

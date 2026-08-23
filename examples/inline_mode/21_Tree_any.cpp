@@ -11,13 +11,10 @@ using namespace anyxx;
 
 namespace {
 
-ANY_(node, dynamic_value, (ANY_FN(int, value, (), const),
-             ANY_FN(std::string, as_forth, (), const),
-             ANY_FN(std::string, as_lisp, (), const)), val<>)
-
-//ANY(node, (ANY_FN(int, value, (), const),
-//             ANY_FN(std::string, as_forth, (), const),
-//             ANY_FN(std::string, as_lisp, (), const)), shared)
+ANY_(node, dynamic_copyable,
+     (ANY_FN(int, value, (), const), ANY_FN(std::string, as_forth, (), const),
+      ANY_FN(std::string, as_lisp, (), const)),
+     cow)
 
 struct Plus {
   Plus(any_node<> left, any_node<> right)
@@ -56,19 +53,12 @@ struct Integer {
   int int_;
 };
 
-template <typename NODE, typename... ARGS>
-auto make_node(ARGS&&... args) {
-  return any_node<>{std::in_place_type<NODE>, std::forward<ARGS>(args)...};
-}
-
 }  // namespace
 
 TEST_CASE("21_Tree_any") {
   using namespace anyxx;
 
-  auto expr = make_node<Times>(
-      make_node<Integer>(2),
-      make_node<Plus>(make_node<Integer>(3), make_node<Integer>(4)));
+  auto expr = any_node<>{Times{Integer(2), Plus{Integer(3), Integer(4)}}};
 
   auto v = expr.value();
   REQUIRE(v == 14);

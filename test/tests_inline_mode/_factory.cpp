@@ -10,7 +10,7 @@ using namespace std::literals;
 namespace {
 namespace example {
 
-ANY(thing, , )
+ANY_(thing, dynamic_deletable, , )
 
 class asteroid {};
 
@@ -47,18 +47,17 @@ TEST_CASE("factory2") {
   CHECK(get_type_info(things[1]) == typeid(spaceship));
 }
 
-ANY(stringable,
-    (ANY_FN_DEF(public, std::string, to_string, (), const,
-                          [&x]() { return std::format("{}", x); })),
-    )
+ANY_(stringable, dynamic_deletable,
+     (ANY_FN_DEF(public, std::string, to_string, (), const,
+                 [&x]() { return std::format("{}", x); })), )
 
 ANY_SINGLETON_DECLARE(, any_stringable_factory,
                       factory<any_stringable, unique, std::string>);
 
 auto __ = any_stringable_factory.register_("int", []() { return 42; });
 
-static_assert(std::is_constructible_v<any_stringable<shared>,
-                                      any_stringable<unique>&&>);
+static_assert(
+    std::is_constructible_v<any_stringable<shared>, any_stringable<unique>&&>);
 }  // namespace example
 }  // namespace
 

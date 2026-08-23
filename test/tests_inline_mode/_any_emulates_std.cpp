@@ -12,10 +12,14 @@
 using namespace anyxx;
 
 namespace {
-ANY_(string_to_string, anyxx::dynamic_value, (ANY_OP(std::string, (), (std::string const&), const)), )
-ANY_(string_to_string_mutable, anyxx::dynamic_value,
-    (ANY_OP(std::string, (), (), const),
-     ANY_OP(std::string, (), (std::string const&), )), )
+ANY_(string_to_string, anyxx::dynamic_copyable,
+     (ANY_OP(std::string, (), (std::string const&), const)), )
+ANY_(string_to_string_mutable, anyxx::dynamic_copyable,
+     (ANY_OP(std::string, (), (), const),
+      ANY_OP(std::string, (), (std::string const&), )), )
+ANY_(string_to_string_deletable, anyxx::dynamic_deletable,
+     (ANY_OP(std::string, (), (), const),
+      ANY_OP(std::string, (), (std::string const&), )), )
 
 }  // namespace
 
@@ -115,20 +119,21 @@ TEST_CASE("std emulated function") {
     functor_t::tracker_ = 0;
     {
       {
-        any_string_to_string_mutable<unique> f{std::make_unique<functor_t>()};
+        any_string_to_string_deletable<unique> f{std::make_unique<functor_t>()};
         REQUIRE(functor_t::tracker_ == 1);
         REQUIRE(f("hello") == "");
         REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello");
       }
       REQUIRE(functor_t::tracker_ == 0);
     }
-    any_string_to_string_mutable<unique> f{
+    any_string_to_string_deletable<unique> f{
         std::make_unique<functor_t>("hello")};
     REQUIRE(f(" world") == "hello");
     REQUIRE(unchecked_unerase_cast<functor_t>(f)->s_ == "hello world");
-    static_assert(!std::assignable_from<any_string_to_string_mutable<unique>,
-                                        any_string_to_string_mutable<unique>>);
-    any_string_to_string_mutable<unique> f2{std::move(f)};
+    static_assert(
+        !std::assignable_from<any_string_to_string_deletable<unique>,
+                              any_string_to_string_deletable<unique>>);
+    any_string_to_string_deletable<unique> f2{std::move(f)};
     REQUIRE(!get_proxy_ptr(f));  // NOLINT
     REQUIRE(f2(", bye") == "hello world");
     REQUIRE(unchecked_unerase_cast<functor_t>(f2)->s_ == "hello world, bye");
@@ -141,16 +146,66 @@ TEST_CASE("std emulated function") {
     static_assert(std::is_same_v<decltype(hello_world), std::string>);
     CHECK(hello_world == "hello world!");
 
-    any<function<std::string(std::string const&), const_>, cref> any_f_cref{f};
+    any<function<std::string(std::string const&), const_, observeable>>
+        any_f_cref{f};
     CHECK(any_f_cref("C++") == "C++ world!");
-    any<function<std::string(std::string const&), mutable_>, cref> any_f_mref{
-        f};
+    any<function<std::string(std::string const&), mutable_, observeable>>
+        any_f_mref{f};
+    CHECK(any_f_mref("C++") == "C++ world!");
 
-    any<function<std::string(std::string const&), const_>, using_<decltype(f)&>>
-        any_f_using_{f};
-    CHECK(any_f_using_("static C++") == "static C++ world!");
+    auto const f_const = [](std::string const& in) {
+      return in + " const world!";
+    };
+    any<function<std::string(std::string const&), const_, observeable>>
+        any_f_cref_const{f_const};
+    CHECK(any_f_cref_const("C++") == "C++ const world!");
+    static_assert(
+        std::is_constructible_v<
+            any<function<std::string(std::string const&), const_, observeable>>,
+            decltype(f_const)>);
+    static_assert(
+        !std::is_constructible_v<any<function<std::string(std::string const&),
+                                              mutable_, observeable>>,
+                                 decltype(f_const)>);
+  }
+  {
+    any<function<std::string(std::string const&), mutable_, moveable>> f{
+        [](std::string const& in) { return in + " world!"; }};
+    auto result = f("hello");
+    CHECK(result == "hello world!");
+    static_assert(std::is_move_constructible_v<decltype(f)>);
+    static_assert(!std::is_copy_assignable_v<decltype(f)>);
+    static_assert(std::same_as<decltype(f)::proxy_t, val<>>);
+    static_assert(!is_copy_constructor_v_table<decltype(f)::v_table_t>);
+    static_assert(!can_copy_construct_from<val<>, decltype(f)::v_table_t>);
+    auto f2 = std::move(f);
+    CHECK(f2("hello") == "hello world!");
+    // auto f3 = f2; // does not compile as expected, because f2 is move-only
+  }
+  {
+    any<function<std::string(std::string const&), const_, moveable>> f{
+        [](std::string const& in) { return in + " world!"; }};
+    auto result = f("hello");
+    CHECK(result == "hello world!");
+    static_assert(std::is_move_constructible_v<decltype(f)>);
+    static_assert(!std::is_copy_assignable_v<decltype(f)>);
+    static_assert(std::same_as<decltype(f)::proxy_t, val<>>);
+    static_assert(!is_copy_constructor_v_table<decltype(f)::v_table_t>);
+    static_assert(!can_copy_construct_from<val<>, decltype(f)::v_table_t>);
+    auto f2 = std::move(f);
+    CHECK(f2("hello") == "hello world!");
+    // auto f3 = f2; // does not compile as expected, because f2 is move-only
+  }
+}
 
-    CHECK(trait_as<function<std::string(std::string const&), const_>>(f)(
-              "trait_as") == "trait_as world!");
+TEST_CASE("std emulated any") {
+  using any = anyxx::any<anyxx::save_copyable>;
+  {
+    auto a1 = any(std::string{"hallo"});
+    CHECK(*unerase_cast<std::string>(a1) == "hallo");
+    a1 = 3;
+    CHECK(*unerase_cast<int>(a1) == 3);
+    CHECK(unerase_cast_if<std::string>(a1) == nullptr);
+    CHECK(get_type_info(a1) == typeid(int));
   }
 }

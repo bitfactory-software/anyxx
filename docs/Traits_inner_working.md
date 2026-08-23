@@ -52,10 +52,10 @@ struct trait1_model_map<T> {
 struct trait1_has_open_dispatch;
 
 struct trait1_v_table
-    : anyxx::dynamic_value::v_table_t,
+    : anyxx::dynamic_copyable::v_table_t,
       anyxx::dispatch_holder<anyxx::is_type_complete<trait1_has_open_dispatch>,
                              trait1> {
-  using v_table_base_t = typename anyxx::dynamic_value::v_table_t;
+  using v_table_base_t = typename anyxx::dynamic_copyable::v_table_t;
   using v_table_t = trait1_v_table;
   using any_value_t = anyxx::any<anyxx::val, trait1>;
   static constexpr bool open_dispatch_enabeled =
@@ -72,9 +72,9 @@ struct trait1_v_table
   explicit(false) trait1_v_table(std::in_place_type_t<Concrete> concrete);
 };
 
-struct trait1 : anyxx::dynamic_value {
+struct trait1 : anyxx::dynamic_copyable {
   using any_value_t = anyxx::any<anyxx::val, trait1>;
-  using base_t = anyxx::dynamic_value;
+  using base_t = anyxx::dynamic_copyable;
   using v_table_base_t = base_t::v_table_t;
   using v_table_t = trait1_v_table;
   template <typename StaticDispatchType>

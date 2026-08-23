@@ -27,8 +27,7 @@ TRAIT_EX_(
                              class_.concat(std::ranges::empty_view<M>{}));
                        }),
      ANY_FN_STATIC_DEF((), anyxx::self, concat,
-                       ((anyxx::any_forward_range<anyxx::self, anyxx::self,
-                                                  anyxx::cref> const&)),
+                       ((anyxx::any_self_forward_range const&)),
                        []<typename M>(auto class_, const auto& r) {
                          auto id = class_.identity();
                          return get_proxy_value(std::ranges::fold_left(
@@ -113,7 +112,7 @@ void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
   using namespace anyxx;
   static_assert(is_semigroup_model<P1>);
   static_assert(is_monoid_model<P1>);
-  any<monoid, using_<P1>> m{p1}; 
+  any<monoid, using_<P1>> m{p1};
   test_monoid(m, r);
 }
 
@@ -145,7 +144,7 @@ TEST_CASE("algebra basics") {
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
       !anyxx::proxy_borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
-                              observeable_v_table>);
+                                    observeable_v_table>);
 
   {
     using_<int>::as<monoid> im{999};
@@ -179,12 +178,12 @@ TEST_CASE("algebra monoid") {
   test_monoid<any<monoid, using_<int>>>(
       trait_as<monoid>(1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
   test_monoid((1), std::vector<any<monoid, using_<int>>>{{2}, {3}});
-  test_monoid<any<monoid, using_<int>>>(
-      trait_as<monoid>(1), std::vector{2, 3});
+  test_monoid<any<monoid, using_<int>>>(trait_as<monoid>(1), std::vector{2, 3});
 
   test_monoid(("1"s), std::vector{"2"s, "3"s});
   test_monoid<any<monoid, using_<std::string>>>(
-      trait_as<monoid>("1"s), std::vector<any<monoid, using_<std::string>>>{{"2"s}, {"3"s}});
+      trait_as<monoid>("1"s),
+      std::vector<any<monoid, using_<std::string>>>{{"2"s}, {"3"s}});
 
   //  test_monoid(not_mappepd{1}, std::vector{not_mappepd{2}, not_mappepd{3}});
 }
@@ -226,7 +225,8 @@ void test_group_traited(
   auto c1 = g.op(id).op(g) == g.op(g).op(id);
   CHECK(c1);
   auto g_concat = g.concat(r);
-  static_assert(std::same_as<decltype(g_concat), anyxx::any<group, anyxx::using_<int>>>);
+  static_assert(
+      std::same_as<decltype(g_concat), anyxx::any<group, anyxx::using_<int>>>);
   auto c2 =
       g_concat == std::ranges::fold_left(
                       r, g.identity(),

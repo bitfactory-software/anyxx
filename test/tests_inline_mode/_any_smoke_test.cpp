@@ -19,7 +19,7 @@ struct position {
   float x, y;
 };
 
-ANY_(drawable, anyxx::dynamic_value, (ANY_FN(void, draw, (position), const)), )
+ANY_(drawable, anyxx::dynamic_copyable, (ANY_FN(void, draw, (position), const)), )
 ANY_(shape, drawable,
      (ANY_FN(int, count_sides, (), const), ANY_FN(double, area, (), const),
       ANY_FN(double, perimeter, (), const)), )
@@ -138,9 +138,9 @@ TEST_CASE("dynamic v_table cref") {
 
   //    any< void* > base_v =  any_callable_shape_onst_observer_circle1; ->
   //    downcast_to may not compile!
-  [[maybe_unused]] anyxx::any<dynamic_value, cref> base_shape =
+  [[maybe_unused]] anyxx::any<dynamic_copyable, cref> base_shape =
       any_callable_shape_onst_observer_circle1;
-  [[maybe_unused]] anyxx::any<dynamic_value, cref> base_shapeX =
+  [[maybe_unused]] anyxx::any<dynamic_copyable, cref> base_shapeX =
       any_callable_shape_onst_observer_circle2;
 
   REQUIRE(is_derived_from<any_callable_shape<cref>>(base_shape));
@@ -209,25 +209,4 @@ TEST_CASE("dynamic any shared") {
   print_any_callable_shape_const_observer(*s);
   print_any_callable_shape_const_observer(*r);
   print_any_callable_shape_const_observer(*p);
-}
-
-namespace {
-void print_any_shape_co(any_shape<cref> const& s) {
-  s.draw(position{.x = 1, .y = 2});
-}
-
-}  // namespace
-TEST_CASE("dynamic any unique") {
-  auto c = std::make_unique<circle>(12.3);
-
-  using shape_unique = any_shape<unique>;
-  shape_unique s1{std::move(c)};
-
-  REQUIRE_THAT(s1.perimeter(), Catch::Matchers::WithinAbs(77.2, 77.3));
-  auto unerased_circle = unerase_cast<circle const>(s1);
-  REQUIRE_THAT(unerased_circle->perimeter(),
-               Catch::Matchers::WithinAbs(77.2, 77.3));
-
-  static_assert(proxy_borrowable_from<cref, unique, observeable_v_table>);
-  print_any_shape_co(s1);
 }

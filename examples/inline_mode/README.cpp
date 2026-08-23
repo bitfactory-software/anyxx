@@ -84,7 +84,7 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-TRAIT_(drawable, anyxx::dynamic_value, (ANY_FN(std::string, draw, (), const)))
+TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
 
 void draw(std::stringstream& os,
           std::vector<anyxx::any<drawable, anyxx::val<>>> const& drawables) {
@@ -179,7 +179,7 @@ struct square {
   [[nodiscard]] std::string edgy_salute() const { return "edgy World"; }
 };
 
-TRAIT_(drawable, anyxx::dynamic_value, (ANY_FN(std::string, draw, (), const)))
+TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)))
 
 ANY_MODEL_MAP((circle), drawable) {
   static std::string draw(circle const&) { return "Silent greetings"; };
@@ -204,7 +204,7 @@ TEST_CASE("Showcase2") {
 #if 0
 // -->
 ```
-Showcase 2 demonstrates, how to use `Any++`s "model map" feature 
+Showcase 2 demonstrates, how to use the `Any++` "model map" feature 
 to provide custom behavior for unrelated types using traits.
 
 [Compiler Explorer](https://godbolt.org/z/P7rfbzecj)
@@ -230,7 +230,7 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX_(figure, anyxx::dynamic_value,
+TRAIT_EX_(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::val<>>
@@ -318,7 +318,7 @@ struct square {
   [[nodiscard]] std::string name() const { return "square"; }
 };
 
-TRAIT_EX_(figure, anyxx::dynamic_value,
+TRAIT_EX_(figure, anyxx::dynamic_copyable,
           (ANY_FN(std::string, name, (), const)), , ,
           (ANY_OPEN_DISPATCH), ())
 template <typename Proxy = anyxx::val<>>
@@ -384,8 +384,8 @@ struct square {
 };
 
 struct figure_has_open_dispatch {};
-ANY_(figure, ayx::dynamic_value, (ANY_FN(double, area, (), const)), ayx::val<>)
-ANY_(serializable, ayx::dynamic_value,
+ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)), ayx::val<>)
+ANY_(serializable, ayx::dynamic_copyable,
     (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
 
 ayx::factory<any_serializable, ayx::val<>, std::string, std::istream&>
@@ -538,7 +538,7 @@ struct square {
   [[nodiscard]] std::string draw() const { return "World"; }
 };
 
-ANY_(figure, ayx::dynamic_value, (ANY_FN(std::string, draw, (), const)),
+ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), const)),
      ayx::val<>)
 
 using known_and_unknown_shapes =

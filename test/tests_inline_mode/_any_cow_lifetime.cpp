@@ -7,9 +7,7 @@
 #pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #endif
 
-namespace anyxx {
-
-}  // namespace anyxx
+namespace anyxx {}  // namespace anyxx
 
 using namespace anyxx;
 
@@ -76,7 +74,7 @@ struct XX {
 };
 using X = XX<>;
 
-TRAIT_(getset, anyxx::dynamic_value,
+TRAIT_(getset, anyxx::dynamic_copyable,
        (ANY_FN(std::string const&, get, (), const),
         ANY_FN(void, set, (std::string const&), )))
 
@@ -153,6 +151,7 @@ TEST_CASE("cow lifetime") {
       CHECK(v2->get() == "hallo");
       CHECK(get_proxy(*v2).holder_ == get_proxy(v).holder_);
       CHECK(get_proxy(v).holder_->count_ == 2);
+      static_assert(is_copy_constructor_v_table<any_getset::v_table_t>);
       v2->set("hallo world");
       CHECK(v.get() == "hallo");
       CHECK(v2->get() == "hallo world");
