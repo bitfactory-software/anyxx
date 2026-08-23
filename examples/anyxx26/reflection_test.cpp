@@ -7,6 +7,10 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include "meta/utilities.hpp"
+
+using namespace anyxx26;
+
 struct default_t{};
 constexpr static inline default_t defaulted = {};
 
@@ -30,16 +34,6 @@ struct trait_facade_call {
     }
 };
 
-template <std::meta::info ...Ms>
-struct outer {
-    struct inner;
-    consteval {
-        define_aggregate(^^inner, { Ms... });
-    }
-};
-template <std::meta::info ...Ms>
-using to_struct = outer<Ms...>::inner;
-
 template<template <typename> typename Trait, typename V>
 consteval std::meta::info make_trait_facade(){
     std::vector<std::meta::info> calls;
@@ -52,7 +46,7 @@ consteval std::meta::info make_trait_facade(){
             calls.push_back(reflect_constant(dms));
         }
     }
-    return substitute(^^to_struct, calls);
+    return substitute(^^meta::to_struct, calls);
 };
 
 template<typename V, template<typename> typename Trait>
@@ -90,7 +84,7 @@ consteval std::meta::info make_v_table_type(){
             fptrs.push_back(reflect_constant(dms));
         }
     }
-    return substitute(^^to_struct, fptrs);
+    return substitute(^^meta::to_struct, fptrs);
 };
 
 template <typename VTable, auto... Functions>
@@ -170,7 +164,7 @@ consteval std::meta::info make_dyn_facade(){
             calls.push_back(reflect_constant(dms));
         }
     }
-    return substitute(^^to_struct, calls);
+    return substitute(^^meta::to_struct, calls);
 };
 
 template<template <typename> typename Trait> struct dyn :

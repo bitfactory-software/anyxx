@@ -8,8 +8,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_G
     project(CmakeConfigPackageTests LANGUAGES CXX)
     include(${Catch2_SOURCE_DIR}/extras/Catch.cmake)
 
-    file(GLOB hpp_files "*.hpp")
-    file(GLOB cpp_files "*.cpp")
+    file(GLOB_RECURSE hpp_files "*.hpp")
+    file(GLOB_RECURSE cpp_files "*.cpp")
     add_executable (examples_anyxx26 ${cpp_files} ${hpp_files})
     target_link_libraries(examples_anyxx26 
         anyxx::anyxx_warnings
