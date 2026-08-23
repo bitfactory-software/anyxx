@@ -1,3 +1,5 @@
+#pragma once
+
 #include <meta>
 
 namespace anyxx26::meta {
