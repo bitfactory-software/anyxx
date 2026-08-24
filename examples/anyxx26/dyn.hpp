@@ -56,8 +56,6 @@ consteval std::meta::info make_v_table_fptrs_type(){
     return substitute(^^meta::to_struct, fptrs);
 };
 
-template <typename VTable, auto... Functions>
-inline auto v_table_instance = VTable{ Functions... };
 
 template <bool default_, std::meta::info m, typename V, typename R, typename... Args>
 R vfimpl(void* self, Args&&... args){
@@ -67,7 +65,6 @@ R vfimpl(void* self, Args&&... args){
         return[:m:](*static_cast<V*>(self), std::forward<Args>(args)...);
     }
 }
-
 template <typename V>
 consteval std::meta::info make_vfimpl(std::meta::info f){
     std::vector<std::meta::info> types;
@@ -87,35 +84,49 @@ consteval std::meta::info make_vfimpl(std::meta::info f){
     return substitute(^^vfimpl, types);
 }
 
-template<template <typename> typename Trait, typename V>
-consteval std::meta::info make_v_table_instance(){
-    std::vector<std::meta::info> types;
-    types.push_back(make_v_table_fptrs_type<Trait>());
-    constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(^^ Trait<V>, ctx))) {
-        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)){
-            types.push_back(make_vfimpl<V>(m));
+template <template <typename> typename Trait>
+using base_v_table_t = typename [:anyxx26::meta::get_first_public_base<^^Trait<void*>, ^^anyxx::observeable>():]::v_table_t;
+
+template<template <typename> typename Trait>
+struct v_table : base_v_table_t<Trait>, [:make_v_table_fptrs_type<Trait>():] {
+    using v_table_t = v_table;
+    using fptrs = [:make_v_table_fptrs_type<Trait>():];
+    template <typename Concrete>
+    v_table(std::in_place_type_t<Concrete> concrete) 
+        : base_v_table_t<Trait>(concrete) {
+            constexpr auto ctx = std::meta::access_context::current();
+            template for(constexpr auto m : define_static_array(members_of(^^Trait<Concrete>, ctx))) {
+                if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)){
+                    constexpr auto f = anyxx26::meta::get_member<make_v_table_fptrs_type<Trait>(), m>();
+                    this->[:f:] = [:make_vfimpl<Concrete>(m):];
+                }
+            }
         }
-    }
-    return substitute(^^v_table_instance, types);
+};
+
+template<template <typename> typename Trait, typename V>
+v_table<Trait>* get_v_table_instance(){
+  static v_table<Trait> instance(std::in_place_type<V>);
+    return &instance;
 };
 
 template<template <typename> typename Trait>
 struct dyn_base {
-    [:make_v_table_fptrs_type<Trait>() :] const& v_table;
+    v_table<Trait>* v_table_ = nullptr;
     void* self = nullptr;
     template <typename V>
         requires (!std::derived_from<V, dyn_base>)
-    dyn_base(V& v) : v_table([:make_v_table_instance<Trait, V>() :]), self(&v) {}
+    dyn_base(V& v) : v_table_(get_v_table_instance<Trait, V>()), self(&v) {}
 };
 
 template<template <typename> typename Trait, std::meta::info vf> struct dyn_facade_call {
     template <typename... Args>
     auto operator()(Args&&... args) const {
         auto base = reinterpret_cast<dyn_base<Trait>const*>(this);
-        auto v_table = base->v_table;
+        auto v_table_ptr = base->v_table_;
+        auto fptrs = static_cast<typename v_table<Trait>::fptrs*>(v_table_ptr);
         auto self = base->self;
-        return v_table.[:vf:](self, std::forward<Args>(args)...);
+        return fptrs->[:vf:](self, std::forward<Args>(args)...);
     }
 };
 

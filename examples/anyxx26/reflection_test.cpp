@@ -63,6 +63,8 @@ TEST_CASE("refelction hello world") {
     auto z_from_self = a1.as_string();
     std::println("z_from_trait = {}", z_from_self);
 
+    static_assert(std::is_same_v<base_v_table_t<stringable>, anyxx::observeable_v_table>);
+
     int i = 4711;
     auto dyn_stringable = dyn<stringable>{ i };
     auto z_from_dyn_stringable = dyn_stringable.as_string();
