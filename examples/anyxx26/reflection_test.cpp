@@ -59,7 +59,8 @@ TEST_CASE("refelction hello world") {
   {
     using namespace anyxx;
 
-    static_assert(std::is_same_v<base_v_table_t<stringable>, anyxx::observeable_v_table>);
+    static_assert(
+        std::is_same_v<base_v_table_t<stringable>, anyxx::observeable_v_table>);
 
     int i = 4711;
     auto dyn_stringable = dyn<stringable, anyxx::mutref>{i};
@@ -69,6 +70,6 @@ TEST_CASE("refelction hello world") {
     std::string s = "hello world";
     foo a_foo{3.14};
     boo a_boo{true};
-    print({i, s,a_foo, a_boo});
+    print({i, s, a_foo, a_boo});
   }
 }
