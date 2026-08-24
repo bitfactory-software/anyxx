@@ -1,6 +1,7 @@
 #pragma once
 
 #include <examples/anyxx26/meta/utilities.hpp>
+#include <bit_factory/anyxx.hpp>
 
 #include <meta>
 #include <utility>
@@ -15,7 +16,7 @@ struct default_t{};
 constexpr static inline default_t defaulted = {};
 
 template <std::meta::info m, typename V, typename R, typename... Args>
-R default_impl(void* self, Args&&... args){
+R default_impl(void * self, Args&&... args){
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto mc : define_static_array(members_of(^^ V, ctx))) {
         if constexpr(has_identifier(mc) && !is_static_member(mc) && is_function(mc) &&
@@ -110,27 +111,89 @@ v_table<Trait>* get_v_table_instance(){
     return &instance;
 };
 
-template<template <typename> typename Trait>
+template<template <typename> typename Trait, anyxx::is_proxy Proxy>
 struct dyn_base {
-    v_table<Trait>* v_table_ = nullptr;
-    void* self = nullptr;
+    using proxy_t = Proxy;
+    using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
+    using void_t = typename proxy_trait_t::void_t;
+    using v_table_t = v_table<Trait>;
+
+    v_table_t* v_table_;
+    Proxy proxy_{};
+
+    dyn_base()
+        requires proxy_trait_t::allow_any_default_constructibile
+    {}
+
+    template <typename ConstructedWith>
+    explicit(false) dyn_base(ConstructedWith&& constructed_with)  // NOLINT
+        requires anyxx::constructibile_for<ConstructedWith, proxy_t, dyn_base<Trait, Proxy>>
+        :   v_table_(get_v_table_instance<Trait, std::decay_t<ConstructedWith>>())
+            , proxy_(anyxx::erased<proxy_t>(std::forward<ConstructedWith>(constructed_with))) {}
+
     template <typename V>
-        requires (!std::derived_from<V, dyn_base>)
-    dyn_base(V& v) : v_table_(get_v_table_instance<Trait, V>()), self(&v) {}
+        requires(!anyxx::is_lifetime_bound<Proxy>)
+    dyn_base(std::in_place_t, V&& v)
+        : v_table_(get_v_table_instance<Trait, V>()), proxy_(
+            proxy_trait_t::construct_in_place(std::forward<V>(v))) {
+    }
+
+    template <typename T, typename... Args>
+        requires(!anyxx::is_lifetime_bound<Proxy>)
+    dyn_base(std::in_place_type_t<T>, Args&&... args)
+        : v_table_(get_v_table_instance<Trait, T>()), proxy_(proxy_trait_t::template construct_type_in_place<T>(
+            std::forward<Args>(args)...)) {
+    }
+
+    ~dyn_base() {
+        proxy_trait_t::destroy(proxy_, v_table_);
+    }
+
+    dyn_base(const dyn_base& other)
+        requires(anyxx::can_copy_construct_from<proxy_trait_t, v_table_t>)
+    : v_table_(other.v_table_) {
+        proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
+            other.v_table_);
+    }
+    dyn_base& operator=(dyn_base const& other)
+        requires(anyxx::can_copy_construct_from<proxy_trait_t, v_table_t>)
+    {
+        if(this == &other) return *this;
+        auto v_table_ptr = v_table_;
+        proxy_trait_t::copy_construct_from(proxy_, v_table_ptr, other.proxy_,
+            other.v_table_);
+        return *this;
+    }
+    dyn_base(dyn_base&& other) noexcept  // NOLINT(noExplicitConstructor)
+        requires(anyxx::moveable_from<proxy_t, proxy_t>)
+    
+        : dyn_base(std::move(other.proxy_), other.release_v_table()) {
+    }
+    dyn_base& operator=(dyn_base&& other) noexcept
+        requires(anyxx::moveable_from<proxy_t, proxy_t>)
+    {
+        proxy_trait_t::move_to(proxy_, v_table_,
+            std::move(other.proxy_), other.v_table_);
+        v_table_ = other.release_v_table();
+        return *this;
+    }
+
+private:
+    auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
-template<template <typename> typename Trait, std::meta::info vf> struct dyn_facade_call {
+template<template <typename> typename Trait, typename Proxy, std::meta::info vf> struct dyn_facade_call {
     template <typename... Args>
     auto operator()(Args&&... args) const {
-        auto base = reinterpret_cast<dyn_base<Trait>const*>(this);
+        auto base = reinterpret_cast<dyn_base<Trait, Proxy> const*>(this);
         auto v_table_ptr = base->v_table_;
         auto fptrs = static_cast<typename v_table<Trait>::fptrs*>(v_table_ptr);
-        auto self = base->self;
-        return fptrs->[:vf:](self, std::forward<Args>(args)...);
+        auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
+        return fptrs->[:vf:](x, std::forward<Args>(args)...);
     }
 };
 
-template<template <typename> typename Trait>
+template<template <typename> typename Trait, typename Proxy>
 consteval std::meta::info make_dyn_facade(){
     constexpr auto v_table_t_info = make_v_table_fptrs_type<Trait>();
 
@@ -138,7 +201,7 @@ consteval std::meta::info make_dyn_facade(){
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(v_table_t_info, ctx))) {
         if constexpr(has_identifier(m)){
-            using dyn_facade_call_t = dyn_facade_call<Trait, m>;
+            using dyn_facade_call_t = dyn_facade_call<Trait, Proxy, m>;
             constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
             auto dms = std::meta::data_member_spec(call_meta, { .name = identifier_of(m), .no_unique_address = true });
             calls.push_back(reflect_constant(dms));
@@ -147,10 +210,10 @@ consteval std::meta::info make_dyn_facade(){
     return substitute(^^meta::to_struct, calls);
 };
 
-template<template <typename> typename Trait> struct dyn :
-    dyn_base<Trait>,
-    [:make_dyn_facade<Trait>() :] {
-    using dyn_base<Trait>::dyn_base;
+template<template <typename> typename Trait, typename Proxy> struct dyn :
+    dyn_base<Trait, Proxy>,
+    [:make_dyn_facade<Trait, Proxy>() :] {
+    using dyn_base<Trait, Proxy>::dyn_base;
 };
 
 } // namespace anyxx26
