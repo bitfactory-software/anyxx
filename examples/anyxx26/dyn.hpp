@@ -43,7 +43,7 @@ consteval std::meta::info make_v_table_fptr_type(const std::meta::info f){
 }
 
 template<template <typename> typename Trait>
-consteval std::meta::info make_v_table_type(){
+consteval std::meta::info make_v_table_fptrs_type(){
     std::vector<std::meta::info> fptrs;
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(^^ Trait<void*>, ctx))) {
@@ -90,7 +90,7 @@ consteval std::meta::info make_vfimpl(std::meta::info f){
 template<template <typename> typename Trait, typename V>
 consteval std::meta::info make_v_table_instance(){
     std::vector<std::meta::info> types;
-    types.push_back(make_v_table_type<Trait>());
+    types.push_back(make_v_table_fptrs_type<Trait>());
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(^^ Trait<V>, ctx))) {
         if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)){
@@ -102,7 +102,7 @@ consteval std::meta::info make_v_table_instance(){
 
 template<template <typename> typename Trait>
 struct dyn_base {
-    [:make_v_table_type<Trait>() :] const& v_table;
+    [:make_v_table_fptrs_type<Trait>() :] const& v_table;
     void* self = nullptr;
     template <typename V>
         requires (!std::derived_from<V, dyn_base>)
@@ -121,7 +121,7 @@ template<template <typename> typename Trait, std::meta::info vf> struct dyn_faca
 
 template<template <typename> typename Trait>
 consteval std::meta::info make_dyn_facade(){
-    constexpr auto v_table_t_info = make_v_table_type<Trait>();
+    constexpr auto v_table_t_info = make_v_table_fptrs_type<Trait>();
 
     std::vector<std::meta::info> calls;
     constexpr auto ctx = std::meta::access_context::current();
