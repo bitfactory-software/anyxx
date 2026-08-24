@@ -92,7 +92,7 @@ using base_v_table_t =
 template <template <typename> typename Trait>
 struct v_table
     : base_v_table_t<Trait>,
-      [ : make_v_table_fptrs_type<Trait>() : ] {
+      [: make_v_table_fptrs_type<Trait>() :] {
         using v_table_t = v_table;
         using fptrs = [:make_v_table_fptrs_type<Trait>():];
         template <typename Concrete>
@@ -220,7 +220,7 @@ consteval std::meta::info make_dyn_facade() {
 };
 
 template <template <typename> typename Trait, typename Proxy>
-struct dyn : dyn_base<Trait, Proxy>, [ : make_dyn_facade<Trait, Proxy>() : ] {
+struct dyn : dyn_base<Trait, Proxy>, [: make_dyn_facade<Trait, Proxy>() :] {
   using dyn_base<Trait, Proxy>::dyn_base;
 };
 
