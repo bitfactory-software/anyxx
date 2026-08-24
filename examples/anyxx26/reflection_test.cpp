@@ -12,6 +12,8 @@
 
 using namespace anyxx26;
 
+namespace {
+
 template <typename Self, bool base = true>
 struct stringable {
   [[= defaulted]] static std::string as_string(Self const& self);
@@ -51,7 +53,9 @@ struct boo {
 template <>
 struct stringable<boo, false> : stringable<boo, true> {};
 
-TEST_CASE("refelction hello world") {
+}  // namespace
+
+TEST_CASE("reflection hello world") {
   auto a1 = trait_as<int, stringable>{42};
   auto z_from_self = a1.as_string();
   std::println("z_from_trait = {}", z_from_self);
@@ -72,4 +76,27 @@ TEST_CASE("refelction hello world") {
     boo a_boo{true};
     print({i, s, a_foo, a_boo});
   }
+}
+
+namespace {
+template <typename Self, bool base = true>
+struct addable {
+  [[= defaulted]] static void add(Self& self, int);
+};
+
+struct add1 {
+  int value;
+  void add(int x) { value += x; }
+};
+}  // namespace
+
+TEST_CASE("reflection mutable hello world") {
+  using namespace anyxx;
+
+  add1 a1{10};
+  auto a1_dyn = dyn<addable, mutref>{a1};
+
+  a1_dyn.add(5);
+  CHECK(a1.value == 15);
+  std::println("a1.value = {}", a1.value);
 }

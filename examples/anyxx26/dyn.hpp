@@ -9,22 +9,42 @@
 
 namespace anyxx26 {
 
+template <typename V, typename VoidSelf>
+using self_const_correct_t =
+    std::conditional_t<std::is_const_v<VoidSelf>, V const, V>;
+
 struct default_t {};
 constexpr static inline default_t defaulted = {};
 
-template <std::meta::info m, typename V, typename R, typename... Args>
-R default_impl(void* self, Args&&... args) {
+template <std::meta::info m, typename V, typename R, typename VoidSelf,
+          typename... Args>
+R default_impl(VoidSelf self, Args&&... args) {
   constexpr auto ctx = std::meta::access_context::current();
   template for (constexpr auto mc : define_static_array(members_of(^^V, ctx))) {
     if constexpr (has_identifier(mc) && !is_static_member(mc) &&
                   is_function(mc) && identifier_of(mc) == identifier_of(m)) {
-      return static_cast<V*>(self)->[:mc:](std::forward<Args>(args)...);
+      return static_cast<self_const_correct_t<V, VoidSelf>*>(self)->[:mc:](
+          std::forward<Args>(args)...);
     }
   }
 }
 
 template <typename R, typename... Args>
-using v_table_fptr_type = R (*)(void*, Args...);
+using v_table_fptr_type = R (*)(Args...);
+
+consteval std::meta::info make_v_table_fptr_param_type(const std::meta::info p,
+                                                       int i) {
+  auto type = type_of(p);
+  if (i == 1) {
+    if (is_const(type)) {
+      return ^^void const*;
+    } else {
+      return ^^void*;
+    }
+  } else {
+    return type;
+  }
+}
 
 consteval std::meta::info make_v_table_fptr_type(const std::meta::info f) {
   std::vector<std::meta::info> types;
@@ -32,10 +52,7 @@ consteval std::meta::info make_v_table_fptr_type(const std::meta::info f) {
   auto i = 0;
   for (auto p : parameters_of(f)) {
     ++i;
-    if (i > 1) {
-      auto type = type_of(p);
-      types.push_back(type);
-    }
+    types.push_back(make_v_table_fptr_param_type(p, i));
   }
   return substitute(^^v_table_fptr_type, types);
 }
@@ -57,14 +74,16 @@ consteval std::meta::info make_v_table_fptrs_type() {
 };
 
 template <bool default_, std::meta::info m, typename V, typename R,
-          typename... Args>
-R vfimpl(void* self, Args&&... args) {
+          typename VoidSelf, typename... Args>
+R vfimpl(VoidSelf self, Args... args) {
   if constexpr (default_) {
     return default_impl<m, V, R>(self, std::forward<Args>(args)...);
   } else {
-    return [:m:](*static_cast<V*>(self), std::forward<Args>(args)...);
+    using VSelf = self_const_correct_t<V, VoidSelf>;
+    return [:m:](*static_cast<VSelf*>(self), std::forward<Args>(args)...);
   }
 }
+
 template <typename V>
 consteval std::meta::info make_vfimpl(std::meta::info f) {
   std::vector<std::meta::info> types;
@@ -76,10 +95,7 @@ consteval std::meta::info make_vfimpl(std::meta::info f) {
   auto i = 0;
   for (auto p : parameters_of(f)) {
     ++i;
-    if (i > 1) {
-      auto type = type_of(p);
-      types.push_back(type);
-    }
+    types.push_back(make_v_table_fptr_param_type(p, i));
   }
   return substitute(^^vfimpl, types);
 }
