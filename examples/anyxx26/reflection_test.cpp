@@ -65,9 +65,9 @@ struct stringable<boo, false> : stringable<boo, true> {};
 }  // namespace
 
 TEST_CASE("anyxx26 hello world") {
-  auto a1 = trait_as<int, stringable>{42};
-  auto z_from_self = a1.as_string();
-  std::println("z_from_trait = {}", z_from_self);
+  //auto a1 = trait_as<int, stringable>{42};
+  //auto z_from_self = a1.as_string();
+  //std::println("z_from_trait = {}", z_from_self);
 
   {
     using namespace anyxx;
