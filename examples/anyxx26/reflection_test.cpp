@@ -45,8 +45,8 @@ struct stringable<std::string, false> {
 struct foo {
   double f;
 };
-template <bool impl>
-struct stringable<foo, impl> {
+template <>
+struct stringable<foo, false> {
   static std::string as_string(foo const& self) {
     return "foo: " + std::to_string(self.f);
   }
