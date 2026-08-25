@@ -10,8 +10,9 @@
 namespace anyxx26 {
 
 template <typename V, typename VoidSelf>
-using self_const_correct_t =
-    std::conditional_t<std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>, V const, V>;
+using self_const_correct_t = std::conditional_t<
+    std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
+    V const, V>;
 
 struct default_t {};
 constexpr static inline default_t defaulted = {};
@@ -25,7 +26,8 @@ R default_impl(VoidSelf self, Args&&... args) {
                   is_function(mc) && identifier_of(mc) == identifier_of(m)) {
       using self_t = self_const_correct_t<V, VoidSelf>;
       auto self_ptr = static_cast<self_t*>(self);
-      static_assert(std::is_invocable_r_v<R, decltype(&[:mc:]), self_t*, Args...>);
+      static_assert(
+          std::is_invocable_r_v<R, decltype(&[:mc:]), self_t*, Args...>);
       return self_ptr->[:mc:](std::forward<Args>(args)...);
     }
   }
@@ -37,17 +39,18 @@ using v_table_fptr_type = R (*)(Args...);
 template <std::meta::info p>
 consteval std::meta::info make_v_table_fptr_param_type(int i) {
   constexpr auto type = type_of(p);
-  //constexpr auto name = identifier_of(p);
-  if(i == 1) {
-      if constexpr(type == ^^void* const& || type == ^^void const* || type == ^^ void const*&) {
-        return ^^void const*;
-      } else if constexpr(type == ^^void* & || type == ^^void *) {
-          return ^^void*;
-      } else if(is_const(remove_reference(type))) { 
-          return ^^void const*;
-      } else { 
-          return ^^void*;
-      }
+  // constexpr auto name = identifier_of(p);
+  if (i == 1) {
+    if constexpr (type == ^^void* const& || type == ^^void const* ||
+                  type == ^^void const*&) {
+      return ^^void const*;
+    } else if constexpr (type == ^^void*& || type == ^^void*) {
+      return ^^void*;
+    } else if (is_const(remove_reference(type))) {
+      return ^^void const*;
+    } else {
+      return ^^void*;
+    }
   } else {
     return type;
   }
@@ -108,10 +111,13 @@ consteval std::meta::info make_vfimpl() {
   return substitute(^^vfimpl, types);
 }
 
+ //template <template <typename> typename Trait>
+ //using base_v_table_t =
+ //    typename[:anyxx26::meta::get_first_public_base<
+ //                  ^^Trait<void*>, ^^anyxx::observeable>():] ::v_table_t;
+
 template <template <typename> typename Trait>
-using base_v_table_t =
-    typename[:anyxx26::meta::get_first_public_base<
-                  ^^Trait<void*>, ^^anyxx::observeable>():] ::v_table_t;
+using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <template <typename> typename Trait>
 struct v_table

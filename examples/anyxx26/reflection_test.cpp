@@ -2,6 +2,7 @@
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <examples/anyxx26/dyn.hpp>
+#include <examples/anyxx26/meta/print_members.hpp>
 #include <examples/anyxx26/meta/utilities.hpp>
 #include <examples/anyxx26/trait_as.hpp>
 #include <meta>
@@ -79,6 +80,13 @@ TEST_CASE("anyxx26 hello world") {
     boo a_boo{true};
     print({i, s, a_foo, a_boo});
   }
+  {
+    anyxx26::meta::print_members<boo>();
+    anyxx26::meta::print_members<stringable<boo>>();
+    dyn<stringable, anyxx::cref> sb{boo{true}};
+    auto sb_str = sb.as_string();
+    CHECK(sb_str == "boo? T");
+  }
 }
 
 namespace {
@@ -111,14 +119,19 @@ struct addable {
  };
 
  template <typename Self, bool base = true>
- struct derived_trait {//: base_trait<Self, base> {
-     [[= defaulted]] static std::string derivedf(Self const& self);
+ //struct derived_trait {
+ struct derived_trait : base_trait<Self, base> {
+         [[= defaulted]] static std::string derivedf(Self const& self);
  };
 
  struct base_and_derived {
    std::string basef() const { return "base"; }
    std::string derivedf() const{ return "derived"; }
  };
+
+ //template <>
+ //struct derived_trait<base_and_derived, false> : derived_trait<base_and_derived, true> {
+ //};
  }  // namespace
 
 static_assert(std::is_const_v<std::remove_pointer_t<std::remove_reference_t<const void*>>>);
@@ -126,6 +139,9 @@ static_assert(std::same_as<anyxx26::self_const_correct_t<base_and_derived, const
 
  TEST_CASE("anyxx26 derived trait") {
      using namespace anyxx;
+
+     anyxx26::meta::print_members<base_trait<base_and_derived>>();
+     anyxx26::meta::print_members<derived_trait<base_and_derived>>();
 
      base_and_derived a1{};
      auto a1_dyn1 = dyn<base_trait, cref>{ a1 };
