@@ -123,8 +123,8 @@ struct base_trait {
 };
 
 template <typename Self, bool base = true>
-// struct derived_trait {
-struct derived_trait : base_trait<Self, base> {
+ struct derived_trait {
+//struct derived_trait : base_trait<Self, base> {
   [[= defaulted]] static std::string derivedf(Self const& self);
 };
 
