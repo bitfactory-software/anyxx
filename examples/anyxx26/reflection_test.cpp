@@ -83,6 +83,7 @@ TEST_CASE("anyxx26 hello world") {
   {
     anyxx26::meta::print_members<boo>();
     anyxx26::meta::print_members<stringable<boo>>();
+    anyxx26::meta::print_members<stringable<boo, false>>();
     dyn<stringable, anyxx::cref> sb{boo{true}};
     auto sb_str = sb.as_string();
     CHECK(sb_str == "boo? T");
