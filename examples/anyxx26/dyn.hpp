@@ -7,6 +7,8 @@
 #include <utility>
 #include <vector>
 
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 namespace anyxx26 {
 
 template <typename V, typename VoidSelf>
@@ -68,12 +70,12 @@ consteval std::meta::info make_v_table_fptr_type() {
   return substitute(^^v_table_fptr_type, types);
 }
 
-template <template <typename> typename Trait>
+template <template <typename, bool> typename Trait>
 consteval std::meta::info make_v_table_fptrs_type() {
   std::vector<std::meta::info> fptrs;
   constexpr auto ctx = std::meta::access_context::current();
   template for (constexpr auto m :
-                define_static_array(members_of(^^Trait<void*>, ctx))) {
+                define_static_array(members_of(^^Trait<void*, true>, ctx))) {
     if constexpr (has_identifier(m) && is_static_member(m) && is_function(m)) {
       auto ft = make_v_table_fptr_type<m>();
       auto dms = std::meta::data_member_spec(
@@ -111,44 +113,68 @@ consteval std::meta::info make_vfimpl() {
   return substitute(^^vfimpl, types);
 }
 
- //template <template <typename> typename Trait>
+ //template <template <typename, bool> typename Trait>
  //using base_v_table_t =
  //    typename[:anyxx26::meta::get_first_public_base<
- //                  ^^Trait<void*>, ^^anyxx::observeable>():] ::v_table_t;
+ //                  ^^Trait<void*, true>, ^^anyxx::observeable>():] ::v_table_t;
 
-template <template <typename> typename Trait>
+template <template <typename, bool> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
-template <template <typename> typename Trait>
+template <std::meta::info trait_info, std::meta::info interface_function>
+consteval std::optional<std::meta::info> find_function_impl() {
+
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(trait_info, ctx))) {
+        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)
+            && identifier_of(interface_function) == identifier_of(m)) {
+            return { m };
+        }
+    }
+    return {};
+}
+
+template <template <typename, bool> typename Trait, typename V, std::meta::info interface_function>
+consteval std::meta::info find_function_impl() {
+
+  constexpr auto found_in_impl = find_function_impl<^^Trait<V, false>, interface_function>();
+  if constexpr (found_in_impl) {
+    return *found_in_impl;
+  } 
+  constexpr auto found_in_base = find_function_impl<^^Trait<V, true>, interface_function>();
+  if constexpr(found_in_base) {
+      return *found_in_base;
+  }
+  throw std::logic_error("Function not found in impl trait or base trait");
+}
+
+template <template <typename, bool> typename Trait>
 struct v_table
     : base_v_table_t<Trait>,
       [: make_v_table_fptrs_type<Trait>() :] {
         using v_table_t = v_table;
-        using fptrs = [:make_v_table_fptrs_type<Trait>():];
+        using  fptrs = [:make_v_table_fptrs_type<Trait>():];
         template <typename Concrete>
         v_table(std::in_place_type_t<Concrete> concrete)
             : base_v_table_t<Trait>(concrete) {
-          constexpr auto ctx = std::meta::access_context::current();
-          template for (constexpr auto m : define_static_array(
-                            members_of(^^Trait<Concrete>, ctx))) {
-            if constexpr (has_identifier(m) && is_static_member(m) &&
-                          is_function(m)) {
-              constexpr auto f =
-                  anyxx26::meta::get_member<make_v_table_fptrs_type<Trait>(),
-                                            m>();
-              this->[:f:] = [:make_vfimpl<Concrete, m>():];
-            }
-          }
+              constexpr auto ctx = std::meta::access_context::current();
+              template for(constexpr auto interface_m : define_static_array(members_of(^^ Trait<void*, true>, ctx))) {
+                if constexpr(has_identifier(interface_m) && is_static_member(interface_m) && is_function(interface_m)) {
+                    constexpr auto f = anyxx26::meta::get_member<^^fptrs, interface_m>();
+                    constexpr auto m = find_function_impl<Trait, Concrete, interface_m>();
+                    this->[:f:] = [:make_vfimpl<Concrete, m>():];
+                }
+              }
         }
-      };
+};
 
-template <template <typename> typename Trait, typename V>
+template <template <typename, bool> typename Trait, typename V>
 v_table<Trait>* get_v_table_instance() {
   static v_table<Trait> instance(std::in_place_type<V>);
   return &instance;
 };
 
-template <template <typename> typename Trait, anyxx::is_proxy Proxy>
+template <template <typename, bool> typename Trait, anyxx::is_proxy Proxy>
 struct dyn_base {
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
@@ -217,7 +243,7 @@ struct dyn_base {
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
-template <template <typename> typename Trait, typename Proxy,
+template <template <typename, bool> typename Trait, typename Proxy,
           std::meta::info vf>
 struct dyn_facade_call {
   template <typename... Args>
@@ -230,7 +256,7 @@ struct dyn_facade_call {
   }
 };
 
-template <template <typename> typename Trait, typename Proxy>
+template <template <typename, bool> typename Trait, typename Proxy>
 consteval std::meta::info make_dyn_facade() {
   constexpr auto v_table_t_info = make_v_table_fptrs_type<Trait>();
 
@@ -249,7 +275,7 @@ consteval std::meta::info make_dyn_facade() {
   return substitute(^^meta::to_struct, calls);
 };
 
-template <template <typename> typename Trait, typename Proxy>
+template <template <typename, bool> typename Trait, typename Proxy>
 struct dyn : dyn_base<Trait, Proxy>, [: make_dyn_facade<Trait, Proxy>() :] {
   using dyn_base<Trait, Proxy>::dyn_base;
 };
