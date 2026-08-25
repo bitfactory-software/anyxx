@@ -71,20 +71,25 @@ consteval std::meta::info make_v_table_fptr_type() {
 }
 
 template <template <typename, bool> typename Trait>
-consteval std::meta::info make_v_table_fptrs_type() {
-  std::vector<std::meta::info> fptrs;
-  constexpr auto ctx = std::meta::access_context::current();
-  template for (constexpr auto m :
-                define_static_array(members_of(^^Trait<void*, true>, ctx))) {
-    if constexpr (has_identifier(m) && is_static_member(m) && is_function(m)) {
-      auto ft = make_v_table_fptr_type<m>();
-      auto dms = std::meta::data_member_spec(
-          ft, {.name = identifier_of(m), .no_unique_address = true});
-      fptrs.push_back(reflect_constant(dms));
+consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m :
+        define_static_array(members_of(^^ Trait<void*, true>, ctx))) {
+        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
+            auto ft = make_v_table_fptr_type<m>();
+            auto dms = std::meta::data_member_spec(
+                ft, { .name = identifier_of(m), .no_unique_address = true });
+            fptrs.push_back(reflect_constant(dms));
+        }
     }
-  }
-  return substitute(^^meta::to_struct, fptrs);
 };
+
+template <template <typename, bool> typename Trait>
+consteval std::meta::info make_v_table_fptrs_type() {
+    std::vector<std::meta::info> fptrs;
+    collect_v_table_fs<Trait>(fptrs);
+    return substitute(^^meta::to_struct, fptrs);
+}
 
 template <bool default_, std::meta::info m, typename V, typename R,
           typename VoidSelf, typename... Args>
