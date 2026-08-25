@@ -17,9 +17,7 @@ namespace {
 
 template <typename Self, bool base = true>
 struct stringable {
-  [[= defaulted]] static std::string as_string(Self const&) {
-    return {};
-  }
+  [[= defaulted]] static std::string as_string(Self const&);
 };
 
 void print(std::vector<dyn<stringable, anyxx::mutref>> const& things) {
