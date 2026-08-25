@@ -11,7 +11,7 @@ namespace anyxx26 {
 
 template <typename V, typename VoidSelf>
 using self_const_correct_t =
-    std::conditional_t<std::is_const_v<VoidSelf>, V const, V>;
+    std::conditional_t<std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>, V const, V>;
 
 struct default_t {};
 constexpr static inline default_t defaulted = {};
@@ -23,8 +23,10 @@ R default_impl(VoidSelf self, Args&&... args) {
   template for (constexpr auto mc : define_static_array(members_of(^^V, ctx))) {
     if constexpr (has_identifier(mc) && !is_static_member(mc) &&
                   is_function(mc) && identifier_of(mc) == identifier_of(m)) {
-      return static_cast<self_const_correct_t<V, VoidSelf>*>(self)->[:mc:](
-          std::forward<Args>(args)...);
+      using self_t = self_const_correct_t<V, VoidSelf>;
+      auto self_ptr = static_cast<self_t*>(self);
+      static_assert(std::is_invocable_r_v<R, decltype(&[:mc:]), self_t*, Args...>);
+      return self_ptr->[:mc:](std::forward<Args>(args)...);
     }
   }
 }
@@ -32,27 +34,33 @@ R default_impl(VoidSelf self, Args&&... args) {
 template <typename R, typename... Args>
 using v_table_fptr_type = R (*)(Args...);
 
-consteval std::meta::info make_v_table_fptr_param_type(const std::meta::info p,
-                                                       int i) {
-  auto type = type_of(p);
-  if (i == 1) {
-    if (is_const(type)) {
-      return ^^void const*;
-    } else {
-      return ^^void*;
-    }
+template <std::meta::info p>
+consteval std::meta::info make_v_table_fptr_param_type(int i) {
+  constexpr auto type = type_of(p);
+  //constexpr auto name = identifier_of(p);
+  if(i == 1) {
+      if constexpr(type == ^^void* const& || type == ^^void const* || type == ^^ void const*&) {
+        return ^^void const*;
+      } else if constexpr(type == ^^void* & || type == ^^void *) {
+          return ^^void*;
+      } else if(is_const(remove_reference(type))) { 
+          return ^^void const*;
+      } else { 
+          return ^^void*;
+      }
   } else {
     return type;
   }
 }
 
-consteval std::meta::info make_v_table_fptr_type(const std::meta::info f) {
+template <std::meta::info f>
+consteval std::meta::info make_v_table_fptr_type() {
   std::vector<std::meta::info> types;
   types.push_back(return_type_of(f));
   auto i = 0;
-  for (auto p : parameters_of(f)) {
+  template for (constexpr auto p : define_static_array(parameters_of(f))) {
     ++i;
-    types.push_back(make_v_table_fptr_param_type(p, i));
+    types.push_back(make_v_table_fptr_param_type<p>(i));
   }
   return substitute(^^v_table_fptr_type, types);
 }
@@ -64,7 +72,7 @@ consteval std::meta::info make_v_table_fptrs_type() {
   template for (constexpr auto m :
                 define_static_array(members_of(^^Trait<void*>, ctx))) {
     if constexpr (has_identifier(m) && is_static_member(m) && is_function(m)) {
-      auto ft = make_v_table_fptr_type(m);
+      auto ft = make_v_table_fptr_type<m>();
       auto dms = std::meta::data_member_spec(
           ft, {.name = identifier_of(m), .no_unique_address = true});
       fptrs.push_back(reflect_constant(dms));
@@ -84,8 +92,8 @@ R vfimpl(VoidSelf self, Args... args) {
   }
 }
 
-template <typename V>
-consteval std::meta::info make_vfimpl(std::meta::info f) {
+template <typename V, std::meta::info f>
+consteval std::meta::info make_vfimpl() {
   std::vector<std::meta::info> types;
   bool use_default = annotations_of_with_type(f, ^^default_t).size() > 0;
   types.push_back(std::meta::reflect_constant(use_default));
@@ -93,9 +101,9 @@ consteval std::meta::info make_vfimpl(std::meta::info f) {
   types.push_back(^^V);
   types.push_back(return_type_of(f));
   auto i = 0;
-  for (auto p : parameters_of(f)) {
+  template for (constexpr auto p : define_static_array(parameters_of(f))) {
     ++i;
-    types.push_back(make_v_table_fptr_param_type(p, i));
+    types.push_back(make_v_table_fptr_param_type<p>(i));
   }
   return substitute(^^vfimpl, types);
 }
@@ -122,7 +130,7 @@ struct v_table
               constexpr auto f =
                   anyxx26::meta::get_member<make_v_table_fptrs_type<Trait>(),
                                             m>();
-              this->[:f:] = [:make_vfimpl<Concrete>(m):];
+              this->[:f:] = [:make_vfimpl<Concrete, m>():];
             }
           }
         }
