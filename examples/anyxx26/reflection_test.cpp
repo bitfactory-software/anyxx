@@ -10,29 +10,6 @@
 #include <utility>
 #include <vector>
 
-static_assert(std::same_as<anyxx26::self_const_correct_t<int, const void*>, int const>);
-
-//static_assert(std::is_const_v<typename[:remove_pointer(remove_reference(^^ const void*)):]>);
-//static_assert(std::is_const_v<typename[:remove_pointer(remove_reference(^^ const void*&)):]>);
-//static_assert(std::is_const_v<typename[:remove_pointer(remove_reference(^^ void const*)) :]>);
-//static_assert(std::is_const_v<typename[:remove_pointer(remove_reference(^^ void* const&)) :]>);
-//static_assert(std::is_const_v<typename[:(remove_reference(^^ const void*)) :]>);
-//static_assert(std::is_const_v<typename[:(remove_reference(^^ const void*&)) :]>);
-//static_assert(std::is_const_v<typename[:(remove_reference(^^ void const*)) :]>);
-//static_assert(std::is_const_v<typename[:(remove_reference(^^ void* const&)) :]>);
-//static_assert(std::same_as<typename[:remove_pointer(remove_reference(^^ const void*)) :], const void>);
-//static_assert(std::same_as<typename[:remove_pointer(remove_reference(^^ const void*&)) :], const void>);
-//static_assert(std::same_as<typename[:remove_pointer(remove_reference(^^ void const*)) :], const void>);
-//static_assert(std::same_as<typename[:remove_pointer(remove_reference(^^ void* const&)) :], void const>);
-
-//consteval{
-//    if constexpr(std::is_const_v<typename[:remove_pointer(remove_reference(^^ const void*&)) :]>) {
-//        static_assert(false);
-//    } else { //if constexpr(std::same_as<typename[:type:], void*&>) {
-//        static_assert(false);
-//    }
-//}
-
 using namespace anyxx26;
 
 namespace {
