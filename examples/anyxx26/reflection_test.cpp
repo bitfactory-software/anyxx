@@ -150,9 +150,12 @@ TEST_CASE("anyxx26 derived trait") {
   anyxx26::meta::print_members<derived_trait<base_and_derived>>();
 
   base_and_derived a1{};
-  auto a1_dyn1 = dyn<base_trait, cref>{a1};
-  CHECK(a1_dyn1.basef() == "base");
-  auto a_dyn2 = dyn<derived_trait, cref>{a1};
-  CHECK(a_dyn2.basef() == "base");
-  CHECK(a_dyn2.derivedf() == "derived");
+  auto dyn1 = dyn<base_trait, cref>{a1};
+  CHECK(dyn1.basef() == "base");
+  auto dyn2 = dyn<derived_trait, cref>{a1};
+  CHECK(dyn2.basef() == "base");
+  CHECK(dyn2.derivedf() == "derived");
+
+  // next goal:
+  // dyn1 = dyn2; 
 }
