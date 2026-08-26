@@ -20,7 +20,7 @@ struct stringable {
   [[= defaulted]] static std::string as_string(Self const&);
 };
 
-void print(std::vector<dyn<stringable, anyxx::mutref>> const& things) {
+void print(std::vector<dyn<stringable, anyxx::cref>> const& things) {
   for (auto& thing : things) {
     std::println("{}", thing.as_string());
   }
