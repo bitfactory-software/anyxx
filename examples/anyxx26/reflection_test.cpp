@@ -143,4 +143,11 @@ TEST_CASE("anyxx26 derived trait") {
   CHECK(dyn4.basef() == "base");
   dyn4 = dyn2;
   CHECK(dyn4.basef() == "base");
+
+  dyn<base_trait, cref> dyn5{std::move(dyn2)};
+  CHECK(dyn5.basef() == "base");
+  dyn<base_trait, cref> dyn6{dyn1};
+  dyn<derived_trait, cref> dyn7{a1};
+  dyn6 = std::move(dyn7);
+  CHECK(dyn6.basef() == "base");
 }
