@@ -30,6 +30,8 @@ template<std::meta::info TraitTemplate>
 consteval std::meta::info trait_declaration(){
     return substitute(TraitTemplate, {^^void*, ^^declaration });;
 }
+template<template<typename, typename> typename TraitTemplate>
+using trait_declaration_t = TraitTemplate<void*, declaration>;
 
 template <std::meta::info m, typename V, typename R, typename VoidSelf,
           typename... Args>
@@ -198,6 +200,7 @@ struct v_table
     : base_v_table_t<Trait>,
     [: make_v_table_fptrs_type<Trait>() :] {
     using v_table_t = v_table;
+	using trait_declaration_t = anyxx26::trait_declaration_t<Trait>;
     using  fptrs_t = [:make_v_table_fptrs_type<Trait>():];
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
@@ -212,8 +215,20 @@ v_table<Trait>* get_v_table_instance() {
   return &instance;
 };
 
+template <typename Dyn>
+concept is_dyn = anyxx::is_any<Dyn> && 
+    requires { typename Dyn::trait_declaration_t; };
+
+template <typename ToVtable, typename FromVTable>
+	requires std::derived_from<typename FromVTable::trait_declaration_t, typename ToVtable::trait_declaration_t>
+ToVtable* v_table_cast(FromVTable* from) {
+	auto void_p = static_cast<void*>(from);
+	return static_cast<ToVtable*>(void_p);
+}
+
 template <template <typename, typename> typename Trait, anyxx::is_proxy Proxy>
 struct dyn_base {
+  using trait_declaration_t = anyxx26::trait_declaration_t<Trait>;
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
@@ -276,6 +291,25 @@ struct dyn_base {
     v_table_ = other.release_v_table();
     return *this;
   }
+
+  template <is_dyn Other>
+  explicit(false) dyn_base(const Other& other)  // NOLINT(noExplicitConstructor)
+      requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
+        std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
+      : v_table_(v_table_cast<v_table_t>(other.v_table_)),
+      proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.v_table_)) {
+  }
+  //template <is_dyn Other>
+  //any& operator=(Other const& other)
+  //    requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
+  //typename Other::v_table_t> &&
+  //    (!is_dyn<Proxy> ||
+  //        std::derived_from<typename Other::v_table_t, v_table_t>))
+  //{
+  //    v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
+  //    proxy_ = borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr());
+  //    return *this;
+  //}
 
  private:
   auto release_v_table() { return std::exchange(v_table_, nullptr); }

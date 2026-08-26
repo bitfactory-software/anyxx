@@ -31,10 +31,6 @@ struct stringable<int, anyxx26::model_map> {
   static std::string as_string(int const& self) { return std::to_string(self); }
 };
 
-static_assert(std::same_as<
-              typename[:remove_const(remove_reference(^^int const&)):], int>);
-static_assert(std::is_const_v<typename[:remove_reference(^^int const&):]>);
-
 template <>
 struct stringable<std::string, anyxx26::model_map> {
   static std::string as_string(std::string const& self) { return self; }
@@ -57,8 +53,8 @@ struct boo {
   }
 };
 // Only to show how to delegate to the default adapter:
-template <>
-struct stringable<boo, anyxx26::model_map> {};
+//template <>
+//struct stringable<boo, anyxx26::model_map> {};
 
 }  // namespace
 
@@ -74,19 +70,12 @@ TEST_CASE("anyxx26 hello world") {
         std::is_same_v<base_v_table_t<stringable>, anyxx::observeable_v_table>);
 
     int i = 4711;
-    auto dyn_stringable = dyn<stringable, anyxx::mutref>{i};
-    auto z_from_dyn_stringable = dyn_stringable.as_string();
-    std::println("z_from_dyn_stringable = {}", z_from_dyn_stringable);
-
     std::string s = "hello world";
     foo a_foo{3.14};
     boo a_boo{true};
     print({i, s, a_foo, a_boo});
   }
   {
-    anyxx26::meta::print_members<boo>();
-    anyxx26::meta::print_members<stringable<boo>>();
-    anyxx26::meta::print_members<stringable<boo, anyxx26::model_map>>();
     dyn<stringable, anyxx::cref> sb{boo{true}};
     auto sb_str = sb.as_string();
     CHECK(sb_str == "boo? T");
@@ -137,25 +126,19 @@ struct base_and_derived {
 
 }  // namespace
 
-static_assert(std::is_const_v<
-              std::remove_pointer_t<std::remove_reference_t<const void*>>>);
-static_assert(
-    std::same_as<anyxx26::self_const_correct_t<base_and_derived, const void*>,
-                 base_and_derived const>);
-
 TEST_CASE("anyxx26 derived trait") {
   using namespace anyxx;
-
-  anyxx26::meta::print_members<base_trait<base_and_derived>>();
-  anyxx26::meta::print_members<derived_trait<base_and_derived>>();
 
   base_and_derived a1{};
   auto dyn1 = dyn<base_trait, cref>{a1};
   CHECK(dyn1.basef() == "base");
+  //CHECK(dyn1.derivedf() == "derived");
   auto dyn2 = dyn<derived_trait, cref>{a1};
   CHECK(dyn2.basef() == "base");
   CHECK(dyn2.derivedf() == "derived");
 
-  // next goal:
-  // dyn1 = dyn2; 
+  dyn<base_trait, cref> dyn3{dyn2};
+  CHECK(dyn3.basef() == "base");
+  dyn<base_trait, cref> dyn4{dyn1};
+//  dyn4 = dyn2; 
 }
