@@ -15,7 +15,7 @@ using namespace anyxx26;
 
 namespace {
 
-template <typename Self, bool base = true>
+template <typename Self, typename = anyxx26::declaration>
 struct stringable {
   [[= defaulted]] static std::string as_string(Self const&);
 };
@@ -27,7 +27,7 @@ void print(std::vector<dyn<stringable, anyxx::mutref>> const& things) {
 }
 
 template <>
-struct stringable<int, false> {
+struct stringable<int, anyxx26::model_map> {
   static std::string as_string(int const& self) { return std::to_string(self); }
 };
 
@@ -36,7 +36,7 @@ static_assert(std::same_as<
 static_assert(std::is_const_v<typename[:remove_reference(^^int const&):]>);
 
 template <>
-struct stringable<std::string, false> {
+struct stringable<std::string, anyxx26::model_map> {
   static std::string as_string(std::string const& self) { return self; }
 };
 
@@ -44,7 +44,7 @@ struct foo {
   double f;
 };
 template <>
-struct stringable<foo, false> {
+struct stringable<foo, anyxx26::model_map> {
   static std::string as_string(foo const& self) {
     return "foo: " + std::to_string(self.f);
   }
@@ -58,7 +58,7 @@ struct boo {
 };
 // Only to show how to delegate to the default adapter:
 template <>
-struct stringable<boo, false> : stringable<boo, true> {};
+struct stringable<boo, anyxx26::model_map> {};
 
 }  // namespace
 
@@ -86,7 +86,7 @@ TEST_CASE("anyxx26 hello world") {
   {
     anyxx26::meta::print_members<boo>();
     anyxx26::meta::print_members<stringable<boo>>();
-    anyxx26::meta::print_members<stringable<boo, false>>();
+    anyxx26::meta::print_members<stringable<boo, anyxx26::model_map>>();
     dyn<stringable, anyxx::cref> sb{boo{true}};
     auto sb_str = sb.as_string();
     CHECK(sb_str == "boo? T");
@@ -94,7 +94,7 @@ TEST_CASE("anyxx26 hello world") {
 }
 
 namespace {
-template <typename Self, bool base = true>
+template <typename Self, typename = anyxx26::declaration>
 struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
@@ -117,12 +117,12 @@ TEST_CASE("anyxx26 mutable hello world") {
 }
 
 namespace {
-template <typename Self, bool base = true>
+template <typename Self, typename = anyxx26::declaration>
 struct base_trait {
   [[= defaulted]] static std::string basef(Self const& self);
 };
 
-template <typename Self, bool base = true>
+template <typename Self, typename = anyxx26::declaration>
  struct derived_trait {
 //struct derived_trait : base_trait<Self, base> {
   [[= defaulted]] static std::string derivedf(Self const& self);
@@ -134,9 +134,8 @@ struct base_and_derived {
 };
 
 // template <>
-// struct derived_trait<base_and_derived, false> :
-// derived_trait<base_and_derived, true> {
-// };
+// struct derived_trait<base_and_derived, anyxx26::model_map> {};
+
 }  // namespace
 
 static_assert(std::is_const_v<
