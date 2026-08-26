@@ -95,10 +95,15 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
         define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
+        if constexpr(has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
+            using type = [:m:]::type;
+            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(m) });
+            fptrs.push_back(reflect_constant(dms));
+        }
+        else if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
             auto ft = make_v_table_fptr_type<m>();
             auto dms = std::meta::data_member_spec(
-                ft, { .name = identifier_of(m), .no_unique_address = true });
+                ft, { .name = identifier_of(m) });
             fptrs.push_back(reflect_constant(dms));
         }
     }
@@ -186,10 +191,12 @@ void set_v_table_fptrs(auto* v_table) {
     }
 
     template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait>(), ctx))) {
-        if constexpr(has_identifier(interface_m) &&
-            is_static_member(interface_m) && is_function(interface_m)) {
-            constexpr auto f =
-                anyxx26::meta::get_member<FunctionPointers, interface_m>();
+        if constexpr(has_identifier(interface_m) && is_type(interface_m) && annotations_of_with_type(interface_m, ^^ v_table_data_t).size() > 0) {
+            constexpr auto m = anyxx26::meta::get_member<FunctionPointers, interface_m>();
+            v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
+        }
+        if constexpr(has_identifier(interface_m) && is_static_member(interface_m) && is_function(interface_m)) {
+            constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             constexpr auto m = find_function_impl<Trait, Concrete, interface_m>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m>():];
         }
@@ -381,12 +388,29 @@ struct dyn : dyn_base<Trait, Proxy>, [:make_dyn_facade<Trait, Proxy>():] {
   using dyn_base<Trait, Proxy>::dyn_base;
 };
 
+/// \brief Safe downcast to an unerased type using runtime information from
+/// the v-Tables.
+/// \ingroup casts
+template <typename U, typename Dyn>
+    requires is_dyn<Dyn>
+inline auto unerase_cast(Dyn const& o) {
+    return unerase_cast_if<U>(o.proxy_, o.v_table_);
+}
+/// \brief Safe downcast to an unerased type using runtime information from
+/// the v-Tables.
+/// \ingroup casts
+template <typename U, typename Dyn>
+    requires is_dyn<Dyn>
+inline auto unerase_cast_if(Dyn const& o) {
+    return unerase_cast_if<U>(o.proxy_, o.v_table_);
+}
 
 template <typename Self, typename = anyxx26::declaration>
 struct save_observable {
     struct [[= v_table_data]] type_info_{
         using type = std::type_info const*;
-        static std::type_info const* init(){ return &typeid(Self); }
+        template<typename Concrete>
+        static std::type_info const* init(auto){ return &typeid(Concrete); }
     }; 
 };
 

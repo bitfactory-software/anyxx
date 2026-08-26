@@ -13,7 +13,7 @@ void print_members(std::string const& indent = {}) {
   constexpr static auto members =
       std::define_static_array(members_of(type_info, ctx));
   template for (constexpr std::meta::info m : members) {
-    if constexpr (has_identifier(m) && is_static_member(m) && is_function(m)) {
+    if constexpr (has_identifier(m)) {
       std::println("{}{}", indent, std::meta::display_string_of(m));
     }
   }

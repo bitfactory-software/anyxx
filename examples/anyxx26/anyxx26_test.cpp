@@ -66,9 +66,6 @@ TEST_CASE("anyxx26 hello world") {
   {
     using namespace anyxx;
 
-    static_assert(
-        std::is_same_v<base_v_table_t<stringable>, anyxx::observeable_v_table>);
-
     int i = 4711;
     std::string s = "hello world";
     foo a_foo{3.14};
@@ -151,4 +148,35 @@ TEST_CASE("anyxx26 derived trait") {
   dyn<derived_trait, cref> dyn7{ a3 };
   dyn6 = std::move(dyn7);
   CHECK(dyn6.basef() == "base a3");
+}
+
+TEST_CASE("anyxx26 v_table_data") {
+  using namespace anyxx;
+
+  base_and_derived a1{ "a1" };
+  dyn<anyxx26::save_observable, cref> d1{a1};
+  meta::print_members<dyn<anyxx26::save_observable, cref>>();
+  meta::print_members<dyn<anyxx26::save_observable, cref>::v_table_t::fptrs_t>();
+  std::println("{}", d1.v_table_->type_info_->name());
+  if(auto p = unerase_cast<base_and_derived>(d1)){
+      CHECK(p->name == "a1");
+  } else{
+      CHECK(false);
+  }
+  [[maybe_unused]] constexpr auto member_type = ^^anyxx26::save_observable<void*>::type_info_::type;
+  static_assert(std::meta::is_type(member_type));
+  static_assert(std::meta::is_type_alias(member_type));
+  static_assert(std::meta::is_pointer_type(member_type));
+  constexpr auto ctx = std::meta::access_context::current();
+  constexpr static auto members1 = define_static_array(members_of(^^anyxx26::save_observable<void*>, ctx));
+  constexpr auto type_info_struct_meta = members1[0];
+  using type = [:type_info_struct_meta:]::type;
+  static_assert(std::meta::is_type(^^type));
+  static_assert(std::meta::is_type_alias(^^type));
+  static_assert(std::meta::is_pointer_type(^^type));
+  static_assert(dealias(^^type) == ^^std::type_info const*);
+  static_assert(std::same_as<type, anyxx26::save_observable<void*>::type_info_::type>);
+  //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
+
+
 }
