@@ -73,16 +73,16 @@ consteval std::meta::info make_v_table_fptr_type() {
   return substitute(^^v_table_fptr_type, types);
 }
 
-template <std::meta::info type_info>
+template <std::meta::info TraitDeclaration>
 consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
-    constexpr auto base = meta::get_single_public_base<type_info>();
+    constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
         collect_v_table_fs<base>(fptrs);
     }
 
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
-        define_static_array(members_of(type_info, ctx))) {
+        define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
             auto ft = make_v_table_fptr_type<m>();
             auto dms = std::meta::data_member_spec(
