@@ -117,8 +117,9 @@ template <typename Self, typename = anyxx26::declaration>
 };
 
 struct base_and_derived {
-  std::string basef() const { return "base"; }
-  std::string derivedf() const { return "derived"; }
+  std::string name;
+  std::string basef() const { return "base " + name; }
+  std::string derivedf() const { return "derived " + name; }
 };
 
 // template <>
@@ -129,25 +130,28 @@ struct base_and_derived {
 TEST_CASE("anyxx26 derived trait") {
   using namespace anyxx;
 
-  base_and_derived a1{};
+  base_and_derived a1{"a1"};
   auto dyn1 = dyn<base_trait, cref>{a1};
-  CHECK(dyn1.basef() == "base");
+  CHECK(dyn1.basef() == "base a1");
   //CHECK(dyn1.derivedf() == "derived");
   auto dyn2 = dyn<derived_trait, cref>{a1};
-  CHECK(dyn2.basef() == "base");
-  CHECK(dyn2.derivedf() == "derived");
+  CHECK(dyn2.basef() == "base a1");
+  CHECK(dyn2.derivedf() == "derived a1");
 
   dyn<base_trait, cref> dyn3{dyn2};
-  CHECK(dyn3.basef() == "base");
-  dyn<base_trait, cref> dyn4{dyn1};
-  CHECK(dyn4.basef() == "base");
+  CHECK(dyn3.basef() == "base a1");
+  base_and_derived a2{ "a2" };
+  dyn<base_trait, cref> dyn4{a2};
+  CHECK(dyn4.basef() == "base a2");
   dyn4 = dyn2;
-  CHECK(dyn4.basef() == "base");
+  CHECK(dyn4.basef() == "base a1");
 
   dyn<base_trait, cref> dyn5{std::move(dyn2)};
-  CHECK(dyn5.basef() == "base");
+  CHECK(dyn5.basef() == "base a1");
   dyn<base_trait, cref> dyn6{dyn1};
-  dyn<derived_trait, cref> dyn7{a1};
+  CHECK(dyn6.basef() == "base a1");
+  base_and_derived a3{ "a3" };
+  dyn<derived_trait, cref> dyn7{ a3 };
   dyn6 = std::move(dyn7);
-  CHECK(dyn6.basef() == "base");
+  CHECK(dyn6.basef() == "base a3");
 }
