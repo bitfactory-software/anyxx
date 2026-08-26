@@ -22,6 +22,15 @@ constexpr static inline default_t defaulted = {};
 struct declaration {};
 struct model_map {};
 
+template<std::meta::info TraitTemplate, typename V>
+consteval std::meta::info trait_model_map(){
+    return substitute(TraitTemplate, {^^V, ^^model_map});;
+}
+template<std::meta::info TraitTemplate>
+consteval std::meta::info trait_declaration(){
+    return substitute(TraitTemplate, {^^void*, ^^declaration });;
+}
+
 template <std::meta::info m, typename V, typename R, typename VoidSelf,
           typename... Args>
 R default_impl(VoidSelf self, Args&&... args) {
@@ -150,11 +159,11 @@ consteval std::optional<std::meta::info> find_function_impl() {
 template <std::meta::info TraitTemplate, typename V, std::meta::info InterfaceFunction>
 consteval std::meta::info find_function_impl() {
 
-  constexpr auto found_in_impl = find_function_impl<substitute(TraitTemplate, {^^V, ^^model_map}), InterfaceFunction >();
+  constexpr auto found_in_impl = find_function_impl<trait_model_map<TraitTemplate, V>(), InterfaceFunction >();
   if constexpr (found_in_impl) {
     return *found_in_impl;
   } 
-  constexpr auto found_in_base = find_function_impl<substitute(TraitTemplate, {^^V, ^^declaration}), InterfaceFunction >();
+  constexpr auto found_in_base = find_function_impl<trait_declaration<TraitTemplate>(), InterfaceFunction >();
   if constexpr(found_in_base) {
       return *found_in_base;
   }
@@ -168,14 +177,12 @@ template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPoin
 void set_v_table_fptrs(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
-	constexpr auto trait_declaration = substitute(Trait, {^^void*, ^^declaration});
-
-    constexpr auto base = meta::get_single_public_base<trait_declaration>();
+    constexpr auto base = meta::get_single_public_base<trait_declaration<Trait>()>();
     if constexpr(base != std::meta::info{}) {
         set_v_table_fptrs<template_of(base), Concrete, FunctionPointers>(v_table);
     }
 
-    template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration, ctx))) {
+    template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait>(), ctx))) {
         if constexpr(has_identifier(interface_m) &&
             is_static_member(interface_m) && is_function(interface_m)) {
             constexpr auto f =
@@ -286,6 +293,26 @@ struct dyn_facade_call {
     return fptrs->[:vf:](x, std::forward<Args>(args)...);
   }
 };
+
+//template <std::meta::info Trait, typename Proxy>
+//consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
+//    constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
+//    if constexpr(base != std::meta::info{}) {
+//        collect_dyn_facade_calls<base>(calls);
+//    }
+//
+//    constexpr auto ctx = std::meta::access_context::current();
+//    template for(constexpr auto m :
+//        define_static_array(members_of(TraitDeclaration, ctx))) {
+//        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
+//            using dyn_facade_call_t = dyn_facade_call<Trait, Proxy, m>;
+//            constexpr std::meta::info call_meta = ^ ^dyn_facade_call_t;
+//            auto dms = std::meta::data_member_spec(
+//                call_meta, { .name = identifier_of(m), .no_unique_address = true });
+//            calls.push_back(reflect_constant(dms));
+//        }
+//    }
+//};
 
 template <template <typename, typename> typename Trait, typename Proxy>
 consteval std::meta::info make_dyn_facade() {
