@@ -281,55 +281,46 @@ struct dyn_base {
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
-template <typename DynBase, std::meta::info vf>
+template <typename DynBase, std::meta::info f>
 struct dyn_facade_call {
   template <typename... Args>
   auto operator()(Args&&... args) const {
     auto base = reinterpret_cast<DynBase const*>(this);
     using v_table_t = DynBase::v_table_t;
     auto v_table_ptr = base->v_table_;
-    auto fptrs = static_cast<typename v_table_t::fptrs*>(v_table_ptr);
+    using fptrs_t = typename v_table_t::fptrs;
+    auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
+    auto constexpr vf = anyxx26::meta::get_member<^^fptrs_t, f>();
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
     return fptrs->[:vf:](x, std::forward<Args>(args)...);
   }
 };
 
-//template <std::meta::info Trait, typename Proxy>
-//consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
-//    constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
-//    if constexpr(base != std::meta::info{}) {
-//        collect_dyn_facade_calls<base>(calls);
-//    }
-//
-//    constexpr auto ctx = std::meta::access_context::current();
-//    template for(constexpr auto m :
-//        define_static_array(members_of(TraitDeclaration, ctx))) {
-//        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
-//            using dyn_facade_call_t = dyn_facade_call<Trait, Proxy, m>;
-//            constexpr std::meta::info call_meta = ^ ^dyn_facade_call_t;
-//            auto dms = std::meta::data_member_spec(
-//                call_meta, { .name = identifier_of(m), .no_unique_address = true });
-//            calls.push_back(reflect_constant(dms));
-//        }
-//    }
-//};
+template <std::meta::info TraitDeclaration, typename DynBase>
+consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
+    constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
+    if constexpr(base != std::meta::info{}) {
+        collect_dyn_facade_calls<base>(calls);
+    }
+
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m :
+        define_static_array(members_of(TraitDeclaration, ctx))) {
+        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
+            using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
+            constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
+            auto dms = std::meta::data_member_spec(
+                call_meta, { .name = identifier_of(m), .no_unique_address = true });
+            calls.push_back(reflect_constant(dms));
+        }
+    }
+};
 
 template <template <typename, typename> typename Trait, typename Proxy>
 consteval std::meta::info make_dyn_facade() {
-  constexpr auto v_table_t_info = make_v_table_fptrs_type<Trait>();
 
   std::vector<std::meta::info> calls;
-  constexpr auto ctx = std::meta::access_context::current();
-  template for (constexpr auto m :
-                define_static_array(members_of(v_table_t_info, ctx))) {
-    if constexpr (has_identifier(m)) {
-      using dyn_facade_call_t = dyn_facade_call<dyn_base<Trait, Proxy>, m>;
-      constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
-      auto dms = std::meta::data_member_spec(
-          call_meta, {.name = identifier_of(m), .no_unique_address = true});
-      calls.push_back(reflect_constant(dms));
-    }
-  }
+  collect_dyn_facade_calls<trait_declaration<^^Trait>(), dyn_base<Trait, Proxy>>(calls);
   return substitute(^^meta::to_struct, calls);
 };
 
