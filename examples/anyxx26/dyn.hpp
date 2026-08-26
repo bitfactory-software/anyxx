@@ -7,20 +7,21 @@
 #include <utility>
 #include <vector>
 
-#pragma GCC diagnostic ignored "-Wunused-function"
-
 namespace anyxx26 {
-
-template <typename V, typename VoidSelf>
-using self_const_correct_t = std::conditional_t<
-    std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
-    V const, V>;
 
 struct default_t {};
 constexpr static inline default_t defaulted = {};
 
 struct declaration {};
 struct model_map {};
+
+struct v_table_data_t {};
+constexpr static inline v_table_data_t v_table_data = {};
+
+template <typename V, typename VoidSelf>
+using self_const_correct_t = std::conditional_t<
+    std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
+    V const, V>;
 
 template<std::meta::info TraitTemplate, typename V>
 consteval std::meta::info trait_model_map(){
@@ -378,6 +379,15 @@ consteval std::meta::info make_dyn_facade() {
 template <template <typename, typename> typename Trait, typename Proxy>
 struct dyn : dyn_base<Trait, Proxy>, [:make_dyn_facade<Trait, Proxy>():] {
   using dyn_base<Trait, Proxy>::dyn_base;
+};
+
+
+template <typename Self, typename = anyxx26::declaration>
+struct save_observable {
+    struct [[= v_table_data]] type_info_{
+        using type = std::type_info const*;
+        static std::type_info const* init(){ return &typeid(Self); }
+    }; 
 };
 
 }  // namespace anyxx26
