@@ -123,8 +123,7 @@ struct base_trait {
 };
 
 template <typename Self, typename = anyxx26::declaration>
- struct derived_trait {
-//struct derived_trait : base_trait<Self, base> {
+ struct derived_trait : base_trait<Self> {
   [[= defaulted]] static std::string derivedf(Self const& self);
 };
 
@@ -154,6 +153,6 @@ TEST_CASE("anyxx26 derived trait") {
   auto a1_dyn1 = dyn<base_trait, cref>{a1};
   CHECK(a1_dyn1.basef() == "base");
   auto a_dyn2 = dyn<derived_trait, cref>{a1};
-  // CHECK(a_dyn2.basef() == "base");
+  CHECK(a_dyn2.basef() == "base");
   CHECK(a_dyn2.derivedf() == "derived");
 }

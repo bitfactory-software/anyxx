@@ -86,7 +86,7 @@ template <std::meta::info TraitDeclaration>
 consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
     constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        collect_v_table_fs<base>(fptrs);
+        collect_v_table_fs<type_of(base)>(fptrs);
     }
 
     constexpr auto ctx = std::meta::access_context::current();
@@ -179,7 +179,7 @@ void set_v_table_fptrs(auto* v_table) {
 
     constexpr auto base = meta::get_single_public_base<trait_declaration<Trait>()>();
     if constexpr(base != std::meta::info{}) {
-        set_v_table_fptrs<template_of(base), Concrete, FunctionPointers>(v_table);
+        set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers>(v_table);
     }
 
     template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait>(), ctx))) {
@@ -198,11 +198,11 @@ struct v_table
     : base_v_table_t<Trait>,
     [: make_v_table_fptrs_type<Trait>() :] {
     using v_table_t = v_table;
-    using  fptrs = [:make_v_table_fptrs_type<Trait>():];
+    using  fptrs_t = [:make_v_table_fptrs_type<Trait>():];
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_fptrs<^^Trait, Concrete, ^^fptrs>(this);
+        set_v_table_fptrs<^^Trait, Concrete, ^^fptrs_t>(this);
     }
 };
 
@@ -288,7 +288,7 @@ struct dyn_facade_call {
     auto base = reinterpret_cast<DynBase const*>(this);
     using v_table_t = DynBase::v_table_t;
     auto v_table_ptr = base->v_table_;
-    using fptrs_t = typename v_table_t::fptrs;
+    using fptrs_t = typename v_table_t::fptrs_t;
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
     auto constexpr vf = anyxx26::meta::get_member<^^fptrs_t, f>();
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
@@ -300,7 +300,7 @@ template <std::meta::info TraitDeclaration, typename DynBase>
 consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        collect_dyn_facade_calls<base>(calls);
+        collect_dyn_facade_calls<type_of(base), DynBase>(calls);
     }
 
     constexpr auto ctx = std::meta::access_context::current();
