@@ -162,23 +162,34 @@ consteval std::meta::info find_function_impl() {
 }
 
 template <template <typename, typename> typename Trait>
+struct v_table;
+
+template <template <typename, typename> typename Trait, typename Concrete, std::meta::info fptrs>
+void set_v_table_fptrs(v_table<Trait>* v_table) {
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto interface_m : define_static_array(
+        members_of(^^ Trait<void*, declaration>, ctx))) {
+        if constexpr(has_identifier(interface_m) &&
+            is_static_member(interface_m) && is_function(interface_m)) {
+            constexpr auto f =
+                anyxx26::meta::get_member<fptrs, interface_m>();
+            constexpr auto m = find_function_impl<Trait, Concrete, interface_m>();
+            v_table->[:f:] = [:make_vfimpl<Concrete, m>():];
+        }
+    }
+}
+
+template <template <typename, typename> typename Trait>
 struct v_table
     : base_v_table_t<Trait>,
-      [: make_v_table_fptrs_type<Trait>() :] {
-        using v_table_t = v_table;
-        using  fptrs = [:make_v_table_fptrs_type<Trait>():];
-        template <typename Concrete>
-        v_table(std::in_place_type_t<Concrete> concrete)
-            : base_v_table_t<Trait>(concrete) {
-              constexpr auto ctx = std::meta::access_context::current();
-              template for(constexpr auto interface_m : define_static_array(members_of(^^ Trait<void*, declaration>, ctx))) {
-                if constexpr(has_identifier(interface_m) && is_static_member(interface_m) && is_function(interface_m)) {
-                    constexpr auto f = anyxx26::meta::get_member<^^fptrs, interface_m>();
-                    constexpr auto m = find_function_impl<Trait, Concrete, interface_m>();
-                    this->[:f:] = [:make_vfimpl<Concrete, m>():];
-                }
-              }
-        }
+    [: make_v_table_fptrs_type<Trait>() :] {
+    using v_table_t = v_table;
+    using  fptrs = [:make_v_table_fptrs_type<Trait>():];
+    template <typename Concrete>
+    v_table(std::in_place_type_t<Concrete> concrete)
+        : base_v_table_t<Trait>(concrete) {
+        set_v_table_fptrs<Trait, Concrete, ^^fptrs>(this);
+    }
 };
 
 template <template <typename, typename> typename Trait, typename V>
