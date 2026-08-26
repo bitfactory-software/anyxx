@@ -140,5 +140,7 @@ TEST_CASE("anyxx26 derived trait") {
   dyn<base_trait, cref> dyn3{dyn2};
   CHECK(dyn3.basef() == "base");
   dyn<base_trait, cref> dyn4{dyn1};
-//  dyn4 = dyn2; 
+  CHECK(dyn4.basef() == "base");
+  dyn4 = dyn2;
+  CHECK(dyn4.basef() == "base");
 }

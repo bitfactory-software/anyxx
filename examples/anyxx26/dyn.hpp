@@ -299,17 +299,15 @@ struct dyn_base {
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
       proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.v_table_)) {
   }
-  //template <is_dyn Other>
-  //any& operator=(Other const& other)
-  //    requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
-  //typename Other::v_table_t> &&
-  //    (!is_dyn<Proxy> ||
-  //        std::derived_from<typename Other::v_table_t, v_table_t>))
-  //{
-  //    v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
-  //    proxy_ = borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr());
-  //    return *this;
-  //}
+  template <is_dyn Other>
+  dyn_base& operator=(Other const& other)
+      requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
+        std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
+  {
+      v_table_ = v_table_cast<v_table_t>(other.v_table_);
+      proxy_ = anyxx::borrow_proxy_as<Proxy>(other.proxy_, other.v_table_);
+      return *this;
+  }
 
  private:
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
