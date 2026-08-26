@@ -122,9 +122,6 @@ struct base_and_derived {
   std::string derivedf() const { return "derived " + name; }
 };
 
-// template <>
-// struct derived_trait<base_and_derived, anyxx26::model_map> {};
-
 }  // namespace
 
 TEST_CASE("anyxx26 derived trait") {
