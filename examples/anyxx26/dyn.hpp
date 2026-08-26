@@ -134,11 +134,11 @@ consteval std::meta::info make_vfimpl() {
 template <template <typename, typename> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
-template <std::meta::info trait_info, std::meta::info interface_function>
+template <std::meta::info trait_class, std::meta::info interface_function>
 consteval std::optional<std::meta::info> find_function_impl() {
 
     constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(trait_info, ctx))) {
+    template for(constexpr auto m : define_static_array(members_of(trait_class, ctx))) {
         if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)
             && identifier_of(interface_function) == identifier_of(m)) {
             return { m };
@@ -147,14 +147,14 @@ consteval std::optional<std::meta::info> find_function_impl() {
     return {};
 }
 
-template <template <typename, typename> typename Trait, typename V, std::meta::info interface_function>
+template <std::meta::info trait_template, typename V, std::meta::info interface_function>
 consteval std::meta::info find_function_impl() {
 
-  constexpr auto found_in_impl = find_function_impl<^^Trait<V, model_map>, interface_function>();
+  constexpr auto found_in_impl = find_function_impl<substitute(trait_template, {^^V, ^^model_map}), interface_function>();
   if constexpr (found_in_impl) {
     return *found_in_impl;
   } 
-  constexpr auto found_in_base = find_function_impl<^^Trait<V, declaration>, interface_function>();
+  constexpr auto found_in_base = find_function_impl<substitute(trait_template, {^^V, ^^declaration}), interface_function>();
   if constexpr(found_in_base) {
       return *found_in_base;
   }
@@ -164,11 +164,18 @@ consteval std::meta::info find_function_impl() {
 template <template <typename, typename> typename Trait>
 struct v_table;
 
-template <template <typename, typename> typename Trait, typename Concrete, std::meta::info fptrs>
-void set_v_table_fptrs(v_table<Trait>* v_table) {
+template <std::meta::info Trait, typename Concrete, std::meta::info fptrs>
+void set_v_table_fptrs(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto interface_m : define_static_array(
-        members_of(^^ Trait<void*, declaration>, ctx))) {
+
+	constexpr auto trait_declaration = substitute(Trait, {^^void*, ^^declaration});
+
+    constexpr auto base = meta::get_single_public_base<trait_declaration>();
+    if constexpr(base != std::meta::info{}) {
+        set_v_table_fptrs<template_of(base), Concrete, fptrs>(v_table);
+    }
+
+    template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration, ctx))) {
         if constexpr(has_identifier(interface_m) &&
             is_static_member(interface_m) && is_function(interface_m)) {
             constexpr auto f =
@@ -188,7 +195,7 @@ struct v_table
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_fptrs<Trait, Concrete, ^^fptrs>(this);
+        set_v_table_fptrs<^^Trait, Concrete, ^^fptrs>(this);
     }
 };
 
