@@ -75,6 +75,11 @@ consteval std::meta::info make_v_table_fptr_type() {
 
 template <std::meta::info type_info>
 consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
+    constexpr auto base = meta::get_single_public_base<type_info>();
+    if constexpr(base != std::meta::info{}) {
+        collect_v_table_fs<base>(fptrs);
+    }
+
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
         define_static_array(members_of(type_info, ctx))) {
@@ -84,10 +89,6 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
                 ft, { .name = identifier_of(m), .no_unique_address = true });
             fptrs.push_back(reflect_constant(dms));
         }
-    }
-    constexpr static auto bases = std::define_static_array(bases_of(type_info, ctx));
-    template for(constexpr std::meta::info b : bases) {
-        collect_v_table_fs<b>(fptrs);
     }
 };
 

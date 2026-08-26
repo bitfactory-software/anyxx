@@ -28,14 +28,17 @@ consteval std::meta::info get_member() {
   return {};
 }
 
-template <std::meta::info Struct, std::meta::info Default>
-consteval std::meta::info get_first_public_base() {
-  constexpr auto ctx = std::meta::access_context::unprivileged();
-  template for (constexpr auto base :
-                define_static_array(bases_of(Struct, ctx))) {
-    return base;
+template <std::meta::info Struct>
+consteval std::meta::info get_single_public_base() {
+  constexpr auto ctx = std::meta::access_context::current();
+  constexpr auto bases = define_static_array(bases_of(Struct, ctx));
+  if (bases.size() > 1) {
+    throw std::logic_error("Struct can have at most one public base");
   }
-  return Default;
+  if (bases.size() == 0) {
+    return {};
+  }
+  return bases[0];
 }
 
 }  // namespace anyxx26::meta
