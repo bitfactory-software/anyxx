@@ -744,6 +744,9 @@ template&lt;is_any ToAny, is_any FromAny&gt; </td></tr>
 <tr class="memitem:a635d420429d93cb3592ab4a7d7e87584" id="r_a635d420429d93cb3592ab4a7d7e87584"><td class="memTemplParams" colspan="2"><a id="a635d420429d93cb3592ab4a7d7e87584" name="a635d420429d93cb3592ab4a7d7e87584"></a>
 template&lt;typename Concrete&gt; </td></tr>
 <tr class="memitem:a635d420429d93cb3592ab4a7d7e87584 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_move_constructor</b> (mutable_void placement, mutable_void from)</td></tr>
+<tr class="memitem:a2562295c3e8cbf12251dd59af7acca36" id="r_a2562295c3e8cbf12251dd59af7acca36"><td class="memTemplParams" colspan="2"><a id="a2562295c3e8cbf12251dd59af7acca36" name="a2562295c3e8cbf12251dd59af7acca36"></a>
+template&lt;typename Concrete&gt; </td></tr>
+<tr class="memitem:a2562295c3e8cbf12251dd59af7acca36 template"><td class="memItemLeft">mutable_void&#160;</td><td class="memItemRight"><b>anyxx::invoke_copy_constructor</b> (mutable_void placement, const_void from)</td></tr>
 <tr class="memitem:a08248e6de5ef3a3bd64ecb7ea9b4e57f" id="r_a08248e6de5ef3a3bd64ecb7ea9b4e57f"><td class="memItemLeft"><a id="a08248e6de5ef3a3bd64ecb7ea9b4e57f" name="a08248e6de5ef3a3bd64ecb7ea9b4e57f"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (moveable, observeable,,,,(ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),(using default_proxy_t=<a class="el" href="structanyxx_1_1val.html">val</a>&lt;&gt;;))</td></tr>
 <tr class="memitem:abe7fb25099a5d3418edcfcda6f4e04de" id="r_abe7fb25099a5d3418edcfcda6f4e04de"><td class="memItemLeft"><a id="abe7fb25099a5d3418edcfcda6f4e04de" name="abe7fb25099a5d3418edcfcda6f4e04de"></a>
@@ -3955,13 +3958,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(copy_constructor_t, copy_constructor,                     \</div>
 <div class="line">                 []([[maybe_unused]] mutable_void placement,               \</div>
 <div class="line">                    [[maybe_unused]] const_void from) -&gt; mutable_void {    \</div>
-<div class="line">                   <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (std::is_copy_constructible_v&lt;Concrete&gt;) { \</div>
-<div class="line">                     <span class="keywordflow">return</span> std::construct_at&lt;Concrete&gt;(                   \</div>
-<div class="line">                         <span class="keyword">static_cast&lt;</span>Concrete*<span class="keyword">&gt;</span>(placement),                \</div>
-<div class="line">                         *<span class="keyword">static_cast&lt;</span>Concrete const*<span class="keyword">&gt;</span>(from));             \</div>
-<div class="line">                   } <span class="keywordflow">else</span> {                                                \</div>
-<div class="line">                     <span class="keywordflow">return</span> <span class="keyword">nullptr</span>;                                       \</div>
-<div class="line">                   };                                                      \</div>
+<div class="line">                     <span class="keywordflow">return</span> invoke_copy_constructor&lt;Concrete&gt;(placement,   \</div>
+<div class="line">                                                              from);       \</div>
 <div class="line">                 })</div>
 </div><!-- fragment -->
 </div>
