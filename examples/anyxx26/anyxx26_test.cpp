@@ -217,25 +217,26 @@ TEST_CASE("anyxx26 v_table_data") {
 
 namespace {
 
-template <typename Self, typename Value, typename = anyxx26::declaration>
+template <typename Self, typename, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
 };
 
 template <typename Self, typename Value>
-struct mapable<Self, Value, anyxx26::model_map> {
+struct mapable<Self, anyxx26::model_map, Value> {
     static Value const& at(Self const& self, std::size_t i) {
         return self.at(i);
     }
 };
 
-using dyn_base_test = [:make_dyn_facade<mapable, anyxx::cref, int>():];
+using dyn_base_test = dyn_base<mapable, anyxx::cref, int>;
+using dyn_facade_test = [:make_dyn_facade<mapable, anyxx::cref, int>():];
 
 }
 
 TEST_CASE("anyxx26 templated trait") {
 
-    dump_type<mapable<void*, int>>();
+    dump_type<mapable<void*, declaration, int>>();
     dump_impl<mapable, std::vector<int>, int>();
 
     {

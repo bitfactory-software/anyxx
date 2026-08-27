@@ -32,14 +32,14 @@ using self_const_correct_t = std::conditional_t<
 
 template<std::meta::info TraitTemplate, typename V, typename... Args>
 consteval std::meta::info trait_model_map(){
-    return substitute(TraitTemplate, {^^V, ^^Args..., ^^model_map});;
+    return substitute(TraitTemplate, {^^V, ^^model_map, ^^Args...});;
 }
 template<std::meta::info TraitTemplate, typename... Args>
 consteval std::meta::info trait_declaration(){
-    return substitute(TraitTemplate, {^^void*, ^^Args..., ^^declaration });;
+    return substitute(TraitTemplate, {^^void*, ^^declaration, ^^Args...});;
 }
-template<template<typename, typename...> typename TraitTemplate, typename...Args>
-using trait_declaration_t = TraitTemplate<void*, Args..., declaration>;
+template<template<typename, typename...> typename TraitTemplate, typename... Args>
+using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
 
 template <std::meta::info m, typename V, typename R, typename VoidSelf,
           typename... Args>
@@ -130,7 +130,7 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_v_table_fptrs_type() {
     std::vector<std::meta::info> fptrs;
-    collect_v_table_fs<^^Trait<void*, Args..., declaration>>(fptrs);
+    collect_v_table_fs<^^Trait<void*, declaration, Args...>>(fptrs);
     return substitute(^^meta::to_struct, fptrs);
 }
 
@@ -159,11 +159,6 @@ consteval std::meta::info make_vfimpl() {
   }
   return substitute(^^vfimpl, types);
 }
-
- //template <template <typename, typename> typename Trait>
- //using base_v_table_t =
- //    typename[:anyxx26::meta::get_first_public_base<
- //                  ^^Trait<void*, declaration>, ^^anyxx::observeable>():] ::v_table_t;
 
 template <template <typename, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
@@ -202,7 +197,7 @@ template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPoin
 void set_v_table_fptrs(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
-    constexpr auto base = meta::get_single_public_base<trait_declaration<Trait>()>();
+    constexpr auto base = meta::get_single_public_base<trait_declaration<Trait, Args...>()>();
     if constexpr(base != std::meta::info{}) {
         set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers, Args...>(v_table);
     }
@@ -392,11 +387,11 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 consteval std::meta::info make_dyn_facade() {
 
   std::vector<std::meta::info> calls;
-  collect_dyn_facade_calls<trait_declaration<^^Trait>(), dyn_base<Trait, Args...>>(calls);
+  collect_dyn_facade_calls<trait_declaration<^^Trait, Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
   return substitute(^^meta::to_struct, calls);
 };
 
