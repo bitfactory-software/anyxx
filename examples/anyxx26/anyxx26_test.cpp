@@ -313,6 +313,15 @@ struct const_copyable_function : copyable<Self, declaration> {
         return self(std::forward<Args>(args)...);
     }
 };
+
+template <typename R, typename... Args>
+struct copyable_function;
+template <typename R, typename... Args>
+struct copyable_function<R(Args...) const> 
+    : dyn<const_copyable_function, anyxx::val<>, int, int> {
+  using dyn::dyn;
+};
+
 //template <typename Self, typename, typename R, typename... Args>
 //struct mutable_copyable_function : copyable<Self, declaration> {
 //    static R op_parentheses(Self const& self, Args... args) {
@@ -320,30 +329,20 @@ struct const_copyable_function : copyable<Self, declaration> {
 //    }
 //};
 
-using test_declartion_cf1 = const_copyable_function<void*, declaration, int, int>;
-using test_declartion_cf2 = [:substitute(^^const_copyable_function, { ^^void*, ^^declaration, ^^int, ^^int }) :];
-
-using test_declartion_cf = [: anyxx26::trait_declaration<^^const_copyable_function, int, int>() :];
-
-constexpr auto test_base = meta::get_single_public_base<anyxx26::trait_declaration<^^const_copyable_function, int, int>()>();
-static_assert(test_base != std::meta::info{});
-static_assert(!is_template(test_base));
-static_assert(is_type(type_of(test_base)));
-using base_test1 = [:type_of(test_base) :];
-static_assert(std::same_as<base_test1, copyable<void*, declaration>>);
-
 }
 
 TEST_CASE("anyxx26 std function equivalents") {
-
-    auto lambda = [](int x){ return x + 2; };
-
-    dump_type<const_copyable_function<void*, declaration, int, int>>();
-    dump_impl<const_copyable_function, decltype(lambda), int, int>();
-
     {
-        dyn< const_copyable_function, anyxx::val<>, int, int> f{ lambda };
+        dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
         CHECK(f.op_parentheses(40) == 42);
+        CHECK(f(40) == 42);
+        auto f2 = f;
+        CHECK(f.op_parentheses(0) == 2);
+    }
+    {
+        copyable_function<int(int) const> f{ [](int x){ return x + 2; } };
+        CHECK(f.op_parentheses(40) == 42);
+        CHECK(f(40) == 42);
         auto f2 = f;
         CHECK(f.op_parentheses(0) == 2);
     }

@@ -360,6 +360,12 @@ struct dyn_base {
       return *this;
   }
 
+  template <typename... Params>
+  auto operator()(Params... params) const {
+      auto x = anyxx::get_proxy_ptr(proxy_, v_table_);
+      return v_table_->op_parentheses(x, std::forward<Params>(params)...);
+  }
+
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
