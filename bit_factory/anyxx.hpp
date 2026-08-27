@@ -3927,7 +3927,19 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
   assert(placement == constructed);
   std::destroy_at(typed_from);
   return placement;
-};
+}
+
+template <typename Concrete>
+mutable_void invoke_copy_constructor([[maybe_unused]] mutable_void placement,
+                                     [[maybe_unused]] const_void from) {
+    if constexpr(std::is_copy_constructible_v<Concrete>) {
+       return std::construct_at<Concrete>(
+        static_cast<Concrete*>(placement),
+        * static_cast<Concrete const*>(from));  
+    } else {
+       return nullptr;
+    };
+}
 
 #define ANY_CLASS_TYPE_INFO \
   ANY_V_TABLE_DATA(std::type_info const*, type_info_, &typeid(Concrete))
@@ -3944,13 +3956,8 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
   ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,                     \
                    []([[maybe_unused]] mutable_void placement,               \
                       [[maybe_unused]] const_void from) -> mutable_void {    \
-                     if constexpr (std::is_copy_constructible_v<Concrete>) { \
-                       return std::construct_at<Concrete>(                   \
-                           static_cast<Concrete*>(placement),                \
-                           *static_cast<Concrete const*>(from));             \
-                     } else {                                                \
-                       return nullptr;                                       \
-                     };                                                      \
+                       return invoke_copy_constructor<Concrete>(placement,   \
+                                                                from);       \
                    })
 #define ANY_HAS_DELETE                                        \
   ANY_V_TABLE_DATA(delete_t, delete_, [](mutable_void data) { \
