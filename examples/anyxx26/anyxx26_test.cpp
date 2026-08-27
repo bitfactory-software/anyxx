@@ -65,7 +65,7 @@ void dump_all(){
 template <typename T>
 void dump_type(){
     constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(^^ T, ctx))) {
+    template for(constexpr auto m : define_static_array(members_of(^^T, ctx))) {
         if constexpr(has_identifier(m) && is_function(m)) {
             constexpr auto ft = make_v_table_fptr_type<m>();
             using ft_t = typename [:ft:];
@@ -75,12 +75,13 @@ void dump_type(){
     }
 }
 
-template <template <typename, typename> typename Trait, typename Concrete>
+template <template <typename, typename...> typename Trait, typename Concrete, typename... Args>
 void dump_impl(){
     constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(^^ Trait<void*, anyxx26::declaration>, ctx))) {
+    template for(constexpr auto m : define_static_array(members_of(^^Trait<void*, Args..., anyxx26::declaration>, ctx))) {
         if constexpr(has_identifier(m) && is_function(m)) {
-            constexpr auto fi = find_function_impl<^^Trait, Concrete, m>();
+            constexpr auto fi = find_function_impl<^^Trait, Concrete, m, Args...>();
+            std::println("{} -> {}", std::meta::display_string_of(m), std::meta::display_string_of(fi));
             constexpr auto vfimpl = make_vfimpl<Concrete, fi>();
             std::println("{} -> {}", std::meta::display_string_of(m), std::meta::display_string_of(vfimpl));
             std::println("   {}", typeid( [:vfimpl:]).name());
@@ -212,6 +213,39 @@ TEST_CASE("anyxx26 v_table_data") {
   static_assert(dealias(^^type) == ^^std::type_info const*);
   static_assert(std::same_as<type, anyxx26::save_observable<void*>::type_info_::type>);
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
+}
+
+namespace {
+
+template <typename Self, typename Value, typename = anyxx26::declaration>
+struct mapable {
+    Value const& at(std::size_t) const;
+};
+
+template <typename Self, typename Value>
+struct mapable<Self, Value, anyxx26::model_map> {
+    static Value const& at(Self const& self, std::size_t i) {
+        return self.at(i);
+    }
+};
+
+using dyn_base_test = [:make_dyn_facade<mapable, anyxx::cref, int>():];
+
+}
+
+TEST_CASE("anyxx26 templated trait") {
+
+    dump_type<mapable<void*, int>>();
+    dump_impl<mapable, std::vector<int>, int>();
+
+    {
+        std::vector<int> v1{1, 2};
+        dyn<mapable, anyxx::cref, int> m{v1};
+        auto v = m.at(0);
+        std::println("{}", v);
+        CHECK(m.at(0) == 1);
+        CHECK(m.at(1) == 2);
+    }
 }
 
 namespace { 

@@ -9,6 +9,13 @@
 
 namespace anyxx26 {
 
+template <typename ...Ts>
+struct select_last {
+    using type = typename decltype((std::enable_if<true, Ts>{}, ...))::type;
+};
+template <typename ...Ts>
+using proxy_from_args_t = typename select_last<Ts...>::type;
+
 struct default_t {};
 constexpr static inline default_t defaulted = {};
 
@@ -23,16 +30,16 @@ using self_const_correct_t = std::conditional_t<
     std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
     V const, V>;
 
-template<std::meta::info TraitTemplate, typename V>
+template<std::meta::info TraitTemplate, typename V, typename... Args>
 consteval std::meta::info trait_model_map(){
-    return substitute(TraitTemplate, {^^V, ^^model_map});;
+    return substitute(TraitTemplate, {^^V, ^^Args..., ^^model_map});;
 }
-template<std::meta::info TraitTemplate>
+template<std::meta::info TraitTemplate, typename... Args>
 consteval std::meta::info trait_declaration(){
-    return substitute(TraitTemplate, {^^void*, ^^declaration });;
+    return substitute(TraitTemplate, {^^void*, ^^Args..., ^^declaration });;
 }
-template<template<typename, typename, typename...> typename TraitTemplate>
-using trait_declaration_t = TraitTemplate<void*, declaration>;
+template<template<typename, typename...> typename TraitTemplate, typename...Args>
+using trait_declaration_t = TraitTemplate<void*, Args..., declaration>;
 
 template <std::meta::info m, typename V, typename R, typename VoidSelf,
           typename... Args>
@@ -43,11 +50,12 @@ R default_impl(VoidSelf self, Args&&... args) {
                   is_function(mc) && identifier_of(mc) == identifier_of(m)) {
       using self_t = self_const_correct_t<V, VoidSelf>;
       auto self_ptr = static_cast<self_t*>(self);
-      static_assert(
-          std::is_invocable_r_v<R, decltype(&[:mc:]), self_t*, Args...>);
-      return self_ptr->[:mc:](std::forward<Args>(args)...);
+      if constexpr(std::is_invocable_r_v<R, decltype(&[:mc:]), self_t*, Args...>) {
+          return self_ptr->[:mc:](std::forward<Args>(args)...);
+      }
     }
   }
+  throw std::logic_error("V has no member function m.");
 }
 
 template <typename R, typename... Args>
@@ -119,10 +127,10 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
     }
 };
 
-template <template <typename, typename, typename...> typename Trait>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_v_table_fptrs_type() {
     std::vector<std::meta::info> fptrs;
-    collect_v_table_fs<^^Trait<void*, declaration>>(fptrs);
+    collect_v_table_fs<^^Trait<void*, Args..., declaration>>(fptrs);
     return substitute(^^meta::to_struct, fptrs);
 }
 
@@ -173,62 +181,62 @@ consteval std::optional<std::meta::info> find_function_impl() {
     return {};
 }
 
-template <std::meta::info TraitTemplate, typename V, std::meta::info InterfaceFunction>
+template <std::meta::info TraitTemplate, typename V, std::meta::info InterfaceFunction, typename... Args>
 consteval std::meta::info find_function_impl() {
 
-  constexpr auto found_in_impl = find_function_impl<trait_model_map<TraitTemplate, V>(), InterfaceFunction >();
+  constexpr auto found_in_impl = find_function_impl<trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction >();
   if constexpr (found_in_impl) {
     return *found_in_impl;
   } 
-  constexpr auto found_in_base = find_function_impl<trait_declaration<TraitTemplate>(), InterfaceFunction >();
+  constexpr auto found_in_base = find_function_impl<trait_declaration<TraitTemplate, Args...>(), InterfaceFunction >();
   if constexpr(found_in_base) {
       return *found_in_base;
   }
   throw std::logic_error("Function not found in impl trait or base trait");
 }
 
-template <template <typename, typename, typename...> typename Trait>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
-template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPointers>
+template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPointers, typename... Args>
 void set_v_table_fptrs(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
     constexpr auto base = meta::get_single_public_base<trait_declaration<Trait>()>();
     if constexpr(base != std::meta::info{}) {
-        set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers>(v_table);
+        set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers, Args...>(v_table);
     }
 
-    template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait>(), ctx))) {
+    template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait, Args...>(), ctx))) {
         if constexpr(has_identifier(interface_m) && is_type(interface_m) && annotations_of_with_type(interface_m, ^^ v_table_data_t).size() > 0) {
             constexpr auto m = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
         }
         if constexpr(has_identifier(interface_m) && is_function(interface_m)) {
             constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
-            constexpr auto m = find_function_impl<Trait, Concrete, interface_m>();
+            constexpr auto m = find_function_impl<Trait, Concrete, interface_m, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m>():];
         }
     }
 }
 
-template <template <typename, typename, typename...> typename Trait>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table
     : base_v_table_t<Trait>,
-    [: make_v_table_fptrs_type<Trait>() :] {
+    [: make_v_table_fptrs_type<Trait, Args...>() :] {
     using v_table_t = v_table;
-	using trait_declaration_t = anyxx26::trait_declaration_t<Trait>;
-    using  fptrs_t = [:make_v_table_fptrs_type<Trait>():];
+	using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
+    using  fptrs_t = [:make_v_table_fptrs_type<Trait, Args...>():];
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_fptrs<^^Trait, Concrete, ^^fptrs_t>(this);
+        set_v_table_fptrs<^^Trait, Concrete, ^^fptrs_t, Args...>(this);
     }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename V>
-v_table<Trait>* get_v_table_instance() {
-  static v_table<Trait> instance(std::in_place_type<V>);
+template <template <typename, typename, typename...> typename Trait, typename V, typename... Args>
+v_table<Trait, Args...>* get_v_table_instance() {
+  static v_table<Trait, Args...> instance(std::in_place_type<V>);
   return &instance;
 };
 
@@ -243,16 +251,16 @@ ToVtable* v_table_cast(FromVTable* from) {
 	return static_cast<ToVtable*>(void_p);
 }
 
-template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy>
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args >
 struct dyn_base {
-  using trait_declaration_t = anyxx26::trait_declaration_t<Trait>;
+  using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
-  using v_table_t = v_table<Trait>;
+  using v_table_t = v_table<Trait, Args...>;
 
   v_table_t* v_table_;
-  Proxy proxy_{};
+  proxy_t proxy_{};
 
   dyn_base()
     requires proxy_trait_t::allow_any_default_constructibile
@@ -261,23 +269,23 @@ struct dyn_base {
   template <typename ConstructedWith>
   explicit(false) dyn_base(ConstructedWith&& constructed_with)  // NOLINT
     requires anyxx::constructibile_for<ConstructedWith, proxy_t,
-                                       dyn_base<Trait, Proxy>>
-      : v_table_(get_v_table_instance<Trait, std::decay_t<ConstructedWith>>()),
+                                       dyn_base<Trait, proxy_t, Args...>>
+      : v_table_(get_v_table_instance<Trait, std::decay_t<ConstructedWith>, Args...>()),
         proxy_(anyxx::erased<proxy_t>(
             std::forward<ConstructedWith>(constructed_with))) {}
 
   template <typename V>
-    requires(!anyxx::is_lifetime_bound<Proxy>)
+    requires(!anyxx::is_lifetime_bound<proxy_t>)
   dyn_base(std::in_place_t, V&& v)
-      : v_table_(get_v_table_instance<Trait, V>()),
+      : v_table_(get_v_table_instance<Trait, V, Args...>()),
         proxy_(proxy_trait_t::construct_in_place(std::forward<V>(v))) {}
 
-  template <typename T, typename... Args>
-    requires(!anyxx::is_lifetime_bound<Proxy>)
-  dyn_base(std::in_place_type_t<T>, Args&&... args)
-      : v_table_(get_v_table_instance<Trait, T>()),
+  template <typename T, typename... ConstructWithArgs>
+    requires(!anyxx::is_lifetime_bound<proxy_t>)
+  dyn_base(std::in_place_type_t<T>, ConstructWithArgs&&... args)
+      : v_table_(get_v_table_instance<Trait, T, Args...>()),
         proxy_(proxy_trait_t::template construct_type_in_place<T>(
-            std::forward<Args>(args)...)) {}
+            std::forward<ConstructWithArgs>(args)...)) {}
 
   ~dyn_base() { proxy_trait_t::destroy(proxy_, v_table_); }
 
@@ -312,7 +320,7 @@ struct dyn_base {
       requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
-      proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.v_table_)) {
+      proxy_(borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
   template <is_dyn Other>
   dyn_base& operator=(Other const& other)
@@ -320,7 +328,7 @@ struct dyn_base {
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
   {
       v_table_ = v_table_cast<v_table_t>(other.v_table_);
-      proxy_ = anyxx::borrow_proxy_as<Proxy>(other.proxy_, other.v_table_);
+      proxy_ = anyxx::borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_);
       return *this;
   }
 
@@ -384,17 +392,17 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_dyn_facade() {
 
   std::vector<std::meta::info> calls;
-  collect_dyn_facade_calls<trait_declaration<^^Trait>(), dyn_base<Trait, Proxy>>(calls);
+  collect_dyn_facade_calls<trait_declaration<^^Trait>(), dyn_base<Trait, Args...>>(calls);
   return substitute(^^meta::to_struct, calls);
 };
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy>
-struct dyn : dyn_base<Trait, Proxy>, [:make_dyn_facade<Trait, Proxy>():] {
-  using dyn_base<Trait, Proxy>::dyn_base;
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+struct dyn : dyn_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
+  using dyn_base<Trait, Args...>::dyn_base;
 };
 
 /// \brief Safe downcast to an unerased type using runtime information from
