@@ -54,10 +54,10 @@ template <typename R, typename... Args>
 using v_table_fptr_type = R (*)(Args...);
 
 template <std::meta::info p>
-consteval std::meta::info make_v_table_fptr_param_type(int i) {
+consteval std::meta::info make_v_table_fptr_param_type(bool self) {
   constexpr auto type = type_of(p);
   // constexpr auto name = identifier_of(p);
-  if (i == 1) {
+  if (self) {
     if constexpr (type == ^^void* const& || type == ^^void const* ||
                   type == ^^void const*&) {
       return ^^void const*;
@@ -74,13 +74,23 @@ consteval std::meta::info make_v_table_fptr_param_type(int i) {
 }
 
 template <std::meta::info f>
+consteval void add_v_table_fptr_this_param_type(std::vector<std::meta::info>& types) {
+    if(!is_static_member(f)) {
+        if(is_const(f)) {
+            types.push_back(^^void const*);
+        } else {
+            types.push_back(^^void*);
+        }
+    }
+}
+
+template <std::meta::info f>
 consteval std::meta::info make_v_table_fptr_type() {
   std::vector<std::meta::info> types;
   types.push_back(return_type_of(f));
-  auto i = 0;
+  add_v_table_fptr_this_param_type<f>(types);
   template for (constexpr auto p : define_static_array(parameters_of(f))) {
-    ++i;
-    types.push_back(make_v_table_fptr_param_type<p>(i));
+    types.push_back(make_v_table_fptr_param_type<p>(types.size() == 1));
   }
   return substitute(^^v_table_fptr_type, types);
 }
@@ -100,7 +110,7 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
             auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(m) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
+        else if constexpr(has_identifier(m) && is_function(m)) {
             auto ft = make_v_table_fptr_type<m>();
             auto dms = std::meta::data_member_spec(
                 ft, { .name = identifier_of(m) });
@@ -119,7 +129,7 @@ consteval std::meta::info make_v_table_fptrs_type() {
 template <bool default_, std::meta::info m, typename V, typename R,
           typename VoidSelf, typename... Args>
 R vfimpl(VoidSelf self, Args... args) {
-  if constexpr (default_) {
+  if constexpr (default_ || !is_static_member(m)) {
     return default_impl<m, V, R>(self, std::forward<Args>(args)...);
   } else {
     using VSelf = self_const_correct_t<V, VoidSelf>;
@@ -135,10 +145,9 @@ consteval std::meta::info make_vfimpl() {
   types.push_back(reflect_constant(f));
   types.push_back(^^V);
   types.push_back(return_type_of(f));
-  auto i = 0;
+  add_v_table_fptr_this_param_type<f>(types);
   template for (constexpr auto p : define_static_array(parameters_of(f))) {
-    ++i;
-    types.push_back(make_v_table_fptr_param_type<p>(i));
+    types.push_back(make_v_table_fptr_param_type<p>(types.size() == 4u));
   }
   return substitute(^^vfimpl, types);
 }
@@ -156,7 +165,7 @@ consteval std::optional<std::meta::info> find_function_impl() {
 
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(Trait, ctx))) {
-        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)
+        if constexpr(has_identifier(m) && is_function(m)
             && identifier_of(interface_function) == identifier_of(m)) {
             return { m };
         }
@@ -195,7 +204,7 @@ void set_v_table_fptrs(auto* v_table) {
             constexpr auto m = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
         }
-        if constexpr(has_identifier(interface_m) && is_static_member(interface_m) && is_function(interface_m)) {
+        if constexpr(has_identifier(interface_m) && is_function(interface_m)) {
             constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             constexpr auto m = find_function_impl<Trait, Concrete, interface_m>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m>():];
@@ -365,7 +374,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
         define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr(has_identifier(m) && is_static_member(m) && is_function(m)) {
+        if constexpr(has_identifier(m) && is_function(m)) {
             using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
             constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
             auto dms = std::meta::data_member_spec(

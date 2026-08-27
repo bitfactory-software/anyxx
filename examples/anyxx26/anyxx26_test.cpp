@@ -17,7 +17,7 @@ namespace {
 
 template <typename Self, typename = anyxx26::declaration>
 struct stringable {
-  [[= defaulted]] static std::string as_string(Self const&);
+  std::string as_string() const;
 };
 
 void print(std::vector<dyn<stringable, anyxx::cref>> const& things) {
@@ -56,12 +56,41 @@ struct boo {
 //template <>
 //struct stringable<boo, anyxx26::model_map> {};
 
+template <typename T>
+void dump_type(){
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(^^ T, ctx))) {
+        if constexpr(has_identifier(m) && is_function(m)) {
+            constexpr auto ft = make_v_table_fptr_type<m>();
+            using ft_t = typename [:ft:];
+            std::println("{} -> {}", std::meta::display_string_of(m), std::meta::display_string_of(ft));
+            std::println("   {}", typeid(ft_t).name());
+        }
+    }
+}
+
+template <template <typename, typename> typename Trait, typename Concrete>
+void dump_impl(){
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(^^ Trait<void*, anyxx26::declaration>, ctx))) {
+        if constexpr(has_identifier(m) && is_function(m)) {
+            constexpr auto fi = find_function_impl<^^Trait, Concrete, m>();
+            constexpr auto vfimpl = make_vfimpl<Concrete, fi>();
+            std::println("{} -> {}", std::meta::display_string_of(m), std::meta::display_string_of(vfimpl));
+            std::println("   {}", typeid( [:vfimpl:]).name());
+        }
+    }
+}
+
 }  // namespace
 
 TEST_CASE("anyxx26 hello world") {
   //auto a1 = trait_as<int, stringable>{42};
   //auto z_from_self = a1.as_string();
   //std::println("z_from_trait = {}", z_from_self);
+
+  dump_type<stringable<void*>>();
+  dump_impl<stringable, int>();
 
   {
     using namespace anyxx;
@@ -94,6 +123,9 @@ struct add1 {
 TEST_CASE("anyxx26 mutable hello world") {
   using namespace anyxx;
 
+  dump_type<addable<void*>>();
+  dump_impl<addable, add1>();
+
   add1 a1{10};
   auto a1_dyn = dyn<addable, mutref>{a1};
 
@@ -105,7 +137,7 @@ TEST_CASE("anyxx26 mutable hello world") {
 namespace {
 template <typename Self, typename = anyxx26::declaration>
 struct base_trait {
-  [[= defaulted]] static std::string basef(Self const& self);
+  std::string basef() const;
 };
 
 template <typename Self, typename = anyxx26::declaration>
