@@ -193,13 +193,24 @@ consteval std::meta::info find_function_impl() {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
+
 template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPointers, typename... Args>
 void set_v_table_fptrs(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
-    constexpr auto base = meta::get_single_public_base<trait_declaration<Trait, Args...>()>();
+    constexpr auto td = trait_declaration<Trait, Args...>();
+    constexpr auto base = meta::get_single_public_base<td>();
     if constexpr(base != std::meta::info{}) {
-        set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers, Args...>(v_table);
+        if constexpr(has_template_arguments(type_of(base)) && template_arguments_of(type_of(base)).size() > 2u) {
+            //constexpr auto base_trait_template = template_of(type_of(base));
+            //auto call_params = std::vector{ reflect_constant(base_trait_template),^^ Concrete, reflect_constant(FunctionPointers) };
+            //constexpr auto base_trait_params = template_arguments_of(base_trait_template) | std::views::drop(2); // self, trait-specifier
+            //call_params.append_range(base_trait_params);
+            //consteval{ auto call_set_v_table_fptrs_with_base_trait_args = substitute(^^set_v_table_fptrs, call_params); }
+            //[:call_set_v_table_fptrs_with_base_trait_args:] (v_table);
+        } else {
+            set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers>(v_table);
+        }
     }
 
     template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait, Args...>(), ctx))) {

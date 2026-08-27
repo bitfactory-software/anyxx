@@ -30,6 +30,7 @@ consteval std::meta::info get_member() {
 
 template <std::meta::info Struct>
 consteval std::meta::info get_single_public_base() {
+  static_assert(is_type(Struct));
   constexpr auto ctx = std::meta::access_context::current();
   constexpr auto bases = define_static_array(bases_of(Struct, ctx));
   if (bases.size() > 1) {
