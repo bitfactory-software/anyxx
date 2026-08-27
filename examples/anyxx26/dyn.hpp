@@ -419,10 +419,117 @@ struct type_info_{
     template<typename Concrete>
     static std::type_info const* init(auto){ return &typeid(Concrete); }
 };
+struct is_derived_from_{
+    using type = anyxx::is_derived_from_t;
+    template<typename Concrete, typename VTable>
+    static auto const* init(VTable* v_table ){ 
+        return +[](const std::type_info& from) {
+            return VTable::static_is_derived_from(from);
+        };
+    }
+};
+struct meta_data_{
+    using type = anyxx::meta_data*;
+    template<typename Concrete>
+    static auto init(auto){ return nullptr; };
+};
+struct model_size {
+    using type = anyxx::model_size_t;
+    template<typename Concrete>
+    static auto init(auto){ return anyxx::compute_model_size<Concrete>(); };
+};
+struct copy_constructor {
+    using type = anyxx::copy_constructor_t;
+    template<typename Concrete>
+    static auto init(auto){ 
+        return []([[maybe_unused]] anyxx::mutable_void placement,
+                  [[maybe_unused]] anyxx::const_void from) {
+            return anyxx::invoke_copy_constructor<Concrete>(placement, from);
+        };
+    }
+};
+struct move_constructor {
+    using type = anyxx::move_constructor_t;
+    template<typename Concrete>
+    static auto init(auto){
+        return []([[maybe_unused]] anyxx::mutable_void placement,
+            [[maybe_unused]] anyxx::mutable_void from) {
+            return anyxx::invoke_move_constructor<Concrete>(placement, from);
+        };
+    }
+};
+struct delete_ {
+    using type = anyxx::delete_t;
+    template<typename Concrete>
+    static auto init(auto){
+        return [](anyxx::mutable_void data) {
+            if(data) delete static_cast<Concrete*>(data);
+        };
+    }
+};
+struct destructor {
+    using type = anyxx::destructor_t;
+    template<typename Concrete>
+    static auto init(auto){
+        return [](anyxx::mutable_void data) {
+            std::destroy_at(static_cast<Concrete*>(data));
+        };
+    }
+};
 
+// clang-format off
+template <typename Self, typename = anyxx26::declaration>
+struct moveable {
+    using model_size [[= v_table_data]] = anyxx26::model_size;
+    using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
+    using destructor [[= v_table_data]] = anyxx26::destructor;
+    using default_proxy_t = anyxx::val<>;
+};
+    template <typename Self, typename = anyxx26::declaration>
+    struct copyable : moveable<Self> {
+        using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
+    };
 template <typename Self, typename = anyxx26::declaration>
 struct save_observable {
     using type_info_ [[= v_table_data]] = anyxx26::type_info_;
 };
+    template <typename Self, typename = anyxx26::declaration>
+    struct save_moveable : save_observable<Self> {
+        using model_size [[= v_table_data]] = anyxx26::model_size;
+        using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
+        using destructor [[= v_table_data]] = anyxx26::destructor;
+        using default_proxy_t = anyxx::val<>;
+    };
+        template <typename Self, typename = anyxx26::declaration>
+        struct save_copyable : save_moveable<Self> {
+            using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
+        };
+    template <typename Self, typename = anyxx26::declaration>
+    struct dynamic_castable : save_observable<Self> {
+        using is_derived_from_ [[= v_table_data]] = anyxx26::is_derived_from_;
+        using meta_data_ [[= v_table_data]] = anyxx26::meta_data_;
+    };
+        template <typename Self, typename = anyxx26::declaration>
+        struct dynamic_deletable : dynamic_castable<Self> {
+            using delete_ [[= v_table_data]] = anyxx26::delete_;
+            using default_proxy_t = anyxx::shared;
+        };
+            template <typename Self, typename = anyxx26::declaration>
+            struct dynamic_smart_ptr : dynamic_deletable<Self> {
+                using model_size [[= v_table_data]] = anyxx26::model_size;
+                using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
+            };
+        template <typename Self, typename = anyxx26::declaration>
+        struct dynamic_moveable : dynamic_castable<Self> {
+            using model_size [[= v_table_data]] = anyxx26::model_size;
+            using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
+            using destructor [[= v_table_data]] = anyxx26::destructor;
+            using default_proxy_t = anyxx::val<>;
+        };
+            template <typename Self, typename = anyxx26::declaration>
+            struct dynamic_copyable : dynamic_moveable<Self> {
+                using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
+            };
+// clang-format on
 
 }  // namespace anyxx26

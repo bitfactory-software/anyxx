@@ -2480,7 +2480,7 @@ static_assert(is_object_proxy<cow>);
 
 template <typename Model>
 constexpr inline model_size_t compute_model_size() {
-  return {.size = sizeof(Model), .trivial = std::is_trivial_v<Model>};
+  return {.size = sizeof(Model), .trivial = std::is_trivially_default_constructible_v<Model> && std::is_trivially_copyable_v<Model> };
 }
 
 template <bool Trivial, std::size_t SmallObjectSize>

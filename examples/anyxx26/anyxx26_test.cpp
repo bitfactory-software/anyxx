@@ -209,6 +209,26 @@ TEST_CASE("anyxx26 v_table_data") {
   static_assert(dealias(^^type) == ^^std::type_info const*);
   static_assert(std::same_as<type, anyxx26::save_observable<void*>::type_info_::type>);
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
+}
+
+namespace { namespace stdemu {
+using any = dyn<save_copyable, anyxx::val<>>;
 
 
+} }  // namespace
+
+TEST_CASE("anyxx26 std type erasure equivalents") {
+    using namespace stdemu;
+
+    auto a1 = stdemu::any{42};
+    if(auto p = unerase_cast<int>(a1)){
+        CHECK(*p == 42);
+    } else{
+        CHECK(false);
+    }
+    if(unerase_cast<double>(a1)){
+        CHECK(false);
+    } else{
+        CHECK(true);
+    }
 }
