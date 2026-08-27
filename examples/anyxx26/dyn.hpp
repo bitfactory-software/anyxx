@@ -31,7 +31,7 @@ template<std::meta::info TraitTemplate>
 consteval std::meta::info trait_declaration(){
     return substitute(TraitTemplate, {^^void*, ^^declaration });;
 }
-template<template<typename, typename> typename TraitTemplate>
+template<template<typename, typename, typename...> typename TraitTemplate>
 using trait_declaration_t = TraitTemplate<void*, declaration>;
 
 template <std::meta::info m, typename V, typename R, typename VoidSelf,
@@ -119,7 +119,7 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
     }
 };
 
-template <template <typename, typename> typename Trait>
+template <template <typename, typename, typename...> typename Trait>
 consteval std::meta::info make_v_table_fptrs_type() {
     std::vector<std::meta::info> fptrs;
     collect_v_table_fs<^^Trait<void*, declaration>>(fptrs);
@@ -157,7 +157,7 @@ consteval std::meta::info make_vfimpl() {
  //    typename[:anyxx26::meta::get_first_public_base<
  //                  ^^Trait<void*, declaration>, ^^anyxx::observeable>():] ::v_table_t;
 
-template <template <typename, typename> typename Trait>
+template <template <typename, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info Trait, std::meta::info interface_function>
@@ -187,7 +187,7 @@ consteval std::meta::info find_function_impl() {
   throw std::logic_error("Function not found in impl trait or base trait");
 }
 
-template <template <typename, typename> typename Trait>
+template <template <typename, typename, typename...> typename Trait>
 struct v_table;
 
 template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPointers>
@@ -212,7 +212,7 @@ void set_v_table_fptrs(auto* v_table) {
     }
 }
 
-template <template <typename, typename> typename Trait>
+template <template <typename, typename, typename...> typename Trait>
 struct v_table
     : base_v_table_t<Trait>,
     [: make_v_table_fptrs_type<Trait>() :] {
@@ -226,7 +226,7 @@ struct v_table
     }
 };
 
-template <template <typename, typename> typename Trait, typename V>
+template <template <typename, typename, typename...> typename Trait, typename V>
 v_table<Trait>* get_v_table_instance() {
   static v_table<Trait> instance(std::in_place_type<V>);
   return &instance;
@@ -243,7 +243,7 @@ ToVtable* v_table_cast(FromVTable* from) {
 	return static_cast<ToVtable*>(void_p);
 }
 
-template <template <typename, typename> typename Trait, anyxx::is_proxy Proxy>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy>
 struct dyn_base {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait>;
   using proxy_t = Proxy;
@@ -384,7 +384,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     }
 };
 
-template <template <typename, typename> typename Trait, typename Proxy>
+template <template <typename, typename, typename...> typename Trait, typename Proxy>
 consteval std::meta::info make_dyn_facade() {
 
   std::vector<std::meta::info> calls;
@@ -392,7 +392,7 @@ consteval std::meta::info make_dyn_facade() {
   return substitute(^^meta::to_struct, calls);
 };
 
-template <template <typename, typename> typename Trait, typename Proxy>
+template <template <typename, typename, typename...> typename Trait, typename Proxy>
 struct dyn : dyn_base<Trait, Proxy>, [:make_dyn_facade<Trait, Proxy>():] {
   using dyn_base<Trait, Proxy>::dyn_base;
 };
