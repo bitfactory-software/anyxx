@@ -2290,7 +2290,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02480" name="l02480"></a><span class="lineno"> 2480</span> </div>
 <div class="line"><a id="l02481" name="l02481"></a><span class="lineno"> 2481</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> Model&gt;</div>
 <div class="line"><a id="l02482" name="l02482"></a><span class="lineno"> 2482</span><span class="keyword">constexpr</span> <span class="keyword">inline</span> model_size_t compute_model_size() {</div>
-<div class="line"><a id="l02483" name="l02483"></a><span class="lineno"> 2483</span>  <span class="keywordflow">return</span> {.size = <span class="keyword">sizeof</span>(Model), .trivial = std::is_trivial_v&lt;Model&gt;};</div>
+<div class="line"><a id="l02483" name="l02483"></a><span class="lineno"> 2483</span>  <span class="keywordflow">return</span> {.size = <span class="keyword">sizeof</span>(Model), .trivial = std::is_trivially_default_constructible_v&lt;Model&gt; &amp;&amp; std::is_trivially_copyable_v&lt;Model&gt; };</div>
 <div class="line"><a id="l02484" name="l02484"></a><span class="lineno"> 2484</span>}</div>
 <div class="line"><a id="l02485" name="l02485"></a><span class="lineno"> 2485</span> </div>
 <div class="line"><a id="l02486" name="l02486"></a><span class="lineno"> 2486</span><span class="keyword">template</span> &lt;<span class="keywordtype">bool</span> Trivial, std::<span class="keywordtype">size_t</span> SmallObjectSize&gt;</div>
