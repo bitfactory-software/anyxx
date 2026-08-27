@@ -211,24 +211,57 @@ TEST_CASE("anyxx26 v_table_data") {
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
 }
 
-namespace { namespace stdemu {
-using any = dyn<save_copyable, anyxx::val<>>;
+namespace { 
+using any_copyable = dyn<save_copyable, anyxx::val<>>;
+using any_moveable = dyn<save_moveable, anyxx::val<>>;
 
-
-} }  // namespace
+}  // namespace
 
 TEST_CASE("anyxx26 std type erasure equivalents") {
-    using namespace stdemu;
-
-    auto a1 = stdemu::any{42};
-    if(auto p = unerase_cast<int>(a1)){
-        CHECK(*p == 42);
-    } else{
-        CHECK(false);
+    {
+        auto a1 = any_copyable{ 42 };
+        if(auto p = unerase_cast<int>(a1)){
+            CHECK(*p == 42);
+        } else{
+            CHECK(false);
+        }
+        if(unerase_cast<double>(a1)){
+            CHECK(false);
+        } else{
+            CHECK(true);
+        }
+        any_copyable a2 = a1;
+        if(auto p = unerase_cast<int>(a2)){
+            CHECK(*p == 42);
+        } else{
+            CHECK(false);
+        }
+        a1 = std::string{ "hello" };
+        if(auto p = unerase_cast<std::string>(a1)){
+            CHECK(*p == "hello");
+        } else {
+            CHECK(false);
+        }
+        if(auto p = unerase_cast<int>(a2)){
+            CHECK(*p == 42);
+        } else{
+            CHECK(false);
+        }
     }
-    if(unerase_cast<double>(a1)){
-        CHECK(false);
-    } else{
-        CHECK(true);
+    {
+        auto a1 = any_moveable{ std::make_unique<int>(42) };
+        if(auto p = unerase_cast<std::unique_ptr<int>>(a1)){
+            CHECK(*p->get() == 42);
+        } else{
+            CHECK(false);
+        }
+        any_moveable a2 = std::move(a1);
+        if(auto p = unerase_cast<std::unique_ptr<int>>(a2)){
+            CHECK(*p->get() == 42);
+        } else{
+            CHECK(false);
+        }
+		static_assert(!std::copy_constructible<any_moveable>);
+		//any_moveable a3 = a2; does not compile, as expected
     }
 }
