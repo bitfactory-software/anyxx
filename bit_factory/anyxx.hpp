@@ -3930,15 +3930,12 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
 }
 
 template <typename Concrete>
+	requires std::copy_constructible<Concrete>
 mutable_void invoke_copy_constructor([[maybe_unused]] mutable_void placement,
                                      [[maybe_unused]] const_void from) {
-    if constexpr(std::is_copy_constructible_v<Concrete>) {
-       return std::construct_at<Concrete>(
-        static_cast<Concrete*>(placement),
-        * static_cast<Concrete const*>(from));  
-    } else {
-       return nullptr;
-    };
+    return std::construct_at<Concrete>
+        (static_cast<Concrete*>(placement),
+        *static_cast<Concrete const*>(from));  
 }
 
 #define ANY_CLASS_TYPE_INFO \
