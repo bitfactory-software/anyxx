@@ -414,13 +414,15 @@ inline auto unerase_cast_if(Dyn const& o) {
     return unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 
+struct type_info_{
+    using type = std::type_info const*;
+    template<typename Concrete>
+    static std::type_info const* init(auto){ return &typeid(Concrete); }
+};
+
 template <typename Self, typename = anyxx26::declaration>
 struct save_observable {
-    struct [[= v_table_data]] type_info_{
-        using type = std::type_info const*;
-        template<typename Concrete>
-        static std::type_info const* init(auto){ return &typeid(Concrete); }
-    }; 
+    using type_info_ [[= v_table_data]] = anyxx26::type_info_;
 };
 
 }  // namespace anyxx26
