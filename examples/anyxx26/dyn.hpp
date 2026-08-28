@@ -393,12 +393,12 @@ struct dyn_base {
   }
   dyn_base(dyn_base&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(anyxx::moveable_from<proxy_t, proxy_t>)
-      : dyn_base(std::move(other.proxy_), other.release_v_table()) {}
+      : dyn_base(std::move(other.proxy_), release_v_table(other)) {}
   dyn_base& operator=(dyn_base&& other) noexcept
     requires(anyxx::moveable_from<proxy_t, proxy_t>)
   {
     proxy_trait_t::move_to(proxy_, v_table_, std::move(other.proxy_), other.v_table_);
-    v_table_ = other.release_v_table();
+    v_table_ = release_v_table(other);
     return *this;
   }
 
@@ -429,7 +429,7 @@ struct dyn_base {
   explicit(false) dyn_base(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
-      : dyn_base(std::move(other.proxy_), v_table_cast<v_table_t>(other.release_v_table())) {
+      : dyn_base(std::move(other.proxy_), v_table_cast<v_table_t>(release_v_table(other))) {
   }
   template <is_dyn Other>
   dyn_base& operator=(Other&& other) noexcept
@@ -437,7 +437,7 @@ struct dyn_base {
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
   {
       proxy_trait_t::move_to(proxy_, v_table_, std::move(other.proxy_), other.v_table_);
-      v_table_ = v_table_cast<v_table_t>(other.release_v_table());
+      v_table_ = v_table_cast<v_table_t>(release_v_table(other));
       return *this;
   }
 
@@ -505,7 +505,8 @@ struct dyn_base {
       --self;
       return old;
   }
-  auto release_v_table() { return std::exchange(v_table_, nullptr); }
+
+  friend auto release_v_table(dyn_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
 template <typename DynBase, std::meta::info f>
