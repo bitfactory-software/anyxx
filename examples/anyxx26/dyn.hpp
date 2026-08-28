@@ -48,11 +48,13 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
 
-template <typename R>
+template <typename R, typename V>
 consteval std::meta::info translate_impl_return_type() {
     if constexpr(^^R == ^^anyxx::self&) {
-       return ^^R&;
-    } else {       
+       return ^^V&;
+    } else if constexpr(^^R == ^^anyxx::self) {
+        return ^^V;
+    } else {
       return ^^R;
     }
 }
@@ -66,11 +68,13 @@ consteval std::meta::info translate_v_table_return_type() {
         return R;
     }
 }
+static_assert(translate_v_table_return_type<^^anyxx::self&, ^^int>() == ^^void);
+static_assert(std::same_as<typename [:translate_v_table_return_type<^^anyxx::self&, ^^int>():], void>);
 
 template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
 decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
-    using return_t = [:translate_impl_return_type<R>():];
+    using return_t = [:translate_impl_return_type<R, V>():];
     constexpr auto ctx = std::meta::access_context::current();
     using self_t = self_const_correct_t<V, VoidSelf>;
     auto typed_self = static_cast<self_t*>(voidSelf);
@@ -140,14 +144,9 @@ consteval void add_v_table_fptr_this_param_type(std::vector<std::meta::info>& ty
 }
 
 template <std::meta::info f, std::meta::info dyn_self_val>
-consteval void add_v_table_fptr_return_type(std::vector<std::meta::info>& types) {
-    types.push_back(translate_v_table_return_type<return_type_of(f), dyn_self_val>());
-}
-
-template <std::meta::info f, std::meta::info dyn_self_val>
 consteval std::meta::info make_v_table_fptr_type() {
   std::vector<std::meta::info> types;
-  add_v_table_fptr_return_type<f, dyn_self_val>(types);
+  types.push_back(translate_v_table_return_type<return_type_of(f), dyn_self_val>());
   add_v_table_fptr_this_param_type<f>(types);
   template for (constexpr auto p : define_static_array(parameters_of(f))) {
     types.push_back(make_v_table_fptr_param_type<p>(types.size() == 1));
@@ -192,15 +191,24 @@ consteval std::meta::info make_v_table_members_type() {
     return substitute(^^meta::to_struct, fptrs);
 }
 
-template <bool default_, std::meta::info m, std::meta::info dyn_self_val, typename V, typename R,
-          typename VoidSelf, typename... Args>
-[:translate_v_table_return_type<^^R, dyn_self_val>():] 
-    vfimpl(VoidSelf self, Args... args) {
+template <bool default_, std::meta::info m, std::meta::info dyn_self_val, typename V, typename R, typename VoidSelf, typename... Args>
+[:translate_v_table_return_type<^^R, dyn_self_val>():] vfimpl(VoidSelf self, Args... args) {
+  using return_t = [:translate_v_table_return_type<^^R, dyn_self_val>():];
   if constexpr (default_ || !is_static_member(m)) {
-    return default_impl<m, V, R>(self, std::forward<Args>(args)...);
+    if constexpr(std::same_as<return_t, void>) {
+        default_impl<m, V, R>(self, std::forward<Args>(args)...);
+        return;
+    } else {
+        return default_impl<m, V, R>(self, std::forward<Args>(args)...);
+    }
   } else {
     using VSelf = self_const_correct_t<V, VoidSelf>;
-    return std::forward<R>([:m:](*static_cast<VSelf*>(self), std::forward<Args>(args)...));
+    if constexpr(std::same_as<return_t, void>) {
+        std::forward<R>([:m:](*static_cast<VSelf*>(self), std::forward<Args>(args)...));
+        return;
+    } else {
+        return std::forward<R>([:m:](*static_cast<VSelf*>(self), std::forward<Args>(args)...));
+    }
   }
 }
 
@@ -212,7 +220,7 @@ consteval std::meta::info make_vfimpl() {
   types.push_back(reflect_constant(f));
   types.push_back(std::meta::reflect_constant(dyn_self_val));
   types.push_back(^^V);
-  add_v_table_fptr_return_type<f, dyn_self_val>(types);
+  types.push_back(return_type_of(f));
   add_v_table_fptr_this_param_type<f>(types);
   template for (constexpr auto p : define_static_array(parameters_of(f))) {
     types.push_back(make_v_table_fptr_param_type<p>(types.size() == 5u));
@@ -332,6 +340,7 @@ ToVtable* v_table_cast(FromVTable* from) {
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args >
 struct dyn_base {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
+  using dyn_self_t = dyn<Trait, Proxy, Args...>;
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
@@ -434,21 +443,18 @@ struct dyn_base {
 
   template <typename Self, typename... Params>
   decltype(auto) operator()(this Self&& self, Params&&... params) {
-      auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_);
-      return self.v_table_->op_parentheses(x, std::forward<Params>(params)...);
+      return self.op_parentheses(std::forward<Params>(params)...);
   }
 
 #define __dyn_OP(function, op) \
   template <typename Self, typename... Params> \
   decltype(auto) operator op (this Self&& self, Params&&... params) { \
-      auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_); \
-      return self.v_table_->function(x, std::forward<Params>(params)...); \
+      return self.function(std::forward<Params>(params)...); \
   }
 #define __dyn_OP0(function, op) \
   template <typename Self> \
   decltype(auto) operator op (this Self&& self) { \
-      auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_); \
-      return self.v_table_->function(x); \
+      return self.function(); \
   }
 
     __dyn_OP(op_square_brackets, [])
@@ -481,40 +487,45 @@ struct dyn_base {
     __dyn_OP(op_greater_greater, >>)
     __dyn_OP(op_less_less_equals, <<=)
     __dyn_OP(op_greater_greater_equals, >>=)
-    __dyn_OP(op_plus_plus, ++)
-    __dyn_OP(op_minus_minus, --)
+    __dyn_OP0(op_plus_plus, ++)
+    __dyn_OP0(op_minus_minus, --)
 
 #undef __dyn_OP
 #undef __dyn_OP0
 
-  template <typename... Params>
-  decltype(auto) operator++(int) {
-    auto old = *this
-    ++(*this);
-    return old;
+  template <typename Self>
+    decltype(auto) operator++(this Self&& self, int) {
+        std::decay_t<Self> old = self;
+        ++self;
+        return old;
+    }  
+  template <typename Self>
+  decltype(auto) operator--(this Self&& self, int) {
+      std::decay_t<Self> old = self;
+      --self;
+      return old;
   }
-  template <typename... Params>
-  decltype(auto) operator--(int) {
-    auto old = *this
-    --(*this);
-    return old;
-  }
-
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
 
 template <typename DynBase, std::meta::info f>
 struct dyn_facade_call {
-  template <typename... Args>
-  auto operator()(Args&&... args) const {
-    auto base = reinterpret_cast<DynBase const*>(this);
+  template <typename Self, typename... Args>
+  decltype(auto) operator()(this Self&& self, Args&&... args) {
+    using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
+    auto base = reinterpret_cast<base_t*>(&self);
     using v_table_t = DynBase::v_table_t;
     auto v_table_ptr = base->v_table_;
     using fptrs_t = typename v_table_t::fptrs_t;
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
     auto constexpr vf = anyxx26::meta::get_member<^^fptrs_t, f>();
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
-    return fptrs->[:vf:](x, std::forward<Args>(args)...);
+    if constexpr(std::same_as<typename [:return_type_of(f):], anyxx::self&>) {
+        fptrs->[:vf:](x, std::forward<Args>(args)...);
+        return static_cast<typename DynBase::dyn_self_t&>(*base);
+    } else {
+        return fptrs->[:vf:](x, std::forward<Args>(args)...);
+    }
   }
 };
 

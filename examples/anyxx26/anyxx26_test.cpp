@@ -375,7 +375,7 @@ TEST_CASE("anyxx26 std function equivalents") {
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();
-        anyxx26::meta::print_members<decltype(callable_object)>();
+        //anyxx26::meta::print_members<decltype(callable_object)>();
         //anyxx26::meta::print_members<decltype(f)>();
         CHECK(f.op_parentheses(40) == 42);
         CHECK(f(40) == 42);
@@ -388,7 +388,7 @@ TEST_CASE("anyxx26 std function equivalents") {
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();
-        anyxx26::meta::print_members<decltype(callable_object)>();
+        //anyxx26::meta::print_members<decltype(callable_object)>();
         //anyxx26::meta::print_members<decltype(f)>();
         CHECK(f.op_parentheses(40) == 42);
         CHECK(f(40) == 42);
@@ -422,7 +422,7 @@ namespace {
 template <typename Self, typename Trait>
 struct operators : save_copyable<Self, Trait> {
     anyxx::self operator+(int) const;
-//    anyxx::self& operator++();
+    anyxx::self& operator++();
 };
 
 struct add_test {
@@ -443,11 +443,17 @@ TEST_CASE("anyxx26 operators") {
 
     dyn<operators, anyxx::val<>> ops{add_test{}};
     auto r1 = ops + 1;
+    static_assert(^^decltype(r1)==^^decltype(ops));
     CHECK(unerase_cast<add_test>(r1)->i == 1);
-    //auto& r2 = ++ops;
-    //CHECK(unerase_cast<add_test>(r1)->i == 2);
-    //CHECK(unerase_cast<add_test>(r2)->i == 2);
-    //++r2;
-    //CHECK(unerase_cast<add_test>(r1)->i == 3);
-    //CHECK(unerase_cast<add_test>(r2)->i == 3);
+//    anyxx26::meta::print_members<dyn<operators, anyxx::val<>>::v_table_t::fptrs_t>();
+    anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
+    auto& r2 = ++r1;
+    CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
+    CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);
+    CHECK(unerase_cast<add_test>(r1)->i == 2);
+    auto r3 = r2++;
+    CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(r3)->i);
+    CHECK(unerase_cast<add_test>(r1)->i == 3);
+    CHECK(unerase_cast<add_test>(r3)->i == 2);
 }
+
