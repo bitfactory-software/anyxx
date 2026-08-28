@@ -399,16 +399,16 @@ struct dyn_base {
       return *this;
   }
 
-  template <typename... Params>
-  auto operator()(Params&&... params) const {
-      auto x = anyxx::get_proxy_ptr(proxy_, v_table_);
-      return v_table_->op_parentheses(x, std::forward<Params>(params)...);
+  template <typename Self, typename... Params>
+  decltype(auto) operator()(this Self&& self, Params&&... params) {
+      auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_);
+      return self.v_table_->op_parentheses(x, std::forward<Params>(params)...);
   }
 #define __dyn_OP(op, function) \
-  template <typename... Params> \
-  auto operator op (Params&&... params) const { \
-      auto x = anyxx::get_proxy_ptr(proxy_, v_table_); \
-      return v_table_->function(x, std::forward<Params>(params)...); \
+  template <typename Self, typename... Params> \
+  decltype(auto) operator op (this Self&& self, Params&&... params) { \
+      auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_); \
+      return self.v_table_->function(x, std::forward<Params>(params)...); \
   } \
   
   __dyn_OP([], op_square_brackets)
