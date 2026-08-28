@@ -48,14 +48,29 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
 
-//template <typename R>
-//consteval std::meta::info translate_return_type(){
-//}
+template <typename R>
+consteval std::meta::info translate_impl_return_type() {
+    if constexpr(^^R == ^^anyxx::self&) {
+       return ^^R&;
+    } else {       
+      return ^^R;
+    }
+}
+template <std::meta::info R, std::meta::info SelfValType>
+consteval std::meta::info translate_v_table_return_type() {
+    if constexpr(R == ^^anyxx::self&) {
+        return ^^void;
+    } else if constexpr(R == ^^anyxx::self){
+        return SelfValType;
+    } else {
+        return R;
+    }
+}
 
 template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
 decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
-    using return_t = std::conditional_t<^^R == ^^anyxx::self, V, R>;
+    using return_t = [:translate_impl_return_type<R>():];
     constexpr auto ctx = std::meta::access_context::current();
     using self_t = self_const_correct_t<V, VoidSelf>;
     auto typed_self = static_cast<self_t*>(voidSelf);
@@ -126,12 +141,7 @@ consteval void add_v_table_fptr_this_param_type(std::vector<std::meta::info>& ty
 
 template <std::meta::info f, std::meta::info dyn_self_val>
 consteval void add_v_table_fptr_return_type(std::vector<std::meta::info>& types) {
-    constexpr auto return_spec = return_type_of(f);
-    if(return_spec == ^^anyxx::self) {
-        types.push_back(dyn_self_val);
-    } else {
-        types.push_back(return_spec);
-    }
+    types.push_back(translate_v_table_return_type<return_type_of(f), dyn_self_val>());
 }
 
 template <std::meta::info f, std::meta::info dyn_self_val>
@@ -184,7 +194,8 @@ consteval std::meta::info make_v_table_members_type() {
 
 template <bool default_, std::meta::info m, std::meta::info dyn_self_val, typename V, typename R,
           typename VoidSelf, typename... Args>
-std::conditional_t<^^R == ^^anyxx::self, typename [:dyn_self_val:], R> vfimpl(VoidSelf self, Args... args) {
+[:translate_v_table_return_type<^^R, dyn_self_val>():] 
+    vfimpl(VoidSelf self, Args... args) {
   if constexpr (default_ || !is_static_member(m)) {
     return default_impl<m, V, R>(self, std::forward<Args>(args)...);
   } else {
