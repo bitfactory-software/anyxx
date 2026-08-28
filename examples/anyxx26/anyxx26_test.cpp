@@ -93,9 +93,9 @@ void dump_impl(){
 
 TEST_CASE("anyxx26 hello world") {
 
-  dump_all<parent_of(^^stringable<void*>)>();
-  dump_type<stringable<void*>>();
-  dump_impl<stringable, int>();
+  //dump_all<parent_of(^^stringable<void*>)>();
+  //dump_type<stringable<void*>>();
+  //dump_impl<stringable, int>();
 
   {
     int i = 4711;
@@ -127,8 +127,8 @@ struct add1 {
 TEST_CASE("anyxx26 mutable hello world") {
   using namespace anyxx;
 
-  dump_type<addable<void*>>();
-  dump_impl<addable, add1>();
+  //dump_type<addable<void*>>();
+  //dump_impl<addable, add1>();
 
   add1 a1{10};
   auto a1_dyn = dyn<addable, mutref>{a1};
@@ -191,8 +191,8 @@ TEST_CASE("anyxx26 v_table_data") {
 
   base_and_derived a1{ "a1" };
   dyn<anyxx26::save_observable, cref> d1{a1};
-  meta::print_members<dyn<anyxx26::save_observable, cref>>();
-  meta::print_members<dyn<anyxx26::save_observable, cref>::v_table_t::fptrs_t>();
+  //meta::print_members<dyn<anyxx26::save_observable, cref>>();
+  //meta::print_members<dyn<anyxx26::save_observable, cref>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
   if(auto p = unerase_cast<base_and_derived>(d1)){
       CHECK(p->name == "a1");
@@ -220,6 +220,7 @@ namespace {
 template <typename Self, typename, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
+    Value const& operator[](std::size_t) const;
 };
 
 template <typename Self, typename Value>
@@ -236,8 +237,10 @@ using dyn_facade_test = [:make_dyn_facade<mapable, anyxx::cref, int>():];
 
 TEST_CASE("anyxx26 templated trait") {
 
-    dump_type<mapable<void*, declaration, int>>();
-    dump_impl<mapable, std::vector<int>, int>();
+    //dump_type<mapable<void*, declaration, int>>();
+    //dump_impl<mapable, std::vector<int>, int>();
+    //anyxx26::meta::print_members<dyn<mapable, anyxx::cref, int>>();
+    //anyxx26::meta::print_members<dyn<mapable, anyxx::cref, int>::v_table_t>();
 
     {
         std::vector<int> v1{1, 2};
@@ -246,6 +249,7 @@ TEST_CASE("anyxx26 templated trait") {
         std::println("{}", v);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
+        CHECK(m[1] == 2);
     }
 }
 

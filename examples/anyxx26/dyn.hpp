@@ -199,12 +199,12 @@ consteval std::optional<std::meta::info> find_function_impl() {
         }
         if constexpr(is_function(m) && has_identifier(m))
         {
-            if constexpr(is_function(interface_function)) {
+            if constexpr(is_function(interface_function) && has_identifier(interface_function)) {
                 if constexpr(identifier_of(interface_function) == identifier_of(m)) {
                     return { m };
                 }
             }
-            if constexpr(is_operator_function(interface_function)) {
+            else if constexpr(is_operator_function(interface_function)) {
                 if constexpr(anyxx26::meta::enum_to_string(operator_of(interface_function)) == identifier_of(m)) {
                     return { m };
                 }
@@ -400,10 +400,21 @@ struct dyn_base {
   }
 
   template <typename... Params>
-  auto operator()(Params... params) const {
+  auto operator()(Params&&... params) const {
       auto x = anyxx::get_proxy_ptr(proxy_, v_table_);
       return v_table_->op_parentheses(x, std::forward<Params>(params)...);
   }
+#define __dyn_OP(op, function) \
+  template <typename... Params> \
+  auto operator op (Params&&... params) const { \
+      auto x = anyxx::get_proxy_ptr(proxy_, v_table_); \
+      return v_table_->function(x, std::forward<Params>(params)...); \
+  } \
+  
+  __dyn_OP([], op_square_brackets)
+
+#undef __dyn_OP
+
 
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
@@ -445,7 +456,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
                 auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(identifier_of(m))>();
                 calls.push_back(reflect_constant(dms));
             }
-            if constexpr(is_user_declared(m) && is_operator_function(m)) {
+            else if constexpr(is_user_declared(m) && is_operator_function(m)) {
                 auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(meta::enum_to_string(operator_of(m)))>();
                 calls.push_back(reflect_constant(dms));
             }

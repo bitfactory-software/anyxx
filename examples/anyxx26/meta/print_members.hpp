@@ -26,14 +26,16 @@ void print_members(std::string const& indent = {}) {
       constexpr static auto members =
           std::define_static_array(members_of(type_info, ctx));
       template for(constexpr std::meta::info m : members) {
-          if constexpr(is_operator_function(m)) {
-              constexpr auto op = operator_of(m);
-              std::println("{}{} \"{}\":{}", indent, symbol_of(op), enum_to_string(op), std::meta::display_string_of(m));
-          } else {
-              std::println("{}{}", indent, std::meta::display_string_of(m));
-          }
-          if constexpr(is_op_parentheses_spec<m>()) {
-              std::println("{} ^___ is_op_parentheses_spec", indent);
+          if constexpr(is_user_provided(m)) {
+              if constexpr(is_operator_function(m)) {
+                  constexpr auto op = operator_of(m);
+                  std::println("{}{} \"{}\":{}", indent, symbol_of(op), enum_to_string(op), std::meta::display_string_of(m));
+              } else {
+                  std::println("{}{}", indent, std::meta::display_string_of(m));
+              }
+              if constexpr(is_op_parentheses_spec<m>()) {
+                  std::println("{} ^___ is_op_parentheses_spec", indent);
+              }
           }
 
       }
