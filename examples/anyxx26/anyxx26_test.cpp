@@ -308,15 +308,20 @@ TEST_CASE("anyxx26 std any equivalents") {
 namespace {
 
 template <typename Self, typename, typename R, typename... Args>
+struct test_function_named_defaulted : copyable<Self, declaration> {
+    [[= defaulted]] static R op_parentheses(Self const& self, Args... args);
+};
+
+template <typename Self, typename, typename R, typename... Args>
+struct test_function_named : copyable<Self, declaration> {
+    static R op_parentheses(Self const& self, Args... args) {
+        return self(std::forward<Args>(args)...);
+    }
+};
+
+template <typename Self, typename, typename R, typename... Args>
 struct const_copyable_function : copyable<Self, declaration> {
-    R op_parentheses(Args... args) const;
-    //static R op_parentheses(Self const& self, Args... args) {
-    //    return self(std::forward<Args>(args)...);
-    //}
-    //static R operator()(Self const& self, Args... args) {
-    //    return self(std::forward<Args>(args)...);
-    //}
-    //R operator+(int i);
+    R operator()(Args... args) const;
 };
 
 template <typename R, typename... Args>
@@ -363,6 +368,32 @@ TEST_CASE("anyxx26 std function equivalents") {
     {
         //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
         dyn<const_copyable_function, anyxx::val<>, int, int> f{ lambda2 };
+        //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
+        //anyxx26::meta::print_members<decltype(lambda)>();
+        //anyxx26::meta::print_members<decltype(lambda2)>();
+        anyxx26::meta::print_members<decltype(callable_object)>();
+        //anyxx26::meta::print_members<decltype(f)>();
+        CHECK(f.op_parentheses(40) == 42);
+        CHECK(f(40) == 42);
+        auto f2 = f;
+        CHECK(f.op_parentheses(0) == 2);
+    }
+    {
+        //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
+        dyn<test_function_named_defaulted, anyxx::val<>, int, int> f{ lambda2 };
+        //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
+        //anyxx26::meta::print_members<decltype(lambda)>();
+        //anyxx26::meta::print_members<decltype(lambda2)>();
+        anyxx26::meta::print_members<decltype(callable_object)>();
+        //anyxx26::meta::print_members<decltype(f)>();
+        CHECK(f.op_parentheses(40) == 42);
+        CHECK(f(40) == 42);
+        auto f2 = f;
+        CHECK(f.op_parentheses(0) == 2);
+    }
+    {
+        //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
+        dyn<test_function_named, anyxx::val<>, int, int> f{ lambda2 };
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();

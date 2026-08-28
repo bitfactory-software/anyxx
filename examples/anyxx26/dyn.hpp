@@ -125,10 +125,10 @@ consteval std::meta::info make_v_table_fptr_type() {
 }
 
 template <std::meta::info TraitDeclaration>
-consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
+consteval void collect_v_table_members(std::vector<std::meta::info>& fptrs) {
     constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        collect_v_table_fs<type_of(base)>(fptrs);
+        collect_v_table_members<type_of(base)>(fptrs);
     }
 
     constexpr auto ctx = std::meta::access_context::current();
@@ -145,13 +145,19 @@ consteval void collect_v_table_fs(std::vector<std::meta::info>& fptrs) {
                 ft, { .name = identifier_of(m) });
             fptrs.push_back(reflect_constant(dms));
         }
+        else if constexpr(is_user_declared(m) && is_operator_function(m)) {
+            auto ft = make_v_table_fptr_type<m>();
+            auto dms = std::meta::data_member_spec(
+                ft, { .name = anyxx26::meta::enum_to_string(operator_of(m)) });
+            fptrs.push_back(reflect_constant(dms));
+        }
     }
 };
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info make_v_table_fptrs_type() {
+consteval std::meta::info make_v_table_members_type() {
     std::vector<std::meta::info> fptrs;
-    collect_v_table_fs<^^Trait<void*, declaration, Args...>>(fptrs);
+    collect_v_table_members<^^Trait<void*, declaration, Args...>>(fptrs);
     return substitute(^^meta::to_struct, fptrs);
 }
 
@@ -186,12 +192,23 @@ using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info Trait, std::meta::info interface_function>
 consteval std::optional<std::meta::info> find_function_impl() {
-
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(Trait, ctx))) {
-        if constexpr(has_identifier(m) && (is_function(m) || is_operator_function(m))
-            && identifier_of(interface_function) == identifier_of(m)) {
+        if constexpr(interface_function == m){
             return { m };
+        }
+        if constexpr(is_function(m) && has_identifier(m))
+        {
+            if constexpr(is_function(interface_function)) {
+                if constexpr(identifier_of(interface_function) == identifier_of(m)) {
+                    return { m };
+                }
+            }
+            if constexpr(is_operator_function(interface_function)) {
+                if constexpr(anyxx26::meta::enum_to_string(operator_of(interface_function)) == identifier_of(m)) {
+                    return { m };
+                }
+            }
         }
     }
     return {};
@@ -216,7 +233,7 @@ struct v_table;
 
 
 template <std::meta::info Trait, typename Concrete, std::meta::info FunctionPointers, typename... Args>
-void set_v_table_fptrs(auto* v_table) {
+void set_v_table_members(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
     constexpr auto td = trait_declaration<Trait, Args...>();
@@ -227,10 +244,10 @@ void set_v_table_fptrs(auto* v_table) {
             //auto call_params = std::vector{ reflect_constant(base_trait_template),^^ Concrete, reflect_constant(FunctionPointers) };
             //constexpr auto base_trait_params = template_arguments_of(base_trait_template) | std::views::drop(2); // self, trait-specifier
             //call_params.append_range(base_trait_params);
-            //consteval{ auto call_set_v_table_fptrs_with_base_trait_args = substitute(^^set_v_table_fptrs, call_params); }
+            //consteval{ auto call_set_v_table_fptrs_with_base_trait_args = substitute(^^set_v_table_members, call_params); }
             //[:call_set_v_table_fptrs_with_base_trait_args:] (v_table);
         } else {
-            set_v_table_fptrs<template_of(type_of(base)), Concrete, FunctionPointers>(v_table);
+            set_v_table_members<template_of(type_of(base)), Concrete, FunctionPointers>(v_table);
         }
     }
 
@@ -239,7 +256,8 @@ void set_v_table_fptrs(auto* v_table) {
             constexpr auto m = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
         }
-        if constexpr(has_identifier(interface_m) && (is_function(interface_m) || is_operator_function(interface_m))) {
+        if constexpr((has_identifier(interface_m) && is_function(interface_m))
+            || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
             constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             constexpr auto m = find_function_impl<Trait, Concrete, interface_m, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m>():];
@@ -250,14 +268,14 @@ void set_v_table_fptrs(auto* v_table) {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table
     : base_v_table_t<Trait>,
-    [: make_v_table_fptrs_type<Trait, Args...>() :] {
+    [: make_v_table_members_type<Trait, Args...>() :] {
     using v_table_t = v_table;
 	using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
-    using  fptrs_t = [:make_v_table_fptrs_type<Trait, Args...>():];
+    using  fptrs_t = [:make_v_table_members_type<Trait, Args...>():];
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_fptrs<^^Trait, Concrete, ^^fptrs_t, Args...>(this);
+        set_v_table_members<^^Trait, Concrete, ^^fptrs_t, Args...>(this);
     }
 };
 
@@ -405,22 +423,32 @@ struct dyn_facade_call {
   }
 };
 
+template <typename DynBase, std::meta::info f, auto id>
+consteval std::meta::info dyn_facade_call_data_member_spec(){
+    using dyn_facade_call_t = dyn_facade_call<DynBase, f>;
+    constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
+    return std::meta::data_member_spec(
+        call_meta, { .name = id, .no_unique_address = true });
+}
+
 template <std::meta::info TraitDeclaration, typename DynBase>
 consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     constexpr auto base = meta::get_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
         collect_dyn_facade_calls<type_of(base), DynBase>(calls);
     }
-
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
         define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr(has_identifier(m) && (is_function(m) || is_operator_function(m))) {
-            using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
-            constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
-            auto dms = std::meta::data_member_spec(
-                call_meta, { .name = identifier_of(m), .no_unique_address = true });
-            calls.push_back(reflect_constant(dms));
+        if constexpr (is_function(m)) {
+            if constexpr(has_identifier(m)) {
+                auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(identifier_of(m))>();
+                calls.push_back(reflect_constant(dms));
+            }
+            if constexpr(is_user_declared(m) && is_operator_function(m)) {
+                auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(meta::enum_to_string(operator_of(m)))>();
+                calls.push_back(reflect_constant(dms));
+            }
         }
     }
 };
