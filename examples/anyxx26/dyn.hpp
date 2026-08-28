@@ -6,6 +6,7 @@
 #include <meta>
 #include <utility>
 #include <vector>
+#include <format>
 
 namespace anyxx26 {
 
@@ -41,21 +42,41 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
 
-template <std::meta::info m, typename V, typename R, typename VoidSelf,
+template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
-R default_impl(VoidSelf self, Args&&... args) {
-  constexpr auto ctx = std::meta::access_context::current();
-  template for (constexpr auto mc : define_static_array(members_of(^^V, ctx))) {
-    if constexpr (has_identifier(mc) && !is_static_member(mc) &&
-                  is_function(mc) && identifier_of(mc) == identifier_of(m)) {
-      using self_t = self_const_correct_t<V, VoidSelf>;
-      auto self_ptr = static_cast<self_t*>(self);
-      if constexpr(std::is_invocable_r_v<R, decltype(&[:mc:]), self_t*, Args...>) {
-          return self_ptr->[:mc:](std::forward<Args>(args)...);
-      }
-    }
-  }
-  throw std::logic_error("V has no member function m.");
+R default_impl(VoidSelf voidSelf, Args&&... args) {
+    constexpr auto ctx = std::meta::access_context::current();
+    using self_t = self_const_correct_t<V, VoidSelf>;
+    auto typed_self = static_cast<self_t*>(voidSelf);
+    if constexpr(is_class_type(^^V)) {
+        template for (constexpr auto candidate : define_static_array(members_of(^^V, ctx))) {
+            if constexpr (!is_static_member(candidate) && is_function(candidate)) {
+                if constexpr(has_identifier(candidate) && has_identifier(spec) && identifier_of(candidate) == identifier_of(spec)) {
+                    if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
+                        return typed_self->[:candidate:](std::forward<Args>(args)...);
+                    }
+                }
+                if constexpr(is_operator_function(candidate)) {
+                    if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
+                        constexpr auto op = operator_of(candidate);
+                        if constexpr(is_operator_function(spec)) {
+                            if constexpr(op == operator_of(spec)) {
+                                return typed_self->[:candidate:](std::forward<Args>(args)...);
+                            }
+                        } else if constexpr(anyxx26::meta::enum_to_string(op) == identifier_of(spec)) {
+                            return typed_self->[:candidate:](std::forward<Args>(args)...);
+                        }
+                    }
+                }
+            }
+        }
+    } 
+    if constexpr(meta::is_op_parentheses_spec<spec>()) {
+        if constexpr(std::is_invocable_r_v<R, V, Args...>) {
+            return (*typed_self)(std::forward<Args>(args)...);
+        }
+    }    
+    throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
 }
 
 template <typename R, typename... Args>
@@ -168,7 +189,7 @@ consteval std::optional<std::meta::info> find_function_impl() {
 
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(Trait, ctx))) {
-        if constexpr(has_identifier(m) && is_function(m)
+        if constexpr(has_identifier(m) && (is_function(m) || is_operator_function(m))
             && identifier_of(interface_function) == identifier_of(m)) {
             return { m };
         }
@@ -218,7 +239,7 @@ void set_v_table_fptrs(auto* v_table) {
             constexpr auto m = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
         }
-        if constexpr(has_identifier(interface_m) && is_function(interface_m)) {
+        if constexpr(has_identifier(interface_m) && (is_function(interface_m) || is_operator_function(interface_m))) {
             constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             constexpr auto m = find_function_impl<Trait, Concrete, interface_m, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m>():];
@@ -394,7 +415,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
         define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr(has_identifier(m) && is_function(m)) {
+        if constexpr(has_identifier(m) && (is_function(m) || is_operator_function(m))) {
             using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
             constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
             auto dms = std::meta::data_member_spec(
