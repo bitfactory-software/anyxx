@@ -416,3 +416,38 @@ TEST_CASE("anyxx26 std function equivalents") {
         CHECK(f.op_parentheses(0) == 2);
     }
 }
+
+//namespace {
+//
+//template <typename Self, typename Trait>
+//struct operators : save_copyable<Self, Trait> {
+//    anyxx::self operator+(int) const;
+//    anyxx::self& operator++();
+//};
+//
+//struct add_test {
+//    int i = 0;
+//
+//    add_test operator+(int inc) const{
+//        return { i + inc };
+//    }
+//    add_test& operator++() {
+//        ++i;
+//        return *this;
+//    }
+//};
+//
+//}
+//
+//TEST_CASE("anyxx26 operators") {
+//
+//    dyn<operators, anyxx::val<>> ops{add_test{}};
+//    auto r1 = ops + 1;
+//    CHECK(unerase_cast<add_test>(r1)->i == 1);
+//    //auto& r2 = ++ops;
+//    //CHECK(unerase_cast<add_test>(r1)->i == 2);
+//    //CHECK(unerase_cast<add_test>(r2)->i == 2);
+//    //++r2;
+//    //CHECK(unerase_cast<add_test>(r1)->i == 3);
+//    //CHECK(unerase_cast<add_test>(r2)->i == 3);
+//}

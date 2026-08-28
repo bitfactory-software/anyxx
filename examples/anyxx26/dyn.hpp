@@ -404,17 +404,68 @@ struct dyn_base {
       auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_);
       return self.v_table_->op_parentheses(x, std::forward<Params>(params)...);
   }
-#define __dyn_OP(op, function) \
+
+#define __dyn_OP(function, op) \
   template <typename Self, typename... Params> \
   decltype(auto) operator op (this Self&& self, Params&&... params) { \
       auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_); \
       return self.v_table_->function(x, std::forward<Params>(params)...); \
-  } \
-  
-  __dyn_OP([], op_square_brackets)
+  }
+#define __dyn_OP0(function, op) \
+  template <typename Self> \
+  decltype(auto) operator op (this Self&& self) { \
+      auto x = anyxx::get_proxy_ptr(self.proxy_, self.v_table_); \
+      return self.v_table_->function(x); \
+  }
+
+    __dyn_OP(op_square_brackets, [])
+    __dyn_OP0(op_tilde, ~)
+    __dyn_OP0(op_exclamation, !)
+    __dyn_OP(op_plus, +)
+    __dyn_OP(op_minus, -)
+    __dyn_OP(op_star, *)
+    __dyn_OP(op_slash, /) 
+    __dyn_OP(op_percent, %)
+    __dyn_OP(op_caret, ^)
+    __dyn_OP(op_ampersand, &)
+    __dyn_OP(op_pipe, |)
+    __dyn_OP(op_plus_equals, +=)
+    __dyn_OP(op_minus_equals, -=)
+    __dyn_OP(op_star_equals, *=)
+    __dyn_OP(op_slash_equals, /=)
+    __dyn_OP(op_percent_equals, %=)
+    __dyn_OP(op_caret_equals, ^=)
+    __dyn_OP(op_ampersand_equals, &=)
+    __dyn_OP(op_pipe_equals, |=)
+    __dyn_OP(op_equals_equals, ==)
+    __dyn_OP(op_exclamation_equals, != )
+    __dyn_OP(op_less, <)
+    __dyn_OP(op_greater, >)
+    __dyn_OP(op_less_equals, <=)
+    __dyn_OP(op_greater_equals, >=)
+    __dyn_OP(op_spaceship, <=>)
+    __dyn_OP(op_less_less, <<)
+    __dyn_OP(op_greater_greater, >>)
+    __dyn_OP(op_less_less_equals, <<=)
+    __dyn_OP(op_greater_greater_equals, >>=)
+    __dyn_OP(op_plus_plus, ++)
+    __dyn_OP(op_minus_minus, --)
 
 #undef __dyn_OP
+#undef __dyn_OP0
 
+  template <typename... Params>
+  decltype(auto) operator++(int) {
+    auto old = *this
+    ++(*this);
+    return old;
+  }
+  template <typename... Params>
+  decltype(auto) operator--(int) {
+    auto old = *this
+    --(*this);
+    return old;
+  }
 
   auto release_v_table() { return std::exchange(v_table_, nullptr); }
 };
