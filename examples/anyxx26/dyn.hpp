@@ -48,9 +48,13 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
 
+//template <typename R>
+//consteval std::meta::info translate_return_type(){
+//}
+
 template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
-R default_impl(VoidSelf voidSelf, Args&&... args) {
+decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
     using return_t = std::conditional_t<^^R == ^^anyxx::self, V, R>;
     constexpr auto ctx = std::meta::access_context::current();
     using self_t = self_const_correct_t<V, VoidSelf>;
@@ -79,7 +83,7 @@ R default_impl(VoidSelf voidSelf, Args&&... args) {
         }
     } 
     if constexpr(meta::is_op_parentheses_spec<spec>()) {
-        if constexpr(std::is_invocable_r_v<R, V, Args...>) {
+        if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
             return (*typed_self)(std::forward<Args>(args)...);
         }
     }    

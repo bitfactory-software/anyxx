@@ -422,7 +422,7 @@ namespace {
 template <typename Self, typename Trait>
 struct operators : save_copyable<Self, Trait> {
     anyxx::self operator+(int) const;
-    anyxx::self& operator++();
+//    anyxx::self& operator++();
 };
 
 struct add_test {
