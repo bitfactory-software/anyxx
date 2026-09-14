@@ -457,28 +457,88 @@ struct add_test {
     }
 };
 
+template <>
+struct operators<int*, anyxx26::model_map> {
+    static int& op_star(int* self) {
+        return *self;
+    }
+    //static bool equal(int* self, int* other) {
+    //    return self == other;
+    //}
+};
+
 }
 
 TEST_CASE("anyxx26 operators") {
+    {
+        dyn<operators, anyxx::val<>> ops{add_test{}};
+        auto r1 = ops + 1;
+        static_assert(^^decltype(r1)==^^decltype(ops));
+        CHECK(unerase_cast<add_test>(r1)->i == 1);
+    //    anyxx26::meta::print_members<dyn<operators, anyxx::val<>>::v_table_t::fptrs_t>();
+        anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
+        auto& r2 = ++r1;
+        CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
+        CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);
+        CHECK(unerase_cast<add_test>(r1)->i == 2);
+        auto r3 = r2++;
+        CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(r3)->i);
+        CHECK(unerase_cast<add_test>(r1)->i == 3);
+        CHECK(unerase_cast<add_test>(r3)->i == 2);
 
-    dyn<operators, anyxx::val<>> ops{add_test{}};
-    auto r1 = ops + 1;
-    static_assert(^^decltype(r1)==^^decltype(ops));
-    CHECK(unerase_cast<add_test>(r1)->i == 1);
-//    anyxx26::meta::print_members<dyn<operators, anyxx::val<>>::v_table_t::fptrs_t>();
-    anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
-    auto& r2 = ++r1;
-    CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
-    CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);
-    CHECK(unerase_cast<add_test>(r1)->i == 2);
-    auto r3 = r2++;
-    CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(r3)->i);
-    CHECK(unerase_cast<add_test>(r1)->i == 3);
-    CHECK(unerase_cast<add_test>(r3)->i == 2);
+        dyn<operators, anyxx::val<>> ops_rhs{ add_test{3} };
+	    CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
+        CHECK(r1.equal(ops_rhs));
+        CHECK(r1 == ops_rhs);
+    }
 
-    dyn<operators, anyxx::val<>> ops_rhs{ add_test{3} };
-	CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
-    CHECK(r1.equal(ops_rhs));
-    CHECK(r1 == ops_rhs);
+    {
+		std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
+		int* p = arr.data();
+    //    dyn<operators, anyxx::val<>> ops{p};
+        (void)p;
+    }
 }
 
+//namespace {
+//namespace rangesxx {
+//
+//template <typename Self, typename Trait, typename Value>
+//struct input_iterator : save_copyable<Self, Trait> {
+//    Value& operator*();
+//    anyxx::self& operator++();
+//    bool operator==(anyxx::self const&) const;
+//    //bool operator!=(anyxx::self const&) const;
+//
+//	struct typedefs{
+//		using value_type = Value;
+//		using reference = Value&;
+//		using pointer = Value*;
+//		using difference_type = std::ptrdiff_t;
+//		using iterator_category = std::input_iterator_tag;
+//	};
+//};
+//
+//template <typename Self>
+//struct input_iterator<Self, anyxx26::model_map, int> {
+//    static int& op_star(Self& self) {
+//        return *self;
+//    }
+//    static void op_plus_plus(Self& self) {
+//        ++self;
+//    }
+//};
+//
+//}
+//
+//void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int>, dyn<rangesxx::input_iterator, anyxx::val<>, int>) {
+////void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin, dyn<rangesxx::input_iterator, anyxx::val<>, int> end) {
+////	std::for_each(begin, end, [](int x){ std::println("{}", x); });
+//}
+//
+//}
+//
+//TEST_CASE("anyxx26 iterators") {
+//	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
+//	test_input_iterator(arr.begin(), arr.end());
+//}

@@ -112,6 +112,11 @@ decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
             return (*typed_self)(std::forward<Args>(args)...);
         }
     }    
+    if constexpr(is_pointer_type(^^V)) {
+        if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
+            return (*typed_self)(std::forward<Args>(args)...);
+        }
+    }
     throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
 }
 
