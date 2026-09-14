@@ -160,7 +160,7 @@ consteval std::meta::info translate_v_table_fptr_param_type(){
 }
 
 template <std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Param>
-using translate_v_table_fptr_param_type_t = [:translate_v_table_fptr_param_type<dyn_self_cref, dyn_self_mutref>():];
+using translate_v_table_fptr_param_type_t = [:translate_v_table_fptr_param_type<dyn_self_cref, dyn_self_mutref, Param>():];
 
 template <typename V, typename Param>
 decltype(auto) forward_v_table_fptr_param(auto&& param){
@@ -174,8 +174,8 @@ decltype(auto) forward_v_table_fptr_param(auto&& param){
 }
 
 template <std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename R, typename... Args>
-//using v_table_fptr_type = R(*)(translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>...);
-using v_table_fptr_type = R(*)(Args...);
+using v_table_fptr_type = R(*)(translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>...);
+//using v_table_fptr_type = R(*)(Args...);
 
 template <std::meta::info f, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
 consteval std::meta::info make_v_table_fptr_type() {
@@ -207,13 +207,13 @@ consteval void collect_v_table_members(std::vector<std::meta::info>& fptrs) {
             fptrs.push_back(reflect_constant(dms));
         }
         else if constexpr(has_identifier(m) && is_function(m)) {
-            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_val, dyn_self_cref>();
+            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
                 ft, { .name = identifier_of(m) });
             fptrs.push_back(reflect_constant(dms));
         }
         else if constexpr(is_user_declared(m) && is_operator_function(m)) {
-            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_val, dyn_self_cref>();
+            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
                 ft, { .name = anyxx26::meta::enum_to_string(operator_of(m)) });
             fptrs.push_back(reflect_constant(dms));
@@ -234,8 +234,8 @@ consteval std::meta::info make_v_table_members_type() {
 template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
     typename V, typename R, typename VoidSelf, typename... Args>
 [:translate_v_table_return_type<^^R, dyn_self_val>():] vfimpl
-    (VoidSelf self, Args... args) {
-    //translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
+    //(VoidSelf self, Args... args) {
+    (VoidSelf self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
   using return_t = [:translate_v_table_return_type<^^R, dyn_self_val>():];
   if constexpr (default_ || !is_static_member(m)) {
     if constexpr(std::same_as<return_t, void>) {

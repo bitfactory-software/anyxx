@@ -255,8 +255,9 @@ TEST_CASE("anyxx26 templated trait") {
 
 namespace { 
 using any_copyable = dyn<save_copyable, anyxx::val<>>;
+using any_copy_refable = dyn<save_copyable, anyxx::cref>;
 using any_moveable = dyn<save_moveable, anyxx::val<>>;
-
+using any_move_refable = dyn<save_moveable, anyxx::cref>;
 }  // namespace
 
 TEST_CASE("anyxx26 std any equivalents") {
@@ -289,6 +290,12 @@ TEST_CASE("anyxx26 std any equivalents") {
         } else{
             CHECK(false);
         }
+        any_copy_refable a3 = a2;
+        if(auto p = unerase_cast<int>(a3)){
+            CHECK(*p == 42);
+        } else{
+            CHECK(false);
+        }
     }
     {
         auto a1 = any_moveable{ std::make_unique<int>(42) };
@@ -305,8 +312,13 @@ TEST_CASE("anyxx26 std any equivalents") {
         }
 		static_assert(!std::copy_constructible<any_moveable>);
 		//any_moveable a3 = a2; does not compile, as expected
+        any_move_refable a3 = a2;
+        if(auto p = unerase_cast<std::unique_ptr<int>>(a3)){
+            CHECK(*p->get() == 42);
+        } else{
+            CHECK(false);
+        }
     }
-
 }
 
 namespace {
@@ -423,6 +435,8 @@ template <typename Self, typename Trait>
 struct operators : save_copyable<Self, Trait> {
     anyxx::self operator+(int) const;
     anyxx::self& operator++();
+    bool equal(anyxx::self const&) const;
+    bool operator==(anyxx::self const&) const;
 };
 
 struct add_test {
@@ -434,6 +448,12 @@ struct add_test {
     add_test& operator++() {
         ++i;
         return *this;
+    }
+    bool equal(add_test const& other) const {
+        return i == other.i;
+    }
+    bool operator==(add_test const& other) const {
+        return i == other.i;
     }
 };
 
@@ -455,5 +475,10 @@ TEST_CASE("anyxx26 operators") {
     CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(r3)->i);
     CHECK(unerase_cast<add_test>(r1)->i == 3);
     CHECK(unerase_cast<add_test>(r3)->i == 2);
+
+    dyn<operators, anyxx::val<>> ops_rhs{ add_test{3} };
+	CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
+    CHECK(r1.equal(ops_rhs));
+    CHECK(r1 == ops_rhs);
 }
 
