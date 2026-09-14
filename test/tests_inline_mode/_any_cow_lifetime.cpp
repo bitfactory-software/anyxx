@@ -20,7 +20,7 @@ struct XX {
   static inline int move_constructed_ = 0;
   static inline int copy_assigned_ = 0;
   static inline int move_assigned_ = 0;
-  XX(T s = "") : s_(std::move(s)) {
+  XX(T s = T{}) : s_(std::move(s)) {
     interior_ptr_ = &s_;
     std::println("X({})", s_);
     ++tracker_;
