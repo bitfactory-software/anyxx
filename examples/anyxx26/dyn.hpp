@@ -43,13 +43,13 @@ using self_const_correct_t = std::conditional_t<
     std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
     V const, V>;
 
-template<std::meta::info TraitTemplate, typename V, typename... Args>
+template<std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info trait_model_map(){
-    return substitute(TraitTemplate, {^^V, ^^model_map, ^^Args...});;
+    return substitute(TraitTemplate, {^^V, ^^model_map, Args...});;
 }
-template<std::meta::info TraitTemplate, typename... Args>
+template<std::meta::info TraitTemplate, std::meta::info... Args>
 consteval std::meta::info trait_declaration(){
-    return substitute(TraitTemplate, {^^void*, ^^declaration, ^^Args...});;
+    return substitute(TraitTemplate, {^^void*, ^^declaration, Args...});;
 }
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
@@ -302,7 +302,7 @@ template <template <typename, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info Trait, std::meta::info interface_function>
-consteval std::optional<std::meta::info> find_function_impl() {
+consteval std::optional<std::meta::info> find_function_impl_in() {
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(Trait, ctx))) {
         if constexpr(interface_function == m){
@@ -325,14 +325,14 @@ consteval std::optional<std::meta::info> find_function_impl() {
     return {};
 }
 
-template <std::meta::info TraitTemplate, typename V, std::meta::info InterfaceFunction, typename... Args>
+template <std::meta::info TraitTemplate, typename V, std::meta::info InterfaceFunction, std::meta::info... Args>
 consteval std::meta::info find_function_impl() {
 
-  constexpr auto found_in_impl = find_function_impl<trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction >();
+  constexpr auto found_in_impl = find_function_impl_in<trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction >();
   if constexpr (found_in_impl) {
     return *found_in_impl;
   } 
-  constexpr auto found_in_base = find_function_impl<trait_declaration<TraitTemplate, Args...>(), InterfaceFunction >();
+  constexpr auto found_in_base = find_function_impl_in<trait_declaration<TraitTemplate, Args...>(), InterfaceFunction >();
   if constexpr(found_in_base) {
       return *found_in_base;
   }
@@ -344,7 +344,7 @@ struct v_table;
 
 
 template <std::meta::info Trait, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
-    typename Concrete, std::meta::info FunctionPointers, typename... Args>
+    typename Concrete, std::meta::info FunctionPointers, std::meta::info... Args>
 void set_v_table_members(auto* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
@@ -388,7 +388,7 @@ struct v_table
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_members<^^Trait, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t, Args...>(this);
+        set_v_table_members<^^Trait, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t, ^^Args...>(this);
     }
 };
 
@@ -654,7 +654,7 @@ template <template <typename, typename, typename...> typename Trait, typename Pr
 consteval std::meta::info make_dyn_facade() {
 
   std::vector<std::meta::info> calls;
-  collect_dyn_facade_calls<trait_declaration<^^Trait, Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
+  collect_dyn_facade_calls<trait_declaration<^^Trait, ^^Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
   return substitute(^^meta::to_struct, calls);
 };
 
