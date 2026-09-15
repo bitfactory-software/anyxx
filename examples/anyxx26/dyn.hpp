@@ -408,8 +408,26 @@ ToVtable* v_table_cast(FromVTable* from) {
 	return static_cast<ToVtable*>(void_p);
 }
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args >
-struct dyn_base {
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+concept has_deduced_typenames = requires { typename Trait<void*, declaration, Args...>::typenames; };
+
+struct empty_t {};
+
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+consteval std::meta::info compute_deduced_typenames() {
+	if constexpr(has_deduced_typenames<Trait, Args...>) {
+	    return ^^ typename Trait<void*, declaration, Args...>::typenames;
+	} else {
+		return ^^empty_t;
+    }
+}
+
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+using deduced_typenames = [:compute_deduced_typenames<Trait, Args...>():];
+
+
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+struct dyn_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
   using dyn_self_t = dyn<Trait, Proxy, Args...>;
   using proxy_t = Proxy;

@@ -505,45 +505,47 @@ TEST_CASE("anyxx26 operators") {
     }
 }
 
-//namespace {
-//namespace rangesxx {
-//
-//template <typename Self, typename Trait, typename Value>
-//struct input_iterator : save_copyable<Self, Trait> {
-//    Value& operator*();
-//    anyxx::self& operator++();
-//    bool operator==(anyxx::self const&) const;
-//    //bool operator!=(anyxx::self const&) const;
-//
-//	struct typedefs{
-//		using value_type = Value;
-//		using reference = Value&;
-//		using pointer = Value*;
-//		using difference_type = std::ptrdiff_t;
-//		using iterator_category = std::input_iterator_tag;
-//	};
-//};
-//
-//template <typename Self>
-//struct input_iterator<Self, anyxx26::model_map, int> {
-//    static int& op_star(Self& self) {
-//        return *self;
-//    }
-//    static void op_plus_plus(Self& self) {
-//        ++self;
-//    }
-//};
-//
-//}
-//
+namespace {
+namespace rangesxx {
+
+template <typename Self, typename Trait, typename Value>
+struct input_iterator : save_copyable<Self, Trait> {
+    Value& operator*();
+    anyxx::self& operator++();
+    bool operator==(anyxx::self const&) const;
+    bool operator!=(anyxx::self const&) const;
+
+	struct typenames {
+		using value_type = Value;
+		using reference = Value&;
+		using pointer = Value*;
+		using difference_type = std::ptrdiff_t;
+		using iterator_category = std::input_iterator_tag;
+	};
+};
+
+static_assert(has_deduced_typenames<rangesxx::input_iterator, int>);
+static_assert(has_identifier(compute_deduced_typenames<rangesxx::input_iterator, int>()));
+static_assert(has_identifier(^^rangesxx::input_iterator<void*, declaration, int>::typenames));
+static_assert(std::same_as<deduced_typenames<rangesxx::input_iterator, int>, rangesxx::input_iterator<void*, declaration, int>::typenames>);
+static_assert(!has_deduced_typenames<stringable>);
+static_assert(!has_deduced_typenames<addable>);
+static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
+static_assert(!has_deduced_typenames<mapable, int>);
+
+}
+
 //void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int>, dyn<rangesxx::input_iterator, anyxx::val<>, int>) {
-////void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin, dyn<rangesxx::input_iterator, anyxx::val<>, int> end) {
-////	std::for_each(begin, end, [](int x){ std::println("{}", x); });
-//}
-//
-//}
-//
-//TEST_CASE("anyxx26 iterators") {
-//	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
-//	test_input_iterator(arr.begin(), arr.end());
-//}
+void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin, dyn<rangesxx::input_iterator, anyxx::val<>, int> end) {
+	std::for_each(begin, end, [](int x){ std::println("{}", x); });
+}
+
+}
+
+TEST_CASE("anyxx26 iterators") {
+
+	static_assert(std::input_iterator<dyn<rangesxx::input_iterator, anyxx::val<>, int>>);
+
+	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
+	test_input_iterator(arr.begin(), arr.end());
+}
