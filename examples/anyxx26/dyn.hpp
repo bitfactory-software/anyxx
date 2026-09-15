@@ -352,6 +352,7 @@ void set_v_table_members(auto* v_table) {
     constexpr auto base = meta::get_single_public_base<td>();
     if constexpr(base != std::meta::info{}) {
         if constexpr(has_template_arguments(type_of(base)) && template_arguments_of(type_of(base)).size() > 2u) {
+			static_assert(false, "Base trait has template arguments, not yet implemented");
             //constexpr auto base_trait_template = template_of(type_of(base));
             //auto call_params = std::vector{ reflect_constant(base_trait_template),^^ Concrete, reflect_constant(FunctionPointers) };
             //constexpr auto base_trait_params = template_arguments_of(base_trait_template) | std::views::drop(2); // self, trait-specifier

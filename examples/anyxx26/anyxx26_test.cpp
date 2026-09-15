@@ -532,6 +532,27 @@ static_assert(!has_deduced_typenames<stringable>);
 static_assert(!has_deduced_typenames<addable>);
 static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
 static_assert(!has_deduced_typenames<mapable, int>);
+static_assert(std::input_iterator<dyn<rangesxx::input_iterator, anyxx::val<>, int>>);
+
+template <typename Self, typename Trait, typename Value>
+struct forward_iterator : input_iterator<Self, Trait, Value> {
+	struct typenames : input_iterator<Self, Trait, Value>::typenames {
+		using iterator_category = std::forward_iterator_tag;
+	};
+};
+
+static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, anyxx::val<std::true_type>, int>>);
+
+template <typename Self, typename Trait, typename Value>
+struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
+    anyxx::self& operator--();
+
+    struct typenames : forward_iterator<Self, Trait, Value>::typenames {
+        using iterator_category = std::bidirectional_iterator_tag;
+    };
+};
+
+static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int>>);
 
 }
 
@@ -540,12 +561,17 @@ void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin,
 	std::for_each(begin, end, [](int x){ std::println("{}", x); });
 }
 
+//void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, anyxx::val<>, int> begin) {
+//    std::println("{}", *begin++);
+//    std::println("{}", *--begin);
+//    std::println("{}", *begin);
+//}
+
 }
 
 TEST_CASE("anyxx26 iterators") {
 
-	static_assert(std::input_iterator<dyn<rangesxx::input_iterator, anyxx::val<>, int>>);
-
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 	test_input_iterator(arr.begin(), arr.end());
+    //test_bidirectional_iterator(arr.begin());
 }
