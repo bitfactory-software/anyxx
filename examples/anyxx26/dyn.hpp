@@ -342,25 +342,23 @@ consteval std::meta::info find_function_impl() {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
+template <typename VTable, std::meta::info Base, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref,
+    typename Concrete, std::meta::info FunctionPointers>
+consteval std::meta::info make_set_base_v_table_members();
 
-template <std::meta::info Trait, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
+template <typename VTable, std::meta::info Trait, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
     typename Concrete, std::meta::info FunctionPointers, std::meta::info... Args>
-void set_v_table_members(auto* v_table) {
+void set_v_table_members(VTable* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
     constexpr auto td = trait_declaration<Trait, Args...>();
     constexpr auto base = meta::get_single_public_base<td>();
     if constexpr(base != std::meta::info{}) {
         if constexpr(has_template_arguments(type_of(base)) && template_arguments_of(type_of(base)).size() > 2u) {
-			static_assert(false, "Base trait has template arguments, not yet implemented");
-            //constexpr auto base_trait_template = template_of(type_of(base));
-            //auto call_params = std::vector{ reflect_constant(base_trait_template),^^ Concrete, reflect_constant(FunctionPointers) };
-            //constexpr auto base_trait_params = template_arguments_of(base_trait_template) | std::views::drop(2); // self, trait-specifier
-            //call_params.append_range(base_trait_params);
-            //consteval{ auto call_set_v_table_fptrs_with_base_trait_args = substitute(^^set_v_table_members, call_params); }
-            //[:call_set_v_table_fptrs_with_base_trait_args:] (v_table);
+            constexpr auto base_set_v_table_fptrs = make_set_base_v_table_members<VTable, type_of(base), dyn_self_val, dyn_self_cref, dyn_self_mutref, Concrete, FunctionPointers>();
+            [:base_set_v_table_fptrs:] (v_table);
         } else {
-            set_v_table_members<template_of(type_of(base)), dyn_self_val, dyn_self_cref, dyn_self_mutref, Concrete, FunctionPointers>(v_table);
+            set_v_table_members<VTable, template_of(type_of(base)), dyn_self_val, dyn_self_cref, dyn_self_mutref, Concrete, FunctionPointers>(v_table);
         }
     }
 
@@ -378,6 +376,24 @@ void set_v_table_members(auto* v_table) {
     }
 }
 
+template <typename VTable, std::meta::info Base, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref,
+    typename Concrete, std::meta::info FunctionPointers>
+consteval std::meta::info make_set_base_v_table_members() {
+    constexpr auto base_trait_template = template_of(Base);
+    std::vector<std::meta::info> function_params = {
+        ^^VTable,
+        reflect_constant(base_trait_template),
+        reflect_constant(dyn_self_val),
+        reflect_constant(dyn_self_cref),
+        reflect_constant(dyn_self_mutref),
+        ^^Concrete,
+        reflect_constant(FunctionPointers),
+    };
+	static_assert(template_arguments_of(Base).size() > 2u);
+    function_params.append_range(template_arguments_of(Base) | std::views::drop(2) | std::views::transform([](std::meta::info i){ return reflect_constant(i); }));
+    return substitute(^^set_v_table_members, function_params);
+}
+
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table
     : base_v_table_t<Trait>,
@@ -388,7 +404,7 @@ struct v_table
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_members<^^Trait, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t, ^^Args...>(this);
+        set_v_table_members<v_table_t, ^^Trait, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t, ^^Args...>(this);
     }
 };
 

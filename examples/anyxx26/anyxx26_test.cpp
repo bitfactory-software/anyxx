@@ -561,11 +561,15 @@ void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin,
 	std::for_each(begin, end, [](int x){ std::println("{}", x); });
 }
 
-//void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, anyxx::val<>, int> begin) {
-//    std::println("{}", *begin++);
-//    std::println("{}", *--begin);
-//    std::println("{}", *begin);
-//}
+void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int> begin) {
+    CHECK(*begin++ == 1);
+    CHECK(*--begin == 1);
+    CHECK(*begin == 1);
+    CHECK(*++begin == 2);
+    CHECK(*begin == 2);
+    CHECK(*--begin == 1);
+    CHECK(*begin == 1);
+}
 
 }
 
@@ -573,5 +577,5 @@ TEST_CASE("anyxx26 iterators") {
 
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 	test_input_iterator(arr.begin(), arr.end());
-    //test_bidirectional_iterator(arr.begin());
+    test_bidirectional_iterator(arr.begin());
 }
