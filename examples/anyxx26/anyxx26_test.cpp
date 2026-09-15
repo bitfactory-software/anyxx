@@ -433,6 +433,7 @@ namespace {
 
 template <typename Self, typename Trait>
 struct operators : save_copyable<Self, Trait> {
+    int const& operator*() const;
     anyxx::self operator+(int) const;
     anyxx::self& operator++();
     bool equal(anyxx::self const&) const;
@@ -442,6 +443,9 @@ struct operators : save_copyable<Self, Trait> {
 struct add_test {
     int i = 0;
 
+    int const& operator*() const{
+        return i;
+    }
     add_test operator+(int inc) const{
         return { i + inc };
     }
@@ -459,12 +463,9 @@ struct add_test {
 
 template <>
 struct operators<int*, anyxx26::model_map> {
-    static int& op_star(int* self) {
-        return *self;
+    static bool equal(int const* self, int const* other) {
+        return self == other;
     }
-    //static bool equal(int* self, int* other) {
-    //    return self == other;
-    //}
 };
 
 }
@@ -475,7 +476,7 @@ TEST_CASE("anyxx26 operators") {
         auto r1 = ops + 1;
         static_assert(^^decltype(r1)==^^decltype(ops));
         CHECK(unerase_cast<add_test>(r1)->i == 1);
-    //    anyxx26::meta::print_members<dyn<operators, anyxx::val<>>::v_table_t::fptrs_t>();
+        //anyxx26::meta::print_members<dyn<operators, anyxx::val<>>::v_table_t::fptrs_t>();
         anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
         auto& r2 = ++r1;
         CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
@@ -494,9 +495,13 @@ TEST_CASE("anyxx26 operators") {
 
     {
 		std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
-		int* p = arr.data();
-    //    dyn<operators, anyxx::val<>> ops{p};
-        (void)p;
+		int* p_int = arr.begin();
+        dyn<operators, anyxx::val<>> p{p_int};
+        CHECK(*p == 1);
+		++p;
+        CHECK(*p == 2);
+        p = p + 2;
+        CHECK(*p == 4);
     }
 }
 

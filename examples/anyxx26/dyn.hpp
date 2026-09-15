@@ -111,13 +111,33 @@ decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
         if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
             return (*typed_self)(std::forward<Args>(args)...);
         }
-    }    
-    if constexpr(is_pointer_type(^^V)) {
-        if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
-            return (*typed_self)(std::forward<Args>(args)...);
+    } else {
+        if constexpr(!is_operator_function(spec)) {
+            throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
+        } else {
+			if constexpr(meta::is_op_spec<spec, std::meta::op_plus_plus>()) {
+				return ++(*typed_self);
+			} else if constexpr(meta::is_op_spec<spec, std::meta::op_minus_minus>()) {
+				return --(*typed_self);
+			} else if constexpr(meta::is_op_spec<spec, std::meta::op_star>()) {
+				return *(*typed_self);
+			} else if constexpr(meta::is_op_spec<spec, std::meta::op_arrow>()) {
+                return (*typed_self).operator->();
+			} else if constexpr(meta::is_op_spec<spec, std::meta::op_square_brackets>()) {
+				return (*typed_self)[std::forward<Args>(args)...];
+            } else if constexpr(meta::is_op_spec<spec, std::meta::op_plus>()) {
+                return ((*typed_self) + ... + std::forward<Args>(args));
+            } else if constexpr(meta::is_op_spec<spec, std::meta::op_minus>()) {
+                return ((*typed_self) - ... - std::forward<Args>(args));
+            } else if constexpr(meta::is_op_spec<spec, std::meta::op_equals_equals>()) {
+                return ((*typed_self) == ... == std::forward<Args>(args));
+            } else if constexpr(meta::is_op_spec<spec, std::meta::op_exclamation_equals>()) {
+                return ((*typed_self) != ... != std::forward<Args>(args));
+            } else {
+                throw std::logic_error(std::format("{} not yet implemeted in anyxx.", display_string_of(spec)));
+            }
         }
     }
-    throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
 }
 
 template <std::meta::info p>
@@ -260,7 +280,7 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
   }
 }
 
-template <typename V, std::meta::info f, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
+template <typename V, std::meta::info interface_m, std::meta::info f, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
 consteval std::meta::info make_vfimpl() {
   std::vector<std::meta::info> types;
   bool use_default = annotations_of_with_type(f, ^^default_t).size() > 0;
@@ -271,8 +291,8 @@ consteval std::meta::info make_vfimpl() {
   types.push_back(std::meta::reflect_constant(dyn_self_mutref));
   types.push_back(^^V);
   types.push_back(return_type_of(f));
-  add_v_table_fptr_this_param_type<f>(types);
-  template for (constexpr auto p : define_static_array(parameters_of(f))) {
+  add_v_table_fptr_this_param_type<interface_m>(types);
+  template for (constexpr auto p : define_static_array(parameters_of(interface_m))) {
     types.push_back(make_v_table_fptr_param_type<p>(types.size() == 7u));
   }
   return substitute(^^vfimpl, types);
@@ -352,7 +372,7 @@ void set_v_table_members(auto* v_table) {
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
             constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
             constexpr auto m = find_function_impl<Trait, Concrete, interface_m, Args...>();
-            v_table->[:f:] = [:make_vfimpl<Concrete, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>():];
+            v_table->[:f:] = [:make_vfimpl<Concrete, interface_m, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>():];
         }
     }
 }
