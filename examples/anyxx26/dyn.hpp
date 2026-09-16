@@ -164,8 +164,7 @@ consteval std::meta::info make_v_table_fptr_param_type(bool self) {
   }
 }
 
-template <std::meta::info f>
-consteval void add_v_table_fptr_this_param_type(std::vector<std::meta::info>& types) {
+consteval void add_v_table_fptr_this_param_type(std::meta::info f, std::vector<std::meta::info>& types) {
     if(!is_static_member(f)) {
         if(is_const(f)) {
             types.push_back(^^void const*);
@@ -212,7 +211,7 @@ consteval std::meta::info make_v_table_fptr_type() {
   types.push_back(reflect_constant(dyn_self_cref));
   types.push_back(reflect_constant(dyn_self_mutref));
   types.push_back(translate_v_table_return_type<return_type_of(f), dyn_self_val>());
-  add_v_table_fptr_this_param_type<f>(types);
+  add_v_table_fptr_this_param_type(f,types);
   template for (constexpr auto p : define_static_array(parameters_of(f))) {
     types.push_back(make_v_table_fptr_param_type<p>(types.size() == 3));
   }
@@ -244,6 +243,11 @@ consteval std::string_view v_table_name_of(v_table_spec spec) {
         return anyxx26::meta::enum_to_string(operator_of(spec.member));
     }
 }
+
+//consteval std::meta::info make_v_table_function_data_member_spec(v_table_spec spec, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref) {
+//    auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
+//    return std::meta::data_member_spec(ft, { .name = v_table_name_of(spec) });
+//}
 
 template <std::meta::info TraitDeclaration>
 consteval std::vector<v_table_spec> v_table_specs() {
@@ -336,7 +340,7 @@ consteval std::meta::info make_vfimpl() {
   types.push_back(std::meta::reflect_constant(dyn_self_mutref));
   types.push_back(^^V);
   types.push_back(return_type_of(f));
-  add_v_table_fptr_this_param_type<interface_m>(types);
+  add_v_table_fptr_this_param_type(interface_m, types);
   template for (constexpr auto p : define_static_array(parameters_of(interface_m))) {
     types.push_back(make_v_table_fptr_param_type<p>(types.size() == 7u));
   }
