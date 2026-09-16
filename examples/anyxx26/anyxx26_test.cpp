@@ -5,6 +5,7 @@
 #include <examples/anyxx26/meta/print_members.hpp>
 #include <examples/anyxx26/meta/utilities.hpp>
 #include <examples/anyxx26/trait_as.hpp>
+#include <examples/anyxx26/rangesxx.hpp>
 #include <meta>
 #include <print>
 #include <string>
@@ -505,25 +506,6 @@ TEST_CASE("anyxx26 operators") {
     }
 }
 
-namespace {
-namespace rangesxx {
-
-template <typename Self, typename Trait, typename Value>
-struct input_iterator : save_copyable<Self, Trait> {
-    Value& operator*();
-    anyxx::self& operator++();
-    bool operator==(anyxx::self const&) const;
-    bool operator!=(anyxx::self const&) const;
-
-	struct typenames {
-		using value_type = Value;
-		using reference = Value&;
-		using pointer = Value*;
-		using difference_type = std::ptrdiff_t;
-		using iterator_category = std::input_iterator_tag;
-	};
-};
-
 static_assert(has_deduced_typenames<rangesxx::input_iterator, int>);
 static_assert(has_identifier(compute_deduced_typenames<rangesxx::input_iterator, int>()));
 static_assert(has_identifier(^^rangesxx::input_iterator<void*, declaration, int>::typenames));
@@ -534,29 +516,13 @@ static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
 static_assert(!has_deduced_typenames<mapable, int>);
 static_assert(std::input_iterator<dyn<rangesxx::input_iterator, anyxx::val<>, int>>);
 
-template <typename Self, typename Trait, typename Value>
-struct forward_iterator : input_iterator<Self, Trait, Value> {
-	struct typenames : input_iterator<Self, Trait, Value>::typenames {
-		using iterator_category = std::forward_iterator_tag;
-	};
-};
 
 static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, anyxx::val<std::true_type>, int>>);
 
-template <typename Self, typename Trait, typename Value>
-struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
-    anyxx::self& operator--();
-
-    struct typenames : forward_iterator<Self, Trait, Value>::typenames {
-        using iterator_category = std::bidirectional_iterator_tag;
-    };
-};
-
 static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int>>);
 
-}
+namespace {
 
-//void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int>, dyn<rangesxx::input_iterator, anyxx::val<>, int>) {
 void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin, dyn<rangesxx::input_iterator, anyxx::val<>, int> end) {
 	std::for_each(begin, end, [](int x){ std::println("{}", x); });
 }
