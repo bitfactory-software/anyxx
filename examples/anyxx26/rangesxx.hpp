@@ -36,5 +36,24 @@ struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
     };
 };
 
+template <typename Self, typename Trait, typename Value>
+struct random_access_iterator : forward_iterator<Self, Trait, Value> {
+    bool operator<(anyxx::self const&) const;
+    bool operator>(anyxx::self const&) const;
+    bool operator<=(anyxx::self const&) const;
+    bool operator>=(anyxx::self const&) const;
+
+    anyxx::self& operator-=(std::ptrdiff_t);
+    anyxx::self& operator+=(std::ptrdiff_t);
+    anyxx::self operator-(std::ptrdiff_t) const;
+    anyxx::self operator+(std::ptrdiff_t) const;
+
+    Value& operator[](std::ptrdiff_t) const;
+
+    struct typenames : forward_iterator<Self, Trait, Value>::typenames {
+        using iterator_category = std::random_access_iterator_tag;
+    };
+};
+
 }
 

@@ -521,6 +521,8 @@ static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, anyxx::val<s
 
 static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int>>);
 
+//static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int>>);
+
 namespace {
 
 void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin, dyn<rangesxx::input_iterator, anyxx::val<>, int> end) {
