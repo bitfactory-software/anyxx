@@ -33,10 +33,10 @@ consteval std::meta::info trait_model_map(){
 }
 template<std::meta::info TraitTemplate, std::meta::info... Args>
 consteval std::meta::info trait_declaration(){
-    return substitute(TraitTemplate, { ^^void*,^^ declaration, Args... });;
+    return substitute(TraitTemplate, { ^^declaration,^^declaration, Args... });;
 }
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
-using trait_declaration_t = TraitTemplate<void*, declaration, Args...>;
+using trait_declaration_t = TraitTemplate<declaration, declaration, Args...>;
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 concept specifies_default_proxy_t = requires { typename trait_declaration_t<Trait, Args...>::default_proxy_t; };
@@ -154,12 +154,7 @@ consteval std::meta::info make_v_table_fptr_param_type(bool self) {
   constexpr auto type = type_of(p);
   // constexpr auto name = identifier_of(p);
   if (self) {
-    if constexpr (type == ^^void* const& || type == ^^void const* ||
-                  type == ^^void const*&) {
-      return ^^void const*;
-    } else if constexpr (type == ^^void*& || type == ^^void*) {
-      return ^^void*;
-    } else if (is_const(remove_reference(type))) {
+    if (is_const(remove_reference(type))) {
       return ^^void const*;
     } else {
       return ^^void*;
@@ -258,7 +253,7 @@ consteval void collect_v_table_members(std::vector<std::meta::info>& fptrs) {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_v_table_members_type() {
     std::vector<std::meta::info> fptrs;
-    collect_v_table_members<^^Trait<void*, declaration, Args...>, 
+    collect_v_table_members<^^Trait<declaration, declaration, Args...>, 
         ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^ dyn_self_mutref_t<Trait, Args...>>
         (fptrs);
     return substitute(^^meta::to_struct, fptrs);
@@ -435,14 +430,14 @@ ToVtable* v_table_cast(FromVTable* from) {
 }
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-concept has_deduced_typenames = requires { typename Trait<void*, declaration, Args...>::typenames; };
+concept has_deduced_typenames = requires { typename Trait<declaration, declaration, Args...>::typenames; };
 
 struct empty_t {};
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info compute_deduced_typenames() {
 	if constexpr(has_deduced_typenames<Trait, Args...>) {
-	    return ^^ typename Trait<void*, declaration, Args...>::typenames;
+	    return ^^ typename Trait<declaration, declaration, Args...>::typenames;
 	} else {
 		return ^^empty_t;
     }

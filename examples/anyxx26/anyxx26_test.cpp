@@ -508,8 +508,8 @@ TEST_CASE("anyxx26 operators") {
 
 static_assert(has_deduced_typenames<rangesxx::input_iterator, int>);
 static_assert(has_identifier(compute_deduced_typenames<rangesxx::input_iterator, int>()));
-static_assert(has_identifier(^^rangesxx::input_iterator<void*, declaration, int>::typenames));
-static_assert(std::same_as<deduced_typenames<rangesxx::input_iterator, int>, rangesxx::input_iterator<void*, declaration, int>::typenames>);
+static_assert(has_identifier(^^rangesxx::input_iterator<declaration, declaration, int>::typenames));
+static_assert(std::same_as<deduced_typenames<rangesxx::input_iterator, int>, rangesxx::input_iterator<declaration, declaration, int>::typenames>);
 static_assert(!has_deduced_typenames<stringable>);
 static_assert(!has_deduced_typenames<addable>);
 static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
