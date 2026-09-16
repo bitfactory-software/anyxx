@@ -235,11 +235,15 @@ consteval bool is_operator(v_table_spec spec) {
     return is_user_declared(spec.member) && is_operator_function(spec.member);
 }
 
-
-//consteval auto v_table_naame_of(v_table_spec spec) {
-//        if (has_identifier(spec.member) && is_function(spec.member)) {
-//            return identifier_of(spec.member);
-//}
+consteval std::string_view v_table_name_of(v_table_spec spec) {
+    if (is_v_table_data(spec)) {
+        return identifier_of(spec.member);
+    } else if (is_function(spec)) {
+        return identifier_of(spec.member);
+    } else {
+        return anyxx26::meta::enum_to_string(operator_of(spec.member));
+    }
+}
 
 template <std::meta::info TraitDeclaration>
 consteval std::vector<v_table_spec> v_table_specs() {
@@ -270,19 +274,19 @@ consteval std::vector<std::meta::info> collect_v_table_members() {
     template for(constexpr auto spec : define_static_array(v_table_specs<TraitDeclaration>())) {
         if constexpr(is_v_table_data(spec)) {
             using type = [:spec.member:]::type;
-            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(spec.member) });
+            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = v_table_name_of(spec) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(is_function(spec  )) {
+        else if constexpr(is_function(spec)) {
             auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
-                ft, { .name = identifier_of(spec.member) });
+                ft, { .name = v_table_name_of(spec) });
             fptrs.push_back(reflect_constant(dms));
         }
         else if constexpr(is_operator(spec)) {
             auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
-                ft, { .name = anyxx26::meta::enum_to_string(operator_of(spec.member)) });
+                ft, { .name = v_table_name_of(spec) });
             fptrs.push_back(reflect_constant(dms));
         }
     }
