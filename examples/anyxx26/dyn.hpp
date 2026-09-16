@@ -224,6 +224,23 @@ struct v_table_spec {
   std::meta::info member;
   std::size_t index;
 };
+
+consteval bool is_v_table_data(v_table_spec spec) {
+    return has_identifier(spec.member) && is_type(spec.member) && annotations_of_with_type(spec.member, ^^v_table_data_t).size() > 0;
+}
+consteval bool is_function(v_table_spec spec) {
+    return has_identifier(spec.member) && is_function(spec.member);
+}
+consteval bool is_operator(v_table_spec spec) {
+    return is_user_declared(spec.member) && is_operator_function(spec.member);
+}
+
+
+//consteval auto v_table_naame_of(v_table_spec spec) {
+//        if (has_identifier(spec.member) && is_function(spec.member)) {
+//            return identifier_of(spec.member);
+//}
+
 template <std::meta::info TraitDeclaration>
 consteval std::vector<v_table_spec> v_table_specs() {
     if constexpr(TraitDeclaration == std::meta::info{}) {
@@ -251,18 +268,18 @@ consteval std::vector<std::meta::info> collect_v_table_members() {
 
     std::vector<std::meta::info> fptrs;
     template for(constexpr auto spec : define_static_array(v_table_specs<TraitDeclaration>())) {
-        if constexpr(has_identifier(spec.member) && is_type(spec.member) && annotations_of_with_type(spec.member, ^^v_table_data_t).size() > 0) {
+        if constexpr(is_v_table_data(spec)) {
             using type = [:spec.member:]::type;
             auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(spec.member) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(has_identifier(spec.member) && is_function(spec.member)) {
+        else if constexpr(is_function(spec  )) {
             auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
                 ft, { .name = identifier_of(spec.member) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(is_user_declared(spec.member) && is_operator_function(spec.member)) {
+        else if constexpr(is_operator(spec)) {
             auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
                 ft, { .name = anyxx26::meta::enum_to_string(operator_of(spec.member)) });
