@@ -220,37 +220,52 @@ consteval std::meta::info make_v_table_fptr_type() {
   return substitute(^^v_table_fptr_type, types);
 }
 
-template <std::meta::info TraitDeclaration, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
-consteval std::vector<std::meta::info> collect_v_table_members() {
+template <std::meta::info TraitDeclaration>
+consteval std::vector<std::meta::info> v_table_specs() {
     if constexpr(TraitDeclaration == std::meta::info{}) {
         return {};
     } else {
         static_assert(is_type(TraitDeclaration));
-        auto fptrs = collect_v_table_members<meta::get_type_of_single_public_base<TraitDeclaration>(), dyn_self_val, dyn_self_cref, dyn_self_mutref>();
+        auto specs = v_table_specs<meta::get_type_of_single_public_base<TraitDeclaration>()>();
 
         constexpr auto ctx = std::meta::access_context::current();
-        template for(constexpr auto m :
-            define_static_array(members_of(TraitDeclaration, ctx))) {
-            if constexpr(has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
-                using type = [:m:]::type;
-                auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(m) });
-                fptrs.push_back(reflect_constant(dms));
-            }
-            else if constexpr(has_identifier(m) && is_function(m)) {
-                auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
-                auto dms = std::meta::data_member_spec(
-                    ft, { .name = identifier_of(m) });
-                fptrs.push_back(reflect_constant(dms));
-            }
-            else if constexpr(is_user_declared(m) && is_operator_function(m)) {
-                auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
-                auto dms = std::meta::data_member_spec(
-                    ft, { .name = anyxx26::meta::enum_to_string(operator_of(m)) });
-                fptrs.push_back(reflect_constant(dms));
+        for(auto m : members_of(TraitDeclaration, ctx)) {
+            if (has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
+                specs.push_back(m);
+            } else if (has_identifier(m) && is_function(m)) {
+                specs.push_back(m);
+            } else if (is_user_declared(m) && is_operator_function(m)) {
+                specs.push_back(m);
             }
         }
-        return fptrs;
+        return specs;
     }
+}
+
+template <std::meta::info TraitDeclaration, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
+consteval std::vector<std::meta::info> collect_v_table_members() {
+
+    std::vector<std::meta::info> fptrs;
+    template for(constexpr auto m : define_static_array(v_table_specs<TraitDeclaration>())) {
+        if constexpr(has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
+            using type = [:m:]::type;
+            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(m) });
+            fptrs.push_back(reflect_constant(dms));
+        }
+        else if constexpr(has_identifier(m) && is_function(m)) {
+            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
+            auto dms = std::meta::data_member_spec(
+                ft, { .name = identifier_of(m) });
+            fptrs.push_back(reflect_constant(dms));
+        }
+        else if constexpr(is_user_declared(m) && is_operator_function(m)) {
+            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
+            auto dms = std::meta::data_member_spec(
+                ft, { .name = anyxx26::meta::enum_to_string(operator_of(m)) });
+            fptrs.push_back(reflect_constant(dms));
+        }
+    }
+    return fptrs;
 };
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
