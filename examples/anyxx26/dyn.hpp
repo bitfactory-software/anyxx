@@ -220,8 +220,12 @@ consteval std::meta::info make_v_table_fptr_type() {
   return substitute(^^v_table_fptr_type, types);
 }
 
+struct v_table_spec {
+  std::meta::info member;
+  std::size_t index;
+};
 template <std::meta::info TraitDeclaration>
-consteval std::vector<std::meta::info> v_table_specs() {
+consteval std::vector<v_table_spec> v_table_specs() {
     if constexpr(TraitDeclaration == std::meta::info{}) {
         return {};
     } else {
@@ -231,11 +235,11 @@ consteval std::vector<std::meta::info> v_table_specs() {
         constexpr auto ctx = std::meta::access_context::current();
         for(auto m : members_of(TraitDeclaration, ctx)) {
             if (has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
-                specs.push_back(m);
+                specs.push_back({m, specs.size()});
             } else if (has_identifier(m) && is_function(m)) {
-                specs.push_back(m);
+                specs.push_back({m, specs.size()});
             } else if (is_user_declared(m) && is_operator_function(m)) {
-                specs.push_back(m);
+                specs.push_back({m, specs.size()});
             }
         }
         return specs;
@@ -246,22 +250,22 @@ template <std::meta::info TraitDeclaration, std::meta::info dyn_self_val, std::m
 consteval std::vector<std::meta::info> collect_v_table_members() {
 
     std::vector<std::meta::info> fptrs;
-    template for(constexpr auto m : define_static_array(v_table_specs<TraitDeclaration>())) {
-        if constexpr(has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
-            using type = [:m:]::type;
-            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(m) });
+    template for(constexpr auto spec : define_static_array(v_table_specs<TraitDeclaration>())) {
+        if constexpr(has_identifier(spec.member) && is_type(spec.member) && annotations_of_with_type(spec.member, ^^v_table_data_t).size() > 0) {
+            using type = [:spec.member:]::type;
+            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = identifier_of(spec.member) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(has_identifier(m) && is_function(m)) {
-            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
+        else if constexpr(has_identifier(spec.member) && is_function(spec.member)) {
+            auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
-                ft, { .name = identifier_of(m) });
+                ft, { .name = identifier_of(spec.member) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(is_user_declared(m) && is_operator_function(m)) {
-            auto ft = make_v_table_fptr_type<m, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
+        else if constexpr(is_user_declared(spec.member) && is_operator_function(spec.member)) {
+            auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
             auto dms = std::meta::data_member_spec(
-                ft, { .name = anyxx26::meta::enum_to_string(operator_of(m)) });
+                ft, { .name = anyxx26::meta::enum_to_string(operator_of(spec.member)) });
             fptrs.push_back(reflect_constant(dms));
         }
     }
