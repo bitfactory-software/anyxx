@@ -6,6 +6,8 @@ namespace anyxx26::rangesxx {
 
 template <typename Self, typename Trait, typename Value>
 struct input_iterator : save_copyable<Self, Trait> {
+    using default_proxy_t = anyxx::val<std::true_type>;
+
     Value& operator*();
     anyxx::self& operator++();
     bool operator==(anyxx::self const&) const;
@@ -37,7 +39,7 @@ struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
 };
 
 template <typename Self, typename Trait, typename Value>
-struct random_access_iterator : forward_iterator<Self, Trait, Value> {
+struct random_access_iterator : bidirectional_iterator<Self, Trait, Value> {
     bool operator<(anyxx::self const&) const;
     bool operator>(anyxx::self const&) const;
     bool operator<=(anyxx::self const&) const;
@@ -48,12 +50,19 @@ struct random_access_iterator : forward_iterator<Self, Trait, Value> {
     anyxx::self operator-(std::ptrdiff_t) const;
     anyxx::self operator+(std::ptrdiff_t) const;
 
+    std::ptrdiff_t operator-(anyxx::self const&) const;
+
     Value& operator[](std::ptrdiff_t) const;
 
-    struct typenames : forward_iterator<Self, Trait, Value>::typenames {
+    struct typenames : bidirectional_iterator<Self, Trait, Value>::typenames {
         using iterator_category = std::random_access_iterator_tag;
     };
 };
+
+template <typename Value>
+auto operator+(std::ptrdiff_t n, dyn<random_access_iterator, anyxx::val<std::true_type>, Value> const& it) {
+  return it + n;
+}
 
 }
 
