@@ -73,18 +73,18 @@ consteval std::meta::info translate_impl_return_type() {
       return ^^R;
     }
 }
-template <std::meta::info R, std::meta::info SelfValType>
-consteval std::meta::info translate_v_table_return_type() {
-    if constexpr(R == ^^anyxx::self&) {
+template <std::meta::info SelfValType>
+consteval std::meta::info translate_v_table_return_type(std::meta::info R) {
+    if (R == ^^anyxx::self&) {
         return ^^void;
-    } else if constexpr(R == ^^anyxx::self){
+    } else if (R == ^^anyxx::self){
         return SelfValType;
     } else {
         return R;
     }
 }
-static_assert(translate_v_table_return_type<^^anyxx::self&, ^^int>() == ^^void);
-static_assert(std::same_as<typename [:translate_v_table_return_type<^^anyxx::self&, ^^int>():], void>);
+static_assert(translate_v_table_return_type<^^int>(^^ anyxx::self&) == ^^void);
+static_assert(std::same_as<typename [:translate_v_table_return_type<^^int>(^^anyxx::self&):], void>);
 
 template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
@@ -149,9 +149,8 @@ decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
     }
 }
 
-template <std::meta::info p>
-consteval std::meta::info make_v_table_fptr_param_type(bool self) {
-  constexpr auto type = type_of(p);
+consteval std::meta::info make_v_table_fptr_param_type(bool self, std::meta::info p) {
+  auto type = type_of(p);
   // constexpr auto name = identifier_of(p);
   if (self) {
     if (is_const(remove_reference(type))) {
@@ -205,15 +204,15 @@ template <std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typena
 using v_table_fptr_type = R(*)(translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>...);
 //using v_table_fptr_type = R(*)(Args...);
 
-template <std::meta::info f, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
-consteval std::meta::info make_v_table_fptr_type() {
+template <std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
+consteval std::meta::info make_v_table_fptr_type(std::meta::info f) {
   std::vector<std::meta::info> types;
   types.push_back(reflect_constant(dyn_self_cref));
   types.push_back(reflect_constant(dyn_self_mutref));
-  types.push_back(translate_v_table_return_type<return_type_of(f), dyn_self_val>());
+  types.push_back(translate_v_table_return_type<dyn_self_val>(return_type_of(f)));
   add_v_table_fptr_this_param_type(f,types);
-  template for (constexpr auto p : define_static_array(parameters_of(f))) {
-    types.push_back(make_v_table_fptr_param_type<p>(types.size() == 3));
+  for (auto p : define_static_array(parameters_of(f))) {
+    types.push_back(make_v_table_fptr_param_type(types.size() == 3, p));
   }
 
   return substitute(^^v_table_fptr_type, types);
@@ -244,10 +243,11 @@ consteval std::string_view v_table_name_of(v_table_spec spec) {
     }
 }
 
-//consteval std::meta::info make_v_table_function_data_member_spec(v_table_spec spec, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref) {
-//    auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
-//    return std::meta::data_member_spec(ft, { .name = v_table_name_of(spec) });
-//}
+template <std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
+consteval std::meta::info make_v_table_function_data_member_spec(v_table_spec spec) {
+    auto ft = make_v_table_fptr_type<dyn_self_val, dyn_self_cref, dyn_self_mutref>(spec.member);
+    return std::meta::data_member_spec(ft, { .name = v_table_name_of(spec) });
+}
 
 template <std::meta::info TraitDeclaration>
 consteval std::vector<v_table_spec> v_table_specs() {
@@ -281,16 +281,8 @@ consteval std::vector<std::meta::info> collect_v_table_members() {
             auto dms = std::meta::data_member_spec(dealias(^^type), { .name = v_table_name_of(spec) });
             fptrs.push_back(reflect_constant(dms));
         }
-        else if constexpr(is_function(spec)) {
-            auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
-            auto dms = std::meta::data_member_spec(
-                ft, { .name = v_table_name_of(spec) });
-            fptrs.push_back(reflect_constant(dms));
-        }
-        else if constexpr(is_operator(spec)) {
-            auto ft = make_v_table_fptr_type<spec.member, dyn_self_val, dyn_self_cref, dyn_self_mutref>();
-            auto dms = std::meta::data_member_spec(
-                ft, { .name = v_table_name_of(spec) });
+        else {
+            auto dms = make_v_table_function_data_member_spec<dyn_self_val, dyn_self_cref, dyn_self_mutref>(spec);
             fptrs.push_back(reflect_constant(dms));
         }
     }
@@ -307,10 +299,10 @@ consteval std::meta::info make_v_table_members_type() {
 
 template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
     typename V, typename R, typename VoidSelf, typename... Args>
-[:translate_v_table_return_type<^^R, dyn_self_val>():] vfimpl
+[:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl
     //(VoidSelf self, Args... args) {
     (VoidSelf self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
-  using return_t = [:translate_v_table_return_type<^^R, dyn_self_val>():];
+  using return_t = [:translate_v_table_return_type<dyn_self_val>(^^R):];
   if constexpr (default_ || !is_static_member(m)) {
     if constexpr(std::same_as<return_t, void>) {
         default_impl<m, V, R>(self, forward_v_table_fptr_param<V, Args>(args)...);
@@ -341,8 +333,8 @@ consteval std::meta::info make_vfimpl() {
   types.push_back(^^V);
   types.push_back(return_type_of(f));
   add_v_table_fptr_this_param_type(interface_m, types);
-  template for (constexpr auto p : define_static_array(parameters_of(interface_m))) {
-    types.push_back(make_v_table_fptr_param_type<p>(types.size() == 7u));
+  for (auto p : define_static_array(parameters_of(interface_m))) {
+    types.push_back(make_v_table_fptr_param_type(types.size() == 7u, p));
   }
   return substitute(^^vfimpl, types);
 }
