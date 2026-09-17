@@ -219,6 +219,7 @@ consteval std::meta::info make_v_table_fptr_type(std::meta::info f) {
 }
 
 struct v_table_spec {
+  std::meta::info declaration_trait;
   std::meta::info member;
   std::size_t index;
 };
@@ -260,11 +261,11 @@ consteval std::vector<v_table_spec> v_table_specs() {
         constexpr auto ctx = std::meta::access_context::current();
         for(auto m : members_of(TraitDeclaration, ctx)) {
             if (has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
-                specs.push_back({m, specs.size()});
+                specs.push_back({TraitDeclaration, m, specs.size()});
             } else if (has_identifier(m) && is_function(m)) {
-                specs.push_back({m, specs.size()});
+                specs.push_back({TraitDeclaration, m, specs.size()});
             } else if (is_user_declared(m) && is_operator_function(m)) {
-                specs.push_back({m, specs.size()});
+                specs.push_back({TraitDeclaration, m, specs.size()});
             }
         }
         return specs;
