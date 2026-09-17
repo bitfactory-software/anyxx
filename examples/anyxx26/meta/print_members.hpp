@@ -33,7 +33,7 @@ void print_members(std::string const& indent = {}) {
               } else {
                   std::println("{}{}", indent, std::meta::display_string_of(m));
               }
-              if constexpr(is_op_parentheses_spec<m>()) {
+              if (is_op_parentheses_spec(m)) {
                   std::println("{} ^___ is_op_parentheses_spec", indent);
               }
           }

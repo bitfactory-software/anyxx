@@ -63,20 +63,18 @@ consteval std::meta::info get_type_of_single_public_base() {
   return type_of(bases[0]);
 }
 
-template<std::meta::info spec, std::meta::operators op>
-constexpr bool is_op_spec(){
-    if constexpr(has_identifier(spec) && identifier_of(spec) == anyxx26::meta::enum_to_string(op)){
+consteval bool is_op_spec(std::meta::info spec, std::meta::operators op){
+    if (has_identifier(spec) && identifier_of(spec) == anyxx26::meta::enum_to_string(op)){
         return true;
     }
-    if constexpr(is_operator_function(spec) && operator_of(spec) == op){
+    if (is_operator_function(spec) && operator_of(spec) == op){
         return true;
     }
     return false;
 }
 
-template<std::meta::info spec>
-constexpr bool is_op_parentheses_spec(){
-    return is_op_spec<spec, std::meta::op_parentheses>();
+consteval bool is_op_parentheses_spec(std::meta::info spec){
+    return is_op_spec(spec, std::meta::op_parentheses);
 }
 
 }  // namespace anyxx26::meta

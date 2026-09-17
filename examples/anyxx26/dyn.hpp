@@ -116,7 +116,7 @@ decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
             }
         }
     } 
-    if constexpr(meta::is_op_parentheses_spec<spec>()) {
+    if constexpr(meta::is_op_parentheses_spec(spec)) {
         if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
             return (*typed_self)(std::forward<Args>(args)...);
         }
@@ -124,23 +124,23 @@ decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
         if constexpr(!is_operator_function(spec)) {
             throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
         } else {
-			if constexpr(meta::is_op_spec<spec, std::meta::op_plus_plus>()) {
+			if constexpr(meta::is_op_spec(spec, std::meta::op_plus_plus)) {
 				return ++(*typed_self);
-			} else if constexpr(meta::is_op_spec<spec, std::meta::op_minus_minus>()) {
+			} else if constexpr(meta::is_op_spec(spec, std::meta::op_minus_minus)) {
 				return --(*typed_self);
-			} else if constexpr(meta::is_op_spec<spec, std::meta::op_star>()) {
+			} else if constexpr(meta::is_op_spec(spec, std::meta::op_star)) {
 				return *(*typed_self);
-			} else if constexpr(meta::is_op_spec<spec, std::meta::op_arrow>()) {
+			} else if constexpr(meta::is_op_spec(spec, std::meta::op_arrow)) {
                 return (*typed_self).operator->();
-			} else if constexpr(meta::is_op_spec<spec, std::meta::op_square_brackets>()) {
+			} else if constexpr(meta::is_op_spec(spec, std::meta::op_square_brackets)) {
 				return (*typed_self)[std::forward<Args>(args)...];
-            } else if constexpr(meta::is_op_spec<spec, std::meta::op_plus>()) {
+            } else if constexpr(meta::is_op_spec(spec, std::meta::op_plus)) {
                 return ((*typed_self) + ... + std::forward<Args>(args));
-            } else if constexpr(meta::is_op_spec<spec, std::meta::op_minus>()) {
+            } else if constexpr(meta::is_op_spec(spec, std::meta::op_minus)) {
                 return ((*typed_self) - ... - std::forward<Args>(args));
-            } else if constexpr(meta::is_op_spec<spec, std::meta::op_equals_equals>()) {
+            } else if constexpr(meta::is_op_spec(spec, std::meta::op_equals_equals)) {
                 return ((*typed_self) == ... == std::forward<Args>(args));
-            } else if constexpr(meta::is_op_spec<spec, std::meta::op_exclamation_equals>()) {
+            } else if constexpr(meta::is_op_spec(spec, std::meta::op_exclamation_equals)) {
                 return ((*typed_self) != ... != std::forward<Args>(args));
             } else {
                 throw std::logic_error(std::format("{} not yet implemeted in anyxx.", display_string_of(spec)));
