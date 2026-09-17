@@ -86,34 +86,44 @@ consteval std::meta::info translate_v_table_return_type(std::meta::info R) {
 static_assert(translate_v_table_return_type<^^int>(^^ anyxx::self&) == ^^void);
 static_assert(std::same_as<typename [:translate_v_table_return_type<^^int>(^^anyxx::self&):], void>);
 
+template <std::meta::info spec, typename Target, typename R, typename VoidSelf, typename... Args>
+consteval std::meta::info find_candidate_in_target() {
+    constexpr auto ctx = std::meta::access_context::current();
+    using return_t = [:translate_impl_return_type<R, Target>():];
+    using self_t = self_const_correct_t<Target, VoidSelf>;
+    template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
+        if constexpr(!is_static_member(candidate) && is_function(candidate)) {
+            if constexpr(has_identifier(candidate) && has_identifier(spec) && identifier_of(candidate) == identifier_of(spec)) {
+                if constexpr(std::is_invocable_r_v<return_t, decltype(&[:candidate:]), self_t, Args...>) {
+                    return candidate;
+                }
+            }
+            if constexpr(is_operator_function(candidate)) {
+                if constexpr(std::is_invocable_r_v<return_t, decltype(&[:candidate:]), self_t, Args...>) {
+                    constexpr auto op = operator_of(candidate);
+                    if constexpr(is_operator_function(spec)) {
+                        if constexpr(op == operator_of(spec)) {
+                            return candidate;
+                        }
+                    } else if constexpr(anyxx26::meta::enum_to_string(op) == identifier_of(spec)) {
+                        return candidate;
+                    }
+                }
+            }
+        }
+    }
+    return {};
+}
+
 template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
 decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
     using return_t = [:translate_impl_return_type<R, V>():];
-    constexpr auto ctx = std::meta::access_context::current();
     using self_t = self_const_correct_t<V, VoidSelf>;
     auto typed_self = static_cast<self_t*>(voidSelf);
     if constexpr(is_class_type(^^V)) {
-        template for (constexpr auto candidate : define_static_array(members_of(^^V, ctx))) {
-            if constexpr (!is_static_member(candidate) && is_function(candidate)) {
-                if constexpr(has_identifier(candidate) && has_identifier(spec) && identifier_of(candidate) == identifier_of(spec)) {
-                    if constexpr(std::is_invocable_r_v<return_t, decltype(&[:candidate:]), self_t, Args...>) {
-                        return typed_self->[:candidate:](std::forward<Args>(args)...);
-                    }
-                }
-                if constexpr(is_operator_function(candidate)) {
-                    if constexpr(std::is_invocable_r_v<return_t, decltype(&[:candidate:]), self_t, Args...>) {
-                        constexpr auto op = operator_of(candidate);
-                        if constexpr(is_operator_function(spec)) {
-                            if constexpr(op == operator_of(spec)) {
-                                return typed_self->[:candidate:](std::forward<Args>(args)...);
-                            }
-                        } else if constexpr(anyxx26::meta::enum_to_string(op) == identifier_of(spec)) {
-                            return typed_self->[:candidate:](std::forward<Args>(args)...);
-                        }
-                    }
-                }
-            }
+        if constexpr (constexpr auto candidate = find_candidate_in_target<spec, V, R, VoidSelf, Args...>(); candidate != std::meta::info{}) {
+            return typed_self->[:candidate:](std::forward<Args>(args)...);
         }
     } 
     if constexpr(meta::is_op_parentheses_spec(spec)) {
