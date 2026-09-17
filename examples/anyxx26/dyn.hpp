@@ -406,12 +406,12 @@ void set_v_table_members(VTable* v_table) {
 
     template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait, Args...>(), ctx))) {
         if constexpr(has_identifier(interface_m) && is_type(interface_m) && annotations_of_with_type(interface_m, ^^ v_table_data_t).size() > 0) {
-            constexpr auto m = anyxx26::meta::get_member<FunctionPointers, interface_m>();
+            constexpr auto m = anyxx26::meta::get_member(FunctionPointers, interface_m);
             v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
         }
         if constexpr((has_identifier(interface_m) && is_function(interface_m))
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
-            constexpr auto f = anyxx26::meta::get_member<FunctionPointers, interface_m>();
+            constexpr auto f = anyxx26::meta::get_member(FunctionPointers, interface_m);
             constexpr auto m = find_function_impl<Trait, Concrete, interface_m, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, interface_m, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>():];
         }
@@ -667,7 +667,7 @@ struct dyn_facade_call {
     auto v_table_ptr = base->v_table_;
     using fptrs_t = typename v_table_t::fptrs_t;
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
-    auto constexpr vf = anyxx26::meta::get_member<^^fptrs_t, f>();
+    auto constexpr vf = anyxx26::meta::get_member(^^fptrs_t, f);
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
     if constexpr(std::same_as<typename [:return_type_of(f):], anyxx::self&>) {
         fptrs->[:vf:](x, std::forward<Args>(args)...);
