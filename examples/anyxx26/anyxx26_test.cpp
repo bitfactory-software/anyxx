@@ -546,4 +546,6 @@ TEST_CASE("anyxx26 iterators") {
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 	test_input_iterator(arr.begin(), arr.end());
     test_bidirectional_iterator(arr.begin());
+
+//    meta::print_members<dyn<rangesxx::random_access_iterator,anyxx::val<std::true_type>, int>>();
 }

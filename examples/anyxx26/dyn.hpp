@@ -761,7 +761,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, std
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr (is_function(m) && is_user_declared(m)) {
             constexpr auto name = define_static_string(meta::function_name_of(m));
-            if (std::find(names.begin(), names.end(), name) == names.end()) {
+            if (std::ranges::find(names, name) == names.end()) {
                 names.push_back(name);
                 constexpr auto dms = dyn_facade_call_data_member_spec<DynBase, name>();
                 calls.push_back(reflect_constant(dms));
