@@ -734,17 +734,22 @@ consteval void dyn_facade_call_overload_set(std::vector<std::meta::info>& overlo
             if constexpr(meta::function_name_of(m) == id) {
                 using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
                 constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
-                overload_set.push_back(std::meta::data_member_spec(call_meta, { .name = id, .no_unique_address = true }));
+                overload_set.push_back(call_meta);
             }
         }
     }
 }
 
+template<class... Ts>
+struct overload : Ts... {
+    using Ts::operator()...;
+};
 template <typename DynBase, auto id>
 consteval std::meta::info dyn_facade_call_data_member_spec(){
     std::vector<std::meta::info> overload_set;
     dyn_facade_call_overload_set<DynBase, ^^typename DynBase::trait_declaration_t, id>(overload_set);
-    return overload_set.front();
+    auto overload_facade_call = substitute(^^overload, overload_set);
+    return std::meta::data_member_spec(overload_facade_call, { .name = id, .no_unique_address = true });
 }
 
 template <std::meta::info TraitDeclaration, typename DynBase>
