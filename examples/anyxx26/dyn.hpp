@@ -405,19 +405,19 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
   }
 }
 
-template <typename V, std::meta::info interface_m, std::meta::info f, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
-consteval std::meta::info make_vfimpl() {
+template <typename V, std::meta::info implementing_function, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
+consteval std::meta::info make_vfimpl(std::meta::info interface_function) {
   std::vector<std::meta::info> types;
-  bool use_default = annotations_of_with_type(f, ^^default_t).size() > 0;
+  bool use_default = annotations_of_with_type(implementing_function, ^^default_t).size() > 0;
   types.push_back(std::meta::reflect_constant(use_default));
-  types.push_back(reflect_constant(f));
+  types.push_back(reflect_constant(implementing_function));
   types.push_back(std::meta::reflect_constant(dyn_self_val));
   types.push_back(std::meta::reflect_constant(dyn_self_cref));
   types.push_back(std::meta::reflect_constant(dyn_self_mutref));
   types.push_back(^^V);
-  types.push_back(return_type_of(f));
-  add_v_table_fptr_this_param_type(interface_m, types);
-  for (auto p : define_static_array(parameters_of(interface_m))) {
+  types.push_back(return_type_of(implementing_function));
+  add_v_table_fptr_this_param_type(interface_function, types);
+  for (auto p : define_static_array(parameters_of(interface_function))) {
     types.push_back(make_v_table_fptr_param_type(types.size() == 7u, p));
   }
   return substitute(^^vfimpl, types);
@@ -496,7 +496,7 @@ void set_v_table_members(VTable* v_table) {
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
             constexpr auto f = anyxx26::meta::get_member(FunctionPointers, interface_m);
             constexpr auto m = find_function_impl<Trait, Concrete, Args...>(interface_m);
-            v_table->[:f:] = [:make_vfimpl<Concrete, interface_m, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>():];
+            v_table->[:f:] = [:make_vfimpl<Concrete, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>(interface_m):];
         }
     }
 }
