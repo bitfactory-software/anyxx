@@ -320,12 +320,12 @@ consteval std::meta::info make_v_table_function_data_member_spec(v_table_spec sp
 }
 
 template <std::meta::info TraitDeclaration>
-consteval std::vector<v_table_spec> v_table_specs() {
+consteval std::vector<v_table_spec> get_v_table_specs() {
     if constexpr(TraitDeclaration == std::meta::info{}) {
         return {};
     } else {
         static_assert(is_type(TraitDeclaration));
-        auto specs = v_table_specs<meta::get_type_of_single_public_base<TraitDeclaration>()>();
+        auto specs = get_v_table_specs<meta::get_type_of_single_public_base<TraitDeclaration>()>();
 
         constexpr auto ctx = std::meta::access_context::current();
         for(auto m : members_of(TraitDeclaration, ctx)) {
@@ -345,7 +345,7 @@ template <std::meta::info TraitDeclaration, std::meta::info dyn_self_val, std::m
 consteval std::vector<std::meta::info> collect_v_table_members() {
 
     std::vector<std::meta::info> fptrs;
-    template for(constexpr auto spec : define_static_array(v_table_specs<TraitDeclaration>())) {
+    template for(constexpr auto spec : define_static_array(get_v_table_specs<TraitDeclaration>())) {
         if constexpr(is_v_table_data(spec)) {
             using type = [:spec.member:]::type;
             auto dms = std::meta::data_member_spec(dealias(^^type), { .name = v_table_name_of(spec) });
