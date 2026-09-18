@@ -7,6 +7,7 @@
 #include <utility>
 #include <vector>
 #include <format>
+#include <set>
 
 namespace anyxx26 {
 
@@ -730,25 +731,29 @@ consteval std::meta::info dyn_facade_call_data_member_spec(){
 }
 
 template <std::meta::info TraitDeclaration, typename DynBase>
-consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
+consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, std::vector<std::string>& names) {
     constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        collect_dyn_facade_calls<base, DynBase>(calls);
+        collect_dyn_facade_calls<base, DynBase>(calls, names);
     }
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr (is_function(m) && is_user_declared(m)) {
-            auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(meta::function_name_of(m))>();
-            calls.push_back(reflect_constant(dms));
+            constexpr auto name = define_static_string(meta::function_name_of(m));
+            if (std::find(names.begin(), names.end(), name) == names.end()) {
+                names.push_back(name);
+                auto dms = dyn_facade_call_data_member_spec<DynBase, m, name>();
+                calls.push_back(reflect_constant(dms));
+            }
         }
     }
 };
 
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 consteval std::meta::info make_dyn_facade() {
-
+  std::vector<std::string> names;
   std::vector<std::meta::info> calls;
-  collect_dyn_facade_calls<trait_declaration<^^Trait, ^^Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
+  collect_dyn_facade_calls<trait_declaration<^^Trait, ^^Args...>(), dyn_base<Trait, Proxy, Args...>>(calls, names);
   return substitute(^^meta::to_struct, calls);
 };
 
