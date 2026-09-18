@@ -46,10 +46,24 @@ consteval std::string_view function_name_of(std::meta::info in) {
 }
 consteval std::string decorated_name_of(std::meta::info in) {
   std::string name{function_name_of(in)};
-  //for (auto p : parameters_of(in)) {
-  //  name += identifier_of(type_of(p));
-  //}
-  return name + "_";
+  if (is_function(in) || is_operator_function(in)) {
+      for (auto p : parameters_of(in) | std::views::drop(is_static_member(in) ? 1 : 0)) {
+          if(has_identifier(type_of(p))) {
+              name += display_string_of(type_of(p));
+          }
+      }
+  }
+  return name;
+}
+
+consteval std::meta::info get_member_by_function_name(std::meta::info in, std::string_view id) {
+    constexpr auto ctx = std::meta::access_context::current();
+    for(auto m : members_of(in, ctx)) {
+        if(function_name_of(m) == id) {
+            return m;
+        }
+    }
+    return {};
 }
 
 consteval std::meta::info get_member_by_decorated_name(std::meta::info in, std::string_view id) {

@@ -412,17 +412,16 @@ consteval std::meta::info make_vfimpl(std::meta::info interface_function) {
 template <template <typename, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
-template <std::meta::info TraitTemplate, typename V, std::meta::info... Args>
-consteval std::meta::info find_function_impl(std::meta::info interface_function) {
-  auto found_in_impl = meta::get_member(trait_model_map<TraitTemplate, V, Args...>(), interface_function);
-  if (found_in_impl != std::meta::info{}) {
+template <std::meta::info InterfaceFunction, std::meta::info TraitTemplate, typename V, std::meta::info... Args>
+consteval std::meta::info find_function_impl() {
+  if constexpr(constexpr auto found_in_impl = meta::get_member(trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction); found_in_impl != std::meta::info{}) {
     return found_in_impl;
-  } 
-  auto found_in_base = meta::get_member(trait_declaration<TraitTemplate, Args...>(), interface_function);
-  if (found_in_base != std::meta::info{}) {
+  } else if constexpr(constexpr auto found_in_base = meta::get_member(trait_declaration<TraitTemplate, Args...>(), InterfaceFunction); found_in_base != std::meta::info{}) {
       return found_in_base;
+  } else {
+      static_assert(false, "Function not found in impl trait or base trait");
+      throw std::logic_error("Function not found in impl trait or base trait");
   }
-  throw std::logic_error("Function not found in impl trait or base trait");
 }
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
@@ -456,7 +455,7 @@ void set_v_table_members(VTable* v_table) {
         if constexpr((has_identifier(interface_m) && is_function(interface_m))
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
             constexpr auto f = anyxx26::meta::get_data_member_by_id(FunctionPointers, meta::decorated_name_of(interface_m));
-            constexpr auto m = find_function_impl<Trait, Concrete, Args...>(interface_m);
+            constexpr auto m = find_function_impl<interface_m, Trait, Concrete, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>(interface_m):];
         }
     }
