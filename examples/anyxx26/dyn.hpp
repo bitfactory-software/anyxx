@@ -412,7 +412,7 @@ template <template <typename, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info Trait>
-consteval std::optional<std::meta::info> find_function_impl_in(std::meta::info interface_function) {
+consteval std::meta::info find_function_impl_in(std::meta::info interface_function) {
     constexpr auto ctx = std::meta::access_context::current();
     for(auto m : members_of(Trait, ctx)) {
         if (interface_function == m){
@@ -437,14 +437,13 @@ consteval std::optional<std::meta::info> find_function_impl_in(std::meta::info i
 
 template <std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info find_function_impl(std::meta::info interface_function) {
-
   auto found_in_impl = find_function_impl_in<trait_model_map<TraitTemplate, V, Args...>()>(interface_function);
-  if (found_in_impl) {
-    return *found_in_impl;
+  if (found_in_impl != std::meta::info{}) {
+    return found_in_impl;
   } 
   auto found_in_base = find_function_impl_in<trait_declaration<TraitTemplate, Args...>()>(interface_function);
-  if (found_in_base) {
-      return *found_in_base;
+  if (found_in_base != std::meta::info{}) {
+      return found_in_base;
   }
   throw std::logic_error("Function not found in impl trait or base trait");
 }
