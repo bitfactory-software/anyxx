@@ -429,7 +429,7 @@ using base_v_table_t = anyxx::observeable::v_table_t;
 template <std::meta::info Trait, std::meta::info interface_function>
 consteval std::optional<std::meta::info> find_function_impl_in() {
     constexpr auto ctx = std::meta::access_context::current();
-    for(auto m : define_static_array(members_of(Trait, ctx))) {
+    for(auto m : members_of(Trait, ctx)) {
         if (interface_function == m){
             return { m };
         }
