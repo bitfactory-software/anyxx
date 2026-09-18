@@ -210,7 +210,6 @@ invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
 
 consteval std::meta::info make_v_table_fptr_param_type(bool self, std::meta::info p) {
   auto type = type_of(p);
-  // constexpr auto name = identifier_of(p);
   if (self) {
     if (is_const(remove_reference(type))) {
       return ^^void const*;
