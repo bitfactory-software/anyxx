@@ -52,10 +52,10 @@ consteval std::string decorated_name_of(std::meta::info in) {
   return name + "_";
 }
 
-consteval std::meta::info get_member_by_decorated_name(std::meta::info in, auto id) {
+consteval std::meta::info get_member_by_decorated_name(std::meta::info in, std::string_view id) {
     constexpr auto ctx = std::meta::access_context::current();
     for(auto m : members_of(in, ctx)) {
-        if (decorated_name_of(m) == std::string_view{id}) {
+        if (decorated_name_of(m) == id) {
             return m;
         }
     }
