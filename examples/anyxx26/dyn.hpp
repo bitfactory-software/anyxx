@@ -96,6 +96,52 @@ R invoke_op_parentheses(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return (*typed_self)(std::forward<Args>(args)...);
 };
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_plus_plus(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ++(*typed_self);
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_minus_minus(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return --(*typed_self);
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_star(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return *(*typed_self);
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_arrow(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return (*typed_self).operator->();
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_square_brackets(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return (*typed_self)[std::forward<Args>(args)...];
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_plus(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) + ... + std::forward<Args>(args));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_minus(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) - ... - std::forward<Args>(args));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_equals_equals(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) == ... == std::forward<Args>(args));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_exclamation_equals(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) != ... != std::forward<Args>(args));
+}   
+
 
 template <typename R, typename VoidSelf, typename... Args>
 using invoke_function_t = R (*)(VoidSelf, Args...);
@@ -132,7 +178,6 @@ template <std::meta::info spec, typename V, typename R, typename VoidSelf, typen
 decltype(auto) default_impl(VoidSelf void_self, Args&&... args) {
     using return_t = [:translate_impl_return_type<R, V>():];
     using self_t = self_const_correct_t<V, VoidSelf>;
-    auto typed_self = static_cast<self_t*>(void_self);
     if constexpr(is_class_type(^^V)) {
         if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate) {
             return candidate(void_self, std::forward<Args>(args)...);
@@ -147,23 +192,23 @@ decltype(auto) default_impl(VoidSelf void_self, Args&&... args) {
             throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
         } else {
 			if constexpr(meta::is_op_spec(spec, std::meta::op_plus_plus)) {
-				return ++(*typed_self);
+				return invoke_op_plus_plus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_minus_minus)) {
-				return --(*typed_self);
+				return invoke_op_minus_minus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_star)) {
-				return *(*typed_self);
+				return invoke_op_star<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_arrow)) {
-                return (*typed_self).operator->();
+                return invoke_op_arrow<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_square_brackets)) {
-				return (*typed_self)[std::forward<Args>(args)...];
+				return invoke_op_square_brackets<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_plus)) {
-                return ((*typed_self) + ... + std::forward<Args>(args));
+                return invoke_op_plus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_minus)) {
-                return ((*typed_self) - ... - std::forward<Args>(args));
+                return invoke_op_minus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_equals_equals)) {
-                return ((*typed_self) == ... == std::forward<Args>(args));
+                return invoke_op_equals_equals<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_exclamation_equals)) {
-                return ((*typed_self) != ... != std::forward<Args>(args));
+                return invoke_op_exclamation_equals<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
             } else {
                 throw std::logic_error(std::format("{} not yet implemeted in anyxx.", display_string_of(spec)));
             }
