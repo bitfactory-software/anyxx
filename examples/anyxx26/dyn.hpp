@@ -738,15 +738,9 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m :
         define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr (is_function(m)) {
-            if constexpr(has_identifier(m)) {
-                auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(identifier_of(m))>();
-                calls.push_back(reflect_constant(dms));
-            }
-            else if constexpr(is_user_declared(m) && is_operator_function(m)) {
-                auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(meta::enum_to_string(operator_of(m)))>();
-                calls.push_back(reflect_constant(dms));
-            }
+        if constexpr (is_function(m) && is_user_declared(m)) {
+            auto dms = dyn_facade_call_data_member_spec<DynBase, m, define_static_string(meta::function_name_of(m))>();
+            calls.push_back(reflect_constant(dms));
         }
     }
 };
