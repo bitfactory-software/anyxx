@@ -358,7 +358,7 @@ struct copyable_function<R(Args...) const>
 
 template <typename Spec, typename V>
 void test_default_impl(V const& v) {
-    constexpr auto spec_f = meta::get_member_by_id(^^Spec, std::define_static_string("op_parentheses"));
+    constexpr auto spec_f = meta::get_member_by_decorated_name(^^Spec, std::define_static_string("op_parentheses"));
     static_assert(spec_f != std::meta::info{});
     auto r = default_impl<spec_f, V, int, const void*, int>()(&v, 2);
     CHECK(r == 4);

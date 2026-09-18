@@ -26,6 +26,15 @@ struct outer {
 template <std::meta::info... Ms>
 using to_struct = outer<Ms...>::inner;
 
+consteval std::meta::info get_data_member_by_id(std::meta::info in, auto id) {
+    constexpr auto ctx = std::meta::access_context::current();
+    for(auto m : members_of(in, ctx)) {
+        if(has_identifier(m) && identifier_of(m) == std::string_view{ id }) {
+            return m;
+        }
+    }
+    return {};
+}
 consteval std::string decorated_name_of(std::meta::info in) {
     if(has_identifier(in)) {
         return std::string{ identifier_of(in) };
@@ -36,7 +45,7 @@ consteval std::string decorated_name_of(std::meta::info in) {
     }
 }
 
-consteval std::meta::info get_member_by_id(std::meta::info in, auto id) {
+consteval std::meta::info get_member_by_decorated_name(std::meta::info in, auto id) {
     constexpr auto ctx = std::meta::access_context::current();
     for(auto m : members_of(in, ctx)) {
         if (decorated_name_of(m) == std::string_view{id}) {
@@ -47,7 +56,7 @@ consteval std::meta::info get_member_by_id(std::meta::info in, auto id) {
 }
 
 consteval std::meta::info get_member(std::meta::info in, std::meta::info other_member) {
-  return get_member_by_id(in, decorated_name_of(other_member));
+  return get_member_by_decorated_name(in, decorated_name_of(other_member));
 }
 
 template <std::meta::info Struct>
