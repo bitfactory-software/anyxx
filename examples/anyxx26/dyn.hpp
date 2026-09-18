@@ -722,12 +722,29 @@ struct dyn_facade_call {
   }
 };
 
-template <typename DynBase, std::meta::info f, auto id>
+template <typename DynBase, std::meta::info TraitDeclaration, auto id>
+consteval void dyn_facade_call_overload_set(std::vector<std::meta::info>& overload_set){
+    constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
+    if constexpr(base != std::meta::info{}) {
+        dyn_facade_call_overload_set<DynBase, base, id>(overload_set);
+    }
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
+        if constexpr(is_function(m) && is_user_declared(m)) {
+            if constexpr(meta::function_name_of(m) == id) {
+                using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
+                constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
+                overload_set.push_back(std::meta::data_member_spec(call_meta, { .name = id, .no_unique_address = true }));
+            }
+        }
+    }
+}
+
+template <typename DynBase, auto id>
 consteval std::meta::info dyn_facade_call_data_member_spec(){
-    using dyn_facade_call_t = dyn_facade_call<DynBase, f>;
-    constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
-    return std::meta::data_member_spec(
-        call_meta, { .name = id, .no_unique_address = true });
+    std::vector<std::meta::info> overload_set;
+    dyn_facade_call_overload_set<DynBase, ^^typename DynBase::trait_declaration_t, id>(overload_set);
+    return overload_set.front();
 }
 
 template <std::meta::info TraitDeclaration, typename DynBase>
@@ -742,7 +759,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, std
             constexpr auto name = define_static_string(meta::function_name_of(m));
             if (std::find(names.begin(), names.end(), name) == names.end()) {
                 names.push_back(name);
-                auto dms = dyn_facade_call_data_member_spec<DynBase, m, name>();
+                constexpr auto dms = dyn_facade_call_data_member_spec<DynBase, name>();
                 calls.push_back(reflect_constant(dms));
             }
         }
