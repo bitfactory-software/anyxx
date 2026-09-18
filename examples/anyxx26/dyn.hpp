@@ -305,13 +305,11 @@ consteval bool is_operator(v_table_spec spec) {
     return is_user_declared(spec.member) && is_operator_function(spec.member);
 }
 
-consteval std::string_view v_table_name_of(v_table_spec spec) {
+consteval std::string v_table_name_of(v_table_spec spec) {
     if (is_v_table_data(spec)) {
-        return identifier_of(spec.member);
-    } else if (is_function(spec)) {
-        return identifier_of(spec.member);
+        return std::string{ identifier_of(spec.member) };
     } else {
-        return anyxx26::meta::enum_to_string(operator_of(spec.member));
+        return meta::decorated_name_of(spec.member);
     }
 }
 

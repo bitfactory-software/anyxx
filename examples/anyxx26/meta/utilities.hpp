@@ -35,7 +35,7 @@ consteval std::meta::info get_data_member_by_id(std::meta::info in, auto id) {
     }
     return {};
 }
-consteval std::string decorated_name_of(std::meta::info in) {
+consteval std::string function_name_of(std::meta::info in) {
     if(has_identifier(in)) {
         return std::string{ identifier_of(in) };
     } else if(is_operator_function(in)) {
@@ -43,6 +43,9 @@ consteval std::string decorated_name_of(std::meta::info in) {
     } else {
         return {};
     }
+}
+consteval std::string decorated_name_of(std::meta::info in) {
+    return function_name_of(in);
 }
 
 consteval std::meta::info get_member_by_decorated_name(std::meta::info in, auto id) {
