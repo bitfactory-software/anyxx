@@ -26,10 +26,10 @@ struct outer {
 template <std::meta::info... Ms>
 using to_struct = outer<Ms...>::inner;
 
-consteval std::meta::info get_data_member_by_id(std::meta::info in, auto id) {
+consteval std::meta::info get_data_member_by_id(std::meta::info in, std::string_view id) {
     constexpr auto ctx = std::meta::access_context::current();
     for(auto m : members_of(in, ctx)) {
-        if(has_identifier(m) && identifier_of(m) == std::string_view{ id }) {
+        if(has_identifier(m) && identifier_of(m) == id) {
             return m;
         }
     }
@@ -45,7 +45,11 @@ consteval std::string_view function_name_of(std::meta::info in) {
     }
 }
 consteval std::string decorated_name_of(std::meta::info in) {
-    return std::string{ function_name_of(in) };
+  std::string name{function_name_of(in)};
+  //for (auto p : parameters_of(in)) {
+  //  name += identifier_of(type_of(p));
+  //}
+  return name + "_";
 }
 
 consteval std::meta::info get_member_by_decorated_name(std::meta::info in, auto id) {

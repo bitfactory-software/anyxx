@@ -450,7 +450,7 @@ void set_v_table_members(VTable* v_table) {
 
     template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait, Args...>(), ctx))) {
         if constexpr(has_identifier(interface_m) && is_type(interface_m) && annotations_of_with_type(interface_m, ^^ v_table_data_t).size() > 0) {
-            constexpr auto m = anyxx26::meta::get_data_member_by_id(FunctionPointers, meta::decorated_name_of(interface_m));
+            constexpr auto m = anyxx26::meta::get_data_member_by_id(FunctionPointers, identifier_of(interface_m));
             v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
         }
         if constexpr((has_identifier(interface_m) && is_function(interface_m))
