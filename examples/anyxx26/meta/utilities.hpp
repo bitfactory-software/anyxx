@@ -39,14 +39,18 @@ consteval std::meta::info get_member_by_id(std::meta::info in, auto id) {
     return {};
 }
 
-consteval std::meta::info get_member(std::meta::info in, std::meta::info other_member) {
-    if (has_identifier(other_member)) {
-        return get_member_by_id(in, define_static_string(identifier_of(other_member)));
-    } 
-    if (is_operator_function(other_member)) {
-      return get_member_by_id(in, define_static_string(anyxx26::meta::enum_to_string(operator_of(other_member))));
-    }
+consteval std::string decorated_name_of(std::meta::info in) {
+  if (has_identifier(in)) {
+    return std::string{identifier_of(in)};
+  } else if (is_operator_function(in)) {
+    return std::string{anyxx26::meta::enum_to_string(operator_of(in))};
+  } else {
     return {};
+  }
+}
+
+consteval std::meta::info get_member(std::meta::info in, std::meta::info other_member) {
+  return get_member_by_id(in, decorated_name_of(other_member));
 }
 
 template <std::meta::info Struct>
