@@ -128,8 +128,7 @@ consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
     return {};
 }
 
-template <std::meta::info spec, typename V, typename R, typename VoidSelf,
-          typename... Args>
+template <std::meta::info spec, typename V, typename R, typename VoidSelf, typename... Args>
 decltype(auto) default_impl(VoidSelf void_self, Args&&... args) {
     using return_t = [:translate_impl_return_type<R, V>():];
     using self_t = self_const_correct_t<V, VoidSelf>;
