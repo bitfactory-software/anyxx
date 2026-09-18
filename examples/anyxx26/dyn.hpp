@@ -450,15 +450,15 @@ consteval std::optional<std::meta::info> find_function_impl_in(std::meta::info i
     return {};
 }
 
-template <std::meta::info TraitTemplate, typename V, std::meta::info InterfaceFunction, std::meta::info... Args>
-consteval std::meta::info find_function_impl() {
+template <std::meta::info TraitTemplate, typename V, std::meta::info... Args>
+consteval std::meta::info find_function_impl(std::meta::info interface_function) {
 
-  constexpr auto found_in_impl = find_function_impl_in<trait_model_map<TraitTemplate, V, Args...>()>(InterfaceFunction);
-  if constexpr (found_in_impl) {
+  auto found_in_impl = find_function_impl_in<trait_model_map<TraitTemplate, V, Args...>()>(interface_function);
+  if (found_in_impl) {
     return *found_in_impl;
   } 
-  constexpr auto found_in_base = find_function_impl_in<trait_declaration<TraitTemplate, Args...>()>(InterfaceFunction);
-  if constexpr(found_in_base) {
+  auto found_in_base = find_function_impl_in<trait_declaration<TraitTemplate, Args...>()>(interface_function);
+  if (found_in_base) {
       return *found_in_base;
   }
   throw std::logic_error("Function not found in impl trait or base trait");
@@ -495,7 +495,7 @@ void set_v_table_members(VTable* v_table) {
         if constexpr((has_identifier(interface_m) && is_function(interface_m))
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
             constexpr auto f = anyxx26::meta::get_member(FunctionPointers, interface_m);
-            constexpr auto m = find_function_impl<Trait, Concrete, interface_m, Args...>();
+            constexpr auto m = find_function_impl<Trait, Concrete, Args...>(interface_m);
             v_table->[:f:] = [:make_vfimpl<Concrete, interface_m, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>():];
         }
     }
