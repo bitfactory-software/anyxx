@@ -413,26 +413,7 @@ using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info Trait>
 consteval std::meta::info find_function_impl_in(std::meta::info interface_function) {
-    constexpr auto ctx = std::meta::access_context::current();
-    for(auto m : members_of(Trait, ctx)) {
-        if (interface_function == m){
-            return { m };
-        }
-        if (is_function(m) && has_identifier(m))
-        {
-            if (is_function(interface_function) && has_identifier(interface_function)) {
-                if (identifier_of(interface_function) == identifier_of(m)) {
-                    return { m };
-                }
-            }
-            else if (is_operator_function(interface_function)) {
-                if (anyxx26::meta::enum_to_string(operator_of(interface_function)) == identifier_of(m)) {
-                    return { m };
-                }
-            }
-        }
-    }
-    return {};
+    return meta::get_member(Trait, interface_function);
 }
 
 template <std::meta::info TraitTemplate, typename V, std::meta::info... Args>
