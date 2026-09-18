@@ -73,6 +73,10 @@ consteval std::meta::info translate_impl_return_type() {
       return ^^R;
     }
 }
+template <typename R, typename V>
+using impl_return_type = [:translate_impl_return_type<R, V>():];
+
+
 template <std::meta::info SelfValType>
 consteval std::meta::info translate_v_table_return_type(std::meta::info R) {
     if (R == ^^anyxx::self&) {
@@ -175,40 +179,40 @@ consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
 }
 
 template <std::meta::info spec, typename V, typename R, typename VoidSelf, typename... Args>
-decltype(auto) default_impl(VoidSelf void_self, Args&&... args) {
-    using return_t = [:translate_impl_return_type<R, V>():];
+invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
+    using return_t = impl_return_type<R, V>;
     using self_t = self_const_correct_t<V, VoidSelf>;
     if constexpr(is_class_type(^^V)) {
         if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate) {
-            return candidate(void_self, std::forward<Args>(args)...);
+            return candidate;
         }
     } 
     if constexpr(meta::is_op_parentheses_spec(spec)) {
         if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
-            return invoke_op_parentheses<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+            return invoke_op_parentheses<self_t, return_t, VoidSelf, Args...>;
         }
     } else {
         if constexpr(!is_operator_function(spec)) {
             throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
         } else {
 			if constexpr(meta::is_op_spec(spec, std::meta::op_plus_plus)) {
-				return invoke_op_plus_plus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+				return invoke_op_plus_plus<self_t, return_t, VoidSelf, Args...>;
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_minus_minus)) {
-				return invoke_op_minus_minus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+				return invoke_op_minus_minus<self_t, return_t, VoidSelf, Args...>;
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_star)) {
-				return invoke_op_star<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+				return invoke_op_star<self_t, return_t, VoidSelf, Args...>;
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_arrow)) {
-                return invoke_op_arrow<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+                return invoke_op_arrow<self_t, return_t, VoidSelf, Args...>;
 			} else if constexpr(meta::is_op_spec(spec, std::meta::op_square_brackets)) {
-				return invoke_op_square_brackets<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+				return invoke_op_square_brackets<self_t, return_t, VoidSelf, Args...>;
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_plus)) {
-                return invoke_op_plus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+                return invoke_op_plus<self_t, return_t, VoidSelf, Args...>;
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_minus)) {
-                return invoke_op_minus<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+                return invoke_op_minus<self_t, return_t, VoidSelf, Args...>;
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_equals_equals)) {
-                return invoke_op_equals_equals<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+                return invoke_op_equals_equals<self_t, return_t, VoidSelf, Args...>;
             } else if constexpr(meta::is_op_spec(spec, std::meta::op_exclamation_equals)) {
-                return invoke_op_exclamation_equals<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
+                return invoke_op_exclamation_equals<self_t, return_t, VoidSelf, Args...>;
             } else {
                 throw std::logic_error(std::format("{} not yet implemeted in anyxx.", display_string_of(spec)));
             }
@@ -255,6 +259,19 @@ consteval std::meta::info translate_v_table_fptr_param_type(){
 
 template <std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Param>
 using translate_v_table_fptr_param_type_t = [:translate_v_table_fptr_param_type<dyn_self_cref, dyn_self_mutref, Param>():];
+
+template <typename V, typename Param>
+consteval std::meta::info translate_impl_fptr_param() {
+    if constexpr(^^Param == ^^anyxx::self const&) {
+        return ^^V const&;
+    } else if constexpr(^^Param == ^^anyxx::self&) {
+        return ^^V&;
+    } else {
+        return ^^Param;
+    }
+}
+template <typename V, typename Param>
+using impl_fptr_param_t = [:translate_impl_fptr_param<V, Param>():];
 
 template <typename V, typename Param>
 decltype(auto) forward_v_table_fptr_param(auto&& param){
@@ -367,24 +384,23 @@ consteval std::meta::info make_v_table_members_type() {
 
 template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
     typename V, typename R, typename VoidSelf, typename... Args>
-[:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl
-    //(VoidSelf self, Args... args) {
-    (VoidSelf self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
+[:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl(VoidSelf void_self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
   using return_t = [:translate_v_table_return_type<dyn_self_val>(^^R):];
   if constexpr (default_ || !is_static_member(m)) {
+    auto fptr = default_impl<m, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
     if constexpr(std::same_as<return_t, void>) {
-        default_impl<m, V, R>(self, forward_v_table_fptr_param<V, Args>(args)...);
+        fptr(void_self, forward_v_table_fptr_param<V, Args>(args)...);
         return;
     } else {
-        return default_impl<m, V, R>(self, forward_v_table_fptr_param<V, Args>(args)...);
+        return fptr(void_self, forward_v_table_fptr_param<V, Args>(args)...);
     }
   } else {
     using VSelf = self_const_correct_t<V, VoidSelf>;
     if constexpr(std::same_as<return_t, void>) {
-        std::forward<R>([:m:](*static_cast<VSelf*>(self), forward_v_table_fptr_param<V, Args>(args)...));
+        std::forward<R>([:m:](*static_cast<VSelf*>(void_self), forward_v_table_fptr_param<V, Args>(args)...));
         return;
     } else {
-        return std::forward<R>([:m:](*static_cast<VSelf*>(self), forward_v_table_fptr_param<V, Args>(args)...));
+        return std::forward<R>([:m:](*static_cast<VSelf*>(void_self), forward_v_table_fptr_param<V, Args>(args)...));
     }
   }
 }
