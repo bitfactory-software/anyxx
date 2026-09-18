@@ -86,6 +86,15 @@ consteval std::meta::info translate_v_table_return_type(std::meta::info R) {
 static_assert(translate_v_table_return_type<^^int>(^^ anyxx::self&) == ^^void);
 static_assert(std::same_as<typename [:translate_v_table_return_type<^^int>(^^anyxx::self&):], void>);
 
+template <std::meta::info Member, typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_member(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return typed_self->[:Member:](std::forward<Args>(args)...);
+};
+
+template <typename R, typename VoidSelf, typename... Args>
+using invoke_function_type = R (*)(VoidSelf, Args...);
+
 template <std::meta::info spec, typename Target, typename R, typename VoidSelf, typename... Args>
 consteval std::meta::info find_candidate_in_target() {
     constexpr auto ctx = std::meta::access_context::current();
@@ -122,8 +131,8 @@ decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
     using self_t = self_const_correct_t<V, VoidSelf>;
     auto typed_self = static_cast<self_t*>(voidSelf);
     if constexpr(is_class_type(^^V)) {
-        if constexpr (constexpr auto candidate = find_candidate_in_target<spec, V, R, VoidSelf, Args...>(); candidate != std::meta::info{}) {
-            return typed_self->[:candidate:](std::forward<Args>(args)...);
+        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, R, VoidSelf, Args...>(); candidate != std::meta::info{}) {
+            return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>(voidSelf, std::forward<Args>(args)...);
         }
     } 
     if constexpr(meta::is_op_parentheses_spec(spec)) {
