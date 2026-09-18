@@ -91,31 +91,35 @@ R invoke_member(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return typed_self->[:Member:](std::forward<Args>(args)...);
 };
+template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
+R invoke_op_parentheses(VoidSelf self, Args... args) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return (*typed_self)(std::forward<Args>(args)...);
+};
 
 template <typename R, typename VoidSelf, typename... Args>
-using invoke_function_type = R (*)(VoidSelf, Args...);
+using invoke_function_t = R (*)(VoidSelf, Args...);
 
 template <std::meta::info spec, typename Target, typename R, typename VoidSelf, typename... Args>
-consteval std::meta::info find_candidate_in_target() {
+consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
     constexpr auto ctx = std::meta::access_context::current();
-    using return_t = [:translate_impl_return_type<R, Target>():];
     using self_t = self_const_correct_t<Target, VoidSelf>;
     template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
         if constexpr(!is_static_member(candidate) && is_function(candidate)) {
             if constexpr(has_identifier(candidate) && has_identifier(spec) && identifier_of(candidate) == identifier_of(spec)) {
-                if constexpr(std::is_invocable_r_v<return_t, decltype(&[:candidate:]), self_t, Args...>) {
-                    return candidate;
+                if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
+                    return invoke_member<candidate, self_t, R, VoidSelf, Args...>;
                 }
             }
             if constexpr(is_operator_function(candidate)) {
-                if constexpr(std::is_invocable_r_v<return_t, decltype(&[:candidate:]), self_t, Args...>) {
+                if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
                     constexpr auto op = operator_of(candidate);
                     if constexpr(is_operator_function(spec)) {
                         if constexpr(op == operator_of(spec)) {
-                            return candidate;
+                            return invoke_member<candidate, self_t, R, VoidSelf, Args...>;
                         }
                     } else if constexpr(anyxx26::meta::enum_to_string(op) == identifier_of(spec)) {
-                        return candidate;
+                        return invoke_member<candidate, self_t, R, VoidSelf, Args...>;
                     }
                 }
             }
@@ -126,18 +130,18 @@ consteval std::meta::info find_candidate_in_target() {
 
 template <std::meta::info spec, typename V, typename R, typename VoidSelf,
           typename... Args>
-decltype(auto) default_impl(VoidSelf voidSelf, Args&&... args) {
+decltype(auto) default_impl(VoidSelf void_self, Args&&... args) {
     using return_t = [:translate_impl_return_type<R, V>():];
     using self_t = self_const_correct_t<V, VoidSelf>;
-    auto typed_self = static_cast<self_t*>(voidSelf);
+    auto typed_self = static_cast<self_t*>(void_self);
     if constexpr(is_class_type(^^V)) {
-        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, R, VoidSelf, Args...>(); candidate != std::meta::info{}) {
-            return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>(voidSelf, std::forward<Args>(args)...);
+        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate) {
+            return candidate(void_self, std::forward<Args>(args)...);
         }
     } 
     if constexpr(meta::is_op_parentheses_spec(spec)) {
         if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
-            return (*typed_self)(std::forward<Args>(args)...);
+            return invoke_op_parentheses<self_t, return_t, VoidSelf, Args...>(void_self, std::forward<Args>(args)...);
         }
     } else {
         if constexpr(!is_operator_function(spec)) {
