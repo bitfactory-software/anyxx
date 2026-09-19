@@ -144,7 +144,7 @@ struct addable {
 
 consteval{
     constexpr auto interface_member = ^^addable<declaration>::add;
-    auto decorated_name = meta::decorated_name_of(interface_member);
+    auto decorated_name = decorated_name_of(interface_member);
     //if (decorated_name != "addint") {
     //  throw std::meta::exception(decorated_name, interface_member);
     //}

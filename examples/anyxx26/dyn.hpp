@@ -2,6 +2,8 @@
 
 #include <array>
 #include <bit_factory/anyxx.hpp>
+#include <examples/anyxx26/dyn/keywords.hpp>
+#include <examples/anyxx26/dyn/signature_translation.hpp>
 #include <examples/anyxx26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
@@ -10,60 +12,6 @@
 #include <set>
 
 namespace anyxx26 {
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-struct dyn;
-
-struct default_t {};
-constexpr static inline default_t defaulted = {};
-
-struct declaration {};
-struct model_map {};
-
-struct v_table_data_t {};
-constexpr static inline v_table_data_t v_table_data = {};
-
-template <typename V, typename VoidSelf>
-using self_const_correct_t = std::conditional_t<
-    std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
-    V const, V>;
-
-template<std::meta::info TraitTemplate, typename V, std::meta::info... Args>
-consteval std::meta::info trait_model_map(){
-    return substitute(TraitTemplate, { ^^V,^^ model_map, Args... });;
-}
-template<std::meta::info TraitTemplate, std::meta::info... Args>
-consteval std::meta::info trait_declaration(){
-    return substitute(TraitTemplate, { ^^declaration,^^declaration, Args... });;
-}
-template<template<typename, typename...> typename TraitTemplate, typename... Args>
-using trait_declaration_t = TraitTemplate<declaration, declaration, Args...>;
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-concept specifies_default_proxy_t = requires { typename trait_declaration_t<Trait, Args...>::default_proxy_t; };
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info compute_default_proxy_t() {
-    if constexpr(specifies_default_proxy_t<Trait, Args...>) {
-        return ^^typename trait_declaration_t<Trait, Args...>::default_proxy_t;
-    } else {
-        return ^^anyxx::cref;
-    }
-}
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-using dyn_self_val_t = dyn<Trait, default_proxy_t<Trait, Args...>, Args...>;
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;
-
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-using dyn_self_mutref_t = dyn<Trait, anyxx::mutref, Args...>;
-
-
 template <typename R, typename V>
 consteval std::meta::info translate_impl_return_type() {
     if constexpr(^^R == ^^anyxx::self&) {
@@ -157,7 +105,7 @@ consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
     using self_t = self_const_correct_t<Target, VoidSelf>;
     template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
         if constexpr(!is_static_member(candidate) && is_function(candidate)) {
-            if constexpr(meta::decorated_name_of(candidate) == meta::decorated_name_of(spec)) {
+            if constexpr(decorated_name_of(candidate) == decorated_name_of(spec)) {
                 if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
                     return invoke_member<candidate, self_t, R, VoidSelf, Args...>;
                 }
@@ -309,7 +257,7 @@ consteval std::string v_table_name_of(v_table_spec spec) {
     if (is_v_table_data(spec)) {
         return std::string{ identifier_of(spec.member) };
     } else {
-        return meta::decorated_name_of(spec.member);
+        return decorated_name_of(spec.member);
     }
 }
 
@@ -413,9 +361,9 @@ using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info InterfaceFunction, std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info find_function_impl() {
-  if constexpr(constexpr auto found_in_impl = meta::get_member(trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction); found_in_impl != std::meta::info{}) {
+  if constexpr(constexpr auto found_in_impl = get_member(trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction); found_in_impl != std::meta::info{}) {
     return found_in_impl;
-  } else if constexpr(constexpr auto found_in_base = meta::get_member(trait_declaration<TraitTemplate, Args...>(), InterfaceFunction); found_in_base != std::meta::info{}) {
+  } else if constexpr(constexpr auto found_in_base = get_member(trait_declaration<TraitTemplate, Args...>(), InterfaceFunction); found_in_base != std::meta::info{}) {
       return found_in_base;
   } else {
       static_assert(false, "Function not found in impl trait or base trait");
@@ -453,7 +401,7 @@ void set_v_table_members(VTable* v_table) {
         }
         if constexpr((has_identifier(interface_m) && is_function(interface_m))
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
-            constexpr auto f = anyxx26::meta::get_data_member_by_id(FunctionPointers, meta::decorated_name_of(interface_m));
+            constexpr auto f = anyxx26::meta::get_data_member_by_id(FunctionPointers, decorated_name_of(interface_m));
             constexpr auto m = find_function_impl<interface_m, Trait, Concrete, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>(interface_m):];
         }
@@ -711,7 +659,7 @@ struct dyn_facade_call {
     auto v_table_ptr = base->v_table_;
     using fptrs_t = typename v_table_t::fptrs_t;
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
-    auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, meta::decorated_name_of(f));
+    auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, decorated_name_of(f));
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
     if constexpr(std::same_as<typename [:return_type_of(f):], anyxx::self&>) {
         fptrs->[:vf:](x, std::forward<Args>(args)...);
