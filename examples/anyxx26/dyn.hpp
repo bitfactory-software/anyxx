@@ -297,9 +297,9 @@ using base_v_table_t = anyxx::observeable::v_table_t;
 
 template <std::meta::info InterfaceFunction, std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info find_function_impl() {
-  if constexpr(constexpr auto found_in_impl = get_member(trait_model_map<TraitTemplate, V, Args...>(), InterfaceFunction); found_in_impl != std::meta::info{}) {
+  if constexpr(constexpr auto found_in_impl = get_implementation_member(trait_model_map<TraitTemplate, V, Args...>(), ^^V, InterfaceFunction); found_in_impl != std::meta::info{}) {
     return found_in_impl;
-  } else if constexpr(constexpr auto found_in_base = get_member(trait_declaration<TraitTemplate, Args...>(), InterfaceFunction); found_in_base != std::meta::info{}) {
+  } else if constexpr(constexpr auto found_in_base = get_implementation_member(trait_declaration<TraitTemplate, Args...>(), ^^V, InterfaceFunction); found_in_base != std::meta::info{}) {
       return found_in_base;
   } else {
       static_assert(false, "Function not found in impl trait or base trait");
