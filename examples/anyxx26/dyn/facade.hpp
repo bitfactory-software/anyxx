@@ -1,0 +1,107 @@
+#pragma once
+
+#include <examples/anyxx26/dyn/keywords.hpp>
+#include <examples/anyxx26/dyn/signature_translation.hpp>
+#include <examples/anyxx26/dyn/v_table_layout.hpp>
+#include <examples/anyxx26/meta/utilities.hpp>
+#include <meta>
+#include <utility>
+#include <vector>
+#include <ranges>
+
+namespace anyxx26 {
+
+template <typename DynBase, std::meta::info f, typename R, typename... Args>
+struct dyn_facade_call {
+    template<typename Self>
+    R operator()(this Self&& self, Args... args) {
+        using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
+        auto base = reinterpret_cast<base_t*>(&self);
+        using v_table_t = DynBase::v_table_t;
+        auto v_table_ptr = base->v_table_;
+        using fptrs_t = typename v_table_t::fptrs_t;
+        auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
+        auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, meta::function_name_of(f));
+        auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
+        if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
+            fptrs->[:vf:](x, std::forward<Args>(args)...);
+            return static_cast<typename DynBase::dyn_self_t&>(*base);
+        } else {
+            return fptrs->[:vf:](x, std::forward<Args>(args)...);
+        }
+    }
+};
+
+
+template <typename DynBase>
+consteval std::meta::info make_dyn_facade_call(std::meta::info m){
+    std::vector<std::meta::info> types
+    { ^^DynBase
+    , reflect_constant(m)
+    , translate_facade_return_type(return_type_of(m),^^ typename DynBase::dyn_self_t)
+    };
+    types.append_range(parameters_of(m)
+        | std::views::drop(is_static_member(m) ? 1 : 0)
+        | std::views::transform([](auto p){
+        return translate_v_table_fptr_param_type(^^typename DynBase::dyn_self_cref_t, ^^typename DynBase::dyn_self_mutref_t, type_of(p));
+    })
+    );
+    return substitute(^^dyn_facade_call, types);
+}
+
+template <typename DynBase, std::meta::info TraitDeclaration>
+consteval void collect_overload_set_for_name(auto id, std::vector<std::meta::info>& overload_set){
+    constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
+    if constexpr(base != std::meta::info{}) {
+        collect_overload_set_for_name<DynBase, base>(id, overload_set);
+    }
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
+        if constexpr(is_function(m) && is_user_declared(m)) {
+            if(meta::function_name_of(m) == id) {
+                overload_set.push_back(make_dyn_facade_call<DynBase>(m));
+            }
+        }
+    }
+}
+
+template<class... Ts>
+struct overload : Ts... {
+    using Ts::operator()...;
+};
+template <typename DynBase>
+consteval std::meta::info dyn_facade_named_overload_set(auto id){
+    std::vector<std::meta::info> overload_set;
+    collect_overload_set_for_name<DynBase, ^^ typename DynBase::trait_declaration_t>(id, overload_set);
+    auto overloaded_operator = substitute(^^overload, overload_set);
+    return std::meta::data_member_spec(overloaded_operator, { .name = id, .no_unique_address = true });
+}
+
+template <std::meta::info TraitDeclaration>
+consteval void collect_dyn_facade_call_names(std::vector<std::string>& names) {
+    constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
+    if constexpr(base != std::meta::info{}) {
+        collect_dyn_facade_call_names<base>(names);
+    }
+    constexpr auto ctx = std::meta::access_context::current();
+    template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
+        if constexpr(is_function(m) && is_user_declared(m)) {
+            constexpr auto name = define_static_string(meta::function_name_of(m));
+            if(std::ranges::find(names, name) == names.end()) {
+                names.push_back(name);
+            }
+        }
+    }
+};
+
+template <std::meta::info TraitDeclaration, typename DynBase>
+consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
+    std::vector<std::string> names;
+    collect_dyn_facade_call_names<TraitDeclaration>(names);
+    for(auto name : names) {
+        auto dms = dyn_facade_named_overload_set<DynBase>(name);
+        calls.push_back(reflect_constant(dms));
+    }
+};
+
+}  // namespace anyxx26
