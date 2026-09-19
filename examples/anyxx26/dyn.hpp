@@ -284,7 +284,7 @@ consteval std::meta::info make_vfimpl(std::meta::info interface_function) {
   types.push_back(std::meta::reflect_constant(dyn_self_cref));
   types.push_back(std::meta::reflect_constant(dyn_self_mutref));
   types.push_back(^^V);
-  types.push_back(return_type_of(implementing_function));
+  types.push_back(return_type_of(interface_function));
   add_v_table_fptr_this_param_type(interface_function, types);
   for (auto p : define_static_array(parameters_of(interface_function))) {
     types.push_back(make_v_table_fptr_param_type(types.size() == 7u, p));
@@ -597,7 +597,7 @@ struct dyn_facade_call {
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
     auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, decorated_name_of(f));
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
-    if constexpr(std::same_as<typename [:return_type_of(f):], anyxx::self&>) {
+    if constexpr(std::same_as<typename [:return_type_of(f):], declaration&>) {
         fptrs->[:vf:](x, std::forward<Args>(args)...);
         return static_cast<typename DynBase::dyn_self_t&>(*base);
     } else {
@@ -605,6 +605,7 @@ struct dyn_facade_call {
     }
   }
 };
+
 
 template <typename DynBase>
 consteval std::meta::info make_facade_call(std::meta::info m){

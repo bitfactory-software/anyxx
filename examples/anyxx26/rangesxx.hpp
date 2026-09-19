@@ -9,9 +9,9 @@ struct input_iterator : save_copyable<Self, Trait> {
     using default_proxy_t = anyxx::val<std::true_type>;
 
     Value& operator*();
-    anyxx::self& operator++();
-    bool operator==(anyxx::self const&) const;
-    bool operator!=(anyxx::self const&) const;
+    Self& operator++();
+    bool operator==(Self const&) const;
+    bool operator!=(Self const&) const;
 
 	struct typenames {
 		using value_type = Value;
@@ -31,7 +31,7 @@ struct forward_iterator : input_iterator<Self, Trait, Value> {
 
 template <typename Self, typename Trait, typename Value>
 struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
-    anyxx::self& operator--();
+    Self& operator--();
 
     struct typenames : forward_iterator<Self, Trait, Value>::typenames {
         using iterator_category = std::bidirectional_iterator_tag;
@@ -40,17 +40,17 @@ struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
 
 template <typename Self, typename Trait, typename Value>
 struct random_access_iterator : bidirectional_iterator<Self, Trait, Value> {
-    bool operator<(anyxx::self const&) const;
-    bool operator>(anyxx::self const&) const;
-    bool operator<=(anyxx::self const&) const;
-    bool operator>=(anyxx::self const&) const;
+    bool operator<(Self const&) const;
+    bool operator>(Self const&) const;
+    bool operator<=(Self const&) const;
+    bool operator>=(Self const&) const;
 
-    anyxx::self& operator-=(std::ptrdiff_t);
-    anyxx::self& operator+=(std::ptrdiff_t);
-    anyxx::self operator-(std::ptrdiff_t) const;
-    anyxx::self operator+(std::ptrdiff_t) const;
+    Self& operator-=(std::ptrdiff_t);
+    Self& operator+=(std::ptrdiff_t);
+    Self operator-(std::ptrdiff_t) const;
+    Self operator+(std::ptrdiff_t) const;
 
-    std::ptrdiff_t operator-(anyxx::self const&) const;
+    std::ptrdiff_t operator-(Self const&) const;
 
     Value& operator[](std::ptrdiff_t) const;
 

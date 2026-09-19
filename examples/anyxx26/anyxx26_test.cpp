@@ -467,10 +467,10 @@ namespace {
 template <typename Self, typename Trait>
 struct operators : save_copyable<Self, Trait> {
     int const& operator*() const;
-    anyxx::self operator+(int) const;
-    anyxx::self& operator++();
-    bool equal(anyxx::self const&) const;
-    bool operator==(anyxx::self const&) const;
+    Self operator+(int) const;
+    Self& operator++();
+    bool equal(Self const&) const;
+    bool operator==(Self const&) const;
 };
 
 struct add_test {
