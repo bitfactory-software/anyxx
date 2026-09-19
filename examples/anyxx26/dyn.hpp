@@ -489,7 +489,7 @@ struct dyn_facade_call {
 
 
 template <typename DynBase>
-consteval std::meta::info make_facade_call(std::meta::info m){
+consteval std::meta::info make_dyn_facade_call(std::meta::info m){
     std::vector<std::meta::info> types
     { ^^DynBase
     , reflect_constant(m)
@@ -514,7 +514,7 @@ consteval void collect_overload_set_for_name(auto id, std::vector<std::meta::inf
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr(is_function(m) && is_user_declared(m)) {
             if (meta::function_name_of(m) == id) {
-                overload_set.push_back(make_facade_call<DynBase>(m));
+                overload_set.push_back(make_dyn_facade_call<DynBase>(m));
             }
         }
     }
