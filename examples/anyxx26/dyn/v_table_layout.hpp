@@ -22,6 +22,9 @@ consteval bool is_function(v_table_spec spec) {
 consteval bool is_operator(v_table_spec spec) {
     return is_user_declared(spec.member) && is_operator_function(spec.member);
 }
+consteval bool is_function_or_operator(v_table_spec spec) {
+    return is_function(spec) || is_operator(spec);
+}
 
 consteval std::string v_table_name_of(v_table_spec spec) {
     if (is_v_table_data(spec)) {

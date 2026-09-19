@@ -8,6 +8,8 @@
 #include <utility>
 #include <vector>
 #include <ranges>
+#include <string>   
+#include <algorithm>
 
 namespace anyxx26 {
 
@@ -104,10 +106,39 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     }
 };
 
+struct overload_sets_spec {
+  std::string name;
+  std::vector<v_table_spec> specs;
+};
+using overload_sets_specs = std::vector<overload_sets_spec>;
+
+template <std::meta::info TraitDeclaration>
+consteval overload_sets_specs make_overload_sets_specs() {
+    overload_sets_specs specs;
+    for(auto s : get_v_table_specs<TraitDeclaration>()) {
+        if(is_function_or_operator(s)) {
+            auto name = meta::function_name_of(s.member);
+            auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });
+            if(found == specs.end()) {
+                overload_sets_spec overloads;
+                overloads.name = name;
+                overloads.specs.push_back(s);
+                specs.push_back(overloads);
+            } else {
+              found->specs.push_back(s);
+            }
+        }
+    }
+    return specs;
+}
+
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 consteval std::meta::info make_dyn_facade() {
+     constexpr auto trait_declaration_info = trait_declaration<^^Trait, ^^Args...>();
+
+    [[maybe_unused]] auto overload_sets = make_overload_sets_specs<trait_declaration_info>();
     std::vector<std::meta::info> calls;
-    collect_dyn_facade_calls<trait_declaration<^^ Trait, ^^ Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
+    collect_dyn_facade_calls<trait_declaration_info, dyn_base<Trait, Proxy, Args...>>(calls);
     return substitute(^^meta::to_struct, calls);
 };
 
