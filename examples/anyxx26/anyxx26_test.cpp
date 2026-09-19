@@ -96,8 +96,8 @@ namespace{
 
 template <typename DynBase>
 consteval std::meta::info test_make_facade_call() {
-  auto m = ^^stringable<declaration>::as_string;
-  return make_facade_call<DynBase>(m);
+    auto m = ^^stringable<declaration>::as_string;
+    return make_facade_call<DynBase>(m);
 }
 
 }
@@ -141,6 +141,15 @@ template <typename Self, typename = anyxx26::declaration>
 struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
+
+consteval{
+    constexpr auto interface_member = ^^addable<declaration>::add;
+    auto decorated_name = meta::decorated_name_of(interface_member);
+    //if (decorated_name != "addint") {
+    //  throw std::meta::exception(decorated_name, interface_member);
+    //}
+}
+
 
 struct add1 {
   int value;
@@ -571,4 +580,7 @@ TEST_CASE("anyxx26 iterators") {
     test_bidirectional_iterator(arr.begin());
 
 //    meta::print_members<dyn<rangesxx::random_access_iterator,anyxx::val<std::true_type>, int>>();
+//    using v_table_members_t =[:make_v_table_members_type<rangesxx::random_access_iterator, int>():];
+    using v_table_members_t =[:make_v_table_members_type<rangesxx::bidirectional_iterator, int>():];
+    meta::print_members<v_table_members_t>();
 }
