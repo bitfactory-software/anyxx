@@ -769,11 +769,11 @@ struct overload : Ts... {
     using Ts::operator()...;
 };
 template <typename DynBase, auto id>
-consteval std::meta::info dyn_facade_call_data_member_spec(){
+consteval std::meta::info dyn_facade_named_overload_set(){
     std::vector<std::meta::info> overload_set;
     collect_overload_set_for_name<DynBase, ^^typename DynBase::trait_declaration_t, id>(overload_set);
-    auto overload_facade_call = substitute(^^overload, overload_set);
-    return std::meta::data_member_spec(overload_facade_call, { .name = id, .no_unique_address = true });
+    auto overloaded_operator = substitute(^^overload, overload_set);
+    return std::meta::data_member_spec(overloaded_operator, { .name = id, .no_unique_address = true });
 }
 
 template <std::meta::info TraitDeclaration, typename DynBase>
@@ -788,7 +788,7 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, std
             constexpr auto name = define_static_string(meta::function_name_of(m));
             if (std::ranges::find(names, name) == names.end()) {
                 names.push_back(name);
-                constexpr auto dms = dyn_facade_call_data_member_spec<DynBase, name>();
+                constexpr auto dms = dyn_facade_named_overload_set<DynBase, name>();
                 calls.push_back(reflect_constant(dms));
             }
         }
