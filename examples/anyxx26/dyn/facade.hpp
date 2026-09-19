@@ -104,4 +104,11 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
     }
 };
 
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+consteval std::meta::info make_dyn_facade() {
+    std::vector<std::meta::info> calls;
+    collect_dyn_facade_calls<trait_declaration<^^ Trait, ^^ Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
+    return substitute(^^meta::to_struct, calls);
+};
+
 }  // namespace anyxx26

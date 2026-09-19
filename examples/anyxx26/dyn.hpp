@@ -467,13 +467,6 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   friend auto release_v_table(dyn_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
-consteval std::meta::info make_dyn_facade() {
-    std::vector<std::meta::info> calls;
-    collect_dyn_facade_calls<trait_declaration<^^ Trait, ^^ Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
-    return substitute(^^meta::to_struct, calls);
-};
-
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct dyn : dyn_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
   using dyn_base<Trait, Args...>::dyn_base;

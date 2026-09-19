@@ -6,6 +6,9 @@
 
 namespace anyxx26 {
 
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+struct dyn_base;
+
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct dyn;
 
