@@ -749,10 +749,10 @@ consteval std::meta::info make_facade_call(std::meta::info m){
 }
 
 template <typename DynBase, std::meta::info TraitDeclaration, auto id>
-consteval void dyn_facade_call_overload_set(std::vector<std::meta::info>& overload_set){
+consteval void collect_overload_set_for_name(std::vector<std::meta::info>& overload_set){
     constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        dyn_facade_call_overload_set<DynBase, base, id>(overload_set);
+        collect_overload_set_for_name<DynBase, base, id>(overload_set);
     }
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
@@ -771,7 +771,7 @@ struct overload : Ts... {
 template <typename DynBase, auto id>
 consteval std::meta::info dyn_facade_call_data_member_spec(){
     std::vector<std::meta::info> overload_set;
-    dyn_facade_call_overload_set<DynBase, ^^typename DynBase::trait_declaration_t, id>(overload_set);
+    collect_overload_set_for_name<DynBase, ^^typename DynBase::trait_declaration_t, id>(overload_set);
     auto overload_facade_call = substitute(^^overload, overload_set);
     return std::meta::data_member_spec(overload_facade_call, { .name = id, .no_unique_address = true });
 }
