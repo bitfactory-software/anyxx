@@ -79,7 +79,7 @@ consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
     using self_t = self_const_correct_t<Target, VoidSelf>;
     template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
         if constexpr(!is_static_member(candidate) && is_function(candidate)) {
-            if constexpr(decorated_name_of(candidate) == decorated_name_of(spec)) {
+            if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
                 if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
                     return invoke_member<candidate, self_t, R, VoidSelf, Args...>;
                 }
@@ -193,7 +193,7 @@ consteval std::string v_table_name_of(v_table_spec spec) {
     if (is_v_table_data(spec)) {
         return std::string{ identifier_of(spec.member) };
     } else {
-        return decorated_name_of(spec.member);
+        return std::string{ meta::function_name_of(spec.member) };
     }
 }
 
@@ -337,7 +337,7 @@ void set_v_table_members(VTable* v_table) {
         }
         if constexpr((has_identifier(interface_m) && is_function(interface_m))
             || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
-            constexpr auto f = anyxx26::meta::get_data_member_by_id(FunctionPointers, decorated_name_of(interface_m));
+            constexpr auto f = anyxx26::meta::get_data_member_by_id(FunctionPointers, meta::function_name_of(interface_m));
             constexpr auto m = find_function_impl<interface_m, Trait, Concrete, Args...>();
             v_table->[:f:] = [:make_vfimpl<Concrete, m, dyn_self_val, dyn_self_cref, dyn_self_mutref>(interface_m):];
         }
@@ -595,7 +595,7 @@ struct dyn_facade_call {
     auto v_table_ptr = base->v_table_;
     using fptrs_t = typename v_table_t::fptrs_t;
     auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
-    auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, decorated_name_of(f));
+    auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, meta::function_name_of(f));
     auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
     if constexpr(std::same_as<typename [:return_type_of(f):], declaration&>) {
         fptrs->[:vf:](x, std::forward<Args>(args)...);
