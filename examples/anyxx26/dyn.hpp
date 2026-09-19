@@ -748,16 +748,16 @@ consteval std::meta::info make_facade_call(std::meta::info m){
     return substitute(^^dyn_facade_call, types);
 }
 
-template <typename DynBase, std::meta::info TraitDeclaration, auto id>
-consteval void collect_overload_set_for_name(std::vector<std::meta::info>& overload_set){
+template <typename DynBase, std::meta::info TraitDeclaration>
+consteval void collect_overload_set_for_name(auto id, std::vector<std::meta::info>& overload_set){
     constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        collect_overload_set_for_name<DynBase, base, id>(overload_set);
+        collect_overload_set_for_name<DynBase, base>(id, overload_set);
     }
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr(is_function(m) && is_user_declared(m)) {
-            if constexpr(meta::function_name_of(m) == id) {
+            if (meta::function_name_of(m) == id) {
                 overload_set.push_back(make_facade_call<DynBase>(m));
             }
         }
@@ -768,38 +768,45 @@ template<class... Ts>
 struct overload : Ts... {
     using Ts::operator()...;
 };
-template <typename DynBase, auto id>
-consteval std::meta::info dyn_facade_named_overload_set(){
+template <typename DynBase>
+consteval std::meta::info dyn_facade_named_overload_set(auto id){
     std::vector<std::meta::info> overload_set;
-    collect_overload_set_for_name<DynBase, ^^typename DynBase::trait_declaration_t, id>(overload_set);
+    collect_overload_set_for_name<DynBase, ^^typename DynBase::trait_declaration_t>(id, overload_set);
     auto overloaded_operator = substitute(^^overload, overload_set);
     return std::meta::data_member_spec(overloaded_operator, { .name = id, .no_unique_address = true });
 }
 
-template <std::meta::info TraitDeclaration, typename DynBase>
-consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, std::vector<std::string>& names) {
+template <std::meta::info TraitDeclaration>
+consteval void collect_dyn_facade_call_names(std::vector<std::string>& names) {
     constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
     if constexpr(base != std::meta::info{}) {
-        collect_dyn_facade_calls<base, DynBase>(calls, names);
+        collect_dyn_facade_call_names<base>(names);
     }
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr (is_function(m) && is_user_declared(m)) {
+        if constexpr(is_function(m) && is_user_declared(m)) {
             constexpr auto name = define_static_string(meta::function_name_of(m));
-            if (std::ranges::find(names, name) == names.end()) {
+            if(std::ranges::find(names, name) == names.end()) {
                 names.push_back(name);
-                constexpr auto dms = dyn_facade_named_overload_set<DynBase, name>();
-                calls.push_back(reflect_constant(dms));
             }
         }
     }
 };
 
+template <std::meta::info TraitDeclaration, typename DynBase>
+consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
+    std::vector<std::string> names;
+    collect_dyn_facade_call_names<TraitDeclaration>(names);
+    for(auto name : names) {
+        auto dms = dyn_facade_named_overload_set<DynBase>(name);
+        calls.push_back(reflect_constant(dms));
+    }
+};
+
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 consteval std::meta::info make_dyn_facade() {
-  std::vector<std::string> names;
   std::vector<std::meta::info> calls;
-  collect_dyn_facade_calls<trait_declaration<^^Trait, ^^Args...>(), dyn_base<Trait, Proxy, Args...>>(calls, names);
+  collect_dyn_facade_calls<trait_declaration<^^Trait, ^^Args...>(), dyn_base<Trait, Proxy, Args...>>(calls);
   return substitute(^^meta::to_struct, calls);
 };
 
