@@ -232,21 +232,20 @@ consteval void add_v_table_fptr_this_param_type(std::meta::info f, std::vector<s
     }
 }
 
-template <std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Param>
-consteval std::meta::info translate_v_table_fptr_param_type(){
-    if constexpr(^^Param == ^^anyxx::self const&) {
+consteval std::meta::info translate_v_table_fptr_param_type(std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, std::meta::info param){
+    if (param == ^^anyxx::self const&) {
         return dyn_self_cref;
     }
-    else if constexpr(^^Param == ^^anyxx::self&) {
+    else if (param == ^^anyxx::self&) {
         return dyn_self_mutref;
     }
     else {
-        return ^^Param;
+        return param;
     }
 }
 
 template <std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Param>
-using translate_v_table_fptr_param_type_t = [:translate_v_table_fptr_param_type<dyn_self_cref, dyn_self_mutref, Param>():];
+using translate_v_table_fptr_param_type_t = [:translate_v_table_fptr_param_type(dyn_self_cref, dyn_self_mutref, ^^Param):];
 
 template <typename V, typename Param>
 consteval std::meta::info translate_impl_fptr_param() {
@@ -532,6 +531,8 @@ template <template <typename, typename, typename...> typename Trait, typename Pr
 struct dyn_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
   using dyn_self_t = dyn<Trait, Proxy, Args...>;
+  using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;
+  using dyn_self_mutref_t = dyn<Trait, anyxx::mutref, Args...>;
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
@@ -657,7 +658,7 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
     __dyn_OP(op_slash, /) 
     __dyn_OP(op_percent, %)
     __dyn_OP(op_caret, ^)
-    __dyn_OP(op_ampersand, &)
+//    __dyn_OP(op_ampersand, &)
     __dyn_OP(op_pipe, |)
     __dyn_OP(op_plus_equals, +=)
     __dyn_OP(op_minus_equals, -=)
@@ -700,10 +701,10 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   friend auto release_v_table(dyn_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <typename DynBase, std::meta::info f>
+template <typename DynBase, std::meta::info f, typename R, typename... Args>
 struct dyn_facade_call {
-  template <typename Self, typename... Args>
-  decltype(auto) operator()(this Self&& self, Args&&... args) {
+  template<typename Self>
+  R operator()(this Self&& self, Args... args) {
     using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
     auto base = reinterpret_cast<base_t*>(&self);
     using v_table_t = DynBase::v_table_t;
@@ -721,6 +722,32 @@ struct dyn_facade_call {
   }
 };
 
+consteval std::meta::info translate_facade_return_type(std::meta::info return_type, std::meta::info dyn_self_val) {
+    if (return_type == ^^anyxx::self&) {
+        return add_lvalue_reference(dyn_self_val);
+    } else if (return_type == ^^anyxx::self) {
+        return dyn_self_val;
+    } else {
+        return return_type;
+    }
+} 
+
+template <typename DynBase>
+consteval std::meta::info make_facade_call(std::meta::info m){
+    std::vector<std::meta::info> types
+    { ^^DynBase
+    , reflect_constant(m)
+    , translate_facade_return_type(return_type_of(m), ^^typename DynBase::dyn_self_t)
+    };
+    types.append_range(parameters_of(m)
+        | std::views::drop(is_static_member(m) ? 1 : 0)
+        | std::views::transform([](auto p){ 
+                return translate_v_table_fptr_param_type(^^typename DynBase::dyn_self_cref_t, ^^typename DynBase::dyn_self_mutref_t, type_of(p)); 
+            })
+        );
+    return substitute(^^dyn_facade_call, types);
+}
+
 template <typename DynBase, std::meta::info TraitDeclaration, auto id>
 consteval void dyn_facade_call_overload_set(std::vector<std::meta::info>& overload_set){
     constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
@@ -731,9 +758,7 @@ consteval void dyn_facade_call_overload_set(std::vector<std::meta::info>& overlo
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr(is_function(m) && is_user_declared(m)) {
             if constexpr(meta::function_name_of(m) == id) {
-                using dyn_facade_call_t = dyn_facade_call<DynBase, m>;
-                constexpr std::meta::info call_meta = ^^dyn_facade_call_t;
-                overload_set.push_back(call_meta);
+                overload_set.push_back(make_facade_call<DynBase>(m));
             }
         }
     }

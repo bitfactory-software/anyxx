@@ -92,6 +92,29 @@ void dump_impl(){
 
 }  // namespace
 
+namespace{
+
+template <typename DynBase>
+consteval std::meta::info test_make_facade_call() {
+  auto m = ^^stringable<declaration>::as_string;
+  return make_facade_call<DynBase>(m);
+}
+
+}
+
+TEST_CASE("anyxx26 make_facade_call") {
+  using facade_call = [:test_make_facade_call<dyn_base<stringable, anyxx::cref>>():];
+  struct dummy_dyn : dyn_base<stringable, anyxx::cref>, facade_call {
+    using dyn_base<stringable, anyxx::cref>::dyn_base;
+    using facade_call::operator();
+  };
+
+  int i = 4711;
+  dummy_dyn x{i};
+  auto s = x();
+  CHECK(s == "4711");
+}
+
 TEST_CASE("anyxx26 hello world") {
 
   //dump_all<parent_of(^^stringable<void*>)>();
