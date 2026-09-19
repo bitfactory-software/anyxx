@@ -117,13 +117,10 @@ consteval overload_sets_specs make_overload_sets_specs() {
     overload_sets_specs specs;
     for(auto s : get_v_table_specs<TraitDeclaration>()) {
         if(is_function_or_operator(s)) {
-            auto name = meta::function_name_of(s.member);
+            std::string name {meta::function_name_of(s.member)};
             auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });
             if(found == specs.end()) {
-                overload_sets_spec overloads;
-                overloads.name = name;
-                overloads.specs.push_back(s);
-                specs.push_back(overloads);
+                specs.push_back(overload_sets_spec{name, {s}});
             } else {
               found->specs.push_back(s);
             }
