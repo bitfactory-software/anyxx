@@ -26,11 +26,15 @@ consteval bool is_function_or_operator(v_table_spec spec) {
     return is_function(spec) || is_operator(spec);
 }
 
+consteval std::string v_table_name_of(std::meta::info member, std::size_t /*index*/) {
+    return std::string{ meta::function_name_of(member) };
+}
+
 consteval std::string v_table_name_of(v_table_spec spec) {
     if (is_v_table_data(spec)) {
         return std::string{ identifier_of(spec.member) };
     } else {
-        return std::string{ meta::function_name_of(spec.member) };
+        return v_table_name_of(spec.member, spec.index);
     }
 }
 
