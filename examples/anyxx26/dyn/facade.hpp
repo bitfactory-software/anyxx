@@ -74,13 +74,6 @@ consteval std::meta::info make_dyn_facade_call(std::meta::info m){
     return substitute(^^dyn_facade_call, types);
 }
 
-template <typename DynBase, std::meta::info TraitDeclaration>
-consteval void collect_overload_set_for_name(overload_set_spec const& spec, std::vector<std::meta::info>& overload_set){
-    for(auto overload : spec.specs) {
-        overload_set.push_back(make_dyn_facade_call<DynBase>(overload.member));
-    }
-}
-
 template<class... Ts>
 struct overload : Ts... {
     using Ts::operator()...;
@@ -88,7 +81,9 @@ struct overload : Ts... {
 template <typename DynBase>
 consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const& spec){
     std::vector<std::meta::info> overload_set;
-    collect_overload_set_for_name<DynBase, ^^ typename DynBase::trait_declaration_t>(spec, overload_set);
+    for(auto overload : spec.specs) {
+        overload_set.push_back(make_dyn_facade_call<DynBase>(overload.member));
+    }
     auto overloaded_operator = substitute(^^overload, overload_set);
     return std::meta::data_member_spec(overloaded_operator, { .name = spec.name, .no_unique_address = true });
 }
