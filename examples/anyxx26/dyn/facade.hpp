@@ -94,7 +94,7 @@ consteval void collect_dyn_facade_call_names(std::vector<std::string>& names) {
             }
         }
     }
-};
+}
 
 template <std::meta::info TraitDeclaration, typename DynBase>
 consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
