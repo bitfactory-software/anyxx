@@ -102,29 +102,10 @@ consteval std::meta::info dyn_facade_named_overload_set(auto id){
     return std::meta::data_member_spec(overloaded_operator, { .name = id, .no_unique_address = true });
 }
 
-template <std::meta::info TraitDeclaration>
-consteval void collect_dyn_facade_call_names(std::vector<std::string>& names) {
-    constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
-    if constexpr(base != std::meta::info{}) {
-        collect_dyn_facade_call_names<base>(names);
-    }
-    constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr(is_function(m) && is_user_declared(m)) {
-            auto name = define_static_string(meta::function_name_of(m));
-            if(std::ranges::find(names, name) == names.end()) {
-                names.push_back(name);
-            }
-        }
-    }
-}
-
 template <std::meta::info TraitDeclaration, typename DynBase>
-consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
-    std::vector<std::string> names;
-    collect_dyn_facade_call_names<TraitDeclaration>(names);
-    for(auto name : names) {
-        auto dms = dyn_facade_named_overload_set<DynBase>(name);
+consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_specs const& overload_sets) {
+    for(auto const& set : overload_sets) {
+        auto dms = dyn_facade_named_overload_set<DynBase>(set.name);
         calls.push_back(reflect_constant(dms));
     }
 };
@@ -135,7 +116,7 @@ consteval std::meta::info make_dyn_facade() {
 
     [[maybe_unused]] auto overload_sets = make_overload_sets_specs<trait_declaration_info>();
     std::vector<std::meta::info> calls;
-    collect_dyn_facade_calls<trait_declaration_info, dyn_base<Trait, Proxy, Args...>>(calls);
+    collect_dyn_facade_calls<trait_declaration_info, dyn_base<Trait, Proxy, Args...>>(calls, overload_sets);
     return substitute(^^meta::to_struct, calls);
 };
 
