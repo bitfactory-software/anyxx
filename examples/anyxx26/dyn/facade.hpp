@@ -76,17 +76,8 @@ consteval std::meta::info make_dyn_facade_call(std::meta::info m){
 
 template <typename DynBase, std::meta::info TraitDeclaration>
 consteval void collect_overload_set_for_name(overload_set_spec const& spec, std::vector<std::meta::info>& overload_set){
-    constexpr auto base = meta::get_type_of_single_public_base<TraitDeclaration>();
-    if constexpr(base != std::meta::info{}) {
-        collect_overload_set_for_name<DynBase, base>(spec, overload_set);
-    }
-    constexpr auto ctx = std::meta::access_context::current();
-    for(auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
-        if (is_function(m) && is_user_declared(m)) {
-            if(meta::function_name_of(m) == spec.name) {
-                overload_set.push_back(make_dyn_facade_call<DynBase>(m));
-            }
-        }
+    for(auto overload : spec.specs) {
+        overload_set.push_back(make_dyn_facade_call<DynBase>(overload.member));
     }
 }
 
