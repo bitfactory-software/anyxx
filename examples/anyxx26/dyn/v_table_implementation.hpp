@@ -174,9 +174,9 @@ consteval std::meta::info make_vfimpl(std::meta::info interface_function) {
 
 template <std::meta::info InterfaceFunction, std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info find_function_impl() {
-  if (auto found_in_impl = get_implementation_member(trait_model_map<TraitTemplate, V, Args...>(), ^^V, InterfaceFunction); found_in_impl != std::meta::info{}) {
+  if (auto found_in_impl = get_implementation_member(trait_model_map(TraitTemplate, ^^V, Args...), ^^V, InterfaceFunction); found_in_impl != std::meta::info{}) {
     return found_in_impl;
-  } else if (auto found_in_base = get_implementation_member(trait_declaration<TraitTemplate, Args...>(), ^^V, InterfaceFunction); found_in_base != std::meta::info{}) {
+  } else if (auto found_in_base = get_implementation_member(trait_declaration(TraitTemplate, Args...), ^^V, InterfaceFunction); found_in_base != std::meta::info{}) {
       return found_in_base;
   } else {
       throw std::logic_error("Function not found in impl trait or base trait");
