@@ -507,6 +507,7 @@ TEST_CASE("anyxx26 operators") {
     {
         dyn<operators> ops{add_test{}};
         auto r1 = ops + 1;
+        static_assert(^^decltype(r1) == ^^decltype(ops));
         CHECK(unerase_cast<add_test>(r1)->i == 1);
         //anyxx26::meta::print_members<dyn<operators>::v_table_t::fptrs_t>();
         anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
@@ -545,11 +546,11 @@ static_assert(!has_deduced_typenames<stringable>);
 static_assert(!has_deduced_typenames<addable>);
 static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
 static_assert(!has_deduced_typenames<mapable, int>);
-static_assert(std::input_iterator<dyn<rangesxx::input_iterator, anyxx::val<>, int>>);
-static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, anyxx::val<std::true_type>, int>>);
-static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int>>);
-static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int>>);
-static_assert(std::contiguous_iterator<dyn<rangesxx::contiguous_iterator, anyxx::val<std::true_type>, int>>);
+static_assert(std::input_iterator<dyn<rangesxx::input_iterator, int>>);
+static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, int>>);
+static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, int>>);
+static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, int>>);
+static_assert(std::contiguous_iterator<dyn<rangesxx::contiguous_iterator, int>>);
 
 namespace {
 

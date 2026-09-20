@@ -70,7 +70,7 @@ template <template <typename, typename, typename...> typename Trait, typename...
 using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-using dyn_self_val_t = dyn<Trait, default_proxy_t<Trait, Args...>, Args...>;
+using dyn_self_val_t = dyn<Trait, Args...>;
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;

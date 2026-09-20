@@ -66,7 +66,7 @@ using deduced_typenames = [:compute_deduced_typenames<Trait, Args...>():];
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct dyn_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
-  using dyn_self_t = dyn<Trait, Proxy, Args...>;
+  using dyn_self_t = dyn<Trait, Args...>;
   using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;
   using dyn_self_mutref_t = dyn<Trait, anyxx::mutref, Args...>;
   using proxy_t = Proxy;
