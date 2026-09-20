@@ -96,7 +96,7 @@ namespace{
 
 template <typename DynBase>
 consteval std::meta::info test_make_dyn_facade_call() {
-    auto v_table_specs = get_v_table_specs<^^stringable<declaration>>();
+    auto v_table_specs = get_v_table_specs(^^stringable<declaration>);
     return make_dyn_facade_call<DynBase>(v_table_specs[0]);
 }
 
