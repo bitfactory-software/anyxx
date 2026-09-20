@@ -24,7 +24,7 @@ struct v_table
     template <typename Concrete>
     v_table(std::in_place_type_t<Concrete> concrete)
         : base_v_table_t<Trait>(concrete) {
-        set_v_table_members<v_table_t, ^^Trait, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t, ^^Args...>(this);
+        set_v_table_members<v_table_t, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t>(this);
     }
 };
 

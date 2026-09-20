@@ -220,7 +220,7 @@ consteval std::meta::info make_vfimpl(std::meta::info concrete_type, std::meta::
   return substitute(^^vfimpl, types);
 }
 
-consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, std::vector<std::meta::info> const& args) {
+consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
   if (auto found_in_impl = get_implementation_member(trait_model_map(trait_template, mapped_type, args), mapped_type, interface_function); found_in_impl != std::meta::info{}) {
     return found_in_impl;
   } else if (auto found_in_base = get_implementation_member(trait_declaration(trait_template, args), mapped_type, interface_function); found_in_base != std::meta::info{}) {
@@ -234,15 +234,16 @@ template <typename VTable, std::meta::info Base, std::meta::info dyn_self_val, s
     typename Concrete, std::meta::info FunctionPointers>
 consteval std::meta::info make_set_base_v_table_members();
 
-template <typename VTable, std::meta::info Trait, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
-    typename Concrete, std::meta::info FunctionPointers, std::meta::info... Args>
+template <typename VTable, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Concrete, std::meta::info FunctionPointers>
 void set_v_table_members(VTable* v_table) {
     template for(constexpr auto v_table_spec : define_static_array(get_v_table_specs(^^typename VTable::trait_declaration_t))){
         constexpr auto v_table_entry = anyxx26::meta::get_data_member_by_id(FunctionPointers, v_table_name_of(v_table_spec));
         if constexpr(is_v_table_data(v_table_spec)) {
             v_table->[:v_table_entry:] = [:v_table_spec.member:]::template init<Concrete>(v_table);
         } else {
-            constexpr auto implemenation_member = find_function_impl(v_table_spec.member, template_of(v_table_spec.declaration_trait), ^^Concrete, { Args... });
+            constexpr auto trait_template = template_of(v_table_spec.declaration_trait);
+            constexpr auto args = std::define_static_array(template_arguments_of(v_table_spec.declaration_trait) | std::views::drop(2));
+            constexpr auto implemenation_member = find_function_impl(v_table_spec.member, trait_template, ^^Concrete, args);
             v_table->[:v_table_entry:] = [:make_vfimpl(^^Concrete, implemenation_member, dyn_self_val, dyn_self_cref, dyn_self_mutref, v_table_spec.member):];
         }
     }
