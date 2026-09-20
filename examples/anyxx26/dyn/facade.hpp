@@ -88,7 +88,7 @@ consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const&
     return std::meta::data_member_spec(overloaded_operator, { .name = spec.name, .no_unique_address = true });
 }
 
-template <std::meta::info TraitDeclaration, typename DynBase>
+template <typename DynBase>
 consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_spec const& overload_sets) {
     for(auto const& set : overload_sets) {
         auto dms = dyn_facade_named_overload_set<DynBase>(set);
@@ -102,7 +102,7 @@ consteval std::meta::info make_dyn_facade() {
 
     [[maybe_unused]] auto overload_sets = make_overload_sets_specs<trait_declaration_info>();
     std::vector<std::meta::info> calls;
-    collect_dyn_facade_calls<trait_declaration_info, dyn_base<Trait, Proxy, Args...>>(calls, overload_sets);
+    collect_dyn_facade_calls<dyn_base<Trait, Proxy, Args...>>(calls, overload_sets);
     return substitute(^^meta::to_struct, calls);
 };
 
