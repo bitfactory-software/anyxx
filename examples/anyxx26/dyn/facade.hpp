@@ -36,7 +36,7 @@ consteval overload_sets_spec make_overload_sets_specs() {
     return specs;
 }
 
-template <typename DynBase, std::meta::info f, typename R, typename... Args>
+template <typename DynBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct dyn_facade_call {
     template<typename Self>
     R operator()(this Self&& self, Args... args) {
@@ -63,6 +63,7 @@ consteval std::meta::info make_dyn_facade_call(v_table_spec spec){
     std::vector<std::meta::info> types
     { ^^DynBase
     , reflect_constant(spec.member)
+    , std::meta::reflect_constant(spec.index)
     , translate_facade_return_type(return_type_of(spec.member),^^ typename DynBase::dyn_self_t)
     };
     types.append_range(parameters_of(spec.member)
