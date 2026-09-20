@@ -63,7 +63,7 @@ template <template <typename, typename, typename...> typename Trait, typename...
 using deduced_typenames = [:compute_deduced_typenames<Trait, Args...>():];
 
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct dyn_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
   using dyn_self_t = dyn<Trait, Proxy, Args...>;
@@ -238,9 +238,9 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   friend auto release_v_table(dyn_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-struct dyn : dyn_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
-  using dyn_base<Trait, Args...>::dyn_base;
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+struct dyn : dyn_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():] {
+  using dyn_base<Trait, Proxy, Args...>::dyn_base;
 };
 
 /// \brief Safe downcast to an unerased type using runtime information from

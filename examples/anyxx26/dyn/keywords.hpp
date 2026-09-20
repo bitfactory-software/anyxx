@@ -12,10 +12,10 @@ using base_v_table_t = anyxx::observeable::v_table_t;
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
-template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct dyn_base;
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct dyn;
 
 struct default_t {};
