@@ -13,6 +13,29 @@
 
 namespace anyxx26 {
 
+struct overload_sets_spec {
+    std::string name;
+    std::vector<v_table_spec> specs;
+};
+using overload_sets_specs = std::vector<overload_sets_spec>;
+
+template <std::meta::info TraitDeclaration>
+consteval overload_sets_specs make_overload_sets_specs() {
+    overload_sets_specs specs;
+    for(auto s : get_v_table_specs<TraitDeclaration>()) {
+        if(is_function_or_operator(s)) {
+            std::string name{ meta::function_name_of(s.member) };
+            auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });
+            if(found == specs.end()) {
+                specs.push_back(overload_sets_spec{ name, {s} });
+            } else {
+                found->specs.push_back(s);
+            }
+        }
+    }
+    return specs;
+}
+
 template <typename DynBase, std::meta::info f, typename R, typename... Args>
 struct dyn_facade_call {
     template<typename Self>
@@ -105,29 +128,6 @@ consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls) {
         calls.push_back(reflect_constant(dms));
     }
 };
-
-struct overload_sets_spec {
-  std::string name;
-  std::vector<v_table_spec> specs;
-};
-using overload_sets_specs = std::vector<overload_sets_spec>;
-
-template <std::meta::info TraitDeclaration>
-consteval overload_sets_specs make_overload_sets_specs() {
-    overload_sets_specs specs;
-    for(auto s : get_v_table_specs<TraitDeclaration>()) {
-        if(is_function_or_operator(s)) {
-            std::string name {meta::function_name_of(s.member)};
-            auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });
-            if(found == specs.end()) {
-                specs.push_back(overload_sets_spec{name, {s}});
-            } else {
-                found->specs.push_back(s);
-            }
-        }
-    }
-    return specs;
-}
 
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 consteval std::meta::info make_dyn_facade() {
