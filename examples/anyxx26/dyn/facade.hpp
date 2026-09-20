@@ -81,8 +81,8 @@ consteval void collect_overload_set_for_name(auto id, std::vector<std::meta::inf
         collect_overload_set_for_name<DynBase, base>(id, overload_set);
     }
     constexpr auto ctx = std::meta::access_context::current();
-    template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
-        if constexpr(is_function(m) && is_user_declared(m)) {
+    for(auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
+        if (is_function(m) && is_user_declared(m)) {
             if(meta::function_name_of(m) == id) {
                 overload_set.push_back(make_dyn_facade_call<DynBase>(m));
             }
