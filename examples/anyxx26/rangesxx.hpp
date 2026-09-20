@@ -4,14 +4,20 @@
 
 namespace anyxx26::rangesxx {
 
-template <typename Self, typename Trait, typename Value>
-struct input_iterator : save_copyable<Self, Trait> {
+template <typename Self, typename Trait>
+struct sentinel : save_copyable<Self, Trait> {
     using default_proxy_t = anyxx::val<std::true_type>;
+
+};
+
+template <typename Self, typename Trait, typename Value>
+struct input_iterator : sentinel<Self, Trait> {
+
+    bool operator==(Self const&) const;
+    bool operator!=(Self const&) const;
 
     Value& operator*();
     Self& operator++();
-    bool operator==(Self const&) const;
-    bool operator!=(Self const&) const;
 
 	struct typenames {
 		using value_type = Value;
