@@ -6,6 +6,9 @@
 
 namespace anyxx26 {
 
+template <template <typename, typename, typename...> typename Trait>
+using base_v_table_t = anyxx::observeable::v_table_t;
+
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 

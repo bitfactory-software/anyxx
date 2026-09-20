@@ -172,9 +172,6 @@ consteval std::meta::info make_vfimpl(std::meta::info interface_function) {
   return substitute(^^vfimpl, types);
 }
 
-template <template <typename, typename, typename...> typename Trait>
-using base_v_table_t = anyxx::observeable::v_table_t;
-
 template <std::meta::info InterfaceFunction, std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info find_function_impl() {
   if (auto found_in_impl = get_implementation_member(trait_model_map<TraitTemplate, V, Args...>(), ^^V, InterfaceFunction); found_in_impl != std::meta::info{}) {
