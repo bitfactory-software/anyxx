@@ -59,14 +59,14 @@ struct dyn_facade_call {
 
 
 template <typename DynBase>
-consteval std::meta::info make_dyn_facade_call(std::meta::info m){
+consteval std::meta::info make_dyn_facade_call(v_table_spec spec){
     std::vector<std::meta::info> types
     { ^^DynBase
-    , reflect_constant(m)
-    , translate_facade_return_type(return_type_of(m),^^ typename DynBase::dyn_self_t)
+    , reflect_constant(spec.member)
+    , translate_facade_return_type(return_type_of(spec.member),^^ typename DynBase::dyn_self_t)
     };
-    types.append_range(parameters_of(m)
-        | std::views::drop(is_static_member(m) ? 1 : 0)
+    types.append_range(parameters_of(spec.member)
+        | std::views::drop(is_static_member(spec.member) ? 1 : 0)
         | std::views::transform([](auto p){
         return translate_v_table_fptr_param_type(^^typename DynBase::dyn_self_cref_t, ^^typename DynBase::dyn_self_mutref_t, type_of(p));
     })
@@ -82,7 +82,7 @@ template <typename DynBase>
 consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const& spec){
     std::vector<std::meta::info> overload_set;
     for(auto overload : spec.specs) {
-        overload_set.push_back(make_dyn_facade_call<DynBase>(overload.member));
+        overload_set.push_back(make_dyn_facade_call<DynBase>(overload));
     }
     auto overloaded_operator = substitute(^^overload, overload_set);
     return std::meta::data_member_spec(overloaded_operator, { .name = spec.name, .no_unique_address = true });
