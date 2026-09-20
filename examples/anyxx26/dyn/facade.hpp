@@ -88,7 +88,7 @@ consteval void collect_dyn_facade_call_names(std::vector<std::string>& names) {
     constexpr auto ctx = std::meta::access_context::current();
     template for(constexpr auto m : define_static_array(members_of(TraitDeclaration, ctx))) {
         if constexpr(is_function(m) && is_user_declared(m)) {
-            constexpr auto name = define_static_string(meta::function_name_of(m));
+            auto name = define_static_string(meta::function_name_of(m));
             if(std::ranges::find(names, name) == names.end()) {
                 names.push_back(name);
             }
