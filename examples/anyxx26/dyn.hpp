@@ -217,6 +217,7 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
     __dyn_OP(op_greater_greater_equals, >>=)
     __dyn_OP0(op_plus_plus, ++)
     __dyn_OP0(op_minus_minus, --)
+    __dyn_OP0(op_arrow, ->)
 
 #undef __dyn_OP
 #undef __dyn_OP0

@@ -45,7 +45,7 @@ R invoke_op_star(VoidSelf self, Args... args) {
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 R invoke_op_arrow(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
-    return (*typed_self).operator->();
+    return std::to_address(*typed_self);
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 R invoke_op_square_brackets(VoidSelf self, Args... args) {

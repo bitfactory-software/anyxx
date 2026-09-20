@@ -547,13 +547,10 @@ static_assert(!has_deduced_typenames<addable>);
 static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
 static_assert(!has_deduced_typenames<mapable, int>);
 static_assert(std::input_iterator<dyn<rangesxx::input_iterator, anyxx::val<>, int>>);
-
-
 static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, anyxx::val<std::true_type>, int>>);
-
 static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int>>);
-
 static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int>>);
+static_assert(std::contiguous_iterator<dyn<rangesxx::contiguous_iterator, anyxx::val<std::true_type>, int>>);
 
 namespace {
 
@@ -584,6 +581,13 @@ void test_random_access_iterator(dyn<rangesxx::random_access_iterator, anyxx::va
     CHECK(begin[2] == 3);
 }
 
+struct a_struct {
+    int i = 0;
+};
+
+void test_contiguous_iterator(dyn<rangesxx::contiguous_iterator, anyxx::val<std::true_type>, a_struct> begin) {
+    CHECK(begin->i == 1);
+}
 }
 
 TEST_CASE("anyxx26 iterators") {
@@ -593,8 +597,11 @@ TEST_CASE("anyxx26 iterators") {
     test_bidirectional_iterator(arr.begin());
     test_random_access_iterator(arr.begin(), arr.end());
 
+    std::array<a_struct, 2> arr2{ 1, 2 };
+    test_contiguous_iterator(arr2.begin());
+
 //    meta::print_members<dyn<rangesxx::random_access_iterator,anyxx::val<std::true_type>, int>>();
 //    using v_table_members_t =[:make_v_table_members_type<rangesxx::random_access_iterator, int>():];
-    using v_table_members_t =[:make_v_table_members_type<rangesxx::bidirectional_iterator, int>():];
-    meta::print_members<v_table_members_t>();
+//    using v_table_members_t =[:make_v_table_members_type<rangesxx::bidirectional_iterator, int>():];
+//    meta::print_members<v_table_members_t>();
 }
