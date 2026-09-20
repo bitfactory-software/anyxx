@@ -13,21 +13,21 @@
 
 namespace anyxx26 {
 
-struct overload_sets_spec {
+struct overload_set_spec {
     std::string name;
     std::vector<v_table_spec> specs;
 };
-using overload_sets_specs = std::vector<overload_sets_spec>;
+using overload_sets_spec = std::vector<overload_set_spec>;
 
 template <std::meta::info TraitDeclaration>
-consteval overload_sets_specs make_overload_sets_specs() {
-    overload_sets_specs specs;
+consteval overload_sets_spec make_overload_sets_specs() {
+    overload_sets_spec specs;
     for(auto s : get_v_table_specs<TraitDeclaration>()) {
         if(is_function_or_operator(s)) {
             std::string name{ meta::function_name_of(s.member) };
             auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });
             if(found == specs.end()) {
-                specs.push_back(overload_sets_spec{ name, {s} });
+                specs.push_back(overload_set_spec{ name, {s} });
             } else {
                 found->specs.push_back(s);
             }
@@ -103,7 +103,7 @@ consteval std::meta::info dyn_facade_named_overload_set(auto id){
 }
 
 template <std::meta::info TraitDeclaration, typename DynBase>
-consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_specs const& overload_sets) {
+consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_spec const& overload_sets) {
     for(auto const& set : overload_sets) {
         auto dms = dyn_facade_named_overload_set<DynBase>(set.name);
         calls.push_back(reflect_constant(dms));
