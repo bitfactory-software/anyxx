@@ -44,14 +44,11 @@ struct random_access_iterator : bidirectional_iterator<Self, Trait, Value> {
     bool operator>(Self const&) const;
     bool operator<=(Self const&) const;
     bool operator>=(Self const&) const;
-
     Self& operator-=(std::ptrdiff_t);
     Self& operator+=(std::ptrdiff_t);
     Self operator-(std::ptrdiff_t) const;
     Self operator+(std::ptrdiff_t) const;
-
     std::ptrdiff_t operator-(Self const&) const;
-
     Value& operator[](std::ptrdiff_t) const;
 
     struct typenames : bidirectional_iterator<Self, Trait, Value>::typenames {
@@ -66,6 +63,7 @@ auto operator+(std::ptrdiff_t n, dyn<IteratorTrait, anyxx::val<std::true_type>, 
 template <typename Self, typename Trait, typename Value>
 struct contiguous_iterator : random_access_iterator<Self, Trait, Value> {
     Value* operator->() const;
+
     struct typenames : random_access_iterator<Self, Trait, Value>::typenames {
         using iterator_category = std::contiguous_iterator_tag;
     };
