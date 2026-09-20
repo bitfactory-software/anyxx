@@ -36,7 +36,11 @@ R invoke_op_minus_minus(VoidSelf self, Args... args) {
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 R invoke_op_star(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
-    return *(*typed_self);
+    if constexpr(sizeof...(Args) == 0) {
+        return *(*typed_self);
+    } else {
+        return ((*typed_self) * ... * std::forward<Args>(args));
+    }
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 R invoke_op_arrow(VoidSelf self, Args... args) {
@@ -51,24 +55,61 @@ R invoke_op_square_brackets(VoidSelf self, Args... args) {
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 R invoke_op_plus(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
-    return ((*typed_self) + ... + std::forward<Args>(args));
+    if constexpr(sizeof...(Args) == 0) {
+        return +(*typed_self);
+    } else {
+        return ((*typed_self) + ... + std::forward<Args>(args));
+    }
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
 R invoke_op_minus(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
-    return ((*typed_self) - ... - std::forward<Args>(args));
+    if constexpr(sizeof...(Args) == 0) {
+        return -(*typed_self);
+    } else {
+        return ((*typed_self) - ... - std::forward<Args>(args));
+    }
 }
-template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_equals_equals(VoidSelf self, Args... args) {
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_equals_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
-    return ((*typed_self) == ... == std::forward<Args>(args));
+    return ((*typed_self) == std::forward<Arg>(arg));
 }
-template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_exclamation_equals(VoidSelf self, Args... args) {
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_exclamation_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
-    return ((*typed_self) != ... != std::forward<Args>(args));
+    return ((*typed_self) != std::forward<Arg>(arg));
 }   
-
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_less(VoidSelf self, Arg arg) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) < std::forward<Arg>(arg));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_less_equals(VoidSelf self, Arg arg) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) <= std::forward<Arg>(arg));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_greater(VoidSelf self, Arg arg) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) > std::forward<Arg>(arg));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_greater_equals(VoidSelf self, Arg arg) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return ((*typed_self) >= std::forward<Arg>(arg));
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_plus_equals(VoidSelf self, Arg arg) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return (*typed_self) += arg;
+}
+template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
+R invoke_op_minus_equals(VoidSelf self, Arg arg) {
+    auto typed_self = static_cast<TypedSelf*>(self);
+    return (*typed_self) -= arg;
+}
 
 template <typename R, typename VoidSelf, typename... Args>
 using invoke_function_t = R (*)(VoidSelf, Args...);
@@ -90,7 +131,7 @@ consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
 }
 
 template <std::meta::info spec, typename V, typename R, typename VoidSelf, typename... Args>
-invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
+consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
     using return_t = impl_return_type<R, V>;
     using self_t = self_const_correct_t<V, VoidSelf>;
     if constexpr(is_class_type(^^V)) {
@@ -104,28 +145,36 @@ invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_impl() {
         }
     } else {
         if constexpr(!is_operator_function(spec)) {
-            throw std::logic_error(std::format("{} has no member function {}.", display_string_of(^^V), display_string_of(spec)));
+            std::string msg{ display_string_of(^^V) };
+            msg += " has no member function " + std::string{display_string_of(spec)};
+            throw std::meta::exception(msg, ^^V);
         } else {
-			if constexpr(meta::is_op_spec(spec, std::meta::op_plus_plus)) {
-				return invoke_op_plus_plus<self_t, return_t, VoidSelf, Args...>;
-			} else if constexpr(meta::is_op_spec(spec, std::meta::op_minus_minus)) {
-				return invoke_op_minus_minus<self_t, return_t, VoidSelf, Args...>;
-			} else if constexpr(meta::is_op_spec(spec, std::meta::op_star)) {
-				return invoke_op_star<self_t, return_t, VoidSelf, Args...>;
-			} else if constexpr(meta::is_op_spec(spec, std::meta::op_arrow)) {
-                return invoke_op_arrow<self_t, return_t, VoidSelf, Args...>;
-			} else if constexpr(meta::is_op_spec(spec, std::meta::op_square_brackets)) {
-				return invoke_op_square_brackets<self_t, return_t, VoidSelf, Args...>;
-            } else if constexpr(meta::is_op_spec(spec, std::meta::op_plus)) {
-                return invoke_op_plus<self_t, return_t, VoidSelf, Args...>;
-            } else if constexpr(meta::is_op_spec(spec, std::meta::op_minus)) {
-                return invoke_op_minus<self_t, return_t, VoidSelf, Args...>;
-            } else if constexpr(meta::is_op_spec(spec, std::meta::op_equals_equals)) {
-                return invoke_op_equals_equals<self_t, return_t, VoidSelf, Args...>;
-            } else if constexpr(meta::is_op_spec(spec, std::meta::op_exclamation_equals)) {
-                return invoke_op_exclamation_equals<self_t, return_t, VoidSelf, Args...>;
-            } else {
-                throw std::logic_error(std::format("{} not yet implemeted in anyxx.", display_string_of(spec)));
+#define __RETURN_OP(op_name) \
+			if constexpr(meta::is_op_spec(spec, std::meta::op_##op_name)) { \
+                return invoke_op_##op_name<self_t, return_t, VoidSelf, Args...>; \
+            }
+
+            __RETURN_OP(plus_plus)
+			else __RETURN_OP(minus_minus)
+			else __RETURN_OP(star)
+			else __RETURN_OP(arrow)
+			else __RETURN_OP(square_brackets)
+            else __RETURN_OP(plus)
+            else __RETURN_OP(minus)
+            else __RETURN_OP(equals_equals)
+            else __RETURN_OP(exclamation_equals)
+            else __RETURN_OP(less)
+            else __RETURN_OP(less_equals)
+            else __RETURN_OP(greater)
+            else __RETURN_OP(greater_equals)
+            else __RETURN_OP(plus_equals)
+            else __RETURN_OP(minus_equals)
+
+#undef __RETURN_OP
+            else {
+                std::string msg{ display_string_of(spec) };
+                msg += " not yet implemeted in anyxx " + std::string{ display_string_of(spec) };
+                throw std::meta::exception(msg, spec);
             }
         }
     }
@@ -136,7 +185,7 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
 [:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl(VoidSelf void_self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
   using return_t = [:translate_v_table_return_type<dyn_self_val>(^^R):];
   if constexpr (default_ || !is_static_member(m)) {
-    auto fptr = default_impl<m, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
+    constexpr auto fptr = default_impl<m, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
     if constexpr(std::same_as<return_t, void>) {
         fptr(void_self, forward_v_table_fptr_param<V, Args>(args)...);
         return;

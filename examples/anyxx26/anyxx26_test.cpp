@@ -496,7 +496,7 @@ struct add_test {
 
 template <>
 struct operators<int*, anyxx26::model_map> {
-    static bool equal(int const* self, int const* other) {
+    static bool equal(int *const self, int* const& other) {
         return self == other;
     }
 };
@@ -553,7 +553,7 @@ static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, anyxx::val<s
 
 static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int>>);
 
-//static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int>>);
+static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int>>);
 
 namespace {
 
@@ -571,6 +571,19 @@ void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, anyxx::va
     CHECK(*begin == 1);
 }
 
+void test_random_access_iterator(dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int> begin, dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int> end) {
+    CHECK(begin < end);
+    CHECK(!(begin > end));
+    CHECK(begin <= end);
+    CHECK(!(begin >= end));
+    CHECK(5u == (end - begin));
+    begin += 1u;
+    CHECK(*begin == 2);
+    begin -= 1u;
+    CHECK(*begin == 1);
+    CHECK(begin[2] == 3);
+}
+
 }
 
 TEST_CASE("anyxx26 iterators") {
@@ -578,6 +591,7 @@ TEST_CASE("anyxx26 iterators") {
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 	test_input_iterator(arr.begin(), arr.end());
     test_bidirectional_iterator(arr.begin());
+    test_random_access_iterator(arr.begin(), arr.end());
 
 //    meta::print_members<dyn<rangesxx::random_access_iterator,anyxx::val<std::true_type>, int>>();
 //    using v_table_members_t =[:make_v_table_members_type<rangesxx::random_access_iterator, int>():];
