@@ -94,12 +94,6 @@ consteval std::meta::info make_v_table_fptr_type(std::meta::info f) {
     return substitute(^^v_table_fptr_type, types);
 }
 
-template <std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
-consteval std::meta::info make_v_table_function_data_member_spec(v_table_spec spec) {
-    auto ft = make_v_table_fptr_type<dyn_self_val, dyn_self_cref, dyn_self_mutref>(spec.member);
-    return std::meta::data_member_spec(ft, { .name = v_table_name_of(spec) });
-}
-
 template <std::meta::info TraitDeclaration, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref>
 consteval std::vector<std::meta::info> collect_v_table_members() {
 
@@ -107,11 +101,12 @@ consteval std::vector<std::meta::info> collect_v_table_members() {
     template for(constexpr auto spec : define_static_array(get_v_table_specs(TraitDeclaration))) {
         if constexpr(is_v_table_data(spec)) {
             using type = [:spec.member:]::type;
-            auto dms = std::meta::data_member_spec(dealias(^^type), { .name = v_table_name_of(spec) });
+            auto dms = std::meta::data_member_spec(dealias(^^type), {.name = v_table_name_of(spec)});
             fptrs.push_back(reflect_constant(dms));
         }
         else {
-            auto dms = make_v_table_function_data_member_spec<dyn_self_val, dyn_self_cref, dyn_self_mutref>(spec);
+            auto function_ptr_type = make_v_table_fptr_type<dyn_self_val, dyn_self_cref, dyn_self_mutref>(spec.member);
+            auto dms = std::meta::data_member_spec(function_ptr_type, {.name = v_table_name_of(spec)});
             fptrs.push_back(reflect_constant(dms));
         }
     }
