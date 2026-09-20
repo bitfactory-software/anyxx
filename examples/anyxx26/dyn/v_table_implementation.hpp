@@ -187,9 +187,6 @@ consteval std::meta::info find_function_impl() {
   }
 }
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-struct v_table;
-
 template <typename VTable, std::meta::info Base, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref,
     typename Concrete, std::meta::info FunctionPointers>
 consteval std::meta::info make_set_base_v_table_members();
