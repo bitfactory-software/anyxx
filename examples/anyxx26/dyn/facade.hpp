@@ -95,17 +95,17 @@ struct overload : Ts... {
     using Ts::operator()...;
 };
 template <typename DynBase>
-consteval std::meta::info dyn_facade_named_overload_set(auto id){
+consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const& set){
     std::vector<std::meta::info> overload_set;
-    collect_overload_set_for_name<DynBase, ^^ typename DynBase::trait_declaration_t>(id, overload_set);
+    collect_overload_set_for_name<DynBase, ^^ typename DynBase::trait_declaration_t>(set.name, overload_set);
     auto overloaded_operator = substitute(^^overload, overload_set);
-    return std::meta::data_member_spec(overloaded_operator, { .name = id, .no_unique_address = true });
+    return std::meta::data_member_spec(overloaded_operator, { .name = set.name, .no_unique_address = true });
 }
 
 template <std::meta::info TraitDeclaration, typename DynBase>
 consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_spec const& overload_sets) {
     for(auto const& set : overload_sets) {
-        auto dms = dyn_facade_named_overload_set<DynBase>(set.name);
+        auto dms = dyn_facade_named_overload_set<DynBase>(set);
         calls.push_back(reflect_constant(dms));
     }
 };
