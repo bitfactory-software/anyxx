@@ -200,7 +200,7 @@ void set_v_table_members(VTable* v_table) {
     constexpr auto ctx = std::meta::access_context::current();
 
     constexpr auto td = trait_declaration<Trait, Args...>();
-    constexpr auto base = meta::get_type_of_single_public_base<td>();
+    constexpr auto base = meta::get_type_of_single_public_base(td);
     if constexpr(base != std::meta::info{}) {
         if constexpr(has_template_arguments(base) && template_arguments_of(base).size() > 2u) {
             constexpr auto base_set_v_table_fptrs = make_set_base_v_table_members<VTable, base, dyn_self_val, dyn_self_cref, dyn_self_mutref, Concrete, FunctionPointers>();

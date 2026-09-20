@@ -40,7 +40,7 @@ consteval std::vector<v_table_spec> get_v_table_specs() {
         return {};
     } else {
         static_assert(is_type(TraitDeclaration));
-        auto specs = get_v_table_specs<meta::get_type_of_single_public_base<TraitDeclaration>()>();
+        auto specs = get_v_table_specs<meta::get_type_of_single_public_base(TraitDeclaration)>();
 
         constexpr auto ctx = std::meta::access_context::current();
         for(auto m : members_of(TraitDeclaration, ctx)) {

@@ -47,13 +47,11 @@ consteval std::string_view function_name_of(std::meta::info in) {
     }
 }
 
-template <std::meta::info Struct>
-consteval std::meta::info get_type_of_single_public_base() {
-  static_assert(is_type(Struct));
+consteval std::meta::info get_type_of_single_public_base(std::meta::info trait_struct) {
   constexpr auto ctx = std::meta::access_context::current();
-  constexpr auto bases = define_static_array(bases_of(Struct, ctx));
+  auto bases = bases_of(trait_struct, ctx);
   if (bases.size() > 1) {
-    throw std::logic_error("Struct can have at most one public base");
+    throw std::logic_error("trait_struct can have at most one public base");
   }
   if (bases.size() == 0) {
     return {};
