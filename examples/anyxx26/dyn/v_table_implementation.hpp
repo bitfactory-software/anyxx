@@ -188,48 +188,15 @@ consteval std::meta::info make_set_base_v_table_members();
 template <typename VTable, std::meta::info Trait, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
     typename Concrete, std::meta::info FunctionPointers, std::meta::info... Args>
 void set_v_table_members(VTable* v_table) {
-    constexpr auto ctx = std::meta::access_context::current();
-
-    constexpr auto td = trait_declaration<Trait, Args...>();
-    constexpr auto base = meta::get_type_of_single_public_base(td);
-    if constexpr(base != std::meta::info{}) {
-        if constexpr(has_template_arguments(base) && template_arguments_of(base).size() > 2u) {
-            constexpr auto base_set_v_table_fptrs = make_set_base_v_table_members<VTable, base, dyn_self_val, dyn_self_cref, dyn_self_mutref, Concrete, FunctionPointers>();
-            [:base_set_v_table_fptrs:] (v_table);
+    template for(constexpr auto v_table_spec : define_static_array(get_v_table_specs(^^typename VTable::trait_declaration_t))){
+        constexpr auto v_table_entry = anyxx26::meta::get_data_member_by_id(FunctionPointers, v_table_name_of(v_table_spec));
+        if constexpr(is_v_table_data(v_table_spec)) {
+            v_table->[:v_table_entry:] = [:v_table_spec.member:]::template init<Concrete>(v_table);
         } else {
-            set_v_table_members<VTable, template_of(base), dyn_self_val, dyn_self_cref, dyn_self_mutref, Concrete, FunctionPointers>(v_table);
+            constexpr auto implemenation_member = find_function_impl(v_table_spec.member, template_of(v_table_spec.declaration_trait), ^^Concrete, { Args... });
+            v_table->[:v_table_entry:] = [:make_vfimpl(^^Concrete, implemenation_member, dyn_self_val, dyn_self_cref, dyn_self_mutref, v_table_spec.member):];
         }
     }
-
-    template for(constexpr auto interface_m : define_static_array(members_of(trait_declaration<Trait, Args...>(), ctx))) {
-        if constexpr(has_identifier(interface_m) && is_type(interface_m) && annotations_of_with_type(interface_m, ^^ v_table_data_t).size() > 0) {
-            constexpr auto m = anyxx26::meta::get_data_member_by_id(FunctionPointers, identifier_of(interface_m));
-            v_table->[:m:] = [:interface_m:]::template init<Concrete>(v_table);
-        }
-        if constexpr((has_identifier(interface_m) && is_function(interface_m))
-            || (is_user_declared(interface_m) && is_operator_function(interface_m))) {
-            constexpr auto f = anyxx26::meta::get_data_member_by_id(FunctionPointers, meta::function_name_of(interface_m));
-            constexpr auto m = find_function_impl(interface_m, Trait, ^^Concrete, { Args... });
-            v_table->[:f:] = [:make_vfimpl(^^Concrete, m, dyn_self_val, dyn_self_cref, dyn_self_mutref, interface_m):];
-        }
-    }
-}
-
-template <typename VTable, std::meta::info Base, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, typename Concrete, std::meta::info FunctionPointers>
-consteval std::meta::info make_set_base_v_table_members() {
-    constexpr auto base_trait_template = template_of(Base);
-    std::vector<std::meta::info> function_params = {
-        ^^VTable,
-        reflect_constant(base_trait_template),
-        reflect_constant(dyn_self_val),
-        reflect_constant(dyn_self_cref),
-        reflect_constant(dyn_self_mutref),
-        ^^Concrete,
-        reflect_constant(FunctionPointers),
-    };
-	static_assert(template_arguments_of(Base).size() > 2u);
-    function_params.append_range(template_arguments_of(Base) | std::views::drop(2) | std::views::transform([](std::meta::info i){ return reflect_constant(i); }));
-    return substitute(^^set_v_table_members, function_params);
 }
 
 }  // namespace anyxx26

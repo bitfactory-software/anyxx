@@ -34,20 +34,21 @@ consteval std::string v_table_name_of(v_table_spec spec) {
     }
 }
 
-consteval std::vector<v_table_spec> get_v_table_specs(std::meta::info trait_declaration) {
-    if (trait_declaration == std::meta::info{}) {
+consteval std::vector<v_table_spec> get_v_table_specs(std::meta::info declaration_trait) {
+    if (declaration_trait == std::meta::info{}) {
         return {};
     } else {
-        auto specs = get_v_table_specs(meta::get_type_of_single_public_base(trait_declaration));
+        declaration_trait = dealias(declaration_trait);
+        auto specs = get_v_table_specs(meta::get_type_of_single_public_base(declaration_trait));
 
         constexpr auto ctx = std::meta::access_context::current();
-        for(auto m : members_of(trait_declaration, ctx)) {
+        for(auto m : members_of(declaration_trait, ctx)) {
             if (has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
-                specs.push_back({trait_declaration, m, specs.size()});
+                specs.push_back({declaration_trait, m, specs.size()});
             } else if (has_identifier(m) && is_function(m)) {
-                specs.push_back({trait_declaration, m, specs.size()});
+                specs.push_back({declaration_trait, m, specs.size()});
             } else if (is_user_declared(m) && is_operator_function(m)) {
-                specs.push_back({trait_declaration, m, specs.size()});
+                specs.push_back({declaration_trait, m, specs.size()});
             }
         }
         return specs;
