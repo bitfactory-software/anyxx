@@ -238,9 +238,9 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   friend auto release_v_table(dyn_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct dyn : dyn_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():] {
-  using dyn_base<Trait, Proxy, Args...>::dyn_base;
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+struct dyn : dyn_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
+  using dyn_base<Trait, Args...>::dyn_base;
 };
 
 /// \brief Safe downcast to an unerased type using runtime information from

@@ -15,7 +15,7 @@ struct v_table;
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct dyn_base;
 
-template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct dyn;
 
 struct default_t {};
