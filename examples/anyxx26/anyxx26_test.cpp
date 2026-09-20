@@ -21,7 +21,7 @@ struct stringable {
     std::string as_string() const;
 };
 
-void print(std::vector<dyn<stringable, anyxx::cref>> const& things) {
+void print(std::vector<dyn<stringable>> const& things) {
     for(auto& thing : things) {
         std::println("{}", thing.as_string());
     }
@@ -130,7 +130,7 @@ TEST_CASE("anyxx26 hello world") {
     print({i, s, a_foo, a_boo});
   }
   {
-    dyn<stringable, anyxx::cref> sb{boo{true}};
+    dyn<stringable> sb{boo{true}};
     auto sb_str = sb.as_string();
     CHECK(sb_str == "boo? T");
   }
@@ -194,27 +194,27 @@ TEST_CASE("anyxx26 derived trait") {
   using namespace anyxx;
 
   base_and_derived a1{"a1"};
-  auto dyn1 = dyn<base_trait, cref>{a1};
+  auto dyn1 = dyn<base_trait>{a1};
   CHECK(dyn1.basef() == "base a1");
   //CHECK(dyn1.derivedf() == "derived");
-  auto dyn2 = dyn<derived_trait, cref>{a1};
+  auto dyn2 = dyn<derived_trait>{a1};
   CHECK(dyn2.basef() == "base a1");
   CHECK(dyn2.derivedf() == "derived a1");
 
-  dyn<base_trait, cref> dyn3{dyn2};
+  dyn<base_trait> dyn3{dyn2};
   CHECK(dyn3.basef() == "base a1");
   base_and_derived a2{ "a2" };
-  dyn<base_trait, cref> dyn4{a2};
+  dyn<base_trait> dyn4{a2};
   CHECK(dyn4.basef() == "base a2");
   dyn4 = dyn2;
   CHECK(dyn4.basef() == "base a1");
 
-  dyn<base_trait, cref> dyn5{std::move(dyn2)};
+  dyn<base_trait> dyn5{std::move(dyn2)};
   CHECK(dyn5.basef() == "base a1");
-  dyn<base_trait, cref> dyn6{dyn1};
+  dyn<base_trait> dyn6{dyn1};
   CHECK(dyn6.basef() == "base a1");
   base_and_derived a3{ "a3" };
-  dyn<derived_trait, cref> dyn7{ a3 };
+  dyn<derived_trait> dyn7{ a3 };
   dyn6 = std::move(dyn7);
   CHECK(dyn6.basef() == "base a3");
 }
@@ -223,9 +223,9 @@ TEST_CASE("anyxx26 v_table_data") {
   using namespace anyxx;
 
   base_and_derived a1{ "a1" };
-  dyn<anyxx26::save_observable, cref> d1{a1};
-  //meta::print_members<dyn<anyxx26::save_observable, cref>>();
-  //meta::print_members<dyn<anyxx26::save_observable, cref>::v_table_t::fptrs_t>();
+  dyn<anyxx26::save_observable> d1{a1};
+  //meta::print_members<dyn<anyxx26::save_observable>>();
+  //meta::print_members<dyn<anyxx26::save_observable>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
   if(auto p = unerase_cast<base_and_derived>(d1)){
       CHECK(p->name == "a1");
@@ -287,9 +287,9 @@ TEST_CASE("anyxx26 templated trait") {
 }
 
 namespace { 
-using any_copyable = dyn<save_copyable, anyxx::val<>>;
+using any_copyable = dyn<save_copyable>;
 using any_copy_refable = dyn<save_copyable, anyxx::cref>;
-using any_moveable = dyn<save_moveable, anyxx::val<>>;
+using any_moveable = dyn<save_moveable>;
 using any_move_refable = dyn<save_moveable, anyxx::cref>;
 }  // namespace
 
@@ -505,11 +505,10 @@ struct operators<int*, anyxx26::model_map> {
 
 TEST_CASE("anyxx26 operators") {
     {
-        dyn<operators, anyxx::val<>> ops{add_test{}};
+        dyn<operators> ops{add_test{}};
         auto r1 = ops + 1;
-        static_assert(^^decltype(r1)==^^decltype(ops));
         CHECK(unerase_cast<add_test>(r1)->i == 1);
-        //anyxx26::meta::print_members<dyn<operators, anyxx::val<>>::v_table_t::fptrs_t>();
+        //anyxx26::meta::print_members<dyn<operators>::v_table_t::fptrs_t>();
         anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
         auto& r2 = ++r1;
         CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
@@ -520,7 +519,7 @@ TEST_CASE("anyxx26 operators") {
         CHECK(unerase_cast<add_test>(r1)->i == 3);
         CHECK(unerase_cast<add_test>(r3)->i == 2);
 
-        dyn<operators, anyxx::val<>> ops_rhs{ add_test{3} };
+        dyn<operators> ops_rhs{ add_test{3} };
 	    CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
         CHECK(r1.equal(ops_rhs));
         CHECK(r1 == ops_rhs);
@@ -529,7 +528,7 @@ TEST_CASE("anyxx26 operators") {
     {
 		std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 		int* p_int = arr.begin();
-        dyn<operators, anyxx::val<>> p{p_int};
+        dyn<operators> p{p_int};
         CHECK(*p == 1);
 		++p;
         CHECK(*p == 2);
@@ -554,11 +553,11 @@ static_assert(std::contiguous_iterator<dyn<rangesxx::contiguous_iterator, anyxx:
 
 namespace {
 
-void test_input_iterator(dyn<rangesxx::input_iterator, anyxx::val<>, int> begin, dyn<rangesxx::input_iterator, anyxx::val<>, int> end) {
+void test_input_iterator(dyn<rangesxx::input_iterator, int> begin, dyn<rangesxx::input_iterator, int> end) {
 	std::for_each(begin, end, [](int x){ std::println("{}", x); });
 }
 
-void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, anyxx::val<std::true_type>, int> begin) {
+void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, int> begin) {
     CHECK(*begin++ == 1);
     CHECK(*--begin == 1);
     CHECK(*begin == 1);
@@ -568,7 +567,7 @@ void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, anyxx::va
     CHECK(*begin == 1);
 }
 
-void test_random_access_iterator(dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int> begin, dyn<rangesxx::random_access_iterator, anyxx::val<std::true_type>, int> end) {
+void test_random_access_iterator(dyn<rangesxx::random_access_iterator, int> begin, dyn<rangesxx::random_access_iterator, int> end) {
     CHECK(begin < end);
     CHECK(!(begin > end));
     CHECK(begin <= end);
@@ -585,7 +584,7 @@ struct a_struct {
     int i = 0;
 };
 
-void test_contiguous_iterator(dyn<rangesxx::contiguous_iterator, anyxx::val<std::true_type>, a_struct> begin) {
+void test_contiguous_iterator(dyn<rangesxx::contiguous_iterator, a_struct> begin) {
     CHECK(begin->i == 1);
 }
 }

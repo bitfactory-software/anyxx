@@ -242,6 +242,19 @@ template <template <typename, typename, typename...> typename Trait, typename...
 struct dyn : dyn_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
   using dyn_base<Trait, Args...>::dyn_base;
 };
+template <template <typename, typename, typename...> typename Trait>
+struct dyn<Trait> : dyn_base<Trait, default_proxy_t<Trait>>, [:make_dyn_facade<Trait, default_proxy_t<Trait>>():] {
+    using dyn_base<Trait, default_proxy_t<Trait>>::dyn_base;
+};
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+struct dyn<Trait, Proxy, Args...> : dyn_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():] {
+    using dyn_base<Trait, Proxy, Args...>::dyn_base;
+};
+template <template <typename, typename, typename...> typename Trait, typename Arg0, typename... Args>
+struct dyn<Trait, Arg0, Args...> : dyn_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>, 
+    [:make_dyn_facade<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>():] {
+    using dyn_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::dyn_base;
+};
 
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
