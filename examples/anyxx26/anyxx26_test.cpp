@@ -547,6 +547,7 @@ static_assert(!has_deduced_typenames<addable>);
 static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
 static_assert(!has_deduced_typenames<mapable, int>);
 static_assert(std::input_iterator<dyn<rangesxx::input_iterator, int>>);
+static_assert(std::sentinel_for<dyn<rangesxx::sentinel, int>, dyn<rangesxx::input_iterator, int>>);
 static_assert(std::forward_iterator<dyn<rangesxx::forward_iterator, int>>);
 static_assert(std::bidirectional_iterator<dyn<rangesxx::bidirectional_iterator, int>>);
 static_assert(std::random_access_iterator<dyn<rangesxx::random_access_iterator, int>>);
@@ -555,6 +556,7 @@ static_assert(std::contiguous_iterator<dyn<rangesxx::contiguous_iterator, int>>)
 namespace {
 
 void test_input_iterator(dyn<rangesxx::input_iterator, int> begin, dyn<rangesxx::input_iterator, int> end) {
+//void test_input_iterator(dyn<rangesxx::input_iterator, int> begin, dyn<rangesxx::sentinel> end) {
 	std::for_each(begin, end, [](int x){ std::println("{}", x); });
 }
 
@@ -593,6 +595,7 @@ void test_contiguous_iterator(dyn<rangesxx::contiguous_iterator, a_struct> begin
 TEST_CASE("anyxx26 iterators") {
 
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
+    //dyn<rangesxx::sentinel, int> end{arr.end()};
 	test_input_iterator(arr.begin(), arr.end());
     test_bidirectional_iterator(arr.begin());
     test_random_access_iterator(arr.begin(), arr.end());
