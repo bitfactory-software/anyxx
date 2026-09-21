@@ -16,7 +16,7 @@ using namespace anyxx26;
 
 namespace {
 
-template <typename Self, typename = anyxx26::declaration>
+template <typename Self, typename >
 struct stringable {
     std::string as_string() const;
 };
@@ -96,7 +96,7 @@ namespace{
 
 template <typename DynBase>
 consteval std::meta::info test_make_dyn_facade_call() {
-    auto v_table_specs = get_v_table_specs(^^stringable<declaration>);
+    auto v_table_specs = get_v_table_specs(^^stringable<declaration, declaration>);
     return make_dyn_facade_call<DynBase>(v_table_specs[0]);
 }
 
@@ -137,13 +137,13 @@ TEST_CASE("anyxx26 hello world") {
 }
 
 namespace {
-template <typename Self, typename = anyxx26::declaration>
+template <typename Self, typename >
 struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
 
 consteval{
-    constexpr auto interface_member = ^^addable<declaration>::add;
+    constexpr auto interface_member = ^^addable<declaration, declaration>::add;
     auto decorated_name = decorated_name_of(interface_member);
     //if (decorated_name != "addint") {
     //  throw std::meta::exception(decorated_name, interface_member);
@@ -172,13 +172,13 @@ TEST_CASE("anyxx26 mutable hello world") {
 }
 
 namespace {
-template <typename Self, typename = anyxx26::declaration>
+template <typename Self, typename >
 struct base_trait {
   std::string basef() const;
 };
 
-template <typename Self, typename = anyxx26::declaration>
- struct derived_trait : base_trait<Self> {
+template <typename Self, typename Trait>
+ struct derived_trait : base_trait<Self, Trait> {
   [[= defaulted]] static std::string derivedf(Self const& self);
 };
 
@@ -232,19 +232,19 @@ TEST_CASE("anyxx26 v_table_data") {
   } else{
       CHECK(false);
   }
-  [[maybe_unused]] constexpr auto member_type = ^^anyxx26::save_observable<void*>::type_info_::type;
+  [[maybe_unused]] constexpr auto member_type = ^^anyxx26::save_observable<declaration, declaration>::type_info_::type;
   static_assert(std::meta::is_type(member_type));
   static_assert(std::meta::is_type_alias(member_type));
   static_assert(std::meta::is_pointer_type(member_type));
   constexpr auto ctx = std::meta::access_context::current();
-  constexpr static auto members1 = define_static_array(members_of(^^anyxx26::save_observable<void*>, ctx));
+  constexpr static auto members1 = define_static_array(members_of(^^anyxx26::save_observable<declaration, declaration>, ctx));
   constexpr auto type_info_struct_meta = members1[0];
   using type = [:type_info_struct_meta:]::type;
   static_assert(std::meta::is_type(^^type));
   static_assert(std::meta::is_type_alias(^^type));
   static_assert(std::meta::is_pointer_type(^^type));
   static_assert(dealias(^^type) == ^^std::type_info const*);
-  static_assert(std::same_as<type, anyxx26::save_observable<void*>::type_info_::type>);
+  static_assert(std::same_as<type, anyxx26::save_observable<declaration, declaration>::type_info_::type>);
   //constexpr auto member_type1 = ^^[:type_info_struct_meta:]::type;
 }
 
