@@ -169,11 +169,6 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
       return *this;
   }
 
-  template <typename Self, typename... Params>
-  decltype(auto) operator()(this Self&& self, Params&&... params) {
-      return self.op_parentheses(std::forward<Params>(params)...);
-  }
-
 #define __dyn_OP(function, op) \
   template <typename Self, typename... Params> \
   decltype(auto) operator op (this Self&& self, Params&&... params) { \
@@ -185,6 +180,7 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
       return self.function(); \
   }
 
+    __dyn_OP(op_parentheses, ())
     __dyn_OP(op_square_brackets, [])
     __dyn_OP0(op_tilde, ~)
     __dyn_OP0(op_exclamation, !)
