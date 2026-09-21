@@ -113,5 +113,42 @@ struct sentinel<Sentinel, model_map, Value> {
     }
 };
 
+struct input {
+    template <typename Self, typename Trait, typename Value>
+    using iterator = input_iterator<Self, Trait, Value>;
+};
+struct forward {
+    template <typename Self, typename Trait, typename Value>
+    using iterator = forward_iterator<Self, Trait, Value>;
+};
+struct bidirectional {
+    template <typename Self, typename Trait, typename Value>
+    using iterator = bidirectional_iterator<Self, Trait, Value>;
+};
+struct  random_access {
+    template <typename Self, typename Trait, typename Value>
+    using iterator = random_access_iterator<Self, Trait, Value>;
+};
+struct  contiguous {
+    template <typename Self, typename Trait, typename Value>
+    using iterator = contiguous_iterator<Self, Trait, Value>;
+};
+
+template <typename Self, typename Trait, typename Category, typename Value>
+struct view : save_copyable<Self, Trait> {
+    using default_proxy_t = anyxx::val<std::true_type>;
+    static dyn<Category::template iterator, Value> begin(Self& self) {
+        return std::ranges::begin(self);
+    }
+    static dyn<sentinel, Value> end(Self& self) {
+        return make_end_sentinel_for(self);
+    }
+    //static dyn<Category::template iterator, Value const> begin(Self const& self) {
+    //    return std::ranges::begin(self);
+    //}
+    //static dyn<sentinel, Value const> end(Self const& self) {
+    //    return make_end_sentinel_for(self);
+    //}
+};
 
 }
