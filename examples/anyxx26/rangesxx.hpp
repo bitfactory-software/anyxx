@@ -85,5 +85,33 @@ template <typename Value>
 bool operator!=(dyn<input_iterator, Value> const& it, dyn<sentinel, Value> const& s) {
     return s != it;
 }
+template <typename Iterator, typename Sentinel>
+struct sentinel_for{
+    using iterator_type = Iterator;
+    using sentinel_type = Sentinel;
+    sentinel_type value;
+};
+template <std::ranges::range Range>
+sentinel_for<std::ranges::iterator_t<Range>, std::ranges::sentinel_t<Range>>
+make_end_sentinel_for(Range&& range) {
+    return {std::ranges::end(range)};
+}
+template <typename SentinelFor>
+concept is_sentinel_for = requires(SentinelFor s) {
+  typename SentinelFor::iterator_type;
+  typename SentinelFor::sentinel_type;
+  { s.value  };
+};
+
+template <is_sentinel_for Sentinel, typename Value>
+struct sentinel<Sentinel, model_map, Value> {
+    static bool op_equals_equals(Sentinel const& sentinel, dyn<input_iterator, Value> const& iterator){
+        return sentinel.value == *unerase_cast<typename Sentinel::iterator_type>(iterator);
+    }
+    static bool op_exclamation_equals(Sentinel const& sentinel, dyn<input_iterator, Value> const& iterator){
+        return sentinel.value != *unerase_cast<typename Sentinel::iterator_type>(iterator);
+    }
+};
+
 
 }
