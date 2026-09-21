@@ -555,9 +555,13 @@ static_assert(std::contiguous_iterator<dyn<rangesxx::contiguous_iterator, int>>)
 
 namespace {
 
-//void test_input_iterator(dyn<rangesxx::input_iterator, int> begin, dyn<rangesxx::sentinel, int> end) {
+void test_input_iterator(dyn<rangesxx::input_iterator, int> begin, dyn<rangesxx::sentinel, int> end) {
+    auto expected = 1;
+    std::ranges::for_each(begin, end, [&expected](int x){ CHECK(x == expected++); });
+}
 void test_input_iterator(dyn<rangesxx::input_iterator, int> begin, dyn<rangesxx::input_iterator, int> end) {
-	std::ranges::for_each(begin, end, [](int x){ std::println("{}", x); });
+    auto expected = 1;
+    std::ranges::for_each(begin, end, [&expected](int x){ CHECK(x == expected++); });
 }
 
 void test_bidirectional_iterator(dyn<rangesxx::bidirectional_iterator, int> begin) {
@@ -595,11 +599,16 @@ void test_contiguous_iterator(dyn<rangesxx::contiguous_iterator, a_struct> begin
 TEST_CASE("anyxx26 iterators") {
 
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
+
     auto e = rangesxx::make_end_sentinel_for(arr);
-    dyn<rangesxx::sentinel, int> end{e};
-//	test_input_iterator(arr.begin(), e);
-	test_input_iterator(arr.begin(), arr.end());
+    dyn<rangesxx::sentinel, int> end_sentinel{e};
+	test_input_iterator(arr.begin(), end_sentinel);
+    
+    dyn<rangesxx::input_iterator, int> end_iterator{arr.end()};
+    test_input_iterator(arr.begin(), end_iterator);
+    
     test_bidirectional_iterator(arr.begin());
+    
     test_random_access_iterator(arr.begin(), arr.end());
 
     std::array<a_struct, 2> arr2{ 1, 2 };
