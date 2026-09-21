@@ -5,8 +5,8 @@
 
 namespace anyxx26::rangesxx {
 
-template <typename Self, is_trait Trait, typename Value>
-struct input_iterator : save_copyable<Self, Trait> {
+template <is_trait Trait, typename Self, typename Value>
+struct input_iterator : save_copyable<Trait, Self> {
     using default_proxy_t = anyxx::val<std::true_type>;
 
     bool operator==(Self const&) const;
@@ -23,24 +23,24 @@ struct input_iterator : save_copyable<Self, Trait> {
 	};
 };
 
-template <typename Self, is_trait Trait, typename Value>
-struct forward_iterator : input_iterator<Self, Trait, Value> {
-	struct typenames : input_iterator<Self, Trait, Value>::typenames {
+template <is_trait Trait, typename Self, typename Value>
+struct forward_iterator : input_iterator<Trait, Self, Value> {
+	struct typenames : input_iterator<Trait, Self, Value>::typenames {
 		using iterator_category = std::forward_iterator_tag;
 	};
 };
 
-template <typename Self, is_trait Trait, typename Value>
-struct bidirectional_iterator : forward_iterator<Self, Trait, Value> {
+template <is_trait Trait, typename Self, typename Value>
+struct bidirectional_iterator : forward_iterator<Trait, Self, Value> {
     Self& operator--();
 
-    struct typenames : forward_iterator<Self, Trait, Value>::typenames {
+    struct typenames : forward_iterator<Trait, Self, Value>::typenames {
         using iterator_category = std::bidirectional_iterator_tag;
     };
 };
 
-template <typename Self, is_trait Trait, typename Value>
-struct random_access_iterator : bidirectional_iterator<Self, Trait, Value> {
+template <is_trait Trait, typename Self, typename Value>
+struct random_access_iterator : bidirectional_iterator<Trait, Self, Value> {
     bool operator<(Self const&) const;
     bool operator>(Self const&) const;
     bool operator<=(Self const&) const;
@@ -56,22 +56,22 @@ struct random_access_iterator : bidirectional_iterator<Self, Trait, Value> {
         using iterator_category = std::random_access_iterator_tag;
     };
 };
-template <template<typename, is_trait, typename...> typename IteratorTrait, typename Value>
+template <template<is_trait, typename, typename...> typename IteratorTrait, typename Value>
 auto operator+(std::ptrdiff_t n, dyn<IteratorTrait, Value> const& it) {
     return it + n;
 }
 
-template <typename Self, is_trait Trait, typename Value>
-struct contiguous_iterator : random_access_iterator<Self, Trait, Value> {
+template <is_trait Trait, typename Self, typename Value>
+struct contiguous_iterator : random_access_iterator<Trait, Self, Value> {
     Value* operator->() const;
 
-    struct typenames : random_access_iterator<Self, Trait, Value>::typenames {
+    struct typenames : random_access_iterator<Trait, Self, Value>::typenames {
         using iterator_category = std::contiguous_iterator_tag;
     };
 };
 
-template <typename Self, is_trait Trait, typename Value>
-struct sentinel : save_copyable<Self, Trait> {
+template <is_trait Trait, typename Self, typename Value>
+struct sentinel : save_copyable<Trait, Self> {
     using default_proxy_t = anyxx::val<std::true_type>;
 
     bool operator==(dyn<input_iterator, Value> const&) const;
@@ -104,7 +104,7 @@ concept is_sentinel_for = requires(SentinelFor s) {
 };
 
 template <is_sentinel_for Sentinel, typename Value>
-struct sentinel<Sentinel, model_map, Value> {
+struct sentinel<model_map, Sentinel, Value> {
     static bool op_equals_equals(Sentinel const& sentinel, dyn<input_iterator, Value> const& iterator){
         return sentinel.value == *unerase_cast<typename Sentinel::iterator_type>(iterator);
     }
@@ -134,8 +134,8 @@ struct  contiguous {
     using iterator = contiguous_iterator<Self, Trait, Value>;
 };
 
-template <typename Self, typename Trait, typename Category, typename Value>
-struct view : save_copyable<Self, Trait> {
+template <is_trait Trait, typename Self, typename Category, typename Value>
+struct view : save_copyable<Trait, Self> {
     using default_proxy_t = anyxx::val<std::true_type>;
     static dyn<Category::template iterator, Value> begin(Self& self) {
         return std::ranges::begin(self);

@@ -11,16 +11,16 @@ struct model_map {};
 template <typename Trait>
 concept is_trait = std::same_as<Trait, declaration> || std::same_as<Trait, model_map>;
 
-template <template <typename, is_trait, typename...> typename Trait>
+template <template <is_trait, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
-template <template <typename, is_trait, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct dyn_base;
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 struct dyn;
 
 struct default_t {};
@@ -37,7 +37,7 @@ using self_const_correct_t = std::conditional_t<
     V const, V>;
 
 consteval std::meta::info trait_model_map(std::meta::info trait_template, std::meta::info mapped_type, auto args){
-  std::vector<std::meta::info> params{ mapped_type, ^^ model_map };
+  std::vector<std::meta::info> params{ ^^model_map, mapped_type };
   params.append_range(args);
   return substitute(trait_template, params);
 }
@@ -58,10 +58,10 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<declaration, declaration, Args...>;
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 concept specifies_default_proxy_t = requires { typename trait_declaration_t<Trait, Args...>::default_proxy_t; };
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info compute_default_proxy_t() {
     if constexpr(specifies_default_proxy_t<Trait, Args...>) {
         return ^^typename trait_declaration_t<Trait, Args...>::default_proxy_t;
@@ -70,16 +70,16 @@ consteval std::meta::info compute_default_proxy_t() {
     }
 }
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 using dyn_self_val_t = dyn<Trait, Args...>;
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;
 
-template <template <typename, is_trait, typename...> typename Trait, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 using dyn_self_mutref_t = dyn<Trait, anyxx::mutref, Args...>;
 
 }  // namespace anyxx26

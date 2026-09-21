@@ -16,7 +16,7 @@ using namespace anyxx26;
 
 namespace {
 
-template <typename Self, is_trait Trait>
+template <is_trait Trait, typename Self>
 struct stringable {
     std::string as_string() const;
 };
@@ -28,12 +28,12 @@ void print(std::vector<dyn<stringable>> const& things) {
 }
 
 template <>
-struct stringable<int, anyxx26::model_map> {
+struct stringable<anyxx26::model_map, int> {
     static std::string as_string(int const& self) { return std::to_string(self); }
 };
 
 template <>
-struct stringable<std::string, anyxx26::model_map> {
+struct stringable<anyxx26::model_map, std::string> {
   static std::string as_string(std::string const& self) { return self; }
 };
 
@@ -41,7 +41,7 @@ struct foo {
   double f;
 };
 template <>
-struct stringable<foo, anyxx26::model_map> {
+struct stringable<anyxx26::model_map, foo> {
   static std::string as_string(foo const& self) {
     return "foo: " + std::to_string(self.f);
   }
@@ -137,7 +137,7 @@ TEST_CASE("anyxx26 hello world") {
 }
 
 namespace {
-template <typename Self, is_trait Trait>
+template <is_trait Trait, typename Self>
 struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
@@ -250,14 +250,14 @@ TEST_CASE("anyxx26 v_table_data") {
 
 namespace {
 
-template <typename Self, is_trait Trait, typename Value>
+template <is_trait Trait, typename Self, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
     Value const& operator[](std::size_t) const;
 };
 
 template <typename Self, typename Value>
-struct mapable<Self, anyxx26::model_map, Value> {
+struct mapable<anyxx26::model_map, Self, Value> {
     static Value const& at(Self const& self, std::size_t i) {
         return self.at(i);
     }
@@ -293,8 +293,8 @@ TEST_CASE("anyxx26 templated trait") {
 
 namespace {
 
-template <typename Self, is_trait Trait>
-struct operators : save_copyable<Self, Trait> {
+template <is_trait Trait, typename Self>
+struct operators : save_copyable<Trait, Self> {
     int const& operator*() const;
     Self operator+(int) const;
     Self& operator++();
@@ -324,7 +324,7 @@ struct add_test {
 };
 
 template <>
-struct operators<int*, anyxx26::model_map> {
+struct operators<anyxx26::model_map, int*> {
     static bool equal(int *const self, int* const& other) {
         return self == other;
     }

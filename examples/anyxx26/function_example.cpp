@@ -6,20 +6,20 @@ using namespace anyxx26;
 
 namespace {
 
-template <typename Self, is_trait Trait, typename R, typename... Args>
-struct test_function_named_defaulted : copyable<Self, declaration> {
+template <is_trait Trait, typename Self, typename R, typename... Args>
+struct test_function_named_defaulted : copyable<Trait, Self> {
     [[= defaulted]] static R op_parentheses(Self const& self, Args... args);
 };
 
-template <typename Self, is_trait Trait, typename R, typename... Args>
-struct test_function_named : copyable<Self, declaration> {
+template <is_trait Trait, typename Self, typename R, typename... Args>
+struct test_function_named : copyable<Trait, Self> {
     static R op_parentheses(Self const& self, Args... args) {
         return self(std::forward<Args>(args)...);
     }
 };
 
 //template <typename Self, typename, typename R, typename... Args>
-//struct mutable_copyable_function : copyable<Self, declaration> {
+//struct mutable_copyable_function : copyable<Trait, Self> {
 //    static R op_parentheses(Self const& self, Args... args) {
 //        return self(std::forward<Args>(args)...);
 //    }
@@ -47,9 +47,9 @@ TEST_CASE("anyxx26 std function equivalents") {
     auto lambda2 = [](int x){ return x + 2; };
     callable_test callable_object;
 
-    test_default_impl<const_copyable_function<void*, declaration, int, int>>(lambda);
-    test_default_impl<const_copyable_function<void*, declaration, int, int>>(lambda2);
-    test_default_impl<const_copyable_function<void*, declaration, int, int>>(callable_object);
+    test_default_impl<const_copyable_function<declaration, declaration, int, int>>(lambda);
+    test_default_impl<const_copyable_function<declaration, declaration, int, int>>(lambda2);
+    test_default_impl<const_copyable_function<declaration, declaration, int, int>>(callable_object);
 
     {
         //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
