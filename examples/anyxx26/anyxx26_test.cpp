@@ -16,7 +16,7 @@ using namespace anyxx26;
 
 namespace {
 
-template <typename Self, typename >
+template <typename Self, is_trait Trait>
 struct stringable {
     std::string as_string() const;
 };
@@ -137,7 +137,7 @@ TEST_CASE("anyxx26 hello world") {
 }
 
 namespace {
-template <typename Self, typename >
+template <typename Self, is_trait Trait>
 struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
@@ -250,7 +250,7 @@ TEST_CASE("anyxx26 v_table_data") {
 
 namespace {
 
-template <typename Self, typename, typename Value>
+template <typename Self, is_trait Trait, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
     Value const& operator[](std::size_t) const;
@@ -293,7 +293,7 @@ TEST_CASE("anyxx26 templated trait") {
 
 namespace {
 
-template <typename Self, typename Trait>
+template <typename Self, is_trait Trait>
 struct operators : save_copyable<Self, Trait> {
     int const& operator*() const;
     Self operator+(int) const;

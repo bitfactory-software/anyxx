@@ -4,8 +4,8 @@
 
 namespace anyxx26 {
 
-template <typename Self, typename, typename R, typename... Args>
-struct const_copyable_function : copyable<Self, declaration> {
+template <typename Self, is_trait Trait, typename R, typename... Args>
+struct const_copyable_function : copyable<Self, Trait> {
     R operator()(Args... args) const;
 };
 

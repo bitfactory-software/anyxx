@@ -361,55 +361,55 @@ struct destructor {
 };
 
 // clang-format off
-template <typename Self, typename Trait>
+template <typename Self, is_trait Trait>
 struct moveable {
     using model_size [[= v_table_data]] = anyxx26::model_size;
     using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
     using destructor [[= v_table_data]] = anyxx26::destructor;
     using default_proxy_t = anyxx::val<>;
 };
-    template <typename Self, typename Trait>
+    template <typename Self, is_trait Trait>
     struct copyable : moveable<Self, Trait> {
         using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
     };
-template <typename Self, typename Trait>
+template <typename Self, is_trait Trait>
 struct save_observable {
     using type_info_ [[= v_table_data]] = anyxx26::type_info_;
 };
-    template <typename Self, typename Trait>
+    template <typename Self, is_trait Trait>
     struct save_moveable : save_observable<Self, Trait> {
         using model_size [[= v_table_data]] = anyxx26::model_size;
         using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
         using destructor [[= v_table_data]] = anyxx26::destructor;
         using default_proxy_t = anyxx::val<>;
     };
-        template <typename Self, typename Trait>
+        template <typename Self, is_trait Trait>
         struct save_copyable : save_moveable<Self, Trait> {
             using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
         };
-    template <typename Self, typename Trait >
+    template <typename Self, is_trait Trait >
     struct dynamic_castable : save_observable<Self, Trait> {
         using is_derived_from_ [[= v_table_data]] = anyxx26::is_derived_from_;
         using meta_data_ [[= v_table_data]] = anyxx26::meta_data_;
     };
-        template <typename Self, typename Trait>
+        template <typename Self, is_trait Trait>
         struct dynamic_deletable : dynamic_castable<Self, Trait> {
             using delete_ [[= v_table_data]] = anyxx26::delete_;
             using default_proxy_t = anyxx::shared;
         };
-            template <typename Self, typename Trait>
+            template <typename Self, is_trait Trait>
             struct dynamic_smart_ptr : dynamic_deletable<Self, Trait> {
                 using model_size [[= v_table_data]] = anyxx26::model_size;
                 using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
             };
-        template <typename Self, typename Trait>
+        template <typename Self, is_trait Trait>
         struct dynamic_moveable : dynamic_castable<Self, Trait> {
             using model_size [[= v_table_data]] = anyxx26::model_size;
             using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
             using destructor [[= v_table_data]] = anyxx26::destructor;
             using default_proxy_t = anyxx::val<>;
         };
-            template <typename Self, typename Trait>
+            template <typename Self, is_trait Trait>
             struct dynamic_copyable : dynamic_moveable<Self, Trait> {
                 using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
             };

@@ -6,12 +6,12 @@ using namespace anyxx26;
 
 namespace {
 
-template <typename Self, typename, typename R, typename... Args>
+template <typename Self, is_trait Trait, typename R, typename... Args>
 struct test_function_named_defaulted : copyable<Self, declaration> {
     [[= defaulted]] static R op_parentheses(Self const& self, Args... args);
 };
 
-template <typename Self, typename, typename R, typename... Args>
+template <typename Self, is_trait Trait, typename R, typename... Args>
 struct test_function_named : copyable<Self, declaration> {
     static R op_parentheses(Self const& self, Args... args) {
         return self(std::forward<Args>(args)...);
