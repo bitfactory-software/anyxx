@@ -1,9 +1,9 @@
 #pragma once
 
-#include <bit_factory/anyxx.hpp>
+#include <bit_factory/v26/dyn.hpp>
+#include <ranges>
 
 namespace anyxx26::rangesxx {
-
 
 template <typename Self, typename Trait, typename Value>
 struct input_iterator : save_copyable<Self, Trait> {
