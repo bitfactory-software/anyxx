@@ -293,56 +293,6 @@ TEST_CASE("anyxx26 templated trait") {
 
 namespace {
 
-template <typename Self, typename, typename R, typename... Args>
-struct test_function_named_defaulted : copyable<Self, declaration> {
-    [[= defaulted]] static R op_parentheses(Self const& self, Args... args);
-};
-
-template <typename Self, typename, typename R, typename... Args>
-struct test_function_named : copyable<Self, declaration> {
-    static R op_parentheses(Self const& self, Args... args) {
-        return self(std::forward<Args>(args)...);
-    }
-};
-
-template <typename Self, typename, typename R, typename... Args>
-struct const_copyable_function : copyable<Self, declaration> {
-    R operator()(Args... args) const;
-};
-
-template <typename R, typename... Args>
-struct copyable_function;
-template <typename R, typename... Args>
-struct copyable_function<R(Args...) const> 
-    : dyn<const_copyable_function, anyxx::val<>, int, int> {
-  using dyn::dyn;
-};
-
-//template <typename Self, typename, typename R, typename... Args>
-//struct mutable_copyable_function : copyable<Self, declaration> {
-//    static R op_parentheses(Self const& self, Args... args) {
-//        return self(std::forward<Args>(args)...);
-//    }
-//};
-
-template <typename Spec, typename V>
-void test_default_impl(V const& v) {
-    constexpr auto spec_f = meta::get_member_by_function_name(^^Spec, std::define_static_string("op_parentheses"));
-    static_assert(spec_f != std::meta::info{});
-    auto r = default_impl<spec_f, V, int, const void*, int>()(&v, 2);
-    CHECK(r == 4);
-}
-
-struct callable_test{
-    int operator()(int i) const {
-        return i * i;
-    }
-};
-
-}
-
-namespace {
-
 template <typename Self, typename Trait>
 struct operators : save_copyable<Self, Trait> {
     int const& operator*() const;
