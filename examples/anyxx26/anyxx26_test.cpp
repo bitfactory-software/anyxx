@@ -1,11 +1,11 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <examples/anyxx26/dyn.hpp>
-#include <examples/anyxx26/meta/print_members.hpp>
-#include <examples/anyxx26/meta/utilities.hpp>
-#include <examples/anyxx26/trait_as.hpp>
-#include <examples/anyxx26/rangesxx.hpp>
+#include <bit_factory/v26/dyn.hpp>
+#include <bit_factory/v26/meta/print_members.hpp>
+#include <bit_factory/v26/meta/utilities.hpp>
+#include <bit_factory/v26/trait_as.hpp>
+#include <bit_factory/v26/rangesxx.hpp>
 #include <meta>
 #include <print>
 #include <string>

@@ -2,8 +2,8 @@
 
 #include <meta>
 #include <algorithm>
-#include <examples/anyxx26/dyn/keywords.hpp>
-#include <examples/anyxx26/meta/utilities.hpp>
+#include <bit_factory/v26/dyn/keywords.hpp>
+#include <bit_factory/v26/meta/utilities.hpp>
 
 namespace anyxx26 {
 

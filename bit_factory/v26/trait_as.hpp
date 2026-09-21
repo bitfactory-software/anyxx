@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <examples/anyxx26/meta/utilities.hpp>
+#include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
 #include <vector>

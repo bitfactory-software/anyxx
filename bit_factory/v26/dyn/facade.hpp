@@ -1,9 +1,9 @@
 #pragma once
 
-#include <examples/anyxx26/dyn/keywords.hpp>
-#include <examples/anyxx26/dyn/signature_translation.hpp>
-#include <examples/anyxx26/dyn/make_v_table_members_type.hpp>
-#include <examples/anyxx26/meta/utilities.hpp>
+#include <bit_factory/v26/dyn/keywords.hpp>
+#include <bit_factory/v26/dyn/signature_translation.hpp>
+#include <bit_factory/v26/dyn/make_v_table_members_type.hpp>
+#include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
 #include <vector>

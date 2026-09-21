@@ -2,7 +2,7 @@
 
 #include <meta>
 #include <print>
-#include <examples/anyxx26/meta/utilities.hpp>
+#include <bit_factory/v26/meta/utilities.hpp>
 
 namespace anyxx26::meta {
 
