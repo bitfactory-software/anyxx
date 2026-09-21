@@ -5,7 +5,7 @@
 #include <examples/anyxx26/dyn/facade.hpp>
 #include <examples/anyxx26/dyn/keywords.hpp>
 #include <examples/anyxx26/dyn/signature_translation.hpp>
-#include <examples/anyxx26/dyn/v_table_layout.hpp>
+#include <examples/anyxx26/dyn/make_v_table_members_type.hpp>
 #include <examples/anyxx26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
