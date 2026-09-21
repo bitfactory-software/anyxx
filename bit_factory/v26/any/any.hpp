@@ -1,3 +1,5 @@
+#pragma once
+
 #include <bit_factory/v26/dyn.hpp>
 
 namespace anyxx26 {
