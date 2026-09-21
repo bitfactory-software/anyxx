@@ -172,13 +172,13 @@ TEST_CASE("anyxx26 mutable hello world") {
 }
 
 namespace {
-template <typename Self, typename >
+template <is_trait, typename>
 struct base_trait {
   std::string basef() const;
 };
 
-template <typename Self, typename Trait>
- struct derived_trait : base_trait<Self, Trait> {
+template <is_trait Trait, typename Self>
+ struct derived_trait : base_trait<Trait, Self> {
   [[= defaulted]] static std::string derivedf(Self const& self);
 };
 
@@ -254,12 +254,23 @@ template <is_trait Trait, typename Self, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
     Value const& operator[](std::size_t) const;
+    Value& at(std::size_t);
+    Value& operator[](std::size_t);
+    void set_all_to(Value const&);
 };
 
 template <typename Self, typename Value>
 struct mapable<anyxx26::model_map, Self, Value> {
     static Value const& at(Self const& self, std::size_t i) {
         return self.at(i);
+    }
+    static Value& at(Self& self, std::size_t i) {
+        return self.at(i);
+    }
+    static void set_all_to(Self& self, Value const& value) {
+      for (auto& v : self) {
+            v = value;
+      }
     }
 };
 
@@ -270,6 +281,11 @@ static_assert(!has_deduced_typenames<stringable>);
 static_assert(!has_deduced_typenames<addable>);
 static_assert(std::same_as<deduced_typenames<addable>, empty_t>);
 static_assert(!has_deduced_typenames<mapable, int>);
+
+template <typename T>
+concept has_set_all_to =requires(T t, int const& value) {
+ { t.set_all_to(value) } -> std::same_as<void>;
+};
 
 }
 
@@ -283,11 +299,25 @@ TEST_CASE("anyxx26 templated trait") {
     {
         std::vector<int> v1{1, 2};
         dyn<mapable, anyxx::cref, int> m{v1};
-        auto v = m.at(0);
+        decltype(auto) v = m.at(0);
         std::println("{}", v);
+        static_assert(std::same_as<decltype(v), int const&>);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
         CHECK(m[1] == 2);
+        static_assert(!has_set_all_to<dyn<mapable, anyxx::cref, int>>);
+    }
+    {
+        std::vector<int> v1{ 1, 2 };
+        dyn<mapable, anyxx::mutref, int> m{ v1 };
+        decltype(auto) v = m.at(0);
+        std::println("{}", v);
+        static_assert(std::same_as<decltype(v), int&>);
+        CHECK(m.at(0) == 1);
+        CHECK(m.at(1) == 2);
+        CHECK(m[1] == 2);
+        m.set_all_to(42);
+        static_assert(has_set_all_to<dyn<mapable, anyxx::mutref, int>>);
     }
 }
 
@@ -323,9 +353,10 @@ struct add_test {
     }
 };
 
+using int_ptr = int*;
 template <>
-struct operators<anyxx26::model_map, int*> {
-    static bool equal(int *const self, int* const& other) {
+struct operators<anyxx26::model_map, int_ptr> {
+    static bool equal(int_ptr const& self, int_ptr const& other) {
         return self == other;
     }
 };

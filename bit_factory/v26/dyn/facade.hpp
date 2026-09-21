@@ -37,9 +37,29 @@ consteval overload_sets_spec make_overload_sets_specs() {
 }
 
 template <typename DynBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
-struct dyn_facade_call {
+struct const_dyn_facade_call {
     template<typename Self>
-    R operator()(this Self&& self, Args... args) {
+    R operator()(this Self const& self, Args... args) {
+        using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
+        auto base = reinterpret_cast<const base_t*>(&self);
+        using v_table_t = DynBase::v_table_t;
+        auto v_table_ptr = base->v_table_;
+        using fptrs_t = typename v_table_t::fptrs_t;
+        auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
+        auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, v_table_name_of(f, v_table_index));
+        auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
+        if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
+            fptrs->[:vf:](x, std::forward<Args>(args)...);
+            return static_cast<typename DynBase::dyn_self_t const&>(*base);
+        } else {
+            return fptrs->[:vf:](x, std::forward<Args>(args)...);
+        }
+    }
+};
+template <typename DynBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
+struct mutable_dyn_facade_call {
+    template<typename Self>
+    R operator()(this Self& self, Args... args) {
         using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
         auto base = reinterpret_cast<base_t*>(&self);
         using v_table_t = DynBase::v_table_t;
@@ -69,10 +89,24 @@ consteval std::meta::info make_dyn_facade_call(v_table_spec spec){
     types.append_range(parameters_of(spec.member)
         | std::views::drop(is_static_member(spec.member) ? 1 : 0)
         | std::views::transform([](auto p){
-        return translate_v_table_fptr_param_type(^^typename DynBase::dyn_self_cref_t, ^^typename DynBase::dyn_self_mutref_t, type_of(p));
-    })
-    );
-    return substitute(^^dyn_facade_call, types);
+            return translate_v_table_fptr_param_type(^^typename DynBase::dyn_self_cref_t, ^^typename DynBase::dyn_self_mutref_t, type_of(p));
+            })
+        );
+    //if (is_function(spec.member) && is_static_member(spec.member)) {
+    //        if(is_const(type_of(spec.member))) {
+    //            throw std::meta::exception(std::string{ "const: " } + std::string{display_string_of(type_of(spec.member))}, spec.member);
+    //        } else { 
+    //            throw std::meta::exception(std::string{ "non-const: " } + std::string{ display_string_of(type_of(spec.member)) }, spec.member);
+    //        }
+    //}
+    if (is_const_function(spec.member)) {
+        return substitute(^^const_dyn_facade_call, types);
+    } else {
+        if( !anyxx::is_const_data<typename DynBase::proxy_t>) {
+            return substitute(^^mutable_dyn_facade_call, types);
+        }
+    }
+    return std::meta::info{};
 }
 
 template<class... Ts>
@@ -83,7 +117,9 @@ template <typename DynBase>
 consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const& spec){
     std::vector<std::meta::info> overload_set;
     for(auto overload : spec.specs) {
+      if (auto call = make_dyn_facade_call<DynBase>(overload); call != std::meta::info{}) {
         overload_set.push_back(make_dyn_facade_call<DynBase>(overload));
+      }
     }
     auto overloaded_operator = substitute(^^overload, overload_set);
     return std::meta::data_member_spec(overloaded_operator, { .name = spec.name, .no_unique_address = true });

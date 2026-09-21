@@ -195,10 +195,10 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
   } else {
     using VSelf = self_const_correct_t<V, VoidSelf>;
     if constexpr(std::same_as<return_t, void>) {
-        std::forward<R>([:m:](*static_cast<VSelf*>(void_self), forward_v_table_fptr_param<V, Args>(args)...));
+        [:m:](*static_cast<VSelf*>(void_self), forward_v_table_fptr_param<V, Args>(args)...);
         return;
     } else {
-        return std::forward<R>([:m:](*static_cast<VSelf*>(void_self), forward_v_table_fptr_param<V, Args>(args)...));
+        return [:m:](*static_cast<VSelf*>(void_self), forward_v_table_fptr_param<V, Args>(args)...);
     }
   }
 }

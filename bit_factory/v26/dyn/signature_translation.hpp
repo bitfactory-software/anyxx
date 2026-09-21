@@ -122,10 +122,21 @@ consteval bool same_signature(std::meta::info self_t, auto const& candidate_para
     return true;
 }
 
+consteval bool is_const_function(std::meta::info f) {
+    if(is_static_member(f)) {
+        return is_const(remove_reference(type_of(parameters_of(f)[0])));
+    } else {
+        return is_const(type_of(f));
+    }
+}
+
 consteval std::meta::info get_implementation_member(std::meta::info in, std::meta::info self_t, std::meta::info declaration_member) {
     constexpr auto ctx = std::meta::access_context::current();
     for(auto candidate : members_of(in, ctx)) {
       if (meta::function_name_of(candidate) == meta::function_name_of(declaration_member)) {
+        if (is_const_function(candidate) != is_const_function(declaration_member)) {
+          continue;
+        }
         auto m_params = parameters_of(candidate) 
             | std::views::drop(is_static_member(candidate) ? 1 : 0); 
         auto d_params = parameters_of(declaration_member) 
@@ -137,5 +148,6 @@ consteval std::meta::info get_implementation_member(std::meta::info in, std::met
     }
     return {};
 }
+
 
 }  // namespace anyxx26::meta
