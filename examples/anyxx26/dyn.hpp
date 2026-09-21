@@ -182,38 +182,11 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
 
     __dyn_OP(op_parentheses, ())
     __dyn_OP(op_square_brackets, [])
-    __dyn_OP0(op_tilde, ~)
-    __dyn_OP0(op_exclamation, !)
-    __dyn_OP(op_plus, +)
-    __dyn_OP(op_minus, -)
-    __dyn_OP(op_star, *)
-    __dyn_OP(op_slash, /) 
-    __dyn_OP(op_percent, %)
-    __dyn_OP(op_caret, ^)
-//    __dyn_OP(op_ampersand, &)
-    __dyn_OP(op_pipe, |)
-    __dyn_OP(op_plus_equals, +=)
-    __dyn_OP(op_minus_equals, -=)
-    __dyn_OP(op_star_equals, *=)
-    __dyn_OP(op_slash_equals, /=)
-    __dyn_OP(op_percent_equals, %=)
-    __dyn_OP(op_caret_equals, ^=)
-    __dyn_OP(op_ampersand_equals, &=)
-    __dyn_OP(op_pipe_equals, |=)
-    __dyn_OP(op_equals_equals, ==)
-    __dyn_OP(op_exclamation_equals, != )
-    __dyn_OP(op_less, <)
-    __dyn_OP(op_greater, >)
-    __dyn_OP(op_less_equals, <=)
-    __dyn_OP(op_greater_equals, >=)
-    __dyn_OP(op_spaceship, <=>)
-    __dyn_OP(op_less_less, <<)
-    __dyn_OP(op_greater_greater, >>)
-    __dyn_OP(op_less_less_equals, <<=)
-    __dyn_OP(op_greater_greater_equals, >>=)
+    __dyn_OP0(op_arrow, ->)
     __dyn_OP0(op_plus_plus, ++)
     __dyn_OP0(op_minus_minus, --)
-    __dyn_OP0(op_arrow, ->)
+
+//    __dyn_OP(op_ampersand, &)
 
 #undef __dyn_OP
 #undef __dyn_OP0
@@ -251,6 +224,61 @@ struct dyn<Trait, Arg0, Args...> : dyn_base<Trait, default_proxy_t<Trait, Arg0, 
     [:make_dyn_facade<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>():] {
     using dyn_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::dyn_base;
 };
+
+#define __dyn_OP_CONST(function, op) \
+template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
+decltype(auto) operator op (dyn<Trait, Args...> const& lhs, Other const& rhs) { \
+    return lhs.function(rhs); \
+}
+#define __dyn_OP_MUTATING(function, op) \
+template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
+decltype(auto) operator op (dyn<Trait, Args...>& lhs, Other const& rhs) { \
+    return lhs.function(rhs); \
+}
+#define __dyn_OP0(function, op) \
+template <template <typename, typename, typename...> typename Trait, typename... Args> \
+decltype(auto) operator op (dyn<Trait, Args...> const& lhs) { \
+    return lhs.function(); \
+}
+
+__dyn_OP_CONST(op_equals_equals, ==)
+__dyn_OP_CONST(op_exclamation_equals, != )
+__dyn_OP_CONST(op_less, < )
+__dyn_OP_CONST(op_greater, > )
+__dyn_OP_CONST(op_less_equals, <= )
+__dyn_OP_CONST(op_greater_equals, >= )
+__dyn_OP_CONST(op_spaceship, <=> )
+
+__dyn_OP0(op_tilde, ~)
+__dyn_OP0(op_exclamation, !)
+__dyn_OP0(op_plus, +)
+__dyn_OP0(op_minus, -)
+__dyn_OP0(op_star, *)
+
+__dyn_OP_CONST(op_plus, +)
+__dyn_OP_CONST(op_minus, -)
+__dyn_OP_CONST(op_star, *)
+__dyn_OP_CONST(op_slash, / )
+__dyn_OP_CONST(op_percent, %)
+__dyn_OP_CONST(op_caret, ^)
+__dyn_OP_CONST(op_pipe, | )
+
+__dyn_OP_MUTATING(op_plus_equals, +=)
+__dyn_OP_MUTATING(op_minus_equals, -=)
+__dyn_OP_MUTATING(op_star_equals, *=)
+__dyn_OP_MUTATING(op_slash_equals, /=)
+__dyn_OP_MUTATING(op_percent_equals, %=)
+__dyn_OP_MUTATING(op_caret_equals, ^=)
+__dyn_OP_MUTATING(op_ampersand_equals, &=)
+__dyn_OP_MUTATING(op_pipe_equals, |=)
+__dyn_OP_MUTATING(op_less_less, << )
+__dyn_OP_MUTATING(op_greater_greater, >> )
+__dyn_OP_MUTATING(op_less_less_equals, <<=)
+__dyn_OP_MUTATING(op_greater_greater_equals, >>=)
+
+#undef __dyn_OP_CONST
+#undef __dyn_OP_MUTATING
+#undef __dyn_OP0
 
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
