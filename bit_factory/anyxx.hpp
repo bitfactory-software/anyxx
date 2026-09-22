@@ -384,7 +384,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
       [[maybe_unused]] this Self&& self __VA_OPT__(, )                         \
           __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) { \
     using self_t = std::decay_t<Self>;                                         \
-    static_assert(!self_t::is_dyn);                                               \
+    static_assert(!self_t::is_dyn);                                            \
     using T = typename self_t::T;                                              \
     using proxy_t = typename self_t::proxy_t;                                  \
     using map_t = typename self_t::template static_dispatch_map_t<T>;          \
@@ -523,7 +523,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using proxy_t = typename self_t::proxy_t;                                  \
     using deduced_type = typename self_t::deduced_type;                        \
                                                                                \
-    if constexpr (!self_t::is_dyn) {                                              \
+    if constexpr (!self_t::is_dyn) {                                           \
       using traited_t = typename self_t::rep_type;                             \
       if constexpr (std::same_as<void, ANYXX_UNPAREN(type)>) {                 \
         return static_dispatch_map_t<T>{}.name(                                \
@@ -2480,7 +2480,9 @@ static_assert(is_object_proxy<cow>);
 
 template <typename Model>
 constexpr inline model_size_t compute_model_size() {
-  return {.size = sizeof(Model), .trivial = std::is_trivially_default_constructible_v<Model> && std::is_trivially_copyable_v<Model> };
+  return {.size = sizeof(Model),
+          .trivial = std::is_trivially_default_constructible_v<Model> &&
+                     std::is_trivially_copyable_v<Model>};
 }
 
 template <bool Trivial, std::size_t SmallObjectSize>
@@ -3563,9 +3565,7 @@ auto query_v_table(FromVTable* from)
     return reinterpret_cast<v_table_t*>(from);
   if constexpr (is_meta_data_v_table<FromVTable>) {
     if (auto meta_data = from->meta_data_; meta_data) {
-      return meta_data->get_v_table(typeid(v_table_t))
-          .transform(
-              [](auto v_table) { return static_cast<v_table_t*>(v_table); });
+      return *meta_data->get_v_table<v_table_t>();
     } else {
       return std::unexpected(
           anyxx::cast_error{typeid(v_table_t), *from->type_info_});
@@ -3930,12 +3930,11 @@ mutable_void invoke_move_constructor([[maybe_unused]] mutable_void placement,
 }
 
 template <typename Concrete>
-	requires std::copy_constructible<Concrete>
+  requires std::copy_constructible<Concrete>
 mutable_void invoke_copy_constructor([[maybe_unused]] mutable_void placement,
                                      [[maybe_unused]] const_void from) {
-    return std::construct_at<Concrete>
-        (static_cast<Concrete*>(placement),
-        *static_cast<Concrete const*>(from));  
+  return std::construct_at<Concrete>(static_cast<Concrete*>(placement),
+                                     *static_cast<Concrete const*>(from));
 }
 
 #define ANY_CLASS_TYPE_INFO \
@@ -3949,12 +3948,12 @@ mutable_void invoke_copy_constructor([[maybe_unused]] mutable_void placement,
   ANY_V_TABLE_DATA(meta_data*, meta_data_, nullptr)
 #define ANY_MODEL_SIZE \
   ANY_V_TABLE_DATA(model_size_t, model_size, compute_model_size<Concrete>())
-#define ANY_COPY_CONSTRUCTOR                                                 \
-  ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,                     \
-                   []([[maybe_unused]] mutable_void placement,               \
-                      [[maybe_unused]] const_void from) -> mutable_void {    \
-                       return invoke_copy_constructor<Concrete>(placement,   \
-                                                                from);       \
+#define ANY_COPY_CONSTRUCTOR                                              \
+  ANY_V_TABLE_DATA(copy_constructor_t, copy_constructor,                  \
+                   []([[maybe_unused]] mutable_void placement,            \
+                      [[maybe_unused]] const_void from) -> mutable_void { \
+                     return invoke_copy_constructor<Concrete>(placement,  \
+                                                              from);      \
                    })
 #define ANY_HAS_DELETE                                        \
   ANY_V_TABLE_DATA(delete_t, delete_, [](mutable_void data) { \
@@ -4003,7 +4002,17 @@ TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 class meta_data {
   const std::type_info& type_info_;
-  std::vector<dynamic_castable::v_table_t*> i_table_;
+  
+  struct i_table_entry {
+    void* v_table_ = nullptr;
+    std::type_index type_index_;
+
+    template <typename VTable>
+    i_table_entry(VTable* v_table)
+        : v_table_(v_table), type_index_(typeid(*v_table)) {}
+  };
+
+  std::vector<i_table_entry> i_table_;
 
  public:
   template <typename CLASS>
@@ -4015,17 +4024,26 @@ class meta_data {
   auto& get_i_table() { return i_table_; }
   auto& get_i_table() const { return i_table_; }
 
-  std::expected<dynamic_castable::v_table_t*, cast_error> get_v_table(
-      std::type_info const& typeid_) const {
-    auto const& i_table = get_i_table();
-    for (auto v_table : i_table)
-      if (is_derived_from(typeid_, v_table)) return v_table;
-    return std::unexpected(cast_error{.to = typeid_, .from = get_type_info()});
+  template <typename VTable>
+  VTable* find_v_table() const {
+    if (auto found = std::ranges::find(get_i_table(), std::type_index(typeid(VTable)),
+                                       &i_table_entry::type_index_);
+        found != get_i_table().end())
+      return static_cast<VTable*>(found->v_table_);
+    return nullptr;
   }
-  auto register_v_table(dynamic_castable::v_table_t* v_table) {
+
+  template <typename VTable>
+  std::expected<VTable*, cast_error> get_v_table() const {
+    if(auto v_table = find_v_table<VTable>(); v_table)
+        return v_table;
+    return std::unexpected(cast_error{.to = typeid(VTable), .from = get_type_info()});
+  }
+  template <typename VTable>
+  auto register_v_table(VTable* v_table) {
     v_table->meta_data_ = this;
-    if (std::ranges::find(get_i_table(), v_table) == get_i_table().end())
-      i_table_.push_back(v_table);
+    if (!find_v_table<VTable>())
+      i_table_.push_back({v_table});
     return v_table;
   }
 };
@@ -4137,8 +4155,7 @@ concept is_key = is_key_impl<T>::value;
 
 /// \brief A class template to implement a factory for \ref any
 /// objects.
-template <typename Any, typename Key,
-          typename... Args>
+template <typename Any, typename Key, typename... Args>
   requires proxy_trait<typename Any::proxy_t>::is_owner
 class factory {
   using constructor_t = std::function<Any(Args...)>;
