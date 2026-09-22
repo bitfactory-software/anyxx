@@ -3346,8 +3346,8 @@ inline To unchecked_downcast_to(From from)
             unchecked_v_table_downcast_to<To>(get_v_table(from))};
 }
 
-template <is_any Any>
-inline auto release_v_table(Any& from) {
+template <typename Trait, is_proxy Proxy>
+inline auto release_v_table(any<Trait, Proxy>& from) {
   return from.release_v_table();
 }
 
