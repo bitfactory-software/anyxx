@@ -33,6 +33,13 @@ v_table<Trait, Args...>* v_table_instance() {
    return anyxx::v_table_instance<v_table<Trait, Args...>, V>();
 };
 
+template <typename T, template <typename, typename, typename...> typename Trait, typename... Args>
+struct register_trait {
+    register_trait() {
+        anyxx::bind_v_table_to_meta_data<v_table<Trait, Args...>, T>();
+    }
+};
+
 template <typename Dyn>
 concept is_dyn = anyxx::is_any<Dyn> && 
     requires { typename Dyn::trait_declaration_t; };

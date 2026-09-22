@@ -14,19 +14,21 @@ namespace _21_Tree_any_borrow_as {
 
 template <anyxx26::is_trait Trait, typename Self>
 struct node : anyxx26::dynamic_deletable<Trait, Self> {
-    int value() const;
+  int value() const;
 };
 template <anyxx26::is_trait Trait, typename Self>
 struct serializeable : anyxx26::dynamic_deletable<Trait, Self> {
-    void serialize(std::ostream&) const;
+  void serialize(std::ostream&) const;
 };
 
-std::ostream& operator<<(std::ostream& s, anyxx26::dyn<serializeable, cref> const& any) {
+std::ostream& operator<<(std::ostream& s,
+                         anyxx26::dyn<serializeable, cref> const& any) {
   any.serialize(s);
   return s;
 }
-ANY_SINGLETON_DECLARE(, deserialize_factory,
-                      factory<anyxx26::dyn<serializeable, unique>, std::string, std::istream&>);
+ANY_SINGLETON_DECLARE(
+    , deserialize_factory,
+    factory<anyxx26::dyn<serializeable, unique>, std::string, std::istream&>);
 
 anyxx26::dyn<serializeable, unique> deserialize(std::istream& archive) {
   std::string type;
@@ -87,12 +89,14 @@ using namespace _21_Tree_any_borrow_as;
 
 ANY_SINGLETON(_21_Tree_any_borrow_as, deserialize_factory)
 
-ANY26_REGISTER_MODEL(Plus, node);
-ANY26_REGISTER_MODEL(Plus, serializeable);
-ANY26_REGISTER_MODEL(Times, node);
-ANY26_REGISTER_MODEL(Times, serializeable);
-ANY26_REGISTER_MODEL(Integer, node);
-ANY26_REGISTER_MODEL(Integer, serializeable);
+namespace {
+anyxx26::register_trait<Plus, node> __;
+anyxx26::register_trait<Plus, serializeable> __;
+anyxx26::register_trait<Times, node> __;
+anyxx26::register_trait<Times, serializeable> __;
+anyxx26::register_trait<Integer, node> __;
+anyxx26::register_trait<Integer, serializeable> __;
+};
 
 TEST_CASE("_21_Tree_any_borrow_as") {
   using namespace anyxx;
@@ -100,7 +104,8 @@ TEST_CASE("_21_Tree_any_borrow_as") {
 
   std::stringstream archive{
       "Plus Integer 1 Plus Times Integer 2 Integer 3 Integer 4 "};
-  static_assert(anyxx::moveable_from<anyxx26::dyn<node, unique>::proxy_t, decltype(deserialize(archive))::proxy_t>);
+  static_assert(anyxx::moveable_from<anyxx26::dyn<node, unique>::proxy_t,
+                                     decltype(deserialize(archive))::proxy_t>);
 
   auto expr = move_to<anyxx26::dyn<node, unique>>(deserialize(archive));
   CHECK(expr.value() == 11);
