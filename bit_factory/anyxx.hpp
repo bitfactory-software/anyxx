@@ -3346,6 +3346,11 @@ inline To unchecked_downcast_to(From from)
             unchecked_v_table_downcast_to<To>(get_v_table(from))};
 }
 
+template <is_any Any>
+inline auto release_v_table(Any& from) {
+  return from.release_v_table();
+}
+
 /// \defgroup casts Casts
 /// \brief Mix and match downcast, crosscast, and obtain \ref any with other
 ///
@@ -3565,7 +3570,7 @@ auto query_v_table(FromVTable* from)
     return reinterpret_cast<v_table_t*>(from);
   if constexpr (is_meta_data_v_table<FromVTable>) {
     if (auto meta_data = from->meta_data_; meta_data) {
-      return *meta_data->get_v_table<v_table_t>();
+      return *meta_data->template get_v_table<v_table_t>();
     } else {
       return std::unexpected(
           anyxx::cast_error{typeid(v_table_t), *from->type_info_});
@@ -3912,7 +3917,7 @@ auto lock(FromAny const& from_interface) {
 /// \ingroup casts
 template <is_any ToAny, is_any FromAny>
 ToAny move_to(FromAny&& from) {
-  auto to_v_table = query_v_table<ToAny>(from.release_v_table());
+  auto to_v_table = query_v_table<ToAny>(release_v_table(from));
   return ToAny{move_proxy(std::move(from)), *to_v_table};
 }
 
@@ -4002,7 +4007,7 @@ TRAIT_EX_(dynamic_copyable, dynamic_moveable, , , , (ANY_COPY_CONSTRUCTOR), ());
 
 class meta_data {
   const std::type_info& type_info_;
-  
+
   struct i_table_entry {
     void* v_table_ = nullptr;
     std::type_index type_index_;
@@ -4026,8 +4031,9 @@ class meta_data {
 
   template <typename VTable>
   VTable* find_v_table() const {
-    if (auto found = std::ranges::find(get_i_table(), std::type_index(typeid(VTable)),
-                                       &i_table_entry::type_index_);
+    if (auto found =
+            std::ranges::find(get_i_table(), std::type_index(typeid(VTable)),
+                              &i_table_entry::type_index_);
         found != get_i_table().end())
       return static_cast<VTable*>(found->v_table_);
     return nullptr;
@@ -4035,15 +4041,14 @@ class meta_data {
 
   template <typename VTable>
   std::expected<VTable*, cast_error> get_v_table() const {
-    if(auto v_table = find_v_table<VTable>(); v_table)
-        return v_table;
-    return std::unexpected(cast_error{.to = typeid(VTable), .from = get_type_info()});
+    if (auto v_table = find_v_table<VTable>(); v_table) return v_table;
+    return std::unexpected(
+        cast_error{.to = typeid(VTable), .from = get_type_info()});
   }
   template <typename VTable>
   auto register_v_table(VTable* v_table) {
     v_table->meta_data_ = this;
-    if (!find_v_table<VTable>())
-      i_table_.push_back({v_table});
+    if (!find_v_table<VTable>()) i_table_.push_back({v_table});
     return v_table;
   }
 };
