@@ -122,28 +122,28 @@ TEST_CASE("anyxx26 std function equivalents") {
         auto const_lambda = +[](int x){ return x + 2; };
         auto mutable_lambda = [&](int x) mutable { return x + 2; };
         using function = dyn<function, mutable_referenceable, int(int)>;
-        function f_mutable{mutable_lambda};
+        function f_mutable_lambda{mutable_lambda};
         function f_const_lambda{const_lambda};
-        static_assert(std::is_invocable_v<decltype(f_mutable), int>);
+        static_assert(std::is_invocable_v<decltype(f_mutable_lambda), int>);
         static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
-        f_mutable(1);
+        f_mutable_lambda(1);
         f_const_lambda(1);
         // +++ this code does not compile, as expected
         //const auto& cref_f_const_lambda = f_const_lambda;
-        //const auto& cref_f_mutable_lambda = f_mutable;
+        //const auto& cref_f_mutable_lambda = f_mutable_lambda;
         //cref_f_const_lambda(1);
         //cref_f_mutable_lambda(1);
         // ---
 
-        CHECK(f_mutable.op_parentheses(40) == 42);
-        CHECK(f_mutable(40) == 42);
-        auto f2 = f_mutable;
-        CHECK(f_mutable.op_parentheses(0) == 2);
+        CHECK(f_mutable_lambda.op_parentheses(40) == 42);
+        CHECK(f_mutable_lambda(40) == 42);
+        auto f2 = f_mutable_lambda;
+        CHECK(f_mutable_lambda.op_parentheses(0) == 2);
     }
     {
         [[maybe_unused]] auto mutable_lambda = [&](int x) mutable { return x + 2; };
         // +++ this code does not compile, as expected
-        //function f_mutable{ mutable_lambda };
+        //function f_mutable_lambda{ mutable_lambda };
         // ---
         auto const_lambda = +[](int x){ return x + 2; };
         using function = dyn<function, mutable_referenceable, int(int) const>;
@@ -163,12 +163,12 @@ TEST_CASE("anyxx26 std function equivalents") {
         [[maybe_unused]] auto const_lambda = +[](int x){ return x + 2; };
         [[maybe_unused]] auto mutable_lambda = [&](int x) mutable { return x + 2; };
         using function = dyn<function, const_referenceable, int(int)>;
-        [[maybe_unused]] function f_mutable{ mutable_lambda };
+        [[maybe_unused]] function f_mutable_lambda{ mutable_lambda };
         [[maybe_unused]] function f_const_lambda{ const_lambda };
-        //static_assert(!std::is_invocable_v<decltype(f_mutable), int>);
+        //static_assert(!std::is_invocable_v<decltype(f_mutable_lambda), int>);
         //static_assert(!std::is_invocable_v<decltype(f_const_lambda), int>);
         // +++ this code does not compile, as expected
-        //f_mutable(1);
+        //f_mutable_lambda(1);
         //f_const_lambda(1);
         // ---
     }
