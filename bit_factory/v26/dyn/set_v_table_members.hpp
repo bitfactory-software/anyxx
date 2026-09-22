@@ -140,8 +140,12 @@ consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_i
         }
     } 
     if constexpr(meta::is_op_parentheses_spec(spec)) {
-        if constexpr(std::is_invocable_r_v<return_t, V, Args...>) {
+        if constexpr(std::is_invocable_r_v<return_t, self_t, Args...>) {
             return invoke_op_parentheses<self_t, return_t, VoidSelf, Args...>;
+        //} else {
+        //    std::string msg{display_string_of(^^V)};
+        //    msg += " has no implementation for " + std::string{display_string_of(spec)};
+        //    throw std::meta::exception(msg, ^^V);
         }
     } else {
         if constexpr(!is_operator_function(spec)) {
