@@ -145,7 +145,7 @@ TEST_CASE("anyxx26 std function equivalents") {
         // +++ this code does not compile, as expected
         //function f_mutable_lambda{ mutable_lambda };
         // ---
-        auto const_lambda = +[](int x){ return x + 2; };
+        auto const_lambda = [](int x){ return x + 2; };
         using function = dyn<function, mutable_referenceable, int(int) const>;
         function f_const_lambda{ const_lambda };
         static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
@@ -160,16 +160,15 @@ TEST_CASE("anyxx26 std function equivalents") {
         CHECK(f_const_lambda.op_parentheses(0) == 2);
     }
     {
-        [[maybe_unused]] auto const_lambda = +[](int x){ return x + 2; };
+        [[maybe_unused]] auto const_lambda = [](int x){ return x + 2; };
         [[maybe_unused]] auto mutable_lambda = [&](int x) mutable { return x + 2; };
-        using function = dyn<function, const_referenceable, int(int)>;
-        [[maybe_unused]] function f_mutable_lambda{ mutable_lambda };
+        using function = dyn<function, const_referenceable, int(int) const>;
+        // +++ this code does not compile, as expected
+        //[[maybe_unused]] function f_mutable_lambda{ mutable_lambda };
+        // ---
         [[maybe_unused]] function f_const_lambda{ const_lambda };
         //static_assert(!std::is_invocable_v<decltype(f_mutable_lambda), int>);
-        //static_assert(!std::is_invocable_v<decltype(f_const_lambda), int>);
-        // +++ this code does not compile, as expected
-        //f_mutable_lambda(1);
-        //f_const_lambda(1);
-        // ---
+        static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
+        CHECK(f_const_lambda(1) == 3);
     }
 }
