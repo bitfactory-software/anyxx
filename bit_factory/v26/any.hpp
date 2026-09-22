@@ -392,6 +392,24 @@ struct dispatch_table {
 };
 
 // clang-format off
+template <template <is_trait, typename, typename...> typename Base>
+struct base {
+    template <is_trait Trait, typename Self, typename... Args >
+    using self_apply = Base<Trait, Self, Args...>;
+};
+struct mutable_referenceable {
+    template <is_trait Trait, typename Self, typename...>
+    struct self_apply {
+        using default_proxy_t = anyxx::mutref;
+    };
+};
+struct const_referenceable {
+    template <is_trait Trait, typename Self, typename...>
+    struct self_apply {
+        using default_proxy_t = anyxx::cref;
+    };
+};
+
 template <is_trait Trait = declaration, typename Self = declaration>
 struct moveable {
     using model_size [[= v_table_data]] = anyxx26::model_size;

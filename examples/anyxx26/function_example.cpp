@@ -61,7 +61,7 @@ TEST_CASE("anyxx26 std function equivalents") {
     {
         auto lambda2 = [](int x){ return x + 2; };
         //any<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
-        any<function, copyable<>, int(int) const> f{ lambda2 };
+        any<function, int(int) const> f{ lambda2 };
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();
