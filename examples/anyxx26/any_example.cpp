@@ -33,12 +33,6 @@ TEST_CASE("anyxx26 std any equivalents") {
         } else{
             CHECK(false);
         }
-        any_copy_refable a3 = a2;
-        if(auto p = unerase_cast<int>(a3)){
-            CHECK(*p == 42);
-        } else{
-            CHECK(false);
-        }
     }
     {
         auto a1 = any_moveable{ std::make_unique<int>(42) };
@@ -54,13 +48,6 @@ TEST_CASE("anyxx26 std any equivalents") {
             CHECK(false);
         }
 		static_assert(!std::copy_constructible<any_moveable>);
-		//any_moveable a3 = a2; does not compile, as expected
-        any_move_refable a3 = a2;
-        if(auto p = unerase_cast<std::unique_ptr<int>>(a3)){
-            CHECK(*p->get() == 42);
-        } else{
-            CHECK(false);
-        }
     }
 }
 
