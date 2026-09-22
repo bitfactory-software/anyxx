@@ -104,9 +104,4 @@ TEST_CASE("anyxx26 iterators ranges") {
 
     std::array<a_struct, 2> arr2{ 1, 2 };
     test_contiguous_iterator(arr2.begin());
-
-//    meta::print_members<any<rangesxx::random_access_iterator,anyxx::val<std::true_type>, int>>();
-//    using v_table_members_t =[:make_v_table_members_type<rangesxx::random_access_iterator, int>():];
-//    using v_table_members_t =[:make_v_table_members_type<rangesxx::bidirectional_iterator, int>():];
-//    meta::print_members<v_table_members_t>();
 }
