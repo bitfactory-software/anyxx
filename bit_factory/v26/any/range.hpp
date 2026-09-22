@@ -11,7 +11,7 @@ struct input_iterator : save_copyable<Trait, Self> {
 
     bool operator==(Self const&) const;
     bool operator!=(Self const&) const;
-    Value& operator*();
+    Value& operator*() const;
     Self& operator++();
 
 	struct typenames {

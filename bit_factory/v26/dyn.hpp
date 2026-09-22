@@ -240,6 +240,11 @@ template <template <typename, typename, typename...> typename Trait, typename...
 decltype(auto) operator op (dyn<Trait, Args...> const& lhs) { \
     return lhs.function(); \
 }
+#define __dyn_OP0_MUTATING(function, op) \
+template <template <typename, typename, typename...> typename Trait, typename... Args> \
+decltype(auto) operator op (dyn<Trait, Args...>& lhs) { \
+    return lhs.function(); \
+}
 
 __dyn_OP_CONST(op_equals_equals, ==)
 __dyn_OP_CONST(op_exclamation_equals, != )
@@ -254,6 +259,7 @@ __dyn_OP0(op_exclamation, !)
 __dyn_OP0(op_plus, +)
 __dyn_OP0(op_minus, -)
 __dyn_OP0(op_star, *)
+__dyn_OP0_MUTATING(op_star, *)
 
 __dyn_OP_CONST(op_plus, +)
 __dyn_OP_CONST(op_minus, -)

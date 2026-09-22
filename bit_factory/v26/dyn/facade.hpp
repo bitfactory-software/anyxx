@@ -40,8 +40,7 @@ template <typename DynBase, std::meta::info f, std::size_t v_table_index, typena
 struct const_dyn_facade_call {
     template<typename Self>
     R operator()(this Self const& self, Args... args) {
-        using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
-        auto base = reinterpret_cast<const base_t*>(&self);
+        auto base = static_cast<DynBase const*>(static_cast<void const*>(&self));
         using v_table_t = DynBase::v_table_t;
         auto v_table_ptr = base->v_table_;
         using fptrs_t = typename v_table_t::fptrs_t;
@@ -60,8 +59,13 @@ template <typename DynBase, std::meta::info f, std::size_t v_table_index, typena
 struct mutable_dyn_facade_call {
     template<typename Self>
     R operator()(this Self& self, Args... args) {
-        using base_t = std::conditional_t<std::is_const_v<std::remove_reference_t<Self>>, DynBase const, DynBase>;
-        auto base = reinterpret_cast<base_t*>(&self);
+        consteval{
+                if constexpr (std::is_const_v<std::remove_reference_t<Self>>) {
+                    std::string msg = std::string{"mutable "} + std::string{display_string_of(f)} + " cannot be called on const Self";
+                    throw std::meta::exception(msg, ^^Self);
+                }
+            }
+        auto base = static_cast<DynBase*>(static_cast<void*>(&self));
         using v_table_t = DynBase::v_table_t;
         auto v_table_ptr = base->v_table_;
         using fptrs_t = typename v_table_t::fptrs_t;
