@@ -73,6 +73,7 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
   using v_table_t = v_table<Trait, Args...>;
+  inline static constexpr bool is_dyn = true; 
 
   v_table_t* v_table_;
   proxy_t proxy_{};
@@ -130,14 +131,14 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
     return *this;
   }
 
-  template <is_dyn Other>
+  template <anyxx26::is_dyn Other>
   explicit(false) dyn_base(const Other& other)  // NOLINT(noExplicitConstructor)
       requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
       proxy_(borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
-  template <is_dyn Other>
+  template <anyxx26::is_dyn Other>
   dyn_base& operator=(Other const& other)
       requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
@@ -153,13 +154,13 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
       : v_table_(v_table) {
       proxy_trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
   }
-  template <is_dyn Other>
+  template <anyxx26::is_dyn Other>
   explicit(false) dyn_base(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
       : dyn_base(std::move(other.proxy_), v_table_cast<v_table_t>(release_v_table(other))) {
   }
-  template <is_dyn Other>
+  template <anyxx26::is_dyn Other>
   dyn_base& operator=(Other&& other) noexcept
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
@@ -289,19 +290,23 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
-template <typename U, typename Dyn>
-    requires is_dyn<Dyn>
-inline auto unerase_cast(Dyn const& o) {
+template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
+inline auto unerase_cast(dyn<Trait, Args...> const& o) {
     return unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
-template <typename U, typename Dyn>
-    requires is_dyn<Dyn>
-inline auto unerase_cast_if(Dyn const& o) {
+template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
+inline auto unerase_cast_if(dyn<Trait, Args...> const& o) {
     return unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
+
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+inline auto get_v_table(dyn<Trait, Args...> const& any) {
+    return v_table_cast<typename dyn<Trait, Args...>::v_table_t>(any.v_table_);
+}
+
 
 struct type_info_{
     using type = std::type_info const*;
@@ -363,6 +368,14 @@ struct destructor {
         return [](anyxx::mutable_void data) {
             std::destroy_at(static_cast<Concrete*>(data));
         };
+    }
+};
+
+struct dispatch_table {
+    using type = anyxx::dispatch_table_t*;
+    template<typename Concrete, typename VTable>
+    static auto init(VTable*){
+        return anyxx::dispatch_table_instance<VTable, Concrete>();
     }
 };
 
