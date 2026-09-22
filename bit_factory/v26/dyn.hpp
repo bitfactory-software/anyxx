@@ -367,57 +367,77 @@ struct destructor {
 };
 
 // clang-format off
-template <is_trait Trait, typename Self>
+template <is_trait Trait = declaration, typename Self = declaration>
 struct moveable {
     using model_size [[= v_table_data]] = anyxx26::model_size;
     using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
     using destructor [[= v_table_data]] = anyxx26::destructor;
     using default_proxy_t = anyxx::val<>;
+    template <is_trait ApplyTrait, typename ApplSelf>
+    using self_apply = moveable<ApplyTrait, ApplSelf>;
 };
-    template <is_trait Trait, typename Self>
+    template <is_trait Trait = declaration, typename Self = declaration>
     struct copyable : moveable<Trait, Self> {
         using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
+        template <is_trait ApplyTrait, typename ApplSelf>
+        using self_apply = copyable<ApplyTrait, ApplSelf>;
     };
-template <is_trait Trait, typename Self>
+template <is_trait Trait = declaration, typename Self = declaration>
 struct save_observable {
     using type_info_ [[= v_table_data]] = anyxx26::type_info_;
+    template <is_trait ApplyTrait, typename ApplSelf>
+    using self_apply = save_observable<ApplyTrait, ApplSelf>;
 };
-    template <is_trait Trait, typename Self>
+    template <is_trait Trait = declaration, typename Self = declaration>
     struct save_moveable : save_observable<Trait, Self> {
         using model_size [[= v_table_data]] = anyxx26::model_size;
         using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
         using destructor [[= v_table_data]] = anyxx26::destructor;
         using default_proxy_t = anyxx::val<>;
+        template <is_trait ApplyTrait, typename ApplSelf>
+        using self_apply = save_moveable<ApplyTrait, ApplSelf>;
     };
-        template <is_trait Trait, typename Self>
+        template <is_trait Trait = declaration, typename Self = declaration>
         struct save_copyable : save_moveable<Trait, Self> {
             using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
+            template <is_trait ApplyTrait, typename ApplSelf>
+            using self_apply = save_copyable<ApplyTrait, ApplSelf>;
         };
-    template <is_trait Trait, typename Self >
+    template <is_trait Trait = declaration, typename Self = declaration >
     struct dynamic_castable : save_observable<Trait, Self> {
         using is_derived_from_ [[= v_table_data]] = anyxx26::is_derived_from_;
         using meta_data_ [[= v_table_data]] = anyxx26::meta_data_;
+        template <is_trait ApplyTrait, typename ApplSelf>
+        using self_apply = dynamic_castable<ApplyTrait, ApplSelf>;
     };
-        template <is_trait Trait, typename Self>
+        template <is_trait Trait = declaration, typename Self = declaration>
         struct dynamic_deletable : dynamic_castable<Trait, Self> {
             using delete_ [[= v_table_data]] = anyxx26::delete_;
             using default_proxy_t = anyxx::shared;
+            template <is_trait ApplyTrait, typename ApplSelf>
+            using self_apply = dynamic_deletable<ApplyTrait, ApplSelf>;
         };
-            template <is_trait Trait, typename Self>
+            template <is_trait Trait = declaration, typename Self = declaration>
             struct dynamic_smart_ptr : dynamic_deletable<Trait, Self> {
                 using model_size [[= v_table_data]] = anyxx26::model_size;
                 using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
+                template <is_trait ApplyTrait, typename ApplSelf>
+                using self_apply = dynamic_smart_ptr<ApplyTrait, ApplSelf>;
             };
-        template <is_trait Trait, typename Self>
+        template <is_trait Trait = declaration, typename Self = declaration>
         struct dynamic_moveable : dynamic_castable<Trait, Self> {
             using model_size [[= v_table_data]] = anyxx26::model_size;
             using move_constructor [[= v_table_data]] = anyxx26::move_constructor;
             using destructor [[= v_table_data]] = anyxx26::destructor;
             using default_proxy_t = anyxx::val<>;
+            template <is_trait ApplyTrait, typename ApplSelf>
+            using self_apply = dynamic_moveable<ApplyTrait, ApplSelf>;
         };
-            template <is_trait Trait, typename Self>
+            template <is_trait Trait = declaration, typename Self = declaration>
             struct dynamic_copyable : dynamic_moveable<Trait, Self> {
                 using copy_constructor [[= v_table_data]] = anyxx26::copy_constructor;
+                template <is_trait ApplyTrait, typename ApplSelf>
+                using self_apply = dynamic_copyable<ApplyTrait, ApplSelf>;
             };
 // clang-format on
 
