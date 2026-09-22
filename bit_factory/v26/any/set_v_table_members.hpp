@@ -2,10 +2,10 @@
 
 #include <array>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/v26/dyn/facade.hpp>
-#include <bit_factory/v26/dyn/keywords.hpp>
-#include <bit_factory/v26/dyn/signature_translation.hpp>
-#include <bit_factory/v26/dyn/make_v_table_members_type.hpp>
+#include <bit_factory/v26/any/facade.hpp>
+#include <bit_factory/v26/any/keywords.hpp>
+#include <bit_factory/v26/any/signature_translation.hpp>
+#include <bit_factory/v26/any/make_v_table_members_type.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <bit_factory/v26/dyn/keywords.hpp>
-#include <bit_factory/v26/dyn/signature_translation.hpp>
-#include <bit_factory/v26/dyn/make_v_table_members_type.hpp>
+#include <bit_factory/v26/any/keywords.hpp>
+#include <bit_factory/v26/any/signature_translation.hpp>
+#include <bit_factory/v26/any/make_v_table_members_type.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
@@ -36,12 +36,12 @@ consteval overload_sets_spec make_overload_sets_specs() {
     return specs;
 }
 
-template <typename DynBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
+template <typename AnyBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct const_dyn_facade_call {
     template<typename Self>
     R operator()(this Self const& self, Args... args) {
-        auto base = static_cast<DynBase const*>(static_cast<void const*>(&self));
-        using v_table_t = DynBase::v_table_t;
+        auto base = static_cast<AnyBase const*>(static_cast<void const*>(&self));
+        using v_table_t = AnyBase::v_table_t;
         auto v_table_ptr = base->v_table_;
         using fptrs_t = typename v_table_t::fptrs_t;
         auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
@@ -49,13 +49,13 @@ struct const_dyn_facade_call {
         auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
         if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
             fptrs->[:vf:](x, std::forward<Args>(args)...);
-            return static_cast<typename DynBase::dyn_self_t const&>(*base);
+            return static_cast<typename AnyBase::dyn_self_t const&>(*base);
         } else {
             return fptrs->[:vf:](x, std::forward<Args>(args)...);
         }
     }
 };
-template <typename DynBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
+template <typename AnyBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct mutable_dyn_facade_call {
     template<typename Self>
     R operator()(this Self& self, Args... args) {
@@ -65,8 +65,8 @@ struct mutable_dyn_facade_call {
                     throw std::meta::exception(msg, ^^Self);
                 }
             }
-        auto base = static_cast<DynBase*>(static_cast<void*>(&self));
-        using v_table_t = DynBase::v_table_t;
+        auto base = static_cast<AnyBase*>(static_cast<void*>(&self));
+        using v_table_t = AnyBase::v_table_t;
         auto v_table_ptr = base->v_table_;
         using fptrs_t = typename v_table_t::fptrs_t;
         auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
@@ -74,7 +74,7 @@ struct mutable_dyn_facade_call {
         auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
         if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
             fptrs->[:vf:](x, std::forward<Args>(args)...);
-            return static_cast<typename DynBase::dyn_self_t&>(*base);
+            return static_cast<typename AnyBase::dyn_self_t&>(*base);
         } else {
             return fptrs->[:vf:](x, std::forward<Args>(args)...);
         }
@@ -82,18 +82,18 @@ struct mutable_dyn_facade_call {
 };
 
 
-template <typename DynBase>
+template <typename AnyBase>
 consteval std::meta::info make_dyn_facade_call(v_table_spec spec){
     std::vector<std::meta::info> types
-    { ^^DynBase
+    { ^^AnyBase
     , reflect_constant(spec.member)
     , std::meta::reflect_constant(spec.index)
-    , translate_facade_return_type(return_type_of(spec.member),^^ typename DynBase::dyn_self_t)
+    , translate_facade_return_type(return_type_of(spec.member),^^ typename AnyBase::dyn_self_t)
     };
     types.append_range(parameters_of(spec.member)
         | std::views::drop(is_static_member(spec.member) ? 1 : 0)
         | std::views::transform([](auto p){
-            return translate_v_table_fptr_param_type(^^typename DynBase::dyn_self_cref_t, ^^typename DynBase::dyn_self_mutref_t, type_of(p));
+            return translate_v_table_fptr_param_type(^^typename AnyBase::dyn_self_cref_t, ^^typename AnyBase::dyn_self_mutref_t, type_of(p));
             })
         );
     //if (is_function(spec.member) && is_static_member(spec.member)) {
@@ -106,7 +106,7 @@ consteval std::meta::info make_dyn_facade_call(v_table_spec spec){
     if (is_const_function(spec.member)) {
         return substitute(^^const_dyn_facade_call, types);
     } else {
-        if( !anyxx::is_const_data<typename DynBase::proxy_t>) {
+        if( !anyxx::is_const_data<typename AnyBase::proxy_t>) {
             return substitute(^^mutable_dyn_facade_call, types);
         }
     }
@@ -117,22 +117,22 @@ template<class... Ts>
 struct overload : Ts... {
     using Ts::operator()...;
 };
-template <typename DynBase>
+template <typename AnyBase>
 consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const& spec){
     std::vector<std::meta::info> overload_set;
     for(auto overload : spec.specs) {
-      if (auto call = make_dyn_facade_call<DynBase>(overload); call != std::meta::info{}) {
-        overload_set.push_back(make_dyn_facade_call<DynBase>(overload));
+      if (auto call = make_dyn_facade_call<AnyBase>(overload); call != std::meta::info{}) {
+        overload_set.push_back(make_dyn_facade_call<AnyBase>(overload));
       }
     }
     auto overloaded_operator = substitute(^^overload, overload_set);
     return std::meta::data_member_spec(overloaded_operator, { .name = spec.name, .no_unique_address = true });
 }
 
-template <typename DynBase>
+template <typename AnyBase>
 consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_spec const& overload_sets) {
     for(auto const& set : overload_sets) {
-        auto dms = dyn_facade_named_overload_set<DynBase>(set);
+        auto dms = dyn_facade_named_overload_set<AnyBase>(set);
         calls.push_back(reflect_constant(dms));
     }
 };
@@ -143,7 +143,7 @@ consteval std::meta::info make_dyn_facade() {
 
     [[maybe_unused]] auto overload_sets = make_overload_sets_specs<trait_declaration_info>();
     std::vector<std::meta::info> calls;
-    collect_dyn_facade_calls<dyn_base<Trait, Proxy, Args...>>(calls, overload_sets);
+    collect_dyn_facade_calls<any_base<Trait, Proxy, Args...>>(calls, overload_sets);
     return substitute(^^meta::to_struct, calls);
 };
 

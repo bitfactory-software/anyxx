@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bit_factory/v26/dyn.hpp>
+#include <bit_factory/v26/any.hpp>
 #include <ranges>
 
 namespace anyxx26::rangesxx {
@@ -57,7 +57,7 @@ struct random_access_iterator : bidirectional_iterator<Trait, Self, Value> {
     };
 };
 template <template<is_trait, typename, typename...> typename IteratorTrait, typename Value>
-auto operator+(std::ptrdiff_t n, dyn<IteratorTrait, Value> const& it) {
+auto operator+(std::ptrdiff_t n, any<IteratorTrait, Value> const& it) {
     return it + n;
 }
 
@@ -74,22 +74,22 @@ template <is_trait Trait, typename Self, typename Value>
 struct sentinel : save_copyable<Trait, Self> {
     using default_proxy_t = anyxx::val<std::true_type>;
 
-    bool equal(dyn<input_iterator, anyxx::cref, Value> const&) const;
+    bool equal(any<input_iterator, anyxx::cref, Value> const&) const;
 };
 template <typename Value, template<is_trait, typename, typename...> typename IteratorTrait>
-bool operator==(dyn<IteratorTrait, Value> const& it, dyn<sentinel, Value> const& s) {
+bool operator==(any<IteratorTrait, Value> const& it, any<sentinel, Value> const& s) {
     return s.equal(it);
 }
 template <typename Value, template<is_trait, typename, typename...> typename IteratorTrait>
-bool operator!=(dyn<IteratorTrait, Value> const& it, dyn<sentinel, Value> const& s) {
+bool operator!=(any<IteratorTrait, Value> const& it, any<sentinel, Value> const& s) {
     return !s.equal(it);
 }
 template <typename Value, template<is_trait, typename, typename...> typename IteratorTrait>
-bool operator==(dyn<sentinel, Value> const& s, dyn<IteratorTrait, Value> const& it) {
+bool operator==(any<sentinel, Value> const& s, any<IteratorTrait, Value> const& it) {
     return s.equal(it);
 }
 template <typename Value, template<is_trait, typename, typename...> typename IteratorTrait>
-bool operator!=(dyn<sentinel, Value> const& s, dyn<IteratorTrait, Value> const& it) {
+bool operator!=(any<sentinel, Value> const& s, any<IteratorTrait, Value> const& it) {
     return !s.equal(it);
 }
 
@@ -113,7 +113,7 @@ concept is_sentinel_for = requires(SentinelFor s) {
 
 template <is_sentinel_for Sentinel, typename Value>
 struct sentinel<model_map, Sentinel, Value> {
-    static bool equal(Sentinel const& sentinel, dyn<input_iterator, anyxx::cref, Value> const& iterator){
+    static bool equal(Sentinel const& sentinel, any<input_iterator, anyxx::cref, Value> const& iterator){
         return sentinel.value == *unerase_cast<typename Sentinel::iterator_type>(iterator);
     }
 };
@@ -142,16 +142,16 @@ struct  contiguous {
 template <is_trait Trait, typename Self, typename Category, typename Value>
 struct view : save_copyable<Trait, Self> {
     using default_proxy_t = anyxx::val<std::true_type>;
-    static dyn<Category::template iterator, Value> begin(Self& self) {
+    static any<Category::template iterator, Value> begin(Self& self) {
         return std::ranges::begin(self);
     }
-    static dyn<sentinel, Value> end(Self& self) {
+    static any<sentinel, Value> end(Self& self) {
         return make_end_sentinel_for(self);
     }
-    static dyn<Category::template iterator, Value const> begin(Self const& self) {
+    static any<Category::template iterator, Value const> begin(Self const& self) {
         return std::ranges::begin(self);
     }
-    static dyn<sentinel, Value const> end(Self const& self) {
+    static any<sentinel, Value const> end(Self const& self) {
         return make_end_sentinel_for(self);
     }
 };

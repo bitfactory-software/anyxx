@@ -1,5 +1,5 @@
 ﻿#include <bit_factory/anyxx.hpp>
-#include <bit_factory/v26/dyn.hpp>
+#include <bit_factory/v26/any.hpp>
 #include <catch2/benchmark/catch_benchmark.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <iostream>
@@ -15,7 +15,7 @@ struct node : anyxx26::copyable<Trait, Self> {
     using dispatch_table [[= anyxx26::v_table_data]] = anyxx26::dispatch_table;
 };
 
-using any_node = anyxx26::dyn<node>;
+using any_node = anyxx26::any<node>;
 static_assert(is_open_dispatch_v_table<any_node::v_table_t>);
 
 struct Plus {

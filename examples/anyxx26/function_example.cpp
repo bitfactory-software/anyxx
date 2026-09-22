@@ -60,8 +60,8 @@ TEST_CASE("anyxx26 std function equivalents") {
        }
     {
         auto lambda2 = [](int x){ return x + 2; };
-        //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
-        dyn<function, copyable<>, int(int) const> f{ lambda2 };
+        //any<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
+        any<function, copyable<>, int(int) const> f{ lambda2 };
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();
@@ -74,8 +74,8 @@ TEST_CASE("anyxx26 std function equivalents") {
     }
     {
         auto lambda2 = [](int x){ return x + 2; };
-        //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
-        dyn<test_function_named_defaulted, int, int> f{ lambda2 };
+        //any<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
+        any<test_function_named_defaulted, int, int> f{ lambda2 };
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();
@@ -89,8 +89,8 @@ TEST_CASE("anyxx26 std function equivalents") {
     {
         auto lambda2 = [](int x){ return x + 2; };
         callable_test callable_object;
-        //dyn<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
-        dyn<test_function_named, int, int> f{ lambda2 };
+        //any<const_copyable_function, anyxx::val<>, int, int> f{ [](int x){ return x + 2; } };
+        any<test_function_named, int, int> f{ lambda2 };
         //anyxx26::meta::print_members<const_copyable_function<void*, declaration, int, int>>();
         //anyxx26::meta::print_members<decltype(lambda)>();
         //anyxx26::meta::print_members<decltype(lambda2)>();
@@ -102,7 +102,7 @@ TEST_CASE("anyxx26 std function equivalents") {
         CHECK(f.op_parentheses(0) == 2);
     }
     {
-        dyn<function, copyable<>, int(int) const> f{ [](int x){ return x + 2; } };
+        any<function, copyable<>, int(int) const> f{ [](int x){ return x + 2; } };
         CHECK(f.op_parentheses(40) == 42);
         CHECK(f(40) == 42);
         auto f2 = f;
@@ -110,7 +110,7 @@ TEST_CASE("anyxx26 std function equivalents") {
     }
     {
         auto lambda = +[](int x){ return x + 2; };
-        using function = dyn<function, const_referenceable, int(int) const>;
+        using function = any<function, const_referenceable, int(int) const>;
         function f{ lambda };
 
         CHECK(f.op_parentheses(40) == 42);
@@ -121,7 +121,7 @@ TEST_CASE("anyxx26 std function equivalents") {
     {
         auto const_lambda = +[](int x){ return x + 2; };
         auto mutable_lambda = [&](int x) mutable { return x + 2; };
-        using function = dyn<function, mutable_referenceable, int(int)>;
+        using function = any<function, mutable_referenceable, int(int)>;
         function f_mutable_lambda{mutable_lambda};
         function f_const_lambda{const_lambda};
         static_assert(std::is_invocable_v<decltype(f_mutable_lambda), int>);
@@ -146,7 +146,7 @@ TEST_CASE("anyxx26 std function equivalents") {
         //function f_mutable_lambda{ mutable_lambda };
         // ---
         auto const_lambda = [](int x){ return x + 2; };
-        using function = dyn<function, mutable_referenceable, int(int) const>;
+        using function = any<function, mutable_referenceable, int(int) const>;
         function f_const_lambda{ const_lambda };
         static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
         f_const_lambda(1);
@@ -162,7 +162,7 @@ TEST_CASE("anyxx26 std function equivalents") {
     {
         [[maybe_unused]] auto const_lambda = [](int x){ return x + 2; };
         [[maybe_unused]] auto mutable_lambda = [&](int x) mutable { return x + 2; };
-        using function = dyn<function, const_referenceable, int(int) const>;
+        using function = any<function, const_referenceable, int(int) const>;
         // +++ this code does not compile, as expected
         //[[maybe_unused]] function f_mutable_lambda{ mutable_lambda };
         // ---

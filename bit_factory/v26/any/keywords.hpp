@@ -18,10 +18,10 @@ template <template <is_trait, typename, typename...> typename Trait, typename...
 struct v_table;
 
 template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct dyn_base;
+struct any_base;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-struct dyn;
+struct any;
 
 struct default_t {};
 constexpr static inline default_t defaulted = {};
@@ -74,12 +74,12 @@ template <template <is_trait, typename, typename...> typename Trait, typename...
 using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_val_t = dyn<Trait, Args...>;
+using dyn_self_val_t = any<Trait, Args...>;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;
+using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using dyn_self_mutref_t = dyn<Trait, anyxx::mutref, Args...>;
+using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
 
 }  // namespace anyxx26

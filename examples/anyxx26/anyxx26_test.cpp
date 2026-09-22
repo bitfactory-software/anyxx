@@ -1,7 +1,7 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <bit_factory/v26/dyn.hpp>
+#include <bit_factory/v26/any.hpp>
 #include <bit_factory/v26/meta/print_members.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <bit_factory/v26/trait_as.hpp>
@@ -20,7 +20,7 @@ struct stringable {
     std::string as_string() const;
 };
 
-void print(std::vector<dyn<stringable>> const& things) {
+void print(std::vector<any<stringable>> const& things) {
     for(auto& thing : things) {
         std::println("{}", thing.as_string());
     }
@@ -102,9 +102,9 @@ consteval std::meta::info test_make_dyn_facade_call() {
 }
 
 TEST_CASE("anyxx26 make_dyn_facade_call") {
-  using facade_call = [:test_make_dyn_facade_call<dyn_base<stringable, anyxx::cref>>():];
-  struct dummy_dyn : dyn_base<stringable, anyxx::cref>, facade_call {
-    using dyn_base<stringable, anyxx::cref>::dyn_base;
+  using facade_call = [:test_make_dyn_facade_call<any_base<stringable, anyxx::cref>>():];
+  struct dummy_dyn : any_base<stringable, anyxx::cref>, facade_call {
+    using any_base<stringable, anyxx::cref>::any_base;
     using facade_call::operator();
   };
 
@@ -129,7 +129,7 @@ TEST_CASE("anyxx26 hello world") {
     print({i, s, a_foo, a_boo});
   }
   {
-    dyn<stringable> sb{boo{true}};
+    any<stringable> sb{boo{true}};
     auto sb_str = sb.as_string();
     CHECK(sb_str == "boo? T");
   }
@@ -157,13 +157,11 @@ struct add1 {
 }  // namespace
 
 TEST_CASE("anyxx26 mutable hello world") {
-  using namespace anyxx;
-
   //dump_type<addable<void*>>();
   //dump_impl<addable, add1>();
 
   add1 a1{10};
-  auto a1_dyn = dyn<addable, mutref>{a1};
+  auto a1_dyn = any<addable, anyxx::mutref>{a1};
 
   a1_dyn.add(5);
   CHECK(a1.value == 15);
@@ -190,41 +188,39 @@ struct base_and_derived {
 }  // namespace
 
 TEST_CASE("anyxx26 derived trait") {
-  using namespace anyxx;
 
   base_and_derived a1{"a1"};
-  auto dyn1 = dyn<base_trait>{a1};
+  auto dyn1 = any<base_trait>{a1};
   CHECK(dyn1.basef() == "base a1");
   //CHECK(dyn1.derivedf() == "derived");
-  auto dyn2 = dyn<derived_trait>{a1};
+  auto dyn2 = any<derived_trait>{a1};
   CHECK(dyn2.basef() == "base a1");
   CHECK(dyn2.derivedf() == "derived a1");
 
-  dyn<base_trait> dyn3{dyn2};
+  any<base_trait> dyn3{dyn2};
   CHECK(dyn3.basef() == "base a1");
   base_and_derived a2{ "a2" };
-  dyn<base_trait> dyn4{a2};
+  any<base_trait> dyn4{a2};
   CHECK(dyn4.basef() == "base a2");
   dyn4 = dyn2;
   CHECK(dyn4.basef() == "base a1");
 
-  dyn<base_trait> dyn5{std::move(dyn2)};
+  any<base_trait> dyn5{std::move(dyn2)};
   CHECK(dyn5.basef() == "base a1");
-  dyn<base_trait> dyn6{dyn1};
+  any<base_trait> dyn6{dyn1};
   CHECK(dyn6.basef() == "base a1");
   base_and_derived a3{ "a3" };
-  dyn<derived_trait> dyn7{ a3 };
+  any<derived_trait> dyn7{ a3 };
   dyn6 = std::move(dyn7);
   CHECK(dyn6.basef() == "base a3");
 }
 
 TEST_CASE("anyxx26 v_table_data") {
-  using namespace anyxx;
 
   base_and_derived a1{ "a1" };
-  dyn<anyxx26::save_observable> d1{a1};
-  //meta::print_members<dyn<anyxx26::save_observable>>();
-  //meta::print_members<dyn<anyxx26::save_observable>::v_table_t::fptrs_t>();
+  any<anyxx26::save_observable> d1{a1};
+  //meta::print_members<any<anyxx26::save_observable>>();
+  //meta::print_members<any<anyxx26::save_observable>::v_table_t::fptrs_t>();
   std::println("{}", d1.v_table_->type_info_->name());
   if(auto p = unerase_cast<base_and_derived>(d1)){
       CHECK(p->name == "a1");
@@ -273,7 +269,7 @@ struct mapable<anyxx26::model_map, Self, Value> {
     }
 };
 
-using dyn_base_test = dyn_base<mapable, anyxx::cref, int>;
+using any_base_test = any_base<mapable, anyxx::cref, int>;
 using dyn_facade_test = [:make_dyn_facade<mapable, anyxx::cref, int>():];
 
 static_assert(!has_deduced_typenames<stringable>);
@@ -292,23 +288,23 @@ TEST_CASE("anyxx26 templated trait") {
 
     //dump_type<mapable<void*, declaration, int>>();
     //dump_impl<mapable, std::vector<int>, int>();
-    //anyxx26::meta::print_members<dyn<mapable, anyxx::cref, int>>();
-    //anyxx26::meta::print_members<dyn<mapable, anyxx::cref, int>::v_table_t>();
+    //anyxx26::meta::print_members<any<mapable, anyxx::cref, int>>();
+    //anyxx26::meta::print_members<any<mapable, anyxx::cref, int>::v_table_t>();
 
     {
         std::vector<int> v1{1, 2};
-        dyn<mapable, anyxx::cref, int> m{v1};
+        any<mapable, anyxx::cref, int> m{v1};
         decltype(auto) v = m.at(0);
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int const&>);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
         CHECK(m[1] == 2);
-        static_assert(!has_set_all_to<dyn<mapable, anyxx::cref, int>>);
+        static_assert(!has_set_all_to<any<mapable, anyxx::cref, int>>);
     }
     {
         std::vector<int> v1{ 1, 2 };
-        dyn<mapable, anyxx::mutref, int> m{ v1 };
+        any<mapable, anyxx::mutref, int> m{ v1 };
         decltype(auto) v = m.at(0);
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int&>);
@@ -316,7 +312,7 @@ TEST_CASE("anyxx26 templated trait") {
         CHECK(m.at(1) == 2);
         CHECK(m[1] == 2);
         m.set_all_to(42);
-        static_assert(has_set_all_to<dyn<mapable, anyxx::mutref, int>>);
+        static_assert(has_set_all_to<any<mapable, anyxx::mutref, int>>);
     }
 }
 
@@ -364,12 +360,12 @@ struct operators<anyxx26::model_map, int_ptr> {
 
 TEST_CASE("anyxx26 operators") {
     {
-        dyn<operators> ops{add_test{}};
+        any<operators> ops{add_test{}};
         auto r1 = ops + 1;
         static_assert(^^decltype(r1) == ^^decltype(ops));
         CHECK(unerase_cast<add_test>(r1)->i == 1);
-        //anyxx26::meta::print_members<dyn<operators>::v_table_t::fptrs_t>();
-        anyxx26::meta::print_members<decltype(dyn<operators, anyxx::val<>>::op_plus_plus)>();
+        //anyxx26::meta::print_members<any<operators>::v_table_t::fptrs_t>();
+        anyxx26::meta::print_members<decltype(any<operators, anyxx::val<>>::op_plus_plus)>();
         auto& r2 = ++r1;
         CHECK(&unerase_cast<add_test>(r1)->i != &unerase_cast<add_test>(ops)->i);
         CHECK(&unerase_cast<add_test>(r1)->i == &unerase_cast<add_test>(r2)->i);
@@ -379,7 +375,7 @@ TEST_CASE("anyxx26 operators") {
         CHECK(unerase_cast<add_test>(r1)->i == 3);
         CHECK(unerase_cast<add_test>(r3)->i == 2);
 
-        dyn<operators> ops_rhs{ add_test{3} };
+        any<operators> ops_rhs{ add_test{3} };
 	    CHECK(unerase_cast<add_test>(ops_rhs)->i == 3);
         CHECK(r1.equal(ops_rhs));
         CHECK(r1 == ops_rhs);
@@ -388,7 +384,7 @@ TEST_CASE("anyxx26 operators") {
     {
 		std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
 		int* p_int = arr.begin();
-        dyn<operators> p{p_int};
+        any<operators> p{p_int};
         CHECK(*p == 1);
 		++p;
         CHECK(*p == 2);

@@ -2,11 +2,11 @@
 
 #include <array>
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/v26/dyn/facade.hpp>
-#include <bit_factory/v26/dyn/keywords.hpp>
-#include <bit_factory/v26/dyn/signature_translation.hpp>
-#include <bit_factory/v26/dyn/set_v_table_members.hpp>
-#include <bit_factory/v26/dyn/make_v_table_members_type.hpp>
+#include <bit_factory/v26/any/facade.hpp>
+#include <bit_factory/v26/any/keywords.hpp>
+#include <bit_factory/v26/any/signature_translation.hpp>
+#include <bit_factory/v26/any/set_v_table_members.hpp>
+#include <bit_factory/v26/any/make_v_table_members_type.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
@@ -40,9 +40,9 @@ struct register_trait {
     }
 };
 
-template <typename Dyn>
-concept is_dyn = anyxx::is_any<Dyn> && 
-    requires { typename Dyn::trait_declaration_t; };
+template <typename Any>
+concept is_any = anyxx::is_any<Any> && 
+    requires { typename Any::trait_declaration_t; };
 
 template <typename ToVtable, typename FromVTable>
 	requires std::derived_from<typename FromVTable::trait_declaration_t, typename ToVtable::trait_declaration_t>
@@ -70,11 +70,11 @@ using deduced_typenames = [:compute_deduced_typenames<Trait, Args...>():];
 
 
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct dyn_base : deduced_typenames<Trait, Args...> {
+struct any_base : deduced_typenames<Trait, Args...> {
   using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
-  using dyn_self_t = dyn<Trait, Args...>;
-  using dyn_self_cref_t = dyn<Trait, anyxx::cref, Args...>;
-  using dyn_self_mutref_t = dyn<Trait, anyxx::mutref, Args...>;
+  using dyn_self_t = any<Trait, Args...>;
+  using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
+  using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
   using proxy_t = Proxy;
   using proxy_trait_t = anyxx::proxy_trait<proxy_t>;
   using void_t = typename proxy_trait_t::void_t;
@@ -84,40 +84,40 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   v_table_t* v_table_;
   proxy_t proxy_{};
 
-  dyn_base()
+  any_base()
     requires proxy_trait_t::allow_any_default_constructibile
   {}
 
   template <typename ConstructedWith>
-  explicit(false) dyn_base(ConstructedWith&& constructed_with)  // NOLINT
+  explicit(false) any_base(ConstructedWith&& constructed_with)  // NOLINT
     requires anyxx::constructibile_for<ConstructedWith, proxy_t,
-                                       dyn_base<Trait, proxy_t, Args...>>
+                                       any_base<Trait, proxy_t, Args...>>
       : v_table_(v_table_instance<Trait, std::decay_t<ConstructedWith>, Args...>()),
         proxy_(anyxx::erased<proxy_t>(
             std::forward<ConstructedWith>(constructed_with))) {}
 
   template <typename V>
     requires(!anyxx::is_lifetime_bound<proxy_t>)
-  dyn_base(std::in_place_t, V&& v)
+  any_base(std::in_place_t, V&& v)
       : v_table_(v_table_instance<Trait, V, Args...>()),
         proxy_(proxy_trait_t::construct_in_place(std::forward<V>(v))) {}
 
   template <typename T, typename... ConstructWithArgs>
     requires(!anyxx::is_lifetime_bound<proxy_t>)
-  dyn_base(std::in_place_type_t<T>, ConstructWithArgs&&... args)
+  any_base(std::in_place_type_t<T>, ConstructWithArgs&&... args)
       : v_table_(v_table_instance<Trait, T, Args...>()),
         proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<ConstructWithArgs>(args)...)) {}
 
-  ~dyn_base() { proxy_trait_t::destroy(proxy_, v_table_); }
+  ~any_base() { proxy_trait_t::destroy(proxy_, v_table_); }
 
-  dyn_base(const dyn_base& other)
+  any_base(const any_base& other)
     requires(anyxx::can_copy_construct_from<proxy_trait_t, v_table_t>)
       : v_table_(other.v_table_) {
     proxy_trait_t::copy_construct_from(proxy_, nullptr, other.proxy_,
                                        other.v_table_);
   }
-  dyn_base& operator=(dyn_base const& other)
+  any_base& operator=(any_base const& other)
     requires(anyxx::can_copy_construct_from<proxy_trait_t, v_table_t>)
   {
     if (this == &other) return *this;
@@ -126,10 +126,10 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
                                        other.v_table_);
     return *this;
   }
-  dyn_base(dyn_base&& other) noexcept  // NOLINT(noExplicitConstructor)
+  any_base(any_base&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(anyxx::moveable_from<proxy_t, proxy_t>)
-      : dyn_base(std::move(other.proxy_), release_v_table(other)) {}
-  dyn_base& operator=(dyn_base&& other) noexcept
+      : any_base(std::move(other.proxy_), release_v_table(other)) {}
+  any_base& operator=(any_base&& other) noexcept
     requires(anyxx::moveable_from<proxy_t, proxy_t>)
   {
     proxy_trait_t::move_to(proxy_, v_table_, std::move(other.proxy_), other.v_table_);
@@ -137,15 +137,15 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
     return *this;
   }
 
-  template <anyxx26::is_dyn Other>
-  explicit(false) dyn_base(const Other& other)  // NOLINT(noExplicitConstructor)
+  template <anyxx26::is_any Other>
+  explicit(false) any_base(const Other& other)  // NOLINT(noExplicitConstructor)
       requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
       proxy_(borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
-  template <anyxx26::is_dyn Other>
-  dyn_base& operator=(Other const& other)
+  template <anyxx26::is_any Other>
+  any_base& operator=(Other const& other)
       requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
   {
@@ -156,18 +156,18 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
 
   template <anyxx::is_proxy OtherErasedData>
       requires(anyxx::moveable_from<proxy_t, OtherErasedData>)
-  explicit dyn_base(OtherErasedData&& proxy, v_table_t* v_table) noexcept
+  explicit any_base(OtherErasedData&& proxy, v_table_t* v_table) noexcept
       : v_table_(v_table) {
       proxy_trait_t::move_to(proxy_, nullptr, std::move(proxy), v_table);
   }
-  template <anyxx26::is_dyn Other>
-  explicit(false) dyn_base(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
+  template <anyxx26::is_any Other>
+  explicit(false) any_base(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
-      : dyn_base(std::move(other.proxy_), v_table_cast<v_table_t>(release_v_table(other))) {
+      : any_base(std::move(other.proxy_), v_table_cast<v_table_t>(release_v_table(other))) {
   }
-  template <anyxx26::is_dyn Other>
-  dyn_base& operator=(Other&& other) noexcept
+  template <anyxx26::is_any Other>
+  any_base& operator=(Other&& other) noexcept
       requires(anyxx::moveable_from<proxy_t, typename Other::proxy_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
   {
@@ -211,45 +211,45 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
       return old;
   }
 
-  friend auto release_v_table(dyn_base& self) { return std::exchange(self.v_table_, nullptr); }
+  friend auto release_v_table(any_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-struct dyn : dyn_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
-  using dyn_base<Trait, Args...>::dyn_base;
+struct any : any_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
+  using any_base<Trait, Args...>::any_base;
 };
 template <template <typename, typename, typename...> typename Trait>
-struct dyn<Trait> : dyn_base<Trait, default_proxy_t<Trait>>, [:make_dyn_facade<Trait, default_proxy_t<Trait>>():] {
-    using dyn_base<Trait, default_proxy_t<Trait>>::dyn_base;
+struct any<Trait> : any_base<Trait, default_proxy_t<Trait>>, [:make_dyn_facade<Trait, default_proxy_t<Trait>>():] {
+    using any_base<Trait, default_proxy_t<Trait>>::any_base;
 };
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct dyn<Trait, Proxy, Args...> : dyn_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():] {
-    using dyn_base<Trait, Proxy, Args...>::dyn_base;
+struct any<Trait, Proxy, Args...> : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():] {
+    using any_base<Trait, Proxy, Args...>::any_base;
 };
 template <template <typename, typename, typename...> typename Trait, typename Arg0, typename... Args>
-struct dyn<Trait, Arg0, Args...> : dyn_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>, 
+struct any<Trait, Arg0, Args...> : any_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>, 
     [:make_dyn_facade<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>():] {
-    using dyn_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::dyn_base;
+    using any_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::any_base;
 };
 
 #define __dyn_OP_CONST(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
-decltype(auto) operator op (dyn<Trait, Args...> const& lhs, Other const& rhs) { \
+decltype(auto) operator op (any<Trait, Args...> const& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
-decltype(auto) operator op (dyn<Trait, Args...>& lhs, Other const& rhs) { \
+decltype(auto) operator op (any<Trait, Args...>& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP0(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename... Args> \
-decltype(auto) operator op (dyn<Trait, Args...> const& lhs) { \
+decltype(auto) operator op (any<Trait, Args...> const& lhs) { \
     return lhs.function(); \
 }
 #define __dyn_OP0_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename... Args> \
-decltype(auto) operator op (dyn<Trait, Args...>& lhs) { \
+decltype(auto) operator op (any<Trait, Args...>& lhs) { \
     return lhs.function(); \
 }
 
@@ -297,24 +297,24 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 /// the v-Tables.
 /// \ingroup casts
 template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
-inline auto unerase_cast(dyn<Trait, Args...> const& o) {
+inline auto unerase_cast(any<Trait, Args...> const& o) {
     return unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
 template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
-inline auto unerase_cast_if(dyn<Trait, Args...> const& o) {
+inline auto unerase_cast_if(any<Trait, Args...> const& o) {
     return unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-inline auto get_v_table(dyn<Trait, Args...> const& any) {
-    return v_table_cast<typename dyn<Trait, Args...>::v_table_t>(any.v_table_);
+inline auto get_v_table(any<Trait, Args...> const& any) {
+    return v_table_cast<typename any<Trait, Args...>::v_table_t>(any.v_table_);
 }
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
-auto release_v_table(dyn<Trait, Args...>& any) { return std::exchange(any.v_table_, nullptr); }
+auto release_v_table(any<Trait, Args...>& any) { return std::exchange(any.v_table_, nullptr); }
 
 
 struct type_info_{
