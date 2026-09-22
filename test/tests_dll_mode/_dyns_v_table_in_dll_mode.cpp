@@ -21,7 +21,7 @@ struct test_class {
   [[nodiscard]] int fun() const { return 42; }
 };
 
-anyxx::factory<any_test, shared, std::string> make_any_test;
+anyxx::factory<any<test, shared>, std::string> make_any_test;
 auto ___ = make_any_test.register_("test_class", []() { return test_class{}; });
 
 }  // namespace

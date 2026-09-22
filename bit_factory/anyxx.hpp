@@ -4137,16 +4137,16 @@ concept is_key = is_key_impl<T>::value;
 
 /// \brief A class template to implement a factory for \ref any
 /// objects.
-template <template <typename...> typename Any, is_proxy Proxy, typename Key,
+template <typename Any, typename Key,
           typename... Args>
-  requires proxy_trait<Proxy>::is_owner
+  requires proxy_trait<typename Any::proxy_t>::is_owner
 class factory {
-  using constructor_t = std::function<Any<Proxy>(Args...)>;
+  using constructor_t = std::function<Any(Args...)>;
   std::map<Key, constructor_t> factory_map_;
 
   auto register_impl(Key key, auto const& construct) {
-    factory_map_[key] = [construct](Args... args) -> Any<Proxy> {
-      return Any<Proxy>{std::in_place, construct(std::forward<Args>(args)...)};
+    factory_map_[key] = [construct](Args... args) -> Any {
+      return Any{std::in_place, construct(std::forward<Args>(args)...)};
     };
   }
 
