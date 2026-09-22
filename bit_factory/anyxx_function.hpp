@@ -51,7 +51,7 @@ struct function<R(Args...), Constness, Lifetime> : Lifetime {
              false /*exact const*/>)
   {
     using self_t = std::decay_t<Self>;
-    if constexpr (self_t::dyn) {
+    if constexpr (self_t::is_dyn) {
       return get_v_table(self)->f_(get_proxy_ptr(self),
                                    std::forward<Args>(args)...);
     } else {

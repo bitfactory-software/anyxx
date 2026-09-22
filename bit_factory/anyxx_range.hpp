@@ -137,7 +137,7 @@ struct forward_trait_to_map<Traited, AnyForwardRange const&> {
     return std::views::transform(any_range,
                                  []<typename T>(T const& any) -> Traited {
                                    if constexpr (is_any<T>) {
-                                     if constexpr (T::dyn) {
+                                     if constexpr (T::is_dyn) {
                                        return *unerase_cast<Traited>(any);
                                      } else {
                                        return get_proxy_value(any);
