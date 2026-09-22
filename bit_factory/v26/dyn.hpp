@@ -29,9 +29,8 @@ struct v_table
 };
 
 template <template <typename, typename, typename...> typename Trait, typename V, typename... Args>
-v_table<Trait, Args...>* get_v_table_instance() {
-  static v_table<Trait, Args...> instance(std::in_place_type<V>);
-  return &instance;
+v_table<Trait, Args...>* v_table_instance() {
+   return anyxx::v_table_instance<v_table<Trait, Args...>, V>();
 };
 
 template <typename Dyn>
@@ -86,20 +85,20 @@ struct dyn_base : deduced_typenames<Trait, Args...> {
   explicit(false) dyn_base(ConstructedWith&& constructed_with)  // NOLINT
     requires anyxx::constructibile_for<ConstructedWith, proxy_t,
                                        dyn_base<Trait, proxy_t, Args...>>
-      : v_table_(get_v_table_instance<Trait, std::decay_t<ConstructedWith>, Args...>()),
+      : v_table_(v_table_instance<Trait, std::decay_t<ConstructedWith>, Args...>()),
         proxy_(anyxx::erased<proxy_t>(
             std::forward<ConstructedWith>(constructed_with))) {}
 
   template <typename V>
     requires(!anyxx::is_lifetime_bound<proxy_t>)
   dyn_base(std::in_place_t, V&& v)
-      : v_table_(get_v_table_instance<Trait, V, Args...>()),
+      : v_table_(v_table_instance<Trait, V, Args...>()),
         proxy_(proxy_trait_t::construct_in_place(std::forward<V>(v))) {}
 
   template <typename T, typename... ConstructWithArgs>
     requires(!anyxx::is_lifetime_bound<proxy_t>)
   dyn_base(std::in_place_type_t<T>, ConstructWithArgs&&... args)
-      : v_table_(get_v_table_instance<Trait, T, Args...>()),
+      : v_table_(v_table_instance<Trait, T, Args...>()),
         proxy_(proxy_trait_t::template construct_type_in_place<T>(
             std::forward<ConstructWithArgs>(args)...)) {}
 
@@ -307,6 +306,9 @@ inline auto get_v_table(dyn<Trait, Args...> const& any) {
     return v_table_cast<typename dyn<Trait, Args...>::v_table_t>(any.v_table_);
 }
 
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+auto release_v_table(dyn<Trait, Args...>& any) { return std::exchange(any.v_table_, nullptr); }
+
 
 struct type_info_{
     using type = std::type_info const*;
@@ -316,9 +318,12 @@ struct type_info_{
 struct is_derived_from_{
     using type = anyxx::is_derived_from_t;
     template<typename Concrete, typename VTable>
-    static auto const* init(VTable* v_table ){ 
-        return +[](const std::type_info& from) {
-            return VTable::static_is_derived_from(from);
+    static anyxx::is_derived_from_t init(VTable* ){
+        return +[]([[maybe_unused]] const std::type_info& from) {
+            return false;
+        //return VTable::static_is_derived_from(
+        //    from);  // not yet implemented! must build a list of base classes in
+        //            // the vtable and check if from is in that list
         };
     }
 };
@@ -455,3 +460,18 @@ struct save_observable {
 // clang-format on
 
 }  // namespace anyxx26
+
+/// \def ANY26_REGISTER_MODEL
+/// \brief Register a model class for a specific trait. Must
+/// be in global namespace.
+/// \param class_ The model class with fully qualified name. Must be
+/// parenthesized
+/// \param trait_ Name of the trait.
+/// \param ... Optional template parameters for the trait.
+///
+/// See also \ref casts.
+#define ANY26_REGISTER_MODEL(class_, interface_, ...)                         \
+  namespace {                                                                 \
+  static auto __ = anyxx::bind_v_table_to_meta_data                           \
+        <anyxx26::v_table<interface_ __VA_OPT__(, __VA_ARGS__)>, ANYXX_UNPAREN(class_)>(); \
+  }
