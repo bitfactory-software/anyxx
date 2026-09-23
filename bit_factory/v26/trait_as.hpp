@@ -2,10 +2,9 @@
 
 #include <array>
 #include <bit_factory/v26/any/keywords.hpp>
-#include <bit_factory/v26/meta/utilities.hpp>
+#include <bit_factory/v26/trait_interface/spec.hpp>
+#include <bit_factory/v26/trait_interface/overload_set_spec.hpp>
 #include <meta>
-#include <utility>
-#include <vector>
 
 namespace anyxx26 {
 
