@@ -36,48 +36,49 @@ consteval overload_sets_spec make_overload_sets_specs() {
     return specs;
 }
 
+template <typename AnyBase, bool const_, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
+R dyn_facade_call(auto&& self, Args... args) {
+    consteval{
+        if constexpr(!const_ && std::is_const_v<std::remove_reference_t<decltype(self)>>) {
+            std::string msg = std::string{ "mutable " } + std::string{ display_string_of(f) } + " cannot be called on const Self";
+            throw std::meta::exception(msg, dealias(^^std::decay_t<decltype(self)>));
+        }
+    }
+    auto void_self = static_cast<std::conditional_t<const_, void const*, void*>>(&self);
+    auto base = static_cast<std::conditional_t<const_, AnyBase const*, AnyBase*>>(void_self);
+    using v_table_t = AnyBase::v_table_t;
+    auto v_table_ptr = base->v_table_;
+    using fptrs_t = typename v_table_t::fptrs_t;
+    auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
+    auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, v_table_name_of(f, v_table_index));
+    auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
+    if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
+        if constexpr(const_) {
+            consteval {
+                std::string msg = std::string{"const "} + std::string{display_string_of(f)} + " cannot return mutable self reference.";
+                throw std::meta::exception(msg, dealias(^^std::decay_t<decltype(self)>));
+            }
+        } else {
+            fptrs->[:vf:](x, std::forward<Args>(args)...);
+            return static_cast<typename AnyBase::dyn_self_t&>(*base);
+        }
+    } else {
+        return fptrs->[:vf:](x, std::forward<Args>(args)...);
+    }
+}
+
 template <typename AnyBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct const_dyn_facade_call {
-    template<typename Self>
+    template <typename Self>
     R operator()(this Self const& self, Args... args) {
-        auto base = static_cast<AnyBase const*>(static_cast<void const*>(&self));
-        using v_table_t = AnyBase::v_table_t;
-        auto v_table_ptr = base->v_table_;
-        using fptrs_t = typename v_table_t::fptrs_t;
-        auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
-        auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, v_table_name_of(f, v_table_index));
-        auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
-        if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
-            fptrs->[:vf:](x, std::forward<Args>(args)...);
-            return static_cast<typename AnyBase::dyn_self_t const&>(*base);
-        } else {
-            return fptrs->[:vf:](x, std::forward<Args>(args)...);
-        }
+        return dyn_facade_call<AnyBase, true, f, v_table_index, R, Args...>(self, std::forward<Args>(args)...);
     }
 };
 template <typename AnyBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct mutable_dyn_facade_call {
     template<typename Self>
     R operator()(this Self& self, Args... args) {
-        consteval{
-                if constexpr (std::is_const_v<std::remove_reference_t<Self>>) {
-                    std::string msg = std::string{"mutable "} + std::string{display_string_of(f)} + " cannot be called on const Self";
-                    throw std::meta::exception(msg, ^^Self);
-                }
-            }
-        auto base = static_cast<AnyBase*>(static_cast<void*>(&self));
-        using v_table_t = AnyBase::v_table_t;
-        auto v_table_ptr = base->v_table_;
-        using fptrs_t = typename v_table_t::fptrs_t;
-        auto fptrs = static_cast<fptrs_t*>(v_table_ptr);
-        auto constexpr vf = anyxx26::meta::get_data_member_by_id(^^fptrs_t, v_table_name_of(f, v_table_index));
-        auto x = anyxx::get_proxy_ptr(base->proxy_, v_table_ptr);
-        if constexpr(std::same_as<typename[:return_type_of(f):], declaration&>) {
-            fptrs->[:vf:](x, std::forward<Args>(args)...);
-            return static_cast<typename AnyBase::dyn_self_t&>(*base);
-        } else {
-            return fptrs->[:vf:](x, std::forward<Args>(args)...);
-        }
+        return dyn_facade_call<AnyBase, false, f, v_table_index, R, Args...>(self, std::forward<Args>(args)...);
     }
 };
 
