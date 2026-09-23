@@ -133,7 +133,7 @@ Classes</h2></td></tr>
 <tr class="memitem:anyxx_3A_3Atrait_5Fclass_3C_20Type_20_3E" id="r_anyxx_3A_3Atrait_5Fclass_3C_20Type_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1trait__class.html">anyxx::trait_class&lt; Type &gt;</a></td></tr>
 <tr class="memitem:anyxx_3A_3Akey_3C_20Tag_20_3E" id="r_anyxx_3A_3Akey_3C_20Tag_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1key.html">anyxx::key&lt; Tag &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A key type for factory registration.  <a href="structanyxx_1_1key.html#details">More...</a><br /></td></tr>
-<tr class="memitem:anyxx_3A_3Afactory_3C_20Any_2C_20Proxy_2C_20Key_2C_20Args_20_3E" id="r_anyxx_3A_3Afactory_3C_20Any_2C_20Proxy_2C_20Key_2C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1factory.html">anyxx::factory&lt; Any, Proxy, Key, Args &gt;</a></td></tr>
+<tr class="memitem:anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E" id="r_anyxx_3A_3Afactory_3C_20Any_2C_20Key_2C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="classanyxx_1_1factory.html">anyxx::factory&lt; Any, Key, Args &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class template to implement a factory for <a class="el" href="classanyxx_1_1any.html" title="any">any</a> objects.  <a href="classanyxx_1_1factory.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Amembers_3C_20InObject_20_3E" id="r_anyxx_3A_3Amembers_3C_20InObject_20_3E"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1members.html">anyxx::members&lt; InObject &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A class template to implement extension members.  <a href="structanyxx_1_1members.html#details">More...</a><br /></td></tr>
@@ -678,6 +678,9 @@ template&lt;typename Any&gt; </td></tr>
 template&lt;is_any To, is_any From&gt; <br />
 requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
 <tr class="memitem:a521054ce8b7f589a9c4b842a9bd4df21 template"><td class="memItemLeft">To&#160;</td><td class="memItemRight"><b>anyxx::unchecked_downcast_to</b> (From from)</td></tr>
+<tr class="memitem:ae5a5f2ce222c1484a4ba282cf86449f2" id="r_ae5a5f2ce222c1484a4ba282cf86449f2"><td class="memTemplParams" colspan="2"><a id="ae5a5f2ce222c1484a4ba282cf86449f2" name="ae5a5f2ce222c1484a4ba282cf86449f2"></a>
+template&lt;typename Trait, is_proxy Proxy&gt; </td></tr>
+<tr class="memitem:ae5a5f2ce222c1484a4ba282cf86449f2 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::release_v_table</b> (<a class="el" href="classanyxx_1_1any.html">any</a>&lt; Trait, Proxy &gt; &amp;from)</td></tr>
 <tr class="memitem:gadd0bed70326711f39e2efc190d006590" id="r_gadd0bed70326711f39e2efc190d006590"><td class="memTemplParams" colspan="2">
 template&lt;is_any To, is_any From&gt; <br />
 requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
@@ -2057,7 +2060,7 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">    [[maybe_unused]] <span class="keyword">this</span> Self&amp;&amp; self __VA_OPT__(, )                         \</div>
 <div class="line">        __VA_OPT__(_detail_ANYXX_JACKET_PARAM_LIST(a, _sig, __VA_ARGS__))) { \</div>
 <div class="line">  <span class="keyword">using </span>self_t = std::decay_t&lt;Self&gt;;                                         \</div>
-<div class="line">  static_assert(!self_t::dyn);                                               \</div>
+<div class="line">  static_assert(!self_t::is_dyn);                                            \</div>
 <div class="line">  <span class="keyword">using </span>T = <span class="keyword">typename</span> self_t::T;                                              \</div>
 <div class="line">  <span class="keyword">using </span>proxy_t = <span class="keyword">typename</span> self_t::proxy_t;                                  \</div>
 <div class="line">  <span class="keyword">using </span>map_t = <span class="keyword">typename</span> self_t::template static_dispatch_map_t&lt;T&gt;;          \</div>
@@ -2529,8 +2532,8 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
 <div class="line">       <a class="code hl_struct" href="structanyxx_1_1trait__class.html">trait_class</a> __VA_OPT__(                                            \</div>
 <div class="line">           , _detail_ANYXX_FORWARD_PARAM_LIST(a, _sig, __VA_ARGS__)));    \</div>
 <div class="line"> };</div>
-<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3437</div></div>
-<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3476</div></div>
+<div class="ttc" id="aanyxx_8hpp_html_a92917959a2ef4d14ddf6e22473220820"><div class="ttname"><a href="#a92917959a2ef4d14ddf6e22473220820">anyxx::use_as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Type &gt; &gt; use_as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3444</div></div>
+<div class="ttc" id="astructanyxx_1_1trait__class_html"><div class="ttname"><a href="structanyxx_1_1trait__class.html">anyxx::trait_class</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3483</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -3955,11 +3958,11 @@ template&lt;std::size_t COUNT, typename... Args&gt; </td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(copy_constructor_t, copy_constructor,                     \</div>
-<div class="line">                 []([[maybe_unused]] mutable_void placement,               \</div>
-<div class="line">                    [[maybe_unused]] const_void from) -&gt; mutable_void {    \</div>
-<div class="line">                     <span class="keywordflow">return</span> invoke_copy_constructor&lt;Concrete&gt;(placement,   \</div>
-<div class="line">                                                              from);       \</div>
+<b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="group__trait__macros.html#gac0a03326e8e38ea3ee7d42b80552e634">ANY_V_TABLE_DATA</a>(copy_constructor_t, copy_constructor,                  \</div>
+<div class="line">                 []([[maybe_unused]] mutable_void placement,            \</div>
+<div class="line">                    [[maybe_unused]] const_void from) -&gt; mutable_void { \</div>
+<div class="line">                   <span class="keywordflow">return</span> invoke_copy_constructor&lt;Concrete&gt;(placement,  \</div>
+<div class="line">                                                            from);      \</div>
 <div class="line">                 })</div>
 </div><!-- fragment -->
 </div>

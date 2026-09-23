@@ -132,53 +132,53 @@ requires constructibile_for&lt;ConstructedWith, proxy_impl_t, trait_t&gt; &amp;&
 <tr class="memitem:a3cc77abb30ad289f4dec4ae1422cff63 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a3cc77abb30ad289f4dec4ae1422cff63">any</a> (std::in_place_t, V &amp;&amp;v)</td></tr>
 <tr class="memitem:a672869c5056afbc9a58411d447d620ff" id="r_a672869c5056afbc9a58411d447d620ff"><td class="memTemplParams" colspan="2">template&lt;typename T, typename... Args&gt; </td></tr>
 <tr class="memitem:a672869c5056afbc9a58411d447d620ff template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a672869c5056afbc9a58411d447d620ff">any</a> (std::in_place_type_t&lt; T &gt;, Args &amp;&amp;... args)</td></tr>
-<tr class="memitem:a2c39068f777730b30ba8d6fdff28a68f" id="r_a2c39068f777730b30ba8d6fdff28a68f"><td class="memItemLeft"><a id="a2c39068f777730b30ba8d6fdff28a68f" name="a2c39068f777730b30ba8d6fdff28a68f"></a>
+<tr class="memitem:a8306b74a71325e85f5a70161581978f4" id="r_a8306b74a71325e85f5a70161581978f4"><td class="memItemLeft"><a id="a8306b74a71325e85f5a70161581978f4" name="a8306b74a71325e85f5a70161581978f4"></a>
 &#160;</td><td class="memItemRight"><b>any</b> (const any &amp;other)</td></tr>
-<tr class="memitem:a62bb3331c7fc5dca8656c539eca1e69a" id="r_a62bb3331c7fc5dca8656c539eca1e69a"><td class="memItemLeft"><a id="a62bb3331c7fc5dca8656c539eca1e69a" name="a62bb3331c7fc5dca8656c539eca1e69a"></a>
+<tr class="memitem:aafc411d02ef3cf361cb41dbd5ded8e1c" id="r_aafc411d02ef3cf361cb41dbd5ded8e1c"><td class="memItemLeft"><a id="aafc411d02ef3cf361cb41dbd5ded8e1c" name="aafc411d02ef3cf361cb41dbd5ded8e1c"></a>
 &#160;</td><td class="memItemRight"><b>any</b> (const any &amp;other)</td></tr>
 <tr class="memitem:a942a5d34122d1a657fe2ed9803f67542" id="r_a942a5d34122d1a657fe2ed9803f67542"><td class="memItemLeft"><a id="a942a5d34122d1a657fe2ed9803f67542" name="a942a5d34122d1a657fe2ed9803f67542"></a>
 any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (any const &amp;other)</td></tr>
-<tr class="memitem:a436588ea52ff5a33bb1d5b4245420d3e" id="r_a436588ea52ff5a33bb1d5b4245420d3e"><td class="memTemplParams" colspan="2"><a id="a436588ea52ff5a33bb1d5b4245420d3e" name="a436588ea52ff5a33bb1d5b4245420d3e"></a>
+<tr class="memitem:a87b7ba803184f569c5aee8cfee8c20a3" id="r_a87b7ba803184f569c5aee8cfee8c20a3"><td class="memTemplParams" colspan="2"><a id="a87b7ba803184f569c5aee8cfee8c20a3" name="a87b7ba803184f569c5aee8cfee8c20a3"></a>
 template&lt;is_any Other&gt; <br />
-requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!is_dyn&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:a436588ea52ff5a33bb1d5b4245420d3e template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(const Other &amp;other)</td></tr>
-<tr class="memitem:acd3a9fd9f766f059cb84f6941bdf35f6" id="r_acd3a9fd9f766f059cb84f6941bdf35f6"><td class="memTemplParams" colspan="2"><a id="acd3a9fd9f766f059cb84f6941bdf35f6" name="acd3a9fd9f766f059cb84f6941bdf35f6"></a>
+requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
+<tr class="memitem:a87b7ba803184f569c5aee8cfee8c20a3 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(const Other &amp;other)</td></tr>
+<tr class="memitem:aeec262817d623ad3c894f98a0d8730de" id="r_aeec262817d623ad3c894f98a0d8730de"><td class="memTemplParams" colspan="2"><a id="aeec262817d623ad3c894f98a0d8730de" name="aeec262817d623ad3c894f98a0d8730de"></a>
 template&lt;is_any Other&gt; <br />
-requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!is_dyn&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:acd3a9fd9f766f059cb84f6941bdf35f6 template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other const &amp;other)</td></tr>
+requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
+<tr class="memitem:aeec262817d623ad3c894f98a0d8730de template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other const &amp;other)</td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b" id="r_a53cabc8cf8b5236e9de77e416b85f97b"><td class="memTemplParams" colspan="2"><a id="a53cabc8cf8b5236e9de77e416b85f97b" name="a53cabc8cf8b5236e9de77e416b85f97b"></a>
 template&lt;is_proxy OtherErasedData&gt; </td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>any</b> (OtherErasedData &amp;&amp;proxy, v_table_t *v_table) noexcept</td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b" id="r_a53cabc8cf8b5236e9de77e416b85f97b"><td class="memTemplParams" colspan="2"><a id="a53cabc8cf8b5236e9de77e416b85f97b" name="a53cabc8cf8b5236e9de77e416b85f97b"></a>
 template&lt;is_proxy OtherErasedData&gt; </td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>any</b> (OtherErasedData &amp;&amp;proxy, v_table_t *v_table) noexcept</td></tr>
-<tr class="memitem:a86167bb632acdc8cdc1e350c4d9ecef0" id="r_a86167bb632acdc8cdc1e350c4d9ecef0"><td class="memTemplParams" colspan="2"><a id="a86167bb632acdc8cdc1e350c4d9ecef0" name="a86167bb632acdc8cdc1e350c4d9ecef0"></a>
+<tr class="memitem:ab18efad6cda979c69ac31826d866fed4" id="r_ab18efad6cda979c69ac31826d866fed4"><td class="memTemplParams" colspan="2"><a id="ab18efad6cda979c69ac31826d866fed4" name="ab18efad6cda979c69ac31826d866fed4"></a>
 template&lt;is_any Other&gt; <br />
-requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_dyn&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:a86167bb632acdc8cdc1e350c4d9ecef0 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(Other &amp;&amp;other) noexcept</td></tr>
-<tr class="memitem:a8a5c3dc36c83dbf7b548241bceacf427" id="r_a8a5c3dc36c83dbf7b548241bceacf427"><td class="memTemplParams" colspan="2"><a id="a8a5c3dc36c83dbf7b548241bceacf427" name="a8a5c3dc36c83dbf7b548241bceacf427"></a>
+requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
+<tr class="memitem:ab18efad6cda979c69ac31826d866fed4 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(Other &amp;&amp;other) noexcept</td></tr>
+<tr class="memitem:aa68b4df0dceed62bddd78bc59c2b691c" id="r_aa68b4df0dceed62bddd78bc59c2b691c"><td class="memTemplParams" colspan="2"><a id="aa68b4df0dceed62bddd78bc59c2b691c" name="aa68b4df0dceed62bddd78bc59c2b691c"></a>
 template&lt;is_any Other&gt; <br />
-requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!is_dyn&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:a8a5c3dc36c83dbf7b548241bceacf427 template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
+requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
+<tr class="memitem:aa68b4df0dceed62bddd78bc59c2b691c template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
 <tr class="memitem:abdb7a5852dce0df7f228fbddda06db58" id="r_abdb7a5852dce0df7f228fbddda06db58"><td class="memItemLeft"><a id="abdb7a5852dce0df7f228fbddda06db58" name="abdb7a5852dce0df7f228fbddda06db58"></a>
 &#160;</td><td class="memItemRight"><b>operator bool</b> () const</td></tr>
-<tr class="memitem:a1a5869791a5a5dfce07a80e240a877a0" id="r_a1a5869791a5a5dfce07a80e240a877a0"><td class="memTemplParams" colspan="2"><a id="a1a5869791a5a5dfce07a80e240a877a0" name="a1a5869791a5a5dfce07a80e240a877a0"></a>
+<tr class="memitem:ac2766c0c977ba126f6b282e03ae4fb34" id="r_ac2766c0c977ba126f6b282e03ae4fb34"><td class="memTemplParams" colspan="2"><a id="ac2766c0c977ba126f6b282e03ae4fb34" name="ac2766c0c977ba126f6b282e03ae4fb34"></a>
 template&lt;typename Self&gt; <br />
-requires (dyn &amp;&amp; is_op_pre_increment_v_table&lt;v_table_t&gt;) || (!dyn &amp;&amp; is_op_pre_increment_model_map&lt;model_map_t, T&gt;)</td></tr>
-<tr class="memitem:a1a5869791a5a5dfce07a80e240a877a0 template"><td class="memItemLeft">Self&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;self, int)</td></tr>
-<tr class="memitem:a32a902deefbda05a59f4fccd09a12d0d" id="r_a32a902deefbda05a59f4fccd09a12d0d"><td class="memTemplParams" colspan="2"><a id="a32a902deefbda05a59f4fccd09a12d0d" name="a32a902deefbda05a59f4fccd09a12d0d"></a>
+requires (is_dyn &amp;&amp; is_op_pre_increment_v_table&lt;v_table_t&gt;) || (!is_dyn &amp;&amp; is_op_pre_increment_model_map&lt;model_map_t, T&gt;)</td></tr>
+<tr class="memitem:ac2766c0c977ba126f6b282e03ae4fb34 template"><td class="memItemLeft">Self&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;self, int)</td></tr>
+<tr class="memitem:af219ae553a6bcc4cf4df00b2a9ed04dd" id="r_af219ae553a6bcc4cf4df00b2a9ed04dd"><td class="memTemplParams" colspan="2"><a id="af219ae553a6bcc4cf4df00b2a9ed04dd" name="af219ae553a6bcc4cf4df00b2a9ed04dd"></a>
 template&lt;typename Self&gt; <br />
-requires dyn</td></tr>
-<tr class="memitem:a32a902deefbda05a59f4fccd09a12d0d template"><td class="memItemLeft">Self &amp;&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;&amp;self) &amp;&amp;is_op_pre_increment_v_table&lt; v_table_t &gt;</td></tr>
-<tr class="memitem:a3dec6ae9513cd94cd0c65f474e57baa8" id="r_a3dec6ae9513cd94cd0c65f474e57baa8"><td class="memTemplParams" colspan="2"><a id="a3dec6ae9513cd94cd0c65f474e57baa8" name="a3dec6ae9513cd94cd0c65f474e57baa8"></a>
+requires is_dyn</td></tr>
+<tr class="memitem:af219ae553a6bcc4cf4df00b2a9ed04dd template"><td class="memItemLeft">Self &amp;&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;&amp;self) &amp;&amp;is_op_pre_increment_v_table&lt; v_table_t &gt;</td></tr>
+<tr class="memitem:a8f9799fae8d3df73799b8eaf72bd2f32" id="r_a8f9799fae8d3df73799b8eaf72bd2f32"><td class="memTemplParams" colspan="2"><a id="a8f9799fae8d3df73799b8eaf72bd2f32" name="a8f9799fae8d3df73799b8eaf72bd2f32"></a>
 template&lt;typename Self&gt; <br />
-requires (!dyn &amp;&amp; is_op_pre_increment_model_map&lt;model_map_t, T&gt;)</td></tr>
-<tr class="memitem:a3dec6ae9513cd94cd0c65f474e57baa8 template"><td class="memItemLeft">Self &amp;&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;&amp;self)</td></tr>
+requires (!is_dyn &amp;&amp; is_op_pre_increment_model_map&lt;model_map_t, T&gt;)</td></tr>
+<tr class="memitem:a8f9799fae8d3df73799b8eaf72bd2f32 template"><td class="memItemLeft">Self &amp;&#160;</td><td class="memItemRight"><b>operator++</b> (this Self &amp;&amp;self)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a2d3cbe4cf34d69eb09ad4e534847e589" id="r_a2d3cbe4cf34d69eb09ad4e534847e589"><td class="memItemLeft"><a id="a2d3cbe4cf34d69eb09ad4e534847e589" name="a2d3cbe4cf34d69eb09ad4e534847e589"></a>
-static constexpr bool&#160;</td><td class="memItemRight"><b>dyn</b> = is_dyn&lt;Proxy&gt;</td></tr>
+<tr class="memitem:ac464c5d7c26eaed16ba44faeb99f6120" id="r_ac464c5d7c26eaed16ba44faeb99f6120"><td class="memItemLeft"><a id="ac464c5d7c26eaed16ba44faeb99f6120" name="ac464c5d7c26eaed16ba44faeb99f6120"></a>
+static constexpr bool&#160;</td><td class="memItemRight"><b>is_dyn</b> = <a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
 Protected Attributes</h2></td></tr>

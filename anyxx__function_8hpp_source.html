@@ -144,7 +144,7 @@ $(function(){initNavTree('anyxx__function_8hpp_source.html','',''); });
 <div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>             <span class="keyword">false</span> <span class="comment">/*exact const*/</span>&gt;)</div>
 <div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>  {</div>
 <div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    <span class="keyword">using </span>self_t = std::decay_t&lt;Self&gt;;</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (self_t::dyn) {</div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    <span class="keywordflow">if</span> <span class="keyword">constexpr</span> (self_t::is_dyn) {</div>
 <div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>      <span class="keywordflow">return</span> get_v_table(self)-&gt;f_(get_proxy_ptr(self),</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span>                                   std::forward&lt;Args&gt;(args)...);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span>    } <span class="keywordflow">else</span> {</div>

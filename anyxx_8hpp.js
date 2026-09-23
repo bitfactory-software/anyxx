@@ -7,7 +7,7 @@ var anyxx_8hpp =
     [ "anyxx::using_cref&lt; Value &gt;", "structanyxx_1_1using__cref.html", "structanyxx_1_1using__cref" ],
     [ "anyxx::trait_class&lt; Type &gt;", "structanyxx_1_1trait__class.html", null ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
-    [ "anyxx::factory&lt; Any, Proxy, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
+    [ "anyxx::factory&lt; Any, Key, Args &gt;", "classanyxx_1_1factory.html", null ],
     [ "anyxx::members&lt; InObject &gt;", "structanyxx_1_1members.html", null ],
     [ "anyxx::virtual_&lt; Any &gt;", "structanyxx_1_1virtual__.html", null ],
     [ "anyxx::dispatch&lt; R(Args...)&gt;", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4.html", "classanyxx_1_1dispatch_3_01R_07Args_8_8_8_08_4" ],
