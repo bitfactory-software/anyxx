@@ -6,6 +6,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
 #include <bit_factory/v26/any/set_v_table_members.hpp>
+#include <bit_factory/v26/any/trait_facade_decorator.hpp>
 #include <bit_factory/v26/any/make_v_table_members_type.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
@@ -176,97 +177,47 @@ struct any_base : deduced_typenames<Trait, Args...> {
       return *this;
   }
 
-#define __dyn_OP(function, op) \
-  template <typename Self, typename... Params> \
-  decltype(auto) operator op (this Self&& self, Params&&... params) { \
-      return self.function(std::forward<Params>(params)...); \
-  }
-#define __dyn_OP0(function, op) \
-  template <typename Self> \
-  decltype(auto) operator op (this Self&& self) { \
-      return self.function(); \
-  }
-
-    __dyn_OP(op_parentheses, ())
-    __dyn_OP(op_square_brackets, [])
-    __dyn_OP0(op_arrow, ->)
-    __dyn_OP0(op_plus_plus, ++)
-    __dyn_OP0(op_minus_minus, --)
-
-//    __dyn_OP(op_ampersand, &)
-
-#undef __dyn_OP
-#undef __dyn_OP0
-
-  template <typename Self>
-    decltype(auto) operator++(this Self&& self, int) {
-        std::decay_t<Self> old = self;
-        ++self;
-        return old;
-    }  
-  template <typename Self>
-  decltype(auto) operator--(this Self&& self, int) {
-      std::decay_t<Self> old = self;
-      --self;
-      return old;
-  }
-
   friend auto release_v_table(any_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-struct no_trait_facade_decorator_t {};
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-concept has_trait_facade_decorator = requires(no_trait_facade_decorator_t){
-  typename trait_declaration_t<Trait, Args...>::template trait_facade_decorator<no_trait_facade_decorator_t>;
-};
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info trait_facade_decorator() {
-  if constexpr (has_trait_facade_decorator<Trait, Args...>) {
-    return ^^typename anyxx26::trait_declaration_t<Trait, Args...>:: template trait_facade_decorator<any<Trait, Args...>>;
-  } else {
-    return ^^no_trait_facade_decorator_t;
-  }
-}
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-using trait_facade_decorator_t = [:trait_facade_decorator<Trait, Args...>():];
-
-
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-struct any : any_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():], trait_facade_decorator_t<Trait, Args...> {
-  using any_base<Trait, Args...>::any_base;
-};
-template <template <is_trait, typename, typename...> typename Trait>
-struct any<Trait> : any_base<Trait, default_proxy_t<Trait>>, [:make_dyn_facade<Trait, default_proxy_t<Trait>>():], trait_facade_decorator_t<Trait> {
-    using any_base<Trait, default_proxy_t<Trait>>::any_base;
-};
 template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct any<Trait, Proxy, Args...> : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():], trait_facade_decorator_t<Trait, Args...> {
+struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>() :] {
     using any_base<Trait, Proxy, Args...>::any_base;
 };
+template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+struct any<Trait, Proxy, Args...> : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<Trait, Args...> {
+    using any_with_facade<Trait, Proxy, Args...>::any_with_facade;
+};
+template <template <is_trait, typename, typename...> typename Trait>
+struct any<Trait> : any<Trait, default_proxy_t<Trait>> {
+    using any<Trait, default_proxy_t<Trait>>::any;
+};
 template <template <is_trait, typename, typename...> typename Trait, typename Arg0, typename... Args>
-struct any<Trait, Arg0, Args...> : any_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>, 
-    [:make_dyn_facade<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>():], trait_facade_decorator_t<Trait, Arg0, Args...> {
-    using any_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::any_base;
+struct any<Trait, Arg0, Args...> : any<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...> {
+    using any<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::any;
 };
 
 #define __dyn_OP_CONST(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
+    requires (!has_trait_facade_decorator<Trait, Args...>) \
 decltype(auto) operator op (any<Trait, Args...> const& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
+    requires (!has_trait_facade_decorator<Trait, Args...>) \
 decltype(auto) operator op (any<Trait, Args...>& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP0(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename... Args> \
+    requires (!has_trait_facade_decorator<Trait, Args...>) \
 decltype(auto) operator op (any<Trait, Args...> const& lhs) { \
     return lhs.function(); \
 }
 #define __dyn_OP0_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename... Args> \
+    requires (!has_trait_facade_decorator<Trait, Args...>) \
 decltype(auto) operator op (any<Trait, Args...>& lhs) { \
     return lhs.function(); \
 }

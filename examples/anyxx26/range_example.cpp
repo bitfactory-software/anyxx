@@ -111,7 +111,10 @@ TEST_CASE("anyxx26 iterators ranges") {
     static_assert(std::ranges::sized_range<any<rangesxx::sized_view, rangesxx::contiguous, a_struct>>);
     CHECK(sr.front().i == 1);
     CHECK(!sr.empty());
-    //CHECK(cr[0].i == 1); //  ‘operator[]’ is ambiguous
-    //cr[0].i = 42;
-    //CHECK(cr[0].i == 42);
+    CHECK(sr);
+    CHECK(sr.size() == 2);
+    static_assert(has_trait_facade_decorator<rangesxx::sized_view, rangesxx::contiguous, a_struct>);
+    CHECK(sr[0].i == 1);
+    sr[0].i = 42;
+    CHECK(sr[0].i == 42);
 }
