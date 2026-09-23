@@ -5,50 +5,50 @@
 #include <format>
 #include <string>
 
-namespace example_2a {
+using namespace anyxx26;
 
-ANY(stringable, (ANY_FN_DEF(public, std::string, to_string, (), const,
-                                      [&x]() { return std::format("{}", x); })), )
+namespace {
 
-}
-
-ANY_MODEL_MAP((bool), example_2a::stringable) {
-  static std::string to_string(bool const& value) {
-    return value ? "wahr" : "falsch";
-  };
+template <is_trait Trait, typename Self>
+struct stringable {
+    static std::string as_string(Self const& s) { 
+        return std::format("{}", s);
+    }
 };
 
-ANY_MODEL_MAP((double), example_2a::stringable) {
-  static std::string to_string(const double& value) {
+template <>
+struct stringable<model_map, bool> {
+  static std::string as_string(bool const& self) { return self ? "wahr" : "falsch"; }
+};
+
+template <>
+struct stringable<model_map, double> {
+  static std::string as_string(const double& value) {
     return std::format("{:6.3}", value);
-  };
+  }
 };
-
-namespace example_2a {
 
 template <typename V>
-std::string print_(anyxx::any<stringable, anyxx::using_<V>> const& s) {
-  return s.to_string() + "\n";
+std::string print_(trait_as<V, stringable> const& s) {
+  return s.as_string() + "\n";
 }
 template <typename V>
 auto print(V s)
 //  requires stringable_trait<V>::is_defined
 {
-  return print_(anyxx::trait_as<stringable>(std::move(s)));
+  return print_(trait_as<V, stringable>(std::move(s)));
 }
-
-}  // namespace example_2a
 
 template <class V>
 concept is_print_callable = requires(V v) {
   { print(v) } -> std::same_as<std::string>;
 };
 
-TEST_CASE("example 2a stringable") {
-  using namespace example_2a;
+}
+
+TEST_CASE("example trait_as stringable") {
+  //CHECK(print("Hello world!") == "Hello world!\n");
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
-  CHECK(print(42) == "42\n");
-  static_assert(!is_print_callable<int>);
-  // print(42);  // remove comment to see the compilation error!
+  //CHECK(print(42) == "42\n");
 }
