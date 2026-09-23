@@ -4,7 +4,7 @@
 #include <bit_factory/v26/anys/range/iterators.hpp>
 #include <ranges>
 
-namespace anyxx26::rangesxx {
+namespace anyxx26 {
 
 template <is_trait Trait, typename Self, typename Value>
 struct sentinel : save_copyable<Trait, Self> {
