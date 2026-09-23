@@ -10,12 +10,20 @@
 namespace anyxx26 {
 
 template <typename V, std::meta::info Target>
-struct trait_facade_call {
+struct const_trait_facade_call {
   template <typename... Args>
-  auto operator()(Args&&... args) const {
+  decltype(auto) operator()(Args&&... args) const {
     const V* pvalue = reinterpret_cast<const V*>(this);
     return [:Target:](*pvalue, std::forward<Args>(args)...);
   }
+};
+template <typename V, std::meta::info Target>
+struct mutable_trait_facade_call {
+    template <typename... Args>
+    decltype(auto) operator()(Args&&... args) {
+        V* pvalue = reinterpret_cast<V*>(this);
+        return[:Target:](*pvalue, std::forward<Args>(args)...);
+    }
 };
 
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
@@ -23,9 +31,9 @@ consteval std::meta::info make_static_facade_call(interface_spec const& spec){
     auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
     auto implemenation_member = find_function_impl(spec.member, ^^Trait, ^^V, args);
     if(is_const_function(spec.member)) {
-        return substitute(^^trait_facade_call, {^^V const, reflect_constant(implemenation_member)});
+        return substitute(^^const_trait_facade_call, {^^V const, reflect_constant(implemenation_member)});
     } else {
-        return substitute(^^trait_facade_call, {^^V, reflect_constant(implemenation_member)});
+        return substitute(^^mutable_trait_facade_call, {^^V, reflect_constant(implemenation_member)});
     }
 }
 
@@ -62,5 +70,17 @@ class trait_as : public[:make_trait_facade<V, Trait, Args...>():] {
  public:
   trait_as(V const& value) : value_(value) {}
 };
+
+template <typename V>
+struct using_ {
+  template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+  using as = trait_as<V, Trait, Args...>;
+};
+
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+auto as(auto&& value){
+  return trait_as<std::remove_reference_t<decltype(value)>, Trait, Args...>(std::forward<decltype(value)>(value));
+}
+
 
 }  // namespace anyxx26
