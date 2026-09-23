@@ -92,10 +92,6 @@ consteval std::meta::info make_dyn_facade_call(interface_spec const& spec){
     return std::meta::info{};
 }
 
-template<class... Ts>
-struct overload : Ts... {
-    using Ts::operator()...;
-};
 template <typename AnyBase>
 consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const& spec){
     std::vector<std::meta::info> overload_set;
@@ -104,7 +100,7 @@ consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const&
         overload_set.push_back(make_dyn_facade_call<AnyBase>(overload));
       }
     }
-    auto overloaded_call_operator = substitute(^^overload, overload_set);
+    auto overloaded_call_operator = substitute(^^meta::overload, overload_set);
     return std::meta::data_member_spec(overloaded_call_operator, { .name = spec.name, .no_unique_address = true });
 }
 

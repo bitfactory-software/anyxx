@@ -18,6 +18,11 @@ constexpr std::string_view enum_to_string(E value) {
     return "<unnamed>";
 }
 
+template<class... Ts>
+struct overload : Ts... {
+    using Ts::operator()...;
+};
+
 template <std::meta::info... Ms>
 struct outer {
   struct inner;
