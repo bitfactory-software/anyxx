@@ -51,7 +51,7 @@ template <std::meta::info TraitDeclaration, std::meta::info dyn_self_val, std::m
 consteval std::vector<std::meta::info> collect_v_table_members() {
 
     std::vector<std::meta::info> fptrs;
-    template for(constexpr auto spec : define_static_array(get_v_table_specs(TraitDeclaration))) {
+    template for(constexpr auto spec : define_static_array(get_interface_specs(TraitDeclaration))) {
         if constexpr(is_v_table_data(spec)) {
             using type = [:spec.member:]::type;
             auto dms = std::meta::data_member_spec(dealias(^^type), {.name = v_table_name_of(spec)});

@@ -20,6 +20,8 @@ struct trait_facade_call {
 template <template <is_trait, typename> typename Trait, typename V>
 consteval std::meta::info make_trait_facade() {
   std::vector<std::meta::info> calls;
+//  template for(constexpr auto v_table_spec : define_static_array(get_interface_specs(^^trait_declaration<Trait>))){
+
   constexpr auto ctx = std::meta::access_context::current();
   template for (constexpr auto m : define_static_array(members_of(^^Trait<model_map, V>, ctx))) {
     if constexpr (has_identifier(m) && is_static_member(m) && is_function(m)) {

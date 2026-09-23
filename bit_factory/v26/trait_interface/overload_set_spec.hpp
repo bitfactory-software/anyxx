@@ -21,7 +21,7 @@ using overload_sets_spec = std::vector<overload_set_spec>;
 template <std::meta::info TraitDeclaration>
 consteval overload_sets_spec make_overload_sets_specs() {
     overload_sets_spec specs;
-    for(auto s : get_v_table_specs(TraitDeclaration)) {
+    for(auto s : get_interface_specs(TraitDeclaration)) {
         if(is_function_or_operator(s)) {
             std::string name{ meta::function_name_of(s.member) };
             auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });

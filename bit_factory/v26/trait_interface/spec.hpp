@@ -40,12 +40,12 @@ consteval std::string v_table_name_of(interface_spec const& spec) {
     }
 }
 
-consteval std::vector<interface_spec> get_v_table_specs(std::meta::info declaration_trait) {
+consteval std::vector<interface_spec> get_interface_specs(std::meta::info declaration_trait) {
     if (declaration_trait == std::meta::info{}) {
         return {};
     } else {
         declaration_trait = dealias(declaration_trait);
-        auto specs = get_v_table_specs(meta::get_type_of_single_public_base(declaration_trait));
+        auto specs = get_interface_specs(meta::get_type_of_single_public_base(declaration_trait));
 
         constexpr auto ctx = std::meta::access_context::current();
         for(auto m : members_of(declaration_trait, ctx)) {
