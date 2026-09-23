@@ -18,10 +18,9 @@ struct overload_set_spec {
 };
 using overload_sets_spec = std::vector<overload_set_spec>;
 
-template <std::meta::info TraitDeclaration>
-consteval overload_sets_spec make_overload_sets_specs() {
+consteval overload_sets_spec make_overload_sets_specs(std::meta::info trait_declaration) {
     overload_sets_spec specs;
-    for(auto s : get_interface_specs(TraitDeclaration)) {
+    for(auto s : get_interface_specs(trait_declaration)) {
         if(is_function_or_operator(s)) {
             std::string name{ meta::function_name_of(s.member) };
             auto found = std::ranges::find_if(specs, [&](auto const spec){ return spec.name == name; });
@@ -34,5 +33,11 @@ consteval overload_sets_spec make_overload_sets_specs() {
     }
     return specs;
 }
+
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+consteval overload_sets_spec make_overload_sets_specs() {
+    return make_overload_sets_specs(trait_declaration<^^Trait, ^^Args...>());
+}
+
 
 }  // namespace anyxx26

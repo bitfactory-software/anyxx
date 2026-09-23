@@ -104,26 +104,22 @@ consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const&
         overload_set.push_back(make_dyn_facade_call<AnyBase>(overload));
       }
     }
-    auto overloaded_operator = substitute(^^overload, overload_set);
-    return std::meta::data_member_spec(overloaded_operator, { .name = spec.name, .no_unique_address = true });
+    auto overloaded_call_operator = substitute(^^overload, overload_set);
+    return std::meta::data_member_spec(overloaded_call_operator, { .name = spec.name, .no_unique_address = true });
 }
 
-template <typename AnyBase>
-consteval void collect_dyn_facade_calls(std::vector<std::meta::info>& calls, overload_sets_spec const& overload_sets) {
-    for(auto const& set : overload_sets) {
-        auto dms = dyn_facade_named_overload_set<AnyBase>(set);
-        calls.push_back(reflect_constant(dms));
+template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
+consteval auto make_dyn_facade_overloaded_calls() {
+    std::vector<std::meta::info> calls;
+    for(auto const& set : make_overload_sets_specs<Trait, Args...>()) {
+        calls.push_back(reflect_constant(dyn_facade_named_overload_set<any_base<Trait, Proxy, Args...>>(set)));
     }
+    return calls;
 };
 
 template <template <typename, typename, typename...> typename Trait, typename Proxy, typename... Args>
 consteval std::meta::info make_dyn_facade() {
-     constexpr auto trait_declaration_info = trait_declaration<^^Trait, ^^Args...>();
-
-    [[maybe_unused]] auto overload_sets = make_overload_sets_specs<trait_declaration_info>();
-    std::vector<std::meta::info> calls;
-    collect_dyn_facade_calls<any_base<Trait, Proxy, Args...>>(calls, overload_sets);
-    return substitute(^^meta::to_struct, calls);
+    return substitute(^^meta::to_struct, make_dyn_facade_overloaded_calls<Trait, Proxy, Args...>());
 };
 
 }  // namespace anyxx26
