@@ -57,7 +57,8 @@ consteval std::meta::info get_implementation_member(auto fitting_dyn_parameter_t
     return {};
 }
 
-consteval std::meta::info find_function_impl(auto fitting_dyn_parameter_type, std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
+consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
+    auto fitting_dyn_parameter_type = anyxx26::fitting_dyn_parameter_type(mapped_type);
     if(auto found_in_impl = get_implementation_member(fitting_dyn_parameter_type, trait_model_map(trait_template, mapped_type, args), interface_function); found_in_impl != std::meta::info{}) {
         return found_in_impl;
     } else if(auto found_in_base = get_implementation_member(fitting_dyn_parameter_type, trait_declaration(trait_template, args), interface_function); found_in_base != std::meta::info{}) {
