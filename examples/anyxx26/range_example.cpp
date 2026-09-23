@@ -106,8 +106,11 @@ TEST_CASE("anyxx26 iterators ranges") {
     test_contiguous_iterator(arr2.begin());
     any<rangesxx::view, rangesxx::contiguous, a_struct> cr{arr2};
     static_assert(std::ranges::view<any<rangesxx::view, rangesxx::contiguous, a_struct>>);
-    //CHECK(cr.front().i == 1); // end() is no sized_sentinel_for
-    //CHECK(!cr.empty()); // end() is no sized_sentinel_for
+
+    any<rangesxx::sized_view, rangesxx::contiguous, a_struct> sr{ arr2 };
+    static_assert(std::ranges::sized_range<any<rangesxx::sized_view, rangesxx::contiguous, a_struct>>);
+    CHECK(sr.front().i == 1);
+    CHECK(!sr.empty());
     //CHECK(cr[0].i == 1); //  ‘operator[]’ is ambiguous
     //cr[0].i = 42;
     //CHECK(cr[0].i == 42);
