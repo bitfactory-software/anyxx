@@ -5,6 +5,7 @@
 #include <bit_factory/v26/trait_translation/spec.hpp>
 #include <bit_factory/v26/trait_translation/overload_set_spec.hpp>
 #include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
+#include <bit_factory/v26/any/trait_facade_decorator.hpp>
 #include <meta>
 
 namespace anyxx26 {
@@ -21,8 +22,8 @@ template <typename V, std::meta::info Target>
 struct mutable_trait_facade_call {
     template <typename... Args>
     decltype(auto) operator()(Args&&... args) {
-        V* pvalue = reinterpret_cast<V*>(this);
-        return[:Target:](*pvalue, std::forward<Args>(args)...);
+      V* pvalue = reinterpret_cast<V*>(this);
+      return[:Target:](*pvalue, std::forward<Args>(args)...);
     }
 };
 
@@ -64,7 +65,7 @@ consteval std::meta::info make_trait_facade() {
 };
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
-class trait_as : public[:make_trait_facade<V, Trait, Args...>():] {
+class trait_as : public[:make_trait_facade<V, Trait, Args...>():], public trait_facade_decorator_t<Trait, Args...> {
   V value_;
 
  public:
