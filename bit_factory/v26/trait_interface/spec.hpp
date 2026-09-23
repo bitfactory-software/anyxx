@@ -7,22 +7,22 @@
 
 namespace anyxx26 {
 
-struct v_table_spec {
+struct interface_spec {
   std::meta::info declaration_trait;
   std::meta::info member;
   std::size_t index;
 };
 
-consteval bool is_v_table_data(v_table_spec spec) {
+consteval bool is_v_table_data(interface_spec const& spec) {
     return has_identifier(spec.member) && is_type(spec.member) && annotations_of_with_type(spec.member, ^^v_table_data_t).size() > 0;
 }
-consteval bool is_function(v_table_spec spec) {
+consteval bool is_function(interface_spec const& spec) {
     return has_identifier(spec.member) && is_function(spec.member);
 }
-consteval bool is_operator(v_table_spec spec) {
+consteval bool is_operator(interface_spec const& spec) {
     return is_user_declared(spec.member) && is_operator_function(spec.member);
 }
-consteval bool is_function_or_operator(v_table_spec spec) {
+consteval bool is_function_or_operator(interface_spec const& spec) {
     return is_function(spec) || is_operator(spec);
 }
 
@@ -32,7 +32,7 @@ consteval std::string v_table_name_of(std::meta::info member, std::size_t index)
     return std::string{meta::function_name_of(member)} + std::string_view(index_chars.begin(), r.ptr - index_chars.begin());
 }
 
-consteval std::string v_table_name_of(v_table_spec spec) {
+consteval std::string v_table_name_of(interface_spec const& spec) {
     if (is_v_table_data(spec)) {
         return std::string{ identifier_of(spec.member) };
     } else {
@@ -40,7 +40,7 @@ consteval std::string v_table_name_of(v_table_spec spec) {
     }
 }
 
-consteval std::vector<v_table_spec> get_v_table_specs(std::meta::info declaration_trait) {
+consteval std::vector<interface_spec> get_v_table_specs(std::meta::info declaration_trait) {
     if (declaration_trait == std::meta::info{}) {
         return {};
     } else {

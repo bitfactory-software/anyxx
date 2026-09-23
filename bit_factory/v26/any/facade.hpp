@@ -15,7 +15,7 @@ namespace anyxx26 {
 
 struct overload_set_spec {
     std::string name;
-    std::vector<v_table_spec> specs;
+    std::vector<interface_spec> specs;
 };
 using overload_sets_spec = std::vector<overload_set_spec>;
 
@@ -84,7 +84,7 @@ struct mutable_dyn_facade_call {
 
 
 template <typename AnyBase>
-consteval std::meta::info make_dyn_facade_call(v_table_spec spec){
+consteval std::meta::info make_dyn_facade_call(interface_spec const& spec){
     std::vector<std::meta::info> types
     { ^^AnyBase
     , reflect_constant(spec.member)
