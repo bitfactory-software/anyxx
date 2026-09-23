@@ -2,7 +2,8 @@
 
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
-#include <bit_factory/v26/trait_interface/overload_set_spec.hpp>
+#include <bit_factory/v26/trait_translation/overload_set_spec.hpp>
+#include <bit_factory/v26/trait_translation/is_const_function.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>

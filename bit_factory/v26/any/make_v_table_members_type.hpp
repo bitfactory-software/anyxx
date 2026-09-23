@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
-#include <bit_factory/v26/trait_interface/spec.hpp>
+#include <bit_factory/v26/trait_translation/spec.hpp>
 
 namespace anyxx26 {
 

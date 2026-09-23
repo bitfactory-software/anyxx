@@ -6,6 +6,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
 #include <bit_factory/v26/any/make_v_table_members_type.hpp>
+#include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
@@ -222,16 +223,6 @@ consteval std::meta::info make_vfimpl(std::meta::info concrete_type, std::meta::
     types.push_back(make_v_table_fptr_param_type(types.size() == 7u, p));
   }
   return substitute(^^vfimpl, types);
-}
-
-consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
-  if (auto found_in_impl = get_implementation_member(trait_model_map(trait_template, mapped_type, args), mapped_type, interface_function); found_in_impl != std::meta::info{}) {
-    return found_in_impl;
-  } else if (auto found_in_base = get_implementation_member(trait_declaration(trait_template, args), mapped_type, interface_function); found_in_base != std::meta::info{}) {
-      return found_in_base;
-  } else {
-      throw std::logic_error("Function not found in impl trait or base trait");
-  }
 }
 
 template <typename VTable, std::meta::info Base, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref,

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bit_factory/v26/any/keywords.hpp>
-#include <bit_factory/v26/trait_interface/spec.hpp>
+#include <bit_factory/v26/trait_translation/spec.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>

@@ -141,15 +141,6 @@ struct addable {
   [[= defaulted]] static void add(Self& self, int inc);
 };
 
-consteval{
-    constexpr auto interface_member = ^^addable<declaration, declaration>::add;
-    auto decorated_name = decorated_name_of(interface_member);
-    //if (decorated_name != "addint") {
-    //  throw std::meta::exception(decorated_name, interface_member);
-    //}
-}
-
-
 struct add1 {
   int value;
   void add(int x) { value += x; }
