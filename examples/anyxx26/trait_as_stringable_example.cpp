@@ -47,8 +47,8 @@ concept is_print_callable = requires(V v) {
 }
 
 TEST_CASE("example trait_as stringable") {
-  //CHECK(print("Hello world!") == "Hello world!\n");
+  CHECK(print("Hello world!") == "Hello world!\n");
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
-  //CHECK(print(42) == "42\n");
+  CHECK(print(42) == "42\n");
 }
