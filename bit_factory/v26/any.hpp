@@ -214,21 +214,39 @@ struct any_base : deduced_typenames<Trait, Args...> {
   friend auto release_v_table(any_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <template <typename, typename, typename...> typename Trait, typename... Args>
-struct any : any_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():] {
+struct no_trait_facade_decorator_t {};
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+concept has_trait_facade_decorator = requires(no_trait_facade_decorator_t){
+  typename trait_declaration_t<Trait, Args...>::template trait_facade_decorator<no_trait_facade_decorator_t>;
+};
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+consteval std::meta::info trait_facade_decorator() {
+  if constexpr (has_trait_facade_decorator<Trait, Args...>) {
+    return ^^typename anyxx26::trait_declaration_t<Trait, Args...>:: template trait_facade_decorator<any<Trait, Args...>>;
+  } else {
+    return ^^no_trait_facade_decorator_t;
+  }
+}
+
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+using trait_facade_decorator_t = [:trait_facade_decorator<Trait, Args...>():];
+
+
+template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+struct any : any_base<Trait, Args...>, [:make_dyn_facade<Trait, Args...>():], trait_facade_decorator_t<Trait, Args...> {
   using any_base<Trait, Args...>::any_base;
 };
-template <template <typename, typename, typename...> typename Trait>
-struct any<Trait> : any_base<Trait, default_proxy_t<Trait>>, [:make_dyn_facade<Trait, default_proxy_t<Trait>>():] {
+template <template <is_trait, typename, typename...> typename Trait>
+struct any<Trait> : any_base<Trait, default_proxy_t<Trait>>, [:make_dyn_facade<Trait, default_proxy_t<Trait>>():], trait_facade_decorator_t<Trait> {
     using any_base<Trait, default_proxy_t<Trait>>::any_base;
 };
-template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct any<Trait, Proxy, Args...> : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():] {
+template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+struct any<Trait, Proxy, Args...> : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>():], trait_facade_decorator_t<Trait, Args...> {
     using any_base<Trait, Proxy, Args...>::any_base;
 };
-template <template <typename, typename, typename...> typename Trait, typename Arg0, typename... Args>
+template <template <is_trait, typename, typename...> typename Trait, typename Arg0, typename... Args>
 struct any<Trait, Arg0, Args...> : any_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>, 
-    [:make_dyn_facade<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>():] {
+    [:make_dyn_facade<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>():], trait_facade_decorator_t<Trait, Arg0, Args...> {
     using any_base<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::any_base;
 };
 

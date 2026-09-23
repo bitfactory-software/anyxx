@@ -104,4 +104,11 @@ TEST_CASE("anyxx26 iterators ranges") {
 
     std::array<a_struct, 2> arr2{ 1, 2 };
     test_contiguous_iterator(arr2.begin());
+    any<rangesxx::view, rangesxx::contiguous, a_struct> cr{arr2};
+    static_assert(std::ranges::view<any<rangesxx::view, rangesxx::contiguous, a_struct>>);
+    //CHECK(cr.front().i == 1); // end() is no sized_sentinel_for
+    //CHECK(!cr.empty()); // end() is no sized_sentinel_for
+    //CHECK(cr[0].i == 1); //  ‘operator[]’ is ambiguous
+    //cr[0].i = 42;
+    //CHECK(cr[0].i == 42);
 }
