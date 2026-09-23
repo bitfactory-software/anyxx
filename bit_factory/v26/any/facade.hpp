@@ -75,13 +75,6 @@ consteval std::meta::info make_dyn_facade_call(interface_spec const& spec){
             return translate_v_table_fptr_param_type(^^typename AnyBase::dyn_self_cref_t, ^^typename AnyBase::dyn_self_mutref_t, type_of(p));
             })
         );
-    //if (is_function(spec.member) && is_static_member(spec.member)) {
-    //        if(is_const(type_of(spec.member))) {
-    //            throw std::meta::exception(std::string{ "const: " } + std::string{display_string_of(type_of(spec.member))}, spec.member);
-    //        } else { 
-    //            throw std::meta::exception(std::string{ "non-const: " } + std::string{ display_string_of(type_of(spec.member)) }, spec.member);
-    //        }
-    //}
     if (is_const_function(spec.member)) {
         return substitute(^^const_dyn_facade_call, types);
     } else {
@@ -97,7 +90,7 @@ consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const&
     std::vector<std::meta::info> overload_set;
     for(auto overload : spec.specs) {
       if (auto call = make_dyn_facade_call<AnyBase>(overload); call != std::meta::info{}) {
-        overload_set.push_back(make_dyn_facade_call<AnyBase>(overload));
+        overload_set.push_back(call);
       }
     }
     auto overloaded_call_operator = substitute(^^meta::overload, overload_set);
