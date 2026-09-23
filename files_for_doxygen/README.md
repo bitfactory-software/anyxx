@@ -388,7 +388,7 @@ ANY_(figure, ayx::dynamic_copyable, (ANY_FN(double, area, (), const)), ayx::val<
 ANY_(serializable, ayx::dynamic_copyable,
     (ANY_FN(void, serialize, (std::ostream&), const)), ayx::cref)
 
-ayx::factory<any_serializable, ayx::val<>, std::string, std::istream&>
+ayx::factory<ayx::any<serializable>, std::string, std::istream&>
     deserialize;
 
 [[nodiscard]] any_figure<> deserialize_any_figure(std::istream& archive) {

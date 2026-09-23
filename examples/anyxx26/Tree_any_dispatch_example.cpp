@@ -1,0 +1,100 @@
+﻿#include <bit_factory/anyxx.hpp>
+#include <bit_factory/v26/any.hpp>
+#include <catch2/benchmark/catch_benchmark.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <iostream>
+#include <string>
+
+using namespace anyxx;
+
+namespace _21_Tree_TE_interface_dispatch {
+
+template <anyxx26::is_trait Trait, typename Self>
+struct node : anyxx26::copyable<Trait, Self> {
+    using default_proxy_t = anyxx::cow;
+    using dispatch_table [[= anyxx26::v_table_data]] = anyxx26::dispatch_table;
+};
+
+using any_node = anyxx26::any<node>;
+static_assert(is_open_dispatch_v_table<any_node::v_table_t>);
+
+struct Plus {
+  Plus(any_node left, any_node right)
+      : left_(std::move(left)), right_(std::move(right)) {}
+  any_node left_, right_;
+};
+struct Times {
+  Times(any_node left, any_node right)
+      : left_(std::move(left)), right_(std::move(right)) {}
+  any_node left_, right_;
+};
+struct Integer {
+  explicit Integer(int i_) : i(i_) {}
+  int i;
+};
+
+// =============================================================================
+// add behavior to existing classes, without changing them
+
+//-----------------------------------------------------------------------------
+// open dispatch evaluate, returns int, dispatched via an any_node;
+dispatch<int(virtual_<any_node>)> evaluate;
+auto __ = evaluate.define<Plus>([](auto const& expr) {
+  return evaluate(expr.left_) + evaluate(expr.right_);
+});
+auto __ = evaluate.define<Times>([](auto const& expr) {
+  return evaluate(expr.left_) * evaluate(expr.right_);
+});
+auto __ = evaluate.define<Integer>([](auto const& expr) { return expr.i; });
+//
+//-----------------------------------------------------------------------------
+// render as Forth
+dispatch<std::string(virtual_<any_node>)> as_forth;
+auto __ = as_forth.define<Plus>([](auto const& expr) {
+  return as_forth(expr.left_) + " " + as_forth(expr.right_) + " +";
+});
+auto __ = as_forth.define<Times>([](auto const& expr) {
+  return as_forth(expr.left_) + " " + as_forth(expr.right_) + " *";
+});
+auto __ = as_forth.define<Integer>(
+    [](auto const& expr) { return std::to_string(expr.i); });
+//
+//-----------------------------------------------------------------------------
+// render as Lisp
+dispatch<std::string(virtual_<any_node>)> as_lisp;
+auto __ = as_lisp.define<Plus>([](auto const& expr) {
+  return "(plus " + as_lisp(expr.left_) + " " + as_lisp(expr.right_) + ")";
+});
+auto __ = as_lisp.define<Times>([](auto const& expr) {
+  return "(times " + as_lisp(expr.left_) + " " + as_lisp(expr.right_) + ")";
+});
+auto __ = as_lisp.define<Integer>(
+    [](auto const& expr) { return std::to_string(expr.i); });
+//-----------------------------------------------------------------------------
+}  // namespace _21_Tree_TE_interface_dispatch
+
+using namespace anyxx;
+
+namespace _21_Tree_TE_interface_dispatch {
+
+TEST_CASE("21_Tree any++ open method") {
+  using namespace anyxx;
+
+  any_node expr{Times{Integer(2), Plus{Integer{3}, Integer{4}}}};
+
+  auto v = evaluate(expr);
+  REQUIRE(v == 14);
+  std::stringstream out;
+  out << as_forth(expr) << " = " << as_lisp(expr) << " = " << evaluate(expr);
+  std::cout << out.str() << "\n";
+  REQUIRE(out.str() == "2 3 4 + * = (times 2 (plus 3 4)) = 14");
+
+#ifndef _DEBUG
+  std::cout << "Ensure 'target_compile_options(examples_inline_mode PRIVATE "
+               "/Ob2)' is used!\n";
+  BENCHMARK("21_Tree any++ open method evaluate") { return evaluate(expr); };
+  BENCHMARK("21_Tree any++ open method as_lisp") { return as_lisp(expr); };
+#endif  // !_DEBUG
+}
+
+}  // namespace _21_Tree_TE_interface_dispatch
