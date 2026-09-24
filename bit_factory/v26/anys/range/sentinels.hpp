@@ -41,12 +41,11 @@ struct sentinel_for{
     using sentinel_type = Sentinel;
     using iterator_type = Iterator;
     sentinel_type value;
+    template <std::ranges::range Range>
+    sentinel_for(Range&& range) : value(std::ranges::end(range)) {};
 };
 template <std::ranges::range Range>
-sentinel_for<std::ranges::sentinel_t<Range>, std::ranges::iterator_t<Range>>
-make_end_sentinel_for(Range&& range) {
-    return {std::ranges::end(range)};
-}
+sentinel_for(Range&& range) -> sentinel_for<std::ranges::sentinel_t<Range>, std::ranges::iterator_t<Range>>;
 template <typename Sentinel, typename Iterator, typename Value>
 struct sentinel<model_map, sentinel_for<Sentinel, Iterator>, Value> {
     static bool equal(sentinel_for<Sentinel, Iterator> const& sentinel, any<input_iterator, anyxx::cref, Value> const& iterator){

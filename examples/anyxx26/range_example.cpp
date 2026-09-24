@@ -35,6 +35,10 @@ void test_input_range(any<view, input, int> const& r) {
     auto expected = 1;
     std::ranges::for_each(r, [&expected](int x){ CHECK(x == expected++); });
 }
+//void test_const_input_range(any<view, input, int const> const& r) {
+//    auto expected = 1;
+//    std::ranges::for_each(r, [&expected](int x){ CHECK(x == expected++); });
+//}
 void test_input_range_template(const std::ranges::range auto&& r) {
     auto expected = 1;
     for (auto const x : std::forward<decltype(r)>(r)) {
@@ -84,7 +88,7 @@ TEST_CASE("anyxx26 iterators ranges") {
 	std::array<int, 5> arr{ 1, 2, 3, 4, 5 };
     std::array<int, 5> const const_arr{ 1, 2, 3, 4, 5 };
 
-    auto e = make_end_sentinel_for(arr);
+    auto e = sentinel_for(arr);
     any<sentinel, int> end_sentinel{e};
 	test_input_iterator(arr.begin(), end_sentinel);
     
@@ -93,6 +97,7 @@ TEST_CASE("anyxx26 iterators ranges") {
     
     test_input_range(arr);
     test_input_range(const_arr);
+    //test_const_input_range(std::views::iota(1, 6));
     test_input_range_template(any<view, input, int>{const_arr});
 
     test_forward_range(arr);
