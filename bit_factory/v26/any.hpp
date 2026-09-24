@@ -181,7 +181,7 @@ struct any_base : deduced_typenames<Trait, Args...> {
 };
 
 template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<Trait, Proxy, Args...>() :] {
+struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<any_base<Trait, Proxy, Args...>>() :] {
     using any_base<Trait, Proxy, Args...>::any_base;
 };
 template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
