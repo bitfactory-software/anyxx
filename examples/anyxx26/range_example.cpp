@@ -95,9 +95,9 @@ TEST_CASE("anyxx26 iterators ranges") {
     any<input_iterator, int> end_iterator{arr.end()};
     test_input_iterator(arr.begin(), end_iterator);
     
-    test_input_range(arr);
+    test_input_range(any<view, input, int>{std::in_place, std::views::all(arr)});
     test_input_range(const_arr);
-    //test_const_input_range(std::views::iota(1, 6));
+    //test_const_input_range(any<view, input, const int>{std::in_place_type<std::ranges::iota_view<int, int>>, 1, 6});
     test_input_range_template(any<view, input, int>{const_arr});
 
     test_forward_range(arr);
