@@ -69,6 +69,20 @@ consteval std::meta::info compute_deduced_typenames() {
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 using deduced_typenames = [:compute_deduced_typenames<Trait, Args...>():];
 
+template <template <typename, typename, typename...> typename Trait, typename... Args>
+decltype(auto) preprocess_constructed_with(auto&& constructed_with) {
+    using ConstructedWith = decltype(constructed_with);
+    using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
+    if constexpr (requires (ConstructedWith constructed_with){ { trait_declaration_t::preprocess_constructed_with(constructed_with) }; }) {
+        return trait_declaration_t::preprocess_constructed_with(std::forward<ConstructedWith>(constructed_with));
+    } else {
+        return constructed_with;
+    }
+}
+
+template <typename ConstructedWith, template <typename, typename, typename...> typename Trait, typename... Args>
+using preprocess_constructed_with_t =
+    std::decay_t<decltype(preprocess_constructed_with<Trait, Args...>(std::declval<ConstructedWith>()))>;
 
 template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base : deduced_typenames<Trait, Args...> {
@@ -93,9 +107,9 @@ struct any_base : deduced_typenames<Trait, Args...> {
   explicit(false) any_base(ConstructedWith&& constructed_with)  // NOLINT
     requires anyxx::constructibile_for<ConstructedWith, proxy_t,
                                        any_base<Trait, proxy_t, Args...>>
-      : v_table_(v_table_instance<Trait, std::decay_t<ConstructedWith>, Args...>()),
+      : v_table_(v_table_instance<Trait, std::decay_t<preprocess_constructed_with_t<ConstructedWith, Trait, Args...>>, Args...>()),
         proxy_(anyxx::erased<proxy_t>(
-            std::forward<ConstructedWith>(constructed_with))) {}
+            preprocess_constructed_with<Trait, Args...>(std::forward<ConstructedWith>(constructed_with)))) {}
 
   template <typename V>
     requires(!anyxx::is_lifetime_bound<proxy_t>)

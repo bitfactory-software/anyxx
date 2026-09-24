@@ -75,3 +75,9 @@ static_assert(std::ranges::range<any<view, bidirectional, int const, int const>>
 static_assert(std::ranges::range<any<view, random_access, int const, int const>>);
 static_assert(std::ranges::range<any<view, contiguous, int const, int const>>);
 
+namespace {
+struct a_struct {};
+}  // namespace
+static_assert(std::ranges::sized_range<any<sized_view, contiguous, a_struct>>);
+static_assert(has_trait_facade_decorator<sized_view, contiguous, a_struct>);
+

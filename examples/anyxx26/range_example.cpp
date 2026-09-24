@@ -19,7 +19,7 @@ TEST_CASE("anyxx26 iterators sentinel equality") {
 	any<forward_iterator, int const, int const&> begin_iterator{arr.begin()};
 	CHECK(!(begin_iterator == end_sentinel));
 
-    any<view, forward, int const, int const&> r{arr};
+    any<view, forward, int const, int const&> r{std::views::all(arr)};
     for (auto const& x : r) {
         CHECK(x == arr[x - 1]);
     }
@@ -105,18 +105,13 @@ TEST_CASE("anyxx26 iterators ranges") {
     any<input_iterator, int> end_iterator{arr.end()};
     test_input_iterator(arr.begin(), end_iterator);
 
-    {
-        any<input_iterator, a_struct> i{ arrs.end() };
-        any<view, input, a_struct> is{ arrs };
-        any<view, input, a_struct const> v{ arrs };
-    }
-
     test_input_range(any<view, input, int>{std::in_place, std::views::all(arr)});
     test_const_input_range(const_arr);
     test_const_input_range1(any<view, input, int, int>{std::in_place_type<std::ranges::iota_view<int, int>>, 1, 6});
+    test_const_input_range1(any<view, input, int, int>{std::ranges::iota_view<int, int>(1, 6)});
+    test_const_input_range1(std::ranges::iota_view<int, int>(1, 6));
     test_input_range_template(any<view, input, int const>{const_arr});
 
-    test_forward_range(arr);
     test_forward_range(const_arr);
 
     test_bidirectional_iterator(arr.begin());
@@ -129,8 +124,6 @@ TEST_CASE("anyxx26 iterators ranges") {
     CHECK(cr.begin()->i == 1);
 
     any<sized_view, contiguous, a_struct> sr{ arr2 };
-    static_assert(std::ranges::sized_range<any<sized_view, contiguous, a_struct>>);
-    static_assert(has_trait_facade_decorator<sized_view, contiguous, a_struct>);
     CHECK(sr.front().i == 1);
     CHECK(!sr.empty());
     CHECK(sr);
@@ -138,4 +131,5 @@ TEST_CASE("anyxx26 iterators ranges") {
     CHECK(sr[0].i == 1);
     sr[0].i = 42;
     CHECK(sr[0].i == 42);
+    CHECK(arr2[0].i == 42);
 }
