@@ -36,27 +36,21 @@ template <template <is_trait, typename, typename...> typename SentinelTrait, tem
 bool operator!=(any<SentinelTrait, Value> const& s, any<IteratorTrait, Value> const& it) {
     return !s.equal(it);
 }
-template <typename Iterator, typename Sentinel>
+template <typename Sentinel, typename Iterator>
 struct sentinel_for{
-    using iterator_type = Iterator;
     using sentinel_type = Sentinel;
+    using iterator_type = Iterator;
     sentinel_type value;
 };
 template <std::ranges::range Range>
-sentinel_for<std::ranges::iterator_t<Range>, std::ranges::sentinel_t<Range>>
+sentinel_for<std::ranges::sentinel_t<Range>, std::ranges::iterator_t<Range>>
 make_end_sentinel_for(Range&& range) {
     return {std::ranges::end(range)};
 }
-template <typename SentinelFor>
-concept is_sentinel_for = requires(SentinelFor s) {
-  typename SentinelFor::iterator_type;
-  typename SentinelFor::sentinel_type;
-  { s.value  };
-};
-template <is_sentinel_for Sentinel, typename Value>
-struct sentinel<model_map, Sentinel, Value> {
-    static bool equal(Sentinel const& sentinel, any<input_iterator, anyxx::cref, Value> const& iterator){
-        return sentinel.value == *unerase_cast<typename Sentinel::iterator_type>(iterator);
+template <typename Sentinel, typename Iterator, typename Value>
+struct sentinel<model_map, sentinel_for<Sentinel, Iterator>, Value> {
+    static bool equal(sentinel_for<Sentinel, Iterator> const& sentinel, any<input_iterator, anyxx::cref, Value> const& iterator){
+        return sentinel.value == *unerase_cast<Sentinel>(iterator);
     }
 };
 
@@ -73,13 +67,13 @@ template <typename Value, template<is_trait, typename, typename...> typename Ite
 std::ptrdiff_t operator-(any<IteratorTrait, Value> const& it, any<sized_sentinel, Value> const& s) {
     return s.subtract_from(it);
 }
-template <is_sentinel_for Sentinel, typename Value>
-struct sized_sentinel<model_map, Sentinel, Value> {
-    static std::ptrdiff_t subtract(Sentinel const& sentinel, any<bidirectional_iterator, anyxx::cref, Value> const& iterator){
-        return sentinel.value - *unerase_cast<typename Sentinel::iterator_type>(iterator);
+template <typename Sentinel, typename Iterator, typename Value>
+struct sized_sentinel<model_map, sentinel_for<Sentinel, Iterator>, Value> {
+    static std::ptrdiff_t subtract(sentinel_for<Sentinel, Iterator> const& sentinel, any<bidirectional_iterator, anyxx::cref, Value> const& iterator){
+        return sentinel.value - *unerase_cast<Iterator>(iterator);
     }
-    static std::ptrdiff_t subtract_from(Sentinel const& sentinel, any<bidirectional_iterator, anyxx::cref, Value> const& iterator){
-        return *unerase_cast<typename Sentinel::iterator_type>(iterator) - sentinel.value;
+    static std::ptrdiff_t subtract_from(sentinel_for<Sentinel, Iterator> const& sentinel, any<bidirectional_iterator, anyxx::cref, Value> const& iterator){
+        return *unerase_cast<Iterator>(iterator) - sentinel.value;
     }
 };
 static_assert(std::sized_sentinel_for<any<sized_sentinel, int>,any<bidirectional_iterator, int>>); 
