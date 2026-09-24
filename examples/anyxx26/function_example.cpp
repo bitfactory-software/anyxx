@@ -1,6 +1,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <bit_factory/v26/anys/function.hpp>
 #include <bit_factory/v26/meta/print_members.hpp>
+#include <functional>
 
 using namespace anyxx26;
 
@@ -171,4 +172,72 @@ TEST_CASE("anyxx26 std function equivalents") {
         static_assert(std::is_invocable_v<decltype(f_const_lambda), int>);
         CHECK(f_const_lambda(1) == 3);
     }
+
+    any<function, copyable<>, int(void) const> f{[]() { return 2; }};
 }
+
+namespace dummy {
+
+template <typename R, typename... Args>
+using signature = R(Args...);
+template <typename R, typename... Args>
+using signature_const = R(Args...) const;
+
+template <typename... Args>
+consteval std::meta::info make_function_signature(bool const_){
+    auto signature_params = std::vector{^^Args...} | std::views::drop(3);
+    if (const_) {
+        return substitute(^^signature_const, signature_params);
+    } else {
+        return substitute(^^signature, signature_params);
+    }
+}
+
+static_assert(dealias(make_function_signature<declaration, declaration, void*, int, double, bool>(false)) ==
+              ^^int(double, bool));
+//static_assert(std::same_as<typename [:make_function_signature<declaration, declaration, void*, int, double, bool>(false):],
+//    int(double, bool));
+
+template <typename FirstRest, typename... RestArgs>
+struct extract_signature {
+    template <typename... ResultArgs>
+    struct result;
+    template <typename... ResultArgs>
+      requires(sizeof...(RestArgs) == 1)
+    struct result<ResultArgs...>{
+      template <typename R>
+        using type = R(ResultArgs...);
+    };
+    template <typename... ResultArgs>
+        requires(sizeof...(RestArgs) > 1)
+    struct result<ResultArgs...> : extract_signature<RestArgs...>::template result<ResultArgs..., FirstRest>{};
+};
+
+
+using sig_t = int(int);
+using sig1_t = extract_signature<int, void, void>::template result<>::type<int>;
+static_assert(std::same_as<sig_t, sig1_t>);
+//template <typename R, typename... Args>
+//using x_function = std::function<extract_signature<Args...>::template result<>::type<R>>;
+//static_assert(std::same_as<x_function<int, double, bool, bool>, std::function<int(double)>>);
+//using f = extract_signature<double, bool, bool>::template result<>::type<int>;
+static_assert(std::same_as<std::function<extract_signature<double, bool, bool>::template result<>::type<int>>, std::function<int(double)>>);
+
+TEST_CASE("anyxx26 function signature") {
+  std::function<sig_t> f = [](auto i) { return i + 1;};
+  CHECK(f(1) == 2);
+}
+
+template <is_trait Trait, typename Self, typename Base, typename R, typename... Args>
+struct function;
+
+template <is_trait Trait, typename Self, typename Base, typename R, typename... Args>
+struct function<Trait, Self, Base, R(Args...) const> : Base::template self_apply<Trait, Self> {
+    R operator()(Args... args) const;
+};
+template <is_trait Trait, typename Self, typename Base, typename R, typename... Args>
+struct function<Trait, Self, Base, R(Args...)> : Base::template self_apply<Trait, Self> {
+    R operator()(Args... args);
+};
+
+};
