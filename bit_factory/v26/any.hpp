@@ -199,25 +199,25 @@ struct any<Trait, Arg0, Args...> : any<Trait, default_proxy_t<Trait, Arg0, Args.
 
 #define __dyn_OP_CONST(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
-    requires (!has_trait_facade_decorator<Trait, Args...>) \
+    requires (!has_trait_facade_decorator<Trait, Args...> && requires(any<Trait, Args...> const& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
 decltype(auto) operator op (any<Trait, Args...> const& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename Other, typename... Args> \
-    requires (!has_trait_facade_decorator<Trait, Args...>) \
+    requires (!has_trait_facade_decorator<Trait, Args...> && requires(any<Trait, Args...>& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
 decltype(auto) operator op (any<Trait, Args...>& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP0(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename... Args> \
-    requires (!has_trait_facade_decorator<Trait, Args...>) \
+    requires (!has_trait_facade_decorator<Trait, Args...> && requires(any<Trait, Args...> const& lhs){ {lhs.function()}; }) \
 decltype(auto) operator op (any<Trait, Args...> const& lhs) { \
     return lhs.function(); \
 }
 #define __dyn_OP0_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename... Args> \
-    requires (!has_trait_facade_decorator<Trait, Args...>) \
+    requires (!has_trait_facade_decorator<Trait, Args...> && requires(any<Trait, Args...>& lhs){ {lhs.function()}; }) \
 decltype(auto) operator op (any<Trait, Args...>& lhs) { \
     return lhs.function(); \
 }
