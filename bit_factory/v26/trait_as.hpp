@@ -59,12 +59,12 @@ consteval auto make_static_facade_overloaded_calls() {
     return calls;
 };
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_trait_facade() {
     return substitute(^^meta::to_struct, make_static_facade_overloaded_calls<V, Trait, Args...>());
 };
 
-template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 class trait_as : public[:make_trait_facade<V, Trait, Args...>():], public trait_facade_decorator_t<Trait, Args...> {
   V value_;
 
@@ -74,11 +74,11 @@ class trait_as : public[:make_trait_facade<V, Trait, Args...>():], public trait_
 
 template <typename V>
 struct using_ {
-  template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+  template <template <typename, typename, typename...> typename Trait, typename... Args>
   using as = trait_as<V, Trait, Args...>;
 };
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 auto as(auto&& value){
   return trait_as<std::remove_reference_t<decltype(value)>, Trait, Args...>(std::forward<decltype(value)>(value));
 }

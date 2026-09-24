@@ -71,7 +71,7 @@ struct random_access_iterator : bidirectional_iterator<Trait, Self, Value, Ref> 
         using iterator_category = std::random_access_iterator_tag;
     };
 };
-template <template<is_trait, typename, typename...> typename IteratorTrait, typename Value, typename Ref = Value&>
+template <template<typename, typename, typename...> typename IteratorTrait, typename Value, typename Ref = Value&>
 auto operator+(std::ptrdiff_t n, any<IteratorTrait, Value, Ref> const& it) {
     return it + n;
 }

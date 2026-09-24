@@ -44,14 +44,14 @@ struct default_operator_facade {
 
 };
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 concept has_trait_facade_decorator = requires(no_trait_facade_decorator_t){
   typename trait_declaration_t<Trait, Args...>::template trait_facade_decorator<no_trait_facade_decorator_t>;
 };
-template <typename DummySelf, template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <typename DummySelf, template <typename, typename, typename...> typename Trait, typename... Args>
 concept has_trait_facade_decorator_for_self = has_trait_facade_decorator<Trait, Args...>;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info trait_facade_decorator() {
   if constexpr (has_trait_facade_decorator<Trait, Args...>) {
     return ^^typename anyxx26::trait_declaration_t<Trait, Args...>:: template trait_facade_decorator<any<Trait, Args...>>;
@@ -60,7 +60,7 @@ consteval std::meta::info trait_facade_decorator() {
   }
 }
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 using trait_facade_decorator_t = [:trait_facade_decorator<Trait, Args...>():];
 
 }  // namespace anyxx26

@@ -194,19 +194,19 @@ struct any_base : deduced_typenames<Trait, Args...> {
   friend auto release_v_table(any_base& self) { return std::exchange(self.v_table_, nullptr); }
 };
 
-template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<any_base<Trait, Proxy, Args...>>() :] {
     using any_base<Trait, Proxy, Args...>::any_base;
 };
-template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any<Trait, Proxy, Args...> : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<Trait, Args...> {
     using any_with_facade<Trait, Proxy, Args...>::any_with_facade;
 };
-template <template <is_trait, typename, typename...> typename Trait>
+template <template <typename, typename, typename...> typename Trait>
 struct any<Trait> : any<Trait, default_proxy_t<Trait>> {
     using any<Trait, default_proxy_t<Trait>>::any;
 };
-template <template <is_trait, typename, typename...> typename Trait, typename Arg0, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename Arg0, typename... Args>
 struct any<Trait, Arg0, Args...> : any<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...> {
     using any<Trait, default_proxy_t<Trait, Arg0, Args...>, Arg0, Args...>::any;
 };
@@ -375,7 +375,7 @@ struct dispatch_table {
 };
 
 // clang-format off
-template <template <is_trait, typename, typename...> typename Base>
+template <template <typename, typename, typename...> typename Base>
 struct base {
     template <is_trait Trait, typename Self, typename... Args >
     using self_apply = Base<Trait, Self, Args...>;

@@ -11,16 +11,16 @@ struct model_map {};
 template <typename Trait>
 concept is_trait = std::same_as<Trait, declaration> || std::same_as<Trait, model_map>;
 
-template <template <is_trait, typename, typename...> typename Trait>
+template <template <typename, typename, typename...> typename Trait>
 using base_v_table_t = anyxx::observeable::v_table_t;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table;
 
-template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
 struct any_base;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct any;
 
 struct default_t {};
@@ -58,10 +58,10 @@ consteval std::meta::info trait_declaration(){
 template<template<typename, typename...> typename TraitTemplate, typename... Args>
 using trait_declaration_t = TraitTemplate<declaration, declaration, Args...>;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 concept specifies_default_proxy_t = requires { typename trait_declaration_t<Trait, Args...>::default_proxy_t; };
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info compute_default_proxy_t() {
     if constexpr(specifies_default_proxy_t<Trait, Args...>) {
         return ^^typename trait_declaration_t<Trait, Args...>::default_proxy_t;
@@ -70,16 +70,16 @@ consteval std::meta::info compute_default_proxy_t() {
     }
 }
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 using default_proxy_t = [:compute_default_proxy_t<Trait, Args...>():];
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 using dyn_self_val_t = any<Trait, Args...>;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
 
-template <template <is_trait, typename, typename...> typename Trait, typename... Args>
+template <template <typename, typename, typename...> typename Trait, typename... Args>
 using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
 
 }  // namespace anyxx26
