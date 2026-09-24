@@ -5,13 +5,13 @@
 
 namespace anyxx26 {
 
-template <is_trait Trait, typename Self, typename Category, typename Value>
-struct sized_view : view_base<Trait, Self, Category, Value> {
+template <is_trait Trait, typename Self, typename Category, typename Value, typename Ref = Value&>
+struct sized_view : view_base<Trait, Self, Category, Value, Ref> {
 
-    static any<sized_sentinel, Value> end(Self& self) {
+    static any<sized_sentinel, Value, Ref> end(Self& self) {
         return sentinel_for(self);
     }
-    static any<sized_sentinel, Value const> end(Self const& self) {
+    static any<sized_sentinel, std::add_const_t<Value>, std::add_const_t<Ref>> end(Self const& self) {
         return sentinel_for(self);
     }
     static std::ptrdiff_t reserve_hint(Self const& self) {

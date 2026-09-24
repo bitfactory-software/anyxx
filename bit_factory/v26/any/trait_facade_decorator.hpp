@@ -20,12 +20,11 @@ struct default_operator_facade {
   }
 
     __dyn_OP(op_parentheses, ())
-        __dyn_OP(op_square_brackets, [])
-        __dyn_OP0(op_arrow, ->)
-        __dyn_OP0(op_plus_plus, ++)
-        __dyn_OP0(op_minus_minus, --)
-
-        //    __dyn_OP(op_ampersand, &)
+    __dyn_OP(op_square_brackets, [])
+    __dyn_OP0(op_arrow, ->)
+    __dyn_OP0(op_plus_plus, ++)
+    __dyn_OP0(op_minus_minus, --)
+     //    __dyn_OP(op_ampersand, &)
 
 #undef __dyn_OP
 #undef __dyn_OP0
