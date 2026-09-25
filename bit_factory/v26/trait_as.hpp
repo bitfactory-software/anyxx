@@ -84,7 +84,7 @@ template <typename V, template <typename, typename, typename...> typename Trait,
 consteval std::meta::info make_static_facade_call(interface_spec const& spec){
     auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
     auto implementation_member = find_function_impl(spec.member, ^^Trait, ^^V, args);
-    if(!is_defaulted_function_spec(implementation_member)) {
+    if (implementation_member!= spec.member) {
         if(is_const_function(spec.member)) {
             return substitute(^^const_trait_facade_model_map_call, {^^V const, reflect_constant(implementation_member)});
         } else {
@@ -121,6 +121,19 @@ consteval auto make_static_facade_overloaded_calls() {
     }
     return calls;
 };
+
+struct interface_spec_with_target : interface_spec {
+    std::meta::info target;
+};
+template <typename V, std::meta::info trait_declaration>
+consteval std::vector<interface_spec_with_target> make_interface_specs_with_target() {
+    std::vector<interface_spec_with_target> inteface_specs_with_target;
+    //template for(constexpr auto v_table_spec : define_static_array(get_interface_specs(^^trait_declaration))){
+    //    auto implementation_member = find_function_impl(spec.member, ^^ Trait, ^^ V, args);
+
+    //}
+    return inteface_specs_with_target;
+}
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_trait_facade() {
