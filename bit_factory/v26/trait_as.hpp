@@ -4,6 +4,7 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/trait_translation/spec.hpp>
 #include <bit_factory/v26/trait_translation/overload_set_spec.hpp>
+#include <bit_factory/v26/trait_translation/overload_set_spec_with_target.hpp>
 #include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
 #include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 #include <bit_factory/v26/trait_translation/find_candidate_in_target.hpp>
@@ -46,24 +47,6 @@ struct mutable_trait_member_call {
     }
 };
 
-
-consteval std::vector<std::meta::info> make_find_candidate_in_target_params(std::meta::info interface_function, std::meta::info concrete_type){
-    std::vector<std::meta::info> types;
-    types.push_back(reflect_constant(interface_function));
-    types.push_back(concrete_type);
-    types.push_back(return_type_of(interface_function));
-    types.push_back(void_self(is_const_function(interface_function)));
-    for(auto p : define_static_array(parameters_of(interface_function) | std::views::drop(is_static_member(interface_function) ? 1 : 0))) {
-        types.push_back(type_of(p));
-    }
-    return types;
-}
-
-template <typename V>
-consteval std::meta::info find_trait_candidate_in_target(std::meta::info interface_function) {
-    constexpr auto find_candidate_in_target_f = substitute(^^find_candidate_in_target, make_find_candidate_in_target_params(interface_function, ^^V));
-    return [:find_candidate_in_target_f:]();
-}
 
 template <typename V>
 consteval std::meta::info make_implementation_call(std::meta::info implementation_member) {
@@ -121,19 +104,6 @@ consteval auto make_static_facade_overloaded_calls() {
     }
     return calls;
 };
-
-struct interface_spec_with_target : interface_spec {
-    std::meta::info target;
-};
-template <typename V, std::meta::info trait_declaration>
-consteval std::vector<interface_spec_with_target> make_interface_specs_with_target() {
-    std::vector<interface_spec_with_target> inteface_specs_with_target;
-    //template for(constexpr auto v_table_spec : define_static_array(get_interface_specs(^^trait_declaration))){
-    //    auto implementation_member = find_function_impl(spec.member, ^^ Trait, ^^ V, args);
-
-    //}
-    return inteface_specs_with_target;
-}
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_trait_facade() {
