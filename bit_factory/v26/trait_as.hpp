@@ -29,8 +29,10 @@ struct mutable_trait_facade_call {
     }
 };
 
+//std::meta::info make_default_implementation
+
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info make_implementation_call(std::meta::info implementation_member, std::meta::info concrete_type) {
+consteval std::meta::info make_implementation_call(std::meta::info implementation_member) {
     if(!is_defaulted_function_spec(implementation_member)) {
         return implementation_member;
     }
@@ -44,14 +46,14 @@ consteval std::meta::info make_implementation_call(std::meta::info implementatio
     throw std::meta::exception(
         "No implementation found for " +
             std::string{display_string_of(implementation_member)} + " in " +
-            std::string{display_string_of(concrete_type)}, concrete_type);
+            std::string{display_string_of(^^V)}, ^^V);
 }
 
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec const& spec){
     auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
     auto implemenation_member = find_function_impl(spec.member, ^^Trait, ^^V, args);
-    //implemenation_member = make_implementation_call<V, Trait, Args...>(implemenation_member, ^^V);
+    implemenation_member = make_implementation_call<V, Trait, Args...>(implemenation_member);
     if(is_const_function(spec.member)) {
         return substitute(^^const_trait_facade_call, {^^V const, reflect_constant(implemenation_member)});
     } else {
