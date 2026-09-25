@@ -117,14 +117,14 @@ template <typename R, typename VoidSelf, typename... Args>
 using invoke_function_t = R (*)(VoidSelf, Args...);
 
 template <std::meta::info spec, typename Target, typename R, typename VoidSelf, typename... Args>
-consteval invoke_function_t<R, VoidSelf, Args...> find_candidate_in_target() {
+consteval std::meta::info find_candidate_in_target() {
     constexpr auto ctx = std::meta::access_context::current();
     using self_t = self_const_correct_t<Target, VoidSelf>;
     template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
         if constexpr(!is_static_member(candidate) && is_function(candidate)) {
             if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
                 if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
-                    return invoke_member<candidate, self_t, R, VoidSelf, Args...>;
+                    return candidate;
                 }
             }
         }
@@ -137,8 +137,8 @@ consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_i
     using return_t = impl_return_type<R, V>;
     using self_t = self_const_correct_t<V, VoidSelf>;
     if constexpr(is_class_type(^^V)) {
-        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate) {
-            return candidate;
+        if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate != std::meta::info{}) {
+            return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>;
         }
     } 
     if constexpr(meta::is_op_parentheses_spec(spec)) {
