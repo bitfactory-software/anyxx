@@ -8,79 +8,11 @@
 #include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
 #include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 #include <bit_factory/v26/trait_translation/find_candidate_in_target.hpp>
+#include <bit_factory/v26/trait_as/trait_calls.hpp>
 #include <bit_factory/v26/any/trait_facade_decorator.hpp>
 #include <meta>
 
 namespace anyxx26 {
-
-template <typename V, typename Self>
-decltype(auto) self_cast(Self* self){
-    return static_cast<V*>(static_cast<std::conditional_t<std::is_const_v<Self>, const void, void>*>(self));
-}
-
-template <typename V, std::meta::info Target>
-struct const_trait_model_map_call {
-  template <typename... Args>
-  decltype(auto) operator()(Args&&... args) const {
-        return[:Target:](*self_cast<V>(this), std::forward<Args>(args)...);
-  }
-};
-template <typename V, std::meta::info Target>
-struct mutable_trait_model_map_call {
-    template <typename... Args>
-    decltype(auto) operator()(Args&&... args) {
-        return[:Target:](*self_cast<V>(this), std::forward<Args>(args)...);
-    }
-};
-
-template <typename V, std::meta::info Target>
-struct const_trait_member_call {
-    template <typename... Args>
-    decltype(auto) operator()(Args&&... args) const {
-        return self_cast<V>(this)->[:Target:](std::forward<Args>(args)...);
-    }
-};
-template <typename V, std::meta::info Target>
-struct mutable_trait_member_call {
-    template <typename... Args>
-    decltype(auto) operator()(Args&&... args) {
-        return self_cast<V>(this)->[:Target:](std::forward<Args>(args)...);
-    }
-};
-
-
-template <typename V>
-consteval std::meta::info make_implementation_call(std::meta::info implementation_member) {
-    return implementation_member;
-
-    //if constexpr(is_class_type(^^V)) {
-    //    if constexpr(constexpr auto candidate = find_candidate_in_target<spec, V, return_t, VoidSelf, Args...>(); candidate != std::meta::info{}) {
-    //        return invoke_member<candidate, self_t, return_t, VoidSelf, Args...>;
-    //    }
-    //}
-    throw std::meta::exception(
-        "No implementation found for " +
-            std::string{display_string_of(implementation_member)} + " in " +
-            std::string{display_string_of(^^V)}, ^^V);
-}
-
-template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
-    if (!is_defaulted_function_spec(spec.target)) {
-        if(is_const_function(spec.target)) {
-            return substitute(^^const_trait_model_map_call, {^^V const, reflect_constant(spec.target)});
-        } else {
-            return substitute(^^mutable_trait_model_map_call, {^^V, reflect_constant(spec.target)});
-        }
-    } else {
-        if (is_const_function(spec.member)) {
-            return substitute(^^const_trait_member_call, {^^V const, reflect_constant(spec.target)});
-        } else {
-            return substitute(^^mutable_trait_member_call, {^^V, reflect_constant(spec.target)});
-        }
-    }
-    return {};
-}
 
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info static_facade_named_overload_set(overload_set_spec_with_target const& spec){
