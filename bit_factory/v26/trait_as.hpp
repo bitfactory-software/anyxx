@@ -16,7 +16,7 @@ template <typename V, std::meta::info Target>
 struct const_trait_facade_model_map_call {
   template <typename... Args>
   decltype(auto) operator()(Args&&... args) const {
-    const V* pvalue = reinterpret_cast<const V*>(this);
+    auto* pvalue = reinterpret_cast<V*>(this);
     return [:Target:](*pvalue, std::forward<Args>(args)...);
   }
 };
@@ -24,7 +24,7 @@ template <typename V, std::meta::info Target>
 struct mutable_trait_facade_model_map_call {
     template <typename... Args>
     decltype(auto) operator()(Args&&... args) {
-      V* pvalue = reinterpret_cast<V*>(this);
+      auto pvalue = reinterpret_cast<V*>(this);
       return[:Target:](*pvalue, std::forward<Args>(args)...);
     }
 };
