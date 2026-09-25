@@ -20,9 +20,9 @@ struct mapable {
 
 template <typename Self, typename Value>
 struct mapable<anyxx26::model_map, Self, Value> {
-    //static Value const& at(Self const& self, std::size_t i) {
-    //    return self.at(i);
-    //}
+    static Value const& at(Self const& self, std::size_t i) {
+        return self.at(i);
+    }
     static Value& at(Self& self, std::size_t i) {
         return self.at(i);
     }

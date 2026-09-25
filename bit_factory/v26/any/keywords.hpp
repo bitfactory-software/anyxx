@@ -35,6 +35,13 @@ template <typename V, typename VoidSelf>
 using self_const_correct_t = std::conditional_t<
     std::is_const_v<std::remove_pointer_t<std::remove_reference_t<VoidSelf>>>,
     V const, V>;
+consteval std::meta::info void_self(bool is_const) {
+  if (is_const) {
+    return ^^void const*;
+  } else {
+    return ^^void*;
+  }
+}
 
 consteval std::meta::info trait_model_map(std::meta::info trait_template, std::meta::info mapped_type, auto args){
   std::vector<std::meta::info> params{ ^^model_map, mapped_type };

@@ -13,7 +13,7 @@
 namespace anyxx26 {
 
 template <typename V, std::meta::info Target>
-struct const_trait_facade_call {
+struct const_trait_facade_model_map_call {
   template <typename... Args>
   decltype(auto) operator()(Args&&... args) const {
     const V* pvalue = reinterpret_cast<const V*>(this);
@@ -21,7 +21,7 @@ struct const_trait_facade_call {
   }
 };
 template <typename V, std::meta::info Target>
-struct mutable_trait_facade_call {
+struct mutable_trait_facade_model_map_call {
     template <typename... Args>
     decltype(auto) operator()(Args&&... args) {
       V* pvalue = reinterpret_cast<V*>(this);
@@ -29,13 +29,31 @@ struct mutable_trait_facade_call {
     }
 };
 
-//std::meta::info make_default_implementation
 
-template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info make_implementation_call(std::meta::info implementation_member) {
-    if(!is_defaulted_function_spec(implementation_member)) {
-        return implementation_member;
+consteval std::vector<std::meta::info> make_find_candidate_in_target_params(std::meta::info interface_function, std::meta::info concrete_type){
+    std::vector<std::meta::info> types;
+    types.push_back(reflect_constant(interface_function));
+    types.push_back(concrete_type);
+    types.push_back(return_type_of(interface_function));
+    types.push_back(void_self(is_const_function(interface_function)));
+    for(auto p : define_static_array(parameters_of(interface_function) | std::views::drop(is_static_member(interface_function) ? 1 : 0))) {
+        types.push_back(type_of(p));
     }
+    return types;
+}
+
+template <typename V>
+consteval std::meta::info make_default_implementation(std::meta::info interface_function) {
+    if (is_class_type(^^V)) {
+        if (auto candidate = substitute(^^find_candidate_in_target, make_find_candidate_in_target_params(interface_function, ^^V)); candidate != std::meta::info{}) {
+            return candidate;
+        }
+    }
+    return std::meta::info{};
+}
+
+template <typename V>
+consteval std::meta::info make_implementation_call(std::meta::info implementation_member) {
     return implementation_member;
 
     //if constexpr(is_class_type(^^V)) {
@@ -52,13 +70,15 @@ consteval std::meta::info make_implementation_call(std::meta::info implementatio
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec const& spec){
     auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
-    auto implemenation_member = find_function_impl(spec.member, ^^Trait, ^^V, args);
-    implemenation_member = make_implementation_call<V, Trait, Args...>(implemenation_member);
-    if(is_const_function(spec.member)) {
-        return substitute(^^const_trait_facade_call, {^^V const, reflect_constant(implemenation_member)});
-    } else {
-        return substitute(^^mutable_trait_facade_call, {^^V, reflect_constant(implemenation_member)});
+    auto implementation_member = find_function_impl(spec.member, ^^Trait, ^^V, args);
+    if(!is_defaulted_function_spec(implementation_member)) {
+        if(is_const_function(spec.member)) {
+            return substitute(^^const_trait_facade_model_map_call, {^^V const, reflect_constant(implementation_member)});
+        } else {
+            return substitute(^^mutable_trait_facade_model_map_call, {^^V, reflect_constant(implementation_member)});
+        }
     }
+    return {};
 }
 
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
