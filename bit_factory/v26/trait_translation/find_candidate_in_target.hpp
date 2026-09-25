@@ -6,14 +6,14 @@
 
 namespace anyxx26 {
 
-template <>
-consteval std::meta::info find_candidate_in_target(std::meta::info spec, std::meta::info target, std::meta::info return_type, std::meta::info void_self, std::meta::info... args) {
+template <std::meta::info spec, typename Target, typename R, typename VoidSelf, typename... Args>
+consteval std::meta::info find_candidate_in_target() {
     constexpr auto ctx = std::meta::access_context::current();
-    using self_t = self_const_correct_t<target, void_self>;
-    template for(constexpr auto candidate : define_static_array(members_of(target, ctx))) {
+    using self_t = self_const_correct_t<Target, VoidSelf>;
+    template for(constexpr auto candidate : define_static_array(members_of(^^ Target, ctx))) {
         if constexpr(!is_static_member(candidate) && is_function(candidate)) {
             if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
-                if constexpr(std::is_invocable_r_v<[:return_type:], decltype(&[:candidate:]), self_t, [:args:]...>) {
+                if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
                     return candidate;
                 }
             }
