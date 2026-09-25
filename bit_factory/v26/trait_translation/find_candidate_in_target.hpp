@@ -3,6 +3,7 @@
 #include <meta>
 #include <algorithm>
 #include <bit_factory/v26/any/keywords.hpp>
+#include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 
 namespace anyxx26 {
 
@@ -10,14 +11,16 @@ template <std::meta::info spec, typename Target, typename R, typename VoidSelf, 
 consteval std::meta::info find_candidate_in_target() {
     constexpr auto ctx = std::meta::access_context::current();
     using self_t = self_const_correct_t<Target, VoidSelf>;
-    template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
-        if constexpr(!is_static_member(candidate) && is_function(candidate)) {
-            if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
-                if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
-                    return candidate;
+    if constexpr(is_defaulted_function_spec(spec) && is_class_type(^^Target)) {
+        template for(constexpr auto candidate : define_static_array(members_of(^^Target, ctx))) {
+            if constexpr(!is_static_member(candidate) && is_function(candidate)) {
+                if constexpr(meta::function_name_of(candidate) == meta::function_name_of(spec)) {
+                    if constexpr(std::is_invocable_r_v<R, decltype(&[:candidate:]), self_t, Args...>) {
+                        return candidate;
+                    }
                 }
             }
-        }
+        }   
     }
     return {};
 }
@@ -36,7 +39,7 @@ consteval std::vector<std::meta::info> make_find_candidate_in_target_params(std:
 
 template <typename V, std::meta::info interface_function>
 consteval std::meta::info find_candidate_in() {
-    constexpr auto find_candidate_in_target_f = substitute(^^find_candidate_in_target, make_find_candidate_in_target_params(interface_function, ^^ V));
+    constexpr auto find_candidate_in_target_f = substitute(^^find_candidate_in_target, make_find_candidate_in_target_params(interface_function, ^^std::decay_t<V>));
     return[:find_candidate_in_target_f:]();
 }
 
