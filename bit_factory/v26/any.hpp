@@ -275,6 +275,8 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 #undef __dyn_OP_CONST
 #undef __dyn_OP_MUTATING
 #undef __dyn_OP0
+#undef __dyn_OP0_MUTATING
+
 
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
