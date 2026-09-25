@@ -25,7 +25,24 @@ struct mutable_trait_facade_model_map_call {
     template <typename... Args>
     decltype(auto) operator()(Args&&... args) {
       auto pvalue = reinterpret_cast<V*>(this);
-      return[:Target:](*pvalue, std::forward<Args>(args)...);
+      return [:Target:](*pvalue, std::forward<Args>(args)...);
+    }
+};
+
+template <typename V, std::meta::info Target>
+struct const_trait_member_call {
+    template <typename... Args>
+    decltype(auto) operator()(Args&&... args) const {
+        auto* pvalue = reinterpret_cast<V*>(this);
+        return pvalue->[:Target:](std::forward<Args>(args)...);
+    }
+};
+template <typename V, std::meta::info Target>
+struct mutable_trait_member_call {
+    template <typename... Args>
+    decltype(auto) operator()(Args&&... args) {
+        auto pvalue = reinterpret_cast<V*>(this);
+        return pvalue->[:Target:](std::forward<Args>(args)...);
     }
 };
 
@@ -43,13 +60,9 @@ consteval std::vector<std::meta::info> make_find_candidate_in_target_params(std:
 }
 
 template <typename V>
-consteval std::meta::info make_default_implementation(std::meta::info interface_function) {
-    if (is_class_type(^^V)) {
-        if (auto candidate = substitute(^^find_candidate_in_target, make_find_candidate_in_target_params(interface_function, ^^V)); candidate != std::meta::info{}) {
-            return candidate;
-        }
-    }
-    return std::meta::info{};
+consteval std::meta::info find_trait_candidate_in_target(std::meta::info interface_function) {
+    constexpr auto find_candidate_in_target_f = substitute(^^find_candidate_in_target, make_find_candidate_in_target_params(interface_function, ^^V));
+    return [:find_candidate_in_target_f:]();
 }
 
 template <typename V>
@@ -77,6 +90,13 @@ consteval std::meta::info make_static_facade_call(interface_spec const& spec){
         } else {
             return substitute(^^mutable_trait_facade_model_map_call, {^^V, reflect_constant(implementation_member)});
         }
+    //} else {
+    //    auto target = find_trait_candidate_in_target<V>(spec.member);
+    //    if (is_const_function(spec.member)) {
+    //        return substitute(^^const_trait_member_call, {^^V const, reflect_constant(target)});
+    //    } else {
+    //        return substitute(^^mutable_trait_member_call, {^^V, reflect_constant(target)});
+    //    }
     }
     return {};
 }
@@ -84,7 +104,7 @@ consteval std::meta::info make_static_facade_call(interface_spec const& spec){
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info static_facade_named_overload_set(overload_set_spec const& spec){
     std::vector<std::meta::info> overload_set;
-    for(auto overload : spec.specs) {
+    for(auto overload : std::define_static_array(spec.specs)) {
         if(auto call = make_static_facade_call<V, Trait, Args...>(overload); call != std::meta::info{}) {
             overload_set.push_back(call);
         }
