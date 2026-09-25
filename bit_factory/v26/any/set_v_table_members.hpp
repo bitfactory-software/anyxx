@@ -7,6 +7,7 @@
 #include <bit_factory/v26/any/signature_translation.hpp>
 #include <bit_factory/v26/any/make_v_table_members_type.hpp>
 #include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
+#include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <meta>
 #include <utility>
@@ -189,7 +190,7 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
     typename V, typename R, typename VoidSelf, typename... Args>
 [:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl(VoidSelf void_self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
   using return_t = [:translate_v_table_return_type<dyn_self_val>(^^R):];
-  if constexpr (default_ || !is_static_member(m)) {
+  if constexpr (default_) {
     constexpr auto fptr = default_impl<m, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
     if constexpr(std::same_as<return_t, void>) {
         fptr(void_self, forward_v_table_fptr_param<V, Args>(args)...);
@@ -210,8 +211,7 @@ template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::m
 
 consteval std::meta::info make_vfimpl(std::meta::info concrete_type, std::meta::info implementing_function, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, std::meta::info interface_function) {
   std::vector<std::meta::info> types;
-  bool use_default = annotations_of_with_type(implementing_function, ^^default_t).size() > 0;
-  types.push_back(std::meta::reflect_constant(use_default));
+  types.push_back(std::meta::reflect_constant(is_defaulted_function_spec(implementing_function)));
   types.push_back(reflect_constant(implementing_function));
   types.push_back(std::meta::reflect_constant(dyn_self_val));
   types.push_back(std::meta::reflect_constant(dyn_self_cref));

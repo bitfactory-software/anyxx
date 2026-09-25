@@ -90,6 +90,24 @@ struct a_struct {
 void test_contiguous_iterator(any<contiguous_iterator, a_struct> begin) {
     CHECK(begin->i == 1);
 }
+
+class container{
+public:
+    container(){
+        v = { {1}, {2}, {3}, {4}, {5} };
+    }
+
+   any<sized_view, contiguous, a_struct> get(int i) {
+       if (i == 0) { return v; }
+       else if(i == 1) { return arr; }
+       else { return std::views::single(single); }
+   }
+
+private:
+    std::vector<a_struct> v;
+    std::array<a_struct, 5> arr{1, 2, 3, 4, 5};
+    a_struct single{1};
+};
 }
 
 TEST_CASE("anyxx26 iterators ranges") {
@@ -132,4 +150,12 @@ TEST_CASE("anyxx26 iterators ranges") {
     sr[0].i = 42;
     CHECK(sr[0].i == 42);
     CHECK(arr2[0].i == 42);
+
+    container c;
+    auto r1 = c.get(0);
+    CHECK(r1.front().i == 1);
+    CHECK(!r1.empty());
+    CHECK(r1);
+    CHECK(r1.size() == 5);
+    CHECK(r1[0].i == 1);
 }

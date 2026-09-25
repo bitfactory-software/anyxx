@@ -5,6 +5,7 @@
 #include <bit_factory/v26/trait_translation/spec.hpp>
 #include <bit_factory/v26/trait_translation/overload_set_spec.hpp>
 #include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
+#include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 #include <bit_factory/v26/any/trait_facade_decorator.hpp>
 #include <meta>
 
@@ -26,6 +27,10 @@ struct mutable_trait_facade_call {
       return[:Target:](*pvalue, std::forward<Args>(args)...);
     }
 };
+
+//consteval std::meta::info make_implementation_call(std::meta::info implementation_member, std::meta::info concrete_type) {
+//    return {};
+//}
 
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec const& spec){
