@@ -12,9 +12,9 @@ namespace {
 template <is_trait Trait, typename Self, typename Value>
 struct mapable {
     Value const& at(std::size_t) const;
-//    Value const& operator[](std::size_t) const;
+    Value const& operator[](std::size_t) const;
     Value& at(std::size_t);
-//    Value& operator[](std::size_t);
+    Value& operator[](std::size_t);
     std::size_t size() const;
     void set_all_to(Value const&);
 };
@@ -50,7 +50,7 @@ TEST_CASE("anyxx26 const correctness overloading any") {
         static_assert(std::same_as<decltype(v), int const&>);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
-        //CHECK(m[1] == 2);
+        CHECK(m[1] == 2);
         CHECK(m.size() == 2);
         static_assert(!has_set_all_to<any<mapable, anyxx::cref, int>>);
     }
@@ -62,7 +62,7 @@ TEST_CASE("anyxx26 const correctness overloading any") {
         static_assert(std::same_as<decltype(v), int&>);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
-        //CHECK(m[1] == 2);
+        CHECK(m[1] == 2);
         m.set_all_to(42);
         CHECK(m.size() == 2);
         static_assert(has_set_all_to<any<mapable, anyxx::mutref, int>>);
@@ -80,7 +80,7 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
         static_assert(target2 == ^^std::vector<int>::size);
         
         constexpr auto interface_specs_with_target = std::define_static_array(make_interface_specs_with_target<std::vector<int>, mapable, int>());
-        static_assert(interface_specs_with_target.size() == 4);
+        static_assert(interface_specs_with_target.size() == 6);
         constexpr auto s1 = display_string_of(interface_specs_with_target[0].target);
         constexpr auto s2 = display_string_of(interface_specs_with_target[1].target);
         static_assert(s1 != s2);
@@ -98,7 +98,7 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
         static_assert(std::same_as<decltype(v), int const&>);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
-        //CHECK(m[1] == 2);
+        CHECK(m[1] == 2);
         CHECK(m.size() == 2);
         static_assert(!has_set_all_to<any<mapable, anyxx::cref, int>>);
     }
@@ -110,7 +110,7 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
         static_assert(std::same_as<decltype(v), int&>);
         CHECK(m.at(0) == 1);
         CHECK(m.at(1) == 2);
-        //CHECK(m[1] == 2);
+        CHECK(m[1] == 2);
         CHECK(m.size() == 2);
         m.set_all_to(42);
         static_assert(has_set_all_to<any<mapable, anyxx::mutref, int>>);

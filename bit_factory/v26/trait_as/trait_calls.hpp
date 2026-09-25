@@ -168,26 +168,67 @@ struct constness##trait_invoke_op_minus_equals { \
     } \
 }; \
 
-__DEFINE_TRAIT_INVOKE_OP(const, const)
-__DEFINE_TRAIT_INVOKE_OP(mutable, )
+__DEFINE_TRAIT_INVOKE_OP(const_, const)
+__DEFINE_TRAIT_INVOKE_OP(mutable_, )
 
 #undef __DEFINE_TRAIT_INVOKE_OP
 
 template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
+
+    auto self_t = is_const_function(spec.target) ? ^^const V : ^^V;
+
     if (!is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
-            return substitute(^^const_trait_model_map_call, {^^V const, reflect_constant(spec.target)});
+            return substitute(^^const_trait_model_map_call, { self_t, reflect_constant(spec.target)});
         } else {
-            return substitute(^^mutable_trait_model_map_call, {^^V, reflect_constant(spec.target)});
+            return substitute(^^mutable_trait_model_map_call, { self_t, reflect_constant(spec.target)});
         }
     } else {
         if (is_const_function(spec.member)) {
-            return substitute(^^const_trait_member_call, {^^V const, reflect_constant(spec.target)});
+            return substitute(^^const_trait_member_call, { self_t, reflect_constant(spec.target)});
         } else {
-            return substitute(^^mutable_trait_member_call, {^^V, reflect_constant(spec.target)});
+            return substitute(^^mutable_trait_member_call, { self_t, reflect_constant(spec.target)});
         }
     }
+
+    if (!is_operator_function(spec.member)) {
+        std::string msg{ display_string_of(^^V) };
+        msg += " has no member function " + std::string{ display_string_of(spec.member) };
+        throw std::meta::exception(msg, ^^ V);
+    } else {
+#define __RETURN_OP(op_name) \
+	    if (meta::is_op_spec(spec.member, std::meta::op_##op_name)) { \
+            if (is_const_function(spec.member)) { \
+                return substitute(^^const_trait_invoke_op_##op_name, { self_t }); \
+            } else { \
+                return substitute(^^mutable_trait_invoke_op_##op_name, { self_t }); \
+            } \
+        }
+        __RETURN_OP(plus_plus)
+        else __RETURN_OP(minus_minus)
+        else __RETURN_OP(star)
+        else __RETURN_OP(arrow)
+        else __RETURN_OP(square_brackets)
+        else __RETURN_OP(plus)
+        else __RETURN_OP(minus)
+        else __RETURN_OP(equals_equals)
+        else __RETURN_OP(exclamation_equals)
+        else __RETURN_OP(less)
+        else __RETURN_OP(less_equals)
+        else __RETURN_OP(greater)
+        else __RETURN_OP(greater_equals)
+        else __RETURN_OP(plus_equals)
+        else __RETURN_OP(minus_equals)
+
+#undef __RETURN_OP
+        else {
+            std::string msg{ display_string_of(spec.member) };
+            msg += " not yet implemeted in anyxx " + std::string{ display_string_of(spec.member) };
+            throw std::meta::exception(msg, spec.member);
+            }
+    }
+
     return {};
 }
 
