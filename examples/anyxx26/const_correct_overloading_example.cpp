@@ -116,3 +116,32 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
         static_assert(has_set_all_to<any<mapable, anyxx::mutref, int>>);
     }
 }
+
+namespace{
+template <is_trait Trait, typename Self, typename Value>
+struct pointable_to {
+    Value * operator->() const;
+    Value& operator[](std::size_t) const;
+};
+}
+TEST_CASE("anyxx26 pointerlike trait_as") {
+    {
+        std::array<int, 2> v1  = { 1, 2 };
+        auto v1ptr = v1.data();
+        auto const m = as<pointable_to, int>(v1ptr);
+        decltype(auto) v = m[0];
+        std::println("{}", v);
+        static_assert(std::same_as<decltype(v), int&>);
+        CHECK(m[0] == 1);
+        CHECK(m[1] == 2);
+    }
+    {
+        std::array<std::string, 2> v1  = { "1", "2" };
+        auto const m = as<pointable_to, std::string>(v1.data());
+        decltype(auto) v = m[0];
+        std::println("{}", v);
+        static_assert(std::same_as<decltype(v), std::string&>);
+        CHECK(m[0] == "1");
+        CHECK(m[1] == "2");
+    }
+}

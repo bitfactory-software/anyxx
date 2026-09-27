@@ -26,7 +26,7 @@ consteval std::vector<interface_spec_with_target> make_interface_specs_with_targ
                 auto target = find_candidate_in<V, spec.member>();
                 if(target != std::meta::info{}) {
                     interface_specs_with_target.push_back(interface_spec_with_target{ spec, target });
-                }
+                }  // else spec.meber is an operator.
             }
         }
     }
