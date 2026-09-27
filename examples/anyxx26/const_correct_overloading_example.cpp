@@ -120,8 +120,12 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
 namespace{
 template <is_trait Trait, typename Self, typename Value>
 struct pointable_to {
-    Value * operator->() const;
+    Value& operator*() const;
+    Value* operator->() const;
     Value& operator[](std::size_t) const;
+    Self& operator++();
+    Self operator+(std::size_t) const;
+//    bool operator==(Self const&) const;
 };
 }
 TEST_CASE("anyxx26 pointerlike trait_as") {
@@ -132,8 +136,14 @@ TEST_CASE("anyxx26 pointerlike trait_as") {
         decltype(auto) v = m[0];
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int&>);
+        decltype(auto) v2 = *m;
+        std::println("{}", v2);
+        static_assert(std::same_as<decltype(v2), int&>);
+        CHECK(*m == 1);
         CHECK(m[0] == 1);
         CHECK(m[1] == 2);
+        //CHECK(++m == m + 1);
+        //CHECK(*m == 2);
     }
     {
         std::array<std::string, 2> v1  = { "1", "2" };
