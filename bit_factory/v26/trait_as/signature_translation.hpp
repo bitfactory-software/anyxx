@@ -8,7 +8,8 @@
 namespace anyxx26 {
 
 template <typename Trait>
-consteval std::meta::info translate_trait_as_return_type(std::meta::info return_type) {
+consteval std::meta::info translate_trait_as_return_type(std::meta::info spec) {
+    std::meta::info return_type = return_type_of(spec);
     if constexpr(^^return_type == ^^declaration&) {
         return ^^Trait&;
     } else if constexpr(^^return_type == ^^declaration) {

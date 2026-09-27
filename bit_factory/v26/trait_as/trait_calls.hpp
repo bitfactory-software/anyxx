@@ -11,14 +11,14 @@ decltype(auto) self_cast(Self* self){
     return static_cast<V*>(static_cast<std::conditional_t<std::is_const_v<Self>, const void, void>*>(self));
 }
 
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct const_trait_model_map_call {
   template <typename Self, typename... Args>
   decltype(auto) operator()(this Self const& self, Args&&... args){
         return[:Target:](*self_cast<V>(&self), std::forward<Args>(args)...);
   }
 };
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct mutable_trait_model_map_call {
     template <typename Self, typename... Args>
     decltype(auto) operator()(this Self&  self, Args&&... args) {
@@ -26,14 +26,14 @@ struct mutable_trait_model_map_call {
     }
 };
 
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct const_trait_member_call {
     template <typename Self, typename... Args>
     decltype(auto) operator()(this Self const& self, Args&&... args) {
         return self_cast<V>(&self)->[:Target:](std::forward<Args>(args)...);
     }
 };
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct mutable_trait_member_call {
     template <typename Self, typename... Args>
     decltype(auto) operator()(this Self&  self, Args&&... args) {
@@ -42,28 +42,28 @@ struct mutable_trait_member_call {
 };
 
 #define __DEFINE_TRAIT_INVOKE_OP(constness, const_) \
-  template <typename V> \
+  template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_parentheses { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
         return (*self_cast<V>(&self))(std::forward<Args>(args)...); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_plus_plus { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
         return ++(*self_cast<V>(&self)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_minus_minus { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
         return --(*self_cast<V>(&self)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_star { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
@@ -74,21 +74,21 @@ struct constness##trait_invoke_op_star { \
         } \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_arrow { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
         return std::to_address(*self_cast<V>(&self)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_square_brackets { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
         return (*self_cast<V>(&self))[std::forward<Args>(args)...]; \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_plus { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
@@ -99,7 +99,7 @@ struct constness##trait_invoke_op_plus { \
         } \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_minus { \
     template <typename Self, typename... Args> \
     decltype(auto) operator()(this Self const_& self, Args&&... args) { \
@@ -110,56 +110,56 @@ struct constness##trait_invoke_op_minus { \
         } \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_equals_equals { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) == std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_exclamation_equals { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) != std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_less { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) < std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_less_equals { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) <= std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_greater { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) > std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_greater_equals { \
     template <typename Self, typename Arg> \
    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) >= std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_plus_equals { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) += std::forward<Arg>(arg)); \
     } \
 }; \
-template <typename V> \
+template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_minus_equals { \
     template <typename Self, typename Arg> \
     decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
@@ -176,33 +176,36 @@ template <typename V, template <typename, typename, typename...> typename Trait,
 consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
 
     auto self_t = is_const_function(spec.target) ? ^^const V : ^^V;
+    auto args = { self_t, reflect_constant(spec.target), reflect_constant(spec.member) };
 
     if(!is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
-            return substitute(^^const_trait_model_map_call, { self_t, reflect_constant(spec.target) });
+            return substitute(^^const_trait_model_map_call, args);
         } else {
-            return substitute(^^mutable_trait_model_map_call, { self_t, reflect_constant(spec.target) });
+            return substitute(^^mutable_trait_model_map_call, args);
         }
     } else if (is_class_type(^^std::remove_cvref_t<V>)){
         if(is_const_function(spec.member)) {
-            return substitute(^^const_trait_member_call, { self_t, reflect_constant(spec.target) });
+            return substitute(^^const_trait_member_call, args);
         } else {
-            return substitute(^^mutable_trait_member_call, { self_t, reflect_constant(spec.target) });
+            return substitute(^^mutable_trait_member_call, args);
         }
     }
 
     if (!is_operator_function(spec.member)) {
         std::string msg{ display_string_of(^^V) };
-        msg += " has no member function " + std::string{ display_string_of(spec.member) };
+        msg += " has no member function " + std::string{display_string_of(spec.member)};
         throw std::meta::exception(msg, ^^ V);
     }
+
+    auto op_args = { self_t, reflect_constant(spec.member) };
 
 #define __RETURN_OP(op_name) \
 	if (meta::is_op_spec(spec.member, std::meta::op_##op_name)) { \
         if (is_const_function(spec.member)) { \
-            return substitute(^^const_trait_invoke_op_##op_name, { self_t }); \
+            return substitute(^^const_trait_invoke_op_##op_name, op_args); \
         } else { \
-            return substitute(^^mutable_trait_invoke_op_##op_name, { self_t }); \
+            return substitute(^^mutable_trait_invoke_op_##op_name, op_args); \
         } \
     }
     __RETURN_OP(plus_plus)
