@@ -20,7 +20,7 @@ consteval auto fitting_dyn_parameter_type(std::meta::info self_t){
     };
 }
 
-consteval bool same_signature(auto fitting_dyn_parameter_type, auto const& candidate_params, auto const& declaration_params) {
+consteval bool same_signature(auto fitting_parameter_type, auto const& candidate_params, auto const& declaration_params) {
     if (candidate_params.size() != declaration_params.size()) {
         return false;
     }
@@ -29,7 +29,7 @@ consteval bool same_signature(auto fitting_dyn_parameter_type, auto const& candi
       auto candidate_type = type_of(candidate_params[i]);
       if (candidate_type == declaration_type) {
         continue;
-      } else if (fitting_dyn_parameter_type(candidate_type, declaration_type)) {
+      } else if (fitting_parameter_type(candidate_type, declaration_type)) {
          continue;
       } else {
         return false;
@@ -38,7 +38,7 @@ consteval bool same_signature(auto fitting_dyn_parameter_type, auto const& candi
     return true;
 }
 
-consteval std::meta::info get_implementation_member(auto fitting_dyn_parameter_type, std::meta::info in, std::meta::info declaration_member) {
+consteval std::meta::info get_implementation_member(auto fitting_parameter_type, std::meta::info in, std::meta::info declaration_member) {
     constexpr auto ctx = std::meta::access_context::current();
     for(auto candidate : members_of(in, ctx)) {
       if (meta::function_name_of(candidate) == meta::function_name_of(declaration_member)) {
@@ -49,7 +49,7 @@ consteval std::meta::info get_implementation_member(auto fitting_dyn_parameter_t
             | std::views::drop(is_static_member(candidate) ? 1 : 0); 
         auto d_params = parameters_of(declaration_member) 
             | std::views::drop(is_static_member(declaration_member) ? 1 : 0);
-        if (same_signature(fitting_dyn_parameter_type, m_params, d_params)) {
+        if (same_signature(fitting_parameter_type, m_params, d_params)) {
             return candidate;
         }
       }
@@ -57,15 +57,21 @@ consteval std::meta::info get_implementation_member(auto fitting_dyn_parameter_t
     return {};
 }
 
-consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
-    auto fitting_dyn_parameter_type = anyxx26::fitting_dyn_parameter_type(mapped_type);
-    if(auto found_in_impl = get_implementation_member(fitting_dyn_parameter_type, trait_model_map(trait_template, mapped_type, args), interface_function); found_in_impl != std::meta::info{}) {
+consteval std::meta::info find_function_impl(auto fitting_parameter_type, std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
+    if(auto found_in_impl = get_implementation_member(fitting_parameter_type, trait_model_map(trait_template, mapped_type, args), interface_function); found_in_impl != std::meta::info{}) {
         return found_in_impl;
-    } else if(auto found_in_base = get_implementation_member(fitting_dyn_parameter_type, trait_declaration(trait_template, args), interface_function); found_in_base != std::meta::info{}) {
+    } else if(auto found_in_base = get_implementation_member(fitting_parameter_type, trait_declaration(trait_template, args), interface_function); found_in_base != std::meta::info{}) {
         return found_in_base;
     } else {
-        throw std::logic_error("Function not found in impl trait or base trait");
+        throw std::meta::exception("Function " + std::string(display_string_of(interface_function)) + " not found in impl trait " 
+            + std::string(display_string_of(trait_model_map(trait_template, mapped_type, args))) 
+            + " or base trait " + std::string(display_string_of(trait_declaration(trait_template, args))), interface_function);
     }
 }
+
+consteval std::meta::info find_function_impl(std::meta::info interface_function, std::meta::info trait_template, std::meta::info mapped_type, auto args) {
+    return find_function_impl(anyxx26::fitting_dyn_parameter_type(mapped_type), interface_function, trait_template, mapped_type, args);
+}
+
 
 }  // namespace anyxx26::meta

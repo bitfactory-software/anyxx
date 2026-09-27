@@ -17,14 +17,16 @@ template <typename V, template <is_trait, typename, typename...> typename Trait,
 consteval std::vector<interface_spec_with_target> make_interface_specs_with_target() {
     std::vector<interface_spec_with_target> interface_specs_with_target;
     template for(constexpr auto spec : define_static_array(get_interface_specs(^^ trait_declaration_t<Trait, Args...>))){
-        auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
-        auto implementation_member = find_function_impl(spec.member, ^^ Trait, ^^ V, args);
-        if(implementation_member != spec.member) {
-            interface_specs_with_target.push_back(interface_spec_with_target{ spec, implementation_member });
-        } else {
-            auto target = find_candidate_in<V, spec.member>();
-            if(target != std::meta::info{}) {
-                interface_specs_with_target.push_back(interface_spec_with_target{ spec, target });
+        if(is_function_or_operator(spec)) {
+            auto args = std::define_static_array(template_arguments_of(spec.declaration_trait) | std::views::drop(2));
+            auto implementation_member = find_function_impl(spec.member, template_of(spec.declaration_trait), ^^ V, args);
+            if(implementation_member != spec.member) {
+                interface_specs_with_target.push_back(interface_spec_with_target{ spec, implementation_member });
+            } else {
+                auto target = find_candidate_in<V, spec.member>();
+                if(target != std::meta::info{}) {
+                    interface_specs_with_target.push_back(interface_spec_with_target{ spec, target });
+                }
             }
         }
     }
