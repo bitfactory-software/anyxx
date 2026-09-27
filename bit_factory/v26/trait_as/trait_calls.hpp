@@ -243,8 +243,6 @@ consteval std::meta::info make_static_facade_call(interface_spec_with_target con
     if(auto named_call = choose_named_call<V>(spec); named_call != std::meta::info{}){
         return substitute(named_call, make_trait_as_named_call_template_params<V, Trait, Args...>(spec));
     } else if (auto op_call = choose_operator_call(spec); op_call != std::meta::info{}) {
-        //auto args = { self_t, reflect_constant(spec.member) };
-        //return substitute(op_call, args);
         return substitute(op_call, make_trait_as_op_call_template_params<V, Trait, Args...>(spec));
     } else {
         throw std::meta::exception{std::string{display_string_of(spec.member)} + " not yet implemeted in anyxx " + std::string{display_string_of(spec.member)}, spec.member};
