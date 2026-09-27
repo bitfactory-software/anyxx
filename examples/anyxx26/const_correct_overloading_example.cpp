@@ -128,7 +128,7 @@ struct pointable_to {
 //    bool operator==(Self const&) const;
 };
 }
-TEST_CASE("anyxx26 pointerlike trait_as") {
+TEST_CASE("anyxx26 pointable_to trait_as") {
     {
         std::array<int, 2> v1  = { 1, 2 };
         auto v1ptr = v1.data();
