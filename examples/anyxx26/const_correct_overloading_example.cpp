@@ -153,5 +153,6 @@ TEST_CASE("anyxx26 pointable_to trait_as") {
         static_assert(std::same_as<decltype(v), std::string&>);
         CHECK(m[0] == "1");
         CHECK(m[1] == "2");
+        CHECK(m->size() == 1u);
     }
 }
