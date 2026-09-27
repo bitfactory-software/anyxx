@@ -172,40 +172,31 @@ __DEFINE_TRAIT_INVOKE_OP(mutable_, )
 
 #undef __DEFINE_TRAIT_INVOKE_OP
 
-template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
-consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
-
-    auto self_t = is_const_function(spec.target) ? ^^const V : ^^V;
-    auto args = { self_t, reflect_constant(spec.target), reflect_constant(spec.member) };
-
+template <typename V>
+consteval std::meta::info choose_named_call(interface_spec_with_target const& spec){
     if(!is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
-            return substitute(^^const_trait_model_map_call, args);
+            return ^^const_trait_model_map_call;
         } else {
-            return substitute(^^mutable_trait_model_map_call, args);
+            return ^^mutable_trait_model_map_call;
         }
-    } else if (is_class_type(^^std::remove_cvref_t<V>)){
+    } else if(is_class_type(^^std::remove_cvref_t<V>)){
         if(is_const_function(spec.member)) {
-            return substitute(^^const_trait_member_call, args);
+            return ^^const_trait_member_call;
         } else {
-            return substitute(^^mutable_trait_member_call, args);
+            return ^^mutable_trait_member_call;
         }
     }
+    return {};
+}
 
-    if (!is_operator_function(spec.member)) {
-        std::string msg{ display_string_of(^^V) };
-        msg += " has no member function " + std::string{display_string_of(spec.member)};
-        throw std::meta::exception(msg, ^^ V);
-    }
-
-    auto op_args = { self_t, reflect_constant(spec.member) };
-
+consteval std::meta::info choose_operator_call(interface_spec_with_target const& spec){
 #define __RETURN_OP(op_name) \
 	if (meta::is_op_spec(spec.member, std::meta::op_##op_name)) { \
         if (is_const_function(spec.member)) { \
-            return substitute(^^const_trait_invoke_op_##op_name, op_args); \
+            return ^^const_trait_invoke_op_##op_name; \
         } else { \
-            return substitute(^^mutable_trait_invoke_op_##op_name, op_args); \
+            return ^^mutable_trait_invoke_op_##op_name; \
         } \
     }
     __RETURN_OP(plus_plus)
@@ -226,10 +217,21 @@ consteval std::meta::info make_static_facade_call(interface_spec_with_target con
     else __RETURN_OP(minus_equals)
 
 #undef __RETURN_OP
-    else {
-        std::string msg{ display_string_of(spec.member) };
-        msg += " not yet implemeted in anyxx " + std::string{ display_string_of(spec.member) };
-        throw std::meta::exception(msg, spec.member);
+}
+
+template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
+consteval std::meta::info make_static_facade_call(interface_spec_with_target const& spec){
+
+    auto self_t = is_const_function(spec.target) ? ^^const V : ^^V;
+
+    if(auto named_call = choose_named_call<V>(spec); named_call != std::meta::info{}){
+        auto args = { self_t, reflect_constant(spec.target), reflect_constant(spec.member) };
+        return substitute(named_call, args);
+    } else if (auto op_call = choose_operator_call(spec); op_call != std::meta::info{}) {
+        auto args = { self_t, reflect_constant(spec.member) };
+        return substitute(op_call, args);
+    } else {
+        throw std::meta::exception{std::string{display_string_of(spec.member)} + " not yet implemeted in anyxx " + std::string{display_string_of(spec.member)}, spec.member};
     }
 }
 
