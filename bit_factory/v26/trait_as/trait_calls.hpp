@@ -11,14 +11,14 @@ decltype(auto) self_cast(Self* self){
     return static_cast<V*>(static_cast<std::conditional_t<std::is_const_v<Self>, const void, void>*>(self));
 }
 
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct const_trait_model_map_call {
   template <typename Self, typename... Args>
   decltype(auto) operator()(this Self const& self, Args&&... args){
         return[:Target:](*self_cast<V>(&self), std::forward<Args>(args)...);
   }
 };
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct mutable_trait_model_map_call {
     template <typename Self, typename... Args>
     decltype(auto) operator()(this Self&  self, Args&&... args) {
@@ -26,14 +26,14 @@ struct mutable_trait_model_map_call {
     }
 };
 
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct const_trait_member_call {
     template <typename Self, typename... Args>
     decltype(auto) operator()(this Self const& self, Args&&... args) {
         return self_cast<V>(&self)->[:Target:](std::forward<Args>(args)...);
     }
 };
-template <typename V, std::meta::info Target>
+template <typename V, std::meta::info Target, std::meta::info Spec>
 struct mutable_trait_member_call {
     template <typename Self, typename... Args>
     decltype(auto) operator()(this Self&  self, Args&&... args) {
@@ -228,7 +228,7 @@ consteval std::meta::info make_static_facade_call(interface_spec_with_target con
     auto self_t = is_const_function(spec.target) ? ^^const V : ^^V;
 
     if(auto named_call = choose_named_call<V>(spec); named_call != std::meta::info{}){
-        auto args = { self_t, reflect_constant(spec.target) };
+        auto args = { self_t, reflect_constant(spec.target), reflect_constant(spec.member) };
         return substitute(named_call, args);
     } else if (auto op_call = choose_operator_call(spec); op_call != std::meta::info{}) {
         auto args = { self_t, reflect_constant(spec.member) };
