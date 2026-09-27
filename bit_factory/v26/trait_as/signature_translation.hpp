@@ -15,7 +15,7 @@ consteval std::meta::info translate_trait_as_return_type(std::meta::info spec) {
     } else if constexpr(^^return_type == ^^declaration) {
         return ^^Self;
     } else {
-        return ^^return_type;
+        return return_type;
     }
 }
 template <typename Self, std::meta::info Spec>

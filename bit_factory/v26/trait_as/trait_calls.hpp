@@ -14,14 +14,14 @@ decltype(auto) self_cast(Self* self){
 template <typename V, std::meta::info Target, std::meta::info Spec>
 struct const_trait_model_map_call {
   template <typename Self, typename... Args>
-  decltype(auto) operator()(this Self const& self, Args&&... args){
+  trait_as_return_type_t<Self, Spec> operator()(this Self const& self, Args&&... args){
         return[:Target:](*self_cast<V>(&self), std::forward<Args>(args)...);
   }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec>
 struct mutable_trait_model_map_call {
     template <typename Self, typename... Args>
-    decltype(auto) operator()(this Self&  self, Args&&... args) {
+    trait_as_return_type_t<Self, Spec> operator()(this Self&  self, Args&&... args) {
         return[:Target:](*self_cast<V>(&self), std::forward<Args>(args)...);
     }
 };
@@ -29,14 +29,14 @@ struct mutable_trait_model_map_call {
 template <typename V, std::meta::info Target, std::meta::info Spec>
 struct const_trait_member_call {
     template <typename Self, typename... Args>
-    decltype(auto) operator()(this Self const& self, Args&&... args) {
+    trait_as_return_type_t<Self, Spec> operator()(this Self const& self, Args&&... args) {
         return self_cast<V>(&self)->[:Target:](std::forward<Args>(args)...);
     }
 };
 template <typename V, std::meta::info Target, std::meta::info Spec>
 struct mutable_trait_member_call {
     template <typename Self, typename... Args>
-    decltype(auto) operator()(this Self&  self, Args&&... args) {
+    trait_as_return_type_t<Self, Spec> operator()(this Self&  self, Args&&... args) {
         return self_cast<V>(&self)->[:Target:](std::forward<Args>(args)...);
     }
 };
@@ -45,28 +45,28 @@ struct mutable_trait_member_call {
   template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_parentheses { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         return (*self_cast<V>(&self))(std::forward<Args>(args)...); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_plus_plus { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         return ++(*self_cast<V>(&self)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_minus_minus { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         return --(*self_cast<V>(&self)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_star { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         if constexpr(sizeof...(Args) == 0) { \
             return *(*self_cast<V>(&self)); \
         } else { \
@@ -77,21 +77,21 @@ struct constness##trait_invoke_op_star { \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_arrow { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         return std::to_address(*self_cast<V>(&self)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_square_brackets { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         return (*self_cast<V>(&self))[std::forward<Args>(args)...]; \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_plus { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         if constexpr(sizeof...(Args) == 0) { \
             return +(*self_cast<V>(&self)); \
         } else { \
@@ -102,7 +102,7 @@ struct constness##trait_invoke_op_plus { \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_minus { \
     template <typename Self, typename... Args> \
-    decltype(auto) operator()(this Self const_& self, Args&&... args) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Args&&... args) { \
         if constexpr(sizeof...(Args) == 0) { \
             return -(*self_cast<V>(&self)); \
         } else { \
@@ -113,56 +113,56 @@ struct constness##trait_invoke_op_minus { \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_equals_equals { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) == std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_exclamation_equals { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) != std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_less { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) < std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_less_equals { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) <= std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_greater { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) > std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_greater_equals { \
     template <typename Self, typename Arg> \
-   decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) >= std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_plus_equals { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) += std::forward<Arg>(arg)); \
     } \
 }; \
 template <typename V, std::meta::info Spec> \
 struct constness##trait_invoke_op_minus_equals { \
     template <typename Self, typename Arg> \
-    decltype(auto) operator()(this Self const_& self, Arg&& arg) { \
+    trait_as_return_type_t<Self, Spec> operator()(this Self const_& self, Arg&& arg) { \
         return ((*self_cast<V>(&self)) -= std::forward<Arg>(arg)); \
     } \
 }; \

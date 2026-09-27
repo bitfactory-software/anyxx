@@ -87,7 +87,11 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
         constexpr auto s3 = std::define_static_string(display_string_of(interface_specs_with_target[3].target));
         constexpr auto s4 = std::define_static_string(display_string_of(interface_specs_with_target[3].member));
         static_assert(s3 != s4);
-        //throw std::meta::exception("target:" + std::string{s3} + "\nmember:" + std::string{s4}, interface_specs_with_target[3].target);
+
+        //constexpr auto return_type = translate_trait_as_return_type<trait_as<std::vector<int>, mapable, int>>(interface_specs_with_target[3].member);
+        //constexpr auto return_type_str = std::define_static_string(display_string_of(return_type));
+        //static_assert(std::same_as<[:return_type:], int&>);
+        //throw std::meta::exception("return_type: " + std::string{ display_string_of(return_type) }, return_type);
     }
 
     {
