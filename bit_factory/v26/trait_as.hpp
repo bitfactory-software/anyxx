@@ -14,7 +14,7 @@
 
 namespace anyxx26 {
 
-template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info static_facade_named_overload_set(overload_set_spec_with_target const& spec){
     std::vector<std::meta::info> overload_set;
     for(auto overload : std::define_static_array(spec.specs)) {
@@ -26,7 +26,7 @@ consteval std::meta::info static_facade_named_overload_set(overload_set_spec_wit
     return std::meta::data_member_spec(overloaded_call_operator, { .name = spec.name, .no_unique_address = true });
 }
 
-template <typename V, template <typename, typename, typename...> typename Trait, typename... Args>
+template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval auto make_static_facade_overloaded_calls() {
     std::vector<std::meta::info> calls;
     for(auto const& set : make_overload_sets_specs_with_target<V, Trait, Args...>()) {

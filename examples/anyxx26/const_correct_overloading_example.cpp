@@ -92,6 +92,8 @@ TEST_CASE("anyxx26 const correctness overloading trait_as") {
         //constexpr auto return_type_str = std::define_static_string(display_string_of(return_type));
         //static_assert(std::same_as<[:return_type:], int&>);
         //throw std::meta::exception("return_type: " + std::string{ display_string_of(return_type) }, return_type);
+        //auto params = make_trait_as_params<trait_as<std::vector<int>, mapable, int>>(interface_specs_with_target[3].member);
+        //throw std::meta::exception("params: " + std::string{ display_string_of(params[0]) } , interface_specs_with_target[3].member);
     }
 
     {

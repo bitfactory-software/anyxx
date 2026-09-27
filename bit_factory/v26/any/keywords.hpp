@@ -23,6 +23,9 @@ struct any_base;
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 struct any;
 
+template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
+class trait_as;
+
 struct default_t {};
 constexpr static inline default_t defaulted = {};
 

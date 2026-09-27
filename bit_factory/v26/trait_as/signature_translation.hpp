@@ -32,4 +32,11 @@ consteval std::meta::info translate_trait_as_param_type(std::meta::info param){
     }
 }
 
+template <typename Self>
+consteval auto make_trait_as_params(std::meta::info spec){
+  return parameters_of(spec) 
+      | std::views::drop(is_static_member(spec) ? 1 : 0)
+      | std::views::transform([](std::meta::info param) { return translate_trait_as_param_type<Self>(type_of(param)); });
+}
+
 }  // namespace anyxx26::meta
