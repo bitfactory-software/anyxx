@@ -8,6 +8,7 @@
 #include <bit_factory/v26/trait_translation/get_implementation_member.hpp>
 #include <bit_factory/v26/trait_translation/is_defaulted_function_spec.hpp>
 #include <bit_factory/v26/trait_translation/find_candidate_in_target.hpp>
+#include <bit_factory/v26/trait_translation/deduced_typenames.hpp>
 #include <bit_factory/v26/trait_as/trait_calls.hpp>
 #include <bit_factory/v26/any/trait_facade_decorator.hpp>
 #include <meta>
@@ -41,15 +42,15 @@ consteval std::meta::info make_trait_facade() {
 };
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
-class trait_as : public[:make_trait_facade<V, Trait, Args...>():], public trait_facade_decorator_t<Trait, Args...> {
-public:
-    V value_;
+class trait_as : public[:make_trait_facade<V, Trait, Args...>():], public trait_facade_decorator_t<Trait, Args...>, public deduced_typenames<Trait, Args...>{
+    V value_{};
 
  public:
-  trait_as(V const& value) : value_(value) {}
+     trait_as() = default;
+     trait_as(V const& value) : value_(value) {}
 
-  friend V const& get_value(trait_as const& self) { return self.value_; };
-  friend V& get_value(trait_as& self) { return self.value_; };
+    friend V const& get_value(trait_as const& self) { return self.value_; };
+    friend V& get_value(trait_as& self) { return self.value_; };
 };
 
 template <typename V>
