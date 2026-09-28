@@ -49,10 +49,13 @@ consteval std::meta::info void_self(bool is_const) {
   }
 }
 
+consteval std::meta::info trait_for(std::meta::info trait_template, std::meta::info type, std::meta::info mapped_type, auto args){
+    std::vector<std::meta::info> params{ type, mapped_type };
+    params.append_range(args);
+    return substitute(trait_template, params);
+}
 consteval std::meta::info trait_model_map(std::meta::info trait_template, std::meta::info mapped_type, auto args){
-  std::vector<std::meta::info> params{ ^^model_map, mapped_type };
-  params.append_range(args);
-  return substitute(trait_template, params);
+  return trait_for(trait_template, ^^model_map, mapped_type, args);
 }
 template<std::meta::info TraitTemplate, typename V, std::meta::info... Args>
 consteval std::meta::info trait_model_map(){
@@ -60,9 +63,7 @@ consteval std::meta::info trait_model_map(){
 }
 
 consteval std::meta::info trait_declaration(std::meta::info trait_template, auto args){
-  std::vector<std::meta::info> params{ ^^declaration, ^^declaration };
-  params.append_range(args);
-  return substitute(trait_template, params);
+    return trait_for(trait_template, ^^declaration, ^^declaration, args);
 }
 template<std::meta::info TraitTemplate, std::meta::info... Args>
 consteval std::meta::info trait_declaration(){
@@ -94,5 +95,7 @@ using dyn_self_cref_t = any<Trait, anyxx::cref, Args...>;
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
 using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
+
+struct empty_t {};
 
 }  // namespace anyxx26
