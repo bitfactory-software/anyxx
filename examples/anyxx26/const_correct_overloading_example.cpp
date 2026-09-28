@@ -152,7 +152,7 @@ TEST_CASE("anyxx26 pointable_to trait_as") {
         std::array<int, 2> v1  = { 1, 2 };
         auto v1ptr = v1.data();
         auto const m = as<pointable_to, int>(v1ptr);
-        auto self_cast_m = self_cast<tt const>(&m.value_);
+        auto self_cast_m = self_cast<tt const>(&get_value(m));
         CHECK(self_cast_m == &m);
         decltype(auto) v = m[0];
         std::println("{}", v);
