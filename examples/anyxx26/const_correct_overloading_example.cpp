@@ -131,14 +131,15 @@ struct pointable_to {
     Value& operator[](std::size_t) const;
     Self& operator++();
     Self operator+(std::size_t) const;
-//    bool operator==(Self const&) const;
+    bool operator==(Self const&) const;
+    bool operator!=(Self const&) const;
 };
 }
 TEST_CASE("anyxx26 pointable_to trait_as") {
+    using tt = trait_as<int*, pointable_to, int>;
     consteval{
         constexpr auto interface_specs_with_target = std::define_static_array(make_interface_specs_with_target<int*, pointable_to, int>());
-        static_assert(interface_specs_with_target.size() == 5);
-        using tt = trait_as<int*, pointable_to, int>;
+        static_assert(interface_specs_with_target.size() == 7);
         using r_type = trait_as_return_type_t<tt, interface_specs_with_target[3].member>;
         constexpr auto return_type = return_type_of(interface_specs_with_target[3].member);
         static_assert(!is_const_function(interface_specs_with_target[3].member));
@@ -151,6 +152,8 @@ TEST_CASE("anyxx26 pointable_to trait_as") {
         std::array<int, 2> v1  = { 1, 2 };
         auto v1ptr = v1.data();
         auto const m = as<pointable_to, int>(v1ptr);
+        auto self_cast_m = self_cast<tt const>(&m.value_);
+        CHECK(self_cast_m == &m);
         decltype(auto) v = m[0];
         std::println("{}", v);
         static_assert(std::same_as<decltype(v), int&>);
@@ -160,13 +163,18 @@ TEST_CASE("anyxx26 pointable_to trait_as") {
         CHECK(*m == 1);
         CHECK(m[0] == 1);
         CHECK(m[1] == 2);
-   //     auto m2 = m + 1;
+        auto m1 = m + 1u;
+        CHECK(m[1] == *m1);
         auto mm = as<pointable_to, int>(v1ptr);
         decltype(auto) mm1 = ++mm;
         static_assert(std::same_as<decltype(mm1), trait_as<int*, pointable_to, int>&>);
         CHECK(*mm1 == 2);
-        //CHECK(++m == m);
-        //CHECK(*m == 2);
+        decltype(auto) mm2 = m + 1u;
+        static_assert(std::same_as<decltype(mm2), trait_as<int*, pointable_to, int>>);
+        CHECK(mm1 == mm2);
+        CHECK(mm1 != m);
+        mm1++;
+        CHECK(mm1 == as<pointable_to, int>(v1.end()));
     }
     {
         std::array<std::string, 2> v1  = { "1", "2" };

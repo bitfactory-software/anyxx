@@ -13,7 +13,7 @@ consteval std::meta::info translate_trait_as_return_type() {
     if constexpr(return_type == ^^declaration&) {
         return ^^TraitAs&;
     } else if constexpr(return_type == ^^declaration) {
-        return ^^TraitAs;
+        return remove_const(^^TraitAs);
     } else {
         return return_type;
     }
@@ -27,7 +27,7 @@ decltype(auto) forward_trait_as_return(Self&& self, R&& r) {
   if constexpr (return_type == ^^declaration&) {
     return *self_cast<TraitAs>(&self);
   } else if constexpr (return_type == ^^declaration) {
-    return *self_cast<TraitAs>(&self);
+    return TraitAs{std::forward<R>(r)};
   } else if constexpr (return_type == ^^void) {
     return;
   } else {
@@ -36,22 +36,31 @@ decltype(auto) forward_trait_as_return(Self&& self, R&& r) {
 }
 
 
-template <typename Self>
+template <typename TraitAs>
 consteval std::meta::info translate_trait_as_param_type(std::meta::info param){
     if(param == ^^declaration const&) {
-        return ^^Self const&;
+        return ^^TraitAs const&;
     } else if(param == ^^declaration&) {
-        return ^^Self&;
+        return ^^TraitAs&;
     } else {
         return param;
     }
 }
 
-template <typename Self>
+template <typename TraitAs>
 consteval auto make_trait_as_params(std::meta::info spec){
   return parameters_of(spec) 
       | std::views::drop(is_static_member(spec) ? 1 : 0)
-      | std::views::transform([](std::meta::info param) { return translate_trait_as_param_type<Self>(type_of(param)); });
+      | std::views::transform([](std::meta::info param) { return translate_trait_as_param_type<TraitAs>(type_of(param)); });
+}
+
+template <typename TraitAs, std::meta::info spec, typename Arg>
+decltype(auto) forward_trait_as_param(Arg arg) {
+    if constexpr(std::same_as<std::remove_cvref_t<Arg>, std::remove_cvref_t<TraitAs>>) {
+        return get_value(arg);
+    } else {
+        return arg;
+    }
 }
 
 }  // namespace anyxx26::meta
