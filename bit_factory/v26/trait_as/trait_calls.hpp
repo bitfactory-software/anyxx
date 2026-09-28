@@ -193,7 +193,7 @@ __DEFINE_TRAIT_INVOKE_OP(mutable_, )
 
 template <typename V>
 consteval std::meta::info choose_named_call(interface_spec_with_target const& spec){
-    if(!is_defaulted_function_spec(spec.target)) {
+    if(spec.target != std::meta::info{} && !is_defaulted_function_spec(spec.target)) {
         if(is_const_function(spec.target)) {
             return ^^const_trait_model_map_call;
         } else {
@@ -243,7 +243,7 @@ consteval std::meta::info choose_operator_call(interface_spec_with_target const&
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval auto make_trait_as_named_call_template_params(interface_spec_with_target const& spec) {
-    auto self_t = is_const_function(spec.target) ? ^^ const V : ^^V;
+    auto self_t = is_const_function(spec.member) ? ^^ const V : ^^V;
     using trait_as_t = trait_as<V, Trait, Args...>;
     std::vector<std::meta::info> args = { self_t, reflect_constant(spec.target), reflect_constant(spec.member), ^^trait_as_t };
     args.append_range(make_trait_as_params<trait_as_t>(spec.member));
@@ -252,9 +252,9 @@ consteval auto make_trait_as_named_call_template_params(interface_spec_with_targ
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval auto make_trait_as_op_call_template_params(interface_spec_with_target const& spec) {
-    auto self_t = is_const_function(spec.target) ? ^^ const V : ^^V;
+    auto self_t = is_const_function(spec.member) ? ^^ const V : ^^V;
     using trait_as_t = trait_as<V, Trait, Args...>;
-    std::vector<std::meta::info> args = { self_t, reflect_constant(spec.member), is_const_function(spec.target) ? ^^const trait_as_t : ^^trait_as_t };
+    std::vector<std::meta::info> args = { self_t, reflect_constant(spec.member), is_const_function(spec.member) ? ^^const trait_as_t : ^^trait_as_t };
     args.append_range(make_trait_as_params<trait_as_t>(spec.member));
     return args;
 }

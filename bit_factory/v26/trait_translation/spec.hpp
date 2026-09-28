@@ -13,8 +13,11 @@ struct interface_spec {
   std::size_t index;
 };
 
+consteval bool is_v_table_data(std::meta::info const spec) {
+    return has_identifier(spec) && is_type(spec) && annotations_of_with_type(spec, ^^ v_table_data_t).size() > 0;
+}
 consteval bool is_v_table_data(interface_spec const& spec) {
-    return has_identifier(spec.member) && is_type(spec.member) && annotations_of_with_type(spec.member, ^^v_table_data_t).size() > 0;
+    return is_v_table_data(spec.member);
 }
 consteval bool is_function(interface_spec const& spec) {
     return has_identifier(spec.member) && is_function(spec.member);
@@ -49,7 +52,7 @@ consteval std::vector<interface_spec> get_interface_specs(std::meta::info declar
 
         constexpr auto ctx = std::meta::access_context::current();
         for(auto m : members_of(declaration_trait, ctx)) {
-            if (has_identifier(m) && is_type(m) && annotations_of_with_type(m, ^^v_table_data_t).size() > 0) {
+            if (is_v_table_data(m)) {
                 specs.push_back({declaration_trait, m, specs.size()});
             } else if (has_identifier(m) && is_function(m)) {
                 specs.push_back({declaration_trait, m, specs.size()});
