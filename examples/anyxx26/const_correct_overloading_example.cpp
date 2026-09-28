@@ -135,6 +135,18 @@ struct pointable_to {
 };
 }
 TEST_CASE("anyxx26 pointable_to trait_as") {
+    consteval{
+        constexpr auto interface_specs_with_target = std::define_static_array(make_interface_specs_with_target<int*, pointable_to, int>());
+        static_assert(interface_specs_with_target.size() == 5);
+        using tt = trait_as<int*, pointable_to, int>;
+        using r_type = trait_as_return_type_t<tt, interface_specs_with_target[3].member>;
+        constexpr auto return_type = return_type_of(interface_specs_with_target[3].member);
+        static_assert(!is_const_function(interface_specs_with_target[3].member));
+        static_assert(return_type == ^^declaration&);
+        static_assert(std::same_as<r_type, tt&>);
+        using r_type1 = trait_as_return_type_t<tt, interface_specs_with_target[4].member>;
+        static_assert(std::same_as<r_type1, tt>);
+    }
     {
         std::array<int, 2> v1  = { 1, 2 };
         auto v1ptr = v1.data();
@@ -148,7 +160,12 @@ TEST_CASE("anyxx26 pointable_to trait_as") {
         CHECK(*m == 1);
         CHECK(m[0] == 1);
         CHECK(m[1] == 2);
-        //CHECK(++m == m + 1);
+   //     auto m2 = m + 1;
+        auto mm = as<pointable_to, int>(v1ptr);
+        decltype(auto) mm1 = ++mm;
+        static_assert(std::same_as<decltype(mm1), trait_as<int*, pointable_to, int>&>);
+        CHECK(*mm1 == 2);
+        //CHECK(++m == m);
         //CHECK(*m == 2);
     }
     {

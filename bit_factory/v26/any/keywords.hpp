@@ -29,7 +29,10 @@ class trait_as;
 struct default_t {};
 constexpr static inline default_t defaulted = {};
 
-
+template <typename V, typename Self>
+decltype(auto) self_cast(Self* self){
+    return static_cast<V*>(static_cast<std::conditional_t<std::is_const_v<Self>, const void, void>*>(self));
+}
 
 struct v_table_data_t {};
 constexpr static inline v_table_data_t v_table_data = {};

@@ -7,19 +7,34 @@
 
 namespace anyxx26 {
 
-template <typename Self>
-consteval std::meta::info translate_trait_as_return_type(std::meta::info spec) {
-    std::meta::info return_type = return_type_of(spec);
-    if constexpr(^^return_type == ^^declaration&) {
-        return ^^Self&;
-    } else if constexpr(^^return_type == ^^declaration) {
-        return ^^Self;
+template <typename TraitAs, std::meta::info Spec>
+consteval std::meta::info translate_trait_as_return_type() {
+    constexpr std::meta::info return_type = return_type_of(Spec);
+    if constexpr(return_type == ^^declaration&) {
+        return ^^TraitAs&;
+    } else if constexpr(return_type == ^^declaration) {
+        return ^^TraitAs;
     } else {
         return return_type;
     }
 }
-template <typename Self, std::meta::info Spec>
-using trait_as_return_type_t = [:translate_trait_as_return_type<Self>(Spec):];
+template <typename TraitAs, std::meta::info Spec>
+using trait_as_return_type_t = [:translate_trait_as_return_type<TraitAs, Spec>():];
+
+template <typename TraitAs, std::meta::info spec, typename Self, typename R>
+decltype(auto) forward_trait_as_return(Self&& self, R&& r) {
+  constexpr auto return_type = return_type_of(spec);
+  if constexpr (return_type == ^^declaration&) {
+    return *self_cast<TraitAs>(&self);
+  } else if constexpr (return_type == ^^declaration) {
+    return *self_cast<TraitAs>(&self);
+  } else if constexpr (return_type == ^^void) {
+    return;
+  } else {
+    return std::forward<R>(r);
+  }
+}
+
 
 template <typename Self>
 consteval std::meta::info translate_trait_as_param_type(std::meta::info param){
