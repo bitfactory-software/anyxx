@@ -4878,9 +4878,6 @@ class dispatch_vany {
 #ifdef ANY_DLL_MODE
 
 #define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)  \
-  namespace ns_ {                                \
-  struct c_;                                     \
-  }                                              \
   namespace anyxx {                              \
   template <>                                    \
   export_ std::size_t& members_count<ns_::c_>(); \
