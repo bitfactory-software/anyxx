@@ -3973,6 +3973,11 @@ mutable_void invoke_copy_constructor([[maybe_unused]] mutable_void placement,
     std::destroy_at(static_cast<Concrete*>(data));                   \
   })
 
+TRAIT_EX_(const_referenceable, observeable, , , , ,
+    (using default_proxy_t = cref;));
+TRAIT_EX_(mutable_referenceable, observeable, , , , ,
+    (using default_proxy_t = mutref;));
+
 TRAIT_EX_(moveable, observeable, , , ,
           (ANY_MODEL_SIZE, ANY_MOVE_CONSTRUCTOR, ANY_DESTRUCTOR),
           (using default_proxy_t = val<>;));
