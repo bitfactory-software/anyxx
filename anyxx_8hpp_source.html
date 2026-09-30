@@ -4499,190 +4499,187 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l04876" name="l04876"></a><span class="lineno"> 4876</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
 <div class="line"><a id="l04877" name="l04877"></a><span class="lineno"> 4877</span> </div>
 <div class="line"><a id="l04878" name="l04878"></a><span class="lineno"> 4878</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(export_, ns_, c_)  \</span></div>
-<div class="line"><a id="l04879" name="l04879"></a><span class="lineno"> 4879</span><span class="preprocessor">  namespace ns_ {                                \</span></div>
-<div class="line"><a id="l04880" name="l04880"></a><span class="lineno"> 4880</span><span class="preprocessor">  struct c_;                                     \</span></div>
-<div class="line"><a id="l04881" name="l04881"></a><span class="lineno"> 4881</span><span class="preprocessor">  }                                              \</span></div>
-<div class="line"><a id="l04882" name="l04882"></a><span class="lineno"> 4882</span><span class="preprocessor">  namespace anyxx {                              \</span></div>
-<div class="line"><a id="l04883" name="l04883"></a><span class="lineno"> 4883</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
-<div class="line"><a id="l04884" name="l04884"></a><span class="lineno"> 4884</span><span class="preprocessor">  export_ std::size_t&amp; members_count&lt;ns_::c_&gt;(); \</span></div>
-<div class="line"><a id="l04885" name="l04885"></a><span class="lineno"> 4885</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04886" name="l04886"></a><span class="lineno"> 4886</span> </div>
-<div class="line"><a id="l04887" name="l04887"></a><span class="lineno"> 4887</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \</span></div>
-<div class="line"><a id="l04888" name="l04888"></a><span class="lineno"> 4888</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
-<div class="line"><a id="l04889" name="l04889"></a><span class="lineno"> 4889</span><span class="preprocessor">  std::size_t&amp; anyxx::members_count&lt;ns_::c_&gt;() { \</span></div>
-<div class="line"><a id="l04890" name="l04890"></a><span class="lineno"> 4890</span><span class="preprocessor">    static std::size_t count = 0;                \</span></div>
-<div class="line"><a id="l04891" name="l04891"></a><span class="lineno"> 4891</span><span class="preprocessor">    return count;                                \</span></div>
-<div class="line"><a id="l04892" name="l04892"></a><span class="lineno"> 4892</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04893" name="l04893"></a><span class="lineno"> 4893</span> </div>
-<div class="line"><a id="l04894" name="l04894"></a><span class="lineno"> 4894</span><span class="preprocessor">#define ANY_MEMBER_FWD(export_, object_, member_, type_)           \</span></div>
-<div class="line"><a id="l04895" name="l04895"></a><span class="lineno"> 4895</span><span class="preprocessor">  export_ anyxx::member&lt;object_, type_&gt;&amp; _inintialize_##member_(); \</span></div>
-<div class="line"><a id="l04896" name="l04896"></a><span class="lineno"> 4896</span><span class="preprocessor">  inline const anyxx::member&lt;object_, type_&gt;&amp; member_ =            \</span></div>
-<div class="line"><a id="l04897" name="l04897"></a><span class="lineno"> 4897</span><span class="preprocessor">      _inintialize_##member_();</span></div>
-<div class="line"><a id="l04898" name="l04898"></a><span class="lineno"> 4898</span> </div>
-<div class="line"><a id="l04899" name="l04899"></a><span class="lineno"> 4899</span><span class="preprocessor">#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \</span></div>
-<div class="line"><a id="l04900" name="l04900"></a><span class="lineno"> 4900</span><span class="preprocessor">  anyxx::member&lt;object_, type_&gt;&amp; ns_::_inintialize_##member_() { \</span></div>
-<div class="line"><a id="l04901" name="l04901"></a><span class="lineno"> 4901</span><span class="preprocessor">    static anyxx::member&lt;object_, type_&gt; instance;               \</span></div>
-<div class="line"><a id="l04902" name="l04902"></a><span class="lineno"> 4902</span><span class="preprocessor">    return instance;                                             \</span></div>
-<div class="line"><a id="l04903" name="l04903"></a><span class="lineno"> 4903</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04904" name="l04904"></a><span class="lineno"> 4904</span> </div>
-<div class="line"><a id="l04905" name="l04905"></a><span class="lineno"> 4905</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l04906" name="l04906"></a><span class="lineno"> 4906</span> </div>
-<div class="line"><a id="l04907" name="l04907"></a><span class="lineno"> 4907</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(...)</span></div>
-<div class="line"><a id="l04908" name="l04908"></a><span class="lineno"> 4908</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(...)</span></div>
-<div class="line"><a id="l04909" name="l04909"></a><span class="lineno"> 4909</span><span class="preprocessor">#define ANY_MEMBER_FWD(...)</span></div>
-<div class="line"><a id="l04910" name="l04910"></a><span class="lineno"> 4910</span><span class="preprocessor">#define ANY_MEMBER_IMPL(...)</span></div>
-<div class="line"><a id="l04911" name="l04911"></a><span class="lineno"> 4911</span> </div>
-<div class="line"><a id="l04912" name="l04912"></a><span class="lineno"> 4912</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l04913" name="l04913"></a><span class="lineno"> 4913</span> </div>
-<div class="line"><a id="l04914" name="l04914"></a><span class="lineno"> 4914</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
-<div class="line"><a id="l04915" name="l04915"></a><span class="lineno"> 4915</span> </div>
-<div class="line"><a id="l04916" name="l04916"></a><span class="lineno"> 4916</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \</span></div>
-<div class="line"><a id="l04917" name="l04917"></a><span class="lineno"> 4917</span><span class="preprocessor">  namespace ns_ {}                                             \</span></div>
-<div class="line"><a id="l04918" name="l04918"></a><span class="lineno"> 4918</span><span class="preprocessor">  namespace anyxx {                                            \</span></div>
-<div class="line"><a id="l04919" name="l04919"></a><span class="lineno"> 4919</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
-<div class="line"><a id="l04920" name="l04920"></a><span class="lineno"> 4920</span><span class="preprocessor">  export_ std::size_t&amp; dispatchs_count&lt;ns_::any_##_v_table&gt;(); \</span></div>
-<div class="line"><a id="l04921" name="l04921"></a><span class="lineno"> 4921</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04922" name="l04922"></a><span class="lineno"> 4922</span> </div>
-<div class="line"><a id="l04923" name="l04923"></a><span class="lineno"> 4923</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(ns_, any_)                          \</span></div>
-<div class="line"><a id="l04924" name="l04924"></a><span class="lineno"> 4924</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
-<div class="line"><a id="l04925" name="l04925"></a><span class="lineno"> 4925</span><span class="preprocessor">  std::size_t&amp; anyxx::dispatchs_count&lt;ns_::any_##_v_table&gt;() { \</span></div>
-<div class="line"><a id="l04926" name="l04926"></a><span class="lineno"> 4926</span><span class="preprocessor">    static std::size_t count = 0;                              \</span></div>
-<div class="line"><a id="l04927" name="l04927"></a><span class="lineno"> 4927</span><span class="preprocessor">    return count;                                              \</span></div>
-<div class="line"><a id="l04928" name="l04928"></a><span class="lineno"> 4928</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04929" name="l04929"></a><span class="lineno"> 4929</span> </div>
-<div class="line"><a id="l04930" name="l04930"></a><span class="lineno"> 4930</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \</span></div>
-<div class="line"><a id="l04931" name="l04931"></a><span class="lineno"> 4931</span><span class="preprocessor">                             interface_)                            \</span></div>
-<div class="line"><a id="l04932" name="l04932"></a><span class="lineno"> 4932</span><span class="preprocessor">  namespace anyxx {                                                 \</span></div>
-<div class="line"><a id="l04933" name="l04933"></a><span class="lineno"> 4933</span><span class="preprocessor">  template &lt;&gt;                                                       \</span></div>
-<div class="line"><a id="l04934" name="l04934"></a><span class="lineno"> 4934</span><span class="preprocessor">  export_ dispatch_table_t* dispatch_table_instance&lt;                \</span></div>
-<div class="line"><a id="l04935" name="l04935"></a><span class="lineno"> 4935</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;();        \</span></div>
-<div class="line"><a id="l04936" name="l04936"></a><span class="lineno"> 4936</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04937" name="l04937"></a><span class="lineno"> 4937</span> </div>
-<div class="line"><a id="l04938" name="l04938"></a><span class="lineno"> 4938</span><span class="preprocessor">#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \</span></div>
-<div class="line"><a id="l04939" name="l04939"></a><span class="lineno"> 4939</span><span class="preprocessor">  template &lt;&gt;                                                      \</span></div>
-<div class="line"><a id="l04940" name="l04940"></a><span class="lineno"> 4940</span><span class="preprocessor">  anyxx::dispatch_table_t* anyxx::dispatch_table_instance&lt;         \</span></div>
-<div class="line"><a id="l04941" name="l04941"></a><span class="lineno"> 4941</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;() {      \</span></div>
-<div class="line"><a id="l04942" name="l04942"></a><span class="lineno"> 4942</span><span class="preprocessor">    return dispatch_table_instance_implementation&lt;                 \</span></div>
-<div class="line"><a id="l04943" name="l04943"></a><span class="lineno"> 4943</span><span class="preprocessor">        interface_namespace_::interface_##_v_table, class_&gt;();     \</span></div>
-<div class="line"><a id="l04944" name="l04944"></a><span class="lineno"> 4944</span><span class="preprocessor">  }</span></div>
-<div class="line"><a id="l04945" name="l04945"></a><span class="lineno"> 4945</span> </div>
-<div class="line"><a id="l04946" name="l04946"></a><span class="lineno"> 4946</span><span class="preprocessor">#else</span></div>
-<div class="line"><a id="l04947" name="l04947"></a><span class="lineno"> 4947</span></div>
-<div class="line"><a id="l04965" name="l04965"></a><span class="lineno"> 4965</span></div>
-<div class="line"><a id="l04972" name="l04972"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4"> 4972</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(...)</span></div>
-<div class="line"><a id="l04978" name="l04978"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43"> 4978</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT(...)</span></div>
-<div class="line"><a id="l04986" name="l04986"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga1373b948d1de7ce120d00aedb00a0e6b"> 4986</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(...)</span></div>
-<div class="line"><a id="l04993" name="l04993"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac"> 4993</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR(...)</span></div>
-<div class="line"><a id="l04994" name="l04994"></a><span class="lineno"> 4994</span></div>
-<div class="line"><a id="l04996" name="l04996"></a><span class="lineno"> 4996</span> </div>
-<div class="line"><a id="l04997" name="l04997"></a><span class="lineno"> 4997</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l04998" name="l04998"></a><span class="lineno"> 4998</span></div>
-<div class="line"><a id="l05012" name="l05012"></a><span class="lineno"> 5012</span></div>
-<div class="line"><a id="l05063" name="l05063"></a><span class="lineno"> 5063</span> </div>
-<div class="line"><a id="l05064" name="l05064"></a><span class="lineno"> 5064</span><span class="comment">// self tests...</span></div>
-<div class="line"><a id="l05065" name="l05065"></a><span class="lineno"> 5065</span><span class="keyword">namespace </span>anyxx {</div>
-<div class="line"><a id="l05066" name="l05066"></a><span class="lineno"> 5066</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05067" name="l05067"></a><span class="lineno"> 5067</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05068" name="l05068"></a><span class="lineno"> 5068</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05069" name="l05069"></a><span class="lineno"> 5069</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05070" name="l05070"></a><span class="lineno"> 5070</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05071" name="l05071"></a><span class="lineno"> 5071</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05072" name="l05072"></a><span class="lineno"> 5072</span> </div>
-<div class="line"><a id="l05073" name="l05073"></a><span class="lineno"> 5073</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05074" name="l05074"></a><span class="lineno"> 5074</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05075" name="l05075"></a><span class="lineno"> 5075</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05076" name="l05076"></a><span class="lineno"> 5076</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05077" name="l05077"></a><span class="lineno"> 5077</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;cref, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05078" name="l05078"></a><span class="lineno"> 5078</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05079" name="l05079"></a><span class="lineno"> 5079</span> </div>
-<div class="line"><a id="l05080" name="l05080"></a><span class="lineno"> 5080</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05081" name="l05081"></a><span class="lineno"> 5081</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05082" name="l05082"></a><span class="lineno"> 5082</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05083" name="l05083"></a><span class="lineno"> 5083</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;shared, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05084" name="l05084"></a><span class="lineno"> 5084</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05085" name="l05085"></a><span class="lineno"> 5085</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05086" name="l05086"></a><span class="lineno"> 5086</span> </div>
-<div class="line"><a id="l05087" name="l05087"></a><span class="lineno"> 5087</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05088" name="l05088"></a><span class="lineno"> 5088</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05089" name="l05089"></a><span class="lineno"> 5089</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05090" name="l05090"></a><span class="lineno"> 5090</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05091" name="l05091"></a><span class="lineno"> 5091</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05092" name="l05092"></a><span class="lineno"> 5092</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05093" name="l05093"></a><span class="lineno"> 5093</span> </div>
-<div class="line"><a id="l05094" name="l05094"></a><span class="lineno"> 5094</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05095" name="l05095"></a><span class="lineno"> 5095</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05096" name="l05096"></a><span class="lineno"> 5096</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05097" name="l05097"></a><span class="lineno"> 5097</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05098" name="l05098"></a><span class="lineno"> 5098</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05099" name="l05099"></a><span class="lineno"> 5099</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05100" name="l05100"></a><span class="lineno"> 5100</span> </div>
-<div class="line"><a id="l05101" name="l05101"></a><span class="lineno"> 5101</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05102" name="l05102"></a><span class="lineno"> 5102</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05103" name="l05103"></a><span class="lineno"> 5103</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05104" name="l05104"></a><span class="lineno"> 5104</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05105" name="l05105"></a><span class="lineno"> 5105</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">weak</a>, observeable_v_table&gt;);</div>
-<div class="line"><a id="l05106" name="l05106"></a><span class="lineno"> 5106</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05107" name="l05107"></a><span class="lineno"> 5107</span> </div>
-<div class="line"><a id="l05108" name="l05108"></a><span class="lineno"> 5108</span><span class="keyword">static_assert</span>(!cloneable_to&lt;mutref&gt;);</div>
-<div class="line"><a id="l05109" name="l05109"></a><span class="lineno"> 5109</span><span class="keyword">static_assert</span>(!cloneable_to&lt;cref&gt;);</div>
-<div class="line"><a id="l05110" name="l05110"></a><span class="lineno"> 5110</span><span class="keyword">static_assert</span>(cloneable_to&lt;shared&gt;);</div>
-<div class="line"><a id="l05111" name="l05111"></a><span class="lineno"> 5111</span><span class="keyword">static_assert</span>(!cloneable_to&lt;weak&gt;);</div>
-<div class="line"><a id="l05112" name="l05112"></a><span class="lineno"> 5112</span><span class="keyword">static_assert</span>(cloneable_to&lt;unique&gt;);</div>
-<div class="line"><a id="l05113" name="l05113"></a><span class="lineno"> 5113</span><span class="keyword">static_assert</span>(cloneable_to&lt;val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05114" name="l05114"></a><span class="lineno"> 5114</span> </div>
-<div class="line"><a id="l05115" name="l05115"></a><span class="lineno"> 5115</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, cref&gt;);</div>
-<div class="line"><a id="l05116" name="l05116"></a><span class="lineno"> 5116</span><span class="keyword">static_assert</span>(moveable_from&lt;mutref, mutref&gt;);</div>
-<div class="line"><a id="l05117" name="l05117"></a><span class="lineno"> 5117</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, unique&gt;);</div>
-<div class="line"><a id="l05118" name="l05118"></a><span class="lineno"> 5118</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, shared&gt;);</div>
-<div class="line"><a id="l05119" name="l05119"></a><span class="lineno"> 5119</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, weak&gt;);</div>
-<div class="line"><a id="l05120" name="l05120"></a><span class="lineno"> 5120</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05121" name="l05121"></a><span class="lineno"> 5121</span> </div>
-<div class="line"><a id="l05122" name="l05122"></a><span class="lineno"> 5122</span><span class="keyword">static_assert</span>(moveable_from&lt;cref, cref&gt;);</div>
-<div class="line"><a id="l05123" name="l05123"></a><span class="lineno"> 5123</span><span class="keyword">static_assert</span>(moveable_from&lt;cref, mutref&gt;);</div>
-<div class="line"><a id="l05124" name="l05124"></a><span class="lineno"> 5124</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, unique&gt;);</div>
-<div class="line"><a id="l05125" name="l05125"></a><span class="lineno"> 5125</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, shared&gt;);</div>
-<div class="line"><a id="l05126" name="l05126"></a><span class="lineno"> 5126</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, weak&gt;);</div>
-<div class="line"><a id="l05127" name="l05127"></a><span class="lineno"> 5127</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05128" name="l05128"></a><span class="lineno"> 5128</span> </div>
-<div class="line"><a id="l05129" name="l05129"></a><span class="lineno"> 5129</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, cref&gt;);</div>
-<div class="line"><a id="l05130" name="l05130"></a><span class="lineno"> 5130</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, mutref&gt;);</div>
-<div class="line"><a id="l05131" name="l05131"></a><span class="lineno"> 5131</span><span class="keyword">static_assert</span>(moveable_from&lt;shared, unique&gt;);</div>
-<div class="line"><a id="l05132" name="l05132"></a><span class="lineno"> 5132</span><span class="keyword">static_assert</span>(moveable_from&lt;shared, shared&gt;);</div>
-<div class="line"><a id="l05133" name="l05133"></a><span class="lineno"> 5133</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, weak&gt;);</div>
-<div class="line"><a id="l05134" name="l05134"></a><span class="lineno"> 5134</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05135" name="l05135"></a><span class="lineno"> 5135</span> </div>
-<div class="line"><a id="l05136" name="l05136"></a><span class="lineno"> 5136</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, cref&gt;);</div>
-<div class="line"><a id="l05137" name="l05137"></a><span class="lineno"> 5137</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, mutref&gt;);</div>
-<div class="line"><a id="l05138" name="l05138"></a><span class="lineno"> 5138</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, unique&gt;);</div>
-<div class="line"><a id="l05139" name="l05139"></a><span class="lineno"> 5139</span><span class="keyword">static_assert</span>(moveable_from&lt;weak, shared&gt;);</div>
-<div class="line"><a id="l05140" name="l05140"></a><span class="lineno"> 5140</span><span class="keyword">static_assert</span>(moveable_from&lt;weak, weak&gt;);</div>
-<div class="line"><a id="l05141" name="l05141"></a><span class="lineno"> 5141</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05142" name="l05142"></a><span class="lineno"> 5142</span> </div>
-<div class="line"><a id="l05143" name="l05143"></a><span class="lineno"> 5143</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, cref&gt;);</div>
-<div class="line"><a id="l05144" name="l05144"></a><span class="lineno"> 5144</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, mutref&gt;);</div>
-<div class="line"><a id="l05145" name="l05145"></a><span class="lineno"> 5145</span><span class="keyword">static_assert</span>(moveable_from&lt;unique, unique&gt;);</div>
-<div class="line"><a id="l05146" name="l05146"></a><span class="lineno"> 5146</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, shared&gt;);</div>
-<div class="line"><a id="l05147" name="l05147"></a><span class="lineno"> 5147</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, weak&gt;);</div>
-<div class="line"><a id="l05148" name="l05148"></a><span class="lineno"> 5148</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05149" name="l05149"></a><span class="lineno"> 5149</span> </div>
-<div class="line"><a id="l05150" name="l05150"></a><span class="lineno"> 5150</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;);</div>
-<div class="line"><a id="l05151" name="l05151"></a><span class="lineno"> 5151</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>&gt;);</div>
-<div class="line"><a id="l05152" name="l05152"></a><span class="lineno"> 5152</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, unique&gt;);</div>
-<div class="line"><a id="l05153" name="l05153"></a><span class="lineno"> 5153</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>&gt;);</div>
-<div class="line"><a id="l05154" name="l05154"></a><span class="lineno"> 5154</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">weak</a>&gt;);</div>
-<div class="line"><a id="l05155" name="l05155"></a><span class="lineno"> 5155</span><span class="keyword">static_assert</span>(moveable_from&lt;val&lt;&gt;, val&lt;&gt;&gt;);</div>
-<div class="line"><a id="l05156" name="l05156"></a><span class="lineno"> 5156</span> </div>
-<div class="line"><a id="l05157" name="l05157"></a><span class="lineno"> 5157</span><span class="keyword">static_assert</span>(is_model_size_v_table&lt;dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05158" name="l05158"></a><span class="lineno"> 5158</span><span class="keyword">static_assert</span>(is_copy_constructor_v_table&lt;dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05159" name="l05159"></a><span class="lineno"> 5159</span><span class="keyword">static_assert</span>(is_move_constructor_v_table&lt;dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05160" name="l05160"></a><span class="lineno"> 5160</span><span class="keyword">static_assert</span>(is_destructor_v_table&lt;dynamic_copyable_v_table&gt;);</div>
-<div class="line"><a id="l05161" name="l05161"></a><span class="lineno"> 5161</span><span class="keyword">static_assert</span>(is_delete_v_table&lt;dynamic_deletable_v_table&gt;);</div>
-<div class="line"><a id="l05162" name="l05162"></a><span class="lineno"> 5162</span> </div>
-<div class="line"><a id="l05163" name="l05163"></a><span class="lineno"> 5163</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;cref, observeable&gt;);</div>
-<div class="line"><a id="l05164" name="l05164"></a><span class="lineno"> 5164</span><span class="keyword">static_assert</span>(!is_proxy_compatible_with_trait&lt;val&lt;&gt;, observeable&gt;);</div>
-<div class="line"><a id="l05165" name="l05165"></a><span class="lineno"> 5165</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;val&lt;&gt;, dynamic_copyable&gt;);</div>
-<div class="line"><a id="l05166" name="l05166"></a><span class="lineno"> 5166</span> </div>
-<div class="line"><a id="l05167" name="l05167"></a><span class="lineno"> 5167</span>}  <span class="comment">// namespace anyxx</span></div>
+<div class="line"><a id="l04879" name="l04879"></a><span class="lineno"> 4879</span><span class="preprocessor">  namespace anyxx {                              \</span></div>
+<div class="line"><a id="l04880" name="l04880"></a><span class="lineno"> 4880</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
+<div class="line"><a id="l04881" name="l04881"></a><span class="lineno"> 4881</span><span class="preprocessor">  export_ std::size_t&amp; members_count&lt;ns_::c_&gt;(); \</span></div>
+<div class="line"><a id="l04882" name="l04882"></a><span class="lineno"> 4882</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04883" name="l04883"></a><span class="lineno"> 4883</span> </div>
+<div class="line"><a id="l04884" name="l04884"></a><span class="lineno"> 4884</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(ns_, c_)          \</span></div>
+<div class="line"><a id="l04885" name="l04885"></a><span class="lineno"> 4885</span><span class="preprocessor">  template &lt;&gt;                                    \</span></div>
+<div class="line"><a id="l04886" name="l04886"></a><span class="lineno"> 4886</span><span class="preprocessor">  std::size_t&amp; anyxx::members_count&lt;ns_::c_&gt;() { \</span></div>
+<div class="line"><a id="l04887" name="l04887"></a><span class="lineno"> 4887</span><span class="preprocessor">    static std::size_t count = 0;                \</span></div>
+<div class="line"><a id="l04888" name="l04888"></a><span class="lineno"> 4888</span><span class="preprocessor">    return count;                                \</span></div>
+<div class="line"><a id="l04889" name="l04889"></a><span class="lineno"> 4889</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04890" name="l04890"></a><span class="lineno"> 4890</span> </div>
+<div class="line"><a id="l04891" name="l04891"></a><span class="lineno"> 4891</span><span class="preprocessor">#define ANY_MEMBER_FWD(export_, object_, member_, type_)           \</span></div>
+<div class="line"><a id="l04892" name="l04892"></a><span class="lineno"> 4892</span><span class="preprocessor">  export_ anyxx::member&lt;object_, type_&gt;&amp; _inintialize_##member_(); \</span></div>
+<div class="line"><a id="l04893" name="l04893"></a><span class="lineno"> 4893</span><span class="preprocessor">  inline const anyxx::member&lt;object_, type_&gt;&amp; member_ =            \</span></div>
+<div class="line"><a id="l04894" name="l04894"></a><span class="lineno"> 4894</span><span class="preprocessor">      _inintialize_##member_();</span></div>
+<div class="line"><a id="l04895" name="l04895"></a><span class="lineno"> 4895</span> </div>
+<div class="line"><a id="l04896" name="l04896"></a><span class="lineno"> 4896</span><span class="preprocessor">#define ANY_MEMBER_IMPL(ns_, object_, member_, type_)            \</span></div>
+<div class="line"><a id="l04897" name="l04897"></a><span class="lineno"> 4897</span><span class="preprocessor">  anyxx::member&lt;object_, type_&gt;&amp; ns_::_inintialize_##member_() { \</span></div>
+<div class="line"><a id="l04898" name="l04898"></a><span class="lineno"> 4898</span><span class="preprocessor">    static anyxx::member&lt;object_, type_&gt; instance;               \</span></div>
+<div class="line"><a id="l04899" name="l04899"></a><span class="lineno"> 4899</span><span class="preprocessor">    return instance;                                             \</span></div>
+<div class="line"><a id="l04900" name="l04900"></a><span class="lineno"> 4900</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04901" name="l04901"></a><span class="lineno"> 4901</span> </div>
+<div class="line"><a id="l04902" name="l04902"></a><span class="lineno"> 4902</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l04903" name="l04903"></a><span class="lineno"> 4903</span> </div>
+<div class="line"><a id="l04904" name="l04904"></a><span class="lineno"> 4904</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_FWD(...)</span></div>
+<div class="line"><a id="l04905" name="l04905"></a><span class="lineno"> 4905</span><span class="preprocessor">#define ANY_MEMBERS_COUNT_IMPL(...)</span></div>
+<div class="line"><a id="l04906" name="l04906"></a><span class="lineno"> 4906</span><span class="preprocessor">#define ANY_MEMBER_FWD(...)</span></div>
+<div class="line"><a id="l04907" name="l04907"></a><span class="lineno"> 4907</span><span class="preprocessor">#define ANY_MEMBER_IMPL(...)</span></div>
+<div class="line"><a id="l04908" name="l04908"></a><span class="lineno"> 4908</span> </div>
+<div class="line"><a id="l04909" name="l04909"></a><span class="lineno"> 4909</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l04910" name="l04910"></a><span class="lineno"> 4910</span> </div>
+<div class="line"><a id="l04911" name="l04911"></a><span class="lineno"> 4911</span><span class="preprocessor">#ifdef ANY_DLL_MODE</span></div>
+<div class="line"><a id="l04912" name="l04912"></a><span class="lineno"> 4912</span> </div>
+<div class="line"><a id="l04913" name="l04913"></a><span class="lineno"> 4913</span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(export_, ns_, any_)             \</span></div>
+<div class="line"><a id="l04914" name="l04914"></a><span class="lineno"> 4914</span><span class="preprocessor">  namespace ns_ {}                                             \</span></div>
+<div class="line"><a id="l04915" name="l04915"></a><span class="lineno"> 4915</span><span class="preprocessor">  namespace anyxx {                                            \</span></div>
+<div class="line"><a id="l04916" name="l04916"></a><span class="lineno"> 4916</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
+<div class="line"><a id="l04917" name="l04917"></a><span class="lineno"> 4917</span><span class="preprocessor">  export_ std::size_t&amp; dispatchs_count&lt;ns_::any_##_v_table&gt;(); \</span></div>
+<div class="line"><a id="l04918" name="l04918"></a><span class="lineno"> 4918</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04919" name="l04919"></a><span class="lineno"> 4919</span> </div>
+<div class="line"><a id="l04920" name="l04920"></a><span class="lineno"> 4920</span><span class="preprocessor">#define ANY_DISPATCH_COUNT(ns_, any_)                          \</span></div>
+<div class="line"><a id="l04921" name="l04921"></a><span class="lineno"> 4921</span><span class="preprocessor">  template &lt;&gt;                                                  \</span></div>
+<div class="line"><a id="l04922" name="l04922"></a><span class="lineno"> 4922</span><span class="preprocessor">  std::size_t&amp; anyxx::dispatchs_count&lt;ns_::any_##_v_table&gt;() { \</span></div>
+<div class="line"><a id="l04923" name="l04923"></a><span class="lineno"> 4923</span><span class="preprocessor">    static std::size_t count = 0;                              \</span></div>
+<div class="line"><a id="l04924" name="l04924"></a><span class="lineno"> 4924</span><span class="preprocessor">    return count;                                              \</span></div>
+<div class="line"><a id="l04925" name="l04925"></a><span class="lineno"> 4925</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04926" name="l04926"></a><span class="lineno"> 4926</span> </div>
+<div class="line"><a id="l04927" name="l04927"></a><span class="lineno"> 4927</span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(export_, class_, interface_namespace_, \</span></div>
+<div class="line"><a id="l04928" name="l04928"></a><span class="lineno"> 4928</span><span class="preprocessor">                             interface_)                            \</span></div>
+<div class="line"><a id="l04929" name="l04929"></a><span class="lineno"> 4929</span><span class="preprocessor">  namespace anyxx {                                                 \</span></div>
+<div class="line"><a id="l04930" name="l04930"></a><span class="lineno"> 4930</span><span class="preprocessor">  template &lt;&gt;                                                       \</span></div>
+<div class="line"><a id="l04931" name="l04931"></a><span class="lineno"> 4931</span><span class="preprocessor">  export_ dispatch_table_t* dispatch_table_instance&lt;                \</span></div>
+<div class="line"><a id="l04932" name="l04932"></a><span class="lineno"> 4932</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;();        \</span></div>
+<div class="line"><a id="l04933" name="l04933"></a><span class="lineno"> 4933</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04934" name="l04934"></a><span class="lineno"> 4934</span> </div>
+<div class="line"><a id="l04935" name="l04935"></a><span class="lineno"> 4935</span><span class="preprocessor">#define ANY_DISPATCH_FOR(class_, interface_namespace_, interface_) \</span></div>
+<div class="line"><a id="l04936" name="l04936"></a><span class="lineno"> 4936</span><span class="preprocessor">  template &lt;&gt;                                                      \</span></div>
+<div class="line"><a id="l04937" name="l04937"></a><span class="lineno"> 4937</span><span class="preprocessor">  anyxx::dispatch_table_t* anyxx::dispatch_table_instance&lt;         \</span></div>
+<div class="line"><a id="l04938" name="l04938"></a><span class="lineno"> 4938</span><span class="preprocessor">      interface_namespace_::interface_##_v_table, class_&gt;() {      \</span></div>
+<div class="line"><a id="l04939" name="l04939"></a><span class="lineno"> 4939</span><span class="preprocessor">    return dispatch_table_instance_implementation&lt;                 \</span></div>
+<div class="line"><a id="l04940" name="l04940"></a><span class="lineno"> 4940</span><span class="preprocessor">        interface_namespace_::interface_##_v_table, class_&gt;();     \</span></div>
+<div class="line"><a id="l04941" name="l04941"></a><span class="lineno"> 4941</span><span class="preprocessor">  }</span></div>
+<div class="line"><a id="l04942" name="l04942"></a><span class="lineno"> 4942</span> </div>
+<div class="line"><a id="l04943" name="l04943"></a><span class="lineno"> 4943</span><span class="preprocessor">#else</span></div>
+<div class="line"><a id="l04944" name="l04944"></a><span class="lineno"> 4944</span></div>
+<div class="line"><a id="l04962" name="l04962"></a><span class="lineno"> 4962</span></div>
+<div class="line"><a id="l04969" name="l04969"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga4c6118f1ec66be826490068afce507a4"> 4969</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT_FWD(...)</span></div>
+<div class="line"><a id="l04975" name="l04975"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga32b666e74d79e7b7c3742af2b38d3f43"> 4975</a></span><span class="preprocessor">#define ANY_DISPATCH_COUNT(...)</span></div>
+<div class="line"><a id="l04983" name="l04983"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#ga1373b948d1de7ce120d00aedb00a0e6b"> 4983</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR_FWD(...)</span></div>
+<div class="line"><a id="l04990" name="l04990"></a><span class="lineno"><a class="line" href="group__dispatch__macros.html#gadd935835248281ded77dd94b587509ac"> 4990</a></span><span class="preprocessor">#define ANY_DISPATCH_FOR(...)</span></div>
+<div class="line"><a id="l04991" name="l04991"></a><span class="lineno"> 4991</span></div>
+<div class="line"><a id="l04993" name="l04993"></a><span class="lineno"> 4993</span> </div>
+<div class="line"><a id="l04994" name="l04994"></a><span class="lineno"> 4994</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l04995" name="l04995"></a><span class="lineno"> 4995</span></div>
+<div class="line"><a id="l05009" name="l05009"></a><span class="lineno"> 5009</span></div>
+<div class="line"><a id="l05060" name="l05060"></a><span class="lineno"> 5060</span> </div>
+<div class="line"><a id="l05061" name="l05061"></a><span class="lineno"> 5061</span><span class="comment">// self tests...</span></div>
+<div class="line"><a id="l05062" name="l05062"></a><span class="lineno"> 5062</span><span class="keyword">namespace </span>anyxx {</div>
+<div class="line"><a id="l05063" name="l05063"></a><span class="lineno"> 5063</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05064" name="l05064"></a><span class="lineno"> 5064</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05065" name="l05065"></a><span class="lineno"> 5065</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05066" name="l05066"></a><span class="lineno"> 5066</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05067" name="l05067"></a><span class="lineno"> 5067</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05068" name="l05068"></a><span class="lineno"> 5068</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05069" name="l05069"></a><span class="lineno"> 5069</span> </div>
+<div class="line"><a id="l05070" name="l05070"></a><span class="lineno"> 5070</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05071" name="l05071"></a><span class="lineno"> 5071</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05072" name="l05072"></a><span class="lineno"> 5072</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05073" name="l05073"></a><span class="lineno"> 5073</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05074" name="l05074"></a><span class="lineno"> 5074</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;cref, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05075" name="l05075"></a><span class="lineno"> 5075</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05076" name="l05076"></a><span class="lineno"> 5076</span> </div>
+<div class="line"><a id="l05077" name="l05077"></a><span class="lineno"> 5077</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05078" name="l05078"></a><span class="lineno"> 5078</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05079" name="l05079"></a><span class="lineno"> 5079</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05080" name="l05080"></a><span class="lineno"> 5080</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;shared, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05081" name="l05081"></a><span class="lineno"> 5081</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05082" name="l05082"></a><span class="lineno"> 5082</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05083" name="l05083"></a><span class="lineno"> 5083</span> </div>
+<div class="line"><a id="l05084" name="l05084"></a><span class="lineno"> 5084</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05085" name="l05085"></a><span class="lineno"> 5085</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05086" name="l05086"></a><span class="lineno"> 5086</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05087" name="l05087"></a><span class="lineno"> 5087</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05088" name="l05088"></a><span class="lineno"> 5088</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05089" name="l05089"></a><span class="lineno"> 5089</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05090" name="l05090"></a><span class="lineno"> 5090</span> </div>
+<div class="line"><a id="l05091" name="l05091"></a><span class="lineno"> 5091</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05092" name="l05092"></a><span class="lineno"> 5092</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05093" name="l05093"></a><span class="lineno"> 5093</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05094" name="l05094"></a><span class="lineno"> 5094</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05095" name="l05095"></a><span class="lineno"> 5095</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05096" name="l05096"></a><span class="lineno"> 5096</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05097" name="l05097"></a><span class="lineno"> 5097</span> </div>
+<div class="line"><a id="l05098" name="l05098"></a><span class="lineno"> 5098</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05099" name="l05099"></a><span class="lineno"> 5099</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05100" name="l05100"></a><span class="lineno"> 5100</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05101" name="l05101"></a><span class="lineno"> 5101</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05102" name="l05102"></a><span class="lineno"> 5102</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">weak</a>, observeable_v_table&gt;);</div>
+<div class="line"><a id="l05103" name="l05103"></a><span class="lineno"> 5103</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05104" name="l05104"></a><span class="lineno"> 5104</span> </div>
+<div class="line"><a id="l05105" name="l05105"></a><span class="lineno"> 5105</span><span class="keyword">static_assert</span>(!cloneable_to&lt;mutref&gt;);</div>
+<div class="line"><a id="l05106" name="l05106"></a><span class="lineno"> 5106</span><span class="keyword">static_assert</span>(!cloneable_to&lt;cref&gt;);</div>
+<div class="line"><a id="l05107" name="l05107"></a><span class="lineno"> 5107</span><span class="keyword">static_assert</span>(cloneable_to&lt;shared&gt;);</div>
+<div class="line"><a id="l05108" name="l05108"></a><span class="lineno"> 5108</span><span class="keyword">static_assert</span>(!cloneable_to&lt;weak&gt;);</div>
+<div class="line"><a id="l05109" name="l05109"></a><span class="lineno"> 5109</span><span class="keyword">static_assert</span>(cloneable_to&lt;unique&gt;);</div>
+<div class="line"><a id="l05110" name="l05110"></a><span class="lineno"> 5110</span><span class="keyword">static_assert</span>(cloneable_to&lt;val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05111" name="l05111"></a><span class="lineno"> 5111</span> </div>
+<div class="line"><a id="l05112" name="l05112"></a><span class="lineno"> 5112</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, cref&gt;);</div>
+<div class="line"><a id="l05113" name="l05113"></a><span class="lineno"> 5113</span><span class="keyword">static_assert</span>(moveable_from&lt;mutref, mutref&gt;);</div>
+<div class="line"><a id="l05114" name="l05114"></a><span class="lineno"> 5114</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, unique&gt;);</div>
+<div class="line"><a id="l05115" name="l05115"></a><span class="lineno"> 5115</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, shared&gt;);</div>
+<div class="line"><a id="l05116" name="l05116"></a><span class="lineno"> 5116</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, weak&gt;);</div>
+<div class="line"><a id="l05117" name="l05117"></a><span class="lineno"> 5117</span><span class="keyword">static_assert</span>(!moveable_from&lt;mutref, val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05118" name="l05118"></a><span class="lineno"> 5118</span> </div>
+<div class="line"><a id="l05119" name="l05119"></a><span class="lineno"> 5119</span><span class="keyword">static_assert</span>(moveable_from&lt;cref, cref&gt;);</div>
+<div class="line"><a id="l05120" name="l05120"></a><span class="lineno"> 5120</span><span class="keyword">static_assert</span>(moveable_from&lt;cref, mutref&gt;);</div>
+<div class="line"><a id="l05121" name="l05121"></a><span class="lineno"> 5121</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, unique&gt;);</div>
+<div class="line"><a id="l05122" name="l05122"></a><span class="lineno"> 5122</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, shared&gt;);</div>
+<div class="line"><a id="l05123" name="l05123"></a><span class="lineno"> 5123</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, weak&gt;);</div>
+<div class="line"><a id="l05124" name="l05124"></a><span class="lineno"> 5124</span><span class="keyword">static_assert</span>(!moveable_from&lt;cref, val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05125" name="l05125"></a><span class="lineno"> 5125</span> </div>
+<div class="line"><a id="l05126" name="l05126"></a><span class="lineno"> 5126</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, cref&gt;);</div>
+<div class="line"><a id="l05127" name="l05127"></a><span class="lineno"> 5127</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, mutref&gt;);</div>
+<div class="line"><a id="l05128" name="l05128"></a><span class="lineno"> 5128</span><span class="keyword">static_assert</span>(moveable_from&lt;shared, unique&gt;);</div>
+<div class="line"><a id="l05129" name="l05129"></a><span class="lineno"> 5129</span><span class="keyword">static_assert</span>(moveable_from&lt;shared, shared&gt;);</div>
+<div class="line"><a id="l05130" name="l05130"></a><span class="lineno"> 5130</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, weak&gt;);</div>
+<div class="line"><a id="l05131" name="l05131"></a><span class="lineno"> 5131</span><span class="keyword">static_assert</span>(!moveable_from&lt;shared, val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05132" name="l05132"></a><span class="lineno"> 5132</span> </div>
+<div class="line"><a id="l05133" name="l05133"></a><span class="lineno"> 5133</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, cref&gt;);</div>
+<div class="line"><a id="l05134" name="l05134"></a><span class="lineno"> 5134</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, mutref&gt;);</div>
+<div class="line"><a id="l05135" name="l05135"></a><span class="lineno"> 5135</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, unique&gt;);</div>
+<div class="line"><a id="l05136" name="l05136"></a><span class="lineno"> 5136</span><span class="keyword">static_assert</span>(moveable_from&lt;weak, shared&gt;);</div>
+<div class="line"><a id="l05137" name="l05137"></a><span class="lineno"> 5137</span><span class="keyword">static_assert</span>(moveable_from&lt;weak, weak&gt;);</div>
+<div class="line"><a id="l05138" name="l05138"></a><span class="lineno"> 5138</span><span class="keyword">static_assert</span>(!moveable_from&lt;weak, val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05139" name="l05139"></a><span class="lineno"> 5139</span> </div>
+<div class="line"><a id="l05140" name="l05140"></a><span class="lineno"> 5140</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, cref&gt;);</div>
+<div class="line"><a id="l05141" name="l05141"></a><span class="lineno"> 5141</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, mutref&gt;);</div>
+<div class="line"><a id="l05142" name="l05142"></a><span class="lineno"> 5142</span><span class="keyword">static_assert</span>(moveable_from&lt;unique, unique&gt;);</div>
+<div class="line"><a id="l05143" name="l05143"></a><span class="lineno"> 5143</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, shared&gt;);</div>
+<div class="line"><a id="l05144" name="l05144"></a><span class="lineno"> 5144</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, weak&gt;);</div>
+<div class="line"><a id="l05145" name="l05145"></a><span class="lineno"> 5145</span><span class="keyword">static_assert</span>(!moveable_from&lt;unique, val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05146" name="l05146"></a><span class="lineno"> 5146</span> </div>
+<div class="line"><a id="l05147" name="l05147"></a><span class="lineno"> 5147</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf">cref</a>&gt;);</div>
+<div class="line"><a id="l05148" name="l05148"></a><span class="lineno"> 5148</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2">mutref</a>&gt;);</div>
+<div class="line"><a id="l05149" name="l05149"></a><span class="lineno"> 5149</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, unique&gt;);</div>
+<div class="line"><a id="l05150" name="l05150"></a><span class="lineno"> 5150</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>&gt;);</div>
+<div class="line"><a id="l05151" name="l05151"></a><span class="lineno"> 5151</span><span class="keyword">static_assert</span>(!moveable_from&lt;val&lt;&gt;, <a class="code hl_typedef" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">weak</a>&gt;);</div>
+<div class="line"><a id="l05152" name="l05152"></a><span class="lineno"> 5152</span><span class="keyword">static_assert</span>(moveable_from&lt;val&lt;&gt;, val&lt;&gt;&gt;);</div>
+<div class="line"><a id="l05153" name="l05153"></a><span class="lineno"> 5153</span> </div>
+<div class="line"><a id="l05154" name="l05154"></a><span class="lineno"> 5154</span><span class="keyword">static_assert</span>(is_model_size_v_table&lt;dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05155" name="l05155"></a><span class="lineno"> 5155</span><span class="keyword">static_assert</span>(is_copy_constructor_v_table&lt;dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05156" name="l05156"></a><span class="lineno"> 5156</span><span class="keyword">static_assert</span>(is_move_constructor_v_table&lt;dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05157" name="l05157"></a><span class="lineno"> 5157</span><span class="keyword">static_assert</span>(is_destructor_v_table&lt;dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l05158" name="l05158"></a><span class="lineno"> 5158</span><span class="keyword">static_assert</span>(is_delete_v_table&lt;dynamic_deletable_v_table&gt;);</div>
+<div class="line"><a id="l05159" name="l05159"></a><span class="lineno"> 5159</span> </div>
+<div class="line"><a id="l05160" name="l05160"></a><span class="lineno"> 5160</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;cref, observeable&gt;);</div>
+<div class="line"><a id="l05161" name="l05161"></a><span class="lineno"> 5161</span><span class="keyword">static_assert</span>(!is_proxy_compatible_with_trait&lt;val&lt;&gt;, observeable&gt;);</div>
+<div class="line"><a id="l05162" name="l05162"></a><span class="lineno"> 5162</span><span class="keyword">static_assert</span>(is_proxy_compatible_with_trait&lt;val&lt;&gt;, dynamic_copyable&gt;);</div>
+<div class="line"><a id="l05163" name="l05163"></a><span class="lineno"> 5163</span> </div>
+<div class="line"><a id="l05164" name="l05164"></a><span class="lineno"> 5164</span>}  <span class="comment">// namespace anyxx</span></div>
 <div class="ttc" id="aanyxx_8hpp_html_a2e85dd054654528100674b1615b37aa8"><div class="ttname"><a href="anyxx_8hpp.html#a2e85dd054654528100674b1615b37aa8">anyxx::use_as_cref_</a></div><div class="ttdeci">any&lt; Trait&lt; Ts... &gt;, using_cref&lt; Type &gt; &gt; use_as_cref_</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3459</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_a41a5f0115a3c735c76b8e40c6043993d"><div class="ttname"><a href="anyxx_8hpp.html#a41a5f0115a3c735c76b8e40c6043993d">anyxx::any_trait_class</a></div><div class="ttdeci">any&lt; Trait, trait_class&lt; Type &gt; &gt; any_trait_class</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3493</div></div>
 <div class="ttc" id="aanyxx_8hpp_html_a5b8337d31962b6107d1748ec5dc2ee3b"><div class="ttname"><a href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b">anyxx::make_vany</a></div><div class="ttdeci">Any&lt; using_&lt; vany_variant&lt; Any, Proxy, Types... &gt; &gt; &gt; make_vany</div><div class="ttdoc">A factory type to direct get the any for the vany.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1951</div></div>
