@@ -19,14 +19,12 @@ namespace anyxx26 {
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
 struct v_table
-    : base_v_table_t<Trait>,
-    [: make_v_table_members_type<Trait, Args...>():] {
+    : [: make_v_table_members_type<Trait, Args...>():] {
     using v_table_t = v_table;
 	using trait_declaration_t = anyxx26::trait_declaration_t<Trait, Args...>;
     using fptrs_t = [:make_v_table_members_type<Trait, Args...>():];
     template <typename Concrete>
-    v_table(std::in_place_type_t<Concrete> concrete)
-        : base_v_table_t<Trait>(concrete) {
+    v_table(std::in_place_type_t<Concrete>) {
         set_v_table_members<v_table_t, ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>, Concrete, ^^fptrs_t>(this);
     }
 };
@@ -142,7 +140,7 @@ struct any_base : deduced_typenames<Trait, Args...> {
       requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         std::derived_from<typename Other::trait_declaration_t, trait_declaration_t>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
-      proxy_(borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
+      proxy_(anyxx::borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
   template <anyxx26::is_any Other>
   any_base& operator=(Other const& other)
@@ -268,14 +266,14 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 /// \ingroup casts
 template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
 inline auto unerase_cast(any<Trait, Args...> const& o) {
-    return unerase_cast_if<U>(o.proxy_, o.v_table_);
+    return anyxx::unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts
 template <typename U, template <typename, typename, typename...> typename Trait, typename... Args>
 inline auto unerase_cast_if(any<Trait, Args...> const& o) {
-    return unerase_cast_if<U>(o.proxy_, o.v_table_);
+    return anyxx::unerase_cast_if<U>(o.proxy_, o.v_table_);
 }
 
 template <template <typename, typename, typename...> typename Trait, typename... Args>
