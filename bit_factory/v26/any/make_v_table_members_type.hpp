@@ -70,7 +70,7 @@ template <template <typename, typename, typename...> typename Trait, typename...
 consteval std::meta::info make_v_table_members_type() {
     auto fptrs = collect_v_table_members<^^Trait<declaration, declaration, Args...>, 
         ^^dyn_self_val_t<Trait, Args...>, ^^dyn_self_cref_t<Trait, Args...>, ^^dyn_self_mutref_t<Trait, Args...>>();
-    return substitute(^^meta::to_struct, fptrs);
+    return meta::make_struct_with(fptrs);
 }
 
 }  // namespace anyxx26

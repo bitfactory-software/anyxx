@@ -24,14 +24,18 @@ struct overload : Ts... {
 };
 
 template <std::meta::info... Ms>
-struct outer {
-  struct inner;
+struct members {
+  struct to_struct;
   consteval {
-    define_aggregate(^^inner, { Ms...});
+    define_aggregate(^^to_struct, { Ms...});
   }
 };
 template <std::meta::info... Ms>
-using to_struct = outer<Ms...>::inner;
+using to_struct = members<Ms...>::to_struct;
+
+consteval std::meta::info make_struct_with(auto const& members) {
+  return substitute(^^meta::to_struct, members);
+}
 
 consteval std::meta::info get_data_member_by_id(std::meta::info in, std::string_view id) {
     constexpr auto ctx = std::meta::access_context::current();

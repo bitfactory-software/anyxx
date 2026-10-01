@@ -28,7 +28,7 @@ consteval std::meta::info static_facade_named_overload_set(overload_set_spec_wit
 }
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
-consteval auto make_static_facade_overloaded_calls() {
+consteval auto static_facade_overloaded_calls() {
     std::vector<std::meta::info> calls;
     for(auto const& set : make_overload_sets_specs_with_target<V, Trait, Args...>()) {
         calls.push_back(reflect_constant(static_facade_named_overload_set<V, Trait, Args...>(set)));
@@ -38,7 +38,7 @@ consteval auto make_static_facade_overloaded_calls() {
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
 consteval std::meta::info make_trait_facade() {
-    return substitute(^^meta::to_struct, make_static_facade_overloaded_calls<V, Trait, Args...>());
+    return meta::make_struct_with(static_facade_overloaded_calls<V, Trait, Args...>());
 };
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>

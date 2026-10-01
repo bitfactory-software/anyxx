@@ -99,7 +99,7 @@ consteval std::meta::info dyn_facade_named_overload_set(overload_set_spec const&
 }
 
 template <typename AnyBase>
-consteval auto make_dyn_facade_overloaded_calls() {
+consteval auto dyn_facade_overloaded_calls() {
     std::vector<std::meta::info> calls;
     for(auto const& set : make_overload_sets_specs(^^typename AnyBase::trait_declaration_t)) {
         calls.push_back(reflect_constant(dyn_facade_named_overload_set<AnyBase>(set)));
@@ -109,7 +109,7 @@ consteval auto make_dyn_facade_overloaded_calls() {
 
 template <typename AnyBase>
 consteval std::meta::info make_dyn_facade() {
-    return substitute(^^meta::to_struct, make_dyn_facade_overloaded_calls<AnyBase>());
+    return meta::make_struct_with(dyn_facade_overloaded_calls<AnyBase>());
 };
 
 }  // namespace anyxx26
