@@ -182,7 +182,7 @@ struct any_with_facade : any_base<Trait, Proxy, Args...>, [:make_dyn_facade<any_
     using any_base<Trait, Proxy, Args...>::any_base;
 };
 template <template <is_trait, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
-struct any<Trait, Proxy, Args...> : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<Trait, Args...> {
+struct any<Trait, Proxy, Args...> : any_with_facade<Trait, Proxy, Args...>, trait_facade_decorator_t<any<Trait, Proxy, Args...>, Trait, Args...> {
     using any_with_facade<Trait, Proxy, Args...>::any_with_facade;
 };
 template <template <is_trait, typename, typename...> typename Trait>

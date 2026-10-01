@@ -42,7 +42,9 @@ consteval std::meta::info make_trait_facade() {
 };
 
 template <typename V, template <is_trait, typename, typename...> typename Trait, typename... Args>
-class trait_as : public[:make_trait_facade<V, Trait, Args...>():], public trait_facade_decorator_t<Trait, Args...>, public deduced_typenames<Trait, Args...>{
+class trait_as : public[:make_trait_facade<V, Trait, Args...>():], 
+    public trait_facade_decorator_t<trait_as<V, Trait, Args...>, Trait, Args...>, 
+    public deduced_typenames<Trait, Args...> {
     V value_{};
 
  public:
