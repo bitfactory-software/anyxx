@@ -10,7 +10,7 @@
 #include <bit_factory/v26/trait_translation/find_candidate_in_target.hpp>
 #include <bit_factory/v26/trait_translation/deduced_typenames.hpp>
 #include <bit_factory/v26/trait_as/trait_calls.hpp>
-#include <bit_factory/v26/any/trait_facade_decorator.hpp>
+#include <bit_factory/v26/trait_translation/trait_facade_decorator.hpp>
 #include <meta>
 
 namespace anyxx26 {

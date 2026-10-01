@@ -7,10 +7,10 @@
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
 #include <bit_factory/v26/any/set_v_table_members.hpp>
-#include <bit_factory/v26/any/trait_facade_decorator.hpp>
 #include <bit_factory/v26/any/make_v_table_members_type.hpp>
 #include <bit_factory/v26/meta/utilities.hpp>
 #include <bit_factory/v26/trait_translation/deduced_typenames.hpp>
+#include <bit_factory/v26/trait_translation/trait_facade_decorator.hpp>
 #include <meta>
 #include <utility>
 #include <vector>
