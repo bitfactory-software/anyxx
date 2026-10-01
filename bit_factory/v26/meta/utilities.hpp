@@ -23,6 +23,10 @@ struct overload : Ts... {
     using Ts::operator()...;
 };
 
+consteval std::meta::info overloaded_calls(auto const& overloads){
+    return substitute(^^meta::overload, overloads);
+}
+
 template <std::meta::info... Ms>
 struct members {
   struct to_struct;
