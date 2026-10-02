@@ -24,7 +24,8 @@ struct view_base : save_copyable<Trait, Self> {
         static_assert(std::ranges::view<Self>, "Self must be a view");
         return std::ranges::begin(self);
     }
-    static any<Category::template iterator, std::add_const_t<Value>, std::add_const_t<Ref>> begin(Self const& self) {
+    static any<Category::template iterator, Value, Ref> begin(Self const& self) {
+        static_assert(std::ranges::view<Self>, "Self must be a view");
         return std::ranges::begin(self);
     }
 };
