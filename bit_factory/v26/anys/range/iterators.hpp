@@ -70,10 +70,7 @@ auto operator+(std::ptrdiff_t n, any<IteratorTrait, Value, Ref> const& it) {
 
 template <is_trait Trait, typename Self, typename Value, typename Ref = Value&>
 struct contiguous_iterator : random_access_iterator<Trait, Self, Value, Ref> {
-    //Value* operator->() const;
-    static Value* op_arrow(Self const& self){
-         return const_cast<Value*>(&(*self)); 
-    }
+    Value* operator->() const;
 
     struct typenames : random_access_iterator<Trait, Self, Value, Ref>::typenames {
         using iterator_category = std::contiguous_iterator_tag;
