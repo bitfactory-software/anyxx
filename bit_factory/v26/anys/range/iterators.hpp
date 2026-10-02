@@ -12,15 +12,7 @@ struct input_iterator : save_copyable<Trait, Self> {
     bool operator==(Self const&) const;
     bool operator!=(Self const&) const;
     Self& operator++();
-
-    //Ref operator*() const;
-    static Ref op_star(Self const& self) { 
-        if constexpr (std::is_reference_v<std::remove_const_t<Ref>>) {
-            return const_cast<Ref>(*self);
-        } else {
-            return *self;
-        }
-    }
+    Ref operator*() const;
 
 	struct typenames {
 		using value_type = Value;

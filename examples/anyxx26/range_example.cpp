@@ -97,7 +97,7 @@ public:
         v = { {1}, {2}, {3}, {4}, {5} };
     }
 
-   any<sized_view, contiguous, a_struct> get(int i) {
+   any<sized_view, contiguous, a_struct const> get(int i) {
        if (i == 0) { return v; }
        else if(i == 1) { return arr; }
        else { return std::views::single(single); }

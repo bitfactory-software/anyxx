@@ -51,4 +51,6 @@ TEST_CASE("example trait_as stringable") {
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   CHECK(print(42) == "42\n");
+
+
 }
