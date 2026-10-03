@@ -203,7 +203,7 @@ TEST_CASE("dynamic any shared") {
     auto perimeter = circle_shape_vv.perimeter();
     REQUIRE_THAT(perimeter, Catch::Matchers::WithinAbs(77.2, 77.3));
   }
-  print_any_shape_const_observer(sc_typed);
+  print_any_shape_const_observer(static_cast<typed_circle_shape_shared_const::any_t&>(sc_typed));
   print_any_shape_const_observer(circle_shape_vv);
   print_any_callable_shape_const_observer(*c);
   print_any_callable_shape_const_observer(*s);
