@@ -227,6 +227,14 @@ __dyn_OP_MUTATING(op_greater_greater_equals, >>=)
 #undef __dyn_OP0_MUTATING
 
 
+
+template <anyxx::is_any ToAny, typename FromVTable>
+  requires has_trait_declaration<ToAny>&& has_trait_declaration<FromVTable> && 
+           anyxx::is_any_derived_from_v<typename ToAny::v_table_t, FromVTable>
+constexpr auto unchecked_v_table_downcast_to(FromVTable*  from) {
+    return unchecked_v_table_downcast_to<typename ToAny::v_table_t>(from);
+}
+
 /// \brief Safe downcast to an unerased type using runtime information from
 /// the v-Tables.
 /// \ingroup casts

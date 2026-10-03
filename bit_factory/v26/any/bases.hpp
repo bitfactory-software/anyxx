@@ -3,6 +3,7 @@
 #include <array>
 #include <bit_factory/anyxx.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
+#include <bit_factory/v26/any/v_table.hpp>
 
 namespace anyxx26 {
 
@@ -15,12 +16,7 @@ struct is_derived_from_{
     using type = anyxx::is_derived_from_t;
     template<typename Concrete, typename VTable>
     static anyxx::is_derived_from_t init(VTable* ){
-        return +[]([[maybe_unused]] const std::type_info& from) {
-            return false;
-        //return VTable::static_is_derived_from(
-        //    from);  // not yet implemented! must build a list of base classes in
-        //            // the vtable and check if from is in that list
-        };
+        return &is_v_table_derived_from<VTable>;
     }
 };
 struct meta_data_{

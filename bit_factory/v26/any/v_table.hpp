@@ -1,8 +1,6 @@
 #pragma once
 
 #include <bit_factory/anyxx.hpp>
-#include <bit_factory/v26/any/bases.hpp>
-#include <bit_factory/v26/any/facade.hpp>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/any/signature_translation.hpp>
 #include <bit_factory/v26/any/set_v_table_members.hpp>
@@ -39,10 +37,37 @@ struct register_trait {
 };
 
 template <typename ToVtable, typename FromVTable>
-    requires std::derived_from<typename FromVTable::trait_declaration_t, typename ToVtable::trait_declaration_t>
+    requires anyxx::is_any_derived_from_v<FromVTable, ToVtable>
 constexpr ToVtable* v_table_cast(FromVTable* from) {
     auto void_p = static_cast<void*>(from);
     return static_cast<ToVtable*>(void_p);
 }
 
+template <typename ToVtable, typename FromVTable>
+    requires (!anyxx::is_any<ToVtable> && anyxx::is_any_derived_from_v<ToVtable, FromVTable>)
+constexpr ToVtable* unchecked_v_table_downcast_to(FromVTable* from) {
+    auto void_p = static_cast<void*>(from);
+    return static_cast<ToVtable*>(void_p);
 }
+
+
+consteval std::meta::info v_table_of_trait(std::meta::info declaration_trait) {
+    std::vector<std::meta::info> v_table_template_args;
+    v_table_template_args.push_back(template_of(declaration_trait));
+    v_table_template_args.append_range(template_arguments_of(declaration_trait) | std::views::drop(2));
+    return substitute(^^v_table, v_table_template_args);
+}
+
+template<typename VTable>
+constexpr bool is_v_table_derived_from(const std::type_info& from) {
+    if (from == typeid(VTable)) {
+        return true;
+    }
+    if constexpr(constexpr auto base = meta::get_type_of_single_public_base(^^typename VTable::trait_declaration_t); base != std::meta::info{}) {
+        using base_v_table_t = [:v_table_of_trait(base):];
+        return is_v_table_derived_from<base_v_table_t>(from);
+    }
+    return false;
+}
+
+}  // namespace anyxx26
