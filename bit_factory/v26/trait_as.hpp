@@ -3,7 +3,6 @@
 #include <array>
 #include <bit_factory/v26/any/keywords.hpp>
 #include <bit_factory/v26/trait_as/trait_facade.hpp>
-#include <bit_factory/v26/trait_translation/trait_facade_decorator.hpp>
 #include <meta>
 
 namespace anyxx26 {
