@@ -61,7 +61,7 @@ template <typename V, typename Param>
 using impl_fptr_param_t = [:translate_impl_fptr_param<V, Param>():];
 
 template <typename V, typename Param>
-decltype(auto) forward_v_table_fptr_param(auto&& param){
+constexpr decltype(auto) forward_v_table_fptr_param(auto&& param){
     if constexpr(^^Param == ^^declaration const&) {
         return std::forward<V const&>(*unerase_cast<V>(param));
     } else if constexpr(^^Param == ^^declaration&) {

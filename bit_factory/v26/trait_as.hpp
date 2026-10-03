@@ -15,11 +15,11 @@ class trait_as : public[:make_trait_facade<V, Trait, Args...>():],
     V value_{};
 
  public:
-     trait_as() = default;
-     trait_as(V const& value) : value_(value) {}
+     constexpr trait_as() = default;
+     constexpr trait_as(V const& value) : value_(value) {}
 
-    friend V const& get_value(trait_as const& self) { return self.value_; };
-    friend V& get_value(trait_as& self) { return self.value_; };
+    friend constexpr V const& get_value(trait_as const& self) { return self.value_; };
+    friend constexpr V& get_value(trait_as& self) { return self.value_; };
 };
 
 template <typename V>
@@ -29,32 +29,32 @@ struct using_ {
 };
 
 template <template <is_trait, typename, typename...> typename Trait, typename... Args>
-auto as(auto&& value){
+constexpr auto as(auto&& value){
   return trait_as<std::remove_reference_t<decltype(value)>, Trait, Args...>(std::forward<decltype(value)>(value));
 }
 
 #define __dyn_OP_CONST(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename V, typename Other, typename... Args> \
     requires (requires(trait_as<V, Trait, Args...> const& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
-decltype(auto) operator op (trait_as<V, Trait, Args...> const& lhs, Other const& rhs) { \
+constexpr decltype(auto) operator op (trait_as<V, Trait, Args...> const& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename V, typename Other, typename... Args> \
     requires (requires(trait_as<V, Trait, Args...>& lhs, Other const& rhs){ {lhs.function(rhs)}; }) \
-decltype(auto) operator op (trait_as<V, Trait, Args...>& lhs, Other const& rhs) { \
+constexpr decltype(auto) operator op (trait_as<V, Trait, Args...>& lhs, Other const& rhs) { \
     return lhs.function(rhs); \
 }
 #define __dyn_OP0(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename V, typename... Args> \
     requires (requires(trait_as<V, Trait, Args...> const& lhs){ {lhs.function()}; }) \
-decltype(auto) operator op (trait_as<V, Trait, Args...> const& lhs) { \
+constexpr decltype(auto) operator op (trait_as<V, Trait, Args...> const& lhs) { \
     return lhs.function(); \
 }
 #define __dyn_OP0_MUTATING(function, op) \
 template <template <typename, typename, typename...> typename Trait, typename V, typename... Args> \
     requires (requires(trait_as<V, Trait, Args...>& lhs){ {lhs.function()}; }) \
-decltype(auto) operator op (trait_as<V, Trait, Args...>& lhs) { \
+constexpr decltype(auto) operator op (trait_as<V, Trait, Args...>& lhs) { \
     return lhs.function(); \
 }
 

@@ -30,7 +30,7 @@ struct default_t {};
 constexpr static inline default_t defaulted = {};
 
 template <typename V, typename Self>
-decltype(auto) self_cast(Self* self){
+constexpr decltype(auto) self_cast(Self* self){
     return static_cast<V*>(static_cast<std::conditional_t<std::is_const_v<Self>, const void, void>*>(self));
 }
 

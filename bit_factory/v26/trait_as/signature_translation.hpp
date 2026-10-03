@@ -55,7 +55,7 @@ consteval auto make_trait_as_params(std::meta::info spec){
 }
 
 template <typename TraitAs, std::meta::info spec, typename Arg>
-decltype(auto) forward_trait_as_param(Arg arg) {
+constexpr decltype(auto) forward_trait_as_param(Arg arg) {
     if constexpr(std::same_as<std::remove_cvref_t<Arg>, std::remove_cvref_t<TraitAs>>) {
         return get_value(arg);
     } else {

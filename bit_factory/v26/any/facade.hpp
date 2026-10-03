@@ -16,7 +16,7 @@ namespace anyxx26 {
 
 
 template <typename AnyBase, bool const_, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
-R dyn_facade_call(auto&& self, Args... args) {
+constexpr R dyn_facade_call(auto&& self, Args... args) {
     consteval{
         if constexpr(!const_ && std::is_const_v<std::remove_reference_t<decltype(self)>>) {
             std::string msg = std::string{ "mutable " } + std::string{ display_string_of(f) } + " cannot be called on const Self";
@@ -49,14 +49,14 @@ R dyn_facade_call(auto&& self, Args... args) {
 template <typename AnyBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct const_dyn_facade_call {
     template <typename Self>
-    R operator()(this Self const& self, Args... args) {
+    constexpr R operator()(this Self const& self, Args... args) {
         return dyn_facade_call<AnyBase, true, f, v_table_index, R, Args...>(self, std::forward<Args>(args)...);
     }
 };
 template <typename AnyBase, std::meta::info f, std::size_t v_table_index, typename R, typename... Args>
 struct mutable_dyn_facade_call {
     template<typename Self>
-    R operator()(this Self& self, Args... args) {
+    constexpr R operator()(this Self& self, Args... args) {
         return dyn_facade_call<AnyBase, false, f, v_table_index, R, Args...>(self, std::forward<Args>(args)...);
     }
 };

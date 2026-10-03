@@ -17,27 +17,27 @@
 namespace anyxx26 {
 
 template <std::meta::info Member, typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_member(VoidSelf self, Args... args) {
+constexpr R invoke_member(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return typed_self->[:Member:](std::forward<Args>(args)...);
 };
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_parentheses(VoidSelf self, Args... args) {
+constexpr R invoke_op_parentheses(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return (*typed_self)(std::forward<Args>(args)...);
 };
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_plus_plus(VoidSelf self, Args... args) {
+constexpr R invoke_op_plus_plus(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ++(*typed_self);
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_minus_minus(VoidSelf self, Args... args) {
+constexpr R invoke_op_minus_minus(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return --(*typed_self);
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_star(VoidSelf self, Args... args) {
+constexpr R invoke_op_star(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     if constexpr(sizeof...(Args) == 0) {
         return *(*typed_self);
@@ -46,17 +46,17 @@ R invoke_op_star(VoidSelf self, Args... args) {
     }
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_arrow(VoidSelf self, Args... args) {
+constexpr R invoke_op_arrow(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return std::to_address(*typed_self);
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_square_brackets(VoidSelf self, Args... args) {
+constexpr R invoke_op_square_brackets(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return (*typed_self)[std::forward<Args>(args)...];
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_plus(VoidSelf self, Args... args) {
+constexpr R invoke_op_plus(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     if constexpr(sizeof...(Args) == 0) {
         return +(*typed_self);
@@ -65,7 +65,7 @@ R invoke_op_plus(VoidSelf self, Args... args) {
     }
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename... Args>
-R invoke_op_minus(VoidSelf self, Args... args) {
+constexpr R invoke_op_minus(VoidSelf self, Args... args) {
     auto typed_self = static_cast<TypedSelf*>(self);
     if constexpr(sizeof...(Args) == 0) {
         return -(*typed_self);
@@ -74,42 +74,42 @@ R invoke_op_minus(VoidSelf self, Args... args) {
     }
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_equals_equals(VoidSelf self, Arg arg) {
+constexpr R invoke_op_equals_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ((*typed_self) == std::forward<Arg>(arg));
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_exclamation_equals(VoidSelf self, Arg arg) {
+constexpr R invoke_op_exclamation_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ((*typed_self) != std::forward<Arg>(arg));
 }   
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_less(VoidSelf self, Arg arg) {
+constexpr R invoke_op_less(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ((*typed_self) < std::forward<Arg>(arg));
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_less_equals(VoidSelf self, Arg arg) {
+constexpr R invoke_op_less_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ((*typed_self) <= std::forward<Arg>(arg));
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_greater(VoidSelf self, Arg arg) {
+constexpr R invoke_op_greater(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ((*typed_self) > std::forward<Arg>(arg));
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_greater_equals(VoidSelf self, Arg arg) {
+constexpr R invoke_op_greater_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return ((*typed_self) >= std::forward<Arg>(arg));
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_plus_equals(VoidSelf self, Arg arg) {
+constexpr R invoke_op_plus_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return (*typed_self) += arg;
 }
 template <typename TypedSelf, typename R, typename VoidSelf, typename Arg>
-R invoke_op_minus_equals(VoidSelf self, Arg arg) {
+constexpr R invoke_op_minus_equals(VoidSelf self, Arg arg) {
     auto typed_self = static_cast<TypedSelf*>(self);
     return (*typed_self) -= arg;
 }
@@ -173,7 +173,7 @@ consteval invoke_function_t<impl_return_type<R, V>, VoidSelf, Args...> default_i
 
 template <bool default_, std::meta::info m, std::meta::info dyn_self_val, std::meta::info dyn_self_cref, std::meta::info dyn_self_mutref, 
     typename V, typename R, typename VoidSelf, typename... Args>
-[:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl(VoidSelf void_self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
+constexpr [:translate_v_table_return_type<dyn_self_val>(^^R):] vfimpl(VoidSelf void_self, translate_v_table_fptr_param_type_t<dyn_self_cref, dyn_self_mutref, Args>... args) {
   using return_t = [:translate_v_table_return_type<dyn_self_val>(^^R):];
   if constexpr (default_) {
     constexpr auto fptr = default_impl<m, V, R, VoidSelf, impl_fptr_param_t<V, Args>...>();
