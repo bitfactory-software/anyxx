@@ -98,4 +98,20 @@ using dyn_self_mutref_t = any<Trait, anyxx::mutref, Args...>;
 
 struct empty_t {};
 
+template <template <typename, typename, typename...> typename Trait, anyxx::is_proxy Proxy, typename... Args>
+struct any_base;
+
+template <typename HasTraitDeclaration>
+concept has_trait_declaration =
+    requires {
+      typename HasTraitDeclaration::trait_declaration_t;
+    };
+
 }  // namespace anyxx26
+
+namespace anyxx {
+template <anyxx26::has_trait_declaration Derived,
+          anyxx26::has_trait_declaration Base>
+constexpr bool is_any_derived_from_v<Derived, Base> =
+    std::derived_from<typename Derived::trait_declaration_t, typename Base::trait_declaration_t>;
+}
