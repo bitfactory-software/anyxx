@@ -2054,7 +2054,7 @@ auto unchecked_v_table_downcast_to(observeable_v_table* v_table) {
 }
 template <typename To>
   requires is_any<To>
-auto unchecked_v_table_downcast_to(observeable_v_table* v_table) {
+auto unchecked_v_table_downcast_to(auto* v_table) {
   return unchecked_v_table_downcast_to<typename To::v_table_t>(v_table);
 }
 
