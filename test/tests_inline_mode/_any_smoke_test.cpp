@@ -185,7 +185,7 @@ TEST_CASE("dynamic any shared") {
   auto c = std::make_shared<circle>(12.3);
   auto s = std::make_shared<square>(32);
   auto r = std::make_shared<rectangle>(12, 9);
-  auto p = std::make_shared<regular_polygon>(4, 32);
+  any_callable_shape<shared> p{regular_polygon(4, 32)};
   std::cout << "print_shape_vv ********************************\n";
 
   using typed_circle_shape_shared_const = typed_any<circle, any_shape<shared>>;
@@ -208,5 +208,5 @@ TEST_CASE("dynamic any shared") {
   print_any_callable_shape_const_observer(*c);
   print_any_callable_shape_const_observer(*s);
   print_any_callable_shape_const_observer(*r);
-  print_any_callable_shape_const_observer(*p);
+  print_any_callable_shape_const_observer(p);
 }

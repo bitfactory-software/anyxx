@@ -897,6 +897,11 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
   static auto erase(std::unique_ptr<V>&& v) {
     return unique{v.release()};
   }
+  template <typename V>
+      requires (!requires { typename std::decay_t<V>::deleter_type; })
+  static auto erase(V&& v) {
+      return unique{ new V{std::move(v)} };
+  }
 };
 
 static_assert(is_proxy<unique>);
@@ -970,6 +975,11 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
   template <typename V>
   static auto erase(std::shared_ptr<V> const& v) {
     return static_pointer_cast<void const>(v);
+  }
+  template <typename V>
+      requires (!requires { typename std::decay_t<V>::weak_type; })
+  static auto erase(V&& v) {
+      return std::make_shared<std::decay_t<V>>(std::forward<V>(v));
   }
 };
 
