@@ -139,7 +139,7 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">void draw(std::stringstream&amp; os,</div>
 <div class="line">          std::vector&lt;anyxx::any&lt;drawable, anyxx::val&lt;&gt;&gt;&gt; const&amp; drawables) {</div>
@@ -156,8 +156,6 @@ Showcase 1: Basic <em>Any++</em> usage</h3>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="agroup__fn__macros_html_ga6a5835dfafdaede08be54515be1208a8"><div class="ttname"><a href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a></div><div class="ttdeci">#define ANY_FN(ret, name, params, const_)</div><div class="ttdoc">TRAIT function whose default behavior is to call an equally named member function of the model.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1099</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:833</div></div>
 </div><!-- fragment --><p> Showcase 1 demonstrates the most basic usage of <span class="tt">Any++</span> for type-erased polymorphism in C++. It defines two simple types, <span class="tt">circle</span> and <span class="tt">square</span>, each with a <span class="tt">draw()</span> method returning a string. Using the <span class="tt">Any++</span> macro system, a <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</p>
 <p>The draw function takes a vector of type-erased any objects that conform to the <span class="tt">drawable</span> trait. It shows how to create and use a heterogeneous collection of unrelated objects (<span class="tt">circle</span> and <span class="tt">square</span>).</p>
 <p><a href="https://godbolt.org/z/nGjjs9xva">Compiler Explorer</a></p>
@@ -235,13 +233,13 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line">  [[nodiscard]] std::string edgy_salute()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;edgy World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(drawable, anyxx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT_(drawable, anyxx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), drawable) {</div>
+<div class="line">ANY_MODEL_MAP((circle), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(circle <span class="keyword">const</span>&amp;) { <span class="keywordflow">return</span> <span class="stringliteral">&quot;Silent greetings&quot;</span>; };</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((square), drawable) {</div>
+<div class="line">ANY_MODEL_MAP((square), drawable) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(square <span class="keyword">const</span>&amp; self) { <span class="keywordflow">return</span> self.edgy_salute(); };</div>
 <div class="line">};</div>
 <div class="line"> </div>
@@ -259,7 +257,6 @@ Showcase 2: <em>Any++</em> with Model Map</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__model__map__macros_html_gaa11989a5b380318c70cc1a59a8642384"><div class="ttname"><a href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a></div><div class="ttdeci">#define ANY_MODEL_MAP(model_, trait_)</div><div class="ttdoc">ANY_MODEL_MAP macro.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1286</div></div>
 </div><!-- fragment --><p> Showcase 2 demonstrates, how to use the <span class="tt">Any++</span> "model map" feature to provide custom behavior for unrelated types using traits.</p>
 <p><a href="https://godbolt.org/z/P7rfbzecj">Compiler Explorer</a></p>
 <p><a class="anchor" id="showcase3"></a> </p>
@@ -283,8 +280,8 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
+<div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
+<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
 <div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</div>
@@ -335,11 +332,10 @@ Showcase 3: <em>Any++</em> Open Multi Dispatch, (Type Erased Binary Operator)</h
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__trait__macros_html_gade6711771425f1b9a231fe819691ce04"><div class="ttname"><a href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a></div><div class="ttdeci">#define TRAIT_EX_(n, BASE, l, static_fns, typedefs, v_table_data, decoration)</div><div class="ttdoc">TRAIT derived from base with decoration. Macro to define the functional behavior for a any,...</div><div class="ttdef"><b>Definition</b> anyxx.hpp:826</div></div>
 </div><!-- fragment --><p> Showcase 3 demonstrates how to use the Any++ library to implement open multi-dispatch (type-erased binary operators) in C++. In this example:</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">name()</span> method.</li>
 <li>A <span class="tt">figure</span> trait is declared using the <span class="tt">Any++</span> macro system, specifying a <span class="tt">name()</span> function.</li>
-<li>The <span class="tt"><a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="Simple ANY macro.">ANY</a></span> macro is an extension of the <span class="tt"><a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="Macro to define the functional behavior for an any.">TRAIT</a></span> macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an <span class="tt">any</span> type, named <span class="tt">any_&lt;first parameter of macro&gt;</span>, that uses this trait. The generated trait itself has a template parameter for the Proxy type, which is defaulted to the last parameter of the <span class="tt"><a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="Simple ANY macro.">ANY</a></span> macro.</li>
+<li>The <span class="tt">ANY</span> macro is an extension of the <span class="tt">TRAIT</span> macro. It defines the requested behavior (trait interface) and additionally creates a typedef for an <span class="tt">any</span> type, named <span class="tt">any_&lt;first parameter of macro&gt;</span>, that uses this trait. The generated trait itself has a template parameter for the Proxy type, which is defaulted to the last parameter of the <span class="tt">ANY</span> macro.</li>
 <li>The <span class="tt">dispatch&lt;R(Args...)&gt;</span> mechanism is used to define a type-erased, runtime-resolved binary operator (<span class="tt">operator&lt;=&gt;</span>) for comparing two <span class="tt">any_figure&lt;&gt;</span> objects.</li>
 <li>The dispatch table is populated with custom comparison logic for each pair of types (<span class="tt">circle</span> vs <span class="tt">circle</span>, <span class="tt">circle</span> vs <span class="tt">square</span>, etc.) at static initialization time. To do this with as little ceremony as possible, <span class="tt"><a class="el" href="anyxx_8hpp.html" title="C++ header only library for external polymorphism.">anyxx.hpp</a></span> provides a <span class="tt">__</span> macro that simulates the<a href="https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2169r4.pdf">C++26 placeholder with no name</a>. That trick initializes a static variable with automatic name at each usage site with a dummy value, returned by <span class="tt">declare</span> only for this purpose.</li>
 <li>The <span class="tt">compare_each</span> function iterates over all pairs of figures, compares them using the type-erased operator, and outputs the results.</li>
@@ -365,8 +361,8 @@ Showcase 4: <em>Any++</em> Open Dispatch As Visitor</h3>
 <div class="line">  [[nodiscard]] std::string name()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;square&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gade6711771425f1b9a231fe819691ce04">TRAIT_EX_</a>(figure, anyxx::dynamic_copyable,</div>
-<div class="line">          (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
+<div class="line">TRAIT_EX_(figure, anyxx::dynamic_copyable,</div>
+<div class="line">          (ANY_FN(std::string, name, (), <span class="keyword">const</span>)), , ,</div>
 <div class="line">          (ANY_OPEN_DISPATCH), ())</div>
 <div class="line">template &lt;typename Proxy = anyxx::val&lt;&gt;&gt;</div>
 <div class="line">using any_figure = anyxx::any&lt;figure, Proxy&gt;;</div>
@@ -428,9 +424,9 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">struct </span>figure_has_open_dispatch {};</div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val&lt;&gt;)</div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(serializable, ayx::dynamic_copyable,</div>
-<div class="line">    (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
+<div class="line">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(<span class="keywordtype">double</span>, area, (), <span class="keyword">const</span>)), ayx::val&lt;&gt;)</div>
+<div class="line">ANY_(serializable, ayx::dynamic_copyable,</div>
+<div class="line">    (ANY_FN(<span class="keywordtype">void</span>, serialize, (std::ostream&amp;), <span class="keyword">const</span>)), ayx::cref)</div>
 <div class="line"> </div>
 <div class="line">ayx::factory&lt;ayx::any&lt;serializable&gt;, std::string, std::istream&amp;&gt;</div>
 <div class="line">    deserialize;</div>
@@ -441,7 +437,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line">  <span class="keywordflow">return</span> ayx::move_to&lt;any_figure&lt;&gt;&gt;(deserialize.construct(type, archive));</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((circle), serializable) {</div>
+<div class="line">ANY_MODEL_MAP((circle), serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(circle <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;circle &quot;</span> &lt;&lt; self.radius &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -454,7 +450,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(circle, figure);</div>
 <div class="line"><a class="code hl_define" href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a>(circle, serializable);</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((square), serializable) {</div>
+<div class="line">ANY_MODEL_MAP((square), serializable) {</div>
 <div class="line">  <span class="keyword">static</span> <span class="keywordtype">void</span> serialize(square <span class="keyword">const</span>&amp; self, std::ostream&amp; os) {</div>
 <div class="line">    os &lt;&lt; <span class="stringliteral">&quot;square &quot;</span> &lt;&lt; self.edge_length &lt;&lt; <span class="stringliteral">&quot; &quot;</span>;</div>
 <div class="line">  };</div>
@@ -497,8 +493,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:4869</div></div>
-<div class="ttc" id="agroup__trait__macros_html_ga5cd6bea6951e6c56a7e253ae6ca0dd1b"><div class="ttname"><a href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a></div><div class="ttdeci">#define ANY_(n, BASE, l, proxy_default)</div><div class="ttdoc">ANY with a baseSee ANY for explanation.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:933</div></div>
+<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3606</div></div>
 </div><!-- fragment --><p> Showcase 5 demonstrates how to use <span class="tt">Any++</span> to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with an <span class="tt">area()</span> method and serializable state (<span class="tt">radius</span> or <span class="tt">edge_length</span>).</li>
 <li>Two traits are declared: <span class="tt">figure</span> (with an <span class="tt">area()</span> method) and <span class="tt">serializable</span> (with a <span class="tt">serialize(std::ostream&amp;)</span> method).</li>
@@ -528,7 +523,7 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a>(drawable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)))</div>
+<div class="line">TRAIT(drawable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)))</div>
 <div class="line"> </div>
 <div class="line">using known_shapes = std::variant&lt;circle, square&gt;;</div>
 <div class="line"> </div>
@@ -547,7 +542,6 @@ Showcase 6: Basic <em>Any++</em> std::variant usage</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__trait__macros_html_gae0cb5618c6b82d8f6a7eaf36143647a9"><div class="ttname"><a href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9">TRAIT</a></div><div class="ttdeci">#define TRAIT(n, fns)</div><div class="ttdoc">Macro to define the functional behavior for an any.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:845</div></div>
 </div><!-- fragment --><p> Showcase 6 demonstrates how to use <span class="tt">Any++</span> with <span class="tt">std::variant</span> to enable type-erased polymorphism over a fixed set of types.</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
 <li>A <span class="tt">drawable</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
@@ -577,7 +571,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line">  [[nodiscard]] std::string draw()<span class="keyword"> const </span>{ <span class="keywordflow">return</span> <span class="stringliteral">&quot;World&quot;</span>; }</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#ga5cd6bea6951e6c56a7e253ae6ca0dd1b">ANY_</a>(figure, ayx::dynamic_copyable, (<a class="code hl_define" href="group__fn__macros.html#ga6a5835dfafdaede08be54515be1208a8">ANY_FN</a>(std::string, draw, (), <span class="keyword">const</span>)),</div>
+<div class="line">ANY_(figure, ayx::dynamic_copyable, (ANY_FN(std::string, draw, (), <span class="keyword">const</span>)),</div>
 <div class="line">     ayx::val&lt;&gt;)</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">using </span>known_and_unknown_shapes =</div>
@@ -586,7 +580,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 <div class="line">    std::same_as&lt;known_and_unknown_shapes,</div>
 <div class="line">                 any_figure&lt;ayx::using_&lt;  <span class="comment">// see the Any++ logo at the top</span></div>
 <div class="line">                     std::variant&lt;any_figure&lt;ayx::val&lt;&gt;&gt;, circle, square&gt;&gt;&gt;&gt;);</div>
-<div class="line"><a class="code hl_define" href="group__model__map__macros.html#gaa11989a5b380318c70cc1a59a8642384">ANY_MODEL_MAP</a>((std::string), figure) {</div>
+<div class="line">ANY_MODEL_MAP((std::string), figure) {</div>
 <div class="line">  <span class="keyword">static</span> std::string draw(std::string <span class="keyword">const</span>&amp; s) { <span class="keywordflow">return</span> s; };</div>
 <div class="line">};</div>
 <div class="line"> </div>

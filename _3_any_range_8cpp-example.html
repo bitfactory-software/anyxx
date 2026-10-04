@@ -119,15 +119,15 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    <span class="keywordflow">return</span> std::vector&lt;int&gt;{1, 2, 3};</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><a id="a0" name="a0"></a><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(stringable, anyxx::dynamic_copyable,</div>
-<div class="line">       (<a id="a1" name="a1"></a><a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
+<div class="line">TRAIT_(stringable, anyxx::dynamic_copyable,</div>
+<div class="line">       (ANY_FN_DEF(<span class="keyword">public</span>, std::string, to_string, (), <span class="keyword">const</span>,</div>
 <div class="line">                   [&amp;x]() { <span class="keywordflow">return</span> std::format(<span class="stringliteral">&quot;{}&quot;</span>, x); })))</div>
 <div class="line"> </div>
 <div class="line">template &lt;typename Proxy&gt;</div>
-<div class="line"><span class="keyword">using</span> any_stringable = <a id="_a2" name="_a2"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;stringable, Proxy&gt;</a>;</div>
+<div class="line"><span class="keyword">using</span> any_stringable = <a id="_a0" name="_a0"></a><a class="code hl_class" href="classanyxx_1_1any.html">anyxx::any&lt;stringable, Proxy&gt;</a>;</div>
 <div class="line"> </div>
-<div class="line"><a class="code hl_define" href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a>(node, anyxx::dynamic_copyable,</div>
-<div class="line">       (<a class="code hl_define" href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a>(<span class="keyword">public</span>, anyxx::self, sum,</div>
+<div class="line">TRAIT_(node, anyxx::dynamic_copyable,</div>
+<div class="line">       (ANY_FN_DEF(<span class="keyword">public</span>, anyxx::self, sum,</div>
 <div class="line">                   ((anyxx::any_self_forward_range <span class="keyword">const</span>&amp;)), <span class="keyword">const</span>,</div>
 <div class="line">                   [&amp;x](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; r) {</div>
 <div class="line">                     <span class="keyword">auto</span> s = x;</div>
@@ -261,7 +261,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  {</div>
 <div class="line">    v_t v{1, 2, 3};</div>
 <div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;,</div>
-<div class="line">                      any_stringable&lt;anyxx::val&lt;&gt;&gt;, <a id="_a3" name="_a3"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;v_t const&amp;&gt;</a>&gt;</div>
+<div class="line">                      any_stringable&lt;anyxx::val&lt;&gt;&gt;, <a id="_a1" name="_a1"></a><a class="code hl_struct" href="structanyxx_1_1using__.html">using_&lt;v_t const&amp;&gt;</a>&gt;</div>
 <div class="line">        r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
@@ -282,7 +282,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : std::views::transform(</div>
-<div class="line">             r, [](any_stringable&lt;<a id="_a4" name="_a4"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; vv) -&gt; <span class="keywordtype">int</span> {</div>
+<div class="line">             r, [](any_stringable&lt;<a id="_a2" name="_a2"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; vv) -&gt; <span class="keywordtype">int</span> {</div>
 <div class="line">               <span class="keywordflow">return</span> *anyxx::unerase_cast&lt;int&gt;(vv);</div>
 <div class="line">             })) {</div>
 <div class="line">      std::println(<span class="stringliteral">&quot;{}&quot;</span>, i);</div>
@@ -336,7 +336,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_constructible_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(std::is_trivially_copy_assignable_v&lt;<span class="keyword">decltype</span>(v2)&gt;);</div>
 <div class="line">  <span class="keyword">static_assert</span>(<span class="keyword">sizeof</span>(v2) &lt;= anyxx::small_object_size);</div>
-<div class="line">  any_forward_range&lt;using_&lt;int&gt;::as&lt;stringable&gt;, <a id="_a5" name="_a5"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt; r{</div>
+<div class="line">  any_forward_range&lt;using_&lt;int&gt;::as&lt;stringable&gt;, <a id="_a3" name="_a3"></a><a class="code hl_typedef" href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">using_&lt;int&gt;::as</a>&lt;stringable&gt;&gt; r{</div>
 <div class="line">      v2};</div>
 <div class="line">  std::string result;</div>
 <div class="line">  <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : r) {</div>
@@ -433,12 +433,10 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  CHECK(out2.str() == <span class="stringliteral">&quot;84/is greater than:is greater than:/26/&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3044</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gadf5ede586c04f0c23d0b46a60e1d241b"><div class="ttname"><a href="group__trait__macros.html#gadf5ede586c04f0c23d0b46a60e1d241b">TRAIT_</a></div><div class="ttdeci">#define TRAIT_(n, BASE, l)</div><div class="ttdoc">TRAIT derived from base.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:833</div></div>
-<div class="ttc" id="agroup__trait__macros_html_gaf19a15e6c5658db6712181244843ceb5"><div class="ttname"><a href="group__trait__macros.html#gaf19a15e6c5658db6712181244843ceb5">ANY_FN_DEF</a></div><div class="ttdeci">#define ANY_FN_DEF(access, ret, name, params, const_,...)</div><div class="ttdoc">TRAIT function with default behavior.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1078</div></div>
-<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:3402</div></div>
-<div class="ttc" id="astructanyxx_1_1using___html_a0bf065d75a9a6d95e728ef80516a1ca3"><div class="ttname"><a href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_::as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Value &gt; &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3413</div></div>
-<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2502</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1784</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html"><div class="ttname"><a href="structanyxx_1_1using__.html">anyxx::using_</a></div><div class="ttdef"><b>Definition</b> anyxx.hpp:2141</div></div>
+<div class="ttc" id="astructanyxx_1_1using___html_a0bf065d75a9a6d95e728ef80516a1ca3"><div class="ttname"><a href="structanyxx_1_1using__.html#a0bf065d75a9a6d95e728ef80516a1ca3">anyxx::using_::as</a></div><div class="ttdeci">any&lt; Trait, using_&lt; Value &gt; &gt; as</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2152</div></div>
+<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1230</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

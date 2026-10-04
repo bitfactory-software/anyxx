@@ -97,11 +97,11 @@ $(function(){initNavTree('group__casts.html','',''); });
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:gadd0bed70326711f39e2efc190d006590" id="r_gadd0bed70326711f39e2efc190d006590"><td class="memTemplParams" colspan="2"><a id="gadd0bed70326711f39e2efc190d006590" name="gadd0bed70326711f39e2efc190d006590"></a>
+<tr class="memitem:gaaa84d41ecbddabea5e87a73438b29eef" id="r_gaaa84d41ecbddabea5e87a73438b29eef"><td class="memTemplParams" colspan="2"><a id="gaaa84d41ecbddabea5e87a73438b29eef" name="gaaa84d41ecbddabea5e87a73438b29eef"></a>
 template&lt;is_any To, is_any From&gt; <br />
-requires (std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
-<tr class="memitem:gadd0bed70326711f39e2efc190d006590 template"><td class="memItemLeft">std::optional&lt; To &gt;&#160;</td><td class="memItemRight"><b>anyxx::downcast_to</b> (From from)</td></tr>
-<tr class="memdesc:gadd0bed70326711f39e2efc190d006590"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to a derived trait using runtime information from the v-Tables. <br /></td></tr>
+requires (is_any_derived_from&lt;To, From&gt;)</td></tr>
+<tr class="memitem:gaaa84d41ecbddabea5e87a73438b29eef template"><td class="memItemLeft">std::optional&lt; To &gt;&#160;</td><td class="memItemRight"><b>anyxx::downcast_to</b> (From from)</td></tr>
+<tr class="memdesc:gaaa84d41ecbddabea5e87a73438b29eef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Safe downcast to a derived trait using runtime information from the v-Tables. <br /></td></tr>
 <tr class="memitem:ga503c7a4639146953d0f21603ef83241e" id="r_ga503c7a4639146953d0f21603ef83241e"><td class="memTemplParams" colspan="2"><a id="ga503c7a4639146953d0f21603ef83241e" name="ga503c7a4639146953d0f21603ef83241e"></a>
 template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memitem:ga503c7a4639146953d0f21603ef83241e template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unerase_cast</b> (Any const &amp;o)</td></tr>

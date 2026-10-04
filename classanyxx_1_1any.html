@@ -138,28 +138,28 @@ requires constructibile_for&lt;ConstructedWith, proxy_impl_t, trait_t&gt; &amp;&
 &#160;</td><td class="memItemRight"><b>any</b> (const any &amp;other)</td></tr>
 <tr class="memitem:a942a5d34122d1a657fe2ed9803f67542" id="r_a942a5d34122d1a657fe2ed9803f67542"><td class="memItemLeft"><a id="a942a5d34122d1a657fe2ed9803f67542" name="a942a5d34122d1a657fe2ed9803f67542"></a>
 any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (any const &amp;other)</td></tr>
-<tr class="memitem:a87b7ba803184f569c5aee8cfee8c20a3" id="r_a87b7ba803184f569c5aee8cfee8c20a3"><td class="memTemplParams" colspan="2"><a id="a87b7ba803184f569c5aee8cfee8c20a3" name="a87b7ba803184f569c5aee8cfee8c20a3"></a>
+<tr class="memitem:aeee6bce16b89b3529bf0bde75ff97ff7" id="r_aeee6bce16b89b3529bf0bde75ff97ff7"><td class="memTemplParams" colspan="2"><a id="aeee6bce16b89b3529bf0bde75ff97ff7" name="aeee6bce16b89b3529bf0bde75ff97ff7"></a>
 template&lt;is_any Other&gt; <br />
-requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:a87b7ba803184f569c5aee8cfee8c20a3 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(const Other &amp;other)</td></tr>
-<tr class="memitem:aeec262817d623ad3c894f98a0d8730de" id="r_aeec262817d623ad3c894f98a0d8730de"><td class="memTemplParams" colspan="2"><a id="aeec262817d623ad3c894f98a0d8730de" name="aeec262817d623ad3c894f98a0d8730de"></a>
+requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || is_any_derived_from&lt;Other, any&gt;))</td></tr>
+<tr class="memitem:aeee6bce16b89b3529bf0bde75ff97ff7 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(const Other &amp;other)</td></tr>
+<tr class="memitem:ab2741c6aa2b12b1923d557241d8f710e" id="r_ab2741c6aa2b12b1923d557241d8f710e"><td class="memTemplParams" colspan="2"><a id="ab2741c6aa2b12b1923d557241d8f710e" name="ab2741c6aa2b12b1923d557241d8f710e"></a>
 template&lt;is_any Other&gt; <br />
-requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:aeec262817d623ad3c894f98a0d8730de template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other const &amp;other)</td></tr>
+requires (proxy_borrowable_from&lt;proxy_t, typename Other::proxy_t, typename Other::v_table_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || is_any_derived_from&lt;Other, any&gt;))</td></tr>
+<tr class="memitem:ab2741c6aa2b12b1923d557241d8f710e template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other const &amp;other)</td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b" id="r_a53cabc8cf8b5236e9de77e416b85f97b"><td class="memTemplParams" colspan="2"><a id="a53cabc8cf8b5236e9de77e416b85f97b" name="a53cabc8cf8b5236e9de77e416b85f97b"></a>
 template&lt;is_proxy OtherErasedData&gt; </td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>any</b> (OtherErasedData &amp;&amp;proxy, v_table_t *v_table) noexcept</td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b" id="r_a53cabc8cf8b5236e9de77e416b85f97b"><td class="memTemplParams" colspan="2"><a id="a53cabc8cf8b5236e9de77e416b85f97b" name="a53cabc8cf8b5236e9de77e416b85f97b"></a>
 template&lt;is_proxy OtherErasedData&gt; </td></tr>
 <tr class="memitem:a53cabc8cf8b5236e9de77e416b85f97b template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>any</b> (OtherErasedData &amp;&amp;proxy, v_table_t *v_table) noexcept</td></tr>
-<tr class="memitem:ab18efad6cda979c69ac31826d866fed4" id="r_ab18efad6cda979c69ac31826d866fed4"><td class="memTemplParams" colspan="2"><a id="ab18efad6cda979c69ac31826d866fed4" name="ab18efad6cda979c69ac31826d866fed4"></a>
+<tr class="memitem:aadbf2b9b252148aa0a6078e91c7c69dd" id="r_aadbf2b9b252148aa0a6078e91c7c69dd"><td class="memTemplParams" colspan="2"><a id="aadbf2b9b252148aa0a6078e91c7c69dd" name="aadbf2b9b252148aa0a6078e91c7c69dd"></a>
 template&lt;is_any Other&gt; <br />
-requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:ab18efad6cda979c69ac31826d866fed4 template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(Other &amp;&amp;other) noexcept</td></tr>
-<tr class="memitem:aa68b4df0dceed62bddd78bc59c2b691c" id="r_aa68b4df0dceed62bddd78bc59c2b691c"><td class="memTemplParams" colspan="2"><a id="aa68b4df0dceed62bddd78bc59c2b691c" name="aa68b4df0dceed62bddd78bc59c2b691c"></a>
+requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || is_any_derived_from&lt;Other, any&gt;))</td></tr>
+<tr class="memitem:aadbf2b9b252148aa0a6078e91c7c69dd template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><b>explicit</b> (false) any(Other &amp;&amp;other) noexcept</td></tr>
+<tr class="memitem:ac7adc0b9dc1ca35fb50e52a29315cbdf" id="r_ac7adc0b9dc1ca35fb50e52a29315cbdf"><td class="memTemplParams" colspan="2"><a id="ac7adc0b9dc1ca35fb50e52a29315cbdf" name="ac7adc0b9dc1ca35fb50e52a29315cbdf"></a>
 template&lt;is_any Other&gt; <br />
-requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || std::derived_from&lt;typename Other::v_table_t, v_table_t&gt;))</td></tr>
-<tr class="memitem:aa68b4df0dceed62bddd78bc59c2b691c template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
+requires (moveable_from&lt;proxy_t, typename Other::proxy_t&gt; &amp;&amp; (!<a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a>&lt;Proxy&gt; || is_any_derived_from&lt;Other, any&gt;))</td></tr>
+<tr class="memitem:ac7adc0b9dc1ca35fb50e52a29315cbdf template"><td class="memItemLeft">any &amp;&#160;</td><td class="memItemRight"><b>operator=</b> (Other &amp;&amp;other) noexcept</td></tr>
 <tr class="memitem:abdb7a5852dce0df7f228fbddda06db58" id="r_abdb7a5852dce0df7f228fbddda06db58"><td class="memItemLeft"><a id="abdb7a5852dce0df7f228fbddda06db58" name="abdb7a5852dce0df7f228fbddda06db58"></a>
 &#160;</td><td class="memItemRight"><b>operator bool</b> () const</td></tr>
 <tr class="memitem:ac2766c0c977ba126f6b282e03ae4fb34" id="r_ac2766c0c977ba126f6b282e03ae4fb34"><td class="memTemplParams" colspan="2"><a id="ac2766c0c977ba126f6b282e03ae4fb34" name="ac2766c0c977ba126f6b282e03ae4fb34"></a>
@@ -205,10 +205,10 @@ template&lt;is_any Friend&gt; </td></tr>
 <tr class="memitem:a625c9537c78256fff8461d2ef827a25b" id="r_a625c9537c78256fff8461d2ef827a25b"><td class="memTemplParams" colspan="2"><a id="a625c9537c78256fff8461d2ef827a25b" name="a625c9537c78256fff8461d2ef827a25b"></a>
 template&lt;typename Friend&gt; </td></tr>
 <tr class="memitem:a625c9537c78256fff8461d2ef827a25b template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>get_v_table</b> (Friend const &amp;any)</td></tr>
-<tr class="memitem:afb3eb77526644fd605957dc25fa9fb30" id="r_afb3eb77526644fd605957dc25fa9fb30"><td class="memTemplParams" colspan="2"><a id="afb3eb77526644fd605957dc25fa9fb30" name="afb3eb77526644fd605957dc25fa9fb30"></a>
+<tr class="memitem:a1b08d45af460d073e3b4a2d0044fa348" id="r_a1b08d45af460d073e3b4a2d0044fa348"><td class="memTemplParams" colspan="2"><a id="a1b08d45af460d073e3b4a2d0044fa348" name="a1b08d45af460d073e3b4a2d0044fa348"></a>
 template&lt;is_any To, is_any From&gt; <br />
-requires ( std::derived_from&lt;typename To::v_table_t, typename From::v_table_t&gt;)</td></tr>
-<tr class="memitem:afb3eb77526644fd605957dc25fa9fb30 template"><td class="memItemLeft">To&#160;</td><td class="memItemRight"><b>unchecked_downcast_to</b> (From from)</td></tr>
+requires ( is_any_derived_from&lt;To, From&gt;)</td></tr>
+<tr class="memitem:a1b08d45af460d073e3b4a2d0044fa348 template"><td class="memItemLeft">To&#160;</td><td class="memItemRight"><b>unchecked_downcast_to</b> (From from)</td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename Trait, is_proxy Proxy&gt;<br />
@@ -219,11 +219,11 @@ class anyxx::any&lt; Trait, Proxy &gt;</div><p>The core class template to contro
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides <a class="el" href="structanyxx_1_1using__.html" title="using_">using_</a>, <a class="el" href="group__proxies.html#ga13249a9ab9228bed2d13f8be41984cbf" title="cref">cref</a>, <a class="el" href="group__proxies.html#ga56d1fe32eadd3e57d34611a42fc845a2" title="mutref">mutref</a>, <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, <a class="el" href="structanyxx_1_1unique.html" title="unique">unique</a>, and value. All Proxy classes must conform to the <a class="el" href="conceptanyxx_1_1is__proxy.html" title="is_proxy">is_proxy</a> concept. </td></tr>
-    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a <a class="el" href="group__trait__macros.html#gae0cb5618c6b82d8f6a7eaf36143647a9" title="TRAIT">TRAIT</a> or <a class="el" href="group__trait__macros.html#ga47a5ba38b03d55fa5f63979281028d22" title="ANY">ANY</a> macro. See there for examples. If the proxy is dynamic (i.e., type erased), the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
+    <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a TRAIT or ANY macro. See there for examples. If the proxy is dynamic (i.e., type erased), the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_borrow_as_8cpp-example.html#_a2">21_Tree_any_borrow_as.cpp</a>, <a class="el" href="21_Tree_any_dispatch_8cpp-example.html#_a1">21_Tree_any_dispatch.cpp</a>, <a class="el" href="31_Animals_any_dispatch_8cpp-example.html#_a2">31_Animals_any_dispatch.cpp</a>, <a class="el" href="README_8cpp-example.html#_a8">README.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#_a2">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a3">_2d_trait_self.cpp</a>, <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a11">_2e_trait_algebra.cpp</a>, <a class="el" href="_2f_trait_equal_comparable_8cpp-example.html#_a2">_2f_trait_equal_comparable.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#_a2">_2o_trait_simple.cpp</a>, <a class="el" href="_3_any_range_8cpp-example.html#_a2">_3_any_range.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a3">_5_any_template.cpp</a>.</dd>
+<dl class="section examples"><dt>Examples</dt><dd><a class="el" href="21_Tree_any_borrow_as_8cpp-example.html#_a0">21_Tree_any_borrow_as.cpp</a>, <a class="el" href="21_Tree_any_dispatch_8cpp-example.html#_a0">21_Tree_any_dispatch.cpp</a>, <a class="el" href="31_Animals_any_dispatch_8cpp-example.html#_a0">31_Animals_any_dispatch.cpp</a>, <a class="el" href="README_8cpp-example.html#_a1">README.cpp</a>, <a class="el" href="_2c_trait_any_variant_8cpp-example.html#_a0">_2c_trait_any_variant.cpp</a>, <a class="el" href="_2d_trait_self_8cpp-example.html#_a1">_2d_trait_self.cpp</a>, <a class="el" href="_2e_trait_algebra_8cpp-example.html#_a5">_2e_trait_algebra.cpp</a>, <a class="el" href="_2f_trait_equal_comparable_8cpp-example.html#_a0">_2f_trait_equal_comparable.cpp</a>, <a class="el" href="_2o_trait_simple_8cpp-example.html#_a0">_2o_trait_simple.cpp</a>, <a class="el" href="_3_any_range_8cpp-example.html#_a0">_3_any_range.cpp</a>, and <a class="el" href="_5_any_template_8cpp-example.html#_a1">_5_any_template.cpp</a>.</dd>
 </dl>
 </div><a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a3cc77abb30ad289f4dec4ae1422cff63" name="a3cc77abb30ad289f4dec4ae1422cff63"></a>

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['trait_20and_20any_5f_20macros_0',['TRAIT... and ANY_ macros',['../group__trait__macros.html',1,'']]]
+  ['vany_5fdispach_20macros_0',['VANY_DISPACH macros',['../group__vany__macros.html',1,'']]]
 ];
