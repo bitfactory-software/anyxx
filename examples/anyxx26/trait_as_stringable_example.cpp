@@ -11,14 +11,14 @@ namespace {
 
 template <is_trait Trait, typename Self>
 struct stringable {
-    static std::string as_string(Self const& s) { 
-        return std::format("{}", s);
-    }
+  static std::string as_string(Self const& s) { return std::format("{}", s); }
 };
 
 template <>
 struct stringable<model_map, bool> {
-  static std::string as_string(bool const& self) { return self ? "wahr" : "falsch"; }
+  static std::string as_string(bool const& self) {
+    return self ? "wahr" : "falsch";
+  }
 };
 
 template <>
@@ -29,28 +29,20 @@ struct stringable<model_map, double> {
 };
 
 template <typename V>
-std::string print_(trait_as<V, stringable> const& s) {
+std::string print(trait_as<V, stringable> const& s) {
+  static_assert(sizeof(trait_as<V, stringable>) == sizeof(V));
   return s.as_string() + "\n";
 }
 template <typename V>
-auto print(V s)
-//  requires stringable_trait<V>::is_defined
-{
-  return print_(trait_as<V, stringable>(std::move(s)));
+auto print(V s) {
+  return print(trait_as<V, stringable>(std::move(s)));
 }
 
-template <class V>
-concept is_print_callable = requires(V v) {
-  { print(v) } -> std::same_as<std::string>;
-};
-
-}
+}  // namespace
 
 TEST_CASE("example trait_as stringable") {
   CHECK(print("Hello world!") == "Hello world!\n");
   CHECK(print(true) == "wahr\n");
   CHECK(print(3.14) == "  3.14\n");
   CHECK(print(42) == "42\n");
-
-
 }
