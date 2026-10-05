@@ -2,6 +2,7 @@
 #include <bit_factory/v26/anys/range.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <ranges>
+#include <print>
 
 #if defined(__GNUC__) and !defined(__clang__)
 #pragma GCC diagnostic ignored "-Wunused-function"
@@ -93,10 +94,6 @@ void test_contiguous_iterator(any<contiguous_iterator, a_struct> begin) {
 
 class container{
 public:
-    container(){
-        v = { {1}, {2}, {3}, {4}, {5} };
-    }
-
    any<sized_view, contiguous, a_struct const> get(int i) {
        if (i == 0) { return v; }
        else if(i == 1) { return arr; }
@@ -104,7 +101,7 @@ public:
    }
 
 private:
-    std::vector<a_struct> v;
+    std::vector<a_struct> v{ {1}, {2}, {3}, {4}, {5} };
     std::array<a_struct, 5> arr{1, 2, 3, 4, 5};
     a_struct single{1};
 };
@@ -158,4 +155,12 @@ TEST_CASE("anyxx26 iterators ranges") {
     CHECK(r1);
     CHECK(r1.size() == 5);
     CHECK(r1[0].i == 1);
+
+    for(auto i : std::views::iota(0, 3)) {
+        for(auto const& x : c.get(i)) {
+            std::println("   {}", x.i);
+        }
+        std::println();
+    }
+
 }
