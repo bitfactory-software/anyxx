@@ -50,14 +50,14 @@ struct random_access_iterator : bidirectional_iterator<Trait, Self, Value, Ref> 
     Self operator-(std::ptrdiff_t) const;
     Self operator+(std::ptrdiff_t) const;
     std::ptrdiff_t operator-(Self const&) const;
-    //Ref const& operator[](std::ptrdiff_t) const;
-    static Ref op_square_brackets(Self const& self, std::ptrdiff_t offset) {
-        if constexpr(std::is_reference_v<std::remove_const_t<Ref>>) {
-            return const_cast<Ref>(self[offset]);
-        } else {    
-            return self[offset];
-        }
-    }
+    Ref operator[](std::ptrdiff_t) const;
+    //static Ref op_square_brackets(Self const& self, std::ptrdiff_t offset) {
+    //    if constexpr(std::is_reference_v<std::remove_const_t<Ref>>) {
+    //        return const_cast<Ref>(self[offset]);
+    //    } else {    
+    //        return self[offset];
+    //    }
+    //}
 
     struct typenames : bidirectional_iterator<Trait, Self, Value, Ref>::typenames {
         using iterator_category = std::random_access_iterator_tag;
