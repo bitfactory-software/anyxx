@@ -72,9 +72,8 @@ auto post_increment_def = [](T& self) -> T {
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, dynamic_copyable, (),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_OP_DEF(public, typename deduced_type::reference, *, op_dereference, (),
-                const,
-                ([&x]() -> typename deduced_type::reference { return *x; })),
+     ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
+                ([&x]() -> Reference { return *x; })),
      ANY_OP_MAP_NAMED_FRIEND(bool, ==, equal, (anyxx::self const&), const),
      ANY_OP_MAP_NAMED_FRIEND(bool, !=, inequal, (anyxx::self const&), const)),
     ,
@@ -89,7 +88,7 @@ TRAIT_TEMPLATE_EX_(
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
-static_assert(std::forward_iterator<any_forward_iterator<int,int>>);
+static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
 
 TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
                 (ANY_FN(AnyIterator, begin, (), const),
@@ -98,7 +97,8 @@ TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
 template <typename AnyIterator, typename Proxy = anyxx::cref>
 using any_range = any<range<AnyIterator>, Proxy>;
 
-template <typename ValueType, typename Reference = ValueType, typename Proxy = anyxx::cref>
+template <typename ValueType, typename Reference = ValueType,
+          typename Proxy = anyxx::cref>
 using any_forward_range =
     any_range<any_forward_iterator<ValueType, Reference>, Proxy>;
 
