@@ -89,11 +89,21 @@ TRAIT_TEMPLATE_EX_(
      ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
     , ())
 
+template <typename ValueType, typename Reference,
+          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+using any_input_iterator = any<input_iterator<ValueType, Reference>, Proxy>;
+static_assert(std::input_iterator<any_input_iterator<int, int>>);
+
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
                    ((ValueType), (Reference)), , ,
                    (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
                              (std::forward_iterator_tag))),
                    , ())
+
+template <typename ValueType, typename Reference,
+          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
+static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
 
 TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
                    forward_iterator, ((ValueType), (Reference)),
@@ -106,18 +116,50 @@ TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
 
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
-using any_input_iterator = any<input_iterator<ValueType, Reference>, Proxy>;
-static_assert(std::input_iterator<any_input_iterator<int, int>>);
+using any_bidirectional_iterator =
+    any<bidirectional_iterator<ValueType, Reference>, Proxy>;
+static_assert(
+    std::bidirectional_iterator<any_bidirectional_iterator<int, int>>);
+
+TRAIT_TEMPLATE_EX_(
+    ((ValueType), (Reference)), random_access_iterator, bidirectional_iterator,
+    ((ValueType), (Reference)),
+    (ANY_OP_MAP_NAMED_FRIEND(bool, <, less, (anyxx::self const&), const),
+     ANY_OP_MAP_NAMED_FRIEND(bool, >, greater, (anyxx::self const&), const),
+     ANY_OP_MAP_NAMED_FRIEND(bool, <=, less_equal, (anyxx::self const&), const),
+     ANY_OP_MAP_NAMED_FRIEND(bool, >=, greater_equal, (anyxx::self const&),
+                             const),
+     ANY_OP_MAP_NAMED_FRIEND(anyxx::self&, +=, plus_assign, (std::ptrdiff_t),
+                             const),
+     ANY_OP_MAP_NAMED_FRIEND(anyxx::self&, -=, minus_assign, (std::ptrdiff_t),
+                             const),
+     ANY_OP_MAP_NAMED_FRIEND(anyxx::self, +, plus, (std::ptrdiff_t), const),
+     ANY_OP_MAP_NAMED_FRIEND(anyxx::self, -, minus, (std::ptrdiff_t), const),
+     ANY_FN_DEF(public, std::ptrdiff_t, difference_to, (anyxx::self const&),
+                const, [&x](auto const& rhs) { return x - rhs; }),
+     ANY_OP_MAP_NAMED(Reference, [], at, (std::ptrdiff_t), const)),
+    ,
+    (ANY_TYPE((), iterator_category, std::random_access_iterator_tag,
+              (std::random_access_iterator_tag))),
+    , ())
 
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
-using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
-static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
+using any_random_access_iterator =
+    any<random_access_iterator<ValueType, Reference>, Proxy>;
 
-template <typename ValueType, typename Reference,
-    typename Proxy = val<std::true_type, iterator_val_proxy_size>>
-    using any_bidirectional_iterator = any<bidirectional_iterator<ValueType, Reference>, Proxy>;
-static_assert(std::bidirectional_iterator<any_bidirectional_iterator<int, int>>);
+template <typename Value, typename Ref, typename Proxy>
+auto operator-(any_random_access_iterator<Value, Ref, Proxy> const& lhs,
+               any_random_access_iterator<Value, Ref, Proxy> const& rhs) {
+  return lhs.difference_to(rhs);
+}
+template <typename Value, typename Ref, typename Proxy>
+auto operator+(std::ptrdiff_t n,
+               any_random_access_iterator<Value, Ref, Proxy> const& it) {
+  return it + n;
+}
+static_assert(
+    std::random_access_iterator<any_random_access_iterator<int, int>>);
 
 TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
                 (ANY_FN(AnyIterator, begin, (), const),
