@@ -8,6 +8,7 @@
 */
 
 #include <bit_factory/infra/config.hpp>
+#include <bit_factory/anyxx/compute_val_proxy_size.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
@@ -39,15 +40,6 @@ using cref = observer<const_void>;
 using mutref = observer<mutable_void>;
 
 class meta_data;
-
-template <typename T>
-constexpr std::size_t compute_val_proxy_size(std::size_t default_size) {
-  if constexpr (anyxx::is_type_complete<T>) {
-    return T::value;
-  } else {
-    return default_size;
-  };
-}
 
 /// No lifetime functionality
 /// Base of v-tables for traits without lifetime requirements
