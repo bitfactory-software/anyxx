@@ -95,6 +95,7 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <p>C++ header only library for external polymorphism.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;bit_factory/infra/config.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/preprocessor_meta_class.hpp&gt;</code><br />
 </div>
 <p><a href="anyxx_8hpp_source.html">Go to the source code of this file.</a></p>
@@ -190,9 +191,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a669761d36747476d00b9ef125020b0c6" id="r_a669761d36747476d00b9ef125020b0c6"><td class="memTemplParams" colspan="2"><a id="a669761d36747476d00b9ef125020b0c6" name="a669761d36747476d00b9ef125020b0c6"></a>
-template&lt;typename T, typename Rep&gt; </td></tr>
-<tr class="memitem:a669761d36747476d00b9ef125020b0c6 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::default_rep</b> = std::conditional_t&lt;is_type_complete&lt;Rep&gt;, Rep, T&gt;</td></tr>
 <tr class="memitem:a4b1ca89c360f9274b1bdac7a1f9a310e" id="r_a4b1ca89c360f9274b1bdac7a1f9a310e"><td class="memItemLeft"><a id="a4b1ca89c360f9274b1bdac7a1f9a310e" name="a4b1ca89c360f9274b1bdac7a1f9a310e"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::const_void</b> = void const*</td></tr>
 <tr class="memitem:a7692ab101191bd14fa60eb89197956f3" id="r_a7692ab101191bd14fa60eb89197956f3"><td class="memItemLeft"><a id="a7692ab101191bd14fa60eb89197956f3" name="a7692ab101191bd14fa60eb89197956f3"></a>
@@ -273,14 +271,6 @@ template&lt;typename Model, typename Param&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a9be4b6b095139c62605c9217fccdef89" id="r_a9be4b6b095139c62605c9217fccdef89"><td class="memItemLeft"><a id="a9be4b6b095139c62605c9217fccdef89" name="a9be4b6b095139c62605c9217fccdef89"></a>
-constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::ignore_mapf_concept_with_always_false</b> (bool)</td></tr>
-<tr class="memitem:ae4ab8c280d2dae22fbbacd472278c973" id="r_ae4ab8c280d2dae22fbbacd472278c973"><td class="memItemLeft"><a id="ae4ab8c280d2dae22fbbacd472278c973" name="ae4ab8c280d2dae22fbbacd472278c973"></a>
-constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::ignore_mapf_concept_with_always_true</b> (bool)</td></tr>
-<tr class="memitem:a26e11aac41a9aba351e0fdacb957e831" id="r_a26e11aac41a9aba351e0fdacb957e831"><td class="memItemLeft"><a id="a26e11aac41a9aba351e0fdacb957e831" name="a26e11aac41a9aba351e0fdacb957e831"></a>
-constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::use_mapf_concept</b> (bool b)</td></tr>
-<tr class="memitem:a0b48ee9890c928b98208baa8216aff2b" id="r_a0b48ee9890c928b98208baa8216aff2b"><td class="memItemLeft"><a id="a0b48ee9890c928b98208baa8216aff2b" name="a0b48ee9890c928b98208baa8216aff2b"></a>
-void&#160;</td><td class="memItemRight"><b>anyxx::dummy</b> ()</td></tr>
 <tr class="memitem:a695fba58c2869d89e6d47df77a06265b" id="r_a695fba58c2869d89e6d47df77a06265b"><td class="memTemplParams" colspan="2"><a id="a695fba58c2869d89e6d47df77a06265b" name="a695fba58c2869d89e6d47df77a06265b"></a>
 template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a695fba58c2869d89e6d47df77a06265b template"><td class="memItemLeft">constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::compute_val_proxy_size</b> (std::size_t default_size)</td></tr>
@@ -554,9 +544,6 @@ template&lt;size_t At, size_t N, typename Tuple&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a72fc7748e9c8f1e5c8e4b291700cb1ee" id="r_a72fc7748e9c8f1e5c8e4b291700cb1ee"><td class="memTemplParams" colspan="2"><a id="a72fc7748e9c8f1e5c8e4b291700cb1ee" name="a72fc7748e9c8f1e5c8e4b291700cb1ee"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a72fc7748e9c8f1e5c8e4b291700cb1ee template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_variant</b> = is_variant_impl&lt;T&gt;::value</td></tr>
 <tr class="memitem:a4d13fc3b5aa8f62a1915fc8b8e1cde11" id="r_a4d13fc3b5aa8f62a1915fc8b8e1cde11"><td class="memItemLeft"><a id="a4d13fc3b5aa8f62a1915fc8b8e1cde11" name="a4d13fc3b5aa8f62a1915fc8b8e1cde11"></a>
 constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_in_dll_mode</b> = false</td></tr>
 <tr class="memitem:a1ce436fa64f930b3ab7d445393f0bcce" id="r_a1ce436fa64f930b3ab7d445393f0bcce"><td class="memItemLeft"><a id="a1ce436fa64f930b3ab7d445393f0bcce" name="a1ce436fa64f930b3ab7d445393f0bcce"></a>
@@ -1041,7 +1028,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:347</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:313</div></div>
 </div><!-- fragment -->
 </div>
 </div>
