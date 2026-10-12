@@ -12,6 +12,7 @@
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
+#include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/voidness.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
@@ -38,8 +39,6 @@ using cref = observer<const_void>;
 using mutref = observer<mutable_void>;
 
 class meta_data;
-
-constexpr std::size_t small_object_size = 4 * sizeof(mutable_void);
 
 template <typename T>
 constexpr std::size_t compute_val_proxy_size(std::size_t default_size) {
