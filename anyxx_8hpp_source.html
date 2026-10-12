@@ -248,13 +248,13 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span><span class="keyword">struct </span>borrow_trait;</div>
 <div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span> </div>
 <div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From, <span class="keyword">typename</span> FromVTable&gt;</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="keyword">concept </span>proxy_borrowable_from =</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span><span class="keyword">concept </span>borrowable_from =</div>
 <div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    is_proxy&lt;From&gt; &amp;&amp; is_proxy&lt;To&gt; &amp;&amp; <span class="keyword">requires</span>(From f, FromVTable* v_table) {</div>
 <div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>      { borrow_trait&lt;To, From&gt;{}(f, v_table) } -&gt; std::same_as&lt;To&gt;;</div>
 <div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    };</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
 <div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span><span class="keyword">template</span> &lt;<span class="keyword">typename</span> To, <span class="keyword">typename</span> From, <span class="keyword">typename</span> FromVTable&gt;</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  <span class="keyword">requires</span> proxy_borrowable_from&lt;To, From, FromVTable&gt;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>  <span class="keyword">requires</span> borrowable_from&lt;To, From, FromVTable&gt;</div>
 <div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>To borrow_proxy_as(From <span class="keyword">const</span>&amp; from, FromVTable* v_table) {</div>
 <div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>  <span class="keywordflow">return</span> borrow_trait&lt;To, From&gt;{}(from, v_table);</div>
 <div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>}</div>
@@ -457,14 +457,14 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span> </div>
 <div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span>  <span class="keyword">template</span> &lt;is_any Other&gt;</div>
 <div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span>  <span class="keyword">explicit</span>(<span class="keyword">false</span>) any(<span class="keyword">const</span> Other&amp; other)  <span class="comment">// NOLINT(noExplicitConstructor)</span></div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keyword">requires</span>(proxy_borrowable_from&lt;proxy_t, <span class="keyword">typename</span> Other::proxy_t,</div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span>    <span class="keyword">requires</span>(borrowable_from&lt;proxy_t, <span class="keyword">typename</span> Other::proxy_t,</div>
 <div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span>                                   <span class="keyword">typename</span> Other::v_table_t&gt; &amp;&amp;</div>
 <div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span>             (!anyxx::is_dyn&lt;Proxy&gt; || is_any_derived_from&lt;Other, any&gt;))</div>
 <div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span>      : v_table_holder_t(other.get_v_table_ptr()),</div>
 <div class="line"><a id="l00411" name="l00411"></a><span class="lineno">  411</span>        proxy_(borrow_proxy_as&lt;Proxy&gt;(other.proxy_, other.get_v_table_ptr())) {}</div>
 <div class="line"><a id="l00412" name="l00412"></a><span class="lineno">  412</span>  <span class="keyword">template</span> &lt;is_any Other&gt;</div>
 <div class="line"><a id="l00413" name="l00413"></a><span class="lineno">  413</span>  any&amp; operator=(Other <span class="keyword">const</span>&amp; other)</div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keyword">requires</span>(proxy_borrowable_from&lt;proxy_t, <span class="keyword">typename</span> Other::proxy_t,</div>
+<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span>    <span class="keyword">requires</span>(borrowable_from&lt;proxy_t, <span class="keyword">typename</span> Other::proxy_t,</div>
 <div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span>                                   <span class="keyword">typename</span> Other::v_table_t&gt; &amp;&amp;</div>
 <div class="line"><a id="l00416" name="l00416"></a><span class="lineno">  416</span>             (!anyxx::is_dyn&lt;Proxy&gt; || is_any_derived_from&lt;Other, any&gt;))</div>
 <div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span>  {</div>
@@ -1104,7 +1104,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01075" name="l01075"></a><span class="lineno"> 1075</span><span class="comment">// any borrow, clone, lock, move</span></div>
 <div class="line"><a id="l01076" name="l01076"></a><span class="lineno"> 1076</span> </div>
 <div class="line"><a id="l01077" name="l01077"></a><span class="lineno"> 1077</span><span class="keyword">template</span> &lt;is_any ToAny, is_proxy FromProxy, <span class="keyword">typename</span> FromVTable&gt;</div>
-<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>  <span class="keyword">requires</span> proxy_borrowable_from&lt;typename ToAny::proxy_t, FromProxy, FromVTable&gt;</div>
+<div class="line"><a id="l01078" name="l01078"></a><span class="lineno"> 1078</span>  <span class="keyword">requires</span> borrowable_from&lt;typename ToAny::proxy_t, FromProxy, FromVTable&gt;</div>
 <div class="line"><a id="l01079" name="l01079"></a><span class="lineno"> 1079</span>std::expected&lt;ToAny, cast_error&gt; borrow_as(FromProxy <span class="keyword">const</span>&amp; from,</div>
 <div class="line"><a id="l01080" name="l01080"></a><span class="lineno"> 1080</span>                                           FromVTable* from_v_table) {</div>
 <div class="line"><a id="l01081" name="l01081"></a><span class="lineno"> 1081</span>  <span class="keyword">using </span>to = <span class="keyword">typename</span> ToAny::proxy_t;</div>
@@ -1114,7 +1114,7 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l01085" name="l01085"></a><span class="lineno"> 1085</span>}</div>
 <div class="line"><a id="l01086" name="l01086"></a><span class="lineno"> 1086</span></div>
 <div class="line"><a id="l01090" name="l01090"></a><span class="lineno"> 1090</span><span class="keyword">template</span> &lt;is_any ToAny, is_any FromAny&gt;</div>
-<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>  <span class="keyword">requires</span> proxy_borrowable_from&lt;<span class="keyword">typename</span> ToAny::proxy_t,</div>
+<div class="line"><a id="l01091" name="l01091"></a><span class="lineno"> 1091</span>  <span class="keyword">requires</span> borrowable_from&lt;<span class="keyword">typename</span> ToAny::proxy_t,</div>
 <div class="line"><a id="l01092" name="l01092"></a><span class="lineno"> 1092</span>                                 <span class="keyword">typename</span> FromAny::proxy_t,</div>
 <div class="line"><a id="l01093" name="l01093"></a><span class="lineno"> 1093</span>                                 <span class="keyword">typename</span> FromAny::v_table_t&gt;</div>
 <div class="foldopen" id="foldopen01094" data-start="{" data-end="}">
@@ -2102,47 +2102,47 @@ $(function(){initNavTree('anyxx_8hpp_source.html','',''); });
 <div class="line"><a id="l02278" name="l02278"></a><span class="lineno"> 2278</span> </div>
 <div class="line"><a id="l02279" name="l02279"></a><span class="lineno"> 2279</span><span class="comment">// self tests...</span></div>
 <div class="line"><a id="l02280" name="l02280"></a><span class="lineno"> 2280</span><span class="keyword">namespace </span>anyxx {</div>
-<div class="line"><a id="l02281" name="l02281"></a><span class="lineno"> 2281</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02282" name="l02282"></a><span class="lineno"> 2282</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02283" name="l02283"></a><span class="lineno"> 2283</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02284" name="l02284"></a><span class="lineno"> 2284</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02285" name="l02285"></a><span class="lineno"> 2285</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;mutref, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02286" name="l02286"></a><span class="lineno"> 2286</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;mutref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l02281" name="l02281"></a><span class="lineno"> 2281</span><span class="keyword">static_assert</span>(!borrowable_from&lt;mutref, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02282" name="l02282"></a><span class="lineno"> 2282</span><span class="keyword">static_assert</span>(borrowable_from&lt;mutref, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02283" name="l02283"></a><span class="lineno"> 2283</span><span class="keyword">static_assert</span>(borrowable_from&lt;mutref, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02284" name="l02284"></a><span class="lineno"> 2284</span><span class="keyword">static_assert</span>(!borrowable_from&lt;mutref, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02285" name="l02285"></a><span class="lineno"> 2285</span><span class="keyword">static_assert</span>(!borrowable_from&lt;mutref, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02286" name="l02286"></a><span class="lineno"> 2286</span><span class="keyword">static_assert</span>(borrowable_from&lt;mutref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
 <div class="line"><a id="l02287" name="l02287"></a><span class="lineno"> 2287</span> </div>
-<div class="line"><a id="l02288" name="l02288"></a><span class="lineno"> 2288</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02289" name="l02289"></a><span class="lineno"> 2289</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02290" name="l02290"></a><span class="lineno"> 2290</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02291" name="l02291"></a><span class="lineno"> 2291</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02292" name="l02292"></a><span class="lineno"> 2292</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;cref, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02293" name="l02293"></a><span class="lineno"> 2293</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;cref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l02288" name="l02288"></a><span class="lineno"> 2288</span><span class="keyword">static_assert</span>(borrowable_from&lt;cref, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02289" name="l02289"></a><span class="lineno"> 2289</span><span class="keyword">static_assert</span>(borrowable_from&lt;cref, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02290" name="l02290"></a><span class="lineno"> 2290</span><span class="keyword">static_assert</span>(borrowable_from&lt;cref, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02291" name="l02291"></a><span class="lineno"> 2291</span><span class="keyword">static_assert</span>(borrowable_from&lt;cref, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02292" name="l02292"></a><span class="lineno"> 2292</span><span class="keyword">static_assert</span>(!borrowable_from&lt;cref, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02293" name="l02293"></a><span class="lineno"> 2293</span><span class="keyword">static_assert</span>(borrowable_from&lt;cref, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
 <div class="line"><a id="l02294" name="l02294"></a><span class="lineno"> 2294</span> </div>
-<div class="line"><a id="l02295" name="l02295"></a><span class="lineno"> 2295</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02296" name="l02296"></a><span class="lineno"> 2296</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02297" name="l02297"></a><span class="lineno"> 2297</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02298" name="l02298"></a><span class="lineno"> 2298</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;shared, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02299" name="l02299"></a><span class="lineno"> 2299</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02300" name="l02300"></a><span class="lineno"> 2300</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;shared, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l02295" name="l02295"></a><span class="lineno"> 2295</span><span class="keyword">static_assert</span>(!borrowable_from&lt;shared, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02296" name="l02296"></a><span class="lineno"> 2296</span><span class="keyword">static_assert</span>(!borrowable_from&lt;shared, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02297" name="l02297"></a><span class="lineno"> 2297</span><span class="keyword">static_assert</span>(!borrowable_from&lt;shared, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02298" name="l02298"></a><span class="lineno"> 2298</span><span class="keyword">static_assert</span>(borrowable_from&lt;shared, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02299" name="l02299"></a><span class="lineno"> 2299</span><span class="keyword">static_assert</span>(!borrowable_from&lt;shared, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02300" name="l02300"></a><span class="lineno"> 2300</span><span class="keyword">static_assert</span>(!borrowable_from&lt;shared, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
 <div class="line"><a id="l02301" name="l02301"></a><span class="lineno"> 2301</span> </div>
-<div class="line"><a id="l02302" name="l02302"></a><span class="lineno"> 2302</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02303" name="l02303"></a><span class="lineno"> 2303</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02304" name="l02304"></a><span class="lineno"> 2304</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02305" name="l02305"></a><span class="lineno"> 2305</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02306" name="l02306"></a><span class="lineno"> 2306</span><span class="keyword">static_assert</span>(proxy_borrowable_from&lt;weak, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02307" name="l02307"></a><span class="lineno"> 2307</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;weak, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l02302" name="l02302"></a><span class="lineno"> 2302</span><span class="keyword">static_assert</span>(!borrowable_from&lt;weak, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02303" name="l02303"></a><span class="lineno"> 2303</span><span class="keyword">static_assert</span>(!borrowable_from&lt;weak, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02304" name="l02304"></a><span class="lineno"> 2304</span><span class="keyword">static_assert</span>(!borrowable_from&lt;weak, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02305" name="l02305"></a><span class="lineno"> 2305</span><span class="keyword">static_assert</span>(borrowable_from&lt;weak, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02306" name="l02306"></a><span class="lineno"> 2306</span><span class="keyword">static_assert</span>(borrowable_from&lt;weak, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02307" name="l02307"></a><span class="lineno"> 2307</span><span class="keyword">static_assert</span>(!borrowable_from&lt;weak, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
 <div class="line"><a id="l02308" name="l02308"></a><span class="lineno"> 2308</span> </div>
-<div class="line"><a id="l02309" name="l02309"></a><span class="lineno"> 2309</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02310" name="l02310"></a><span class="lineno"> 2310</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02311" name="l02311"></a><span class="lineno"> 2311</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02312" name="l02312"></a><span class="lineno"> 2312</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02313" name="l02313"></a><span class="lineno"> 2313</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02314" name="l02314"></a><span class="lineno"> 2314</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;unique, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l02309" name="l02309"></a><span class="lineno"> 2309</span><span class="keyword">static_assert</span>(!borrowable_from&lt;unique, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02310" name="l02310"></a><span class="lineno"> 2310</span><span class="keyword">static_assert</span>(!borrowable_from&lt;unique, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02311" name="l02311"></a><span class="lineno"> 2311</span><span class="keyword">static_assert</span>(!borrowable_from&lt;unique, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02312" name="l02312"></a><span class="lineno"> 2312</span><span class="keyword">static_assert</span>(!borrowable_from&lt;unique, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02313" name="l02313"></a><span class="lineno"> 2313</span><span class="keyword">static_assert</span>(!borrowable_from&lt;unique, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02314" name="l02314"></a><span class="lineno"> 2314</span><span class="keyword">static_assert</span>(!borrowable_from&lt;unique, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
 <div class="line"><a id="l02315" name="l02315"></a><span class="lineno"> 2315</span> </div>
-<div class="line"><a id="l02316" name="l02316"></a><span class="lineno"> 2316</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, cref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02317" name="l02317"></a><span class="lineno"> 2317</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, mutref, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02318" name="l02318"></a><span class="lineno"> 2318</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, unique, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02319" name="l02319"></a><span class="lineno"> 2319</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, shared, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02320" name="l02320"></a><span class="lineno"> 2320</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, weak, observeable_v_table&gt;);</div>
-<div class="line"><a id="l02321" name="l02321"></a><span class="lineno"> 2321</span><span class="keyword">static_assert</span>(!proxy_borrowable_from&lt;val&lt;&gt;, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
+<div class="line"><a id="l02316" name="l02316"></a><span class="lineno"> 2316</span><span class="keyword">static_assert</span>(!borrowable_from&lt;val&lt;&gt;, cref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02317" name="l02317"></a><span class="lineno"> 2317</span><span class="keyword">static_assert</span>(!borrowable_from&lt;val&lt;&gt;, mutref, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02318" name="l02318"></a><span class="lineno"> 2318</span><span class="keyword">static_assert</span>(!borrowable_from&lt;val&lt;&gt;, unique, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02319" name="l02319"></a><span class="lineno"> 2319</span><span class="keyword">static_assert</span>(!borrowable_from&lt;val&lt;&gt;, shared, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02320" name="l02320"></a><span class="lineno"> 2320</span><span class="keyword">static_assert</span>(!borrowable_from&lt;val&lt;&gt;, weak, observeable_v_table&gt;);</div>
+<div class="line"><a id="l02321" name="l02321"></a><span class="lineno"> 2321</span><span class="keyword">static_assert</span>(!borrowable_from&lt;val&lt;&gt;, val&lt;&gt;, dynamic_copyable_v_table&gt;);</div>
 <div class="line"><a id="l02322" name="l02322"></a><span class="lineno"> 2322</span> </div>
 <div class="line"><a id="l02323" name="l02323"></a><span class="lineno"> 2323</span><span class="keyword">static_assert</span>(!cloneable_to&lt;mutref&gt;);</div>
 <div class="line"><a id="l02324" name="l02324"></a><span class="lineno"> 2324</span><span class="keyword">static_assert</span>(!cloneable_to&lt;cref&gt;);</div>
