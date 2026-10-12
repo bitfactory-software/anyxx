@@ -194,11 +194,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ac95774b5b2d689feed50405f9b8b049f" id="r_ac95774b5b2d689feed50405f9b8b049f"><td class="memTemplParams" colspan="2"><a id="ac95774b5b2d689feed50405f9b8b049f" name="ac95774b5b2d689feed50405f9b8b049f"></a>
-template&lt;is_proxy Data&gt; </td></tr>
-<tr class="memitem:ac95774b5b2d689feed50405f9b8b049f template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::data_void</b> = proxy_trait&lt;Data&gt;::void_t</td></tr>
-<tr class="memitem:a26cffc6820013e7206c36a5873ef13b1" id="r_a26cffc6820013e7206c36a5873ef13b1"><td class="memTemplParams" colspan="2">template&lt;is_proxy Proxy, typename ConstructedWith&gt; </td></tr>
-<tr class="memitem:a26cffc6820013e7206c36a5873ef13b1 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a26cffc6820013e7206c36a5873ef13b1">anyxx::unerased</a></td></tr>
 <tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80" id="r_gaf97e4130c5c467557b419eb6e97b8d80"><td class="memTemplParams" colspan="2">template&lt;template&lt; typename &gt; typename Any, is_proxy Proxy, typename... Types&gt; </td></tr>
 <tr class="memitem:gaf97e4130c5c467557b419eb6e97b8d80 template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80">anyxx::vany_variant</a> = std::variant&lt;Any&lt;Proxy&gt;, Types...&gt;</td></tr>
 <tr class="memitem:a5b8337d31962b6107d1748ec5dc2ee3b" id="r_a5b8337d31962b6107d1748ec5dc2ee3b"><td class="memTemplParams" colspan="2"><a id="a5b8337d31962b6107d1748ec5dc2ee3b" name="a5b8337d31962b6107d1748ec5dc2ee3b"></a>
@@ -253,22 +248,6 @@ template&lt;typename Model, typename Param&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a44ae4ba72a85a764ac7ae56c5d7ee383" id="r_a44ae4ba72a85a764ac7ae56c5d7ee383"><td class="memItemLeft"><a id="a44ae4ba72a85a764ac7ae56c5d7ee383" name="a44ae4ba72a85a764ac7ae56c5d7ee383"></a>
-constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_const_correct_call_for_proxy_and_self</b> (bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact)</td></tr>
-<tr class="memitem:a255ef796b4b603d1058e4e6914ebb171" id="r_a255ef796b4b603d1058e4e6914ebb171"><td class="memTemplParams" colspan="2"><a id="a255ef796b4b603d1058e4e6914ebb171" name="a255ef796b4b603d1058e4e6914ebb171"></a>
-template&lt;is_proxy Proxy, typename From&gt; </td></tr>
-<tr class="memitem:a255ef796b4b603d1058e4e6914ebb171 template"><td class="memItemLeft">Proxy&#160;</td><td class="memItemRight"><b>anyxx::erased</b> (From &amp;&amp;from)</td></tr>
-<tr class="memitem:a4c6876c85ae0d4c5b52352b5fc7d6f63" id="r_a4c6876c85ae0d4c5b52352b5fc7d6f63"><td class="memTemplParams" colspan="2"><a id="a4c6876c85ae0d4c5b52352b5fc7d6f63" name="a4c6876c85ae0d4c5b52352b5fc7d6f63"></a>
-template&lt;is_proxy Proxy&gt; <br />
-requires std::same_as&lt;void const*, typename proxy_trait&lt;Proxy&gt;::void_t&gt;</td></tr>
-<tr class="memitem:a4c6876c85ae0d4c5b52352b5fc7d6f63 template"><td class="memItemLeft">void const *&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy const &amp;vv, auto v_table)</td></tr>
-<tr class="memitem:a6e69a60e50829f96627fd90b3e7900d9" id="r_a6e69a60e50829f96627fd90b3e7900d9"><td class="memTemplParams" colspan="2"><a id="a6e69a60e50829f96627fd90b3e7900d9" name="a6e69a60e50829f96627fd90b3e7900d9"></a>
-template&lt;is_proxy Proxy&gt; <br />
-requires std::same_as&lt;void*, typename proxy_trait&lt;Proxy&gt;::void_t&gt;</td></tr>
-<tr class="memitem:a6e69a60e50829f96627fd90b3e7900d9 template"><td class="memItemLeft">void *&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy const &amp;vv, auto v_table)</td></tr>
-<tr class="memitem:a24f314d49d3790974016ef2e632797f8" id="r_a24f314d49d3790974016ef2e632797f8"><td class="memTemplParams" colspan="2"><a id="a24f314d49d3790974016ef2e632797f8" name="a24f314d49d3790974016ef2e632797f8"></a>
-template&lt;is_proxy Proxy&gt; </td></tr>
-<tr class="memitem:a24f314d49d3790974016ef2e632797f8 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::get_proxy_ptr</b> (Proxy &amp;vv, auto v_table)</td></tr>
 <tr class="memitem:a2c4e8b2775cdd9a89f754a74809e57c0" id="r_a2c4e8b2775cdd9a89f754a74809e57c0"><td class="memTemplParams" colspan="2"><a id="a2c4e8b2775cdd9a89f754a74809e57c0" name="a2c4e8b2775cdd9a89f754a74809e57c0"></a>
 template&lt;typename U&gt; </td></tr>
 <tr class="memitem:a2c4e8b2775cdd9a89f754a74809e57c0 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::unchecked_unerase_cast</b> (void const *p)</td></tr>
@@ -722,24 +701,6 @@ template&lt;typename Proxy, typename Trait&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line"> </div>
 <div class="line"><span class="keyword">typename</span> Trait::template model_map&lt;static_dispatch_t&lt;Proxy&gt;&gt;</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a26cffc6820013e7206c36a5873ef13b1" name="a26cffc6820013e7206c36a5873ef13b1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26cffc6820013e7206c36a5873ef13b1">&#9670;&#160;</a></span>unerased</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;is_proxy Proxy, typename ConstructedWith&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using anyxx::unerased</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line"> </div>
-<div class="line">proxy_trait&lt;Proxy&gt;::template unerased&lt;std::decay_t&lt;ConstructedWith&gt;&gt;</div>
 </div><!-- fragment -->
 </div>
 </div>
