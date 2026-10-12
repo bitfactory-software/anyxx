@@ -17,6 +17,8 @@
 #include <bit_factory/anyxx/proxies/unerase_cast.hpp>
 #include <bit_factory/anyxx/proxies/dyn/observer.hpp>
 #include <bit_factory/anyxx/proxies/dyn/unique.hpp>
+#include <bit_factory/anyxx/proxies/dyn/shared.hpp>
+#include <bit_factory/anyxx/proxies/dyn/weak.hpp>
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
@@ -69,137 +71,6 @@ static_assert(std::is_const_v<std::remove_reference_t<int const&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
-/// \defgroup proxies Proxies
-/// \brief Proxies manage the storage in an \ref any
-
-/// Proxy to manage the captured object via \c std::shared_ptr.
-/// * If you pass a \c std::shared_ptr to the \ref any constructor, this
-/// pointer will be casted to \c <const void*> and used as proxy.
-/// * If you pass an object as second parameter, with the std::in_place tag as
-/// first, this object will be forwarded to std::make_shared with the decayed
-/// type of object.
-/// * If you pass as first parameter std::in_place_type<T>, the other
-/// arguments will be forwarded to std::make_shared<T>(...).
-/// \ingroup proxies
-using shared = std::shared_ptr<void const>;
-/// Proxy to manage the captured object via \c std::weak_ptr.
-/// Assign or copy construct it from a  \c any<shared>
-/// \ingroup proxies
-using weak = std::weak_ptr<void const>;
-
-template <>
-struct proxy_trait<shared> : basic_proxy_trait<shared> {
-  using void_t = void const*;
-  using static_dispatch_t = void_t;
-  template <typename V>
-  using typed_t = const std::decay_t<V>;
-  static constexpr bool is_constructibile_from_const = true;
-  template <typename ConstructedWith>
-  struct is_constructibile_from {
-    static constexpr bool value = false;
-  };
-  static constexpr bool is_owner = true;
-  static auto clone_from(const_void data_ptr, is_delete_v_table auto* v_table) {
-    return shared{copy_construct(v_table, data_ptr),
-                  [v_table](auto p) { v_table->delete_(p); }};
-  }
-  static void move_to(shared& to, [[maybe_unused]] auto v_table_to,
-                      shared&& from, [[maybe_unused]] auto) {
-    to = std::move(from);
-  }
-  static void move_to(shared& to, [[maybe_unused]] auto v_table_to, unique from,
-                      is_delete_v_table auto* v_table) {
-    mutable_void p = nullptr;
-    std::swap(from.ptr, p);
-    to = shared{p, [v_table](auto px) { v_table->delete_(px); }};
-  }
-
-  static void const* get_proxy_ptr_in(const auto& v,
-                                      [[maybe_unused]] auto* v_table) {
-    return v.get();
-  }
-
-  template <typename ConstructedWith>
-  struct unerased_impl {
-    using type = std::decay_t<ConstructedWith>;
-  };
-  template <typename V>
-  struct unerased_impl<std::shared_ptr<V>> {
-    using type = std::decay_t<V>;
-  };
-  template <typename ConstructedWith>
-  using unerased = unerased_impl<ConstructedWith>::type;
-
-  template <typename V>
-  static auto construct_in_place(V&& v) {
-    return std::make_shared<V>(std::forward<V>(v));
-  }
-  template <typename T, typename... Args>
-  static auto construct_type_in_place(Args&&... args) {
-    return std::make_shared<T>(std::forward<Args>(args)...);
-  }
-  template <typename V>
-  static auto erase(std::shared_ptr<V> const& v) {
-    return static_pointer_cast<void const>(v);
-  }
-  template <typename V>
-    requires(!requires { typename std::decay_t<V>::weak_type; })
-  static auto erase(V&& v) {
-    return std::make_shared<std::decay_t<V>>(std::forward<V>(v));
-  }
-};
-
-template <>
-struct proxy_trait<weak> : basic_proxy_trait<weak> {
-  using void_t = void const*;
-  using static_dispatch_t = void_t;
-  template <typename V>
-  using typed_t = const std::decay_t<V>;
-  static constexpr bool is_constructibile_from_const = true;
-  template <typename ConstructedWith>
-  struct is_constructibile_from {
-    static constexpr bool value = false;
-  };
-  static constexpr bool is_owner = false;
-  static constexpr bool is_weak =  // NOLINT([duplInheritedMember)
-      true;                        // cppcheck-suppress duplInheritedMember
-  static constexpr bool allow_any_default_constructibile = true;
-
-  static auto clone_from([[maybe_unused]] const_void data_ptr,  // NOLINT
-                         [[maybe_unused]] auto* v_table) {
-    return weak{};
-  }
-
-  static void const* get_proxy_ptr_in([[maybe_unused]] const auto& ptr,
-                                      [[maybe_unused]] auto* v_table) {
-    return nullptr;
-  }
-
-  template <typename ConstructedWith>
-  using unerased = std::decay_t<typename ConstructedWith::element_type>;
-
-  template <typename V>
-  static auto construct_in_place(V&&) {
-    static_assert(false);
-    return nullptr;
-  }
-  template <typename T, typename... Args>
-  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
-    static_assert(false);
-    return nullptr;
-  }
-  template <typename V>
-  static auto erase(std::shared_ptr<V> const& v) {
-    return weak{static_pointer_cast<void const>(v)};
-  }
-  template <typename V>
-  static auto erase(std::weak_ptr<V> const& v) {
-    return erase(v.lock());
-  }
-};
-
-static_assert(is_proxy<shared>);
-static_assert(is_proxy<weak>);
 
 // --------------------------------------------------------------------------------
 // erased data cow
