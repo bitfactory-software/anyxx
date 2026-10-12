@@ -97,16 +97,16 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <div class="textblock"><code>#include &lt;bit_factory/infra/config.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/dll_mode.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/errors/cast_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/errors/type_mismatch_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/voidness.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/v_table_data.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/v23/preprocessor_meta_class.hpp&gt;</code><br />
 </div>
 <p><a href="anyxx_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-nested-classes" class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
-<tr class="memitem:anyxx_3A_3Aundefined" id="r_anyxx_3A_3Aundefined"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1undefined.html">anyxx::undefined</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Use this type to indicate, that the ANY_TYPE must be specified in the model map.  <a href="structanyxx_1_1undefined.html#details">More...</a><br /></td></tr>
 <tr class="memitem:anyxx_3A_3Aobserveable_5Fv_5Ftable" id="r_anyxx_3A_3Aobserveable_5Fv_5Ftable"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1observeable__v__table.html">anyxx::observeable_v_table</a></td></tr>
 <tr class="memitem:anyxx_3A_3Aunique" id="r_anyxx_3A_3Aunique"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1unique.html">anyxx::unique</a></td></tr>
 <tr class="memitem:anyxx_3A_3Acow" id="r_anyxx_3A_3Acow"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="structanyxx_1_1cow.html">anyxx::cow</a></td></tr>
@@ -194,18 +194,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a04088b852e3a2d150ce935f87c80c412" id="r_a04088b852e3a2d150ce935f87c80c412"><td class="memItemLeft"><a id="a04088b852e3a2d150ce935f87c80c412" name="a04088b852e3a2d150ce935f87c80c412"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::allocate_t</b> = mutable_void (*)()</td></tr>
-<tr class="memitem:ac0a3b525ba12272ee6c9ec5dc2664e65" id="r_ac0a3b525ba12272ee6c9ec5dc2664e65"><td class="memItemLeft"><a id="ac0a3b525ba12272ee6c9ec5dc2664e65" name="ac0a3b525ba12272ee6c9ec5dc2664e65"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::copy_constructor_t</b> = mutable_void (*)(mutable_void, const_void)</td></tr>
-<tr class="memitem:a42604760485fa89f837719146ef47608" id="r_a42604760485fa89f837719146ef47608"><td class="memItemLeft"><a id="a42604760485fa89f837719146ef47608" name="a42604760485fa89f837719146ef47608"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::move_constructor_t</b> = mutable_void (*)(mutable_void, mutable_void)</td></tr>
-<tr class="memitem:a81ccd896e492cb9dd45cd90f28541bd4" id="r_a81ccd896e492cb9dd45cd90f28541bd4"><td class="memItemLeft"><a id="a81ccd896e492cb9dd45cd90f28541bd4" name="a81ccd896e492cb9dd45cd90f28541bd4"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::destructor_t</b> = void (*)(mutable_void)</td></tr>
-<tr class="memitem:a83d8374608d38faecab8800c03cfd98b" id="r_a83d8374608d38faecab8800c03cfd98b"><td class="memItemLeft"><a id="a83d8374608d38faecab8800c03cfd98b" name="a83d8374608d38faecab8800c03cfd98b"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::delete_t</b> = void (*)(mutable_void)</td></tr>
-<tr class="memitem:ad062ac6e40cdaa98cf5e6b43d1b8bf9b" id="r_ad062ac6e40cdaa98cf5e6b43d1b8bf9b"><td class="memItemLeft"><a id="ad062ac6e40cdaa98cf5e6b43d1b8bf9b" name="ad062ac6e40cdaa98cf5e6b43d1b8bf9b"></a>
-using&#160;</td><td class="memItemRight"><b>anyxx::is_derived_from_t</b> = bool (*)(const std::type_info&amp;)</td></tr>
 <tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add" id="r_a554eb25dc0742eb08d38968bd3ba6add"><td class="memTemplParams" colspan="2"><a id="a554eb25dc0742eb08d38968bd3ba6add" name="a554eb25dc0742eb08d38968bd3ba6add"></a>
 template&lt;voidness Voidness&gt; </td></tr>
 <tr class="memitem:a554eb25dc0742eb08d38968bd3ba6add template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><b>anyxx::observer</b> = Voidness</td></tr>
@@ -273,43 +261,6 @@ Functions</h2></td></tr>
 <tr class="memitem:a695fba58c2869d89e6d47df77a06265b" id="r_a695fba58c2869d89e6d47df77a06265b"><td class="memTemplParams" colspan="2"><a id="a695fba58c2869d89e6d47df77a06265b" name="a695fba58c2869d89e6d47df77a06265b"></a>
 template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a695fba58c2869d89e6d47df77a06265b template"><td class="memItemLeft">constexpr std::size_t&#160;</td><td class="memItemRight"><b>anyxx::compute_val_proxy_size</b> (std::size_t default_size)</td></tr>
-<tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60" id="r_a9d9ca1a9aa463aa620c1dfb58dda2c60"><td class="memTemplParams" colspan="2"><a id="a9d9ca1a9aa463aa620c1dfb58dda2c60" name="a9d9ca1a9aa463aa620c1dfb58dda2c60"></a>
-template&lt;typename VTable, typename Concrete&gt; </td></tr>
-<tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60 template"><td class="memItemLeft">VTable *&#160;</td><td class="memItemRight"><b>anyxx::v_table_instance</b> ()</td></tr>
-<tr class="memitem:a0bd7eb50071027ef6486ca0611869ff6" id="r_a0bd7eb50071027ef6486ca0611869ff6"><td class="memTemplParams" colspan="2"><a id="a0bd7eb50071027ef6486ca0611869ff6" name="a0bd7eb50071027ef6486ca0611869ff6"></a>
-template&lt;typename VTable&gt; </td></tr>
-<tr class="memitem:a0bd7eb50071027ef6486ca0611869ff6 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::set_is_derived_from</b> (auto v_table)</td></tr>
-<tr class="memitem:a408914b3a500de3b1fdecd0339430ad3" id="r_a408914b3a500de3b1fdecd0339430ad3"><td class="memItemLeft"><a id="a408914b3a500de3b1fdecd0339430ad3" name="a408914b3a500de3b1fdecd0339430ad3"></a>
-bool&#160;</td><td class="memItemRight"><b>anyxx::is_derived_from</b> (const std::type_info &amp;from, is_dynamic_castable_v_table auto *v_table)</td></tr>
-<tr class="memitem:a65bb0ecaa4282e5fdd467e541a7d0d78" id="r_a65bb0ecaa4282e5fdd467e541a7d0d78"><td class="memItemLeft"><a id="a65bb0ecaa4282e5fdd467e541a7d0d78" name="a65bb0ecaa4282e5fdd467e541a7d0d78"></a>
-mutable_void&#160;</td><td class="memItemRight"><b>anyxx::allocate</b> (is_model_size_v_table auto *v_table)</td></tr>
-<tr class="memitem:a6a22dc2abf6a84b47256dfbc9e0ccfb6" id="r_a6a22dc2abf6a84b47256dfbc9e0ccfb6"><td class="memTemplParams" colspan="2"><a id="a6a22dc2abf6a84b47256dfbc9e0ccfb6" name="a6a22dc2abf6a84b47256dfbc9e0ccfb6"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a6a22dc2abf6a84b47256dfbc9e0ccfb6 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::deallocate</b> (T v_table, mutable_void data)</td></tr>
-<tr class="memitem:ac4c54ed17ff3b70e76121ecdb7eb6d42" id="r_ac4c54ed17ff3b70e76121ecdb7eb6d42"><td class="memItemLeft"><a id="ac4c54ed17ff3b70e76121ecdb7eb6d42" name="ac4c54ed17ff3b70e76121ecdb7eb6d42"></a>
-model_size_t&#160;</td><td class="memItemRight"><b>anyxx::model_size</b> (std::nullptr_t)</td></tr>
-<tr class="memitem:af0ce3d38da7099f55827557279611dff" id="r_af0ce3d38da7099f55827557279611dff"><td class="memItemLeft"><a id="af0ce3d38da7099f55827557279611dff" name="af0ce3d38da7099f55827557279611dff"></a>
-model_size_t&#160;</td><td class="memItemRight"><b>anyxx::model_size</b> (is_model_size_v_table auto *v_table)</td></tr>
-<tr class="memitem:aab4c2ebbadd41067eab134e7bc45968f" id="r_aab4c2ebbadd41067eab134e7bc45968f"><td class="memItemLeft"><a id="aab4c2ebbadd41067eab134e7bc45968f" name="aab4c2ebbadd41067eab134e7bc45968f"></a>
-mutable_void&#160;</td><td class="memItemRight"><b>anyxx::copy_construct_at</b> (is_copy_constructor_v_table auto *v_table, mutable_void placement, const_void from)</td></tr>
-<tr class="memitem:a6ff3712237f1a2ab5d974ea67f51e72d" id="r_a6ff3712237f1a2ab5d974ea67f51e72d"><td class="memItemLeft"><a id="a6ff3712237f1a2ab5d974ea67f51e72d" name="a6ff3712237f1a2ab5d974ea67f51e72d"></a>
-mutable_void&#160;</td><td class="memItemRight"><b>anyxx::copy_construct</b> (is_copy_constructor_v_table auto *v_table, const_void from)</td></tr>
-<tr class="memitem:a0a44f60cea7093459ba86c20aeccce69" id="r_a0a44f60cea7093459ba86c20aeccce69"><td class="memItemLeft"><a id="a0a44f60cea7093459ba86c20aeccce69" name="a0a44f60cea7093459ba86c20aeccce69"></a>
-mutable_void&#160;</td><td class="memItemRight"><b>anyxx::move_construct_at</b> (is_move_constructor_v_table auto *v_table, mutable_void placement, mutable_void from)</td></tr>
-<tr class="memitem:afe5f1df8425f8a3dbbb6d3d879626567" id="r_afe5f1df8425f8a3dbbb6d3d879626567"><td class="memItemLeft"><a id="afe5f1df8425f8a3dbbb6d3d879626567" name="afe5f1df8425f8a3dbbb6d3d879626567"></a>
-mutable_void&#160;</td><td class="memItemRight"><b>anyxx::move_construct</b> (is_move_constructor_v_table auto *v_table, mutable_void from)</td></tr>
-<tr class="memitem:aca158c31c89d237cefacc57497e3cb9b" id="r_aca158c31c89d237cefacc57497e3cb9b"><td class="memTemplParams" colspan="2"><a id="aca158c31c89d237cefacc57497e3cb9b" name="aca158c31c89d237cefacc57497e3cb9b"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:aca158c31c89d237cefacc57497e3cb9b template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::delete_</b> (T v_table, mutable_void &amp;data) noexcept</td></tr>
-<tr class="memitem:a86a16d743abae4ffd97857bdf2be90a1" id="r_a86a16d743abae4ffd97857bdf2be90a1"><td class="memTemplParams" colspan="2"><a id="a86a16d743abae4ffd97857bdf2be90a1" name="a86a16d743abae4ffd97857bdf2be90a1"></a>
-template&lt;typename T&gt; </td></tr>
-<tr class="memitem:a86a16d743abae4ffd97857bdf2be90a1 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::destruct</b> (T v_table, mutable_void data) noexcept</td></tr>
-<tr class="memitem:a58fedd0e4389e077eda4b2f7e993d6d5" id="r_a58fedd0e4389e077eda4b2f7e993d6d5"><td class="memTemplParams" colspan="2"><a id="a58fedd0e4389e077eda4b2f7e993d6d5" name="a58fedd0e4389e077eda4b2f7e993d6d5"></a>
-template&lt;typename U&gt; </td></tr>
-<tr class="memitem:a58fedd0e4389e077eda4b2f7e993d6d5 template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><b>anyxx::type_match</b> (is_type_info_v_table auto *v_table)</td></tr>
-<tr class="memitem:a606d95567f81b2f4bb4a3d347c57ee30" id="r_a606d95567f81b2f4bb4a3d347c57ee30"><td class="memTemplParams" colspan="2"><a id="a606d95567f81b2f4bb4a3d347c57ee30" name="a606d95567f81b2f4bb4a3d347c57ee30"></a>
-template&lt;typename U&gt; </td></tr>
-<tr class="memitem:a606d95567f81b2f4bb4a3d347c57ee30 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::check_type_match</b> (is_type_info_v_table auto *v_table)</td></tr>
 <tr class="memitem:a44ae4ba72a85a764ac7ae56c5d7ee383" id="r_a44ae4ba72a85a764ac7ae56c5d7ee383"><td class="memItemLeft"><a id="a44ae4ba72a85a764ac7ae56c5d7ee383" name="a44ae4ba72a85a764ac7ae56c5d7ee383"></a>
 constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_const_correct_call_for_proxy_and_self</b> (bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact)</td></tr>
 <tr class="memitem:a255ef796b4b603d1058e4e6914ebb171" id="r_a255ef796b4b603d1058e4e6914ebb171"><td class="memTemplParams" colspan="2"><a id="a255ef796b4b603d1058e4e6914ebb171" name="a255ef796b4b603d1058e4e6914ebb171"></a>
@@ -445,6 +396,9 @@ template&lt;typename U, typename Any&gt; </td></tr>
 <tr class="memitem:aa0a344700732ba661e0fb701ef1eba2c template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#aa0a344700732ba661e0fb701ef1eba2c">anyxx::trait_as</a> (T &amp;&amp;v)</td></tr>
 <tr class="memitem:abd61608594394c90276eec4d088a9430" id="r_abd61608594394c90276eec4d088a9430"><td class="memTemplParams" colspan="2">template&lt;typename Trait, typename T&gt; </td></tr>
 <tr class="memitem:abd61608594394c90276eec4d088a9430 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><a class="el" href="#abd61608594394c90276eec4d088a9430">anyxx::trait_as_cref</a> (T const &amp;v)</td></tr>
+<tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60" id="r_a9d9ca1a9aa463aa620c1dfb58dda2c60"><td class="memTemplParams" colspan="2"><a id="a9d9ca1a9aa463aa620c1dfb58dda2c60" name="a9d9ca1a9aa463aa620c1dfb58dda2c60"></a>
+template&lt;typename VTable, typename Concrete&gt; </td></tr>
+<tr class="memitem:a9d9ca1a9aa463aa620c1dfb58dda2c60 template"><td class="memItemLeft">VTable *&#160;</td><td class="memItemRight"><b>anyxx::v_table_instance</b> ()</td></tr>
 <tr class="memitem:a9f6c325609ae457472868b67551fdf06" id="r_a9f6c325609ae457472868b67551fdf06"><td class="memTemplParams" colspan="2"><a id="a9f6c325609ae457472868b67551fdf06" name="a9f6c325609ae457472868b67551fdf06"></a>
 template&lt;typename AnyVTable, typename Class&gt; </td></tr>
 <tr class="memitem:a9f6c325609ae457472868b67551fdf06 template"><td class="memItemLeft">dispatch_table_t *&#160;</td><td class="memItemRight"><b>anyxx::dispatch_table_instance_implementation</b> ()</td></tr>
@@ -1025,7 +979,7 @@ template&lt;typename T&gt; </div>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
 <div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:290</div></div>
+<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:143</div></div>
 </div><!-- fragment -->
 </div>
 </div>

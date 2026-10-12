@@ -1,6 +1,5 @@
 var anyxx_8hpp =
 [
-    [ "anyxx::undefined", "structanyxx_1_1undefined.html", null ],
     [ "anyxx::observeable_v_table", "structanyxx_1_1observeable__v__table.html", "structanyxx_1_1observeable__v__table" ],
     [ "anyxx::any&lt; Trait, Proxy &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::using_&lt; Value &gt;", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
