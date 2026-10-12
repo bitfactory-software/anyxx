@@ -194,9 +194,13 @@ struct observeable_v_table {
 };
 
 template <typename T = std::nullptr_t>
-struct no_model_map {
-  using rep_type = T;
+struct observeable_default_model_map {
+  using rep_type = std::nullptr_t;
+  struct deduced_type {};
 };
+
+template <typename T = std::nullptr_t>
+struct observeable_map : observeable_default_model_map<T> {};
 
 struct observeable {
   template <typename>
@@ -207,7 +211,10 @@ struct observeable {
   using default_proxy_t = cref;
 
   template <typename StaticDispatchType>
-  using static_dispatch_map_t = no_model_map<StaticDispatchType>;
+  using static_dispatch_map_t = observeable_map<StaticDispatchType>;
+
+  template <typename T>
+  using model_map = observeable_map<T>;
 
   using v_table_t = observeable_v_table;
   using val_nullable = typename v_table_t::val_nullable;
@@ -898,9 +905,9 @@ struct proxy_trait<unique> : basic_proxy_trait<unique> {
     return unique{v.release()};
   }
   template <typename V>
-      requires (!requires { typename std::decay_t<V>::deleter_type; })
+    requires(!requires { typename std::decay_t<V>::deleter_type; })
   static auto erase(V&& v) {
-      return unique{ new V{std::move(v)} };
+    return unique{new V{std::move(v)}};
   }
 };
 
@@ -977,9 +984,9 @@ struct proxy_trait<shared> : basic_proxy_trait<shared> {
     return static_pointer_cast<void const>(v);
   }
   template <typename V>
-      requires (!requires { typename std::decay_t<V>::weak_type; })
+    requires(!requires { typename std::decay_t<V>::weak_type; })
   static auto erase(V&& v) {
-      return std::make_shared<std::decay_t<V>>(std::forward<V>(v));
+    return std::make_shared<std::decay_t<V>>(std::forward<V>(v));
   }
 };
 
@@ -1891,16 +1898,14 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   explicit(false) any(const Other& other)  // NOLINT(noExplicitConstructor)
     requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
                                    typename Other::v_table_t> &&
-             (!anyxx::is_dyn<Proxy> ||
-              is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
       : v_table_holder_t(other.get_v_table_ptr()),
         proxy_(borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr())) {}
   template <is_any Other>
   any& operator=(Other const& other)
     requires(proxy_borrowable_from<proxy_t, typename Other::proxy_t,
                                    typename Other::v_table_t> &&
-             (!anyxx::is_dyn<Proxy> ||
-              is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
   {
     v_table_holder_t::set_v_table_ptr(other.get_v_table_ptr());
     proxy_ = borrow_proxy_as<Proxy>(other.proxy_, other.get_v_table_ptr());
@@ -1920,14 +1925,12 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
   template <is_any Other>
   explicit(false) any(Other&& other) noexcept  // NOLINT(noExplicitConstructor)
     requires(moveable_from<proxy_t, typename Other::proxy_t> &&
-             (!anyxx::is_dyn<Proxy> ||
-              is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
       : any(std::move(other.proxy_), other.release_v_table()) {}
   template <is_any Other>
   any& operator=(Other&& other) noexcept
     requires(moveable_from<proxy_t, typename Other::proxy_t> &&
-             (!anyxx::is_dyn<Proxy> ||
-              is_any_derived_from<Other, any>))
+             (!anyxx::is_dyn<Proxy> || is_any_derived_from<Other, any>))
   {
     proxy_trait_t::move_to(proxy_, v_table_holder_t::get_v_table_ptr(),
                            std::move(other.proxy_), other.get_v_table_ptr());
@@ -1955,8 +1958,7 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
 
   template <is_any To, is_any From>
   friend inline To unchecked_downcast_to(From from)
-    requires(
-        is_any_derived_from<To, From>);
+    requires(is_any_derived_from<To, From>);
 
   explicit operator bool() const
     requires proxy_trait_t::allow_any_default_constructibile

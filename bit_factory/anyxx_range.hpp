@@ -70,7 +70,24 @@ auto post_increment_def = [](T& self) -> T {
 };
 
 TRAIT_TEMPLATE_EX_(
-    ((ValueType), (Reference)), forward_iterator, dynamic_copyable, (),
+    ((ValueType), (Reference)), input_iterator, dynamic_copyable, (),
+    (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
+     ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
+                ([&x]() -> Reference { return *x; })),
+     ANY_OP_MAP_NAMED_FRIEND(bool, ==, equal, (anyxx::self const&), const),
+     ANY_OP_MAP_NAMED_FRIEND(bool, !=, inequal, (anyxx::self const&), const)),
+    ,
+    (ANY_TYPE((), iterator_category, std::input_iterator_tag,
+              (std::input_iterator_tag)),
+     ANY_TYPE((), difference_type, std::ptrdiff_t,
+              (difference_type_impl<T>::type)),
+     ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
+     ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
+    , ())
+
+TRAIT_TEMPLATE_EX_(
+    ((ValueType), (Reference)), forward_iterator, input_iterator,
+    ((ValueType), (Reference)),
     (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
      ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
                 ([&x]() -> Reference { return *x; })),
@@ -79,8 +96,6 @@ TRAIT_TEMPLATE_EX_(
     ,
     (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
               (std::forward_iterator_tag)),
-     ANY_TYPE((), difference_type, std::ptrdiff_t,
-              (difference_type_impl<T>::type)),
      ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
      ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
     , ())
@@ -88,6 +103,7 @@ TRAIT_TEMPLATE_EX_(
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
+
 static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
 
 TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),

@@ -573,7 +573,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     using default_map = n##_default_model_map;                                 \
     using rep_type = T;                                                        \
                                                                                \
-    struct deduced_type {                                                      \
+    struct deduced_type                                                        \
+        : BASE                                                                 \
+          _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(                                \
+              base_template_params)::template model_map<T>::deduced_type {     \
       _detail_ANYXX_MAP_TYPES(typedefs);                                       \
     };                                                                         \
     _detail_ANYXX_MAP_FUNCTIONS(l);                                            \
@@ -636,7 +639,7 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                                                                                \
     using T = char;                                                            \
                                                                                \
-    struct deduced_type {                                                      \
+    struct deduced_type : v_table_base_t::deduced_type {                       \
       _detail_ANYXX_V_TABLE_TYPES(typedefs);                                   \
     };                                                                         \
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
@@ -1225,4 +1228,3 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 
 #define _detail_ANYXX_FN_EMPTY(name, ret) \
   []<typename... Args>([[maybe_unused]] Args...) -> ret { return {}; }
-
