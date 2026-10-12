@@ -282,8 +282,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    any_forward_range&lt;any_stringable&lt;anyxx::val&lt;&gt;&gt;&gt; r{v};</div>
 <div class="line">    <span class="keywordtype">int</span> x = 0;</div>
 <div class="line">    <span class="keywordflow">for</span> (<span class="keyword">auto</span> i : std::views::transform(</div>
-<div class="line">             r, [](any_stringable&lt;<a id="_a1" name="_a1"></a><a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; <span class="keyword">const</span>&amp; vv) -&gt; <span class="keywordtype">int</span> {</div>
-<div class="line">               <span class="keywordflow">return</span> *<a id="a2" name="a2"></a><a class="code hl_function" href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">anyxx::unerase_cast&lt;int&gt;</a>(vv);</div>
+<div class="line">             r, [](any_stringable&lt;anyxx::val&lt;&gt;&gt; <span class="keyword">const</span>&amp; vv) -&gt; <span class="keywordtype">int</span> {</div>
+<div class="line">               <span class="keywordflow">return</span> *<a id="a1" name="a1"></a><a class="code hl_function" href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">anyxx::unerase_cast&lt;int&gt;</a>(vv);</div>
 <div class="line">             })) {</div>
 <div class="line">      std::println(<span class="stringliteral">&quot;{}&quot;</span>, i);</div>
 <div class="line">      CHECK(i == ++x);</div>
@@ -309,7 +309,7 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">    CHECK(get_proxy_value(r) == 6);</div>
 <div class="line">  }</div>
 <div class="line">  {</div>
-<div class="line">    any_forward_range&lt;any_node&lt;&gt;, any_node&lt;&gt;, <a class="code hl_struct" href="structanyxx_1_1val.html">anyxx::val&lt;&gt;</a>&gt; r{v};</div>
+<div class="line">    any_forward_range&lt;any_node&lt;&gt;, any_node&lt;&gt;, anyxx::val&lt;&gt;&gt; r{v};</div>
 <div class="line">    {</div>
 <div class="line">      any_node&lt;using_&lt;int&gt;&gt; n1{0};</div>
 <div class="line">      <span class="keyword">auto</span> result = n1.sum(r);</div>
@@ -431,9 +431,8 @@ $(function(){initNavTree('_3_any_range_8cpp-example.html','',''); });
 <div class="line">  CHECK(out2.str() == <span class="stringliteral">&quot;84/is greater than:is greater than:/26/&quot;</span>);</div>
 <div class="line">}</div>
 <div class="ttc" id="aanyxx_8hpp_html"><div class="ttname"><a href="anyxx_8hpp.html">anyxx.hpp</a></div><div class="ttdoc">C++ header only library for external polymorphism.</div></div>
-<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:648</div></div>
-<div class="ttc" id="agroup__casts_html_ga503c7a4639146953d0f21603ef83241e"><div class="ttname"><a href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">anyxx::unerase_cast</a></div><div class="ttdeci">auto unerase_cast(Any const &amp;o)</div><div class="ttdoc">Safe downcast to an unerased type using runtime information from the v-Tables.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:1001</div></div>
-<div class="ttc" id="astructanyxx_1_1val_html"><div class="ttname"><a href="structanyxx_1_1val.html">anyxx::val</a></div><div class="ttdoc">Proxy to manage the captured object as value with small object optimization.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:103</div></div>
+<div class="ttc" id="aclassanyxx_1_1any_html"><div class="ttname"><a href="classanyxx_1_1any.html">anyxx::any</a></div><div class="ttdoc">The core class template to control dispatch for external polymorphism.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:299</div></div>
+<div class="ttc" id="agroup__casts_html_ga503c7a4639146953d0f21603ef83241e"><div class="ttname"><a href="group__casts.html#ga503c7a4639146953d0f21603ef83241e">anyxx::unerase_cast</a></div><div class="ttdeci">auto unerase_cast(Any const &amp;o)</div><div class="ttdoc">Safe downcast to an unerased type using runtime information from the v-Tables.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:652</div></div>
 </div><!-- fragment --> </div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->
