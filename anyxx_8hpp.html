@@ -99,6 +99,7 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <code>#include &lt;bit_factory/anyxx/errors/cast_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/errors/type_mismatch_error.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/observeable.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxy_concept.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/small_object_size.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/utilities.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/v_table_data.hpp&gt;</code><br />
@@ -133,12 +134,8 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-concepts" class="groupheader"><a id="concepts" name="concepts"></a>
 Concepts</h2></td></tr>
-<tr class="memitem:anyxx_3A_3Ais_5Fproxy" id="r_anyxx_3A_3Ais_5Fproxy"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a proxy type. <br /></td></tr>
 <tr class="memitem:anyxx_3A_3Ahas_5Fv_5Ftable" id="r_anyxx_3A_3Ahas_5Fv_5Ftable"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptanyxx_1_1has__v__table.html">anyxx::has_v_table</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a trait type. <br /></td></tr>
-<tr class="memitem:anyxx_3A_3Ais_5Fdyn" id="r_anyxx_3A_3Ais_5Fdyn"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="conceptanyxx_1_1is__dyn.html">anyxx::is_dyn</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Requirements for a dynamic (i.e., type-erased) Proxy. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-define-members" class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
@@ -970,8 +967,7 @@ template&lt;typename T&gt; </div>
 </table>
 </div><div class="memdoc">
 <b>Initial value:</b><div class="fragment"><div class="line">                                =</div>
-<div class="line"><a class="code hl_concept" href="conceptanyxx_1_1is__proxy.html">is_proxy&lt;T&gt;</a> &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
-<div class="ttc" id="aconceptanyxx_1_1is__proxy_html"><div class="ttname"><a href="conceptanyxx_1_1is__proxy.html">anyxx::is_proxy</a></div><div class="ttdoc">Requirements for a proxy type.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:73</div></div>
+<div class="line">is_proxy&lt;T&gt; &amp;&amp; is_type_class_impl&lt;T&gt;::value</div>
 </div><!-- fragment -->
 </div>
 </div>
