@@ -422,16 +422,23 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
 #define _detail_ANYXX_LAMBDA_TO_MEMEBER_IMPL(                              \
     access, overload, type, name, name_ext, exact_const, const_, map_body, \
     mapf_concept, mapf_concept_lhs, ...)                                   \
-  name##const_ =                                                           \
-      [](void const_* _vp __VA_OPT__(                                      \
-          , _detail_ANYXX_V_TABLE_PARAM_LIST(a, _sig, __VA_ARGS__)))       \
-      -> anyxx::v_table_return<any_value_t, ANYXX_UNPAREN(type)> {         \
+  name##const_ = [](void const_* _vp __VA_OPT__(                           \
+                     , _detail_ANYXX_V_TABLE_PARAM_LIST(                   \
+                           a, _sig, __VA_ARGS__))) -> decltype(auto) {     \
     if constexpr (std::same_as<anyxx::self&, ANYXX_UNPAREN(type)>) {       \
       model_map{}.name(                                                    \
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
               __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(          \
                   a, _sig, __VA_ARGS__)));                                 \
       return anyxx::handle_self_ref_return<ANYXX_UNPAREN(type)>{}();       \
+    } else if constexpr (std::same_as<anyxx::self, ANYXX_UNPAREN(type)>) { \
+      using proxy_t = typename any_value_t::proxy_t;                       \
+      return any_value_t{                                                  \
+          anyxx::erased<proxy_t>(model_map{}.name(                         \
+              *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, ) \
+                  __VA_OPT__(_detail_ANYXX_FORWARD_PARAM_LIST_TO_MAP(      \
+                      a, _sig, __VA_ARGS__)))),                            \
+          anyxx::v_table_instance<Parent, Concrete>()};                    \
     } else {                                                               \
       return model_map{}.name(                                             \
           *anyxx::unchecked_unerase_cast<Concrete>(_vp) __VA_OPT__(, )     \
@@ -439,6 +446,9 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
                   a, _sig, __VA_ARGS__)));                                 \
     }                                                                      \
   };
+
+// return any_value_t{ std::move(erased_result),
+//                    anyxx::v_table_instance<Parent, Concrete>() };
 
 #define _detail_ANYXX_V_TABLE_DATA_DECL(type, name, ...) type name;
 
@@ -645,8 +655,10 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
     _detail_ANYXX_V_TABLE_FUNCTION_PTRS(l);                                    \
     _detail_ANYXX_V_TABLE_DATA_DECLS(v_table_data);                            \
                                                                                \
-    template <typename Concrete>                                               \
-    explicit(false) n##_v_table(std::in_place_type_t<Concrete> concrete);      \
+    template <typename Concrete, typename Parent = n##_v_table>                \
+    explicit(false) n##_v_table(                                               \
+        std::in_place_type_t<Concrete> concrete,                               \
+        std::in_place_type_t<Parent> parent = std::in_place_type<Parent>);     \
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(any_template_params) struct n     \
@@ -715,11 +727,12 @@ static_assert(std::same_as<ANYXX_UNPAREN((int)), int>);
   };                                                                           \
                                                                                \
   _detail_ANYXX_OPTIONAL_TYPENAME_PARAM_LIST(                                  \
-      any_template_params) template <typename Concrete>                        \
+      any_template_params) template <typename Concrete, typename Parent>       \
   n##_v_table                                                                  \
   _detail_ANYXX_OPTIONAL_TEMPLATE_ARGS(any_template_params)::n##_v_table(      \
-      std::in_place_type_t<Concrete> concrete)                                 \
-      : v_table_base_t(concrete) {                                             \
+      std::in_place_type_t<Concrete> concrete,                                 \
+      std::in_place_type_t<Parent> parent)                                     \
+      : v_table_base_t(concrete, parent) {                                     \
     using model_map =                                                          \
         n##_model_map<_detail_ANYXX_TEMPLATE_ARGS(concrete_template_params)>;  \
                                                                                \

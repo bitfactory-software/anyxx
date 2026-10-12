@@ -7,6 +7,10 @@ namespace anyxx {
 inline static constexpr std::size_t iterator_val_proxy_size =
     small_object_size * 2u;
 
+struct input_iterator_is_nullable {};
+struct input_iterator_val_size {
+  static constexpr std::size_t value = iterator_val_proxy_size;
+};
 struct forward_iterator_is_nullable {};
 struct forward_iterator_val_size {
   static constexpr std::size_t value = iterator_val_proxy_size;
@@ -85,21 +89,35 @@ TRAIT_TEMPLATE_EX_(
      ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
     , ())
 
-TRAIT_TEMPLATE_EX_(
-    ((ValueType), (Reference)), forward_iterator, input_iterator,
-    ((ValueType), (Reference)),
-    (ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
-                ([&x]() -> Reference { return *x; }))),
-    ,
-    (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
-              (std::forward_iterator_tag))),
-    , ())
+TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), forward_iterator, input_iterator,
+                   ((ValueType), (Reference)), , ,
+                   (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
+                             (std::forward_iterator_tag))),
+                   , ())
+
+TRAIT_TEMPLATE_EX_(((ValueType), (Reference)), bidirectional_iterator,
+                   forward_iterator, ((ValueType), (Reference)),
+                   (ANY_OP_MAP_NAMED(anyxx::self&, --, op_pre_decrement, (), )),
+                   ,
+                   (ANY_TYPE((), iterator_category,
+                             std::bidirectional_iterator_tag,
+                             (std::bidirectional_iterator_tag))),
+                   , ())
+
+template <typename ValueType, typename Reference,
+          typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+using any_input_iterator = any<input_iterator<ValueType, Reference>, Proxy>;
+static_assert(std::input_iterator<any_input_iterator<int, int>>);
 
 template <typename ValueType, typename Reference,
           typename Proxy = val<std::true_type, iterator_val_proxy_size>>
 using any_forward_iterator = any<forward_iterator<ValueType, Reference>, Proxy>;
-
 static_assert(std::forward_iterator<any_forward_iterator<int, int>>);
+
+template <typename ValueType, typename Reference,
+    typename Proxy = val<std::true_type, iterator_val_proxy_size>>
+    using any_bidirectional_iterator = any<bidirectional_iterator<ValueType, Reference>, Proxy>;
+static_assert(std::bidirectional_iterator<any_bidirectional_iterator<int, int>>);
 
 TRAIT_TEMPLATE_(((AnyIterator)), range, dynamic_copyable, (),
                 (ANY_FN(AnyIterator, begin, (), const),

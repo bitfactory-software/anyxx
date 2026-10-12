@@ -151,9 +151,17 @@ template <typename M, typename V>
 concept is_op_pre_increment_model_map =
     requires(M model_map, V v) { model_map.op_pre_increment(v); };
 
+template <typename M, typename V>
+concept is_op_pre_decrement_model_map =
+    requires(M model_map, V v) { model_map.op_pre_decrement(v); };
+
 template <typename VTable>
 concept is_op_pre_increment_v_table =
     requires(VTable* v_table, mutable_void x) { v_table->op_pre_increment(x); };
+
+template <typename VTable>
+concept is_op_pre_decrement_v_table =
+    requires(VTable * v_table, mutable_void x) { v_table->op_pre_decrement(x); };
 
 /// \brief Use this type to indicate, that the ANY_TYPE must be specified in
 /// the model map.
@@ -184,9 +192,11 @@ struct observeable_v_table {
   static constexpr std::size_t val_proxy_size = small_object_size;
 
   /// Type-erasing constructor
-  template <typename Concrete>
+  template <typename Concrete, typename Parent = observeable_v_table>
   explicit observeable_v_table(
-      [[maybe_unused]] std::in_place_type_t<Concrete> concrete) {}
+      [[maybe_unused]] std::in_place_type_t<Concrete> concrete,
+      [[maybe_unused]] std::in_place_type_t<Parent> parent =
+          std::in_place_type<Parent>) {}
 
   static bool static_is_derived_from(const std::type_info& from) {
     return typeid(observeable_v_table) == from;
@@ -1994,7 +2004,6 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
         get_proxy_ptr(std::forward<Self>(self)));
     return std::forward<Self>(self);
   }
-
   template <typename Self>
   Self& operator++(this Self&& self)
     requires(!is_dyn && is_op_pre_increment_model_map<model_map_t, T>)
@@ -2002,7 +2011,36 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
     model_map_t{}.op_pre_increment(get_proxy_value(std::forward<Self>(self)));
     return std::forward<Self>(self);
   }
+
+  template <typename Self>
+  Self operator--(this Self& self, int)
+      requires(is_dyn&& is_op_pre_decrement_v_table<v_table_t>) ||
+  (!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
+
+  {
+      auto r = self;
+      --(self);
+      return r;
+  }
+  template <typename Self>
+  Self& operator--(this Self&& self)
+      requires is_dyn&& is_op_pre_decrement_v_table<v_table_t>
+  {
+      get_v_table(self)->op_pre_decrement(
+          get_proxy_ptr(std::forward<Self>(self)));
+      return std::forward<Self>(self);
+  }
+  template <typename Self>
+  Self& operator--(this Self&& self)
+      requires(!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
+  {
+      model_map_t{}.op_pre_decrement(get_proxy_value(std::forward<Self>(self)));
+      return std::forward<Self>(self);
+  }
+
 };
+
+
 
 template <is_any Any>
 inline auto& get_proxy(Any const& any) {
@@ -2360,6 +2398,8 @@ struct jacket_return<self> {
     } else {
       if constexpr (is_any<sig_t> && !Any::is_dyn) {
         return Any{get_proxy_value(sig)};
+      } else if constexpr (is_any<sig_t> && Any::is_dyn) {
+        return unchecked_downcast_to<Any>(std::forward<Sig>(sig));
       } else {
         return Any{std::forward<Sig>(sig)};
       }
