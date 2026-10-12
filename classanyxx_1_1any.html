@@ -230,7 +230,7 @@ class anyxx::any&lt; Trait, Proxy &gt;</div><p>The core class template to contro
 <p>With the Trait template parameter, you specify the member functions of a captured object which can be invoked on this <span class="tt"><a class="el" href="classanyxx_1_1any.html" title="The core class template to control dispatch for external polymorphism.">any</a></span>.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides using_, cref, mutref, <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, unique, and value. All Proxy classes must conform to the is_proxy concept. </td></tr>
+    <tr><td class="paramname">Proxy</td><td>Specifies the lifetime of the captured object. Any++ provides using_, cref, mutref, shared, weak, unique, and value. All Proxy classes must conform to the is_proxy concept. </td></tr>
     <tr><td class="paramname">Trait</td><td>Specifies the functionality of this any. A class of this type is normally provided via a TRAIT or ANY macro. See there for examples. If the proxy is dynamic (i.e., type erased), the Trait must conform to the <a class="el" href="conceptanyxx_1_1has__v__table.html" title="has_v_table">has_v_table</a> concept (that means: must provide a v-Table). </td></tr>
   </table>
   </dd>
@@ -383,7 +383,7 @@ requires constructibile_for&lt;ConstructedWith, proxy_impl_t, trait_t&gt; &amp;&
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Type-erasing constructor for lifetime owning proxies. The concrete behavior is controlled by the proxy via its corresponding proxy_trait. See using_, <a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c" title="shared">shared</a>, <a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c" title="weak">weak</a>, unique, and value. </p>
+<p>Type-erasing constructor for lifetime owning proxies. The concrete behavior is controlled by the proxy via its corresponding proxy_trait. See using_, shared, weak, unique, and value. </p>
 
 </div>
 </div>

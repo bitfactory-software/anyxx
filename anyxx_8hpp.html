@@ -104,6 +104,8 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <code>#include &lt;bit_factory/anyxx/proxies/unerase_cast.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/observer.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/unique.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/shared.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/weak.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/trait_class.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/using_cref.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/using_.hpp&gt;</code><br />
@@ -197,8 +199,6 @@ Macros</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:ga56505144f855bfd01c879bf63c62f09c" id="r_ga56505144f855bfd01c879bf63c62f09c"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">anyxx::shared</a> = std::shared_ptr&lt;void const&gt;</td></tr>
-<tr class="memitem:ga7170135ae5d6f21abb97fb1fb1649f0c" id="r_ga7170135ae5d6f21abb97fb1fb1649f0c"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="group__proxies.html#ga7170135ae5d6f21abb97fb1fb1649f0c">anyxx::weak</a> = std::weak_ptr&lt;void const&gt;</td></tr>
 <tr class="memitem:a533268eaf0ea159eddeef975f7286c18" id="r_a533268eaf0ea159eddeef975f7286c18"><td class="memItemLeft"><a id="a533268eaf0ea159eddeef975f7286c18" name="a533268eaf0ea159eddeef975f7286c18"></a>
 using&#160;</td><td class="memItemRight"><b>anyxx::nullable_val</b> = <a class="el" href="structanyxx_1_1val.html">val</a>&lt;std::true_type&gt;</td></tr>
 <tr class="memitem:aec5473f1849561491cbfe887f2a12270" id="r_aec5473f1849561491cbfe887f2a12270"><td class="memTemplParams" colspan="2"><a id="aec5473f1849561491cbfe887f2a12270" name="aec5473f1849561491cbfe887f2a12270"></a>
@@ -410,7 +410,7 @@ template&lt;typename Concrete&gt; </td></tr>
 <tr class="memitem:a141cdc18d5e8a99ad3cedda7418309b2" id="r_a141cdc18d5e8a99ad3cedda7418309b2"><td class="memItemLeft"><a id="a141cdc18d5e8a99ad3cedda7418309b2" name="a141cdc18d5e8a99ad3cedda7418309b2"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_castable, save_observable,,,,(ANY_CAN_TYPE_SAVE_DOWNCAST, ANY_CAN_TYPE_SAVE_CROSSCAST),())</td></tr>
 <tr class="memitem:a3eb05cd657f0334d8c6b1350d3f322e4" id="r_a3eb05cd657f0334d8c6b1350d3f322e4"><td class="memItemLeft"><a id="a3eb05cd657f0334d8c6b1350d3f322e4" name="a3eb05cd657f0334d8c6b1350d3f322e4"></a>
-&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_deletable, dynamic_castable,,,,(ANY_HAS_DELETE),(using default_proxy_t=<a class="el" href="group__proxies.html#ga56505144f855bfd01c879bf63c62f09c">shared</a>;))</td></tr>
+&#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_deletable, dynamic_castable,,,,(ANY_HAS_DELETE),(using default_proxy_t=shared;))</td></tr>
 <tr class="memitem:a72bcf80656f8e5a5b99c6d90b862116f" id="r_a72bcf80656f8e5a5b99c6d90b862116f"><td class="memItemLeft"><a id="a72bcf80656f8e5a5b99c6d90b862116f" name="a72bcf80656f8e5a5b99c6d90b862116f"></a>
 &#160;</td><td class="memItemRight"><b>anyxx::TRAIT_EX_</b> (dynamic_smart_ptr, dynamic_deletable,,,,(ANY_MODEL_SIZE, ANY_COPY_CONSTRUCTOR),())</td></tr>
 <tr class="memitem:a5ae2096d910a2544ece3c6a80b098bb3" id="r_a5ae2096d910a2544ece3c6a80b098bb3"><td class="memItemLeft"><a id="a5ae2096d910a2544ece3c6a80b098bb3" name="a5ae2096d910a2544ece3c6a80b098bb3"></a>
