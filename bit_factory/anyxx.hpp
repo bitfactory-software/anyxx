@@ -9,14 +9,14 @@
 
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
-#include <bit_factory/anyxx/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
+#include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
+#include <bit_factory/anyxx/proxies/proxy_concept.hpp>
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
-#include <bit_factory/anyxx/proxy_concept.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
