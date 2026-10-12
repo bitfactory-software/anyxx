@@ -108,6 +108,9 @@ $(function(){initNavTree('anyxx_8hpp.html','',''); });
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/shared.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/weak.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/dyn/val.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/borrowable_from.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/cloneable_to.hpp&gt;</code><br />
+<code>#include &lt;bit_factory/anyxx/proxies/dyn/moveable_from.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/trait_class.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/using_cref.hpp&gt;</code><br />
 <code>#include &lt;bit_factory/anyxx/proxies/static/using_.hpp&gt;</code><br />
@@ -250,15 +253,6 @@ template&lt;typename T&gt; </td></tr>
 <tr class="memitem:aab243e28ae1ec0abbc49057a5d0af1e6" id="r_aab243e28ae1ec0abbc49057a5d0af1e6"><td class="memTemplParams" colspan="2"><a id="aab243e28ae1ec0abbc49057a5d0af1e6" name="aab243e28ae1ec0abbc49057a5d0af1e6"></a>
 template&lt;typename VTable, typename Concrete&gt; </td></tr>
 <tr class="memitem:aab243e28ae1ec0abbc49057a5d0af1e6 template"><td class="memItemLeft">auto&#160;</td><td class="memItemRight"><b>anyxx::bind_v_table_to_meta_data</b> ()</td></tr>
-<tr class="memitem:aa72f314a00ea070fbe7ef1155f7a7159" id="r_aa72f314a00ea070fbe7ef1155f7a7159"><td class="memTemplParams" colspan="2"><a id="aa72f314a00ea070fbe7ef1155f7a7159" name="aa72f314a00ea070fbe7ef1155f7a7159"></a>
-template&lt;typename To, typename From, typename FromVTable&gt; </td></tr>
-<tr class="memitem:aa72f314a00ea070fbe7ef1155f7a7159 template"><td class="memItemLeft">To&#160;</td><td class="memItemRight"><b>anyxx::borrow_proxy_as</b> (From const &amp;from, FromVTable *v_table)</td></tr>
-<tr class="memitem:a81cad71ab6be5cbea76f191639021731" id="r_a81cad71ab6be5cbea76f191639021731"><td class="memTemplParams" colspan="2"><a id="a81cad71ab6be5cbea76f191639021731" name="a81cad71ab6be5cbea76f191639021731"></a>
-template&lt;is_proxy To, is_proxy From&gt; </td></tr>
-<tr class="memitem:a81cad71ab6be5cbea76f191639021731 template"><td class="memItemLeft">To&#160;</td><td class="memItemRight"><b>anyxx::clone_to</b> (From const &amp;from, auto v_table)</td></tr>
-<tr class="memitem:a17e4ecb84bf3532a54860a220523e5af" id="r_a17e4ecb84bf3532a54860a220523e5af"><td class="memTemplParams" colspan="2"><a id="a17e4ecb84bf3532a54860a220523e5af" name="a17e4ecb84bf3532a54860a220523e5af"></a>
-template&lt;is_proxy To, is_proxy From&gt; </td></tr>
-<tr class="memitem:a17e4ecb84bf3532a54860a220523e5af template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><b>anyxx::move_to</b> (To &amp;to, auto to_v_table, From &amp;&amp;from, auto from_v_table)</td></tr>
 <tr class="memitem:aeb744d3528f74dfbb51f29520e3a02e9" id="r_aeb744d3528f74dfbb51f29520e3a02e9"><td class="memTemplParams" colspan="2"><a id="aeb744d3528f74dfbb51f29520e3a02e9" name="aeb744d3528f74dfbb51f29520e3a02e9"></a>
 template&lt;is_any Any&gt; </td></tr>
 <tr class="memitem:aeb744d3528f74dfbb51f29520e3a02e9 template"><td class="memItemLeft">auto &amp;&#160;</td><td class="memItemRight"><b>anyxx::get_proxy</b> (Any const &amp;<a class="el" href="classanyxx_1_1any.html">any</a>)</td></tr>
@@ -429,12 +423,6 @@ template&lt;size_t At, size_t N, typename Tuple&gt; </td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a81e31d857ed19860064711ad2d7aa3f4" id="r_a81e31d857ed19860064711ad2d7aa3f4"><td class="memItemLeft"><a id="a81e31d857ed19860064711ad2d7aa3f4" name="a81e31d857ed19860064711ad2d7aa3f4"></a>
-template&lt;&gt; </td></tr>
-<tr class="memitem:a81e31d857ed19860064711ad2d7aa3f4 template"><td class="memItemLeft">bool constexpr&#160;</td><td class="memItemRight"><b>anyxx::can_move_to_from&lt; shared, unique &gt;</b> = true</td></tr>
-<tr class="memitem:a1027bdaa076afd87d2ef4f771d5ea4a8" id="r_a1027bdaa076afd87d2ef4f771d5ea4a8"><td class="memItemLeft"><a id="a1027bdaa076afd87d2ef4f771d5ea4a8" name="a1027bdaa076afd87d2ef4f771d5ea4a8"></a>
-template&lt;&gt; </td></tr>
-<tr class="memitem:a1027bdaa076afd87d2ef4f771d5ea4a8 template"><td class="memItemLeft">bool constexpr&#160;</td><td class="memItemRight"><b>anyxx::can_move_to_from&lt; weak, shared &gt;</b> = true</td></tr>
 <tr class="memitem:a83dccf89419ef0f48f5114ed2e029f72" id="r_a83dccf89419ef0f48f5114ed2e029f72"><td class="memTemplParams" colspan="2"><a id="a83dccf89419ef0f48f5114ed2e029f72" name="a83dccf89419ef0f48f5114ed2e029f72"></a>
 template&lt;typename DerivedAny, typename BaseAny&gt; </td></tr>
 <tr class="memitem:a83dccf89419ef0f48f5114ed2e029f72 template"><td class="memItemLeft">constexpr bool&#160;</td><td class="memItemRight"><b>anyxx::is_any_derived_from_v</b> = false</td></tr>
