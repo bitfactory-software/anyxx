@@ -95,9 +95,7 @@ TRAIT_TEMPLATE_EX_(
      ANY_OP_MAP_NAMED_FRIEND(bool, !=, inequal, (anyxx::self const&), const)),
     ,
     (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
-              (std::forward_iterator_tag)),
-     ANY_TYPE((), value_type, ValueType, (value_type_impl<T, ValueType>::type)),
-     ANY_TYPE((), reference, Reference, (reference_impl<T, Reference>::type))),
+              (std::forward_iterator_tag))),
     , ())
 
 template <typename ValueType, typename Reference,
