@@ -1,6 +1,5 @@
 var anyxx_8hpp =
 [
-    [ "anyxx::cow", "structanyxx_1_1cow.html", null ],
     [ "anyxx::val&lt; Nullable, SmallObjectSize &gt;", "structanyxx_1_1val.html", null ],
     [ "anyxx::any&lt; Trait, Proxy &gt;", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
     [ "anyxx::key&lt; Tag &gt;", "structanyxx_1_1key.html", null ],
