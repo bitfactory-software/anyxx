@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['trait_5fclass_0',['trait_class',['../structanyxx_1_1trait__class.html',1,'anyxx']]]
+  ['unique_0',['unique',['../structanyxx_1_1unique.html',1,'anyxx']]]
 ];
