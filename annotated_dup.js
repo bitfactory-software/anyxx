@@ -1,13 +1,13 @@
 var annotated_dup =
 [
     [ "anyxx", null, [
-      [ "using_", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
       [ "using_cref", "structanyxx_1_1using__cref.html", "structanyxx_1_1using__cref" ],
       [ "trait_class", "structanyxx_1_1trait__class.html", null ],
       [ "any", "classanyxx_1_1any.html", "classanyxx_1_1any" ],
       [ "unique", "structanyxx_1_1unique.html", null ],
       [ "cow", "structanyxx_1_1cow.html", null ],
       [ "val", "structanyxx_1_1val.html", null ],
+      [ "using_", "structanyxx_1_1using__.html", "structanyxx_1_1using__" ],
       [ "hook", "classanyxx_1_1hook.html", null ],
       [ "key", "structanyxx_1_1key.html", null ],
       [ "factory", "classanyxx_1_1factory.html", null ],

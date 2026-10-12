@@ -13,7 +13,6 @@ var searchData=
   ['useage_20in_20cmakelists_20txt_3a_10',['Useage in CMakeLists.txt:',['../index.html#autotoc_md26',1,'']]],
   ['using_20c_2023_20library_20tech_20steve_20downey_11',['Chapter 3: Concept Maps using C++23 Library Tech, Steve Downey',['../subpage3.html',1,'main']]],
   ['using_5f_12',['using_',['../structanyxx_1_1using__.html',1,'anyxx']]],
-  ['using_5f_3c_20rep_20_3e_13',['using_&lt; Rep &gt;',['../structanyxx_1_1using__.html',1,'anyxx']]],
-  ['using_5fcref_14',['using_cref',['../structanyxx_1_1using__cref.html',1,'anyxx']]],
-  ['using_5fcref_3c_20rep_20_3e_15',['using_cref&lt; Rep &gt;',['../structanyxx_1_1using__cref.html',1,'anyxx']]]
+  ['using_5fcref_13',['using_cref',['../structanyxx_1_1using__cref.html',1,'anyxx']]],
+  ['using_5fcref_3c_20rep_20_3e_14',['using_cref&lt; Rep &gt;',['../structanyxx_1_1using__cref.html',1,'anyxx']]]
 ];
