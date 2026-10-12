@@ -88,8 +88,7 @@ TRAIT_TEMPLATE_EX_(
 TRAIT_TEMPLATE_EX_(
     ((ValueType), (Reference)), forward_iterator, input_iterator,
     ((ValueType), (Reference)),
-    (ANY_OP_MAP_NAMED(anyxx::self&, ++, op_pre_increment, (), ),
-     ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
+    (ANY_OP_DEF(public, Reference, *, op_dereference, (), const,
                 ([&x]() -> Reference { return *x; }))),
     ,
     (ANY_TYPE((), iterator_category, std::forward_iterator_tag,
