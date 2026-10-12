@@ -8,16 +8,11 @@
 */
 
 #include <bit_factory/infra/config.hpp>
+#include <bit_factory/anyxx/dll_mode.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
 
 namespace anyxx {
-
-#ifdef ANY_DLL_MODE
-constexpr bool is_in_dll_mode = true;
-#else
-constexpr bool is_in_dll_mode = false;
-#endif
 
 class error : public std::runtime_error {
   using std::runtime_error::runtime_error;
