@@ -13,8 +13,9 @@
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
-#include <bit_factory/anyxx/proxies/static/using_cref_proxy_trait.hpp>
-#include <bit_factory/anyxx/proxies/static/using_proxy_trait.hpp>
+#include <bit_factory/anyxx/proxies/static/trait_class.hpp>
+#include <bit_factory/anyxx/proxies/static/using_cref.hpp>
+#include <bit_factory/anyxx/proxies/static/using_.hpp>
 #include <bit_factory/anyxx/proxy_concept.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
@@ -25,23 +26,7 @@
 
 namespace anyxx {
 
-template <typename Value>
-struct using_cref;
-template <typename Type>
-struct trait_class;
-
 class meta_data;
-
-template <typename T>
-struct is_type_class_impl : std::false_type {};
-template <typename T>
-struct is_type_class_impl<trait_class<T>> : std::true_type {};
-template <typename T>
-inline constexpr bool is_type_class =
-    is_proxy<T> && is_type_class_impl<T>::value;
-
-// template <typename Model>
-// concept is_base_trait_model = true;
 
 /// Requirements for a trait type
 template <typename T>
@@ -120,39 +105,6 @@ static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
 /// \defgroup proxies Proxies
 /// \brief Proxies manage the storage in an \ref any
-
-template <typename Type>
-struct proxy_trait<trait_class<Type>> : basic_proxy_trait<trait_class<Type>> {
-  using void_t = const_void;
-  using static_dispatch_t = Type;
-  static constexpr bool is_constructibile_from_const = true;
-  static constexpr bool is_object = false;
-  template <typename ConstructedWith>
-  struct is_constructibile_from {
-    static constexpr bool value = true;
-  };
-  static constexpr bool is_owner = false;
-  static constexpr bool allow_any_default_constructibile = true;
-
-  static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] auto* v_table) {}
-
-  static auto get_proxy_ptr_in([[maybe_unused]] auto& val,
-                               [[maybe_unused]] auto* v_table) {
-    return nullptr;
-  }
-
-  template <typename ConstructedWith>
-  using unerased = ConstructedWith;
-
-  static auto construct_in_place(auto) {}
-  template <typename... Args>
-  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {}
-  template <typename Vx>
-  static auto erase([[maybe_unused]] Vx&& v) {
-    return trait_class<Vx>{};
-  }
-};
 
 /// A Proxy for mixing std::variant and type erasure
 /// Use this when some, at compile time, known types are dispatched in a hot
@@ -1638,54 +1590,6 @@ inline auto unerase_cast_if(Any const& o) {
   return unerase_cast_if<U>(get_proxy(o), get_v_table(o));
 }
 
-/// Proxy to capture the dispatch target concrete to enable static dispatch
-/// A simple wrapper class over an object. Use \c '&' and \c 'const &' to
-/// capture by reference.
-///
-/// Usage:
-/// * Use the model map as a static customization point.
-/// * Use \c using_<std::variant<...>> to unify customization points and member
-///   function-like invocation.
-/// * Use with \ref vany_variant.
-///
-/// \tparam Value The captured value
-template <typename Value>
-struct using_ {
-  using_() = default;
-  template <typename V>
-    requires(!std::same_as<std::decay_t<V>, using_>)
-  using_(V&& v) : value_(std::forward<V>(v)) {}
-  Value value_;
-  using value_t = Value;
-  operator Value() const { return value_; }
-  /// Helper type alias template to trait a model with an \ref any.
-  /// See also \ref trait_as.
-  template <typename Trait>
-  using as = any<Trait, using_<Value>>;
-};
-
-/// Proxy to capture the dispatch target concrete via const& to enable static
-/// dispatch A simple wrapper class over an object. Use \c '&' and \c 'const &'
-/// to capture by reference.
-///
-/// Usage:
-/// * Use the model map as a static customization point.
-///
-/// \tparam Value The captured value
-template <typename Value>
-struct using_cref {
-  using_cref() = delete;
-  template <typename V>
-    requires(!std::same_as<std::decay_t<V>, using_cref>)
-  using_cref(V const& v) : value_(v) {}
-  Value const& value_;
-  operator Value const&() const { return value_; }
-  /// Helper type alias template to trait a model with an \ref any.
-  /// See also \ref trait_as.
-  template <typename Trait>
-  using as = any<Trait, using_cref<Value>>;
-};
-
 /// A template to get an \ref any trait for a type
 /// See also \ref using_::as.
 template <typename Type, typename Trait>
@@ -1721,16 +1625,6 @@ template <typename Trait, typename T>
 auto trait_as_cref(T const& v) {
   return any<Trait, using_cref<std::decay_t<T>>>{v};
 }
-
-/// Proxy to capture the type to enable static
-/// dispatch. Has no data member, so it doesn't capture any value and has no
-/// size
-///
-/// \tparam Type The captured type
-template <typename Type>
-struct trait_class {
-  using value_t = Type;
-};
 
 /// Helper type alias template to get a \ref trait_class for a type
 /// dispatch. Has no data member, so it doesn't capture any value and has no

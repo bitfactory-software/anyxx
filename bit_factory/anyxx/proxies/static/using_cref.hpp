@@ -5,8 +5,23 @@
 
 namespace anyxx {
 
+/// Proxy to capture the dispatch target concrete via const& to enable static
+/// dispatch A simple wrapper class over an object. Use \c '&' and \c 'const &'
+/// to capture by reference.
+///
+/// Usage:
+/// * Use the model map as a static customization point.
+///
+/// \tparam Value The captured value
 template <typename Value>
-struct using_cref;
+struct using_cref {
+  using_cref() = delete;
+  template <typename V>
+    requires(!std::same_as<std::decay_t<V>, using_cref>)
+  using_cref(V const& v) : value_(v) {}
+  Value const& value_;
+  operator Value const&() const { return value_; }
+};
 
 template <typename V>
 struct proxy_trait<using_cref<V>> : basic_proxy_trait<using_cref<V>> {

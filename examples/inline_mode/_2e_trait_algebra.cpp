@@ -132,11 +132,12 @@ TEST_CASE("algebra basics") {
   using namespace algebra;
   using namespace std::string_literals;
 
-  using_<int>::as<monoid> x{2};
-  using_<int>::as<monoid> y{x};
-  using_<int>::as<monoid> z = y;
+  using int_monoid = any<monoid, using_<int>>;
+  int_monoid x{2};
+  int_monoid y{x};
+  int_monoid z = y;
   CHECK(get_proxy_value(z) == 2);
-  using_<int>::as<monoid> a{std::move(x)};
+  int_monoid a{std::move(x)};
   CHECK(get_proxy_value(a) == 2);
   static_assert(anyxx::is_proxy<decltype(x)::proxy_t>);
   static_assert(anyxx::is_any<decltype(x)>);
@@ -147,7 +148,7 @@ TEST_CASE("algebra basics") {
                                     observeable_v_table>);
 
   {
-    using_<int>::as<monoid> im{999};
+    any<monoid, using_<int>> im{999};
     static_assert(is_proxy<trait_class<int>>);
     static_assert(is_any<any<monoid, trait_class<int>>>);
     bool eq0 = im.identity() == trait_as<monoid>(0);
@@ -157,7 +158,7 @@ TEST_CASE("algebra basics") {
     CHECK(x1 == y2);
   }
   {
-    using_<std::string>::as<monoid> sm{"XXX"};
+    any<monoid, using_<std::string>> sm{"XXX"};
     auto i = sm.identity();
 
     CHECK(sm.identity() == trait_as<monoid>(""s));
@@ -198,7 +199,7 @@ template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_group(P1 const& p1, std::ranges::forward_range auto const& r) {
   static_assert(is_group_model<P1>);
-  using any_group = typename anyxx::using_<P1>::template as<group>;
+  using any_group = anyxx::any<group, anyxx::using_<P1>>;
   test_group_traited<any_group>(any_group{p1}, r);
 }
 template <anyxx::is_any Group>

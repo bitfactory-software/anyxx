@@ -48,7 +48,7 @@ TRAIT(nullable,
        ANY_OP_MAP_NAMED_FRIEND(bool, ==, eq, (anyxx::self const&), const)))
 
 template <typename T>
-using optional = anyxx::using_<T>::template as<nullable>;
+using optional = anyxx::any<nullable, anyxx::using_<T>>;
 
 template <typename T>
 struct reference_wrapper {

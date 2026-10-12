@@ -68,7 +68,7 @@ void test_monoid_traited(
 template <typename P1>
   requires(!anyxx::is_any<P1>)
 void test_monoid(P1 const& p1, std::ranges::forward_range auto const& r) {
-  using any_monoid = typename anyxx::using_<P1>::template as<monoid>;
+  using any_monoid = anyxx::any<monoid, anyxx::using_<P1>>;
   test_monoid_traited<any_monoid>(any_monoid{p1}, r);
 }
 template <anyxx::is_any Monoid>
@@ -142,9 +142,9 @@ TEST_CASE("example 2b monoid b") {
   using namespace anyxx;
 
   test_monoid("1"s, std::vector{"2"s, "3"s});
-  test_monoid<using_<std::string>::as<monoid>>(
+  test_monoid<any<monoid, using_<std::string>>>(
       trait_as<monoid>("1"s),
-      std::vector<using_<std::string>::as<monoid>>{{"2"s}, {"3"s}});
+      std::vector<any<monoid, using_<std::string>>>{{"2"s}, {"3"s}});
 }
 TEST_CASE("example 2b monoid c") {
   using namespace example_2b;

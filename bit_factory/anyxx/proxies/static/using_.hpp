@@ -5,8 +5,27 @@
 
 namespace anyxx {
 
+/// Proxy to capture the dispatch target concrete to enable static dispatch
+/// A simple wrapper class over an object. Use \c '&' and \c 'const &' to
+/// capture by reference.
+///
+/// Usage:
+/// * Use the model map as a static customization point.
+/// * Use \c using_<std::variant<...>> to unify customization points and member
+///   function-like invocation.
+/// * Use with \ref vany_variant.
+///
+/// \tparam Value The captured value
 template <typename Value>
-struct using_;
+struct using_ {
+  using_() = default;
+  template <typename V>
+    requires(!std::same_as<std::decay_t<V>, using_>)
+  using_(V&& v) : value_(std::forward<V>(v)) {}
+  Value value_;
+  using value_t = Value;
+  operator Value() const { return value_; }
+};
 
 template <typename V>
 struct proxy_trait<using_<V>> : basic_proxy_trait<using_<V>> {
