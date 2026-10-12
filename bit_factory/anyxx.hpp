@@ -54,13 +54,6 @@ struct dynamic_copyable;
 template <typename Trait, is_proxy Proxy = typename Trait::default_proxy_t>
 class any;
 
-template <typename I>
-concept is_proxy_holder_impl = requires(I i) {
-  typename I::proxy_t;
-  typename I::proxy_trait_t;
-};
-template <typename I>
-concept is_proxy_holder = is_proxy_holder_impl<std::decay_t<I>>;
 
 template <typename I>
 concept is_any_impl = is_proxy_holder_impl<I> &&
@@ -75,12 +68,6 @@ concept is_typed_any = is_any<E> && requires(E e) {
   { E::is_const } -> std::convertible_to<bool>;
 };
 
-template <typename ConstructedWith, typename Proxy, typename BASE>
-concept erased_constructibile_for =
-    (!std::derived_from<std::remove_cvref_t<ConstructedWith>, BASE> &&
-     !is_proxy<std::remove_cvref_t<ConstructedWith>> &&
-     (!std::is_const_v<std::remove_reference_t<ConstructedWith>> ||
-      proxy_trait<Proxy>::is_constructibile_from_const));
 template <typename ConstructedWith, typename Proxy, typename Trait>
 concept constructibile_for =
     (proxy_trait<Proxy>::template is_constructibile_from<
@@ -88,77 +75,6 @@ concept constructibile_for =
     (erased_constructibile_for<ConstructedWith, Proxy, any<Trait, Proxy>> &&
      !is_proxy_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
-
-template <is_proxy Data>
-using data_void = proxy_trait<Data>::void_t;
-
-template <typename Proxy>
-concept is_const_data = is_proxy<Proxy> && is_const_void<data_void<Proxy>>;
-
-template <typename Proxy>
-concept is_object_proxy = is_proxy<Proxy> && proxy_trait<Proxy>::is_object;
-
-template <typename Proxy>
-concept is_weak_data = is_proxy<Proxy> && proxy_trait<Proxy>::is_weak;
-
-template <typename Proxy>
-concept is_lifetime_bound =
-    is_proxy<Proxy> && proxy_trait<Proxy>::is_lifetime_bound;
-
-template <bool ToIsConst, bool FromIsConst, bool FromIsWeak>
-concept const_correct_move_to_from =
-    !FromIsWeak && ((ToIsConst == FromIsConst) || !FromIsConst);
-
-constexpr inline bool is_const_correct_call_for_proxy_and_self(
-    bool call_is_const, bool proxy_is_const, bool self_is_const, bool exact) {
-  if (call_is_const) {
-    if (exact) {
-      return (call_is_const == proxy_is_const);
-    } else {
-      return true;
-    }
-  }
-
-  if (proxy_is_const || self_is_const) return false;
-
-  if (exact)
-    return (call_is_const == proxy_is_const);
-  else
-    return true;
-}
-
-template <typename CALL, typename Proxy, bool SelfIsConst, bool Exact>
-concept const_correct_call_for_proxy_and_self =
-    is_object_proxy<Proxy> && !is_weak_data<Proxy> && voidness<CALL> &&
-    is_proxy<Proxy> &&
-    is_const_correct_call_for_proxy_and_self(
-        is_const_void<CALL>, is_const_data<Proxy>, SelfIsConst, Exact);
-
-template <is_proxy Proxy, typename From>
-Proxy erased(From&& from) {
-  return proxy_trait<Proxy>::erase(std::forward<From>(from));
-}
-
-template <is_proxy Proxy, typename ConstructedWith>
-using unerased =
-    proxy_trait<Proxy>::template unerased<std::decay_t<ConstructedWith>>;
-
-template <is_proxy Proxy>
-void const* get_proxy_ptr(Proxy const& vv, auto v_table)
-  requires std::same_as<void const*, typename proxy_trait<Proxy>::void_t>
-{
-  return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
-}
-template <is_proxy Proxy>
-void* get_proxy_ptr(Proxy const& vv, auto v_table)
-  requires std::same_as<void*, typename proxy_trait<Proxy>::void_t>
-{
-  return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
-}
-template <is_proxy Proxy>
-auto get_proxy_ptr(Proxy& vv, auto v_table) {
-  return proxy_trait<Proxy>::get_proxy_ptr_in(vv, v_table);
-}
 
 template <typename U>
 auto unchecked_unerase_cast(void const* p) {
