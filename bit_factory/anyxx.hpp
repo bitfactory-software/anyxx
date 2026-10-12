@@ -14,9 +14,11 @@
 #include <bit_factory/anyxx/observeable.hpp>
 #include <bit_factory/anyxx/proxies/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxies/proxy_concept.hpp>
+#include <bit_factory/anyxx/proxies/unerase_cast.hpp>
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
+#include <bit_factory/anyxx/proxies/static/vany.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
 #include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
@@ -61,133 +63,12 @@ concept constructibile_for =
      !is_proxy_holder<ConstructedWith> &&
      !is_typed_any<std::remove_cvref_t<ConstructedWith>>);
 
-template <typename U>
-auto unchecked_unerase_cast(void const* p) {
-  return static_cast<U const*>(p);
-}
-template <typename U>
-auto unchecked_unerase_cast(void* p) {
-  return static_cast<U*>(p);
-}
-
-template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, auto v_table) {
-  return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
-}
-template <typename U, is_proxy Proxy>
-auto unchecked_unerase_cast(Proxy const& o, auto v_table)
-  requires(!is_const_data<Proxy>)
-{
-  return unchecked_unerase_cast<U>(get_proxy_ptr(o, v_table));
-}
-
-template <typename U, is_proxy Proxy>
-auto unerase_cast(Proxy const& o, auto* v_table) {
-  check_type_match<U>(v_table);
-  return unchecked_unerase_cast<U>(o, v_table);
-}
-template <typename U, is_proxy Proxy>
-U const* unerase_cast_if(Proxy const& o, auto* v_table) {
-  if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
-  return nullptr;
-}
-template <typename U, is_proxy Proxy>
-U* unerase_cast_if(Proxy const& o, auto* v_table)
-  requires(!is_const_data<Proxy>)
-{
-  if (type_match<U>(v_table)) return unchecked_unerase_cast<U>(o, v_table);
-  return nullptr;
-}
-
 static_assert(std::is_const_v<std::remove_reference_t<int const&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int&>>);
 static_assert(!std::is_const_v<std::remove_reference_t<int>>);
 
 /// \defgroup proxies Proxies
 /// \brief Proxies manage the storage in an \ref any
-
-/// A Proxy for mixing std::variant and type erasure
-/// Use this when some, at compile time, known types are dispatched in a hot
-/// path. Put these types plus an any (with the specific \ref trait and a
-/// dynamic proxy) in a std::variant. This variant is then used with a \ref
-/// using_ proxy and the same \ref trait as before. See \ref make_vany
-/// So the dispatch for the types in the variant is done internally with a
-/// std::visit, and all other types are dispatched via their v-Table. Now you
-/// know where the Any++ logo has its origin.
-/// \ingroup proxies
-template <template <typename> typename Any, is_proxy Proxy, typename... Types>
-using vany_variant = std::variant<Any<Proxy>, Types...>;
-
-/// A factory type to direct get the any for the vany
-template <template <typename> typename Any, is_proxy Proxy, typename... Types>
-using make_vany = Any<using_<vany_variant<Any, Proxy, Types...>>>;
-
-template <typename VanyVariant>
-struct vany_variant_trait {
-  using vany_variant_val = VanyVariant;
-  using vany_variant = typename VanyVariant::value_t;
-  template <typename... Types>
-  struct concrete_variant_impl;
-  template <typename First, typename... Types>
-  struct concrete_variant_impl<std::variant<First, Types...>> {
-    using type = std::variant<Types...>;
-  };
-  using concrete_variant = typename concrete_variant_impl<vany_variant>::type;
-  using any_in_variant = typename std::variant_alternative_t<0, vany_variant>;
-};
-
-template <typename Vany>
-struct vany_type_trait {
-  using vany = Vany;
-  using vany_variant = typename Vany::proxy_t;
-  using concrete_variant =
-      typename vany_variant_trait<vany_variant>::concrete_variant;
-  using any_in_variant =
-      typename vany_variant_trait<vany_variant>::any_in_variant;
-};
-
-template <template <typename> typename Any, is_proxy Proxy, typename... Types>
-struct proxy_trait<using_<vany_variant<Any, Proxy, Types...>>>
-    : basic_proxy_trait<using_<vany_variant<Any, Proxy, Types...>>> {
-  using vany_variant_t = vany_variant<Any, Proxy, Types...>;
-  using void_t = typename proxy_trait<Proxy>::void_t;
-  using static_dispatch_t = vany_variant_t;
-  static constexpr bool is_constructibile_from_const =
-      proxy_trait<Proxy>::is_constructibile_from_const;
-  template <typename ConstructedWith>
-  struct is_constructibile_from {
-    static constexpr bool value =
-        std::is_constructible_v<vany_variant_t, ConstructedWith>;
-  };
-  static constexpr bool is_owner = proxy_trait<Proxy>::is_owner;
-  static constexpr bool is_weak =
-      proxy_trait<Proxy>::is_weak;  // cppcheck-suppress
-                                    // duplInheritedMember
-  static auto clone_from([[maybe_unused]] const_void data_ptr,
-                         [[maybe_unused]] auto* v_table) {
-    return void_t{};
-  }
-
-  static auto get_proxy_ptr_in(auto& val, [[maybe_unused]] auto* v_table) {
-    return val;
-  }
-
-  template <typename ConstructedWith>
-  using unerased = ConstructedWith;
-
-  template <typename V>
-  static vany_variant_t construct_in_place(V&& v) {
-    return using_<vany_variant_t>{std::forward<V>(v)};
-  }
-  template <typename T, typename... Args>
-  static auto construct_type_in_place([[maybe_unused]] Args&&... args) {
-    return using_<vany_variant_t>{T{std::forward<Args>(args)...}};
-  }
-  template <typename Vx>
-  static auto erase(Vx&& v) {
-    return using_<vany_variant_t>{std::forward<Vx>(v)};
-  }
-};
 
 // --------------------------------------------------------------------------------
 // erased data observer
