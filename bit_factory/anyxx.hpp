@@ -21,6 +21,9 @@
 #include <bit_factory/anyxx/proxies/dyn/shared.hpp>
 #include <bit_factory/anyxx/proxies/dyn/weak.hpp>
 #include <bit_factory/anyxx/proxies/dyn/val.hpp>
+#include <bit_factory/anyxx/proxies/dyn/borrowable_from.hpp>
+#include <bit_factory/anyxx/proxies/dyn/cloneable_to.hpp>
+#include <bit_factory/anyxx/proxies/dyn/moveable_from.hpp>
 #include <bit_factory/anyxx/proxies/static/trait_class.hpp>
 #include <bit_factory/anyxx/proxies/static/using_cref.hpp>
 #include <bit_factory/anyxx/proxies/static/using_.hpp>
@@ -153,103 +156,6 @@ auto bind_v_table_to_meta_data() {
   auto v_table = v_table_instance<VTable, Concrete>();
   get_meta_data<Concrete>().register_v_table(v_table);
   return v_table;
-}
-
-// --------------------------------------------------------------------------------
-// borrow erased data
-
-template <is_proxy To, is_proxy From>
-struct borrow_trait;
-
-template <typename To, typename From, typename FromVTable>
-concept borrowable_from =
-    is_proxy<From> && is_proxy<To> && requires(From f, FromVTable* v_table) {
-      { borrow_trait<To, From>{}(f, v_table) } -> std::same_as<To>;
-    };
-
-template <typename To, typename From, typename FromVTable>
-  requires borrowable_from<To, From, FromVTable>
-To borrow_proxy_as(From const& from, FromVTable* v_table) {
-  return borrow_trait<To, From>{}(from, v_table);
-}
-
-template <is_proxy From>
-  requires(!is_const_data<From> && !is_weak_data<From>)
-struct borrow_trait<mutref, From> {
-  auto operator()(const auto& from, auto* v_table) const {
-    return mutref{get_proxy_ptr(from, v_table)};
-  }
-};
-template <is_proxy From>
-  requires(!is_weak_data<From>)
-struct borrow_trait<cref, From> {
-  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
-    return cref{get_proxy_ptr(from, v_table)};
-  }
-};
-template <>
-struct borrow_trait<shared, shared> {
-  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
-    return from;
-  }
-};
-template <>
-struct borrow_trait<weak, weak> {
-  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
-    return from;
-  }
-};
-template <>
-struct borrow_trait<weak, shared> {
-  auto operator()(const auto& from, [[maybe_unused]] auto* v_table) const {
-    return weak{from};
-  }
-};
-
-// --------------------------------------------------------------------------------
-// clone erased data
-
-template <is_proxy To>
-struct can_copy_to;
-
-template <typename To>
-concept cloneable_to = is_proxy<To> && proxy_trait<To>::is_owner;
-
-template <is_proxy To, is_proxy From>
-  requires cloneable_to<To>
-To clone_to(From const& from, auto v_table) {
-  return proxy_trait<To>::clone_from(get_proxy_ptr(from, v_table), v_table);
-}
-
-// --------------------------------------------------------------------------------
-// move erased data
-
-template <typename To, typename From>
-inline static bool constexpr can_move_to_from = false;
-
-template <typename To, typename From>
-concept moveable_from =
-    is_proxy<From> && is_proxy<To> && can_move_to_from<To, From>;
-
-template <is_proxy X>
-inline static bool constexpr can_move_to_from<X, X> = true;
-
-template <>
-inline bool constexpr can_move_to_from<shared, unique> = true;
-
-template <>
-inline bool constexpr can_move_to_from<weak, shared> = true;
-
-template <voidness To, voidness From>
-  requires const_correct_move_to_from<is_const_void<To>, is_const_void<From>,
-                                      is_weak_data<From>>
-inline static bool constexpr can_move_to_from<To, From> = true;
-
-template <is_proxy To, is_proxy From>
-  requires moveable_from<To, std::decay_t<From>>
-void move_to(To& to, auto to_v_table, From&& from, auto from_v_table) {
-  return proxy_trait<From>::move_to(to, to_v_table, std::move(from),
-                                    from_v_table);
 }
 
 template <typename Proxy, typename Trait>
