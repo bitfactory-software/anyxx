@@ -144,7 +144,7 @@ TEST_CASE("algebra basics") {
   static_assert(
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
-      !anyxx::proxy_borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
                                     observeable_v_table>);
 
   {

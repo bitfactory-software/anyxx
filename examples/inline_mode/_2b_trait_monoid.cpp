@@ -121,7 +121,7 @@ TEST_CASE("example 2b monoid simple") {
   static_assert(
       anyxx::moveable_from<decltype(x)::proxy_t, decltype(y)::proxy_t>);
   static_assert(
-      !anyxx::proxy_borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
+      !anyxx::borrowable_from<decltype(x)::proxy_t, decltype(y)::proxy_t,
                                     decltype(y)::v_table_t>);
 }
 

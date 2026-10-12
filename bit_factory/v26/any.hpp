@@ -103,14 +103,14 @@ struct any_base : deduced_typenames<Trait, Args...> {
 
   template <anyxx26::is_any Other>
   explicit(false) constexpr any_base(const Other& other)  // NOLINT(noExplicitConstructor)
-      requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
+      requires(anyxx::borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         anyxx::is_any_derived_from_v<Other, any_base>)
       : v_table_(v_table_cast<v_table_t>(other.v_table_)),
       proxy_(anyxx::borrow_proxy_as<proxy_t>(other.proxy_, other.v_table_)) {
   }
   template <anyxx26::is_any Other>
   constexpr any_base& operator=(Other const& other)
-      requires(anyxx::proxy_borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
+      requires(anyxx::borrowable_from<proxy_t, typename Other::proxy_t, typename Other::v_table_t> &&
         anyxx::is_any_derived_from_v<Other, any_base>)
   {
       v_table_ = v_table_cast<v_table_t>(other.v_table_);
