@@ -8,11 +8,10 @@ var searchData=
   ['vany_5fdispach_5',['VANY_DISPACH',['../group__vany__macros.html#ga93a6d3c140de4e4c95f863b88385a27c',1,'anyxx.hpp']]],
   ['vany_5fdispach_20macros_6',['VANY_DISPACH macros',['../group__vany__macros.html',1,'']]],
   ['vany_5fdispach_5fdeclare_7',['VANY_DISPACH_DECLARE',['../group__vany__macros.html#ga0a538605bcb4ae50bd736f0802af2c8b',1,'anyxx.hpp']]],
-  ['vany_5fvariant_8',['vany_variant',['../group__proxies.html#gaf97e4130c5c467557b419eb6e97b8d80',1,'anyxx']]],
-  ['vcpkg_3a_9',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]],
-  ['versus_20typed_5fany_10',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
-  ['virtual_5f_11',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
-  ['visitor_12',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
-  ['vs_20downcast_13',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
-  ['vs_20dynamic_20cast_14',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
+  ['vcpkg_3a_8',['Available on vcpkg:',['../index.html#autotoc_md25',1,'']]],
+  ['versus_20typed_5fany_9',['&apos;any&apos; Versus &apos;typed_any&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md16',1,'']]],
+  ['virtual_5f_10',['virtual_',['../structanyxx_1_1virtual__.html',1,'anyxx']]],
+  ['visitor_11',['Showcase 4: &lt;em&gt;Any++&lt;/em&gt; Open Dispatch As Visitor',['../index.html#autotoc_md32',1,'']]],
+  ['vs_20downcast_12',['&apos;Upcast&apos; vs &apos;Downcast&apos;',['../md_docs_2terms__and__definitions.html#autotoc_md18',1,'']]],
+  ['vs_20dynamic_20cast_13',['Static Cast vs Dynamic Cast',['../md_docs_2terms__and__definitions.html#autotoc_md17',1,'']]]
 ];

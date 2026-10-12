@@ -493,7 +493,7 @@ Showcase 5: <em>Any++</em> Crosscast + Factory = Serialization</h3>
 <div class="line"><span class="comment">// &lt;!--</span></div>
 <div class="line"><span class="preprocessor">#if 0</span></div>
 <div class="line"><span class="comment">// --&gt;</span></div>
-<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:3014</div></div>
+<div class="ttc" id="agroup__meta__class__macros_html_ga3449a1cb25287d73a1e8db0fe95f2dac"><div class="ttname"><a href="group__meta__class__macros.html#ga3449a1cb25287d73a1e8db0fe95f2dac">ANY_REGISTER_MODEL</a></div><div class="ttdeci">#define ANY_REGISTER_MODEL(class_, interface_,...)</div><div class="ttdoc">Register a model class for a specific any interface. Must be in global namespace.</div><div class="ttdef"><b>Definition</b> anyxx.hpp:2895</div></div>
 </div><!-- fragment --><p> Showcase 5 demonstrates how to use <span class="tt">Any++</span> to combine cross-casting and factory patterns for serialization and deserialization of type-erased objects.</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with an <span class="tt">area()</span> method and serializable state (<span class="tt">radius</span> or <span class="tt">edge_length</span>).</li>
 <li>Two traits are declared: <span class="tt">figure</span> (with an <span class="tt">area()</span> method) and <span class="tt">serializable</span> (with a <span class="tt">serialize(std::ostream&amp;)</span> method).</li>
@@ -601,7 +601,7 @@ Showcase 7: Basic <em>Any++</em> open std::variant usage: 'vany'</h3>
 </div><!-- fragment --><p> Showcase 7 demonstrates how to use <span class="tt">Any++</span> to combine open type erasure with <span class="tt">std::variant</span> for extensible, heterogeneous collections. Let us call them "vany" (variant-any).</p><ul>
 <li>Two types, <span class="tt">circle</span> and <span class="tt">square</span>, are defined, each with a <span class="tt">draw()</span> method returning a string.</li>
 <li>A <span class="tt">figure</span> trait is declared, specifying the required interface (<span class="tt">draw() const -&gt; std::string</span>).</li>
-<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt"><a class="el" href="anyxx_8hpp.html#a5b8337d31962b6107d1748ec5dc2ee3b" title="A factory type to direct get the any for the vany.">anyxx::make_vany</a></span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
+<li>The type alias <span class="tt">known_and_unknown_shapes</span> is created using <span class="tt">anyxx::make_vany</span>, which produces a type-erased wrapper over a <span class="tt">std::variant</span> containing:<ul>
 <li>All known types (<span class="tt">circle</span>, <span class="tt">square</span>)</li>
 <li>An open-ended type-erased fallback (<span class="tt">any_figure&lt;ayx::val&lt;&gt;&gt;</span>)</li>
 </ul>
