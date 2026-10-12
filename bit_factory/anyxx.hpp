@@ -7,20 +7,19 @@
     /Zc:preprocessor (see CMakeLists.txt for example)
 */
 
-#include <bit_factory/infra/config.hpp>
 #include <bit_factory/anyxx/compute_val_proxy_size.hpp>
 #include <bit_factory/anyxx/dll_mode.hpp>
-#include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/errors/cast_error.hpp>
 #include <bit_factory/anyxx/errors/type_mismatch_error.hpp>
 #include <bit_factory/anyxx/observeable.hpp>
 #include <bit_factory/anyxx/small_object_size.hpp>
-#include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/anyxx/utilities.hpp>
 #include <bit_factory/anyxx/v_table_data.hpp>
+#include <bit_factory/anyxx/voidness.hpp>
+#include <bit_factory/infra/config.hpp>
 #include <bit_factory/v23/preprocessor_meta_class.hpp>
 
 namespace anyxx {
-
 
 template <typename Value>
 struct using_;
@@ -114,8 +113,7 @@ inline constexpr bool is_type_class =
 
 /// Requirements for a trait type
 template <typename T>
-concept has_v_table =
-    std::derived_from<typename T::v_table_t, observeable_v_table>;
+concept has_v_table = requires { typename T::v_table_t; };
 
 struct dynamic_castable;
 struct dynamic_deletable;
@@ -1732,33 +1730,30 @@ class ANYXX_USE_EBO any : public v_table_holder<Proxy, Trait>, public Trait {
 
   template <typename Self>
   Self operator--(this Self& self, int)
-      requires(is_dyn&& is_op_pre_decrement_v_table<v_table_t>) ||
-  (!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
+    requires(is_dyn && is_op_pre_decrement_v_table<v_table_t>) ||
+            (!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
 
   {
-      auto r = self;
-      --(self);
-      return r;
+    auto r = self;
+    --(self);
+    return r;
   }
   template <typename Self>
   Self& operator--(this Self&& self)
-      requires is_dyn&& is_op_pre_decrement_v_table<v_table_t>
+    requires is_dyn && is_op_pre_decrement_v_table<v_table_t>
   {
-      get_v_table(self)->op_pre_decrement(
-          get_proxy_ptr(std::forward<Self>(self)));
-      return std::forward<Self>(self);
+    get_v_table(self)->op_pre_decrement(
+        get_proxy_ptr(std::forward<Self>(self)));
+    return std::forward<Self>(self);
   }
   template <typename Self>
   Self& operator--(this Self&& self)
-      requires(!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
+    requires(!is_dyn && is_op_pre_decrement_model_map<model_map_t, T>)
   {
-      model_map_t{}.op_pre_decrement(get_proxy_value(std::forward<Self>(self)));
-      return std::forward<Self>(self);
+    model_map_t{}.op_pre_decrement(get_proxy_value(std::forward<Self>(self)));
+    return std::forward<Self>(self);
   }
-
 };
-
-
 
 template <is_any Any>
 inline auto& get_proxy(Any const& any) {
