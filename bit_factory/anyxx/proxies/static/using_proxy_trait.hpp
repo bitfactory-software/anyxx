@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <bit_factory/anyxx/basic_proxy_trait.hpp>
 #include <bit_factory/anyxx/proxy_concept.hpp>
 
